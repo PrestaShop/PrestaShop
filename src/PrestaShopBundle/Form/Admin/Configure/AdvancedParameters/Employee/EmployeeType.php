@@ -38,6 +38,7 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -126,6 +127,12 @@ final class EmployeeType extends AbstractType
                     new Email([
                         'message' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
                     ]),
+                ],
+            ])
+            ->add('avatarUrl', FileType::class, [
+                'required' => false,
+                'attr' => [
+                    'accept' => 'gif,jpg,jpeg,jpe,png',
                 ],
             ])
         ;
