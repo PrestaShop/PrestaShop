@@ -44,7 +44,7 @@ describe('Sort Contacts', async () => {
       dashboardPage.contactLink,
     );
 
-    await contactsPage.closeSfToolBar(page,);
+    await contactsPage.closeSfToolBar(page);
 
     const pageTitle = await contactsPage.getPageTitle(page);
     await expect(pageTitle).to.contains(contactsPage.pageTitle);
@@ -53,7 +53,7 @@ describe('Sort Contacts', async () => {
   it('should reset all filters and get number of contacts in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfContacts = await contactsPage.resetAndGetNumberOfLines(page,);
+    numberOfContacts = await contactsPage.resetAndGetNumberOfLines(page);
     await expect(numberOfContacts).to.be.above(0);
   });
 
@@ -83,11 +83,11 @@ describe('Sort Contacts', async () => {
     it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-      let nonSortedTable = await contactsPage.getAllRowsColumnContent(page,test.args.sortBy);
+      let nonSortedTable = await contactsPage.getAllRowsColumnContent(page, test.args.sortBy);
 
-      await contactsPage.sortTable(page,test.args.sortBy, test.args.sortDirection);
+      await contactsPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-      let sortedTable = await contactsPage.getAllRowsColumnContent(page,test.args.sortBy);
+      let sortedTable = await contactsPage.getAllRowsColumnContent(page, test.args.sortBy);
 
       if (test.args.isFloat) {
         nonSortedTable = await nonSortedTable.map(text => parseFloat(text));

@@ -47,16 +47,16 @@ describe('Filter Contacts', async () => {
       dashboardPage.contactLink,
     );
 
-    await contactsPage.closeSfToolBar(page,);
+    await contactsPage.closeSfToolBar(page);
 
-    const pageTitle = await contactsPage.getPageTitle(page,);
+    const pageTitle = await contactsPage.getPageTitle(page);
     await expect(pageTitle).to.contains(contactsPage.pageTitle);
   });
 
   it('should reset all filters and get number of contacts in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfContacts = await contactsPage.resetAndGetNumberOfLines(page,);
+    numberOfContacts = await contactsPage.resetAndGetNumberOfLines(page);
     await expect(numberOfContacts).to.be.above(0);
   });
 
@@ -86,7 +86,7 @@ describe('Filter Contacts', async () => {
           test.args.filterValue,
         );
 
-        const numberOfContactsAfterFilter = await contactsPage.getNumberOfElementInGrid(page,);
+        const numberOfContactsAfterFilter = await contactsPage.getNumberOfElementInGrid(page);
         await expect(numberOfContactsAfterFilter).to.be.at.most(numberOfContacts);
 
         for (let i = 1; i <= numberOfContactsAfterFilter; i++) {
@@ -103,7 +103,7 @@ describe('Filter Contacts', async () => {
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfContactsAfterReset = await contactsPage.resetAndGetNumberOfLines(page,);
+        const numberOfContactsAfterReset = await contactsPage.resetAndGetNumberOfLines(page);
         await expect(numberOfContactsAfterReset).to.equal(numberOfContacts);
       });
     });
