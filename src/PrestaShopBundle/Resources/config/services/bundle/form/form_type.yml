@@ -1111,8 +1111,9 @@ services:
 
     form.type.customer_address:
       class: 'PrestaShopBundle\Form\Admin\Sell\Address\CustomerAddressType'
+      parent: 'form.type.translatable.aware'
+      public: true
       arguments:
-        - '@translator'
         - '@prestashop.adapter.form.choice_provider.country_state_by_id'
         - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
         - '@router'
