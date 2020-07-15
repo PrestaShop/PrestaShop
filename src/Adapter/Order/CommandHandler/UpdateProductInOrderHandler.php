@@ -77,7 +77,8 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             }
 
             // Check fields validity
-            $this->assertProductCanBeUpdated($command, $orderDetail, $order, $orderInvoice);
+            $cart = Cart::getCartByOrderId($order->id);
+            $this->assertProductCanBeUpdated($command, $orderDetail, $order, $cart, $orderInvoice);
 
             if (0 < $orderDetail->id_customization) {
                 $customization = new Customization($orderDetail->id_customization);
@@ -102,7 +103,6 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
                 $orderDetail->total_price_tax_incl += $diff_price_tax_incl;
                 $orderDetail->total_price_tax_excl += $diff_price_tax_excl;
 
-                $cart = Cart::getCartByOrderId($order->id);
                 if (!($cart instanceof Cart)) {
                     throw new OrderException('Cart linked to the order cannot be found.');
                 }
@@ -156,6 +156,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
      * @param UpdateProductInOrderCommand $command
      * @param OrderDetail $orderDetail
      * @param Order $order
+     * @param Cart $cart
      * @param OrderInvoice|null $orderInvoice
      *
      * @throws OrderException
@@ -164,6 +165,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
         UpdateProductInOrderCommand $command,
         OrderDetail $orderDetail,
         Order $order,
+        Cart $cart,
         OrderInvoice $orderInvoice = null
     ) {
         if (!Validate::isLoadedObject($orderDetail)) {
@@ -213,6 +215,10 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
         //check if product is available in stock
         if (!\Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($orderDetail->product_id))) {
             $availableQuantity = StockAvailable::getQuantityAvailableByProduct($orderDetail->product_id, $orderDetail->product_attribute_id);
+            $cartQuantity = $cart->getProductQuantity($orderDetail->product_id, $orderDetail->product_attribute_id);
+            if (!empty($cartQuantity['deep_quantity'])) {
+                $availableQuantity += $cartQuantity['deep_quantity'];
+            }
 
             if ($availableQuantity < $command->getQuantity()) {
                 throw new ProductOutOfStockException('Not enough products in stock');

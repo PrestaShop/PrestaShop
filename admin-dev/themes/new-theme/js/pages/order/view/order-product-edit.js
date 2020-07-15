@@ -45,13 +45,13 @@ export default class OrderProductEdit {
 
   setupListener() {
     this.quantityInput.on('change keyup', (event) => {
-      const quantity = Number(event.target.value);
+      this.quantity = Number(event.target.value);
       const available = parseInt($(event.currentTarget).data('availableQuantity'), 10) - (this.quantity - this.quantityInput.data('previousQuantity'));
       const availableOutOfStock = this.availableText.data('availableOutOfStock');
       this.availableText.text(available);
       this.availableText.toggleClass('text-danger font-weight-bold', available < 0);
       this.updateTotal();
-      const disableEditActionBtn = quantity <= 0 || (available <= 0 && !availableOutOfStock) ? true : false;
+      const disableEditActionBtn = this.quantity <= 0 || (available < 0 && !availableOutOfStock) ? true : false;
       this.productEditSaveBtn.prop('disabled', disableEditActionBtn);
     });
     this.productEditInvoiceSelect.on('change', () => {

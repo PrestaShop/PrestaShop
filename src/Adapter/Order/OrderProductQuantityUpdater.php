@@ -189,7 +189,11 @@ class OrderProductQuantityUpdater
                 $orderDetail->product_id,
                 $orderDetail->product_attribute_id,
                 false,
-                $deltaQuantity > 0 ? 'down' : 'up'
+                $deltaQuantity > 0 ? 'down' : 'up',
+                0,
+                null,
+                true,
+                true // already checked before and not working with an already existing order
             );
 
             if (-1 === $updateQuantityResult) {

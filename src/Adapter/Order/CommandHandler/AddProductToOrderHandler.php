@@ -161,7 +161,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $this->addProductToCart($cart, $product, $combination, $command->getProductQuantity());
 
             // Fetch Cart Product
-            $productCart = $this->getCartProductData($cart, $product, $command->getProductQuantity());
+            $productCart = $this->getCartProductData($cart, $product, $combination, $command->getProductQuantity());
 
             $invoice = $this->createNewOrEditExistingInvoice(
                 $command,
@@ -329,18 +329,22 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      *
      * @param Cart $cart
      * @param Product $product
+     * @param Combination|null $combination
      * @param int $quantity
      *
      * @return array
      */
-    private function getCartProductData(Cart $cart, Product $product, int $quantity): array
+    private function getCartProductData(Cart $cart, Product $product, $combination, int $quantity): array
     {
-        $productItem = array_reduce($cart->getProducts(), function ($carry, $item) use ($product) {
+        $productItem = array_reduce($cart->getProducts(), function ($carry, $item) use ($product, $combination) {
             if (null !== $carry) {
                 return $carry;
             }
 
-            return $item['id_product'] == $product->id ? $item : null;
+            $productMatch = $item['id_product'] == $product->id;
+            $combinationMatch = $combination === null || $item['id_product_attribute'] == $combination->id;
+
+            return $productMatch && $combinationMatch ? $item : null;
         });
         $productItem['cart_quantity'] = $quantity;
 
@@ -394,7 +398,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             false,
             'up',
             0,
-            new Shop($cart->id_shop)
+            new Shop($cart->id_shop),
+            true,
+            true // already checked before and not working with an already existing order
         );
 
         if ($result < 0) {
