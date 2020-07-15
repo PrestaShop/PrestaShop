@@ -67,3 +67,44 @@ Feature: Update product shipping options from Back Office (BO)
       | delivery time in stock notes     | en-US:product in stock     |
       | delivery time out of stock notes | en-US:product out of stock |
       | carriers                         | [carrier1,carrier2]        |
+
+  Scenario: Provide negative product dimensions
+    Given product product1 should have following values:
+      | width                            | 15                         |
+      | height                           | 5                          |
+      | depth                            | 4                          |
+      | weight                           | 2                          |
+    When I update product product1 shipping information with following values:
+      | width                            | -15                        |
+    Then I should get error that product width is invalid
+    When I update product product1 shipping information with following values:
+      | height                            | -5                        |
+    Then I should get error that product height is invalid
+    When I update product product1 shipping information with following values:
+      | depth                            | -4                         |
+    Then I should get error that product depth is invalid
+    When I update product product1 shipping information with following values:
+      | weight                            | -2                        |
+    Then I should get error that product weight is invalid
+
+  Scenario: Provide negative additional shipping cost
+    Given product product1 should have following values:
+      | additional_shipping_cost         | 12                         |
+    When I update product product1 shipping information with following values:
+      | additional_shipping_cost         | -12                        |
+    Then I should get error that product additional_shipping_cost is invalid
+
+    #@todo: finish up with field validations
+
+  Scenario: Remove delivery time notes, but still have specific notes type
+    Given product product1 should have following values:
+      | delivery time notes type         | specific                   |
+      | delivery time in stock notes     | en-US:product in stock     |
+      | delivery time out of stock notes | en-US:product out of stock |
+    When I update product product1 shipping information with following values:
+      | delivery time in stock notes     | en-US:                     |
+      | delivery time out of stock notes | en-US:                     |
+    Given product product1 should have following values:
+      | delivery time notes type         | specific                   |
+      | delivery time in stock notes     | en-US:                     |
+      | delivery time out of stock notes | en-US:                     |
