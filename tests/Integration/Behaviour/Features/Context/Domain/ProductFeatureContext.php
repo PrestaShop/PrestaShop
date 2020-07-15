@@ -738,7 +738,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then /^product "(.+)" should (be not customizable|allow customization|require customization)$/
+     * @Then /^product "(.+)" should (not be customizable|allow customization|require customization)$/
      *
      * @param string $productReference
      * @param string $customizability
@@ -748,7 +748,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $customizationOptions = $this->getProductForEditing($productReference)->getCustomizationOptions();
 
         switch ($customizability) {
-            case 'be not customizable':
+            case 'not be customizable':
                 Assert::assertTrue(
                     $customizationOptions->isNotCustomizable(),
                     sprintf('Expected product "%s" to be not customizable', $productReference)
@@ -775,7 +775,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then product :productReference should have :expectedCount customizable :customizationType fields
+     * @Then product :productReference should have :expectedCount customizable :customizationType field(s)
      *
      * @param string $productReference
      * @param int $expectedCount

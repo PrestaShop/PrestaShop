@@ -39,7 +39,7 @@ Feature: Update product customization fields in Back Office (BO)
       | customField3          | file    | en-US:back image        | false       |
     Then product "product1" should allow customization
     And product product1 should have 2 customizable text fields
-    And product product1 should have 1 customizable file fields
+    And product product1 should have 1 customizable file field
     And product product1 should have following customization fields:
       | reference             | type    | name                    | is required |
       | customField1          | text    | en-US:front-text        | false       |
@@ -56,7 +56,7 @@ Feature: Update product customization fields in Back Office (BO)
       | reference             | type    | name                    | is required |
       | customField2          | text    | en-US:bottom-text       | true        |
     Then product "product1" should require customization
-    And product product1 should have 1 customizable text fields
+    And product product1 should have 1 customizable text field
     And product product1 should have 0 customizable file fields
     And product product1 should have following customization fields:
       | reference             | type    | name                    | is required |
@@ -65,7 +65,7 @@ Feature: Update product customization fields in Back Office (BO)
   Scenario: Update customization field name in different languages
     Given language "french" with locale "fr-FR" exists
     And product "product1" should require customization
-    And product product1 should have 1 customizable text fields
+    And product product1 should have 1 customizable text field
     And product product1 should have 0 customizable file fields
     And product product1 should have following customization fields:
       | reference             | type    | name                                 | is required |
@@ -85,12 +85,12 @@ Feature: Update product customization fields in Back Office (BO)
 
   Scenario: I delete all customization fields for product
     Given product "product1" should require customization
-    And product product1 should have 1 customizable text fields
+    And product product1 should have 1 customizable text field
     And product product1 should have 0 customizable file fields
     And product product1 should have following customization fields:
       | reference             | type    | name                                  | is required |
       | customField2          | text    | en-US:bottom;fr-FR:texte du bas       | true        |
     When I delete all customization fields from product product1
-    Then product "product1" should be not customizable
+    Then product "product1" should not be customizable
     Then product product1 should have 0 customizable text fields
     And product product1 should have 0 customizable file fields
