@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductShippingCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductShippingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use Product;
 
 /**
@@ -58,26 +59,31 @@ final class UpdateProductShippingHandler extends AbstractProductHandler implemen
     {
         if (null !== $command->getWidth()) {
             $product->width = (string) $command->getWidth();
+            $this->validateField($product, 'width', ProductConstraintException::INVALID_WIDTH);
             $this->fieldsToUpdate['width'] = true;
         }
 
         if (null !== $command->getHeight()) {
             $product->height = (string) $command->getHeight();
+            $this->validateField($product, 'height', ProductConstraintException::INVALID_HEIGHT);
             $this->fieldsToUpdate['height'] = true;
         }
 
         if (null !== $command->getDepth()) {
             $product->depth = (string) $command->getDepth();
+            $this->validateField($product, 'depth', ProductConstraintException::INVALID_DEPTH);
             $this->fieldsToUpdate['depth'] = true;
         }
 
         if (null !== $command->getWeight()) {
             $product->weight = (string) $command->getWeight();
+            $this->validateField($product, 'weight', ProductConstraintException::INVALID_WEIGHT);
             $this->fieldsToUpdate['weight'] = true;
         }
 
         if (null !== $command->getAdditionalShippingCost()) {
             $product->additional_shipping_cost = (string) $command->getAdditionalShippingCost();
+            $this->validateField($product, 'additional_shipping_cost', ProductConstraintException::INVALID_ADDITIONAL_SHIPPING_COST);
             $this->fieldsToUpdate['additional_shipping_cost'] = true;
         }
 

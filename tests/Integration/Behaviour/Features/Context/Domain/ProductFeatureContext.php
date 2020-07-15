@@ -1364,6 +1364,11 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             'unit_price' => ProductConstraintException::INVALID_UNIT_PRICE,
             'tax rules group' => ProductConstraintException::INVALID_TAX_RULES_GROUP_ID,
             'tag' => ProductConstraintException::INVALID_TAG,
+            'width' => ProductConstraintException::INVALID_WIDTH,
+            'height' => ProductConstraintException::INVALID_HEIGHT,
+            'depth' => ProductConstraintException::INVALID_DEPTH,
+            'weight' => ProductConstraintException::INVALID_WEIGHT,
+            'additional_shipping_cost' => ProductConstraintException::INVALID_ADDITIONAL_SHIPPING_COST,
         ];
 
         if (!array_key_exists($fieldName, $constraintErrorFieldMap)) {

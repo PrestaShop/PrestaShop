@@ -125,4 +125,29 @@ class ProductConstraintException extends ProductException
      * When product additional time notes type is invalid
      */
     const INVALID_ADDITIONAL_TIME_NOTES_TYPE = 190;
+
+    /**
+     * When product width is invalid
+     */
+    const INVALID_WIDTH = 200;
+
+    /**
+     * When product height is invalid
+     */
+    const INVALID_HEIGHT = 210;
+
+    /**
+     * When product depth is invalid
+     */
+    const INVALID_DEPTH = 220;
+
+    /**
+     * When product weight is invalid
+     */
+    const INVALID_WEIGHT = 230;
+
+    /**
+     * When product additional shipping cost is invalid
+     */
+    const INVALID_ADDITIONAL_SHIPPING_COST = 240;
 }
