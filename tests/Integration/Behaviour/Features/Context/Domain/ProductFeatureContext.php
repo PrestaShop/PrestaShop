@@ -273,57 +273,74 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
         try {
             $command = new UpdateProductShippingCommand($productId);
+            $unhandledData = $this->setUpdateShippingCommandData($data, $command);
 
-            if (isset($data['width'])) {
-                $command->setWidth($data['width']);
-                unset($data['width']);
-            }
-
-            if (isset($data['height'])) {
-                $command->setHeight($data['height']);
-                unset($data['height']);
-            }
-
-            if (isset($data['depth'])) {
-                $command->setDepth($data['depth']);
-                unset($data['depth']);
-            }
-
-            if (isset($data['weight'])) {
-                $command->setWeight($data['weight']);
-                unset($data['weight']);
-            }
-
-            if (isset($data['additional_shipping_cost'])) {
-                $command->setAdditionalShippingCost($data['additional_shipping_cost']);
-                unset($data['additional_shipping_cost']);
-            }
-
-            if (isset($data['delivery time notes type'])) {
-                $command->setDeliveryTimeNotesType(DeliveryTimeNotesType::ALLOWED_TYPES[$data['delivery time notes type']]);
-                unset($data['delivery time notes type']);
-            }
-
-            if (isset($data['delivery time in stock notes'])) {
-                $command->setLocalizedDeliveryTimeInStockNotes(
-                    $this->parseLocalizedArray($data['delivery time in stock notes'])
-                );
-                unset($data['delivery time in stock notes']);
-            }
-
-            if (isset($data['delivery time out of stock notes'])) {
-                $command->setLocalizedDeliveryTimeOutOfStockNotes(
-                    $this->parseLocalizedArray($data['delivery time out of stock notes'])
-                );
-                unset($data['delivery time out of stock notes']);
-            }
-
-            Assert::assertEmpty($data, sprintf('Not all provided values handled in scenario. %s', var_export($data)));
+            Assert::assertEmpty(
+                $unhandledData,
+                sprintf('Not all provided values handled in scenario. %s', var_export($unhandledData))
+            );
 
             $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {
             $this->lastException = $e;
         }
+    }
+
+    /**
+     * @param array $data
+     * @param UpdateProductShippingCommand $command
+     *
+     * @return array values that was provided, but wasn't handled
+     */
+    private function setUpdateShippingCommandData(array $data, UpdateProductShippingCommand $command): array
+    {
+        $unhandledValues = $data;
+
+        if (isset($data['width'])) {
+            $command->setWidth($data['width']);
+            unset($unhandledValues['width']);
+        }
+
+        if (isset($data['height'])) {
+            $command->setHeight($data['height']);
+            unset($unhandledValues['height']);
+        }
+
+        if (isset($data['depth'])) {
+            $command->setDepth($data['depth']);
+            unset($unhandledValues['depth']);
+        }
+
+        if (isset($data['weight'])) {
+            $command->setWeight($data['weight']);
+            unset($unhandledValues['weight']);
+        }
+
+        if (isset($data['additional_shipping_cost'])) {
+            $command->setAdditionalShippingCost($data['additional_shipping_cost']);
+            unset($unhandledValues['additional_shipping_cost']);
+        }
+
+        if (isset($data['delivery time notes type'])) {
+            $command->setDeliveryTimeNotesType(DeliveryTimeNotesType::ALLOWED_TYPES[$data['delivery time notes type']]);
+            unset($unhandledValues['delivery time notes type']);
+        }
+
+        if (isset($data['delivery time in stock notes'])) {
+            $command->setLocalizedDeliveryTimeInStockNotes(
+                $this->parseLocalizedArray($data['delivery time in stock notes'])
+            );
+            unset($unhandledValues['delivery time in stock notes']);
+        }
+
+        if (isset($data['delivery time out of stock notes'])) {
+            $command->setLocalizedDeliveryTimeOutOfStockNotes(
+                $this->parseLocalizedArray($data['delivery time out of stock notes'])
+            );
+            unset($unhandledValues['delivery time out of stock notes']);
+        }
+
+        return $unhandledValues;
     }
 
     /**
