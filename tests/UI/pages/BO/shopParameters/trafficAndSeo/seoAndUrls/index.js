@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class SeoAndUrls extends BOBasePage {
-  constructor(page) {
-    super(page);
+class SeoAndUrls extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'SEO & URLs •';
 
@@ -41,107 +41,119 @@ module.exports = class SeoAndUrls extends BOBasePage {
    * Go to new seo page
    * @return {Promise<void>}
    */
-  async goToNewSeoUrlPage() {
-    await this.clickAndWaitForNavigation(this.addNewSeoPageLink);
+  async goToNewSeoUrlPage(page) {
+    await this.clickAndWaitForNavigation(page, this.addNewSeoPageLink);
   }
 
   /* Column methods */
   /**
    * Get text from a column
+   * @param page
    * @param row, row in table
    * @param column, which column
    * @returns {Promise<string>}
    */
-  async getTextColumnFromTable(row, column) {
-    return this.getTextContent(this.tableColumn(row, column));
+  async getTextColumnFromTable(page, row, column) {
+    return this.getTextContent(page, this.tableColumn(row, column));
   }
 
   /**
    * Go to edit file
+   * @param page
    * @param row, Which row of the list
    * @return {Promise<void>}
    */
-  async goToEditSeoUrlPage(row = 1) {
-    await this.clickAndWaitForNavigation(this.editRowLink(row));
+  async goToEditSeoUrlPage(page, row = 1) {
+    await this.clickAndWaitForNavigation(page, this.editRowLink(row));
   }
 
   /**
    * Delete Row in table
+   * @param page
    * @param row, row to delete
    * @returns {Promise<string>}
    */
-  async deleteSeoUrlPage(row = 1) {
-    this.dialogListener(true);
+  async deleteSeoUrlPage(page, row = 1) {
+    this.dialogListener(page, true);
     await Promise.all([
-      this.page.click(this.dropdownToggleButton(row)),
+      page.click(this.dropdownToggleButton(row)),
       this.waitForVisibleSelector(
+        page,
         `${this.dropdownToggleButton(row)}[aria-expanded='true']`,
       ),
     ]);
-    await this.clickAndWaitForNavigation(this.deleteRowLink(row));
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.clickAndWaitForNavigation(page, this.deleteRowLink(row));
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /* Reset methods */
   /**
    * Reset filters in table
+   * @param page
    * @return {Promise<void>}
    */
-  async resetFilter() {
-    if (!(await this.elementNotVisible(this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(this.filterResetButton);
+  async resetFilter(page) {
+    if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
+      await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
   }
 
   /**
    * Get number of elements in grid
+   * @param page
    * @return {Promise<number>}
    */
-  async getNumberOfElementInGrid() {
-    return this.getNumberFromText(this.gridHeaderTitle);
+  async getNumberOfElementInGrid(page) {
+    return this.getNumberFromText(page, this.gridHeaderTitle);
   }
 
   /**
    * Reset Filter And get number of elements in list
+   * @param page
    * @return {Promise<number>}
    */
-  async resetAndGetNumberOfLines() {
-    await this.resetFilter();
-    return this.getNumberOfElementInGrid();
+  async resetAndGetNumberOfLines(page) {
+    await this.resetFilter(page);
+    return this.getNumberOfElementInGrid(page);
   }
 
   /* Filter methods */
   /**
    * Filter Table
+   * @param page
    * @param filterBy, which column
    * @param value, value to put in filter
    * @return {Promise<void>}
    */
-  async filterTable(filterBy, value = '') {
-    await this.setValue(this.filterColumn(filterBy), value.toString());
+  async filterTable(page, filterBy, value = '') {
+    await this.setValue(page, this.filterColumn(filterBy), value.toString());
     // click on search
-    await this.clickAndWaitForNavigation(this.filterSearchButton);
+    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
 
   /**
    * Enable/disable friendly url
+   * @param page
    * @param toEnable, true to enable and false to disable
    * @return {Promise<string>}
    */
-  async enableDisableFriendlyURL(toEnable = true) {
-    await this.waitForSelectorAndClick(this.switchFriendlyUrlLabel(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveSeoAndUrlFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async enableDisableFriendlyURL(page, toEnable = true) {
+    await this.waitForSelectorAndClick(page, this.switchFriendlyUrlLabel(toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(page, this.saveSeoAndUrlFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Enable/disable accented url
+   * @param page
    * @param toEnable, true to enable and false to disable
    * @return {Promise<string>}
    */
-  async enableDisableAccentedURL(toEnable = true) {
-    await this.waitForSelectorAndClick(this.switchAccentedUrlLabel(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveSeoAndUrlFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async enableDisableAccentedURL(page, toEnable = true) {
+    await this.waitForSelectorAndClick(page, this.switchAccentedUrlLabel(toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(page, this.saveSeoAndUrlFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
-};
+}
+
+module.exports = new SeoAndUrls();
