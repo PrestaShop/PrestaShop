@@ -191,3 +191,5 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CategoryFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CarrierFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext

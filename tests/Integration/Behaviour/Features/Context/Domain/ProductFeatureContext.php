@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
 use Cache;
 use Context;
@@ -62,11 +63,23 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNotesType;
 use Product;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Tests\Integration\Behaviour\Features\Context\CarrierFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class ProductFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * @var CarrierFeatureContext
+     */
+    private $carrierFeatureContext;
+
+    /** @BeforeScenario */
+    public function before(BeforeScenarioScope $scope)
+    {
+        $this->carrierFeatureContext = $scope->getEnvironment()->getContext(CarrierFeatureContext::class);
+    }
+
     /**
      * @Then I set tax rule group :taxRulesGroupReference to product :productReference
      *
@@ -338,6 +351,16 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                 $this->parseLocalizedArray($data['delivery time out of stock notes'])
             );
             unset($unhandledValues['delivery time out of stock notes']);
+        }
+
+        if (isset($data['carriers'])) {
+            $referenceIds = [];
+            foreach (PrimitiveUtils::castStringArrayIntoArray($data['carriers']) as $carrierName) {
+                $carrier = $this->carrierFeatureContext->loadCarrierByName($carrierName);
+                $referenceIds[] = (int) $carrier->id_reference;
+            }
+            $command->setCarrierReferences($referenceIds);
+            unset($unhandledValues['carriers']);
         }
 
         return $unhandledValues;
@@ -1223,6 +1246,17 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      */
     private function assertShippingInformation(array &$data, ProductShippingInformation $productShippingInformation): void
     {
+        if (isset($data['carriers'])) {
+            $expectedReferences = [];
+            foreach (PrimitiveUtils::castStringArrayIntoArray($data['carriers']) as $carrierName) {
+                $carrier = $this->carrierFeatureContext->loadCarrierByName($carrierName);
+                $expectedReferences[] = (int) $carrier->id_reference;
+            }
+            $actualReferences = $productShippingInformation->getCarrierReferences();
+            Assert::assertEquals($expectedReferences, $actualReferences, 'Unexpected carrier references in product shipping information');
+            unset($data['carriers']);
+        }
+
         $this->assertNumberShippingFields($data, $productShippingInformation);
         $this->assertDeliveryTimeNotes($data, $productShippingInformation);
     }

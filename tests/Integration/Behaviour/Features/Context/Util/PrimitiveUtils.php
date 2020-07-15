@@ -219,6 +219,10 @@ class PrimitiveUtils
     {
         $arrayAsString = str_replace(['[', ']', ' '], ['', '', ''], $arrayAsString);
 
+        if (empty($arrayAsString)) {
+            return [];
+        }
+
         return explode(',', $arrayAsString);
     }
 

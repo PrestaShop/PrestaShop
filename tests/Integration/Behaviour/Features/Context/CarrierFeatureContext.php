@@ -34,6 +34,7 @@ use Configuration;
 use Context;
 use Country;
 use Group;
+use PHPUnit\Framework\Assert;
 use RangePrice;
 use RangeWeight;
 use State;
@@ -272,6 +273,22 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     public function getCarrierWithName($carrierName)
     {
         return $this->carriers[$carrierName];
+    }
+
+    /**
+     * @param $carrierName
+     *
+     * @return Carrier
+     */
+    public function loadCarrierByName($carrierName): Carrier
+    {
+        $carrier = $this->getCarrierWithName($carrierName);
+        $carrierId = (int) $carrier->id;
+        $loadedCarrier = new Carrier($carrierId);
+
+        Assert::assertGreaterThan(0, (int) $loadedCarrier->id, sprintf('Carrier named "%s" not found', $carrierName));
+
+        return $loadedCarrier;
     }
 
     /**
