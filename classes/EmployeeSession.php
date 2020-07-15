@@ -23,60 +23,67 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+use PrestaShop\PrestaShop\Core\Session\SessionInterface;
 
-namespace PrestaShop\PrestaShop\Core\Grid\Filter;
-
-/**
- * Class FilterCollection manages filters collection for grid.
- */
-final class FilterCollection implements FilterCollectionInterface
+class EmployeeSessionCore extends ObjectModel implements SessionInterface
 {
+    public $id;
+
+    /** @var int Id Employee */
+    public $id_employee;
+
+    /** @var string Token */
+    public $token;
+
     /**
-     * @var FilterInterface[]
+     * @see ObjectModel::$definition
      */
-    private $filters = [];
+    public static $definition = [
+        'table' => 'employee_session',
+        'primary' => 'id_employee_session',
+        'fields' => [
+            'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'token' => ['type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 40, 'copy_post' => false],
+        ],
+    ];
 
     /**
      * {@inheritdoc}
      */
-    public function add(FilterInterface $filter)
+    public function getId()
     {
-        $this->filters[$filter->getName()] = $filter;
-
-        return $this;
+        return $this->id;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function remove($filterName)
+    public function setUserId($idEmployee)
     {
-        if (isset($this->filters[$filterName])) {
-            unset($this->filters[$filterName]);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param string $filterName
-     *
-     * @return FilterInterface|null return null if no filter with given filter name
-     */
-    public function get($filterName)
-    {
-        if (isset($this->filters[$filterName])) {
-            return $this->filters[$filterName];
-        }
-
-        return null;
+        $this->id_employee = (int) $idEmployee;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function all()
+    public function getUserId()
     {
-        return $this->filters;
+        return (int) $this->id_employee;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setToken($token)
+    {
+        $this->token = (string) $token;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getToken()
+    {
+        return $this->token;
     }
 }

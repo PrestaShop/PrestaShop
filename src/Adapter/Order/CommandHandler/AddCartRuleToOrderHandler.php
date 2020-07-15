@@ -51,7 +51,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
      */
     public function handle(AddCartRuleToOrderCommand $command): void
     {
-        $order = $this->getOrderObject($command->getOrderId());
+        $order = $this->getOrder($command->getOrderId());
 
         $computingPrecision = new ComputingPrecision();
         $currency = new Currency((int) $order->id_currency);

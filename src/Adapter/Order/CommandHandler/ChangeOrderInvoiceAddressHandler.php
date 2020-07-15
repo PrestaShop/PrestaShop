@@ -44,7 +44,7 @@ final class ChangeOrderInvoiceAddressHandler extends AbstractOrderHandler implem
      */
     public function handle(ChangeOrderInvoiceAddressCommand $command)
     {
-        $order = $this->getOrderObject($command->getOrderId());
+        $order = $this->getOrder($command->getOrderId());
         $address = new Address($command->getNewInvoiceAddressId()->getValue());
 
         $cart = Cart::getCartByOrderId($order->id);

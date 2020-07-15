@@ -83,14 +83,19 @@ class CategoryController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request, CategoryFilters $filters)
     {
-        $categoryGridFactory = $this->get('prestashop.core.grid.factory.category_decorator');
-        $categoryGrid = $categoryGridFactory->getGrid($filters);
-
         $categoriesKpiFactory = $this->get('prestashop.core.kpi_row.factory.categories');
 
         $currentCategoryId = $filters->getFilters()['id_category_parent'];
         $categoryViewDataProvider = $this->get('prestashop.adapter.category.category_view_data_provider');
         $categoryViewData = $categoryViewDataProvider->getViewData($currentCategoryId);
+
+        $isItASearchRequest = $this->requestHasSearchParameters($request);
+
+        $filters->addFilter(['is_home_category' => $categoryViewData['is_home_category']]);
+        $filters->addFilter(['is_search_request' => $isItASearchRequest]);
+
+        $categoryGridFactory = $this->get('prestashop.core.grid.factory.category_decorator');
+        $categoryGrid = $categoryGridFactory->getGrid($filters);
 
         $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class, ['categories_to_delete_parent' => (int) $currentCategoryId], []);
 
@@ -129,7 +134,8 @@ class CategoryController extends FrameworkBundleAdminController
             $this->get('prestashop.core.grid.definition.factory.category'),
             $request,
             CategoryGridDefinitionFactory::GRID_ID,
-            'admin_categories_index'
+            'admin_categories_index',
+            ['categoryId']
         );
     }
 
@@ -838,5 +844,15 @@ class CategoryController extends FrameworkBundleAdminController
         }
 
         return $categoryIds;
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return bool
+     */
+    private function requestHasSearchParameters(Request $request)
+    {
+        return !empty($request->query->get('category')['filters']);
     }
 }

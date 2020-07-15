@@ -109,16 +109,16 @@ services:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation'
 
-  prestashop.adapter.command_handler.add_customization_fields_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\AddCustomizationFieldsHandler'
+  prestashop.adapter.command_handler.add_customization_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\AddCustomizationHandler'
     tags:
       - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationCommand'
 
   prestashop.adapter.command_handler.add_product_to_cart_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\AddProductToCartHandler'
     arguments:
-      - '@prestashop.adapter.command_handler.add_customization_fields_handler'
+      - '@prestashop.adapter.command_handler.add_customization_handler'
       - '@prestashop.adapter.command_handler.update_product_quantity_in_cart_handler'
     tags:
       - name: tactician.handler

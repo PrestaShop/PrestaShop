@@ -24,20 +24,59 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
+namespace PrestaShop\PrestaShop\Core\Session;
 
 /**
- * Interface for handling AddCustomizationFields command
+ * SessionInterface is used to store/access to the session token used by customers and employees
  */
-interface AddCustomizationFieldsHandlerInterface
+interface SessionInterface
 {
     /**
-     * @param AddCustomizationFieldsCommand $command
+     * Returns session id
      *
-     * @return CustomizationId|null customizationId
+     * @return int
      */
-    public function handle(AddCustomizationFieldsCommand $command): ?CustomizationId;
+    public function getId();
+
+    /**
+     * Set session user id
+     *
+     * @param int $id
+     *
+     * @return void
+     */
+    public function setUserId($id);
+
+    /**
+     * Returns session user id
+     *
+     * @return int
+     */
+    public function getUserId();
+
+    /**
+     * Set session token
+     *
+     * @param string $string
+     *
+     * @return void
+     */
+    public function setToken($string);
+
+    /**
+     * Returns session token
+     *
+     * @return string
+     */
+    public function getToken();
+
+    /**
+     * Adds current object to the database.
+     */
+    public function add();
+
+    /**
+     * Deletes current object from database.
+     */
+    public function delete();
 }
