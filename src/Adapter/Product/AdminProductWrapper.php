@@ -405,7 +405,10 @@ class AdminProductWrapper
     public function getSpecificPricesList($product, $defaultCurrency, $shops, $currencies, $countries, $groups)
     {
         $content = [];
-        $specific_prices = SpecificPrice::getByProductId((int) $product->id);
+        $specific_prices = array_merge(
+            SpecificPrice::getByProductId((int) $product->id),
+            SpecificPrice::getByProductId(0)
+        );
 
         $tmp = [];
         foreach ($shops as $shop) {
