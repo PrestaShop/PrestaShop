@@ -26,9 +26,9 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
 use Cache;
+use Carrier;
 use Context;
 use Language;
 use PHPUnit\Framework\Assert;
@@ -63,23 +63,11 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNotesType;
 use Product;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
-use Tests\Integration\Behaviour\Features\Context\CarrierFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class ProductFeatureContext extends AbstractDomainFeatureContext
 {
-    /**
-     * @var CarrierFeatureContext
-     */
-    private $carrierFeatureContext;
-
-    /** @BeforeScenario */
-    public function before(BeforeScenarioScope $scope)
-    {
-        $this->carrierFeatureContext = $scope->getEnvironment()->getContext(CarrierFeatureContext::class);
-    }
-
     /**
      * @Then I set tax rule group :taxRulesGroupReference to product :productReference
      *
@@ -354,12 +342,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         }
 
         if (isset($data['carriers'])) {
-            $referenceIds = [];
-            foreach (PrimitiveUtils::castStringArrayIntoArray($data['carriers']) as $carrierName) {
-                $carrier = $this->carrierFeatureContext->loadCarrierByName($carrierName);
-                $referenceIds[] = (int) $carrier->id_reference;
-            }
-            $command->setCarrierReferences($referenceIds);
+            $command->setCarrierReferences($this->getCarrierReferenceIds($data['carriers']));
             unset($unhandledValues['carriers']);
         }
 
@@ -583,7 +566,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $this->assertPriceFields($data, $productForEditing->getPricesInformation());
         $this->assertShippingInformation($data, $productForEditing->getShippingInformation());
 
-        // Assertions checking isset() which can hide some errors if it doesn't find array key,
+        // Assertions checking isset() can hide some errors if it doesn't find array key,
         // to make sure all provided fields were checked we need to unset every asserted field
         // and finally, if provided data is not empty, it means there are some unnasserted values left
         Assert::assertEmpty($data, sprintf('Some provided fields haven\'t been asserted: %s', implode(',', $data)));
@@ -1034,6 +1017,22 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @param string $carrierReferencesInput
+     *
+     * @return int[]
+     */
+    private function getCarrierReferenceIds(string $carrierReferencesInput): array
+    {
+        $referenceIds = [];
+        foreach (PrimitiveUtils::castStringArrayIntoArray($carrierReferencesInput) as $carrierReference) {
+            $carrier = new Carrier($this->getSharedStorage()->get($carrierReference));
+            $referenceIds[] = (int) $carrier->id_reference;
+        }
+
+        return $referenceIds;
+    }
+
+    /**
      * @param array $data
      * @param UpdateProductOptionsCommand $command
      */
@@ -1247,13 +1246,15 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     private function assertShippingInformation(array &$data, ProductShippingInformation $productShippingInformation): void
     {
         if (isset($data['carriers'])) {
-            $expectedReferences = [];
-            foreach (PrimitiveUtils::castStringArrayIntoArray($data['carriers']) as $carrierName) {
-                $carrier = $this->carrierFeatureContext->loadCarrierByName($carrierName);
-                $expectedReferences[] = (int) $carrier->id_reference;
-            }
-            $actualReferences = $productShippingInformation->getCarrierReferences();
-            Assert::assertEquals($expectedReferences, $actualReferences, 'Unexpected carrier references in product shipping information');
+            $expectedReferenceIds = $this->getCarrierReferenceIds($data['carriers']);
+            $actualReferenceIds = $productShippingInformation->getCarrierReferences();
+
+            Assert::assertEquals(
+                $expectedReferenceIds,
+                $actualReferenceIds,
+                'Unexpected carrier references in product shipping information'
+            );
+
             unset($data['carriers']);
         }
 
