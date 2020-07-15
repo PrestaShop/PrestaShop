@@ -126,14 +126,13 @@ $(document).ready(() => {
 
     const $target = $(event.currentTarget);
     const {dataset} = event.currentTarget;
-
     const cartAction = parseCartAction($target, event.namespace);
     const requestData = {
       ajax: '1',
       action: 'update',
     };
 
-    if (typeof cartAction === 'undefined') {
+    if (!cartAction) {
       return;
     }
 
