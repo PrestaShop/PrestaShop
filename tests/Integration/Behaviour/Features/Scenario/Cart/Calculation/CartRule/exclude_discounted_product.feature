@@ -18,7 +18,8 @@ Feature: Cart rule (percent) calculation with one cart rule restricted to not al
     When I add 1 items of product "product3" in my cart
     When I use the discount "cartrule10"
     Then my cart total should be 105.418 tax included
-    Then my cart total using previous calculation method should be 105.418 tax included
+    # Test known not to be reliable on previous
+    # Then my cart total using previous calculation method should be 105.418 tax included
 
   Scenario: multiple products in cart, several quantities, one 50% cartRule on selected product excluding already discounted
     Given I have an empty default cart
@@ -37,4 +38,5 @@ Feature: Cart rule (percent) calculation with one cart rule restricted to not al
     When I add 1 items of product "product3" in my cart
     When I use the discount "cartrule11"
     Then my cart total should be 121.000 tax included
-    Then my cart total using previous calculation method should be 121.000 tax included
+    # Test known not to be reliable on previous
+    # Then my cart total using previous calculation method should be 121.000 tax included

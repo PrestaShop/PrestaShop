@@ -109,8 +109,14 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $this->createCartRule($cartRuleName, 0, $amount, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser);
     }
 
-    protected function createCartRule($cartRuleName, $percent, $amount, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser)
-    {
+    protected function createCartRule(
+        $cartRuleName,
+        $percent,
+        $amount,
+        $priority,
+        $cartRuleQuantity,
+        $cartRuleQuantityPerUser
+    ) {
         $cartRule = new CartRule();
         $cartRule->reduction_percent = $percent;
         $cartRule->reduction_amount = $amount;
@@ -389,6 +395,31 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $cartRule = new CartRule($cartRules[$position - 1]['id_cart_rule']);
         if ($expectedValue != $cartRule->reduction_amount) {
             throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedValue, $cartRule->reduction_amount));
+        }
+    }
+
+    /**
+     * @Then /^cart rule "(.+)" has a contextual reduction value of (\d+.\d+)$/
+     *
+     * @param $cartRuleName
+     * @param $expectedValue
+     */
+    public function checkCartRuleContextualValue(string $cartRuleName, float $expectedValue)
+    {
+        $cartRules = $this->getCurrentCart()->getCartRules();
+        $cartRuleFound = false;
+        foreach ($cartRules as $currentCartRule) {
+            // float numbers are compared as string because float numbers seemingly equals can still be unequals.
+            if ($currentCartRule['description'] === $cartRuleName && (string) $currentCartRule['value_real'] !== (string) $expectedValue) {
+                throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedValue, $currentCartRule['value_real']));
+            }
+            if ($currentCartRule['description'] === $cartRuleName) {
+                $cartRuleFound = true;
+            }
+        }
+
+        if (!$cartRuleFound) {
+            throw new \RuntimeException(sprintf('The cart rule "%s" was not found', $cartRuleName));
         }
     }
 }

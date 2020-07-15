@@ -30,7 +30,10 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-class AddCustomizationFieldsCommand
+/**
+ * Adds product customization
+ */
+class AddCustomizationCommand
 {
     /**
      * @var CartId
@@ -45,20 +48,20 @@ class AddCustomizationFieldsCommand
     /**
      * @var array key - value pairs where key is the id of customization field and the value is the customization value
      */
-    private $customizationsByFieldIds;
+    private $customizationValuesByFieldIds;
 
     /**
      * @param int $cartId
      * @param int $productId
-     * @param array $customizationsByFieldIds
+     * @param array $customizationValuesByFieldIds
      *
      * @throws CartConstraintException
      */
-    public function __construct(int $cartId, int $productId, array $customizationsByFieldIds)
+    public function __construct(int $cartId, int $productId, array $customizationValuesByFieldIds)
     {
         $this->cartId = new CartId($cartId);
         $this->productId = new ProductId($productId);
-        $this->customizationsByFieldIds = $customizationsByFieldIds;
+        $this->customizationValuesByFieldIds = $customizationValuesByFieldIds;
     }
 
     /**
@@ -80,8 +83,8 @@ class AddCustomizationFieldsCommand
     /**
      * @return array
      */
-    public function getCustomizationsByFieldIds(): array
+    public function getCustomizationValuesByFieldIds(): array
     {
-        return $this->customizationsByFieldIds;
+        return $this->customizationValuesByFieldIds;
     }
 }

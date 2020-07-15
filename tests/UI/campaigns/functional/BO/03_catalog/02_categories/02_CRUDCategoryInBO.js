@@ -28,9 +28,9 @@ let browserContext;
 let page;
 let numberOfCategories = 0;
 
-let createCategoryData;
-let createSubCategoryData;
-let editCategoryData;
+const createCategoryData = new CategoryFaker();
+const createSubCategoryData = new CategoryFaker({name: 'subCategoryToCreate'});
+const editCategoryData = new CategoryFaker({displayed: false, name: `update${createCategoryData.name}`});
 
 // Init objects needed
 const init = async function () {
@@ -52,10 +52,6 @@ describe('Create, Read, Update and Delete Category', async () => {
     page = await helper.newTab(browserContext);
 
     this.pageObjects = await init();
-
-    createCategoryData = await (new CategoryFaker());
-    createSubCategoryData = await (new CategoryFaker({name: `subCategory${createCategoryData.name}`}));
-    editCategoryData = await (new CategoryFaker({displayed: false, name: `update${createCategoryData.name}`}));
   });
 
   after(async () => {
@@ -186,7 +182,7 @@ describe('Create, Read, Update and Delete Category', async () => {
         await expect(textResult).to.equal(this.pageObjects.categoriesPage.successfulCreationMessage);
       });
 
-      it.skip('should search for the subcategory and check result', async function () {
+      it('should search for the subcategory and check result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'searchForCreatedSubcategory', baseContext);
 
         await this.pageObjects.categoriesPage.resetFilter();
@@ -201,7 +197,7 @@ describe('Create, Read, Update and Delete Category', async () => {
         await expect(textColumn).to.contains(createSubCategoryData.name);
       });
 
-      it.skip('should go to FO and check the created Subcategory', async function () {
+      it('should go to FO and check the created Subcategory', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedSubcategoryFO', baseContext);
 
         const categoryID = await this.pageObjects.categoriesPage.getTextColumnFromTableCategories(1, 'id_category');
@@ -266,7 +262,7 @@ describe('Create, Read, Update and Delete Category', async () => {
       await expect(pageTitle).to.contains(createCategoryData.name);
     });
 
-    it.skip('should check subcategories list', async function () {
+    it('should check subcategories list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSubcategoriesForCreatedCategory', baseContext);
 
       await this.pageObjects.categoriesPage.resetFilter();

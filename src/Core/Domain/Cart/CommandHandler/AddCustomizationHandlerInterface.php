@@ -24,59 +24,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Filter;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
 
 /**
- * Class FilterCollection manages filters collection for grid.
+ * Defines contract to handle @var AddCustomizationCommand
  */
-final class FilterCollection implements FilterCollectionInterface
+interface AddCustomizationHandlerInterface
 {
     /**
-     * @var FilterInterface[]
-     */
-    private $filters = [];
-
-    /**
-     * {@inheritdoc}
-     */
-    public function add(FilterInterface $filter)
-    {
-        $this->filters[$filter->getName()] = $filter;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function remove($filterName)
-    {
-        if (isset($this->filters[$filterName])) {
-            unset($this->filters[$filterName]);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param string $filterName
+     * @param AddCustomizationCommand $command
      *
-     * @return FilterInterface|null return null if no filter with given filter name
+     * @return CustomizationId|null customizationId
      */
-    public function get($filterName)
-    {
-        if (isset($this->filters[$filterName])) {
-            return $this->filters[$filterName];
-        }
-
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function all()
-    {
-        return $this->filters;
-    }
+    public function handle(AddCustomizationCommand $command): ?CustomizationId;
 }

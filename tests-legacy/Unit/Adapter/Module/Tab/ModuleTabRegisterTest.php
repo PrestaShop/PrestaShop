@@ -28,7 +28,11 @@ namespace LegacyTests\Unit\Adapter\Module\Tab;
 
 use LegacyTests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Adapter\Module\Tab\ModuleTabRegister;
+use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
 
 class ModuleTabRegisterTest extends UnitTestCase
 {
@@ -49,7 +53,7 @@ class ModuleTabRegisterTest extends UnitTestCase
             // Non-existing class file, must throw an exception
             array(
                 'class_name' => 'AdminMissing',
-                'exception' => 'Class "AdminMissingController" not found in controllers/admin',
+                'exception' => 'Class "AdminMissingController" not found in controllers/admin nor routing file',
             ),
         ),
         'symfony' => array(
@@ -57,6 +61,12 @@ class ModuleTabRegisterTest extends UnitTestCase
             array(
                 'class_name' => 'UnknownLegacyController',
                 'route_name' => 'some_fancy_symfony_route',
+            ),
+        ),
+        // No tabs by default, the undeclared one comes from the routing parsing
+        'undeclared_symfony' => array(
+            array(
+                'class_name' => 'UndeclaredLegacyController',
             ),
         ),
     );
@@ -70,6 +80,7 @@ class ModuleTabRegisterTest extends UnitTestCase
         'gamification' => array('AdminGamification'),
         'doge' => array('Wololo', 'AdminMissing', 'AdminMy'),
         'symfony' => array('UnknownLegacyController'),
+        'undeclared_symfony' => array('UndeclaredLegacyController'),
     );
 
     protected $languages = array(
@@ -145,13 +156,72 @@ class ModuleTabRegisterTest extends UnitTestCase
                 $this->sfKernel->getContainer()->get('prestashop.core.admin.lang.repository'),
                 $this->sfKernel->getContainer()->get('logger'),
                 $this->sfKernel->getContainer()->get('translator'),
-                $this->sfKernel->getContainer()->get('filesystem'),
+                $this->buildFilesystemMock(),
                 $this->languages,
+                $this->buildRoutingConfigLoaderMock(),
             ))
             ->getMock();
         $this->tabRegister
             ->method('getModuleAdminControllersFilename')
             ->will($this->returnValueMap($this->moduleAdminControllers));
+    }
+
+    protected function buildFilesystemMock()
+    {
+        $filesystemMock = $this->getMockBuilder(Filesystem::class)
+            ->setMethods(['exists'])
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        // We only need to override the behaviour for undeclared_symfony routing file, to simulate
+        // that the file is present and parseable, then the YamlModuleLoader mock does the rest
+        $service = $this->sfKernel->getContainer()->get('filesystem');
+        $filesystemMock
+            ->method('exists')
+            ->willReturnCallback(function($filePath) use($service) {
+                if (false !== strpos($filePath, 'undeclared_symfony/config/routes.yml')) {
+                    return true;
+                }
+
+                return $service->exists($filePath);
+            });
+
+        return $filesystemMock;
+    }
+
+    protected function buildRoutingConfigLoaderMock()
+    {
+        $moduleRoutingLoader = $this->getMockBuilder(LoaderInterface::class)
+            ->setMethods(['import', 'load', 'supports', 'getResolver', 'setResolver'])
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        // We only need to mock the import method, it returns a RouteCollection, by default the mock returns a useless
+        // Route object, but ONLY for the undeclared_symfony module it returns an additional one with the _legacy_controller
+        // option that will add an undeclared controller
+        $moduleRoutingLoader
+            ->method('import')
+            ->willReturnCallback(function($routingFile, $type) {
+                $routeCollection = new RouteCollection();
+                $simpleRoute = new Route('/nowhere', [
+                    '_controller' => 'PrestaShop\\Module\\Test\\SymfonyController::someAction',
+                ]);
+                $routeCollection->add('not_detected_route', $simpleRoute);
+
+                if (false !== strpos($routingFile, 'symfony/config/routes.yml')) {
+                    $route = new Route('/hidden-url', [
+                        '_controller' => 'PrestaShop\\Module\\Test\\SecuredSymfonyController::securedAction',
+                        '_legacy_controller' => 'UndeclaredLegacyController',
+                    ]);
+                    $routeCollection->add('route_to_be_detected', $route);
+                }
+
+                return $routeCollection;
+            });
+
+        return $moduleRoutingLoader;
     }
 
     public function testWorkingTabsAreOk()

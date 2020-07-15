@@ -163,6 +163,16 @@ class LegacyContext
     }
 
     /**
+     * Adapter to get upload directory
+     *
+     * @return string
+     */
+    public function getUploadDirectory()
+    {
+        return _PS_UPLOAD_DIR_;
+    }
+
+    /**
      * Url to the mail themes folder
      *
      * @return string

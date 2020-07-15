@@ -474,21 +474,11 @@ class AdminDashboardControllerCore extends AdminController
         ];
 
         if (Validate::isModuleName($module) && $module_obj = Module::getInstanceByName($module)) {
-            if (Validate::isLoadedObject($module_obj) && method_exists($module_obj, 'validateDashConfig')) {
-                $return['errors'] = $module_obj->validateDashConfig($configs);
-            }
-            if (!count($return['errors'])) {
-                if (Validate::isLoadedObject($module_obj) && method_exists($module_obj, 'saveDashConfig')) {
-                    $return['has_errors'] = $module_obj->saveDashConfig($configs);
-                } elseif (is_array($configs) && count($configs)) {
-                    foreach ($configs as $name => $value) {
-                        if (Validate::isConfigName($name)) {
-                            Configuration::updateValue($name, $value);
-                        }
-                    }
-                }
-            } else {
+            $return['errors'] = $module_obj->validateDashConfig($configs);
+            if (count($return['errors'])) {
                 $return['has_errors'] = true;
+            } else {
+                $return['has_errors'] = $module_obj->saveDashConfig($configs);
             }
         }
 

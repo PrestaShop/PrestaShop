@@ -62,6 +62,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Factory\CategoryGridFactoryDecorator'
         arguments:
           - '@prestashop.core.grid.factory.category'
+          - '@prestashop.core.grid.filter.category_form_factory'
 
     prestashop.core.grid.factory.employee:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
