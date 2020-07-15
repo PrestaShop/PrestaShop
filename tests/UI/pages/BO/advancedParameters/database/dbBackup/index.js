@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class DbBackup extends BOBasePage {
-  constructor(page) {
-    super(page);
+class DbBackup extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'DB Backup •';
     this.successfulBackupCreationMessage = 'It appears the backup was successful, however you must download '
@@ -38,79 +38,87 @@ module.exports = class DbBackup extends BOBasePage {
   /* Header methods */
   /**
    * Go to db Backup page
+   * @param page
    * @returns {Promise<void>}
    */
-  async goToSqlManagerPage() {
-    await this.clickAndWaitForNavigation(this.sqlManagerSubTabLink);
+  async goToSqlManagerPage(page) {
+    await this.clickAndWaitForNavigation(page, this.sqlManagerSubTabLink);
   }
 
   /* Form and grid methods */
   /**
    * Get number of backups
+   * @param page
    * @returns {Promise<number>}
    */
-  async getNumberOfElementInGrid() {
-    return this.getNumberFromText(this.gridHeaderTitle);
+  async getNumberOfElementInGrid(page) {
+    return this.getNumberFromText(page, this.gridHeaderTitle);
   }
 
   /**
    * Create new db backup
+   * @param page
    * @returns {Promise<string>}
    */
-  async createDbDbBackup() {
+  async createDbDbBackup(page) {
     await Promise.all([
-      this.page.click(this.newBackupButton),
-      this.page.waitForSelector(this.tableRow(1), {state: 'visible'}),
-      this.page.waitForSelector(this.downloadBackupButton, {state: 'visible'}),
+      page.click(this.newBackupButton),
+      page.waitForSelector(this.tableRow(1), {state: 'visible'}),
+      page.waitForSelector(this.downloadBackupButton, {state: 'visible'}),
     ]);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
    * Download backup
+   * @param page
    * @return {Promise<void>}
    */
-  async downloadDbBackup() {
+  async downloadDbBackup(page) {
     const [download] = await Promise.all([
-      this.page.waitForEvent('download'),
-      await this.page.click(this.downloadBackupButton),
+      page.waitForEvent('download'),
+      await page.click(this.downloadBackupButton),
     ]);
     return download.path();
   }
 
   /**
    * Delete backup
+   * @param page
    * @param row
    * @returns {Promise<string>}
    */
-  async deleteBackup(row) {
-    this.dialogListener(true);
+  async deleteBackup(page, row) {
+    this.dialogListener(page, true);
     await Promise.all([
-      this.page.click(this.dropdownToggleButton(row)),
-      this.page.waitForSelector(`${this.dropdownToggleButton(row)}[aria-expanded='true']`),
+      page.click(this.dropdownToggleButton(row)),
+      page.waitForSelector(`${this.dropdownToggleButton(row)}[aria-expanded='true']`),
     ]);
-    await this.clickAndWaitForNavigation(this.deleteRowLink(row));
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.clickAndWaitForNavigation(page, this.deleteRowLink(row));
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
    * Delete with bulk actions
+   * @param page
    * @returns {Promise<string>}
    */
-  async deleteWithBulkActions() {
-    this.dialogListener(true);
+  async deleteWithBulkActions(page) {
+    this.dialogListener(page, true);
     // Click on Select All
     await Promise.all([
-      this.page.$eval(this.selectAllRowsLabel, el => el.click()),
-      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
+      page.$eval(this.selectAllRowsLabel, el => el.click()),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
-      this.page.click(this.bulkActionsToggleButton),
-      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
+      page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
-    await this.clickAndWaitForNavigation(this.bulkActionsDeleteButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.clickAndWaitForNavigation(page, this.bulkActionsDeleteButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
-};
+}
+
+module.exports = new DbBackup();
