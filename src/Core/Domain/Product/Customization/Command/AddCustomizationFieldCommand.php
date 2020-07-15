@@ -65,8 +65,8 @@ class AddCustomizationFieldCommand
      * @param int $productId
      * @param int $type
      * @param bool $required
-     * @param bool $addedByModule
      * @param string[] $localizedNames
+     * @param bool $addedByModule
      */
     public function __construct(
         int $productId,

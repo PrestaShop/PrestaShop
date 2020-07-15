@@ -92,11 +92,8 @@ abstract class AbstractCustomizationFieldHandler extends AbstractProductHandler
      */
     protected function refreshCustomizationFieldsCount(Product $product): void
     {
-        $textFieldsCount = $product->countCustomizationFields(CustomizationFieldType::TYPE_TEXT);
-        $fileFieldsCount = $product->countCustomizationFields(CustomizationFieldType::TYPE_FILE);
-
-        $product->text_fields = $textFieldsCount;
-        $product->uploadable_files = $fileFieldsCount;
+        $product->text_fields = $product->countCustomizationFields(CustomizationFieldType::TYPE_TEXT);
+        $product->uploadable_files = $product->countCustomizationFields(CustomizationFieldType::TYPE_FILE);
         $this->fieldsToUpdate['text_fields'] = true;
         $this->fieldsToUpdate['uploadable_files'] = true;
     }

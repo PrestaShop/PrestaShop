@@ -75,7 +75,7 @@ class CustomizationField
         $this->type = $type;
         $this->localizedNames = $localizedNames;
         $this->required = $required;
-        $this->customizationFieldId = $customizationFieldId ? $customizationFieldId : null;
+        $this->customizationFieldId = $customizationFieldId ?? null;
         $this->addedByModule = $addedByModule;
     }
 
