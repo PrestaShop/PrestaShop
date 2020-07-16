@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -35,7 +35,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * Class generates "By Date" form
  * in "Sell > Orders > Invoices" page.
  */
-class GenerateByDateType extends CommonAbstractType
+class GenerateByDateType extends TranslatorAwareType
 {
     /**
      * {@inheritdoc}
@@ -43,8 +43,22 @@ class GenerateByDateType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('date_from', DatePickerType::class)
-            ->add('date_to', DatePickerType::class);
+            ->add(
+                'date_from',
+                DatePickerType::class,
+                [
+                    'label' => $this->trans('From', 'Admin.Global'),
+                    'help' => 'Format: 2011-12-31 (inclusive).'
+                ]
+            )
+            ->add(
+                'date_to',
+                DatePickerType::class,
+                [
+                    'label' => $this->trans('Name', 'Admin.Global'),
+                    'help' => 'Format: 2011-12-31 (inclusive).'
+                ]
+            );
     }
 
     /**
