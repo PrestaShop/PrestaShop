@@ -415,6 +415,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             );
         } catch (InvalidProductQuantityException $e) {
             $this->lastException = $e;
+        } catch (ProductOutOfStockException $e) {
+            $this->lastException = $e;
         }
     }
 

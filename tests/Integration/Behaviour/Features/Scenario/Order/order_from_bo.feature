@@ -350,6 +350,62 @@ Feature: Order from Back Office (BO)
       | total_price_tax_incl        | 25.230000 |
       | total_price_tax_excl        | 23.8   |
 
+  Scenario: Update product in order with quantity equals to the total available is authorized
+    Given there is a product in the catalog named "Test quantity" with a price of 10.00 and 300 items in stock
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name    | Test quantity |
+      | amount  | 1             |
+      | price   | 10.00         |
+      | free_shipping | true    |
+    And I edit product "Test quantity" to order "bo_order1" with following products details:
+      | amount | 300 |
+      | price | 10.00 |
+    Then order "bo_order1" should contain 300 product "Test quantity"
+    And product "Test quantity" is out of stock
+
+  Scenario: Update product in order with higher quantity than stock is forbidden
+    Given there is a product in the catalog named "Test quantity" with a price of 10.00 and 300 items in stock
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name    | Test quantity |
+      | amount  | 1             |
+      | price   | 10.00         |
+      | free_shipping | true    |
+    And I edit product "Test quantity" to order "bo_order1" with following products details:
+      | amount | 301 |
+      | price | 10.00 |
+    Then I should get error that product is out of stock
+    And order "bo_order1" should contain 1 product "Test quantity"
+
+  Scenario: Add already product already in order with quantity equals to the total available is authorized
+    Given there is a product in the catalog named "Test quantity" with a price of 10.00 and 300 items in stock
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name    | Test quantity |
+      | amount  | 1             |
+      | price   | 10.00         |
+      | free_shipping | true    |
+    And I add products to order "bo_order1" with new invoice and the following products details:
+      | name    | Test quantity |
+      | amount  | 299           |
+      | price   | 10.00         |
+      | free_shipping | true    |
+    Then order "bo_order1" should contain 300 product "Test quantity"
+    And product "Test quantity" is out of stock
+
+  Scenario: Add already product already in order with higher quantity than stock is forbidden
+    Given there is a product in the catalog named "Test quantity" with a price of 10.00 and 300 items in stock
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name    | Test quantity |
+      | amount  | 1             |
+      | price   | 10.00         |
+      | free_shipping | true    |
+    And I add products to order "bo_order1" with new invoice and the following products details:
+      | name    | Test quantity |
+      | amount  | 300           |
+      | price   | 10.00         |
+      | free_shipping | true    |
+    Then I should get error that product is out of stock
+    Then order "bo_order1" should contain 1 product "Test quantity"
+
   Scenario: Generating invoice for Order
     When I generate invoice for "bo_order1" order
     Then order "bo_order1" should have invoice
