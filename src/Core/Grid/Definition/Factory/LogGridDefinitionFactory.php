@@ -269,12 +269,13 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
             );
     }
 
-    private function getSeveritysChoices(){
+    private function getSeveritysChoices()
+    {
         return [
             $this->trans('Informative only', [], 'Admin.Advparameters.Help') => 1,
-            $this->trans('Warning', [], 'Admin.Advparameters.Help') =>  2,
-            $this->trans('Error', [], 'Admin.Advparameters.Help') =>  3,
-            $this->trans('Major issue (crash)!', [], 'Admin.Advparameters.Help') =>  4,
+            $this->trans('Warning', [], 'Admin.Advparameters.Help') => 2,
+            $this->trans('Error', [], 'Admin.Advparameters.Help') => 3,
+            $this->trans('Major issue (crash)!', [], 'Admin.Advparameters.Help') => 4,
         ];
-	}
+    }
 }
