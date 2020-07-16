@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPackCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateProductCustomizationFieldsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
@@ -597,6 +598,35 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I update product :productReference customization field name with text containing :nameLength symbols
+     *
+     * @param string $productReference
+     * @param int $nameLength
+     */
+    public function addCustomizationFieldWithTooLongName(string $productReference, int $nameLength)
+    {
+        $fieldsForUpdate = [];
+        foreach (Language::getIDs() as $langId) {
+            $langId = (int) $langId;
+            $fieldsForUpdate[] = [
+                'id' => null,
+                'type' => CustomizationFieldType::TYPE_TEXT,
+                'is_required' => false,
+                'added_by_module' => false,
+                'localized_names' => [
+                    $langId => PrimitiveUtils::generateRandomString($nameLength),
+                ],
+            ];
+        }
+
+        try {
+            $this->updateProductCustomizationFields($productReference, ['name'], $fieldsForUpdate);
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
      * @When I delete all customization fields from product :productReference
      *
      * @param string $productReference
@@ -616,10 +646,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $table->getColumnsHash();
         /** @var CustomizationField[] $actualFields */
-        $actualFields = $this->getQueryBus()->handle(new GetProductCustomizationFields(
-            $this->getSharedStorage()->get($productReference)
-        ));
-
+        $actualFields = $this->getProductCustomizationFields($productReference);
         $notFoundExpectedFields = [];
 
         foreach ($data as $expectedField) {
@@ -834,6 +861,17 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $this->assertLastErrorIs(
             ProductConstraintException::class,
             $this->getConstraintErrorCode($fieldName)
+        );
+    }
+
+    /**
+     * @Then I should get error that product customization field name is invalid
+     */
+    public function assertCustomizationFieldNameError(): void
+    {
+        $this->assertLastErrorIs(
+            CustomizationFieldConstraintException::class,
+            CustomizationFieldConstraintException::INVALID_NAME
         );
     }
 
@@ -1177,5 +1215,17 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         } catch (ProductException $e) {
             $this->lastException = $e;
         }
+    }
+
+    /**
+     * @param string $productReference
+     *
+     * @return CustomizationField[]
+     */
+    private function getProductCustomizationFields(string $productReference): array
+    {
+        return $this->getQueryBus()->handle(new GetProductCustomizationFields(
+            $this->getSharedStorage()->get($productReference)
+        ));
     }
 }

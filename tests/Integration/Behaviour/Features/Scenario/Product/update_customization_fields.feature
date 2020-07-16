@@ -83,6 +83,16 @@ Feature: Update product customization fields in Back Office (BO)
       | reference             | type    | name                                 | is required |
       | customField2          | text    | en-US:bottom;fr-FR:texte du bas      | true        |
 
+    Scenario: Update customization field providing invalid name
+      Given product product1 should have following customization fields:
+        | reference             | type    | name                                 | is required |
+        | customField2          | text    | en-US:bottom;fr-FR:texte du bas      | true        |
+      When I update product product1 customization field name with text containing 256 symbols
+      Then I should get error that product customization field name is invalid
+      And product product1 should have following customization fields:
+        | reference             | type    | name                                 | is required |
+        | customField2          | text    | en-US:bottom;fr-FR:texte du bas      | true        |
+
   Scenario: I delete all customization fields for product
     Given product "product1" should require customization
     And product product1 should have 1 customizable text field

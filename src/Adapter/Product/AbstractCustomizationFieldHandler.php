@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use CustomizationField;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
@@ -96,5 +97,25 @@ abstract class AbstractCustomizationFieldHandler extends AbstractProductHandler
         $product->uploadable_files = $product->countCustomizationFields(CustomizationFieldType::TYPE_FILE);
         $this->fieldsToUpdate['text_fields'] = true;
         $this->fieldsToUpdate['uploadable_files'] = true;
+    }
+
+    /**
+     * @param CustomizationField $customizationField
+     *
+     * @throws CustomizationFieldConstraintException
+     */
+    protected function validateCustomizationFieldName(CustomizationField $customizationField): void
+    {
+        foreach ($customizationField->name as $langId => $value) {
+            if (true !== $customizationField->validateField('name', $value, $langId)) {
+                throw new CustomizationFieldConstraintException(
+                    sprintf(
+                        'Invalid localized customization field name for language with id "%d"',
+                        $langId
+                    ),
+                    CustomizationFieldConstraintException::INVALID_NAME
+                );
+            }
+        }
     }
 }
