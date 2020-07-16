@@ -28,6 +28,122 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
+
+/**
+ * Adds new product supplier
+ */
 class AddProductSupplierCommand
 {
+    /**
+     * @var ProductId
+     */
+    private $productId;
+
+    /**
+     * @var SupplierId
+     */
+    private $supplierId;
+
+    /**
+     * @var CurrencyId
+     */
+    private $currencyId;
+
+    /**
+     * @var string|null
+     */
+    private $reference;
+
+    /**
+     * @var string|null
+     */
+    private $priceTaxExcluded;
+
+    /**
+     * @var CombinationId|null
+     */
+    private $combinationId;
+
+    /**
+     * @param int $productId
+     * @param int $supplierId
+     * @param int $currencyId
+     * @param string|null $reference
+     * @param string|null $priceTaxExcluded
+     * @param int|null $combinationId
+     *
+     * @throws CurrencyException
+     * @throws CombinationConstraintException
+     * @throws SupplierException
+     */
+    public function __construct(
+        int $productId,
+        int $supplierId,
+        int $currencyId,
+        ?string $reference = null,
+        ?string $priceTaxExcluded = null,
+        ?int $combinationId = null
+    ) {
+        $this->productId = new ProductId($productId);
+        $this->supplierId = new SupplierId($supplierId);
+        $this->currencyId = new CurrencyId($currencyId);
+        $this->reference = $reference;
+        $this->priceTaxExcluded = $priceTaxExcluded;
+        $this->combinationId = $combinationId ? new CombinationId($combinationId) : null;
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
+    }
+
+    /**
+     * @return SupplierId
+     */
+    public function getSupplierId(): SupplierId
+    {
+        return $this->supplierId;
+    }
+
+    /**
+     * @return CurrencyId
+     */
+    public function getCurrencyId(): CurrencyId
+    {
+        return $this->currencyId;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getReference(): ?string
+    {
+        return $this->reference;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPriceTaxExcluded(): ?string
+    {
+        return $this->priceTaxExcluded;
+    }
+
+    /**
+     * @return CombinationId|null
+     */
+    public function getCombinationId(): ?CombinationId
+    {
+        return $this->combinationId;
+    }
 }
