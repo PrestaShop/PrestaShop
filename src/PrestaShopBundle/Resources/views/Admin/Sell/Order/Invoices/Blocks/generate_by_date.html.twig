@@ -24,7 +24,7 @@
  *#}
 
 {% trans_default_domain "Admin.Orderscustomers.Feature" %}
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+{% form_theme generateByDateForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {% block invoices_generate_by_date %}
   <div class="col-xl-12">
@@ -35,22 +35,9 @@
       </h3>
       <div class="card-block row">
         <div class="card-text">
-          <div class="form-group row">
-            {{ ps.label_with_help(('From'|trans({}, 'Admin.Global')), ('Format: 2011-12-31 (inclusive).'|trans({}, 'Admin.Orderscustomers.Help'))) }}
-            <div class="col-sm">
-              {{ form_errors(generateByDateForm.date_from) }}
-              {{ form_widget(generateByDateForm.date_from) }}
-            </div>
-          </div>
-          <div class="form-group row">
-            {{ ps.label_with_help(('To'|trans({}, 'Admin.Global')), ('Format: 2011-12-31 (inclusive).'|trans({}, 'Admin.Orderscustomers.Help'))) }}
-            <div class="col-sm">
-              {{ form_errors(generateByDateForm.date_to) }}
-              {{ form_widget(generateByDateForm.date_to) }}
-            </div>
-          </div>
-        </div>
-        {{ form_rest(generateByDateForm) }}
+          {% block generate_by_date_form_widget %}
+            {{ form_widget(generateByDateForm) }}
+          {% endblock %}
       </div>
       <div class="card-footer">
         <div class="d-flex justify-content-end">
