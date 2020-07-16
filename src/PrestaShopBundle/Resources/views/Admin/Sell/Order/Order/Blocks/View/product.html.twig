@@ -154,10 +154,14 @@
       {% if product.customizations.fileCustomizations %}
         <div class="d-flex flex-row flex-wrap">
           {% for customization in product.customizations.fileCustomizations %}
-            <div class="mr-4">
-              <p><strong>{{ customization.name }}</strong></p>
-              <p><img src="{{ customization.image }}" alt="{{ customization.name }}"></p>
-            </div>
+              <div class="mr-4">
+                <p><strong>{{ customization.name }}</strong></p>
+                <p>
+                  <a href="{{ path('admin_orders_display_customization_image', {'orderId': orderForViewing.id, 'type': customization.type, "name": customization.name, "value": customization.value})}}" download>
+                    <img src="{{ customization.image }}" alt="{{ customization.name }}">
+                  </a>
+                </p>
+              </div>
           {% endfor %}
         </div>
       {% endif %}

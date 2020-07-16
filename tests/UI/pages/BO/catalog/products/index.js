@@ -66,6 +66,11 @@ class Product extends BOBasePage {
     this.tableHead = `${this.productTable} thead`;
     this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
     this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    // Pagination selectors
+    this.paginationLimitSelect = '#paginator_select_page_limit';
+    this.paginationLabel = `${this.productListForm} .col-form-label`;
+    this.paginationNextLink = `${this.productListForm} #pagination_next_url`;
+    this.paginationPreviousLink = `${this.productListForm} [aria-label='Previous']`;
   }
 
   /*
@@ -491,6 +496,47 @@ class Product extends BOBasePage {
       i += 1;
     }
     await this.waitForVisibleSelector(page, sortColumnDiv);
+  }
+
+  /* Pagination methods */
+  /**
+   * Get pagination label
+   * @param page
+   * @return {Promise<string>}
+   */
+  getPaginationLabel(page) {
+    return this.getTextContent(page, this.paginationLabel);
+  }
+
+  /**
+   * Select pagination limit
+   * @param page
+   * @param number
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page, number) {
+    await this.selectByVisibleText(page, this.paginationLimitSelect, number);
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on next
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on previous
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    return this.getPaginationLabel(page);
   }
 }
 

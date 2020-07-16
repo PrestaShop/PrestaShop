@@ -140,7 +140,7 @@ class ReleaseCreator
         '\.eslintignore$',
         '\.eslintrc\.js$',
         '\.php_cs\.dist$',
-        '\.docker-compose\.yml$',
+        'docker-compose\.yml$',
         'tools/assets$',
         '\.webpack$',
     ];

@@ -19,6 +19,7 @@ class AddProduct extends BOBasePage {
     this.productQuantityInput = '#form_step1_qty_0_shortcut';
     this.productPriceTtcInput = '#form_step1_price_ttc_shortcut';
     this.saveProductButton = 'input#submit[value=\'Save\']';
+    this.goToCatalogButton = '#product_form_save_go_to_catalog_btn';
     this.previewProductLink = 'a#product_form_preview_btn';
     this.productOnlineSwitch = '.product-footer div.switch-input';
     this.productOnlineTitle = 'h2.for-switch.online-title';
@@ -396,6 +397,15 @@ class AddProduct extends BOBasePage {
    */
   isQuantityInputVisible(page) {
     return this.elementVisible(page, this.productQuantityInput, 1000);
+  }
+
+  /**
+   * Go to catalog page
+   * @param page
+   * @returns {Promise<void>}
+   */
+  async goToCatalogPage(page) {
+    await this.clickAndWaitForNavigation(page, this.goToCatalogButton);
   }
 }
 

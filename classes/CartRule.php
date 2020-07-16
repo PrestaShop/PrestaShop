@@ -1241,7 +1241,7 @@ class CartRuleCore extends ObjectModel
                 $reduction_amount = (float) $this->reduction_amount;
                 // If the cart rule is restricted to one product it can't exceed this product price
                 if ($this->reduction_product > 0) {
-                    foreach ($context->cart->getProducts() as $product) {
+                    foreach ($all_products as $product) {
                         if ($product['id_product'] == $this->reduction_product) {
                             if ($this->reduction_tax) {
                                 $max_reduction_amount = (int) $product['cart_quantity'] * (float) $product['price_wt'];
@@ -1280,7 +1280,7 @@ class CartRuleCore extends ObjectModel
                     $reduction_value += $prorata * $reduction_amount;
                 } else {
                     if ($this->reduction_product > 0) {
-                        foreach ($context->cart->getProducts() as $product) {
+                        foreach ($all_products as $product) {
                             if ($product['id_product'] == $this->reduction_product) {
                                 $product_price_ti = $product['price_wt'];
                                 $product_price_te = $product['price'];

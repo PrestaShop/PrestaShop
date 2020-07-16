@@ -1,11 +1,12 @@
-2007-2020 PrestaShop and Contributors
+Copyright since 2007 PrestaShop SA and Contributors
+PrestaShop is an International Registered Trademark & Property of PrestaShop SA
 
 NOTICE OF LICENSE
 
 This source file is subject to the Open Software License (OSL 3.0)
-that is bundled with this package in the file LICENSE.txt.
+that is bundled with this package in the file LICENSE.md.
 It is also available through the world-wide-web at this URL:
-http://opensource.org/licenses/osl-3.0.php
+https://opensource.org/licenses/OSL-3.0
 If you did not receive a copy of the license and are unable to
 obtain it through the world-wide-web, please send an email
 to license@prestashop.com so we can send you a copy immediately.
@@ -14,15 +15,48 @@ DISCLAIMER
 
 Do not edit or add to this file if you wish to upgrade PrestaShop to newer
 versions in the future. If you wish to customize PrestaShop for your
-needs please refer to http://www.prestashop.com for more information.
+needs please refer to https://devdocs.prestashop.com/ for more information.
 
-@author    PrestaShop SA <contact@prestashop.com>
-@copyright 2007-2020 PrestaShop SA and Contributors
-@license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
-International Registered Trademark & Property of PrestaShop SA
+@author    PrestaShop SA and Contributors <contact@prestashop.com>
+@copyright Since 2007 PrestaShop SA and Contributors
+@license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
 
 Release Notes for PrestaShop 1.7
 --------------------------------
+
+####################################
+#   v1.7.6.6 - (2020-07-01)
+####################################
+- Back Office:
+  - Bug fix:
+    - #19814: Change buttons in modal bulk of module page to avoid black color (by @NeOMakinG)
+    - #18975: BO - Customer View page - Added Green alert when editing a voucher (by @Progi1984)
+    - #19942: Cast changelogs to array for twig - Backport of #19778 (by @atomiix)
+    - #19718: Remove i18n access restrictions (by @PierreRambaud)
+    - #19990: Fix BO page Module permission checks (by @jolelievre)
+- Front Office:
+  - Improvement:
+    - #19800: Add a new selector in order to select the product page more precisely (by @NeOMakinG)
+- Core:
+  - Improvement:
+    - #19943: Update Composer dependencies and prestashop module versions (by @PierreRambaud)
+    - #19980: Update version number to 1.7.6.6 (by @matks)
+    - #19979: Update outdated assets in 176x (by @matks)
+    - #19984: Update license headers for PS 1.7.6.6 (by @matks)
+  - Bug fix:
+    - #19010: Added missing required_once for Datas class (by @atomiix)
+    - #19986: Fix php7-only code into 1766 (by @matks)
+    - #20018: Remove COLLATION placeholder from 1.7.6.6.sql (by @matks)
+    - #GHSA-mc98-xjm3-c4fm - External control of configuration setting in the dashboard (by @PierreRambaud)
+    - #GHSA-997j-f42g-x57c - Information exposure in upload directory (by @PierreRambaud)
+    - #GHSA-492w-2pp5-xhvg - Information disclosure in release archive (by @PierreRambaud)
+    - #GHSA-ccvh-jh5x-mpg4 - Improper authentication (by @PierreRambaud)
+    - #GHSA-xp3x-3h8q-c386 - Improper access controls in Carrier page, Module Manager and Module Positions (by @PierreRambaud)
+    - #GHSA-qgh4-95j7-p3vj - Reflected XSS in product page (by @PierreRambaud)
+    - #GHSA-v4pg-q2cv-f7x4 - Stored XSS in AdminQuickAccesses (by @PierreRambaud)
+- Web Services:
+  - Bug fix:
+    - #18969: Make api backward compatible for Currencies (by @atomiix)
 
 ####################################
 #   v1.7.7.0-beta.1 - (2020-05-13)
@@ -1016,6 +1050,13 @@ Release Notes for PrestaShop 1.7
     - #14612: Update docker for puppeteer (by @boubkerbribri)
     - #14508: Integrate Puppeteer to check links on FO and BO (by @mbadrani)
     - #13772: Correct usage of fixtures on behat tests for taxes (by @tomlev)
+
+####################################
+#   v1.7.6.7 - (2020-07-03)
+####################################
+- Front Office:
+  - Bug fix:
+    - #20052: Fix product page event theme sided not getting fired  (by @NeOMakinG)
 
 ####################################
 #   v1.7.6.5 - (2020-04-17)

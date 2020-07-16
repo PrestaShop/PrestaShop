@@ -23,78 +23,67 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+use PrestaShop\PrestaShop\Core\Session\SessionInterface;
 
-declare(strict_types=1);
-
-namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
-
-use DateTimeImmutable;
-
-class OrderSourceForViewing
+class CustomerSessionCore extends ObjectModel implements SessionInterface
 {
-    /**
-     * @var string
-     */
-    private $httpReferer;
+    public $id;
+
+    /** @var Id Customer */
+    public $id_customer;
+
+    /** @var string Token */
+    public $token;
 
     /**
-     * @var string
+     * @see ObjectModel::$definition
      */
-    private $requestUri;
+    public static $definition = [
+        'table' => 'customer_session',
+        'primary' => 'id_customer_session',
+        'fields' => [
+            'id_customer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'token' => ['type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 40, 'copy_post' => false],
+        ],
+    ];
 
     /**
-     * @var DateTimeImmutable
+     * {@inheritdoc}
      */
-    private $addedAt;
-
-    /**
-     * @var string
-     */
-    private $keywords;
-
-    /**
-     * @param string $httpReferer
-     * @param string $requestUri
-     * @param DateTimeImmutable $addedAt
-     * @param string $keywords
-     */
-    public function __construct(string $httpReferer, string $requestUri, DateTimeImmutable $addedAt, string $keywords)
+    public function getId()
     {
-        $this->httpReferer = $httpReferer;
-        $this->requestUri = $requestUri;
-        $this->addedAt = $addedAt;
-        $this->keywords = $keywords;
+        return $this->id;
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
-    public function getHttpReferer(): string
+    public function setUserId($idCustomer)
     {
-        return $this->httpReferer;
+        $this->id_customer = (int) $idCustomer;
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
-    public function getRequestUri(): string
+    public function getUserId()
     {
-        return $this->requestUri;
+        return (int) $this->id_customer;
     }
 
     /**
-     * @return DateTimeImmutable
+     * {@inheritdoc}
      */
-    public function getAddedAt(): DateTimeImmutable
+    public function setToken($token)
     {
-        return $this->addedAt;
+        $this->token = (string) $token;
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
-    public function getKeywords(): string
+    public function getToken()
     {
-        return $this->keywords;
+        return $this->token;
     }
 }

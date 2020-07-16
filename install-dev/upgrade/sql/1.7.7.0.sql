@@ -107,6 +107,7 @@ ALTER TABLE `PREFIX_customer` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_g
 ALTER TABLE `PREFIX_customer_group` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_customer_message` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_customer_message_sync_imap` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+ALTER TABLE `PREFIX_customer_session` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_customer_thread` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_customization` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_customization_field` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
@@ -115,6 +116,7 @@ ALTER TABLE `PREFIX_customized_data` CONVERT TO CHARACTER SET utf8mb4 COLLATE ut
 ALTER TABLE `PREFIX_date_range` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_delivery` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_employee` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+ALTER TABLE `PREFIX_employee_session` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_employee_shop` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_feature` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_feature_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;

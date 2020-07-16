@@ -63,7 +63,10 @@ class ImportController extends FrameworkBundleAdminController
         $importDir = $this->get('prestashop.core.import.dir');
 
         if (!$this->checkImportDirectory($importDir)) {
-            return $this->getTemplateParams($request);
+            return $this->render(
+                '@PrestaShop/Admin/Configure/AdvancedParameters/ImportPage/import.html.twig',
+                $this->getTemplateParams($request)
+            );
         }
 
         $formHandler = $this->get('prestashop.admin.import.form_handler');
