@@ -26,22 +26,41 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject;
 
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\UpdateProductSuppliersHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductSupplier\Exception\ProductSupplierConstraintException;
 
 /**
- * Handles @var UpdateProductSuppliersCommand using legacy object model
+ * Holds product supplier identification value
  */
-final class UpdateProductSuppliersHandler extends AbstractProductHandler implements UpdateProductSuppliersHandlerInterface
+class ProductSupplierId
 {
     /**
-     * {@inheritdoc}
+     * @var int
      */
-    public function handle(UpdateProductSuppliersCommand $command): void
+    private $value;
+
+    /**
+     * @param int $value
+     */
+    public function __construct(int $value)
     {
-        // TODO: Implement handle() method.
+        $this->assertValueIsGreaterThanZero($value);
+        $this->value = $value;
+    }
+
+    /**
+     * @param int $value
+     *
+     * @throws ProductSupplierConstraintException
+     */
+    private function assertValueIsGreaterThanZero(int $value): void
+    {
+        if (0 >= $value) {
+            throw new ProductSupplierConstraintException(
+                sprintf('Invalid product supplier id %d', $value),
+                ProductSupplierConstraintException::INVALID_ID
+            );
+        }
     }
 }
