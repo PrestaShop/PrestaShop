@@ -104,9 +104,7 @@ class UpdateProductCustomizationFieldsHandler extends AbstractCustomizationField
             }
         }
 
-        if (!empty($deletableFieldIds)) {
-            $this->deleteFields($deletableFieldIds);
-        }
+        $this->deleteCustomizationFields($deletableFieldIds);
 
         return $this->getProductCustomizationFieldsHandler->handle(
             new GetProductCustomizationFields($command->getProductId()->getValue())
@@ -161,9 +159,9 @@ class UpdateProductCustomizationFieldsHandler extends AbstractCustomizationField
     }
 
     /**
-     * @param array $fieldIdsForDeletion
+     * @param int[] $fieldIdsForDeletion
      */
-    private function deleteFields(array $fieldIdsForDeletion): void
+    private function deleteCustomizationFields(array $fieldIdsForDeletion): void
     {
         foreach ($fieldIdsForDeletion as $fieldId) {
             $this->deleteCustomizationFieldHandler->handle(new DeleteCustomizationFieldCommand($fieldId));
