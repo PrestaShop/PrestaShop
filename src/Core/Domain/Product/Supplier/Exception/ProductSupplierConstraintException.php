@@ -24,17 +24,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSuppliersCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 
 /**
- * Defines contract to handle @var UpdateProductSuppliersCommand
+ * Thrown when product supplier constraints are violated
  */
-interface UpdateProductSuppliersHandlerInterface
+class ProductSupplierConstraintException extends ProductException
 {
     /**
-     * @param UpdateProductSuppliersCommand $command
+     * When product supplier id is invalid
      */
-    public function handle(UpdateProductSuppliersCommand $command): void;
+    const INVALID_ID = 10;
 }

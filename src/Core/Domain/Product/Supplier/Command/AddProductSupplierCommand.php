@@ -26,11 +26,8 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command;
 
-/**
- * Updates product suppliers
- */
-class UpdateProductSuppliersCommand
+class AddProductSupplierCommand
 {
 }

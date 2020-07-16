@@ -24,24 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler;
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
-
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\UpdateProductSuppliersHandlerInterface;
 
 /**
- * Handles @var UpdateProductSuppliersCommand using legacy object model
+ * Defines contract to handle @var UpdateProductSuppliersCommand
  */
-final class UpdateProductSuppliersHandler extends AbstractProductHandler implements UpdateProductSuppliersHandlerInterface
+interface UpdateProductSuppliersHandlerInterface
 {
     /**
-     * {@inheritdoc}
+     * @param UpdateProductSuppliersCommand $command
      */
-    public function handle(UpdateProductSuppliersCommand $command): void
-    {
-        // TODO: Implement handle() method.
-    }
+    public function handle(UpdateProductSuppliersCommand $command): void;
 }

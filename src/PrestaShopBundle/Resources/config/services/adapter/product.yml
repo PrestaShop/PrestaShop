@@ -170,8 +170,14 @@ services:
         - name: tactician.handler
           command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductShippingCommand
 
-    prestashop.adapter.product.command_handler.update_product_suppliers_handler:
+    prestashop.adapter.product.supplier.command_handler.add_product_supplier_handler:
+      class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddProductSupplierHandler
+      tags:
+        - name: tactician.handler
+          command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\AddProductSupplierCommand
+
+    prestashop.adapter.product.supplier.command_handler.update_product_suppliers_handler:
       class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductSuppliersHandler
       tags:
         - name: tactician.handler
-          command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSuppliersCommand
+          command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand

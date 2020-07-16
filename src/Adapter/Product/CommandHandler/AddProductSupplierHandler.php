@@ -28,19 +28,19 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\UpdateProductSuppliersHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\AddProductSupplierCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\AddProductSupplierHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 
 /**
- * Handles @var UpdateProductSuppliersCommand using legacy object model
+ * Handles @var AddProductSupplierCommand using legacy object model
  */
-final class UpdateProductSuppliersHandler extends AbstractProductHandler implements UpdateProductSuppliersHandlerInterface
+final class AddProductSupplierHandler implements AddProductSupplierHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(UpdateProductSuppliersCommand $command): void
+    public function handle(AddProductSupplierCommand $command): ProductSupplierId
     {
         // TODO: Implement handle() method.
     }

@@ -26,22 +26,12 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
-
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\UpdateProductSuppliersHandlerInterface;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command;
 
 /**
- * Handles @var UpdateProductSuppliersCommand using legacy object model
+ * Updates product suppliers
  */
-final class UpdateProductSuppliersHandler extends AbstractProductHandler implements UpdateProductSuppliersHandlerInterface
+class UpdateProductSuppliersCommand
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(UpdateProductSuppliersCommand $command): void
-    {
-        // TODO: Implement handle() method.
-    }
+    //@todo: implement
 }
