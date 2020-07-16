@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class SqlManager extends BOBasePage {
-  constructor(page) {
-    super(page);
+class SqlManager extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'SQL Manager •';
     this.successfulDeleteMessage = 'Successful deletion';
@@ -33,127 +33,143 @@ module.exports = class SqlManager extends BOBasePage {
   /* Header Methods */
   /**
    * Go to db Backup page
+   * @param page
    * @return {Promise<void>}
    */
-  async goToDbBackupPage() {
-    await this.clickAndWaitForNavigation(this.dbBackupSubTabLink);
+  async goToDbBackupPage(page) {
+    await this.clickAndWaitForNavigation(page, this.dbBackupSubTabLink);
   }
 
   /**
    * Go to new SQL query page
+   * @param page
    * @returns {Promise<void>}
    */
-  async goToNewSQLQueryPage() {
-    await this.clickAndWaitForNavigation(this.addNewSQLQueryButton);
+  async goToNewSQLQueryPage(page) {
+    await this.clickAndWaitForNavigation(page, this.addNewSQLQueryButton);
   }
 
   /**
    * Reset filter
+   * @param page
    * @returns {Promise<void>}
    */
-  async resetFilter() {
-    if (await this.elementVisible(this.filterResetButton, 2000)) {
-      await this.clickAndWaitForNavigation(this.filterResetButton);
+  async resetFilter(page) {
+    if (await this.elementVisible(page, this.filterResetButton, 2000)) {
+      await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
   }
 
   /**
    * Get number of elements in grid
+   * @param page
    * @returns {Promise<number>}
    */
-  async getNumberOfElementInGrid() {
-    return this.getNumberFromText(this.sqlQueryGridTitle);
+  async getNumberOfElementInGrid(page) {
+    return this.getNumberFromText(page, this.sqlQueryGridTitle);
   }
 
   /**
    * Reset input filters
+   * @param page
    * @returns {Promise<number>}
    */
-  async resetAndGetNumberOfLines() {
-    await this.resetFilter();
-    return this.getNumberOfElementInGrid();
+  async resetAndGetNumberOfLines(page) {
+    await this.resetFilter(page);
+    return this.getNumberOfElementInGrid(page);
   }
 
   /**
    * Filter SQL manager table
+   * @param page
    * @param filterBy
    * @param value
    * @returns {Promise<void>}
    */
-  async filterSQLQuery(filterBy, value = '') {
-    await this.setValue(this.filterInput(filterBy), value.toString());
+  async filterSQLQuery(page, filterBy, value = '') {
+    await this.setValue(page, this.filterInput(filterBy), value.toString());
     // click on search
-    await this.clickAndWaitForNavigation(this.filterSearchButton);
+    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
 
   /**
    * Get text column from table
+   * @param page
    * @param row
    * @param column
    * @returns {Promise<string>}
    */
-  getTextColumnFromTable(row, column) {
-    return this.getTextContent(this.sqlQueryListTableColumn(row, column));
+  getTextColumnFromTable(page, row, column) {
+    return this.getTextContent(page, this.sqlQueryListTableColumn(row, column));
   }
 
   /**
    * Go to view sql query page
+   * @param page
    * @param row
    * @returns {Promise<void>}
    */
-  async goToViewSQLQueryPage(row = 1) {
+  async goToViewSQLQueryPage(page, row = 1) {
     await Promise.all([
-      this.page.click(this.sqlQueryListTableToggleDropDown(row)),
+      page.click(this.sqlQueryListTableToggleDropDown(row)),
       this.waitForVisibleSelector(
+        page,
         `${this.sqlQueryListTableToggleDropDown(row)}[aria-expanded='true']`,
       ),
     ]);
-    await this.clickAndWaitForNavigation(this.sqlQueryListTableViewLink(row));
+    await this.clickAndWaitForNavigation(page, this.sqlQueryListTableViewLink(row));
   }
 
   /**
    * Go to edit SQL query page
+   * @param page
    * @param row
    * @returns {Promise<void>}
    */
-  async goToEditSQLQueryPage(row = 1) {
+  async goToEditSQLQueryPage(page, row = 1) {
     await Promise.all([
-      this.page.click(this.sqlQueryListTableToggleDropDown(row)),
+      page.click(this.sqlQueryListTableToggleDropDown(row)),
       this.waitForVisibleSelector(
+        page,
         `${this.sqlQueryListTableToggleDropDown(row)}[aria-expanded='true']`),
     ]);
-    await this.clickAndWaitForNavigation(this.sqlQueryListTableEditLink(row));
+    await this.clickAndWaitForNavigation(page, this.sqlQueryListTableEditLink(row));
   }
 
   /**
    * Delete SQL query
+   * @param page
    * @param row
    * @returns {Promise<string>}
    */
-  async deleteSQLQuery(row = 1) {
-    this.dialogListener();
+  async deleteSQLQuery(page, row = 1) {
+    this.dialogListener(page);
     // Click on dropDown
     await Promise.all([
-      this.page.click(this.sqlQueryListTableToggleDropDown(row)),
+      page.click(this.sqlQueryListTableToggleDropDown(row)),
       this.waitForVisibleSelector(
+        page,
         `${this.sqlQueryListTableToggleDropDown(row)}[aria-expanded='true']`,
       ),
     ]);
     // Click on delete
-    await this.clickAndWaitForNavigation(this.sqlQueryListTableDeleteLink(row));
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.clickAndWaitForNavigation(page, this.sqlQueryListTableDeleteLink(row));
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
    * Export sql result to csv
+   * @param page
    * @param row
    * @returns {Promise<void>}
    */
-  async exportSqlResultDataToCsv(row = 1) {
+  async exportSqlResultDataToCsv(page, row = 1) {
     const [download] = await Promise.all([
-      this.page.waitForEvent('download'),
-      await this.page.click(this.sqlQueryListTableExportLink(row)),
+      page.waitForEvent('download'),
+      await page.click(this.sqlQueryListTableExportLink(row)),
     ]);
     return download.path();
   }
-};
+}
+
+module.exports = new SqlManager();

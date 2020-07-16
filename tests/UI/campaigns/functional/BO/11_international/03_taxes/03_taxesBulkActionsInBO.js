@@ -6,10 +6,10 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const TaxesPage = require('@pages/BO/international/taxes');
-const AddTaxPage = require('@pages/BO/international/taxes/add');
+const dashboardPage = require('@pages/BO/dashboard');
+const taxesPage = require('@pages/BO/international/taxes');
+const addTaxPage = require('@pages/BO/international/taxes/add');
+
 const TaxFaker = require('@data/faker/tax');
 
 // Import test context
@@ -25,47 +25,39 @@ let numberOfTaxes = 0;
 const firstTaxData = new TaxFaker({name: 'TVA to delete'});
 const secondTaxData = new TaxFaker({name: 'TVA to delete2'});
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    taxesPage: new TaxesPage(page),
-    addTaxPage: new AddTaxPage(page),
-  };
-};
-
 // Create taxes, Then disable / Enable and Delete with Bulk actions
 describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to Taxes page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to Taxes page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.internationalParentLink,
-      this.pageObjects.dashboardPage.taxesLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.internationalParentLink,
+      dashboardPage.taxesLink,
     );
 
-    const pageTitle = await this.pageObjects.taxesPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.taxesPage.pageTitle);
+    const pageTitle = await taxesPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(taxesPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
-    numberOfTaxes = await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
+
+    numberOfTaxes = await taxesPage.resetAndGetNumberOfLines(page);
     await expect(numberOfTaxes).to.be.above(0);
   });
 
@@ -80,18 +72,18 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
       it('should go to add new tax page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewTaxPage${index + 1}`, baseContext);
 
-        await this.pageObjects.taxesPage.goToAddNewTaxPage();
-        const pageTitle = await this.pageObjects.addTaxPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.addTaxPage.pageTitleCreate);
+        await taxesPage.goToAddNewTaxPage(page);
+        const pageTitle = await addTaxPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(addTaxPage.pageTitleCreate);
       });
 
       it('should create tax and check result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `CreateTax${index + 1}`, baseContext);
 
-        const textResult = await this.pageObjects.addTaxPage.createEditTax(test.args.taxToCreate);
-        await expect(textResult).to.equal(this.pageObjects.taxesPage.successfulCreationMessage);
+        const textResult = await addTaxPage.createEditTax(page, test.args.taxToCreate);
+        await expect(textResult).to.equal(taxesPage.successfulCreationMessage);
 
-        const numberOfTaxesAfterCreation = await this.pageObjects.taxesPage.getNumberOfElementInGrid();
+        const numberOfTaxesAfterCreation = await taxesPage.getNumberOfElementInGrid(page);
         await expect(numberOfTaxesAfterCreation).to.be.equal(numberOfTaxes + index + 1);
       });
     });
@@ -102,13 +94,14 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterTaxesToChangeStatus', baseContext);
 
-      await this.pageObjects.taxesPage.filterTaxes(
+      await taxesPage.filterTaxes(
+        page,
         'input',
         'name',
         'TVA to delete',
       );
 
-      const textResult = await this.pageObjects.taxesPage.getTextColumnFromTableTaxes(1, 'name');
+      const textResult = await taxesPage.getTextColumnFromTableTaxes(page, 1, 'name');
       await expect(textResult).to.contains('TVA to delete');
     });
 
@@ -121,17 +114,18 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
       it(`should ${test.args.action} taxes with bulk actions and check Result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `bulk${test.args.action}`, baseContext);
 
-        const textResult = await this.pageObjects.taxesPage.changeTaxesEnabledColumnBulkActions(
+        const textResult = await taxesPage.changeTaxesEnabledColumnBulkActions(
+          page,
           test.args.enabledValue,
         );
 
-        await expect(textResult).to.be.equal(this.pageObjects.taxesPage.successfulUpdateStatusMessage);
+        await expect(textResult).to.be.equal(taxesPage.successfulUpdateStatusMessage);
 
-        const numberOfTaxesInGrid = await this.pageObjects.taxesPage.getNumberOfElementInGrid();
+        const numberOfTaxesInGrid = await taxesPage.getNumberOfElementInGrid(page);
         await expect(numberOfTaxesInGrid).to.be.at.most(numberOfTaxes);
 
         for (let i = 1; i <= numberOfTaxesInGrid; i++) {
-          const textColumn = await this.pageObjects.taxesPage.getTextColumnFromTableTaxes(1, 'active');
+          const textColumn = await taxesPage.getTextColumnFromTableTaxes(page, 1, 'active');
           await expect(textColumn).to.contains(test.expected);
         }
       });
@@ -140,7 +134,7 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkEdit', baseContext);
 
-      const numberOfTaxesAfterReset = await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
+      const numberOfTaxesAfterReset = await taxesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfTaxesAfterReset).to.be.equal(numberOfTaxes + 2);
     });
   });
@@ -150,23 +144,24 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
 
-      await this.pageObjects.taxesPage.filterTaxes(
+      await taxesPage.filterTaxes(
+        page,
         'input',
         'name',
         'TVA to delete',
       );
 
-      const textResult = await this.pageObjects.taxesPage.getTextColumnFromTableTaxes(1, 'name');
+      const textResult = await taxesPage.getTextColumnFromTableTaxes(page, 1, 'name');
       await expect(textResult).to.contains('TVA to delete');
     });
 
     it('should delete Taxes with Bulk Actions and check Result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDelete', baseContext);
 
-      const deleteTextResult = await this.pageObjects.taxesPage.deleteTaxesBulkActions();
-      await expect(deleteTextResult).to.be.equal(this.pageObjects.taxesPage.successfulDeleteMessage);
+      const deleteTextResult = await taxesPage.deleteTaxesBulkActions(page);
+      await expect(deleteTextResult).to.be.equal(taxesPage.successfulDeleteMessage);
 
-      const numberOfTaxesAfterReset = await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
+      const numberOfTaxesAfterReset = await taxesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfTaxesAfterReset).to.be.equal(numberOfTaxes);
     });
   });

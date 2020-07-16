@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class AddPageEmployee extends BOBasePage {
-  constructor(page) {
-    super(page);
+class AddEmployee extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitleCreate = 'Add new •';
     this.pageTitleEdit = 'Edit:';
@@ -15,7 +15,7 @@ module.exports = class AddPageEmployee extends BOBasePage {
     this.passwordInput = '#employee_password';
     this.defaultPageSpan = '.select2-selection[aria-labelledby=\'select2-employee_default_page-container\']';
     this.languageSelect = '#employee_language';
-    this.activeSwitchlabel = 'label[for=\'employee_active_%ID\']';
+    this.activeSwitchLabel = toggle => `label[for='employee_active_${toggle}']`;
     this.permissionProfileSelect = '#employee_profile';
     this.saveButton = 'div.card-footer button';
     this.cancelButton = 'div.card-footer a';
@@ -27,42 +27,46 @@ module.exports = class AddPageEmployee extends BOBasePage {
 
   /**
    * Fill form for add/edit page Employee
+   * @param page
    * @param employeeData
    * @returns {Promise<string>}
    */
-  async createEditEmployee(employeeData) {
-    await this.setValue(this.firstNameInput, employeeData.firstName);
-    await this.setValue(this.lastNameInput, employeeData.lastName);
-    await this.setValue(this.emailInput, employeeData.email);
-    await this.setValue(this.passwordInput, employeeData.password);
-    await this.selectByVisibleText(this.permissionProfileSelect, employeeData.permissionProfile);
-    await this.selectByVisibleText(this.languageSelect, employeeData.language);
-    await this.selectDefaultPage(employeeData.defaultPage);
-    // replace %ID by 1 in the selector if active = YES / 0 if active = NO
-    await this.page.click(this.activeSwitchlabel.replace('%ID', employeeData.active ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+  async createEditEmployee(page, employeeData) {
+    await this.setValue(page, this.firstNameInput, employeeData.firstName);
+    await this.setValue(page, this.lastNameInput, employeeData.lastName);
+    await this.setValue(page, this.emailInput, employeeData.email);
+    await this.setValue(page, this.passwordInput, employeeData.password);
+    await this.selectByVisibleText(page, this.permissionProfileSelect, employeeData.permissionProfile);
+    await this.selectByVisibleText(page, this.languageSelect, employeeData.language);
+    await this.selectDefaultPage(page, employeeData.defaultPage);
+    // replace toggle by 1 in the selector if active = YES / 0 if active = NO
+    await page.click(this.activeSwitchLabel(employeeData.active ? 1 : 0));
+    await this.clickAndWaitForNavigation(page, this.saveButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
    * Select default Page
+   * @param page
    * @param defaultPage
    * @returns {Promise<void>}
    */
-  async selectDefaultPage(defaultPage) {
+  async selectDefaultPage(page, defaultPage) {
     await Promise.all([
-      this.page.click(this.defaultPageSpan),
-      this.waitForVisibleSelector(`${this.defaultPageSpan}[aria-expanded='true']`),
+      page.click(this.defaultPageSpan),
+      this.waitForVisibleSelector(page, `${this.defaultPageSpan}[aria-expanded='true']`),
     ]);
-    await this.page.keyboard.type(defaultPage);
-    await this.page.keyboard.press('Enter');
+    await page.keyboard.type(defaultPage);
+    await page.keyboard.press('Enter');
   }
 
   /**
    * Cancel page
    * @returns {Promise<void>}
    */
-  async cancel() {
-    await this.clickAndWaitForNavigation(this.cancelButton);
+  async cancel(page) {
+    await this.clickAndWaitForNavigation(page, this.cancelButton);
   }
-};
+}
+
+module.exports = new AddEmployee();

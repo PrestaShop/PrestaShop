@@ -1,9 +1,9 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
-module.exports = class OrderHistory extends FOBasePage {
-  constructor(page) {
-    super(page);
+class OrderHistory extends FOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Order history';
 
@@ -17,10 +17,13 @@ module.exports = class OrderHistory extends FOBasePage {
 
   /**
    * Is reorder link visible
+   * @param page
    * @param idOrder
    * @returns {boolean}
    */
-  isReorderLinkVisible(idOrder = 1) {
-    return this.elementVisible(this.reorderLink(idOrder), 1000);
+  isReorderLinkVisible(page, idOrder = 1) {
+    return this.elementVisible(page, this.reorderLink(idOrder), 1000);
   }
-};
+}
+
+module.exports = new OrderHistory();

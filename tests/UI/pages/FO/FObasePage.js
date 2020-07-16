@@ -1,9 +1,9 @@
 require('module-alias/register');
 const CommonPage = require('@pages/commonPage');
 
-module.exports = class Home extends CommonPage {
-  constructor(page) {
-    super(page);
+module.exports = class FOBasePage extends CommonPage {
+  constructor() {
+    super();
 
     // Selectors for home page
     this.content = '#content';
@@ -34,108 +34,119 @@ module.exports = class Home extends CommonPage {
 
   /**
    * Go to the home page
+   * @param page
    * @returns {Promise<void>}
    */
-  async goToHomePage() {
-    await this.waitForVisibleSelector(this.desktopLogo);
-    await this.clickAndWaitForNavigation(this.desktopLogoLink);
+  async goToHomePage(page) {
+    await this.waitForVisibleSelector(page, this.desktopLogo);
+    await this.clickAndWaitForNavigation(page, this.desktopLogoLink);
   }
 
   /**
    * Go to category
+   * @param page
    * @param categoryID, category id from the BO
    * @returns {Promise<void>}
    */
-  async goToCategory(categoryID) {
-    await this.waitForSelectorAndClick(this.categoryMenu(categoryID));
+  async goToCategory(page, categoryID) {
+    await this.waitForSelectorAndClick(page, this.categoryMenu(categoryID));
   }
 
   /**
    * Go to subcategory
+   * @param page
    * @param categoryID, category id from the BO
    * @param subCategoryID, subcategory id from the BO
    * @returns {Promise<void>}
    */
-  async goToSubCategory(categoryID, subCategoryID) {
-    await this.page.hover(this.categoryMenu(categoryID));
-    await this.waitForSelectorAndClick(this.categoryMenu(subCategoryID));
+  async goToSubCategory(page, categoryID, subCategoryID) {
+    await page.hover(this.categoryMenu(categoryID));
+    await this.waitForSelectorAndClick(page, this.categoryMenu(subCategoryID));
   }
 
   /**
    * Go to login Page
+   * @param page
    * @return {Promise<void>}
    */
-  async goToLoginPage() {
-    await this.clickAndWaitForNavigation(this.userInfoLink);
+  async goToLoginPage(page) {
+    await this.clickAndWaitForNavigation(page, this.userInfoLink);
   }
 
   /**
    * Check if customer is connected
+   * @param page
    * @return {Promise<boolean>}
    */
-  async isCustomerConnected() {
-    return this.elementVisible(this.logoutLink, 1000);
+  async isCustomerConnected(page) {
+    return this.elementVisible(page, this.logoutLink, 1000);
   }
 
   /**
    * Logout from FO
+   * @param page
    * @return {Promise<void>}
    */
-  async logout() {
-    await this.clickAndWaitForNavigation(this.logoutLink);
+  async logout(page) {
+    await this.clickAndWaitForNavigation(page, this.logoutLink);
   }
 
   /**
    * Change language in FO
+   * @param page
    * @param lang
    * @return {Promise<void>}
    */
-  async changeLanguage(lang = 'en') {
+  async changeLanguage(page, lang = 'en') {
     await Promise.all([
-      this.page.click(this.languageSelectorExpandIcon),
-      this.waitForVisibleSelector(this.languageSelectorMenuItemLink(lang)),
+      page.click(this.languageSelectorExpandIcon),
+      this.waitForVisibleSelector(page, this.languageSelectorMenuItemLink(lang)),
     ]);
-    await this.clickAndWaitForNavigation(this.languageSelectorMenuItemLink(lang));
+    await this.clickAndWaitForNavigation(page, this.languageSelectorMenuItemLink(lang));
   }
 
   /**
    * Get shop language
+   * @param page
    * @returns {Promise<string>}
    */
-  getShopLanguage() {
-    return this.getTextContent(this.defaultLanguageSpan);
+  getShopLanguage(page) {
+    return this.getTextContent(page, this.defaultLanguageSpan);
   }
 
 
   /**
    * Return true if language exist in FO
+   * @param page
    * @param lang
    * @return {Promise<boolean>}
    */
-  async languageExists(lang = 'en') {
-    await this.page.click(this.languageSelectorExpandIcon);
-    return this.elementVisible(this.languageSelectorMenuItemLink(lang), 1000);
+  async languageExists(page, lang = 'en') {
+    await page.click(this.languageSelectorExpandIcon);
+    return this.elementVisible(page, this.languageSelectorMenuItemLink(lang), 1000);
   }
 
   /**
    * Change currency in FO
+   * @param page
    * @param currency
    * @return {Promise<void>}
    */
-  async changeCurrency(currency = 'EUR €') {
+  async changeCurrency(page, currency = 'EUR €') {
     await Promise.all([
-      this.selectByVisibleText(this.currencySelect, currency),
-      this.page.waitForNavigation(),
+      this.selectByVisibleText(page, this.currencySelect, currency),
+      page.waitForNavigation('newtorkidle'),
     ]);
   }
 
   /**
    * Get text content of footer links
+   * @param page
    * @param position, position of links
    * @return {Promise<!Promise<!Object|undefined>|any>}
    */
-  async getFooterLinksTextContent(position) {
-    return this.page.$$eval(
+  async getFooterLinksTextContent(page, position) {
+    return page.$$eval(
       this.wrapperSubmenuItemLink(position),
       all => all.map(el => el.textContent.trim()),
     );
@@ -143,50 +154,65 @@ module.exports = class Home extends CommonPage {
 
   /**
    * Get Title of Block that contains links in footer
+   * @param page
    * @param position
    * @returns {Promise<string>}
    */
-  async getFooterLinksBlockTitle(position) {
-    return this.getTextContent(this.wrapperTitle(position));
+  async getFooterLinksBlockTitle(page, position) {
+    return this.getTextContent(page, this.wrapperTitle(position));
   }
 
   /**
    * Get cart notifications number
+   * @param page
    * @returns {Promise<number>}
    */
-  async getCartNotificationsNumber() {
-    return this.getNumberFromText(this.cartProductsCount);
+  async getCartNotificationsNumber(page) {
+    return this.getNumberFromText(page, this.cartProductsCount);
   }
 
   /**
    * Go to siteMap page
+   * @param page
    * @returns {Promise<void>}
    */
-  async goToSiteMapPage() {
-    await this.clickAndWaitForNavigation(this.siteMapLink);
+  async goToSiteMapPage(page) {
+    await this.clickAndWaitForNavigation(page, this.siteMapLink);
   }
 
   /**
    * Go to cart page
+   * @param page
    * @returns {Promise<void>}
    */
-  async goToCartPage() {
-    await this.clickAndWaitForNavigation(this.cartLink);
+  async goToCartPage(page) {
+    await this.clickAndWaitForNavigation(page, this.cartLink);
   }
 
   /**
    * Go to Fo page
+   * @param page
    * @return {Promise<void>}
    */
-  async goToFo() {
-    await this.goTo(global.FO.URL);
+  async goToFo(page) {
+    await this.goTo(page, global.FO.URL);
   }
 
   /**
    * Get default currency
+   * @param page
    * @returns {Promise<string>}
    */
-  getDefaultCurrency() {
-    return this.getTextContent(this.defaultCurrencySpan);
+  getDefaultCurrency(page) {
+    return this.getTextContent(page, this.defaultCurrencySpan);
+  }
+
+  /**
+   * CLick on siteMap link on footer and go to page
+   * @param page
+   * @return {Promise<void>}
+   */
+  async goToSitemapPage(page) {
+    await this.clickAndWaitForNavigation(page, this.siteMapLink);
   }
 };

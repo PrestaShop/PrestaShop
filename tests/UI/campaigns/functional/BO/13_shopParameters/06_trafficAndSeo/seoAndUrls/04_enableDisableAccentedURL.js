@@ -7,12 +7,11 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const SeoAndUrlsPage = require('@pages/BO/shopParameters/trafficAndSeo/seoAndUrls');
-const ProductsPage = require('@pages/BO/catalog/products');
-const AddProductPage = require('@pages/BO/catalog/products/add');
-const FOHomePage = require('@pages/FO/home');
+const dashboardPage = require('@pages/BO/dashboard');
+const seoAndUrlsPage = require('@pages/BO/shopParameters/trafficAndSeo/seoAndUrls');
+const productsPage = require('@pages/BO/catalog/products');
+const addProductPage = require('@pages/BO/catalog/products/add');
+const foHomePage = require('@pages/FO/home');
 
 // Import data
 const ProductFaker = require('@data/faker/product');
@@ -31,54 +30,42 @@ const productNameWithoutAccent = 'TESTURLE';
 
 const productData = new ProductFaker({name: productName, type: 'Standard product'});
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    seoAndUrlsPage: new SeoAndUrlsPage(page),
-    productsPage: new ProductsPage(page),
-    addProductPage: new AddProductPage(page),
-    foHomePage: new FOHomePage(page),
-  };
-};
-
 describe('Enable/Disable accented URL', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to \'Catalog > Products\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.catalogParentLink,
-      this.pageObjects.dashboardPage.productsLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.catalogParentLink,
+      dashboardPage.productsLink,
     );
 
-    await this.pageObjects.productsPage.closeSfToolBar();
+    await productsPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.productsPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
+    const pageTitle = await productsPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(productsPage.pageTitle);
   });
 
   it('should create a product that the name contains accented characters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'createAccentedCharsProduct', baseContext);
 
-    await this.pageObjects.productsPage.goToAddProductPage();
-    const createProductMessage = await this.pageObjects.addProductPage.createEditBasicProduct(productData);
-    await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
+    await productsPage.goToAddProductPage(page);
+    const createProductMessage = await addProductPage.createEditBasicProduct(page, productData);
+    await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
   });
 
   const tests = [
@@ -90,80 +77,80 @@ describe('Enable/Disable accented URL', async () => {
     it('should go to \'Shop parameters > SEO and Urls\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToSeoPageTo${test.args.action}`, baseContext);
 
-      await this.pageObjects.addProductPage.goToSubMenu(
-        this.pageObjects.addProductPage.shopParametersParentLink,
-        this.pageObjects.addProductPage.trafficAndSeoLink,
+      await addProductPage.goToSubMenu(
+        page,
+        addProductPage.shopParametersParentLink,
+        addProductPage.trafficAndSeoLink,
       );
 
-      const pageTitle = await this.pageObjects.seoAndUrlsPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.seoAndUrlsPage.pageTitle);
+      const pageTitle = await seoAndUrlsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
     });
 
     it(`should ${test.args.action} accented URL`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}AccentedUrl`, baseContext);
 
-      const result = await this.pageObjects.seoAndUrlsPage.enableDisableAccentedURL(test.args.enable);
-      await expect(result).to.contains(this.pageObjects.seoAndUrlsPage.successfulSettingsUpdateMessage);
+      const result = await seoAndUrlsPage.enableDisableAccentedURL(page, test.args.enable);
+      await expect(result).to.contains(seoAndUrlsPage.successfulSettingsUpdateMessage);
     });
 
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToProductsPageAfter${test.args.action}`, baseContext);
 
-      await this.pageObjects.seoAndUrlsPage.goToSubMenu(
-        this.pageObjects.seoAndUrlsPage.catalogParentLink,
-        this.pageObjects.seoAndUrlsPage.productsLink,
+      await seoAndUrlsPage.goToSubMenu(
+        page,
+        seoAndUrlsPage.catalogParentLink,
+        seoAndUrlsPage.productsLink,
       );
 
-      const pageTitle = await this.pageObjects.productsPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
+      const pageTitle = await productsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `resetFilterAfter${test.args.action}`, baseContext);
 
-      await this.pageObjects.productsPage.resetFilterCategory();
-      const numberOfProducts = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
+      await productsPage.resetFilterCategory(page);
+      const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
       await expect(numberOfProducts).to.be.above(0);
     });
 
     it('should filter by the created product name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `filterProductTo${test.args.action}`, baseContext);
 
-      await this.pageObjects.productsPage.filterProducts('name', productName);
-      const textColumn = await this.pageObjects.productsPage.getProductNameFromList(1);
+      await productsPage.filterProducts(page, 'name', productName);
+      const textColumn = await productsPage.getProductNameFromList(page, 1);
       await expect(textColumn).to.contains(productName);
     });
 
     it('should go to the created product page and reset the friendly url', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `resetFriendlyURl${test.args.action}`, baseContext);
 
-      await this.pageObjects.productsPage.goToProductPage(1);
-      const pageTitle = await this.pageObjects.addProductPage.getPageTitle();
+      await productsPage.goToProductPage(page, 1);
+      const pageTitle = await addProductPage.getPageTitle(page);
 
-      await expect(pageTitle).to.contains(this.pageObjects.addProductPage.pageTitle);
-      await this.pageObjects.addProductPage.resetURL();
+      await expect(pageTitle).to.contains(addProductPage.pageTitle);
+      await addProductPage.resetURL(page);
     });
 
     it('should check the product URL', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkProductUrl${test.args.action}`, baseContext);
 
       // Go to product page in FO
-      page = await this.pageObjects.addProductPage.previewProduct();
-      this.pageObjects = await init();
+      page = await addProductPage.previewProduct(page);
 
-      const url = await this.pageObjects.foHomePage.getCurrentURL();
+      const url = await foHomePage.getCurrentURL(page);
       await expect(url).to.contains(test.args.productNameInURL.toLowerCase());
 
       // Go back to BO
-      page = await this.pageObjects.foHomePage.closePage(browserContext, 0);
-      this.pageObjects = await init();
+      page = await foHomePage.closePage(browserContext, page, 0);
     });
   });
 
   it('should delete product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-    const testResult = await this.pageObjects.addProductPage.deleteProduct();
-    await expect(testResult).to.equal(this.pageObjects.productsPage.productDeletedSuccessfulMessage);
+    const testResult = await addProductPage.deleteProduct(page);
+    await expect(testResult).to.equal(productsPage.productDeletedSuccessfulMessage);
   });
 });

@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class PreviewEmailTheme extends BOBasePage {
-  constructor(page) {
-    super(page);
+class PreviewEmailTheme extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Preview Theme';
 
@@ -18,17 +18,21 @@ module.exports = class PreviewEmailTheme extends BOBasePage {
 
   /**
    * Get number of layouts in grid
+   * @param page
    * @return {Promise<number>}
    */
-  async getNumberOfLayoutInGrid() {
-    return (await this.page.$$(this.tableRows)).length;
+  async getNumberOfLayoutInGrid(page) {
+    return (await page.$$(this.tableRows)).length;
   }
 
   /**
    * Click on back to configuration button
+   * @param page
    * @return {Promise<void>}
    */
-  async goBackToEmailThemesPage() {
-    await this.clickAndWaitForNavigation(this.backToConfigurationLink);
+  async goBackToEmailThemesPage(page) {
+    await this.clickAndWaitForNavigation(page, this.backToConfigurationLink);
   }
-};
+}
+
+module.exports = new PreviewEmailTheme();

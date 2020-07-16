@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class AddCartRule extends BOBasePage {
-  constructor(page) {
-    super(page);
+class AddCartRule extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Cart Rules > Add new •';
 
@@ -27,24 +27,27 @@ module.exports = class AddCartRule extends BOBasePage {
   /* Methods */
   /**
    * Create/edit cart rule
+   * @param page
    * @param cartRuleData
    * @returns {Promise<string>}
    */
-  async createEditCartRules(cartRuleData) {
+  async createEditCartRules(page, cartRuleData) {
     // Fill information form
-    await this.setValue(this.nameInput(1), cartRuleData.name);
-    await this.setValue(this.descriptionTextArea, cartRuleData.description);
-    await this.setValue(this.codeInput, cartRuleData.code);
+    await this.setValue(page, this.nameInput(1), cartRuleData.name);
+    await this.setValue(page, this.descriptionTextArea, cartRuleData.description);
+    await this.setValue(page, this.codeInput, cartRuleData.code);
     // Fill conditions form
-    await this.page.click(this.conditionsTabLink);
-    await this.setValue(this.singleCustomerInput, cartRuleData.customer);
-    await this.waitForVisibleSelector(`${this.singleCustomerResultBlock}:not([style*='display: none;'])`);
-    await this.page.click(this.singleCustomerResultItem);
-    await this.page.waitForSelector(`${this.singleCustomerResultBlock}[style*='display: none;']`);
+    await page.click(this.conditionsTabLink);
+    await this.setValue(page, this.singleCustomerInput, cartRuleData.customer);
+    await this.waitForVisibleSelector(page, `${this.singleCustomerResultBlock}:not([style*='display: none;'])`);
+    await page.click(this.singleCustomerResultItem);
+    await page.waitForSelector(`${this.singleCustomerResultBlock}[style*='display: none;']`);
     // Fill actions form
-    await this.page.click(this.actionsTabLink);
-    await this.page.click(this.freeShippingInput(cartRuleData.freeShipping));
-    await this.clickAndWaitForNavigation(this.saveAndStayButton);
-    return this.getTextContent(this.alertSuccessBlock);
+    await page.click(this.actionsTabLink);
+    await page.click(this.freeShippingInput(cartRuleData.freeShipping));
+    await this.clickAndWaitForNavigation(page, this.saveAndStayButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
-};
+}
+
+module.exports = new AddCartRule();

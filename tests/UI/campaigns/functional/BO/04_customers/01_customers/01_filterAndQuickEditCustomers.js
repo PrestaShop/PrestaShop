@@ -8,10 +8,11 @@ const loginCommon = require('@commonTests/loginBO');
 
 // Import data
 const {DefaultAccount} = require('@data/demo/customer');
+
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const CustomersPage = require('@pages/BO/customers');
+const dashboardPage = require('@pages/BO/dashboard');
+const customersPage = require('@pages/BO/customers');
+
 // Import test context
 const testContext = require('@utils/testContext');
 
@@ -22,48 +23,39 @@ let browserContext;
 let page;
 let numberOfCustomers = 0;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    customersPage: new CustomersPage(page),
-  };
-};
-
 // Filter And Quick Edit Customers
 describe('Filter And Quick Edit Customers', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to customers page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to Customers page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.customersParentLink,
-      this.pageObjects.dashboardPage.customersLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.customersParentLink,
+      dashboardPage.customersLink,
     );
 
-    const pageTitle = await this.pageObjects.customersPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.customersPage.pageTitle);
+    const pageTitle = await customersPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(customersPage.pageTitle);
   });
 
   it('should reset all filters and get Number of customers in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-    numberOfCustomers = await this.pageObjects.customersPage.resetAndGetNumberOfLines();
+    numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
     await expect(numberOfCustomers).to.be.above(0);
   });
 
@@ -152,23 +144,26 @@ describe('Filter And Quick Edit Customers', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
 
         if (typeof test.args.filterValue === 'boolean') {
-          await this.pageObjects.customersPage.filterCustomersSwitch(
+          await customersPage.filterCustomersSwitch(
+            page,
             test.args.filterBy,
             test.args.filterValue,
           );
         } else {
-          await this.pageObjects.customersPage.filterCustomers(
+          await customersPage.filterCustomers(
+            page,
             test.args.filterType,
             test.args.filterBy,
             test.args.filterValue,
           );
         }
-        const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberOfElementInGrid();
+        const numberOfCustomersAfterFilter = await customersPage.getNumberOfElementInGrid(page);
 
         await expect(numberOfCustomersAfterFilter).to.be.at.most(numberOfCustomers);
 
         for (let i = 1; i <= numberOfCustomersAfterFilter; i++) {
-          const textColumn = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(
+          const textColumn = await customersPage.getTextColumnFromTableCustomers(
+            page,
             i,
             test.args.filterBy,
           );
@@ -184,7 +179,7 @@ describe('Filter And Quick Edit Customers', async () => {
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfCustomersAfterReset = await this.pageObjects.customersPage.resetAndGetNumberOfLines();
+        const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
         await expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
       });
     });
@@ -195,13 +190,14 @@ describe('Filter And Quick Edit Customers', async () => {
     it('should filter by Email \'pub@prestashop.com\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
-      await this.pageObjects.customersPage.filterCustomers(
+      await customersPage.filterCustomers(
+        page,
         'input',
         'email',
         DefaultAccount.email,
       );
 
-      const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberOfElementInGrid();
+      const numberOfCustomersAfterFilter = await customersPage.getNumberOfElementInGrid(page);
       await expect(numberOfCustomersAfterFilter).to.be.at.above(0);
     });
 
@@ -242,20 +238,22 @@ describe('Filter And Quick Edit Customers', async () => {
       it(`should ${test.args.action} for first customer`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
 
-        const isActionPerformed = await this.pageObjects.customersPage.updateToggleColumnValue(
+        const isActionPerformed = await customersPage.updateToggleColumnValue(
+          page,
           1,
           test.args.column,
           test.args.value,
         );
 
         if (isActionPerformed) {
-          const resultMessage = await this.pageObjects.customersPage.getTextContent(
-            this.pageObjects.customersPage.alertSuccessBlockParagraph,
+          const resultMessage = await customersPage.getTextContent(
+            page,
+            customersPage.alertSuccessBlockParagraph,
           );
-          await expect(resultMessage).to.contains(this.pageObjects.customersPage.successfulUpdateStatusMessage);
+          await expect(resultMessage).to.contains(customersPage.successfulUpdateStatusMessage);
         }
 
-        const customerStatus = await this.pageObjects.customersPage.getToggleColumnValue(1, test.args.column);
+        const customerStatus = await customersPage.getToggleColumnValue(page, 1, test.args.column);
         await expect(customerStatus).to.be.equal(test.args.value);
       });
     });

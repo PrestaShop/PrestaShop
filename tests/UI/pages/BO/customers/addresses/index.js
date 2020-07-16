@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class Addresses extends BOBasePage {
-  constructor(page) {
-    super(page);
+class Addresses extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Addresses •';
     this.successfulUpdateMessage = 'Update successful';
@@ -49,73 +49,79 @@ module.exports = class Addresses extends BOBasePage {
    */
   /**
    * Reset input filters
+   * @param page
    * @returns {Promise<void>}
    */
-  async resetFilter() {
-    if (!(await this.elementNotVisible(this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(this.filterResetButton);
+  async resetFilter(page) {
+    if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
+      await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
   }
 
   /**
    * Get number of elements in grid
+   * @param page
    * @returns {Promise<number>}
    */
-  async getNumberOfElementInGrid() {
-    return this.getNumberFromText(this.addressGridTitle);
+  async getNumberOfElementInGrid(page) {
+    return this.getNumberFromText(page, this.addressGridTitle);
   }
 
   /**
    * Reset Filter And get number of elements in list
+   * @param page
    * @returns {Promise<number>}
    */
-  async resetAndGetNumberOfLines() {
-    await this.resetFilter();
-    return this.getNumberOfElementInGrid();
+  async resetAndGetNumberOfLines(page) {
+    await this.resetFilter(page);
+    return this.getNumberOfElementInGrid(page);
   }
 
   /**
    * Filter list of addresses
+   * @param page
    * @param filterType, input or select to choose method of filter
    * @param filterBy, column to filter
    * @param value, value to filter with
    * @return {Promise<void>}
    */
-  async filterAddresses(filterType, filterBy, value = '') {
+  async filterAddresses(page, filterType, filterBy, value = '') {
     switch (filterType) {
       case 'input':
-        await this.setValue(this.addressFilterColumnInput(filterBy), value.toString());
+        await this.setValue(page, this.addressFilterColumnInput(filterBy), value.toString());
         break;
       case 'select':
-        await this.selectByVisibleText(this.addressFilterColumnInput(filterBy), value);
+        await this.selectByVisibleText(page, this.addressFilterColumnInput(filterBy), value);
         break;
       default:
         // Do nothing
     }
     // click on search
-    await this.clickAndWaitForNavigation(this.filterSearchButton);
+    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
 
   /**
    * Get text from a column
+   * @param page
    * @param row, row in table
    * @param column, which column
    * @return {Promise<string>}
    */
-  async getTextColumnFromTableAddresses(row, column) {
-    return this.getTextContent(this.addressesListTableColumn(row, column));
+  async getTextColumnFromTableAddresses(page, row, column) {
+    return this.getTextContent(page, this.addressesListTableColumn(row, column));
   }
 
   /**
    * Get content from all rows
+   * @param page
    * @param column
    * @return {Promise<[]>}
    */
-  async getAllRowsColumnContent(column) {
-    const rowsNumber = await this.getNumberOfElementInGrid();
+  async getAllRowsColumnContent(page, column) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
     for (let i = 1; i <= rowsNumber; i++) {
-      const rowContent = await this.getTextColumnFromTableAddresses(i, column);
+      const rowContent = await this.getTextColumnFromTableAddresses(page, i, column);
       await allRowsContentTable.push(rowContent);
     }
     return allRowsContentTable;
@@ -123,116 +129,128 @@ module.exports = class Addresses extends BOBasePage {
 
   /**
    * Go to address Page
+   * @param page
    * @return {Promise<void>}
    */
-  async goToAddNewAddressPage() {
-    await this.clickAndWaitForNavigation(this.addNewAddressLink);
+  async goToAddNewAddressPage(page) {
+    await this.clickAndWaitForNavigation(page, this.addNewAddressLink);
   }
 
   /**
    * Go to Edit address page
+   * @param page
    * @param row, row in table
    * @return {Promise<void>}
    */
-  async goToEditAddressPage(row) {
-    await this.clickAndWaitForNavigation(this.addressesListTableEditLink(row));
+  async goToEditAddressPage(page, row) {
+    await this.clickAndWaitForNavigation(page, this.addressesListTableEditLink(row));
   }
 
   /**
    * Delete address
+   * @param page
    * @param row
    * @returns {Promise<string>}
    */
-  async deleteAddress(row) {
-    this.dialogListener();
+  async deleteAddress(page, row) {
+    this.dialogListener(page);
     // Click on dropDown
     await Promise.all([
-      this.page.click(this.addressesListTableToggleDropDown(row)),
+      page.click(this.addressesListTableToggleDropDown(row)),
       this.waitForVisibleSelector(
+        page,
         `${this.addressesListTableToggleDropDown(row)}[aria-expanded='true']`,
       ),
     ]);
     // Click on delete
-    await this.page.click(this.addressesListTableDeleteLink(row));
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await page.click(this.addressesListTableDeleteLink(row));
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
    * Delete all addresses with Bulk Actions
+   * @param page
    * @return {Promise<string>}
    */
-  async deleteAddressesBulkActions() {
+  async deleteAddressesBulkActions(page) {
     // Click on Select All
     await Promise.all([
-      this.page.$eval(this.selectAllRowsLabel, el => el.click()),
-      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
+      page.$eval(this.selectAllRowsLabel, el => el.click()),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
-      this.page.click(this.bulkActionsToggleButton),
-      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
+      page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      this.page.click(this.bulkActionsDeleteButton),
-      this.waitForVisibleSelector(this.deleteAddressModal),
+      page.click(this.bulkActionsDeleteButton),
+      this.waitForVisibleSelector(page, this.deleteAddressModal),
     ]);
-    await this.page.click(this.deleteCustomerModalDeleteButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await page.click(this.deleteCustomerModalDeleteButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /* Sort functions */
   /**
    * Sort table by clicking on column name
+   * @param page
    * @param sortBy, column to sort with
    * @param sortDirection, asc or desc
    * @return {Promise<void>}
    */
-  async sortTable(sortBy, sortDirection) {
+  async sortTable(page, sortBy, sortDirection) {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
     let i = 0;
-    while (await this.elementNotVisible(sortColumnDiv, 1000) && i < 2) {
-      await this.clickAndWaitForNavigation(sortColumnSpanButton);
+    while (await this.elementNotVisible(page, sortColumnDiv, 1000) && i < 2) {
+      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
     }
-    await this.waitForVisibleSelector(sortColumnDiv);
+    await this.waitForVisibleSelector(page, sortColumnDiv);
   }
 
   /* Pagination methods */
   /**
    * Get pagination label
+   * @param page
    * @return {Promise<string>}
    */
-  getPaginationLabel() {
-    return this.getTextContent(this.paginationLabel);
+  getPaginationLabel(page) {
+    return this.getTextContent(page, this.paginationLabel);
   }
 
   /**
    * Select pagination limit
+   * @param page
    * @param number
    * @returns {Promise<string>}
    */
-  async selectPaginationLimit(number) {
-    await this.selectByVisibleText(this.paginationLimitSelect, number);
-    return this.getPaginationLabel();
+  async selectPaginationLimit(page, number) {
+    await this.selectByVisibleText(page, this.paginationLimitSelect, number);
+    return this.getPaginationLabel(page);
   }
 
   /**
    * Click on next
+   * @param page
    * @returns {Promise<string>}
    */
-  async paginationNext() {
-    await this.clickAndWaitForNavigation(this.paginationNextLink);
-    return this.getPaginationLabel();
+  async paginationNext(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    return this.getPaginationLabel(page);
   }
 
   /**
    * Click on previous
+   * @param page
    * @returns {Promise<string>}
    */
-  async paginationPrevious() {
-    await this.clickAndWaitForNavigation(this.paginationPreviousLink);
-    return this.getPaginationLabel();
+  async paginationPrevious(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    return this.getPaginationLabel(page);
   }
-};
+}
+
+module.exports = new Addresses();

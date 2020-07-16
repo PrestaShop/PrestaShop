@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class shopParamsGeneral extends BOBasePage {
-  constructor(page) {
-    super(page);
+class ShopParamsGeneral extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Preferences •';
 
@@ -22,42 +22,48 @@ module.exports = class shopParamsGeneral extends BOBasePage {
 
   /**
    * Change Tab to Maintenance in Shop Parameters General Page
+   * @param page
    * @return {Promise<void>}
    */
-  async goToSubTabMaintenance() {
-    await this.clickAndWaitForNavigation(this.maintenanceNavItemLink);
+  async goToSubTabMaintenance(page) {
+    await this.clickAndWaitForNavigation(page, this.maintenanceNavItemLink);
   }
 
   /**
    * Enable/Disable display suppliers
+   * @param page
    * @param toEnable
    * @returns {Promise<string>}
    */
-  async setDisplaySuppliers(toEnable = true) {
-    await this.waitForSelectorAndClick(this.displaySuppliersLabel(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async setDisplaySuppliers(page, toEnable = true) {
+    await this.waitForSelectorAndClick(page, this.displaySuppliersLabel(toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(page, this.saveFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Enable/Disable display brands
+   * @param page
    * @param toEnable
    * @returns {Promise<string>}
    */
-  async setDisplayBrands(toEnable = true) {
-    await this.waitForSelectorAndClick(this.displayBrandsLabel(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async setDisplayBrands(page, toEnable = true) {
+    await this.waitForSelectorAndClick(page, this.displayBrandsLabel(toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(page, this.saveFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Enable/Disable multi store
+   * @param page
    * @param toEnable
    * @returns {Promise<string>}
    */
-  async setMultiStoreStatus(toEnable = true) {
-    await this.waitForSelectorAndClick(this.enableMultiStoreLabel(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async setMultiStoreStatus(page, toEnable = true) {
+    await this.waitForSelectorAndClick(page, this.enableMultiStoreLabel(toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(page, this.saveFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
-};
+}
+
+module.exports = new ShopParamsGeneral();

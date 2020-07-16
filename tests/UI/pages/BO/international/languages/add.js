@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class AddLanguage extends BOBasePage {
-  constructor(page) {
-    super(page);
+class AddLanguage extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Add new •';
     this.pageEditTitle = 'Edit:';
@@ -25,24 +25,27 @@ module.exports = class AddLanguage extends BOBasePage {
 
   /**
    * Create or edit language
+   * @param page
    * @param languageData
    * @return {Promise<string>}
    */
-  async createEditLanguage(languageData) {
+  async createEditLanguage(page, languageData) {
     // Set input text
-    await this.setValue(this.nameInput, languageData.name);
-    await this.setValue(this.isoCodeInput, languageData.isoCode);
-    await this.setValue(this.languageCodeInput, languageData.languageCode);
-    await this.setValue(this.dateFormatInput, languageData.dateFormat);
-    await this.setValue(this.fullDataFormatInput, languageData.fullDateFormat);
+    await this.setValue(page, this.nameInput, languageData.name);
+    await this.setValue(page, this.isoCodeInput, languageData.isoCode);
+    await this.setValue(page, this.languageCodeInput, languageData.languageCode);
+    await this.setValue(page, this.dateFormatInput, languageData.dateFormat);
+    await this.setValue(page, this.fullDataFormatInput, languageData.fullDateFormat);
     // Add images
-    await this.generateAndUploadImage(this.flagInput, languageData.flag);
-    await this.generateAndUploadImage(this.noPictureInput, languageData.noPicture);
+    await this.generateAndUploadImage(page, this.flagInput, languageData.flag);
+    await this.generateAndUploadImage(page, this.noPictureInput, languageData.noPicture);
     // Add switch
-    await this.page.click(this.isRtlSwitch(languageData.isRtl ? 1 : 0));
-    await this.page.click(this.statusSwitch(languageData.status ? 1 : 0));
+    await page.click(this.isRtlSwitch(languageData.isRtl ? 1 : 0));
+    await page.click(this.statusSwitch(languageData.status ? 1 : 0));
     // Save and return result
-    await this.clickAndWaitForNavigation(this.saveButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.clickAndWaitForNavigation(page, this.saveButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
-};
+}
+
+module.exports = new AddLanguage();

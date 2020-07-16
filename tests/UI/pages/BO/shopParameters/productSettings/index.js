@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class productSettings extends BOBasePage {
-  constructor(page) {
-    super(page);
+class ProductSettings extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Product Settings •';
     this.successfulUpdateMessage = 'Update successful';
@@ -58,268 +58,292 @@ module.exports = class productSettings extends BOBasePage {
 
   /**
    * Enable/disable catalog mode
+   * @param page
    * @param toEnable, true to enable and false to disable
    * @return {Promise<string>}
    */
-  async changeCatalogModeStatus(toEnable = true) {
-    await this.waitForSelectorAndClick(this.switchCatalogModeLabel(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveProductGeneralFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async changeCatalogModeStatus(page, toEnable = true) {
+    await this.waitForSelectorAndClick(page, this.switchCatalogModeLabel(toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(page, this.saveProductGeneralFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Enable/disable show prices
+   * @param page
    * @param toEnable, true to enable and false to disable
    * @return {Promise<string>}
    */
-  async setShowPricesStatus(toEnable = true) {
-    await this.waitForSelectorAndClick(this.switchShowPricesLabel(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveProductGeneralFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async setShowPricesStatus(page, toEnable = true) {
+    await this.waitForSelectorAndClick(page, this.switchShowPricesLabel(toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(page, this.saveProductGeneralFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Update number of days
+   * @param page
    * @param numberOfDays
    * @returns {Promise<string>}
    */
-  async updateNumberOfDays(numberOfDays) {
-    await this.setValue(this.newDaysNumberInput, numberOfDays.toString());
-    await this.clickAndWaitForNavigation(this.saveProductGeneralFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async updateNumberOfDays(page, numberOfDays) {
+    await this.setValue(page, this.newDaysNumberInput, numberOfDays.toString());
+    await this.clickAndWaitForNavigation(page, this.saveProductGeneralFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Update max size of short description
+   * @param page
    * @param size
    * @returns {Promise<string>}
    */
-  async UpdateMaxSizeOfSummary(size) {
-    await this.setValue(this.maxSizeShortDescriptionInput, size.toString());
-    await this.clickAndWaitForNavigation(this.saveProductGeneralFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async UpdateMaxSizeOfSummary(page, size) {
+    await this.setValue(page, this.maxSizeShortDescriptionInput, size.toString());
+    await this.clickAndWaitForNavigation(page, this.saveProductGeneralFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Enable/Disable force update of friendly URL
+   * @param page
    * @param toEnable
    * @returns {Promise<string>}
    */
-  async setForceUpdateFriendlyURLStatus(toEnable = true) {
-    await this.waitForSelectorAndClick(this.switchForceUpdateFriendlyURLLabel(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveProductGeneralFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async setForceUpdateFriendlyURLStatus(page, toEnable = true) {
+    await this.waitForSelectorAndClick(page, this.switchForceUpdateFriendlyURLLabel(toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(page, this.saveProductGeneralFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Change default activation status
+   * @param page
    * @param toEnable
    * @returns {Promise<string>}
    */
-  async setDefaultActivationStatus(toEnable = true) {
-    await this.waitForSelectorAndClick(this.switchDefaultActivationStatusLabel(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveProductGeneralFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async setDefaultActivationStatus(page, toEnable = true) {
+    await this.waitForSelectorAndClick(page, this.switchDefaultActivationStatusLabel(toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(page, this.saveProductGeneralFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Choose quantity discounts based on
+   * @param page
    * @param basedOn
    * @returns {Promise<string>}
    */
-  async chooseQuantityDiscountsBasedOn(basedOn) {
-    await this.selectByVisibleText(this.quantityDiscountBasedOnSelect, basedOn);
-    await this.clickAndWaitForNavigation(this.saveProductGeneralFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async chooseQuantityDiscountsBasedOn(page, basedOn) {
+    await this.selectByVisibleText(page, this.quantityDiscountBasedOnSelect, basedOn);
+    await this.clickAndWaitForNavigation(page, this.saveProductGeneralFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Enable/ Disable display available quantities
+   * @param page
    * @param toEnable
    * @returns {Promise<string>}
    */
-  async setDisplayAvailableQuantitiesStatus(toEnable = true) {
-    await this.waitForSelectorAndClick(this.switchDisplayAvailableQuantities(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveProductPageFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async setDisplayAvailableQuantitiesStatus(page, toEnable = true) {
+    await this.waitForSelectorAndClick(page, this.switchDisplayAvailableQuantities(toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(page, this.saveProductPageFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Set display remaining quantities
+   * @param page
    * @param quantity
    * @returns {Promise<string>}
    */
-  async setDisplayRemainingQuantities(quantity) {
-    await this.setValue(this.remainingQuantityInput, quantity.toString());
-    await this.clickAndWaitForNavigation(this.saveProductPageFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async setDisplayRemainingQuantities(page, quantity) {
+    await this.setValue(page, this.remainingQuantityInput, quantity.toString());
+    await this.clickAndWaitForNavigation(page, this.saveProductPageFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Set display unavailable product attributes
+   * @param page
    * @param toEnable
    * @returns {Promise<string>}
    */
-  async setDisplayUnavailableProductAttributesStatus(toEnable = true) {
-    await this.waitForSelectorAndClick(this.displayUnavailableAttributesLabel(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveProductPageFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async setDisplayUnavailableProductAttributesStatus(page, toEnable = true) {
+    await this.waitForSelectorAndClick(page, this.displayUnavailableAttributesLabel(toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(page, this.saveProductPageFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Set separator of attribute anchor on the product links
+   * @param page
    * @param separator
    * @returns {Promise<string>}
    */
-  async setSeparatorOfAttributeOnProductLink(separator) {
-    await this.selectByVisibleText(this.separatorAttributeOnProductPageSelect, separator);
-    await this.clickAndWaitForNavigation(this.saveProductPageFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async setSeparatorOfAttributeOnProductLink(page, separator) {
+    await this.selectByVisibleText(page, this.separatorAttributeOnProductPageSelect, separator);
+    await this.clickAndWaitForNavigation(page, this.saveProductPageFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Enable/Disable allow ordering out of stock
+   * @param page
    * @param toEnable
    * @returns {Promise<string>}
    */
-  async setAllowOrderingOutOfStockStatus(toEnable = true) {
-    await this.waitForSelectorAndClick(this.allowOrderingOosLabel(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveProductsStockForm);
-    return this.getTextContent(this.alertSuccessBlock);
+  async setAllowOrderingOutOfStockStatus(page, toEnable = true) {
+    await this.waitForSelectorAndClick(page, this.allowOrderingOosLabel(toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(page, this.saveProductsStockForm);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Enable/Disable stock management
+   * @param page
    * @param toEnable
    * @returns {Promise<string>}
    */
-  async setEnableStockManagementStatus(toEnable = true) {
-    await this.waitForSelectorAndClick(this.enableStockManagementLabel(toEnable ? 1 : 0));
+  async setEnableStockManagementStatus(page, toEnable = true) {
+    await this.waitForSelectorAndClick(page, this.enableStockManagementLabel(toEnable ? 1 : 0));
     if (toEnable) {
-      await this.waitForSelectorAndClick(this.allowOrderingOosLabel(0));
+      await this.waitForSelectorAndClick(page, this.allowOrderingOosLabel(0));
     }
-    await this.clickAndWaitForNavigation(this.saveProductsStockForm);
-    return this.getTextContent(this.alertSuccessBlock);
+    await this.clickAndWaitForNavigation(page, this.saveProductsStockForm);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Set number of products displayed per page
+   * @param page
    * @param numberOfProducts
    * @return {Promise<string>}
    */
-  async setProductsDisplayedPerPage(numberOfProducts) {
-    await this.setValue(this.productsPerPageInput, numberOfProducts.toString());
-    await this.clickAndWaitForNavigation(this.savePaginationFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async setProductsDisplayedPerPage(page, numberOfProducts) {
+    await this.setValue(page, this.productsPerPageInput, numberOfProducts.toString());
+    await this.clickAndWaitForNavigation(page, this.savePaginationFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Change language for selectors
+   * @param page
    * @param lang
    * @return {Promise<void>}
    */
-  async changeLanguageForSelectors(lang = 'en') {
+  async changeLanguageForSelectors(page, lang = 'en') {
     await Promise.all([
-      this.page.click(this.nameLangButton),
-      this.waitForVisibleSelector(`${this.nameLangButton}[aria-expanded='true']`),
+      page.click(this.nameLangButton),
+      this.waitForVisibleSelector(page, `${this.nameLangButton}[aria-expanded='true']`),
     ]);
     await Promise.all([
-      this.page.click(this.nameLangSpan(lang)),
-      this.waitForVisibleSelector(`${this.nameLangButton}[aria-expanded='false']`),
+      page.click(this.nameLangSpan(lang)),
+      this.waitForVisibleSelector(page, `${this.nameLangButton}[aria-expanded='false']`),
     ]);
   }
 
   /**
    * Set label of in_stock products
+   * @param page
    * @param label
    * @returns {Promise<string>}
    */
-  async setLabelOfInStockProducts(label) {
+  async setLabelOfInStockProducts(page, label) {
     // Fill label in english
-    await this.changeLanguageForSelectors('en');
-    await this.setValue(this.labelInStock(1), label);
+    await this.changeLanguageForSelectors(page, 'en');
+    await this.setValue(page, this.labelInStock(1), label);
     // Fill label in french
-    await this.changeLanguageForSelectors('fr');
-    await this.setValue(this.labelInStock(2), label);
-    await this.clickAndWaitForNavigation(this.saveProductsStockForm);
-    return this.getTextContent(this.alertSuccessBlock);
+    await this.changeLanguageForSelectors(page, 'fr');
+    await this.setValue(page, this.labelInStock(2), label);
+    await this.clickAndWaitForNavigation(page, this.saveProductsStockForm);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Set delivery time text
+   * @param page
    * @param deliveryTimeText
    * @return {Promise<string>}
    */
-  async setDeliveryTimeInStock(deliveryTimeText) {
-    await this.setValue(this.deliveryTimeInStockInput, deliveryTimeText);
-    await this.clickAndWaitForNavigation(this.saveProductsStockForm);
-    return this.getTextContent(this.alertSuccessBlock);
+  async setDeliveryTimeInStock(page, deliveryTimeText) {
+    await this.setValue(page, this.deliveryTimeInStockInput, deliveryTimeText);
+    await this.clickAndWaitForNavigation(page, this.saveProductsStockForm);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Set display discounted price
+   * @param page
    * @param toEnable
    * @returns {Promise<string>}
    */
-  async setDisplayDiscountedPriceStatus(toEnable = true) {
-    await this.waitForSelectorAndClick(this.displayDiscountedPriceLabel(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveProductPageFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async setDisplayDiscountedPriceStatus(page, toEnable = true) {
+    await this.waitForSelectorAndClick(page, this.displayDiscountedPriceLabel(toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(page, this.saveProductPageFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Set default order for products on products list in FO
+   * @param page
    * @param orderBy, the order in which products will be displayed in the product list
    * @param orderMethod, order method for product list
    * @return {Promise<string>}
    */
-  async setDefaultProductsOrder(orderBy, orderMethod = 'Ascending') {
-    await this.selectByVisibleText(this.productsDefaultOrderBySelect, orderBy);
-    await this.selectByVisibleText(this.productsDefaultOrderMethodSelect, orderMethod);
-    await this.clickAndWaitForNavigation(this.savePaginationFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async setDefaultProductsOrder(page, orderBy, orderMethod = 'Ascending') {
+    await this.selectByVisibleText(page, this.productsDefaultOrderBySelect, orderBy);
+    await this.selectByVisibleText(page, this.productsDefaultOrderMethodSelect, orderMethod);
+    await this.clickAndWaitForNavigation(page, this.savePaginationFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Set delivery time out-of-stock text
+   * @param page
    * @param deliveryTimeText
    * @return {Promise<string>}
    */
-  async setDeliveryTimeOutOfStock(deliveryTimeText = '') {
-    await this.setValue(this.deliveryTimeOutOfStockInput, deliveryTimeText);
-    await this.clickAndWaitForNavigation(this.saveProductsStockForm);
-    return this.getTextContent(this.alertSuccessBlock);
+  async setDeliveryTimeOutOfStock(page, deliveryTimeText = '') {
+    await this.setValue(page, this.deliveryTimeOutOfStockInput, deliveryTimeText);
+    await this.clickAndWaitForNavigation(page, this.saveProductsStockForm);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Set label out-of-stock allowed backorders
+   * @param page
    * @param label
    * @returns {Promise<string>}
    */
-  async setLabelOosAllowedBackorders(label) {
+  async setLabelOosAllowedBackorders(page, label) {
     // Fill label in english
-    await this.changeLanguageForSelectors('en');
-    await this.setValue(this.oosAllowedBackordersLabel(1), label);
+    await this.changeLanguageForSelectors(page, 'en');
+    await this.setValue(page, this.oosAllowedBackordersLabel(1), label);
     // Fill label in french
-    await this.changeLanguageForSelectors('fr');
-    await this.setValue(this.oosAllowedBackordersLabel(2), label);
-    await this.clickAndWaitForNavigation(this.savePaginationFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+    await this.changeLanguageForSelectors(page, 'fr');
+    await this.setValue(page, this.oosAllowedBackordersLabel(2), label);
+    await this.clickAndWaitForNavigation(page, this.savePaginationFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Set label out-of-stock denied backorders
+   * @param page
    * @param label
    * @returns {Promise<string>}
    */
-  async setLabelOosDeniedBackorders(label) {
+  async setLabelOosDeniedBackorders(page, label) {
     // Fill label in english
-    await this.changeLanguageForSelectors('en');
-    await this.setValue(this.oosDeniedBackordersLabel(1), label);
+    await this.changeLanguageForSelectors(page, 'en');
+    await this.setValue(page, this.oosDeniedBackordersLabel(1), label);
     // Fill label in french
-    await this.changeLanguageForSelectors('fr');
-    await this.setValue(this.oosDeniedBackordersLabel(2), label);
-    await this.clickAndWaitForNavigation(this.savePaginationFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+    await this.changeLanguageForSelectors(page, 'fr');
+    await this.setValue(page, this.oosDeniedBackordersLabel(2), label);
+    await this.clickAndWaitForNavigation(page, this.savePaginationFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
-};
+}
+
+module.exports = new ProductSettings();

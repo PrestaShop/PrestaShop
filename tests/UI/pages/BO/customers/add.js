@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class AddCustomer extends BOBasePage {
-  constructor(page) {
-    super(page);
+class AddCustomer extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitleCreate = 'Creating a new Customer •';
     this.pageTitleEdit = 'Editing customer';
@@ -31,46 +31,48 @@ module.exports = class AddCustomer extends BOBasePage {
 
   /**
    * Fill form for add/edit customer
+   * @param page
    * @param customerData
    * @return {Promise<string>}
    */
-  async createEditCustomer(customerData) {
-    await this.page.click(this.socialTitleInput(customerData.socialTitle === 'Mr.' ? 0 : 1));
-    await this.setValue(this.firstNameInput, customerData.firstName);
-    await this.setValue(this.lastNameInput, customerData.lastName);
-    await this.setValue(this.emailInput, customerData.email);
-    await this.setValue(this.passwordInput, customerData.password);
-    await this.page.selectOption(this.yearOfBirthSelect, customerData.yearOfBirth);
-    await this.page.selectOption(this.monthOfBirthSelect, customerData.monthOfBirth);
-    await this.page.selectOption(this.dayOfBirthSelect, customerData.dayOfBirth);
-    await this.page.click(this.enabledSwitchLabel(customerData.enabled ? 1 : 0));
-    await this.page.click(this.partnerOffersSwitchLabel(customerData.partnerOffers ? 1 : 0));
-    await this.setCustomerGroupAccess(customerData.defaultCustomerGroup);
-    await this.selectByVisibleText(this.defaultCustomerGroupSelect, customerData.defaultCustomerGroup);
+  async createEditCustomer(page, customerData) {
+    await page.click(this.socialTitleInput(customerData.socialTitle === 'Mr.' ? 0 : 1));
+    await this.setValue(page, this.firstNameInput, customerData.firstName);
+    await this.setValue(page, this.lastNameInput, customerData.lastName);
+    await this.setValue(page, this.emailInput, customerData.email);
+    await this.setValue(page, this.passwordInput, customerData.password);
+    await page.selectOption(this.yearOfBirthSelect, customerData.yearOfBirth);
+    await page.selectOption(this.monthOfBirthSelect, customerData.monthOfBirth);
+    await page.selectOption(this.dayOfBirthSelect, customerData.dayOfBirth);
+    await page.click(this.enabledSwitchLabel(customerData.enabled ? 1 : 0));
+    await page.click(this.partnerOffersSwitchLabel(customerData.partnerOffers ? 1 : 0));
+    await this.setCustomerGroupAccess(page, customerData.defaultCustomerGroup);
+    await this.selectByVisibleText(page, this.defaultCustomerGroupSelect, customerData.defaultCustomerGroup);
     // Save Customer
-    await this.clickAndWaitForNavigation(this.saveCustomerButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.clickAndWaitForNavigation(page, this.saveCustomerButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
    * Set customer group access in form
+   * @param page
    * @param customerGroup
    * @return {Promise<void>}
    */
-  async setCustomerGroupAccess(customerGroup) {
+  async setCustomerGroupAccess(page, customerGroup) {
     switch (customerGroup) {
       case 'Customer':
-        await this.changeCheckboxValue(this.selectAllGroupAccessCheckbox);
+        await this.changeCheckboxValue(page, this.selectAllGroupAccessCheckbox);
         break;
       case 'Guest':
-        await this.changeCheckboxValue(this.groupAccessCheckbox(0), false);
-        await this.changeCheckboxValue(this.groupAccessCheckbox(2), false);
-        await this.changeCheckboxValue(this.groupAccessCheckbox(1));
+        await this.changeCheckboxValue(page, this.groupAccessCheckbox(0), false);
+        await this.changeCheckboxValue(page, this.groupAccessCheckbox(2), false);
+        await this.changeCheckboxValue(page, this.groupAccessCheckbox(1));
         break;
       case 'Visitor':
-        await this.changeCheckboxValue(this.groupAccessCheckbox(1), false);
-        await this.changeCheckboxValue(this.groupAccessCheckbox(2), false);
-        await this.changeCheckboxValue(this.groupAccessCheckbox(0));
+        await this.changeCheckboxValue(page, this.groupAccessCheckbox(1), false);
+        await this.changeCheckboxValue(page, this.groupAccessCheckbox(2), false);
+        await this.changeCheckboxValue(page, this.groupAccessCheckbox(0));
         break;
       default:
         throw new Error(`${customerGroup} was not found as a group access`);
@@ -80,14 +82,17 @@ module.exports = class AddCustomer extends BOBasePage {
   /**
    * @override
    * Select, unselect checkbox
+   * @param page
    * @param checkboxSelector, selector of checkbox
    * @param valueWanted, true if we want to select checkBox, else otherwise
    * @return {Promise<void>}
    */
-  async changeCheckboxValue(checkboxSelector, valueWanted = true) {
-    if (valueWanted !== (await this.isCheckboxSelected(checkboxSelector))) {
+  async changeCheckboxValue(page, checkboxSelector, valueWanted = true) {
+    if (valueWanted !== (await this.isCheckboxSelected(page, checkboxSelector))) {
       // The selector is not visible, that why '+ i' is required here
-      await this.page.$eval(`${checkboxSelector} + i`, el => el.click());
+      await page.$eval(`${checkboxSelector} + i`, el => el.click());
     }
   }
-};
+}
+
+module.exports = new AddCustomer();

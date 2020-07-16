@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class shopParamsMaintenance extends BOBasePage {
-  constructor(page) {
-    super(page);
+class ShopParamsMaintenance extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Maintenance •';
     this.maintenanceText = 'We are currently updating our shop and will be back really soon. Thanks for your patience.';
@@ -24,46 +24,52 @@ module.exports = class shopParamsMaintenance extends BOBasePage {
    */
   /**
    * Enable / disable shop
+   * @param page
    * @param toEnable, true to enable and false to disable
    * @return {Promise<string>}
    */
-  async changeShopStatus(toEnable = true) {
-    await this.waitForSelectorAndClick(this.switchShopLabel(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async changeShopStatus(page, toEnable = true) {
+    await this.waitForSelectorAndClick(page, this.switchShopLabel(toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(page, this.saveFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Update Maintenance text
+   * @param page
    * @param text
    * @return {Promise<string>}
    */
-  async changeMaintenanceTextShopStatus(text) {
-    await this.setValueOnTinymceInput(this.maintenanceTextInputEN, text);
-    await this.page.click(this.customMaintenanceFrTab);
-    await this.setValueOnTinymceInput(this.maintenanceTextInputFR, text);
-    await this.page.click(this.saveFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async changeMaintenanceTextShopStatus(page, text) {
+    await this.setValueOnTinymceInput(page, this.maintenanceTextInputEN, text);
+    await page.click(this.customMaintenanceFrTab);
+    await this.setValueOnTinymceInput(page, this.maintenanceTextInputFR, text);
+    await page.click(this.saveFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Add my IP address in maintenance IP input
+   * @param page
    * @return {Promise<string>}
    */
-  async addMyIpAddress() {
-    await this.page.click(this.addMyIPAddressButton);
-    await this.page.click(this.saveFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async addMyIpAddress(page) {
+    await page.click(this.addMyIPAddressButton);
+    await page.click(this.saveFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Add maintenance IP address input
+   * @param page
    * @param ipAddress
    * @return {Promise<string>}
    */
-  async addMaintenanceIPAddress(ipAddress) {
-    await this.setValue(this.maintenanceIpInput, ipAddress);
-    await this.page.click(this.saveFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async addMaintenanceIPAddress(page, ipAddress) {
+    await this.setValue(page, this.maintenanceIpInput, ipAddress);
+    await page.click(this.saveFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
-};
+}
+
+module.exports = new ShopParamsMaintenance();

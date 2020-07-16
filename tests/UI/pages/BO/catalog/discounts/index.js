@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class CartRules extends BOBasePage {
-  constructor(page) {
-    super(page);
+class CartRules extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Cart Rules •';
 
@@ -14,10 +14,13 @@ module.exports = class CartRules extends BOBasePage {
   /* Methods */
   /**
    * Change Tab to Catalog Price Rules in Discounts Page
+   * @param page
    * @returns {Promise<void>}
    */
-  async goToCatalogPriceRulesTab() {
-    await this.clickAndWaitForNavigation(this.catalogPriceRulesTab);
-    await this.page.waitForSelector(`${this.catalogPriceRulesTab}.current`, {state: 'visible'});
+  async goToCatalogPriceRulesTab(page) {
+    await this.clickAndWaitForNavigation(page, this.catalogPriceRulesTab);
+    await this.waitForVisibleSelector(page, `${this.catalogPriceRulesTab}.current`);
   }
-};
+}
+
+module.exports = new CartRules();

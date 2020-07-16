@@ -1,9 +1,9 @@
 require('module-alias/register');
 const LocalizationBasePage = require('@pages/BO/international/localization/localizationBasePage');
 
-module.exports = class Languages extends LocalizationBasePage {
-  constructor(page) {
-    super(page);
+class Languages extends LocalizationBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Languages •';
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
@@ -48,84 +48,91 @@ module.exports = class Languages extends LocalizationBasePage {
   /* Header methods */
   /**
    * Go to add new language page
+   * @param page
    * @return {Promise<void>}
    */
-  async goToAddNewLanguage() {
-    await this.clickAndWaitForNavigation(this.addNewLanguageLink);
+  async goToAddNewLanguage(page) {
+    await this.clickAndWaitForNavigation(page, this.addNewLanguageLink);
   }
 
   /* Reset methods */
   /**
    * Reset filters in table
+   * @param page
    * @return {Promise<void>}
    */
-  async resetFilter() {
-    if (!(await this.elementNotVisible(this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(this.filterResetButton);
+  async resetFilter(page) {
+    if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
+      await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
   }
 
   /**
    * Get number of elements in grid
+   * @param page
    * @returns {Promise<number>}
    */
-  async getNumberOfElementInGrid() {
-    return this.getNumberFromText(this.gridHeaderTitle);
+  async getNumberOfElementInGrid(page) {
+    return this.getNumberFromText(page, this.gridHeaderTitle);
   }
 
   /**
    * Reset Filter And get number of elements in list
+   * @param page
    * @returns {Promise<number>}
    */
-  async resetAndGetNumberOfLines() {
-    await this.resetFilter();
-    return this.getNumberOfElementInGrid();
+  async resetAndGetNumberOfLines(page) {
+    await this.resetFilter(page);
+    return this.getNumberOfElementInGrid(page);
   }
 
   /* Filter method */
   /**
    * Filter Table
+   * @param page
    * @param filterType, input / Select
    * @param filterBy, which column
    * @param value, value to put in filter
    * @return {Promise<void>}
    */
-  async filterTable(filterType, filterBy, value) {
+  async filterTable(page, filterType, filterBy, value) {
     switch (filterType) {
       case 'input':
-        await this.setValue(this.filterColumn(filterBy), value.toString());
+        await this.setValue(page, this.filterColumn(filterBy), value.toString());
         break;
       case 'select':
-        await this.selectByVisibleText(this.filterColumn(filterBy), value ? 'Yes' : 'No');
+        await this.selectByVisibleText(page, this.filterColumn(filterBy), value ? 'Yes' : 'No');
         break;
       default:
       // Do nothing
     }
     // click on search
-    await this.clickAndWaitForNavigation(this.filterSearchButton);
+    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
 
   /* Table methods */
   /**
    * Get text from a column
+   * @param page
    * @param row, row in table
    * @param column, which column
    * @returns {Promise<string>}
    */
-  async getTextColumnFromTable(row, column) {
-    return this.getTextContent(this.tableColumn(row, column));
+  async getTextColumnFromTable(page, row, column) {
+    return this.getTextContent(page, this.tableColumn(row, column));
   }
 
   /**
    * Get content from all rows
+   * @param page
    * @param column
    * @return {Promise<[]>}
    */
-  async getAllRowsColumnContent(column) {
-    const rowsNumber = await this.getNumberOfElementInGrid();
+  async getAllRowsColumnContent(page, column) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
     for (let i = 1; i <= rowsNumber; i++) {
-      const rowContent = await this.getTextColumnFromTable(i, column);
+      const rowContent = await this.getTextColumnFromTable(page, i, column);
       await allRowsContentTable.push(rowContent);
     }
     return allRowsContentTable;
@@ -133,50 +140,55 @@ module.exports = class Languages extends LocalizationBasePage {
 
   /**
    * Go to edit language page
+   * @param page
    * @param row, which row of the list
    * @return {Promise<void>}
    */
-  async goToEditLanguage(row = 1) {
-    await this.clickAndWaitForNavigation(this.editRowLink(row));
+  async goToEditLanguage(page, row = 1) {
+    await this.clickAndWaitForNavigation(page, this.editRowLink(row));
   }
 
   /**
    * Delete Row in table
+   * @param page
    * @param row, row to delete
    * @returns {Promise<string>}
    */
-  async deleteLanguage(row = 1) {
-    this.dialogListener(true);
+  async deleteLanguage(page, row = 1) {
+    this.dialogListener(page, true);
     await Promise.all([
-      this.page.click(this.dropdownToggleButton(row)),
+      page.click(this.dropdownToggleButton(row)),
       this.waitForVisibleSelector(
+        page,
         `${this.dropdownToggleButton(row)}[aria-expanded='true']`,
       ),
     ]);
-    await this.clickAndWaitForNavigation(this.deleteRowLink(row));
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.clickAndWaitForNavigation(page, this.deleteRowLink(row));
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
 
   /**
    * Get language status
+   * @param page
    * @param row
    * @return {Promise<string>}
    */
-  isEnabled(row) {
-    return this.elementVisible(this.enabledColumnValidIcon(row), 100);
+  isEnabled(page, row) {
+    return this.elementVisible(page, this.enabledColumnValidIcon(row), 100);
   }
 
   /**
    * Enable/Disable language
+   * @param page
    * @param row
    * @param valueWanted
    * @return {Promise<boolean>}, true if click has been performed
    */
-  async quickEditLanguage(row, valueWanted = true) {
-    await this.waitForVisibleSelector(this.tableColumn(row, 'active'), 2000);
-    if (await this.isEnabled(row) !== valueWanted) {
-      await this.clickAndWaitForNavigation(this.tableColumn(row, 'active'));
+  async quickEditLanguage(page, row, valueWanted = true) {
+    await this.waitForVisibleSelector(page, this.tableColumn(row, 'active'), 2000);
+    if (await this.isEnabled(page, row) !== valueWanted) {
+      await this.clickAndWaitForNavigation(page, this.tableColumn(row, 'active'));
       return true;
     }
     return false;
@@ -185,72 +197,78 @@ module.exports = class Languages extends LocalizationBasePage {
   /* Bulk Actions Methods */
   /**
    * Enable / disable Suppliers by Bulk Actions
+   * @param page
    * @param toEnable
    * @returns {Promise<string>}
    */
-  async bulkEditEnabledColumn(toEnable = true) {
+  async bulkEditEnabledColumn(page, toEnable = true) {
     // Click on Select All
     await Promise.all([
-      this.page.$eval(this.selectAllRowsLabel, el => el.click()),
-      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
+      page.$eval(this.selectAllRowsLabel, el => el.click()),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
-      this.page.click(this.bulkActionsToggleButton),
-      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
+      page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
-    await this.clickAndWaitForNavigation(toEnable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.clickAndWaitForNavigation(page, toEnable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
    * Delete with bulk actions
+   * @param page
    * @returns {Promise<string>}
    */
-  async deleteWithBulkActions() {
+  async deleteWithBulkActions(page) {
     // Click on Select All
     await Promise.all([
-      this.page.$eval(this.selectAllRowsLabel, el => el.click()),
-      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
+      page.$eval(this.selectAllRowsLabel, el => el.click()),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
-      this.page.click(this.bulkActionsToggleButton),
-      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
+      page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      this.page.click(this.bulkActionsDeleteButton),
-      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
+      page.click(this.bulkActionsDeleteButton),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
-    await this.confirmDeleteLanguages();
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.confirmDeleteLanguages(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
    * Confirm delete with in modal
+   * @param page
    * @return {Promise<void>}
    */
-  async confirmDeleteLanguages() {
-    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
+  async confirmDeleteLanguages(page) {
+    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
   }
 
   /* Sort functions */
   /**
    * Sort table by clicking on column name
+   * @param page
    * @param sortBy, column to sort with
    * @param sortDirection, asc or desc
    * @return {Promise<void>}
    */
-  async sortTable(sortBy, sortDirection = 'asc') {
+  async sortTable(page, sortBy, sortDirection = 'asc') {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
     let i = 0;
-    while (await this.elementNotVisible(sortColumnDiv, 1000) && i < 2) {
-      await this.clickAndWaitForNavigation(sortColumnSpanButton);
+    while (await this.elementNotVisible(page, sortColumnDiv, 1000) && i < 2) {
+      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
     }
-    await this.waitForVisibleSelector(sortColumnDiv);
+    await this.waitForVisibleSelector(page, sortColumnDiv);
   }
-};
+}
+
+module.exports = new Languages();

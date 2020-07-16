@@ -10,11 +10,9 @@ const loginCommon = require('@commonTests/loginBO');
 const CategoryFaker = require('@data/faker/CMScategory');
 
 // Import pages
-const LoginPage = require('@pages/BO/login/index');
-const DashboardPage = require('@pages/BO/dashboard/index');
-const PagesPage = require('@pages/BO/design/pages/index');
-const AddPageCategoryPage = require('@pages/BO/design/pages/pageCategory/add');
-const AddPagePage = require('@pages/BO/design/pages/add');
+const dashboardPage = require('@pages/BO/dashboard/index');
+const pagesPage = require('@pages/BO/design/pages/index');
+const addPageCategoryPage = require('@pages/BO/design/pages/pageCategory/add');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -29,53 +27,42 @@ let numberOfCategories = 0;
 const firstCategoryData = new CategoryFaker({name: 'todelete'});
 const secondCategoryData = new CategoryFaker({name: 'todelete'});
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    pagesPage: new PagesPage(page),
-    addPageCategoryPage: new AddPageCategoryPage(page),
-    addPagePage: new AddPagePage(page),
-  };
-};
-
 // Create Categories, Then disable / Enable and Delete with Bulk actions
 describe('Create Categories, Then disable / Enable and Delete with Bulk actions', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   // Go to Design>Pages page
   it('should go to "Design>Pages" page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCmsPagesPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.designParentLink,
-      this.pageObjects.dashboardPage.pagesLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.designParentLink,
+      dashboardPage.pagesLink,
     );
 
-    await this.pageObjects.pagesPage.closeSfToolBar();
+    await pagesPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
+    const pageTitle = await pagesPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(pagesPage.pageTitle);
   });
 
   it('should reset filter and get number of categories in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfCategories = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page_category');
+    numberOfCategories = await pagesPage.resetAndGetNumberOfLines(page, 'cms_page_category');
 
     if (numberOfCategories !== 0) {
       await expect(numberOfCategories).to.be.above(0);
@@ -90,24 +77,24 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
       it('should go to add new page category', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddCategory${index + 1}`, baseContext);
 
-        await this.pageObjects.pagesPage.goToAddNewPageCategory();
-        const pageTitle = await this.pageObjects.addPageCategoryPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.addPageCategoryPage.pageTitleCreate);
+        await pagesPage.goToAddNewPageCategory(page);
+        const pageTitle = await addPageCategoryPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(addPageCategoryPage.pageTitleCreate);
       });
 
       it('should create the first category ', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createCategory${index + 1}`, baseContext);
 
-        const textResult = await this.pageObjects.addPageCategoryPage.createEditPageCategory(categoryToCreate);
-        await expect(textResult).to.equal(this.pageObjects.pagesPage.successfulCreationMessage);
+        const textResult = await addPageCategoryPage.createEditPageCategory(page, categoryToCreate);
+        await expect(textResult).to.equal(pagesPage.successfulCreationMessage);
       });
 
       it('should go back to categories list', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `backToCategories${index + 1}`, baseContext);
 
-        await this.pageObjects.pagesPage.backToList();
-        const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
+        await pagesPage.backToList(page);
+        const pageTitle = await pagesPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(pagesPage.pageTitle);
       });
     });
   });
@@ -117,14 +104,16 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
     it('should filter list by Name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToChangeStatus', baseContext);
 
-      await this.pageObjects.pagesPage.filterTable(
+      await pagesPage.filterTable(
+        page,
         'cms_page_category',
         'input',
         'name',
         'todelete',
       );
 
-      const textResult = await this.pageObjects.pagesPage.getTextColumnFromTableCmsPageCategory(
+      const textResult = await pagesPage.getTextColumnFromTableCmsPageCategory(
+        page,
         1,
         'name',
       );
@@ -141,19 +130,22 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
       it(`should ${categoryStatus.args.status} categories with Bulk Actions and check Result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${categoryStatus.args.status}Category`, baseContext);
 
-        const textResult = await this.pageObjects.pagesPage.changeEnabledColumnBulkActions(
+        const textResult = await pagesPage.changeEnabledColumnBulkActions(
+          page,
           'cms_page_category',
           categoryStatus.args.enable,
         );
 
-        await expect(textResult).to.be.equal(this.pageObjects.pagesPage.successfulUpdateStatusMessage);
+        await expect(textResult).to.be.equal(pagesPage.successfulUpdateStatusMessage);
 
-        const numberOfCategoriesInGrid = await this.pageObjects.pagesPage.getNumberOfElementInGrid(
+        const numberOfCategoriesInGrid = await pagesPage.getNumberOfElementInGrid(
+          page,
           'cms_page_category',
         );
 
         for (let i = 1; i <= numberOfCategoriesInGrid; i++) {
-          const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTableCmsPageCategory(
+          const textColumn = await pagesPage.getTextColumnFromTableCmsPageCategory(
+            page,
             i,
             'active',
           );
@@ -169,14 +161,16 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
     it('should filter list by Name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
-      await this.pageObjects.pagesPage.filterTable(
+      await pagesPage.filterTable(
+        page,
         'cms_page_category',
         'input',
         'name',
         'todelete',
       );
 
-      const textResult = await this.pageObjects.pagesPage.getTextColumnFromTableCmsPageCategory(
+      const textResult = await pagesPage.getTextColumnFromTableCmsPageCategory(
+        page,
         1,
         'name',
       );
@@ -187,14 +181,15 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
     it('should delete categories with Bulk Actions and check Result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCategories', baseContext);
 
-      const deleteTextResult = await this.pageObjects.pagesPage.deleteWithBulkActions('cms_page_category');
-      await expect(deleteTextResult).to.be.equal(this.pageObjects.pagesPage.successfulMultiDeleteMessage);
+      const deleteTextResult = await pagesPage.deleteWithBulkActions(page, 'cms_page_category');
+      await expect(deleteTextResult).to.be.equal(pagesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
-      const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetAndGetNumberOfLines(
+      const numberOfCategoriesAfterFilter = await pagesPage.resetAndGetNumberOfLines(
+        page,
         'cms_page_category',
       );
 

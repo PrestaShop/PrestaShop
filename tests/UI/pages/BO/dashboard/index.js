@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class Dashboard extends BOBasePage {
-  constructor(page) {
-    super(page);
+class Dashboard extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Dashboard • ';
   }
@@ -11,4 +11,6 @@ module.exports = class Dashboard extends BOBasePage {
   /*
   Methods
    */
-};
+}
+
+module.exports = new Dashboard();

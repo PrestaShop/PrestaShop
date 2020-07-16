@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class LinkWidgets extends BOBasePage {
-  constructor(page) {
-    super(page);
+class LinkWidgets extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Link Widget •';
 
@@ -23,35 +23,40 @@ module.exports = class LinkWidgets extends BOBasePage {
   /* Header methods */
   /**
    * Go to new Block page
+   * @param page
    * @return {Promise<void>}
    */
-  async goToNewLinkWidgetPage() {
-    await this.clickAndWaitForNavigation(this.newBlockLink);
+  async goToNewLinkWidgetPage(page) {
+    await this.clickAndWaitForNavigation(page, this.newBlockLink);
   }
 
   /* Table methods */
   /**
    * Get Number of element in grid
+   * @param page
    * @param hookId, table to get number from
    * @returns {Promise<number>}
    */
-  async getNumberOfElementInGrid(hookId) {
-    return this.getNumberFromText(this.gridHeaderTitle(hookId));
+  async getNumberOfElementInGrid(page, hookId) {
+    return this.getNumberFromText(page, this.gridHeaderTitle(hookId));
   }
 
   /**
    * Delete link widget
+   * @param page
    * @param hookId, table to delete from
    * @param row, row to delete
    * @returns {Promise<string>}
    */
-  async deleteLinkWidget(hookId, row) {
-    this.dialogListener(true);
+  async deleteLinkWidget(page, hookId, row) {
+    this.dialogListener(page, true);
     await Promise.all([
-      this.page.click(this.dropdownToggleButton(hookId, row)),
-      this.waitForVisibleSelector(`${this.dropdownToggleButton(hookId, row)}[aria-expanded='true']`),
+      page.click(this.dropdownToggleButton(hookId, row)),
+      this.waitForVisibleSelector(page, `${this.dropdownToggleButton(hookId, row)}[aria-expanded='true']`),
     ]);
-    await this.clickAndWaitForNavigation(this.deleteRowLink(hookId, row));
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.clickAndWaitForNavigation(page, this.deleteRowLink(hookId, row));
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
-};
+}
+
+module.exports = new LinkWidgets();
