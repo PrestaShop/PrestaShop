@@ -150,4 +150,14 @@ class ProductConstraintException extends ProductException
      * When product additional shipping cost is invalid
      */
     const INVALID_ADDITIONAL_SHIPPING_COST = 240;
+
+    /**
+     * When product delivery time in stock notes are invalid
+     */
+    const INVALID_DELIVERY_TIME_IN_STOCK_NOTES = 250;
+
+    /**
+     * When product delivery time out of stock notes are invalid
+     */
+    const INVALID_DELIVERY_TIME_OUT_OF_STOCK_NOTES = 260;
 }

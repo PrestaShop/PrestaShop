@@ -86,6 +86,11 @@ Feature: Update product shipping options from Back Office (BO)
     When I update product product1 shipping information with following values:
       | weight                            | -2                        |
     Then I should get error that product weight is invalid
+    And product product1 should have following values:
+      | width                            | 15                         |
+      | height                           | 5                          |
+      | depth                            | 4                          |
+      | weight                           | 2                          |
 
   Scenario: Provide negative additional shipping cost
     Given product product1 should have following values:
@@ -94,7 +99,19 @@ Feature: Update product shipping options from Back Office (BO)
       | additional_shipping_cost         | -12                        |
     Then I should get error that product additional_shipping_cost is invalid
 
-    #@todo: finish up with field validations
+  Scenario: Provide invalid delivery notes
+    Given product product1 should have following values:
+      | delivery time in stock notes     | en-US:product in stock     |
+      | delivery time out of stock notes | en-US:product out of stock |
+    When I update product product1 shipping information with following values:
+      | delivery time in stock notes     | en-US:bla bla <{}            |
+    Then I should get error that product delivery_in_stock is invalid
+    When I update product product1 shipping information with following values:
+      | delivery time out of stock notes | en-US:ble ble >= |
+    Then I should get error that product delivery_out_stock is invalid
+    And product product1 should have following values:
+      | delivery time in stock notes     | en-US:product in stock     |
+      | delivery time out of stock notes | en-US:product out of stock |
 
   Scenario: Remove delivery time notes, but still have specific notes type
     Given product product1 should have following values:
