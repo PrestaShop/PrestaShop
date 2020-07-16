@@ -228,11 +228,11 @@ $(document).ready(() => {
 
     // There should be a valid product quantity in cart
     const targetValue = $target.val();
-    if (targetValue !== parseInt(targetValue, 10) || targetValue < 0 || isNaN(targetValue)) {
+    // eslint-disable-next-line
+    if (targetValue != parseInt(targetValue, 10) || targetValue < 0 || isNaN(targetValue)) {
       $target.val(baseValue);
       return;
     }
-
     // There should be a new product quantity in cart
     const qty = targetValue - baseValue;
     if (qty === 0) {
