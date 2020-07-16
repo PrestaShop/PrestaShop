@@ -86,7 +86,6 @@ ALTER TABLE `PREFIX_cms_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_g
 ALTER TABLE `PREFIX_cms_role` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_cms_role_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_cms_shop` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-ALTER TABLE `PREFIX_condition` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_configuration` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_configuration_kpi` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_configuration_kpi_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
@@ -279,10 +278,6 @@ ALTER TABLE `PREFIX_stock_mvt` CHANGE `employee_lastname` `employee_lastname` va
 ALTER TABLE `PREFIX_stock_mvt` CHANGE `employee_firstname` `employee_firstname` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL;
 ALTER TABLE `PREFIX_timezone` CHANGE `name` `name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
 ALTER TABLE `PREFIX_attribute_group` CHANGE `group_type` `group_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
-ALTER TABLE `PREFIX_condition` CHANGE `operator` `operator` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL;
-ALTER TABLE `PREFIX_condition` CHANGE `value` `value` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL;
-ALTER TABLE `PREFIX_condition` CHANGE `result` `result` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL;
-ALTER TABLE `PREFIX_condition` CHANGE `calculation_detail` `calculation_detail` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL;
 ALTER TABLE `PREFIX_search_word` CHANGE `word` `word` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
 ALTER TABLE `PREFIX_meta` CHANGE `page` `page` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
 ALTER TABLE `PREFIX_statssearch` CHANGE `keywords` `keywords` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
@@ -341,7 +336,6 @@ ALTER TABLE `PREFIX_cms_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_g
 ALTER TABLE `PREFIX_cms_role` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_cms_role_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_cms_shop` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-ALTER TABLE `PREFIX_condition` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_configuration` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_configuration_kpi` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_configuration_kpi_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
