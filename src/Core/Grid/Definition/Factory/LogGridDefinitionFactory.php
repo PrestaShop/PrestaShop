@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
@@ -181,7 +182,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setAssociatedColumn('employee')
             )
             ->add(
-                (new Filter('severity', TextType::class))
+                (new Filter('severity', ChoiceType::class))
                     ->setTypeOptions([
                         'required' => false,
                     ])
@@ -191,6 +192,8 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('message', TextType::class))
                     ->setTypeOptions([
                         'required' => false,
+                        'choices' => $this->getSeveritysChoices(),
+                        'translation_domain' => false,
                     ])
                     ->setAssociatedColumn('message')
             )
@@ -265,4 +268,13 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setIcon('storage')
             );
     }
+
+    private function getSeveritysChoices(){
+        return [
+            $this->trans('Informative only', [], 'Admin.Advparameters.Help') => 1,
+            $this->trans('Warning', [], 'Admin.Advparameters.Help') =>  2,
+            $this->trans('Error', [], 'Admin.Advparameters.Help') =>  3,
+            $this->trans('Major issue (crash)!', [], 'Admin.Advparameters.Help') =>  4,
+        ];
+	}
 }
