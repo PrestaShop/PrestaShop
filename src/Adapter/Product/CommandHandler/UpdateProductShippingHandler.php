@@ -98,11 +98,21 @@ final class UpdateProductShippingHandler extends AbstractProductHandler implemen
 
         if (null !== $command->getLocalizedDeliveryTimeInStockNotes()) {
             $product->delivery_in_stock = $command->getLocalizedDeliveryTimeInStockNotes();
+            $this->validateLocalizedField(
+                $product,
+                'delivery_in_stock',
+                ProductConstraintException::INVALID_DELIVERY_TIME_IN_STOCK_NOTES
+            );
             $this->fieldsToUpdate['delivery_in_stock'] = true;
         }
 
         if (null !== $command->getLocalizedDeliveryTimeOutOfStockNotes()) {
             $product->delivery_out_stock = $command->getLocalizedDeliveryTimeOutOfStockNotes();
+            $this->validateLocalizedField(
+                $product,
+                'delivery_out_stock',
+                ProductConstraintException::INVALID_DELIVERY_TIME_OUT_OF_STOCK_NOTES
+            );
             $this->fieldsToUpdate['delivery_out_stock'] = true;
         }
     }
