@@ -13,6 +13,19 @@ prestashop.selectors = {
     miniature: '.js-product-miniature',
     minimalQuantity: '.product-minimal-quantity',
     addToCart: '.product-add-to-cart',
+    prices:
+      '.quickview .product-prices, .page-product:not(.modal-open) .row .product-prices, .page-product:not(.modal-open) .product-container .product-prices',
+    customization:
+      '.quickview .product-customization, .page-product:not(.modal-open) .row .product-customization, .page-product:not(.modal-open) .product-container .product-customization',
+    variantsUpdate:
+      '.quickview .product-variants, .page-product:not(.modal-open) .row .product-variants, .page-product:not(.modal-open) .product-container .product-variants',
+    discounts:
+      '.quickview .product-discounts, .page-product:not(.modal-open) .row .product-discounts, .page-product:not(.modal-open) .product-container .product-discounts',
+    additionalInfos:
+      '.quickview .product-additional-info, .page-product:not(.modal-open) .row .product-additional-info, .page-product:not(.modal-open) .product-container .product-additional-info',
+    details: '.quickview #product-details, #product-details',
+    flags:
+      '.quickview .product-flags, .page-product:not(.modal-open) .row .product-flags, .page-product:not(.modal-open) .product-container .product-flags',
   },
   listing: {
     quickview: '.quick-view',

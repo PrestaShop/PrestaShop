@@ -191,41 +191,19 @@ function updateProduct(event, eventType, updateUrl) {
           const $newImagesContainer = $('<div>').append(data.product_cover_thumbnails);
 
           // Used to avoid image blinking if same image = epileptic friendly
-          if ($('.images-container').html() !== $newImagesContainer.find('.images-container').html()) {
-            $('.images-container').replaceWith(data.product_cover_thumbnails);
+          if (
+            $(prestashop.selectors.product.imageContainer).html() !==
+            $newImagesContainer.find(prestashop.selectors.product.imageContainer).html()
+          ) {
+            $(prestashop.selectors.product.imageContainer).replaceWith(data.product_cover_thumbnails);
           }
-
-          $(
-            '.quickview .product-prices, .page-product:not(.modal-open) .row .product-prices, .page-product:not(.modal-open) .product-container .product-prices'
-          )
-            .first()
-            .replaceWith(data.product_prices);
-          $(
-            '.quickview .product-customization, .page-product:not(.modal-open) .row .product-customization, .page-product:not(.modal-open) .product-container .product-customization'
-          )
-            .first()
-            .replaceWith(data.product_customization);
-          $(
-            '.quickview .product-variants, .page-product:not(.modal-open) .row .product-variants, .page-product:not(.modal-open) .product-container .product-variants'
-          )
-            .first()
-            .replaceWith(data.product_variants);
-          $(
-            '.quickview .product-discounts, .page-product:not(.modal-open) .row .product-discounts, .page-product:not(.modal-open) .product-container .product-discounts'
-          )
-            .first()
-            .replaceWith(data.product_discounts);
-          $(
-            '.quickview .product-additional-info, .page-product:not(.modal-open) .row .product-additional-info, .page-product:not(.modal-open) .product-container .product-additional-info'
-          )
-            .first()
-            .replaceWith(data.product_additional_info);
-          $('.quickview #product-details, #product-details').replaceWith(data.product_details);
-          $(
-            '.quickview .product-flags, .page-product:not(.modal-open) .row .product-flags, .page-product:not(.modal-open) .product-container .product-flags'
-          )
-            .first()
-            .replaceWith(data.product_flags);
+          $(prestashop.selectors.product.prices).first().replaceWith(data.product_prices);
+          $(prestashop.selectors.product.customization).first().replaceWith(data.product_customization);
+          $(prestashop.selectors.product.variantsUpdate).first().replaceWith(data.product_variants);
+          $(prestashop.selectors.product.discounts).first().replaceWith(data.product_discounts);
+          $(prestashop.selectors.product.additionalInfos).first().replaceWith(data.product_additional_info);
+          $(prestashop.selectors.product.details).replaceWith(data.product_details);
+          $(prestashop.selectors.product.flags).first().replaceWith(data.product_flags);
           replaceAddToCartSections(data);
           const minimalProductQuantity = parseInt(data.product_minimal_quantity, 10);
 
