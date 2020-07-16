@@ -258,4 +258,16 @@ class PrimitiveUtils
                 throw new RuntimeException("Unknown string integer: $element");
         }
     }
+
+    /**
+     * @param int $length
+     *
+     * @return string
+     *
+     * @throws Exception
+     */
+    public static function generateRandomString(int $length): string
+    {
+        return bin2hex(random_bytes(round($length / 2)));
+    }
 }

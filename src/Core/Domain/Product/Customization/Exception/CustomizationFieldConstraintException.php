@@ -34,12 +34,17 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception;
 class CustomizationFieldConstraintException extends CustomizationFieldException
 {
     /**
-     * When CustomizationFieldId is invalid
+     * When Customization field id is invalid
      */
     const INVALID_ID = 1;
 
     /**
      * When customization type is invalid
      */
-    const INVALID_TYPE = 4;
+    const INVALID_TYPE = 2;
+
+    /**
+     * When customization field name is invalid
+     */
+    const INVALID_NAME = 3;
 }

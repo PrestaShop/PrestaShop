@@ -58,6 +58,8 @@ final class AddCustomizationFieldHandler extends AbstractCustomizationFieldHandl
         $customizationField->is_module = $command->isAddedByModule();
         $customizationField->name = $command->getLocalizedNames();
 
+        $this->validateCustomizationFieldName($customizationField);
+
         try {
             if (false === $customizationField->add()) {
                 throw new CannotAddCustomizationFieldException(sprintf(

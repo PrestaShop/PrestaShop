@@ -50,10 +50,7 @@ final class UpdateCustomizationFieldHandler extends AbstractCustomizationFieldHa
     {
         $customizationField = $this->getCustomizationField($command->getCustomizationFieldId());
         $this->fillEntityWithCommandData($command, $customizationField);
-
-        if (!$customizationField->validateFields(false) || !$customizationField->validateFieldsLang(false)) {
-            throw new CannotUpdateCustomizationFieldException('Customization field contains invalid values');
-        }
+        $this->validateCustomizationFieldName($customizationField);
 
         try {
             if (false === $customizationField->update()) {

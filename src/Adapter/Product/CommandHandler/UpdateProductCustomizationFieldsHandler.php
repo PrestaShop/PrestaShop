@@ -94,7 +94,7 @@ class UpdateProductCustomizationFieldsHandler extends AbstractCustomizationField
      */
     public function handle(UpdateProductCustomizationFieldsCommand $command): array
     {
-        $this->handleDeletion($command);
+        $deletableFieldIds = $this->getDeletableFieldIds($command);
 
         foreach ($command->getCustomizationFields() as $customizationField) {
             if ($customizationField->getCustomizationFieldId()) {
@@ -102,6 +102,10 @@ class UpdateProductCustomizationFieldsHandler extends AbstractCustomizationField
             } else {
                 $this->handleCreation($command->getProductId(), $customizationField);
             }
+        }
+
+        if (!empty($deletableFieldIds)) {
+            $this->deleteFields($deletableFieldIds);
         }
 
         return $this->getProductCustomizationFieldsHandler->handle(
@@ -144,7 +148,7 @@ class UpdateProductCustomizationFieldsHandler extends AbstractCustomizationField
      * @throws ProductException
      * @throws ProductNotFoundException
      */
-    private function handleDeletion(UpdateProductCustomizationFieldsCommand $command): void
+    private function getDeletableFieldIds(UpdateProductCustomizationFieldsCommand $command): array
     {
         $product = $this->getProduct($command->getProductId());
 
@@ -153,8 +157,14 @@ class UpdateProductCustomizationFieldsHandler extends AbstractCustomizationField
             return $field->getCustomizationFieldId();
         }, $command->getCustomizationFields());
 
-        $fieldIdsForDeletion = array_diff($existingFieldIds, $providedFieldsIds);
+        return array_diff($existingFieldIds, $providedFieldsIds);
+    }
 
+    /**
+     * @param array $fieldIdsForDeletion
+     */
+    private function deleteFields(array $fieldIdsForDeletion): void
+    {
         foreach ($fieldIdsForDeletion as $fieldId) {
             $this->deleteCustomizationFieldHandler->handle(new DeleteCustomizationFieldCommand($fieldId));
         }
