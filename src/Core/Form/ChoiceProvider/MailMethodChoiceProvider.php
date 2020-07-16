@@ -67,7 +67,7 @@ final class MailMethodChoiceProvider implements FormChoiceProviderInterface
 
         if (null === $this->configuration->get('_PS_HOST_MODE_')) {
             $choices[
-                $this->trans('Use PHP\'s mail() function (recommended; works in most cases)', [], 'Admin.Advparameters.Feature')
+                $this->trans('Use /usr/sbin/sendmail (recommended; works in most cases)', [], 'Admin.Advparameters.Feature')
             ] = MailOption::METHOD_NATIVE;
         }
 
