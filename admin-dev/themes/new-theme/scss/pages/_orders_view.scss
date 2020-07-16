@@ -121,6 +121,14 @@
         }
       }
     }
+
+    @media (max-width: 1554px) {
+      .discount-action,
+      .order-product-pagination{
+        flex: 0 0 100%;
+        max-width: 100%;
+      }
+    }
   }
 
   .configure {
@@ -297,7 +305,6 @@
   #order-view-page {
     .table {
       display: block;
-      overflow-y: scroll;
     }
   }
 }

@@ -1,10 +1,11 @@
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 import $ from 'jquery';
 import prestashop from 'prestashop';
@@ -93,7 +93,7 @@ function showErrorNextToAddtoCartButton(errorMessage) {
   }
 
   showError(
-      $('.quickview #product-availability, .page-product:not(.modal-open) .row #product-availability'),
+      $('.quickview #product-availability, .page-product:not(.modal-open) .row #product-availability, .page-product:not(.modal-open) .product-container #product-availability'),
       errorMessage
   );
 }
@@ -181,13 +181,37 @@ function updateProduct(event, eventType, updateUrl) {
           $('.images-container').replaceWith(data.product_cover_thumbnails);
         }
 
-        $('.quickview .product-prices, .page-product:not(.modal-open) .row .product-prices').replaceWith(data.product_prices);
-        $('.quickview .product-customization, .page-product:not(.modal-open) .row .product-customization').replaceWith(data.product_customization);
-        $('.quickview .product-variants, .page-product:not(.modal-open) .row .product-variants').replaceWith(data.product_variants);
-        $('.quickview .product-discounts, .page-product:not(.modal-open) .row .product-discounts').replaceWith(data.product_discounts);
-        $('.quickview .product-additional-info, .page-product:not(.modal-open) .row .product-additional-info').replaceWith(data.product_additional_info);
+        $(
+          '.quickview .product-prices, .page-product:not(.modal-open) .row .product-prices, .page-product:not(.modal-open) .product-container .product-prices',
+        )
+          .first()
+          .replaceWith(data.product_prices);
+        $(
+          '.quickview .product-customization, .page-product:not(.modal-open) .row .product-customization, .page-product:not(.modal-open) .product-container .product-customization',
+        )
+          .first()
+          .replaceWith(data.product_customization);
+        $(
+          '.quickview .product-variants, .page-product:not(.modal-open) .row .product-variants, .page-product:not(.modal-open) .product-container .product-variants',
+        )
+          .first()
+          .replaceWith(data.product_variants);
+        $(
+          '.quickview .product-discounts, .page-product:not(.modal-open) .row .product-discounts, .page-product:not(.modal-open) .product-container .product-discounts',
+        )
+          .first()
+          .replaceWith(data.product_discounts);
+        $(
+          '.quickview .product-additional-info, .page-product:not(.modal-open) .row .product-additional-info, .page-product:not(.modal-open) .product-container .product-additional-info',
+        )
+          .first()
+          .replaceWith(data.product_additional_info);
         $('.quickview #product-details, #product-details').replaceWith(data.product_details);
-        $('.quickview .product-flags, .page-product:not(.modal-open) .row .product-flags').replaceWith(data.product_flags)
+        $(
+          '.quickview .product-flags, .page-product:not(.modal-open) .row .product-flags, .page-product:not(.modal-open) .product-container .product-flags',
+        )
+          .first()
+          .replaceWith(data.product_flags);
         replaceAddToCartSections(data);
         const minimalProductQuantity = parseInt(data.product_minimal_quantity, 10);
 

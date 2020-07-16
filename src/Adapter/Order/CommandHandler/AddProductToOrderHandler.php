@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,18 +17,18 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Address;
 use Attribute;
+use Cache;
 use Carrier;
 use Cart;
 use CartRule;
@@ -47,13 +48,10 @@ use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
-use PrestaShop\PrestaShop\Core\Cart\AmountImmutable;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\AddProductToOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use Product;
 use Shop;
 use SpecificPrice;
@@ -90,8 +88,14 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     private $translator;
 
     /**
+     * @var int
+     */
+    private $computingPrecision;
+
+    /**
      * @param TranslatorInterface $translator
      * @param ContextStateManager $contextStateManager
+     * @param OrderAmountUpdater $orderAmountUpdater
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -109,40 +113,50 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      */
     public function handle(AddProductToOrderCommand $command)
     {
-        $order = $this->getOrderObject($command->getOrderId());
+        $order = $this->getOrder($command->getOrderId());
 
         $this->contextStateManager
             ->setCurrency(new Currency($order->id_currency))
             ->setCustomer(new Customer($order->id_customer));
 
+        // Get context precision just in case
+        $this->computingPrecision = $this->context->getComputingPrecision();
+        $temporarySpecificPrices = [];
         try {
             $this->assertOrderWasNotShipped($order);
 
-            $product = $this->getProductObject($command->getProductId(), (int) $order->id_lang);
+            $product = $this->getProduct($command->getProductId(), (int) $order->id_lang);
             $combination = $this->getCombination($command->getCombinationId());
 
-            $this->checkProductInStock($command->getProductId()->getValue(), $command->getCombinationId(), $command->getProductQuantity());
+            $this->checkProductInStock($product, $command);
 
-            $cart = $this->createNewOrEditExistingCart($order);
+            $cart = Cart::getCartByOrderId($order->id);
+            if (!($cart instanceof Cart)) {
+                throw new OrderException('Cart linked to the order cannot be found.');
+            }
+            $this->contextStateManager->setCart($cart);
+            // Cart precision is more adapted
+            $this->computingPrecision = $this->getPrecisionFromCart($cart);
 
-            $oldCartRules = $cart->getCartRules();
+            // Restore any specific prices for the products in the order
+            $temporarySpecificPrices = $this->restoreOrderProductsSpecificPrices(
+                $order,
+                $cart
+            );
 
+            // Add specific price for the product being added
             $specificPrice = $this->createSpecificPriceIfNeeded(
-                new AmountImmutable(
-                    (float) (string) $command->getProductPriceTaxIncluded(),
-                    (float) (string) $command->getProductPriceTaxExcluded()
-                ),
+                $command->getProductPriceTaxIncluded(),
+                $command->getProductPriceTaxExcluded(),
                 $order,
                 $cart,
                 $product,
                 $combination
             );
 
-            // Restore any specific prices for the products in the order
-            $restoredSpecificPrices = $this->restoreOrderProductsSpecificPrices(
-                $order,
-                $cart
-            );
+            if (null !== $specificPrice) {
+                $temporarySpecificPrices[] = $specificPrice;
+            }
 
             $this->addProductToCart($cart, $product, $combination, $command->getProductQuantity());
 
@@ -182,57 +196,61 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
             Hook::exec('actionOrderEdited', ['order' => $order]);
 
-            $newCartRules = $cart->getCartRules();
-
-            sort($oldCartRules);
-            sort($newCartRules);
-
-            // Serialize permits to diff multi dimensional array
-            $result = array_diff(
-                array_map('serialize', $newCartRules),
-                array_map('serialize', $oldCartRules)
-            );
-            $result = array_map('unserialize', $result);
-
-            foreach ($result as $cartRule) {
-                // Create OrderCartRule
-                $rule = new CartRule($cartRule['id_cart_rule']);
-                $values = [
-                    'tax_incl' => $rule->getContextualValue(true),
-                    'tax_excl' => $rule->getContextualValue(false),
-                ];
-                $orderCartRule = new OrderCartRule();
-                $orderCartRule->id_order = $order->id;
-                $orderCartRule->id_cart_rule = $cartRule['id_cart_rule'];
-                $orderCartRule->id_order_invoice = !empty($invoice->id) ? $invoice->id : 0;
-                $orderCartRule->name = $cartRule['name'];
-                $orderCartRule->value = $values['tax_incl'];
-                $orderCartRule->value_tax_excl = $values['tax_excl'];
-                $orderCartRule->add();
-            }
+            $this->updateOrderCartRules($order, $invoice, $cart->getCartRules());
 
             // Update totals amount of order
             $order = $this->orderAmountUpdater->update($order, $cart, $orderDetail->id_order_invoice != 0);
 
-            // Delete specific price if exists
-            if (null !== $specificPrice) {
-                $specificPrice->delete();
-            }
-
-            // Delete restored specific prices
-            foreach ($restoredSpecificPrices as $restoredSpecificPrice) {
-                if (null !== $restoredSpecificPrice) {
-                    $restoredSpecificPrice->delete();
-                }
-            }
+            // Delete temporary specific prices
+            $this->clearTemporarySpecificPrices($temporarySpecificPrices);
 
             $order->update();
         } catch (Exception $e) {
+            $this->clearTemporarySpecificPrices($temporarySpecificPrices);
             $this->contextStateManager->restoreContext();
             throw $e;
         }
 
         $this->contextStateManager->restoreContext();
+    }
+
+    /**
+     * @param Order $order
+     * @param OrderInvoice|null $invoice
+     * @param array $cartCartRules
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    private function updateOrderCartRules(Order $order, ?OrderInvoice $invoice, array $cartCartRules)
+    {
+        CartRule::resetStaticCache();
+        Cache::clean('getContextualValue_*');
+
+        foreach ($cartCartRules as $cartCartRule) {
+            $rule = new CartRule($cartCartRule['id_cart_rule']);
+
+            // Search for existing order cart rule
+            $orderCartRule = null;
+            foreach ($order->getCartRules() as $existingCartRule) {
+                if ($existingCartRule['id_cart_rule'] === $cartCartRule['id_cart_rule']) {
+                    $orderCartRule = new OrderCartRule($existingCartRule['id_order_cart_rule']);
+
+                    break;
+                }
+            }
+
+            if (null === $orderCartRule) {
+                $orderCartRule = new OrderCartRule();
+            }
+            $orderCartRule->id_order = $order->id;
+            $orderCartRule->id_cart_rule = $cartCartRule['id_cart_rule'];
+            $orderCartRule->id_order_invoice = !empty($invoice->id) ? $invoice->id : 0;
+            $orderCartRule->name = $cartCartRule['name'];
+            $orderCartRule->value = Tools::ps_round($rule->getContextualValue(true), $this->computingPrecision);
+            $orderCartRule->value_tax_excl = Tools::ps_round($rule->getContextualValue(false), $this->computingPrecision);
+            $orderCartRule->save();
+        }
     }
 
     /**
@@ -245,73 +263,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         if ($order->hasBeenShipped()) {
             throw new OrderException('Cannot add product to shipped order.');
         }
-    }
-
-    /**
-     * @param int $combinationId
-     *
-     * @return Combination|null
-     */
-    private function getCombination($combinationId)
-    {
-        $combination = null;
-
-        if (0 !== $combinationId) {
-            $combination = new Combination($combinationId);
-
-            if (!Validate::isLoadedObject($combination)) {
-                throw new OrderException('Product combination not found.');
-            }
-        }
-
-        return $combination;
-    }
-
-    /**
-     * @param ProductId $productId
-     * @param int $langId
-     *
-     * @return Product
-     */
-    private function getProductObject(ProductId $productId, $langId)
-    {
-        $product = new Product($productId->getValue(), false, $langId);
-
-        if ($product->id !== $productId->getValue()) {
-            throw new OrderException(sprintf('Product with id "%d" is invalid.', $productId->getValue()));
-        }
-
-        return $product;
-    }
-
-    /**
-     * @param Order $order
-     *
-     * @return Cart
-     */
-    private function createNewOrEditExistingCart(Order $order)
-    {
-        $cartId = Cart::getCartIdByOrderId($order->id);
-        if ($cartId) {
-            $cart = new Cart($cartId);
-        } else {
-            $cart = new Cart();
-            $cart->id_shop_group = $order->id_shop_group;
-            $cart->id_shop = $order->id_shop;
-            $cart->id_customer = $order->id_customer;
-            $cart->id_carrier = $order->id_carrier;
-            $cart->id_address_delivery = $order->id_address_delivery;
-            $cart->id_address_invoice = $order->id_address_invoice;
-            $cart->id_currency = $order->id_currency;
-            $cart->id_lang = $order->id_lang;
-            $cart->secure_key = $order->secure_key;
-
-            $cart->add();
-        }
-
-        $this->context->cart = $cart;
-
-        return $cart;
     }
 
     /**
@@ -343,86 +294,33 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      * @param Order $order
      * @param Cart $cart
      *
-     * @return array
+     * @return SpecificPrice[]
      *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
     private function restoreOrderProductsSpecificPrices(Order $order, Cart $cart): array
     {
-        $restoredSpecificPrices = [];
+        $specificPrices = [];
         foreach ($order->getOrderDetailList() as $row) {
             $orderDetail = new OrderDetail($row['id_order_detail']);
             $product = new Product((int) $orderDetail->product_id);
 
-            $restoredSpecificPrices[] = $this->createSpecificPriceIfNeeded(
-                new AmountImmutable($orderDetail->unit_price_tax_incl, $orderDetail->unit_price_tax_excl),
+            $specificPrice = $this->createSpecificPriceIfNeeded(
+                new Number((string) $orderDetail->unit_price_tax_incl),
+                new Number((string) $orderDetail->unit_price_tax_excl),
                 $order,
                 $cart,
                 $product,
                 new Combination($orderDetail->product_attribute_id)
             );
+
+            if (null !== $specificPrice) {
+                $specificPrices[] = $specificPrice;
+            }
         }
 
-        return $restoredSpecificPrices;
-    }
-
-    /**
-     * @param AmountImmutable $amount
-     * @param Order $order
-     * @param Cart $cart
-     * @param Product $product
-     * @param Combination|null $combination
-     *
-     * @return SpecificPrice|null
-     */
-    private function createSpecificPriceIfNeeded(
-        AmountImmutable $amount,
-        Order $order,
-        Cart $cart,
-        Product $product,
-        $combination
-    ) {
-        $initialProductPriceTaxIncl = Product::getPriceStatic(
-            $product->id,
-            true,
-            $combination ? $combination->id : null,
-            2,
-            null,
-            false,
-            true,
-            1,
-            false,
-            $order->id_customer,
-            $cart->id,
-            $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)}
-        );
-
-        if (!(new Number((string) $amount->getTaxIncluded()))->equals(new Number((string) $initialProductPriceTaxIncl))) {
-            // @todo: use private method to create specific price object
-            $specificPrice = new SpecificPrice();
-            $specificPrice->id_shop = 0;
-            $specificPrice->id_cart = 0;
-            $specificPrice->id_shop_group = 0;
-            $specificPrice->id_currency = $order->id_currency;
-            $specificPrice->id_country = 0;
-            $specificPrice->id_group = 0;
-            $specificPrice->id_customer = $order->id_customer;
-            $specificPrice->id_product = $product->id;
-            $specificPrice->id_product_attribute = $combination ? $combination->id : 0;
-            $specificPrice->price = new Number((string) $amount->getTaxExcluded());
-            $specificPrice->from_quantity = 1;
-            $specificPrice->reduction = 0;
-            $specificPrice->reduction_type = 'amount';
-            $specificPrice->reduction_tax = 0;
-            $specificPrice->from = '0000-00-00 00:00:00';
-            $specificPrice->to = '0000-00-00 00:00:00';
-            $specificPrice->add();
-
-            return $specificPrice;
-        }
-
-        return null;
+        return $specificPrices;
     }
 
     /**
@@ -455,11 +353,11 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             case Order::ROUND_LINE:
                 $productItem['total'] = Tools::ps_round(
                     $productItem['price_with_reduction_without_tax'] * $quantity,
-                    Context::getContext()->getComputingPrecision()
+                    $this->computingPrecision
                 );
                 $productItem['total_wt'] = Tools::ps_round(
                     $productItem['price_with_reduction'] * $quantity,
-                    Context::getContext()->getComputingPrecision()
+                    $this->computingPrecision
                 );
 
                 break;
@@ -468,11 +366,11 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             default:
                 $productItem['total'] = Tools::ps_round(
                         $productItem['price_with_reduction_without_tax'],
-                        Context::getContext()->getComputingPrecision()
+                        $this->computingPrecision
                     ) * $quantity;
                 $productItem['total_wt'] = Tools::ps_round(
                         $productItem['price_with_reduction'],
-                        Context::getContext()->getComputingPrecision()
+                        $this->computingPrecision
                     ) * $quantity;
 
                 break;
@@ -600,15 +498,13 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $carrier = new Carrier((int) $order->id_carrier);
         $taxCalculator = $carrier->getTaxCalculator($invoice_address);
 
-        // @todo: use https://github.com/PrestaShop/decimal to compute prices and taxes
-        $precision = $this->getPrecisionFromCart($cart);
         $invoice->total_paid_tax_excl = Tools::ps_round(
             (float) $cart->getOrderTotal(false, $totalMethod, $newProducts),
-            $precision
+            $this->computingPrecision
         );
         $invoice->total_paid_tax_incl = Tools::ps_round(
             (float) $cart->getOrderTotal(true, $totalMethod, $newProducts),
-            $precision
+            $this->computingPrecision
         );
         $invoice->total_products = (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $newProducts);
         $invoice->total_products_wt = (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $newProducts);
@@ -643,16 +539,15 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      */
     private function updateExistingInvoice($orderInvoiceId, Cart $cart, array $newProducts)
     {
-        $precision = $this->getPrecisionFromCart($cart);
         $invoice = new OrderInvoice($orderInvoiceId);
 
         $invoice->total_paid_tax_excl += Tools::ps_round(
             (float) $cart->getOrderTotal(false, Cart::BOTH_WITHOUT_SHIPPING, $newProducts),
-            $precision
+            $this->computingPrecision
         );
         $invoice->total_paid_tax_incl += Tools::ps_round(
             (float) $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, $newProducts),
-            $precision
+            $this->computingPrecision
         );
         $invoice->total_products += (float) $cart->getOrderTotal(
             false,
@@ -671,34 +566,29 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     }
 
     /**
-     * @param int $productId
-     * @param int $combinationId
-     * @param int $expectedQuantity
+     * @param Product $product
+     * @param AddProductToOrderCommand $command
      *
      * @throws ProductOutOfStockException
      */
-    private function checkProductInStock(int $productId, int $combinationId, int $expectedQuantity): void
+    private function checkProductInStock(Product $product, AddProductToOrderCommand $command): void
     {
-        //check if product is available in stock
-        if (!Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($productId))) {
-            $availableQuantity = StockAvailable::getQuantityAvailableByProduct($productId, $combinationId);
+        if ($command->getCombinationId() > 0) {
+            $isAvailableWhenOutOfStock = Product::isAvailableWhenOutOfStock($product->out_of_stock);
+            $isEnoughQuantity = Attribute::checkAttributeQty(
+                $command->getCombinationId(),
+                $command->getProductQuantity()
+            );
 
-            if ($availableQuantity < $expectedQuantity) {
-                throw new ProductOutOfStockException('Not enough products in stock');
+            if (!$isAvailableWhenOutOfStock && !$isEnoughQuantity) {
+                throw new ProductOutOfStockException(sprintf('Product with id "%s" is out of stock, thus cannot be added to cart', $product->id));
             }
+
+            return;
         }
-    }
 
-    /**
-     * @param Cart $cart
-     *
-     * @return int
-     */
-    private function getPrecisionFromCart(Cart $cart): int
-    {
-        $computingPrecision = new ComputingPrecision();
-        $currency = new Currency((int) $cart->id_currency);
-
-        return $computingPrecision->getPrecision($currency->precision);
+        if (!$product->checkQty($command->getProductQuantity())) {
+            throw new ProductOutOfStockException(sprintf('Product with id "%s" is out of stock, thus cannot be added to cart', $product->id));
+        }
     }
 }

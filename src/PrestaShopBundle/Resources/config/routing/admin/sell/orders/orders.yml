@@ -331,3 +331,24 @@ admin_orders_cancellation:
     orderId: \d+
   options:
     expose: true
+
+admin_orders_configure_product_pagination:
+  path: /configure-product-pagination
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:configureProductPagination
+    _legacy_controller: AdminOrders
+  options:
+    expose: true
+
+admin_orders_display_customization_image:
+  path: /display-customization-image/{orderId}/{type}/{name}/{value}
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:displayCustomizationImage
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+    type: \d+
+    name: \w+
+    value: \w+

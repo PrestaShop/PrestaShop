@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\AddressFactory;
 use PrestaShop\PrestaShop\Adapter\Cache\CacheAdapter;
@@ -486,6 +486,15 @@ class CartCore extends ObjectModel
         // Define virtual context to prevent case where the cart is not the in the global context
         $virtual_context = Context::getContext()->cloneContext();
         $virtual_context->cart = $this;
+
+        // set base cart total values, they will be updated and used for percentage cart rules (because percentage cart rules
+        // are applied to the cart total's value after previously applied cart rules)
+        $virtual_context->virtualTotalTaxExcluded = $virtual_context->cart->getOrderTotal(false, self::ONLY_PRODUCTS);
+        if (Tax::excludeTaxeOption()) {
+            $virtual_context->virtualTotalTaxIncluded = $virtual_context->virtualTotalTaxExcluded;
+        } else {
+            $virtual_context->virtualTotalTaxIncluded = $virtual_context->cart->getOrderTotal(true, self::ONLY_PRODUCTS);
+        }
 
         foreach ($result as &$row) {
             $row['obj'] = new CartRule($row['id_cart_rule'], (int) $this->id_lang);
@@ -1628,15 +1637,10 @@ class CartCore extends ObjectModel
      */
     public function orderExists()
     {
-        $cache_id = 'Cart::orderExists_' . (int) $this->id;
-        if (!Cache::isStored($cache_id)) {
-            $result = (bool) Db::getInstance()->getValue('SELECT count(*) FROM `' . _DB_PREFIX_ . 'orders` WHERE `id_cart` = ' . (int) $this->id);
-            Cache::store($cache_id, $result);
-
-            return $result;
-        }
-
-        return Cache::retrieve($cache_id);
+        return (bool) Db::getInstance()->getValue(
+            'SELECT count(*) FROM `' . _DB_PREFIX_ . 'orders` WHERE `id_cart` = ' . (int) $this->id,
+            false
+        );
     }
 
     /**

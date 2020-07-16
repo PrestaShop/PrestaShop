@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,21 +17,25 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Adapter\Container\LegacyContainerInterface;
+use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 abstract class ModuleCore implements ModuleInterface
 {
@@ -3436,28 +3441,71 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * Access the Symfony Container if we are in Symfony Context.
-     * Note: in this case, we must get a container from SymfonyContainer class.
-     * Note: if not in Symfony context, fallback to legacy Container for FO/BO.
+     * Access a service from the container (found from the controller or the context
+     * depending on cases). It uses ContainerFinder to find the appropriate container.
      *
      * @param string $serviceName
      *
-     * @return object|false if a container is not available, it returns false
+     * @return object|false If a container is not available it returns false
+     *
+     * @throws ServiceCircularReferenceException When a circular reference is detected
+     * @throws ServiceNotFoundException When the service is not defined
+     * @throws \Exception
      */
     public function get($serviceName)
     {
-        if ($this->isSymfonyContext()) {
-            if (null === $this->container) {
-                $this->container = SymfonyContainer::getInstance();
-            }
-
-            return $this->container->get($serviceName);
+        try {
+            $container = $this->getContainer();
+        } catch (ContainerNotFoundException $e) {
+            return false;
         }
 
-        if ($this->context->controller instanceof Controller) {
-            return $this->context->controller->get($serviceName);
+        return $container->get($serviceName);
+    }
+
+    /**
+     * Returns the container depending on the environment:
+     *  - Legacy: light container with few services specifically defined for legacy front/admin controllers
+     *  - Symfony: symfony container with all the migrated services (CQRS, ...)
+     *
+     * If you need to detect which kind of container you are using you can check if it is an instance of LegacyContainerInterface,
+     * which means it's a legacy/light container.
+     *
+     * @return ContainerInterface
+     *
+     * @throws ContainerNotFoundException
+     */
+    public function getContainer(): ContainerInterface
+    {
+        if (null === $this->container) {
+            $finder = new ContainerFinder($this->context);
+            $this->container = $finder->getContainer();
         }
 
+        return $this->container;
+    }
+
+    /**
+     * Save dashboard configuration
+     *
+     * @param array $config
+     *
+     * @return array Array of errors
+     */
+    public function validateDashConfig(array $config)
+    {
+        return [];
+    }
+
+    /**
+     * Save dashboard configuration
+     *
+     * @param array $config
+     *
+     * @return bool Determines if the save returns an error
+     */
+    public function saveDashConfig(array $config)
+    {
         return false;
     }
 }

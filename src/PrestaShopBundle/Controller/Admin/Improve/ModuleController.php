@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Improve;
@@ -30,6 +30,7 @@ use DateTime;
 use Exception;
 use Module;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
+use PrestaShop\PrestaShop\Adapter\Module\Module as ModuleAdapter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
@@ -58,7 +59,7 @@ class ModuleController extends ModuleAbstractController
     const MAX_MODULES_DISPLAYED = 6;
 
     /**
-     * @AdminSecurity("is_granted(['read', 'create', 'update', 'delete'], 'ADMINMODULESSF_')")
+     * @AdminSecurity("is_granted(['read'], 'ADMINMODULESSF_')")
      *
      * @return Response
      */
@@ -87,7 +88,7 @@ class ModuleController extends ModuleAbstractController
     /**
      * Controller responsible for displaying "Catalog Module Grid" section of Module management pages with ajax.
      *
-     * @AdminSecurity("is_granted(['read', 'create', 'update', 'delete'], 'ADMINMODULESSF_')")
+     * @AdminSecurity("is_granted(['read'], 'ADMINMODULESSF_')")
      *
      * @param Request $request
      *
@@ -146,7 +147,7 @@ class ModuleController extends ModuleAbstractController
     }
 
     /**
-     * @AdminSecurity("is_granted(['read', 'create', 'update', 'delete'], 'ADMINMODULESSF_')")
+     * @AdminSecurity("is_granted(['read'], 'ADMINMODULESSF_')")
      *
      * @param Request $request
      *
@@ -263,7 +264,7 @@ class ModuleController extends ModuleAbstractController
     }
 
     /**
-     * @AdminSecurity("is_granted(['read', 'create', 'update', 'delete'], 'ADMINMODULESSF_')")
+     * @AdminSecurity("is_granted(['read'], 'ADMINMODULESSF_')")
      *
      * @param Request $request
      *
@@ -353,14 +354,25 @@ class ModuleController extends ModuleAbstractController
      */
     public function moduleAction(Request $request)
     {
-        $deniedAccess = $this->checkPermissions(
-            [
-                PageVoter::LEVEL_READ,
-                PageVoter::LEVEL_UPDATE,
-                PageVoter::LEVEL_CREATE,
-                PageVoter::LEVEL_DELETE,
-            ]
-        );
+        $action = $request->get('action');
+
+        switch ($action) {
+            case ModuleAdapter::ACTION_UPGRADE:
+            case ModuleAdapter::ACTION_RESET:
+            case ModuleAdapter::ACTION_ENABLE:
+            case ModuleAdapter::ACTION_DISABLE:
+            case ModuleAdapter::ACTION_ENABLE_MOBILE:
+            case ModuleAdapter::ACTION_DISABLE_MOBILE:
+                $deniedAccess = $this->checkPermission(PageVoter::UPDATE);
+                break;
+            case ModuleAdapter::ACTION_INSTALL:
+                $deniedAccess = $this->checkPermission(PageVoter::CREATE);
+                break;
+            case ModuleAdapter::ACTION_UNINSTALL:
+                $deniedAccess = $this->checkPermission(PageVoter::DELETE);
+                break;
+        }
+
         if (null !== $deniedAccess) {
             return $deniedAccess;
         }
@@ -369,7 +381,6 @@ class ModuleController extends ModuleAbstractController
             return $this->getDisabledFunctionalityResponse($request);
         }
 
-        $action = $request->get('action');
         $module = $request->get('module_name');
         $moduleManager = $this->container->get('prestashop.module.manager');
         $moduleManager->setActionParams($request->request->get('actionParams', []));
@@ -765,6 +776,23 @@ class ModuleController extends ModuleAbstractController
             $pageVoter
         )
         ) {
+            return new JsonResponse(
+                [
+                    'status' => false,
+                    'msg' => $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error'),
+                ]
+            );
+        }
+    }
+
+    /**
+     * @param string $pageVoter
+     *
+     * @return JsonResponse
+     */
+    private function checkPermission($pageVoter)
+    {
+        if (!$this->isGranted($pageVoter, self::CONTROLLER_NAME)) {
             return new JsonResponse(
                 [
                     'status' => false,
