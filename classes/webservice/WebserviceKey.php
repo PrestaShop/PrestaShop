@@ -83,7 +83,24 @@ class WebserviceKeyCore extends ObjectModel
 
     public function delete()
     {
-        return parent::delete() && ($this->deleteAssociations() !== false);
+        $result = parent::delete() && ($this->deleteAssociations() !== false);
+
+        if ($result) {
+            PrestaShopLogger::addLog(
+                Context::getContext()->getTranslator()->trans(
+                    'Webservice key deleted by employee "%d" %s %s (%s)',
+                    [
+                        Context::getContext()->employee->id,
+                        Context::getContext()->employee->firstname,
+                        Context::getContext()->employee->lastname,
+                        Context::getContext()->employee->email,
+                    ],
+                    'Admin.Advparameters.Feature'
+                )
+            );
+        }
+
+        return $result;
     }
 
     public function deleteAssociations()
