@@ -11,6 +11,8 @@ const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders/index');
 const homePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
+const foMyAccountPage = require('@pages/FO/myAccount');
+const foOrderHistoryPage = require('@pages/FO/myAccount/orderHistory');
 const productPage = require('@pages/FO/product');
 const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
@@ -34,6 +36,7 @@ Create order in FO with bank wire payment
 Go to BO orders page and change order status to 'shipped'
 Check delivery slip creation
 Download delivery slip from list and check pdf text
+Go to FO and check the new order status
  */
 describe('Check delivery slip downloaded from list', async () => {
   // before and after functions
@@ -185,6 +188,49 @@ describe('Check delivery slip downloaded from list', async () => {
         totalPaidExist,
         `Total paid '${orderInformation.totalPaid}' does not exist in delivery slip`,
       ).to.be.true;
+    });
+  });
+
+  describe('Check order status in FO ', async () => {
+    it('should go to FO page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
+
+      await homePage.goToFo(page);
+      await homePage.changeLanguage(page, 'en');
+
+      const isHomePage = await homePage.isHomePage(page);
+      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+    });
+
+    it('should go to login page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
+
+      await homePage.goToLoginPage(page);
+      const pageTitle = await foLoginPage.getPageTitle(page);
+      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+    });
+
+    it('should sign in with default customer', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
+
+      await foLoginPage.customerLogin(page, DefaultAccount);
+      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+    });
+
+    it('should go to orders history page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
+
+      await foMyAccountPage.goToHistoryAndDetailsPage(page);
+      const pageTitle = await foOrderHistoryPage.getPageTitle(page);
+      await expect(pageTitle, 'Fail to open order history page').to.contains(foOrderHistoryPage.pageTitle);
+    });
+
+    it('should check last order status in FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
+
+      const orderStatusFO = await foOrderHistoryPage.getOrderStatus(page, 1);
+      await expect(orderStatusFO, 'Order status is not correct').to.equal(Statuses.shipped.status);
     });
   });
 });
