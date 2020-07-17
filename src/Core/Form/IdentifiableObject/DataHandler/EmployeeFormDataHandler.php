@@ -125,7 +125,7 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
             $data['active'],
             $data['profile'],
             isset($data['shop_association']) ? $data['shop_association'] : $this->defaultShopAssociation,
-            $data['has_enabled_gravatar'] ?? false
+            $data['has_enabled_gravatar']
         ));
 
         /** @var UploadedFile $uploadedAvatar */
