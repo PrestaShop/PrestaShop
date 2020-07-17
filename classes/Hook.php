@@ -974,7 +974,6 @@ class HookCore extends ObjectModel
     {
         $context = Context::getContext();
         if (!Module::isEnabled($module->name) || $context->isMobile() && !Module::isEnabledForMobileDevices($module->name)) {
-
             return null;
         }
 
