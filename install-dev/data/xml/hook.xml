@@ -2759,5 +2759,10 @@
       <title>Product Listing Presenter</title>
       <description>This hook is called before a product listing is presented</description>
     </hook>
+    <hook id="actionGetEmployeeImage">
+      <name>actionGetEmployeeImage</name>
+      <title>Get Employee Image</title>
+      <description>This hook is used to get the employee image</description>
+    </hook>
   </entities>
 </entity_hook>
