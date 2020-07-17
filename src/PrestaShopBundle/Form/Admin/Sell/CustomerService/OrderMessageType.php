@@ -36,7 +36,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Length;
 
 /**
- * Backwards compatibility break due to addition of translator via TranslatorAwareTrait
+ * Backwards compatibility break introduced in 1.7.8.0 due to extension of TranslationAwareType instead of using trait
  *
  * Builds add/edit form for order message
  */
