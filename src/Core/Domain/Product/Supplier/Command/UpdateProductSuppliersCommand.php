@@ -28,10 +28,88 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
+
 /**
  * Updates product suppliers
  */
 class UpdateProductSuppliersCommand
 {
-    //@todo: implement
+    /**
+     * @var ProductId
+     */
+    private $productId;
+
+    /**
+     * @var ProductSupplier[]|null
+     */
+    private $productSuppliers;
+
+    /**
+     * @var SupplierId|null
+     */
+    private $defaultSupplierId;
+
+    /**
+     * @param int $productId
+     */
+    public function __construct(int $productId)
+    {
+        $this->productId = new ProductId($productId);
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
+    }
+
+    /**
+     * @return ProductSupplier[]
+     */
+    public function getProductSuppliers(): array
+    {
+        return $this->productSuppliers;
+    }
+
+    /**
+     * @return SupplierId|null
+     */
+    public function getDefaultSupplierId(): ?SupplierId
+    {
+        return $this->defaultSupplierId;
+    }
+
+    /**
+     * @param int $supplierId
+     *
+     * @throws SupplierException
+     */
+    public function setDefaultSupplierId(int $supplierId): self
+    {
+        $this->defaultSupplierId = new SupplierId($supplierId);
+
+        return $this;
+    }
+
+    /**
+     * @param array[] $productSuppliers
+     */
+    public function setProductSuppliers(array $productSuppliers): void
+    {
+        foreach ($productSuppliers as $productSupplier) {
+            $this->productSuppliers[] = new ProductSupplier(
+                $productSupplier['supplier_id'],
+                $productSupplier['currency_id'],
+                $productSupplier['reference'],
+                $productSupplier['price_tax_excluded'],
+                $productSupplier['product_supplier_id'] ?? null
+            );
+        }
+    }
 }
