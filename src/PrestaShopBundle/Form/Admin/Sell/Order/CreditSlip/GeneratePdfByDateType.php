@@ -63,8 +63,8 @@ final class GeneratePdfByDateType extends TranslatorAwareType
                     new DateTime([
                         'format' => $dateFormat,
                         'message' => $invalidDateMessage,
-                    ])
-                ]
+                    ]),
+                ],
             ])
             ->add('to', DatePickerType::class, [
                 'label' => $this->trans('To', 'Admin.Global'),

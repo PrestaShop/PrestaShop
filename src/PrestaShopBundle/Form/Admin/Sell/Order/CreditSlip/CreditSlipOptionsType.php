@@ -36,14 +36,13 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 final class CreditSlipOptionsType extends TranslatorAwareType
 {
-
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('slip_prefix', TranslatableType::class, [
-            'label' => $this->trans('Credit slip prefix','Admin.Orderscustomers.Feature'),
+            'label' => $this->trans('Credit slip prefix', 'Admin.Orderscustomers.Feature'),
             'help' => $this->trans('Prefix used for credit slips.', 'Admin.Orderscustomers.Help'),
             'required' => false,
             'error_bubbling' => true,
