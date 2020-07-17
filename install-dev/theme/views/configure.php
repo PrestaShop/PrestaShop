@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
  $this->displayTemplate('header') ?>
 
@@ -53,7 +53,6 @@
 		<p class="userInfos aligned"><?php echo $this->translator->trans('Help us learn more about your store so we can offer you optimal guidance and the best features for your business!', array(), 'Install') ?></p>
 	</div>
 
-	<?php if (_PS_MODE_DEV_): ?>
 	<!-- Install type (with fixtures or not) -->
 	<div class="field clearfix">
 		<label class="aligned"><?php echo $this->translator->trans('Install demo products', array(), 'Install'); ?></label>
@@ -69,9 +68,6 @@
 		</div>
 		<p class="userInfos aligned"><?php echo $this->translator->trans('Demo products are a good way to learn how to use PrestaShop. You should install them if you are not familiar with it.', array(), 'Install'); ?></p>
 	</div>
-	<?php else: ?>
-		<input value="full" name="db_mode" type="hidden" />
-	<?php endif; ?>
 
 	<!-- Country list -->
 	<div class="field clearfix">
@@ -103,20 +99,20 @@
 		<?php echo $this->displayError('shop_timezone') ?>
 	</div>
 
-	<!-- Shop logo
-	<div class="field clearfix">
-		<label for="uploadedImage" class="aligned logo"><?php echo $this->translator->trans('Shop logo', array(), 'Install'); ?></label>
-		<div class="contentinput">
-			<p id="alignedLogo"><img id="uploadedImage" src="../img/logo.jpg?t=<?php echo time() ?>" alt="Logo" /></p>
-		</div>
-		<p class="userInfos aligned"><?php echo $this->translator->trans('Optional - You can add you logo at a later time.', array(), 'Install'); ?></p>
-
-		<div id="inputFileLogo" class="contentinput" style="top:-20px;position:relative">
-			<input type="file" name="fileToUpload" id="fileToUpload"/>
-		</div>
-		<span id="resultInfosLogo" class="result"></span>
-	</div>
-	 -->
+    <!-- Enable SSL -->
+    <div class="field clearfix">
+        <label class="aligned"><?php echo $this->translator->trans('Enable SSL', array(), 'Install'); ?></label>
+        <div class="contentinput">
+            <label>
+                <input value="1" type="radio" name="enable_ssl" style="vertical-align: middle;" <?php if ($this->session->enable_ssl == '1'): ?>checked="checked"<?php endif; ?> autocomplete="off" />
+                <?php echo $this->translator->trans('Yes', array(), 'Install'); ?>
+            </label>
+            <label>
+                <input value="0" type="radio" name="enable_ssl" style="vertical-align: middle;" <?php if ($this->session->enable_ssl == '0'): ?>checked="checked"<?php endif; ?> autocomplete="off" />
+                <?php echo $this->translator->trans('No', array(), 'Install'); ?>
+            </label>
+        </div>
+    </div>
 
 	<h2 style="margin-top:20px"><?php echo $this->translator->trans('Your Account', array(), 'Install'); ?></h2>
 

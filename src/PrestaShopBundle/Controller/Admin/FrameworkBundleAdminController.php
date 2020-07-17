@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,26 +17,29 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,6 +49,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class FrameworkBundleAdminController extends Controller
 {
+    const PRESTASHOP_CORE_CONTROLLERS_TAG = 'prestashop.core.controllers';
+
     /**
      * @var ConfigurationInterface
      */
@@ -76,26 +82,12 @@ class FrameworkBundleAdminController extends Controller
         ];
     }
 
-    public function hashUpdateJsAction($hash)
-    {
-        $contents = file_get_contents('http://localhost:8080/' . $hash . '.hot-update.js');
-
-        return new Response($contents);
-    }
-
-    public function hashUpdateJsonAction($hash)
-    {
-        $contents = file_get_contents('http://localhost:8080/' . $hash . '.hot-update.json');
-
-        return new Response($contents);
-    }
-
     /**
      * Returns form errors for JS implementation.
      *
      * Parse all errors mapped by id html field
      *
-     * @param Form $form The form
+     * @param Form $form
      *
      * @return array[array[string]] Errors
      *
@@ -208,6 +200,27 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
+     * Get the locale based on the context
+     *
+     * @return Locale
+     */
+    protected function getContextLocale(): Locale
+    {
+        $locale = $this->getContext()->getCurrentLocale();
+        if (null !== $locale) {
+            return $locale;
+        }
+
+        /** @var LocaleRepository $localeRepository */
+        $localeRepository = $this->get('prestashop.core.localization.locale.repository');
+        $locale = $localeRepository->getLocale(
+            $this->getContext()->language->getLocale()
+        );
+
+        return $locale;
+    }
+
+    /**
      * @param $lang
      *
      * @return mixed
@@ -236,7 +249,7 @@ class FrameworkBundleAdminController extends Controller
     /**
      * Checks if the attributes are granted against the current authentication token and optionally supplied object.
      *
-     * @param string $controller name of the controller to valide access
+     * @param string $controller name of the controller that token is tested against
      *
      * @return int
      *
@@ -361,11 +374,25 @@ class FrameworkBundleAdminController extends Controller
      *
      * @param string $type
      * @param string $code
+     * @param string $message
      *
      * @return string
      */
-    protected function getFallbackErrorMessage($type, $code)
+    protected function getFallbackErrorMessage($type, $code, $message = '')
     {
+        $isDebug = $this->get('kernel')->isDebug();
+        if ($isDebug && !empty($message)) {
+            return $this->trans(
+                'An unexpected error occurred. [%type% code %code%]: %message%',
+                'Admin.Notifications.Error',
+                [
+                    '%type%' => $type,
+                    '%code%' => $code,
+                    '%message%' => $message,
+                ]
+            );
+        }
+
         return $this->trans(
             'An unexpected error occurred. [%type% code %code%]',
             'Admin.Notifications.Error',
@@ -454,6 +481,17 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
+     * @param FormInterface $form
+     */
+    protected function addFlashFormErrors(FormInterface $form)
+    {
+        /** @var FormError $formError */
+        foreach ($form->getErrors(true) as $formError) {
+            $this->addFlash('error', $formError->getMessage());
+        }
+    }
+
+    /**
      * Get error by exception from given messages
      *
      * @param Exception $e
@@ -484,7 +522,8 @@ class FrameworkBundleAdminController extends Controller
 
         return $this->getFallbackErrorMessage(
             $exceptionType,
-            $exceptionCode
+            $exceptionCode,
+            $e->getMessage()
         );
     }
 }

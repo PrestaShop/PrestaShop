@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,21 +17,20 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
-use PrestaShopBundle\Translation\Loader\SqlTranslationLoader;
 use PrestaShopBundle\Translation\TranslatorComponent as Translator;
+use PrestaShopBundle\Translation\TranslatorLanguageLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Translation\Loader\XliffFileLoader;
 
 /**
  * Class ContextCore.
@@ -99,6 +99,9 @@ class ContextCore
 
     /** @var Translator */
     protected $translator = null;
+
+    /** @var int */
+    protected $priceComputingPrecision = null;
 
     /**
      * Mobile device of the customer.
@@ -361,6 +364,8 @@ class ContextCore
         $this->cookie->id_cart = (int) $this->cart->id;
         $this->cookie->write();
         $this->cart->autosetProductAddress();
+
+        $this->cookie->registerSession(new CustomerSession());
     }
 
     /**
@@ -373,7 +378,7 @@ class ContextCore
      */
     public function getTranslator($isInstaller = false)
     {
-        if (null !== $this->translator) {
+        if (null !== $this->translator && $this->language->locale === $this->translator->getLocale()) {
             return $this->translator;
         }
 
@@ -406,9 +411,7 @@ class ContextCore
 
         // In case we have at least 1 translated message, we return the current translator.
         // If some translations are missing, clear cache
-        if ($locale === '' || count($translator->getCatalogue($locale)->all())) {
-            $this->translator = $translator;
-
+        if ($locale === '' || null === $locale || count($translator->getCatalogue($locale)->all())) {
             return $translator;
         }
 
@@ -423,31 +426,14 @@ class ContextCore
             (new Filesystem())->remove($cache_file);
         }
 
+        $translator->clearLanguage($locale);
+
         $adminContext = defined('_PS_ADMIN_DIR_');
-        $translator->addLoader('xlf', new XliffFileLoader());
-
-        $sqlTranslationLoader = new SqlTranslationLoader();
-        if (null !== $this->shop) {
-            $sqlTranslationLoader->setTheme($this->shop->theme);
-        }
-
-        $translator->addLoader('db', $sqlTranslationLoader);
-        $notName = $adminContext ? '^Shop*' : '^Admin*';
-
-        $finder = Finder::create()
-            ->files()
-            ->name('*.' . $locale . '.xlf')
-            ->notName($notName)
-            ->in($this->getTranslationResourcesDirectories());
-
-        foreach ($finder as $file) {
-            list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
-
-            $translator->addResource($format, $file, $locale, $domain);
-            if (!$this->language instanceof PrestashopBundle\Install\Language) {
-                $translator->addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
-            }
-        }
+        // Do not load DB translations when $this->language is PrestashopBundle\Install\Language
+        // because it means that we're looking for the installer translations, so we're not yet connected to the DB
+        $withDB = !$this->language instanceof PrestashopBundle\Install\Language;
+        $theme = $this->shop !== null ? $this->shop->theme : null;
+        (new TranslatorLanguageLoader($adminContext))->loadLanguage($translator, $locale, $withDB, $theme);
 
         return $translator;
     }
@@ -457,7 +443,7 @@ class ContextCore
      */
     protected function getTranslationResourcesDirectories()
     {
-        $locations = array(_PS_ROOT_DIR_ . '/app/Resources/translations');
+        $locations = [_PS_ROOT_DIR_ . '/app/Resources/translations'];
 
         if (null !== $this->shop) {
             $activeThemeLocation = _PS_ROOT_DIR_ . '/themes/' . $this->shop->theme_name . '/translations';
@@ -467,5 +453,20 @@ class ContextCore
         }
 
         return $locations;
+    }
+
+    /**
+     * Returns the computing precision according to the current currency
+     *
+     * @return int
+     */
+    public function getComputingPrecision()
+    {
+        if ($this->priceComputingPrecision === null) {
+            $computingPrecision = new ComputingPrecision();
+            $this->priceComputingPrecision = $computingPrecision->getPrecision($this->currency->precision);
+        }
+
+        return $this->priceComputingPrecision;
     }
 }

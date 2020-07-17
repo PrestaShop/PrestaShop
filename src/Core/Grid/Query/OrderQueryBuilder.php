@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
@@ -86,23 +86,18 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $newCustomerSubSelect = $this->connection
-            ->createQueryBuilder()
-            ->select('so.id_order')
-            ->from($this->dbPrefix . 'orders', 'so')
-            ->where('so.id_customer = o.id_customer')
-            ->andWhere('so.id_order < o.id_order')
-            ->setMaxResults(1)
-        ;
-
         $qb = $this
             ->getBaseQueryBuilder($searchCriteria->getFilters())
+            ->addSelect($this->getCustomerField() . ' AS `customer`')
             ->addSelect('o.id_order, o.reference, o.total_paid_tax_incl, os.paid, osl.name AS osname')
-            ->addSelect('CONCAT(LEFT(cu.`firstname`, 1), \'. \', cu.`lastname`) AS `customer`')
+            ->addSelect('o.id_currency, cur.iso_code')
+            ->addSelect('o.current_state, o.id_customer')
+            ->addSelect('cu.`id_customer` IS NULL as `deleted_customer`')
             ->addSelect('os.color, o.payment, s.name AS shop_name')
             ->addSelect('o.date_add, cu.company, cl.name AS country_name, o.invoice_number, o.delivery_number')
-            ->addSelect('IF ((' . $newCustomerSubSelect->getSQL() . ') > 0, 0, 1) AS new')
         ;
+
+        $this->addNewCustomerField($qb);
 
         $this->applySorting($qb, $searchCriteria);
 
@@ -120,10 +115,16 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        return $this->connection
-            ->createQueryBuilder()
-            ->select('FOUND_ROWS()')
-        ;
+        $qb = $this->getBaseQueryBuilder($searchCriteria->getFilters());
+        if (isset($searchCriteria->getFilters()['new'])) {
+            $this->addNewCustomerField($qb->addSelect('o.id_order as o_id_order'));
+            $qb = $this->applyNewCustomerFilter($qb, $searchCriteria->getFilters());
+            $qb->select('count(o_id_order)');
+        } else {
+            $qb->select('count(o.id_order)');
+        }
+
+        return $qb;
     }
 
     /**
@@ -137,6 +138,7 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'orders', 'o')
             ->leftJoin('o', $this->dbPrefix . 'customer', 'cu', 'o.id_customer = cu.id_customer')
+            ->leftJoin('o', $this->dbPrefix . 'currency', 'cur', 'o.id_currency = cur.id_currency')
             ->innerJoin('o', $this->dbPrefix . 'address', 'a', 'o.id_address_delivery = a.id_address')
             ->innerJoin('a', $this->dbPrefix . 'country', 'c', 'a.id_country = c.id_country')
             ->innerJoin(
@@ -169,11 +171,10 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
             'reference' => 'o.`reference`',
             'company' => 'cu.`company`',
             'payment' => 'o.`payment`',
+            'customer' => $this->getCustomerField(),
         ];
 
-        $havingLikeComparisonFilters = [
-            'customer' => 'customer',
-        ];
+        $havingLikeComparisonFilters = [];
 
         $dateComparisonFilters = [
             'date_add' => 'o.`date_add`',
@@ -229,6 +230,31 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
         }
 
         return $qb;
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     */
+    private function addNewCustomerField(QueryBuilder $qb)
+    {
+        $newCustomerSubSelect = $this->connection
+            ->createQueryBuilder()
+            ->select('so.id_order')
+            ->from($this->dbPrefix . 'orders', 'so')
+            ->where('so.id_customer = o.id_customer')
+            ->andWhere('so.id_order < o.id_order')
+            ->setMaxResults(1)
+        ;
+
+        $qb->addSelect('IF ((' . $newCustomerSubSelect->getSQL() . ') > 0, 0, 1) AS new');
+    }
+
+    /**
+     * @return string
+     */
+    private function getCustomerField()
+    {
+        return 'CONCAT(LEFT(cu.`firstname`, 1), \'. \', cu.`lastname`)';
     }
 
     /**

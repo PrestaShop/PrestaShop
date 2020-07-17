@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace LegacyTests\Unit\Core\Cart\Calculation;
@@ -214,7 +214,7 @@ class CartOld extends Cart
             switch ($ps_round_type) {
                 case Order::ROUND_TOTAL:
                     $products_total[$id_tax_rules_group . '_' . $id_address] += $price
-                                                                                * (int) $product['cart_quantity'];
+                        * (int) $product['cart_quantity'];
 
                     break;
 
@@ -229,7 +229,7 @@ class CartOld extends Cart
                     $product_price                       = /*$with_taxes ? $tax_calculator->addTaxes($price) : */
                         $price;
                     $products_total[$id_tax_rules_group] += Tools::ps_round($product_price, $compute_precision)
-                                                            * (int) $product['cart_quantity'];
+                        * (int) $product['cart_quantity'];
 
                     break;
             }
@@ -290,7 +290,7 @@ class CartOld extends Cart
                         foreach ($products as $product) {
                             if ($cartRule->gift_product == $product['id_product']
                                 && $cartRule->gift_product_attribute
-                                   == $product['id_product_attribute']) {
+                                == $product['id_product_attribute']) {
                                 $in_order = true;
                             }
                         }
@@ -323,7 +323,7 @@ class CartOld extends Cart
             }
 
             $order_total_discount = min(Tools::ps_round($order_total_discount, 2), (float) $order_total_products)
-                                    + (float) $order_shipping_discount;
+                + (float) $order_shipping_discount;
             $order_total          -= $order_total_discount;
         }
 

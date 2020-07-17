@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 class OrderCartRuleCore extends ObjectModel
 {
@@ -52,23 +52,23 @@ class OrderCartRuleCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'order_cart_rule',
         'primary' => 'id_order_cart_rule',
-        'fields' => array(
-            'id_order' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_cart_rule' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_order_invoice' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true),
-            'value' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
-            'value_tax_excl' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
-            'free_shipping' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-        ),
-    );
+        'fields' => [
+            'id_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_cart_rule' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_order_invoice' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'name' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true],
+            'value' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true],
+            'value_tax_excl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true],
+            'free_shipping' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id_order' => array('xlink_resource' => 'orders'),
-        ),
-    );
+    protected $webserviceParameters = [
+        'fields' => [
+            'id_order' => ['xlink_resource' => 'orders'],
+        ],
+    ];
 }

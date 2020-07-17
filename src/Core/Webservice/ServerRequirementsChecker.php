@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Webservice;
@@ -37,8 +37,6 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 final class ServerRequirementsChecker implements ServerRequirementsCheckerInterface
 {
-    const ISSUE_NOT_APACHE_SERVER = 'not_apache_server';
-    const ISSUE_CANNOT_CHECK_APACHE_MODULES = 'cannot_check_apache_modules';
     const ISSUE_APACHE_MOD_AUTH_BASIC_NOT_AVAILABLE = 'issue_apache_mod_auth_basic_not_available';
     const ISSUE_APACHE_MOD_AUTH_REWRITE_NOT_AVAILABLE = 'issue_apache_mod_auth_rewrite_not_available';
     const ISSUE_EXT_SIMPLEXML_NOT_AVAILABLE = 'issue_ext_simplexml_not_available';
@@ -117,8 +115,16 @@ final class ServerRequirementsChecker implements ServerRequirementsCheckerInterf
     {
         $issues = [];
 
+        if (!$this->phpExtensionChecker->loaded('SimpleXML')) {
+            $issues[] = self::ISSUE_EXT_SIMPLEXML_NOT_AVAILABLE;
+        }
+
+        if (false === $this->configuration->getBoolean('PS_SSL_ENABLED')) {
+            $issues[] = self::ISSUE_HTTPS_NOT_AVAILABLE;
+        }
+
         if (false === strpos($this->hostingInformation->getServerInformation()['version'], 'Apache')) {
-            $issues[] = self::ISSUE_NOT_APACHE_SERVER;
+            return $issues;
         }
 
         if (function_exists('apache_get_modules')) {
@@ -131,16 +137,6 @@ final class ServerRequirementsChecker implements ServerRequirementsCheckerInterf
             if (false === in_array('mod_rewrite', $apache_modules)) {
                 $issues[] = self::ISSUE_APACHE_MOD_AUTH_REWRITE_NOT_AVAILABLE;
             }
-        } else {
-            $issues[] = self::ISSUE_CANNOT_CHECK_APACHE_MODULES;
-        }
-
-        if (!$this->phpExtensionChecker->loaded('SimpleXML')) {
-            $issues[] = self::ISSUE_EXT_SIMPLEXML_NOT_AVAILABLE;
-        }
-
-        if (false === $this->configuration->getBoolean('PS_SSL_ENABLED')) {
-            $issues[] = self::ISSUE_HTTPS_NOT_AVAILABLE;
         }
 
         return $issues;
@@ -152,16 +148,6 @@ final class ServerRequirementsChecker implements ServerRequirementsCheckerInterf
     private function getWarningMessages()
     {
         return [
-            self::ISSUE_NOT_APACHE_SERVER => $this->translator->trans(
-                'To avoid operating problems, please use an Apache server.',
-                [],
-                'Admin.Advparameters.Notification'
-            ),
-            self::ISSUE_CANNOT_CHECK_APACHE_MODULES => $this->translator->trans(
-                'Please activate the \'mod_auth_basic\' Apache module to allow authentication of PrestaShop\'s webservice.',
-                [],
-                'Admin.Advparameters.Notification'
-            ),
             self::ISSUE_APACHE_MOD_AUTH_BASIC_NOT_AVAILABLE => $this->translator->trans(
                 'Please activate the \'mod_rewrite\' Apache module to allow the PrestaShop webservice.',
                 [],

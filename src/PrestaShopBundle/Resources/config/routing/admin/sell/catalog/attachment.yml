@@ -1,0 +1,69 @@
+admin_attachments_index:
+  path: /
+  methods: GET
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Attachment:index
+    _legacy_controller: AdminAttachments
+    _legacy_link: AdminAttachments
+
+admin_attachments_filter:
+  path: /
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Common:searchGrid
+    _legacy_controller: AdminAttachments
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.attachment
+    redirectRoute: admin_attachments_index
+    _legacy_link: AdminAttachments:submitFilterattachment
+
+admin_attachments_create:
+  path: /new
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Attachment:create
+    _legacy_controller: AdminAttachments
+    _legacy_link: AdminAttachments:addattachment
+
+admin_attachments_edit:
+  path: /{attachmentId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Attachment:edit
+    _legacy_controller: AdminAttachments
+    _legacy_link: AdminAttachments:updateattachment
+    _legacy_parameters:
+      id_attachment: attachmentId
+  requirements:
+    attachmentId: \d+
+
+admin_attachments_view:
+  path: /{attachmentId}/view
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Attachment:view
+    _legacy_controller: AdminAttachments
+    _legacy_link: AdminAttachments:viewattachment
+    _legacy_parameters:
+      id_attachment: attachmentId
+  requirements:
+    attachmentId: \d+
+
+admin_attachments_delete_bulk:
+  path: /delete-bulk
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Attachment:deleteBulk
+    _legacy_controller: AdminAttachments
+    _legacy_link: AdminAttachments:submitBulkdeleteattachment
+
+admin_attachments_delete:
+  path: /{attachmentId}/delete
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Attachment:delete
+    _legacy_controller: AdminAttachments
+    _legacy_link: AdminAttachments:deleteattachment
+    _legacy_parameters:
+      id_attachment: attachmentId
+  requirements:
+    attachmentId: \d+

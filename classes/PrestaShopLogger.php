@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -47,7 +47,7 @@ class PrestaShopLoggerCore extends ObjectModel
     /** @var int Object ID */
     public $object_id;
 
-    /** @var int Object ID */
+    /** @var int Employee ID */
     public $id_employee;
 
     /** @var string Object creation date */
@@ -59,22 +59,22 @@ class PrestaShopLoggerCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'log',
         'primary' => 'id_log',
-        'fields' => array(
-            'severity' => array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
-            'error_code' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'message' => array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true),
-            'object_id' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'id_employee' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'object_type' => array('type' => self::TYPE_STRING, 'validate' => 'isName'),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-        ),
-    );
+        'fields' => [
+            'severity' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true],
+            'error_code' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'message' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true],
+            'object_id' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'object_type' => ['type' => self::TYPE_STRING, 'validate' => 'isName'],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+        ],
+    ];
 
-    protected static $is_present = array();
+    protected static $is_present = [];
 
     /**
      * Send e-mail to the shop owner only if the minimal severity level has been reached.
@@ -91,11 +91,11 @@ class PrestaShopLoggerCore extends ObjectModel
                 'log_alert',
                 Context::getContext()->getTranslator()->trans(
                     'Log: You have a new alert from your shop',
-                    array(),
+                    [],
                     'Emails.Subject',
                     $language->locale
                 ),
-                array(),
+                [],
                 Configuration::get('PS_SHOP_EMAIL')
             );
         }

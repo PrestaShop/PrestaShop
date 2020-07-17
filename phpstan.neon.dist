@@ -1,0 +1,8 @@
+parameters:
+	level: 1
+	bootstrapFiles:
+		- .github/workflows/phpstan/autoload.php
+	paths:
+		- src
+	ignoreErrors:
+		- '#Unsafe usage of new static().#'

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Api;
@@ -64,21 +64,25 @@ class StockController extends ApiController
      */
     public function listProductsAction(Request $request)
     {
+        if (!$this->isGranted([PageVoter::READ], $request->get('_legacy_controller'))) {
+            return new JsonResponse(null, Response::HTTP_FORBIDDEN);
+        }
+
         try {
             $queryParamsCollection = $this->queryParams->fromRequest($request);
         } catch (InvalidPaginationParamsException $exception) {
             return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
         }
 
-        $stock = array(
-            'info' => array(
+        $stock = [
+            'info' => [
                 'edit_bulk_url' => $this->container->get('router')->generate('api_stock_bulk_edit_products'),
-            ),
+            ],
             'data' => $this->stockRepository->getData($queryParamsCollection),
-        );
+        ];
         $totalPages = $this->stockRepository->countPages($queryParamsCollection);
 
-        return $this->jsonResponse($stock, $request, $queryParamsCollection, 200, array('Total-Pages' => $totalPages));
+        return $this->jsonResponse($stock, $request, $queryParamsCollection, 200, ['Total-Pages' => $totalPages]);
     }
 
     /**
@@ -99,10 +103,10 @@ class StockController extends ApiController
             return $this->handleException($exception);
         }
 
-        $productIdentity = ProductIdentity::fromArray(array(
+        $productIdentity = ProductIdentity::fromArray([
             'product_id' => $request->attributes->get('productId'),
             'combination_id' => $request->attributes->get('combinationId', 0),
-        ));
+        ]);
 
         try {
             $movement = new Movement($productIdentity, $delta);
@@ -150,6 +154,10 @@ class StockController extends ApiController
      */
     public function listProductsExportAction(Request $request)
     {
+        if (!$this->isGranted([PageVoter::READ], $request->get('_legacy_controller'))) {
+            return new JsonResponse(null, Response::HTTP_FORBIDDEN);
+        }
+
         try {
             $queryParamsCollection = $this->queryParams->fromRequest($request);
         } catch (InvalidPaginationParamsException $exception) {
@@ -163,21 +171,21 @@ class StockController extends ApiController
         $translator = $this->container->get('translator');
 
         // headers columns
-        $headersData = array(
+        $headersData = [
             'product_id' => 'Product ID',
             'combination_id' => 'Combination ID',
-            'product_reference' => $translator->trans('Product reference', array(), 'Admin.Advparameters.Feature'),
-            'combination_reference' => $translator->trans('Combination reference', array(), 'Admin.Advparameters.Feature'),
-            'product_name' => $translator->trans('Product name', array(), 'Admin.Catalog.Feature'),
-            'combination_name' => $translator->trans('Combination name', array(), 'Admin.Catalog.Feature'),
-            'supplier_name' => $translator->trans('Supplier', array(), 'Admin.Global'),
-            'active' => $translator->trans('Status', array(), 'Admin.Global'),
-            'product_physical_quantity' => $translator->trans('Physical quantity', array(), 'Admin.Catalog.Feature'),
-            'product_reserved_quantity' => $translator->trans('Reserved quantity', array(), 'Admin.Catalog.Feature'),
-            'product_available_quantity' => $translator->trans('Available quantity', array(), 'Admin.Catalog.Feature'),
-            'product_low_stock_threshold' => $translator->trans('Low stock level', array(), 'Admin.Catalog.Feature'),
-            'product_low_stock_alert' => $translator->trans('Send me an email when the quantity is below or equals this level', array(), 'Admin.Catalog.Feature'),
-        );
+            'product_reference' => $translator->trans('Product reference', [], 'Admin.Advparameters.Feature'),
+            'combination_reference' => $translator->trans('Combination reference', [], 'Admin.Advparameters.Feature'),
+            'product_name' => $translator->trans('Product name', [], 'Admin.Catalog.Feature'),
+            'combination_name' => $translator->trans('Combination name', [], 'Admin.Catalog.Feature'),
+            'supplier_name' => $translator->trans('Supplier', [], 'Admin.Global'),
+            'active' => $translator->trans('Status', [], 'Admin.Global'),
+            'product_physical_quantity' => $translator->trans('Physical quantity', [], 'Admin.Catalog.Feature'),
+            'product_reserved_quantity' => $translator->trans('Reserved quantity', [], 'Admin.Catalog.Feature'),
+            'product_available_quantity' => $translator->trans('Available quantity', [], 'Admin.Catalog.Feature'),
+            'product_low_stock_threshold' => $translator->trans('Low stock level', [], 'Admin.Catalog.Feature'),
+            'product_low_stock_alert' => $translator->trans('Send me an email when the quantity is below or equals this level', [], 'Admin.Catalog.Feature'),
+        ];
 
         return (new CsvResponse())
             ->setData($dataCallback)

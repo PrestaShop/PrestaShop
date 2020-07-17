@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
@@ -84,7 +84,8 @@ final class SupplierFormDataHandler implements FormDataHandlerInterface
             $data['post_code'],
             isset($data['id_state']) ? (int) $data['id_state'] : null,
             $data['phone'],
-            $data['mobile_phone']
+            $data['mobile_phone'],
+            $data['dni']
         ));
 
         /** @var UploadedFile $uploadedFlagImage */
@@ -124,19 +125,45 @@ final class SupplierFormDataHandler implements FormDataHandlerInterface
      */
     private function fillCommandWithData(EditSupplierCommand $command, array $data)
     {
-        $command->setName($data['name']);
-        $command->setLocalizedDescriptions($data['description']);
-        $command->setPhone($data['phone']);
-        $command->setMobilePhone($data['mobile_phone']);
-        $command->setAddress($data['address']);
-        $command->setAddress2($data['address2']);
-        $command->setPostCode($data['post_code']);
-        $command->setCity($data['city']);
-        $command->setCountryId((int) $data['id_country']);
-        $command->setLocalizedMetaTitles($data['meta_title']);
-        $command->setLocalizedMetaDescriptions($data['meta_description']);
-        $command->setLocalizedMetaKeywords($data['meta_keyword']);
-        $command->setEnabled((bool) $data['is_enabled']);
+        if (null !== $data['name']) {
+            $command->setName($data['name']);
+        }
+        if (null !== $data['description']) {
+            $command->setLocalizedDescriptions($data['description']);
+        }
+        if (null !== $data['phone']) {
+            $command->setPhone($data['phone']);
+        }
+        if (null !== $data['mobile_phone']) {
+            $command->setMobilePhone($data['mobile_phone']);
+        }
+        if (null !== $data['address']) {
+            $command->setAddress($data['address']);
+        }
+        if (null !== $data['address2']) {
+            $command->setAddress2($data['address2']);
+        }
+        if (null !== $data['post_code']) {
+            $command->setPostCode($data['post_code']);
+        }
+        if (null !== $data['city']) {
+            $command->setCity($data['city']);
+        }
+        if (null !== $data['id_country']) {
+            $command->setCountryId((int) $data['id_country']);
+        }
+        if (null !== $data['meta_title']) {
+            $command->setLocalizedMetaTitles($data['meta_title']);
+        }
+        if (null !== $data['meta_description']) {
+            $command->setLocalizedMetaDescriptions($data['meta_description']);
+        }
+        if (null !== $data['is_enabled']) {
+            $command->setEnabled((bool) $data['is_enabled']);
+        }
+        if (null !== $data['dni']) {
+            $command->setDni($data['dni']);
+        }
 
         if (isset($data['id_state'])) {
             $command->setStateId((int) $data['id_state']);

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,20 +17,21 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Unit\Core\ConstraintValidator;
 
+use PHPUnit\Framework\MockObject\Builder\InvocationMocker;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\IsUrlRewriteValidator;
-use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 /**
@@ -42,9 +44,28 @@ class IsUrlRewriteValidatorTest extends ConstraintValidatorTestCase
      */
     private $useAscendedChars;
 
+    /**
+     * @var InvocationMocker
+     */
+    private $configurationMockWithAscendingCharsOn;
+
     public function setUp()
     {
         $this->useAscendedChars = false;
+
+        $this->configurationMockWithAscendingCharsOff = $this->getMockBuilder(ConfigurationInterface::class)
+            ->getMock()
+        ;
+
+        $this->configurationMockWithAscendingCharsOn = $this->getMockBuilder(ConfigurationInterface::class)
+            ->getMock()
+        ;
+
+        $this->configurationMockWithAscendingCharsOn
+            ->method('get')
+            ->with('PS_ALLOW_ACCENTED_CHARS_URL')
+            ->willReturn(true)
+        ;
 
         parent::setUp();
     }
@@ -97,6 +118,7 @@ class IsUrlRewriteValidatorTest extends ConstraintValidatorTestCase
         $this->useAscendedChars = true;
 
         $validator = $this->createValidator();
+        $validator->initialize($this->context);
 
         $validator->validate($correctRewriteUrl, new IsUrlRewrite());
 
@@ -152,10 +174,10 @@ class IsUrlRewriteValidatorTest extends ConstraintValidatorTestCase
     {
         return [
             [
-              'aĮأ',
+                'aĮأ',
             ],
             [
-              'Šarūnas',
+                'Šarūnas',
             ],
             [
                 '_$',
@@ -165,6 +187,11 @@ class IsUrlRewriteValidatorTest extends ConstraintValidatorTestCase
 
     protected function createValidator()
     {
-        return new IsUrlRewriteValidator($this->useAscendedChars);
+        $configuration = $this->useAscendedChars ?
+             $this->configurationMockWithAscendingCharsOn :
+             0
+         ;
+
+        return new IsUrlRewriteValidator($configuration);
     }
 }

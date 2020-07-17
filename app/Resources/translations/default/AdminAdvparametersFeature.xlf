@@ -78,50 +78,7 @@
       <trans-unit id="9d20a93036ba910dd75ffbcec173798e">
         <source>Price per unit</source>
         <target>Price per unit</target>
-        <note>Line: 929</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/request_sql/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ac104da0cd80e52437b67aefa351e177">
-        <source>List of MySQL Tables</source>
-        <target>List of MySQL Tables</target>
-        <note>Line: 36</note>
-      </trans-unit>
-      <trans-unit id="1ee79b4b20638d135b8ae8122f7770b9">
-        <source>Please choose a table.</source>
-        <target>Please choose a table.</target>
-        <note>Line: 108</note>
-      </trans-unit>
-      <trans-unit id="1a696d8e9ac51e281e1cf1b646ddcc96">
-        <source>Add table name to SQL query</source>
-        <target>Add table name to SQL query</target>
-        <note>Line: 45</note>
-      </trans-unit>
-      <trans-unit id="1938087a74c4d20f5454850ffbaf0e26">
-        <source>List of attributes for this MySQL table</source>
-        <target>List of attributes for this MySQL table</target>
-        <note>Line: 51</note>
-      </trans-unit>
-      <trans-unit id="1141c5086ed62bf696bccf7de6b885bd">
-        <source>Add attribute to SQL query</source>
-        <target>Add attribute to SQL query</target>
-        <note>Line: 94</note>
-      </trans-unit>
-      <trans-unit id="004bf6c9a40003140292e97330236c53">
-        <source>Action</source>
-        <target>Action</target>
-        <note>Line: 85</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/request_sql/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="526a00f8a3c4c865b9c1834f38b5e2c6">
-        <source>SQL query result</source>
-        <target>SQL query result</target>
-        <note>Line: 34</note>
+        <note>Line: 930</note>
       </trans-unit>
     </body>
   </file>
@@ -163,12 +120,12 @@
       <trans-unit id="0440efe0a9a9bc643eaec7dbdade39df">
         <source>Supply Orders</source>
         <target>Supply Orders</target>
-        <note>Line: 4723</note>
+        <note>Line: 4730</note>
       </trans-unit>
       <trans-unit id="9f954c5e16659673382f03fa027772ea">
         <source>Supply Order Details</source>
         <target>Supply Order Details</target>
-        <note>Line: 4729</note>
+        <note>Line: 4736</note>
       </trans-unit>
       <trans-unit id="fa4ecc0168c2a9e448f469e3835d2a68">
         <source>Product Reference</source>
@@ -178,77 +135,77 @@
       <trans-unit id="3b0649c72650c313a357338dcdfb64ec">
         <source>Note</source>
         <target>Note</target>
-        <note>Line: 528</note>
+        <note>Line: 531</note>
       </trans-unit>
       <trans-unit id="9b1f5ada3db7e58544806a11099b7103">
         <source>Supplier ID *</source>
         <target>Supplier ID *</target>
-        <note>Line: 558</note>
+        <note>Line: 561</note>
       </trans-unit>
       <trans-unit id="84560d7d7c4d97c640d09a58491a3677">
         <source>Lang ID</source>
         <target>Lang ID</target>
-        <note>Line: 559</note>
+        <note>Line: 562</note>
       </trans-unit>
       <trans-unit id="8954e2e0d62b56db3c10df45a7602cd3">
         <source>Warehouse ID *</source>
         <target>Warehouse ID *</target>
-        <note>Line: 560</note>
+        <note>Line: 563</note>
       </trans-unit>
       <trans-unit id="dfa8db9b8d08689d8a23067e93ef4ef9">
         <source>Currency ID *</source>
         <target>Currency ID *</target>
-        <note>Line: 561</note>
+        <note>Line: 564</note>
       </trans-unit>
       <trans-unit id="e11d1e5d17a3f9ce34faccbb5cc61394">
         <source>Supply Order Reference *</source>
         <target>Supply Order Reference *</target>
-        <note>Line: 587</note>
+        <note>Line: 590</note>
       </trans-unit>
       <trans-unit id="f9c5030e9d71a6ba285489576e1d0e3f">
         <source>Delivery Date (Y-M-D)*</source>
         <target>Delivery Date (Y-M-D)*</target>
-        <note>Line: 563</note>
+        <note>Line: 566</note>
       </trans-unit>
       <trans-unit id="9e57c2dbcacea5e2e8aa3edde11cf976">
         <source>Discount rate</source>
         <target>Discount rate</target>
-        <note>Line: 564</note>
+        <note>Line: 567</note>
       </trans-unit>
       <trans-unit id="c5d4da7adbd98e284ef9a8733a9ceaf2">
         <source>Product ID *</source>
         <target>Product ID *</target>
-        <note>Line: 588</note>
+        <note>Line: 591</note>
       </trans-unit>
       <trans-unit id="41b00531a619d5e0f965854e352529f1">
         <source>Product Attribute ID</source>
         <target>Product Attribute ID</target>
-        <note>Line: 589</note>
+        <note>Line: 592</note>
       </trans-unit>
       <trans-unit id="94fb72f3353fb2507e18fc6748f7a811">
         <source>Unit Price (tax excl.)*</source>
         <target>Unit Price (tax excl.)*</target>
-        <note>Line: 590</note>
+        <note>Line: 593</note>
       </trans-unit>
       <trans-unit id="f41a10a672cbcdecaad1d2f73f30b1f8">
         <source>Quantity Expected *</source>
         <target>Quantity Expected *</target>
-        <note>Line: 591</note>
+        <note>Line: 594</note>
       </trans-unit>
       <trans-unit id="6703aa9936582b4381418f7d523370b4">
         <source>Discount Rate</source>
         <target>Discount Rate</target>
-        <note>Line: 592</note>
+        <note>Line: 595</note>
       </trans-unit>
       <trans-unit id="8fe77c2601e54f1aaef28cfde997bbad">
         <source>Tax Rate</source>
         <target>Tax Rate</target>
-        <note>Line: 593</note>
+        <note>Line: 596</note>
       </trans-unit>
       <trans-unit id="2415390fb5052bb8221a93c9fc51b17f">
         <source>Import .CSV data</source>
         <target>Import .CSV data</target>
-        <note>Line: 879</note>
+        <note>Line: 882</note>
       </trans-unit>
     </body>
   </file>
@@ -257,7 +214,7 @@
       <trans-unit id="60e3ee398aa0ee3498c68914b5d5fb1a">
         <source>Back office connection from %ip%</source>
         <target>Back office connection from %ip%</target>
-        <note>Line: 206</note>
+        <note>Line: 214</note>
       </trans-unit>
     </body>
   </file>
@@ -266,7 +223,7 @@
       <trans-unit id="8ceefbf99a59faebc1abfe60004fa5cd">
         <source>%class_name% addition</source>
         <target>%class_name% addition</target>
-        <note>Line: 194
+        <note>Line: 184
 Comment: voluntary do affectation here</note>
       </trans-unit>
     </body>
@@ -586,21 +543,21 @@ Comment: voluntary do affectation here</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/Core/Grid/Definition/Factory/AddressGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e129ae480280e47ef82fc7702f8321ba">
+        <source>Refresh list</source>
+        <target>Refresh list</target>
+        <note>Line: 267</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/Core/Grid/Definition/Factory/BackupDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="9d8d2d5ab12b515182a505f54db7f538">
         <source>Age</source>
         <target>Age</target>
         <note>Line: 82</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Grid/Definition/Factory/CmsPageDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e129ae480280e47ef82fc7702f8321ba">
-        <source>Refresh list</source>
-        <target>Refresh list</target>
-        <note>Line: 312</note>
       </trans-unit>
     </body>
   </file>
@@ -734,17 +691,17 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="5db5f3f0c5f233fbc13f08c052e98281">
         <source>Default (0 = No, 1 = Yes)</source>
         <target>Default (0 = No, 1 = Yes)</target>
-        <note>Line: 76</note>
+        <note>Line: 77</note>
       </trans-unit>
       <trans-unit id="e933b93c26b14c12ac7818867e54c5d9">
         <source>Combination availability date</source>
         <target>Combination availability date</target>
-        <note>Line: 77</note>
+        <note>Line: 78</note>
       </trans-unit>
       <trans-unit id="657645fae83ad1673b25d3c027b77ed8">
         <source>Choose among product images by position (1,2,3...)</source>
         <target>Choose among product images by position (1,2,3...)</target>
-        <note>Line: 78</note>
+        <note>Line: 79</note>
       </trans-unit>
       <trans-unit id="75ed578ac3cb02b0ba40002a25bc0403">
         <source>Product reference</source>
@@ -807,47 +764,37 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="ac0b7d0703609cbbfa09b53f8d793d29">
         <source>Minimal quantity</source>
         <target>Minimal quantity</target>
-        <note>Line: 90</note>
+        <note>Line: 91</note>
       </trans-unit>
       <trans-unit id="4d2589e1bcd4263cb99927b59f0f88d2">
         <source>Image URLs (x,y,z...)</source>
         <target>Image URLs (x,y,z...)</target>
-        <note>Line: 113</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="7a2ec0911e94664f3dfcc8cbefb0e908">
         <source>Image alt texts (x,y,z...)</source>
         <target>Image alt texts (x,y,z...)</target>
-        <note>Line: 114</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="70b8833184afe1b309f4d679acff991e">
         <source>Advanced Stock Management</source>
         <target>Advanced Stock Management</target>
-        <note>Line: 152</note>
+        <note>Line: 153</note>
       </trans-unit>
       <trans-unit id="53acc0172842523c8a52f50894c6df15">
         <source>Depends on stock</source>
         <target>Depends on stock</target>
-        <note>Line: 160</note>
+        <note>Line: 161</note>
       </trans-unit>
       <trans-unit id="6416e8cb5fc0a208d94fa7f5a300dbc4">
         <source>Warehouse</source>
         <target>Warehouse</target>
-        <note>Line: 168</note>
+        <note>Line: 169</note>
       </trans-unit>
       <trans-unit id="df8ffb90c945e796f2cfd9265325b9c3">
         <source>Categories (x,y,z...)</source>
         <target>Categories (x,y,z...)</target>
         <note>Line: 60</note>
-      </trans-unit>
-      <trans-unit id="88627291a92931577d427c5fd68f511e">
-        <source>Price tax excluded</source>
-        <target>Price tax excluded</target>
-        <note>Line: 61</note>
-      </trans-unit>
-      <trans-unit id="f154d2146a2acf439d955fea9d396ec2">
-        <source>Price tax included</source>
-        <target>Price tax included</target>
-        <note>Line: 62</note>
       </trans-unit>
       <trans-unit id="8a1cabdfd802aa4ea2ec774feb832a1e">
         <source>Tax rule ID</source>
@@ -892,112 +839,112 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="f6db0ad0a1b6aff800f260a83bc06584">
         <source>Delivery time of out-of-stock products with allowed orders:</source>
         <target>Delivery time of out-of-stock products with allowed orders:</target>
-        <note>Line: 87</note>
+        <note>Line: 88</note>
       </trans-unit>
       <trans-unit id="7bbdd372c9d171174e3ce1ba9d97d5f6">
         <source>Additional shipping cost</source>
         <target>Additional shipping cost</target>
-        <note>Line: 97</note>
+        <note>Line: 98</note>
       </trans-unit>
       <trans-unit id="0246175f81454bc445f908bac64f354c">
         <source>Unit for the price per unit</source>
         <target>Unit for the price per unit</target>
-        <note>Line: 98</note>
+        <note>Line: 99</note>
       </trans-unit>
       <trans-unit id="bede52f418b34b1ab0db65f9450bdfc3">
         <source>Tags (x,y,z...)</source>
         <target>Tags (x,y,z...)</target>
-        <note>Line: 102</note>
+        <note>Line: 103</note>
       </trans-unit>
       <trans-unit id="db72e24b402e8baf8df6ca786a59e4de">
         <source>Rewritten URL</source>
         <target>Rewritten URL</target>
-        <note>Line: 106</note>
+        <note>Line: 107</note>
       </trans-unit>
       <trans-unit id="6be65deefdf4fae21955e2c060815530">
         <source>Label when backorder allowed</source>
         <target>Label when backorder allowed</target>
-        <note>Line: 108</note>
+        <note>Line: 109</note>
       </trans-unit>
       <trans-unit id="cf7a1f189bbd1f48db0ece1da9cc0802">
         <source>Available for order (0 = No, 1 = Yes)</source>
         <target>Available for order (0 = No, 1 = Yes)</target>
-        <note>Line: 109</note>
+        <note>Line: 110</note>
       </trans-unit>
       <trans-unit id="d24a6864b6139a2423c8f3004c8f7751">
         <source>Product availability date</source>
         <target>Product availability date</target>
-        <note>Line: 110</note>
+        <note>Line: 111</note>
       </trans-unit>
       <trans-unit id="21f7b5b011f253b35340528b7f190282">
         <source>Product creation date</source>
         <target>Product creation date</target>
-        <note>Line: 111</note>
+        <note>Line: 112</note>
       </trans-unit>
       <trans-unit id="76aeea9f48196068e6b47d46d41e7618">
         <source>Show price (0 = No, 1 = Yes)</source>
         <target>Show price (0 = No, 1 = Yes)</target>
-        <note>Line: 112</note>
+        <note>Line: 113</note>
       </trans-unit>
       <trans-unit id="4f5dc004cdd01ec9cf7fbbcf9f812aa7">
         <source>Delete existing images (0 = No, 1 = Yes)</source>
         <target>Delete existing images (0 = No, 1 = Yes)</target>
-        <note>Line: 115</note>
+        <note>Line: 116</note>
       </trans-unit>
       <trans-unit id="2fe5beaf842ddac297ade8ef5ba379cc">
         <source>Feature (Name:Value:Position:Customized)</source>
         <target>Feature (Name:Value:Position:Customized)</target>
-        <note>Line: 116</note>
+        <note>Line: 117</note>
       </trans-unit>
       <trans-unit id="446e04d1ed3b8fca04274d7c726a3fd5">
         <source>Available online only (0 = No, 1 = Yes)</source>
         <target>Available online only (0 = No, 1 = Yes)</target>
-        <note>Line: 117</note>
+        <note>Line: 118</note>
       </trans-unit>
       <trans-unit id="f53c39de16dea1ee2352ab566702eb27">
         <source>Customizable (0 = No, 1 = Yes)</source>
         <target>Customizable (0 = No, 1 = Yes)</target>
-        <note>Line: 119</note>
+        <note>Line: 120</note>
       </trans-unit>
       <trans-unit id="da505e5a6dd5678894aa9f8663bf4db0">
         <source>Uploadable files (0 = No, 1 = Yes)</source>
         <target>Uploadable files (0 = No, 1 = Yes)</target>
-        <note>Line: 120</note>
+        <note>Line: 121</note>
       </trans-unit>
       <trans-unit id="6bfdfdf56a73c0726864489f78e4f91b">
         <source>Text fields (0 = No, 1 = Yes)</source>
         <target>Text fields (0 = No, 1 = Yes)</target>
-        <note>Line: 121</note>
+        <note>Line: 122</note>
       </trans-unit>
       <trans-unit id="27cb4532e39ccfac2114be6223cf3534">
         <source>Action when out of stock</source>
         <target>Action when out of stock</target>
-        <note>Line: 122</note>
+        <note>Line: 123</note>
       </trans-unit>
       <trans-unit id="81188f605f25cfc48952bb6b754cf69f">
         <source>Virtual product (0 = No, 1 = Yes)</source>
         <target>Virtual product (0 = No, 1 = Yes)</target>
-        <note>Line: 123</note>
+        <note>Line: 124</note>
       </trans-unit>
       <trans-unit id="b3d2db69feecaedff30f1e0bc60206d6">
         <source>File URL</source>
         <target>File URL</target>
-        <note>Line: 124</note>
+        <note>Line: 125</note>
       </trans-unit>
       <trans-unit id="8b155133fee28ec212ccf75a28e0711e">
         <source>Expiration date (yyyy-mm-dd)</source>
         <target>Expiration date (yyyy-mm-dd)</target>
-        <note>Line: 133</note>
+        <note>Line: 134</note>
       </trans-unit>
       <trans-unit id="58fd2b2308056ad80255a322b305742b">
         <source>Number of days</source>
         <target>Number of days</target>
-        <note>Line: 136</note>
+        <note>Line: 137</note>
       </trans-unit>
       <trans-unit id="63a293f69541c07a826ac0e8f35e6222">
         <source>Accessories (x,y,z...)</source>
         <target>Accessories (x,y,z...)</target>
-        <note>Line: 174</note>
+        <note>Line: 175</note>
       </trans-unit>
     </body>
   </file>
@@ -1034,12 +981,21 @@ Comment: voluntary do affectation here</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/PerformanceController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="79c0d6cba080dc90b01c887064c9fc2f">
+        <source>Clear cache</source>
+        <target>Clear cache</target>
+        <note>Line: 58</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ProfileController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="69d18853cb35672b765f55ae37ae4967">
         <source>Add new profile</source>
         <target>Add new profile</target>
-        <note>Line: 139</note>
+        <note>Line: 142</note>
       </trans-unit>
     </body>
   </file>
@@ -1057,7 +1013,7 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="ae5977a08e8a3d45283789d99c67c3c3">
         <source>Combination reference</source>
         <target>Combination reference</target>
-        <note>Line: 170</note>
+        <note>Line: 178</note>
       </trans-unit>
     </body>
   </file>
@@ -1066,22 +1022,167 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="bd74be2b0190f4b7f3ef117342771f70">
         <source>Memcached via PHP::Memcache</source>
         <target>Memcached via PHP::Memcache</target>
-        <note>Line: 119</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="e6f9c14400a56127e7397b4f8afeae10">
         <source>Memcached via PHP::Memcached</source>
         <target>Memcached via PHP::Memcached</target>
-        <note>Line: 129</note>
+        <note>Line: 125</note>
       </trans-unit>
       <trans-unit id="0e68f753bc601f5d9d04717f95042762">
         <source>APC</source>
         <target>APC</target>
-        <note>Line: 139</note>
+        <note>Line: 135</note>
       </trans-unit>
       <trans-unit id="38ca568bbe61771c6456a5c7b8d419ee">
         <source>Xcache</source>
         <target>Xcache</target>
-        <note>Line: 149</note>
+        <note>Line: 145</note>
+      </trans-unit>
+      <trans-unit id="276e3171a63595e207ec292fce891277">
+        <source>Use cache</source>
+        <target>Use cache</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="aa7ef82bc75491903bfc4838957265be">
+        <source>Caching system</source>
+        <target>Caching system</target>
+        <note>Line: 56</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/CombineCompressCacheType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c7ceaefb9d7fd3731ae2a28abad2cb95">
+        <source>Smart cache for CSS</source>
+        <target>Smart cache for CSS</target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="cf00874a93cf1cca317853c54c9f40e3">
+        <source>Smart cache for JavaScript</source>
+        <target>Smart cache for JavaScript</target>
+        <note>Line: 48</note>
+      </trans-unit>
+      <trans-unit id="0b388064aa29e8576990d9eb5da8d43e">
+        <source>Apache optimization</source>
+        <target>Apache optimization</target>
+        <note>Line: 51</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/DebugModeType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0da6a47faba382116423315f9e61b9e2">
+        <source>Disable non PrestaShop modules</source>
+        <target>Disable non PrestaShop modules</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="edf05af828595f01ae00b209ef0b1e1f">
+        <source>Enable or disable non PrestaShop Modules.</source>
+        <target>Enable or disable non PrestaShop Modules.</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="03a9e6840847f96325b7184d5f3c2769">
+        <source>Disable all overrides</source>
+        <target>Disable all overrides</target>
+        <note>Line: 51</note>
+      </trans-unit>
+      <trans-unit id="29826f9f4da3d473c1e4ecf2f6c4ef9f">
+        <source>Enable or disable all classes and controllers overrides.</source>
+        <target>Enable or disable all classes and controllers overrides.</target>
+        <note>Line: 52</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/MediaServersType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3ed7fddd0f381c4fe4683fc9e856dbcf">
+        <source>Media server #1</source>
+        <target>Media server #1</target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="9dafd449b62301e26c635b976b231b88">
+        <source>Media server #2</source>
+        <target>Media server #2</target>
+        <note>Line: 51</note>
+      </trans-unit>
+      <trans-unit id="391e79edab921e1974705a7096055dde">
+        <source>Media server #3</source>
+        <target>Media server #3</target>
+        <note>Line: 57</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/OptionalFeaturesType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="517a8a7dbf1f6e371509817de328e396">
+        <source>Customer groups</source>
+        <target>Customer groups</target>
+        <note>Line: 76</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/SmartyType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="770d85a02ce8841bd4dac97b57c7fa17">
+        <source>Template compilation</source>
+        <target>Template compilation</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="ab0cf104f39708eabd07b8cb67e149ba">
+        <source>Cache</source>
+        <target>Cache</target>
+        <note>Line: 58</note>
+      </trans-unit>
+      <trans-unit id="0d6bf1934cab1de045b189eed03c3d42">
+        <source>Should be enabled except for debugging.</source>
+        <target>Should be enabled except for debugging.</target>
+        <note>Line: 59</note>
+      </trans-unit>
+      <trans-unit id="1c9e9fdb43035d78fc94dd37c357869c">
+        <source>Multi-front optimizations</source>
+        <target>Multi-front optimizations</target>
+        <note>Line: 63</note>
+      </trans-unit>
+      <trans-unit id="bfa7e629b4eaa924530242510a50679e">
+        <source>Caching type</source>
+        <target>Caching type</target>
+        <note>Line: 76</note>
+      </trans-unit>
+      <trans-unit id="dbe2df5641344e1d14be812243f91ec5">
+        <source>Never clear cache files</source>
+        <target>Never clear cache files</target>
+        <note>Line: 84</note>
+      </trans-unit>
+      <trans-unit id="8a9c2220c57773c2b05e4b800be3ba88">
+        <source>Clear cache everytime something has been modified</source>
+        <target>Clear cache everytime something has been modified</target>
+        <note>Line: 85</note>
+      </trans-unit>
+      <trans-unit id="6c202452e44c42e323204da2a3a3c24a">
+        <source>File System</source>
+        <target>File System</target>
+        <note>Line: 71</note>
+      </trans-unit>
+      <trans-unit id="62a004b95946bb97541afa471dcca73a">
+        <source>MySQL</source>
+        <target>MySQL</target>
+        <note>Line: 72</note>
+      </trans-unit>
+      <trans-unit id="b8b65041a5ab3fa85c620238bbd3f390">
+        <source>Never recompile template files</source>
+        <target>Never recompile template files</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="a1d2406cf6a671bc87a3eb6b5db3a7fd">
+        <source>Recompile templates if the files have been updated</source>
+        <target>Recompile templates if the files have been updated</target>
+        <note>Line: 48</note>
+      </trans-unit>
+      <trans-unit id="624718bb7cbf83ee3b5a78ecade12eac">
+        <source>Force compilation</source>
+        <target>Force compilation</target>
+        <note>Line: 49</note>
       </trans-unit>
     </body>
   </file>
@@ -1330,37 +1431,37 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="c098053744ce979cbd030908105d54fe">
         <source>Mail domain name</source>
         <target>Mail domain name</target>
-        <note>Line: 36</note>
+        <note>Line: 37</note>
       </trans-unit>
       <trans-unit id="bdd48fb41b9d0a4a1051fa22a87eb5a2">
         <source>SMTP server</source>
         <target>SMTP server</target>
-        <note>Line: 44</note>
+        <note>Line: 45</note>
       </trans-unit>
       <trans-unit id="a7bfd8847270913b15396380c3627d76">
         <source>SMTP username</source>
         <target>SMTP username</target>
-        <note>Line: 52</note>
+        <note>Line: 53</note>
       </trans-unit>
       <trans-unit id="3cffa2fabd5519beaf4c2fbd0610899b">
         <source>SMTP password</source>
         <target>SMTP password</target>
-        <note>Line: 60</note>
+        <note>Line: 61</note>
       </trans-unit>
       <trans-unit id="d7f2615c71a1567cc13cf3a7f7de0aea">
         <source>Encryption</source>
         <target>Encryption</target>
-        <note>Line: 68</note>
+        <note>Line: 69</note>
       </trans-unit>
       <trans-unit id="762160912d2bac8eb64bc00b711d6f6c">
         <source>Port number to use.</source>
         <target>Port number to use.</target>
-        <note>Line: 81</note>
+        <note>Line: 82</note>
       </trans-unit>
       <trans-unit id="60aaf44d4b562252c04db7f98497e9aa">
         <source>Port</source>
         <target>Port</target>
-        <note>Line: 81</note>
+        <note>Line: 82</note>
       </trans-unit>
     </body>
   </file>
@@ -1437,12 +1538,12 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="435a2d71a0c6c33cd2c917b00b8e0da1">
         <source>Default page</source>
         <target>Default page</target>
-        <note>Line: 210</note>
+        <note>Line: 205</note>
       </trans-unit>
       <trans-unit id="57452e2dda1a10cfe2cc34c575e6b9d0">
         <source>Permission profile</source>
         <target>Permission profile</target>
-        <note>Line: 230</note>
+        <note>Line: 225</note>
       </trans-unit>
       <trans-unit id="eb626c94531ec554f93b2b78a77c8b1b">
         <source>Employees</source>
@@ -1559,6 +1660,40 @@ Comment: voluntary do affectation here</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/RequestSql/Blocks/db_tables_panel.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ac104da0cd80e52437b67aefa351e177">
+        <source>List of MySQL Tables</source>
+        <target>List of MySQL Tables</target>
+        <note>Line: 37</note>
+      </trans-unit>
+      <trans-unit id="1ee79b4b20638d135b8ae8122f7770b9">
+        <source>Please choose a table.</source>
+        <target>Please choose a table.</target>
+        <note>Line: 52</note>
+      </trans-unit>
+      <trans-unit id="1a696d8e9ac51e281e1cf1b646ddcc96">
+        <source>Add table name to SQL query</source>
+        <target>Add table name to SQL query</target>
+        <note>Line: 54</note>
+      </trans-unit>
+      <trans-unit id="1938087a74c4d20f5454850ffbaf0e26">
+        <source>List of attributes for this MySQL table</source>
+        <target>List of attributes for this MySQL table</target>
+        <note>Line: 62</note>
+      </trans-unit>
+      <trans-unit id="1141c5086ed62bf696bccf7de6b885bd">
+        <source>Add attribute to SQL query</source>
+        <target>Add attribute to SQL query</target>
+        <note>Line: 65</note>
+      </trans-unit>
+      <trans-unit id="004bf6c9a40003140292e97330236c53">
+        <source>Action</source>
+        <target>Action</target>
+        <note>Line: 70</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/RequestSql/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="dddc702fcffceb2ac77291954897d747">
@@ -1579,6 +1714,15 @@ Comment: voluntary do affectation here</note>
         <source>Select your default file encoding</source>
         <target>Select your default file encoding</target>
         <note>Line: 38</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/RequestSql/view.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="526a00f8a3c4c865b9c1834f38b5e2c6">
+        <source>SQL query result</source>
+        <target>SQL query result</target>
+        <note>Line: 37</note>
       </trans-unit>
     </body>
   </file>
@@ -1708,156 +1852,61 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="5b8c99dad1893a85076709b2d3c2d2d0">
         <source>IP Address</source>
         <target>IP Address</target>
-        <note>Line: 79</note>
+        <note>Line: 55</note>
       </trans-unit>
       <trans-unit id="8c489d0946f66d17d73f26366a4bf620">
         <source>Weight</source>
         <target>Weight</target>
-        <note>Line: 81</note>
+        <note>Line: 57</note>
       </trans-unit>
       <trans-unit id="003744a685f896a2d9764655f67f1a24">
         <source>Add Server</source>
         <target>Add Server</target>
-        <note>Line: 67</note>
+        <note>Line: 43</note>
       </trans-unit>
       <trans-unit id="dd11871dd215aec96a2eb051116bac00">
         <source>Test Server</source>
         <target>Test Server</target>
-        <note>Line: 68</note>
+        <note>Line: 44</note>
       </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="517a8a7dbf1f6e371509817de328e396">
-        <source>Customer groups</source>
-        <target>Customer groups</target>
-        <note>Line: 172</note>
-      </trans-unit>
-      <trans-unit id="79c0d6cba080dc90b01c887064c9fc2f">
-        <source>Clear cache</source>
-        <target>Clear cache</target>
-        <note>Line: 74</note>
-      </trans-unit>
       <trans-unit id="f8d698aea36fcbead2b9d5359ffca76f">
         <source>Smarty</source>
         <target>Smarty</target>
-        <note>Line: 41</note>
-      </trans-unit>
-      <trans-unit id="770d85a02ce8841bd4dac97b57c7fa17">
-        <source>Template compilation</source>
-        <target>Template compilation</target>
-        <note>Line: 46</note>
-      </trans-unit>
-      <trans-unit id="ab0cf104f39708eabd07b8cb67e149ba">
-        <source>Cache</source>
-        <target>Cache</target>
-        <note>Line: 53</note>
-      </trans-unit>
-      <trans-unit id="0d6bf1934cab1de045b189eed03c3d42">
-        <source>Should be enabled except for debugging.</source>
-        <target>Should be enabled except for debugging.</target>
-        <note>Line: 53</note>
-      </trans-unit>
-      <trans-unit id="1c9e9fdb43035d78fc94dd37c357869c">
-        <source>Multi-front optimizations</source>
-        <target>Multi-front optimizations</target>
-        <note>Line: 60</note>
-      </trans-unit>
-      <trans-unit id="bfa7e629b4eaa924530242510a50679e">
-        <source>Caching type</source>
-        <target>Caching type</target>
-        <note>Line: 67</note>
+        <note>Line: 42</note>
       </trans-unit>
       <trans-unit id="ec3028a12402ab7f43962a6f3a667b6e">
         <source>Debug mode</source>
         <target>Debug mode</target>
-        <note>Line: 115</note>
-      </trans-unit>
-      <trans-unit id="0da6a47faba382116423315f9e61b9e2">
-        <source>Disable non PrestaShop modules</source>
-        <target>Disable non PrestaShop modules</target>
-        <note>Line: 101</note>
-      </trans-unit>
-      <trans-unit id="edf05af828595f01ae00b209ef0b1e1f">
-        <source>Enable or disable non PrestaShop Modules.</source>
-        <target>Enable or disable non PrestaShop Modules.</target>
-        <note>Line: 101</note>
-      </trans-unit>
-      <trans-unit id="03a9e6840847f96325b7184d5f3c2769">
-        <source>Disable all overrides</source>
-        <target>Disable all overrides</target>
-        <note>Line: 108</note>
-      </trans-unit>
-      <trans-unit id="29826f9f4da3d473c1e4ecf2f6c4ef9f">
-        <source>Enable or disable all classes and controllers overrides.</source>
-        <target>Enable or disable all classes and controllers overrides.</target>
-        <note>Line: 108</note>
+        <note>Line: 64</note>
       </trans-unit>
       <trans-unit id="010a6cb0eccdea35662ad711d443f2ec">
         <source>Optional features</source>
         <target>Optional features</target>
-        <note>Line: 137</note>
+        <note>Line: 86</note>
       </trans-unit>
       <trans-unit id="f4efdd180586cba038b52f2471e4075d">
         <source>CCC (Combine, Compress and Cache)</source>
         <target>CCC (Combine, Compress and Cache)</target>
-        <note>Line: 194</note>
-      </trans-unit>
-      <trans-unit id="c7ceaefb9d7fd3731ae2a28abad2cb95">
-        <source>Smart cache for CSS</source>
-        <target>Smart cache for CSS</target>
-        <note>Line: 204</note>
-      </trans-unit>
-      <trans-unit id="cf00874a93cf1cca317853c54c9f40e3">
-        <source>Smart cache for JavaScript</source>
-        <target>Smart cache for JavaScript</target>
-        <note>Line: 211</note>
-      </trans-unit>
-      <trans-unit id="0b388064aa29e8576990d9eb5da8d43e">
-        <source>Apache optimization</source>
-        <target>Apache optimization</target>
-        <note>Line: 218</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="3ffcac2b857b421d5418b748b411265b">
         <source>Media servers (use only with CCC)</source>
         <target>Media servers (use only with CCC)</target>
-        <note>Line: 240</note>
+        <note>Line: 143</note>
       </trans-unit>
       <trans-unit id="2d29e91503465ed72170623f37458e32">
         <source>You must enter another domain, or subdomain, in order to use cookieless static content.</source>
         <target>You must enter another domain, or subdomain, in order to use cookieless static content.</target>
-        <note>Line: 246</note>
-      </trans-unit>
-      <trans-unit id="3ed7fddd0f381c4fe4683fc9e856dbcf">
-        <source>Media server #1</source>
-        <target>Media server #1</target>
-        <note>Line: 250</note>
-      </trans-unit>
-      <trans-unit id="9dafd449b62301e26c635b976b231b88">
-        <source>Media server #2</source>
-        <target>Media server #2</target>
-        <note>Line: 257</note>
-      </trans-unit>
-      <trans-unit id="391e79edab921e1974705a7096055dde">
-        <source>Media server #3</source>
-        <target>Media server #3</target>
-        <note>Line: 264</note>
+        <note>Line: 149</note>
       </trans-unit>
       <trans-unit id="02d56cf7754ce16d7ce0193fbca7c90a">
         <source>Caching</source>
         <target>Caching</target>
-        <note>Line: 286</note>
-      </trans-unit>
-      <trans-unit id="276e3171a63595e207ec292fce891277">
-        <source>Use cache</source>
-        <target>Use cache</target>
-        <note>Line: 291</note>
-      </trans-unit>
-      <trans-unit id="aa7ef82bc75491903bfc4838957265be">
-        <source>Caching system</source>
-        <target>Caching system</target>
-        <note>Line: 298</note>
+        <note>Line: 171</note>
       </trans-unit>
     </body>
   </file>
@@ -2075,6 +2124,20 @@ Comment: voluntary do affectation here</note>
         <source>File size</source>
         <target>File size</target>
         <note>Line: 33</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/Modal/add_product_modal.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="88627291a92931577d427c5fd68f511e">
+        <source>Price tax excluded</source>
+        <target>Price tax excluded</target>
+        <note>Line: 67</note>
+      </trans-unit>
+      <trans-unit id="f154d2146a2acf439d955fea9d396ec2">
+        <source>Price tax included</source>
+        <target>Price tax included</target>
+        <note>Line: 81</note>
       </trans-unit>
     </body>
   </file>

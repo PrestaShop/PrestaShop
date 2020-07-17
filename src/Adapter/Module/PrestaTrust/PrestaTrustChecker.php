@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Module\PrestaTrust;
@@ -43,7 +43,7 @@ class PrestaTrustChecker
     /**
      * @var array
      */
-    protected $checked_extensions = array('php', 'js', 'css', 'tpl');
+    protected $checked_extensions = ['php', 'js', 'css', 'tpl'];
 
     const SMART_CONTRACT_PATTERN = 'prestatrust-license-verification: ';
     const CHECKS_ALL_OK = 'Module is authenticated.';
@@ -101,7 +101,7 @@ class PrestaTrustChecker
 
         $details->check_list = $this->requestCheck($details->hash, $this->findSmartContrat($module->disk->get('path')));
         $details->status = array_sum($details->check_list) == count($details->check_list); // True if all content is True
-        $details->message = $this->translator->trans($this->getMessage($details->check_list), array(), 'Admin.Modules.Notification');
+        $details->message = $this->translator->trans($this->getMessage($details->check_list), [], 'Admin.Modules.Notification');
 
         $module->set('prestatrust', $details);
     }
@@ -262,12 +262,12 @@ class PrestaTrustChecker
         try {
             $result = $this->apiClient->getPrestaTrustCheck($hash, $contract);
 
-            return array(
+            return [
                 'integrity' => (bool) ($result->hash_trusted),
                 'property' => (bool) ($result->property_trusted),
-            );
+            ];
         } catch (Exception $e) {
-            return array('integrity' => false, 'property' => false);
+            return ['integrity' => false, 'property' => false];
         }
     }
 }

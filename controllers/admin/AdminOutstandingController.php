@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -52,33 +52,33 @@ class AdminOutstandingControllerCore extends AdminController
         $this->_where = 'AND number > 0';
         $this->_use_found_rows = false;
 
-        $risks = array();
+        $risks = [];
         foreach (Risk::getRisks() as $risk) {
             /* @var Risk $risk */
             $risks[$risk->id] = $risk->name;
         }
 
-        $this->fields_list = array(
-            'number' => array(
-                'title' => $this->trans('Invoice', array(), 'Admin.Global'),
-            ),
-            'date_add' => array(
-                'title' => $this->trans('Date', array(), 'Admin.Global'),
+        $this->fields_list = [
+            'number' => [
+                'title' => $this->trans('Invoice', [], 'Admin.Global'),
+            ],
+            'date_add' => [
+                'title' => $this->trans('Date', [], 'Admin.Global'),
                 'type' => 'date',
                 'align' => 'right',
                 'filter_key' => 'a!date_add',
-            ),
-            'customer' => array(
-                'title' => $this->trans('Customer', array(), 'Admin.Global'),
+            ],
+            'customer' => [
+                'title' => $this->trans('Customer', [], 'Admin.Global'),
                 'filter_key' => 'customer',
                 'tmpTableFilter' => true,
-            ),
-            'company' => array(
-                'title' => $this->trans('Company', array(), 'Admin.Global'),
+            ],
+            'company' => [
+                'title' => $this->trans('Company', [], 'Admin.Global'),
                 'align' => 'center',
-            ),
-            'risk' => array(
-                'title' => $this->trans('Risk', array(), 'Admin.Orderscustomers.Feature'),
+            ],
+            'risk' => [
+                'title' => $this->trans('Risk', [], 'Admin.Orderscustomers.Feature'),
                 'align' => 'center',
                 'orderby' => false,
                 'type' => 'select',
@@ -86,29 +86,29 @@ class AdminOutstandingControllerCore extends AdminController
                 'list' => $risks,
                 'filter_key' => 'r!id_risk',
                 'filter_type' => 'int',
-            ),
-            'outstanding_allow_amount' => array(
-                'title' => $this->trans('Outstanding Allowance', array(), 'Admin.Orderscustomers.Feature'),
+            ],
+            'outstanding_allow_amount' => [
+                'title' => $this->trans('Outstanding Allowance', [], 'Admin.Orderscustomers.Feature'),
                 'align' => 'center',
                 'prefix' => '<b>',
                 'suffix' => '</b>',
                 'type' => 'price',
-            ),
-            'outstanding' => array(
-                'title' => $this->trans('Current Outstanding', array(), 'Admin.Orderscustomers.Feature'),
+            ],
+            'outstanding' => [
+                'title' => $this->trans('Current Outstanding', [], 'Admin.Orderscustomers.Feature'),
                 'align' => 'center',
                 'callback' => 'printOutstandingCalculation',
                 'orderby' => false,
                 'search' => false,
-            ),
-            'id_invoice' => array(
-                'title' => $this->trans('Invoice', array(), 'Admin.Global'),
+            ],
+            'id_invoice' => [
+                'title' => $this->trans('Invoice', [], 'Admin.Global'),
                 'align' => 'center',
                 'callback' => 'printPDFIcons',
                 'orderby' => false,
                 'search' => false,
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -131,9 +131,9 @@ class AdminOutstandingControllerCore extends AdminController
      */
     public function printPDFIcons($id_invoice, $tr)
     {
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'id_invoice' => $id_invoice,
-        ));
+        ]);
 
         return $this->createTemplate('_print_pdf_icon.tpl')->fetch();
     }
@@ -153,7 +153,7 @@ class AdminOutstandingControllerCore extends AdminController
             throw new PrestaShopException('object Customer cannot be loaded');
         }
 
-        return '<b>' . Tools::displayPrice($customer->getOutstanding(), Context::getContext()->currency) . '</b>';
+        return '<b>' . $this->context->getCurrentLocale()->formatPrice($customer->getOutstanding(), Context::getContext()->currency->iso_code) . '</b>';
     }
 
     /**
@@ -172,8 +172,9 @@ class AdminOutstandingControllerCore extends AdminController
             throw new PrestaShopException('object Order cannot be loaded');
         }
 
-        $link = $this->context->link->getAdminLink('AdminOrders');
-        $link .= '&vieworder&id_order=' . $order->id;
+        $parameters = ['vieworder' => 1, 'id_order' => $order->id];
+        $link = $this->context->link->getAdminLink('AdminOrders', true, [], $parameters);
+
         $this->redirect_after = $link;
         $this->redirect();
     }

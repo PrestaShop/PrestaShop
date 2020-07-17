@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
@@ -37,8 +37,8 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotDisableCmsPageExce
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotEnableCmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotToggleCmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
-use PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsCategoryIdForRedirection;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsCategoryIdForRedirection;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsPageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\QueryResult\EditableCmsPage;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDeleteCmsPageCategoryCommand;
@@ -192,7 +192,9 @@ class CmsPageController extends FrameworkBundleAdminController
         if ($categoryParentId) {
             $formData['page_category_id'] = $categoryParentId;
         }
-        $form = $formBuilder->getForm($formData);
+        $form = $formBuilder->getForm($formData, [
+            'cms_preview_url' => $this->get('prestashop.adapter.shop.url.cms_provider')->getUrl(0, '{friendy-url}'),
+        ]);
         $form->handleRequest($request);
 
         try {
@@ -227,8 +229,6 @@ class CmsPageController extends FrameworkBundleAdminController
                 'cmsCategoryParentId' => $categoryParentId,
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-                'cmsUrl' => $this->get('prestashop.adapter.shop.url.cms_provider')
-                ->getUrl(0, '{friendy-url}'),
             ]
         );
     }
@@ -259,6 +259,8 @@ class CmsPageController extends FrameworkBundleAdminController
                 'action' => $this->generateUrl('admin_cms_pages_edit', [
                     'cmsPageId' => $cmsPageId,
                 ]),
+                'cms_preview_url' => $this->get('prestashop.adapter.shop.url.cms_provider')
+                    ->getUrl($cmsPageId, '{friendy-url}'),
             ]);
             $form->handleRequest($request);
         } catch (Exception $e) {
@@ -303,8 +305,6 @@ class CmsPageController extends FrameworkBundleAdminController
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'previewUrl' => $previewUrl,
-                'cmsUrl' => $this->get('prestashop.adapter.shop.url.cms_provider')
-                    ->getUrl($cmsPageId, '{friendy-url}'),
             ]
         );
     }
@@ -374,19 +374,31 @@ class CmsPageController extends FrameworkBundleAdminController
     public function editCmsCategoryAction($cmsCategoryId, Request $request)
     {
         $cmsPageCategoryFormBuilder = $this->getCmsPageCategoryFormBuilder();
-        $cmsCategoryParentId = null;
 
         try {
             $cmsPageCategoryForm = $cmsPageCategoryFormBuilder->getFormFor((int) $cmsCategoryId);
+            $cmsCategoryParentId = $this->getParentCategoryId((int) $cmsCategoryId)->getValue();
+        } catch (Exception $exception) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+            );
+
+            return $this->redirectToRoute('admin_cms_pages_index');
+        }
+
+        try {
             $cmsPageCategoryForm->handleRequest($request);
             $result = $this->getCmsPageCategoryFormHandler()->handleFor((int) $cmsCategoryId, $cmsPageCategoryForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash(
+                    'success',
+                    $this->trans('Successful update.', 'Admin.Notifications.Success')
+                );
 
                 return $this->redirectToIndexPageById($result->getIdentifiableObjectId());
             }
-            $cmsCategoryParentId = $this->getParentCategoryId((int) $cmsCategoryId)->getValue();
         } catch (Exception $exception) {
             $this->addFlash(
                 'error',

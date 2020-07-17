@@ -1,10 +1,11 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,36 +16,36 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Grid from '../../components/grid/grid';
-import ReloadListActionExtension from '../../components/grid/extension/reload-list-extension';
-import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
-import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
-import SortingExtension from '../../components/grid/extension/sorting-extension';
-import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
-import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
-import SubmitGridExtension from '../../components/grid/extension/submit-grid-action-extension';
-import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
-import LinkableItem from '../../components/linkable-item';
-import ChoiceTable from '../../components/choice-table';
-import ColumnTogglingExtension from '../../components/grid/extension/column-toggling-extension';
+import Grid from '@components/grid/grid';
+import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
+import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
+import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
+import FormSubmitButton from '@components/form-submit-button';
+import SortingExtension from '@components/grid/extension/sorting-extension';
+import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
+import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
+import SubmitGridExtension from '@components/grid/extension/submit-grid-action-extension';
+import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
+import LinkableItem from '@components/linkable-item';
+import ChoiceTable from '@components/choice-table';
+import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
 import DeleteCustomersBulkActionExtension
-  from '../../components/grid/extension/action/bulk/customer/delete-customers-bulk-action-extension';
+  from '@components/grid/extension/action/bulk/customer/delete-customers-bulk-action-extension';
 import DeleteCustomerRowActionExtension
-  from "../../components/grid/extension/action/row/customer/delete-customer-row-action-extension";
+  from '@components/grid/extension/action/row/customer/delete-customer-row-action-extension';
 import FiltersSubmitButtonEnablerExtension
-  from '../../components/grid/extension/filters-submit-button-enabler-extension';
-import ShowcaseCard from '../../components/showcase-card/showcase-card';
-import ShowcaseCardCloseExtension from '../../components/showcase-card/extension/showcase-card-close-extension';
+  from '@components/grid/extension/filters-submit-button-enabler-extension';
+import ShowcaseCard from '@components/showcase-card/showcase-card';
+import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const customerGrid = new Grid('customer');
@@ -73,4 +74,6 @@ $(() => {
   // where you click any row
   // and it redirects user to related page
   new LinkableItem();
+
+  new FormSubmitButton();
 });

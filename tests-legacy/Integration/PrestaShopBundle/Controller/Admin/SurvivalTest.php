@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace LegacyTests\Integration\PrestaShopBundle\Controller\Admin;
@@ -174,6 +174,12 @@ class SurvivalTest extends WebTestCase
             'admin_themes_import' => ['Add new theme', 'admin_themes_import'],
             'admin_mail_theme_index' => ['Email Theme', 'admin_mail_theme_index'],
             'admin_emails_index' => ['Advanced parameters E-mail', 'admin_emails_index'],
+            'admin_order_messages_index' => ['Order messages', 'admin_order_messages_index'],
+            'admin_order_messages_create' => ['Add new', 'admin_order_messages_create'],
+            'admin_attachments_index' => ['Files', 'admin_attachments_index'],
+            'admin_attachments_create' => ['Add new', 'admin_attachments_create'],
+            'admin_orders_index' => ['Orders', 'admin_orders_index'],
+            'admin_orders_create' => ['Add new', 'admin_orders_create'],
         ];
     }
 

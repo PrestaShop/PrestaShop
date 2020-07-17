@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,18 +17,19 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Address\Configuration\AddressConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -39,6 +41,8 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  */
 class TypedRegexValidator extends ConstraintValidator
 {
+    const CATALOG_CHARS = '<>;=#{}';
+
     /**
      * @var CharacterCleaner
      */
@@ -101,17 +105,16 @@ class TypedRegexValidator extends ConstraintValidator
             TypedRegex::TYPE_MESSAGE => '/[<>{}]/i',
             TypedRegex::TYPE_LANGUAGE_ISO_CODE => IsoCode::PATTERN,
             TypedRegex::TYPE_LANGUAGE_CODE => '/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/',
+            TypedRegex::TYPE_CURRENCY_ISO_CODE => AlphaIsoCode::PATTERN,
+            TypedRegex::TYPE_FILE_NAME => '/^[a-zA-Z0-9_.-]+$/',
+            TypedRegex::TYPE_DNI_LITE => AddressConstraint::DNI_LITE_PATTERN,
         ];
 
         if (isset($typePatterns[$type])) {
             return $typePatterns[$type];
         }
 
-        throw new InvalidArgumentException(sprintf(
-            'Type "%s" is not defined. Defined types are: %s',
-            $type,
-            implode(',', array_keys($typePatterns))
-        ));
+        throw new InvalidArgumentException(sprintf('Type "%s" is not defined. Defined types are: %s', $type, implode(',', array_keys($typePatterns))));
     }
 
     /**

@@ -1,10 +1,11 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,15 +16,14 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Module Admin Page Controller.
@@ -39,7 +39,6 @@ class AdminModuleController {
     this.moduleCardController = moduleCardController;
 
     this.DEFAULT_MAX_RECENTLY_USED = 10;
-    this.DEFAULT_MAX_PER_CATEGORIES = 6;
     this.DISPLAY_GRID = 'grid';
     this.DISPLAY_LIST = 'list';
     this.CATEGORY_RECENTLY_USED = 'recently-used';
@@ -68,9 +67,6 @@ class AdminModuleController {
     this.addonsCardList = null;
 
     this.moduleShortList = '.module-short-list';
-    // See more & See less selector
-    this.seeMoreSelector = '.see-more';
-    this.seeLessSelector = '.see-less';
 
     // Selectors into vars to make it easier to change them while keeping same code logic
     this.moduleItemGridSelector = '.module-item-grid';
@@ -155,7 +151,6 @@ class AdminModuleController {
     this.initFilterStatusDropdown();
     this.fetchModulesList();
     this.getNotificationsCount();
-    this.initializeSeeMore();
   }
 
   initFilterStatusDropdown() {
@@ -187,10 +182,10 @@ class AdminModuleController {
       const selector = $(self.bulkActionDropDownSelector);
       if ($(self.getBulkCheckboxesCheckedSelector()).length > 0) {
         selector.closest('.module-top-menu-item')
-                .removeClass('disabled');
+          .removeClass('disabled');
       } else {
         selector.closest('.module-top-menu-item')
-                .addClass('disabled');
+          .addClass('disabled');
       }
     });
 
@@ -225,16 +220,11 @@ class AdminModuleController {
 
   initBOEventRegistering() {
     window.BOEvent.on('Module Disabled', this.onModuleDisabled, this);
-    window.BOEvent.on('Module Uninstalled', this.updateTotalResults, this);
   }
 
   onModuleDisabled() {
     const self = this;
-    const moduleItemSelector = self.getModuleItemSelector();
-
-    $('.modules-list').each(function scanModulesList() {
-      self.updateTotalResults();
-    });
+    self.getModuleItemSelector();
   }
 
   initPlaceholderMechanism() {
@@ -270,14 +260,14 @@ class AdminModuleController {
 
         if (stylesheet.insertRule) {
           stylesheet.insertRule(
-            requiredSelectorCombination +
-            stylesheetRule, stylesheet.cssRules.length
+            requiredSelectorCombination
+            + stylesheetRule, stylesheet.cssRules.length,
           );
         } else if (stylesheet.addRule) {
           stylesheet.addRule(
             requiredSelectorCombination,
             stylesheetRule,
-            -1
+            -1,
           );
         }
 
@@ -373,8 +363,8 @@ class AdminModuleController {
       if (key === 'access') {
         aData = (new Date(aData)).getTime();
         bData = (new Date(bData)).getTime();
-        aData = isNaN(aData) ? 0 : aData;
-        bData = isNaN(bData) ? 0 : bData;
+        aData = Number.isNaN(aData) ? 0 : aData;
+        bData = Number.isNaN(bData) ? 0 : bData;
         if (aData === bData) {
           return b.name.localeCompare(a.name);
         }
@@ -418,11 +408,6 @@ class AdminModuleController {
       }
 
       container.show();
-      if (nbModulesInContainer >= self.DEFAULT_MAX_PER_CATEGORIES) {
-        container.find(`${self.seeMoreSelector}, ${self.seeLessSelector}`).show();
-      } else {
-        container.find(`${self.seeMoreSelector}, ${self.seeLessSelector}`).hide();
-      }
     });
   }
 
@@ -443,15 +428,24 @@ class AdminModuleController {
 
     const modulesListLength = self.modulesList.length;
     const counter = {};
+    const checkTag = (index, value) => {
+      newValue = value.toLowerCase();
+      tagExists |= (
+        currentModule.name.indexOf(newValue) !== -1
+        || currentModule.description.indexOf(newValue) !== -1
+        || currentModule.author.indexOf(newValue) !== -1
+        || currentModule.techName.indexOf(newValue) !== -1
+      );
+    };
 
     for (let i = 0; i < modulesListLength; i += 1) {
       currentModule = self.modulesList[i];
       if (currentModule.display === self.currentDisplay) {
         isVisible = true;
 
-        moduleCategory = self.currentRefCategory === self.CATEGORY_RECENTLY_USED ?
-                         self.CATEGORY_RECENTLY_USED :
-                         currentModule.categories;
+        moduleCategory = self.currentRefCategory === self.CATEGORY_RECENTLY_USED
+          ? self.CATEGORY_RECENTLY_USED
+          : currentModule.categories;
 
         // Check for same category
         if (self.currentRefCategory !== null) {
@@ -466,15 +460,7 @@ class AdminModuleController {
         // Check for tag list
         if (self.currentTagsList.length) {
           tagExists = false;
-          $.each(self.currentTagsList, (index, value) => {
-            newValue = value.toLowerCase();
-            tagExists |= (
-              currentModule.name.indexOf(newValue) !== -1
-              || currentModule.description.indexOf(newValue) !== -1
-              || currentModule.author.indexOf(newValue) !== -1
-              || currentModule.techName.indexOf(newValue) !== -1
-            );
-          });
+          $.each(self.currentTagsList, checkTag);
           isVisible &= tagExists;
         }
 
@@ -494,8 +480,6 @@ class AdminModuleController {
             if (counter[moduleCategory] >= self.DEFAULT_MAX_RECENTLY_USED) {
               isVisible &= self.currentCategoryDisplay[moduleCategory];
             }
-          } else if (counter[moduleCategory] >= self.DEFAULT_MAX_PER_CATEGORIES) {
-            isVisible &= self.currentCategoryDisplay[moduleCategory];
           }
 
           counter[moduleCategory] += 1;
@@ -517,8 +501,6 @@ class AdminModuleController {
     if (self.currentTagsList.length) {
       $('.modules-list').append(this.currentDisplay === self.DISPLAY_GRID ? this.addonsCardGrid : this.addonsCardList);
     }
-
-    self.updateTotalResults();
   }
 
   initPageChangeProtection() {
@@ -526,8 +508,11 @@ class AdminModuleController {
 
     $(window).on('beforeunload', () => {
       if (self.isUploadStarted === true) {
-        return 'It seems some critical operation are running, are you sure you want to change page ? It might cause some unexepcted behaviors.';
+        return 'It seems some critical operation are running, are you sure you want to change page? '
+          + 'It might cause some unexepcted behaviors.';
       }
+
+      return undefined;
     });
   }
 
@@ -582,10 +567,10 @@ class AdminModuleController {
         beforeSend: () => {
           $(self.addonsLoginButtonSelector).show();
           $('button.btn[type="submit"]', self.addonsConnectForm).hide();
-        }
+        },
       }).done((response) => {
         if (response.success === 1) {
-          location.reload();
+          window.location.reload();
         } else {
           $.growl.error({message: response.message});
           $(self.addonsLoginButtonSelector).hide();
@@ -612,6 +597,7 @@ class AdminModuleController {
       'click',
       this.moduleImportFailureRetrySelector,
       () => {
+        /* eslint-disable-next-line max-len */
         $(`${self.moduleImportSuccessSelector},${self.moduleImportFailureSelector},${self.moduleImportProcessingSelector}`).fadeOut(() => {
           /**
            * Added timeout for a better render of animation
@@ -625,7 +611,7 @@ class AdminModuleController {
             });
           }, 550);
         });
-      }
+      },
     );
 
     // Reinit modal on exit, but check if not already processing something
@@ -650,7 +636,7 @@ class AdminModuleController {
           event.stopPropagation();
           event.preventDefault();
         }
-      }
+      },
     );
 
     body.on('click', this.moduleImportSelectFileManualSelector, (event) => {
@@ -786,7 +772,7 @@ class AdminModuleController {
    */
   displayPrestaTrustStep(result) {
     const self = this;
-    const modal = self.moduleCardController._replacePrestaTrustPlaceholders(result);
+    const modal = self.moduleCardController.replacePrestaTrustPlaceholders(result);
     const moduleName = result.module.attributes.name;
 
     $(this.moduleImportConfirmSelector).html(modal.find('.modal-body').html()).fadeIn();
@@ -799,35 +785,35 @@ class AdminModuleController {
 
       // Install ajax call
       $.post(result.module.attributes.urls.install, {'actionParams[confirmPrestaTrust]': '1'})
-       .done((data) => {
-         self.displayOnUploadDone(data[moduleName]);
-       })
-       .fail((data) => {
-         self.displayOnUploadError(data[moduleName]);
-       })
-       .always(() => {
-         self.isUploadStarted = false;
-       });
+        .done((data) => {
+          self.displayOnUploadDone(data[moduleName]);
+        })
+        .fail((data) => {
+          self.displayOnUploadError(data[moduleName]);
+        })
+        .always(() => {
+          self.isUploadStarted = false;
+        });
     });
   }
 
   getBulkCheckboxesSelector() {
     return this.currentDisplay === this.DISPLAY_GRID
-         ? this.bulkActionCheckboxGridSelector
-         : this.bulkActionCheckboxListSelector;
+      ? this.bulkActionCheckboxGridSelector
+      : this.bulkActionCheckboxListSelector;
   }
 
 
   getBulkCheckboxesCheckedSelector() {
     return this.currentDisplay === this.DISPLAY_GRID
-         ? this.checkedBulkActionGridSelector
-         : this.checkedBulkActionListSelector;
+      ? this.checkedBulkActionGridSelector
+      : this.checkedBulkActionListSelector;
   }
 
   getModuleItemSelector() {
     return this.currentDisplay === this.DISPLAY_GRID
-         ? this.moduleItemGridSelector
-         : this.moduleItemListSelector;
+      ? this.moduleItemGridSelector
+      : this.moduleItemListSelector;
   }
 
   /**
@@ -838,7 +824,7 @@ class AdminModuleController {
     const self = this;
     $.getJSON(
       window.moduleURLs.notificationsCount,
-      self.updateNotificationsCount
+      self.updateNotificationsCount,
     ).fail(() => {
       console.error('Could not retrieve module notifications count.');
     });
@@ -850,13 +836,11 @@ class AdminModuleController {
       to_update: $('#subtab-AdminModulesUpdates'),
     };
 
-    for (let key in destinationTabs) {
-      if (destinationTabs[key].length === 0) {
-        continue;
+    Object.keys(destinationTabs).forEach((destinationKey) => {
+      if (destinationTabs[destinationKey].length !== 0) {
+        destinationTabs[destinationKey].find('.notification-counter').text(badge[destinationKey]);
       }
-
-      destinationTabs[key].find('.notification-counter').text(badge[key]);
-    }
+    });
   }
 
   initAddonsSearch() {
@@ -871,7 +855,7 @@ class AdminModuleController {
         }
 
         window.open(`${self.baseAddonsUrl}search.php?search_query=${searchQuery}`, '_blank');
-      }
+      },
     );
   }
 
@@ -925,7 +909,7 @@ class AdminModuleController {
       function initializeBodySortingChange() {
         self.currentSorting = $(this).find(':checked').attr('value');
         self.updateModuleVisibility();
-      }
+      },
     );
   }
 
@@ -947,7 +931,13 @@ class AdminModuleController {
     // Maybe useful to implement this kind of things later if intended to
     // use this functionality elsewhere but "manage my module" section
     if (typeof bulkActionToUrl[requestedBulkAction] === 'undefined') {
-      $.growl.error({message: window.translate_javascripts['Bulk Action - Request not found'].replace('[1]', requestedBulkAction)});
+      $.growl.error(
+        {
+          message: window
+            .translate_javascripts['Bulk Action - Request not found']
+            .replace('[1]', requestedBulkAction),
+        },
+      );
       return false;
     }
 
@@ -981,24 +971,24 @@ class AdminModuleController {
       return;
     }
 
-    //First let's filter modules that can't perform this action
-    let actionMenuLinks = filterAllowedActions(modulesActions);
+    // First let's filter modules that can't perform this action
+    const actionMenuLinks = filterAllowedActions(modulesActions);
     if (!actionMenuLinks.length) {
       return;
     }
 
     let modulesRequestedCountdown = actionMenuLinks.length - 1;
-    let spinnerObj = $("<button class=\"btn-primary-reverse onclick unbind spinner \"></button>");
+    let spinnerObj = $('<button class="btn-primary-reverse onclick unbind spinner "></button>');
     if (actionMenuLinks.length > 1) {
-      //Loop through all the modules except the last one which waits for other
-      //requests and then call its request with cache clear enabled
-      $.each(actionMenuLinks, function bulkModulesLoop(index, actionMenuLink) {
+      // Loop through all the modules except the last one which waits for other
+      // requests and then call its request with cache clear enabled
+      $.each(actionMenuLinks, (index, actionMenuLink) => {
         if (index >= actionMenuLinks.length - 1) {
           return;
         }
         requestModuleAction(actionMenuLink, true, countdownModulesRequest);
       });
-      //Display a spinner for the last module
+      // Display a spinner for the last module
       const lastMenuLink = actionMenuLinks[actionMenuLinks.length - 1];
       const actionMenuObj = lastMenuLink.closest(self.moduleCardController.moduleItemActionsSelector);
       actionMenuObj.hide();
@@ -1008,19 +998,19 @@ class AdminModuleController {
     }
 
     function requestModuleAction(actionMenuLink, disableCacheClear, requestEndCallback) {
-      self.moduleCardController._requestToController(
+      self.moduleCardController.requestToController(
         bulkModuleAction,
         actionMenuLink,
         forceDeletion,
         disableCacheClear,
-        requestEndCallback
+        requestEndCallback,
       );
     }
 
     function countdownModulesRequest() {
-      modulesRequestedCountdown--;
-      //Now that all other modules have performed their action WITHOUT cache clear, we
-      //can request the last module request WITH cache clear
+      modulesRequestedCountdown -= 1;
+      // Now that all other modules have performed their action WITHOUT cache clear, we
+      // can request the last module request WITH cache clear
       if (modulesRequestedCountdown <= 0) {
         if (spinnerObj) {
           spinnerObj.remove();
@@ -1034,24 +1024,26 @@ class AdminModuleController {
       }
     }
 
-    function filterAllowedActions(modulesActions) {
-      let actionMenuLinks = [];
+    function filterAllowedActions(actions) {
+      const menuLinks = [];
       let actionMenuLink;
-      $.each(modulesActions, function filterAllowedModules(index, moduleData) {
+      $.each(actions, (index, moduleData) => {
         actionMenuLink = $(
           self.moduleCardController.moduleActionMenuLinkSelector + bulkModuleAction,
-          moduleData.actionMenuObj
+          moduleData.actionMenuObj,
         );
         if (actionMenuLink.length > 0) {
-          actionMenuLinks.push(actionMenuLink);
+          menuLinks.push(actionMenuLink);
         } else {
-          $.growl.error({message: window.translate_javascripts['Bulk Action - Request not available for module']
+          $.growl.error({
+            message: window.translate_javascripts['Bulk Action - Request not available for module']
               .replace('[1]', bulkModuleAction)
-              .replace('[2]', moduleData.techName)});
+              .replace('[2]', moduleData.techName),
+          });
         }
       });
 
-      return actionMenuLinks;
+      return menuLinks;
     }
   }
 
@@ -1074,7 +1066,7 @@ class AdminModuleController {
         }).done(() => {
           $next.fadeOut();
         });
-      }
+      },
     );
 
     // "Upgrade All" button handler
@@ -1117,7 +1109,7 @@ class AdminModuleController {
         $(self.categorySelectorLabelSelector).text($(this).data('category-display-name'));
         $(self.categoryResetBtnSelector).show();
         self.updateModuleVisibility();
-      }
+      },
     );
 
     body.on(
@@ -1133,7 +1125,7 @@ class AdminModuleController {
         $(this).hide();
         self.currentRefCategory = null;
         self.updateModuleVisibility();
-      }
+      },
     );
   }
 
@@ -1176,7 +1168,7 @@ class AdminModuleController {
           self.switchSortingDisplayTo(switchTo);
           self.currentDisplay = switchTo;
         }
-      }
+      },
     );
   }
 
@@ -1190,61 +1182,6 @@ class AdminModuleController {
     $(`#module-sort-${switchTo}`).addClass('module-sort-active');
     this.currentDisplay = switchTo;
     this.updateModuleVisibility();
-  }
-
-  initializeSeeMore() {
-    const self = this;
-
-    $(`${self.moduleShortList} ${self.seeMoreSelector}`).on('click', function seeMore() {
-      self.currentCategoryDisplay[$(this).data('category')] = true;
-      $(this).addClass('d-none');
-      $(this).closest(self.moduleShortList).find(self.seeLessSelector).removeClass('d-none');
-      self.updateModuleVisibility();
-    });
-
-    $(`${self.moduleShortList} ${self.seeLessSelector}`).on('click', function seeMore() {
-      self.currentCategoryDisplay[$(this).data('category')] = false;
-      $(this).addClass('d-none');
-      $(this).closest(self.moduleShortList).find(self.seeMoreSelector).removeClass('d-none');
-      self.updateModuleVisibility();
-    });
-  }
-
-  updateTotalResults() {
-    const replaceFirstWordBy = (element, value) => {
-      const explodedText = element.text().split(' ');
-      explodedText[0] = value;
-      element.text(explodedText.join(' '));
-    };
-
-    // If there are some shortlist: each shortlist count the modules on the next container.
-    const $shortLists = $('.module-short-list');
-    if ($shortLists.length > 0) {
-      $shortLists.each(function shortLists() {
-        const $this = $(this);
-        replaceFirstWordBy(
-          $this.find('.module-search-result-wording'),
-          $this.next('.modules-list').find('.module-item').length
-        );
-      });
-
-      // If there is no shortlist: the wording directly update from the only module container.
-    } else {
-      const modulesCount = $('.modules-list').find('.module-item').length;
-      replaceFirstWordBy($('.module-search-result-wording'), modulesCount);
-
-      const selectorToToggle = (self.currentDisplay === self.DISPLAY_LIST) ?
-                               this.addonItemListSelector :
-                               this.addonItemGridSelector;
-      $(selectorToToggle).toggle(modulesCount !== (this.modulesList.length / 2));
-
-      if (modulesCount === 0) {
-        $('.module-addons-search-link').attr(
-          'href',
-          `${this.baseAddonsUrl}search.php?search_query=${encodeURIComponent(this.currentTagsList.join(' '))}`
-        );
-      }
-    }
   }
 }
 

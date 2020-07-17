@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,156 +17,101 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
+use InvalidArgumentException;
+use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidAmountException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailRefund;
 
 /**
  * Issues partial refund for given order.
  */
-class IssuePartialRefundCommand
+class IssuePartialRefundCommand extends AbstractRefundCommand
 {
     /**
-     * @var OrderId
+     * @var Number
      */
-    private $orderId;
+    private $shippingCostRefundAmount;
 
     /**
-     * @var array
-     */
-    private $orderDetailRefunds;
-
-    /**
-     * @var int
-     */
-    private $shippingCostRefund;
-
-    /**
-     * @var bool
-     */
-    private $restockRefundedProducts;
-
-    /**
-     * @var bool
-     */
-    private $generateCartRule;
-
-    /**
-     * @var int
-     */
-    private $taxMethod;
-
-    /**
-     * @var int
-     */
-    private $cartRuleRefundType;
-
-    /**
-     * @var float|null
-     */
-    private $cartRuleRefundAmount;
-
-    /**
+     * The expected format for $orderDetailRefunds is an associative array indexed
+     * by OrderDetail id containing two fields amount and quantity
+     *
+     * ex: $orderDetailRefunds = [
+     *      {orderId} => [
+     *          'quantity' => 2,
+     *          'amount' => 23.56,
+     *      ],
+     * ];
+     *
      * @param int $orderId
      * @param array $orderDetailRefunds
-     * @param int $shippingCostRefund
+     * @param string $shippingCostRefundAmount
      * @param bool $restockRefundedProducts
-     * @param bool $generateCartRule
-     * @param int $taxMethod
-     * @param int $cartRuleRefundType
-     * @param float|null $cartRuleRefundAmount
+     * @param bool $generateVoucher
+     * @param bool $generateCreditSlip
+     * @param int $voucherRefundType
+     * @param string|null $voucherRefundAmount
+     *
+     * @throws InvalidCancelProductException
+     * @throws OrderException
      */
     public function __construct(
-        $orderId,
+        int $orderId,
         array $orderDetailRefunds,
-        $shippingCostRefund,
-        $restockRefundedProducts,
-        $generateCartRule,
-        $taxMethod,
-        $cartRuleRefundType,
-        $cartRuleRefundAmount = null
+        string $shippingCostRefundAmount,
+        bool $restockRefundedProducts,
+        bool $generateCreditSlip,
+        bool $generateVoucher,
+        int $voucherRefundType,
+        ?string $voucherRefundAmount = null
     ) {
-        if (empty($orderDetailRefunds)) {
-            throw new OrderException('The partial refund data is incorrect.');
+        parent::__construct(
+            $orderId,
+            $orderDetailRefunds,
+            $restockRefundedProducts,
+            $generateCreditSlip,
+            $generateVoucher,
+            $voucherRefundType,
+            $voucherRefundAmount
+        );
+        try {
+            $this->shippingCostRefundAmount = new Number($shippingCostRefundAmount);
+        } catch (InvalidArgumentException $e) {
+            throw new InvalidAmountException();
         }
-
-        $this->orderId = new OrderId($orderId);
-        $this->orderDetailRefunds = $orderDetailRefunds;
-        $this->shippingCostRefund = $shippingCostRefund;
-        $this->restockRefundedProducts = $restockRefundedProducts;
-        $this->generateCartRule = $generateCartRule;
-        $this->taxMethod = $taxMethod;
-        $this->cartRuleRefundType = $cartRuleRefundType;
-        $this->cartRuleRefundAmount = $cartRuleRefundAmount;
     }
 
     /**
-     * @return OrderId
+     * @return Number
      */
-    public function getOrderId()
+    public function getShippingCostRefundAmount(): Number
     {
-        return $this->orderId;
+        return $this->shippingCostRefundAmount;
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
-    public function getOrderDetailRefunds()
+    protected function setOrderDetailRefunds(array $orderDetailRefunds)
     {
-        return $this->orderDetailRefunds;
-    }
-
-    /**
-     * @return int
-     */
-    public function getTaxMethod()
-    {
-        return $this->taxMethod;
-    }
-
-    /**
-     * @return int
-     */
-    public function getShippingCostRefundAmount()
-    {
-        return $this->shippingCostRefund;
-    }
-
-    /**
-     * @return bool
-     */
-    public function restockRefundedProducts()
-    {
-        return $this->restockRefundedProducts;
-    }
-
-    /**
-     * @return bool
-     */
-    public function generateCartRule()
-    {
-        return $this->generateCartRule;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCartRuleRefundType()
-    {
-        return $this->cartRuleRefundType;
-    }
-
-    public function getCartRuleRefundAmount()
-    {
-        return $this->cartRuleRefundAmount;
+        $this->orderDetailRefunds = [];
+        foreach ($orderDetailRefunds as $orderDetailId => $detailRefund) {
+            $this->orderDetailRefunds[] = OrderDetailRefund::createPartialRefund(
+                $orderDetailId,
+                $detailRefund['quantity'],
+                $detailRefund['amount']
+            );
+        }
     }
 }

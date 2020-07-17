@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
@@ -56,6 +56,11 @@ class ModuleRepository implements ModuleRepositoryInterface
      * @var \PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider
      */
     private $adminModuleProvider;
+
+    /**
+     * @var Finder
+     */
+    private $finder;
 
     /**
      * Logger.
@@ -97,8 +102,6 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     private $prestaTrustChecker = null;
 
-    //### CACHE PROPERTIES ####
-
     /**
      * Key of the cache content.
      *
@@ -111,7 +114,7 @@ class ModuleRepository implements ModuleRepositoryInterface
      *
      * @var array
      */
-    private $cache = array();
+    private $cache = [];
 
     /**
      * Optionnal Doctrine cache provider.
@@ -126,8 +129,6 @@ class ModuleRepository implements ModuleRepositoryInterface
      * @var ArrayCache
      */
     private $loadedModules;
-
-    //### END OF CACHE PROPERTIES ####
 
     public function __construct(
         AdminModuleDataProvider $adminModulesProvider,
@@ -184,7 +185,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         if ($this->cacheProvider) {
             $this->cacheProvider->delete($this->cacheFilePath);
         }
-        $this->cache = array();
+        $this->cache = [];
     }
 
     /**
@@ -379,7 +380,7 @@ class ModuleRepository implements ModuleRepositoryInterface
 
     private function getAddonsCatalogModules()
     {
-        $modules = array();
+        $modules = [];
         foreach ($this->adminModuleProvider->getCatalogModulesNames() as $name) {
             try {
                 $module = $this->getModule($name);
@@ -390,10 +391,10 @@ class ModuleRepository implements ModuleRepositoryInterface
                 $this->logger->critical(
                     $this->translator->trans(
                         'Parse error on module %module%. %error_details%',
-                        array(
+                        [
                             '%module%' => $name,
                             '%error_details%' => $e->getMessage(),
-                        ),
+                        ],
                         'Admin.Modules.Notification'
                     )
                 );
@@ -401,10 +402,10 @@ class ModuleRepository implements ModuleRepositoryInterface
                 $this->logger->critical(
                     $this->translator->trans(
                         'Unexpected exception on module %module%. %error_details%',
-                        array(
+                        [
                             '%module%' => $name,
                             '%error_details%' => $e->getMessage(),
-                        ),
+                        ],
                         'Admin.Modules.Notification'
                     )
                 );
@@ -433,14 +434,14 @@ class ModuleRepository implements ModuleRepositoryInterface
         $php_file_path = $path . '/' . $name . '.php';
 
         /* Data which design the module class */
-        $attributes = array('name' => $name);
+        $attributes = ['name' => $name];
 
         // Get filemtime of module main class (We do this directly with an error suppressor to go faster)
         $current_filemtime = (int) @filemtime($php_file_path);
 
         // We check that we have data from the marketplace
         try {
-            $module_catalog_data = $this->adminModuleProvider->getCatalogModules(array('name' => $name));
+            $module_catalog_data = $this->adminModuleProvider->getCatalogModules(['name' => $name]);
             $attributes = array_merge(
                 $attributes,
                 (array) array_shift($module_catalog_data)
@@ -449,7 +450,7 @@ class ModuleRepository implements ModuleRepositoryInterface
             $this->logger->alert(
                 $this->translator->trans(
                     'Loading data from Addons failed. %error_details%',
-                    array('%error_details%' => $e->getMessage()),
+                    ['%error_details%' => $e->getMessage()],
                     'Admin.Modules.Notification'
                 )
             );
@@ -466,20 +467,20 @@ class ModuleRepository implements ModuleRepositoryInterface
         } else {
             // NOPE, we have to fulfil the cache with the module data
 
-            $disk = array(
+            $disk = [
                 'filemtime' => $current_filemtime,
                 'is_present' => (int) $this->moduleProvider->isOnDisk($name),
                 'is_valid' => 0,
                 'version' => null,
                 'path' => $path,
-            );
-            $main_class_attributes = array();
+            ];
+            $main_class_attributes = [];
 
             if (!$skip_main_class_attributes && $this->moduleProvider->isModuleMainClassValid($name)) {
                 // We load the main class of the module, and get its properties
                 $tmp_module = LegacyModule::getInstanceByName($name);
-                foreach (array('warning', 'name', 'tab', 'displayName', 'description', 'author', 'author_address',
-                    'limited_countries', 'need_instance', 'confirmUninstall', ) as $data_to_get) {
+                foreach (['warning', 'name', 'tab', 'displayName', 'description', 'author', 'author_address',
+                    'limited_countries', 'need_instance', 'confirmUninstall', ] as $data_to_get) {
                     if (isset($tmp_module->{$data_to_get})) {
                         $main_class_attributes[$data_to_get] = $tmp_module->{$data_to_get};
                     }
@@ -553,11 +554,11 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     private function getModulesOnDisk($skip_main_class_attributes = false)
     {
-        $modules = array();
+        $modules = [];
         $modulesDirsList = $this->finder->directories()
             ->in($this->modulePath)
             ->depth('== 0')
-            ->exclude(array('__MACOSX'))
+            ->exclude(['__MACOSX'])
             ->ignoreVCS(true);
 
         foreach ($modulesDirsList as $moduleDir) {
@@ -575,9 +576,9 @@ class ModuleRepository implements ModuleRepositoryInterface
                 $this->logger->critical(
                     $this->translator->trans(
                         'Parse error detected in module %module%. %error_details%.',
-                        array(
+                        [
                             '%module%' => $moduleName,
-                            '%error_details%' => $e->getMessage(), ),
+                            '%error_details%' => $e->getMessage(), ],
                         'Admin.Modules.Notification'
                     )
                 );
@@ -585,9 +586,9 @@ class ModuleRepository implements ModuleRepositoryInterface
                 $this->logger->critical(
                     $this->translator->trans(
                         'Exception detected while loading module %module%. %error_details%.',
-                        array(
+                        [
                             '%module%' => $moduleName,
-                            '%error_details%' => $e->getMessage(), ),
+                            '%error_details%' => $e->getMessage(), ],
                         'Admin.Modules.Notification'
                     )
                 );
@@ -630,7 +631,7 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     public function getInstalledModulesPaths()
     {
-        $paths = array();
+        $paths = [];
         $modulesFiles = Finder::create()->directories()->in(__DIR__ . '/../../../../modules')->depth(0);
         $installedModules = array_keys($this->getInstalledModules());
 

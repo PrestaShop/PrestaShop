@@ -1,10 +1,11 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 export default class ImportProgressModal {
@@ -45,14 +45,13 @@ export default class ImportProgressModal {
    * @param {number} total number of items in total.
    */
   updateProgress(completed, total) {
-    completed = parseInt(completed);
-    total = parseInt(total);
-
-    let $progressBar = this.progressBar,
-        percentage = completed / total * 100;
+    const progressCompleted = parseInt(completed, 10);
+    const progressTotal = parseInt(total, 10);
+    const $progressBar = this.progressBar;
+    const percentage = (progressCompleted / progressTotal) * 100;
 
     $progressBar.css('width', `${percentage}%`);
-    $progressBar.find('> span').text(`${completed}/${total}`);
+    $progressBar.find('> span').text(`${progressCompleted}/${progressTotal}`);
   }
 
   /**
@@ -84,7 +83,7 @@ export default class ImportProgressModal {
    * @param {Array} messages
    */
   showInfoMessages(messages) {
-    this._showMessages(this.infoMessageBlock, messages);
+    this.showMessages(this.infoMessageBlock, messages);
   }
 
   /**
@@ -93,7 +92,7 @@ export default class ImportProgressModal {
    * @param {Array} messages
    */
   showWarningMessages(messages) {
-    this._showMessages(this.warningMessageBlock, messages);
+    this.showMessages(this.warningMessageBlock, messages);
   }
 
   /**
@@ -102,7 +101,7 @@ export default class ImportProgressModal {
    * @param {Array} messages
    */
   showErrorMessages(messages) {
-    this._showMessages(this.errorMessageBlock, messages);
+    this.showMessages(this.errorMessageBlock, messages);
   }
 
   /**
@@ -129,19 +128,19 @@ export default class ImportProgressModal {
    * @param {Array} messages
    * @private
    */
-  _showMessages($messageBlock, messages) {
+  showMessages($messageBlock, messages) {
     let showMessagesBlock = false;
 
-    for (let key in messages) {
+    Object.values(messages).forEach((msg) => {
       // Indicate that the messages block should be displayed
       showMessagesBlock = true;
 
-      let message = $('<div>');
-      message.text(messages[key]);
+      const message = $('<div>');
+      message.text(msg);
       message.addClass('message');
 
       $messageBlock.append(message);
-    }
+    });
 
     if (showMessagesBlock) {
       $messageBlock.removeClass('d-none');
@@ -152,7 +151,7 @@ export default class ImportProgressModal {
    * Show the "Ignore warnings and continue" button.
    */
   showContinueImportButton() {
-    this.continueImportButton.removeClass('d-none')
+    this.continueImportButton.removeClass('d-none');
   }
 
   /**

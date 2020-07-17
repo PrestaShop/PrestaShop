@@ -44,10 +44,10 @@ class Ps_Banner extends Module implements WidgetInterface
         $this->bootstrap = true;
         parent::__construct();
 
-        $this->displayName = $this->trans('Banner', array(), 'Modules.Banner.Admin');
-        $this->description = $this->trans('Displays a banner on your shop.', array(), 'Modules.Banner.Admin');
+        $this->displayName = $this->trans('Banner', [], 'Modules.Banner.Admin');
+        $this->description = $this->trans('Displays a banner on your shop.', [], 'Modules.Banner.Admin');
 
-        $this->ps_versions_compliancy = array('min' => '1.7.1.0', 'max' => _PS_VERSION_);
+        $this->ps_versions_compliancy = ['min' => '1.7.1.0', 'max' => _PS_VERSION_];
 
         $this->templateFile = 'module:ps_banner/ps_banner.tpl';
     }
@@ -101,7 +101,7 @@ class Ps_Banner extends Module implements WidgetInterface
     {
         if (Tools::isSubmit('submitStoreConf')) {
             $languages = Language::getLanguages(false);
-            $values = array();
+            $values = [];
             $update_images_values = false;
 
             foreach ($languages as $lang) {
@@ -114,7 +114,7 @@ class Ps_Banner extends Module implements WidgetInterface
                         $file_name = md5($_FILES['BANNER_IMG_' . $lang['id_lang']]['name']) . '.' . $ext;
 
                         if (!move_uploaded_file($_FILES['BANNER_IMG_' . $lang['id_lang']]['tmp_name'], __DIR__ . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . $file_name)) {
-                            return $this->displayError($this->trans('An error occurred while attempting to upload the file.', array(), 'Admin.Notifications.Error'));
+                            return $this->displayError($this->trans('An error occurred while attempting to upload the file.', [], 'Admin.Notifications.Error'));
                         } else {
                             if (Configuration::hasContext('BANNER_IMG', $lang['id_lang'], Shop::getContext())
                                 && Configuration::get('BANNER_IMG', $lang['id_lang']) != $file_name) {
@@ -141,7 +141,7 @@ class Ps_Banner extends Module implements WidgetInterface
 
             $this->_clearCache($this->templateFile);
 
-            return $this->displayConfirmation($this->trans('The settings have been updated.', array(), 'Admin.Notifications.Success'));
+            return $this->displayConfirmation($this->trans('The settings have been updated.', [], 'Admin.Notifications.Success'));
         }
 
         return '';
@@ -154,40 +154,40 @@ class Ps_Banner extends Module implements WidgetInterface
 
     public function renderForm()
     {
-        $fields_form = array(
-            'form' => array(
-                'legend' => array(
-                    'title' => $this->trans('Settings', array(), 'Admin.Global'),
+        $fields_form = [
+            'form' => [
+                'legend' => [
+                    'title' => $this->trans('Settings', [], 'Admin.Global'),
                     'icon' => 'icon-cogs',
-                ),
-                'input' => array(
-                    array(
+                ],
+                'input' => [
+                    [
                         'type' => 'file_lang',
-                        'label' => $this->trans('Banner image', array(), 'Modules.Banner.Admin'),
+                        'label' => $this->trans('Banner image', [], 'Modules.Banner.Admin'),
                         'name' => 'BANNER_IMG',
-                        'desc' => $this->trans('Upload an image for your top banner. The recommended dimensions are 1110 x 214px if you are using the default theme.', array(), 'Modules.Banner.Admin'),
+                        'desc' => $this->trans('Upload an image for your top banner. The recommended dimensions are 1110 x 214px if you are using the default theme.', [], 'Modules.Banner.Admin'),
                         'lang' => true,
-                    ),
-                    array(
+                    ],
+                    [
                         'type' => 'text',
                         'lang' => true,
-                        'label' => $this->trans('Banner Link', array(), 'Modules.Banner.Admin'),
+                        'label' => $this->trans('Banner Link', [], 'Modules.Banner.Admin'),
                         'name' => 'BANNER_LINK',
-                        'desc' => $this->trans('Enter the link associated to your banner. When clicking on the banner, the link opens in the same window. If no link is entered, it redirects to the homepage.', array(), 'Modules.Banner.Admin'),
-                    ),
-                    array(
+                        'desc' => $this->trans('Enter the link associated to your banner. When clicking on the banner, the link opens in the same window. If no link is entered, it redirects to the homepage.', [], 'Modules.Banner.Admin'),
+                    ],
+                    [
                         'type' => 'text',
                         'lang' => true,
-                        'label' => $this->trans('Banner description', array(), 'Modules.Banner.Admin'),
+                        'label' => $this->trans('Banner description', [], 'Modules.Banner.Admin'),
                         'name' => 'BANNER_DESC',
-                        'desc' => $this->trans('Please enter a short but meaningful description for the banner.', array(), 'Modules.Banner.Admin'),
-                    ),
-                ),
-                'submit' => array(
-                    'title' => $this->trans('Save', array(), 'Admin.Actions'),
-                ),
-            ),
-        );
+                        'desc' => $this->trans('Please enter a short but meaningful description for the banner.', [], 'Modules.Banner.Admin'),
+                    ],
+                ],
+                'submit' => [
+                    'title' => $this->trans('Save', [], 'Admin.Actions'),
+                ],
+            ],
+        ];
 
         $lang = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
 
@@ -201,20 +201,20 @@ class Ps_Banner extends Module implements WidgetInterface
         $helper->submit_action = 'submitStoreConf';
         $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false) . '&configure=' . $this->name . '&tab_module=' . $this->tab . '&module_name=' . $this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
-        $helper->tpl_vars = array(
+        $helper->tpl_vars = [
             'uri' => $this->getPathUri(),
             'fields_value' => $this->getConfigFieldsValues(),
             'languages' => $this->context->controller->getLanguages(),
             'id_language' => $this->context->language->id,
-        );
+        ];
 
-        return $helper->generateForm(array($fields_form));
+        return $helper->generateForm([$fields_form]);
     }
 
     public function getConfigFieldsValues()
     {
         $languages = Language::getLanguages(false);
-        $fields = array();
+        $fields = [];
 
         foreach ($languages as $lang) {
             $fields['BANNER_IMG'][$lang['id_lang']] = Tools::getValue('BANNER_IMG_' . $lang['id_lang'], Configuration::get('BANNER_IMG', $lang['id_lang']));
@@ -247,10 +247,10 @@ class Ps_Banner extends Module implements WidgetInterface
             $banner_link = $this->context->link->getPageLink('index');
         }
 
-        return array(
+        return [
             'banner_link' => $this->updateUrl($banner_link),
             'banner_desc' => Configuration::get('BANNER_DESC', $this->context->language->id),
-        );
+        ];
     }
 
     private function updateUrl($link)

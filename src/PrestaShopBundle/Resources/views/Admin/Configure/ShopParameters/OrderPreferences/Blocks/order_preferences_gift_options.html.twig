@@ -1,10 +1,11 @@
 {#**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *#}
 
 {% trans_default_domain "Admin.Shopparameters.Feature" %}
@@ -34,39 +34,6 @@
         </h3>
         <div class="card-block row">
             <div class="card-text">
-                <div class="form-group row">
-                    {{ ps.label_with_help(('Offer gift wrapping'|trans), ('Suggest gift-wrapping to customers.'|trans({}, 'Admin.Shopparameters.Help'))) }}
-                    <div class="col-sm">
-                      {{ form_errors(giftOptionsForm.enable_gift_wrapping) }}
-                      {{ form_widget(giftOptionsForm.enable_gift_wrapping) }}
-                    </div>
-                </div>
-                <div class="form-group row">
-                    {{ ps.label_with_help(('Gift-wrapping price'|trans), ('Set a price for gift wrapping.'|trans({}, 'Admin.Shopparameters.Help'))) }}
-                    <div class="col-sm">
-                      {{ form_errors(giftOptionsForm.gift_wrapping_price) }}
-                      {{ form_widget(giftOptionsForm.gift_wrapping_price) }}
-                    </div>
-                </div>
-
-                {% if not isAtcpShipWrapEnabled %}
-                    <div class="form-group row">
-                        {{ ps.label_with_help(('Gift-wrapping tax'|trans), ('Set a tax for gift wrapping.'|trans({}, 'Admin.Shopparameters.Help'))) }}
-                        <div class="col-sm">
-                          {{ form_errors(giftOptionsForm.gift_wrapping_tax_rules_group) }}
-                          {{ form_widget(giftOptionsForm.gift_wrapping_tax_rules_group) }}
-                        </div>
-                    </div>
-                {% endif %}
-
-                <div class="form-group row">
-                    {{ ps.label_with_help(('Offer recycled packaging'|trans), ('Suggest recycled packaging to customer.'|trans({}, 'Admin.Shopparameters.Help'))) }}
-                    <div class="col-sm">
-                      {{ form_errors(giftOptionsForm.offer_recyclable_pack) }}
-                      {{ form_widget(giftOptionsForm.offer_recyclable_pack) }}
-                    </div>
-                </div>
-
                 {% block order_gift_options_preferences_form_rest %}
                   {{ form_rest(giftOptionsForm) }}
                 {% endblock %}
@@ -74,7 +41,7 @@
         </div>
         <div class="card-footer">
             <div class="d-flex justify-content-end">
-                <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                <button class="btn btn-primary" id="form-gift-save-button">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
             </div>
         </div>
     </div>

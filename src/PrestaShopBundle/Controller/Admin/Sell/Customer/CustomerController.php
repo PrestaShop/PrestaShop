@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Customer;
@@ -33,25 +33,31 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkEnableCustomerCommand
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetPrivateNoteAboutCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\TransformGuestToCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\MissingCustomerRequiredFieldsException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\EditableCustomer;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerByEmailNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAccessException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerTransformationException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\MissingCustomerRequiredFieldsException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerCarts;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForAddressCreation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerOrders;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustomer;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\SearchCustomers;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\AddressCreationCustomerInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\EditableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Customer\DeleteCustomersType;
@@ -108,6 +114,27 @@ class CustomerController extends AbstractAdminController
             'showcaseCardName' => ShowcaseCard::CUSTOMERS_CARD,
             'isShowcaseCardClosed' => $showcaseCardIsClosed,
         ]);
+    }
+
+    /**
+     * Process Grid search.
+     *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function searchGridAction(Request $request)
+    {
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+
+        return $responseBuilder->buildSearchResponse(
+            $this->get('prestashop.core.grid.definition.factory.customer'),
+            $request,
+            CustomerGridDefinitionFactory::GRID_ID,
+            'admin_customers_index'
+        );
     }
 
     /**
@@ -176,14 +203,24 @@ class CustomerController extends AbstractAdminController
     public function editAction($customerId, Request $request)
     {
         $this->addGroupSelectionToRequest($request);
+        /** @var ViewableCustomer $customerInformation */
+        $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int) $customerId));
+        $customerFormOptions = [
+            'is_password_required' => false,
+        ];
         try {
-            /** @var ViewableCustomer $customerInformation */
-            $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int) $customerId));
-            $customerFormOptions = [
-                'is_password_required' => false,
-            ];
             $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')
                 ->getFormFor((int) $customerId, [], $customerFormOptions);
+        } catch (Exception $exception) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages($exception))
+            );
+
+            return $this->redirectToRoute('admin_customers_index');
+        }
+
+        try {
             $customerForm->handleRequest($request);
             $customerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.customer_form_handler');
             $result = $customerFormHandler->handleFor((int) $customerId, $customerForm);
@@ -243,6 +280,10 @@ class CustomerController extends AbstractAdminController
         $privateNoteForm = $this->createForm(PrivateNoteType::class, [
             'note' => $customerInformation->getGeneralInformation()->getPrivateNote(),
         ]);
+
+        if ($request->query->has('conf')) {
+            $this->manageLegacyFlashes($request->query->get('conf'));
+        }
 
         return $this->render('@PrestaShop/Admin/Sell/Customer/view.html.twig', [
             'enableSidebar' => true,
@@ -370,7 +411,7 @@ class CustomerController extends AbstractAdminController
     /**
      * Search for customers by query.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
      *
      * @param Request $request
      *
@@ -382,7 +423,14 @@ class CustomerController extends AbstractAdminController
         $phrases = explode(' ', $query);
         $isRequestFromLegacyPage = !$request->query->has('sf2');
 
-        $customers = $this->getQueryBus()->handle(new SearchCustomers($phrases));
+        try {
+            $customers = $this->getQueryBus()->handle(new SearchCustomers($phrases));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
 
         // if call is made from legacy page
         // it will return response so legacy can understand it
@@ -394,6 +442,39 @@ class CustomerController extends AbstractAdminController
         }
 
         return $this->json($customers);
+    }
+
+    /**
+     * Provides customer information for address creation in json format
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function getCustomerInformationAction(Request $request): Response
+    {
+        try {
+            $email = $request->query->get('email');
+
+            /** @var AddressCreationCustomerInformation $customerInformation */
+            $customerInformation = $this->getQueryBus()->handle(new GetCustomerForAddressCreation($email));
+
+            return $this->json($customerInformation);
+        } catch (Exception $e) {
+            $code = Response::HTTP_INTERNAL_SERVER_ERROR;
+
+            if ($e instanceof CustomerException) {
+                $code = Response::HTTP_NOT_FOUND;
+            }
+
+            return $this->json([
+                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+            ],
+                $code
+            );
+        }
     }
 
     /**
@@ -451,6 +532,8 @@ class CustomerController extends AbstractAdminController
             $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing((int) $customerId));
 
             $editCustomerCommand = new EditCustomerCommand((int) $customerId);
+
+            // toggle newsletter subscription
             $editCustomerCommand->setNewsletterSubscribed(!$editableCustomer->isNewsletterSubscribed());
 
             $this->getCommandBus()->handle($editCustomerCommand);
@@ -661,6 +744,7 @@ class CustomerController extends AbstractAdminController
      */
     public function exportAction(CustomerFilters $filters)
     {
+        $filters = new CustomerFilters(['limit' => null] + $filters->all());
         $gridFactory = $this->get('prestashop.core.grid.factory.customer');
         $grid = $gridFactory->getGrid($filters);
 
@@ -686,8 +770,8 @@ class CustomerController extends AbstractAdminController
                 'id_customer' => $record['id_customer'],
                 'social_title' => '--' === $record['social_title'] ? '' : $record['social_title'],
                 'firstname' => $record['firstname'],
-                'lastname' => $record['firstname'],
-                'email' => $record['firstname'],
+                'lastname' => $record['lastname'],
+                'email' => $record['email'],
                 'company' => '--' === $record['company'] ? '' : $record['company'],
                 'total_spent' => '--' === $record['total_spent'] ? '' : $record['total_spent'],
                 'enabled' => $record['active'],
@@ -702,6 +786,52 @@ class CustomerController extends AbstractAdminController
             ->setData($data)
             ->setHeadersData($headers)
             ->setFileName('customer_' . date('Y-m-d_His') . '.csv');
+    }
+
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
+     *
+     * @param int $customerId
+     *
+     * @return JsonResponse
+     */
+    public function getCartsAction(int $customerId)
+    {
+        try {
+            $carts = $this->getQueryBus()->handle(new GetCustomerCarts($customerId));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+
+        return $this->json([
+            'carts' => $carts,
+        ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
+     *
+     * @param int $customerId
+     *
+     * @return JsonResponse
+     */
+    public function getOrdersAction(int $customerId)
+    {
+        try {
+            $orders = $this->getQueryBus()->handle(new GetCustomerOrders($customerId));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+
+        return $this->json([
+            'orders' => $orders,
+        ]);
     }
 
     /**
@@ -761,6 +891,10 @@ class CustomerController extends AbstractAdminController
                 'A default customer group must be selected in group box.',
                 'Admin.Orderscustomers.Notification'
             ),
+            CustomerByEmailNotFoundException::class => $this->trans(
+                'This email address is not registered.',
+                'Admin.Orderscustomers.Notification'
+            ),
             CustomerConstraintException::class => [
                 CustomerConstraintException::INVALID_PASSWORD => $this->trans(
                     'Password should be at least %length% characters long.',
@@ -814,5 +948,26 @@ class CustomerController extends AbstractAdminController
                 ]
             ),
         ];
+    }
+
+    /**
+     * Manage legacy flashes
+     *
+     * @todo Remove this code when legacy edit will be migrated.
+     *
+     * @param int $messageId The message id from legacy context
+     */
+    private function manageLegacyFlashes($messageId)
+    {
+        $messages = [
+            4 => $this->trans('Update successful.', 'Admin.Notifications.Success'),
+        ];
+
+        if (isset($messages[$messageId])) {
+            $this->addFlash(
+                'success',
+                $messages[$messageId]
+            );
+        }
     }
 }

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Routing;
@@ -86,10 +86,16 @@ class LegacyHelperLinkBuilder implements EntityLinkBuilderInterface
     private function buildActionParameters($action, $entity, array $parameters)
     {
         unset($parameters['current_index']);
-        $viewAction = $action . $entity;
+        $actionParameter = $action . $entity;
+
+        /**
+         * Legacy actions are displayed with empty value (e.g ?controller=ProductAdminController&updateproduct&id_product=1)
+         * Some modules don't just check that the parameter is set but also that it is empty...
+         * The closest thing we have with http_build_query is controller=ProductAdminController&updateproduct=&id_product=1
+         */
         $parameters = array_merge(
-            $parameters,
-            [$viewAction => 1]
+            [$actionParameter => ''],
+            $parameters
         );
 
         return $parameters;

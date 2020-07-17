@@ -18,28 +18,36 @@ cache:
   directories:
     - $HOME/.composer/cache
 
-sudo: required
-dist: trusty
+os: linux
+dist: xenial
 
 php:
   - 7.1
   - 7.2
+  - 7.3
 
 env:
   global:
     - SYMFONY_DEPRECATIONS_HELPER=disabled
-  matrix:
+    - DISABLE_DEBUG_TOOLBAR=1
+  jobs:
     - PRESTASHOP_TEST_TYPE=unit
     - PRESTASHOP_TEST_TYPE=integration
     - PRESTASHOP_TEST_TYPE=sanity
 
-matrix:
+stages:
+  - name: deploy
+    if: type = cron
+  - name: test
+    if: type IN (push, pull_request)
+
+jobs:
   include:
-    - php: 7.2
-      env: EXTRA_DEPS=phpHigh  PRESTASHOP_TEST_TYPE=unit
     - stage: deploy
-      php: 7.2
+      php: 7.3
       before_install: skip
+      before_script: skip
+      install: skip
       script:
         - mkdir -p /tmp/ps-release
         - php tools/build/CreateRelease.php --destination-dir=/tmp/ps-release
@@ -52,14 +60,10 @@ matrix:
         access_key_id: $GCS_ACCESS_KEY
         secret_access_key: $GCS_ACCESS_SECRET
         bucket: prestashop-core-nightly
-        skip_cleanup: true
         acl: public-read
-        local-dir: "/tmp/ps-release"
+        local_dir: "/tmp/ps-release"
         on:
           all_branches: true
-  allow_failures:
-    - php: 7.2
-      env: EXTRA_DEPS=phpHigh  PRESTASHOP_TEST_TYPE=unit
 
 before_install:
   - /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_10.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :10 -ac -screen 0 1600x1200x16
@@ -68,22 +72,26 @@ before_install:
   # Apache & php-fpm configuration
   - bash travis-scripts/setup-php-fpm.sh
   - bash travis-scripts/setup-apache.sh
+  - bash travis-scripts/setup-node-js.sh
 
   # PrestaShop configuration
   - cp tests-legacy/parameters.yml.travis app/config/parameters.yml
 
-before_script:
-  - if [ "$EXTRA_DEPS" = "phpHigh" ]; then
-        composer update --ignore-platform-reqs --no-suggest --ansi --no-interaction --no-progress --quiet;
-    else
-        composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet;
-    fi
+  # Always test with non-unity MySQL autoincrement
+  - mysql -e 'SET @@GLOBAL.auto_increment_increment = 2, @@GLOBAL.auto_increment_offset = 2;'
 
-  - bash travis-scripts/install-prestashop;
+install:
+  - composer install --ansi --prefer-dist --no-interaction --no-progress --quiet;
+  - if [ "$PRESTASHOP_TEST_TYPE" != "sanity" ]; then
+      bash travis-scripts/install-prestashop;
+    fi
 
 script:
   - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
-        bash tests-legacy/check_file_syntax.sh;
+        bash tests/check_file_syntax.sh;
+    fi
+
+  - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
         bash tests-legacy/check_phpunit.sh;
     fi
 
@@ -92,10 +100,12 @@ script:
     fi
 
   - if [ "$PRESTASHOP_TEST_TYPE" = "integration" ]; then
+        make assets;
         bash tests/check_integration.sh;
     fi
 
   - if [ "$PRESTASHOP_TEST_TYPE" = "sanity" ]; then
+        make assets;
         bash tests/check_sanity.sh;
     fi
 
@@ -131,7 +141,7 @@ after_deploy:
       gcloud compute instances stop --zone $GC_ZONE "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}";
       gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata=NIGHTLY_TOKEN=$NIGHTLY_TOKEN && \
       gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata=TRAVIS_BRANCH=$TRAVIS_BRANCH && \
-      gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata-from-file startup-tests-script=tests/E2E/scripts/run-nightly-tests.sh && \
-      gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata-from-file startup-reports-script=tests/E2E/scripts/run-nightly-reports.sh && \
+      gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata-from-file startup-tests-script=tests/UI/scripts/run-nightly-tests.sh && \
+      gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata-from-file startup-reports-script=tests/UI/scripts/run-nightly-reports.sh && \
       gcloud compute instances start --zone $GC_ZONE "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}"
     fi

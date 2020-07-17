@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 class WebserviceKeyCore extends ObjectModel
 {
@@ -37,15 +37,15 @@ class WebserviceKeyCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'webservice_account',
         'primary' => 'id_webservice_account',
-        'fields' => array(
-            'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'key' => array('type' => self::TYPE_STRING, 'required' => true, 'size' => 32),
-            'description' => array('type' => self::TYPE_STRING),
-        ),
-    );
+        'fields' => [
+            'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'key' => ['type' => self::TYPE_STRING, 'required' => true, 'size' => 32],
+            'description' => ['type' => self::TYPE_STRING],
+        ],
+    ];
 
     public function add($autodate = true, $nullValues = false)
     {
@@ -53,7 +53,24 @@ class WebserviceKeyCore extends ObjectModel
             return false;
         }
 
-        return parent::add($autodate = true, $nullValues = false);
+        $result = parent::add($autodate = true, $nullValues = false);
+
+        if ($result) {
+            PrestaShopLogger::addLog(
+                Context::getContext()->getTranslator()->trans(
+                    'Webservice key created by employee "%d" %s %s (%s)',
+                    [
+                        Context::getContext()->employee->id,
+                        Context::getContext()->employee->firstname,
+                        Context::getContext()->employee->lastname,
+                        Context::getContext()->employee->email,
+                    ],
+                    'Admin.Advparameters.Feature'
+                )
+            );
+        }
+
+        return $result;
     }
 
     public static function keyExists($key)
@@ -82,7 +99,7 @@ class WebserviceKeyCore extends ObjectModel
 			LEFT JOIN `' . _DB_PREFIX_ . 'webservice_account` a ON (a.id_webservice_account = p.id_webservice_account)
 			WHERE a.key = \'' . pSQL($auth_key) . '\'
 		');
-        $permissions = array();
+        $permissions = [];
         if ($result) {
             foreach ($result as $row) {
                 $permissions[$row['resource']][] = $row['method'];
@@ -116,14 +133,14 @@ class WebserviceKeyCore extends ObjectModel
             $ok = false;
         }
         if (isset($permissions_to_set)) {
-            $permissions = array();
+            $permissions = [];
             $resources = WebserviceRequest::getResources();
-            $methods = array('GET', 'PUT', 'POST', 'DELETE', 'HEAD');
+            $methods = ['GET', 'PUT', 'POST', 'DELETE', 'HEAD'];
             foreach ($permissions_to_set as $resource_name => $resource_methods) {
                 if (in_array($resource_name, array_keys($resources))) {
                     foreach (array_keys($resource_methods) as $method_name) {
                         if (in_array($method_name, $methods)) {
-                            $permissions[] = array($method_name, $resource_name);
+                            $permissions[] = [$method_name, $resource_name];
                         }
                     }
                 }

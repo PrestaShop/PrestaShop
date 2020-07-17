@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Service\DataProvider\Marketplace;
@@ -31,9 +31,9 @@ use GuzzleHttp\Client;
 class ApiClient
 {
     private $addonsApiClient;
-    private $queryParameters = array(
+    private $queryParameters = [
         'format' => 'json',
-    );
+    ];
     private $defaultQueryParameters;
 
     /**
@@ -108,7 +108,7 @@ class ApiClient
 
         $responseArray = json_decode($response);
 
-        return isset($responseArray->modules) ? $responseArray->modules : array();
+        return isset($responseArray->modules) ? $responseArray->modules : [];
     }
 
     public function getPreInstalledModules()
@@ -118,7 +118,7 @@ class ApiClient
             ->getResponse();
         $responseDecoded = json_decode($response);
 
-        return isset($responseDecoded->modules) ? $responseDecoded->modules : array();
+        return isset($responseDecoded->modules) ? $responseDecoded->modules : [];
     }
 
     public function getMustHaveModules()
@@ -129,7 +129,7 @@ class ApiClient
 
         $responseArray = json_decode($response);
 
-        return isset($responseArray->modules) ? $responseArray->modules : array();
+        return isset($responseArray->modules) ? $responseArray->modules : [];
     }
 
     /**
@@ -159,7 +159,7 @@ class ApiClient
 
         $responseArray = json_decode($response);
 
-        return isset($responseArray->services) ? $responseArray->services : array();
+        return isset($responseArray->services) ? $responseArray->services : [];
     }
 
     public function getCategories()
@@ -170,7 +170,7 @@ class ApiClient
 
         $responseArray = json_decode($response);
 
-        return isset($responseArray->module) ? $responseArray->module : array();
+        return isset($responseArray->module) ? $responseArray->module : [];
     }
 
     public function getModule($moduleId)
@@ -215,7 +215,7 @@ class ApiClient
             return $responseArray->modules;
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -235,7 +235,7 @@ class ApiClient
             return $responseDecoded->themes;
         }
 
-        return array();
+        return [];
     }
 
     public function getResponse()
@@ -243,8 +243,8 @@ class ApiClient
         return (string) $this->addonsApiClient
             ->get(
                 null,
-                array('query' => $this->queryParameters,
-                )
+                ['query' => $this->queryParameters,
+                ]
             )->getBody();
     }
 
@@ -253,8 +253,8 @@ class ApiClient
         return (string) $this->addonsApiClient
             ->post(
                 null,
-                array('query' => $this->queryParameters,
-                )
+                ['query' => $this->queryParameters,
+                ]
             )->getBody();
     }
 

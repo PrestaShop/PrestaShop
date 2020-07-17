@@ -205,7 +205,7 @@
                     <class_name>AdminThemesCatalog</class_name>
                 </tab>
                 <tab id="Mail_Theme_Parent" id_parent="Look_feel" active="1" enabled="1" hide_host_mode="0" icon="">
-                  <class_name>AdminMailThemeParent</class_name>
+                  <class_name>AdminParentMailTheme</class_name>
                 </tab>
                     <tab id="Mail_Theme" id_parent="Mail_Theme_Parent" active="1" enabled="1" hide_host_mode="0" icon="">
                       <class_name>AdminMailTheme</class_name>
@@ -383,6 +383,9 @@
                 <class_name>AdminAdvancedParameters</class_name>
             </tab>
 
+                <tab id="Tabs" id_parent="Advanced_Parameters" active="1" enabled="1"  hide_host_mode="0" icon="">
+                    <class_name>AdminTabs</class_name>
+                </tab>
                 <tab id="Information" id_parent="Advanced_Parameters" active="1" enabled="1" hide_host_mode="0" icon="">
                     <class_name>AdminInformation</class_name>
                 </tab>

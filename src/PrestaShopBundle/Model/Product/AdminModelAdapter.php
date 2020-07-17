@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Model\Product;
@@ -41,9 +41,9 @@ use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShop\PrestaShop\Core\Product\ProductInterface;
 use PrestaShopBundle\Utils\FloatParser;
-use Symfony\Component\Routing\Router;
 use Product;
 use ProductDownload;
+use Symfony\Component\Routing\Router;
 
 /**
  * This form class is responsible to map the form data to the product object.
@@ -82,8 +82,14 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private $warehouseAdapter;
     /** @var Router */
     private $router;
+
+    /**
+     * @var FloatParser
+     */
+    private $floatParser;
+
     /** @var array */
-    private $multiShopKeys = array(
+    private $multiShopKeys = [
         'category_box',
         'id_category_default',
         'attribute_wholesale_price',
@@ -118,14 +124,14 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         'low_stock_alert',
         'available_date',
         'ecotax',
-    );
+    ];
 
     /**
      * Defines translatable key.
      *
      * @var array
      */
-    private $translatableKeys = array(
+    private $translatableKeys = [
         'name',
         'description',
         'description_short',
@@ -137,14 +143,14 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         'tags',
         'delivery_in_stock',
         'delivery_out_stock',
-    );
+    ];
 
     /**
      * Defines unused key for manual binding.
      *
      * @var array
      */
-    private $unmapKeys = array(
+    private $unmapKeys = [
         'name',
         'description',
         'description_short',
@@ -157,7 +163,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         'specific_price',
         'virtual_product',
         'attachment_product',
-    );
+    ];
 
     /**
      * Array containing all the data to be mapped with the form.
@@ -180,8 +186,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      * @param PackDataProvider $packDataProvider
      * @param ShopContext $shopContext
      * @param TaxRuleDataProvider $taxRuleDataProvider
-     *
-     * @throws \PrestaShopException
+     * @param Router $router
+     * @param FloatParser|null $floatParser
      */
     public function __construct(
         LegacyContext $legacyContext,
@@ -194,7 +200,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         PackDataProvider $packDataProvider,
         ShopContext $shopContext,
         TaxRuleDataProvider $taxRuleDataProvider,
-        Router $router
+        Router $router,
+        FloatParser $floatParser = null
     ) {
         $this->context = $legacyContext;
         $this->contextShop = $this->context->getContext();
@@ -211,6 +218,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $this->shopContext = $shopContext;
         $this->taxRuleDataProvider = $taxRuleDataProvider;
         $this->router = $router;
+        $this->floatParser = $floatParser ?? new FloatParser();
     }
 
     /**
@@ -304,34 +312,32 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             $form_data['combinations'][$k]['attribute_weight_impact'] = 0;
             $form_data['combinations'][$k]['attribute_unit_impact'] = 0;
 
-            $floatParser = new FloatParser();
-
-            if ($floatParser->fromString($combination['attribute_price']) > 0) {
+            if ($this->floatParser->fromString($combination['attribute_price']) > 0) {
                 $form_data['combinations'][$k]['attribute_price_impact'] = 1;
-            } elseif ($floatParser->fromString($combination['attribute_price']) < 0) {
+            } elseif ($this->floatParser->fromString($combination['attribute_price']) < 0) {
                 $form_data['combinations'][$k]['attribute_price_impact'] = -1;
             }
 
-            if ($floatParser->fromString($combination['attribute_weight']) > 0) {
+            if ($this->floatParser->fromString($combination['attribute_weight']) > 0) {
                 $form_data['combinations'][$k]['attribute_weight_impact'] = 1;
-            } elseif ($floatParser->fromString($combination['attribute_weight']) < 0) {
+            } elseif ($this->floatParser->fromString($combination['attribute_weight']) < 0) {
                 $form_data['combinations'][$k]['attribute_weight_impact'] = -1;
             }
 
-            if ($floatParser->fromString($combination['attribute_unity']) > 0) {
+            if ($this->floatParser->fromString($combination['attribute_unity']) > 0) {
                 $form_data['combinations'][$k]['attribute_unit_impact'] = 1;
-            } elseif ($floatParser->fromString($combination['attribute_unity']) < 0) {
+            } elseif ($this->floatParser->fromString($combination['attribute_unity']) < 0) {
                 $form_data['combinations'][$k]['attribute_unit_impact'] = -1;
             }
 
             $form_data['combinations'][$k]['attribute_price'] = abs(
-                $floatParser->fromString($combination['attribute_price'])
+                $this->floatParser->fromString($combination['attribute_price'])
             );
             $form_data['combinations'][$k]['attribute_weight'] = abs(
-                $floatParser->fromString($combination['attribute_weight'])
+                $this->floatParser->fromString($combination['attribute_weight'])
             );
             $form_data['combinations'][$k]['attribute_unity'] = abs(
-                $floatParser->fromString($combination['attribute_unity'])
+                $this->floatParser->fromString($combination['attribute_unity'])
             );
         }
 
@@ -473,7 +479,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      */
     private function mapStep1FromData(Product $product)
     {
-        return array(
+        return [
             'type_product' => $product->getType(),
             'inputPackItems' => [
                 'data' => array_map(
@@ -506,15 +512,15 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                         return $p['id_product'];
                     },
                     call_user_func_array(
-                        array($product, 'getAccessoriesLight'),
-                        array($this->locales[0]['id_lang'], $product->id)
+                        [$product, 'getAccessoriesLight'],
+                        [$this->locales[0]['id_lang'], $product->id]
                     )
                 ),
             ],
             'id_manufacturer' => $product->id_manufacturer,
             'features' => $this->getFormFeatures($product),
             'images' => $this->productAdapter->getImages($product->id, $this->locales[0]['id_lang']),
-        );
+        ];
     }
 
     /**
@@ -526,9 +532,17 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      */
     private function mapStep2FormData(Product $product)
     {
-        return array(
+        // ecotax is stored with tax included but form uses the tax excluded value
+        // using a precision of 6 digits as `AdminProductsController::_removeTaxFromEcotax()`
+        // which does the opposite uses 6 digits too
+        $ecotax = $this->tools->round(
+            $product->ecotax * (1 + $this->taxRuleDataProvider->getProductEcotaxRate() / 100),
+            6
+        );
+
+        return [
             'price' => $product->price,
-            'ecotax' => $product->ecotax,
+            'ecotax' => $ecotax,
             'id_tax_rules_group' => isset($product->id_tax_rules_group)
                 ? (int) $product->id_tax_rules_group
                 : $this->taxRuleDataProvider->getIdTaxRulesGroupMostUsed(),
@@ -549,7 +563,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'specificPricePriority_1' => $this->productPricePriority[1],
             'specificPricePriority_2' => $this->productPricePriority[2],
             'specificPricePriority_3' => $this->productPricePriority[3],
-        );
+        ];
     }
 
     /**
@@ -561,7 +575,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      */
     private function mapStep3FormData(Product $product)
     {
-        return array(
+        return [
             'advanced_stock_management' => (bool) $product->advanced_stock_management,
             'depends_on_stock' => $product->depends_on_stock ? '1' : '0',
             'qty_0' => $product::getQuantity($product->id),
@@ -576,7 +590,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'available_date' => $product->available_date,
             'pack_stock_type' => $product->pack_stock_type,
             'virtual_product' => $this->getVirtualProductData($product),
-        );
+        ];
     }
 
     /**
@@ -588,7 +602,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      */
     private function mapStep4FormData(Product $product)
     {
-        return array(
+        return [
             'width' => $product->width,
             'height' => $product->height,
             'depth' => $product->depth,
@@ -598,7 +612,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'additional_delivery_times' => $product->additional_delivery_times,
             'delivery_in_stock' => $product->delivery_in_stock,
             'delivery_out_stock' => $product->delivery_out_stock,
-        );
+        ];
     }
 
     /**
@@ -610,7 +624,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      */
     private function mapStep5FormData(Product $product)
     {
-        return array(
+        return [
             'link_rewrite' => $product->link_rewrite,
             'meta_title' => $product->meta_title,
             'meta_description' => $product->meta_description,
@@ -618,7 +632,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'id_type_redirected' => [
                 'data' => [$product->id_type_redirected],
             ],
-        );
+        ];
     }
 
     /**
@@ -630,7 +644,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      */
     private function mapStep6FormData(Product $product)
     {
-        return array(
+        return [
             'visibility' => $product->visibility,
             'tags' => $this->getTags($product),
             'display_options' => [
@@ -639,6 +653,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'online_only' => (bool) $product->online_only,
             ],
             'upc' => $product->upc,
+            'mpn' => $product->mpn,
             'ean13' => $product->ean13,
             'isbn' => $product->isbn,
             'reference' => $product->reference,
@@ -653,7 +668,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'default_supplier' => $product->id_supplier,
             'custom_fields' => $this->getCustomFields($product),
             'attachments' => $this->getProductAttachments($product),
-        );
+        ];
     }
 
     /**
@@ -779,11 +794,11 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     {
         $combinations = $product->getAttributesResume($this->locales[0]['id_lang']);
         if (!$combinations || empty($combinations)) {
-            $combinations[] = array(
+            $combinations[] = [
                 'id_product' => $product->id,
                 'id_product_attribute' => 0,
                 'attribute_designation' => $product->name[$this->locales[0]['id_lang']],
-            );
+            ];
         }
 
         //for each supplier, generate combinations list
@@ -828,11 +843,11 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     {
         $combinations = $product->getAttributesResume($this->locales[0]['id_lang']);
         if (!$combinations || empty($combinations)) {
-            $combinations[] = array(
+            $combinations[] = [
                 'id_product' => $product->id,
                 'id_product_attribute' => 0,
                 'attribute_designation' => $product->name[$this->locales[0]['id_lang']],
-            );
+            ];
         }
 
         //for each warehouse, generate combinations list
@@ -924,7 +939,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private function getProductAttributes(Product $product)
     {
         $combinations = $product->getAttributesResume($this->context->getContext()->language->id);
-        $idsProductAttribute = array();
+        $idsProductAttribute = [];
 
         if (is_array($combinations)) {
             foreach ($combinations as $combination) {

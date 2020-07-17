@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,27 +17,28 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\MailTemplate;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
-use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
 use Address;
 use AddressFormat;
 use Carrier;
 use Cart;
 use Context;
 use Order;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
 use Product;
+use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 
 /**
@@ -45,6 +47,8 @@ use Tools;
 final class MailPreviewVariablesBuilder
 {
     const ORDER_CONFIRMATION = 'order_conf';
+
+    const DOWNLOAD_PRODUCT = 'download_product';
 
     const EMAIL_ALERTS_MODULE = 'ps_emailalerts';
     const NEW_ORDER = 'new_order';
@@ -56,6 +60,11 @@ final class MailPreviewVariablesBuilder
     /** @var LegacyContext */
     private $legacyContext;
 
+    /**
+     * @var Locale
+     */
+    private $locale;
+
     /** @var ContextEmployeeProviderInterface */
     private $employeeProvider;
 
@@ -65,17 +74,36 @@ final class MailPreviewVariablesBuilder
     /** @var MailPartialTemplateRenderer */
     private $mailPartialTemplateRenderer;
 
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * MailPreviewVariablesBuilder constructor.
+     *
+     * @param ConfigurationInterface $configuration
+     * @param LegacyContext $legacyContext
+     * @param ContextEmployeeProviderInterface $employeeProvider
+     * @param MailPartialTemplateRenderer $mailPartialTemplateRenderer
+     * @param Locale $locale
+     * @param TranslatorInterface $translatorComponent
+     */
     public function __construct(
         ConfigurationInterface $configuration,
         LegacyContext $legacyContext,
         ContextEmployeeProviderInterface $employeeProvider,
-        MailPartialTemplateRenderer $mailPartialTemplateRenderer
+        MailPartialTemplateRenderer $mailPartialTemplateRenderer,
+        Locale $locale,
+        TranslatorInterface $translatorComponent
     ) {
         $this->configuration = $configuration;
         $this->legacyContext = $legacyContext;
         $this->context = $this->legacyContext->getContext();
         $this->employeeProvider = $employeeProvider;
         $this->mailPartialTemplateRenderer = $mailPartialTemplateRenderer;
+        $this->locale = $locale;
+        $this->translator = $translatorComponent;
     }
 
     /**
@@ -120,6 +148,19 @@ final class MailPreviewVariablesBuilder
     }
 
     /**
+     * @param $id
+     * @param array $parameters
+     * @param null $domain
+     * @param null $local
+     *
+     * @return string
+     */
+    protected function trans($id, $parameters = [], $domain = null, $local = null)
+    {
+        return $this->translator->trans($id, $parameters, $domain, $local);
+    }
+
+    /**
      * @return array
      *
      * @throws \PrestaShopException
@@ -136,10 +177,10 @@ final class MailPreviewVariablesBuilder
             $productListTxt = $this->mailPartialTemplateRenderer->render('order_conf_product_list.txt', $this->context->language, $productTemplateList);
             $productListHtml = $this->mailPartialTemplateRenderer->render('order_conf_product_list.tpl', $this->context->language, $productTemplateList);
 
-            $cartRulesList[] = array(
+            $cartRulesList[] = [
                 'voucher_name' => 'Promo code',
-                'voucher_reduction' => '-' . Tools::displayPrice(5, $this->context->currency, false),
-            );
+                'voucher_reduction' => '-' . $this->locale->formatPrice(5, $this->context->currency->iso_code),
+            ];
             $cartRulesListTxt = $this->mailPartialTemplateRenderer->render('order_conf_cart_rules.txt', $this->context->language, $cartRulesList);
             $cartRulesListHtml = $this->mailPartialTemplateRenderer->render('order_conf_cart_rules.tpl', $this->context->language, $cartRulesList);
 
@@ -148,6 +189,15 @@ final class MailPreviewVariablesBuilder
                 '{products_txt}' => $productListTxt,
                 '{discounts}' => $cartRulesListHtml,
                 '{discounts_txt}' => $cartRulesListTxt,
+            ];
+        } elseif (self::DOWNLOAD_PRODUCT == $mailLayout->getName()) {
+            $virtualProductTemplateList = $this->getFakeVirtualProductList();
+            $virtualProductListTxt = $this->mailPartialTemplateRenderer->render('download_product_virtual_products.txt', $this->context->language, $virtualProductTemplateList);
+            $virtualProductListHtml = $this->mailPartialTemplateRenderer->render('download_product_virtual_products.tpl', $this->context->language, $virtualProductTemplateList);
+            $productVariables = [
+                '{nbProducts}' => count($virtualProductTemplateList),
+                '{virtualProducts}' => $virtualProductListHtml,
+                '{virtualProductsTxt}' => $virtualProductListTxt,
             ];
         } elseif (self::EMAIL_ALERTS_MODULE == $mailLayout->getModuleName() && self::NEW_ORDER == $mailLayout->getName()) {
             $productVariables = [
@@ -169,23 +219,26 @@ final class MailPreviewVariablesBuilder
             '{carrier}' => $carrier->name,
             '{delivery_block_txt}' => $this->getFormatedAddress($delivery, "\n"),
             '{invoice_block_txt}' => $this->getFormatedAddress($invoice, "\n"),
-            '{delivery_block_html}' => $this->getFormatedAddress($delivery, '<br />', array(
+            '{delivery_block_html}' => $this->getFormatedAddress($delivery, '<br />', [
                 'firstname' => '<span style="font-weight:bold;">%s</span>',
                 'lastname' => '<span style="font-weight:bold;">%s</span>',
-            )),
-            '{invoice_block_html}' => $this->getFormatedAddress($invoice, '<br />', array(
+            ]),
+            '{invoice_block_html}' => $this->getFormatedAddress($invoice, '<br />', [
                 'firstname' => '<span style="font-weight:bold;">%s</span>',
                 'lastname' => '<span style="font-weight:bold;">%s</span>',
-            )),
+            ]),
             '{date}' => Tools::displayDate($order->date_add, null, 1),
             '{order_name}' => $order->getUniqReference(),
+            '{id_order}' => $order->id,
             '{payment}' => Tools::substr($order->payment, 0, 255),
             '{total_products}' => count($order->getProducts()),
-            '{total_discounts}' => Tools::displayPrice($order->total_discounts, $this->context->currency, false),
-            '{total_wrapping}' => Tools::displayPrice($order->total_wrapping, $this->context->currency, false),
-            '{total_shipping}' => Tools::displayPrice($order->total_shipping, $this->context->currency, false),
-            '{total_tax_paid}' => Tools::displayPrice(($order->total_products_wt - $order->total_products) + ($order->total_shipping_tax_incl - $order->total_shipping_tax_excl), $this->context->currency, false),
-            '{total_paid}' => Tools::displayPrice($order->total_paid, $this->context->currency, false),
+            '{total_discounts}' => $this->locale->formatPrice($order->total_discounts, $this->context->currency->iso_code),
+            '{total_wrapping}' => $this->locale->formatPrice($order->total_wrapping, $this->context->currency->iso_code),
+            '{total_shipping}' => $this->locale->formatPrice($order->total_shipping, $this->context->currency->iso_code),
+            '{total_shipping_tax_excl}' => $this->locale->formatPrice($order->total_shipping_tax_excl, $this->context->currency->iso_code),
+            '{total_shipping_tax_incl}' => $this->locale->formatPrice($order->total_shipping_tax_incl, $this->context->currency->iso_code),
+            '{total_tax_paid}' => $this->locale->formatPrice(($order->total_products_wt - $order->total_products) + ($order->total_shipping_tax_incl - $order->total_shipping_tax_excl), $this->context->currency->iso_code),
+            '{total_paid}' => $this->locale->formatPrice($order->total_paid, $this->context->currency->iso_code),
         ]);
     }
 
@@ -217,7 +270,7 @@ final class MailPreviewVariablesBuilder
                     }
 
                     if (isset($customization['datas'][Product::CUSTOMIZE_FILE])) {
-                        $customizationText .= count($customization['datas'][Product::CUSTOMIZE_FILE]) . ' ' . $this->trans('image(s)', array(), 'Modules.Mailalerts.Admin') . '<br />';
+                        $customizationText .= count($customization['datas'][Product::CUSTOMIZE_FILE]) . ' ' . $this->trans('image(s)', [], 'Modules.Mailalerts.Admin') . '<br />';
                     }
 
                     $customizationText .= '---<br />';
@@ -239,18 +292,18 @@ final class MailPreviewVariablesBuilder
                 . (!empty($customizationText) ? '<br />' . $customizationText : '')
                 . '</strong>
 					</td>
-					<td style="padding:0.6em 0.4em; text-align:right;">' . Tools::displayPrice($unitPrice, $this->context->currency, false) . '</td>
+					<td style="padding:0.6em 0.4em; text-align:right;">' . $this->locale->formatPrice($unitPrice, $this->context->currency->iso_code) . '</td>
 					<td style="padding:0.6em 0.4em; text-align:center;">' . (int) $product['product_quantity'] . '</td>
 					<td style="padding:0.6em 0.4em; text-align:right;">'
-                . Tools::displayPrice(($unitPrice * $product['product_quantity']), $this->context->currency, false)
+                . $this->locale->formatPrice(($unitPrice * $product['product_quantity']), $this->context->currency->iso_code)
                 . '</td>
 				</tr>';
         }
         foreach ($order->getCartRules() as $discount) {
             $itemsTable .=
                 '<tr style="background-color:#EBECEE;">
-						<td colspan="4" style="padding:0.6em 0.4em; text-align:right;">' . $this->trans('Voucher code:', array(), 'Modules.Mailalerts.Admin') . ' ' . $discount['name'] . '</td>
-					<td style="padding:0.6em 0.4em; text-align:right;">-' . Tools::displayPrice($discount['value'], $this->context->currency, false) . '</td>
+						<td colspan="4" style="padding:0.6em 0.4em; text-align:right;">' . $this->trans('Voucher code:', [], 'Modules.Mailalerts.Admin') . ' ' . $discount['name'] . '</td>
+					<td style="padding:0.6em 0.4em; text-align:right;">-' . $this->locale->formatPrice($discount['value'], $this->context->currency->iso_code) . '</td>
 			</tr>';
         }
 
@@ -297,25 +350,25 @@ final class MailPreviewVariablesBuilder
         $package = current(current($packageList));
         $productList = $package['product_list'];
 
-        $productTemplateList = array();
+        $productTemplateList = [];
         foreach ($productList as $product) {
             $price = Product::getPriceStatic((int) $product['id_product'], false, ($product['id_product_attribute'] ? (int) $product['id_product_attribute'] : null), 6, null, false, true, $product['cart_quantity'], false, (int) $order->id_customer, (int) $order->id_cart, (int) $order->{$this->configuration->get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, null, true, $product['id_customization']);
             $priceWithTax = Product::getPriceStatic((int) $product['id_product'], true, ($product['id_product_attribute'] ? (int) $product['id_product_attribute'] : null), 2, null, false, true, $product['cart_quantity'], false, (int) $order->id_customer, (int) $order->id_cart, (int) $order->{$this->configuration->get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, null, true, $product['id_customization']);
 
             $productPrice = Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $priceWithTax;
 
-            $productTemplate = array(
+            $productTemplate = [
                 'id_product' => $product['id_product'],
                 'reference' => $product['reference'],
                 'name' => $product['name'] . (isset($product['attributes']) ? ' - ' . $product['attributes'] : ''),
-                'price' => Tools::displayPrice($productPrice * $product['quantity'], $this->context->currency, false),
+                'price' => $this->locale->formatPrice($productPrice * $product['quantity'], $this->context->currency->iso_code),
                 'quantity' => $product['quantity'],
-                'customization' => array(),
-            );
+                'customization' => [],
+            ];
 
             if (isset($product['price']) && $product['price']) {
-                $productTemplate['unit_price'] = Tools::displayPrice($productPrice, $this->context->currency, false);
-                $productTemplate['unit_price_full'] = Tools::displayPrice($productPrice, $this->context->currency, false)
+                $productTemplate['unit_price'] = $this->locale->formatPrice($productPrice, $this->context->currency->iso_code);
+                $productTemplate['unit_price_full'] = $this->locale->formatPrice($productPrice, $this->context->currency->iso_code)
                     . ' ' . $product['unity'];
             } else {
                 $productTemplate['unit_price'] = $productTemplate['unit_price_full'] = '';
@@ -323,7 +376,7 @@ final class MailPreviewVariablesBuilder
 
             $customizedDatas = Product::getAllCustomizedDatas((int) $order->id_cart, null, true, null, (int) $product['id_customization']);
             if (isset($customizedDatas[$product['id_product']][$product['id_product_attribute']])) {
-                $productTemplate['customization'] = array();
+                $productTemplate['customization'] = [];
                 foreach ($customizedDatas[$product['id_product']][$product['id_product_attribute']][$order->id_address_delivery] as $customization) {
                     $customizationText = '';
                     if (isset($customization['datas'][Product::CUSTOMIZE_TEXTFIELD])) {
@@ -333,16 +386,16 @@ final class MailPreviewVariablesBuilder
                     }
 
                     if (isset($customization['datas'][Product::CUSTOMIZE_FILE])) {
-                        $customizationText .= $this->trans('%d image(s)', array(count($customization['datas'][Product::CUSTOMIZE_FILE])), 'Admin.Payment.Notification') . '<br />';
+                        $customizationText .= $this->trans('%d image(s)', [count($customization['datas'][Product::CUSTOMIZE_FILE])], 'Admin.Payment.Notification') . '<br />';
                     }
 
                     $customizationQuantity = (int) $customization['quantity'];
 
-                    $productTemplate['customization'][] = array(
+                    $productTemplate['customization'][] = [
                         'customization_text' => $customizationText,
                         'customization_quantity' => $customizationQuantity,
-                        'quantity' => Tools::displayPrice($customizationQuantity * $productPrice, $this->context->currency, false),
-                    );
+                        'quantity' => $this->locale->formatPrice($customizationQuantity * $productPrice, $this->context->currency->iso_code),
+                    ];
                 }
             }
             $productTemplateList[] = $productTemplate;
@@ -352,14 +405,36 @@ final class MailPreviewVariablesBuilder
     }
 
     /**
+     * @return array
+     */
+    private function getFakeVirtualProductList()
+    {
+        $products = Product::getProducts($this->context->language->getId(), 0, 2, 'id_product', 'ASC');
+        $results = [];
+
+        foreach ($products as $productData) {
+            $product = new Product($productData['id_product']);
+            $results[] = [
+                'text' => Product::getProductName($productData['id_product']),
+                'url' => $product->getLink(),
+                'complementary_text' => '',
+            ];
+        }
+        $results[1]['complementary_text'] = ' ' . $this->trans('expires on %s.', [date('Y-m-d')], 'Admin.Orderscustomers.Notification');
+        $results[1]['complementary_text'] .= ' ' . $this->trans('downloadable %d time(s)', [10], 'Admin.Orderscustomers.Notification');
+
+        return $results;
+    }
+
+    /**
      * @param Address $address Address $the_address that needs to be txt formated
      * @param string $lineSeparator Line separator
      * @param array $fieldsStyle Associative array to replace styled fields
      *
      * @return string
      */
-    private function getFormatedAddress(Address $address, $lineSeparator, $fieldsStyle = array())
+    private function getFormatedAddress(Address $address, $lineSeparator, $fieldsStyle = [])
     {
-        return AddressFormat::generateAddress($address, array('avoid' => array()), $lineSeparator, ' ', $fieldsStyle);
+        return AddressFormat::generateAddress($address, ['avoid' => []], $lineSeparator, ' ', $fieldsStyle);
     }
 }

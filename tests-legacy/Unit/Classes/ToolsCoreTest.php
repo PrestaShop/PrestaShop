@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace LegacyTests\Unit\Classes;
@@ -82,7 +82,7 @@ class ToolsCoreTest extends TestCase
         $this->assertFalse(Tools::getValue(null, true));
     }
 
-    public function testGetValueStripsNullCharsFromReturnedStringsExamples()
+    public function getValueStripsNullCharsFromReturnedStringsExamples()
     {
         return array(
             array("\0", ''),
@@ -93,7 +93,7 @@ class ToolsCoreTest extends TestCase
     }
 
     /**
-     * @dataProvider testGetValueStripsNullCharsFromReturnedStringsExamples
+     * @dataProvider getValueStripsNullCharsFromReturnedStringsExamples
      */
     public function testGetValueStripsNullCharsFromReturnedStrings($rawString, $cleanedString)
     {
@@ -116,7 +116,7 @@ class ToolsCoreTest extends TestCase
         $this->assertEquals($cleanedString, Tools::getValue('NON EXISTING KEY', $rawString));
     }
 
-    public function testSpreadAmountExamples()
+    public function spreadAmountExamples()
     {
         return array(
             array(
@@ -225,7 +225,7 @@ class ToolsCoreTest extends TestCase
     }
 
     /**
-     * @dataProvider testSpreadAmountExamples
+     * @dataProvider spreadAmountExamples
      */
     public function testSpreadAmount($expectedRows, $amount, $precision, $rows, $column)
     {
@@ -236,7 +236,7 @@ class ToolsCoreTest extends TestCase
     /**
      * @return array of example taken from the installation of PrestaShop
      */
-    public function testCamelCaseExample()
+    public function getCamelCaseExample()
     {
         return array(
             array('address_format', 'addressFormat', false),
@@ -320,7 +320,7 @@ class ToolsCoreTest extends TestCase
     }
 
     /**
-     * @dataProvider testCamelCaseExample
+     * @dataProvider getCamelCaseExample
      */
     public function testToCamelCase($source, $expected, $firstCharUpperCase)
     {
@@ -334,7 +334,7 @@ class ToolsCoreTest extends TestCase
     }
 
     /**
-     * @dataProvider testStrReplaceFirstProvider
+     * @dataProvider getStrReplaceFirstProvider
      */
     public function testStrReplaceFirst($search, $replace, $subject, $cur, $expected) {
         $this->assertEquals($expected, Tools::StrReplaceFirst($search, $replace, $subject, $cur));
@@ -382,7 +382,7 @@ class ToolsCoreTest extends TestCase
         ];
     }
 
-    public function testStrReplaceFirstProvider() {
+    public function getStrReplaceFirstProvider() {
         return [
             ['s', 'f', 'seed', 0, 'feed'],
             ['s', 'f', 'seed', 1, 'seed'],

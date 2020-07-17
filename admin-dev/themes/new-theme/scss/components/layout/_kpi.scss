@@ -1,11 +1,11 @@
 .kpi-container {
   position: relative;
-  text-decoration: none;
-  background: white;
+  display: block;
   padding-top: .9375rem;
   padding-bottom: .9375rem;
   text-align: center;
-  display: block;
+  text-decoration: none;
+  background: #fff;
 
   &:hover {
     text-decoration: none;
@@ -14,15 +14,15 @@
 
 .kpi-refresh {
   position: absolute;
-  z-index: 1;
   top: 0;
   right: 0;
+  z-index: 1;
 }
 
 .kpi-content {
   position: relative;
-  text-align: left;
   padding-left: 40px;
+  text-align: left;
 
   > .material-icons {
     position: absolute;
@@ -33,46 +33,63 @@
   }
 
   &.-color2 {
-    > .value,
+    .value,
     > .material-icons {
       color: $danger;
     }
   }
 
   &.-color3 {
-    > .value,
+    .value,
     > .material-icons {
       color: $success;
     }
   }
 
-  > .title,
-  > .subtitle,
-  > .value {
-    font-size: 0.75rem;
+  .title,
+  .subtitle,
+  .value {
     padding-left: .125rem;
+    font-size: .75rem;
     color: $gray-dark;
   }
 
-  > .title {
+  .title {
     display: inline-block;
   }
 
-  > .subtitle {
-    text-transform: uppercase;
-    color: $gray-medium;
+  .subtitle {
     display: block;
+    color: $gray-medium;
+    text-transform: uppercase;
   }
-  > .value {
+  .value {
+    display: block;
     font-size: 1.25rem;
     color: $primary;
-    display: block;
+  }
+}
+
+// specific design for orders page. If design tends to repeat use this for all kpi's in all pages
+.orders-kpi {
+  .kpi-content {
+    .kpi-description {
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+      justify-content: flex-end;
+
+      .value {
+        padding-right: 10px;
+        color: $gray-dark;
+      }
+    }
   }
 }
 
 .container-fluid {
   > .kpi-container {
-    padding-left: 1rem;
     padding-right: 1rem;
+    padding-left: 1rem;
   }
 }

@@ -1,10 +1,11 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,15 +16,14 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 export default class EntityFieldsValidator {
   /**
@@ -34,7 +34,7 @@ export default class EntityFieldsValidator {
   static validate() {
     $('.js-validation-error').addClass('d-none');
 
-    return this._checkDuplicateSelectedValues() && this._checkRequiredFields();
+    return this.checkDuplicateSelectedValues() && this.checkRequiredFields();
   }
 
   /**
@@ -43,12 +43,12 @@ export default class EntityFieldsValidator {
    * @returns {boolean}
    * @private
    */
-  static _checkDuplicateSelectedValues() {
+  static checkDuplicateSelectedValues() {
     const uniqueFields = [];
     let valid = true;
 
     $('.js-entity-field select').each(function () {
-      let value = $(this).val();
+      const value = $(this).val();
 
       if (value === 'no') {
         return;
@@ -72,17 +72,19 @@ export default class EntityFieldsValidator {
    * @returns {boolean}
    * @private
    */
-  static _checkRequiredFields() {
-    let requiredImportFields = $('.js-import-data-table').data('required-fields');
+  static checkRequiredFields() {
+    const requiredImportFields = $('.js-import-data-table').data('required-fields');
 
-    for (let key in requiredImportFields) {
-      if (0 === $(`option[value="${requiredImportFields[key]}"]:selected`).length) {
+    /* eslint-disable-next-line */
+    for (const key in requiredImportFields) {
+      if ($(`option[value="${requiredImportFields[key]}"]:selected`).length === 0) {
         $('.js-missing-column-warning').removeClass('d-none');
         $('.js-missing-column').text($(`option[value="${requiredImportFields[key]}"]:first`).text());
 
         return false;
       }
     }
+
     return true;
   }
 }

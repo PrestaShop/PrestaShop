@@ -1,10 +1,11 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 $(document).ready(function() {
@@ -63,12 +63,6 @@ $(document).ready(function() {
     $(this).val(parsedValue);
   });
 
-  /** Attach date picker */
-  $('.datepicker').datetimepicker({
-    locale: full_language_code,
-    format: 'YYYY-MM-DD'
-  });
-
   /** tooltips should be hidden when we move to another tab */
   $('#form-nav').on('click','.nav-item', function clearTooltipsAndPopovers() {
     $('[data-toggle="tooltip"]').tooltip('hide');
@@ -76,13 +70,14 @@ $(document).ready(function() {
   });
 
   $('.summary-description-container a[data-toggle="tab"]').on('shown.bs.tab', resetEditor);
+  form.switchLanguage($('#form_switch_language').val());
 });
 
 /**
  * Reset active tinyMce editor (triggered when switch language, or switching tabs)
  */
 function resetEditor() {
-  const languageEditorsSelector = '.summary-description-container .panel.active div.translation-field.active textarea.autoload_rte';
+  const languageEditorsSelector = '.summary-description-container div.translation-field.active textarea.autoload_rte';
   $(languageEditorsSelector).each(function(index, textarea) {
     const editor = tinyMCE.get(textarea.id);
     if (editor) {
@@ -759,11 +754,11 @@ var form = (function() {
     });
   }
 
-  function switchLanguage(iso_code) {
-    $('div.translations.tabbable > div > div.translation-field:not(.translation-label-' + iso_code + ')').removeClass('show active');
+  function switchLanguage(isoCode) {
+    $(`div.translations.tabbable > div > div.translation-field:not(.translation-label-${isoCode})`)
+      .removeClass('show active');
 
-    const langueTabSelector = 'div.translations.tabbable > div > div.translation-field.translation-label-' + iso_code;
-    $(langueTabSelector).addClass('show active');
+    $(`div.translations.tabbable > div > div.translation-field.translation-label-${isoCode}`).addClass('show active');
     resetEditor();
   }
 
@@ -929,10 +924,40 @@ var form = (function() {
         });
       };
 
-      /** On event "tokenfield:createtoken" : stop event if its not a typehead result */
+      /** On event "tokenfield:createtoken" : check values are valid if its not a typehead result */
       $('#form_step3_attributes').on('tokenfield:createtoken', function(e) {
-        if (!e.attrs.data && e.handleObj.origType !== 'tokenfield:createtoken') {
-          return false;
+        if (!e.attrs.data){
+          if (e.handleObj.origType !== 'tokenfield:createtoken') {
+            return false;
+          }
+
+          const orgLabel = e.attrs.label;
+          if (e.attrs.label === e.attrs.value) {
+            engine.search(e.attrs.label, function(result) {
+              if (result.length >= 1) {
+                e.attrs.label = result[0].label;
+                e.attrs.value = result[0].value;
+                e.attrs.data = [];
+                e.attrs.data['id_group'] = result[0].data.id_group;
+              }
+            });
+          } else {
+            const attr = $(`.js-attribute-checkbox[data-value="${e.attrs.value}"]`);
+
+            if (attr) {
+              e.attrs.label = attr.data('label');
+              e.attrs.value = attr.data('value');
+              e.attrs.data = [];
+              e.attrs.data['id_group'] = attr.data('group-id');
+            }
+          }
+
+          if(e.attrs.data && filter([e.attrs]).length === 0){
+            $('#form_step3_attributes-tokenfield').val((i, value) => {
+              return value.replace(orgLabel,"");
+            });
+            return false;
+          }
         }
       });
 
@@ -940,14 +965,16 @@ var form = (function() {
       $('#form_step3_attributes').on('tokenfield:createdtoken', function(e) {
         if (e.attrs.data) {
           $('#attributes-generator').append('<input type="hidden" id="attribute-generator-' + e.attrs.value + '" class="attribute-generator" value="' + e.attrs.value + '" name="options[' + e.attrs.data.id_group + '][' + e.attrs.value + ']" />');
-        } else if (e.handleObj.origType == 'tokenfield:createdtoken') {
-          $('#attributes-generator').append('<input type="hidden" id="attribute-generator-' + $('.js-attribute-checkbox[data-value="'+e.attrs.value+'"]').data('value') + '" class="attribute-generator" value="' + $('.js-attribute-checkbox[data-value="'+e.attrs.value+'"]').data('value') + '" name="options[' + $('.js-attribute-checkbox[data-value="'+e.attrs.value+'"]').data('group-id') + '][' + $('.js-attribute-checkbox[data-value="'+e.attrs.value+'"]').data('value') + ']" />');
+        } else {
+          $(e.relatedTarget).addClass('invalid');
         }
       });
 
       /** On event "tokenfield:removedtoken" : remove stored attributes input when remove token */
       $('#form_step3_attributes').on('tokenfield:removedtoken', function(e) {
-        $('#attribute-generator-' + e.attrs.value).remove();
+        if (!$(e.relatedTarget).hasClass('invalid')) {
+          $(`#attribute-generator-${e.attrs.value}`).remove();
+        }
       });
     });
     },
@@ -1156,15 +1183,6 @@ var attachmentProduct = (function() {
       var buttonSave = $('#form_step6_attachment_product_add');
       var buttonCancel = $('#form_step6_attachment_product_cancel');
 
-      /** check all attachments files */
-      $('#product-attachment-files-check').change(function() {
-        if ($(this).is(":checked")) {
-          $('#product-attachment-file input[type="checkbox"]').prop('checked', true);
-        } else {
-          $('#product-attachment-file input[type="checkbox"]').prop('checked', false);
-        }
-      });
-
       buttonCancel.click(function (){
         resetAttachmentForm();
       });
@@ -1339,7 +1357,7 @@ var imagesProduct = (function() {
         success: function(file, response) {
           //manage error on uploaded file
           if (response.error !== 0) {
-            errorElem.append('<p>' + file.name + ': ' + response.error + '</p>');
+            errorElem.append($('<p></p>').text(file.name + ': ' + response.error));
             this.removeFile(file);
             return;
           }
@@ -1368,7 +1386,7 @@ var imagesProduct = (function() {
           }
 
           //append new error
-          errorElem.append('<p>' + file.name + ': ' + message + '</p>');
+          errorElem.append($('<p></p>').text(file.name + ': ' + message));
 
           //remove uploaded item
           this.removeFile(file);

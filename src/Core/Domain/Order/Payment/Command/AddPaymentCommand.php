@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,20 +17,20 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command;
 
 use DateTimeImmutable;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\NegativePaymentAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
 /**
@@ -53,7 +54,7 @@ class AddPaymentCommand
     private $paymentMethod;
 
     /**
-     * @var float
+     * @var Number
      */
     private $paymentAmount;
 
@@ -76,28 +77,28 @@ class AddPaymentCommand
      * @param int $orderId
      * @param string $paymentDate
      * @param string $paymentMethod
-     * @param float $paymentAmount
-     * @param float $paymentCurrencyId
-     * @param null $orderInvoiceId
-     * @param string $transactionId
+     * @param string $paymentAmount
+     * @param int $paymentCurrencyId
+     * @param int|null $orderInvoiceId
+     * @param string|null $transactionId transaction ID, usually payment ID from payment gateway
      */
     public function __construct(
-        $orderId,
-        $paymentDate,
-        $paymentMethod,
-        $paymentAmount,
-        $paymentCurrencyId,
-        $orderInvoiceId = null,
-        $transactionId = ''
+        int $orderId,
+        string $paymentDate,
+        string $paymentMethod,
+        string $paymentAmount,
+        int $paymentCurrencyId,
+        ?int $orderInvoiceId = null,
+        ?string $transactionId = null
     ) {
-        $this->assertAmountIsNotNegative($paymentAmount);
+        $amount = new Number($paymentAmount);
+        $this->assertAmountIsPositive($amount);
         $this->assertPaymentMethodIsGenericName($paymentMethod);
-        $this->assertTransactionIdIsString($transactionId);
 
         $this->orderId = new OrderId($orderId);
         $this->paymentDate = new DateTimeImmutable($paymentDate);
         $this->paymentMethod = $paymentMethod;
-        $this->paymentAmount = $paymentAmount;
+        $this->paymentAmount = $amount;
         $this->paymentCurrencyId = new CurrencyId($paymentCurrencyId);
         $this->orderInvoiceId = $orderInvoiceId;
         $this->transactionId = $transactionId;
@@ -128,7 +129,7 @@ class AddPaymentCommand
     }
 
     /**
-     * @return float
+     * @return Number
      */
     public function getPaymentAmount()
     {
@@ -157,32 +158,19 @@ class AddPaymentCommand
     }
 
     /**
-     * @param float $paymentAmount
-     */
-    private function assertAmountIsNotNegative($paymentAmount)
-    {
-        if (!is_float($paymentAmount) || 0 >= $paymentAmount) {
-            throw new OrderConstraintException('The amount is invalid.');
-        }
-    }
-
-    /**
      * @param string $paymentMethod
      */
     private function assertPaymentMethodIsGenericName($paymentMethod)
     {
-        if (empty($paymentMethod) || preg_match('/^[^<>={}]*$/u', $paymentMethod)) {
+        if (empty($paymentMethod) || !preg_match('/^[^<>={}]*$/u', $paymentMethod)) {
             throw new OrderConstraintException('The selected payment method is invalid.');
         }
     }
 
-    /**
-     * @param string $transactionId
-     */
-    private function assertTransactionIdIsString($transactionId)
+    private function assertAmountIsPositive(Number $amount)
     {
-        if (!is_string($transactionId)) {
-            throw new OrderException('The transaction ID is invalid.');
+        if ($amount->isNegative()) {
+            throw new NegativePaymentAmountException('The amount should be greater than 0.');
         }
     }
 }

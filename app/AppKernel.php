@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,14 +17,12 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShopBundle\Kernel\ModuleRepositoryFactory;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -31,14 +30,15 @@ use Symfony\Component\HttpKernel\Kernel;
 
 class AppKernel extends Kernel
 {
-    const VERSION = '1.7.7.0';
+    const VERSION = '1.7.8.0';
     const MAJOR_VERSION_STRING = '1.7';
     const MAJOR_VERSION = 17;
-    const MINOR_VERSION = 7;
+    const MINOR_VERSION = 8;
     const RELEASE_VERSION = 0;
 
+
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function registerBundles()
     {
@@ -57,6 +57,7 @@ class AppKernel extends Kernel
             // REST API consumer
             new Csa\Bundle\GuzzleBundle\CsaGuzzleBundle(),
             new League\Tactician\Bundle\TacticianBundle(),
+            new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
@@ -82,7 +83,7 @@ class AppKernel extends Kernel
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     protected function getKernelParameters()
     {
@@ -95,7 +96,7 @@ class AppKernel extends Kernel
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getRootDir()
     {
@@ -103,23 +104,24 @@ class AppKernel extends Kernel
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getCacheDir()
     {
-        return dirname(__DIR__).'/var/cache/'.$this->getEnvironment();
+        return _PS_CACHE_DIR_;
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getLogDir()
     {
-        return dirname(__DIR__).'/var/logs';
+        return dirname(__DIR__) . '/var/logs';
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
+     *
      * @throws \Exception
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
@@ -130,13 +132,13 @@ class AppKernel extends Kernel
             $container->addObjectResource($this);
         });
 
-        $loader->load($this->getRootDir().'/config/config_'.$this->getEnvironment().'.yml');
+        $loader->load($this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml');
     }
 
     /**
      * Return all active modules.
      *
-     * @return array list of modules names.
+     * @return array list of modules names
      */
     private function getActiveModules()
     {
@@ -149,7 +151,6 @@ class AppKernel extends Kernel
             //Do nothing because the modules retrieval must not block the kernel, and it won't work
             //during the installation process
         }
-
 
         return $activeModules;
     }
@@ -166,7 +167,7 @@ class AppKernel extends Kernel
     private function enableComposerAutoloaderOnModules($modules)
     {
         foreach ($modules as $module) {
-            $autoloader = __DIR__.'/../modules/'.$module.'/vendor/autoload.php';
+            $autoloader = __DIR__ . '/../modules/' . $module . '/vendor/autoload.php';
 
             if (file_exists($autoloader)) {
                 include_once $autoloader;

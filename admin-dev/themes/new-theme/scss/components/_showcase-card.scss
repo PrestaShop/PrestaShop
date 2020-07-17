@@ -1,25 +1,33 @@
-.showcase-card, .helper-card {
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.06);
-  max-width: 810px;
+.showcase-card,
+.helper-card {
   position: relative;
-  margin: auto;
-  margin-bottom: 17px;
   display: flex;
   flex-direction: row;
+  max-width: 810px;
+  margin: auto;
+  margin-bottom: 17px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, .06);
 
-  &__left, &__right {
+  &__left,
+  &__right {
+    display: inline-block;
     height: 100%;
     text-align: center;
-    display: inline-block;
     vertical-align: top;
   }
 
-  &__team, &__customer {
-    background-image: url('img/helper-card/wave-shape-background.png');
+  &__team,
+  &__customer {
+    background-image: url("img/helper-card/wave-shape-background.png");
+  }
+
+  &__attribute,
+  &__monitoring {
+    background-image: url("img/helper-card/content-background@3x.png");
   }
 
   &__category {
-    background-image: url('img/helper-card/seo-background@3x.png');
+    background-image: url("img/helper-card/seo-background@3x.png");
   }
 
   &__left {
@@ -31,9 +39,9 @@
     }
 
     img {
-      animation: showcase-img-appearance 1.5s;
-      padding: 40px;
       width: 100%;
+      padding: 40px;
+      animation: showcase-img-appearance 1.5s;
     }
     &.shape-one {
       background-repeat: no-repeat;
@@ -51,8 +59,8 @@
     }
 
     h2 {
+      font-family: "Open Sans", Arial, Helvetica, sans-serif;
       font-size: 18px;
-      font-family: 'Open Sans';
       font-weight: 600;
       color: #363a41;
     }
@@ -69,17 +77,23 @@
     }
 
     button {
-      background-color: white;
-      border: 1px solid #899ea5;
       padding: 7px 15px;
-      color: #576c72;
       font-weight: 600;
+      color: #576c72;
+      background-color: #fff;
+      border: 1px solid #899ea5;
       outline: 0;
     }
 
     @include media-breakpoint-down(md) {
       width: inherit;
       text-align: center;
+    }
+  }
+
+  &__monitoring {
+    img {
+      padding: 35px 60px 0;
     }
   }
 
@@ -93,14 +107,14 @@
 
 .showcase-list-card {
   &__header {
-    color: #363a41;
-    opacity: 0.7;
     font-size: 20px;
     font-weight: 600;
+    color: #363a41;
+    opacity: .7;
   }
 
   &__message {
-    max-width: 460px;
+    max-width: 540px;
     font-size: 14px;
     line-height: 1.43;
     color: #6c868e;

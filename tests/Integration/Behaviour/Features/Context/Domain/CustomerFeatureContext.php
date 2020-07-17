@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,21 +17,27 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Behat\Gherkin\Node\TableNode;
 use Customer;
+use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetPrivateNoteAboutCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustomer;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroupsProviderInterface;
 use RuntimeException;
+use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
+use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class CustomerFeatureContext extends AbstractDomainFeatureContext
 {
@@ -102,5 +109,55 @@ class CustomerFeatureContext extends AbstractDomainFeatureContext
         ];
 
         return $requiredCustomerFields[$requiredField];
+    }
+
+    /**
+     * @When /^I create customer "(.+)" with following details:$/
+     *
+     * @param string $customerReference
+     * @param TableNode $table
+     *
+     * @throws Exception
+     */
+    public function createCustomerUsingCommand(string $customerReference, TableNode $table)
+    {
+        $data = $table->getRowsHash();
+
+        $commandBus = $this->getCommandBus();
+
+        /** @var DefaultGroupsProviderInterface $groupProvider */
+        $groupProvider = CommonFeatureContext::getContainer()->get('prestashop.adapter.group.provider.default_groups_provider');
+        $defaultGroups = $groupProvider->getGroups();
+
+        $mandatoryFields = [
+            'firstName',
+            'lastName',
+            'email',
+            'password',
+        ];
+
+        foreach ($mandatoryFields as $mandatoryField) {
+            if (!array_key_exists($mandatoryField, $data)) {
+                throw new Exception(sprintf('Mandatory property %s for customer has not been provided', $mandatoryField));
+            }
+        }
+
+        $command = new AddCustomerCommand(
+            $data['firstName'],
+            $data['lastName'],
+            $data['email'],
+            $data['password'],
+            isset($data['defaultGroupId']) ? $data['defaultGroupId'] : $defaultGroups->getCustomersGroup()->getId(),
+            isset($data['groupIds']) ? $data['groupIds'] : [$defaultGroups->getCustomersGroup()->getId()],
+            (isset($data['shopId']) ? $data['shopId'] : 0),
+            (isset($data['genderId']) ? $data['genderId'] : null),
+            (isset($data['isEnabled']) ? $data['isEnabled'] : true),
+            (isset($data['isPartnerOffersSubscribed']) ? $data['isPartnerOffersSubscribed'] : false),
+            (isset($data['birthday']) ? $data['birthday'] : null)
+        );
+
+        /** @var CustomerId $id */
+        $id = $commandBus->handle($command);
+        SharedStorage::getStorage()->set($customerReference, $id->getValue());
     }
 }

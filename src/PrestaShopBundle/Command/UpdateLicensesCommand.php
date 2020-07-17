@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Command;
@@ -37,12 +37,13 @@ use Symfony\Component\Finder\SplFileInfo;
 class UpdateLicensesCommand extends Command
 {
     private $text = '/**
- * 2007-{currentYear} PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the {licenseName}
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * {licenseLink}
  * If you did not receive a copy of the license and are unable to
@@ -53,12 +54,11 @@ class UpdateLicensesCommand extends Command
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-{currentYear} PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   {licenseLink} {licenseName}
- * International Registered Trademark & Property of PrestaShop SA
  */';
 
     /**
@@ -66,11 +66,11 @@ class UpdateLicensesCommand extends Command
      */
     private $license;
 
-    private $aflLicense = array(
+    private $aflLicense = [
         'themes/classic/',
         'themes/StarterTheme/',
         'modules/',
-    );
+    ];
 
     /**
      * {@inheritdoc}
@@ -89,7 +89,7 @@ class UpdateLicensesCommand extends Command
     {
         $this->text = str_replace('{currentYear}', date('Y'), $this->text);
 
-        $extensions = array(
+        $extensions = [
             'php',
             'js',
             'css',
@@ -97,7 +97,7 @@ class UpdateLicensesCommand extends Command
             'html.twig',
             'json',
             'vue',
-        );
+        ];
 
         foreach ($extensions as $extension) {
             $this->findAndCheckExtension($output, $extension);
@@ -115,7 +115,7 @@ class UpdateLicensesCommand extends Command
             ->files()
             ->name('*.' . $ext)
             ->in(_PS_ROOT_DIR_)
-            ->exclude(array(
+            ->exclude([
                 // versioning folders
                 '.git',
                 '.github',
@@ -148,8 +148,8 @@ class UpdateLicensesCommand extends Command
                 'tests-legacy/resources/',
                 'tests/E2E/',
                 'tests/Unit/Resources/assets/',
-                'tests/puppeteer/',
-            ))
+                'tests/UI/',
+            ])
             ->ignoreDotFiles(false);
         $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
 
@@ -273,7 +273,7 @@ class UpdateLicensesCommand extends Command
         $content = $file->getContents();
         // Regular expression found thanks to Stephen Ostermiller's Blog. http://blog.ostermiller.org/find-comment
         $regex = '%' . $startDelimiter . '\*([^*]|[\r\n]|(\*+([^*' . $endDelimiter . ']|[\r\n])))*\*+' . $endDelimiter . '%';
-        $matches = array();
+        $matches = [];
         $text = $this->license;
         if ($startDelimiter != '\/') {
             $text = $startDelimiter . ltrim($text, '/');
@@ -363,7 +363,7 @@ class UpdateLicensesCommand extends Command
      */
     private function addLicenseToJsonFile(SplFileInfo $file)
     {
-        if (!in_array($file->getFilename(), array('composer.json', 'package.json'))) {
+        if (!in_array($file->getFilename(), ['composer.json', 'package.json'])) {
             return false;
         }
 

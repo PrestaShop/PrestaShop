@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -90,70 +90,70 @@ class CategoryCore extends ObjectModel
     /** @var bool */
     public $doNotRegenerateNTree = false;
 
-    protected static $_links = array();
+    protected static $_links = [];
 
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'category',
         'primary' => 'id_category',
         'multilang' => true,
         'multilang_shop' => true,
-        'fields' => array(
-            'nleft' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'nright' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'level_depth' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
-            'id_parent' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'id_shop_default' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'is_root_category' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'position' => array('type' => self::TYPE_INT),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+        'fields' => [
+            'nleft' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'nright' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'level_depth' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true],
+            'id_parent' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'id_shop_default' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'is_root_category' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'position' => ['type' => self::TYPE_INT],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             /* Lang fields */
-            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 128),
-            'link_rewrite' => array(
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 128],
+            'link_rewrite' => [
                 'type' => self::TYPE_STRING,
                 'lang' => true,
                 'validate' => 'isLinkRewrite',
-                'required' => false,
+                'required' => true,
                 'size' => 128,
-                'ws_modifier' => array(
+                'ws_modifier' => [
                     'http_method' => WebserviceRequest::HTTP_POST,
                     'modifier' => 'modifierWsLinkRewrite',
-                ),
-            ),
-            'description' => array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
-            'meta_title' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-            'meta_description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512),
-            'meta_keywords' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-        ),
-    );
+                ],
+            ],
+            'description' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'],
+            'meta_title' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
+            'meta_description' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512],
+            'meta_keywords' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
+        ],
+    ];
 
     /** @var string id_image is the category ID when an image exists and 'default' otherwise */
     public $id_image = 'default';
 
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
         'objectsNodeName' => 'categories',
-        'hidden_fields' => array('nleft', 'nright', 'groupBox'),
-        'fields' => array(
-            'id_parent' => array('xlink_resource' => 'categories'),
-            'level_depth' => array('setter' => false),
-            'nb_products_recursive' => array('getter' => 'getWsNbProductsRecursive', 'setter' => false),
-        ),
-        'associations' => array(
-            'categories' => array('getter' => 'getChildrenWs', 'resource' => 'category'),
-            'products' => array('getter' => 'getProductsWs', 'resource' => 'product'),
-        ),
-    );
+        'hidden_fields' => ['nleft', 'nright', 'groupBox'],
+        'fields' => [
+            'id_parent' => ['xlink_resource' => 'categories'],
+            'level_depth' => ['setter' => false],
+            'nb_products_recursive' => ['getter' => 'getWsNbProductsRecursive', 'setter' => false],
+        ],
+        'associations' => [
+            'categories' => ['getter' => 'getChildrenWs', 'resource' => 'category'],
+            'products' => ['getter' => 'getProductsWs', 'resource' => 'product'],
+        ],
+    ];
 
     /**
      * CategoryCore constructor.
      *
-     * @param null $idCategory
-     * @param null $idLang
-     * @param null $idShop
+     * @param int|null $idCategory
+     * @param int|null $idLang
+     * @param int|null $idShop
      */
     public function __construct($idCategory = null, $idLang = null, $idShop = null)
     {
@@ -214,8 +214,9 @@ class CategoryCore extends ObjectModel
         if (!$this->doNotRegenerateNTree) {
             Category::regenerateEntireNtree();
         }
-        $this->updateGroup($this->groupBox);
-        Hook::exec('actionCategoryAdd', array('category' => $this));
+        // if access group is not set, initialize it with 3 default groups
+        $this->updateGroup(($this->groupBox !== null) ? $this->groupBox : []);
+        Hook::exec('actionCategoryAdd', ['category' => $this]);
 
         return $ret;
     }
@@ -256,11 +257,11 @@ class CategoryCore extends ObjectModel
         if ($changed) {
             if (Tools::isSubmit('checkBoxShopAsso_category')) {
                 foreach (Tools::getValue('checkBoxShopAsso_category') as $idAssoObject => $idShop) {
-                    $this->addPosition((int) Category::getLastPosition((int) $this->id_parent, (int) $idShop), (int) $idShop);
+                    $this->addPosition($this->position, (int) $idShop);
                 }
             } else {
                 foreach (Shop::getShops(true) as $shop) {
-                    $this->addPosition((int) Category::getLastPosition((int) $this->id_parent, $shop['id_shop']), $shop['id_shop']);
+                    $this->addPosition($this->position, $shop['id_shop']);
                 }
             }
         }
@@ -271,7 +272,7 @@ class CategoryCore extends ObjectModel
             Category::regenerateEntireNtree();
             $this->recalculateLevelDepth($this->id);
         }
-        Hook::exec('actionCategoryUpdate', array('category' => $this));
+        Hook::exec('actionCategoryUpdate', ['category' => $this]);
 
         return $ret;
     }
@@ -284,7 +285,7 @@ class CategoryCore extends ObjectModel
     public function toggleStatus()
     {
         $result = parent::toggleStatus();
-        Hook::exec('actionCategoryUpdate', array('category' => $this));
+        Hook::exec('actionCategoryUpdate', ['category' => $this]);
 
         return $result;
     }
@@ -304,10 +305,10 @@ class CategoryCore extends ObjectModel
     {
         $idLang = null === $idLang ? Context::getContext()->language->id : (int) $idLang;
 
-        $children = array();
+        $children = [];
         $subcats = $this->getSubCategories($idLang, true);
         if (($maxDepth == 0 || $currentDepth < $maxDepth) && $subcats && count($subcats)) {
-            foreach ($subcats as &$subcat) {
+            foreach ($subcats as $subcat) {
                 if (!$subcat['id_category']) {
                     break;
                 } elseif (!is_array($excludedIdsArray) || !in_array($subcat['id_category'], $excludedIdsArray)) {
@@ -326,21 +327,21 @@ class CategoryCore extends ObjectModel
         }
 
         if ($format === 'sitemap') {
-            return array(
+            return [
                 'id' => 'category-page-' . (int) $this->id,
                 'label' => $this->name,
                 'url' => Context::getContext()->link->getCategoryLink($this->id, $this->link_rewrite),
                 'children' => $children,
-            );
+            ];
         }
 
-        return array(
+        return [
             'id' => (int) $this->id,
             'link' => Context::getContext()->link->getCategoryLink($this->id, $this->link_rewrite),
             'name' => $this->name,
             'desc' => $this->description,
             'children' => $children,
-        );
+        ];
     }
 
     /**
@@ -404,7 +405,7 @@ class CategoryCore extends ObjectModel
                 $cat->cleanGroups();
                 $cat->cleanAssoProducts();
                 // Delete associated restrictions on cart rules
-                CartRule::cleanProductRuleIntegrity('categories', array($cat->id));
+                CartRule::cleanProductRuleIntegrity('categories', [$cat->id]);
                 Category::cleanPositions($cat->id_parent);
                 /* Delete Categories in GroupReduction */
                 if (GroupReduction::getGroupsReductionByCategoryId((int) $cat->id)) {
@@ -418,7 +419,7 @@ class CategoryCore extends ObjectModel
             Category::regenerateEntireNtree();
         }
 
-        Hook::exec('actionCategoryDelete', array('category' => $this, 'deleted_children' => $deletedChildren));
+        Hook::exec('actionCategoryDelete', ['category' => $this, 'deleted_children' => $deletedChildren]);
 
         return true;
     }
@@ -467,8 +468,7 @@ class CategoryCore extends ObjectModel
                 $name = $this->name;
             }
 
-            throw new PrestaShopException('Parent category ' . $this->id_parent .
-                ' does not exist. Current category: ' . $name);
+            throw new PrestaShopException('Parent category ' . $this->id_parent . ' does not exist. Current category: ' . $name);
         }
 
         return (int) $parentCategory->level_depth + 1;
@@ -487,7 +487,7 @@ class CategoryCore extends ObjectModel
         $sql->leftJoin('category_shop', 'cs', 'c.`id_category` = cs.`id_category` AND cs.`id_shop` = ' . (int) $idShop);
         $sql->orderBy('c.`id_parent`, cs.`position` ASC');
         $categories = Db::getInstance()->executeS($sql);
-        $categoriesArray = array();
+        $categoriesArray = [];
         foreach ($categories as $category) {
             $categoriesArray[$category['id_parent']]['subcategories'][] = $category['id_category'];
         }
@@ -528,7 +528,7 @@ class CategoryCore extends ObjectModel
      */
     protected static function computeNTreeInfos(&$categories, $idCategory, &$n)
     {
-        $queries = array();
+        $queries = [];
         $left = $n++;
         if (isset($categories[(int) $idCategory]['subcategories'])) {
             foreach ($categories[(int) $idCategory]['subcategories'] as $idSubcategory) {
@@ -537,7 +537,7 @@ class CategoryCore extends ObjectModel
         }
         $right = (int) $n++;
 
-        $queries[] = array($idCategory, $left, $right);
+        $queries[] = [$idCategory, $left, $right];
 
         return $queries;
     }
@@ -563,10 +563,10 @@ class CategoryCore extends ObjectModel
 
         return Db::getInstance()->update(
             'category',
-            array(
+            [
                 'nleft' => (int) $left,
                 'nright' => (int) $right,
-            ),
+            ],
             '`id_category` = ' . (int) $idCategory,
             1
         );
@@ -600,9 +600,9 @@ class CategoryCore extends ObjectModel
         foreach ($categories as $subCategory) {
             Db::getInstance()->update(
                 'category',
-                array(
+                [
                     'level_depth' => (int) ($level['level_depth'] + 1),
-                ),
+                ],
                 '`id_category` = ' . (int) $subCategory['id_category']
             );
             /* Recursive call */
@@ -645,7 +645,7 @@ class CategoryCore extends ObjectModel
             return $result;
         }
 
-        $categories = array();
+        $categories = [];
         foreach ($result as $row) {
             $categories[$row['id_parent']][$row['id_category']]['infos'] = $row;
         }
@@ -793,8 +793,8 @@ class CategoryCore extends ObjectModel
 				' . ($limit != '' ? $limit : '')
             );
 
-            $categories = array();
-            $buff = array();
+            $categories = [];
+            $buff = [];
 
             if (!isset($idRootCategory)) {
                 $idRootCategory = Category::getRootCategory()->id;
@@ -969,7 +969,7 @@ class CategoryCore extends ObjectModel
             return false;
         }
 
-        $front = in_array($context->controller->controller_type, array('front', 'modulefront'));
+        $front = in_array($context->controller->controller_type, ['front', 'modulefront']);
         $idSupplier = (int) Tools::getValue('id_supplier');
 
         /* Return only the number of products */
@@ -1057,7 +1057,7 @@ class CategoryCore extends ObjectModel
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
 
         if (!$result) {
-            return array();
+            return [];
         }
 
         if ($orderyBy == 'orderprice') {
@@ -1291,14 +1291,14 @@ class CategoryCore extends ObjectModel
 				WHERE `id_product` = ' . (int) $idOld;
         $result = Db::getInstance()->executeS($sql);
 
-        $row = array();
+        $row = [];
         if ($result) {
             foreach ($result as $i) {
-                $row[] = '(' . implode(', ', array((int) $idNew, $i['id_category'], '(SELECT tmp.max + 1 FROM (
+                $row[] = '(' . implode(', ', [(int) $idNew, $i['id_category'], '(SELECT tmp.max + 1 FROM (
 					SELECT MAX(cp.`position`) AS max
 					FROM `' . _DB_PREFIX_ . 'category_product` cp
 					WHERE cp.`id_category`=' . (int) $i['id_category'] . ') AS tmp)',
-                )) . ')';
+                ]) . ')';
             }
         }
 
@@ -1507,7 +1507,7 @@ class CategoryCore extends ObjectModel
                 }
 
                 if (!$category && $objectToCreate && $methodToCreate) {
-                    call_user_func_array(array($objectToCreate, $methodToCreate), array($idLang, $categoryName, $idParentCategory));
+                    call_user_func_array([$objectToCreate, $methodToCreate], [$idLang, $categoryName, $idParentCategory]);
                     $category = Category::searchByPath($idLang, $categoryName);
                 }
                 if (isset($category['id_category']) && $category['id_category']) {
@@ -1607,6 +1607,34 @@ class CategoryCore extends ObjectModel
     }
 
     /**
+     * Check if all categories by provided ids are present in database.
+     * If at least one is missing return false
+     *
+     * @param int[] $categoryIds
+     *
+     * @return bool
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public static function categoriesExists(array $categoryIds): bool
+    {
+        if (empty($categoryIds)) {
+            return false;
+        }
+
+        $categoryIds = array_map('intval', array_unique($categoryIds, SORT_REGULAR));
+        $categoryIdsFormatted = implode(',', $categoryIds);
+
+        $result = Db::getInstance()->query('
+            SELECT COUNT(c.id_category) as categories_found
+            FROM ' . _DB_PREFIX_ . 'category c
+            WHERE c.id_category IN (' . $categoryIdsFormatted . ')
+        ')->fetch();
+
+        return count($categoryIds) === (int) $result['categories_found'];
+    }
+
+    /**
      * Clean Category Groups.
      *
      * @return bool Indicated whether the cleanup was successful
@@ -1635,7 +1663,7 @@ class CategoryCore extends ObjectModel
     {
         foreach ($groups as $group) {
             if ($group !== false) {
-                Db::getInstance()->insert('category_group', array('id_category' => (int) $this->id, 'id_group' => (int) $group));
+                Db::getInstance()->insert('category_group', ['id_category' => (int) $this->id, 'id_group' => (int) $group]);
             }
         }
     }
@@ -1654,7 +1682,7 @@ class CategoryCore extends ObjectModel
             $sql->from('category_group', 'cg');
             $sql->where('cg.`id_category` = ' . (int) $this->id);
             $result = Db::getInstance()->executeS($sql);
-            $groups = array();
+            $groups = [];
             foreach ($result as $group) {
                 $groups[] = $group['id_group'];
             }
@@ -1677,7 +1705,7 @@ class CategoryCore extends ObjectModel
     {
         $groups = $this->getGroups();
         if (!in_array((int) $idGroup, $groups)) {
-            return $this->addGroups(array((int) $idGroup));
+            return $this->addGroups([(int) $idGroup]);
         }
 
         return false;
@@ -1715,17 +1743,25 @@ class CategoryCore extends ObjectModel
     }
 
     /**
-     * Update customer groups associated to the object.
+     * Update customer groups associated to the object. Don't update group access if list is null.
      *
      * @param array $list groups
+     *
+     * @return bool
      */
     public function updateGroup($list)
     {
+        // don't update group access if list is null
+        if ($list === null) {
+            return false;
+        }
         $this->cleanGroups();
         if (empty($list)) {
-            $list = array(Configuration::get('PS_UNIDENTIFIED_GROUP'), Configuration::get('PS_GUEST_GROUP'), Configuration::get('PS_CUSTOMER_GROUP'));
+            $list = [Configuration::get('PS_UNIDENTIFIED_GROUP'), Configuration::get('PS_GUEST_GROUP'), Configuration::get('PS_CUSTOMER_GROUP')];
         }
         $this->addGroups($list);
+
+        return true;
     }
 
     /**
@@ -1796,7 +1832,7 @@ class CategoryCore extends ObjectModel
             c.`date_upd` = "' . date('Y-m-d H:i:s') . '"
             WHERE c.`id_parent` = ' . (int) $movedCategory['id_parent'] . '
             AND c.`id_category`=' . (int) $movedCategory['id_category']));
-        Hook::exec('actionCategoryUpdate', array('category' => new Category($movedCategory['id_category'])));
+        Hook::exec('actionCategoryUpdate', ['category' => new Category($movedCategory['id_category'])]);
 
         return $result;
     }
@@ -2096,7 +2132,7 @@ class CategoryCore extends ObjectModel
             return false;
         }
 
-        $categories = array();
+        $categories = [];
         $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT c.`id_category`, cl.`name`, cl.`link_rewrite`, cl.`id_lang`
 		FROM `' . _DB_PREFIX_ . 'category` c
@@ -2139,21 +2175,21 @@ class CategoryCore extends ObjectModel
      */
     public function addShop($idShop)
     {
-        $data = array();
+        $data = [];
         if (!$idShop) {
             foreach (Shop::getShops(false) as $shop) {
                 if (!$this->existsInShop($shop['id_shop'])) {
-                    $data[] = array(
+                    $data[] = [
                         'id_category' => (int) $this->id,
                         'id_shop' => (int) $shop['id_shop'],
-                    );
+                    ];
                 }
             }
         } elseif (!$this->existsInShop($idShop)) {
-            $data[] = array(
+            $data[] = [
                 'id_category' => (int) $this->id,
                 'id_shop' => (int) $idShop,
-            );
+            ];
         }
 
         return Db::getInstance()->insert('category_shop', $data);
@@ -2371,7 +2407,7 @@ class CategoryCore extends ObjectModel
             return false;
         }
         $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'category_shop` (`id_category`, `id_shop`) VALUES';
-        $tabCategories = array();
+        $tabCategories = [];
         foreach ($categories as $idCategory) {
             $tabCategories[] = new Category($idCategory);
             $sql .= '("' . (int) $idCategory . '", "' . (int) $idShop . '"),';

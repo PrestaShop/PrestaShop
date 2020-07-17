@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
@@ -70,7 +70,7 @@ class AdminProductDataUpdater implements ProductInterface
             throw new \Exception('AdminProductDataUpdater->activateProductIdList() should always receive at least one ID. Zero given.', 5003);
         }
 
-        $failedIdList = array();
+        $failedIdList = [];
         foreach ($productListId as $productId) {
             $product = new Product($productId);
             if (!Validate::isLoadedObject($product)
@@ -82,10 +82,10 @@ class AdminProductDataUpdater implements ProductInterface
             }
             $product->active = ($activate ? 1 : 0);
             $product->update();
-            if (in_array($product->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
+            if (in_array($product->visibility, ['both', 'search']) && Configuration::get('PS_SEARCH_INDEXATION')) {
                 Search::indexation(false, $product->id);
             }
-            $this->hookDispatcher->dispatchWithParameters('actionProductActivation', array('id_product' => (int) $product->id, 'product' => $product, 'activated' => $activate));
+            $this->hookDispatcher->dispatchWithParameters('actionProductActivation', ['id_product' => (int) $product->id, 'product' => $product, 'activated' => $activate]);
         }
 
         if (count($failedIdList) > 0) {
@@ -124,7 +124,7 @@ class AdminProductDataUpdater implements ProductInterface
             throw new \Exception('AdminProductDataUpdater->duplicateProductIdList() should always receive at least one ID. Zero given.', 5005);
         }
 
-        $failedIdList = array();
+        $failedIdList = [];
         foreach ($productIdList as $productId) {
             try {
                 $this->duplicateProduct($productId);
@@ -229,8 +229,8 @@ class AdminProductDataUpdater implements ProductInterface
             if (!Image::duplicateProductImages($id_product_old, $product->id, $combination_images)) {
                 throw new UpdateProductException('An error occurred while copying images.', 5008);
             } else {
-                $this->hookDispatcher->dispatchWithParameters('actionProductAdd', array('id_product_old' => $id_product_old, 'id_product' => (int) $product->id, 'product' => $product));
-                if (in_array($product->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
+                $this->hookDispatcher->dispatchWithParameters('actionProductAdd', ['id_product_old' => $id_product_old, 'id_product' => (int) $product->id, 'product' => $product]);
+                if (in_array($product->visibility, ['both', 'search']) && Configuration::get('PS_SEARCH_INDEXATION')) {
                     Search::indexation(false, $product->id);
                 }
 

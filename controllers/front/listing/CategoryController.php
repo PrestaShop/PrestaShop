@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\Category\CategoryProductSearchProvider;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
@@ -57,7 +57,7 @@ class CategoryControllerCore extends ProductListingFrontController
         if (isset($parsedUrl['query'])) {
             parse_str($parsedUrl['query'], $params);
         } else {
-            $params = array();
+            $params = [];
         }
         $page = (int) Tools::getValue('page');
         if ($page > 1) {
@@ -94,7 +94,7 @@ class CategoryControllerCore extends ProductListingFrontController
         if (!$this->category->checkAccess($this->context->customer->id)) {
             header('HTTP/1.1 403 Forbidden');
             header('Status: 403 Forbidden');
-            $this->errors[] = $this->trans('You do not have access to this category.', array(), 'Shop.Notifications.Error');
+            $this->errors[] = $this->trans('You do not have access to this category.', [], 'Shop.Notifications.Error');
             $this->setTemplate('errors/forbidden');
 
             return;
@@ -104,7 +104,7 @@ class CategoryControllerCore extends ProductListingFrontController
 
         $filteredCategory = Hook::exec(
             'filterCategoryContent',
-            array('object' => $categoryVar),
+            ['object' => $categoryVar],
             $id_module = null,
             $array_return = false,
             $check_exceptions = true,
@@ -116,10 +116,10 @@ class CategoryControllerCore extends ProductListingFrontController
             $categoryVar = $filteredCategory['object'];
         }
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'category' => $categoryVar,
             'subcategories' => $this->getTemplateVarSubCategories(),
-        ));
+        ]);
     }
 
     /**
@@ -157,7 +157,7 @@ class CategoryControllerCore extends ProductListingFrontController
     protected function getAjaxProductSearchVariables()
     {
         $data = parent::getAjaxProductSearchVariables();
-        $rendered_products_header = $this->render('catalog/_partials/category-header', array('listing' => $data));
+        $rendered_products_header = $this->render('catalog/_partials/category-header', ['listing' => $data]);
         $data['rendered_products_header'] = $rendered_products_header;
 
         return $data;
@@ -268,7 +268,7 @@ class CategoryControllerCore extends ProductListingFrontController
 
         return $this->trans(
             'Category: %category_name%',
-            array('%category_name%' => $this->category->name),
+            ['%category_name%' => $this->category->name],
             'Shop.Theme.Catalog'
         );
     }

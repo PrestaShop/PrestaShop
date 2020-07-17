@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,26 +17,25 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Api;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Translation\Locale\Converter;
 use PrestaShopBundle\Api\QueryTranslationParamsCollection;
+use PrestaShopBundle\Exception\InvalidLanguageException;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\TranslationService;
+use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
 use PrestaShopBundle\Translation\View\TreeBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
-use Symfony\Component\Validator\Constraints\Locale;
 
 class TranslationController extends ApiController
 {
@@ -51,6 +51,8 @@ class TranslationController extends ApiController
 
     /**
      * Show translations for 1 domain & 1 locale given & 1 theme given (optional).
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -71,20 +73,17 @@ class TranslationController extends ApiController
             $module = $request->query->get('module');
             $search = $request->query->get('search');
 
-            $icuLocale = Converter::toPrestaShopLocale($locale);
-            $validationErrors = $this->container->get('validator')->validate($icuLocale, [
-                new Locale(),
-            ]);
-
-            // If the locale is invalid, no need to call the translation provider.
-            if ($locale !== 'default' && count($validationErrors) > 0) {
+            try {
+                $this->translationService->findLanguageByLocale($locale);
+            } catch (InvalidLanguageException $e) {
+                // If the locale is invalid, no need to call the translation provider.
                 throw UnsupportedLocaleException::invalidLocale($locale);
             }
 
             $catalog = $translationService->listDomainTranslation($locale, $domain, $theme, $search, $module);
-            $info = array(
+            $info = [
                 'Total-Pages' => ceil(count($catalog['data']) / $queryParams['page_size']),
-            );
+            ];
 
             $catalog['info'] = array_merge(
                 $catalog['info'],
@@ -118,6 +117,8 @@ class TranslationController extends ApiController
     /**
      * Show tree for translation page with some params.
      *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
      * @param Request $request
      *
      * @return JsonResponse
@@ -136,7 +137,7 @@ class TranslationController extends ApiController
 
             $search = $request->query->get('search');
 
-            if (in_array($type, array('modules', 'themes')) && empty($selected)) {
+            if (in_array($type, ['modules', 'themes']) && empty($selected)) {
                 throw new Exception('This \'selected\' param is not valid.');
             }
 
@@ -150,9 +151,11 @@ class TranslationController extends ApiController
                     break;
 
                 case 'mails':
-                    // when emails body will be implemented, it should be a different type
-                    // because domain routes only support "type" & "selected/theme" as parameters
                     $tree = $this->getMailsSubjectTree($lang, $search);
+                    break;
+
+                case 'mails_body':
+                    $tree = $this->getMailsBodyTree($lang, $search);
                     break;
 
                 default:
@@ -168,6 +171,8 @@ class TranslationController extends ApiController
 
     /**
      * Route to edit translation.
+     *
+     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -213,6 +218,8 @@ class TranslationController extends ApiController
 
     /**
      * Route to reset translation.
+     *
+     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -367,6 +374,22 @@ class TranslationController extends ApiController
 
         $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $theme);
         $catalogue = $this->translationService->getTranslationsCatalogue($lang, 'mails', $theme, $search);
+
+        return $this->getCleanTree($treeBuilder, $catalogue, $theme, $search);
+    }
+
+    /**
+     * @param string $lang Two-letter iso code
+     * @param null $search
+     *
+     * @return array
+     */
+    private function getMailsBodyTree($lang, $search = null)
+    {
+        $theme = null;
+
+        $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $theme);
+        $catalogue = $this->translationService->getTranslationsCatalogue($lang, 'mails_body', $theme, $search);
 
         return $this->getCleanTree($treeBuilder, $catalogue, $theme, $search);
     }

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,21 +17,29 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin;
 
 use Category;
+use Configuration;
+use Currency;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Exception\UpdateProductException;
@@ -44,6 +53,7 @@ use PrestaShopBundle\Form\Admin\Product\ProductQuantity;
 use PrestaShopBundle\Form\Admin\Product\ProductSeo;
 use PrestaShopBundle\Form\Admin\Product\ProductShipping;
 use PrestaShopBundle\Model\Product\AdminModelAdapter;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface as ProductInterfaceProvider;
 use PrestaShopBundle\Service\DataProvider\StockInterface;
@@ -114,7 +124,7 @@ class ProductController extends FrameworkBundleAdminController
         $orderBy = 'id_product',
         $sortOrder = 'desc'
     ) {
-        if (!$this->isGranted(array(PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE), self::PRODUCT_OBJECT)) {
+        if (!$this->isGranted([PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE], self::PRODUCT_OBJECT)) {
             return $this->redirect('admin_dashboard');
         }
 
@@ -262,6 +272,10 @@ class ProductController extends FrameworkBundleAdminController
         $sortOrder = 'asc',
         $view = 'full'
     ) {
+        if (!$this->isGranted([PageVoter::READ], self::PRODUCT_OBJECT)) {
+            return $this->redirect('admin_dashboard');
+        }
+
         /** @var $productProvider ProductInterfaceProvider */
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
@@ -320,14 +334,14 @@ class ProductController extends FrameworkBundleAdminController
         $activateDragAndDrop = 'position_ordering' === $orderBy && $hasCategoryFilter;
 
         // Template vars injection
-        $vars = array(
+        $vars = [
             'activate_drag_and_drop' => $activateDragAndDrop,
             'products' => $products,
             'product_count' => $totalCount,
             'last_sql_query' => $lastSql,
             'has_category_filter' => $productProvider->isCategoryFiltered(),
             'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
-        );
+        ];
         if ($view !== 'full') {
             return $this->render(
                 '@Product/CatalogPage/Lists/list_' . $view . '.html.twig',
@@ -352,13 +366,13 @@ class ProductController extends FrameworkBundleAdminController
      */
     private function getToolbarButtons()
     {
-        $toolbarButtons = array();
-        $toolbarButtons['add'] = array(
+        $toolbarButtons = [];
+        $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_product_new'),
             'desc' => $this->trans('New product', 'Admin.Actions'),
             'icon' => 'add_circle_outline',
             'help' => $this->trans('Create a new product: CTRL+P', 'Admin.Catalog.Help'),
-        );
+        ];
 
         return $toolbarButtons;
     }
@@ -426,7 +440,7 @@ class ProductController extends FrameworkBundleAdminController
     {
         gc_disable();
 
-        if (!$this->isGranted(array(PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE), self::PRODUCT_OBJECT)) {
+        if (!$this->isGranted([PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE], self::PRODUCT_OBJECT)) {
             return $this->redirect('admin_dashboard');
         }
 
@@ -453,8 +467,6 @@ class ProductController extends FrameworkBundleAdminController
                 'iso_code' => $this
                     ->get('prestashop.adapter.legacy.context')
                     ->getContext()->currency->iso_code,
-                'price_display_precision' => $this->configuration
-                    ->get('_PS_PRICE_DISPLAY_PRECISION_'),
             ]
         );
 
@@ -685,7 +697,7 @@ class ProductController extends FrameworkBundleAdminController
                     $this->trans(
                         'The value of the PHP.ini setting "max_input_vars" must be increased to %value% in order to be able to submit the product form.',
                         'Admin.Notifications.Error',
-                        array('%value%' => $combinationsInputs)
+                        ['%value%' => $combinationsInputs]
                     )
                 );
             }
@@ -756,7 +768,7 @@ class ProductController extends FrameworkBundleAdminController
                         );
                     }
 
-                    $logger->info('Products activated: (' . implode(',', $productIdList) . ').');
+                    $logger->info('Products activated: (' . implode(',', $productIdList) . ').', $this->getLogDataContext());
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminActivateAfter',
                         $hookEventParameters
@@ -785,7 +797,7 @@ class ProductController extends FrameworkBundleAdminController
                         );
                     }
 
-                    $logger->info('Products deactivated: (' . implode(',', $productIdList) . ').');
+                    $logger->info('Products deactivated: (' . implode(',', $productIdList) . ').', $this->getLogDataContext());
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminDeactivateAfter',
                         $hookEventParameters
@@ -814,7 +826,7 @@ class ProductController extends FrameworkBundleAdminController
                         );
                     }
 
-                    $logger->info('Products deleted: (' . implode(',', $productIdList) . ').');
+                    $logger->info('Products deleted: (' . implode(',', $productIdList) . ').', $this->getLogDataContext());
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminDeleteAfter',
                         $hookEventParameters
@@ -843,7 +855,7 @@ class ProductController extends FrameworkBundleAdminController
                         );
                     }
 
-                    $logger->info('Products duplicated: (' . implode(',', $productIdList) . ').');
+                    $logger->info('Products duplicated: (' . implode(',', $productIdList) . ').', $this->getLogDataContext());
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminDuplicateAfter',
                         $hookEventParameters
@@ -859,18 +871,15 @@ class ProductController extends FrameworkBundleAdminController
                      * should never happens since the route parameters are
                      * restricted to a set of action values in YML file.
                      */
-                    $logger->error('Bulk action from ProductController received a bad parameter.');
+                    $logger->error('Bulk action from ProductController received a bad parameter.', $this->getLogDataContext());
 
-                    throw new Exception(
-                        'Bad action received from call to ProductController::bulkAction: "' . $action . '"',
-                        2001
-                    );
+                    throw new Exception('Bad action received from call to ProductController::bulkAction: "' . $action . '"', 2001);
             }
         } catch (UpdateProductException $due) {
             //TODO : need to translate this with an domain name
             $message = $due->getMessage();
             $this->addFlash('failure', $message);
-            $logger->warning($message);
+            $logger->warning($message, $this->getLogDataContext());
         }
 
         return new Response(json_encode(['result' => 'ok']));
@@ -950,7 +959,7 @@ class ProductController extends FrameworkBundleAdminController
                     );
                     $logger->info(
                         'Products sorted: (' . implode(',', $productIdList) .
-                        ') with positions (' . implode(',', $productPositionList) . ').'
+                        ') with positions (' . implode(',', $productPositionList) . ').', $this->getLogDataContext()
                     );
                     $hookEventParameters = [
                         'product_list_id' => $productIdList,
@@ -971,18 +980,15 @@ class ProductController extends FrameworkBundleAdminController
                      * should never happens since the route parameters are
                      * restricted to a set of action values in YML file.
                      */
-                    $logger->error('Mass edit action from ProductController received a bad parameter.');
+                    $logger->error('Mass edit action from ProductController received a bad parameter.', $this->getLogDataContext());
 
-                    throw new Exception(
-                        'Bad action received from call to ProductController::massEditAction: "' . $action . '"',
-                        2001
-                    );
+                    throw new Exception('Bad action received from call to ProductController::massEditAction: "' . $action . '"', 2001);
             }
         } catch (UpdateProductException $due) {
             //TODO : need to translate with domain name
             $message = $due->getMessage();
             $this->addFlash('failure', $message);
-            $logger->warning($message);
+            $logger->warning($message, $this->getLogDataContext());
         }
 
         $urlGenerator = $this->get('prestashop.core.admin.url_generator');
@@ -1039,7 +1045,7 @@ class ProductController extends FrameworkBundleAdminController
                         'success',
                         $this->trans('Product successfully deleted.', 'Admin.Catalog.Notification')
                     );
-                    $logger->info('Product deleted: (' . $id . ').');
+                    $logger->info('Product deleted: (' . $id . ').', $this->getLogDataContext($id));
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminDeleteAfter',
                         $hookEventParameters
@@ -1065,7 +1071,7 @@ class ProductController extends FrameworkBundleAdminController
                         'success',
                         $this->trans('Product successfully duplicated.', 'Admin.Catalog.Notification')
                     );
-                    $logger->info('Product duplicated: (from ' . $id . ' to ' . $duplicateProductId . ').');
+                    $logger->info('Product duplicated: (from ' . $id . ' to ' . $duplicateProductId . ').', $this->getLogDataContext($id));
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminDuplicateAfter',
                         $hookEventParameters
@@ -1091,7 +1097,7 @@ class ProductController extends FrameworkBundleAdminController
                         'success',
                         $this->trans('Product successfully activated.', 'Admin.Catalog.Notification')
                     );
-                    $logger->info('Product activated: ' . $id);
+                    $logger->info('Product activated: ' . $id, $this->getLogDataContext($id));
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminActivateAfter',
                         $hookEventParameters
@@ -1117,7 +1123,7 @@ class ProductController extends FrameworkBundleAdminController
                         'success',
                         $this->trans('Product successfully deactivated.', 'Admin.Catalog.Notification')
                     );
-                    $logger->info('Product deactivated: ' . $id);
+                    $logger->info('Product deactivated: ' . $id, $this->getLogDataContext($id));
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminDeactivateAfter',
                         $hookEventParameters
@@ -1133,21 +1139,57 @@ class ProductController extends FrameworkBundleAdminController
                      * should never happens since the route parameters are
                      * restricted to a set of action values in YML file.
                      */
-                    $logger->error('Unit action from ProductController received a bad parameter.');
+                    $logger->error('Unit action from ProductController received a bad parameter.', $this->getLogDataContext($id));
 
-                    throw new Exception(
-                        'Bad action received from call to ProductController::unitAction: "' . $action . '"',
-                        2002
-                    );
+                    throw new Exception('Bad action received from call to ProductController::unitAction: "' . $action . '"', 2002);
             }
         } catch (UpdateProductException $due) {
             //TODO : need to translate with a domain name
             $message = $due->getMessage();
             $this->addFlash('failure', $message);
-            $logger->warning($message);
+            $logger->warning($message, $this->getLogDataContext($id));
         }
 
         return $this->redirect($this->get('prestashop.core.admin.url_generator')->generate('admin_product_catalog'));
+    }
+
+    /**
+     * Toggle product status
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to update this."
+     * )
+     *
+     * @param $productId
+     *
+     * @return JsonResponse
+     */
+    public function toggleStatusAction($productId)
+    {
+        if ($this->isDemoModeEnabled()) {
+            return $this->json([
+                'status' => false,
+                'message' => $this->getDemoModeErrorMessage(),
+            ]);
+        }
+
+        try {
+            $isEnabled = $this->getQueryBus()->handle(new GetProductIsEnabled($productId));
+
+            $this->getCommandBus()->handle(new UpdateProductStatusCommand($productId, !$isEnabled));
+            $response = [
+                'status' => true,
+                'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
+            ];
+        } catch (ProductException $e) {
+            $response = [
+                'status' => false,
+                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages()),
+            ];
+        }
+
+        return $this->json($response);
     }
 
     /**
@@ -1254,5 +1296,57 @@ class ProductController extends FrameworkBundleAdminController
             'form' => $form->getForm()->get($step)->get($fieldName)->createView(),
             'formId' => $step . '_' . $fieldName . '_rendered',
         ]);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function searchProductsAction(Request $request): JsonResponse
+    {
+        try {
+            $searchPhrase = $request->query->get('search_phrase');
+            $currencyId = $request->query->get('currency_id');
+            $currencyIsoCode = $currencyId !== null
+                ? Currency::getIsoCodeById((int) $currencyId)
+                : Currency::getIsoCodeById((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+
+            /** @var FoundProduct[] $foundProducts */
+            $foundProducts = $this->getQueryBus()->handle(new SearchProducts($searchPhrase, 10, $currencyIsoCode));
+
+            return $this->json([
+                'products' => $foundProducts,
+            ]);
+        } catch (Exception $e) {
+            return $this->json(
+                [$e, 'message' => $this->getErrorMessageForException($e, [])],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
+    /**
+     * @return array
+     */
+    private function getErrorMessages(): array
+    {
+        return [
+            ProductNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            CannotUpdateProductException::class => $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getLogDataContext($id_product = null, $error_code = null, $allow_duplicate = null): array
+    {
+        return [
+            'object_type' => 'Product',
+            'object_id' => $id_product,
+            'error_code' => $error_code,
+            'allow_duplicate' => $allow_duplicate,
+        ];
     }
 }

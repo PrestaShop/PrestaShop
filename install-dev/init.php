@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,13 +17,14 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
+use Doctrine\DBAL\DBALException;
+
 ob_start();
 
 require_once 'install_version.php';
@@ -31,13 +33,10 @@ require_once 'install_version.php';
 @set_time_limit(0);
 @ini_set('max_execution_time', '0');
 
-// setting the memory limit to 128M only if current is lower
-$memory_limit = ini_get('memory_limit');
-if (substr($memory_limit, -1) != 'G'
-    && ((substr($memory_limit, -1) == 'M' && substr($memory_limit, 0, -1) < 128)
-        || is_numeric($memory_limit) && ((int) $memory_limit < 131072) && $memory_limit > 0)
-) {
-    @ini_set('memory_limit', '128M');
+// setting the memory limit to 256M only if current is lower
+$current_memory_limit = psinstall_get_memory_limit();
+if ($current_memory_limit > 0 && $current_memory_limit < psinstall_get_octets('256M')) {
+    ini_set('memory_limit', '256M');
 }
 
 // redefine REQUEST_URI if empty (on some webservers...)
@@ -57,7 +56,24 @@ $_SERVER['REQUEST_URI'] = str_replace('//', '/', $_SERVER['REQUEST_URI']);
 // we check if theses constants are defined
 // in order to use init.php in upgrade.php script
 if (!defined('__PS_BASE_URI__')) {
-    define('__PS_BASE_URI__', substr($_SERVER['REQUEST_URI'], 0, -1 * (strlen($_SERVER['REQUEST_URI']) - strrpos($_SERVER['REQUEST_URI'], '/')) - strlen(substr(dirname($_SERVER['REQUEST_URI']), strrpos(dirname($_SERVER['REQUEST_URI']), '/') + 1))));
+    if (PHP_SAPI !== 'cli') {
+        define(
+            '__PS_BASE_URI__',
+            substr(
+                $_SERVER['REQUEST_URI'],
+                0,
+                -1 * (strlen($_SERVER['REQUEST_URI']) - strrpos($_SERVER['REQUEST_URI'], '/'))
+                - strlen(
+                    substr(
+                        dirname($_SERVER['REQUEST_URI']),
+                        strrpos(dirname($_SERVER['REQUEST_URI']), '/') + 1
+                    )
+                )
+            )
+        );
+    } else {
+        define('__PS_BASE_URI__', '/' . trim(Datas::getInstance()->base_uri, '/') . '/');
+    }
 }
 
 if (!defined('_PS_CORE_DIR_')) {
@@ -76,15 +92,19 @@ require_once _PS_CORE_DIR_.'/config/autoload.php';
 if (file_exists(_PS_CORE_DIR_.'/app/config/parameters.php')) {
     require_once _PS_CORE_DIR_.'/config/bootstrap.php';
 
-    if (defined('_PS_IN_TEST_') && _PS_IN_TEST_) {
-        $env = 'test';
-    } else {
-        $env = _PS_MODE_DEV_ ? 'dev' : 'prod';
-    }
     global $kernel;
-    $kernel = new AppKernel($env, _PS_MODE_DEV_);
-    $kernel->loadClassCache();
-    $kernel->boot();
+    try {
+        $kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
+        $kernel->boot();
+    } catch (DBALException $e) {
+        /**
+         * Doctrine couldn't be loaded because database settings point to a
+         * non existence database
+         */
+        if (strpos($e->getMessage(), 'You can circumvent this by setting a \'server_version\' configuration value') === false) {
+            throw $e;
+        }
+    }
 }
 
 if (!defined('_THEME_NAME_')) {
@@ -96,12 +116,20 @@ if (!defined('_THEME_NAME_')) {
          * @deprecated since 1.7.5.x to be removed in 1.8.x
          * Rely on "PS_THEME_NAME" environment variable value
          */
-        $themes = glob(dirname(__DIR__).'/themes/*/config/theme.yml', GLOB_NOSORT);
-        usort($themes, function ($a, $b) {
-            return strcmp($b, $a);
-        });
-
-        define('_THEME_NAME_', basename(substr($themes[0], 0, -strlen('/config/theme.yml'))));
+        $dirThemes = dirname(__DIR__).'/themes/';
+        $fileConfig = '/config/theme.yml';
+        $defaultTheme = 'classic';
+        // Choose classic theme as default
+        if (file_exists($dirThemes . $defaultTheme . $fileConfig)) {
+            define('_THEME_NAME_', $defaultTheme);
+        } else {
+            // Choose the first theme alphabetically
+            $themes = glob($dirThemes . '*' . $fileConfig, GLOB_NOSORT);
+            usort($themes, function ($a, $b) {
+                return strcmp($a, $b);
+            });
+            define('_THEME_NAME_', basename(substr($themes[0], 0, -strlen('/config/theme.yml'))));
+        }
     }
 }
 
@@ -131,11 +159,6 @@ if (!in_array(@ini_get('date.timezone'), timezone_identifiers_list())) {
     ini_set('date.timezone', 'UTC');
 }
 
-// Try to improve memory limit if it's under 64M
-$current_memory_limit = psinstall_get_memory_limit();
-if ($current_memory_limit > 0 && $current_memory_limit < psinstall_get_octets('128M')) {
-    ini_set('memory_limit', '128M');
-}
 
 function psinstall_get_octets($option)
 {

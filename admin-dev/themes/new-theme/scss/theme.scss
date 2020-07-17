@@ -1,7 +1,10 @@
 // Tools
 @import "~prestakit/dist/css/bootstrap-prestashop-ui-kit";
+@import "~dropzone/dist/min/dropzone.min.css";
+@import "~magnific-popup/dist/magnific-popup.css";
 @import "~bourbon/app/assets/stylesheets/bourbon";
 @import "../node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css";
+@import "~perfect-scrollbar/css/perfect-scrollbar.css";
 @import "mixins/single_line_block";
 @import "mixins/notification_container";
 @import "mixins/notification_counter";
@@ -12,6 +15,10 @@
 // Settings
 @import "config/settings";
 @import "config/keyframes";
+
+// Tools with vars overwritten
+@import "~bootstrap/scss/mixins/transition";
+@import "~bootstrap/scss/mixins/border-radius";
 
 // Components
 @import "components/layout/content_div";
@@ -42,6 +49,9 @@
 @import "components/cursor";
 @import "components/toggable_field";
 @import "components/form_popover_error";
+@import "components/button";
+@import "components/font";
+@import "components/timeline";
 
 // Pages specifics SCSS files
 @import "pages/product_page";
@@ -57,6 +67,10 @@
 @import "pages/employee";
 @import "pages/error";
 @import "pages/orders";
+@import "pages/attribute";
+@import "pages/customer_thread";
+@import "pages/orders_view";
+@import "pages/orders_create";
 
 // Main Layout
 @import "pages/modules";
@@ -84,7 +98,7 @@ body {
   }
   > .nav-item > .nav-link {
     &.active {
-      border-bottom: 1px solid #FFFFFF;
+      border-bottom: 1px solid #fff;
     }
   }
 }
@@ -94,17 +108,17 @@ body {
 
 // Needed to override the default inline style of typeahead and take all the width
 span.twitter-typeahead {
-  display: block !important;
-  width: 100% !important;
+  width: 100%;
+
   input.tt-input {
-    width: 100% !important;
+    width: 100%;
   }
 }
 
 // text buttons
 .btn.btn-text {
-  cursor: pointer;
   padding: 0;
+  cursor: pointer;
   background: transparent;
 
   &:focus {
@@ -114,10 +128,10 @@ span.twitter-typeahead {
 
 // setting dropdown button
 .dropdown-toggle.tool-button {
-  &:after {
-    content: "settings";
+  &::after {
     font-size: 1.375rem;
     color: $medium-gray;
+    content: "settings";
   }
 }
 
@@ -130,12 +144,12 @@ span.twitter-typeahead {
 }
 
 table.table {
-  font-size: 0.8rem;
+  font-size: .8rem;
 }
 
 // Needed to override the default inline style of modal header in translations-app
-.translations-app{
-  .modal-header{
+.translations-app {
+  .modal-header {
     display: initial;
   }
 }

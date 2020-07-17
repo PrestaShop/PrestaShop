@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,24 +17,22 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
 use Cart;
 use Configuration;
-use Context;
-use Currency;
 use Customer;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\CreateEmptyCustomerCartHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
+use PrestaShopException;
 
 /**
  * @internal
@@ -47,6 +46,26 @@ final class CreateEmptyCustomerCartHandler implements CreateEmptyCustomerCartHan
     {
         $customer = new Customer($command->getCustomerId()->getValue());
 
+        $lastEmptyCartId = $customer->getLastEmptyCart(false);
+
+        if ($lastEmptyCartId) {
+            $cart = new Cart($lastEmptyCartId);
+        } else {
+            $cart = $this->createEmptyCustomerCart($customer);
+        }
+
+        return new CartId((int) $cart->id);
+    }
+
+    /**
+     * @param Customer $customer
+     *
+     * @return Cart
+     *
+     * @throws PrestaShopException
+     */
+    private function createEmptyCustomerCart(Customer $customer): Cart
+    {
         $cart = new Cart();
 
         $cart->recyclable = 0;
@@ -54,7 +73,7 @@ final class CreateEmptyCustomerCartHandler implements CreateEmptyCustomerCartHan
         $cart->id_customer = $customer->id;
         $cart->secure_key = $customer->secure_key;
 
-        $cart->id_shop = $command->getShopId()->getValue();
+        $cart->id_shop = $customer->id_shop;
         $cart->id_lang = (int) Configuration::get('PS_LANG_DEFAULT');
         $cart->id_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
 
@@ -66,11 +85,6 @@ final class CreateEmptyCustomerCartHandler implements CreateEmptyCustomerCartHan
         $cart->setNoMultishipping();
         $cart->save();
 
-        Context::getContext()->cart = $cart;
-
-        $currency = new Currency((int) $cart->id_currency);
-        Context::getContext()->currency = $currency;
-
-        return new CartId((int) $cart->id);
+        return $cart;
     }
 }

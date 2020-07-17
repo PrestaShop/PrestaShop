@@ -1,12 +1,13 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -17,12 +18,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Translation\Provider;
@@ -100,20 +100,11 @@ class TranslationFinder
         try {
             $translationFiles = $finder->files()->notName('index.php')->in($paths);
         } catch (\InvalidArgumentException $e) {
-            throw new FileNotFoundException(
-                sprintf(
-                    'Could not crawl for translation files: %s',
-                    $e->getMessage()
-                ),
-                self::ERR_DIRECTORY_NOT_FOUND,
-                $e
-            );
+            throw new FileNotFoundException(sprintf('Could not crawl for translation files: %s', $e->getMessage()), self::ERR_DIRECTORY_NOT_FOUND, $e);
         }
 
         if (count($translationFiles) === 0) {
-            throw new FileNotFoundException(
-                'There are no translation file available.', self::ERR_NO_FILES_IN_DIRECTORY
-            );
+            throw new FileNotFoundException('There are no translation file available.', self::ERR_NO_FILES_IN_DIRECTORY);
         }
 
         return $translationFiles;

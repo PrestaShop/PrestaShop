@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -103,9 +103,9 @@ class AddressCore extends ObjectModel
     public $deleted = 0;
 
     /** @var array Zone IDs cache */
-    protected static $_idZones = array();
+    protected static $_idZones = [];
     /** @var array Country IDs cache */
-    protected static $_idCountries = array();
+    protected static $_idCountries = [];
 
     /**
      * @see ObjectModel::$definition
@@ -113,47 +113,47 @@ class AddressCore extends ObjectModel
 
     // when you override this class, do not create a field with allow_null=>true
     // because it will give you exception on checkout address step
-    public static $definition = array(
+    public static $definition = [
         'table' => 'address',
         'primary' => 'id_address',
-        'fields' => array(
-            'id_customer' => array('type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false),
-            'id_manufacturer' => array('type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false),
-            'id_supplier' => array('type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false),
-            'id_warehouse' => array('type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false),
-            'id_country' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_state' => array('type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId'),
-            'alias' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
-            'company' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 255),
-            'lastname' => array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 255),
-            'firstname' => array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 255),
-            'vat_number' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
-            'address1' => array('type' => self::TYPE_STRING, 'validate' => 'isAddress', 'required' => true, 'size' => 128),
-            'address2' => array('type' => self::TYPE_STRING, 'validate' => 'isAddress', 'size' => 128),
-            'postcode' => array('type' => self::TYPE_STRING, 'validate' => 'isPostCode', 'size' => 12),
-            'city' => array('type' => self::TYPE_STRING, 'validate' => 'isCityName', 'required' => true, 'size' => 64),
-            'other' => array('type' => self::TYPE_STRING, 'validate' => 'isMessage', 'size' => 300),
-            'phone' => array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 32),
-            'phone_mobile' => array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 32),
-            'dni' => array('type' => self::TYPE_STRING, 'validate' => 'isDniLite', 'size' => 16),
-            'deleted' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false),
-            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false),
-        ),
-    );
+        'fields' => [
+            'id_customer' => ['type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false],
+            'id_manufacturer' => ['type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false],
+            'id_supplier' => ['type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false],
+            'id_warehouse' => ['type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false],
+            'id_country' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_state' => ['type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId'],
+            'alias' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32],
+            'company' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 255],
+            'lastname' => ['type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 255],
+            'firstname' => ['type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 255],
+            'vat_number' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
+            'address1' => ['type' => self::TYPE_STRING, 'validate' => 'isAddress', 'required' => true, 'size' => 128],
+            'address2' => ['type' => self::TYPE_STRING, 'validate' => 'isAddress', 'size' => 128],
+            'postcode' => ['type' => self::TYPE_STRING, 'validate' => 'isPostCode', 'size' => 12],
+            'city' => ['type' => self::TYPE_STRING, 'validate' => 'isCityName', 'required' => true, 'size' => 64],
+            'other' => ['type' => self::TYPE_STRING, 'validate' => 'isMessage', 'size' => 300],
+            'phone' => ['type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 32],
+            'phone_mobile' => ['type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 32],
+            'dni' => ['type' => self::TYPE_STRING, 'validate' => 'isDniLite', 'size' => 16],
+            'deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false],
+            'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false],
+        ],
+    ];
 
     /** @var array Web service parameters */
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
         'objectsNodeName' => 'addresses',
-        'fields' => array(
-            'id_customer' => array('xlink_resource' => 'customers'),
-            'id_manufacturer' => array('xlink_resource' => 'manufacturers'),
-            'id_supplier' => array('xlink_resource' => 'suppliers'),
-            'id_warehouse' => array('xlink_resource' => 'warehouse'),
-            'id_country' => array('xlink_resource' => 'countries'),
-            'id_state' => array('xlink_resource' => 'states'),
-        ),
-    );
+        'fields' => [
+            'id_customer' => ['xlink_resource' => 'customers'],
+            'id_manufacturer' => ['xlink_resource' => 'manufacturers'],
+            'id_supplier' => ['xlink_resource' => 'suppliers'],
+            'id_warehouse' => ['xlink_resource' => 'warehouse'],
+            'id_country' => ['xlink_resource' => 'countries'],
+            'id_state' => ['xlink_resource' => 'states'],
+        ],
+    ];
 
     /**
      * Build an Address.
@@ -175,8 +175,8 @@ class AddressCore extends ObjectModel
      */
     public static function resetStaticCache()
     {
-        static::$_idZones = array();
-        static::$_idCountries = array();
+        static::$_idZones = [];
+        static::$_idCountries = [];
     }
 
     /**
@@ -214,7 +214,7 @@ class AddressCore extends ObjectModel
 
         /* Skip the required fields */
         if ($this->isUsed()) {
-            self::$fieldsRequiredDatabase['Address'] = array();
+            self::$fieldsRequiredDatabase['Address'] = [];
         }
 
         return parent::update($null_values);
@@ -288,7 +288,7 @@ class AddressCore extends ObjectModel
             return self::$_idZones[$id_address];
         }
 
-        $id_zone = Hook::exec('actionGetIDZoneByAddressID', array('id_address' => $id_address));
+        $id_zone = Hook::exec('actionGetIDZoneByAddressID', ['id_address' => $id_address]);
 
         if (is_numeric($id_zone)) {
             self::$_idZones[$id_address] = (int) $id_zone;
@@ -339,7 +339,7 @@ class AddressCore extends ObjectModel
     /**
      * {@inheritdoc}
      */
-    public function validateField($field, $value, $id_lang = null, $skip = array(), $human_errors = false)
+    public function validateField($field, $value, $id_lang = null, $skip = [], $human_errors = false)
     {
         $error = parent::validateField($field, $value, $id_lang, $skip, $human_errors);
         if (true !== $error || 'dni' !== $field) {
@@ -347,12 +347,7 @@ class AddressCore extends ObjectModel
         }
 
         // Special validation for dni, check if the country needs it
-        $result = (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT c.`need_identification_number`
-			FROM `' . _DB_PREFIX_ . 'country` c
-			WHERE c.`id_country` = ' . (int) $this->id_country);
-
-        if ($result && Tools::isEmpty($value)) {
+        if (!$this->deleted && static::dniRequired((int) $this->id_country) && Tools::isEmpty($value)) {
             if ($human_errors) {
                 return $this->trans(
                     'The %s field is required.',
@@ -369,6 +364,23 @@ class AddressCore extends ObjectModel
         }
 
         return true;
+    }
+
+    /**
+     * Request to check if DNI field is required
+     * depending on the current selected country.
+     *
+     * @param int $idCountry
+     *
+     * @return bool
+     */
+    public static function dniRequired($idCountry)
+    {
+        return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT c.`need_identification_number` ' .
+            'FROM `' . _DB_PREFIX_ . 'country` c ' .
+            'WHERE c.`id_country` = ' . (int) $idCountry
+        );
     }
 
     /**

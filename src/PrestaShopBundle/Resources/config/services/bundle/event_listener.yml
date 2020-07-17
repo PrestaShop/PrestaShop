@@ -89,5 +89,15 @@ services:
         class: PrestaShopBundle\EventListener\BackUrlRedirectResponseListener
         arguments:
           - '@prestashop.core.uti.back_url_provider'
+          - "@prestashop.adapter.legacy.context"
         tags:
           - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+
+    prestashop.bundle.event_listener.module_guard_listener:
+        class: PrestaShopBundle\EventListener\ModuleGuardListener
+        arguments:
+          - '@prestashop.core.security.folder_guard.vendor'
+          - '%modules_dir%'
+          - '@logger'
+        tags:
+          - { name: kernel.event_subscriber }

@@ -3,6 +3,9 @@ import $ from 'jquery';
 window.$ = $;
 window.jQuery = $;
 
+import 'jquery-migrate';
+import 'jquery.browser';
+import '@prestashop-core/jquery.live-polyfill';
 import './cart';
 import './checkout';
 import './facets';
@@ -13,6 +16,7 @@ import './address';
 import prestashop from 'prestashop';
 import EventEmitter from 'events';
 import {psShowHide} from './common';
+import initEmailFields from './email-idn';
 
 // "inherit" EventEmitter
 for (var i in EventEmitter.prototype) {
@@ -21,4 +25,5 @@ for (var i in EventEmitter.prototype) {
 
 $(document).ready(() => {
   psShowHide();
+  initEmailFields('input[type="email"]');
 });

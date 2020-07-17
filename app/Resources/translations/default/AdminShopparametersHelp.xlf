@@ -170,42 +170,42 @@
       <trans-unit id="a5fa9ffd3ddf89fe263675358032e7fb">
         <source>Automatically apply this value as a discount on all products for members of this customer group.</source>
         <target>Automatically apply this value as a discount on all products for members of this customer group.</target>
-        <note>Line: 327</note>
+        <note>Line: 331</note>
       </trans-unit>
       <trans-unit id="21e445ba767d4fd41332b6eceab2be1a">
         <source>How prices are displayed in the order summary for this customer group.</source>
         <target>How prices are displayed in the order summary for this customer group.</target>
-        <note>Line: 334</note>
+        <note>Line: 338</note>
       </trans-unit>
       <trans-unit id="eaf74fe1658ada757063c8ddc4381ef9">
         <source>Customers in this group can view prices.</source>
         <target>Customers in this group can view prices.</target>
-        <note>Line: 369</note>
+        <note>Line: 373</note>
       </trans-unit>
       <trans-unit id="d38245fbe312b2dafef8450b67e94f50">
         <source>%group_name% - All persons without a customer account or customers that are not logged in.</source>
         <target>%group_name% - All persons without a customer account or customers that are not logged in.</target>
-        <note>Line: 615</note>
+        <note>Line: 619</note>
       </trans-unit>
       <trans-unit id="5125d0fd7b81fee95b7e4b7689a878a9">
         <source>%group_name% - All persons who placed an order through Guest Checkout.</source>
         <target>%group_name% - All persons who placed an order through Guest Checkout.</target>
-        <note>Line: 616</note>
+        <note>Line: 620</note>
       </trans-unit>
       <trans-unit id="96f090b06e329e3d192c0ea3701f8cb5">
         <source>%group_name% - All persons who created an account on this site.</source>
         <target>%group_name% - All persons who created an account on this site.</target>
-        <note>Line: 617</note>
+        <note>Line: 621</note>
       </trans-unit>
       <trans-unit id="a2ce271cf6d8afe81168fbfc4ccb492c">
         <source>PrestaShop has three default customer groups:</source>
         <target>PrestaShop has three default customer groups:</target>
-        <note>Line: 619</note>
+        <note>Line: 623</note>
       </trans-unit>
       <trans-unit id="c7a5c6872a29383d6ab0db08e6b40e15">
         <source>Need to hide prices for all groups? Save time, enable catalog mode in Product Settings instead.</source>
         <target>Need to hide prices for all groups? Save time, enable catalog mode in Product Settings instead.</target>
-        <note>Line: 370</note>
+        <note>Line: 374</note>
       </trans-unit>
     </body>
   </file>
@@ -243,72 +243,102 @@
       <trans-unit id="a5cb89e5bcb48c0708ee6837a5944d3e">
         <source>By default, to search for “blouse”, you have to enter “blous”, “blo”, etc (beginning of the word) – but not “lous” (within the word).</source>
         <target>By default, to search for “blouse”, you have to enter “blous”, “blo”, etc (beginning of the word) – but not “lous” (within the word).</target>
-        <note>Line: 134</note>
+        <note>Line: 140</note>
       </trans-unit>
       <trans-unit id="d2e38e24e467d35cc5881e083e05b823">
         <source>With this option enabled, it also gives the good result if you search for “lous”, “ouse”, or anything contained in the word.</source>
         <target>With this option enabled, it also gives the good result if you search for “lous”, “ouse”, or anything contained in the word.</target>
-        <note>Line: 139</note>
+        <note>Line: 145</note>
       </trans-unit>
       <trans-unit id="9110055bdc92744713baa237b26f8ac7">
         <source>Enable search within a whole word, rather than from its beginning only.</source>
         <target>Enable search within a whole word, rather than from its beginning only.</target>
-        <note>Line: 145</note>
+        <note>Line: 151</note>
       </trans-unit>
       <trans-unit id="0e665a9cf278d49f43c4bb4cb9a7c29f">
         <source>It checks if the searched term is contained in the indexed word. This may be resource-consuming.</source>
         <target>It checks if the searched term is contained in the indexed word. This may be resource-consuming.</target>
-        <note>Line: 150</note>
+        <note>Line: 156</note>
       </trans-unit>
       <trans-unit id="1122eba5946331d2709712f64fa1d66b">
         <source>By default, if you search "book", you will have "book", "bookcase" and "bookend".</source>
         <target>By default, if you search "book", you will have "book", "bookcase" and "bookend".</target>
-        <note>Line: 162</note>
+        <note>Line: 168</note>
       </trans-unit>
       <trans-unit id="0b1d71ac92f27198d2bd1e6cd49cec1b">
         <source>With this option enabled, it only gives one result “book”, as exact end of the indexed word is matching.</source>
         <target>With this option enabled, it only gives one result “book”, as exact end of the indexed word is matching.</target>
-        <note>Line: 167</note>
+        <note>Line: 173</note>
       </trans-unit>
       <trans-unit id="c4474326e7d8129b7c04ada10f34f5b1">
         <source>Enable more precise search with the end of the word.</source>
         <target>Enable more precise search with the end of the word.</target>
-        <note>Line: 173</note>
+        <note>Line: 179</note>
       </trans-unit>
       <trans-unit id="efb6bc8d1ee1c5527d494ba15ee3109d">
         <source>It checks if the searched term is the exact end of the indexed word.</source>
         <target>It checks if the searched term is the exact end of the indexed word.</target>
-        <note>Line: 178</note>
+        <note>Line: 184</note>
       </trans-unit>
       <trans-unit id="645115aba5ef431a04da95c746477544">
         <source>Only words this size or larger will be indexed.</source>
         <target>Only words this size or larger will be indexed.</target>
-        <note>Line: 191</note>
+        <note>Line: 256</note>
       </trans-unit>
       <trans-unit id="2c2666c9eee818342b0aff77dda51990">
         <source>Please enter the index words separated by a "|".</source>
         <target>Please enter the index words separated by a "|".</target>
-        <note>Line: 203</note>
+        <note>Line: 268</note>
       </trans-unit>
       <trans-unit id="786471035f60ea5955fd93f6998e8637">
         <source>Enter each alias separated by a comma (e.g. 'prestshop,preztashop,prestasohp').</source>
         <target>Enter each alias separated by a comma (e.g. 'prestshop,preztashop,prestasohp').</target>
-        <note>Line: 363</note>
+        <note>Line: 428</note>
       </trans-unit>
       <trans-unit id="259b411f284388d228a30c1e2ed0c61d">
         <source><![CDATA[Forbidden characters: <>;=#{}]]></source>
         <target><![CDATA[Forbidden characters: <>;=#{}]]></target>
-        <note>Line: 364</note>
+        <note>Line: 429</note>
       </trans-unit>
       <trans-unit id="01d2aac5d20787a1e873f2bdc79b514a">
         <source>Search this word instead.</source>
         <target>Search this word instead.</target>
-        <note>Line: 372</note>
+        <note>Line: 437</note>
+      </trans-unit>
+      <trans-unit id="b080303b551112c7b9dcdf6a21051f42">
+        <source>By default, the fuzzy search is enabled. It means spelling errors are allowed, e.g. you can search for "bird" with words like "burd", "bard" or "beerd".</source>
+        <target>By default, the fuzzy search is enabled. It means spelling errors are allowed, e.g. you can search for "bird" with words like "burd", "bard" or "beerd".</target>
+        <note>Line: 196</note>
+      </trans-unit>
+      <trans-unit id="2324c421f8c5376051c024f15232cd80">
+        <source>Enable approximate string matching.</source>
+        <target>Enable approximate string matching.</target>
+        <note>Line: 207</note>
+      </trans-unit>
+      <trans-unit id="a4b432b49016cf0de70c747fde4f815b">
+        <source>Note that this option is resource-consuming: the more you search, the longer it takes.</source>
+        <target>Note that this option is resource-consuming: the more you search, the longer it takes.</target>
+        <note>Line: 220</note>
+      </trans-unit>
+      <trans-unit id="39e61e5c1261f090e3c56f494a315f07">
+        <source>Disabling this option will require exact spelling for the search to match results.</source>
+        <target>Disabling this option will require exact spelling for the search to match results.</target>
+        <note>Line: 201</note>
+      </trans-unit>
+      <trans-unit id="6392d16e9ae94967fe13716b69e1d0b2">
+        <source>Only words fewer or equal to this maximum length will be searched.</source>
+        <target>Only words fewer or equal to this maximum length will be searched.</target>
+        <note>Line: 235</note>
+      </trans-unit>
+      <trans-unit id="2b610a936a358875e6f5a01564a3a0e6">
+        <source>This parameter will only be used if the fuzzy search is activated: the lower the value, the more tolerant your search will be.</source>
+        <target>This parameter will only be used if the fuzzy search is activated: the lower the value, the more tolerant your search will be.</target>
+        <note>Line: 240</note>
       </trans-unit>
       <trans-unit id="88851f53412ccb796508fd5f48e7a44f">
         <source><![CDATA[Forbidden characters: <>;=#{}]]></source>
         <target><![CDATA[Forbidden characters: <>;=#{}]]></target>
-        <note>Line: 364</note>
+        <note>Line: 429</note>
       </trans-unit>
     </body>
   </file>
@@ -404,6 +434,79 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/GeneralType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="406fff3ade73ad2eb4c4fefa8a1c2702">
+        <source>Display an overview of the addresses, shipping method and cart just before the order button (required in some European countries).</source>
+        <target>Display an overview of the addresses, shipping method and cart just before the order button (required in some European countries).</target>
+        <note>Line: 79</note>
+      </trans-unit>
+      <trans-unit id="e7c9a42ec01114dcd98e47bb1cb1ace6">
+        <source>Allow guest visitors to place an order without registering.</source>
+        <target>Allow guest visitors to place an order without registering.</target>
+        <note>Line: 84</note>
+      </trans-unit>
+      <trans-unit id="8690429442758955469bd5eb14c3db72">
+        <source>Disable the option to allow customers to reorder in one click from the order history page (required in some European countries).</source>
+        <target>Disable the option to allow customers to reorder in one click from the order history page (required in some European countries).</target>
+        <note>Line: 89</note>
+      </trans-unit>
+      <trans-unit id="96b2f955774aee5f11e61646b7d5ae43">
+        <source>Set to 0 to disable this feature.</source>
+        <target>Set to 0 to disable this feature.</target>
+        <note>Line: 94</note>
+      </trans-unit>
+      <trans-unit id="5ed533875d7388ffdbb60818e9596bdc">
+        <source>Automatically updates the shipping costs when you edit an order.</source>
+        <target>Automatically updates the shipping costs when you edit an order.</target>
+        <note>Line: 101</note>
+      </trans-unit>
+      <trans-unit id="fff92cdf417b8a468af180474057a575">
+        <source>Require customers to accept or decline terms of service before processing an order.</source>
+        <target>Require customers to accept or decline terms of service before processing an order.</target>
+        <note>Line: 121</note>
+      </trans-unit>
+      <trans-unit id="38cb366ab3534fefcbc7d051a3b122fd">
+        <source>Choose the page which contains your store's terms and conditions of use.</source>
+        <target>Choose the page which contains your store's terms and conditions of use.</target>
+        <note>Line: 126</note>
+      </trans-unit>
+      <trans-unit id="df2a562b17ec12920cee57e20b02ab67">
+        <source>Allow the customer to ship orders to multiple addresses. This option will convert the customer's cart into one or more orders.</source>
+        <target>Allow the customer to ship orders to multiple addresses. This option will convert the customer's cart into one or more orders.</target>
+        <note>Line: 108</note>
+      </trans-unit>
+      <trans-unit id="4acdb94f4cbc425ad20d457ffa1d81c1">
+        <source>It allows you to delay shipping if your customers request it.</source>
+        <target>It allows you to delay shipping if your customers request it.</target>
+        <note>Line: 116</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/GiftOptionsType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8be74244c8fe462cb6d967a5ebdc57cb">
+        <source>Suggest gift-wrapping to customers.</source>
+        <target>Suggest gift-wrapping to customers.</target>
+        <note>Line: 80</note>
+      </trans-unit>
+      <trans-unit id="f2e28db133063334eb23fad936947493">
+        <source>Set a price for gift wrapping.</source>
+        <target>Set a price for gift wrapping.</target>
+        <note>Line: 85</note>
+      </trans-unit>
+      <trans-unit id="3993942430a9f4e82e50b2c39048d6b6">
+        <source>Set a tax for gift wrapping.</source>
+        <target>Set a tax for gift wrapping.</target>
+        <note>Line: 94</note>
+      </trans-unit>
+      <trans-unit id="f8aacaf7661fefb62d929d691b6bcfbe">
+        <source>Suggest recycled packaging to customer.</source>
+        <target>Suggest recycled packaging to customer.</target>
+        <note>Line: 103</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="2593c7ce3ff937293feb1e61c152e551">
@@ -421,8 +524,8 @@
         <note>Line: 38</note>
       </trans-unit>
       <trans-unit id="751e29d82b27256878d1a38f2be4e118">
-        <source>Send an email with summary of the account information (email, password) after registration.</source>
-        <target>Send an email with summary of the account information (email, password) after registration.</target>
+        <source>Send an email with summary of the account information after registration.</source>
+        <target>Send an email with summary of the account information after registration.</target>
         <note>Line: 45</note>
       </trans-unit>
       <trans-unit id="59a84d54ad58aa4bea8aeacd11e47ab2">
@@ -574,74 +677,10 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/OrderPreferences/Blocks/order_preferences_general.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="406fff3ade73ad2eb4c4fefa8a1c2702">
-        <source>Display an overview of the addresses, shipping method and cart just before the order button (required in some European countries).</source>
-        <target>Display an overview of the addresses, shipping method and cart just before the order button (required in some European countries).</target>
-        <note>Line: 38</note>
-      </trans-unit>
-      <trans-unit id="e7c9a42ec01114dcd98e47bb1cb1ace6">
-        <source>Allow guest visitors to place an order without registering.</source>
-        <target>Allow guest visitors to place an order without registering.</target>
-        <note>Line: 45</note>
-      </trans-unit>
-      <trans-unit id="8690429442758955469bd5eb14c3db72">
-        <source>Disable the option to allow customers to reorder in one click from the order history page (required in some European countries).</source>
-        <target>Disable the option to allow customers to reorder in one click from the order history page (required in some European countries).</target>
-        <note>Line: 52</note>
-      </trans-unit>
-      <trans-unit id="96b2f955774aee5f11e61646b7d5ae43">
-        <source>Set to 0 to disable this feature.</source>
-        <target>Set to 0 to disable this feature.</target>
-        <note>Line: 59</note>
-      </trans-unit>
-      <trans-unit id="5ed533875d7388ffdbb60818e9596bdc">
-        <source>Automatically updates the shipping costs when you edit an order.</source>
-        <target>Automatically updates the shipping costs when you edit an order.</target>
-        <note>Line: 66</note>
-      </trans-unit>
-      <trans-unit id="df2a562b17ec12920cee57e20b02ab67">
-        <source>Allow the customer to ship orders to multiple addresses. This option will convert the customer's cart into one or more orders.</source>
-        <target>Allow the customer to ship orders to multiple addresses. This option will convert the customer's cart into one or more orders.</target>
-        <note>Line: 74</note>
-      </trans-unit>
       <trans-unit id="86d8ec764d429d4ebe6e39de9ff8c4a4">
         <source>Allows you to delay shipping at your customers' request.</source>
         <target>Allows you to delay shipping at your customers' request.</target>
         <note>Line: 82</note>
-      </trans-unit>
-      <trans-unit id="fff92cdf417b8a468af180474057a575">
-        <source>Require customers to accept or decline terms of service before processing an order.</source>
-        <target>Require customers to accept or decline terms of service before processing an order.</target>
-        <note>Line: 89</note>
-      </trans-unit>
-      <trans-unit id="38cb366ab3534fefcbc7d051a3b122fd">
-        <source>Choose the page which contains your store's terms and conditions of use.</source>
-        <target>Choose the page which contains your store's terms and conditions of use.</target>
-        <note>Line: 96</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/OrderPreferences/Blocks/order_preferences_gift_options.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="8be74244c8fe462cb6d967a5ebdc57cb">
-        <source>Suggest gift-wrapping to customers.</source>
-        <target>Suggest gift-wrapping to customers.</target>
-        <note>Line: 38</note>
-      </trans-unit>
-      <trans-unit id="f2e28db133063334eb23fad936947493">
-        <source>Set a price for gift wrapping.</source>
-        <target>Set a price for gift wrapping.</target>
-        <note>Line: 45</note>
-      </trans-unit>
-      <trans-unit id="3993942430a9f4e82e50b2c39048d6b6">
-        <source>Set a tax for gift wrapping.</source>
-        <target>Set a tax for gift wrapping.</target>
-        <note>Line: 54</note>
-      </trans-unit>
-      <trans-unit id="f8aacaf7661fefb62d929d691b6bcfbe">
-        <source>Suggest recycled packaging to customer.</source>
-        <target>Suggest recycled packaging to customer.</target>
-        <note>Line: 63</note>
       </trans-unit>
     </body>
   </file>
@@ -690,6 +729,11 @@
         <source>Only letters and hyphens are allowed.</source>
         <target>Only letters and hyphens are allowed.</target>
         <note>Line: 81</note>
+      </trans-unit>
+      <trans-unit id="0210e7a00cf2cd3cca0e4d7ed3bdf86f">
+        <source>To add tags, click in the field, write something, and then press the "Enter" key.</source>
+        <target>To add tags, click in the field, write something, and then press the "Enter" key.</target>
+        <note>Line: 70</note>
       </trans-unit>
     </body>
   </file>
@@ -817,14 +861,15 @@
         <target>The multistore feature allows you to manage several e-shops with one Back Office. If this feature is enabled, a "Multistore" page will be available in the "Advanced Parameters" menu.</target>
         <note>Line: 150</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/Cms/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="0210e7a00cf2cd3cca0e4d7ed3bdf86f">
-        <source>To add tags, click in the field, write something, and then press the "Enter" key.</source>
-        <target>To add tags, click in the field, write something, and then press the "Enter" key.</target>
-        <note>Line: 76</note>
+      <trans-unit id="7c6efc73556c295515e6f3c2129eee32">
+        <source>Enable suppliers page on your front office even when its module is disabled.</source>
+        <target>Enable suppliers page on your front office even when its module is disabled.</target>
+        <note>Line: 126</note>
+      </trans-unit>
+      <trans-unit id="8e17743ca02e7c24310531d34d0c89ff">
+        <source>Enable brands page on your front office even when its module is disabled.</source>
+        <target>Enable brands page on your front office even when its module is disabled.</target>
+        <note>Line: 134</note>
       </trans-unit>
     </body>
   </file>

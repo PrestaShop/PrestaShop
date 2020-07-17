@@ -22,7 +22,7 @@ admin_international_translations_show_settings:
         _legacy_controller: AdminTranslations
         _legacy_link: AdminTranslations:settings
 
-_admin_international_translations_modify:
+admin_international_translations_modify:
     path: /modify
     methods: [GET]
     defaults:

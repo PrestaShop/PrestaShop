@@ -22,6 +22,8 @@ services:
 
   prestashop.adapter.cart.command_handler.update_cart_addresses_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\UpdateCartAddressesHandler'
+    arguments:
+      - '@prestashop.adapter.command_handler.update_cart_carrier_handler'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand'
@@ -41,20 +43,17 @@ services:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand'
 
-  prestashop.adapter.command_handler.update_cart_delivery_option_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\UpdateCartDeliveryOptionHandler'
+  prestashop.adapter.command_handler.update_cart_carrier_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\UpdateCartCarrierHandler'
     tags:
       - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartDeliveryOptionCommand'
-
-  prestashop.adapter.query_handler.get_cart_summary_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\Cart\QueryHandler\GetCartSummaryHandler'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartSummary'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand'
 
   prestashop.adapter.command_handler.add_cart_rule_to_cart_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\AddCartRuleToCartHandler'
+    arguments:
+      - '@translator'
+      - '@prestashop.adapter.context_state_manager'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand'
@@ -87,6 +86,40 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\QueryHandler\GetCartForViewingHandler'
     arguments:
       - '@prestashop.adapter.image_manager'
+      - "@prestashop.core.localization.locale.context_locale"
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing'
+
+  prestashop.adapter.cart.query_handler.get_last_empty_customer_cart_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Cart\QueryHandler\GetLastEmptyCustomerCartHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetLastEmptyCustomerCart'
+
+  prestashop.adapter.query_handler.get_cart_information_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Cart\QueryHandler\GetCartInformationHandler'
+    arguments:
+      - "@prestashop.core.localization.locale.context_locale"
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      - '@=service("prestashop.adapter.legacy.context").getContext().link'
+      - '@prestashop.adapter.context_state_manager'
+      - '@translator'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation'
+
+  prestashop.adapter.command_handler.add_customization_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\AddCustomizationHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationCommand'
+
+  prestashop.adapter.command_handler.add_product_to_cart_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\AddProductToCartHandler'
+    arguments:
+      - '@prestashop.adapter.command_handler.add_customization_handler'
+      - '@prestashop.adapter.command_handler.update_product_quantity_in_cart_handler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddProductToCartCommand'

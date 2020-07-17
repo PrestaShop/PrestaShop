@@ -1,10 +1,11 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,23 +16,24 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Component which allows to copy regular text to url friendly text
  *
  * Usage example in template:
  *
- * <input name="source-input" class="js-link-rewrite-copier-source"> // The original text will be taken from this element
- * <input name="destination-input" class="js-link-rewrite-copier-destination"> // Modified text will be added to this input
+ * <input name="source-input"
+ *        class="js-link-rewrite-copier-source"> // The original text will be taken from this element
+ * <input name="destination-input"
+ *        class="js-link-rewrite-copier-destination"> // Modified text will be added to this input
  *
  * in javascript:
  *
@@ -41,7 +43,8 @@ const $ = window.$;
  * });
  *
  * If the source-input has value "test name" the link rewrite value will be "test-name".
- * If the source-input has value "test name #$" link rewrite will be "test-name-" since #$ are un allowed characters in url.
+ * If the source-input has value "test name #$" link rewrite will be "test-name-" since #$
+ * are un allowed characters in url.
  *
  * You can also pass additional options to change the event name, or encoding format:
  *
@@ -54,9 +57,15 @@ const $ = window.$;
  * });
  *
  */
-const textToLinkRewriteCopier = ({sourceElementSelector, destinationElementSelector, options = {eventName: 'input'}}) => {
+const textToLinkRewriteCopier = (
+  {
+    sourceElementSelector,
+    destinationElementSelector,
+    options = {eventName: 'input'},
+  },
+) => {
   $(document).on(options.eventName, `${sourceElementSelector}`, (event) => {
-    $(destinationElementSelector).val(str2url($(event.currentTarget).val(), 'UTF-8'));
+    $(destinationElementSelector).val(window.str2url($(event.currentTarget).val(), 'UTF-8'));
   });
 };
 
