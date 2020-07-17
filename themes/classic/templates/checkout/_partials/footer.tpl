@@ -36,6 +36,9 @@
 </div>
 
 <div class="text-sm-center">
-  <span class="js-terms">{$tos_cms nofilter}</span> - {l s='%copyright% %year% - Ecommerce software by %prestashop%' sprintf=['%prestashop%' => 'PrestaShop™', '%year%' => 'Y'|date, '%copyright%' => '©'] d='Shop.Theme.Global'}
+  {if $tos_cms != false}
+    <span class="js-terms">{$tos_cms nofilter}</span> - 
+  {/if}
+  {l s='%copyright% %year% - Ecommerce software by %prestashop%' sprintf=['%prestashop%' => 'PrestaShop™', '%year%' => 'Y'|date, '%copyright%' => '©'] d='Shop.Theme.Global'}
 </div>
 {/block}
