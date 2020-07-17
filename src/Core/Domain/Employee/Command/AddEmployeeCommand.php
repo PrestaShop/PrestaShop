@@ -108,7 +108,7 @@ class AddEmployeeCommand
         $active,
         $profileId,
         array $shopAssociation,
-        bool $hasEnabledGravatar
+        bool $hasEnabledGravatar = false
     ) {
         $this->firstName = new FirstName($firstName);
         $this->lastName = new LastName($lastName);

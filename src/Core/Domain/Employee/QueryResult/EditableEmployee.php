@@ -115,7 +115,7 @@ class EditableEmployee
         $active,
         $profileId,
         array $shopAssociation,
-        bool $hasEnabledGravatar
+        bool $hasEnabledGravatar = false
     ) {
         $this->employeeId = $employeeId;
         $this->firstName = $firstName;
