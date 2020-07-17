@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command;
 
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
@@ -62,7 +63,7 @@ class AddProductSupplierCommand
     private $reference;
 
     /**
-     * @var string|null
+     * @var Number|null
      */
     private $priceTaxExcluded;
 
@@ -95,7 +96,7 @@ class AddProductSupplierCommand
         $this->supplierId = new SupplierId($supplierId);
         $this->currencyId = new CurrencyId($currencyId);
         $this->reference = $reference;
-        $this->priceTaxExcluded = $priceTaxExcluded;
+        $this->priceTaxExcluded = $priceTaxExcluded ? new Number($priceTaxExcluded) : null;
         $this->combinationId = $combinationId ? new CombinationId($combinationId) : null;
     }
 
@@ -132,9 +133,9 @@ class AddProductSupplierCommand
     }
 
     /**
-     * @return string|null
+     * @return Number|null
      */
-    public function getPriceTaxExcluded(): ?string
+    public function getPriceTaxExcluded(): ?Number
     {
         return $this->priceTaxExcluded;
     }

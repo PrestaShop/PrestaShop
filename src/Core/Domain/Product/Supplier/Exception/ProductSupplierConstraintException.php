@@ -28,15 +28,23 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-
 /**
  * Thrown when product supplier constraints are violated
  */
-class ProductSupplierConstraintException extends ProductException
+class ProductSupplierConstraintException extends ProductSupplierException
 {
     /**
      * When product supplier id is invalid
      */
     const INVALID_ID = 10;
+
+    /**
+     * When product supplier reference is invalid
+     */
+    const INVALID_REFERENCE = 20;
+
+    /**
+     * When product supplier price is invalid
+     */
+    const INVALID_PRICE = 30;
 }
