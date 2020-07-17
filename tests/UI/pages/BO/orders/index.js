@@ -11,6 +11,10 @@ class Order extends BOBasePage {
     this.gridPanel = '#order_grid_panel';
     this.gridTable = '#order_grid_table';
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
+    // Sort Selectors
+    this.tableHead = `${this.gridTable} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
     // Filters
     this.filterColumn = filterBy => `${this.gridTable} #order_${filterBy}`;
     this.filterSearchButton = `${this.gridTable} button[name='order[actions][search]']`;
@@ -165,6 +169,22 @@ class Order extends BOBasePage {
   }
 
   /**
+   * Get column content in all rows
+   * @param page
+   * @param column
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(page, column) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable = [];
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumn(page, column, i);
+      await allRowsContentTable.push(rowContent);
+    }
+    return allRowsContentTable;
+  }
+
+  /**
    * Get order from table in csv format
    * @param page
    * @param row
@@ -264,6 +284,28 @@ class Order extends BOBasePage {
     await this.selectByVisibleText(page, this.updateOrdersStatusModalSelect, status);
     await this.clickAndWaitForNavigation(page, this.updateOrdersStatusModalButton);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
+  }
+
+
+  /* Sort functions */
+  /**
+   * Sort table by clicking on column name
+   * @param page
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page, sortBy, sortDirection) {
+    const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+
+    let i = 0;
+    while (await this.elementNotVisible(page, sortColumnDiv, 1000) && i < 2) {
+      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      i += 1;
+    }
+
+    await this.waitForVisibleSelector(page, sortColumnDiv);
   }
 }
 
