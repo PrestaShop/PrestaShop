@@ -30,8 +30,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\OrderMessageConstraint;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
-use PrestaShopBundle\Translation\TranslatorAwareTrait;
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Length;
@@ -41,10 +40,8 @@ use Symfony\Component\Validator\Constraints\Length;
  *
  * Builds add/edit form for order message
  */
-class OrderMessageType extends AbstractType
+class OrderMessageType extends TranslatorAwareType
 {
-    use TranslatorAwareTrait;
-
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -53,7 +50,7 @@ class OrderMessageType extends AbstractType
     {
         $builder
             ->add('name', TranslatableType::class, [
-                'label' => $this->trans('Name', [], 'Admin.Global'),
+                'label' => $this->trans('Name', 'Admin.Global'),
                 'options' => [
                     'constraints' => [
                         new TypedRegex([
@@ -69,7 +66,7 @@ class OrderMessageType extends AbstractType
                 ],
             ])
             ->add('message', TranslatableType::class, [
-                'label' => $this->trans('Message', [], 'Admin.Global'),
+                'label' => $this->trans('Message', 'Admin.Global'),
                 'type' => TextareaType::class,
                 'options' => [
                     'constraints' => [
