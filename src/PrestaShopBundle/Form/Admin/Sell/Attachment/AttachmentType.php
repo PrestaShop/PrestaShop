@@ -31,8 +31,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Configuration\AttachmentConstraint;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
-use PrestaShopBundle\Translation\TranslatorAwareTrait;
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -41,10 +40,8 @@ use Symfony\Component\Validator\Constraints\Length;
 /**
  * Attachment form type definition
  */
-class AttachmentType extends AbstractType
+class AttachmentType extends TranslatorAwareType
 {
-    use TranslatorAwareTrait;
-
     /**
      * {@inheritdoc}
      */
@@ -54,7 +51,7 @@ class AttachmentType extends AbstractType
             ->add('name', TranslatableType::class, [
                 'type' => TextType::class,
                 'required' => true,
-                'label' => $this->trans('File name', [], 'Admin.Global'),
+                'label' => $this->trans('File name', 'Admin.Global'),
                 'options' => [
                     'constraints' => [
                         new TypedRegex(
@@ -67,8 +64,8 @@ class AttachmentType extends AbstractType
                                 'max' => AttachmentConstraint::MAX_NAME_LENGTH,
                                 'maxMessage' => $this->trans(
                                     'This field cannot be longer than %limit% characters',
-                                    ['%limit%' => AttachmentConstraint::MAX_NAME_LENGTH],
-                                    'Admin.Notifications.Error'
+                                    'Admin.Notifications.Error',
+                                    ['%limit%' => AttachmentConstraint::MAX_NAME_LENGTH]
                                 ),
                             ]
                         ),
@@ -81,7 +78,7 @@ class AttachmentType extends AbstractType
             ->add('file_description', TranslatableType::class, [
                 'type' => TextType::class,
                 'required' => false,
-                'label' => $this->trans('Description', [], 'Admin.Global'),
+                'label' => $this->trans('Description', 'Admin.Global'),
                 'options' => [
                     'constraints' => [
                         new CleanHtml(),
@@ -90,7 +87,7 @@ class AttachmentType extends AbstractType
             ])
             ->add('file', FileType::class, [
                 'required' => true,
-                'label' => $this->trans('File', [], 'Admin.Global'),
+                'label' => $this->trans('File', 'Admin.Global'),
             ])
         ;
     }
