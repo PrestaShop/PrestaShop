@@ -5539,6 +5539,12 @@ class ProductCore extends ObjectModel
             }
         }
 
+        Hook::exec('actionGetProductPropertiesAfter', [
+            'id_lang' => $id_lang,
+            'product' => &$row,
+            'context' => $context,
+        ]);
+
         $combination = new Combination($id_product_attribute);
 
         if (0 != $combination->unit_price_impact && 0 != $row['unit_price_ratio']) {
@@ -5552,7 +5558,7 @@ class ProductCore extends ObjectModel
             $row['unit_price'] = 0.0;
         }
 
-         Hook::exec('actionGetProductPropertiesAfter', [
+        Hook::exec('actionGetProductPropertiesAfterUnitPrice', [
             'id_lang' => $id_lang,
             'product' => &$row,
             'context' => $context,
