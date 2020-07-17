@@ -59,6 +59,10 @@
           </div>
         </div>
 
+        {{ ps.form_group_row(employeeForm.has_enabled_gravatar, {}, {
+          'label': 'Use gravatar'|trans({}, 'Admin.Global')
+        }) }}
+
         {{ ps.form_group_row(employeeForm.email, {}, {
           'label': 'Email address'|trans({}, 'Admin.Global')
         }) }}
