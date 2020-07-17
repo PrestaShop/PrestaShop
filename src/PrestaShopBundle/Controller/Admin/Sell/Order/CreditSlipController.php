@@ -167,9 +167,7 @@ class CreditSlipController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_credit_slips_index', [
-            $pdfByDateForm->getName() => $pdfByDateForm->getData(),
-        ]);
+        return $this->redirectToRoute('admin_credit_slips_index');
     }
 
     /**
