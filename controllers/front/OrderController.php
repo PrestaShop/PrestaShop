@@ -362,12 +362,16 @@ class OrderControllerCore extends FrontController
     /**
      * Return default TOS link for checkout footer
      *
-     * @return string
+     * @return string|bool
      */
     protected function getDefaultTermsAndConditions()
     {
         $cms = new CMS((int) Configuration::get('PS_CONDITIONS_CMS_ID'), $this->context->language->id);
         $link = $this->context->link->getCMSLink($cms, $cms->link_rewrite, (bool) Configuration::get('PS_SSL_ENABLED'));
+
+        if(!$cms->id) {
+            return false;
+        }
 
         $termsAndConditions = new TermsAndConditions();
         $termsAndConditions
