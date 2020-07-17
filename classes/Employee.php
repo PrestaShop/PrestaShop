@@ -102,6 +102,11 @@ class EmployeeCore extends ObjectModel
     public $reset_password_validity;
 
     /**
+     * @var bool
+     */
+    public $has_enabled_gravatar = false;
+
+    /**
      * @see ObjectModel::$definition
      */
     public static $definition = [
@@ -133,6 +138,7 @@ class EmployeeCore extends ObjectModel
             'id_last_customer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
             'reset_password_token' => ['type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 40, 'copy_post' => false],
             'reset_password_validity' => ['type' => self::TYPE_DATE, 'validate' => 'isDateOrNull', 'copy_post' => false],
+            'has_enabled_gravatar' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
         ],
     ];
 
@@ -606,6 +612,11 @@ class EmployeeCore extends ObjectModel
 
         // Default Image
         $imageUrl = $imageUrl ?? $default;
+
+        // Gravatar
+        if ($this->has_enabled_gravatar) {
+            $imageUrl = 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($this->email))) . '?d=' . urlencode($default);
+        }
 
         // Hooks
         Hook::exec(
