@@ -65,4 +65,9 @@ class CannotUpdateProductException extends ProductException
      * When product shipping options update fails
      */
     const FAILED_UPDATE_SHIPPING_OPTIONS = 70;
+
+    /**
+     * When product default supplier update fails
+     */
+    const FAILED_UPDATE_DEFAULT_SUPPLIER = 80;
 }

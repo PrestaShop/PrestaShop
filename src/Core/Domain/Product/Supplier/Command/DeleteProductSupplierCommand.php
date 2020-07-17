@@ -26,13 +26,33 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 
 /**
- * Base exception for Product Supplier subdomain
+ * Deletes product supplier
  */
-class ProductSupplierException extends ProductException
+class DeleteProductSupplierCommand
 {
+    /**
+     * @var ProductSupplierId
+     */
+    private $productSupplierId;
+
+    /**
+     * @param int $productSupplierId
+     */
+    public function __construct(int $productSupplierId)
+    {
+        $this->productSupplierId = new ProductSupplierId($productSupplierId);
+    }
+
+    /**
+     * @return ProductSupplierId
+     */
+    public function getProductSupplierId(): ProductSupplierId
+    {
+        return $this->productSupplierId;
+    }
 }
