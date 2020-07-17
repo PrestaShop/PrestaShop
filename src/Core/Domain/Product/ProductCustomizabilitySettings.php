@@ -24,40 +24,34 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\Product;
 
 /**
- * Is thrown when updating a product failed
+ * Holds value which represents how customizable the product is
  */
-class CannotUpdateProductException extends ProductException
+class ProductCustomizabilitySettings
 {
     /**
-     * When basic information update fails
+     * The product does not have any customiztion fields, so it is not customizable at all
      */
-    const FAILED_UPDATE_BASIC_INFO = 10;
+    const NOT_CUSTOMIZABLE = 0;
 
     /**
-     * When updating product fields associated with price fails
+     * The product has at least one customization field, but none of them are required
      */
-    const FAILED_UPDATE_PRICES = 20;
+    const ALLOWS_CUSTOMIZATION = 1;
 
     /**
-     * When product options update fails
+     * The product has at least one customization field which is required
      */
-    const FAILED_UPDATE_OPTIONS = 30;
+    const REQUIRES_CUSTOMIZATION = 2;
 
     /**
-     * When product tags update fails
+     * This class shouldn't be instantiated as its purpose is to hold some setting values
      */
-    const FAILED_UPDATE_TAGS = 40;
-
-    /**
-     * When failed to assign product categories
-     */
-    const FAILED_UPDATE_CATEGORIES = 50;
-
-    /**
-     * When product properties associated with customization fields update fails
-     */
-    const FAILED_UPDATE_CUSTOMIZATION_FIELDS = 60;
+    private function __construct()
+    {
+    }
 }
