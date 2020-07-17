@@ -28,20 +28,100 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use Currency;
+use PrestaShop\PrestaShop\Adapter\Product\AbstractProductSupplierHandler;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\AddProductSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\AddProductSupplierHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
+use PrestaShopException;
+use Product;
+use ProductSupplier;
+use Supplier;
 
 /**
  * Handles @var AddProductSupplierCommand using legacy object model
  */
-final class AddProductSupplierHandler implements AddProductSupplierHandlerInterface
+final class AddProductSupplierHandler extends AbstractProductSupplierHandler implements AddProductSupplierHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
     public function handle(AddProductSupplierCommand $command): ProductSupplierId
     {
-        // TODO: Implement handle() method.
+        $productSupplier = new ProductSupplier();
+
+        try {
+            $this->fillEntityWithCommandData($productSupplier, $command);
+            $this->validateProductSupplierFields($productSupplier);
+
+            if (!$productSupplier->add()) {
+                throw new ProductSupplierException('Failed to add product supplier');
+            }
+        } catch (PrestaShopException $e) {
+            throw new ProductSupplierException('Error occurred when adding product supplier');
+        }
+
+        return new ProductSupplierId((int) $productSupplier->id);
+    }
+
+    /**
+     * @param ProductSupplier $productSupplier
+     * @param AddProductSupplierCommand $command
+     *
+     * @throws CurrencyNotFoundException
+     * @throws ProductNotFoundException
+     * @throws SupplierNotFoundException
+     */
+    private function fillEntityWithCommandData(ProductSupplier $productSupplier, AddProductSupplierCommand $command)
+    {
+        $productIdValue = $command->getProductId()->getValue();
+        $supplierIdValue = $command->getSupplierId()->getValue();
+        $currencyIdValue = $command->getCurrencyId()->getValue();
+
+        $this->assertRelatedEntitiesExist($productIdValue, $supplierIdValue, $currencyIdValue);
+
+        $productSupplier->id_product = $productIdValue;
+        $productSupplier->id_supplier = $supplierIdValue;
+        $productSupplier->id_currency = $currencyIdValue;
+
+        if (null !== $command->getReference()) {
+            $productSupplier->product_supplier_reference = $command->getReference();
+        }
+
+        if (null !== $command->getPriceTaxExcluded()) {
+            $productSupplier->product_supplier_price_te = (string) $command->getPriceTaxExcluded();
+        }
+
+        if (null !== $command->getCombinationId()) {
+            $productSupplier->id_product_attribute = $command->getCombinationId()->getValue();
+        }
+    }
+
+    /**
+     * @param int $productId
+     * @param int $supplierId
+     * @param int $currencyId
+     *
+     * @throws CurrencyNotFoundException
+     * @throws ProductNotFoundException
+     * @throws SupplierNotFoundException
+     */
+    private function assertRelatedEntitiesExist(int $productId, int $supplierId, int $currencyId)
+    {
+        if (!Product::existsInDatabase($productId, 'product')) {
+            throw new ProductNotFoundException(sprintf('Product #%d does not exist', $productId));
+        }
+
+        if (!Supplier::supplierExists($supplierId)) {
+            throw new SupplierNotFoundException(sprintf('Supplier #%d does not exist', $supplierId));
+        }
+
+        if (!Currency::existsInDatabase($currencyId, 'currency')) {
+            throw new CurrencyNotFoundException(sprintf('Currency #%d does not exist', $currencyId));
+        }
     }
 }
