@@ -1986,7 +1986,7 @@ class FrontControllerCore extends Controller
         foreach ($languages as $lang) {
             $langUrl = $this->context->link->getLanguageLink($lang['id_lang']);
 
-            $params = array();
+            $params = [];
             $url_details = parse_url($langUrl);
 
             if (!empty($url_details['query'])) {
@@ -1996,7 +1996,7 @@ class FrontControllerCore extends Controller
                 }
             }
 
-            $excluded_key = array('isolang', 'id_lang', 'controller', 'fc', 'id_product', 'id_category', 'id_manufacturer', 'id_supplier', 'id_cms');
+            $excluded_key = ['isolang', 'id_lang', 'controller', 'fc', 'id_product', 'id_category', 'id_manufacturer', 'id_supplier', 'id_cms'];
             $excluded_key = array_merge($excluded_key, $this->redirectionExtraExcludedKeys);
             foreach ($_GET as $key => $value) {
                 if (!in_array($key, $excluded_key) && Validate::isUrl($key) && Validate::isUrl($value)) {
