@@ -35,6 +35,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Valid;
 
 /**
+ * Backwards compatibility break introduced in 1.7.8.0 due to extension of TranslationAwareType instead of using translator as dependency.
+ *
  * Defines form for generating Credit slip PDF
  */
 final class GeneratePdfByDateType extends TranslatorAwareType

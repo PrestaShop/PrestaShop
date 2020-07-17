@@ -32,6 +32,9 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
+ *
+ * Backwards compatibility break introduced in 1.7.8.0 due to extension of TranslationAwareType instead of using translator as dependency.
+ *
  * Defines credit slips options form
  */
 final class CreditSlipOptionsType extends TranslatorAwareType
