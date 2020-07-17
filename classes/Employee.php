@@ -620,7 +620,7 @@ class EmployeeCore extends ObjectModel
 
         // Hooks
         Hook::exec(
-            'actionGetEmployeeImage',
+            'actionOverrideEmployeeImage',
             [
                 'employee' => $this,
                 'imageUrl' => &$imageUrl,
