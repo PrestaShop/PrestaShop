@@ -90,7 +90,7 @@ class WebserviceKeyCore extends ObjectModel
                 Context::getContext()->getTranslator()->trans(
                     'Webservice key %s deleted',
                     [
-                        $this->key
+                        $this->key,
                     ],
                     'Admin.Advparameters.Feature'
                 ),
