@@ -1984,7 +1984,34 @@ class FrontControllerCore extends Controller
         }
 
         foreach ($languages as $lang) {
-            $alternativeLangs[$lang['language_code']] = $this->context->link->getLanguageLink($lang['id_lang']);
+            $langUrl = $this->context->link->getLanguageLink($lang['id_lang']);
+
+            $params = array();
+            $url_details = parse_url($langUrl);
+
+            if (!empty($url_details['query'])) {
+                parse_str($url_details['query'], $query);
+                foreach ($query as $key => $value) {
+                    $params[Tools::safeOutput($key)] = Tools::safeOutput($value);
+                }
+            }
+
+            $excluded_key = array('isolang', 'id_lang', 'controller', 'fc', 'id_product', 'id_category', 'id_manufacturer', 'id_supplier', 'id_cms');
+            $excluded_key = array_merge($excluded_key, $this->redirectionExtraExcludedKeys);
+            foreach ($_GET as $key => $value) {
+                if (!in_array($key, $excluded_key) && Validate::isUrl($key) && Validate::isUrl($value)) {
+                    $params[Tools::safeOutput($key)] = Tools::safeOutput($value);
+                }
+            }
+
+            $str_params = http_build_query($params, '', '&');
+            if (!empty($str_params)) {
+                $langUrl = preg_replace('/^([^?]*)?.*$/', '$1', $langUrl) . '?' . $str_params;
+            } else {
+                $langUrl = preg_replace('/^([^?]*)?.*$/', '$1', $langUrl);
+            }
+
+            $alternativeLangs[$lang['language_code']] = $langUrl;
         }
 
         return $alternativeLangs;
