@@ -2764,5 +2764,10 @@
       <title>Product Properties</title>
       <description>This hook is called after defining the properties of a product</description>
     </hook>
+    <hook id="actionGetEmployeeImage">
+      <name>actionGetEmployeeImage</name>
+      <title>Get Employee Image</title>
+      <description>This hook is used to get the employee image</description>
+    </hook>
   </entities>
 </entity_hook>
