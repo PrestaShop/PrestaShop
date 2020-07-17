@@ -369,7 +369,7 @@ class OrderControllerCore extends FrontController
         $cms = new CMS((int) Configuration::get('PS_CONDITIONS_CMS_ID'), $this->context->language->id);
         $link = $this->context->link->getCMSLink($cms, $cms->link_rewrite, (bool) Configuration::get('PS_SSL_ENABLED'));
 
-        if (!$cms->id) {
+        if (!$cms->id || !Validate::isLoadedObject($cms)) {
             return false;
         }
 
