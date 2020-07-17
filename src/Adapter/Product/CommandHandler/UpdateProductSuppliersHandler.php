@@ -29,8 +29,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\AddProductSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\AddProductSupplierHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\UpdateProductSupplierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\UpdateProductSuppliersHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
  * Handles @var UpdateProductSuppliersCommand using legacy object model
@@ -38,10 +44,68 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\UpdateProd
 final class UpdateProductSuppliersHandler extends AbstractProductHandler implements UpdateProductSuppliersHandlerInterface
 {
     /**
+     * @var AddProductSupplierHandlerInterface
+     */
+    private $addProductSupplierHandler;
+
+    /**
+     * @var UpdateProductSupplierHandlerInterface
+     */
+    private $updateProductSupplierHandler;
+
+    /**
+     * @var DeleteProductSupplierHandler
+     */
+    private $deleteProductSupplierHandler;
+
+    public function __construct(
+        AddProductSupplierHandlerInterface $addProductSupplierHandler,
+        UpdateProductSupplierHandlerInterface $updateProductSupplierHandler,
+        DeleteProductSupplierHandler $deleteProductSupplierHandler
+    ) {
+        $this->addProductSupplierHandler = $addProductSupplierHandler;
+        $this->updateProductSupplierHandler = $updateProductSupplierHandler;
+        $this->deleteProductSupplierHandler = $deleteProductSupplierHandler;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(UpdateProductSuppliersCommand $command): void
     {
-        // TODO: Implement handle() method.
+        if (null !== $command->getProductSuppliers()) {
+            $this->updateProductSuppliers($command->getProductId(), $command->getProductSuppliers());
+        }
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ProductSupplier[] $productSuppliers
+     */
+    private function updateProductSuppliers(ProductId $productId, array $productSuppliers): void
+    {
+        foreach ($productSuppliers as $productSupplier) {
+            if ($productSupplier->getProductSupplierId()) {
+                $this->updateProductSupplier($productId, $productSupplier);
+            } else {
+                $this->addProductSupplier($productId, $productSupplier);
+            }
+        }
+    }
+
+    private function addProductSupplier(ProductId $productId, ProductSupplier $productSupplier): ProductSupplierId
+    {
+        $command = new AddProductSupplierCommand(
+            $productId,
+            $productSupplier->getSupplierId(),
+            $productSupplier->getCurrencyId(),
+            $productSupplier->getReference()
+        );
+        $this->addProductSupplierHandler->handle()
+    }
+
+    private function updateProductSupplier(ProductId $productId, ProductSupplier $productSupplier): void
+    {
+
     }
 }
