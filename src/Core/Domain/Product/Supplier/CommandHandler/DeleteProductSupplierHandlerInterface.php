@@ -24,15 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception;
-
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\DeleteProductSupplierCommand;
 
 /**
- * Base exception for Product Supplier subdomain
+ * Defines contract to handle @var DeleteProductSupplierCommand
  */
-class ProductSupplierException extends ProductException
+interface DeleteProductSupplierHandlerInterface
 {
+    /**
+     * @param DeleteProductSupplierCommand $command
+     */
+    public function handle(DeleteProductSupplierCommand $command): void;
 }

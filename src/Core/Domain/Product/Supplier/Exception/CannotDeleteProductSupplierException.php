@@ -28,11 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-
 /**
- * Base exception for Product Supplier subdomain
+ * Thrown when product supplier deletion fails
  */
-class ProductSupplierException extends ProductException
+class CannotDeleteProductSupplierException extends ProductSupplierException
 {
 }

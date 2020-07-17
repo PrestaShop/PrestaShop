@@ -182,6 +182,13 @@ services:
         - name: tactician.handler
           command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSupplierCommand
 
+    prestashop.adapter.product.supplier.command_handler.delete_product_supplier_handler:
+      class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DeleteProductSupplierHandler
+      tags:
+        - name: tactician.handler
+          command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\DeleteProductSupplierCommand
+
+
     prestashop.adapter.product.supplier.command_handler.update_product_suppliers_handler:
       class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductSuppliersHandler
       tags:
