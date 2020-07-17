@@ -117,7 +117,7 @@ final class AddProductSupplierHandler extends AbstractProductSupplierHandler imp
      * @throws ProductNotFoundException
      * @throws SupplierNotFoundException
      */
-    private function assertRelatedEntitiesExist(int $productId, int $supplierId, int $currencyId)
+    private function assertRelatedEntitiesExist(int $productId, int $supplierId, int $currencyId): void
     {
         if (!Product::existsInDatabase($productId, 'product')) {
             throw new ProductNotFoundException(sprintf('Product #%d does not exist', $productId));
