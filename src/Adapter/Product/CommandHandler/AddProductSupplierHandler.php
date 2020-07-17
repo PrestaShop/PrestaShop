@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 use Currency;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductSupplierHandler;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\AddProductSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\AddProductSupplierHandlerInterface;
@@ -90,14 +91,20 @@ final class AddProductSupplierHandler extends AbstractProductSupplierHandler imp
 
         if (null !== $command->getReference()) {
             $productSupplier->product_supplier_reference = $command->getReference();
+        } else {
+            $productSupplier->product_supplier_reference = '';
         }
 
         if (null !== $command->getPriceTaxExcluded()) {
             $productSupplier->product_supplier_price_te = (string) $command->getPriceTaxExcluded();
+        } else {
+            $productSupplier->product_supplier_price_te = 0;
         }
 
         if (null !== $command->getCombinationId()) {
             $productSupplier->id_product_attribute = $command->getCombinationId()->getValue();
+        } else {
+            $productSupplier->id_product_attribute = CombinationId::NO_COMBINATION;
         }
     }
 
