@@ -56,11 +56,11 @@
       </div>
       {% endif %}
 
-      {% block product_catalog_tools %}
+      <div class="align-items-start">
+        {% block product_catalog_tools %}
           {{ include('@Product/CatalogPage/Blocks/tools.html.twig', {'import_link': import_link }) }}
-      {% endblock %}
-        
-      <div class="row align-items-start">
+        {% endblock %}
+
         {% block product_catalog_filters %}
           {{ include('@Product/CatalogPage/Blocks/filters.html.twig', {
               'limit': limit,

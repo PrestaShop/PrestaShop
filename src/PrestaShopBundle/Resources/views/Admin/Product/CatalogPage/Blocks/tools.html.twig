@@ -22,33 +22,36 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-
-<h3 class="d-inline-block">{{ "Products"|trans({}, 'Admin.Global') }} ({{ product_count_filtered }})</h3>
-<div class="d-inline-block float-right">
-  <div class="dropdown">
-    <button class="btn btn-text dropdown-toggle tool-button"
+<div class="row">
+   <div class="col">
+      <h3 class="d-inline-block">{{ "Products"|trans({}, 'Admin.Global') }} ({{ product_count_filtered }})</h3>
+      <div class="d-inline-block float-right col-2 text-right">
+         <div class="dropdown">
+            <button class="btn btn-text dropdown-toggle tool-button"
             id="catalog-tools-button"
             data-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="false"
             title="{{ "Settings"|trans({}, 'Admin.Global') }}"
-    >
-      <span class="sr-only">{{ "Settings"|trans({}, 'Admin.Global') }}</span>
-    </button>
-    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="catalog-tools-button">
-      {{ renderhook('displayDashboardToolbarIcons', {}) }}
-      <a id="desc-product-export" class="dropdown-item" href="{{ path('admin_product_export_action') }}">
-        {{ "Export"|trans({}, 'Admin.Actions') }}
-      </a>
-      <a id="desc-product-import" class="dropdown-item" href="{{ import_link }}">
-        {{ "Import"|trans({}, 'Admin.Actions') }}
-      </a>
-      <a id="desc-product-show-sql" class="dropdown-item" href="javascript:void(0);" onclick="showLastSqlQuery();">
-        {{ "Show SQL query"|trans({}, 'Admin.Actions') }}
-      </a>
-      <a id="desc-product-sql-manager" class="dropdown-item" href="javascript:void(0);" onclick="sendLastSqlQuery(createSqlQueryName());">
-        {{ "Export to SQL Manager"|trans({}, 'Admin.Actions') }}
-      </a>
-    </div>
-  </div>
+            >
+            <span class="sr-only">{{ "Settings"|trans({}, 'Admin.Global') }}</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="catalog-tools-button">
+               {{ renderhook('displayDashboardToolbarIcons', {}) }}
+               <a id="desc-product-export" class="dropdown-item" href="{{ path('admin_product_export_action') }}">
+               {{ "Export"|trans({}, 'Admin.Actions') }}
+               </a>
+               <a id="desc-product-import" class="dropdown-item" href="{{ import_link }}">
+               {{ "Import"|trans({}, 'Admin.Actions') }}
+               </a>
+               <a id="desc-product-show-sql" class="dropdown-item" href="javascript:void(0);" onclick="showLastSqlQuery();">
+               {{ "Show SQL query"|trans({}, 'Admin.Actions') }}
+               </a>
+               <a id="desc-product-sql-manager" class="dropdown-item" href="javascript:void(0);" onclick="sendLastSqlQuery(createSqlQueryName());">
+               {{ "Export to SQL Manager"|trans({}, 'Admin.Actions') }}
+               </a>
+            </div>
+         </div>
+      </div>
+   </div>
 </div>
