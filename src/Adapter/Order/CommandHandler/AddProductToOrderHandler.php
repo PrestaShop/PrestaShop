@@ -140,25 +140,14 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             // Cart precision is more adapted
             $this->computingPrecision = $this->getPrecisionFromCart($cart);
 
-            // Restore any specific prices for the products in the order
-            $temporarySpecificPrices = $this->restoreOrderProductsSpecificPrices(
-                $order,
-                $cart
-            );
-
-            // Add specific price for the product being added
-            $specificPrice = $this->createSpecificPriceIfNeeded(
+            $this->createOrUpdateSpecificPrice(
                 $command->getProductPriceTaxIncluded(),
                 $command->getProductPriceTaxExcluded(),
+                $command->getProductQuantity(),
                 $order,
-                $cart,
                 $product,
                 $combination
             );
-
-            if (null !== $specificPrice) {
-                $temporarySpecificPrices[] = $specificPrice;
-            }
 
             $this->addProductToCart($cart, $product, $combination, $command->getProductQuantity());
 
@@ -179,6 +168,18 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 $cart,
                 [$productCart]
             );
+
+            // update order details
+            $this->updateOrderDetails(
+                $order,
+                $product,
+                $command->getProductQuantity(),
+                $command->getProductPriceTaxIncluded(),
+                $command->getProductPriceTaxExcluded()
+            );
+
+            // update invoices
+            $this->updateOrderInvoices($order);
 
             StockAvailable::synchronize($product->id);
 
@@ -201,10 +202,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             // Update totals amount of order
             $this->orderAmountUpdater->update($order, $cart, (int) $orderDetail->id_order_invoice);
 
-            // Delete temporary specific prices
-            $this->clearTemporarySpecificPrices($temporarySpecificPrices);
+            $order->update();
         } catch (Exception $e) {
-            $this->clearTemporarySpecificPrices($temporarySpecificPrices);
             $this->contextStateManager->restoreContext();
             throw $e;
         }
@@ -595,5 +594,47 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         if (!empty($command->getOrderInvoiceId()) && in_array((int) $command->getOrderInvoiceId(), $invoicesContainingProduct)) {
             throw new DuplicateProductInOrderException('You cannot add this product in the order has it is already present');
         }
+    }
+
+    /**
+     * Update order details after a specific price has been created or updated
+     *
+     * @param Order $order
+     * @param Product $product
+     * @param int $productQuantity
+     * @param Number $priceTaxIncluded
+     * @param Number $priceTaxExcluded
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    private function updateOrderDetails(
+        Order $order,
+        Product $product,
+        int $productQuantity,
+        Number $priceTaxIncluded,
+        Number $priceTaxExcluded
+    ): void
+    {
+        foreach($order->getOrderDetailList() as $row) {
+            $orderDetail = new OrderDetail($row['id_order_detail']);
+            if ($orderDetail->product_id == $product->id) {
+                $orderDetail->unit_price_tax_excl = (float) (string) $priceTaxExcluded;
+                $orderDetail->unit_price_tax_incl = (float) (string) $priceTaxIncluded;
+                $orderDetail->total_price_tax_excl = Tools::ps_round((float) (string) $priceTaxExcluded * $productQuantity, $this->computingPrecision);
+                $orderDetail->total_price_tax_incl = Tools::ps_round((float) (string) $priceTaxIncluded * $productQuantity, $this->computingPrecision);
+
+                $orderDetail->update();
+            }
+        }
+    }
+
+    /**
+     * @param Order $order
+     */
+    private function updateOrderInvoices(Order $order): void
+    {
+        $orderInvoices = $order->getInvoicesCollection();
+
+        // find invoices that should be updated, and update them
     }
 }
