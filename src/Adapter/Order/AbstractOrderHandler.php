@@ -275,4 +275,68 @@ abstract class AbstractOrderHandler
             $specificPrice->delete();
         }
     }
+
+    /**
+     * Create a specific price, or update it if it already exists
+     *
+     * @param Number $priceTaxIncluded
+     * @param Number $priceTaxExcluded
+     * @param int $productQuantity
+     * @param Order $order
+     * @param Product $product
+     * @param $combination
+     * @return SpecificPrice
+     * @throws PrestaShopException
+     * @throws \PrestaShopDatabaseException
+     */
+    protected function createOrUpdateSpecificPrice(
+        Number $priceTaxIncluded,
+        Number $priceTaxExcluded,
+        int $productQuantity,
+        Order $order,
+        Product $product,
+        $combination
+    ): SpecificPrice {
+        $existingSpecificPrice = SpecificPrice::getSpecificPrice(
+            $product->id,
+            0,
+            $order->id_currency,
+            0,
+            0,
+            $productQuantity,
+            $combination ? $combination->id : 0,
+            $order->id_customer
+        );
+
+        if (!empty($existingSpecificPrice)) {
+
+            $specificPrice = new SpecificPrice($existingSpecificPrice['id_specific_price']);
+
+            $specificPrice->price = $priceTaxExcluded;
+            $specificPrice->update();
+
+            return $specificPrice;
+        }
+
+        $specificPrice = new SpecificPrice();
+        $specificPrice->id_shop = 0;
+        $specificPrice->id_cart = 0;
+        $specificPrice->id_shop_group = 0;
+        $specificPrice->id_currency = $order->id_currency;
+        $specificPrice->id_country = 0;
+        $specificPrice->id_group = 0;
+        $specificPrice->id_customer = $order->id_customer;
+        $specificPrice->id_product = $product->id;
+        $specificPrice->id_product_attribute = $combination ? $combination->id : 0;
+        $specificPrice->price = (float) (string) $priceTaxExcluded;
+        $specificPrice->from_quantity = 1;
+        $specificPrice->reduction = 0;
+        $specificPrice->reduction_type = 'amount';
+        $specificPrice->reduction_tax = !$priceTaxIncluded->equals($priceTaxExcluded);
+        $specificPrice->from = '0000-00-00 00:00:00';
+        $specificPrice->to = '0000-00-00 00:00:00';
+        $specificPrice->add();
+
+        return $specificPrice;
+    }
 }
