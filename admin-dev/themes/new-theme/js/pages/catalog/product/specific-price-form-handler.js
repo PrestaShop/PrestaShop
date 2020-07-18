@@ -115,6 +115,7 @@ class SpecificPriceFormHandler {
       ? `<a href="#" data-specific-price-id="${specificPriceId}" class="js-edit edit btn tooltip-link delete pl-0 pr-0"><i class="material-icons">edit</i></a>`
       : '';
     const row = `<tr> \
+    <td>${specificPrice.id_specific_price}</td> \
     <td>${specificPrice.rule_name}</td> \
     <td>${specificPrice.attributes_name}</td> \
     <td>${specificPrice.currency}</td> \
