@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -25,13 +24,25 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Translation\Provider;
 
-/**
- * Defines what should be the default catalogue, contains all the translations keys.
- *
- * @deprecated Since 1.7.6.5, no longer used
- */
-interface UseDefaultCatalogueInterface
+class MailsProvider extends TranslationsProvider
 {
+    /**
+     * @return array|string[]
+     */
+    protected function getFilenameFilters(): array
+    {
+        return ['#EmailsSubject*#'];
+    }
+
+    /**
+     * @return array|string[]
+     */
+    protected function getTranslationDomains(): array
+    {
+        return ['EmailsSubject*'];
+    }
 }

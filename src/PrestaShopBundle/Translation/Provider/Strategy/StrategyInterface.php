@@ -26,17 +26,15 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Translation\Provider;
+namespace PrestaShopBundle\Translation\Provider\Strategy;
 
-/**
- * Define contract to retrieve translations.
- */
-interface ProviderInterface
+use Symfony\Component\Translation\MessageCatalogueInterface;
+
+interface StrategyInterface
 {
-    /*
-     * Returns the provider's unique identifier
-     *
-     * @return string
-     */
-//    public function getIdentifier();
+    public function getDefaultCatalogue(bool $empty = true): ?MessageCatalogueInterface;
+
+    public function getFileTranslatedCatalogue(): ?MessageCatalogueInterface;
+
+    public function getUserTranslatedCatalogue(?string $domain = null): ?MessageCatalogueInterface;
 }
