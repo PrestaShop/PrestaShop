@@ -28,15 +28,21 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider;
 
-/**
- * Define contract to retrieve translations.
- */
-interface ProviderInterface
+class MailsBodyProvider extends TranslationsProvider
 {
-    /*
-     * Returns the provider's unique identifier
-     *
-     * @return string
+    /**
+     * @return array|string[]
      */
-//    public function getIdentifier();
+    protected function getFilenameFilters(): array
+    {
+        return ['#EmailsBody*#'];
+    }
+
+    /**
+     * @return array|string[]
+     */
+    protected function getTranslationDomains(): array
+    {
+        return ['EmailsBody*'];
+    }
 }

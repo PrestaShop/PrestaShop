@@ -30,6 +30,7 @@ use Exception;
 use PrestaShopBundle\Entity\Translation;
 use PrestaShopBundle\Exception\InvalidLanguageException;
 use PrestaShopBundle\Translation\Constraints\PassVsprintf;
+use PrestaShopBundle\Translation\Provider\Strategy\StrategyInterface;
 use PrestaShopBundle\Translation\Provider\TranslationsCatalogueProvider;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Validator\Validation;
@@ -104,33 +105,28 @@ class TranslationService
     /**
      * Returns list translations by domain
      *
-     * @param string $lang
-     * @param string $type
+     * @param StrategyInterface $strategy
      * @param array $search
-     * @param string|null $theme
      *
      * @return array
+     *
+     * @throws Exception
      */
-    public function getTranslationsCatalogue(string $lang, string $type, array $search, ?string $theme, ?string $module)
+    public function getTranslationsCatalogue(StrategyInterface $strategy, array $search)
     {
-        return $this->container->get('prestashop.translation.translations_catalogue_provider')
-                    ->getCatalogue(
-                        $type,
-                        $this->langToLocale($lang),
-                        $search,
-                        $theme,
-                        $module
-                    );
+        return (new TranslationsCatalogueProvider())
+            ->getCatalogue(
+                $strategy,
+                $search
+            );
     }
 
     /**
      * List translations for a specific domain.
      *
-     * @param string $locale
+     * @param StrategyInterface $strategy
      * @param string $domain
-     * @param string|null $theme
      * @param array $search
-     * @param string|null $module
      *
      * @return array
      *
@@ -140,35 +136,18 @@ class TranslationService
      * @todo: we need module information here
      */
     public function listDomainTranslation(
-        string $locale,
+        StrategyInterface $strategy,
         string $domain,
-        array $search,
-        ?string $theme = null,
-        ?string $module = null
+        array $search
     ): array {
-        /**
-         * @var TranslationsCatalogueProvider
-         */
-        $catalogueProvider = $this->container->get('prestashop.translation.translations_catalogue_provider');
-
-        $router = $this->container->get('router');
-
-        if (!empty($theme) && $this->container->getParameter('default_theme') !== $theme) {
-            $catalogue = $catalogueProvider->getThemeDomainCatalogue(
-                $locale,
+        $catalogue = (new TranslationsCatalogueProvider())
+            ->getDomainCatalogue(
+                $strategy,
                 $domain,
-                $theme,
                 $search
             );
-        } else {
-            $catalogue = $catalogueProvider->getDomainCatalogue(
-                $locale,
-                $domain,
-                $search,
-                $theme,
-                $module
-            );
-        }
+
+        $router = $this->container->get('router');
 
         return [
             'info' => [
