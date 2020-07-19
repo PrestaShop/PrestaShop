@@ -24,36 +24,42 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Translation\Provider;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
-use Symfony\Component\Translation\MessageCatalogue;
+namespace PrestaShopBundle\Translation\Provider\Strategy;
 
-/**
- * Helper used to retrieve a Symfony Catalogue object.
- *
- * @deprecated use TraslationFinder instead
- */
-trait TranslationFinderTrait
+use PrestaShopBundle\Translation\Provider\ProviderInterface;
+use Symfony\Component\Translation\MessageCatalogueInterface;
+
+class MailsBodyStrategy implements StrategyInterface
 {
     /**
-     * @param array $paths a list of paths when we can look for translations
-     * @param string $locale the Symfony (not the PrestaShop one) locale
-     * @param string|null $pattern a regular expression
-     *
-     * @return MessageCatalogue
-     *
-     * @throws FileNotFoundException
-     *
-     * @deprecated use TraslationFinder::getCatalogueFromPaths() instead
+     * @var string
      */
-    public function getCatalogueFromPaths($paths, $locale, $pattern = null)
-    {
-        @trigger_error(
-            __FUNCTION__ . 'is deprecated since version 1.7.6.1 Use TranslationFinder::getCatalogueFromPaths() instead.',
-            E_USER_DEPRECATED
-        );
+    private $locale;
+    /**
+     * @var ProviderInterface
+     */
+    private $provider;
 
-        return (new TranslationFinder())->getCatalogueFromPaths($paths, $locale, $pattern);
+    public function __construct(ProviderInterface $provider, string $locale)
+    {
+        $this->locale = $locale;
+        $this->provider = $provider;
+    }
+
+    public function getDefaultCatalogue(bool $empty = true): ?MessageCatalogueInterface
+    {
+        return $this->provider->getDefaultCatalogue($this->locale, $empty);
+    }
+
+    public function getFileTranslatedCatalogue(): ?MessageCatalogueInterface
+    {
+        return $this->provider->getFileTranslatedCatalogue($this->locale);
+    }
+
+    public function getUserTranslatedCatalogue(?string $domain = null): ?MessageCatalogueInterface
+    {
+        return $this->provider->getUserTranslatedCatalogue($this->locale, $domain);
     }
 }

@@ -24,13 +24,42 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Translation\Provider;
+declare(strict_types=1);
 
-/**
- * Provide an Message Catalogue from Xliff files.
- *
- * @deprecated Since 1.7.6.5, no longer used
- */
-interface XliffCatalogueInterface
+namespace PrestaShopBundle\Translation\Provider\Strategy;
+
+use PrestaShopBundle\Translation\Provider\ProviderInterface;
+use Symfony\Component\Translation\MessageCatalogueInterface;
+
+class OthersStrategy implements StrategyInterface
 {
+    /**
+     * @var string
+     */
+    private $locale;
+    /**
+     * @var ProviderInterface
+     */
+    private $provider;
+
+    public function __construct(ProviderInterface $provider, string $locale)
+    {
+        $this->locale = $locale;
+        $this->provider = $provider;
+    }
+
+    public function getDefaultCatalogue(bool $empty = true): ?MessageCatalogueInterface
+    {
+        return $this->provider->getDefaultCatalogue($this->locale, $empty);
+    }
+
+    public function getFileTranslatedCatalogue(): ?MessageCatalogueInterface
+    {
+        return $this->provider->getFileTranslatedCatalogue($this->locale);
+    }
+
+    public function getUserTranslatedCatalogue(?string $domain = null): ?MessageCatalogueInterface
+    {
+        return $this->provider->getUserTranslatedCatalogue($this->locale, $domain);
+    }
 }
