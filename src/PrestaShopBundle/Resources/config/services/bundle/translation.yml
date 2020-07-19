@@ -2,22 +2,14 @@ services:
     _defaults:
         public: true
 
-    #TRANSLATIONS FACTORIES
-    #TODO: I see no need to put this in a service as it is used only by TranslationService
-    # and it requires locale that has to be in the constructor to avoid setter
-    prestashop.translation.translations_catalogue_provider:
-        class: PrestaShopBundle\Translation\Provider\TranslationsCatalogueProvider
-        arguments:
-            - "@prestashop.translation.translations_provider"
-            - "@prestashop.translation.theme_provider"
-            - "@prestashop.translation.search_provider"
-            - "@prestashop.translation.external_module_provider"
-
-    prestashop.translation.translations_provider:
-        class: PrestaShopBundle\Translation\Provider\TranslationsProvider
+    prestashop.translation.strategy_factory:
+        class: PrestaShopBundle\Translation\Provider\Strategy\StrategyFactory
         arguments:
             - "@prestashop.translation.database_loader"
             - "%translations_dir%"
+            - "@prestashop.translation.theme_provider"
+            - "@prestashop.translation.search_provider"
+            - "@prestashop.translation.external_module_provider"
 
     #TRANSLATIONS PROVIDERS
     prestashop.translation.frontoffice_provider:
