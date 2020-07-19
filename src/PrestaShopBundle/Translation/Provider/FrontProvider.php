@@ -24,13 +24,31 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Translation\Provider;
 
-/**
- * Provide an Message Catalogue from the Database
- *
- * @deprecated Since 1.7.7.0, no longer used
- */
-interface DatabaseCatalogueInterface
+class FrontProvider extends TranslationsProvider
 {
+    /**
+     * @return array|string[]
+     */
+    protected function getFilenameFilters(): array
+    {
+        return [
+           '#^Shop*#',
+           '#^Modules(.*)Shop#',
+       ];
+    }
+
+    /**
+     * @return array|string[]
+     */
+    protected function getTranslationDomains(): array
+    {
+        return [
+            '^Shop*',
+            '^Modules(.*)Shop',
+        ];
+    }
 }
