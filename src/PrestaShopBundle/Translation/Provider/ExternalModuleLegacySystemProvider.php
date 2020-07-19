@@ -41,7 +41,7 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 /**
  * Be able to retrieve information from legacy translation files
  */
-class ExternalModuleLegacySystemProvider
+class ExternalModuleLegacySystemProvider implements ProviderInterface
 {
     /**
      * @var string Path where translation files are found
