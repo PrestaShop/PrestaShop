@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 declare(strict_types=1);
@@ -29,10 +29,11 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Translation\Provider;
 
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShopBundle\Exception\NotImplementedException;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
-class TranslationsProvider
+abstract class TranslationsProvider implements ProviderInterface
 {
     /**
      * @var DatabaseTranslationLoader
@@ -53,145 +54,76 @@ class TranslationsProvider
     }
 
     /**
-     * @param string $type
      * @param string $locale
      * @param bool $empty
      *
      * @return MessageCatalogueInterface
      *
      * @throws FileNotFoundException
+     * @throws NotImplementedException
      */
-    public function getDefaultCatalogue(string $type, string $locale, bool $empty = true): MessageCatalogueInterface
+    public function getDefaultCatalogue(string $locale, bool $empty = true): MessageCatalogueInterface
     {
-        if (!in_array($type, ['front', 'modules', 'mails', 'mails_body', 'back', 'others'])) {
-            throw new \LogicException("The 'type' parameter is not valid. $type given");
-        }
-
         $provider = new DefaultCatalogueProvider(
             $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default',
-            $this->getFilenameFilters($type)
+            $this->getFilenameFilters()
         );
 
         return $provider->getDefaultCatalogue($locale, $empty);
     }
 
     /**
-     * @param string $type
      * @param string $locale
      *
      * @return MessageCatalogueInterface
      *
      * @throws FileNotFoundException
+     * @throws NotImplementedException
      */
-    public function getFileTranslatedCatalogue(string $type, string $locale): MessageCatalogueInterface
+    public function getFileTranslatedCatalogue(string $locale): MessageCatalogueInterface
     {
-        if (!in_array($type, ['front', 'modules', 'mails', 'mails_body', 'back', 'others'])) {
-            throw new \LogicException("The 'type' parameter is not valid. $type given");
-        }
-
         $provider = new FileTranslatedCatalogueProvider(
             $this->resourceDirectory,
-            $this->getFilenameFilters($type)
+            $this->getFilenameFilters()
         );
 
         return $provider->getFileTranslatedCatalogue($locale);
     }
 
     /**
-     * @param string $type
      * @param string $locale
      *
      * @return MessageCatalogueInterface
+     *
+     * @throws NotImplementedException
      */
-    public function getUserTranslatedCatalogue(string $type, string $locale): MessageCatalogueInterface
+    public function getUserTranslatedCatalogue(string $locale): MessageCatalogueInterface
     {
-        if (!in_array($type, ['front', 'modules', 'mails', 'mails_body', 'back', 'others'])) {
-            throw new \LogicException("The 'type' parameter is not valid. $type given");
-        }
-
         $provider = new UserTranslatedCatalogueProvider(
             $this->databaseLoader,
-            $this->getTranslationDomains($type)
+            $this->getTranslationDomains()
         );
 
         return $provider->getUserTranslatedCatalogue($locale);
     }
 
     /**
-     * @param string $type
-     *
      * @return array|string[]
+     *
+     * @throws NotImplementedException
      */
-    private function getFilenameFilters(string $type): array
+    protected function getFilenameFilters(): array
     {
-        $filenameFilters = [];
-
-        switch ($type) {
-            case 'back':
-                $filenameFilters = [
-                    '#^Admin[A-Z]#',
-                    '#^Modules[A-Z](.*)Admin#',
-                ];
-                break;
-            case 'front':
-                $filenameFilters = [
-                    '#^Shop*#',
-                    '#^Modules(.*)Shop#',
-                ];
-                break;
-            case 'modules':
-                $filenameFilters = ['#^Modules[A-Z]#'];
-                break;
-            case 'mails':
-                $filenameFilters = ['#EmailsSubject*#'];
-                break;
-            case 'mails_body':
-                $filenameFilters = ['#EmailsBody*#'];
-                break;
-            case 'others':
-                $filenameFilters = ['#^messages*#'];
-                break;
-        }
-
-        return $filenameFilters;
+        throw new NotImplementedException('You must implement the method in the specific class');
     }
 
     /**
-     * @param string $type
-     *
      * @return array|string[]
+     *
+     * @throws NotImplementedException
      */
-    private function getTranslationDomains(string $type): array
+    protected function getTranslationDomains(): array
     {
-        $translationDomains = [];
-
-        switch ($type) {
-            case 'back':
-                $translationDomains = [
-                    '^Admin[A-Z]',
-                    '^Modules[A-Z](.*)Admin',
-                ];
-                break;
-            case 'front':
-                $translationDomains = [
-                    '^Shop*',
-                    '^Modules(.*)Shop',
-                ];
-                break;
-            case 'modules':
-                $translationDomains = ['^Modules[A-Z]'];
-                break;
-            case 'mails':
-                $translationDomains = ['EmailsSubject*'];
-                break;
-            case 'mails_body':
-                $translationDomains = ['EmailsBody*'];
-                break;
-            case 'others':
-                $translationDomains = ['^messages*'];
-                break;
-        }
-
-        return $translationDomains;
+        throw new NotImplementedException('You must implement the method in the specific class');
     }
 }

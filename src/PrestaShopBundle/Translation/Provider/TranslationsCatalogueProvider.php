@@ -28,97 +28,25 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider;
 
-use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShopBundle\Translation\Provider\Strategy\StrategyInterface;
 
 class TranslationsCatalogueProvider
 {
     /**
-     * @var TranslationsProvider
-     */
-    private $translationProvider;
-    /**
-     * @var ThemeProvider
-     */
-    private $themeProvider;
-    /**
-     * @var SearchProvider
-     */
-    private $searchProvider;
-    /**
-     * @var ExternalModuleLegacySystemProvider
-     */
-    private $externalModuleLegacySystemProvider;
-
-    public function __construct(
-        TranslationsProvider $translationProvider,
-        ThemeProvider $themeProvider,
-        SearchProvider $searchProvider,
-        ExternalModuleLegacySystemProvider $externalModuleLegacySystemProvider
-    ) {
-        $this->translationProvider = $translationProvider;
-        $this->themeProvider = $themeProvider;
-        $this->searchProvider = $searchProvider;
-        $this->externalModuleLegacySystemProvider = $externalModuleLegacySystemProvider;
-    }
-
-    /**
-     * @param string $locale
+     * @param StrategyInterface $strategy
      * @param string $domain
      * @param array $search
-     * @param string|null $theme
-     *
-     * @return array
-     */
-    public function getThemeDomainCatalogue(
-        string $locale,
-        string $domain,
-        string $theme,
-        array $search = []
-    ): array {
-        if ('Messages' === $domain) {
-            $domain = 'messages';
-        }
-        $provider = $this->themeProvider;
-
-        $defaultCatalogue = $provider->getDefaultCatalogue($locale, $theme)->all($domain);
-        $fileTranslatedCatalogue = $provider->getFileTranslatedCatalogue($locale, $theme)->all($domain);
-        $userTranslatedCatalogue = $provider->getUserTranslatedCatalogue($locale, $theme, $domain)->all($domain);
-
-        $treeDomain = preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY);
-
-        return $this->normalizeCatalogue(
-            $defaultCatalogue,
-            $fileTranslatedCatalogue,
-            $userTranslatedCatalogue,
-            $treeDomain,
-            $search
-        );
-    }
-
-    /**
-     * @param string $locale
-     * @param string $domain
-     * @param array $search
-     * @param string|null $theme
-     * @param string|null $module
      *
      * @return array
      */
     public function getDomainCatalogue(
-        string $locale,
+        StrategyInterface $strategy,
         string $domain,
-        array $search = [],
-        ?string $theme = null,
-        ?string $module = null
+        array $search = []
     ): array {
-        if ('Messages' === $domain) {
-            $domain = 'messages';
-        }
-        $provider = $this->searchProvider;
-
-        $defaultCatalogue = $provider->getDefaultCatalogue($locale, $domain, $module)->all($domain);
-        $fileTranslatedCatalogue = $provider->getFileTranslatedCatalogue($locale, $domain, $module)->all($domain);
-        $userTranslatedCatalogue = $provider->getUserTranslatedCatalogue($locale, $domain, $theme)->all($domain);
+        $defaultCatalogue = $strategy->getDefaultCatalogue()->all($domain);
+        $fileTranslatedCatalogue = $strategy->getFileTranslatedCatalogue()->all($domain);
+        $userTranslatedCatalogue = $strategy->getUserTranslatedCatalogue($domain)->all($domain);
 
         $treeDomain = preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY);
 
@@ -132,42 +60,18 @@ class TranslationsCatalogueProvider
     }
 
     /**
-     * @param string $type
-     * @param string $locale
+     * @param StrategyInterface $strategy
      * @param array $search
-     * @param string|null $theme
-     * @param string|null $module
      *
      * @return array
-     *
-     * @throws FileNotFoundException
      */
     public function getCatalogue(
-        string $type,
-        string $locale,
-        array $search = [],
-        ?string $theme = null,
-        ?string $module = null
+        StrategyInterface $strategy,
+        array $search = []
     ): array {
-        if ('external_legacy_module' === $type) {
-            $provider = $this->externalModuleLegacySystemProvider;
-
-            $defaultCatalogue = $provider->getDefaultCatalogue($locale, $module, true);
-            $fileTranslatedCatalogue = $provider->getFileTranslatedCatalogue($locale, $module);
-            $userTranslatedCatalogue = $provider->getUserTranslatedCatalogue($locale, $module);
-        } elseif ('themes' === $type) {
-            $provider = $this->themeProvider;
-
-            $defaultCatalogue = $provider->getDefaultCatalogue($locale, $theme, true);
-            $fileTranslatedCatalogue = $provider->getFileTranslatedCatalogue($locale, $theme);
-            $userTranslatedCatalogue = $provider->getUserTranslatedCatalogue($locale, $theme);
-        } else {
-            $provider = $this->translationProvider;
-
-            $defaultCatalogue = $provider->getDefaultCatalogue($type, $locale, true);
-            $fileTranslatedCatalogue = $provider->getFileTranslatedCatalogue($type, $locale);
-            $userTranslatedCatalogue = $provider->getUserTranslatedCatalogue($type, $locale);
-        }
+        $defaultCatalogue = $strategy->getDefaultCatalogue();
+        $fileTranslatedCatalogue = $strategy->getFileTranslatedCatalogue();
+        $userTranslatedCatalogue = $strategy->getUserTranslatedCatalogue();
 
         $translations = [];
 
