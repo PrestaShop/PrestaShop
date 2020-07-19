@@ -26,17 +26,40 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Translation\Provider;
+namespace PrestaShopBundle\Translation\Provider\Strategy;
 
-/**
- * Define contract to retrieve translations.
- */
-interface ProviderInterface
+use PrestaShopBundle\Translation\Provider\ProviderInterface;
+use Symfony\Component\Translation\MessageCatalogueInterface;
+
+class ModulesStrategy implements StrategyInterface
 {
-    /*
-     * Returns the provider's unique identifier
-     *
-     * @return string
+    /**
+     * @var string
      */
-//    public function getIdentifier();
+    private $locale;
+    /**
+     * @var ProviderInterface
+     */
+    private $provider;
+
+    public function __construct(ProviderInterface $provider, string $locale)
+    {
+        $this->locale = $locale;
+        $this->provider = $provider;
+    }
+
+    public function getDefaultCatalogue(bool $empty = true): ?MessageCatalogueInterface
+    {
+        return $this->provider->getDefaultCatalogue($this->locale, $empty);
+    }
+
+    public function getFileTranslatedCatalogue(): ?MessageCatalogueInterface
+    {
+        return $this->provider->getFileTranslatedCatalogue($this->locale);
+    }
+
+    public function getUserTranslatedCatalogue(?string $domain = null): ?MessageCatalogueInterface
+    {
+        return $this->provider->getUserTranslatedCatalogue($this->locale, $domain);
+    }
 }
