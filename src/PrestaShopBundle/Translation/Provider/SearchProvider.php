@@ -34,7 +34,7 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 /**
  * Able to search translations for a specific translation domains across multiple sources
  */
-class SearchProvider
+class SearchProvider implements ProviderInterface
 {
     /**
      * @var string Path where translation files are found

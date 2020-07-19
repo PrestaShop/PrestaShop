@@ -28,15 +28,27 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider;
 
-/**
- * Define contract to retrieve translations.
- */
-interface ProviderInterface
+class BackProvider extends TranslationsProvider
 {
-    /*
-     * Returns the provider's unique identifier
-     *
-     * @return string
+    /**
+     * @return array|string[]
      */
-//    public function getIdentifier();
+    protected function getFilenameFilters(): array
+    {
+        return [
+            '#^Admin[A-Z]#',
+            '#^Modules[A-Z](.*)Admin#',
+        ];
+    }
+
+    /**
+     * @return array|string[]
+     */
+    protected function getTranslationDomains(): array
+    {
+        return [
+            '^Admin[A-Z]',
+            '^Modules[A-Z](.*)Admin',
+        ];
+    }
 }
