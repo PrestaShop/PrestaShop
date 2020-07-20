@@ -631,17 +631,25 @@ class CartRuleCore extends ObjectModel
             return false;
         }
 
-        if (!$this->active) {
-            return (!$display_error) ? false : $this->trans('This voucher is disabled', [], 'Shop.Notifications.Error');
-        }
-        if (!$this->quantity) {
-            return (!$display_error) ? false : $this->trans('This voucher has already been used', [], 'Shop.Notifications.Error');
-        }
-        if (strtotime($this->date_from) > time()) {
-            return (!$display_error) ? false : $this->trans('This voucher is not valid yet', [], 'Shop.Notifications.Error');
-        }
-        if (strtotime($this->date_to) < time()) {
-            return (!$display_error) ? false : $this->trans('This voucher has expired', [], 'Shop.Notifications.Error');
+        // All these checks are necessary when you add the cart rule the first, so when it's not in cart yet
+        // However when it's in the cart and you are checking if the cart rule is still valid (when performing auto remove)
+        // these rules are outdated For example:
+        //  - the cart rule can now be disabled but it was at the time it was applied, so it doesn't need to be removed
+        //  - the current date is not in the range any more but it was at the time
+        //  - the quantity is now zero but it was not when it was added
+        if (!$alreadyInCart) {
+            if (!$this->active) {
+                return (!$display_error) ? false : $this->trans('This voucher is disabled', [], 'Shop.Notifications.Error');
+            }
+            if (!$this->quantity) {
+                return (!$display_error) ? false : $this->trans('This voucher has already been used', [], 'Shop.Notifications.Error');
+            }
+            if (strtotime($this->date_from) > time()) {
+                return (!$display_error) ? false : $this->trans('This voucher is not valid yet', [], 'Shop.Notifications.Error');
+            }
+            if (strtotime($this->date_to) < time()) {
+                return (!$display_error) ? false : $this->trans('This voucher has expired', [], 'Shop.Notifications.Error');
+            }
         }
 
         if ($context->cart->id_customer) {
@@ -653,7 +661,12 @@ class CartRuleCore extends ObjectModel
 			AND od.id_cart_rule = ' . (int) $this->id . '
 			AND ' . (int) Configuration::get('PS_OS_ERROR') . ' != o.current_state
 			');
-            if ($quantityUsed + 1 > $this->quantity_per_user) {
+            // When checking the cart rules present in that cart the request result is accurate
+            // When we check if using the cart rule one more time is valid then we increment this value
+            if (!$alreadyInCart) {
+                ++$quantityUsed;
+            }
+            if ($quantityUsed > $this->quantity_per_user) {
                 return (!$display_error) ? false : $this->trans('You cannot use this voucher anymore (usage limit reached)', [], 'Shop.Notifications.Error');
             }
         }
