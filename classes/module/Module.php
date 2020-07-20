@@ -2367,6 +2367,20 @@ abstract class ModuleCore implements ModuleInterface
         return Cache::retrieve('Module::isEnabled' . $module_name);
     }
 
+    public static function isEnabledForMobileDevices($module_name)
+    {
+        if (!Cache::isStored('Module::isEnabledForMobileDevices' . $module_name)) {
+            $id_module = Module::getModuleIdByName($module_name);
+            $enable_device = (int) Db::getInstance()->getValue('SELECT `enable_device` FROM `' . _DB_PREFIX_ . 'module_shop` WHERE `id_module` = ' . (int) $id_module . ' AND `id_shop` = ' . (int) Context::getContext()->shop->id);
+            $is_enabled_mobile = $enable_device === 7;
+            Cache::store('Module::isEnabledForMobileDevices' . $module_name, (bool) $is_enabled_mobile);
+
+            return (bool) $is_enabled_mobile;
+        }
+
+        return Cache::retrieve('Module::isEnabledForMobileDevices' . $module_name);
+    }
+
     /**
      * Check if module is registered on hook
      *

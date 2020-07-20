@@ -972,6 +972,11 @@ class HookCore extends ObjectModel
 
     public static function coreRenderWidget($module, $hook_name, $params)
     {
+        $context = Context::getContext();
+        if (!Module::isEnabled($module->name) || $context->isMobile() && !Module::isEnabledForMobileDevices($module->name)) {
+            return null;
+        }
+
         return $module->renderWidget($hook_name, $params);
     }
 
