@@ -674,4 +674,14 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
             }
         }
     }
+
+    /**
+     * @BeforeStep
+     *
+     * Clear Product prices cache at each step in order to get fresh data
+     */
+    public function clearProductPrices()
+    {
+        Product::flushPriceCache();
+    }
 }
