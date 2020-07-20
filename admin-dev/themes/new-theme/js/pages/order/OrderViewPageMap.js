@@ -195,4 +195,8 @@ export default {
     },
   },
   printOrderViewPageButton: '.js-print-order-view-page',
+  orderNoteToggleBtn: '.js-order-notes-toggle-btn',
+  orderNoteBlock: '.js-order-notes-block',
+  orderNoteInput: '#internal_note_note',
+  orderNoteSubmitBtn: '.js-order-notes-btn',
 };
