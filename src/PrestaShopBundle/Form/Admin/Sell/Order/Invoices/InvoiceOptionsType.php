@@ -136,6 +136,7 @@ class InvoiceOptionsType extends TranslatorAwareType
             ])
             ->add('invoice_model', ChoiceType::class, [
                 'required' => false,
+                'placeholder' => false,
                 'choices' => $this->invoiceModelChoiceProvider->getChoices(),
                 'translation_domain' => false,
                 'label' => $this->trans('Invoice model', 'Admin.Orderscustomers.Feature'),
