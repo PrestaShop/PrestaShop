@@ -173,6 +173,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $this->updateOrderDetails(
                 $order,
                 $product,
+                $command->getCombinationId(),
                 $command->getProductQuantity(),
                 $command->getProductPriceTaxIncluded(),
                 $command->getProductPriceTaxExcluded()
@@ -610,6 +611,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     private function updateOrderDetails(
         Order $order,
         Product $product,
+        int $combinationId,
         int $productQuantity,
         Number $priceTaxIncluded,
         Number $priceTaxExcluded
@@ -617,14 +619,18 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     {
         foreach($order->getOrderDetailList() as $row) {
             $orderDetail = new OrderDetail($row['id_order_detail']);
-            if ($orderDetail->product_id == $product->id) {
-                $orderDetail->unit_price_tax_excl = (float) (string) $priceTaxExcluded;
-                $orderDetail->unit_price_tax_incl = (float) (string) $priceTaxIncluded;
-                $orderDetail->total_price_tax_excl = Tools::ps_round((float) (string) $priceTaxExcluded * $productQuantity, $this->computingPrecision);
-                $orderDetail->total_price_tax_incl = Tools::ps_round((float) (string) $priceTaxIncluded * $productQuantity, $this->computingPrecision);
-
-                $orderDetail->update();
+            if ($orderDetail->product_id !== (int) $product->id) {
+                continue;
             }
+            if (!empty($combinationId) && $combinationId !== (int) $orderDetail['product_attribute_id']) {
+                continue;
+            }
+            $orderDetail->unit_price_tax_excl = (float) (string) $priceTaxExcluded;
+            $orderDetail->unit_price_tax_incl = (float) (string) $priceTaxIncluded;
+            $orderDetail->total_price_tax_excl = Tools::ps_round((float) (string) $priceTaxExcluded * $productQuantity, $this->computingPrecision);
+            $orderDetail->total_price_tax_incl = Tools::ps_round((float) (string) $priceTaxIncluded * $productQuantity, $this->computingPrecision);
+
+            $orderDetail->update();
         }
     }
 
