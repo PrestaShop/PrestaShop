@@ -162,6 +162,30 @@ class OrderInvoiceCore extends ObjectModel
     }
 
     /**
+     * Get multiple invoices for a single order (useful for multi-invoices orders)
+     *
+     * @param int $orderId
+     * @return array
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    public static function getInvoicesByOrderId(int $orderId)
+    {
+        $orderInvoicesList = [];
+        $invoices = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            'SELECT `id_order_invoice`
+            FROM `' . _DB_PREFIX_ . 'order_invoice`
+            WHERE id_order = ' . $orderId
+        );
+
+        foreach ($invoices as $row) {
+            $orderInvoicesList[] = new OrderInvoice($row['id_order_invoice']);
+        }
+
+        return $orderInvoicesList;
+    }
+
+    /**
      * Get order products.
      *
      * @return array Products with price, quantity (with taxe and without)
