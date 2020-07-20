@@ -367,8 +367,8 @@ Feature: Order from Back Office (BO)
       | combination   | combination2  |
       | amount        | 1             |
       | price         | 10            |
-    Then order "bo_order1" should contain 1 products "My Product - Size : L"
-    And order "bo_order1" should contain 1 products "My Product - Size : M"
+    Then order "bo_order1" should contain 1 product "My Product - Size : L"
+    And order "bo_order1" should contain 1 product "My Product - Size : M"
 
   Scenario: Generating invoice for Order
     When I generate invoice for "bo_order1" order
