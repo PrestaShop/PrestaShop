@@ -120,4 +120,9 @@ class ProductConstraintException extends ProductException
      * When product tag value is invalid
      */
     const INVALID_TAG = 180;
+
+    /**
+     * When product customizability value is invalid
+     */
+    const INVALID_CUSTOMIZABILITY = 190;
 }
