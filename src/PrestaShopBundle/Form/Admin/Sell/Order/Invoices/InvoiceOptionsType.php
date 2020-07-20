@@ -92,7 +92,7 @@ class InvoiceOptionsType extends TranslatorAwareType
             ->add('enable_product_images', SwitchType::class, [
                 'required' => false,
                 'label' => $this->trans('Enable product image', 'Admin.Orderscustomers.Feature'),
-                'help' => $this->trans('Adds an image in front of the product name on the invoice', 'Admin.Orderscustomers.Help'),
+                'help' => $this->trans('Adds an image in front of the product name on the invoice.', 'Admin.Orderscustomers.Help'),
             ])
             ->add('invoice_prefix', TranslatableType::class, [
                 'required' => false,
