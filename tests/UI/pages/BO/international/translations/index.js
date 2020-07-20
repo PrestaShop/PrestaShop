@@ -102,5 +102,4 @@ class Translations extends BOBasePage {
     return download.path();
   }
 }
-
 module.exports = new Translations();
