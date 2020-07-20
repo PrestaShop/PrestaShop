@@ -34,6 +34,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class generates "By Date" form
  * in "Sell > Orders > Invoices" page.
+ *
+ * Backwards compatibility break introduced in 1.7.8.0 due to extension of TranslationAwareType
  */
 class GenerateByDateType extends TranslatorAwareType
 {
