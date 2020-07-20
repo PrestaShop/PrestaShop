@@ -369,7 +369,7 @@ class OrderControllerCore extends FrontController
     {
         $cms = new CMS((int) Configuration::get('PS_CONDITIONS_CMS_ID'), $this->context->language->id);
 
-        if (!$cms->id || !Validate::isLoadedObject($cms)) {
+        if (!Validate::isLoadedObject($cms)) {
             return false;
         }
 
