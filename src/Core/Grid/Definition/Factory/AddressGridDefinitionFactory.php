@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
@@ -46,6 +45,7 @@ use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class is responsible for defining 'Sell > Customer > Addresses' grid.
@@ -53,6 +53,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 final class AddressGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
     use BulkDeleteActionTrait;
+    use DeleteActionTrait;
 
     public const GRID_ID = 'address';
 
@@ -147,19 +148,12 @@ final class AddressGridDefinitionFactory extends AbstractFilterableGridDefinitio
                             ])
                     )
                     ->add(
-                        (new SubmitRowAction('delete'))
-                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                            ->setIcon('delete')
-                            ->setOptions([
-                                'confirm_message' => $this->trans(
-                                    'Delete selected item?',
-                                    [],
-                                    'Admin.Notifications.Warning'
-                                ),
-                                'route' => 'admin_addresses_delete',
-                                'route_param_name' => 'addressId',
-                                'route_param_field' => 'id_address',
-                            ])
+                        $this->buildDeleteAction(
+                            'admin_addresses_delete',
+                            'addressId',
+                            'id_address',
+                            Request::METHOD_DELETE
+                        )
                     ),
             ])
             )
