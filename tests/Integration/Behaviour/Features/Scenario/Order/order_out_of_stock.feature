@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-out-of-stock
 @reset-database-before-feature
+@reset-product-price-cache
 @order-out-of-stock
 Feature: Order from Back Office (BO)
   In order to manage orders for FO customers
