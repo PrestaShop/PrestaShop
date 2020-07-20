@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,6 +24,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Core\Checkout\TermsAndConditions;
 use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
@@ -146,7 +148,7 @@ class OrderControllerCore extends FrontController
                 ->setGiftAllowed((bool) Configuration::get('PS_GIFT_WRAPPING'))
                 ->setIncludeTaxes(
                     !Product::getTaxCalculationMethod((int) $this->context->cart->id_customer)
-                    && (int) Configuration::get('PS_TAX')
+                        && (int) Configuration::get('PS_TAX')
                 )
                 ->setDisplayTaxesLabel((Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC')))
                 ->setGiftCost(
@@ -367,10 +369,11 @@ class OrderControllerCore extends FrontController
     protected function getDefaultTermsAndConditions()
     {
         $cms = new CMS((int) Configuration::get('PS_CONDITIONS_CMS_ID'), $this->context->language->id);
+
         if (!$cms->id || !Validate::isLoadedObject($cms)) {
             return false;
         }
-        
+
         $link = $this->context->link->getCMSLink($cms, $cms->link_rewrite, (bool) Configuration::get('PS_SSL_ENABLED'));
 
         $termsAndConditions = new TermsAndConditions();
