@@ -58,6 +58,7 @@ $(() => {
 
   handlePaymentDetailsToggle();
   handlePrivateNoteChange();
+  handleOrderNoteChange();
   handleUpdateOrderStatusButton();
 
   new InvoiceNoteManager();
@@ -67,6 +68,11 @@ $(() => {
   $(OrderViewPageMap.privateNoteToggleBtn).on('click', (event) => {
     event.preventDefault();
     togglePrivateNoteBlock();
+  });
+
+  $(OrderViewPageMap.orderNoteToggleBtn).on('click', (event) => {
+    event.preventDefault();
+    toggleOrderNoteBlock();
   });
 
   $(OrderViewPageMap.printOrderViewPageButton).on('click', () => {
@@ -120,6 +126,32 @@ $(() => {
       $submitBtn.prop('disabled', false);
     });
   }
+
+  function toggleOrderNoteBlock() {
+    const $block = $(OrderViewPageMap.orderNoteBlock);
+    const $btn = $(OrderViewPageMap.orderNoteToggleBtn);
+    const isNoteOpened = $btn.hasClass('is-opened');
+
+    if (isNoteOpened) {
+      $btn.removeClass('is-opened');
+      $block.addClass('d-none');
+    } else {
+      $btn.addClass('is-opened');
+      $block.removeClass('d-none');
+    }
+
+    const $icon = $btn.find('.material-icons');
+    $icon.text(isNoteOpened ? 'add' : 'remove');
+  }
+
+  function handleOrderNoteChange() {
+    const $submitBtn = $(OrderViewPageMap.orderNoteSubmitBtn);
+
+    $(OrderViewPageMap.orderNoteInput).on('input', () => {
+      $submitBtn.prop('disabled', false);
+    });
+  }
+
 
   function initAddCartRuleFormHandler() {
     const $modal = $(OrderViewPageMap.addCartRuleModal);
