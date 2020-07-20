@@ -30,6 +30,7 @@ use AppKernel;
 use Context;
 use Employee;
 use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
+use Product;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class CommonFeatureContext extends AbstractPrestaShopFeatureContext
@@ -104,6 +105,16 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     public function clearEntityManager()
     {
         $this::getContainer()->get('doctrine.orm.entity_manager')->clear();
+    }
+
+    /**
+     * @BeforeStep
+     *
+     * Clear Product prices cache at each step in order to get fresh data
+     */
+    public function clearProductPrices()
+    {
+        Product::flushPriceCache();
     }
 
     /**
