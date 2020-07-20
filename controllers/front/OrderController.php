@@ -367,11 +367,11 @@ class OrderControllerCore extends FrontController
     protected function getDefaultTermsAndConditions()
     {
         $cms = new CMS((int) Configuration::get('PS_CONDITIONS_CMS_ID'), $this->context->language->id);
-        $link = $this->context->link->getCMSLink($cms, $cms->link_rewrite, (bool) Configuration::get('PS_SSL_ENABLED'));
-
         if (!$cms->id || !Validate::isLoadedObject($cms)) {
             return false;
         }
+        
+        $link = $this->context->link->getCMSLink($cms, $cms->link_rewrite, (bool) Configuration::get('PS_SSL_ENABLED'));
 
         $termsAndConditions = new TermsAndConditions();
         $termsAndConditions
