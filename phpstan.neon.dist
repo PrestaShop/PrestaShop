@@ -5,4 +5,4 @@ parameters:
 	paths:
 		- src
 	ignoreErrors:
-		- '#Unsafe usage of new static().#'
+		- '#^Unsafe usage of new static\(\)\.$#'
