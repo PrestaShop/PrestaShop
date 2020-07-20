@@ -82,23 +82,23 @@ class InvoiceOptionsType extends TranslatorAwareType
             ->add('enable_invoices', SwitchType::class, [
                 'required' => false,
                 'label' => $this->trans('Enable invoices', 'Admin.Orderscustomers.Feature'),
-                'help' => $this->trans('If enabled, your customers will receive an invoice for the purchase.', 'Admin.Orderscustomers.Help')
+                'help' => $this->trans('If enabled, your customers will receive an invoice for the purchase.', 'Admin.Orderscustomers.Help'),
             ])
             ->add('enable_tax_breakdown', SwitchType::class, [
                 'required' => false,
                 'label' => $this->trans('Enable tax breakdown', 'Admin.Orderscustomers.Feature'),
-                'help' => $this->trans('If required, show the total amount per rate of the corresponding tax.', 'Admin.Orderscustomers.Help')
+                'help' => $this->trans('If required, show the total amount per rate of the corresponding tax.', 'Admin.Orderscustomers.Help'),
             ])
             ->add('enable_product_images', SwitchType::class, [
                 'required' => false,
                 'label' => $this->trans('Enable product image', 'Admin.Orderscustomers.Feature'),
-                'help' => $this->trans('Adds an image in front of the product name on the invoice', 'Admin.Orderscustomers.Help')
+                'help' => $this->trans('Adds an image in front of the product name on the invoice', 'Admin.Orderscustomers.Help'),
             ])
             ->add('invoice_prefix', TranslatableType::class, [
                 'required' => false,
                 'type' => TextType::class,
                 'label' => $this->trans('Invoice prefix', 'Admin.Orderscustomers.Feature'),
-                'help' => $this->trans('Freely definable prefix for invoice number (e.g. #IN00001).', 'Admin.Orderscustomers.Help')
+                'help' => $this->trans('Freely definable prefix for invoice number (e.g. #IN00001).', 'Admin.Orderscustomers.Help'),
             ])
             ->add('add_current_year', SwitchType::class, [
                 'required' => false,
@@ -120,31 +120,31 @@ class InvoiceOptionsType extends TranslatorAwareType
             ->add('invoice_number', NumberType::class, [
                 'required' => false,
                 'label' => $this->trans('Invoice number', 'Admin.Orderscustomers.Feature'),
-                'help' => $this->trans('The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number (which is #%number%).', 'Admin.Orderscustomers.Help')
+                'help' => $this->trans('The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number (which is #%number%).', 'Admin.Orderscustomers.Help'),
             ])
             ->add('legal_free_text', TranslatableType::class, [
                 'required' => false,
                 'type' => TextareaType::class,
                 'label' => $this->trans('Legal free text', 'Admin.Orderscustomers.Feature'),
-                'help' => $this->trans('Use this field to show additional information on the invoice, below the payment methods summary (like specific legal information).', 'Admin.Orderscustomers.Help')
+                'help' => $this->trans('Use this field to show additional information on the invoice, below the payment methods summary (like specific legal information).', 'Admin.Orderscustomers.Help'),
             ])
             ->add('footer_text', TranslatableType::class, [
                 'required' => false,
                 'type' => TextType::class,
                 'label' => $this->trans('Footer text', 'Admin.Orderscustomers.Feature'),
-                'help' => $this->trans('This text will appear at the bottom of the invoice, below your company details.', 'Admin.Orderscustomers.Help')
+                'help' => $this->trans('This text will appear at the bottom of the invoice, below your company details.', 'Admin.Orderscustomers.Help'),
             ])
             ->add('invoice_model', ChoiceType::class, [
                 'required' => false,
                 'choices' => $this->invoiceModelChoiceProvider->getChoices(),
                 'translation_domain' => false,
                 'label' => $this->trans('Invoice model', 'Admin.Orderscustomers.Feature'),
-                'help' => $this->trans('Choose an invoice model.', 'Admin.Orderscustomers.Help')
+                'help' => $this->trans('Choose an invoice model.', 'Admin.Orderscustomers.Help'),
             ])
             ->add('use_disk_cache', SwitchType::class, [
                 'required' => false,
                 'label' => $this->trans('Use the disk as cache for PDF invoices', 'Admin.Orderscustomers.Feature'),
-                'help' => $this->trans('Saves memory but slows down the PDF generation.', 'Admin.Orderscustomers.Help')
+                'help' => $this->trans('Saves memory but slows down the PDF generation.', 'Admin.Orderscustomers.Help'),
             ]);
     }
 
