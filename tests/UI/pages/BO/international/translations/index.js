@@ -7,6 +7,7 @@ class Translations extends BOBasePage {
 
     this.pageTitle = 'Translations • ';
     this.validationMessage = 'Translations successfully updated';
+    this.validationResetMessage = 'Translations successfully reset';
 
     // Selectors
     // Modify translation form
@@ -18,6 +19,7 @@ class Translations extends BOBasePage {
     this.searchButton = '#search button';
     this.translationTextarea = 'textarea.form-control';
     this.saveTranslationButton = '#app button[type=\'submit\']';
+    this.resetTranslationButton = '#app  button[class*=\'btn-outline-secondary\']';
     this.growlMessage = '#growls-default div.growl-message';
     // Export language form
     this.exportLanguageForm = 'form[action*=\'translations/export\']';
@@ -32,40 +34,53 @@ class Translations extends BOBasePage {
 
   /**
    * Modify translation
+   * @param page
    * @param translation
    * @param theme
    * @param language
    * @returns {Promise<void>}
    */
-  async modifyTranslation(translation, theme, language) {
-    await this.selectByVisibleText(this.typeOfTranslationSelect, translation);
-    await this.selectByVisibleText(this.selectYourThemeSelect, theme);
-    await this.selectByVisibleText(this.selectYourLanguageSelect, language);
-    await this.clickAndWaitForNavigation(this.modifyTranslationsButton);
+  async modifyTranslation(page, translation, theme, language) {
+    await this.selectByVisibleText(page, this.typeOfTranslationSelect, translation);
+    await this.selectByVisibleText(page, this.selectYourThemeSelect, theme);
+    await this.selectByVisibleText(page, this.selectYourLanguageSelect, language);
+    await this.clickAndWaitForNavigation(page, this.modifyTranslationsButton);
   }
 
   /**
    * Search translation
+   * @param page
    * @param expression
    * @returns {Promise<void>}
    */
-  async searchTranslation(expression){
-    await this.setValue(this.searchInput, expression);
-    await this.page.click(this.searchButton);
-    await this.page.waitForSelector(this.translationTextarea);
-    await this.page.waitForTimeout(2000);
+  async searchTranslation(page, expression) {
+    await this.setValue(page, this.searchInput, expression);
+    await page.click(this.searchButton);
+    await page.waitForSelector(this.translationTextarea);
+    await page.waitForTimeout(2000);
   }
 
   /**
    * Translate an expression
-   * @param expression
+   * @param page
    * @param translation
    * @returns {Promise<string>}
    */
-  async translateExpression(expression, translation) {
-    await this.setValue(this.translationTextarea, translation);
-    await this.page.click(this.saveTranslationButton);
-    return this.getTextContent(this.growlMessage);
+  async translateExpression(page, translation) {
+    await this.setValue(page, this.translationTextarea, translation);
+    await page.click(this.saveTranslationButton);
+    return this.getTextContent(page, this.growlMessage);
+  }
+
+  /**
+   * Reset translation
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async resetTranslation(page) {
+    await this.waitForSelectorAndClick(page, this.resetTranslationButton);
+    await page.click(this.saveTranslationButton);
+    return this.getTextContent(page, this.growlMessage);
   }
 
   /**

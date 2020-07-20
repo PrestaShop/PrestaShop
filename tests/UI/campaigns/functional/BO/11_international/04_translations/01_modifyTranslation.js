@@ -6,9 +6,10 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const TranslationsPage = require('@pages/BO/international/translations');
+const dashboardPage = require('@pages/BO/dashboard');
+const translationsPage = require('@pages/BO/international/translations');
+const homePage = require('@pages/FO/home');
+
 const {Languages} = require('@data/demo/languages');
 
 // Import test context
@@ -19,73 +20,98 @@ const baseContext = 'functional_BO_international_localization_translations_editT
 let browserContext;
 let page;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    translationsPage: new TranslationsPage(page),
-  };
-};
-
 describe('Edit translation', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to translations page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to translations page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTranslationsPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.internationalParentLink,
-      this.pageObjects.dashboardPage.translationsLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.internationalParentLink,
+      dashboardPage.translationsLink,
     );
 
-    const pageTitle = await this.pageObjects.translationsPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.translationsPage.pageTitle);
+    const pageTitle = await translationsPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(translationsPage.pageTitle);
   });
 
-  it('should modify translation', async function () {
+  it('should choose the translation to modify', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'modifyTranslation', baseContext);
 
-    await this.pageObjects.translationsPage.modifyTranslation('Themes translations', 'classic', 'Français (French)');
-    const pageTitle = await this.pageObjects.translationsPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.translationsPage.pageTitle);
+    await translationsPage.modifyTranslation(page, 'Themes translations', 'classic', Languages.french.name);
+    const pageTitle = await translationsPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(translationsPage.pageTitle);
   });
 
   it('should search \'Popular Products\' expression and modify the french translation', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'translateExpression', baseContext);
 
-    await this.pageObjects.translationsPage.searchTranslation('Popular Products');
-    const textResult = await this.pageObjects.translationsPage.translateExpression('translate');
-    await expect(textResult).to.equal(this.pageObjects.translationsPage.validationMessage);
+    await translationsPage.searchTranslation(page, 'Popular Products');
+    const textResult = await translationsPage.translateExpression(page, 'translate');
+    await expect(textResult).to.equal(translationsPage.validationMessage);
   });
 
-  it('should go to FO page', async function () {
+  it('should go to FO page and change the language to French', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
-    await this.pageObjects.homePage.goToFo();
-    await this.pageObjects.homePage.changeLanguage('fr');
+    page = await translationsPage.viewMyShop(page);
+    await homePage.changeLanguage(page, 'fr');
 
-    const isHomePage = await this.pageObjects.homePage.isHomePage();
+    const isHomePage = await homePage.isHomePage(page);
     await expect(isHomePage, 'Fail to open FO home page').to.be.true;
   });
 
   it('should check the translation', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkTranslation', baseContext);
 
-    const title = await this.pageObjects.homePage.getPopularProductTitle();
-    await expect(title).to.equal('translate');
+    const title = await homePage.getPopularProductTitle(page);
+    await expect(title).to.contain('translate');
+  });
+
+  it('should go back to BO', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo', baseContext);
+
+    // Close tab and init other page objects with new current tab
+    page = await homePage.closePage(browserContext, page, 0);
+
+    const pageTitle = await translationsPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(translationsPage.pageTitle);
+  });
+
+  it('should reset the french translation', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'searchAndResetTranslation', baseContext);
+
+    const textResult = await translationsPage.resetTranslation(page);
+    await expect(textResult).to.equal(translationsPage.validationResetMessage);
+  });
+
+  it('should go to FO page and change the language to French', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
+
+    await homePage.goToFo(page);
+    await homePage.changeLanguage(page, 'fr');
+
+    const isHomePage = await homePage.isHomePage(page);
+    await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+  });
+
+  it('should check the translation', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkTranslation', baseContext);
+
+    const title = await homePage.getPopularProductTitle(page);
+    await expect(title).to.equal('Produits populaires');
   });
 });
