@@ -55,7 +55,11 @@ if (!file_exists(_PS_ROOT_DIR_ . '/app/config/parameters.yml') && !file_exists(_
 
 require_once $currentDir . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
-/* Improve PHP configuration on Windows */
+/*
+ * Improve PHP configuration on Windows
+ *
+ * @deprecated since 1.7.8.0
+ */
 if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
     Windows::improveFilesytemPerformances();
 }

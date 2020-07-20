@@ -27,6 +27,8 @@
 /**
  * Class Windows, used to improve the experience
  * when using PrestaShop on Windows operating system.
+ *
+ * @deprecated since 1.7.8.0
  */
 class WindowsCore
 {
