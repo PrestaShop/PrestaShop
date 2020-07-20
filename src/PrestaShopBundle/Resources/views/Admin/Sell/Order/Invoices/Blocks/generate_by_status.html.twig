@@ -24,7 +24,7 @@
  *#}
 
 {% trans_default_domain "Admin.Orderscustomers.Feature" %}
-{% form_theme generateByStatusForm '@PrestaShop/Admin/Sell/Order/Invoices/Themes/generate_by_status_theme.html.twig' _self %}
+{% form_theme generateByStatusForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' _self %}
 
 {% block invoices_generate_by_status %}
   <div id="by-status-block" class="col-xl-12">
