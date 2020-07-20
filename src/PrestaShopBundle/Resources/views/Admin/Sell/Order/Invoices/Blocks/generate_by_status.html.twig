@@ -24,7 +24,7 @@
  *#}
 
 {% trans_default_domain "Admin.Orderscustomers.Feature" %}
-{% form_theme generateByStatusForm '@PrestaShop/Admin/Sell/Order/Invoices/Themes/generate_by_status_theme.html.twig' %}
+{% form_theme generateByStatusForm '@PrestaShop/Admin/Sell/Order/Invoices/Themes/generate_by_status_theme.html.twig' _self %}
 
 {% block invoices_generate_by_status %}
   <div id="by-status-block" class="col-xl-12">
@@ -48,4 +48,24 @@
       </div>
     {{ form_end(generateByStatusForm) }}
   </div>
+{% endblock %}
+
+{% block _form_order_states_entry_label %}
+  {# Do not display the label if widget is not defined in order to prevent double label rendering #}
+  {% if widget is defined %}
+    {% if parent_label_class is defined %}
+      {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' ' ~ parent_label_class)|trim}) %}
+    {% endif %}
+    <div class="md-checkbox">
+      <label>
+        {{- widget|raw -}}
+        <i class="md-checkbox-control"></i>
+        {% set badgeType = orders_count > 0 ? 'success' : 'danger' %}
+        <span class="badge badge-{{ badgeType }}">{{ orders_count }}</span>
+        <span class="status-name">
+          {{- label is not same as(false) ? label|raw -}}
+        </span>
+      </label>
+    </div>
+  {% endif %}
 {% endblock %}
