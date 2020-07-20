@@ -7,6 +7,7 @@ class Home extends FOBasePage {
 
     // Selectors for home page
     this.homePageSection = 'section#content.page-home';
+    this.popularProductTitle = '#content section h2';
     this.productArticle = number => `#content .products div:nth-child(${number}) article`;
     this.productImg = number => `${this.productArticle(number)} img`;
     this.productDescriptionDiv = number => `${this.productArticle(number)} div.product-description`;
@@ -137,5 +138,15 @@ class Home extends FOBasePage {
   async goToAllProductsPage(page) {
     await this.clickAndWaitForNavigation(page, this.allProductLink);
   }
+
+  /**
+   * Get popular product title
+   * @param page
+   * @returns {Promise<string>}
+   */
+  getPopularProductTitle(page) {
+    return this.getTextContent(page, this.popularProductTitle);
+  }
 }
+
 module.exports = new Home();
