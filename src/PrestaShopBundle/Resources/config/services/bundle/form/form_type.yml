@@ -1071,18 +1071,14 @@ services:
 
     form.type.order.credit_slip.generate_pdf_by_date:
         class: 'PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\GeneratePdfByDateType'
-        parent: 'form.type.common_type'
-        arguments:
-            - '@translator'
+        parent: 'form.type.translatable.aware'
         public: true
         tags:
             - { name: form.type }
 
     form.type.order.credit_slip.credit_slip_options:
         class: 'PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\CreditSlipOptionsType'
-        parent: 'form.type.common_type'
-        arguments:
-            - '@translator'
+        parent: 'form.type.translatable.aware'
         public: true
         tags:
             - { name: form.type }
