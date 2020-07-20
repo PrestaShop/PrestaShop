@@ -80,7 +80,7 @@ class GenerateByStatusType extends TranslatorAwareType
                 'multiple' => true,
                 'choices' => $this->orderStateChoiceProvider->getChoices(),
                 'label' => $this->trans('Order statuses', 'Admin.Orderscustomers.Feature'),
-                'help' => $this->trans('You can also export orders which have not been charged yet.', 'Admin.Orderscustomers.Help')
+                'help' => $this->trans('You can also export orders which have not been charged yet.', 'Admin.Orderscustomers.Help'),
             ]);
     }
 
