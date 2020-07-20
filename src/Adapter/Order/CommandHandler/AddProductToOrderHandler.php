@@ -291,7 +291,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      *
      * @return array
      */
-    private function getCartProductData(Cart $cart, Product $product, $combination, int $quantity): array
+    private function getCartProductData(Cart $cart, Product $product, ?Combination $combination, int $quantity): array
     {
         $productItem = array_reduce($cart->getProducts(), function ($carry, $item) use ($product, $combination) {
             if (null !== $carry) {
