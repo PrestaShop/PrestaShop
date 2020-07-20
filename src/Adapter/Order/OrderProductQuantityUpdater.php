@@ -122,7 +122,7 @@ class OrderProductQuantityUpdater
                 $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, $oldQuantity);
                 $this->updateCustomizationOnProductDelete($order, $orderDetail, $oldQuantity);
             } else {
-                $this->assertValidProductQuantity($order, $orderDetail, $newQuantity);
+                $this->assertValidProductQuantity($orderDetail, $newQuantity);
                 $orderDetail->product_quantity = $newQuantity;
                 $orderDetail->reduction_percent = 0;
                 // update taxes
@@ -457,42 +457,21 @@ class OrderProductQuantityUpdater
     }
 
     /**
-     * @param Order $order
      * @param OrderDetail $orderDetail
      * @param int $newQuantity
      *
      * @throws ProductOutOfStockException
      */
-    private function assertValidProductQuantity(Order $order, OrderDetail $orderDetail, int $newQuantity)
+    private function assertValidProductQuantity(OrderDetail $orderDetail, int $newQuantity)
     {
         //check if product is available in stock
         if (!Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($orderDetail->product_id))) {
             $availableQuantity = StockAvailable::getQuantityAvailableByProduct($orderDetail->product_id, $orderDetail->product_attribute_id);
-            $productQuantity = $this->getProductQuantityInOrder($order, (int) $orderDetail->product_id, (int) $orderDetail->product_attribute_id);
+            $quantityDiff = $newQuantity - (int) $orderDetail->product_quantity;
 
-            if ($availableQuantity < $newQuantity - $productQuantity) {
+            if ($quantityDiff > $availableQuantity) {
                 throw new ProductOutOfStockException('Not enough products in stock');
             }
         }
-    }
-
-    /**
-     * @param Order $order
-     * @param int $productId
-     * @param int $productAttributeId
-     *
-     * @return int
-     */
-    private function getProductQuantityInOrder(Order $order, int $productId, int $productAttributeId): int
-    {
-        $productQuantity = 0;
-        foreach ($order->getOrderDetailList() as $orderDetail) {
-            if ((int) $orderDetail['product_id'] === (int) $productId
-                && (int) $orderDetail['product_attribute_id'] === (int) $productAttributeId) {
-                $productQuantity += (int) $orderDetail['product_quantity'];
-            }
-        }
-
-        return $productQuantity;
     }
 }
