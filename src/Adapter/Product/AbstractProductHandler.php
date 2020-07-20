@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
@@ -65,13 +66,13 @@ abstract class AbstractProductHandler
 
             if ((int) $product->id !== $productIdValue) {
                 throw new ProductNotFoundException(sprintf(
-                    'Product #%s was not found',
+                    'Product #%d was not found',
                     $productIdValue
                 ));
             }
         } catch (PrestaShopException $e) {
             throw new ProductException(
-                sprintf('Error occurred when trying to get product #%s', $productId),
+                sprintf('Error occurred when trying to get product #%d', $productId),
                 0,
                 $e
             );
@@ -97,7 +98,7 @@ abstract class AbstractProductHandler
             if (true !== $product->validateField($field, $value, $langId)) {
                 throw new ProductConstraintException(
                     sprintf(
-                        'Invalid localized product %s for language with id "%s"',
+                        'Invalid localized product %d for language with id "%d"',
                         $field,
                         $langId
                     ),
@@ -126,6 +127,31 @@ abstract class AbstractProductHandler
                     $product->{$field}
                 ),
                 $errorCode
+            );
+        }
+    }
+
+    /**
+     * @param Product $product
+     * @param int $errorCode
+     *
+     * @throws CannotUpdateProductException
+     * @throws ProductException
+     */
+    protected function performUpdate(Product $product, int $errorCode): void
+    {
+        try {
+            if (false === $product->update()) {
+                throw new CannotUpdateProductException(
+                    sprintf('Failed to update product #%d', $product->id),
+                    $errorCode
+                );
+            }
+        } catch (PrestaShopException $e) {
+            throw new ProductException(
+                sprintf('Error occurred when trying to update product #%d', $product->id),
+                0,
+                $e
             );
         }
     }

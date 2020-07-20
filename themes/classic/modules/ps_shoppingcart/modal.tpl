@@ -36,7 +36,7 @@
           <div class="col-md-5 divide-right">
             <div class="row">
               <div class="col-md-6">
-                <img class="product-image" src="{$product.cover.medium.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" itemprop="image">
+                <img class="product-image" src="{$product.cover.medium.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" itemprop="image" loading="lazy">
               </div>
               <div class="col-md-6">
                 <h6 class="h6 product-name">{$product.name}</h6>

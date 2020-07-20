@@ -38,7 +38,7 @@ use DateTime;
 use Exception;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveCartRuleFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
@@ -175,7 +175,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         $cartId = (int) SharedStorage::getStorage()->get($reference);
 
         /** @var CustomizationId $customizationId */
-        $customizationId = $this->getCommandBus()->handle(new AddCustomizationFieldsCommand(
+        $customizationId = $this->getCommandBus()->handle(new AddCustomizationCommand(
             $cartId,
             $productId,
             $customizations

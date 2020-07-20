@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -81,21 +82,35 @@ class ModuleTabRegister
     private $languages;
 
     /**
+     * @var LoaderInterface
+     */
+    private $routingConfigLoader;
+
+    /**
      * @param TabRepository $tabRepository
      * @param LangRepository $langRepository
      * @param LoggerInterface $logger
      * @param TranslatorInterface $translator
      * @param Filesystem $filesystem
      * @param array $languages
+     * @param LoaderInterface $routingConfigLoader
      */
-    public function __construct(TabRepository $tabRepository, LangRepository $langRepository, LoggerInterface $logger, TranslatorInterface $translator, Filesystem $filesystem, array $languages)
-    {
+    public function __construct(
+        TabRepository $tabRepository,
+        LangRepository $langRepository,
+        LoggerInterface $logger,
+        TranslatorInterface $translator,
+        Filesystem $filesystem,
+        array $languages,
+        LoaderInterface $routingConfigLoader
+    ) {
         $this->langRepository = $langRepository;
         $this->tabRepository = $tabRepository;
         $this->logger = $logger;
         $this->translator = $translator;
         $this->filesystem = $filesystem;
         $this->languages = $languages;
+        $this->routingConfigLoader = $routingConfigLoader;
     }
 
     /**
@@ -147,8 +162,8 @@ class ModuleTabRegister
             }
         }, $tabs);
 
-        foreach ($this->getModuleAdminControllersFilename($moduleName) as $adminControllerFileName) {
-            $adminControllerName = str_replace('Controller.php', '', $adminControllerFileName);
+        $detectedControllers = $this->getDetectedModuleControllers($moduleName);
+        foreach ($detectedControllers as $adminControllerName) {
             if (in_array($adminControllerName, $tabsNames)) {
                 continue;
             }
@@ -167,6 +182,30 @@ class ModuleTabRegister
     }
 
     /**
+     * Returns a list of all detected controllers, either from admin/controllers folder
+     * or from the routing file.
+     *
+     * @param string $moduleName
+     *
+     * @return array
+     *
+     * @throws Exception
+     */
+    protected function getDetectedModuleControllers(string $moduleName): array
+    {
+        $legacyControllersFilenames = $this->getModuleAdminControllersFilename($moduleName);
+        $legacyControllers = array_map(function ($legacyControllersFilename) {
+            return str_replace('Controller.php', '', $legacyControllersFilename);
+        }, $legacyControllersFilenames);
+        $legacyControllers = $legacyControllers ?? [];
+
+        $routingControllers = $this->getModuleControllersFromRouting($moduleName);
+        $routingControllers = $routingControllers ?? [];
+
+        return array_merge($legacyControllers, $routingControllers);
+    }
+
+    /**
      * Check mandatory data for tab registration, such as class name and class exists.
      *
      * @param string $moduleName
@@ -182,10 +221,13 @@ class ModuleTabRegister
         if (null === $className) {
             throw new Exception('Missing class name of tab');
         }
+
         // Check controller exists
-        if (empty($data->get('route_name')) && !in_array($className . 'Controller.php', $this->getModuleAdminControllersFilename($moduleName))) {
-            throw new Exception(sprintf('Class "%sController" not found in controllers/admin', $className));
+        $detectedControllers = $this->getDetectedModuleControllers($moduleName);
+        if (empty($data->get('route_name')) && !in_array($className, $detectedControllers)) {
+            throw new Exception(sprintf('Class "%sController" not found in controllers/admin nor routing file', $className));
         }
+
         // Deprecation check
         if ($data->has('ParentClassName') && !$data->has('parent_class_name')) {
             $this->logger->warning('Tab attribute "ParentClassName" is deprecated. You must use "parent_class_name" instead.');
@@ -224,6 +266,37 @@ class ModuleTabRegister
             ->contains('/Controller\s+extends\s+/i');
 
         return iterator_to_array($moduleFolder);
+    }
+
+    /**
+     * Parses the routes file from the module and return the list of associated controller
+     * via the _legacy_controller routing option.
+     *
+     * @param string $moduleName
+     *
+     * @return string[]
+     *
+     * @throws Exception
+     */
+    protected function getModuleControllersFromRouting(string $moduleName): array
+    {
+        $routingFile = _PS_ROOT_DIR_ . '/' . basename(_PS_MODULE_DIR_) .
+            '/' . $moduleName . '/config/routes.yml';
+
+        if (!$this->filesystem->exists($routingFile)) {
+            return [];
+        }
+
+        $routingControllers = [];
+        $moduleRoutes = $this->routingConfigLoader->import($routingFile, 'yaml');
+        foreach ($moduleRoutes->getIterator() as $route) {
+            $legacyController = $route->getDefault('_legacy_controller');
+            if (!empty($legacyController)) {
+                $routingControllers[] = $legacyController;
+            }
+        }
+
+        return $routingControllers;
     }
 
     /**

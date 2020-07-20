@@ -88,7 +88,7 @@ describe('Create footer link widget and check it in FO', async () => {
       await expect(textResult).to.equal(this.pageObjects.linkWidgetsPage.successfulCreationMessage);
 
       numberOfLinkWidgetInFooter = await this.pageObjects.linkWidgetsPage.getNumberOfElementInGrid(
-        hooks.displayFooter.id,
+        hooks.displayFooter.name,
       );
       await expect(numberOfLinkWidgetInFooter).to.be.above(0);
     });
@@ -127,14 +127,14 @@ describe('Create footer link widget and check it in FO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteLinkWidget', baseContext);
 
       const textResult = await this.pageObjects.linkWidgetsPage.deleteLinkWidget(
-        hooks.displayFooter.id,
+        hooks.displayFooter.name,
         numberOfLinkWidgetInFooter,
       );
 
       await expect(textResult).to.equal(this.pageObjects.linkWidgetsPage.successfulDeleteMessage);
 
       const numberOfLinkWidgetAfterDelete = await this.pageObjects.linkWidgetsPage.getNumberOfElementInGrid(
-        hooks.displayFooter.id,
+        hooks.displayFooter.name,
       );
 
       await expect(numberOfLinkWidgetAfterDelete).to.equal(numberOfLinkWidgetInFooter - 1);

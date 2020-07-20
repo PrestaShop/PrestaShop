@@ -27,10 +27,14 @@
 namespace Tests\Integration\Behaviour\Features\Context\Configuration;
 
 use Configuration;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
+use Tests\Integration\Behaviour\Features\Transform\StringToBooleanTransform;
 use Tools;
 
 class CommonConfigurationFeatureContext extends AbstractConfigurationFeatureContext
 {
+    use StringToBooleanTransform;
+
     /**
      * @Given /^shop configuration for "(.+)" is set to (.+)$/
      */
@@ -64,5 +68,19 @@ class CommonConfigurationFeatureContext extends AbstractConfigurationFeatureCont
     public function activateGroupFeature()
     {
         Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', '1');
+    }
+
+    /**
+     * @Given /^customization feature is (enabled|disabled)$/
+     *
+     * @Transform(enabled|disabled)
+     */
+    public function toggleCustomizationFeature(string $status)
+    {
+        $status = PrimitiveUtils::castStringBooleanIntoBoolean($status);
+        Configuration::set(
+            'PS_CUSTOMIZATION_FEATURE_ACTIVE',
+            $status
+        );
     }
 }

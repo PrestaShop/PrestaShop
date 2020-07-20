@@ -79,7 +79,7 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
             return;
         }
 
-        $this->performUpdate($product);
+        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_PRICES);
     }
 
     /**
@@ -180,7 +180,7 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
             if (!$taxRulesGroup->id) {
                 throw new ProductConstraintException(
                     sprintf(
-                        'Invalid tax rules group id "%s". Group doesn\'t exist',
+                        'Invalid tax rules group id "%d". Group doesn\'t exist',
                         $taxRulesGroupId
                     ),
                     ProductConstraintException::INVALID_TAX_RULES_GROUP_ID
@@ -189,7 +189,7 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
         } catch (PrestaShopException $e) {
             throw new ProductException(
                 sprintf(
-                    'Error occurred when trying to load tax rules group #%s for product',
+                    'Error occurred when trying to load tax rules group #%d for product',
                     $taxRulesGroupId
                 ),
                 0,
@@ -244,35 +244,6 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
                     $unitPrice
                 ),
                 ProductConstraintException::INVALID_UNIT_PRICE
-            );
-        }
-    }
-
-    /**
-     * @param Product $product
-     *
-     * @throws CannotUpdateProductException
-     */
-    private function performUpdate(Product $product): void
-    {
-        try {
-            if (false === $product->update()) {
-                throw new CannotUpdateProductException(
-                    sprintf(
-                        'Failed to update product #%s prices',
-                        $product->id
-                    ),
-                    CannotUpdateProductException::FAILED_UPDATE_PRICES
-                );
-            }
-        } catch (PrestaShopException $e) {
-            throw new CannotUpdateProductException(
-                sprintf(
-                    'Error occurred when trying to update product #%s prices',
-                    $product->id
-                ),
-                CannotUpdateProductException::FAILED_UPDATE_PRICES,
-                $e
             );
         }
     }

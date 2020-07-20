@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Command\BulkToggleCurrenciesStatu
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\BulkToggleCurrenciesStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\BulkToggleCurrenciesException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
+use PrestaShopException;
 
 /**
  * Toggles multiple currencies status using legacy Currency object model

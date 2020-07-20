@@ -166,8 +166,17 @@ class ProfileController extends FrameworkBundleAdminController
 
         try {
             $form = $formBuilder->getFormFor((int) $profileId);
-            $form->handleRequest($request);
+        } catch (Exception $exception) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+            );
 
+            return $this->redirectToRoute('admin_profiles_index');
+        }
+
+        try {
+            $form->handleRequest($request);
             $handlerResult = $formHandler->handleFor((int) $profileId, $form);
 
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {

@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformat
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductBasicInformationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShopException;
 use Product;
 
 /**
@@ -56,7 +55,7 @@ final class UpdateProductBasicInformationHandler extends AbstractProductHandler 
             return;
         }
 
-        $this->performUpdate($product);
+        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_BASIC_INFO);
     }
 
     /**
@@ -103,29 +102,6 @@ final class UpdateProductBasicInformationHandler extends AbstractProductHandler 
     {
         foreach ($localizedValues as $langId => $value) {
             $this->fieldsToUpdate[$field][$langId] = true;
-        }
-    }
-
-    /**
-     * @param Product $product
-     *
-     * @throws CannotUpdateProductException
-     */
-    private function performUpdate(Product $product): void
-    {
-        try {
-            if (false === $product->update()) {
-                throw new CannotUpdateProductException(
-                    sprintf('Failed to update product #%s basic information', $product->id),
-                    CannotUpdateProductException::FAILED_UPDATE_BASIC_INFO
-                );
-            }
-        } catch (PrestaShopException $e) {
-            throw new CannotUpdateProductException(
-                sprintf('Error occurred when trying to update product #%s basic information', $product->id),
-                CannotUpdateProductException::FAILED_UPDATE_BASIC_INFO,
-                $e
-            );
         }
     }
 }

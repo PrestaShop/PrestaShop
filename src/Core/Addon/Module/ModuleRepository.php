@@ -58,6 +58,11 @@ class ModuleRepository implements ModuleRepositoryInterface
     private $adminModuleProvider;
 
     /**
+     * @var Finder
+     */
+    private $finder;
+
+    /**
      * Logger.
      *
      * @var \Psr\Log\LoggerInterface
@@ -97,8 +102,6 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     private $prestaTrustChecker = null;
 
-    //### CACHE PROPERTIES ####
-
     /**
      * Key of the cache content.
      *
@@ -126,8 +129,6 @@ class ModuleRepository implements ModuleRepositoryInterface
      * @var ArrayCache
      */
     private $loadedModules;
-
-    //### END OF CACHE PROPERTIES ####
 
     public function __construct(
         AdminModuleDataProvider $adminModulesProvider,

@@ -143,6 +143,11 @@ class OrderForViewing
     private $discounts;
 
     /**
+     * @var LinkedOrdersForViewing
+     */
+    private $linkedOrders;
+
+    /**
      * @var DateTimeImmutable
      */
     private $createdAt;
@@ -213,6 +218,7 @@ class OrderForViewing
      * @param OrderDiscountsForViewing $discounts
      * @param OrderSourcesForViewing $sources
      * @param string $note
+     * @param LinkedOrdersForViewing $linkedOrders
      */
     public function __construct(
         int $orderId,
@@ -245,6 +251,7 @@ class OrderForViewing
         OrderDiscountsForViewing $discounts,
         OrderSourcesForViewing $sources,
         string $note = ''
+        LinkedOrdersForViewing $linkedOrders
     ) {
         $this->reference = $reference;
         $this->customer = $customer;
@@ -276,6 +283,7 @@ class OrderForViewing
         $this->invoiceManagementIsEnabled = $invoiceManagementIsEnabled;
         $this->sources = $sources;
         $this->note = $note;
+        $this->linkedOrders = $linkedOrders;
     }
 
     /**
@@ -481,6 +489,14 @@ class OrderForViewing
     public function getDiscounts(): OrderDiscountsForViewing
     {
         return $this->discounts;
+    }
+
+    /**
+     * @return LinkedOrdersForViewing
+     */
+    public function getLinkedOrders(): LinkedOrdersForViewing
+    {
+        return $this->linkedOrders;
     }
 
     /**

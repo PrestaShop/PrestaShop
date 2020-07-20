@@ -203,14 +203,24 @@ class CustomerController extends AbstractAdminController
     public function editAction($customerId, Request $request)
     {
         $this->addGroupSelectionToRequest($request);
+        /** @var ViewableCustomer $customerInformation */
+        $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int) $customerId));
+        $customerFormOptions = [
+            'is_password_required' => false,
+        ];
         try {
-            /** @var ViewableCustomer $customerInformation */
-            $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int) $customerId));
-            $customerFormOptions = [
-                'is_password_required' => false,
-            ];
             $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')
                 ->getFormFor((int) $customerId, [], $customerFormOptions);
+        } catch (Exception $exception) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages($exception))
+            );
+
+            return $this->redirectToRoute('admin_customers_index');
+        }
+
+        try {
             $customerForm->handleRequest($request);
             $customerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.customer_form_handler');
             $result = $customerFormHandler->handleFor((int) $customerId, $customerForm);
@@ -270,6 +280,10 @@ class CustomerController extends AbstractAdminController
         $privateNoteForm = $this->createForm(PrivateNoteType::class, [
             'note' => $customerInformation->getGeneralInformation()->getPrivateNote(),
         ]);
+
+        if ($request->query->has('conf')) {
+            $this->manageLegacyFlashes($request->query->get('conf'));
+        }
 
         return $this->render('@PrestaShop/Admin/Sell/Customer/view.html.twig', [
             'enableSidebar' => true,
@@ -934,5 +948,26 @@ class CustomerController extends AbstractAdminController
                 ]
             ),
         ];
+    }
+
+    /**
+     * Manage legacy flashes
+     *
+     * @todo Remove this code when legacy edit will be migrated.
+     *
+     * @param int $messageId The message id from legacy context
+     */
+    private function manageLegacyFlashes($messageId)
+    {
+        $messages = [
+            4 => $this->trans('Update successful.', 'Admin.Notifications.Success'),
+        ];
+
+        if (isset($messages[$messageId])) {
+            $this->addFlash(
+                'success',
+                $messages[$messageId]
+            );
+        }
     }
 }

@@ -64,6 +64,7 @@ use Product;
 use RuntimeException;
 use stdClass;
 use Tax;
+use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class OrderFeatureContext extends AbstractDomainFeatureContext
@@ -1091,6 +1092,12 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      */
     private function getOrderDiscountByName(int $orderId, string $cartRuleName): ?OrderDiscountForViewing
     {
+        $cartRuleName = CommonFeatureContext::getContainer()->get('translator')->trans(
+            $cartRuleName,
+            [],
+            'Admin.Orderscustomers.Feature'
+        );
+
         /** @var OrderDiscountForViewing[] $orderDiscountsForViewing */
         $orderDiscountsForViewing = $this->getOrderDiscounts($orderId);
 

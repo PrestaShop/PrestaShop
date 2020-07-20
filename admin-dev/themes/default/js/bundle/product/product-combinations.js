@@ -160,7 +160,7 @@ var combinations = (function() {
             }
           });
 
-          $('.attribute_default_checkbox').removeAttr('checked');
+          $('.attribute_default_checkbox').prop('checked', false);
           getCombinationForm(attributeId)
             .find('input[id^="combination"][id$="_attribute_default"]')
             .prop("checked", true);

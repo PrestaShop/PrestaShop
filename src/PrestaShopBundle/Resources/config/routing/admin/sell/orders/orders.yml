@@ -352,3 +352,15 @@ admin_orders_set_internal_note:
       id_order: orderId
   requirements:
     orderId: \d+
+
+admin_orders_display_customization_image:
+  path: /display-customization-image/{orderId}/{type}/{name}/{value}
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:displayCustomizationImage
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+    type: \d+
+    name: \w+
+    value: \w+

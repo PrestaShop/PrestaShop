@@ -45,7 +45,7 @@
     "mochawesome": "^2.3.0",
     "module-alias": "^2.2.2",
     "pdfjs-dist": "^2.3.200",
-    "playwright": "^1.0.2"
+    "playwright": "^1.1.1"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",

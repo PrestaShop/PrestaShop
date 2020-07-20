@@ -37,7 +37,7 @@ class CustomizationFieldCore extends ObjectModel
     public $required;
     /** @var bool Field was added by a module */
     public $is_module;
-    /** @var string Label for customized field */
+    /** @var string[] Label for customized field */
     public $name;
     /** @var bool Soft delete */
     public $is_deleted;

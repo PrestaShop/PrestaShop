@@ -1092,6 +1092,7 @@ namespace PrestaShopBundle\Install {
 
         const SETTINGS_FILE = 'config/settings.inc.php';
 
+        /* @phpstan-ignore-next-line */
         public static function migrateSettingsFile(Event $event = null)
         {
             if ($event !== null) {

@@ -26,15 +26,17 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
+use PrestaShop\PrestaShop\Adapter\Image\Uploader\EmployeeImageUploader;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\AddEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\EditEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Employee\Access\EmployeeFormAccessCheckerInterface;
 use PrestaShop\PrestaShop\Core\Employee\EmployeeDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Handles submitted employee form's data.
@@ -72,6 +74,11 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
     private $hashing;
 
     /**
+     * @var ImageUploaderInterface
+     */
+    private $imageUploader;
+
+    /**
      * @param CommandBusInterface $bus
      * @param array $defaultShopAssociation
      * @param int $superAdminProfileId
@@ -85,7 +92,8 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
         $superAdminProfileId,
         EmployeeFormAccessCheckerInterface $employeeFormAccessChecker,
         EmployeeDataProviderInterface $employeeDataProvider,
-        Hashing $hashing
+        Hashing $hashing,
+        ImageUploaderInterface $imageUploader = null
     ) {
         $this->bus = $bus;
         $this->defaultShopAssociation = $defaultShopAssociation;
@@ -93,6 +101,7 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
         $this->employeeFormAccessChecker = $employeeFormAccessChecker;
         $this->employeeDataProvider = $employeeDataProvider;
         $this->hashing = $hashing;
+        $this->imageUploader = $imageUploader ?? new EmployeeImageUploader();
     }
 
     /**
@@ -118,6 +127,12 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
             isset($data['shop_association']) ? $data['shop_association'] : $this->defaultShopAssociation
         ));
 
+        /** @var UploadedFile $uploadedAvatar */
+        $uploadedAvatar = $data['avatarUrl'] ?? null;
+        if (!empty($uploadedAvatar) && $uploadedAvatar instanceof UploadedFile) {
+            $this->imageUploader->upload($employeeId->getValue(), $uploadedAvatar);
+        }
+
         return $employeeId->getValue();
     }
 
@@ -126,6 +141,12 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
+        /** @var UploadedFile $uploadedAvatar */
+        $uploadedAvatar = $data['avatarUrl'];
+        if ($uploadedAvatar instanceof UploadedFile) {
+            $this->imageUploader->upload($id, $uploadedAvatar);
+        }
+
         $command = (new EditEmployeeCommand($id))
             ->setFirstName($data['firstname'])
             ->setLastName($data['lastname'])

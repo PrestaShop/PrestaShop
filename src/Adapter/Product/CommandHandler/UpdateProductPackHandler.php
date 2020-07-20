@@ -57,7 +57,7 @@ final class UpdateProductPackHandler extends AbstractProductHandler implements U
 
         if (false === Pack::deleteItems($packId)) {
             throw new ProductPackException(
-                sprintf('Failed deleting products from pack #%s', $packId),
+                sprintf('Failed deleting previous products from pack #%d before adding new ones', $packId),
                 ProductPackException::FAILED_DELETING_PRODUCTS_FROM_PACK
             );
         }
@@ -106,7 +106,7 @@ final class UpdateProductPackHandler extends AbstractProductHandler implements U
     {
         if (Pack::isPack($productId)) {
             throw new ProductPackException(
-                sprintf('Product #%s is a pack itself. It cannot be packed', $productId),
+                sprintf('Product #%d is a pack itself. It cannot be packed', $productId),
                 ProductPackException::CANNOT_ADD_PACK_INTO_PACK
             );
         }
@@ -124,11 +124,11 @@ final class UpdateProductPackHandler extends AbstractProductHandler implements U
     private function appendIdsToMessage(string $messageBody, QuantifiedProduct $product, int $packId): string
     {
         if ($product->getCombinationId()) {
-            $combinationId = sprintf(' combinationId #%s', $product->getCombinationId()->getValue());
+            $combinationId = sprintf(' combinationId #%d', $product->getCombinationId()->getValue());
         }
 
         return sprintf(
-            "$messageBody. [packId #%s; productId #%s;%s]",
+            "$messageBody. [packId #%d; productId #%d;%s]",
             $packId,
             $product->getProductId()->getValue(),
             isset($combinationId) ? $combinationId : ''

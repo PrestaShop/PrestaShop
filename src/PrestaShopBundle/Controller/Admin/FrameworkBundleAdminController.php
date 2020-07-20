@@ -87,7 +87,7 @@ class FrameworkBundleAdminController extends Controller
      *
      * Parse all errors mapped by id html field
      *
-     * @param Form $form The form
+     * @param Form $form
      *
      * @return array[array[string]] Errors
      *
@@ -249,7 +249,7 @@ class FrameworkBundleAdminController extends Controller
     /**
      * Checks if the attributes are granted against the current authentication token and optionally supplied object.
      *
-     * @param string $controller name of the controller to valide access
+     * @param string $controller name of the controller that token is tested against
      *
      * @return int
      *
