@@ -99,6 +99,11 @@ class CustomerNameValidator extends ConstraintValidator
         if (mb_strpos($name, '.') === false && mb_strpos($name, '。') === false) {
             return true;
         }
+
+        if (mb_strpos($name, '.') === 0 || mb_strpos($name, '。') === 0) {
+            return false;
+        }
+
         $pattern = $this->characterCleaner->cleanNonUnicodeSupport(self::PATTERN_DOT_SPACED);
 
         return (bool) preg_match($pattern, $name);
