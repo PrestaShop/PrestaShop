@@ -122,7 +122,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
         // Get context precision just in case
         $this->computingPrecision = $this->context->getComputingPrecision();
-        $temporarySpecificPrices = [];
         try {
             $this->assertOrderWasNotShipped($order);
             $this->assertProductDuplicate($order, $command);
@@ -179,7 +178,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 $command->getProductPriceTaxExcluded()
             );
 
-            // update invoices
             $this->updateOrderInvoices($order);
 
             StockAvailable::synchronize($product->id);
@@ -619,10 +617,10 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     {
         foreach($order->getOrderDetailList() as $row) {
             $orderDetail = new OrderDetail($row['id_order_detail']);
-            if ($orderDetail->product_id !== (int) $product->id) {
+            if ((int) $orderDetail->product_id !== (int) $product->id) {
                 continue;
             }
-            if (!empty($combinationId) && $combinationId !== (int) $orderDetail['product_attribute_id']) {
+            if (!empty($combinationId) && (int) $combinationId !== (int) $orderDetail->product_attribute_id) {
                 continue;
             }
             $orderDetail->unit_price_tax_excl = (float) (string) $priceTaxExcluded;
@@ -635,12 +633,30 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     }
 
     /**
+     * This method takes care of multi-invoices, all invoices are updated
+     *
      * @param Order $order
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
      */
     private function updateOrderInvoices(Order $order): void
     {
-        $orderInvoices = $order->getInvoicesCollection();
+        $orderInvoices = OrderInvoice::getInvoicesByOrderId($order->id);
 
-        // find invoices that should be updated, and update them
+        foreach ($orderInvoices as $invoice) {
+            $totalProductsTaxExcluded = 0;
+            $totalProductsTaxIncluded = 0;
+            foreach ($invoice->getProducts() as $product) {
+                $totalProductsTaxExcluded += (float) $product['total_price_tax_excl'];
+                $totalProductsTaxIncluded += (float) $product['total_price_tax_incl'];
+            }
+            $invoice->total_products_wt = (float) Tools::ps_round($totalProductsTaxExcluded, $this->computingPrecision);
+            $invoice->total_products = (float) Tools::ps_round($totalProductsTaxIncluded, $this->computingPrecision);
+
+            $invoice->total_paid_tax_excl = (float) Tools::ps_round($totalProductsTaxExcluded + $invoice->total_shipping_tax_excl, $this->computingPrecision);
+            $invoice->total_paid_tax_incl = (float) Tools::ps_round($totalProductsTaxIncluded + $invoice->total_shipping_tax_incl, $this->computingPrecision);
+
+            $invoice->update();
+        }
     }
 }
