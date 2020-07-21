@@ -24,8 +24,8 @@
  *#}
 
 <div class="card js-grid-panel" id="{{ grid.id }}_grid_panel">
-{% if grid.name is not null or grid.actions.grid|length > 0 %}
   {% block grid_panel_header %}
+    {% if grid.name is not null or grid.actions.grid|length > 0 %}
     <div class="card-header js-grid-header">
       {% if grid.name is not null %}
         <h3 class="d-inline-block card-header-title">
@@ -38,8 +38,8 @@
         </div>
       {% endblock %}
     </div>
+    {% endif %}
   {% endblock %}
-{% endif %}
 
   {% block grid_panel_body %}
     <div class="card-body">
