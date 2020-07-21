@@ -80,8 +80,7 @@ final class ManufacturerImageUploader extends AbstractImageUploader
 
         try {
             /* Generate images with different size */
-            if (isset($_FILES) &&
-                count($_FILES) &&
+            if (count($_FILES) &&
                 file_exists(_PS_MANU_IMG_DIR_ . $manufacturerId . '.jpg')
             ) {
                 $imageTypes = ImageType::getImagesTypes('manufacturers');

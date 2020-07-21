@@ -74,7 +74,7 @@ final class AddProductHandler extends AbstractProductHandler implements AddProdu
             if (!$product->add()) {
                 throw new ProductException('Failed to add new basic product');
             }
-            $product->updateCategories([$this->defaultCategoryId]);
+            $product->addToCategories([$this->defaultCategoryId]);
         } catch (PrestaShopException $e) {
             throw new ProductException('Error occurred when trying to add new basic product.', 0, $e);
         }

@@ -37,6 +37,7 @@
                 {else}
                   alt="{$product.name}"
                 {/if}
+                loading="lazy"
                 data-full-size-image-url="{$product.cover.large.url}"
               >
             </a>
@@ -49,12 +50,12 @@
           </a>
         </div>
 
-        {if $showPackProductsPrice} 
+        {if $showPackProductsPrice}
           <div class="pack-product-price">
             <strong>{$product.price}</strong>
           </div>
         {/if}
-        
+
         <div class="pack-product-quantity">
           <span>x {$product.pack_quantity}</span>
         </div>

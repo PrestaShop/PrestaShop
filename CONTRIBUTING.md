@@ -6,7 +6,7 @@ PrestaShop is an open-source e-commerce solution. Everyone is welcome and even e
 PrestaShop 1.7 is written mostly in PHP. Other languages used throughout are JavaScript, HTML, CSS, the Smarty & Twig templating languages, SQL, and XML.
 
 To contribute to the project, you should ideally be familiar with Git, the source code management system that PrestaShop uses, with the official repository being hosted on Github: 
-* You can learn more about Git here: http://try.github.io/ (there are many tutorials available on the Web).
+* You can learn more about Git here: https://try.github.io/ (there are many tutorials available on the Web).
 * You can get help on Github here: https://help.github.com/.
 * Windows users can get a nice interface for Git by installing TortoiseGit: https://tortoisegit.org/
 
@@ -22,6 +22,8 @@ Contributors should follow the following process:
 8. Wait for one of the core developers either to include your change in the codebase, or to comment on possible improvements you should make to your code.
 
 That's it: you have contributed to this open source project! Congratulations!
+
+You don't exactly know where to start? Pick one of our [good first issues][9] to get the list of all beginner-friendly improvements and bugs to fix. Read more about this label on [Build][10].
 
 The PrestaShop documentation features a thorough explanation of the [complete process to your first pull request][4].
 
@@ -41,9 +43,11 @@ Thank you for your help in making PrestaShop even better!
 [1]: https://devdocs.prestashop.com/1.7/development/coding-standards/
 [2]: https://devdocs.prestashop.com/1.7/contribute/contribution-guidelines/
 [3]: https://help.github.com/articles/using-pull-requests
-[4]: http://doc.prestashop.com/display/PS16/Contributing+code+to+PrestaShop
+[4]: https://devdocs.prestashop.com/1.7/contribute/contribute-pull-requests/
 [5]: https://github.com/PrestaShop/PrestaShop/issues/new/choose
 [6]: https://github.com/join
-[7]: http://opensource.org/licenses/OSL-3.0
-[8]: http://opensource.org/licenses/AFL-3.0
+[7]: https://opensource.org/licenses/OSL-3.0
+[8]: https://opensource.org/licenses/AFL-3.0
+[9]: https://github.com/PrestaShop/PrestaShop/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22
+[10]: https://build.prestashop.com/news/a-definition-of-the-good-first-issue-label
 

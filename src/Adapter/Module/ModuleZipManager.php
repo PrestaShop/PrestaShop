@@ -111,6 +111,7 @@ class ModuleZipManager
             ->ignoreVCS(true);
 
         $validModuleStructure = false;
+        $moduleName = '';
         // We must have only one folder in the zip, which contains the module files
         if (iterator_count($directories->directories()) == 1) {
             $directories = iterator_to_array($directories);

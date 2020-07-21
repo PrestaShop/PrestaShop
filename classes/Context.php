@@ -364,6 +364,8 @@ class ContextCore
         $this->cookie->id_cart = (int) $this->cart->id;
         $this->cookie->write();
         $this->cart->autosetProductAddress();
+
+        $this->cookie->registerSession(new CustomerSession());
     }
 
     /**
@@ -376,7 +378,7 @@ class ContextCore
      */
     public function getTranslator($isInstaller = false)
     {
-        if (null !== $this->translator) {
+        if (null !== $this->translator && $this->language->locale === $this->translator->getLocale()) {
             return $this->translator;
         }
 

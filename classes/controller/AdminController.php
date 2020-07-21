@@ -539,10 +539,7 @@ class AdminControllerCore extends Controller
         }
 
         // Check if logged on Addons
-        $this->logged_on_addons = false;
-        if (isset($this->context->cookie->username_addons, $this->context->cookie->password_addons) && !empty($this->context->cookie->username_addons) && !empty($this->context->cookie->password_addons)) {
-            $this->logged_on_addons = true;
-        }
+        $this->logged_on_addons = !empty($this->context->cookie->username_addons) && !empty($this->context->cookie->password_addons);
 
         // Set context mode
         if (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_) {

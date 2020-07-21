@@ -163,6 +163,16 @@ class LegacyContext
     }
 
     /**
+     * Adapter to get upload directory
+     *
+     * @return string
+     */
+    public function getUploadDirectory()
+    {
+        return _PS_UPLOAD_DIR_;
+    }
+
+    /**
      * Url to the mail themes folder
      *
      * @return string
@@ -239,7 +249,7 @@ class LegacyContext
      * @param int|bool $id_shop Shop ID
      * @param bool $ids_only If true, returns an array of language IDs
      *
-     * @return array Languages
+     * @return array<int|Language> Languages
      */
     public function getLanguages($active = true, $id_shop = false, $ids_only = false)
     {

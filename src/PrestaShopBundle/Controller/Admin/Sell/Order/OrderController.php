@@ -68,6 +68,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizationForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
@@ -94,6 +95,9 @@ use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -1458,6 +1462,47 @@ class OrderController extends FrameworkBundleAdminController
         }
 
         return $this->json(null, Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * Method for downloading customization picture
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param int $orderId
+     * @param int $type
+     * @param string $name
+     * @param string $value
+     *
+     * @return BinaryFileResponse|RedirectResponse
+     */
+    public function displayCustomizationImageAction(int $orderId, int $type, string $name, string $value)
+    {
+        $uploadDir = $this->get('prestashop.adapter.legacy.context')->getUploadDirectory();
+        $customizationForViewing = new OrderProductCustomizationForViewing($type, $name, $value);
+        $filePath = $uploadDir . $customizationForViewing->getValue();
+        $filesystem = new Filesystem();
+
+        try {
+            if (!$filesystem->exists($filePath)) {
+                $this->addFlash('error', $this->trans('The product customization picture could not be found.', 'Admin.Notifications.Error'));
+
+                return $this->redirectToRoute('admin_orders_view', [
+                    'orderId' => $orderId,
+                ]);
+            }
+
+            $imageFile = new File($filePath);
+            $fileName = sprintf('%s-customization-%s.%s', $orderId, $name, $imageFile->guessExtension() ?? 'jpg');
+
+            return $this->file($filePath, $fileName);
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
     }
 
     /**

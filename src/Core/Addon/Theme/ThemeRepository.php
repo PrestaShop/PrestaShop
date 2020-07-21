@@ -39,9 +39,22 @@ use Symfony\Component\Yaml\Parser;
 
 class ThemeRepository implements AddonRepositoryInterface
 {
+    /**
+     * @var ConfigurationInterface
+     */
     private $appConfiguration;
+    /**
+     * @var Filesystem
+     */
     private $filesystem;
+    /**
+     * @var Shop|null
+     */
     private $shop;
+    /**
+     * @var array
+     */
+    public $themes;
 
     public function __construct(ConfigurationInterface $configuration, Filesystem $filesystem, Shop $shop = null)
     {
@@ -130,10 +143,7 @@ class ThemeRepository implements AddonRepositoryInterface
         $themes = [];
         foreach ($themeDirectories as $directory) {
             $name = basename(substr($directory, 0, -strlen($suffix)));
-            $theme = $this->getInstanceByName($name);
-            if (isset($theme)) {
-                $themes[$name] = $theme;
-            }
+            $themes[$name] = $this->getInstanceByName($name);
         }
 
         return $themes;

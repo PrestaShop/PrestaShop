@@ -6,6 +6,11 @@
  *    notice and this notice are preserved.  This file is offered as-is,
  *    without any warranty.
  */
+
+/**
+ * /!\ Deprecated since 1.6.0.4, it will be deleted in next major release /!\
+ */
+
 var unicode_hack = (function() {
     /* Regexps to match characters in the BMP according to their Unicode category.
        Extracted from Unicode specification, version 5.0.0, source:

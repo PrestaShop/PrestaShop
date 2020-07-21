@@ -2841,3 +2841,17 @@ CREATE TABLE IF NOT EXISTS `PREFIX_cms_role_lang` (
     `id_cms_role`, `id_lang`, id_shop
   )
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `PREFIX_employee_session` (
+  `id_employee_session` int(11) unsigned NOT NULL auto_increment,
+  `id_employee` int(10) unsigned DEFAULT NULL,
+  `token` varchar(40) DEFAULT NULL,
+  PRIMARY KEY `id_employee_session` (`id_employee_session`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
+CREATE TABLE `PREFIX_customer_session` (
+  `id_customer_session` int(11) unsigned NOT NULL auto_increment,
+  `id_customer` int(10) unsigned DEFAULT NULL,
+  `token` varchar(40) DEFAULT NULL,
+  PRIMARY KEY `id_customer_session` (`id_customer_session`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;

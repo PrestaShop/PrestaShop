@@ -4745,6 +4745,7 @@ class ProductCore extends ObjectModel
             WHERE pa.`id_product` = ' . (int) $id_product_old
         );
         $combinations = [];
+        $product_supplier_keys = [];
 
         foreach ($result as $row) {
             $id_product_attribute_old = (int) $row['id_product_attribute'];
@@ -4799,6 +4800,14 @@ class ProductCore extends ObjectModel
             AND `id_product` = ' . (int) $id_product_old);
 
             foreach ($result3 as $row3) {
+                $current_supplier_key = $id_product_new . '_' . $id_product_attribute_new . '_' . $row3['id_supplier'];
+
+                if (in_array($current_supplier_key, $product_supplier_keys)) {
+                    continue;
+                }
+
+                $product_supplier_keys[] = $current_supplier_key;
+
                 unset($row3['id_product_supplier']);
                 $row3['id_product'] = $id_product_new;
                 $row3['id_product_attribute'] = $id_product_attribute_new;
@@ -6130,6 +6139,56 @@ class ProductCore extends ObjectModel
             SELECT `id_customization_field`, `type`, `required`
             FROM `' . _DB_PREFIX_ . 'customization_field`
             WHERE `id_product` = ' . (int) $this->id);
+    }
+
+    /**
+     * @return array
+     */
+    public function getNonDeletedCustomizationFieldIds()
+    {
+        if (!Customization::isFeatureActive()) {
+            return [];
+        }
+
+        $results = Db::getInstance()->executeS('
+            SELECT `id_customization_field`
+            FROM `' . _DB_PREFIX_ . 'customization_field`
+            WHERE `is_deleted` = 0
+            AND `id_product` = ' . (int) $this->id
+        );
+
+        return array_map(function ($result) {
+            return (int) $result['id_customization_field'];
+        }, $results);
+    }
+
+    /**
+     * @param int $fieldType |null
+     *
+     * @return int
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public function countCustomizationFields(?int $fieldType = null): int
+    {
+        $query = '
+            SELECT COUNT(`id_customization_field`) as customizations_count
+            FROM `' . _DB_PREFIX_ . 'customization_field`
+            WHERE `is_deleted` = 0
+            AND `id_product` = ' . (int) $this->id
+        ;
+
+        if (null !== $fieldType) {
+            $query .= sprintf(' AND type = %d', $fieldType);
+        }
+
+        $results = Db::getInstance()->executeS($query);
+
+        if (empty($results)) {
+            return 0;
+        }
+
+        return (int) reset($results)['customizations_count'];
     }
 
     /**

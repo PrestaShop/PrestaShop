@@ -83,7 +83,7 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
 
     public function handle(GetOrderProductsForViewing $query): OrderProductsForViewing
     {
-        $order = $this->getOrderObject($query->getOrderId());
+        $order = $this->getOrder($query->getOrderId());
         $taxCalculationMethod = $this->getOrderTaxCalculationMethod($order);
 
         $products = $order->getProducts();

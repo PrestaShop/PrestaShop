@@ -127,7 +127,12 @@ class CartRuleCalculator
             if ($cartRule->reduction_product == 0) {
                 foreach ($this->cartRows as $cartRow) {
                     $product = $cartRow->getRowData();
-                    if ((($cartRule->reduction_exclude_special && !$product['reduction_applies'])
+                    if (
+                        array_key_exists('product_quantity', $product) &&
+                        0 === (int) $product['product_quantity']
+                    ) {
+                        $cartRuleData->addDiscountApplied(new AmountImmutable(0.0, 0.0));
+                    } elseif ((($cartRule->reduction_exclude_special && !$product['reduction_applies'])
                         || !$cartRule->reduction_exclude_special)) {
                         $amount = $cartRow->applyPercentageDiscount($cartRule->reduction_percent);
                         $cartRuleData->addDiscountApplied($amount);

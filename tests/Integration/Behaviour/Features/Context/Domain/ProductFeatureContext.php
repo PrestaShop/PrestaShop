@@ -34,10 +34,17 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPackCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTagsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateProductCustomizationFieldsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackException;
@@ -155,7 +162,8 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
             /**
              * @var int
-             * @var PackedProduct $packedProduct */
+             * @var PackedProduct $packedProduct
+             */
             foreach ($packedProducts as $key => $packedProduct) {
                 //@todo: check && combination id when asserting combinations.
                 if ($packedProduct->getProductId() === $expectedPackedProductId) {
@@ -297,6 +305,148 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then product :productReference should be assigned to following categories:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function assertProductCategories(string $productReference, TableNode $table)
+    {
+        $data = $table->getRowsHash();
+        $productForEditing = $actualCategoryIds = $this->getProductForEditing($productReference);
+        $actualCategoryIds = $productForEditing->getCategoriesInformation()->getCategoryIds();
+        sort($actualCategoryIds);
+
+        $expectedCategoriesRef = PrimitiveUtils::castStringArrayIntoArray($data['categories']);
+        $expectedCategoryIds = array_map(function (string $categoryReference) {
+            return $this->getSharedStorage()->get($categoryReference);
+        }, $expectedCategoriesRef);
+        sort($expectedCategoryIds);
+
+        $expectedDefaultCategoryId = $this->getSharedStorage()->get($data['default category']);
+        $actualDefaultCategoryId = $productForEditing->getCategoriesInformation()->getDefaultCategoryId();
+
+        Assert::assertEquals($expectedDefaultCategoryId, $actualDefaultCategoryId, 'Unexpected default category assigned to product');
+        Assert::assertEquals($actualCategoryIds, $expectedCategoryIds, 'Unexpected categories assigned to product');
+    }
+
+    /**
+     * @When I assign product :productReference to following categories:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function assignToCategoriesIncludingNonExistingOnes(string $productReference, TableNode $table)
+    {
+        $data = $table->getRowsHash();
+        $categoryReferences = PrimitiveUtils::castStringArrayIntoArray($data['categories']);
+
+        // this random number is used on purpose to mimic non existing category id
+        $nonExistingCategoryId = 50000;
+        $categoryIds = [];
+        foreach ($categoryReferences as $categoryReference) {
+            if ($this->getSharedStorage()->exists($categoryReference)) {
+                $categoryIds[] = $this->getSharedStorage()->get($categoryReference);
+            } else {
+                $categoryIds[] = $nonExistingCategoryId;
+                ++$nonExistingCategoryId;
+            }
+        }
+
+        if ($this->getSharedStorage()->exists($data['default category'])) {
+            $defaultCategoryId = $this->getSharedStorage()->get($data['default category']);
+        } else {
+            $defaultCategoryId = $nonExistingCategoryId;
+        }
+
+        $this->assignProductToCategories(
+            $this->getSharedStorage()->get($productReference),
+            $defaultCategoryId,
+            $categoryIds
+        );
+    }
+
+    /**
+     * @Then I should get error that assigning product to categories failed
+     */
+    public function assertFailedUpdateCategoriesError()
+    {
+        $this->assertLastErrorIs(
+            CannotUpdateProductException::class,
+            CannotUpdateProductException::FAILED_UPDATE_CATEGORIES
+        );
+    }
+
+    /**
+     * Product tags differs from other localized properties, because each locale can have an array of tags
+     * (whereas common property will have one value per language)
+     * This is why it needs some additional parsing
+     *
+     * @param array $localizedTagStrings key value pairs where key is language id and value is string representation of array separated by comma
+     *                                   e.g. [1 => 'hello,goodbye', 2 => 'bonjour,Au revoir']
+     * @param ProductForEditing $productForEditing
+     */
+    private function assertLocalizedTags(array $localizedTagStrings, ProductForEditing $productForEditing)
+    {
+        $fieldName = 'tags';
+        /** @var LocalizedTagsDto[] $actualLocalizedTags */
+        $actualLocalizedTagsList = $this->extractValueFromProductForEditing($productForEditing, $fieldName);
+
+        foreach ($localizedTagStrings as $langId => $tagsString) {
+            $langIso = Language::getIsoById($langId);
+
+            if (empty($tagsString)) {
+                // if tags string is empty, then we should not have any actual value in this language
+                /** @var LocalizedTagsDto $actualLocalizedTags */
+                foreach ($actualLocalizedTagsList as $actualLocalizedTags) {
+                    if ($actualLocalizedTags->getLanguageId() === $langId) {
+                        throw new RuntimeException(sprintf(
+                                'Expected no tags in %s language, but got "%s"',
+                                $langIso,
+                                var_export($actualLocalizedTags->getTags(), true))
+                        );
+                    }
+                }
+
+                // if above code passed it means tags in this lang is empty as expected and we can continue
+                continue;
+            }
+
+            // convert filled tags to array
+            $expectedTags = array_map('trim', explode(',', $tagsString));
+            $valueInLangExists = false;
+            foreach ($actualLocalizedTagsList as $actualLocalizedTags) {
+                if ($actualLocalizedTags->getLanguageId() !== $langId) {
+                    continue;
+                }
+
+                Assert::assertEquals(
+                    $expectedTags,
+                    $actualLocalizedTags->getTags(),
+                    sprintf(
+                        'Expected %s in "%s" language was "%s", but got "%s"',
+                        $fieldName,
+                        $langIso,
+                        var_export($expectedTags, true),
+                        var_export($actualLocalizedTags->getTags(), true)
+                    )
+                );
+                $valueInLangExists = true;
+            }
+
+            // All empty values have ben filtered out above,
+            // so if this lang value doesn't exist, it means it didn't meet the expectations
+            if (!$valueInLangExists) {
+                throw new RuntimeException(sprintf(
+                    'Expected localized tags value "%s" is not set in %s language',
+                    var_export($expectedTags, true),
+                    $langIso
+                ));
+            }
+        }
+    }
+
+    /**
      * @Then product :productReference should have following values:
      * @Then product :productReference has following values:
      *
@@ -411,6 +561,163 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I update product :productReference with following customization fields:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function updateCustomizationFields(string $productReference, TableNode $table)
+    {
+        $customizationFields = $table->getColumnsHash();
+        $fieldsForUpdate = [];
+        $fieldReferences = [];
+
+        foreach ($customizationFields as $customizationField) {
+            $addedByModule = isset($customizationField['added by module']) ?
+                PrimitiveUtils::castStringBooleanIntoBoolean($customizationField['added by module']) :
+                false
+            ;
+            $fieldReference = $customizationField['reference'];
+            $id = $this->getSharedStorage()->exists($fieldReference) ? $this->getSharedStorage()->get($fieldReference) : null;
+
+            $fieldReferences[] = $fieldReference;
+            $fieldsForUpdate[] = [
+                'id' => $id,
+                'type' => $customizationField['type'] === 'file' ? CustomizationFieldType::TYPE_FILE : CustomizationFieldType::TYPE_TEXT,
+                'localized_names' => $this->parseLocalizedArray($customizationField['name']),
+                'is_required' => PrimitiveUtils::castStringBooleanIntoBoolean($customizationField['is required']),
+                'added_by_module' => $addedByModule,
+            ];
+        }
+
+        $this->updateProductCustomizationFields(
+            $productReference,
+            $fieldReferences,
+            $fieldsForUpdate
+        );
+    }
+
+    /**
+     * @When I update product :productReference customization field name with text containing :nameLength symbols
+     *
+     * @param string $productReference
+     * @param int $nameLength
+     */
+    public function addCustomizationFieldWithTooLongName(string $productReference, int $nameLength)
+    {
+        $fieldsForUpdate = [];
+        foreach (Language::getIDs() as $langId) {
+            $langId = (int) $langId;
+            $fieldsForUpdate[] = [
+                'id' => null,
+                'type' => CustomizationFieldType::TYPE_TEXT,
+                'is_required' => false,
+                'added_by_module' => false,
+                'localized_names' => [
+                    $langId => PrimitiveUtils::generateRandomString($nameLength),
+                ],
+            ];
+        }
+
+        try {
+            $this->updateProductCustomizationFields($productReference, ['name'], $fieldsForUpdate);
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @When I delete all customization fields from product :productReference
+     *
+     * @param string $productReference
+     */
+    public function updateCustomizationFieldsWithEmptyArray(string $productReference)
+    {
+        $this->updateProductCustomizationFields($productReference, [], []);
+    }
+
+    /**
+     * @Then product :productReference should have following customization fields:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function assertCustomizationFields(string $productReference, TableNode $table)
+    {
+        $data = $table->getColumnsHash();
+        /** @var CustomizationField[] $actualFields */
+        $actualFields = $this->getProductCustomizationFields($productReference);
+        $notFoundExpectedFields = [];
+
+        foreach ($data as $expectedField) {
+            $expectedId = $this->getSharedStorage()->get($expectedField['reference']);
+            $foundExpectedField = false;
+
+            foreach ($actualFields as $key => $actualField) {
+                if ($expectedId === $actualField->getCustomizationFieldId()) {
+                    $foundExpectedField = true;
+                    $expectedType = $expectedField['type'] === 'file' ? CustomizationFieldType::TYPE_FILE : CustomizationFieldType::TYPE_TEXT;
+                    $expectedLocalizedNames = $this->parseLocalizedArray($expectedField['name']);
+                    $expectedRequired = PrimitiveUtils::castStringBooleanIntoBoolean($expectedField['is required']);
+                    Assert::assertEquals($expectedType, $actualField->getType(), 'Unexpected customization type');
+                    Assert::assertEquals(
+                        $expectedLocalizedNames,
+                        $actualField->getLocalizedNames(),
+                        sprintf('Unexpected product "%s" customization field name', $productReference)
+                    );
+
+                    if ($expectedRequired !== $actualField->isRequired()) {
+                        throw new RuntimeException(
+                            sprintf(
+                                'Expected customization field #%d to be %s',
+                                $expectedId,
+                                $expectedRequired ? 'required' : 'not required'
+                            )
+                        );
+                    }
+
+                    if (isset($expectedField['added by module'])) {
+                        $expectedByModule = PrimitiveUtils::castStringBooleanIntoBoolean($expectedField['added by module']);
+                        if ($expectedByModule !== $actualField->isAddedByModule()) {
+                            throw new RuntimeException(
+                                sprintf(
+                                    'Expected customization field #%d to be added %s',
+                                    $actualField->getCustomizationFieldId(),
+                                    $expectedByModule ? 'by module' : 'not by module'
+                                )
+                            );
+                        }
+                    }
+                    //unset this asserted customization field so we can check if there any left after loop
+                    unset($actualFields[$key]);
+
+                    continue;
+                }
+            }
+
+            if (!$foundExpectedField) {
+                $notFoundExpectedFields[] = $expectedField;
+            }
+        }
+
+        if (!empty($notFoundExpectedFields)) {
+            throw new RuntimeException(sprintf(
+                'Following customization fields were not found for product %s: %s',
+                $productReference,
+                var_export($notFoundExpectedFields)
+            ));
+        }
+
+        if (!empty($actualFields)) {
+            throw new RuntimeException(sprintf(
+                'Product "%s" contains unexpected customization fields: %s',
+                $productReference,
+                var_export($actualFields)
+            ));
+        }
+    }
+
+    /**
      * @Then product :productReference should be assigned to default category
      *
      * @param string $productReference
@@ -433,7 +740,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         }
 
         if ($productCategoriesInfo->getDefaultCategoryId() !== $defaultCategoryId || !$belongsToDefaultCategory) {
-            throw new RuntimeException('Default category is not assigned to product');
+            throw new RuntimeException('Product is not assigned to default category');
         }
     }
 
@@ -455,6 +762,73 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                 $editableProduct->getBasicInformation()->getType()->getValue()
             )
         );
+    }
+
+    /**
+     * @Then /^product "(.+)" should (not be customizable|allow customization|require customization)$/
+     *
+     * @param string $productReference
+     * @param string $customizability
+     */
+    public function assertCustomizability(string $productReference, string $customizability)
+    {
+        $customizationOptions = $this->getProductForEditing($productReference)->getCustomizationOptions();
+
+        switch ($customizability) {
+            case 'not be customizable':
+                Assert::assertTrue(
+                    $customizationOptions->isNotCustomizable(),
+                    sprintf('Expected product "%s" to be not customizable', $productReference)
+                );
+
+                break;
+            case 'allow customization':
+                Assert::assertTrue(
+                    $customizationOptions->allowsCustomization(),
+                    sprintf('Expected product "%s" to allow customization', $productReference)
+                );
+
+                break;
+            case 'require customization':
+                Assert::assertTrue(
+                    $customizationOptions->requiresCustomization(),
+                    sprintf('Expected product "%s" to require customization', $productReference)
+                );
+
+                break;
+            default:
+                throw new RuntimeException(sprintf('Invalid customizability "%s" provided in test scenario', $customizability));
+        }
+    }
+
+    /**
+     * @Then product :productReference should have :expectedCount customizable :customizationType field(s)
+     *
+     * @param string $productReference
+     * @param int $expectedCount
+     * @param string $customizationType
+     */
+    public function assertCustomizationOptions(string $productReference, int $expectedCount, string $customizationType)
+    {
+        if (!in_array($customizationType, array_keys(CustomizationFieldType::AVAILABLE_TYPES))) {
+            throw new RuntimeException(sprintf('Invalid customization type "%s" provided in test scenario', $customizationType));
+        }
+
+        $productForEditing = $this->getProductForEditing($productReference);
+
+        if ('file' === $customizationType) {
+            Assert::assertEquals(
+                $expectedCount,
+                $productForEditing->getCustomizationOptions()->getAvailableFileCustomizationsCount(),
+                'Unexpected customizable file fields count'
+            );
+        } else {
+            Assert::assertEquals(
+                $expectedCount,
+                $productForEditing->getCustomizationOptions()->getAvailableTextCustomizationsCount(),
+                'Unexpected customizable text fields count'
+            );
+        }
     }
 
     /**
@@ -488,6 +862,45 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             ProductConstraintException::class,
             $this->getConstraintErrorCode($fieldName)
         );
+    }
+
+    /**
+     * @Then I should get error that product customization field name is invalid
+     */
+    public function assertCustomizationFieldNameError(): void
+    {
+        $this->assertLastErrorIs(
+            CustomizationFieldConstraintException::class,
+            CustomizationFieldConstraintException::INVALID_NAME
+        );
+    }
+
+    /**
+     * @param string $productReference
+     * @param array $fieldReferences
+     * @param array $fieldsForUpdate
+     */
+    private function updateProductCustomizationFields(string $productReference, array $fieldReferences, array $fieldsForUpdate): void
+    {
+        try {
+            $newCustomizationFields = $this->getCommandBus()->handle(new UpdateProductCustomizationFieldsCommand(
+                $this->getSharedStorage()->get($productReference),
+                $fieldsForUpdate
+            ));
+
+            Assert::assertSameSize(
+                $fieldReferences,
+                $newCustomizationFields,
+                'Cannot set references in shared storage. References and actual customization fields doesn\'t match.'
+            );
+
+            /** @var CustomizationField $customizationField */
+            foreach ($newCustomizationFields as $key => $customizationField) {
+                $this->getSharedStorage()->set($fieldReferences[$key], $customizationField->getCustomizationFieldId());
+            }
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
     }
 
     /**
@@ -720,75 +1133,6 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * Product tags differs from other localized properties, because each locale can have an array of tags
-     * (whereas common property will have one value per language)
-     * This is why it needs some additional parsing
-     *
-     * @param array $localizedTagStrings key value pairs where key is language id and value is string representation of array separated by comma
-     *                                   e.g. [1 => 'hello,goodbye', 2 => 'bonjour,Au revoir']
-     * @param ProductForEditing $productForEditing
-     */
-    private function assertLocalizedTags(array $localizedTagStrings, ProductForEditing $productForEditing)
-    {
-        $fieldName = 'tags';
-        /** @var LocalizedTagsDto[] $actualLocalizedTags */
-        $actualLocalizedTagsList = $this->extractValueFromProductForEditing($productForEditing, $fieldName);
-
-        foreach ($localizedTagStrings as $langId => $tagsString) {
-            $langIso = Language::getIsoById($langId);
-
-            if (empty($tagsString)) {
-                // if tags string is empty, then we should not have any actual value in this language
-                /** @var LocalizedTagsDto $actualLocalizedTags */
-                foreach ($actualLocalizedTagsList as $actualLocalizedTags) {
-                    if ($actualLocalizedTags->getLanguageId() === $langId) {
-                        throw new RuntimeException(sprintf(
-                                'Expected no tags in %s language, but got "%s"',
-                                $langIso,
-                                var_export($actualLocalizedTags->getTags(), true))
-                        );
-                    }
-                }
-
-                // if above code passed it means tags in this lang is empty as expected and we can continue
-                continue;
-            }
-
-            // convert filled tags to array
-            $expectedTags = array_map('trim', explode(',', $tagsString));
-            $valueInLangExists = false;
-            foreach ($actualLocalizedTagsList as $actualLocalizedTags) {
-                if ($actualLocalizedTags->getLanguageId() !== $langId) {
-                    continue;
-                }
-
-                Assert::assertEquals(
-                    $expectedTags,
-                    $actualLocalizedTags->getTags(),
-                    sprintf(
-                        'Expected %s in "%s" language was "%s", but got "%s"',
-                        $fieldName,
-                        $langIso,
-                        var_export($expectedTags, true),
-                        var_export($actualLocalizedTags->getTags(), true)
-                    )
-                );
-                $valueInLangExists = true;
-            }
-
-            // All empty values have ben filtered out above,
-            // so if this lang value doesn't exist, it means it didn't meet the expectations
-            if (!$valueInLangExists) {
-                throw new RuntimeException(sprintf(
-                    'Expected localized tags value "%s" is not set in %s language',
-                    var_export($expectedTags, true),
-                    $langIso
-                ));
-            }
-        }
-    }
-
-    /**
      * Extracts corresponding field value from ProductForEditing DTO
      *
      * @param ProductForEditing $productForEditing
@@ -852,6 +1196,36 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
         return $this->getQueryBus()->handle(new GetProductForEditing(
             $productId
+        ));
+    }
+
+    /**
+     * @param int $productId
+     * @param int $defaultCategoryId
+     * @param array $categoryIds
+     */
+    private function assignProductToCategories(int $productId, int $defaultCategoryId, array $categoryIds): void
+    {
+        try {
+            $this->getCommandBus()->handle(new UpdateProductCategoriesCommand(
+                $productId,
+                $defaultCategoryId,
+                $categoryIds
+            ));
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @param string $productReference
+     *
+     * @return CustomizationField[]
+     */
+    private function getProductCustomizationFields(string $productReference): array
+    {
+        return $this->getQueryBus()->handle(new GetProductCustomizationFields(
+            $this->getSharedStorage()->get($productReference)
         ));
     }
 }

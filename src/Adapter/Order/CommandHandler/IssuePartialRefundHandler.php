@@ -97,7 +97,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
     public function handle(IssuePartialRefundCommand $command): void
     {
         /** @var Order $order */
-        $order = $this->getOrderObject($command->getOrderId());
+        $order = $this->getOrder($command->getOrderId());
         if (!$order->hasBeenPaid() && !$order->hasPayments()) {
             throw new InvalidOrderStateException(
                 InvalidOrderStateException::NOT_PAID,

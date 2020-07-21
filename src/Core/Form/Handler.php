@@ -38,6 +38,11 @@ use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 class Handler implements FormHandlerInterface
 {
     /**
+     * @var string
+     */
+    public $form;
+
+    /**
      * @var FormFactoryInterface the form factory
      */
     protected $formFactory;
@@ -68,6 +73,7 @@ class Handler implements FormHandlerInterface
      * @param FormFactoryInterface $formFactory
      * @param HookDispatcherInterface $hookDispatcher
      * @param FormDataProviderInterface $formDataProvider
+     * @param string $form
      * @param string $hookName
      * @param string $formName
      */

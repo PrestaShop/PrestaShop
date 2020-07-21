@@ -24,20 +24,34 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
+namespace PrestaShop\PrestaShop\Core\Domain\Product;
 
 /**
- * Interface for handling AddCustomizationFields command
+ * Holds value which represents how customizable the product is
  */
-interface AddCustomizationFieldsHandlerInterface
+class ProductCustomizabilitySettings
 {
     /**
-     * @param AddCustomizationFieldsCommand $command
-     *
-     * @return CustomizationId|null customizationId
+     * The product does not have any customiztion fields, so it is not customizable at all
      */
-    public function handle(AddCustomizationFieldsCommand $command): ?CustomizationId;
+    const NOT_CUSTOMIZABLE = 0;
+
+    /**
+     * The product has at least one customization field, but none of them are required
+     */
+    const ALLOWS_CUSTOMIZATION = 1;
+
+    /**
+     * The product has at least one customization field which is required
+     */
+    const REQUIRES_CUSTOMIZATION = 2;
+
+    /**
+     * This class shouldn't be instantiated as its purpose is to hold some setting values
+     */
+    private function __construct()
+    {
+    }
 }
