@@ -49,6 +49,7 @@ class GenerateByDateType extends TranslatorAwareType
                 'date_from',
                 DatePickerType::class,
                 [
+                    'required' => false,
                     'label' => $this->trans('From', 'Admin.Global'),
                     'help' => $this->trans('Format: 2011-12-31 (inclusive).', 'Admin.Orderscustomers.Help'),
                 ]
@@ -57,6 +58,7 @@ class GenerateByDateType extends TranslatorAwareType
                 'date_to',
                 DatePickerType::class,
                 [
+                    'required' => false,
                     'label' => $this->trans('Name', 'Admin.Global'),
                     'help' => $this->trans('Format: 2011-12-31 (inclusive).', 'Admin.Orderscustomers.Help'),
                 ]
