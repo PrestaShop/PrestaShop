@@ -1607,6 +1607,34 @@ class CategoryCore extends ObjectModel
     }
 
     /**
+     * Check if all categories by provided ids are present in database.
+     * If at least one is missing return false
+     *
+     * @param int[] $categoryIds
+     *
+     * @return bool
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public static function categoriesExists(array $categoryIds): bool
+    {
+        if (empty($categoryIds)) {
+            return false;
+        }
+
+        $categoryIds = array_map('intval', array_unique($categoryIds, SORT_REGULAR));
+        $categoryIdsFormatted = implode(',', $categoryIds);
+
+        $result = Db::getInstance()->query('
+            SELECT COUNT(c.id_category) as categories_found
+            FROM ' . _DB_PREFIX_ . 'category c
+            WHERE c.id_category IN (' . $categoryIdsFormatted . ')
+        ')->fetch();
+
+        return count($categoryIds) === (int) $result['categories_found'];
+    }
+
+    /**
      * Clean Category Groups.
      *
      * @return bool Indicated whether the cleanup was successful

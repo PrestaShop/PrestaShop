@@ -264,10 +264,10 @@ class XmlLoader
         }
 
         $is_multi_lang_entity = $this->isMultilang($entity);
+        $xml_langs = $multilang_columns = [];
+        $default_lang = null;
         if ($is_multi_lang_entity) {
             $multilang_columns = $this->getColumns($entity, true);
-            $xml_langs = [];
-            $default_lang = null;
             foreach ($this->languages as $id_lang => $iso) {
                 if ($iso == $this->language->getLanguageIso()) {
                     $default_lang = $id_lang;
@@ -1193,7 +1193,7 @@ class XmlLoader
         }
 
         // Get multilang columns
-        $alias_multilang = [];
+        $alias_multilang = $multilang_columns = [];
         if ($is_multilang) {
             $columns = $this->getColumns($entity);
             $multilang_columns = $this->getColumns($entity, true);

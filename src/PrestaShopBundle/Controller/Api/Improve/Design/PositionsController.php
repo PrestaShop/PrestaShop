@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Api\Improve\Design;
 
 use PrestaShopBundle\Controller\Api\ApiController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -34,6 +35,8 @@ class PositionsController extends ApiController
 {
     /**
      * Update positions.
+     *
+     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))")
      *
      * @param Request $request
      *

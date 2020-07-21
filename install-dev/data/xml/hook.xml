@@ -96,6 +96,11 @@
       <title>Product update</title>
       <description>This hook is displayed after a product has been updated</description>
     </hook>
+    <hook id="displayAfterTitleTag">
+      <name>displayAfterTitleTag</name>
+      <title>After title tag</title>
+      <description>Use this hook to add content after title tag</description>
+    </hook>
     <hook id="displayAfterBodyOpeningTag">
       <name>displayAfterBodyOpeningTag</name>
       <title>Very top of pages</title>

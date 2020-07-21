@@ -197,8 +197,11 @@ class CurrencyCore extends ObjectModel
     protected $webserviceParameters = [
         'objectsNodeName' => 'currencies',
         'fields' => [
+            'names' => [
+                'getter' => 'getLocalizedNames',
+                'i18n' => true,
+            ],
             'name' => [
-                'setter' => false,
                 'getter' => 'getName',
                 'modifier' => [
                     'http_method' => WebserviceRequest::HTTP_POST | WebserviceRequest::HTTP_PUT,
@@ -206,11 +209,12 @@ class CurrencyCore extends ObjectModel
                 ],
             ],
             'symbol' => [
-                'setter' => false,
-                'getter' => 'getSymbol',
+                'getter' => 'getLocalizedSymbols',
+            ],
+            'iso_code' => [
                 'modifier' => [
                     'http_method' => WebserviceRequest::HTTP_POST | WebserviceRequest::HTTP_PUT,
-                    'modifier' => 'setSymbolForWebservice',
+                    'modifier' => 'setIsoCodeForWebService',
                 ],
             ],
         ],
@@ -297,24 +301,74 @@ class CurrencyCore extends ObjectModel
     public function getWebserviceParameters($ws_params_attribute_name = null)
     {
         $parameters = parent::getWebserviceParameters($ws_params_attribute_name);
-        // name & symbol are i18n fields but casted to single string in the constructor
-        // so we need to force the webservice to consider those fields as non-i18n fields.
-        // Also, in 1.7.5 the field symbol didn't exists and name wasn't an i18n field so in order
-        // to keep 1.7.6 backward compatible we need to make those fields non-i18n.
+        // name is an i18n field but is casted to single string in the constructor
+        // so we need to force the webservice to consider this field as non-i18n.
         $parameters['fields']['name']['i18n'] = false;
-        $parameters['fields']['symbol']['i18n'] = false;
+        $parameters['fields']['name']['required'] = true;
 
         return $parameters;
     }
 
+    /**
+     * If the field 'names' (localized names) is sent,
+     * it should be use instead of the field 'name' (non-localized).
+     * LocalizedNames is also updated to reflect the new information.
+     */
     public function setNameForWebservice()
     {
-        $this->name = $this->localizedNames;
+        if (!empty($this->names)) {
+            $this->name = $this->names;
+            if (is_array($this->names)) {
+                $this->localizedNames = $this->names;
+            } else {
+                foreach ($this->localizedNames as $lang => $name) {
+                    $this->localizedNames[$lang] = $this->names;
+                }
+            }
+        } else {
+            foreach ($this->localizedNames as $lang => $localizedName) {
+                $this->localizedNames[$lang] = $this->name;
+            }
+        }
     }
 
-    public function setSymbolForWebservice()
+    /**
+     * In 1.7.6, new fields have been introduced. To keep it backward compatible,
+     * we need to populate those fields with default values and they are all available
+     * using the ISO code through CLDR data.
+     */
+    public function setIsoCodeForWebService()
     {
-        $this->symbol = $this->localizedSymbols;
+        $container = Context::getContext()->container;
+        /** @var LocaleRepository $localeCldr */
+        $localeCldr = $container->get('prestashop.core.localization.cldr.locale_repository');
+        /** @var Configuration $configuration */
+        $configuration = $container->get('prestashop.adapter.legacy.configuration');
+        $languages = Language::getIDs();
+        $defaultLanguage = new Language($configuration->get('PS_LANG_DEFAULT'));
+        $locale = $localeCldr->getLocale($defaultLanguage->getLocale());
+        $currency = $locale->getCurrency($this->iso_code);
+        if (!empty($currency)) {
+            if (empty($this->numeric_iso_code)) {
+                $this->numeric_iso_code = $currency->getNumericIsoCode();
+                $this->iso_code_num = $this->numeric_iso_code;
+            }
+            if (empty($this->precision)) {
+                $this->precision = (int) $currency->getDecimalDigits();
+            }
+        }
+        if (empty($this->symbol)) {
+            $name = $this->name;
+            $this->refreshLocalizedCurrencyData($languages, $localeCldr);
+            $this->name = $name;
+        }
+        if (is_array($this->symbol)) {
+            $this->localizedSymbols = $this->symbol;
+        } else {
+            foreach ($this->localizedSymbols as $lang => $symbol) {
+                $this->localizedSymbols[$lang] = $this->symbol;
+            }
+        }
     }
 
     /**

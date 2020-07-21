@@ -30,7 +30,7 @@ const {$} = window;
  */
 export default class PreviewExtension {
   constructor(previewCustomization) {
-    this.lock = [];
+    this.locks = [];
     this.expandSelector = '.js-expand';
     this.collapseSelector = '.js-collapse';
     this.previewOpenClass = 'preview-open';
@@ -180,7 +180,7 @@ export default class PreviewExtension {
   }
 
   isLocked(key) {
-    return this.lock.indexOf(key) !== -1;
+    return this.locks.indexOf(key) !== -1;
   }
 
   lock(key) {
@@ -188,17 +188,17 @@ export default class PreviewExtension {
       return;
     }
 
-    this.lock.push(key);
+    this.locks.push(key);
   }
 
   unlock(key) {
-    const index = this.lock.indexOf(key);
+    const index = this.locks.indexOf(key);
 
     if (index === -1) {
       return;
     }
 
-    this.lock.splice(index, 1);
+    this.locks.splice(index, 1);
   }
 
   /**

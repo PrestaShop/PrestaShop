@@ -36,6 +36,7 @@ class AppKernel extends Kernel
     const MINOR_VERSION = 8;
     const RELEASE_VERSION = 0;
 
+
     /**
      * {@inheritdoc}
      */

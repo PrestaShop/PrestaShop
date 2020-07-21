@@ -154,12 +154,24 @@ class LanguageController extends FrameworkBundleAdminController
             $languageForm = $languageFormBuilder->getFormFor((int) $languageId, [], [
                 'is_for_editing' => true,
             ]);
-            $languageForm->handleRequest($request);
+        } catch (Exception $exception) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages($exception))
+            );
 
+            return $this->redirectToRoute('admin_languages_index');
+        }
+
+        try {
+            $languageForm->handleRequest($request);
             $result = $languageFormHandler->handleFor((int) $languageId, $languageForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash(
+                    'success',
+                    $this->trans('Successful update.', 'Admin.Notifications.Success')
+                );
 
                 return $this->redirectToRoute('admin_languages_index');
             }

@@ -103,7 +103,7 @@ class IssueReturnProductHandler extends AbstractOrderCommandHandler implements I
         }
 
         /** @var Order $order */
-        $order = $this->getOrderObject($command->getOrderId());
+        $order = $this->getOrder($command->getOrderId());
         if (!$order->hasBeenDelivered()) {
             throw new InvalidOrderStateException(
                 InvalidOrderStateException::DELIVERY_NOT_FOUND,

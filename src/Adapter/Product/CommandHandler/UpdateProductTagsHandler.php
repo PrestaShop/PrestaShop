@@ -55,7 +55,7 @@ class UpdateProductTagsHandler extends AbstractProductHandler implements UpdateP
         } catch (PrestaShopException $e) {
             throw new ProductException(
                 sprintf(
-                    'Error occurred during product #%s tags update',
+                    'Error occurred during product #%d tags update',
                     $product->id
                 ),
                 0,
@@ -95,7 +95,7 @@ class UpdateProductTagsHandler extends AbstractProductHandler implements UpdateP
             // delete all this product tags for this lang
             if (false === Tag::deleteProductTagsInLang($productId, $langId)) {
                 throw new CannotUpdateProductException(
-                    sprintf('Failed to delete product #%s previous tags in lang #%s', $productId, $langId),
+                    sprintf('Failed to delete product #%d previous tags in lang #%d', $productId, $langId),
                     CannotUpdateProductException::FAILED_UPDATE_TAGS
                 );
             }
@@ -108,7 +108,7 @@ class UpdateProductTagsHandler extends AbstractProductHandler implements UpdateP
             // assign new tags to product
             if (false === Tag::addTags($langId, $productId, $localizedTags->getTags())) {
                 throw new CannotUpdateProductException(
-                    sprintf('Failed to update product #%s tags in lang #%s', $productId, $langId),
+                    sprintf('Failed to update product #%d tags in lang #%d', $productId, $langId),
                     CannotUpdateProductException::FAILED_UPDATE_TAGS
                 );
             }
@@ -125,7 +125,7 @@ class UpdateProductTagsHandler extends AbstractProductHandler implements UpdateP
     {
         if (false === Tag::deleteTagsForProduct($productId)) {
             throw new CannotUpdateProductException(
-                sprintf('Failed to delete all tags for product #%s', $productId),
+                sprintf('Failed to delete all tags for product #%d', $productId),
                 CannotUpdateProductException::FAILED_UPDATE_TAGS
             );
         }

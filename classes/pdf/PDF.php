@@ -169,13 +169,13 @@ class PDFCore
     /**
      * Get correct PDF template classes.
      *
-     * @param ObjectModel $object
+     * @param mixed $object
      *
      * @return HTMLTemplate|false
      *
      * @throws PrestaShopException
      */
-    public function getTemplateObject(ObjectModel $object)
+    public function getTemplateObject($object)
     {
         $class = false;
         $class_name = 'HTMLTemplate' . $this->template;

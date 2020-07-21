@@ -1357,7 +1357,7 @@ var imagesProduct = (function() {
         success: function(file, response) {
           //manage error on uploaded file
           if (response.error !== 0) {
-            errorElem.append('<p>' + file.name + ': ' + response.error + '</p>');
+            errorElem.append($('<p></p>').text(file.name + ': ' + response.error));
             this.removeFile(file);
             return;
           }
@@ -1386,7 +1386,7 @@ var imagesProduct = (function() {
           }
 
           //append new error
-          errorElem.append('<p>' + file.name + ': ' + message + '</p>');
+          errorElem.append($('<p></p>').text(file.name + ': ' + message));
 
           //remove uploaded item
           this.removeFile(file);

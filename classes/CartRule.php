@@ -1074,6 +1074,11 @@ class CartRuleCore extends ObjectModel
             return 0;
         }
 
+        // set base price that will be used for percent reductions
+        if (!empty($context->virtualTotalTaxIncluded) && !empty($context->virtualTotalTaxExcluded)) {
+            $basePriceForPercentReduction = $use_tax ? $context->virtualTotalTaxIncluded : $context->virtualTotalTaxExcluded;
+        }
+
         if (!$context) {
             $context = Context::getContext();
         }
@@ -1156,8 +1161,9 @@ class CartRuleCore extends ObjectModel
                         }
                     }
                 }
-
-                $reduction_value += $order_total * $this->reduction_percent / 100;
+                // set base price on which percentage reduction will be applied
+                $basePriceForPercentReduction = $basePriceForPercentReduction ?? $order_total;
+                $reduction_value += $basePriceForPercentReduction * $this->reduction_percent / 100;
             }
 
             // Discount (%) on a specific product
@@ -1235,12 +1241,12 @@ class CartRuleCore extends ObjectModel
                 $reduction_amount = (float) $this->reduction_amount;
                 // If the cart rule is restricted to one product it can't exceed this product price
                 if ($this->reduction_product > 0) {
-                    foreach ($context->cart->getProducts() as $product) {
+                    foreach ($all_products as $product) {
                         if ($product['id_product'] == $this->reduction_product) {
                             if ($this->reduction_tax) {
-                                $max_reduction_amount = (float) $product['price_wt'];
+                                $max_reduction_amount = (int) $product['cart_quantity'] * (float) $product['price_wt'];
                             } else {
-                                $max_reduction_amount = (float) $product['price'];
+                                $max_reduction_amount = (int) $product['cart_quantity'] * (float) $product['price'];
                             }
                             $reduction_amount = min($reduction_amount, $max_reduction_amount);
                             break;
@@ -1274,7 +1280,7 @@ class CartRuleCore extends ObjectModel
                     $reduction_value += $prorata * $reduction_amount;
                 } else {
                     if ($this->reduction_product > 0) {
-                        foreach ($context->cart->getProducts() as $product) {
+                        foreach ($all_products as $product) {
                             if ($product['id_product'] == $this->reduction_product) {
                                 $product_price_ti = $product['price_wt'];
                                 $product_price_te = $product['price'];
@@ -1375,6 +1381,13 @@ class CartRuleCore extends ObjectModel
         }
 
         Cache::store($cache_id, $reduction_value);
+
+        // update virtual total values, for percentage reductions that might be applied later
+        if ($use_tax && !empty($context->virtualTotalTaxIncluded)) {
+            $context->virtualTotalTaxIncluded -= $reduction_value;
+        } elseif (!$use_tax && !empty($context->virtualTotalTaxExcluded)) {
+            $context->virtualTotalTaxExcluded -= $reduction_value;
+        }
 
         return $reduction_value;
     }

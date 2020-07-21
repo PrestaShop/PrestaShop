@@ -30,11 +30,12 @@ use Exception;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Twig\Extension\GlobalsInterface;
 
 /**
  * This class is used by Twig_Environment and provide layout methods callable from a twig template.
  */
-class LayoutExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
+class LayoutExtension extends \Twig_Extension implements GlobalsInterface
 {
     /** @var LegacyContext */
     private $context;
