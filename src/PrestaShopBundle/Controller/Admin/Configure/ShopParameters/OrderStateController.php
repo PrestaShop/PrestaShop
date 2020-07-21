@@ -279,7 +279,7 @@ class OrderStateController extends FrameworkBundleAdminController
             $editableOrderState = $this->getQueryBus()->handle(new GetOrderStateForEditing((int) $orderStateId));
 
             $editOrderStateCommand = new EditOrderStateCommand((int) $orderStateId);
-            $editOrderStateCommand->setDelivery(!$editableOrderState->isDeliveryOn());
+            $editOrderStateCommand->setDelivery(!$editableOrderState->isDelivery());
 
             $this->getCommandBus()->handle($editOrderStateCommand);
 
@@ -349,7 +349,7 @@ class OrderStateController extends FrameworkBundleAdminController
             $editableOrderState = $this->getQueryBus()->handle(new GetOrderStateForEditing((int) $orderStateId));
 
             $editOrderStateCommand = new EditOrderStateCommand((int) $orderStateId);
-            $editOrderStateCommand->setSendEmail(!$editableOrderState->isSendEmailOn());
+            $editOrderStateCommand->setSendEmail(!$editableOrderState->isSendEmailEnabled());
 
             $this->getCommandBus()->handle($editOrderStateCommand);
 

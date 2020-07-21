@@ -176,7 +176,7 @@ class AddOrderStateCommand
     /**
      * @return bool
      */
-    public function isSendEmail()
+    public function isSendEmailEnabled()
     {
         return $this->sendEmail;
     }

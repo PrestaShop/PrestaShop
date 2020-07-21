@@ -168,7 +168,7 @@ class EditableOrderState
     /**
      * @return bool
      */
-    public function isSendEmail()
+    public function isSendEmailEnabled()
     {
         return $this->sendEmail;
     }

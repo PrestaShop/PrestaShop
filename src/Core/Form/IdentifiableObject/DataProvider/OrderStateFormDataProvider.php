@@ -61,7 +61,7 @@ final class OrderStateFormDataProvider implements FormDataProviderInterface
             'loggable' => $editableOrderState->isLoggable(),
             'invoice' => $editableOrderState->isInvoice(),
             'hidden' => $editableOrderState->isHidden(),
-            'send_email' => $editableOrderState->isSendEmail(),
+            'send_email' => $editableOrderState->isSendEmailEnabled(),
             'pdf_invoice' => $editableOrderState->isPdfInvoice(),
             'pdf_delivery' => $editableOrderState->isPdfDelivery(),
             'shipped' => $editableOrderState->isShipped(),

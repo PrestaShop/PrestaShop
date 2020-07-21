@@ -216,7 +216,7 @@ class EditOrderStateCommand
     /**
      * @return bool|null
      */
-    public function isSendEmail()
+    public function isSendEmailEnabled()
     {
         return $this->sendEmail;
     }

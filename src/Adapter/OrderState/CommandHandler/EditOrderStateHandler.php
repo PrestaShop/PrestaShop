@@ -103,8 +103,8 @@ final class EditOrderStateHandler extends AbstractOrderStateHandler implements E
             $orderState->invoice = $command->isInvoice();
         }
 
-        if (null !== $command->isSendEmail()) {
-            $orderState->send_email = $command->isSendEmail();
+        if (null !== $command->isSendEmailEnabled()) {
+            $orderState->send_email = $command->isSendEmailEnabled();
         }
 
         if (null !== $command->isPdfInvoice()) {
