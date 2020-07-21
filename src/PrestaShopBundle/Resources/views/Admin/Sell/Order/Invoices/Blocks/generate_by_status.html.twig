@@ -62,6 +62,7 @@
         <i class="md-checkbox-control"></i>
         {% set badgeType = orders_count > 0 ? 'success' : 'danger' %}
         <span class="badge badge-{{ badgeType }}">{{ orders_count }}</span>
+        &nbsp;
         <span class="status-name">
           {{- label is not same as(false) ? label|raw -}}
         </span>
