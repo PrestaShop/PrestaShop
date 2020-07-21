@@ -156,7 +156,6 @@ module.exports = class Addresses extends BOBasePage {
       this.page.click(this.addressesListTableDeleteLink(row)),
       this.waitForVisibleSelector(this.deleteAddressModal),
     ]);
-    // Click on delete
     await this.page.click(this.deleteAddressModalDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
