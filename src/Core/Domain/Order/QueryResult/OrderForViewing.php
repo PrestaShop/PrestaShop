@@ -250,8 +250,8 @@ class OrderForViewing
         OrderPricesForViewing $prices,
         OrderDiscountsForViewing $discounts,
         OrderSourcesForViewing $sources,
+        LinkedOrdersForViewing $linkedOrders,
         string $note = ''
-        LinkedOrdersForViewing $linkedOrders
     ) {
         $this->reference = $reference;
         $this->customer = $customer;

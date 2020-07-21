@@ -1518,7 +1518,7 @@ class OrderController extends FrameworkBundleAdminController
             'orderId' => $orderId,
         ]);
     }
-  
+
     /**
      * Method for downloading customization picture
      *
@@ -1558,6 +1558,7 @@ class OrderController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_orders_view', [
             'orderId' => $orderId,
         ]);
+    }
 
     /**
      * Initializes order status update
