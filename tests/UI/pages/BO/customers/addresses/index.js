@@ -32,7 +32,7 @@ module.exports = class Addresses extends BOBasePage {
     this.bulkActionsDeleteButton = '#address_grid_bulk_action_delete_selection';
     // Modal Dialog
     this.deleteAddressModal = '#address-grid-confirm-modal.show';
-    this.deleteCustomerModalDeleteButton = `${this.deleteAddressModal} button.btn-confirm-submit`;
+    this.deleteAddressModalDeleteButton = `${this.deleteAddressModal} button.btn-confirm-submit`;
     // Sort Selectors
     this.tableHead = `${this.addressesListForm} thead`;
     this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
@@ -144,7 +144,6 @@ module.exports = class Addresses extends BOBasePage {
    * @returns {Promise<string>}
    */
   async deleteAddress(row) {
-    this.dialogListener();
     // Click on dropDown
     await Promise.all([
       this.page.click(this.addressesListTableToggleDropDown(row)),
@@ -152,8 +151,12 @@ module.exports = class Addresses extends BOBasePage {
         `${this.addressesListTableToggleDropDown(row)}[aria-expanded='true']`,
       ),
     ]);
-    // Click on delete
-    await this.page.click(this.addressesListTableDeleteLink(row));
+    // Click on delete and wait for modal
+    await Promise.all([
+      this.page.click(this.addressesListTableDeleteLink(row)),
+      this.waitForVisibleSelector(this.deleteAddressModal),
+    ]);
+    await this.page.click(this.deleteAddressModalDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
