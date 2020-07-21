@@ -88,7 +88,7 @@ class WebserviceKeyCore extends ObjectModel
         if ($result) {
             PrestaShopLogger::addLog(
                 Context::getContext()->getTranslator()->trans(
-                    'Webservice key %s deleted',
+                    'Webservice key %s has been deleted',
                     [
                         $this->key,
                     ],
