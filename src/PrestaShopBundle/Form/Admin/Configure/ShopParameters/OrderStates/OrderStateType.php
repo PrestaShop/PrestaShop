@@ -63,15 +63,25 @@ class OrderStateType extends TranslatorAwareType
      */
     private $templateAttributes;
 
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param ThemeCatalogInterface $themeCatalog
+     * @param Router $routing
+     * @param Configuration $configuration
+     *
+     * @throws \PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException
+     */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         ThemeCatalogInterface $themeCatalog,
-        Router $routing
+        Router $routing,
+        Configuration $configuration
     ) {
         parent::__construct($translator, $locales);
         $this->routing = $routing;
-        $mailTheme = Configuration::get('PS_MAIL_THEME', 'modern');
+        $mailTheme = $configuration->get('PS_MAIL_THEME', 'modern');
 
         $mailLayouts = $themeCatalog->getByName($mailTheme)->getLayouts();
 

@@ -1170,6 +1170,7 @@ services:
       arguments:
         - "@prestashop.core.mail_template.theme_catalog"
         - '@router'
+        - '@prestashop.adapter.legacy.configuration'
       tags:
         - { name: form.type }
 
