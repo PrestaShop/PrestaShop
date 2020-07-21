@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,35 +22,32 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-<div class="card js-grid-panel" id="{{ grid.id }}_grid_panel">
-{% if grid.name is not null or grid.actions.grid|length > 0 %}
-  {% block grid_panel_header %}
-    <div class="card-header js-grid-header">
-      {% if grid.name is not null %}
-        <h3 class="d-inline-block card-header-title">
-          {{ grid.name }} ({{ grid.data.records_total }})
-        </h3>
-      {% endif %}
-      {% block grid_actions_block %}
-        <div class="d-inline-block float-right">
-          {{ include('@PrestaShop/Admin/Common/Grid/Blocks/grid_actions.html.twig', {'grid': grid}) }}
-        </div>
-      {% endblock %}
-    </div>
-  {% endblock %}
-{% endif %}
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-  {% block grid_panel_body %}
-    <div class="card-body">
-      {% block grid_view_block %}
-        {{ include('@PrestaShop/Admin/Common/Grid/grid.html.twig', {'grid': grid }) }}
-      {% endblock %}
-    </div>
-  {% endblock %}
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerAddressGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
-  {% block grid_panel_footer %}{% endblock %}
-</div>
+/**
+ * Default customer's addresses list filters
+ */
+final class CustomerAddressFilters extends Filters
+{
+    /** @var string */
+    protected $filterId = CustomerAddressGridDefinitionFactory::GRID_ID;
 
-{% block grid_panel_extra_content %}{% endblock %}
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaults(): array
+    {
+        return [
+            'limit' => 50,
+            'offset' => 0,
+            'orderBy' => 'id_address',
+            'sortOrder' => 'asc',
+            'filters' => [],
+        ];
+    }
+}
