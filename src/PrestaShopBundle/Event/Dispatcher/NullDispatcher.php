@@ -28,6 +28,8 @@ namespace PrestaShopBundle\Event\Dispatcher;
 
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookInterface;
+use PrestaShop\PrestaShop\Core\Hook\RenderedHookInterface;
+use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -43,11 +45,11 @@ class NullDispatcher implements EventDispatcherInterface, HookDispatcherInterfac
 
     /**
      * @param string $eventName
-     * @param \Symfony\Component\EventDispatcher\Event|null $event
+     * @param Event|null $event
      *
-     * @return \Symfony\Component\EventDispatcher\Event|void
+     * @return Event|void
      */
-    public function dispatch($eventName, \Symfony\Component\EventDispatcher\Event $event = null)
+    public function dispatch($eventName, Event $event = null)
     {
     }
 
@@ -98,7 +100,7 @@ class NullDispatcher implements EventDispatcherInterface, HookDispatcherInterfac
     /**
      * @param HookInterface $hook
      *
-     * @return \PrestaShop\PrestaShop\Core\Hook\RenderedHookInterface|void
+     * @return RenderedHookInterface|void
      */
     public function dispatchRendering(HookInterface $hook)
     {
@@ -108,7 +110,7 @@ class NullDispatcher implements EventDispatcherInterface, HookDispatcherInterfac
      * @param string $hookName
      * @param array $hookParameters
      *
-     * @return \PrestaShop\PrestaShop\Core\Hook\RenderedHookInterface|void
+     * @return RenderedHookInterface|void
      */
     public function dispatchRenderingWithParameters($hookName, array $hookParameters = [])
     {
