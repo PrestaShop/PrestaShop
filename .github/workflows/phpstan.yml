@@ -17,4 +17,4 @@ jobs:
       - run: composer install --prefer-dist
 
       - name: Run phpstan
-        run: phpstan analyse -c phpstan.neon.dist --error-format github
+        run: ./vendor/bin/phpstan analyse -c phpstan.neon.dist --error-format github
