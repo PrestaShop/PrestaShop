@@ -76,6 +76,7 @@ class GenerateByStatusType extends TranslatorAwareType
     {
         $builder
             ->add('order_states', ChoiceType::class, [
+                'required' => false,
                 'expanded' => true,
                 'multiple' => true,
                 'choices' => $this->orderStateChoiceProvider->getChoices(),
