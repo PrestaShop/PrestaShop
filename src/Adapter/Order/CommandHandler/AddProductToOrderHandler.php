@@ -603,6 +603,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      * @param int $productQuantity
      * @param Number $priceTaxIncluded
      * @param Number $priceTaxExcluded
+     *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
@@ -613,9 +614,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         int $productQuantity,
         Number $priceTaxIncluded,
         Number $priceTaxExcluded
-    ): void
-    {
-        foreach($order->getOrderDetailList() as $row) {
+    ): void {
+        foreach ($order->getOrderDetailList() as $row) {
             $orderDetail = new OrderDetail($row['id_order_detail']);
             if ((int) $orderDetail->product_id !== (int) $product->id) {
                 continue;
@@ -636,6 +636,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      * This method takes care of multi-invoices, all invoices are updated
      *
      * @param Order $order
+     *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
