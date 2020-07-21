@@ -457,7 +457,9 @@
       padding: 0.3125rem 0.625rem;
       color: $gray-medium;
       cursor: pointer;
-      &:hover {
+
+      &:hover,
+      &.tt-cursor {
         color: #fff;
         background-color: $primary-hover;
       }
