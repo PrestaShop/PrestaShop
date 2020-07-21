@@ -58,6 +58,7 @@ use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerDiscountFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\CustomerAddressFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
@@ -290,6 +291,14 @@ class CustomerController extends AbstractAdminController
         ]);
         $customerDiscountGrid = $customerDiscountGridFactory->getGrid($customerDiscountFilters);
 
+        $customerAddressGridFactory = $this->get('prestashop.core.grid.factory.customer.address');
+        $customerAddressFilters = new CustomerAddressFilters([
+            'filters' => [
+                'id_customer' => $customerId,
+            ],
+        ]);
+        $customerAddressGrid = $customerAddressGridFactory->getGrid($customerAddressFilters);
+
         if ($request->query->has('conf')) {
             $this->manageLegacyFlashes($request->query->get('conf'));
         }
@@ -299,6 +308,7 @@ class CustomerController extends AbstractAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'customerInformation' => $customerInformation,
             'customerDiscountGrid' => $this->presentGrid($customerDiscountGrid),
+            'customerAddressGrid' => $this->presentGrid($customerAddressGrid),
             'isMultistoreEnabled' => $this->get('prestashop.adapter.feature.multistore')->isActive(),
             'transferGuestAccountForm' => $transferGuestAccountForm,
             'privateNoteForm' => $privateNoteForm->createView(),
