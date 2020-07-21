@@ -113,9 +113,6 @@ var admin = '<?php echo file_exists('../admin-dev') ? '../admin-dev' : '../admin
 		<button type="button" class="btn-facebook" onclick="psinstall_facebook_click();">
 			<i></i> <?php echo $this->translator->trans('Share', array(), 'Install'); ?>
 		</button>
-		<button type="button" class="btn-google-plus" onclick="psinstall_google_click();">
-			<i></i> <?php echo $this->translator->trans('Google+', array(), 'Install'); ?>
-		</button>
 		<button type="button" class="btn-pinterest" onclick="psinstall_pinterest_click();">
 			<i></i> <?php echo $this->translator->trans('Pinterest', array(), 'Install'); ?>
 		</button>
