@@ -33,10 +33,4 @@ namespace PrestaShopBundle\Translation\Provider;
  */
 interface ProviderInterface
 {
-    /*
-     * Returns the provider's unique identifier
-     *
-     * @return string
-     */
-//    public function getIdentifier();
 }

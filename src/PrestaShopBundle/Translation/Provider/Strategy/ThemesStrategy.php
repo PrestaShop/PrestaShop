@@ -31,6 +31,10 @@ namespace PrestaShopBundle\Translation\Provider\Strategy;
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
+/**
+ * Represents strategy for 'themes' type of translation.
+ * It must use the ThemeProvider and required parameters.
+ */
 class ThemesStrategy implements StrategyInterface
 {
     /**
@@ -46,6 +50,11 @@ class ThemesStrategy implements StrategyInterface
      */
     private $provider;
 
+    /**
+     * @param ProviderInterface $provider
+     * @param string $locale
+     * @param string $theme
+     */
     public function __construct(ProviderInterface $provider, string $locale, string $theme)
     {
         $this->locale = $locale;
@@ -53,16 +62,29 @@ class ThemesStrategy implements StrategyInterface
         $this->provider = $provider;
     }
 
+    /**
+     * @param bool $empty
+     *
+     * @return MessageCatalogueInterface|null
+     */
     public function getDefaultCatalogue(bool $empty = true): ?MessageCatalogueInterface
     {
         return $this->provider->getDefaultCatalogue($this->locale, $this->theme, $empty);
     }
 
+    /**
+     * @return MessageCatalogueInterface|null
+     */
     public function getFileTranslatedCatalogue(): ?MessageCatalogueInterface
     {
         return $this->provider->getFileTranslatedCatalogue($this->locale, $this->theme);
     }
 
+    /**
+     * @param string|null $domain
+     *
+     * @return MessageCatalogueInterface|null
+     */
     public function getUserTranslatedCatalogue(?string $domain = null): ?MessageCatalogueInterface
     {
         return $this->provider->getUserTranslatedCatalogue($this->locale, $this->theme, $domain);

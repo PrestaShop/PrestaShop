@@ -162,20 +162,8 @@ class TranslationController extends ApiController
                 throw new Exception("The 'selected' parameter is empty.");
             }
 
-            $treeType = $type;
-            $selectedTheme = $selectedModule = null;
-
-            if ('themes' === $type) {
-                $selectedTheme = $selected;
-            }
-
-            if ('modules' === $type) {
-                $moduleProvider = $this->container->get('prestashop.translation.external_module_provider');
-
-                // this will magically update the module provider inside the factory (yes, this is horrible)
-                $treeType = $moduleProvider->getIdentifier();
-                $selectedModule = $selected;
-            }
+            $selectedTheme = ('themes' === $type) ? $selected : null;
+            $selectedModule = ('modules' === $type) ? $selected : null;
 
             $searchedExpressions = [];
             if (!is_array($search) && !empty($search)) {
@@ -183,7 +171,7 @@ class TranslationController extends ApiController
             }
 
             return $this->jsonResponse(
-                $this->getTree($lang, $treeType, $searchedExpressions, $selectedTheme, $selectedModule),
+                $this->getTree($lang, $type, $searchedExpressions, $selectedTheme, $selectedModule),
                 $request
             );
         } catch (Exception $exception) {
