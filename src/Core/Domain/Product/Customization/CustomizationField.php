@@ -64,6 +64,7 @@ class CustomizationField
      * @param bool $required
      * @param int|null $customizationFieldId
      * @param bool $addedByModule
+     * @todo: require all fields except the id.
      */
     public function __construct(
         int $type,
