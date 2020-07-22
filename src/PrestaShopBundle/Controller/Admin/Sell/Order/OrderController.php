@@ -713,20 +713,27 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function refreshProductPricesAction(int $orderId, Request $request): Response
     {
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-        $productsForViewing = $orderForViewing->getProducts();
-        $productList = $productsForViewing->getProducts();
+        try {
+            $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+            $productsForViewing = $orderForViewing->getProducts();
+            $productList = $productsForViewing->getProducts();
 
-        $result = [];
-        foreach ($productList as $product) {
-            $result[] = [
-                'orderDetailId' => $product->getOrderDetailId(),
-                'unitPrice' => $product->getUnitPrice(),
-                'quantity' => $product->getQuantity(),
-                'availableQuantity' => $product->getAvailableQuantity(),
-                'totalPrice' => $product->getTotalPrice(),
-                'orderInvoiceNumber' => $product->getOrderInvoiceNumber()
-            ];
+            $result = [];
+            foreach ($productList as $product) {
+                $result[] = [
+                    'orderDetailId' => $product->getOrderDetailId(),
+                    'unitPrice' => $product->getUnitPrice(),
+                    'quantity' => $product->getQuantity(),
+                    'availableQuantity' => $product->getAvailableQuantity(),
+                    'totalPrice' => $product->getTotalPrice(),
+                    'orderInvoiceNumber' => $product->getOrderInvoiceNumber()
+                ];
+            }
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_BAD_REQUEST
+            );
         }
 
         return $this->json($result);
