@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider;
 
+/**
+ * Provides translation catalogues for Modules.
+ */
 class ModulesProvider extends TranslationsProvider
 {
     /**

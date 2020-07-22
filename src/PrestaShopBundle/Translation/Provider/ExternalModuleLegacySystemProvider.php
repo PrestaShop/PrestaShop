@@ -46,17 +46,17 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
     /**
      * @var string Path where translation files are found
      */
-    protected $resourceDirectory;
+    protected $modulesDirectory;
+
+    /**
+     * @var string
+     */
+    private $translationsDirectory;
 
     /**
      * @var string domain
      */
     protected $domain;
-
-    /**
-     * @var SearchProvider|ModuleProvider the module provider
-     */
-    private $moduleProvider;
 
     /**
      * @var LoaderInterface the translation loader from legacy files
@@ -78,26 +78,25 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
      */
     private $databaseLoader;
 
+    /**
+     * @param DatabaseTranslationLoader $databaseLoader
+     * @param string $modulesDirectory
+     * @param string $translationsDirectory
+     * @param LoaderInterface $legacyFileLoader
+     * @param LegacyModuleExtractorInterface $legacyModuleExtractor
+     */
     public function __construct(
         DatabaseTranslationLoader $databaseLoader,
-        string $resourceDirectory,
+        string $modulesDirectory,
+        string $translationsDirectory,
         LoaderInterface $legacyFileLoader,
-        LegacyModuleExtractorInterface $legacyModuleExtractor,
-        ModuleProvider $moduleProvider
+        LegacyModuleExtractorInterface $legacyModuleExtractor
     ) {
-        $this->moduleProvider = $moduleProvider;
         $this->legacyFileLoader = $legacyFileLoader;
         $this->legacyModuleExtractor = $legacyModuleExtractor;
         $this->databaseLoader = $databaseLoader;
-        $this->resourceDirectory = $resourceDirectory;
-    }
-
-    /**
-     * @return string
-     */
-    public function getIdentifier(): string
-    {
-        return 'external_legacy_module';
+        $this->modulesDirectory = $modulesDirectory;
+        $this->translationsDirectory = $translationsDirectory;
     }
 
     /**
@@ -138,14 +137,20 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
     public function getFileTranslatedCatalogue(string $locale, string $moduleName): MessageCatalogueInterface
     {
         try {
-            $translationCatalogue = $this->moduleProvider
-                ->getFileTranslatedCatalogue($locale, $moduleName)
-            ;
-        } catch (FileNotFoundException $exception) {
-            $translationCatalogue = $this->buildTranslationCatalogueFromLegacyFiles($locale, $moduleName);
-        }
+            $resourceDirectory = implode(DIRECTORY_SEPARATOR, [
+                    $this->translationsDirectory,
+                    $moduleName,
+                    'translations',
+                ]) . DIRECTORY_SEPARATOR;
 
-        return $translationCatalogue;
+            return (new FileTranslatedCatalogueProvider(
+                $resourceDirectory,
+                $this->getFilenameFilters($moduleName)
+            ))
+                ->getCatalogue($locale);
+        } catch (FileNotFoundException $exception) {
+            return $this->buildTranslationCatalogueFromLegacyFiles($locale, $moduleName);
+        }
     }
 
     /**
@@ -171,9 +176,9 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
      * @param string $locale
      * @param string $moduleName
      *
-     * @return MessageCatalogue|MessageCatalogueInterface
+     * @return MessageCatalogueInterface
      */
-    private function buildTranslationCatalogueFromLegacyFiles(string $locale, string $moduleName)
+    private function buildTranslationCatalogueFromLegacyFiles(string $locale, string $moduleName): MessageCatalogueInterface
     {
         // the message catalogue needs to be indexed by original wording, but legacy files are indexed by hash
         // therefore, we need to build the default catalogue (by analyzing source code)
@@ -259,8 +264,17 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
 
         try {
             // look up files in the core translations
-            $defaultCatalogue = $this->moduleProvider
-                ->getDefaultCatalogue($locale, $moduleName);
+            $resourceDirectory = implode(DIRECTORY_SEPARATOR, [
+                $this->translationsDirectory,
+                $moduleName,
+                'translations',
+            ]) . DIRECTORY_SEPARATOR;
+
+            $defaultCatalogue = (new DefaultCatalogueProvider(
+                $resourceDirectory . DIRECTORY_SEPARATOR . 'default',
+                $this->getFilenameFilters($moduleName)
+            ))
+                ->getCatalogue($locale);
         } catch (FileNotFoundException $exception) {
             // there are no xliff files for this module in the core
         }
@@ -300,7 +314,7 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
      *
      * @return string[]
      */
-    private function getFilenameFilters(string $moduleName)
+    private function getFilenameFilters(string $moduleName): array
     {
         return ['#^' . preg_quote(DomainHelper::buildModuleBaseDomain($moduleName)) . '([A-Z]|$)#'];
     }
@@ -310,9 +324,9 @@ class ExternalModuleLegacySystemProvider implements ProviderInterface
      *
      * @return string
      */
-    private function getDefaultResourceDirectory(string $moduleName)
+    private function getDefaultResourceDirectory(string $moduleName): string
     {
-        return implode(DIRECTORY_SEPARATOR, [$this->resourceDirectory, $moduleName, 'translations']) . DIRECTORY_SEPARATOR;
+        return implode(DIRECTORY_SEPARATOR, [$this->modulesDirectory, $moduleName, 'translations']) . DIRECTORY_SEPARATOR;
     }
 
     /**

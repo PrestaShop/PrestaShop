@@ -50,7 +50,7 @@ class TranslationFinder
      *
      * @throws FileNotFoundException
      */
-    public function getCatalogueFromPaths($paths, $locale, $pattern = null)
+    public function getCatalogueFromPaths($paths, $locale, $pattern = null): MessageCatalogue
     {
         $translationFiles = $this->getTranslationFilesFromPath($paths, $pattern);
 
@@ -62,7 +62,7 @@ class TranslationFinder
      *
      * @return MessageCatalogue
      */
-    private function removeTrailingLocaleFromDomains(MessageCatalogueInterface $catalogue)
+    private function removeTrailingLocaleFromDomains(MessageCatalogueInterface $catalogue): MessageCatalogue
     {
         $messages = $catalogue->all();
         $locale = $catalogue->getLocale();
@@ -88,7 +88,7 @@ class TranslationFinder
      *
      * @throws FileNotFoundException
      */
-    private function getTranslationFilesFromPath($paths, $pattern)
+    private function getTranslationFilesFromPath($paths, $pattern): Finder
     {
         $finder = new Finder();
 
@@ -115,7 +115,7 @@ class TranslationFinder
      *
      * @return MessageCatalogue
      */
-    private function buildCatalogueFromFiles(Finder $translationFiles, $locale)
+    private function buildCatalogueFromFiles(Finder $translationFiles, $locale): MessageCatalogue
     {
         $messageCatalogue = new MessageCatalogue($locale);
         $xliffFileLoader = new XliffFileLoader();
@@ -141,7 +141,7 @@ class TranslationFinder
      *
      * @return string
      */
-    private function getDomainFromFile(SplFileInfo $file, $locale)
+    private function getDomainFromFile(SplFileInfo $file, $locale): string
     {
         $basename = $file->getBasename('.xlf');
 
