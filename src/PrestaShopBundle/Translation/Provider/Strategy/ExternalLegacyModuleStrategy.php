@@ -31,6 +31,10 @@ namespace PrestaShopBundle\Translation\Provider\Strategy;
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
+/**
+ * Represents strategy for 'external_legacy_module' type of translation.
+ * It must use the ExternalLegacyModuleProvider and required parameters.
+ */
 class ExternalLegacyModuleStrategy implements StrategyInterface
 {
     /**
@@ -46,6 +50,11 @@ class ExternalLegacyModuleStrategy implements StrategyInterface
      */
     private $provider;
 
+    /**
+     * @param ProviderInterface $provider
+     * @param string $locale
+     * @param string $module
+     */
     public function __construct(ProviderInterface $provider, string $locale, string $module)
     {
         $this->locale = $locale;
@@ -53,16 +62,29 @@ class ExternalLegacyModuleStrategy implements StrategyInterface
         $this->provider = $provider;
     }
 
+    /**
+     * @param bool $empty
+     *
+     * @return MessageCatalogueInterface|null
+     */
     public function getDefaultCatalogue(bool $empty = true): ?MessageCatalogueInterface
     {
         return $this->provider->getDefaultCatalogue($this->locale, $this->module, $empty);
     }
 
+    /**
+     * @return MessageCatalogueInterface|null
+     */
     public function getFileTranslatedCatalogue(): ?MessageCatalogueInterface
     {
         return $this->provider->getFileTranslatedCatalogue($this->locale, $this->module);
     }
 
+    /**
+     * @param string|null $domain
+     *
+     * @return MessageCatalogueInterface|null
+     */
     public function getUserTranslatedCatalogue(?string $domain = null): ?MessageCatalogueInterface
     {
         return $this->provider->getUserTranslatedCatalogue($this->locale, $this->module, $domain);
