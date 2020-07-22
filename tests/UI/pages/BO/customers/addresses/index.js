@@ -180,7 +180,7 @@ module.exports = class Addresses extends BOBasePage {
       this.page.click(this.bulkActionsDeleteButton),
       this.waitForVisibleSelector(this.deleteAddressModal),
     ]);
-    await this.page.click(this.deleteCustomerModalDeleteButton);
+    await this.page.click(this.deleteAddressModalDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
