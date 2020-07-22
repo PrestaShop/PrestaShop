@@ -44,4 +44,17 @@ export default class OrderPricesRefresher {
         $(OrderViewPageMap.orderTaxesTotal).text(response.taxesTotalFormatted);
       });
   }
+
+  refreshProductPrices(orderId) {
+    $.ajax(this.router.generate('admin_orders_refresh_product_prices', {orderId}))
+      .then((productPricesList) => {
+        productPricesList.forEach((productPrices) => {
+          let orderProductTrId = '#orderProduct_' + productPrices.orderDetailId;
+          $(`${orderProductTrId} ${OrderViewPageMap.productEditUnitPrice}`).text(productPrices.unitPrice);
+          $(`${orderProductTrId} ${OrderViewPageMap.productEditQuantity}`).text(productPrices.quantity);
+          $(`${orderProductTrId} ${OrderViewPageMap.productEditAvailableQuantity}`).text(productPrices.availableQuantity);
+          $(`${orderProductTrId} ${OrderViewPageMap.productEditTotalPrice}`).text(productPrices.totalPrice);
+        });
+      });
+  }
 }
