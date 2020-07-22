@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplier;
 
 /**
  * Defines contract to handle @var UpdateProductSuppliersCommand
@@ -35,6 +36,8 @@ interface UpdateProductSuppliersHandlerInterface
 {
     /**
      * @param UpdateProductSuppliersCommand $command
+     *
+     * @return ProductSupplier[] new product suppliers list
      */
-    public function handle(UpdateProductSuppliersCommand $command): void;
+    public function handle(UpdateProductSuppliersCommand $command): array;
 }
