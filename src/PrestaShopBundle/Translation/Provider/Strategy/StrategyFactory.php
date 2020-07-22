@@ -39,6 +39,9 @@ use PrestaShopBundle\Translation\Provider\OthersProvider;
 use PrestaShopBundle\Translation\Provider\SearchProvider;
 use PrestaShopBundle\Translation\Provider\ThemeProvider;
 
+/**
+ * Builds strategies with the correct provider and parameters.
+ */
 class StrategyFactory
 {
     /**
@@ -126,8 +129,12 @@ class StrategyFactory
      *
      * @return StrategyInterface
      */
-    public function buildSearchStrategy(string $locale, string $domain, ?string $theme = null, ?string $module = null): StrategyInterface
-    {
+    public function buildSearchStrategy(
+        string $locale,
+        string $domain,
+        ?string $theme = null,
+        ?string $module = null
+    ): StrategyInterface {
         return new SearchStrategy($this->searchProvider, $locale, $domain, $theme, $module);
     }
 
