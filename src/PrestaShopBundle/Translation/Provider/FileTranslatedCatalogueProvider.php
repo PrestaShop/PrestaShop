@@ -32,6 +32,10 @@ use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
+/**
+ * Gets catalogue within the files filtered by name in the directory given.
+ * The translation files are searched in the subdirectory with the language name.
+ */
 class FileTranslatedCatalogueProvider implements TranslationCatalogueProviderInterface
 {
     /**
@@ -45,8 +49,6 @@ class FileTranslatedCatalogueProvider implements TranslationCatalogueProviderInt
     private $filenameFilters = [];
 
     /**
-     * DefaultCatalogueProvider constructor.
-     *
      * @param string $directory
      * @param array $filenameFilters
      */
