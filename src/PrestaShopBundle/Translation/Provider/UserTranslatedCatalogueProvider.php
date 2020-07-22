@@ -32,6 +32,9 @@ use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
+/**
+ * Gets catalogue translated by the user himself ans stored in the database.
+ */
 class UserTranslatedCatalogueProvider implements TranslationCatalogueProviderInterface
 {
     /**
@@ -44,6 +47,10 @@ class UserTranslatedCatalogueProvider implements TranslationCatalogueProviderInt
      */
     private $translationDomains;
 
+    /**
+     * @param DatabaseTranslationLoader $databaseLoader
+     * @param array $translationDomains
+     */
     public function __construct(
         DatabaseTranslationLoader $databaseLoader,
         array $translationDomains

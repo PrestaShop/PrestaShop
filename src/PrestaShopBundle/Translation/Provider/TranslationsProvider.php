@@ -33,6 +33,9 @@ use PrestaShopBundle\Exception\NotImplementedException;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
+/**
+ * Abstract class for the generic catalogue providers.
+ */
 abstract class TranslationsProvider implements ProviderInterface
 {
     /**
@@ -45,6 +48,10 @@ abstract class TranslationsProvider implements ProviderInterface
      */
     private $resourceDirectory;
 
+    /**
+     * @param DatabaseTranslationLoader $databaseLoader
+     * @param string $resourceDirectory
+     */
     public function __construct(
         DatabaseTranslationLoader $databaseLoader,
         string $resourceDirectory

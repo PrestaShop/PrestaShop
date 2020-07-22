@@ -30,6 +30,9 @@ namespace PrestaShopBundle\Translation\Provider\Strategy;
 
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
+/**
+ * Defines methods required for each strategy.
+ */
 interface StrategyInterface
 {
     public function getDefaultCatalogue(bool $empty = true): ?MessageCatalogueInterface;

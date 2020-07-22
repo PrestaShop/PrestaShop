@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider;
 
+/**
+ * Provides translation catalogues for Mails body.
+ */
 class MailsBodyProvider extends TranslationsProvider
 {
     /**

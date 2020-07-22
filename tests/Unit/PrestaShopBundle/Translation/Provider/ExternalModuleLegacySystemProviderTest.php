@@ -34,7 +34,6 @@ use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use PrestaShopBundle\Translation\Provider\DefaultCatalogueProvider;
 use PrestaShopBundle\Translation\Provider\ExternalModuleLegacySystemProvider;
-use PrestaShopBundle\Translation\Provider\ModuleProvider;
 use Symfony\Component\Translation\Dumper\XliffFileDumper;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -89,25 +88,18 @@ class ExternalModuleLegacySystemProviderTest extends TestCase
         $legacyModuleExtractor
             ->method('extract')
             ->willReturn($catalogue);
-        /** @var MockObject|ModuleProvider $moduleProvider */
-        $moduleProvider = $this->createMock(ModuleProvider::class);
-//        $moduleProvider
-//            ->method('setModuleName')
-//            ->willReturn($moduleProvider);
 
         self::$tempDir = implode(DIRECTORY_SEPARATOR, [sys_get_temp_dir(), 'ExternalModuleProviderProviderTest']);
         if (!is_dir(self::$tempDir)) {
             mkdir(self::$tempDir);
         }
 
-        $moduleProvider = new ModuleProvider($databaseLoader, self::$tempDir);
-
         $this->externalModuleLegacySystemProvider = (new ExternalModuleLegacySystemProvider(
             $databaseLoader,
             self::$tempDir,
+            self::$tempDir,
             $legacyFileLoader,
-            $legacyModuleExtractor,
-            $moduleProvider
+            $legacyModuleExtractor
         ));
     }
 

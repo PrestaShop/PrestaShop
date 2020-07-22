@@ -32,5 +32,10 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 
 interface TranslationCatalogueProviderInterface
 {
+    /**
+     * @param string $locale
+     *
+     * @return MessageCatalogueInterface
+     */
     public function getCatalogue(string $locale): MessageCatalogueInterface;
 }

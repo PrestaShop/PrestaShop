@@ -57,14 +57,6 @@ class FrontOfficeProvider implements ProviderInterface
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getIdentifier()
-    {
-        return 'front';
-    }
-
-    /**
      * @param string $locale
      * @param bool $empty
      *
@@ -127,7 +119,7 @@ class FrontOfficeProvider implements ProviderInterface
     /**
      * @return string[]
      */
-    private function getFilenameFilters()
+    private function getFilenameFilters(): array
     {
         return [
             '#^Shop*#',
