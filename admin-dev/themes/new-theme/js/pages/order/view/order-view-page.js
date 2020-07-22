@@ -151,6 +151,7 @@ export default class OrderViewPage {
       }
       this.orderProductRenderer.updateNumProducts(numProducts + 1);
       this.orderProductRenderer.resetAddRow();
+      this.orderPricesRefresher.refreshProductPrices(event.orderId);
       this.orderPricesRefresher.refresh(event.orderId);
       this.orderDiscountsRefresher.refresh(event.orderId);
       this.orderInvoicesRefresher.refresh(event.orderId);
