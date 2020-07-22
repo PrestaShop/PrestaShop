@@ -39,7 +39,7 @@ use ProductSupplier as ProductSupplierEntity;
 final class GetProductSuppliersHandler implements GetProductSuppliersHandlerInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function handle(GetProductSuppliers $query): array
     {
