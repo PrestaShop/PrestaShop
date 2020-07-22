@@ -46,37 +46,33 @@ $(document).ready(() => {
 
     $.post(getCartViewUrl, requestData)
       .then((resp) => {
-        $('.cart-detailed-totals').replaceWith(resp.cart_detailed_totals);
-        $('.cart-summary-items-subtotal').replaceWith(
-          resp.cart_summary_items_subtotal,
-        );
-        $('.cart-summary-subtotals-container').replaceWith(
-          resp.cart_summary_subtotals_container,
-        );
-        $('.cart-summary-products').replaceWith(resp.cart_summary_products);
-        $('.cart-summary-totals').replaceWith(resp.cart_summary_totals);
-        $('.cart-detailed-actions').replaceWith(resp.cart_detailed_actions);
-        $('.cart-voucher').replaceWith(resp.cart_voucher);
-        $('.cart-overview').replaceWith(resp.cart_detailed);
-        $('.cart-summary-top').replaceWith(resp.cart_summary_top);
+        $(prestashop.selectors.cart.detailedTotals).replaceWith(resp.cart_detailed_totals);
+        $(prestashop.selectors.cart.summaryItemsSubtotal).replaceWith(resp.cart_summary_items_subtotal);
+        $(prestashop.selectors.cart.summarySubTotalsContainer).replaceWith(resp.cart_summary_subtotals_container);
+        $(prestashop.selectors.cart.summaryProducts).replaceWith(resp.cart_summary_products);
+        $(prestashop.selectors.cart.summaryTotals).replaceWith(resp.cart_summary_totals);
+        $(prestashop.selectors.cart.detailedActions).replaceWith(resp.cart_detailed_actions);
+        $(prestashop.selectors.cart.voucher).replaceWith(resp.cart_voucher);
+        $(prestashop.selectors.cart.overview).replaceWith(resp.cart_detailed);
+        $(prestashop.selectors.cart.summaryTop).replaceWith(resp.cart_summary_top);
 
-        $('#product_customization_id').val(0);
+        $(prestashop.selectors.cart.productCustomizationId).val(0);
 
-        $('.js-cart-line-product-quantity').each((index, input) => {
+        $(prestashop.selectors.cart.lineProductQuantity).each((index, input) => {
           let $input = $(input);
           $input.attr('value', $input.val());
         });
 
-        if ($('.js-cart-payment-step-refresh').length) {
+        if ($(prestashop.selectors.checkout.cartPaymentStepRefresh).length) {
           // we get the refresh flag : on payment step we need to refresh page to be sure
           // amount is correctly updated on payment modules
           refreshCheckoutPage();
         }
 
-        prestashop.emit('updatedCart', {eventType: 'updateCart', resp });
+        prestashop.emit('updatedCart', {eventType: 'updateCart', resp});
       })
       .fail((resp) => {
-        prestashop.emit('handleError', {eventType: 'updateCart', resp });
+        prestashop.emit('handleError', {eventType: 'updateCart', resp});
       });
   });
 
@@ -85,13 +81,13 @@ $(document).ready(() => {
   $body.on('click', '[data-button-action="add-to-cart"]', (event) => {
     event.preventDefault();
     if (
-      $('#quantity_wanted').val() > $('[data-stock]').data('stock')
-      && $('[data-allow-oosp]').data('allow-oosp').length === 0
+      $(prestashop.selectors.quantityWanted).val() > $('[data-stock]').data('stock') &&
+      $('[data-allow-oosp]').data('allow-oosp').length === 0
     ) {
       $('[data-button-action="add-to-cart"]').attr('disabled', 'disabled');
     } else {
       const $form = $(event.target.form);
-      const query = `${$form.serialize()  }&add=1&action=update`;
+      const query = `${$form.serialize()}&add=1&action=update`;
       const actionURL = $form.attr('action');
 
       const isQuantityInputValid = ($input) => {
@@ -111,14 +107,11 @@ $(document).ready(() => {
 
       let onInvalidQuantity = ($input) => {
         $input
-          .parents('.product-add-to-cart')
+          .parents(prestashop.selectors.product.addToCart)
           .first()
-          .find('.product-minimal-quantity')
+          .find(prestashop.selectors.product.minimalQuantity)
           .addClass('error');
-        $input
-          .parent()
-          .find('label')
-          .addClass('error');
+        $input.parent().find('label').addClass('error');
       };
 
       const $quantityInput = $form.find('input[min]');
@@ -138,13 +131,13 @@ $(document).ready(() => {
               linkAction: 'add-to-cart',
               cart: resp.cart,
             },
-            resp
+            resp,
           });
         })
         .fail((resp) => {
           prestashop.emit('handleError', {
             eventType: 'addProductToCart',
-            resp
+            resp,
           });
         });
     }
@@ -156,24 +149,17 @@ $(document).ready(() => {
     const $addVoucherForm = $(event.currentTarget);
     const getCartViewUrl = $addVoucherForm.attr('action');
 
-    if ($addVoucherForm.find("[name=action]").length === 0) {
-      $addVoucherForm.append(
-        $('<input>', {type: 'hidden', name: 'ajax', value: 1}),
-      );
+    if ($addVoucherForm.find('[name=action]').length === 0) {
+      $addVoucherForm.append($('<input>', {type: 'hidden', name: 'ajax', value: 1}));
     }
-    if ($addVoucherForm.find("[name=action]").length === 0) {
-      $addVoucherForm.append(
-        $('<input>', {type: 'hidden', name: 'action', value: 'update' }),
-      );
+    if ($addVoucherForm.find('[name=action]').length === 0) {
+      $addVoucherForm.append($('<input>', {type: 'hidden', name: 'action', value: 'update'}));
     }
 
     $.post(getCartViewUrl, $addVoucherForm.serialize(), null, 'json')
       .then((resp) => {
         if (resp.hasError) {
-          $('.js-error')
-            .show()
-            .find('.js-error-text')
-            .text(resp.errors[0]);
+          $('.js-error').show().find('.js-error-text').text(resp.errors[0]);
 
           return;
         }
@@ -181,11 +167,11 @@ $(document).ready(() => {
         // Refresh cart preview
         prestashop.emit('updateCart', {
           reason: event.target.dataset,
-          resp
+          resp,
         });
       })
       .fail((resp) => {
-        prestashop.emit('handleError', {eventType: 'updateCart', resp });
+        prestashop.emit('handleError', {eventType: 'updateCart', resp});
       });
   });
 });
