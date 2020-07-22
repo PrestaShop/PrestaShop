@@ -797,29 +797,8 @@ class FrontControllerCore extends Controller
 
         $match_url = rawurldecode(Tools::getCurrentUrlProtocolPrefix() . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
         if (!preg_match('/^' . Tools::pRegexp(rawurldecode($canonical_url), '/') . '([&?].*)?$/', $match_url)) {
-            $params = [];
-            $url_details = parse_url($canonical_url);
-
-            if (!empty($url_details['query'])) {
-                parse_str($url_details['query'], $query);
-                foreach ($query as $key => $value) {
-                    $params[Tools::safeOutput($key)] = Tools::safeOutput($value);
-                }
-            }
-            $excluded_key = ['isolang', 'id_lang', 'controller', 'fc', 'id_product', 'id_category', 'id_manufacturer', 'id_supplier', 'id_cms'];
-            $excluded_key = array_merge($excluded_key, $this->redirectionExtraExcludedKeys);
-            foreach ($_GET as $key => $value) {
-                if (!in_array($key, $excluded_key) && Validate::isUrl($key) && Validate::isUrl($value)) {
-                    $params[Tools::safeOutput($key)] = Tools::safeOutput($value);
-                }
-            }
-
-            $str_params = http_build_query($params, '', '&');
-            if (!empty($str_params)) {
-                $final_url = preg_replace('/^([^?]*)?.*$/', '$1', $canonical_url) . '?' . $str_params;
-            } else {
-                $final_url = preg_replace('/^([^?]*)?.*$/', '$1', $canonical_url);
-            }
+            
+            $final_url = $this->sanitizeUrl($canonical_url);
 
             // Don't send any cookie
             Context::getContext()->cookie->disallowWriting();
@@ -1985,35 +1964,46 @@ class FrontControllerCore extends Controller
 
         foreach ($languages as $lang) {
             $langUrl = $this->context->link->getLanguageLink($lang['id_lang']);
-
-            $params = [];
-            $url_details = parse_url($langUrl);
-
-            if (!empty($url_details['query'])) {
-                parse_str($url_details['query'], $query);
-                foreach ($query as $key => $value) {
-                    $params[Tools::safeOutput($key)] = Tools::safeOutput($value);
-                }
-            }
-
-            $excluded_key = ['isolang', 'id_lang', 'controller', 'fc', 'id_product', 'id_category', 'id_manufacturer', 'id_supplier', 'id_cms'];
-            $excluded_key = array_merge($excluded_key, $this->redirectionExtraExcludedKeys);
-            foreach ($_GET as $key => $value) {
-                if (!in_array($key, $excluded_key) && Validate::isUrl($key) && Validate::isUrl($value)) {
-                    $params[Tools::safeOutput($key)] = Tools::safeOutput($value);
-                }
-            }
-
-            $str_params = http_build_query($params, '', '&');
-            if (!empty($str_params)) {
-                $langUrl = preg_replace('/^([^?]*)?.*$/', '$1', $langUrl) . '?' . $str_params;
-            } else {
-                $langUrl = preg_replace('/^([^?]*)?.*$/', '$1', $langUrl);
-            }
-
-            $alternativeLangs[$lang['language_code']] = $langUrl;
+            $alternativeLangs[$lang['language_code']] = $this->sanitizeUrl($langUrl);
         }
 
         return $alternativeLangs;
+    }
+
+    /**
+     * Sanitize / Clean params of an URL
+     *
+     * @param string $url URL to clean
+     * @return string cleaned URL
+     */
+    private function sanitizeUrl($url) 
+    {
+        $params = [];
+        $url_details = parse_url($url);
+        $sanitizedUrl = null;
+
+        if (!empty($url_details['query'])) {
+            parse_str($url_details['query'], $query);
+            foreach ($query as $key => $value) {
+                $params[Tools::safeOutput($key)] = Tools::safeOutput($value);
+            }
+        }
+
+        $excluded_key = ['isolang', 'id_lang', 'controller', 'fc', 'id_product', 'id_category', 'id_manufacturer', 'id_supplier', 'id_cms'];
+        $excluded_key = array_merge($excluded_key, $this->redirectionExtraExcludedKeys);
+        foreach ($_GET as $key => $value) {
+            if (!in_array($key, $excluded_key) && Validate::isUrl($key) && Validate::isUrl($value)) {
+                $params[Tools::safeOutput($key)] = Tools::safeOutput($value);
+            }
+        }
+
+        $str_params = http_build_query($params, '', '&');
+        if (!empty($str_params)) {
+            $sanitizedUrl = preg_replace('/^([^?]*)?.*$/', '$1', $url) . '?' . $str_params;
+        } else {
+            $sanitizedUrl = preg_replace('/^([^?]*)?.*$/', '$1', $url);
+        }
+
+        return $sanitizedUrl;
     }
 }
