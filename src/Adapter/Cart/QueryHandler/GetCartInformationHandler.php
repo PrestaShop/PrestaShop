@@ -158,13 +158,6 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
 
         foreach ($customer->getAddresses($cart->id_lang) as $data) {
             $addressId = (int) $data['id_address'];
-            $countryIsEnabled = (bool) Address::isCountryActiveById($addressId);
-
-            // filter out disabled countries
-            if (!$countryIsEnabled) {
-                continue;
-            }
-
             $cartAddresses[$addressId] = new CartAddress(
                 $addressId,
                 $data['alias'],
