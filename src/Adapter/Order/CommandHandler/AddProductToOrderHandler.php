@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Address;
@@ -124,7 +126,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $this->assertOrderWasNotShipped($order);
 
             $product = $this->getProduct($command->getProductId(), (int) $order->id_lang);
-            $combination = $this->getCombination($command->getCombinationId());
+            $combination = null !== $command->getCombinationId() ? $this->getCombination($command->getCombinationId()->getValue()) : null;
 
             $this->checkProductInStock($product, $command);
 
@@ -159,7 +161,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $this->addProductToCart($cart, $product, $combination, $command->getProductQuantity());
 
             // Fetch Cart Product
-            $productCart = $this->getCartProductData($cart, $product, $command->getProductQuantity());
+            $productCart = $this->getCartProductData($cart, $product, $combination, $command->getProductQuantity());
 
             $invoice = $this->createNewOrEditExistingInvoice(
                 $command,
@@ -284,18 +286,22 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      *
      * @param Cart $cart
      * @param Product $product
+     * @param Combination|null $combination
      * @param int $quantity
      *
      * @return array
      */
-    private function getCartProductData(Cart $cart, Product $product, int $quantity): array
+    private function getCartProductData(Cart $cart, Product $product, ?Combination $combination, int $quantity): array
     {
-        $productItem = array_reduce($cart->getProducts(), function ($carry, $item) use ($product) {
+        $productItem = array_reduce($cart->getProducts(), function ($carry, $item) use ($product, $combination) {
             if (null !== $carry) {
                 return $carry;
             }
 
-            return $item['id_product'] == $product->id ? $item : null;
+            $productMatch = $item['id_product'] == $product->id;
+            $combinationMatch = $combination === null || $item['id_product_attribute'] == $combination->id;
+
+            return $productMatch && $combinationMatch ? $item : null;
         });
         $productItem['cart_quantity'] = $quantity;
 
@@ -342,6 +348,19 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      */
     private function addProductToCart(Cart $cart, Product $product, $combination, $quantity)
     {
+        /**
+         * Here we update product and customization in the cart.
+         *
+         * The last argument "skip quantity check" is set to true because
+         * 1) the quantity has already been checked,
+         * 2) (main reason) when the cart checks the availability ; it substracts
+         * its own quantity from available stock.
+         *
+         * This is because a product in a cart is not really out of the stock, because it is not checked out yet.
+         *
+         * Here we are editing an order, not a cart, so what has been ordered
+         * has already been substracted from the stock.
+         */
         $result = $cart->updateQty(
             $quantity,
             $product->id,
@@ -349,7 +368,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             false,
             'up',
             0,
-            new Shop($cart->id_shop)
+            new Shop($cart->id_shop),
+            true,
+            true
         );
 
         if ($result < 0) {
@@ -528,22 +549,14 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      */
     private function checkProductInStock(Product $product, AddProductToOrderCommand $command): void
     {
-        if ($command->getCombinationId() > 0) {
-            $isAvailableWhenOutOfStock = Product::isAvailableWhenOutOfStock($product->out_of_stock);
-            $isEnoughQuantity = Attribute::checkAttributeQty(
-                $command->getCombinationId(),
-                $command->getProductQuantity()
-            );
+        //check if product is available in stock
+        if (!Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($command->getProductId()->getValue()))) {
+            $combinationId = null !== $command->getCombinationId() ? $command->getCombinationId()->getValue() : 0;
+            $availableQuantity = StockAvailable::getQuantityAvailableByProduct($command->getProductId()->getValue(), $combinationId);
 
-            if (!$isAvailableWhenOutOfStock && !$isEnoughQuantity) {
+            if ($availableQuantity < $command->getProductQuantity()) {
                 throw new ProductOutOfStockException(sprintf('Product with id "%s" is out of stock, thus cannot be added to cart', $product->id));
             }
-
-            return;
-        }
-
-        if (!$product->checkQty($command->getProductQuantity())) {
-            throw new ProductOutOfStockException(sprintf('Product with id "%s" is out of stock, thus cannot be added to cart', $product->id));
         }
     }
 }

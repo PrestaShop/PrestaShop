@@ -35,6 +35,7 @@ use Context;
 use Country;
 use Currency;
 use Customer;
+use Customization;
 use Db;
 use Language;
 use Order;
@@ -45,7 +46,9 @@ use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderProductRemover;
 use PrestaShop\PrestaShop\Adapter\StockManager;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use Product;
+use Shop;
 use StockAvailable;
 use StockManagerFactory;
 use StockMvt;
@@ -119,11 +122,18 @@ class OrderProductQuantityUpdater
                 $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, $oldQuantity);
                 $this->updateCustomizationOnProductDelete($order, $orderDetail, $oldQuantity);
             } else {
+                $this->assertValidProductQuantity($orderDetail, $newQuantity);
                 $orderDetail->product_quantity = $newQuantity;
                 $orderDetail->reduction_percent = 0;
                 // update taxes
                 $orderDetail->updateTaxAmount($order);
                 $orderDetail->update();
+
+                if ($orderDetail->id_customization > 0) {
+                    $customization = new Customization($orderDetail->id_customization);
+                    $customization->quantity = $newQuantity;
+                    $customization->save();
+                }
             }
 
             // Update quantity on the cart and stock
@@ -164,13 +174,29 @@ class OrderProductQuantityUpdater
             return $cart;
         }
 
-        // Update product and customization in the cart
+        /**
+         * Here we update product and customization in the cart.
+         *
+         * The last argument "skip quantity check" is set to true because
+         * 1) the quantity has already been checked,
+         * 2) (main reason) when the cart checks the availability ; it substracts
+         * its own quantity from available stock.
+         *
+         * This is because a product in a cart is not really out of the stock, because it is not checked out yet.
+         *
+         * Here we are editing an order, not a cart, so what has been ordered
+         * has already been substracted from the stock.
+         */
         $updateQuantityResult = $cart->updateQty(
             abs($deltaQuantity),
             $orderDetail->product_id,
             $orderDetail->product_attribute_id,
             false,
-            $deltaQuantity > 0 ? 'down' : 'up'
+            $deltaQuantity > 0 ? 'down' : 'up',
+            0,
+            new Shop($cart->id_shop),
+            true,
+            true
         );
 
         if (-1 === $updateQuantityResult) {
@@ -428,5 +454,24 @@ class OrderProductQuantityUpdater
         $taxAddress = new Address($taxAddressId);
 
         return new Country($taxAddress->id_country);
+    }
+
+    /**
+     * @param OrderDetail $orderDetail
+     * @param int $newQuantity
+     *
+     * @throws ProductOutOfStockException
+     */
+    private function assertValidProductQuantity(OrderDetail $orderDetail, int $newQuantity)
+    {
+        //check if product is available in stock
+        if (!Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($orderDetail->product_id))) {
+            $availableQuantity = StockAvailable::getQuantityAvailableByProduct($orderDetail->product_id, $orderDetail->product_attribute_id);
+            $quantityDiff = $newQuantity - (int) $orderDetail->product_quantity;
+
+            if ($quantityDiff > $availableQuantity) {
+                throw new ProductOutOfStockException('Not enough products in stock');
+            }
+        }
     }
 }

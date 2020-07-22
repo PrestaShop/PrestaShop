@@ -27,6 +27,7 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Gherkin\Node\TableNode;
 use Cart;
 use Combination;
 use Configuration;
@@ -148,9 +149,35 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function remainingQuantityOfProductNamedShouldBe($productName, $productQuantity)
     {
         $this->checkProductWithNameExists($productName);
+        // Be careful this counts the amount present in the cart as well event if the stock has not been updated yet
         $nbProduct = Product::getQuantity($this->products[$productName]->id, null, null, $this->getCurrentCart(), null);
         if ($productQuantity != $nbProduct) {
             throw new \RuntimeException(sprintf('Expects %s, got %s instead', $productQuantity, $nbProduct));
+        }
+    }
+
+    /**
+     * @Then /^the available stock for product "(.+)" should be ([\-\d]+)$/
+     */
+    public function actualQuantityOfProductNamedShouldBe($productName, $productQuantity)
+    {
+        $this->checkProductWithNameExists($productName);
+        $nbProduct = StockAvailable::getQuantityAvailableByProduct($this->products[$productName]->id, null);
+        if ($productQuantity != $nbProduct) {
+            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $productQuantity, $nbProduct));
+        }
+    }
+
+    /**
+     * @Then /^the available stock for combination "(.+)" of product "(.+)" should be ([\-\d]+)$/
+     */
+    public function actualQuantityOfCombinationNamedShouldBe($combinationName, $productName, $combinationQuantity)
+    {
+        $this->checkProductWithNameExists($productName);
+        $this->checkCombinationWithNameExists($productName, $combinationName);
+        $nbProduct = StockAvailable::getQuantityAvailableByProduct($this->products[$productName]->id, $this->combinations[$productName][$combinationName]->id);
+        if ($combinationQuantity != $nbProduct) {
+            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $combinationQuantity, $nbProduct));
         }
     }
 
@@ -176,7 +203,10 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $product->quantity = $productQuantity;
         // Use same default tax rules group as products from fixtures to have the same tax rate
         $product->id_tax_rules_group = TaxRulesGroup::getIdByName('US-FL Rate (6%)');
-        $product->add();
+        $productAdded = $product->add();
+        if (!$productAdded) {
+            throw new \RuntimeException('Could not add product in database');
+        }
         StockAvailable::setQuantity((int) $product->id, 0, $product->quantity);
 
         $this->products[$productName] = $product;
@@ -211,6 +241,17 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->products[$productName]->save();
         StockAvailable::setQuantity($this->products[$productName]->id, 0, 0);
         StockAvailable::setProductOutOfStock((int) $this->products[$productName]->id, 0);
+    }
+
+    /**
+     * @Given /^product "(.+)" can be ordered out of stock$/
+     *
+     * @param string $productName
+     */
+    public function productWithNameCanBeOrderedOutOfStock($productName)
+    {
+        $this->checkProductWithNameExists($productName);
+        StockAvailable::setProductOutOfStock($this->products[$productName]->id, 1);
     }
 
     /**
@@ -300,6 +341,39 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $combination->add();
         StockAvailable::setQuantity((int) $this->products[$productName]->id, $combination->id, $combination->quantity);
         $this->combinations[$productName][$combinationName] = $combination;
+    }
+
+    /**
+     * @Given /^product "(.+)" has combinations with following details:$/
+     */
+    public function productWithNameHasCombinationsWithFollowingDetails($productName, TableNode $table)
+    {
+        $this->checkProductWithNameExists($productName);
+        $productId = (int) $this->products[$productName]->id;
+        $combinationsList = $table->getColumnsHash();
+        $attributesList = \Attribute::getAttributes((int) Configuration::get('PS_LANG_DEFAULT'));
+        foreach ($combinationsList as $combinationDetails) {
+            $combinationName = $combinationDetails['reference'];
+            $combination = new Combination();
+            $combination->reference = $combinationName;
+            $combination->id_product = $productId;
+            $combination->quantity = (int) $combinationDetails['quantity'];
+            $combination->add();
+            StockAvailable::setQuantity($productId, $combination->id, (int) $combination->quantity);
+            $this->combinations[$productName][$combinationName] = $combination;
+            $combinationAttributes = explode(';', $combinationDetails['attributes']);
+            $combinationAttributesIds = [];
+            foreach ($combinationAttributes as $combinationAttribute) {
+                list($attributeGroup, $attributeName) = explode(':', $combinationAttribute);
+                foreach ($attributesList as $attributeDetail) {
+                    if ($attributeDetail['attribute_group'] == $attributeGroup && $attributeDetail['name'] == $attributeName) {
+                        $combinationAttributesIds[] = (int) $attributeDetail['id_attribute'];
+                        continue 2;
+                    }
+                }
+            }
+            $combination->setAttributes($combinationAttributesIds);
+        }
     }
 
     /**
@@ -599,5 +673,15 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
                 throw new \RuntimeException(sprintf('Expects %s, got %s instead', $priceWithReduction, $productPrices['price_with_reduction']));
             }
         }
+    }
+
+    /**
+     * @BeforeFeature @reset-product-price-cache
+     *
+     * Clear Product prices cache at each step in order to get fresh data
+     */
+    public static function clearProductPrices()
+    {
+        Product::flushPriceCache();
     }
 }
