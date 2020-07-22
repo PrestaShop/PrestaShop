@@ -718,7 +718,6 @@ class OrderController extends FrameworkBundleAdminController
                     'quantity' => $product->getQuantity(),
                     'availableQuantity' => $product->getAvailableQuantity(),
                     'totalPrice' => $product->getTotalPrice(),
-                    'orderInvoiceNumber' => $product->getOrderInvoiceNumber()
                 ];
             }
         } catch (Exception $e) {
