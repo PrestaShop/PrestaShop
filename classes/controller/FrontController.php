@@ -797,7 +797,6 @@ class FrontControllerCore extends Controller
 
         $match_url = rawurldecode(Tools::getCurrentUrlProtocolPrefix() . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
         if (!preg_match('/^' . Tools::pRegexp(rawurldecode($canonical_url), '/') . '([&?].*)?$/', $match_url)) {
-            
             $final_url = $this->sanitizeUrl($canonical_url);
 
             // Don't send any cookie
@@ -1974,13 +1973,13 @@ class FrontControllerCore extends Controller
      * Sanitize / Clean params of an URL
      *
      * @param string $url URL to clean
+     *
      * @return string cleaned URL
      */
-    private function sanitizeUrl($url) 
+    private function sanitizeUrl(string $url): string
     {
         $params = [];
         $url_details = parse_url($url);
-        $sanitizedUrl = null;
 
         if (!empty($url_details['query'])) {
             parse_str($url_details['query'], $query);
