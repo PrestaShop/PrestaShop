@@ -170,6 +170,12 @@ services:
         - name: tactician.handler
           command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductShippingCommand
 
+    prestashop.adapter.product.supplier.query_handler.get_product_suppliers_handler:
+      class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductSuppliersHandler
+      tags:
+        - name: tactician.handler
+          command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSuppliers
+
     prestashop.adapter.product.supplier.command_handler.add_product_supplier_handler:
       class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddProductSupplierHandler
       tags:
@@ -194,6 +200,7 @@ services:
         - '@prestashop.adapter.product.supplier.command_handler.add_product_supplier_handler'
         - '@prestashop.adapter.product.supplier.command_handler.update_product_supplier_handler'
         - '@prestashop.adapter.product.supplier.command_handler.delete_product_supplier_handler'
+        - '@prestashop.adapter.product.supplier.query_handler.get_product_suppliers_handler'
       tags:
         - name: tactician.handler
           command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand
