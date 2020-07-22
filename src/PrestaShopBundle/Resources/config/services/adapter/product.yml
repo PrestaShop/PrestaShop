@@ -70,6 +70,7 @@ services:
       class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductForEditingHandler
       arguments:
         - '@prestashop.core.util.number.number_extractor'
+        - '@prestashop.adapter.product.supplier.query_handler.get_product_suppliers_handler'
       tags:
         - name: tactician.handler
           command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing
