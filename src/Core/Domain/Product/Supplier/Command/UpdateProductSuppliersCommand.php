@@ -108,6 +108,7 @@ class UpdateProductSuppliersCommand
                 $productSupplier['currency_id'],
                 $productSupplier['reference'],
                 $productSupplier['price_tax_excluded'],
+                $productSupplier['combination_id'],
                 $productSupplier['product_supplier_id'] ?? null
             );
         }
