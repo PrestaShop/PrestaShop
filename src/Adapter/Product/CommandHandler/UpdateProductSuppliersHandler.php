@@ -29,14 +29,28 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\AddProductSupplierCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\DeleteProductSupplierCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\AddProductSupplierHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\DeleteProductSupplierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\UpdateProductSupplierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\UpdateProductSuppliersHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotDeleteProductSupplierException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
+use ProductSupplier as ProductSupplierEntity;
 
 /**
  * Handles @var UpdateProductSuppliersCommand using legacy object model
@@ -58,10 +72,15 @@ final class UpdateProductSuppliersHandler extends AbstractProductHandler impleme
      */
     private $deleteProductSupplierHandler;
 
+    /**
+     * @param AddProductSupplierHandlerInterface $addProductSupplierHandler
+     * @param UpdateProductSupplierHandlerInterface $updateProductSupplierHandler
+     * @param DeleteProductSupplierHandlerInterface $deleteProductSupplierHandler
+     */
     public function __construct(
         AddProductSupplierHandlerInterface $addProductSupplierHandler,
         UpdateProductSupplierHandlerInterface $updateProductSupplierHandler,
-        DeleteProductSupplierHandler $deleteProductSupplierHandler
+        DeleteProductSupplierHandlerInterface $deleteProductSupplierHandler
     ) {
         $this->addProductSupplierHandler = $addProductSupplierHandler;
         $this->updateProductSupplierHandler = $updateProductSupplierHandler;
@@ -76,6 +95,11 @@ final class UpdateProductSuppliersHandler extends AbstractProductHandler impleme
         if (null !== $command->getProductSuppliers()) {
             $this->updateProductSuppliers($command->getProductId(), $command->getProductSuppliers());
         }
+        if (null !== $command->getDefaultSupplierId()) {
+            $this->updateDefaultSupplier($command->getProductId(), $command->getDefaultSupplierId());
+        }
+
+        //@todo: query to return new product suppliers list
     }
 
     /**
@@ -84,28 +108,115 @@ final class UpdateProductSuppliersHandler extends AbstractProductHandler impleme
      */
     private function updateProductSuppliers(ProductId $productId, array $productSuppliers): void
     {
+        $deletableProductSupplierIds = $this->getDeletableProductSupplierIds($productId, $productSuppliers);
+
         foreach ($productSuppliers as $productSupplier) {
             if ($productSupplier->getProductSupplierId()) {
-                $this->updateProductSupplier($productId, $productSupplier);
+                $this->updateProductSupplier($productSupplier);
             } else {
                 $this->addProductSupplier($productId, $productSupplier);
             }
         }
+
+        $this->deleteProductSuppliers($deletableProductSupplierIds);
     }
 
+    /**
+     * @param ProductId $productId
+     * @param ProductSupplier $productSupplier
+     *
+     * @return ProductSupplierId
+     *
+     * @throws CurrencyException
+     * @throws CombinationConstraintException
+     * @throws SupplierException
+     */
     private function addProductSupplier(ProductId $productId, ProductSupplier $productSupplier): ProductSupplierId
     {
+        $combinationId = $productSupplier->getCombinationId();
+
+        if ($combinationId === CombinationId::NO_COMBINATION) {
+            $combinationId = null;
+        }
+
         $command = new AddProductSupplierCommand(
-            $productId,
+            $productId->getValue(),
             $productSupplier->getSupplierId(),
             $productSupplier->getCurrencyId(),
-            $productSupplier->getReference()
+            $productSupplier->getReference(),
+            $productSupplier->getPriceTaxExcluded(),
+            $combinationId
         );
-        $this->addProductSupplierHandler->handle()
+
+        return $this->addProductSupplierHandler->handle($command);
     }
 
-    private function updateProductSupplier(ProductId $productId, ProductSupplier $productSupplier): void
+    /**
+     * @param ProductSupplier $productSupplier
+     */
+    private function updateProductSupplier(ProductSupplier $productSupplier): void
     {
+        $command = new UpdateProductSupplierCommand($productSupplier->getProductSupplierId());
+        $command->setCurrencyId($productSupplier->getCurrencyId())
+            ->setReference($productSupplier->getReference())
+            ->setPriceTaxExcluded($productSupplier->getPriceTaxExcluded())
+            ->setCombinationId($productSupplier->getCombinationId())
+        ;
 
+        $this->updateProductSupplierHandler->handle($command);
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param SupplierId $defaultSupplierId
+     *
+     * @throws CannotUpdateProductException
+     * @throws ProductException
+     * @throws ProductNotFoundException
+     */
+    private function updateDefaultSupplier(ProductId $productId, SupplierId $defaultSupplierId): void
+    {
+        $product = $this->getProduct($productId);
+        $product->id_supplier = $defaultSupplierId->getValue();
+        $this->fieldsToUpdate['id_supplier'] = true;
+
+        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_DEFAULT_SUPPLIER);
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param array $providedProductSuppliers
+     *
+     * @return int[]
+     */
+    private function getDeletableProductSupplierIds(ProductId $productId, array $providedProductSuppliers): array
+    {
+        $productSuppliers = ProductSupplierEntity::getSupplierCollection($productId->getValue());
+        $existingProductSupplierIds = [];
+        $providedProductSupplierIds = [];
+
+        /** @var ProductSupplierEntity $currentSupplier */
+        foreach ($productSuppliers as $currentSupplier) {
+            $existingProductSupplierIds[] = (int) $currentSupplier->id;
+        }
+
+        foreach ($providedProductSuppliers as $productSupplier) {
+            $providedProductSupplierIds[] = $productSupplier->getProductSupplierId();
+        }
+
+        return array_diff($existingProductSupplierIds, $providedProductSupplierIds);
+    }
+
+    /**
+     * @param array $productSupplierIds
+     *
+     * @throws CannotDeleteProductSupplierException
+     * @throws ProductSupplierException
+     */
+    private function deleteProductSuppliers(array $productSupplierIds): void
+    {
+        foreach ($productSupplierIds as $productSupplierId) {
+            $this->deleteProductSupplierHandler->handle(new DeleteProductSupplierCommand($productSupplierId));
+        }
     }
 }

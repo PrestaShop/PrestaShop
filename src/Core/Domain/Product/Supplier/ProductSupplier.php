@@ -59,7 +59,7 @@ class ProductSupplier
     private $productSupplierId;
 
     /**
-     * @var int|null
+     * @var int
      */
     private $combinationId;
 
@@ -68,17 +68,15 @@ class ProductSupplier
      * @param int $currencyId
      * @param string $reference
      * @param string $priceTaxExcluded
-     * @param int|null $combinationId
+     * @param int $combinationId
      * @param int|null $productSupplierId Provide value to update existing resource. Null means this is new resource
-     * @todo: which props should it require if it will be used in update and create?
-     * @todo; dont forget its one line per product attribute.
      */
     public function __construct(
         int $supplierId,
         int $currencyId,
         string $reference,
         string $priceTaxExcluded,
-        ?int $combinationId = null,
+        int $combinationId,
         ?int $productSupplierId = null
     ) {
         $this->supplierId = $supplierId;
@@ -119,6 +117,14 @@ class ProductSupplier
     public function getPriceTaxExcluded(): string
     {
         return $this->priceTaxExcluded;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCombinationId(): int
+    {
+        return $this->combinationId;
     }
 
     /**
