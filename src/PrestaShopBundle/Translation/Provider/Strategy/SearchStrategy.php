@@ -31,6 +31,10 @@ namespace PrestaShopBundle\Translation\Provider\Strategy;
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
+/**
+ * Represents strategy for searching inside translations.
+ * It must use the SearchProvider and required parameters.
+ */
 class SearchStrategy implements StrategyInterface
 {
     /**
@@ -54,6 +58,13 @@ class SearchStrategy implements StrategyInterface
      */
     private $provider;
 
+    /**
+     * @param ProviderInterface $provider
+     * @param string $locale
+     * @param string $domain
+     * @param string|null $theme
+     * @param string|null $module
+     */
     public function __construct(
         ProviderInterface $provider,
         string $locale,
@@ -68,16 +79,29 @@ class SearchStrategy implements StrategyInterface
         $this->provider = $provider;
     }
 
+    /**
+     * @param bool $empty
+     *
+     * @return MessageCatalogueInterface|null
+     */
     public function getDefaultCatalogue(bool $empty = true): ?MessageCatalogueInterface
     {
         return $this->provider->getDefaultCatalogue($this->locale, $this->domain, $this->module, $empty);
     }
 
+    /**
+     * @return MessageCatalogueInterface|null
+     */
     public function getFileTranslatedCatalogue(): ?MessageCatalogueInterface
     {
         return $this->provider->getFileTranslatedCatalogue($this->locale, $this->domain, $this->module);
     }
 
+    /**
+     * @param string|null $domain
+     *
+     * @return MessageCatalogueInterface|null
+     */
     public function getUserTranslatedCatalogue(?string $domain = null): ?MessageCatalogueInterface
     {
         return $this->provider->getUserTranslatedCatalogue($this->locale, $this->domain, $this->theme);

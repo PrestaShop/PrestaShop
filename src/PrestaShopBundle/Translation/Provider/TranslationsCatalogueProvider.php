@@ -30,6 +30,9 @@ namespace PrestaShopBundle\Translation\Provider;
 
 use PrestaShopBundle\Translation\Provider\Strategy\StrategyInterface;
 
+/**
+ * Retrieves combined and formatted catalogues depending on the strategy defined by the caller.
+ */
 class TranslationsCatalogueProvider
 {
     /**
@@ -128,7 +131,7 @@ class TranslationsCatalogueProvider
         array $userTranslatedCatalogue,
         array $treeDomain,
         ?array $search = []
-    ) {
+    ): array {
         $domainCatalogue = [];
         foreach ($defaultCatalogue as $key => $message) {
             $messageData = [
