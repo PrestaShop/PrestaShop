@@ -149,8 +149,13 @@ class LanguageList
     public function getCountries()
     {
         static $countries = null;
+        static $language = null;
 
+        if ($language !== $this->getLanguage()) {
+            $countries = null;
+        }
         if (null === $countries) {
+            $language = $this->getLanguage();
             $countries = [];
             $countries_lang = $this->getLanguage()->getCountries();
             $countries_default = $this->getLanguage(self::DEFAULT_ISO)->getCountries();
