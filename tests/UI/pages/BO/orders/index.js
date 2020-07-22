@@ -249,6 +249,24 @@ class Order extends BOBasePage {
     return download.path();
   }
 
+
+  /**
+   * Click on customer link to open view page in a new tab
+   * @param page
+   * @param row
+   * @return {Promise<*>}, new browser tab to work with
+   */
+  viewCustomer(page, row) {
+    return this.openLinkWithTargetBlank(
+      page,
+      `${this.tableColumn(row, 'customer')} a`,
+      this.userProfileIcon,
+    );
+  }
+
+
+  /* Bulk actions methods */
+
   /**
    * Bulk change orders status
    * @param page
