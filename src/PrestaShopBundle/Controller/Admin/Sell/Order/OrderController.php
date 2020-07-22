@@ -704,6 +704,35 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
+     * @param int $orderId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function refreshProductPricesAction(int $orderId, Request $request): Response
+    {
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $productsForViewing = $orderForViewing->getProducts();
+        $productList = $productsForViewing->getProducts();
+
+        $result = [];
+        foreach ($productList as $product) {
+            $result[] = [
+                'orderDetailId' => $product->getOrderDetailId(),
+                'unitPrice' => $product->getUnitPrice(),
+                'quantity' => $product->getQuantity(),
+                'availableQuantity' => $product->getAvailableQuantity(),
+                'totalPrice' => $product->getTotalPrice(),
+                'orderInvoiceNumber' => $product->getOrderInvoiceNumber()
+            ];
+        }
+
+        return $this->json($result);
+    }
+
+    /**
      * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
      *
      * @param int $orderId
