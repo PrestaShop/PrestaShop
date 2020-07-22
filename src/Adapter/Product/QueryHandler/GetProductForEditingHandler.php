@@ -41,7 +41,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSuppliers;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryHandler\GetProductSuppliersHandlerInterface;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractorException;
 use Product;
@@ -58,12 +61,20 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
     private $numberExtractor;
 
     /**
+     * @var GetProductSuppliersHandlerInterface
+     */
+    private $getProductSuppliersHandler;
+
+    /**
      * @param NumberExtractor $numberExtractor
+     * @param GetProductSuppliersHandlerInterface $getProductSuppliersHandler
      */
     public function __construct(
-        NumberExtractor $numberExtractor
+        NumberExtractor $numberExtractor,
+        GetProductSuppliersHandlerInterface $getProductSuppliersHandler
     ) {
         $this->numberExtractor = $numberExtractor;
+        $this->getProductSuppliersHandler = $getProductSuppliersHandler;
     }
 
     /**
@@ -81,7 +92,8 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             $this->getCategoriesInformation($product),
             $this->getPricesInformation($product),
             $this->getOptions($product),
-            $this->getShippingInformation($product)
+            $this->getShippingInformation($product),
+            $this->getSupplierOptions($product)
         );
     }
 
@@ -229,7 +241,7 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
      *
      * @return ProductCustomizationOptions
      */
-    public function getCustomizationOptions(Product $product): ProductCustomizationOptions
+    private function getCustomizationOptions(Product $product): ProductCustomizationOptions
     {
         if (!Customization::isFeatureActive()) {
             return ProductCustomizationOptions::createNotCustomizable();
@@ -248,5 +260,18 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             default:
                 return ProductCustomizationOptions::createNotCustomizable();
         }
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return ProductSupplierOptions
+     */
+    private function getSupplierOptions(Product $product): ProductSupplierOptions
+    {
+        return new ProductSupplierOptions(
+            (int) $product->id_supplier,
+            $this->getProductSuppliersHandler->handle(new GetProductSuppliers((int) $product->id))
+        );
     }
 }
