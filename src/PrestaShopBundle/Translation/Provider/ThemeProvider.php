@@ -201,21 +201,17 @@ class ThemeProvider implements ProviderInterface
     }
 
     /**
+     * @param string $themeName
+     *
      * @return string
      */
-    public function getIdentifier(): string
+    private function getResourceDirectory(string $themeName): string
     {
-        return 'theme';
-    }
-
-    private function getResourceDirectory(string $themeName)
-    {
-        $resourceDirectory = rtrim($this->themeResourcesDirectory, DIRECTORY_SEPARATOR) .
-            DIRECTORY_SEPARATOR .
-            $themeName .
-            DIRECTORY_SEPARATOR .
-            'translations'
-        ;
+        $resourceDirectory = implode(DIRECTORY_SEPARATOR, [
+            rtrim($this->themeResourcesDirectory, DIRECTORY_SEPARATOR),
+            $themeName,
+            'translations',
+        ]);
         $this->filesystem->mkdir($resourceDirectory);
 
         return $resourceDirectory;
