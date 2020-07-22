@@ -32,6 +32,9 @@ use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
+/**
+ * Gets catalogue within the files filtered by name in the directory given.
+ */
 class DefaultCatalogueProvider implements TranslationCatalogueProviderInterface
 {
     const DEFAULT_LOCALE = 'en-US';
