@@ -60,11 +60,18 @@ class SearchProvider implements ProviderInterface
      * @var ExternalModuleLegacySystemProvider
      */
     private $externalModuleLegacySystemProvider;
+
     /**
      * @var DatabaseTranslationLoader
      */
     private $databaseLoader;
 
+    /**
+     * @param ExternalModuleLegacySystemProvider $externalModuleLegacySystemProvider
+     * @param DatabaseTranslationLoader $databaseLoader
+     * @param string $resourceDirectory
+     * @param string $modulesDirectory
+     */
     public function __construct(
         ExternalModuleLegacySystemProvider $externalModuleLegacySystemProvider,
         DatabaseTranslationLoader $databaseLoader,
@@ -75,14 +82,6 @@ class SearchProvider implements ProviderInterface
         $this->externalModuleLegacySystemProvider = $externalModuleLegacySystemProvider;
         $this->resourceDirectory = $resourceDirectory;
         $this->databaseLoader = $databaseLoader;
-    }
-
-    /**
-     * @return string
-     */
-    public function getIdentifier(): string
-    {
-        return 'search';
     }
 
     /**
@@ -124,8 +123,11 @@ class SearchProvider implements ProviderInterface
      *
      * @return MessageCatalogueInterface|null
      */
-    public function getFileTranslatedCatalogue(string $locale, string $domain, ?string $module = null): ?MessageCatalogueInterface
-    {
+    public function getFileTranslatedCatalogue(
+        string $locale,
+        string $domain,
+        ?string $module = null
+    ): ?MessageCatalogueInterface {
         try {
             return (new FileTranslatedCatalogueProvider(
                 $this->resourceDirectory,
@@ -151,8 +153,11 @@ class SearchProvider implements ProviderInterface
      *
      * @return MessageCatalogueInterface
      */
-    public function getUserTranslatedCatalogue(string $locale, string $domain, ?string $theme = null): MessageCatalogueInterface
-    {
+    public function getUserTranslatedCatalogue(
+        string $locale,
+        string $domain,
+        ?string $theme = null
+    ): MessageCatalogueInterface {
         $translationDomains = ['^' . preg_quote($domain) . '([A-Za-z]|$)'];
 
         return (new UserTranslatedCatalogueProvider(
@@ -163,9 +168,11 @@ class SearchProvider implements ProviderInterface
     }
 
     /**
+     * @param string $domain
+     *
      * @return string[]
      */
-    private function getFilenameFilters(string $domain)
+    private function getFilenameFilters(string $domain): array
     {
         return ['#^' . preg_quote($domain, '#') . '([A-Za-z]|\.|$)#'];
     }
@@ -173,11 +180,12 @@ class SearchProvider implements ProviderInterface
     /**
      * Filters the catalogue so that only domains matching the filters are kept
      *
+     * @param string $locale
      * @param MessageCatalogueInterface $catalogue
      *
      * @return MessageCatalogueInterface
      */
-    private function filterCatalogue(string $locale, MessageCatalogueInterface $catalogue)
+    private function filterCatalogue(string $locale, MessageCatalogueInterface $catalogue): MessageCatalogueInterface
     {
         $allowedDomains = [];
 
