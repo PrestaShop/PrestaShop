@@ -33,7 +33,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use PrestaShopBundle\Translation\Provider\DefaultCatalogueProvider;
-use PrestaShopBundle\Translation\Provider\ExternalModuleLegacySystemProvider;
+use PrestaShopBundle\Translation\Provider\ExternalLegacyModuleProvider;
 use Symfony\Component\Translation\Dumper\XliffFileDumper;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -68,7 +68,7 @@ class ExternalModuleLegacySystemProviderTest extends TestCase
     ];
 
     /**
-     * @var ExternalModuleLegacySystemProvider
+     * @var ExternalLegacyModuleProvider
      */
     private $externalModuleLegacySystemProvider;
 
@@ -94,7 +94,7 @@ class ExternalModuleLegacySystemProviderTest extends TestCase
             mkdir(self::$tempDir);
         }
 
-        $this->externalModuleLegacySystemProvider = (new ExternalModuleLegacySystemProvider(
+        $this->externalModuleLegacySystemProvider = (new ExternalLegacyModuleProvider(
             $databaseLoader,
             self::$tempDir,
             self::$tempDir,

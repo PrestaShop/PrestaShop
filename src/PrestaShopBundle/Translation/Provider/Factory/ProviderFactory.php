@@ -26,18 +26,39 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Translation\Provider;
+namespace PrestaShopBundle\Translation\Provider\Factory;
 
-use Symfony\Component\Translation\MessageCatalogueInterface;
+use PrestaShopBundle\Exception\NotImplementedException;
+use PrestaShopBundle\Translation\Provider\ProviderInterface;
+use PrestaShopBundle\Translation\Provider\Strategy\TypeInterface;
 
-/**
- * Define contract to retrieve translations.
- */
-interface ProviderInterface
+class ProviderFactory
 {
-    public function getDefaultCatalogue(string $locale): ?MessageCatalogueInterface;
+    /**
+     * @var ProviderFactoryInterface[]
+     */
+    private $factories;
 
-    public function getFileTranslatedCatalogue(string $locale): ?MessageCatalogueInterface;
+    public function __construct(array $factories)
+    {
+        $this->factories = $factories;
+    }
 
-    public function getUserTranslatedCatalogue(string $locale): ?MessageCatalogueInterface;
+    /**
+     * @param TypeInterface $strategy
+     *
+     * @return ProviderInterface
+     *
+     * @throws NotImplementedException
+     */
+    public function getProviderFor(TypeInterface $strategy): ProviderInterface
+    {
+        foreach ($this->factories as $factory) {
+            if ($factory->implements($strategy)) {
+                return $factory->build($strategy);
+            }
+        }
+
+        throw new NotImplementedException(sprintf('Could not find factory for %s', get_class($strategy)));
+    }
 }

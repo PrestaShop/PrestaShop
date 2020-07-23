@@ -31,8 +31,7 @@ use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Translation;
 use PrestaShopBundle\Exception\InvalidLanguageException;
 use PrestaShopBundle\Translation\Constraints\PassVsprintf;
-use PrestaShopBundle\Translation\Provider\Strategy\StrategyInterface;
-use PrestaShopBundle\Translation\Provider\TranslationsCatalogueProvider;
+use PrestaShopBundle\Translation\Provider\Strategy\TypeInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Validator\Validation;
 
@@ -106,18 +105,20 @@ class TranslationService
     /**
      * Returns list translations by domain
      *
-     * @param StrategyInterface $strategy
+     * @param TypeInterface $strategy
+     * @param string $locale
      * @param array $search
      *
      * @return array
      *
      * @throws Exception
      */
-    public function getTranslationsCatalogue(StrategyInterface $strategy, array $search)
+    public function getTranslationsCatalogue(TypeInterface $strategy, string $locale, array $search)
     {
-        return (new TranslationsCatalogueProvider())
+        return $this->container->get('prestashop.translation.translation_catalogue_provider')
             ->getCatalogue(
                 $strategy,
+                $locale,
                 $search
             );
     }
@@ -125,7 +126,8 @@ class TranslationService
     /**
      * List translations for a specific domain.
      *
-     * @param StrategyInterface $strategy
+     * @param TypeInterface $providerType
+     * @param string $locale
      * @param string $domain
      * @param array $search
      *
@@ -137,13 +139,15 @@ class TranslationService
      * @todo: we need module information here
      */
     public function listDomainTranslation(
-        StrategyInterface $strategy,
+        TypeInterface $providerType,
+        string $locale,
         string $domain,
         array $search
     ): array {
-        $catalogue = (new TranslationsCatalogueProvider())
+        $catalogue = $this->container->get('prestashop.translation.translation_catalogue_provider')
             ->getDomainCatalogue(
-                $strategy,
+                $providerType,
+                $locale,
                 $domain,
                 $search
             );
