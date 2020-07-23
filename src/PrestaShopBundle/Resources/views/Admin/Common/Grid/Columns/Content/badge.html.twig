@@ -29,7 +29,8 @@
     {{ record[column.options.field] }}
   </span>
 {% elseif record[column.options.field] is not empty and column.options.color_field in record|keys and record[column.options.color_field] is not empty %}
-  <span class="badge rounded" style="background-color: {{ record[column.options.color_field] }}">
+  {% set textColor = is_color_bright(record[column.options.color_field]) ? '#383838' : 'white' %}
+  <span class="badge rounded" style="background-color: {{ record[column.options.color_field] }}; color: {{ textColor ]]">
     {{ record[column.options.field] }}
   </span>
 {% elseif record[column.options.field] is not empty %}
@@ -38,4 +39,3 @@
   {{ column.options.empty_value }}
 {% endif %}
 </div>
-
