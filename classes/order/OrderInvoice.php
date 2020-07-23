@@ -165,7 +165,9 @@ class OrderInvoiceCore extends ObjectModel
      * Get multiple invoices for a single order (useful for multi-invoices orders)
      *
      * @param int $orderId
+     *
      * @return array
+     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
