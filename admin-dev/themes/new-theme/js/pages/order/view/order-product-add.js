@@ -189,14 +189,25 @@ export default class OrderProductAdd {
     const orderId = $(event.currentTarget).data('orderId');
 
     if (invoiceId === 0) {
+      const modalEditPrice = new ConfirmModal({
+        id: 'modal-confirm-new-price',
+        confirmTitle: this.invoiceSelect.data('modal-edit-price-title'),
+        confirmMessage: this.invoiceSelect.data('modal-edit-price-body'),
+        confirmButtonLabel: this.invoiceSelect.data('modal-edit-price-apply'),
+        closeButtonLabel: this.invoiceSelect.data('modal-edit-price-cancel'),
+      }, () => {
+        this.addProduct(orderId)
+      });
+
       const modal = new ConfirmModal({
         id: 'modal-confirm-new-invoice',
         confirmTitle: this.invoiceSelect.data('modal-title'),
         confirmMessage: this.invoiceSelect.data('modal-body'),
         confirmButtonLabel: this.invoiceSelect.data('modal-apply'),
         closeButtonLabel: this.invoiceSelect.data('modal-cancel'),
-      }, () => this.addProduct(orderId));
-
+      }, () => {
+        modalEditPrice.show();
+      });
       modal.show();
     } else {
       this.addProduct(orderId);
