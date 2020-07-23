@@ -1,0 +1,16 @@
+admin_outstanding_index:
+  path: /
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Outstanding:index
+    _legacy_controller: AdminOutstanding
+    _legacy_link: AdminOutstanding
+
+admin_outstanding_search:
+  path: /
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Common:searchGrid
+    _legacy_controller: AdminOutstanding
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.outstanding
+    redirectRoute: admin_outstanding_index
