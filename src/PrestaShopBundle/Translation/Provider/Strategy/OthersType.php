@@ -28,16 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider\Strategy;
 
-use Symfony\Component\Translation\MessageCatalogueInterface;
-
 /**
- * Defines methods required for each strategy.
+ * Properties container for 'others' type of translation.
  */
-interface StrategyInterface
+class OthersType implements TypeInterface
 {
-    public function getDefaultCatalogue(bool $empty = true): ?MessageCatalogueInterface;
-
-    public function getFileTranslatedCatalogue(): ?MessageCatalogueInterface;
-
-    public function getUserTranslatedCatalogue(?string $domain = null): ?MessageCatalogueInterface;
 }

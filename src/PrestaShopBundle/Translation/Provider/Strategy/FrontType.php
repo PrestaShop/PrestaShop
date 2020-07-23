@@ -26,18 +26,31 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Translation\Provider;
-
-use Symfony\Component\Translation\MessageCatalogueInterface;
+namespace PrestaShopBundle\Translation\Provider\Strategy;
 
 /**
- * Define contract to retrieve translations.
+ * Properties container for 'front' type of translation.
  */
-interface ProviderInterface
+class FrontType implements TypeInterface
 {
-    public function getDefaultCatalogue(string $locale): ?MessageCatalogueInterface;
+    /**
+     * @var string|null
+     */
+    private $domain;
 
-    public function getFileTranslatedCatalogue(string $locale): ?MessageCatalogueInterface;
+    /**
+     * @param string|null $domain
+     */
+    public function __construct(?string $domain = null)
+    {
+        $this->domain = $domain;
+    }
 
-    public function getUserTranslatedCatalogue(string $locale): ?MessageCatalogueInterface;
+    /**
+     * @return string|null
+     */
+    public function getDomain(): ?string
+    {
+        return $this->domain;
+    }
 }

@@ -27,7 +27,7 @@
 namespace Tests\Integration\PrestaShopBundle\Translation\Provider;
 
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractor;
-use PrestaShopBundle\Translation\Provider\ExternalModuleLegacySystemProvider;
+use PrestaShopBundle\Translation\Provider\ExternalLegacyModuleProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 use Tests\Integration\PrestaShopBundle\Translation\CatalogueVerifier;
@@ -40,7 +40,7 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
     const MODULE_NAME = 'translationtest';
 
     /**
-     * @var ExternalModuleLegacySystemProvider
+     * @var ExternalLegacyModuleProvider
      */
     private $provider;
 
@@ -73,7 +73,7 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
             $this->getModuleDirectory()
         );
 
-        $this->provider = new ExternalModuleLegacySystemProvider(
+        $this->provider = new ExternalLegacyModuleProvider(
             $databaseLoader,
             '',
             $this->getModuleDirectory(),
