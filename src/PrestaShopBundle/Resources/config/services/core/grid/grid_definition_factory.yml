@@ -276,4 +276,6 @@ services:
     prestashop.core.grid.definition.factory.outstanding:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OutstandingGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
         public: true
