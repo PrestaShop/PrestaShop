@@ -57,7 +57,7 @@ class SearchProvider implements ProviderInterface
     private $modulesDirectory;
 
     /**
-     * @var ExternalModuleLegacySystemProvider
+     * @var ExternalLegacyModuleProvider|null
      */
     private $externalModuleLegacySystemProvider;
 
@@ -65,50 +65,61 @@ class SearchProvider implements ProviderInterface
      * @var DatabaseTranslationLoader
      */
     private $databaseLoader;
+    /**
+     * @var string|null
+     */
+    private $moduleName;
+    /**
+     * @var string|null
+     */
+    private $themeName;
 
     /**
-     * @param ExternalModuleLegacySystemProvider $externalModuleLegacySystemProvider
      * @param DatabaseTranslationLoader $databaseLoader
      * @param string $resourceDirectory
      * @param string $modulesDirectory
+     * @param string $domain
+     * @param ExternalLegacyModuleProvider|null $externalModuleLegacySystemProvider
+     * @param string|null $moduleName
+     * @param string|null $themeName
      */
     public function __construct(
-        ExternalModuleLegacySystemProvider $externalModuleLegacySystemProvider,
         DatabaseTranslationLoader $databaseLoader,
         string $resourceDirectory,
-        string $modulesDirectory
+        string $modulesDirectory,
+        string $domain,
+        ?ExternalLegacyModuleProvider $externalModuleLegacySystemProvider = null,
+        ?string $moduleName = null,
+        ?string $themeName = null
     ) {
         $this->modulesDirectory = $modulesDirectory;
         $this->externalModuleLegacySystemProvider = $externalModuleLegacySystemProvider;
         $this->resourceDirectory = $resourceDirectory;
         $this->databaseLoader = $databaseLoader;
+        $this->domain = $domain;
+        $this->moduleName = $moduleName;
+        $this->themeName = $themeName;
     }
 
     /**
      * @param string $locale
-     * @param string $domain
-     * @param string|null $module
      * @param bool $empty
      *
      * @return MessageCatalogueInterface|null
      */
-    public function getDefaultCatalogue(
-        string $locale,
-        string $domain,
-        ?string $module = null,
-        bool $empty = true
-    ): ?MessageCatalogueInterface {
+    public function getDefaultCatalogue(string $locale, bool $empty = true): ?MessageCatalogueInterface
+    {
         try {
             return (new DefaultCatalogueProvider(
                 $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default',
-                $this->getFilenameFilters($domain)
+                $this->getFilenameFilters()
             ))
                 ->getCatalogue($locale, $empty);
         } catch (FileNotFoundException $e) {
-            if (null !== $module) {
+            if (null !== $this->moduleName && null !== $this->externalModuleLegacySystemProvider) {
                 return $this->filterCatalogue(
                     $locale,
-                    $this->externalModuleLegacySystemProvider->getDefaultCatalogue($locale, $module, $empty)
+                    $this->externalModuleLegacySystemProvider->getDefaultCatalogue($locale, $empty)
                 );
             }
         }
@@ -118,27 +129,22 @@ class SearchProvider implements ProviderInterface
 
     /**
      * @param string $locale
-     * @param string $domain
-     * @param string|null $module
      *
      * @return MessageCatalogueInterface|null
      */
-    public function getFileTranslatedCatalogue(
-        string $locale,
-        string $domain,
-        ?string $module = null
-    ): ?MessageCatalogueInterface {
+    public function getFileTranslatedCatalogue(string $locale): ?MessageCatalogueInterface
+    {
         try {
             return (new FileTranslatedCatalogueProvider(
                 $this->resourceDirectory,
-                $this->getFilenameFilters($domain)
+                $this->getFilenameFilters()
             ))
                 ->getCatalogue($locale);
         } catch (FileNotFoundException $e) {
-            if (null !== $module) {
+            if (null !== $this->moduleName && null !== $this->externalModuleLegacySystemProvider) {
                 return $this->filterCatalogue(
                     $locale,
-                    $this->externalModuleLegacySystemProvider->getFileTranslatedCatalogue($locale, $module)
+                    $this->externalModuleLegacySystemProvider->getFileTranslatedCatalogue($locale)
                 );
             }
         }
@@ -148,33 +154,26 @@ class SearchProvider implements ProviderInterface
 
     /**
      * @param string $locale
-     * @param string $domain
-     * @param string|null $theme
      *
      * @return MessageCatalogueInterface
      */
-    public function getUserTranslatedCatalogue(
-        string $locale,
-        string $domain,
-        ?string $theme = null
-    ): MessageCatalogueInterface {
-        $translationDomains = ['^' . preg_quote($domain) . '([A-Za-z]|$)'];
+    public function getUserTranslatedCatalogue(string $locale): MessageCatalogueInterface
+    {
+        $translationDomains = ['^' . preg_quote($this->domain) . '([A-Za-z]|$)'];
 
         return (new UserTranslatedCatalogueProvider(
             $this->databaseLoader,
             $translationDomains
         ))
-            ->getCatalogue($locale, $theme);
+            ->getCatalogue($locale, $this->themeName);
     }
 
     /**
-     * @param string $domain
-     *
      * @return string[]
      */
-    private function getFilenameFilters(string $domain): array
+    private function getFilenameFilters(): array
     {
-        return ['#^' . preg_quote($domain, '#') . '([A-Za-z]|\.|$)#'];
+        return ['#^' . preg_quote($this->domain, '#') . '([A-Za-z]|\.|$)#'];
     }
 
     /**

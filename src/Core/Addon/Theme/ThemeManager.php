@@ -41,6 +41,8 @@ use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShopBundle\Service\TranslationService;
+use PrestaShopBundle\Translation\Provider\Factory\ProviderFactory;
+use PrestaShopBundle\Translation\Provider\Strategy\ThemesType;
 use PrestaShopBundle\Translation\Provider\TranslationFinder;
 use PrestaShopLogger;
 use Shop;
@@ -108,6 +110,10 @@ class ThemeManager implements AddonManagerInterface
      * @var TranslationFinder
      */
     private $translationFinder;
+    /**
+     * @var ProviderFactory
+     */
+    private $providerFactory;
 
     public function __construct(
         Shop $shop,
@@ -119,7 +125,8 @@ class ThemeManager implements AddonManagerInterface
         Finder $finder,
         HookConfigurator $hookConfigurator,
         ThemeRepository $themeRepository,
-        ImageTypeRepository $imageTypeRepository
+        ImageTypeRepository $imageTypeRepository,
+        ProviderFactory $providerFactory
     ) {
         $this->translationFinder = new TranslationFinder();
         $this->shop = $shop;
@@ -132,6 +139,7 @@ class ThemeManager implements AddonManagerInterface
         $this->hookConfigurator = $hookConfigurator;
         $this->themeRepository = $themeRepository;
         $this->imageTypeRepository = $imageTypeRepository;
+        $this->providerFactory = $providerFactory;
     }
 
     /**
@@ -498,9 +506,12 @@ class ThemeManager implements AddonManagerInterface
         }
 
         $translationService = $kernel->getContainer()->get('prestashop.service.translation');
-        $themeProvider = $kernel->getContainer()->get('prestashop.translation.theme_provider');
-
         $themeName = $theme->getName();
+        /** @var \PrestaShopBundle\Translation\Provider\ThemeProvider $themeProvider */
+        $themeProvider = $this->providerFactory->getProviderFor(
+            new ThemesType($themeName)
+        );
+
         $themePath = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_') . $themeName;
         $translationFolder = $themePath . DIRECTORY_SEPARATOR . 'translations' . DIRECTORY_SEPARATOR;
 

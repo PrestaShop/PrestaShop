@@ -31,7 +31,8 @@ use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\TranslationToolsBundle\Translation\Dumper\XliffFileDumper;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\Util\Flattenizer;
 use PrestaShopBundle\Translation\Extractor\ThemeExtractorInterface;
-use PrestaShopBundle\Translation\Provider\ThemeProvider;
+use PrestaShopBundle\Translation\Provider\Factory\ProviderFactory;
+use PrestaShopBundle\Translation\Provider\Strategy\ThemesType;
 use PrestaShopBundle\Translation\Provider\TranslationFinder;
 use PrestaShopBundle\Utils\ZipManager;
 use Symfony\Component\Filesystem\Filesystem;
@@ -47,11 +48,6 @@ class ThemeExporter
      * @var ThemeExtractorInterface the theme extractor
      */
     private $themeExtractor;
-
-    /**
-     * @var ThemeProvider the theme provider
-     */
-    private $themeProvider;
 
     /**
      * @var ZipManager the zip manager
@@ -82,21 +78,25 @@ class ThemeExporter
      * @var string the export directory path
      */
     public $exportDir;
+    /**
+     * @var ProviderFactory
+     */
+    private $providerFactory;
 
     public function __construct(
         ThemeExtractorInterface $themeExtractor,
-        ThemeProvider $themeProvider,
         ThemeRepository $themeRepository,
+        ProviderFactory $providerFactory,
         XliffFileDumper $dumper,
         ZipManager $zipManager,
         Filesystem $filesystem
     ) {
         $this->themeExtractor = $themeExtractor;
-        $this->themeProvider = $themeProvider;
         $this->themeRepository = $themeRepository;
         $this->dumper = $dumper;
         $this->zipManager = $zipManager;
         $this->filesystem = $filesystem;
+        $this->providerFactory = $providerFactory;
     }
 
     /**
@@ -130,13 +130,14 @@ class ThemeExporter
     {
         $mergedTranslations = $this->getCatalogueExtractedFromTemplates($themeName, $locale, $rootDir);
 
+        $themeProvider = $this->providerFactory->getProviderFor(new ThemesType($themeName));
         try {
-            $themeCatalogue = $this->themeProvider->getFileTranslatedCatalogue($locale, $themeName);
+            $themeCatalogue = $themeProvider->getFileTranslatedCatalogue($locale);
         } catch (FileNotFoundException $exception) {
             // if the theme doesn't have translation files (eg. the default theme)
             $themeCatalogue = new MessageCatalogue($locale);
         }
-        $databaseCatalogue = $this->themeProvider->getUserTranslatedCatalogue($locale, $themeName);
+        $databaseCatalogue = $themeProvider->getUserTranslatedCatalogue($locale);
 
         $mergedTranslations->addCatalogue($themeCatalogue);
         $mergedTranslations->addCatalogue($databaseCatalogue);
