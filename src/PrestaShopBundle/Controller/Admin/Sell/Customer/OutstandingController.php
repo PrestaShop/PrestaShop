@@ -24,9 +24,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Controller\Admin\Sell\Customer;
-
 declare(strict_types=1);
+
+namespace PrestaShopBundle\Controller\Admin\Sell\Customer;
 
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OutstandingGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\OutstandingFilters;
