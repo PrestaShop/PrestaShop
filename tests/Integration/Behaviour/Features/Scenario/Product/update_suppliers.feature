@@ -5,5 +5,40 @@ Feature: Update product suppliers from Back Office (BO)
   As a BO user
   I need to be able to update product suppliers from BO
 
+  Background:
+    Given shop "shop1" with name "test_shop" exists
+    And language "language1" with locale "en-US" exists
+    And I add new supplier supplier1 with following properties:
+      | name                 | my supplier 1                   |
+      | address              | Donelaicio st. 1                |
+      | city                 | Kaunas                          |
+      | country              | Lithuania                       |
+      | enabled              | true                            |
+      | description          | en-US:just a supplier           |
+      | meta title           | en-US:my supplier nr one        |
+      | meta description     | en-US:                          |
+      | meta keywords        | en-US:sup,1                     |
+      | shops                | [shop1]                         |
+    And I add new supplier supplier2 with following properties:
+      | name                 | my supplier 2                   |
+      | address              | Donelaicio st. 2                |
+      | city                 | Kaunas                          |
+      | country              | Lithuania                       |
+      | enabled              | true                            |
+      | description          | en-US:just a supplier           |
+      | meta title           | en-US:my supplier nr two        |
+      | meta description     | en-US:                          |
+      | meta keywords        | en-US:sup,2                     |
+      | shops                | [shop1]                         |
+    And I add product "product1" with following information:
+      | name       | en-US:magic staff   |
+      | is_virtual | false               |
+    And product "product1" should have following values:
+    #@todo: not implemented
+      | default supplier |                |
+    And product product1 should have following suppliers:
+      | reference             | product supplier reference    | currency      | price tax excluded | combination |
+      |                       |                               |                |                   |             |
+
   Scenario: I update product suppliers
-    Given supplier
+#todo:
