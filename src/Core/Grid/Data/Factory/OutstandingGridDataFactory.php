@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
+declare(strict_types=1);
+
 use Customer;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
@@ -60,7 +62,7 @@ final class OutstandingGridDataFactory implements GridDataFactoryInterface
     public function __construct(
         GridDataFactoryInterface $outstandingDataFactory,
         RepositoryInterface $repositoryLocale,
-        $contextLocale
+        string $contextLocale
     ) {
         $this->outstandingDataFactory = $outstandingDataFactory;
         $this->repositoryLocale = $repositoryLocale;
