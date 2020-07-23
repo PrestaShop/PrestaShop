@@ -47,6 +47,10 @@ abstract class TranslationsProvider implements ProviderInterface
      * @var string
      */
     private $resourceDirectory;
+    /**
+     * @var string|null
+     */
+    private $domain;
 
     /**
      * @param DatabaseTranslationLoader $databaseLoader
