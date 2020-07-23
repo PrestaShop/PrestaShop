@@ -24,9 +24,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
-
 declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
 use Customer;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
