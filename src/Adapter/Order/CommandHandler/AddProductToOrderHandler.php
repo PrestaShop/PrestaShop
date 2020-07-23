@@ -139,7 +139,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             // Cart precision is more adapted
             $this->computingPrecision = $this->getPrecisionFromCart($cart);
 
-            $this->createOrUpdateSpecificPrice(
+            $specificPrice = $this->createOrUpdateSpecificPrice(
                 $command->getProductPriceTaxIncluded(),
                 $command->getProductPriceTaxExcluded(),
                 $command->getProductQuantity(),
@@ -172,7 +172,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $this->updateOrderDetails(
                 $order,
                 $product,
-                $command->getCombinationId(),
+                $command->getCombinationId() ? $command->getCombinationId()->getValue() : null,
                 $command->getProductQuantity(),
                 $command->getProductPriceTaxIncluded(),
                 $command->getProductPriceTaxExcluded()
@@ -202,6 +202,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $this->orderAmountUpdater->update($order, $cart, (int) $orderDetail->id_order_invoice);
 
             $order->update();
+
+            $specificPrice->delete();
         } catch (Exception $e) {
             $this->contextStateManager->restoreContext();
             throw $e;
@@ -600,17 +602,17 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      *
      * @param Order $order
      * @param Product $product
+     * @param int|null $combinationId
      * @param int $productQuantity
      * @param Number $priceTaxIncluded
      * @param Number $priceTaxExcluded
-     *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
     private function updateOrderDetails(
         Order $order,
         Product $product,
-        int $combinationId,
+        ?int $combinationId,
         int $productQuantity,
         Number $priceTaxIncluded,
         Number $priceTaxExcluded
