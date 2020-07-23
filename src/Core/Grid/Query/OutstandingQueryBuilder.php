@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
+declare(strict_types=1);
+
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PDO;
@@ -55,15 +57,15 @@ final class OutstandingQueryBuilder implements DoctrineQueryBuilderInterface
 
     /**
      * @param Connection $connection
-     * @param $dbPrefix
+     * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $criteriaApplicator
-     * @param $contextLangId
+     * @param int $contextLangId
      */
     public function __construct(
         Connection $connection,
-        $dbPrefix,
+        string $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $criteriaApplicator,
-        $contextLangId
+        int $contextLangId
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
