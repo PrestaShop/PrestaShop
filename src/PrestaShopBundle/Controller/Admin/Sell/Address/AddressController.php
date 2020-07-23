@@ -526,7 +526,7 @@ class AddressController extends FrameworkBundleAdminController
                 ),
             ],
             InvalidAddressFieldException::class => $this->trans(
-                'Address contains invalid field values',
+                'Address fields contain invalid values.',
                 'Admin.Notifications.Error'
             ),
             StateConstraintException::class => [
