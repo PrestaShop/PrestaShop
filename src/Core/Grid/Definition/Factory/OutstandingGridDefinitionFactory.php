@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 declare(strict_types=1);
 
 use Context;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
@@ -49,6 +50,19 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     const GRID_ID = 'outstanding';
+
+    /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
+     * @param ConfigurationInterface $configuration
+     */
+    public function __construct(ConfigurationInterface $configuration)
+    {
+        $this->configuration = $configuration;
+    }
 
     /**
      * {@inheritdoc}
@@ -215,8 +229,10 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
 
     private function getRowActions()
     {
-        return (new RowActionCollection())
-            ->add(
+        $collection = new RowActionCollection();
+
+        if ($this->configuration->get('PS_INVOICE')) {
+            $collection->add(
                 (new LinkRowAction('print_invoice'))
                     ->setName($this->trans('View invoice', [], 'Admin.Orderscustomers.Feature'))
                     ->setIcon('receipt')
@@ -226,18 +242,22 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
                         'route_param_field' => 'id_order',
                         'use_inline_display' => true,
                     ])
-            )
-            ->add(
-                (new LinkRowAction('view'))
-                    ->setName($this->trans('View', [], 'Admin.Actions'))
-                    ->setIcon('zoom_in')
-                    ->setOptions([
-                        'route' => 'admin_orders_view',
-                        'route_param_name' => 'orderId',
-                        'route_param_field' => 'id_order',
-                        'use_inline_display' => true,
-                        'clickable_row' => true,
-                    ])
             );
+        }
+
+        $collection->add(
+            (new LinkRowAction('view'))
+                ->setName($this->trans('View', [], 'Admin.Actions'))
+                ->setIcon('zoom_in')
+                ->setOptions([
+                    'route' => 'admin_orders_view',
+                    'route_param_name' => 'orderId',
+                    'route_param_field' => 'id_order',
+                    'use_inline_display' => true,
+                    'clickable_row' => true,
+                ])
+        );
+
+        return $collection;
     }
 }
