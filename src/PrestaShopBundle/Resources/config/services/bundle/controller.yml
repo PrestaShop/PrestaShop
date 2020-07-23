@@ -117,7 +117,6 @@ services:
         public: true
         properties:
             translationService: "@prestashop.service.translation"
-            strategyFactory: "@prestashop.translation.strategy_factory"
             queryParams: "@prestashop.core.api.query_translation_params_collection"
         tags:
           - { name: !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG }
