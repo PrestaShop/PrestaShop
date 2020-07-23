@@ -377,7 +377,7 @@ class XmlLoader
 
         // Read list of fields
         if (empty($xml->fields)) {
-            throw new PrestashopInstallerException('List of fields not found for entity coutrny');
+            throw new PrestashopInstallerException('List of fields not found for entity country');
         }
         $langs = [];
         $languageList = LanguageList::getInstance();
