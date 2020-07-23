@@ -471,11 +471,13 @@ class CurrencyCore extends ObjectModel
     {
         if ($this->id == Configuration::get('PS_CURRENCY_DEFAULT')) {
             $result = Db::getInstance()->getRow('SELECT `id_currency` FROM ' . _DB_PREFIX_ . 'currency WHERE `id_currency` != ' . (int) $this->id . ' AND `deleted` = 0');
-            if (!$result['id_currency']) {
+            if (empty($result['id_currency'])) {
                 return false;
             }
+
             Configuration::updateValue('PS_CURRENCY_DEFAULT', $result['id_currency']);
         }
+
         $this->deleted = 1;
 
         // Remove currency restrictions
