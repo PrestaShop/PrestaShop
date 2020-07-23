@@ -8,11 +8,10 @@ const loginCommon = require('@commonTests/loginBO');
 const files = require('@utils/files');
 
 // Importing pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const DeliverySlipsPage = require('@pages/BO/orders/deliverySlips/index');
-const OrdersPage = require('@pages/BO/orders/index');
-const ViewOrderPage = require('@pages/BO/orders/view');
+const dashboardPage = require('@pages/BO/dashboard');
+const deliverySlipsPage = require('@pages/BO/orders/deliverySlips/index');
+const ordersPage = require('@pages/BO/orders/index');
+const viewOrderPage = require('@pages/BO/orders/view');
 
 // Importing data
 const {Statuses} = require('@data/demo/orderStatuses');
@@ -34,17 +33,6 @@ today.setFullYear(today.getFullYear() + 1);
 const futureDate = today.toISOString().slice(0, 10);
 
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    deliverySlipsPage: new DeliverySlipsPage(page),
-    ordersPage: new OrdersPage(page),
-    viewOrderPage: new ViewOrderPage(page),
-  };
-};
-
 /*
 Change the last order status to shipped
 Create delivery slip
@@ -55,50 +43,51 @@ describe('Generate Delivery slip file by date', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
+
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   describe('Create delivery slip', async () => {
     it('should go to the orders page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-      await this.pageObjects.dashboardPage.goToSubMenu(
-        this.pageObjects.dashboardPage.ordersParentLink,
-        this.pageObjects.dashboardPage.ordersLink,
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.ordersParentLink,
+        dashboardPage.ordersLink,
       );
 
-      await this.pageObjects.ordersPage.closeSfToolBar();
+      await ordersPage.closeSfToolBar(page);
 
-      const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
+      const pageTitle = await ordersPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
     it('should go to the order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPage', baseContext);
 
-      await this.pageObjects.ordersPage.goToOrder(1);
-      const pageTitle = await this.pageObjects.viewOrderPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
+      await ordersPage.goToOrder(page, 1);
+      const pageTitle = await viewOrderPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
     });
 
     it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.shipped.status);
+      const result = await viewOrderPage.modifyOrderStatus(page, Statuses.shipped.status);
       await expect(result).to.equal(Statuses.shipped.status);
     });
 
     it('should check the delivery slip document Name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentName', baseContext);
 
-      const documentName = await this.pageObjects.viewOrderPage.getDocumentName(3);
+      const documentName = await viewOrderPage.getDocumentName(page, 3);
       await expect(documentName).to.be.equal('Delivery slip');
     });
   });
@@ -107,20 +96,21 @@ describe('Generate Delivery slip file by date', async () => {
     it('should go to delivery slips page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDeliverySlipsPage', baseContext);
 
-      await this.pageObjects.viewOrderPage.goToSubMenu(
-        this.pageObjects.viewOrderPage.ordersParentLink,
-        this.pageObjects.viewOrderPage.deliverySlipslink,
+      await viewOrderPage.goToSubMenu(
+        page,
+        viewOrderPage.ordersParentLink,
+        viewOrderPage.deliverySlipslink,
       );
 
-      const pageTitle = await this.pageObjects.deliverySlipsPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.deliverySlipsPage.pageTitle);
+      const pageTitle = await deliverySlipsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(deliverySlipsPage.pageTitle);
     });
 
     it('should generate PDF file by date and check the file existence', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'generateDeliverySlips', baseContext);
 
       // Generate delivery slips
-      const filePath = await this.pageObjects.deliverySlipsPage.generatePDFByDateAndDownload();
+      const filePath = await deliverySlipsPage.generatePDFByDateAndDownload(page);
 
       const exist = await files.doesFileExist(filePath);
       await expect(exist).to.be.true;
@@ -130,8 +120,8 @@ describe('Generate Delivery slip file by date', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoDeliverySlipsErrorMessage', baseContext);
 
       // Generate delivery slips and get error message
-      const textMessage = await this.pageObjects.deliverySlipsPage.generatePDFByDateAndFail(futureDate, futureDate);
-      await expect(textMessage).to.equal(this.pageObjects.deliverySlipsPage.errorMessageWhenGenerateFileByDate);
+      const textMessage = await deliverySlipsPage.generatePDFByDateAndFail(page, futureDate, futureDate);
+      await expect(textMessage).to.equal(deliverySlipsPage.errorMessageWhenGenerateFileByDate);
     });
   });
 });

@@ -263,7 +263,6 @@ Feature: Order from Back Office (BO)
       | name          | Mug Today is a good day |
       | amount        | 2                       |
       | price         | 16                      |
-      | free_shipping | true                    |
     Then order "bo_order1" should contain 2 products "Mug Today is a good day"
     Then order "bo_order1" should have 1 invoices
 
@@ -349,6 +348,27 @@ Feature: Order from Back Office (BO)
       | unit_price_tax_excl         | 11.9   |
       | total_price_tax_incl        | 25.230000 |
       | total_price_tax_excl        | 23.8   |
+
+  Scenario: Add different combinations of the same product
+    Given there is a product in the catalog named "My Product" with a price of 10.00 and 200 items in stock
+    And product "My Product" has combinations with following details:
+      | reference    | quantity | attributes |
+      | combination1 | 100      | Size:L     |
+      | combination2 | 100      | Size:M     |
+    Then the available stock for combination "combination1" of product "My Product" should be 100
+    And the available stock for combination "combination2" of product "My Product" should be 100
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | My Product    |
+      | combination   | combination1  |
+      | amount        | 1             |
+      | price         | 10            |
+    And I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | My Product    |
+      | combination   | combination2  |
+      | amount        | 1             |
+      | price         | 10            |
+    Then order "bo_order1" should contain 1 product "My Product - Size : L"
+    And order "bo_order1" should contain 1 product "My Product - Size : M"
 
   Scenario: Generating invoice for Order
     When I generate invoice for "bo_order1" order

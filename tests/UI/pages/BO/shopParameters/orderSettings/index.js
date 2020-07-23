@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class OrderSettings extends BOBasePage {
-  constructor(page) {
-    super(page);
+class OrderSettings extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Order settings •';
     this.successfulUpdateMessage = 'Update successful';
@@ -37,79 +37,88 @@ module.exports = class OrderSettings extends BOBasePage {
 
   /**
    * Enable/disable final summary
+   * @param page
    * @param toEnable, true to enable and false to disable
    * @return {Promise<string>}
    */
-  async setFinalSummaryStatus(toEnable = true) {
-    await this.waitForSelectorAndClick(this.enableFinalSummaryLabel(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveGeneralFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async setFinalSummaryStatus(page, toEnable = true) {
+    await this.waitForSelectorAndClick(page, this.enableFinalSummaryLabel(toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Enable/Disable guest checkout
+   * @param page
    * @param toEnable
    * @returns {Promise<string>}
    */
-  async setGuestCheckoutStatus(toEnable = true) {
-    await this.waitForSelectorAndClick(this.enableGuestCheckoutLabel(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveGeneralFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async setGuestCheckoutStatus(page, toEnable = true) {
+    await this.waitForSelectorAndClick(page, this.enableGuestCheckoutLabel(toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Enable/Disable reordering option
+   * @param page
    * @param toEnable
    * @returns {Promise<string>}
    */
-  async setReorderOptionStatus(toEnable = true) {
-    await this.waitForSelectorAndClick(this.disableReorderingLabel(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveGeneralFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async setReorderOptionStatus(page, toEnable = true) {
+    await this.waitForSelectorAndClick(page, this.disableReorderingLabel(toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Set minimum quantity required to purchase
+   * @param page
    * @param value
    * @returns {Promise<string>}
    */
-  async setMinimumPurchaseRequiredTotal(value) {
-    await this.setValue(this.minimumPurchaseRequiredValue, value.toString());
-    await this.clickAndWaitForNavigation(this.saveGeneralFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async setMinimumPurchaseRequiredTotal(page, value) {
+    await this.setValue(page, this.minimumPurchaseRequiredValue, value.toString());
+    await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Set terms of service
+   * @param page
    * @param toEnable
    * @param pageName
    * @returns {Promise<string>}
    */
-  async setTermsOfService(toEnable = true, pageName = '') {
-    await this.waitForSelectorAndClick(this.enableTermsOfServiceLabel(toEnable ? 1 : 0));
+  async setTermsOfService(page, toEnable = true, pageName = '') {
+    await this.waitForSelectorAndClick(page, this.enableTermsOfServiceLabel(toEnable ? 1 : 0));
     if (toEnable) {
-      await this.selectByVisibleText(this.pageForTermsAndConditionsSelect, pageName);
+      await this.selectByVisibleText(page, this.pageForTermsAndConditionsSelect, pageName);
     }
-    await this.clickAndWaitForNavigation(this.saveGeneralFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+    await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Set gift options form
+   * @param page
    * @param wantedStatus
    * @param price
    * @param tax
    * @param recyclePackagingStatus
    * @return {Promise<string>}
    */
-  async setGiftOptions(wantedStatus = false, price = 0, tax = 'none', recyclePackagingStatus = false) {
-    await this.page.click(this.giftWrappingToggle(wantedStatus ? 1 : 0));
+  async setGiftOptions(page, wantedStatus = false, price = 0, tax = 'none', recyclePackagingStatus = false) {
+    await page.click(this.giftWrappingToggle(wantedStatus ? 1 : 0));
     if (wantedStatus) {
-      await this.setValue(this.giftWrappingPriceInput, price.toString());
-      await this.selectByVisibleText(this.giftWrappingTaxSelect, tax);
+      await this.setValue(page, this.giftWrappingPriceInput, price.toString());
+      await this.selectByVisibleText(page, this.giftWrappingTaxSelect, tax);
     }
-    await this.page.click(this.recycledPackagingToggle(recyclePackagingStatus ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveGiftOptionsFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+
+    await page.click(this.recycledPackagingToggle(recyclePackagingStatus ? 1 : 0));
+    await this.clickAndWaitForNavigation(page, this.saveGiftOptionsFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
-};
+}
+
+module.exports = new OrderSettings();

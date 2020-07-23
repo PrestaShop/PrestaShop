@@ -1,100 +1,105 @@
 module.exports = class CommonPage {
-  constructor(page) {
-    this.page = page;
-  }
-
   /**
    * Get page title
+   * @param page
    * @returns {Promise<string>}
    */
-  async getPageTitle() {
-    return this.page.title();
+  async getPageTitle(page) {
+    return page.title();
   }
 
   /**
    * Go to URL
+   * @param page
    * @param url
    * @returns {Promise<void>}
    */
-  async goTo(url) {
-    await this.page.goto(url);
+  async goTo(page, url) {
+    await page.goto(url);
   }
 
   /**
    * Get current url
+   * @param page
    * @returns {Promise<string>}
    */
-  async getCurrentURL() {
-    return decodeURIComponent(this.page.url());
+  async getCurrentURL(page) {
+    return decodeURIComponent(page.url());
   }
 
   /**
    * Wait for selector to be visible
+   * @param page
    * @param selector
    * @param timeout
    * @return {Promise<void>}
    */
-  async waitForVisibleSelector(selector, timeout = 10000) {
-    await this.page.waitForSelector(selector, {state: 'visible', timeout});
+  async waitForVisibleSelector(page, selector, timeout = 10000) {
+    await page.waitForSelector(selector, {state: 'visible', timeout});
   }
 
   /**
    * Get Text from element
+   * @param page
    * @param selector, from where to get text
    * @param waitForSelector
    * @return {Promise<string>}
    */
-  async getTextContent(selector, waitForSelector = true) {
+  async getTextContent(page, selector, waitForSelector = true) {
     if (waitForSelector) {
-      await this.waitForVisibleSelector(selector);
+      await this.waitForVisibleSelector(page, selector);
     }
-    const textContent = await this.page.$eval(selector, el => el.textContent);
+    const textContent = await page.$eval(selector, el => el.textContent);
     return textContent.replace(/\s+/g, ' ').trim();
   }
 
   /**
    * Get attribute from element
+   * @param page
    * @param selector
    * @param attribute
    * @returns {Promise<string>}
    */
-  async getAttributeContent(selector, attribute) {
-    await this.page.waitForSelector(selector, {state: 'attached'});
-    return this.page.$eval(selector, (el, attr) => el
+  async getAttributeContent(page, selector, attribute) {
+    await page.waitForSelector(selector, {state: 'attached'});
+    return page.$eval(selector, (el, attr) => el
       .getAttribute(attr), attribute);
   }
 
   /**
    * Is checkBox have checked status
+   * @param page
    * @param selector, checkbox to check
    * @returns {Promise<boolean>}
    */
-  async elementChecked(selector) {
-    return this.page.$eval(selector, el => el.checked);
+  async elementChecked(page, selector) {
+    return page.$eval(selector, el => el.checked);
   }
 
   /**
    * Update checkbox value
+   * @param page
    * @param selector
    * @param expectedValue
    * @return {Promise<void>}
    */
-  async updateCheckboxValue(selector, expectedValue) {
-    const actualValue = await this.elementChecked(selector);
+  async updateCheckboxValue(page, selector, expectedValue) {
+    const actualValue = await this.elementChecked(page, selector);
     if (actualValue !== expectedValue) {
-      await this.page.click(selector);
+      await page.click(selector);
     }
   }
 
   /**
    * Is element visible
+   * @param page
    * @param selector, element to check
    * @param timeout, how much should we wait
    * @returns {Promise<boolean>}, true if visible, false if not
    */
-  async elementVisible(selector, timeout = 10) {
+  async elementVisible(page, selector, timeout = 10) {
     try {
-      await this.waitForVisibleSelector(selector, timeout);
+      await this.waitForVisibleSelector(page, selector, timeout);
       return true;
     } catch (error) {
       return false;
@@ -103,13 +108,14 @@ module.exports = class CommonPage {
 
   /**
    * Is element not visible
+   * @param page
    * @param selector, element to check
    * @param timeout, how much should we wait
    * @returns {Promise<boolean>}, true if visible, false if not
    */
-  async elementNotVisible(selector, timeout = 10) {
+  async elementNotVisible(page, selector, timeout = 10) {
     try {
-      await this.page.waitForSelector(selector, {state: 'hidden', timeout});
+      await page.waitForSelector(selector, {state: 'hidden', timeout});
       return true;
     } catch (error) {
       return false;
@@ -118,14 +124,15 @@ module.exports = class CommonPage {
 
   /**
    * Open link in new Tab and get opened Page
+   * @param page
    * @param selector, where to click
    * @param newPageSelector, selector to wait in new page (default to FO logo)
    * @return newPage, what was opened by the browser
    */
-  async openLinkWithTargetBlank(selector, newPageSelector = 'body .logo') {
+  async openLinkWithTargetBlank(page, selector, newPageSelector = 'body .logo') {
     const [newPage] = await Promise.all([
-      this.page.waitForEvent('popup'),
-      this.page.click(selector),
+      page.waitForEvent('popup'),
+      page.click(selector),
     ]);
 
     await newPage.waitForLoadState('networkidle');
@@ -136,44 +143,48 @@ module.exports = class CommonPage {
 
   /**
    * Wait for selector and click
+   * @param page
    * @param selector, element to check
    * @param timeout, wait timeout
    * @return {Promise<void>}
    */
-  async waitForSelectorAndClick(selector, timeout = 5000) {
-    await this.waitForVisibleSelector(selector, timeout);
-    await this.page.click(selector);
+  async waitForSelectorAndClick(page, selector, timeout = 5000) {
+    await this.waitForVisibleSelector(page, selector, timeout);
+    await page.click(selector);
   }
 
   /**
    * Reload actual browser page
+   * @param page
    * @return {Promise<void>}
    */
-  async reloadPage() {
-    await this.page.reload();
+  async reloadPage(page) {
+    await page.reload();
   }
 
   /**
    * Delete the existing text from input then set a value
+   * @param page
    * @param selector, input
    * @param value, value to set in the input
    * @return {Promise<void>}
    */
-  async setValue(selector, value) {
-    await this.waitForSelectorAndClick(selector);
-    await this.page.click(selector, {clickCount: 3});
+  async setValue(page, selector, value) {
+    await this.waitForSelectorAndClick(page, selector);
+    await page.click(selector, {clickCount: 3});
     // Delete text from input before typing
-    await this.page.keyboard.press('Delete');
-    await this.page.type(selector, value);
+    await page.keyboard.press('Delete');
+    await page.type(selector, value);
   }
 
   /**
    * To accept or dismiss a navigator dialog
+   * @param page
    * @param accept
    * @return {Promise<void>}
    */
-  async dialogListener(accept = true) {
-    this.page.once('dialog', (dialog) => {
+  async dialogListener(page, accept = true) {
+    page.once('dialog', (dialog) => {
       if (accept) dialog.accept();
       else dialog.dismiss();
     });
@@ -182,35 +193,39 @@ module.exports = class CommonPage {
   /**
    * Close actual tab and goto another tab if wanted
    * @param browserContext
+   * @param page
    * @param tabId
    * @return {Promise<void>}
    */
-  async closePage(browserContext, tabId = -1) {
-    await this.page.close();
+  async closePage(browserContext, page, tabId = -1) {
+    await page.close();
+    let focusedPage;
     if (tabId !== -1) {
-      this.page = (await browserContext.pages())[tabId];
+      focusedPage = (await browserContext.pages())[tabId];
     }
-    return this.page;
+    return focusedPage;
   }
 
   /**
    * Scroll to element
+   * @param page
    * @param selector
    * @return {Promise<void>}
    */
-  async scrollTo(selector) {
-    await this.page.$eval(selector, el => el.scrollIntoView());
+  async scrollTo(page, selector) {
+    await page.$eval(selector, el => el.scrollIntoView());
   }
 
   /**
    * Select option in select by visible text
+   * @param page
    * @param selector
    * @param textValue
    * @returns {Promise<void>}
    */
-  async selectByVisibleText(selector, textValue) {
+  async selectByVisibleText(page, selector, textValue) {
     let found = false;
-    let options = await this.page.$$eval(
+    let options = await page.$$eval(
       `${selector} option`,
       all => all.map(
         option => ({
@@ -221,7 +236,7 @@ module.exports = class CommonPage {
     options = await options.filter(option => textValue === option.textContent);
     if (options.length !== 0) {
       const elementValue = await options[0].value;
-      await this.page.selectOption(selector, elementValue);
+      await page.selectOption(selector, elementValue);
       found = true;
     }
     if (!found) throw new Error(`${textValue} was not found as option of select`);
@@ -229,57 +244,62 @@ module.exports = class CommonPage {
 
   /**
    * To get a number from text
+   * @param page
    * @param selector
    * @param timeout
    * @returns {Promise<number>}
    */
-  async getNumberFromText(selector, timeout = 0) {
-    await this.page.waitForTimeout(timeout);
-    const text = await this.getTextContent(selector);
+  async getNumberFromText(page, selector, timeout = 0) {
+    await page.waitForTimeout(timeout);
+    const text = await this.getTextContent(page, selector);
     const number = /\d+/g.exec(text).toString();
     return parseInt(number, 10);
   }
 
   /**
    * Go to Page and wait for navigation
+   * @param page
    * @param selector
    * @param waitUntil, the event to wait after click (load/networkidle/domcontentloaded)
    * @return {Promise<void>}
    */
-  async clickAndWaitForNavigation(selector, waitUntil = 'networkidle') {
+  async clickAndWaitForNavigation(page, selector, waitUntil = 'networkidle') {
     await Promise.all([
-      this.page.waitForNavigation({waitUntil}),
-      this.page.click(selector),
+      page.waitForNavigation({waitUntil}),
+      page.click(selector),
     ]);
   }
 
   /**
    * Navigate to the previous page in history
+   * @param page
    * @param waitUntil
    * @return {Promise<void>}
    */
-  async goToPreviousPage(waitUntil = 'load') {
-    await this.page.goBack({waitUntil});
+  async goToPreviousPage(page, waitUntil = 'load') {
+    await page.goBack({waitUntil});
   }
 
   /**
    * Check if checkbox is selected
+   * @param page
    * @param selector
    * @return {Promise<boolean>}
    */
-  async isCheckboxSelected(selector) {
-    return this.page.$eval(selector, el => el.checked);
+  async isCheckboxSelected(page, selector) {
+    return page.$eval(selector, el => el.checked);
   }
 
   /**
    * Select, unselect checkbox
+   * @param page
    * @param checkboxSelector, selector of checkbox
    * @param valueWanted, true if we want to select checkBox, else otherwise
    * @return {Promise<void>}
    */
-  async changeCheckboxValue(checkboxSelector, valueWanted = true) {
-    if (valueWanted !== (await this.isCheckboxSelected(checkboxSelector))) {
-      await this.page.click(checkboxSelector);
+  async changeCheckboxValue(page, checkboxSelector, valueWanted = true) {
+    if (valueWanted !== (await this.isCheckboxSelected(page, checkboxSelector))) {
+      await page.click(checkboxSelector);
     }
   }
 
@@ -298,15 +318,16 @@ module.exports = class CommonPage {
 
   /**
    * Drag and drop element
+   * @param page
    * @param selectorToDrag
    * @param selectorWhereToDrop
    * @return {Promise<void>}
    */
-  async dragAndDrop(selectorToDrag, selectorWhereToDrop) {
-    await this.page.hover(selectorToDrag);
-    await this.page.mouse.down();
-    await this.page.hover(selectorWhereToDrop);
-    await this.page.mouse.up();
+  async dragAndDrop(page, selectorToDrag, selectorWhereToDrop) {
+    await page.hover(selectorToDrag);
+    await page.mouse.down();
+    await page.hover(selectorWhereToDrop);
+    await page.mouse.up();
   }
 
   /**

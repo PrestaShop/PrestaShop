@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class AddTaxRules extends BOBasePage {
-  constructor(page) {
-    super(page);
+class AddTaxRules extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitleCreate = 'Tax Rules > Add new';
     this.pageTitleEdit = 'Tax Rules > Edit';
@@ -32,37 +32,41 @@ module.exports = class AddTaxRules extends BOBasePage {
 
   /**
    * Fill form for add/edit tax rules group
+   * @param page
    * @param taxRuleGroupData
    * @returns {Promise<string>}
    */
-  async createEditTaxRulesGroup(taxRuleGroupData) {
-    await this.setValue(this.nameInput, taxRuleGroupData.name);
-    await this.page.click(this.enabledSwitchLabel(taxRuleGroupData.enabled ? 'on' : 'off'));
+  async createEditTaxRulesGroup(page, taxRuleGroupData) {
+    await this.setValue(page, this.nameInput, taxRuleGroupData.name);
+    await page.click(this.enabledSwitchLabel(taxRuleGroupData.enabled ? 'on' : 'off'));
     // Save Tax rules group
-    await this.clickAndWaitForNavigation(this.saveTaxButton);
-    return this.getTextContent(this.alertSuccessBlock);
+    await this.clickAndWaitForNavigation(page, this.saveTaxButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Fill form for add/edit tax rules group
+   * @param page
    * @param taxRuleData
    * @returns {Promise<string>}
    */
-  async createEditTaxRules(taxRuleData) {
-    await this.selectByVisibleText(this.countrySelect, taxRuleData.country);
-    await this.selectByVisibleText(this.behaviourSelect, taxRuleData.behaviour);
-    await this.selectByVisibleText(this.taxSelect, taxRuleData.tax);
-    await this.setValue(this.descriptionInput, taxRuleData.description);
+  async createEditTaxRules(page, taxRuleData) {
+    await this.selectByVisibleText(page, this.countrySelect, taxRuleData.country);
+    await this.selectByVisibleText(page, this.behaviourSelect, taxRuleData.behaviour);
+    await this.selectByVisibleText(page, this.taxSelect, taxRuleData.tax);
+    await this.setValue(page, this.descriptionInput, taxRuleData.description);
     // Save Tax rules
-    await this.clickAndWaitForNavigation(this.saveAndStayButton);
-    return this.getTextContent(this.alertSuccessBlock);
+    await this.clickAndWaitForNavigation(page, this.saveAndStayButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Click on Add new tax rule
+   * @param page
    * @return {Promise<void>}
    */
-  async clickOnAddNewTaxRule() {
-    await this.page.click(this.addNewTaxRuleButton);
+  async clickOnAddNewTaxRule(page) {
+    await page.click(this.addNewTaxRuleButton);
   }
-};
+}
+module.exports = new AddTaxRules();

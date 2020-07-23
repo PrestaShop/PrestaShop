@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class Employees extends BOBasePage {
-  constructor(page) {
-    super(page);
+class Employees extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Employees';
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
@@ -48,92 +48,101 @@ module.exports = class Employees extends BOBasePage {
 
   /**
    * Go to new Page Employee page
+   * @param page
    * @returns {Promise<void>}
    */
-  async goToAddNewEmployeePage() {
-    await this.clickAndWaitForNavigation(this.addNewEmployeeLink);
+  async goToAddNewEmployeePage(page) {
+    await this.clickAndWaitForNavigation(page, this.addNewEmployeeLink);
   }
 
   /**
    * Get number of elements in grid
+   * @param page
    * @returns {Promise<number>}
    */
-  async getNumberOfElementInGrid() {
-    return this.getNumberFromText(this.employeeGridTitle);
+  async getNumberOfElementInGrid(page) {
+    return this.getNumberFromText(page, this.employeeGridTitle);
   }
 
   /**
    * Reset input filters
+   * @param page
    * @returns {Promise<number>}
    */
-  async resetAndGetNumberOfLines() {
-    if (await this.elementVisible(this.filterResetButton, 2000)) {
-      await this.clickAndWaitForNavigation(this.filterResetButton);
+  async resetAndGetNumberOfLines(page) {
+    if (await this.elementVisible(page, this.filterResetButton, 2000)) {
+      await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
-    return this.getNumberOfElementInGrid();
+    return this.getNumberOfElementInGrid(page);
   }
 
   /**
    * Get text from a column from table
+   * @param page
    * @param row
    * @param column
    * @returns {Promise<string>}
    */
-  async getTextColumnFromTable(row, column) {
-    return this.getTextContent(this.employeesListTableColumn(row, column));
+  async getTextColumnFromTable(page, row, column) {
+    return this.getTextContent(page, this.employeesListTableColumn(row, column));
   }
 
   /**
    * Go to Edit employee page
+   * @param page
    * @param row, row in table
    * @returns {Promise<void>}
    */
-  async goToEditEmployeePage(row) {
-    await this.clickAndWaitForNavigation(this.employeesListTableEditLink(row));
+  async goToEditEmployeePage(page, row) {
+    await this.clickAndWaitForNavigation(page, this.employeesListTableEditLink(row));
   }
 
   /**
    * Filter list of employees
+   * @param page
    * @param filterType, input or select to choose method of filter
    * @param filterBy, column to filter
    * @param value, value to filter with
    * @returns {Promise<void>}
    */
-  async filterEmployees(filterType, filterBy, value = '') {
+  async filterEmployees(page, filterType, filterBy, value = '') {
     switch (filterType) {
       case 'input':
-        await this.setValue(this.employeeFilterInput(filterBy), value.toString());
+        await this.setValue(page, this.employeeFilterInput(filterBy), value.toString());
         break;
       case 'select':
-        await this.selectByVisibleText(this.employeeFilterInput(filterBy), value ? 'Yes' : 'No');
+        await this.selectByVisibleText(page, this.employeeFilterInput(filterBy), value ? 'Yes' : 'No');
         break;
       default:
       // Do nothing
     }
     // click on search
-    await this.clickAndWaitForNavigation(this.filterSearchButton);
+    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
 
   /**
    * Get Value of column Displayed
+   * @param page
    * @param row, row in table
    * @returns {Promise<boolean>}
    */
-  async getToggleColumnValue(row) {
-    return this.elementVisible(this.employeesListColumnValidIcon(row), 100);
+  async getToggleColumnValue(page, row) {
+    return this.elementVisible(page, this.employeesListColumnValidIcon(row), 100);
   }
 
   /**
    * Quick edit toggle column value
+   * @param page
    * @param row, row in table
    * @param valueWanted, Value wanted in column
    * @returns {Promise<boolean>} return true if action is done, false otherwise
    */
-  async updateToggleColumnValue(row, valueWanted = true) {
-    await this.waitForVisibleSelector(this.employeesListTableColumn(row, 'active'), 2000);
-    if (await this.getToggleColumnValue(row) !== valueWanted) {
-      this.page.click(this.employeesListTableColumn(row, 'active'));
+  async updateToggleColumnValue(page, row, valueWanted = true) {
+    await this.waitForVisibleSelector(page, this.employeesListTableColumn(row, 'active'), 2000);
+    if (await this.getToggleColumnValue(page, row) !== valueWanted) {
+      page.click(this.employeesListTableColumn(row, 'active'));
       await this.waitForVisibleSelector(
+        page,
         (valueWanted ? this.employeesListColumnValidIcon(row) : this.employeesListColumnNotValidIcon(row)),
       );
       return true;
@@ -143,81 +152,89 @@ module.exports = class Employees extends BOBasePage {
 
   /**
    * Delete employee
+   * @param page
    * @param row, row in table
    * @returns {Promise<string>}
    */
-  async deleteEmployee(row) {
+  async deleteEmployee(page, row) {
     // Click on dropDown
     await Promise.all([
-      this.page.click(this.employeesListTableToggleDropDown(row)),
+      page.click(this.employeesListTableToggleDropDown(row)),
       this.waitForVisibleSelector(
+        page,
         `${this.employeesListTableToggleDropDown(row)}[aria-expanded='true']`,
       ),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      this.page.click(this.employeesListTableDeleteLink(row)),
-      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
+      page.click(this.employeesListTableDeleteLink(row)),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
-    await this.confirmDeleteEmployees();
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.confirmDeleteEmployees(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
    * Confirm delete with in modal
+   * @param page
    * @return {Promise<void>}
    */
-  async confirmDeleteEmployees() {
-    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
+  async confirmDeleteEmployees(page) {
+    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
   }
 
   /**
    * Enable / disable employees by Bulk Actions
+   * @param page
    * @param enable
    * @returns {Promise<string>}
    */
-  async changeEnabledColumnBulkActions(enable = true) {
+  async changeEnabledColumnBulkActions(page, enable = true) {
     // Click on Select All
     await Promise.all([
-      this.page.$eval(this.selectAllRowsLabel, el => el.click()),
-      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
+      page.$eval(this.selectAllRowsLabel, el => el.click()),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
-      this.page.click(this.bulkActionsToggleButton),
-      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}`),
+      page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}`),
     ]);
     // Click on delete and wait for modal
-    await this.clickAndWaitForNavigation(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
    * Delete all employees with Bulk Actions
+   * @param page
    * @returns {Promise<string>}
    */
-  async deleteBulkActions() {
-    this.dialogListener();
+  async deleteBulkActions(page) {
+    this.dialogListener(page);
     // Click on Select All
     await Promise.all([
-      this.page.$eval(this.selectAllRowsLabel, el => el.click()),
-      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
+      page.$eval(this.selectAllRowsLabel, el => el.click()),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
-      this.page.click(this.bulkActionsToggleButton),
-      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
+      page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
-    await this.clickAndWaitForNavigation(this.bulkActionsDeleteButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.clickAndWaitForNavigation(page, this.bulkActionsDeleteButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
    * Go to Profiles page
+   * @param page
    * @returns {Promise<void>}
    */
-  async goToProfilesPage() {
-    await this.clickAndWaitForNavigation(this.profilesTab);
+  async goToProfilesPage(page) {
+    await this.clickAndWaitForNavigation(page, this.profilesTab);
   }
-};
+}
+
+module.exports = new Employees();

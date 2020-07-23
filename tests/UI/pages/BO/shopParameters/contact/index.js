@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class Contacts extends BOBasePage {
-  constructor(page) {
-    super(page);
+class Contacts extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Contacts';
 
@@ -44,63 +44,69 @@ module.exports = class Contacts extends BOBasePage {
 
   /**
    * Reset input filters
+   * @param page
    * @returns {Promise<void>}
    */
-  async resetFilter() {
-    if (!(await this.elementNotVisible(this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(this.filterResetButton);
+  async resetFilter(page) {
+    if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
+      await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
   }
 
   /**
    * Get number of elements in grid
+   * @param page
    * @return {Promise<number>}
    */
-  async getNumberOfElementInGrid() {
-    return this.getNumberFromText(this.contactsGridTitle);
+  async getNumberOfElementInGrid(page) {
+    return this.getNumberFromText(page, this.contactsGridTitle);
   }
 
   /**
    * Reset Filter And get number of elements in list
+   * @param page
    * @return {Promise<number>}
    */
-  async resetAndGetNumberOfLines() {
-    await this.resetFilter();
-    return this.getNumberOfElementInGrid();
+  async resetAndGetNumberOfLines(page) {
+    await this.resetFilter(page);
+    return this.getNumberOfElementInGrid(page);
   }
 
   /**
    * Filter list of contacts
+   * @param page
    * @param filterBy, column to filter
    * @param value, value to filter with
    * @return {Promise<void>}
    */
-  async filterContacts(filterBy, value = '') {
-    await this.setValue(this.contactFilterInput(filterBy), value.toString());
+  async filterContacts(page, filterBy, value = '') {
+    await this.setValue(page, this.contactFilterInput(filterBy), value.toString());
     // click on search
-    await this.clickAndWaitForNavigation(this.filterSearchButton);
+    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
 
   /**
    * Get text from a column
+   * @param page
    * @param row, row in table
    * @param column, which column
    * @returns {Promise<string>}
    */
-  async getTextColumnFromTableContacts(row, column) {
-    return this.getTextContent(this.contactsListTableColumn(row, column));
+  async getTextColumnFromTableContacts(page, row, column) {
+    return this.getTextContent(page, this.contactsListTableColumn(row, column));
   }
 
   /**
    * Get content from all rows
+   * @param page
    * @param column
    * @return {Promise<[]>}
    */
-  async getAllRowsColumnContent(column) {
-    const rowsNumber = await this.getNumberOfElementInGrid();
+  async getAllRowsColumnContent(page, column) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
     for (let i = 1; i <= rowsNumber; i++) {
-      const rowContent = await this.getTextColumnFromTableContacts(i, column);
+      const rowContent = await this.getTextColumnFromTableContacts(page, i, column);
       await allRowsContentTable.push(rowContent);
     }
     return allRowsContentTable;
@@ -108,89 +114,98 @@ module.exports = class Contacts extends BOBasePage {
 
   /**
    * Go to new Contact page
+   * @param page
    * @return {Promise<void>}
    */
-  async goToAddNewContactPage() {
-    await this.clickAndWaitForNavigation(this.addNewContactButton);
+  async goToAddNewContactPage(page) {
+    await this.clickAndWaitForNavigation(page, this.addNewContactButton);
   }
 
   /**
    * Go to Edit Contact page
+   * @param page
    * @param row, row in table
    * @return {Promise<void>}
    */
-  async goToEditContactPage(row) {
-    await this.clickAndWaitForNavigation(this.listTableEditLink(row));
+  async goToEditContactPage(page, row) {
+    await this.clickAndWaitForNavigation(page, this.listTableEditLink(row));
   }
 
   /**
    * Delete Contact
+   * @param page
    * @param row, row in table
    * @returns {Promise<string>}
    */
-  async deleteContact(row) {
+  async deleteContact(page, row) {
     // Click on dropDown
     await Promise.all([
-      this.page.click(this.listTableToggleDropDown(row)),
+      page.click(this.listTableToggleDropDown(row)),
       this.waitForVisibleSelector(
+        page,
         `${this.listTableToggleDropDown(row)}[aria-expanded='true']`,
       ),
     ]);
     // Click on delete
 
     await Promise.all([
-      this.page.click(this.deleteRowLink(row)),
-      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
+      page.click(this.deleteRowLink(row)),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
-    await this.confirmDeleteContact();
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.confirmDeleteContact(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
    * Confirm delete with in modal
+   * @param page
    * @return {Promise<void>}
    */
-  async confirmDeleteContact() {
-    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
+  async confirmDeleteContact(page) {
+    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
   }
 
   /**
    * Delete all contacts in table with Bulk Actions
+   * @param page
    * @return {Promise<string>}
    */
-  async deleteContactsBulkActions() {
+  async deleteContactsBulkActions(page) {
     // Add listener to dialog to accept deletion
-    this.dialogListener();
+    this.dialogListener(page);
     // Click on Select All
     await Promise.all([
-      this.page.$eval(this.selectAllRowsLabel, el => el.click()),
-      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
+      page.$eval(this.selectAllRowsLabel, el => el.click()),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
-      this.page.click(this.bulkActionsToggleButton),
-      this.waitForVisibleSelector(this.bulkActionsToggleButton),
+      page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(page, this.bulkActionsToggleButton),
     ]);
     // Click on delete and wait for modal
-    await this.clickAndWaitForNavigation(this.bulkActionsDeleteButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.clickAndWaitForNavigation(page, this.bulkActionsDeleteButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /* Sort methods */
   /**
    * Sort table by clicking on column name
+   * @param page
    * @param sortBy, column to sort with
    * @param sortDirection, asc or desc
    * @return {Promise<void>}
    */
-  async sortTable(sortBy, sortDirection = 'asc') {
+  async sortTable(page, sortBy, sortDirection = 'asc') {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
     let i = 0;
-    while (await this.elementNotVisible(sortColumnDiv, 1000) && i < 2) {
-      await this.clickAndWaitForNavigation(sortColumnSpanButton);
+    while (await this.elementNotVisible(page, sortColumnDiv, 1000) && i < 2) {
+      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
     }
-    await this.waitForVisibleSelector(sortColumnDiv);
+    await this.waitForVisibleSelector(page, sortColumnDiv);
   }
-};
+}
+
+module.exports = new Contacts();

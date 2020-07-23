@@ -1,12 +1,13 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
-module.exports = class Home extends FOBasePage {
-  constructor(page) {
-    super(page);
+class Home extends FOBasePage {
+  constructor() {
+    super();
 
     // Selectors for home page
     this.homePageSection = 'section#content.page-home';
+    this.popularProductTitle = '#content section h2';
     this.productArticle = number => `#content .products div:nth-child(${number}) article`;
     this.productImg = number => `${this.productArticle(number)} img`;
     this.productDescriptionDiv = number => `${this.productArticle(number)} div.product-description`;
@@ -27,105 +28,125 @@ module.exports = class Home extends FOBasePage {
 
   /**
    * Check home page
+   * @param page
    * @returns {Promise<boolean>}
    */
-  async isHomePage() {
-    return this.elementVisible(this.homePageSection, 3000);
+  async isHomePage(page) {
+    return this.elementVisible(page, this.homePageSection, 3000);
   }
 
   /**
    * Go to the product page
+   * @param page
    * @param id, product id
    * @returns {Promise<void>}
    */
-  async goToProductPage(id) {
-    await this.clickAndWaitForNavigation(this.productImg(id));
+  async goToProductPage(page, id) {
+    await this.clickAndWaitForNavigation(page, this.productImg(id));
   }
 
   /**
    * Click on Quick view Product
+   * @param page
    * @param id, index of product in list of products
    * @return {Promise<void>}
    */
-  async quickViewProduct(id) {
-    await this.page.hover(this.productImg(id));
+  async quickViewProduct(page, id) {
+    await page.hover(this.productImg(id));
     let displayed = false;
     /* eslint-disable no-await-in-loop */
     // Only way to detect if element is displayed is to get value of computed style 'product description' after hover
     // and compare it with value 'block'
     for (let i = 0; i < 10 && !displayed; i++) {
       /* eslint-env browser */
-      displayed = await this.page.evaluate(
+      displayed = await page.evaluate(
         selector => window.getComputedStyle(document.querySelector(selector), ':after')
           .getPropertyValue('display') === 'block',
         this.productDescriptionDiv(id),
       );
-      await this.page.waitForTimeout(100);
+      await page.waitForTimeout(100);
     }
     /* eslint-enable no-await-in-loop */
     await Promise.all([
-      this.waitForVisibleSelector(this.quickViewModalDiv),
-      this.page.$eval(this.productQuickViewLink(id), el => el.click()),
+      this.waitForVisibleSelector(page, this.quickViewModalDiv),
+      page.$eval(this.productQuickViewLink(id), el => el.click()),
     ]);
   }
 
   /**
    * Add product to cart with Quick view
+   * @param page
    * @param id, index of product in list of products
    * @param quantity_wanted, quantity to order
    * @return {Promise<void>}
    */
-  async addProductToCartByQuickView(id, quantity_wanted = '1') {
-    await this.quickViewProduct(id);
-    await this.setValue(this.quantityWantedInput, quantity_wanted.toString());
+  async addProductToCartByQuickView(page, id, quantity_wanted = '1') {
+    await this.quickViewProduct(page, id);
+    await this.setValue(page, this.quantityWantedInput, quantity_wanted.toString());
     await Promise.all([
-      this.waitForVisibleSelector(this.blockCartModalDiv),
-      this.page.click(this.addToCartButton),
+      this.waitForVisibleSelector(page, this.blockCartModalDiv),
+      page.click(this.addToCartButton),
     ]);
   }
 
   /**
    * Click on proceed to checkout after adding product to cart (in modal homePage)
+   * @param page
    * @return {Promise<void>}
    */
-  async proceedToCheckout() {
-    await this.clickAndWaitForNavigation(this.blockCartModalCheckoutLink);
+  async proceedToCheckout(page) {
+    await this.clickAndWaitForNavigation(page, this.blockCartModalCheckoutLink);
   }
 
   /**
    * Check product price
+   * @param page
    * @param id, index of product in list of products
    * @return {Promise<boolean>}
    */
-  async isPriceVisible(id = 1) {
-    return this.elementVisible(this.productPrice(id), 1000);
+  async isPriceVisible(page, id = 1) {
+    return this.elementVisible(page, this.productPrice(id), 1000);
   }
 
   /**
    * Check new flag
+   * @param page
    * @param id
    * @returns {Promise<boolean>}
    */
-  async isNewFlagVisible(id = 1) {
-    return this.elementVisible(this.newFlag(id), 1000);
+  async isNewFlagVisible(page, id = 1) {
+    return this.elementVisible(page, this.newFlag(id), 1000);
   }
 
   /**
    * Search product
+   * @param page
    * @param productName
    * @returns {Promise<void>}
    */
-  async searchProduct(productName) {
-    await this.setValue(this.searchInput, productName);
-    await this.page.keyboard.press('Enter');
-    await this.page.waitForNavigation();
+  async searchProduct(page, productName) {
+    await this.setValue(page, this.searchInput, productName);
+    await page.keyboard.press('Enter');
+    await page.waitForNavigation();
   }
 
   /**
    * Go to home category page by clicking on all products
+   * @param page
    * @return {Promise<void>}
    */
-  async goToAllProductsPage() {
-    await this.clickAndWaitForNavigation(this.allProductLink);
+  async goToAllProductsPage(page) {
+    await this.clickAndWaitForNavigation(page, this.allProductLink);
   }
-};
+
+  /**
+   * Get popular product title
+   * @param page
+   * @returns {Promise<string>}
+   */
+  getPopularProductTitle(page) {
+    return this.getTextContent(page, this.popularProductTitle);
+  }
+}
+
+module.exports = new Home();

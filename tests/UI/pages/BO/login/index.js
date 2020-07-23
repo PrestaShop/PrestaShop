@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class Login extends BOBasePage {
-  constructor(page) {
-    super(page);
+class Login extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'PrestaShop';
     this.loginErrorText = 'The employee does not exist, or the password provided is incorrect.';
@@ -21,26 +21,30 @@ module.exports = class Login extends BOBasePage {
 
   /**
    * Enter credentials and submit login form
+   * @param page
    * @param email
    * @param password
    * @param waitForNavigation, false if login should fail
    * @returns {Promise<void>}
    */
-  async login(email, password, waitForNavigation = true) {
-    await this.page.type(this.emailInput, email);
-    await this.page.type(this.passwordInput, password);
+  async login(page, email, password, waitForNavigation = true) {
+    await page.type(this.emailInput, email);
+    await page.type(this.passwordInput, password);
     if (waitForNavigation) {
-      await this.clickAndWaitForNavigation(this.submitLoginButton);
+      await this.clickAndWaitForNavigation(page, this.submitLoginButton);
     } else {
-      await this.page.click(this.submitLoginButton);
+      await page.click(this.submitLoginButton);
     }
   }
 
   /**
    * Get login error
+   * @param page
    * @return {Promise<string>}
    */
-  async getLoginError() {
-    return this.getTextContent(this.alertDangerTextBlock);
+  async getLoginError(page) {
+    return this.getTextContent(page, this.alertDangerTextBlock);
   }
-};
+}
+
+module.exports = new Login();

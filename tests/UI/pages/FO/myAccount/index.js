@@ -1,9 +1,9 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
-module.exports = class MyAccount extends FOBasePage {
-  constructor(page) {
-    super(page);
+class MyAccount extends FOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'My account';
 
@@ -17,9 +17,12 @@ module.exports = class MyAccount extends FOBasePage {
 
   /**
    * Go to order history page
+   * @param page
    * @returns {Promise<void>}
    */
-  async goToHistoryAndDetailsPage() {
-    await this.waitForSelectorAndClick(this.historyLink);
+  async goToHistoryAndDetailsPage(page) {
+    await this.waitForSelectorAndClick(page, this.historyLink);
   }
-};
+}
+
+module.exports = new MyAccount();

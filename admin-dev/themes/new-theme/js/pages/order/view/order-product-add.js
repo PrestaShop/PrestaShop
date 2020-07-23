@@ -75,18 +75,18 @@ export default class OrderProductAdd {
     });
     this.quantityInput.on('change keyup', (event) => {
       if (this.available !== null) {
-        const quantity = Number(event.target.value);
-        const available = this.available - quantity;
+        const newQuantity = Number(event.target.value);
+        const remainingAvailable = this.available - newQuantity;
         const availableOutOfStock = this.availableText.data('availableOutOfStock');
-        this.availableText.text(available);
-        this.availableText.toggleClass('text-danger font-weight-bold', available < 0);
-        const disableAddActionBtn = quantity <= 0 || (available <= 0 && !availableOutOfStock);
+        this.availableText.text(remainingAvailable);
+        this.availableText.toggleClass('text-danger font-weight-bold', remainingAvailable < 0);
+        const disableAddActionBtn = newQuantity <= 0 || (remainingAvailable < 0 && !availableOutOfStock);
         this.productAddActionBtn.prop('disabled', disableAddActionBtn);
-        this.invoiceSelect.prop('disabled', !availableOutOfStock && available < 0);
+        this.invoiceSelect.prop('disabled', !availableOutOfStock && remainingAvailable < 0);
 
         const taxIncluded = parseFloat(this.priceTaxIncludedInput.val());
         this.totalPriceText.html(
-          this.priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, this.currencyPrecision),
+          this.priceTaxCalculator.calculateTotalPrice(newQuantity, taxIncluded, this.currencyPrecision),
         );
       }
     });

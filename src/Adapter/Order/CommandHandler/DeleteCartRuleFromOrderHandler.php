@@ -26,9 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
+use Cart;
+use CartRule;
 use OrderCartRule;
-use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\DeleteCartRuleFromOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -40,45 +42,43 @@ use Validate;
 final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implements DeleteCartRuleFromOrderHandlerInterface
 {
     /**
+     * @var OrderAmountUpdater
+     */
+    private $orderAmountUpdater;
+
+    /**
+     * @param OrderAmountUpdater $orderAmountUpdater
+     */
+    public function __construct(OrderAmountUpdater $orderAmountUpdater)
+    {
+        $this->orderAmountUpdater = $orderAmountUpdater;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(DeleteCartRuleFromOrderCommand $command)
     {
         $order = $this->getOrder($command->getOrderId());
         $orderCartRule = new OrderCartRule($command->getOrderCartRuleId());
-
         if (!Validate::isLoadedObject($orderCartRule) || $orderCartRule->id_order != $order->id) {
             throw new OrderException('Invalid order cart rule provided.');
         }
 
-        if ($orderCartRule->id_order_invoice) {
-            $orderInvoice = new OrderInvoice($orderCartRule->id_order_invoice);
-            if (!Validate::isLoadedObject($orderInvoice)) {
-                throw new OrderException('Can\'t load Order Invoice object');
-            }
-
-            // Update amounts of Order Invoice
-            $orderInvoice->total_discount_tax_excl -= $orderCartRule->value_tax_excl;
-            $orderInvoice->total_discount_tax_incl -= $orderCartRule->value;
-
-            $orderInvoice->total_paid_tax_excl += $orderCartRule->value_tax_excl;
-            $orderInvoice->total_paid_tax_incl += $orderCartRule->value;
-
-            // Update Order Invoice
-            $orderInvoice->update();
+        $cart = Cart::getCartByOrderId($order->id);
+        if (!Validate::isLoadedObject($cart) || $order->id_cart != $cart->id) {
+            throw new OrderException('Invalid cart provided.');
         }
 
-        // Update amounts of order
-        $order->total_discounts -= $orderCartRule->value;
-        $order->total_discounts_tax_incl -= $orderCartRule->value;
-        $order->total_discounts_tax_excl -= $orderCartRule->value_tax_excl;
-
-        $order->total_paid += $orderCartRule->value;
-        $order->total_paid_tax_incl += $orderCartRule->value;
-        $order->total_paid_tax_excl += $orderCartRule->value_tax_excl;
+        $cartRule = new CartRule($orderCartRule->id_cart_rule);
+        if (!Validate::isLoadedObject($cartRule)) {
+            throw new OrderException('Invalid cart rule provided.');
+        }
 
         // Delete Order Cart Rule and update Order
         $orderCartRule->delete();
-        $order->update();
+        $cart->removeCartRule($orderCartRule->id_cart_rule);
+
+        $this->orderAmountUpdater->update($order, $cart, $orderCartRule->id_order_invoice);
     }
 }

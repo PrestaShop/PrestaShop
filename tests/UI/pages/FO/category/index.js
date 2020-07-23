@@ -1,9 +1,9 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
-module.exports = class Category extends FOBasePage {
-  constructor(page) {
-    super(page);
+class Category extends FOBasePage {
+  constructor() {
+    super();
 
     // Selectors
     this.bodySelector = '#category';
@@ -18,25 +18,30 @@ module.exports = class Category extends FOBasePage {
   /* Methods */
   /**
    * Check if user is in category page
+   * @param page
    * @return {Promise<boolean>}
    */
-  async isCategoryPage() {
-    return this.elementVisible(this.bodySelector, 2000);
+  async isCategoryPage(page) {
+    return this.elementVisible(page, this.bodySelector, 2000);
   }
 
   /**
    * Get number of products displayed in category page
+   * @param page
    * @return {Promise<number>}
    */
-  async getNumberOfProductsDisplayed() {
-    return (await this.page.$$(this.productItemListDiv)).length;
+  async getNumberOfProductsDisplayed(page) {
+    return (await page.$$(this.productItemListDiv)).length;
   }
 
   /**
    * Get sort by value from button
+   * @param page
    * @return {Promise<string>}
    */
-  getSortByValue() {
-    return this.getTextContent(this.sortByButton);
+  getSortByValue(page) {
+    return this.getTextContent(page, this.sortByButton);
   }
-};
+}
+
+module.exports = new Category();
