@@ -121,11 +121,9 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
         /** @var CountryByIdChoiceProvider $countryChoiceProvider */
         $countryChoiceProvider = $this->getContainer()->get('prestashop.core.form.choice_provider.country_by_id');
         $countryId = (int) $countryChoiceProvider->getChoices()[$testCaseData['Country']];
-        /** @var CountryStateByIdChoiceProvider $countryStateChoiceProvider */
         $countryStateId = self::DEFAULT_COUNTRY_STATE_ID;
         if (isset($testCaseData['State'])) {
-            $countryStateChoiceProvider = $this->getContainer()->get('prestashop.adapter.form.choice_provider.country_state_by_id');
-            $countryStateId = $countryStateChoiceProvider->getChoices(['id_country' => $countryId])[$testCaseData['State']];
+            $countryStateId = $this->getStateId($countryId, $testCaseData);
         }
 
         /** @var AddressId $addressIdObject */
@@ -234,19 +232,9 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
             }
             $countryId = (int) $countryList[$testCaseData['Country']];
             $editAddressCommand->setCountryId($countryId);
-
-            /* @var CountryStateByIdChoiceProvider $countryStateChoiceProvider */
-            if (!empty($testCaseData['State'])) {
-                $countryStateChoiceProvider = $this->getContainer()->get('prestashop.adapter.form.choice_provider.country_state_by_id');
-                $countryStateList = $countryStateChoiceProvider->getChoices(['id_country' => $countryId]);
-                if (!isset($countryStateList[$testCaseData['State']])) {
-                    throw new RuntimeException(sprintf(
-                        'Cannot find state %s for country %s',
-                        $testCaseData['State'],
-                        $testCaseData['Country']
-                    ));
-                }
-                $editAddressCommand->setStateId((int) $countryStateList[$testCaseData['State']]);
+            $stateId = $this->getStateId($countryId, $testCaseData);
+            if (null !== $stateId) {
+                $editAddressCommand->setStateId($stateId);
             }
         }
     }
@@ -439,20 +427,7 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
         $countryChoiceProvider = $this->getContainer()->get('prestashop.core.form.choice_provider.country_by_id');
         $countryId = (int) $countryChoiceProvider->getChoices()[$testCaseData['Country']];
 
-        $stateId = null;
-        /* @var CountryStateByIdChoiceProvider $countryStateChoiceProvider */
-        if (!empty($testCaseData['State'])) {
-            $countryStateChoiceProvider = $this->getContainer()->get('prestashop.adapter.form.choice_provider.country_state_by_id');
-            $countryStateList = $countryStateChoiceProvider->getChoices(['id_country' => $countryId]);
-            if (!isset($countryStateList[$testCaseData['State']])) {
-                throw new RuntimeException(sprintf(
-                    'Cannot find state %s for country %s',
-                    $testCaseData['State'],
-                    $testCaseData['Country']
-                ));
-            }
-            $stateId = (int) $countryStateList[$testCaseData['State']];
-        }
+        $stateId = $this->getStateId($countryId, $testCaseData);
 
         return new EditableManufacturerAddress(
             new AddressId($addressId),
@@ -532,5 +507,33 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
         $editManufacturerAddressCommand->setCountryId($manufacturerAddress->getCountryId());
         $editManufacturerAddressCommand->setStateId($manufacturerAddress->getStateId());
         $this->getCommandBus()->handle($editManufacturerAddressCommand);
+    }
+
+    /**
+     * @param int $countryId
+     * @param array $testCaseData
+     *
+     * @return int|null
+     *
+     * @throws RuntimeException
+     */
+    private function getStateId(int $countryId, array $testCaseData): ?int
+    {
+        if (empty($testCaseData['State'])) {
+            return null;
+        }
+        $stateId = null;
+        /* @var CountryStateByIdChoiceProvider $countryStateChoiceProvider */
+        $countryStateChoiceProvider = $this->getContainer()->get('prestashop.adapter.form.choice_provider.country_state_by_id');
+        $countryStateList = $countryStateChoiceProvider->getChoices(['id_country' => $countryId]);
+        if (!isset($countryStateList[$testCaseData['State']])) {
+            throw new RuntimeException(sprintf(
+                'Cannot find state %s for country %s',
+                $testCaseData['State'],
+                $testCaseData['Country']
+            ));
+        }
+
+        return (int) $countryStateList[$testCaseData['State']];
     }
 }

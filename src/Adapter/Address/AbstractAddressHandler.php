@@ -87,10 +87,8 @@ abstract class AbstractAddressHandler
      */
     protected function validateAddress(Address $address): void
     {
-        if (true !== ($validateResult = $address->validateFields(false, true))) {
-            throw new InvalidAddressFieldException(sprintf('Address contains invalid field values: %s', $validateResult));
-        }
-        if (true !== ($validateResult = $address->validateFieldsLang(false, true))) {
+        if (true !== ($validateResult = $address->validateFields(false, true))
+            || true !== ($validateResult = $address->validateFieldsLang(false, true))) {
             throw new InvalidAddressFieldException(sprintf('Address contains invalid field values: %s', $validateResult));
         }
     }
