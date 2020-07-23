@@ -2759,5 +2759,10 @@
       <title>Product Listing Presenter</title>
       <description>This hook is called before a product listing is presented</description>
     </hook>
+    <hook id="actionGetProductPropertiesAfterUnitPrice">
+      <name>actionGetProductPropertiesAfterUnitPrice</name>
+      <title>Product Properties</title>
+      <description>This hook is called after defining the properties of a product</description>
+    </hook>
   </entities>
 </entity_hook>

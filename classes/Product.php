@@ -5567,6 +5567,12 @@ class ProductCore extends ObjectModel
             $row['unit_price'] = 0.0;
         }
 
+        Hook::exec('actionGetProductPropertiesAfterUnitPrice', [
+            'id_lang' => $id_lang,
+            'product' => &$row,
+            'context' => $context,
+        ]);
+
         self::$productPropertiesCache[$cache_key] = $row;
 
         return self::$productPropertiesCache[$cache_key];
