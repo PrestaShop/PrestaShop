@@ -117,6 +117,12 @@ final class UpdateProductSuppliersHandler extends AbstractProductHandler impleme
     /**
      * @param ProductId $productId
      * @param ProductSupplier[] $productSuppliers
+     *
+     * @throws CannotDeleteProductSupplierException
+     * @throws CombinationConstraintException
+     * @throws CurrencyException
+     * @throws ProductSupplierException
+     * @throws SupplierException
      */
     private function updateProductSuppliers(ProductId $productId, array $productSuppliers): void
     {
@@ -168,6 +174,7 @@ final class UpdateProductSuppliersHandler extends AbstractProductHandler impleme
      */
     private function updateProductSupplier(ProductSupplier $productSupplier): void
     {
+        //@todo: check if i need to set supplier reference for product attribute manually (it has such field in db)
         $command = new UpdateProductSupplierCommand($productSupplier->getProductSupplierId());
         $command->setCurrencyId($productSupplier->getCurrencyId())
             ->setReference($productSupplier->getReference())

@@ -60,6 +60,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNotesType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
 use Product;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -347,6 +348,18 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         }
 
         return $unhandledValues;
+    }
+
+    /**
+     * @When I update product :productReference suppliers with following values:
+     *
+     * @param string $productReference
+     * @param TableNode $tableNode
+     */
+    public function updateProductSuppliers(string $productReference, TableNode $tableNode): void
+    {
+        $command = new UpdateProductSuppliersCommand($this->getSharedStorage()->get($productReference));
+        $command->setProductSuppliers();
     }
 
     /**
