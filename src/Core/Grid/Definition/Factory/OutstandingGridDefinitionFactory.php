@@ -106,6 +106,7 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
                     ->setOptions([
                         'field' => 'risk',
                         'color_field' => 'color',
+                        'badge_type' => '',
                     ])
             )
             ->add(
