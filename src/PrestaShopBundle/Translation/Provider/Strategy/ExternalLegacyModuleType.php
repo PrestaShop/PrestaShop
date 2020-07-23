@@ -26,18 +26,31 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Translation\Provider;
-
-use Symfony\Component\Translation\MessageCatalogueInterface;
+namespace PrestaShopBundle\Translation\Provider\Strategy;
 
 /**
- * Define contract to retrieve translations.
+ * Properties container for 'external_legacy_module' type of translation.
  */
-interface ProviderInterface
+class ExternalLegacyModuleType implements TypeInterface
 {
-    public function getDefaultCatalogue(string $locale): ?MessageCatalogueInterface;
+    /**
+     * @var string
+     */
+    private $moduleName;
 
-    public function getFileTranslatedCatalogue(string $locale): ?MessageCatalogueInterface;
+    /**
+     * @param string $moduleName
+     */
+    public function __construct(string $moduleName)
+    {
+        $this->moduleName = $moduleName;
+    }
 
-    public function getUserTranslatedCatalogue(string $locale): ?MessageCatalogueInterface;
+    /**
+     * @return string
+     */
+    public function getModuleName(): string
+    {
+        return $this->moduleName;
+    }
 }

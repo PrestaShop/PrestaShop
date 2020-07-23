@@ -28,59 +28,60 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider\Strategy;
 
-use PrestaShopBundle\Translation\Provider\ProviderInterface;
-use Symfony\Component\Translation\MessageCatalogueInterface;
-
 /**
- * Represents strategy for 'front' type of translation.
- * It must use the FrontProvider and required parameters.
+ * Properties container for provider to search inside translations.
  */
-class FrontStrategy implements StrategyInterface
+class SearchType implements TypeInterface
 {
     /**
      * @var string
      */
-    private $locale;
+    private $domain;
     /**
-     * @var ProviderInterface
+     * @var string|null
      */
-    private $provider;
+    private $theme;
+    /**
+     * @var string|null
+     */
+    private $module;
 
     /**
-     * @param ProviderInterface $provider
-     * @param string $locale
+     * @param string $domain
+     * @param string|null $theme
+     * @param string|null $module
      */
-    public function __construct(ProviderInterface $provider, string $locale)
-    {
-        $this->locale = $locale;
-        $this->provider = $provider;
+    public function __construct(
+        string $domain,
+        ?string $theme = null,
+        ?string $module = null
+    ) {
+        $this->domain = $domain;
+        $this->theme = $theme;
+        $this->module = $module;
     }
 
     /**
-     * @param bool $empty
-     *
-     * @return MessageCatalogueInterface|null
+     * @return string
      */
-    public function getDefaultCatalogue(bool $empty = true): ?MessageCatalogueInterface
+    public function getDomain(): string
     {
-        return $this->provider->getDefaultCatalogue($this->locale, $empty);
+        return $this->domain;
     }
 
     /**
-     * @return MessageCatalogueInterface|null
+     * @return string|null
      */
-    public function getFileTranslatedCatalogue(): ?MessageCatalogueInterface
+    public function getTheme(): ?string
     {
-        return $this->provider->getFileTranslatedCatalogue($this->locale);
+        return $this->theme;
     }
 
     /**
-     * @param string|null $domain
-     *
-     * @return MessageCatalogueInterface|null
+     * @return string|null
      */
-    public function getUserTranslatedCatalogue(?string $domain = null): ?MessageCatalogueInterface
+    public function getModule(): ?string
     {
-        return $this->provider->getUserTranslatedCatalogue($this->locale, $domain);
+        return $this->module;
     }
 }
