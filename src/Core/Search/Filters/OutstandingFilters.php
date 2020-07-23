@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
+declare(strict_types=1);
+
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OutstandingGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 

@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+declare(strict_types=1);
+
 use Context;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;

@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Customer;
 
+declare(strict_types=1);
+
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OutstandingGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\OutstandingFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
