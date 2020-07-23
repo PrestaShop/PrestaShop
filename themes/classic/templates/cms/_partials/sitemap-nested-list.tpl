@@ -29,7 +29,7 @@
         <a id="{$link.id}" href="{$link.url}" title="{$link.label}">
           {$link.label}
         </a>
-        {if isset($link.children) && $link.children|@count > 0}
+        {if !empty($link.children)}
           {include file='cms/_partials/sitemap-nested-list.tpl' links=$link.children is_nested=true}
         {/if}
       </li>
