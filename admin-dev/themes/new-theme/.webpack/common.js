@@ -85,6 +85,7 @@ module.exports = {
     order_message: './js/pages/order_message',
     order_preferences: './js/pages/order-preferences',
     order_view: './js/pages/order/view.js',
+    outstanding: './js/pages/outstanding',
     payment_preferences: './js/pages/payment-preferences',
     product_page: './js/product-page/index',
     product_preferences: './js/pages/product-preferences',
