@@ -89,6 +89,7 @@ module.exports = {
     order_states: './js/pages/order-states',
     order_return_states_form: './js/pages/order-return-states/form',
     order_view: './js/pages/order/view.js',
+    outstanding: './js/pages/outstanding',
     payment_preferences: './js/pages/payment-preferences',
     product_edit: './js/pages/product/edit',
     product_page: './js/product-page/index',
