@@ -26,18 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Translation\Provider;
-
-use Symfony\Component\Translation\MessageCatalogueInterface;
+namespace PrestaShopBundle\Translation\Provider\Strategy;
 
 /**
- * Define contract to retrieve translations.
+ * Properties container for 'back' type of translation.
  */
-interface ProviderInterface
+class BackType implements TypeInterface
 {
-    public function getDefaultCatalogue(string $locale): ?MessageCatalogueInterface;
-
-    public function getFileTranslatedCatalogue(string $locale): ?MessageCatalogueInterface;
-
-    public function getUserTranslatedCatalogue(string $locale): ?MessageCatalogueInterface;
 }
