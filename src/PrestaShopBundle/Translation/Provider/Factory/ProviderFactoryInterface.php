@@ -26,18 +26,24 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Translation\Provider;
+namespace PrestaShopBundle\Translation\Provider\Factory;
 
-use Symfony\Component\Translation\MessageCatalogueInterface;
+use PrestaShopBundle\Translation\Provider\ProviderInterface;
+use PrestaShopBundle\Translation\Provider\Strategy\TypeInterface;
 
-/**
- * Define contract to retrieve translations.
- */
-interface ProviderInterface
+interface ProviderFactoryInterface
 {
-    public function getDefaultCatalogue(string $locale): ?MessageCatalogueInterface;
+    /**
+     * @param TypeInterface $strategy
+     *
+     * @return bool
+     */
+    public function implements(TypeInterface $strategy): bool;
 
-    public function getFileTranslatedCatalogue(string $locale): ?MessageCatalogueInterface;
-
-    public function getUserTranslatedCatalogue(string $locale): ?MessageCatalogueInterface;
+    /**
+     * @param TypeInterface $providerType
+     *
+     * @return ProviderInterface
+     */
+    public function build(TypeInterface $providerType): ProviderInterface;
 }
