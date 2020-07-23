@@ -397,10 +397,11 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertProductSuppliers(string $productReference, TableNode $table)
     {
-        $data = $table->getColumnsHash();
+        $expectedProductSuppliers = $table->getColumnsHash();
+        $actualProductSupplierOptions = $this->getProductForEditing($productReference)->getProductSupplierOptions();
 
-        foreach ($data as $expectedProductSupplier) {
-            //@todo:
+        foreach ($expectedProductSuppliers as $expectedProductSupplier) {
+            $actualProductSupplierOptions->getProductSuppliers();
         }
     }
 

@@ -31,9 +31,19 @@ Feature: Update product suppliers from Back Office (BO)
       | meta keywords        | en-US:sup,2                     |
       | shops                | [shop1]                         |
     And I add product "product1" with following information:
-      | name       | en-US:magic staff   |
-      | is_virtual | false               |
+      | name       | en-US:magic staff                         |
+      | is_virtual | false                                     |
     And product product1 should have no suppliers assigned
+    And product "product1" has combinations with following details:
+      | reference    | quantity | attributes |
+      | combination1 | 100      | Size:L     |
+      | combination2 | 100      | Size:M     |
+    When I update product product1 suppliers with following values:
+      | reference         | supplier reference    | product supplier reference     | currency      | price tax excluded | combination reference |
+      | product1suppl1    | supplier1             | this is input reference        | USD           | 19                 | combination1          |
+    Then product product1 should have following suppliers:
+      | reference         | supplier reference    | product supplier reference     | currency      | price tax excluded | combination reference |
+      | product1suppl1    | supplier1             | this is input reference        | USD           | 19                 | combination1          |
 
     #@todo: assume we will provide one product combination per reference, can we ?
   Scenario: I update product suppliers
@@ -43,4 +53,6 @@ Feature: Update product suppliers from Back Office (BO)
     And product product1 should have following suppliers:
       | reference             | product supplier reference     | currency      | price tax excluded |
       | product1supplier1     | my first supplier for product1 | USD           | 10                 |
-
+    And product product1 should have following values:
+    #todo: not implemented
+      | default supplier | supplier1 |
