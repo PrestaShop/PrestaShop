@@ -54,7 +54,7 @@ final class BadgeColumn extends AbstractColumn
                 'field',
             ])
             ->setDefaults([
-                'badge_type' => '',
+                'badge_type' => 'success',
                 'empty_value' => '',
                 'clickable' => true,
                 'color_field' => '',
