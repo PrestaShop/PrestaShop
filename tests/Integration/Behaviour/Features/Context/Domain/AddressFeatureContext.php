@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCustomerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditManufacturerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditOrderAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetCustomerAddressForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetManufacturerAddressForEditing;
@@ -78,8 +79,11 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
             $editableManufacturerAddress->getAddress(),
             $editableManufacturerAddress->getCountryId(),
             $editableManufacturerAddress->getCity(),
-            $editableManufacturerAddress->getManufacturerId())
-        );
+            $editableManufacturerAddress->getManufacturerId(),
+            null,
+            null,
+            $editableManufacturerAddress->getStateId()
+        ));
         SharedStorage::getStorage()->set($manufacturerAddressReference, $addressIdObject->getValue());
     }
 
@@ -157,9 +161,14 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
         $editAddressCommand = new EditCustomerAddressCommand($customerAddressId);
         $this->updateEditCommandFields($editAddressCommand, $testCaseData);
 
-        /** @var AddressId $addressIdObject */
-        $addressIdObject = $this->getCommandBus()->handle($editAddressCommand);
-        SharedStorage::getStorage()->set($testCaseData['Address alias'], $addressIdObject->getValue());
+        $this->lastException = null;
+        try {
+            /** @var AddressId $addressIdObject */
+            $addressIdObject = $this->getCommandBus()->handle($editAddressCommand);
+            SharedStorage::getStorage()->set($testCaseData['Address alias'], $addressIdObject->getValue());
+        } catch (AddressException $e) {
+            $this->lastException = $e;
+        }
     }
 
     /**
@@ -182,9 +191,14 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
         $editOrderAddressCommand = new EditOrderAddressCommand($orderId, $addressType);
         $this->updateEditCommandFields($editOrderAddressCommand, $testCaseData);
 
-        /** @var AddressId $addressIdObject */
-        $addressIdObject = $this->getCommandBus()->handle($editOrderAddressCommand);
-        SharedStorage::getStorage()->set($testCaseData['Address alias'], $addressIdObject->getValue());
+        $this->lastException = null;
+        try {
+            /** @var AddressId $addressIdObject */
+            $addressIdObject = $this->getCommandBus()->handle($editOrderAddressCommand);
+            SharedStorage::getStorage()->set($testCaseData['Address alias'], $addressIdObject->getValue());
+        } catch (AddressException $e) {
+            $this->lastException = $e;
+        }
     }
 
     /**
@@ -211,14 +225,28 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
         if (!empty($testCaseData['Country'])) {
             /** @var CountryByIdChoiceProvider $countryChoiceProvider */
             $countryChoiceProvider = $this->getContainer()->get('prestashop.core.form.choice_provider.country_by_id');
-            $countryId = (int) $countryChoiceProvider->getChoices()[$testCaseData['Country']];
+            $countryList = $countryChoiceProvider->getChoices();
+            if (!isset($countryList[$testCaseData['Country']])) {
+                throw new RuntimeException(sprintf(
+                    'Cannot find country %s',
+                    $testCaseData['Country']
+                ));
+            }
+            $countryId = (int) $countryList[$testCaseData['Country']];
             $editAddressCommand->setCountryId($countryId);
 
             /* @var CountryStateByIdChoiceProvider $countryStateChoiceProvider */
-            if (isset($testCaseData['State'])) {
+            if (!empty($testCaseData['State'])) {
                 $countryStateChoiceProvider = $this->getContainer()->get('prestashop.adapter.form.choice_provider.country_state_by_id');
-                $countryStateId = $countryStateChoiceProvider->getChoices(['id_country' => $countryId])[$testCaseData['State']];
-                $editAddressCommand->setStateId($countryStateId);
+                $countryStateList = $countryStateChoiceProvider->getChoices(['id_country' => $countryId]);
+                if (!isset($countryStateList[$testCaseData['State']])) {
+                    throw new RuntimeException(sprintf(
+                        'Cannot find state %s for country %s',
+                        $testCaseData['State'],
+                        $testCaseData['Country']
+                    ));
+                }
+                $editAddressCommand->setStateId((int) $countryStateList[$testCaseData['State']]);
             }
         }
     }
@@ -324,9 +352,22 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
         $countryId = (int) $countryChoiceProvider->getChoices()[$testCaseData['Country']];
         Assert::assertSame((int) $countryId, $customerAddress->getCountryId()->getValue());
 
-        $countryStateChoiceProvider = $this->getContainer()->get('prestashop.adapter.form.choice_provider.country_state_by_id');
-        $countryStateId = $countryStateChoiceProvider->getChoices(['id_country' => $countryId])[$testCaseData['State']];
-        Assert::assertSame((int) $countryStateId, $customerAddress->getStateId()->getValue());
+        if (!empty($testCaseData['State'])) {
+            $countryStateChoiceProvider = $this->getContainer()->get('prestashop.adapter.form.choice_provider.country_state_by_id');
+            $countryStateList = $countryStateChoiceProvider->getChoices(['id_country' => $countryId]);
+            if (!isset($countryStateList[$testCaseData['State']])) {
+                throw new RuntimeException(sprintf(
+                    'Cannot find state %s for country %s',
+                    $testCaseData['State'],
+                    $testCaseData['Country']
+                ));
+            }
+            $countryStateId = $countryStateList[$testCaseData['State']];
+            Assert::assertSame((int) $countryStateId, $customerAddress->getStateId()->getValue());
+        } else {
+            Assert::assertSame(0, $customerAddress->getStateId()->getValue());
+        }
+
         Assert::assertEquals($testCaseData['Postal code'], $customerAddress->getPostCode());
     }
 
@@ -396,7 +437,22 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
 
         /** @var CountryByIdChoiceProvider $countryChoiceProvider */
         $countryChoiceProvider = $this->getContainer()->get('prestashop.core.form.choice_provider.country_by_id');
-        $countryId = $countryChoiceProvider->getChoices()[$testCaseData['Country']];
+        $countryId = (int) $countryChoiceProvider->getChoices()[$testCaseData['Country']];
+
+        $stateId = null;
+        /* @var CountryStateByIdChoiceProvider $countryStateChoiceProvider */
+        if (!empty($testCaseData['State'])) {
+            $countryStateChoiceProvider = $this->getContainer()->get('prestashop.adapter.form.choice_provider.country_state_by_id');
+            $countryStateList = $countryStateChoiceProvider->getChoices(['id_country' => $countryId]);
+            if (!isset($countryStateList[$testCaseData['State']])) {
+                throw new RuntimeException(sprintf(
+                    'Cannot find state %s for country %s',
+                    $testCaseData['State'],
+                    $testCaseData['Country']
+                ));
+            }
+            $stateId = (int) $countryStateList[$testCaseData['State']];
+        }
 
         return new EditableManufacturerAddress(
             new AddressId($addressId),
@@ -405,7 +461,10 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
             $testCaseData['Address'],
             $testCaseData['City'],
             $manufacturerId,
-            $countryId
+            $countryId,
+            null,
+            null,
+            $stateId
         );
     }
 
@@ -471,6 +530,7 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
         $editManufacturerAddressCommand->setCity($manufacturerAddress->getCity());
         $editManufacturerAddressCommand->setManufacturerId($manufacturerAddress->getManufacturerId());
         $editManufacturerAddressCommand->setCountryId($manufacturerAddress->getCountryId());
+        $editManufacturerAddressCommand->setStateId($manufacturerAddress->getStateId());
         $this->getCommandBus()->handle($editManufacturerAddressCommand);
     }
 }

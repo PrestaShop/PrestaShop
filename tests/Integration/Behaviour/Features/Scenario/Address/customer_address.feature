@@ -1,37 +1,12 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s address
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s address --tags customer-address
 @reset-database-before-feature
+@customer-address
 Feature: Address
-  PrestaShop allows BO users to manage addresses
+  PrestaShop allows BO users to manage customer addresses
   As a BO user
-  I should be able to customize addresses
+  I should be able to customize customer addresses
 
-  Background:
-    #  from the user point of view manufacturer is brand
-    Given I add new manufacturer "testBrand" with following properties:
-      | name             | testBrand                          |
-      | short_description| Makes best shoes in Europe         |
-      | description      | Lorem ipsum dolor sit amets ornare |
-      | meta_title       | Perfect quality shoes              |
-      | meta_description |                                    |
-      | meta_keywords    | Boots, shoes, slippers             |
-      | enabled          | true                               |
-
-  Scenario: add brand address
-    When I add new brand address "testBrandAddress" with following details:
-      | Brand            | testBrand                          |
-      | Last name        | testLastName                       |
-      | First name       | testFirstName                      |
-      | Address          | test street 123                    |
-      | City             | Kaunas                             |
-      | Country          | Lithuania                          |
-    Then brand address "testBrandAddress" should have following details:
-      | Brand            | testBrand                          |
-      | Last name        | testLastName                       |
-      | First name       | testFirstName                      |
-      | Address          | test street 123                    |
-      | City             | Kaunas                             |
-      | Country          | Lithuania                          |
-
+  # NOTE: these scenario cannot be run independently you need to run them all in the right order
   Scenario: add customer address
     Given I create customer "testFirstName" with following details:
       | firstName        | testFirstName                      |
@@ -57,25 +32,26 @@ Feature: Address
       | State            | Alabama                            |
       | Postal code      | 12345                              |
 
-  Scenario: edit customer address
+  Scenario: edit customer address not assigned to any order
     When I edit address "test-customer-address" with following details:
-      | Address alias    | test-edited-customer-address       |
-      | First name       | testFirstNameuh                    |
-      | Last name        | testLastNameuh                     |
-      | Address          | Work address st. 1234567890        |
-      | City             | Birminghameuh                      |
-      | Country          | United States                      |
-      | State            | Alabama                            |
-      | Postal code      | 12345                              |
-    Then customer "testFirstName" should have address "test-edited-customer-address" with following details:
-      | Address alias    | test-edited-customer-address       |
-      | First name       | testFirstNameuh                    |
-      | Last name        | testLastNameuh                     |
-      | Address          | Work address st. 1234567890        |
-      | City             | Birminghameuh                      |
-      | Country          | United States                      |
-      | State            | Alabama                            |
-      | Postal code      | 12345                              |
+      | Address alias    | test-edited-customer-address |
+      | First name       | testFirstNameuh              |
+      | Last name        | testLastNameuh               |
+      | Address          | Work address st. 1234567890  |
+      | City             | Miami                        |
+      | Country          | United States                |
+      | State            | Florida                      |
+      | Postal code      | 12345                        |
+    Then customer "testFirstName" should have address "test-customer-address" with following details:
+      | Address alias    | test-edited-customer-address |
+      | First name       | testFirstNameuh              |
+      | Last name        | testLastNameuh               |
+      | Address          | Work address st. 1234567890  |
+      | City             | Miami                        |
+      | Country          | United States                |
+      | State            | Florida                      |
+      | Postal code      | 12345                        |
+    # The address is not assigned to an order, so it is not duplicated nor deleted, simply updated
     And customer "testFirstName" should have 1 addresses
     And customer "testFirstName" should have 0 deleted addresses
 
@@ -99,10 +75,22 @@ Feature: Address
       | Country          | United States                      |
       | State            | Alabama                            |
       | Postal code      | 12345                              |
+    # The former address has been copied and is unchanged
+    And customer "testFirstName" should have address "test-customer-address" with following details:
+      | Address alias    | test-edited-customer-address       |
+      | First name       | testFirstNameuh                    |
+      | Last name        | testLastNameuh                     |
+      | Address          | Work address st. 1234567890        |
+      | City             | Miami                              |
+      | Country          | United States                      |
+      | State            | Florida                            |
+      | Postal code      | 12345                              |
+    # The former address has been soft deleted, and a new one has been created
     And customer "testFirstName" should have 1 addresses
     And customer "testFirstName" should have 1 deleted addresses
 
-  Scenario: edit order delivery address
+  Scenario: edit order delivery address (already deleted)
+    # We assign a deleted address to the order
     Given address "test-customer-address" is assigned to an order "test-delivery-order" for "testFirstName"
     When I edit delivery address for order "test-delivery-order" with following details:
       | Address alias    | test-customer-delivery-address     |
@@ -122,13 +110,24 @@ Feature: Address
       | Country          | United States                      |
       | State            | Alabama                            |
       | Postal code      | 12345                              |
-    # Now 2 addresses since test-order-address is not deleted, and test-customer-address is the one being modified
+    # The initially deleted address is still intact
+    And customer "testFirstName" should have address "test-customer-address" with following details:
+      | Address alias    | test-edited-customer-address       |
+      | First name       | testFirstNameuh                    |
+      | Last name        | testLastNameuh                     |
+      | Address          | Work address st. 1234567890        |
+      | City             | Miami                              |
+      | Country          | United States                      |
+      | State            | Florida                            |
+      | Postal code      | 12345                              |
+    # A new address has been created, test-order-address is not deleted but test-customer-address still is
     And customer "testFirstName" should have 2 addresses
     And customer "testFirstName" should have 1 deleted addresses
     And order "test-delivery-order" should have "test-customer-address" as a invoice address
     And order "test-delivery-order" should have "test-customer-delivery-address" as a delivery address
 
-  Scenario: edit order invoice address
+  Scenario: edit order invoice address (address not deleted)
+    # We assign a not deleted address to the order
     Given address "test-order-address" is assigned to an order "test-invoice-order" for "testFirstName"
     When I edit invoice address for order "test-invoice-order" with following details:
       | Address alias    | test-customer-invoice-address      |
@@ -148,63 +147,46 @@ Feature: Address
       | Country          | United States                      |
       | State            | Alabama                            |
       | Postal code      | 12345                              |
-    # Now 2 addresses since test-customer-delivery-address is not deleted, as it's not been modified
+    # test-order-address has not been modified, it is now deleted
+    And customer "testFirstName" should have address "test-order-address" with following details:
+      | Address alias    | test-order-address                 |
+      | First name       | testFirstNameuhmeuh                |
+      | Last name        | testLastNameuhmeuh                 |
+      | Address          | Work address st. 1234567890        |
+      | City             | Birminghameuhmeuh                  |
+      | Country          | United States                      |
+      | State            | Alabama                            |
+      | Postal code      | 12345                              |
+    # Now 2 addresses the new one edited for an invoice, and this new one edited for delivery
     And customer "testFirstName" should have 2 addresses
     # And now 2 deleted addresses since test-order-address is now deleted
     And customer "testFirstName" should have 2 deleted addresses
     And order "test-invoice-order" should have "test-order-address" as a delivery address
     And order "test-invoice-order" should have "test-customer-invoice-address" as a invoice address
 
-  Scenario: delete brand address
-    Given I add new brand address "testBrandAddress" with following details:
-      | Brand            | testBrand                          |
-      | Last name        | testLastName                       |
-      | First name       | testFirstName                      |
-      | Address          | test street 123                    |
-      | City             | Kaunas                             |
-      | Country          | Lithuania                          |
-    When I delete address "testBrandAddress"
-    Then brand address "testBrandAddress" does not exist
-
-  Scenario: bulk delete brand addresses
-    Given I add new brand address "testBrandAddress1" with following details:
-      | Brand            | testBrand                          |
-      | Last name        | testLastName                       |
-      | First name       | testFirstName                      |
-      | Address          | test street 12                     |
-      | City             | Kaunas                             |
-      | Country          | Lithuania                          |
-    And I add new brand address "testBrandAddress2" with following details:
-      | Brand            | testBrand                          |
-      | Last name        | testLastNameTwo                    |
-      | First name       | testFirstNameTwo                   |
-      | Address          | test street 123                    |
-      | City             | Kaunas                             |
-      | Country          | Lithuania                          |
-    When I bulk delete addresses "testBrandAddress1,testBrandAddress2"
-    Then brand address testBrandAddress1 does not exist
-    Then brand address testBrandAddress2 does not exist
-
-  Scenario: edit brand address
-    Given I add new brand address "testBrandAddress" with following details:
-      | Brand            | testBrand                          |
-      | Last name        | testLastName                       |
-      | First name       | testFirstName                      |
-      | Address          | test street 123                    |
-      | City             | Kaunas                             |
-      | Country          | Lithuania                          |
-    When I edit brand address "testBrandAddress" with following details:
-      | Brand            | testBrand                          |
-      | Last name        | testLastNameEdited                 |
-      | First name       | testFirstNameEdited                |
-      | Address          | test street 123                    |
-      | City             | Paris                              |
-      | Country          | France                             |
-    Then brand address "testBrandAddress" should have following details:
-      | Brand            | testBrand                          |
-      | Last name        | testLastNameEdited                 |
-      | First name       | testFirstNameEdited                |
-      | Address          | test street 123                    |
-      | City             | Paris                              |
-      | Country          | France                             |
-
+  Scenario: edit order delivery address change country (not deleted address)
+    Given address "test-customer-invoice-address" is assigned to an order "test-country-order" for "testFirstName"
+    # We assign a not deleted address to the order
+    When I edit delivery address for order "test-country-order" with following details:
+      | Address alias    | test-customer-france-address |
+      | First name       | testFirstName                |
+      | Last name        | testLastName                 |
+      | Address          | Work address st. 1234567890  |
+      | City             | Birmingham                   |
+      | Country          | France                       |
+      | Postal code      | 12345                        |
+    # The state is automatically reset because France has no states
+    Then customer "testFirstName" should have address "test-customer-france-address" with following details:
+      | Address alias    | test-customer-france-address |
+      | First name       | testFirstName                |
+      | Last name        | testLastName                 |
+      | Address          | Work address st. 1234567890  |
+      | City             | Birmingham                   |
+      | Country          | France                       |
+      | State            |                              |
+      | Postal code      | 12345                        |
+    # Now 3 addresses since test-customer-invoice-address is now deleted
+    And customer "testFirstName" should have 2 addresses
+    And customer "testFirstName" should have 3 deleted addresses
+    And order "test-country-order" should have "test-customer-france-address" as a delivery address
+    And order "test-country-order" should have "test-customer-invoice-address" as a invoice address
