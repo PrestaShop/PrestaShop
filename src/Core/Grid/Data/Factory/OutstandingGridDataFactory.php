@@ -81,11 +81,10 @@ final class OutstandingGridDataFactory implements GridDataFactoryInterface
 
         foreach ($records as &$record) {
             $customer = new Customer((int) $record['id_customer']);
-            if (Validate::isLoadedObject($customer)) {
-                $record['outstanding'] = $locale->formatPrice($customer->getOutstanding(), $record['iso_code']);
-            } else {
-                $record['outstanding'] = $locale->formatPrice(0.00, $record['iso_code']);
-            }
+            $record['outstanding'] = $locale->formatPrice(
+                Validate::isLoadedObject($customer) ? $customer->getOutstanding() : 0.00,
+                $record['iso_code']
+            );
 
             $record['outstanding_allow_amount'] = $locale->formatPrice($record['outstanding_allow_amount'], $record['iso_code']);
 
