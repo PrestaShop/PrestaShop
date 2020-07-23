@@ -32,8 +32,16 @@ use PrestaShopBundle\Exception\InvalidLanguageException;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
-use PrestaShopBundle\Translation\Provider\Strategy\StrategyFactory;
-use PrestaShopBundle\Translation\Provider\Strategy\StrategyInterface;
+use PrestaShopBundle\Translation\Provider\Strategy\BackType;
+use PrestaShopBundle\Translation\Provider\Strategy\ExternalLegacyModuleType;
+use PrestaShopBundle\Translation\Provider\Strategy\FrontType;
+use PrestaShopBundle\Translation\Provider\Strategy\MailsBodyType;
+use PrestaShopBundle\Translation\Provider\Strategy\MailsType;
+use PrestaShopBundle\Translation\Provider\Strategy\ModulesType;
+use PrestaShopBundle\Translation\Provider\Strategy\OthersType;
+use PrestaShopBundle\Translation\Provider\Strategy\SearchType;
+use PrestaShopBundle\Translation\Provider\Strategy\ThemesType;
+use PrestaShopBundle\Translation\Provider\Strategy\TypeInterface;
 use PrestaShopBundle\Translation\View\TranslationApiTreeBuilder;
 use PrestaShopBundle\Translation\View\TreeBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -51,11 +59,6 @@ class TranslationController extends ApiController
      * @var TranslationService
      */
     public $translationService;
-
-    /**
-     * @var StrategyFactory
-     */
-    public $strategyFactory;
 
     /**
      * Show translations for 1 domain & 1 locale given & 1 theme given (optional).
@@ -93,11 +96,11 @@ class TranslationController extends ApiController
                 $domain = 'messages';
             }
             if (!empty($theme) && $this->container->getParameter('default_theme') !== $theme) {
-                $strategy = $this->strategyFactory->buildThemesStrategy($locale, $theme);
+                $providerType = new ThemesType($theme);
             } else {
-                $strategy = $this->strategyFactory->buildSearchStrategy($locale, $domain, $theme, $module);
+                $providerType = new SearchType($domain, $theme, $module);
             }
-            $catalog = $this->translationService->listDomainTranslation($strategy, $domain, $searchedExpressions);
+            $catalog = $this->translationService->listDomainTranslation($providerType, $locale, $domain, $searchedExpressions);
             $info = [
                 'Total-Pages' => ceil(count($catalog['data']) / $queryParams['page_size']),
             ];
@@ -353,46 +356,50 @@ class TranslationController extends ApiController
         $locale = $this->translationService->langToLocale($lang);
 
         $catalogue = $this->translationService->getTranslationsCatalogue(
-            $this->buildProviderStrategy($type, $locale, $theme, $module),
+            $this->buildProviderStrategy($type, $theme, $module),
+            $locale,
             $search
         );
 
         $apiBuilder = new TranslationApiTreeBuilder($this->container->get('router'), new TreeBuilder());
 
-        return $apiBuilder->buildDomainTreeForApi($catalogue, $locale, $theme, $search);
+        return $apiBuilder->buildDomainTreeForApi(
+            $catalogue,
+            $locale,
+            $theme,
+            $search
+        );
     }
 
     /**
      * @param string $type
-     * @param string $locale
      * @param string|null $theme
      * @param string|null $module
      *
-     * @return StrategyInterface
+     * @return TypeInterface
      */
     private function buildProviderStrategy(
         string $type,
-        string $locale,
         ?string $theme = null,
         ?string $module = null
-    ): StrategyInterface {
+    ): TypeInterface {
         switch ($type) {
             case 'external_legacy_module':
-                return $this->strategyFactory->buildExternalLegacyModuleStrategy($locale, $module);
+                return new ExternalLegacyModuleType($module);
             case 'themes':
-                return $this->strategyFactory->buildThemesStrategy($locale, $theme);
+                return new ThemesType($theme);
             case 'back':
-                return $this->strategyFactory->buildBackStrategy($locale);
+                return new BackType();
             case 'front':
-                return $this->strategyFactory->buildFrontStrategy($locale);
+                return new FrontType();
             case 'mails':
-                return $this->strategyFactory->buildMailsStrategy($locale);
+                return new MailsType();
             case 'mails_body':
-                return $this->strategyFactory->buildMailsBodyStrategy($locale);
+                return new MailsBodyType();
             case 'modules':
-                return $this->strategyFactory->buildModulesStrategy($locale);
+                return new ModulesType();
             case 'others':
-                return $this->strategyFactory->buildOthersStrategy($locale);
+                return new OthersType();
             default:
                 throw new \RuntimeException("Unrecognized type : $type");
         }
