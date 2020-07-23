@@ -33,12 +33,14 @@ Feature: Update product suppliers from Back Office (BO)
     And I add product "product1" with following information:
       | name       | en-US:magic staff   |
       | is_virtual | false               |
-    And product "product1" should have following values:
-    #@todo: not implemented
-      | default supplier |                |
-    And product product1 should have following suppliers:
-      | reference             | product supplier reference    | currency      | price tax excluded | combination |
-      |                       |                               |                |                   |             |
+    And product product1 should have no suppliers assigned
 
+    #@todo: assume we will provide one product combination per reference, can we ?
   Scenario: I update product suppliers
-#todo:
+    When I update product product1 suppliers with following values:
+      | reference         | supplier reference    | product supplier reference     | currency      | price tax excluded |
+      | product1supplier1 | supplier1             | my first supplier for product1 | USD           | 10                 |
+    And product product1 should have following suppliers:
+      | reference             | product supplier reference     | currency      | price tax excluded |
+      | product1supplier1     | my first supplier for product1 | USD           | 10                 |
+

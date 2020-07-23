@@ -30,6 +30,7 @@ use Behat\Gherkin\Node\TableNode;
 use Cache;
 use Carrier;
 use Context;
+use Currency;
 use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\Number;
@@ -61,6 +62,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformati
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNotesType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierException;
 use Product;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -358,8 +360,66 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      */
     public function updateProductSuppliers(string $productReference, TableNode $tableNode): void
     {
-        $command = new UpdateProductSuppliersCommand($this->getSharedStorage()->get($productReference));
-        $command->setProductSuppliers();
+        $data = $tableNode->getColumnsHash();
+        $productSuppliers = [];
+
+        foreach ($data as $productSupplier) {
+            $productSupplierId = null;
+
+            if ($this->getSharedStorage()->exists($productSupplier['reference'])) {
+                $productSupplierId = $this->getSharedStorage()->get($productSupplier['reference']);
+            }
+
+            $productSuppliers[] = [
+                'supplier_id' => $this->getSharedStorage()->get($productSupplier['supplier reference']),
+                'currency_id' => (int) Currency::getIdByIsoCode($productReference['currency']),
+                'reference' => $productSupplier['product supplier reference'],
+                'price_tax_excluded' => $productSupplier['price tax excluded'],
+                //@todo: $productReference could save not only product id, but also combination id?
+                'combination_id' => 0,
+                'product_supplier_id' => $productSupplierId
+            ];
+        }
+
+        try {
+            $command = new UpdateProductSuppliersCommand($this->getSharedStorage()->get($productReference));
+            $command->setProductSuppliers($productSuppliers);
+        } catch (ProductSupplierException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @Then product :productReference should have following suppliers:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function assertProductSuppliers(string $productReference, TableNode $table)
+    {
+        $data = $table->getColumnsHash();
+
+        foreach ($data as $expectedProductSupplier) {
+            //@todo:
+        }
+    }
+
+    /**
+     * @Then product :productReference should have no suppliers assigned
+     *
+     * @param string $productReference
+     */
+    public function assertProductHasNoSuppliers(string $productReference)
+    {
+        $productForEditing = $this->getProductForEditing($productReference);
+        Assert::assertEmpty(
+            $productForEditing->getProductSupplierOptions()->getDefaultSupplierId(),
+            sprintf('Expected product %s to have no default supplier', $productReference)
+        );
+        Assert::assertEmpty(
+            $productForEditing->getProductSupplierOptions()->getProductSuppliers(),
+            sprintf('Expected product %s to have no suppliers assigned', $productReference)
+        );
     }
 
     /**
