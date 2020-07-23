@@ -285,7 +285,9 @@ abstract class AbstractOrderHandler
      * @param Order $order
      * @param Product $product
      * @param $combination
+     *
      * @return SpecificPrice
+     *
      * @throws PrestaShopException
      * @throws \PrestaShopDatabaseException
      */
@@ -309,7 +311,6 @@ abstract class AbstractOrderHandler
         );
 
         if (!empty($existingSpecificPrice)) {
-
             $specificPrice = new SpecificPrice($existingSpecificPrice['id_specific_price']);
 
             $specificPrice->price = $priceTaxExcluded;
