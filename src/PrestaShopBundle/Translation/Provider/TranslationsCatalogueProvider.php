@@ -28,7 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider;
 
-use PrestaShopBundle\Translation\Provider\Strategy\StrategyInterface;
+use PrestaShopBundle\Translation\Provider\Factory\ProviderFactory;
+use PrestaShopBundle\Translation\Provider\Strategy\TypeInterface;
 
 /**
  * Retrieves combined and formatted catalogues depending on the strategy defined by the caller.
@@ -36,20 +37,44 @@ use PrestaShopBundle\Translation\Provider\Strategy\StrategyInterface;
 class TranslationsCatalogueProvider
 {
     /**
-     * @param StrategyInterface $strategy
+     * @var ProviderFactory
+     */
+    private $providerFactory;
+
+    public function __construct(ProviderFactory $providerFactory)
+    {
+        $this->providerFactory = $providerFactory;
+    }
+
+    /**
+     * @param TypeInterface $strategy
+     * @param string $locale
      * @param string $domain
      * @param array $search
      *
      * @return array
+     *
+     * @throws \PrestaShopBundle\Exception\NotImplementedException
      */
     public function getDomainCatalogue(
-        StrategyInterface $strategy,
+        TypeInterface $strategy,
+        string $locale,
         string $domain,
         array $search = []
     ): array {
-        $defaultCatalogue = $strategy->getDefaultCatalogue()->all($domain);
-        $fileTranslatedCatalogue = $strategy->getFileTranslatedCatalogue()->all($domain);
-        $userTranslatedCatalogue = $strategy->getUserTranslatedCatalogue($domain)->all($domain);
+        $provider = $this->providerFactory->getProviderFor($strategy);
+
+        $defaultCatalogue = $provider->getDefaultCatalogue($locale);
+        if (null === $defaultCatalogue) {
+            return [];
+        }
+        $defaultCatalogue = $defaultCatalogue->all($domain);
+
+        $fileTranslatedCatalogue = $provider->getFileTranslatedCatalogue($locale);
+        $fileTranslatedCatalogue = (null !== $fileTranslatedCatalogue) ? $fileTranslatedCatalogue->all($domain) : [];
+
+        $userTranslatedCatalogue = $provider->getUserTranslatedCatalogue($locale);
+        $userTranslatedCatalogue = (null !== $userTranslatedCatalogue) ? $userTranslatedCatalogue->all($domain) : [];
 
         $treeDomain = preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY);
 
@@ -63,18 +88,24 @@ class TranslationsCatalogueProvider
     }
 
     /**
-     * @param StrategyInterface $strategy
+     * @param TypeInterface $strategy
+     * @param string $locale
      * @param array $search
      *
      * @return array
+     *
+     * @throws \PrestaShopBundle\Exception\NotImplementedException
      */
     public function getCatalogue(
-        StrategyInterface $strategy,
+        TypeInterface $strategy,
+        string $locale,
         array $search = []
     ): array {
-        $defaultCatalogue = $strategy->getDefaultCatalogue();
-        $fileTranslatedCatalogue = $strategy->getFileTranslatedCatalogue();
-        $userTranslatedCatalogue = $strategy->getUserTranslatedCatalogue();
+        $provider = $this->providerFactory->getProviderFor($strategy);
+
+        $defaultCatalogue = $provider->getDefaultCatalogue($locale);
+        $fileTranslatedCatalogue = $provider->getFileTranslatedCatalogue($locale);
+        $userTranslatedCatalogue = $provider->getUserTranslatedCatalogue($locale);
 
         $translations = [];
 

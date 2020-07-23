@@ -26,18 +26,31 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Translation\Provider;
-
-use Symfony\Component\Translation\MessageCatalogueInterface;
+namespace PrestaShopBundle\Translation\Provider\Strategy;
 
 /**
- * Define contract to retrieve translations.
+ * Properties container for 'themes' type of translation.
  */
-interface ProviderInterface
+class ThemesType implements TypeInterface
 {
-    public function getDefaultCatalogue(string $locale): ?MessageCatalogueInterface;
+    /**
+     * @var string
+     */
+    private $themeName;
 
-    public function getFileTranslatedCatalogue(string $locale): ?MessageCatalogueInterface;
+    /**
+     * @param string $themeName
+     */
+    public function __construct(string $themeName)
+    {
+        $this->themeName = $themeName;
+    }
 
-    public function getUserTranslatedCatalogue(string $locale): ?MessageCatalogueInterface;
+    /**
+     * @return string
+     */
+    public function getThemeName(): string
+    {
+        return $this->themeName;
+    }
 }
