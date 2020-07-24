@@ -26,12 +26,6 @@ services:
             - "@prestashop.translation.database_loader"
             - "%translations_dir%"
 
-    prestashop.translation.modules_provider_factory:
-        class: PrestaShopBundle\Translation\Provider\Factory\ModulesProviderFactory
-        arguments:
-            - "@prestashop.translation.database_loader"
-            - "%translations_dir%"
-
     prestashop.translation.others_provider_factory:
         class: PrestaShopBundle\Translation\Provider\Factory\OthersProviderFactory
         arguments:
@@ -74,7 +68,6 @@ services:
                 - "@prestashop.translation.front_provider_factory"
                 - "@prestashop.translation.mails_body_provider_factory"
                 - "@prestashop.translation.mails_provider_factory"
-                - "@prestashop.translation.modules_provider_factory"
                 - "@prestashop.translation.others_provider_factory"
                 - "@prestashop.translation.external_legacy_module_provider_factory"
                 - "@prestashop.translation.search_provider_factory"
