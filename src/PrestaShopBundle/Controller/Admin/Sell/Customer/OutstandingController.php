@@ -58,7 +58,7 @@ class OutstandingController extends FrameworkBundleAdminController
             [
                 'layoutHeaderToolbarBtn' => [],
                 'outstandingGrid' => $this->presentGrid($grid),
-                'layoutTitle' => $this->trans('Outstanding', 'Admin.Action'),
+                'layoutTitle' => $this->trans('Outstanding', 'Admin.Navigation.Menu'),
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             ]
