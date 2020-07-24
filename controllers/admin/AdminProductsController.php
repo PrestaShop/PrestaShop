@@ -2576,12 +2576,14 @@ class AdminProductsControllerCore extends AdminController
                 }
             }
 
-            $product->updateDefaultSupplierData(
-                $product->id,
-                $new_default_supplier,
-                $defaultReference,
-                $defaultWholeslePrice
-            );
+            if ($this->object) {
+                $product->updateDefaultSupplierData(
+                    $product->id,
+                    $new_default_supplier,
+                    $defaultReference,
+                    $defaultWholeslePrice
+                );
+            }
         }
     }
 
