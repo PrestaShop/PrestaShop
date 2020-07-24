@@ -41,12 +41,16 @@ class ProductSupplierForEditing
     /**
      * @var int
      */
-    private $combinationId;
+    private $productId;
+    /**
+     * @var int
+     */
+    private $supplierId;
 
     /**
-     * @var string[]
+     * @var string
      */
-    private $localizedProductNames;
+    private $productName;
 
     /**
      * @var string
@@ -64,27 +68,38 @@ class ProductSupplierForEditing
     private $currencyId;
 
     /**
-     * @param int $productSupplierId
-     * @param int $combinationId
-     * @param string[] $localizedProductNames
-     * @param string $reference
+     * @var int|null
+     */
+    private $combinationId;
+
+    /**
+     * @param int $productSupplierId ProductSupplier entity record id
+     * @param int $productId the associated product id
+     * @param int $supplierId the associated supplier id
+     * @param string $productName depending if its combination it can be name of combination or name of product
+     * @param string $reference the reference for this product supplier
      * @param string $priceTaxExcluded
      * @param int $currencyId
+     * @param int|null $combinationId
      */
     public function __construct(
         int $productSupplierId,
-        int $combinationId,
-        array $localizedProductNames,
+        int $productId,
+        int $supplierId,
+        string $productName,
         string $reference,
         string $priceTaxExcluded,
-        int $currencyId
+        int $currencyId,
+        ?int $combinationId = null
     ) {
         $this->productSupplierId = $productSupplierId;
-        $this->combinationId = $combinationId;
-        $this->localizedProductNames = $localizedProductNames;
+        $this->productId = $productId;
+        $this->supplierId = $supplierId;
+        $this->productName = $productName;
         $this->reference = $reference;
         $this->priceTaxExcluded = $priceTaxExcluded;
         $this->currencyId = $currencyId;
+        $this->combinationId = $combinationId;
     }
 
     /**
@@ -98,17 +113,25 @@ class ProductSupplierForEditing
     /**
      * @return int
      */
-    public function getCombinationId(): int
+    public function getProductId(): int
     {
-        return $this->combinationId;
+        return $this->productId;
     }
 
     /**
-     * @return string[]
+     * @return int
      */
-    public function getLocalizedProductNames(): array
+    public function getSupplierId(): int
     {
-        return $this->localizedProductNames;
+        return $this->supplierId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProductName(): string
+    {
+        return $this->productName;
     }
 
     /**
@@ -133,5 +156,13 @@ class ProductSupplierForEditing
     public function getCurrencyId(): int
     {
         return $this->currencyId;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getCombinationId(): ?int
+    {
+        return $this->combinationId;
     }
 }

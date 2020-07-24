@@ -41,13 +41,16 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOption;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSuppliersForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryHandler\GetProductSuppliersForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractorException;
 use Product;
+use Supplier;
 use Tag;
 
 /**
@@ -63,18 +66,18 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
     /**
      * @var GetProductSuppliersForEditingHandlerInterface
      */
-    private $getProductSuppliersHandler;
+    private $getProductSuppliersForEditingHandler;
 
     /**
      * @param NumberExtractor $numberExtractor
-     * @param GetProductSuppliersForEditingHandlerInterface $getProductSuppliersHandler
+     * @param GetProductSuppliersForEditingHandlerInterface $getProductSuppliersForEditingHandler
      */
     public function __construct(
         NumberExtractor $numberExtractor,
-        GetProductSuppliersForEditingHandlerInterface $getProductSuppliersHandler
+        GetProductSuppliersForEditingHandlerInterface $getProductSuppliersForEditingHandler
     ) {
         $this->numberExtractor = $numberExtractor;
-        $this->getProductSuppliersHandler = $getProductSuppliersHandler;
+        $this->getProductSuppliersForEditingHandler = $getProductSuppliersForEditingHandler;
     }
 
     /**
@@ -269,9 +272,42 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
      */
     private function getSupplierOptions(Product $product): ProductSupplierOptions
     {
+        $productSuppliersForEditing = $this->getProductSuppliersForEditingHandler->handle(new GetProductSuppliersForEditing((int) $product->id));
+        $supplierOptions = [];
+
+        foreach ($productSuppliersForEditing as $productSupplierForEditing) {
+            $supplierId = $productSupplierForEditing->getSupplierId();
+            $supplierOptions[] = new ProductSupplierOption(
+                Supplier::getNameById($supplierId),
+                $supplierId,
+                $this->filterProductSuppliersBySupplier($supplierId, $productSuppliersForEditing)
+            );
+        }
+
         return new ProductSupplierOptions(
             (int) $product->id_supplier,
-            $this->getProductSuppliersHandler->handle(new GetProductSuppliersForEditing((int) $product->id))
+            $supplierOptions
         );
+    }
+
+    /**
+     * Gets EditableProductSuppliers list for its supplier
+     *
+     * @param int $supplierId
+     * @param ProductSupplierForEditing[] $productSuppliersForEditing
+     *
+     * @return ProductSupplierForEditing[]
+     */
+    private function filterProductSuppliersBySupplier(int $supplierId, array $productSuppliersForEditing): array
+    {
+        $productSuppliersBySupplier = [];
+
+        foreach ($productSuppliersForEditing as $productSupplierForEditing) {
+            if ($productSupplierForEditing->getSupplierId() !== $supplierId) {
+                $productSuppliersBySupplier[] = $productSupplierForEditing;
+            }
+        }
+
+        return $productSuppliersBySupplier;
     }
 }
