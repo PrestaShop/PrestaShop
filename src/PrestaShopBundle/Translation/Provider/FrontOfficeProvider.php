@@ -28,6 +28,9 @@ namespace PrestaShopBundle\Translation\Provider;
 
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
+use PrestaShopBundle\Translation\Provider\Catalogue\DefaultCatalogueProvider;
+use PrestaShopBundle\Translation\Provider\Catalogue\FileTranslatedCatalogueProvider;
+use PrestaShopBundle\Translation\Provider\Catalogue\UserTranslatedCatalogueProvider;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
