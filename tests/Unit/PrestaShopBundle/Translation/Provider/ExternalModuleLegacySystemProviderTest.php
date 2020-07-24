@@ -32,7 +32,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
-use PrestaShopBundle\Translation\Provider\DefaultCatalogueProvider;
+use PrestaShopBundle\Translation\Provider\Catalogue\DefaultCatalogueProvider;
 use PrestaShopBundle\Translation\Provider\ExternalLegacyModuleProvider;
 use Symfony\Component\Translation\Dumper\XliffFileDumper;
 use Symfony\Component\Translation\Loader\LoaderInterface;
