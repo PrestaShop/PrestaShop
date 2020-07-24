@@ -171,6 +171,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             // update order details
             $this->updateOrderDetails(
                 $order,
+                $orderDetail,
                 $product,
                 $command->getCombinationId() ? $command->getCombinationId()->getValue() : null,
                 $command->getProductQuantity(),
@@ -202,7 +203,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $this->orderAmountUpdater->update($order, $cart, (int) $orderDetail->id_order_invoice);
 
             $order->update();
-
         } catch (Exception $e) {
             $this->contextStateManager->restoreContext();
             throw $e;
@@ -600,16 +600,19 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      * Update order details after a specific price has been created or updated
      *
      * @param Order $order
+     * @param OrderDetail $updatedOrderDetail
      * @param Product $product
      * @param int|null $combinationId
      * @param int $productQuantity
      * @param Number $priceTaxIncluded
      * @param Number $priceTaxExcluded
+     *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
     private function updateOrderDetails(
         Order $order,
+        OrderDetail $updatedOrderDetail,
         Product $product,
         ?int $combinationId,
         int $productQuantity,
@@ -622,6 +625,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 continue;
             }
             if (!empty($combinationId) && (int) $combinationId !== (int) $orderDetail->product_attribute_id) {
+                continue;
+            }
+            if ($updatedOrderDetail->id == $orderDetail->id) {
                 continue;
             }
             $orderDetail->unit_price_tax_excl = (float) (string) $priceTaxExcluded;
