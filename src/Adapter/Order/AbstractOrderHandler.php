@@ -291,14 +291,14 @@ abstract class AbstractOrderHandler
      * @throws PrestaShopException
      * @throws \PrestaShopDatabaseException
      */
-    protected function createOrUpdateSpecificPrice(
+    protected function updateSpecificPrice(
         Number $priceTaxIncluded,
         Number $priceTaxExcluded,
         int $productQuantity,
         Order $order,
         Product $product,
         $combination
-    ): SpecificPrice {
+    ): ?SpecificPrice {
         $existingSpecificPrice = SpecificPrice::getSpecificPrice(
             $product->id,
             0,
@@ -310,6 +310,17 @@ abstract class AbstractOrderHandler
             $order->id_customer,
             $order->id_cart
         );
+
+        $productOriginalPrice = New Number((string) $product->price);
+
+        if ($productOriginalPrice->equals($priceTaxExcluded)) {
+            if (!empty($existingSpecificPrice)) {
+                $specificPrice = new SpecificPrice($existingSpecificPrice['id_specific_price']);
+                $specificPrice->delete();
+            }
+
+            return null;
+        }
 
         if (!empty($existingSpecificPrice)) {
             $specificPrice = new SpecificPrice($existingSpecificPrice['id_specific_price']);
