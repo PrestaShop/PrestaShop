@@ -76,7 +76,7 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
         }
 
         // Delete Order Cart Rule and update Order
-        $orderCartRule->delete();
+        $orderCartRule->softDelete();
         $cart->removeCartRule($orderCartRule->id_cart_rule);
 
         $this->orderAmountUpdater->update($order, $cart, $orderCartRule->id_order_invoice);

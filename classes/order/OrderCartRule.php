@@ -49,6 +49,9 @@ class OrderCartRuleCore extends ObjectModel
     /** @var bool value : voucher gives free shipping or not */
     public $free_shipping;
 
+    /** @var bool value : deleted from order */
+    public $deleted = 0;
+
     /**
      * @see ObjectModel::$definition
      */
@@ -63,6 +66,7 @@ class OrderCartRuleCore extends ObjectModel
             'value' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true],
             'value_tax_excl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true],
             'free_shipping' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
         ],
     ];
 
