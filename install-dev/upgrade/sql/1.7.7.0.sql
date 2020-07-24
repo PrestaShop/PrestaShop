@@ -595,6 +595,9 @@ UPDATE `PREFIX_order_cart_rule` SET `value_tax_excl` = RIGHT(`value_tax_excl`, 1
 ALTER TABLE `PREFIX_order_cart_rule` CHANGE `value` `value` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
 ALTER TABLE `PREFIX_order_cart_rule` CHANGE `value_tax_excl` `value_tax_excl` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
 
+/* add deleted field */
+ALTER TABLE `PREFIX_order_cart_rule` ADD `deleted` TINYINT(1) UNSIGNED NOT NULL;
+
 UPDATE
     `PREFIX_order_detail` `od`
 SET
