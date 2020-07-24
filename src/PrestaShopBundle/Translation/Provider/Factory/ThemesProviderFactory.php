@@ -32,8 +32,8 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShopBundle\Translation\Extractor\ThemeExtractorInterface;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
-use PrestaShopBundle\Translation\Provider\Strategy\ThemesType;
-use PrestaShopBundle\Translation\Provider\Strategy\TypeInterface;
+use PrestaShopBundle\Translation\Provider\Type\ThemesType;
+use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
 use PrestaShopBundle\Translation\Provider\ThemeProvider;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -83,9 +83,9 @@ class ThemesProviderFactory implements ProviderFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function implements(TypeInterface $strategy): bool
+    public function implements(TypeInterface $providerType): bool
     {
-        return $strategy instanceof ThemesType;
+        return $providerType instanceof ThemesType;
     }
 
     /**
@@ -93,6 +93,10 @@ class ThemesProviderFactory implements ProviderFactoryInterface
      */
     public function build(TypeInterface $providerType): ProviderInterface
     {
+        if (!$this->implements($providerType)) {
+            throw new \RuntimeException(sprintf('Invalid provider type given: %s', get_class($providerType)));
+        }
+
         /* @var ThemesType $providerType */
         return new ThemeProvider(
             $this->frontOfficeProvider,

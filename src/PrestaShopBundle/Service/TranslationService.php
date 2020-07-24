@@ -31,7 +31,7 @@ use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Translation;
 use PrestaShopBundle\Exception\InvalidLanguageException;
 use PrestaShopBundle\Translation\Constraints\PassVsprintf;
-use PrestaShopBundle\Translation\Provider\Strategy\TypeInterface;
+use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Validator\Validation;
 
@@ -105,7 +105,7 @@ class TranslationService
     /**
      * Returns list translations by domain
      *
-     * @param TypeInterface $strategy
+     * @param TypeInterface $providerType
      * @param string $locale
      * @param array $search
      *
@@ -113,11 +113,11 @@ class TranslationService
      *
      * @throws Exception
      */
-    public function getTranslationsCatalogue(TypeInterface $strategy, string $locale, array $search)
+    public function getTranslationsCatalogue(TypeInterface $providerType, string $locale, array $search)
     {
         return $this->container->get('prestashop.translation.translation_catalogue_provider')
             ->getCatalogue(
-                $strategy,
+                $providerType,
                 $locale,
                 $search
             );

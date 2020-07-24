@@ -29,16 +29,16 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Translation\Provider\Factory;
 
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
-use PrestaShopBundle\Translation\Provider\Strategy\TypeInterface;
+use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
 
 interface ProviderFactoryInterface
 {
     /**
-     * @param TypeInterface $strategy
+     * @param TypeInterface $providerType
      *
      * @return bool
      */
-    public function implements(TypeInterface $strategy): bool;
+    public function implements(TypeInterface $providerType): bool;
 
     /**
      * @param TypeInterface $providerType

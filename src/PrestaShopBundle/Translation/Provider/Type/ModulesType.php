@@ -26,11 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Translation\Provider\Strategy;
+namespace PrestaShopBundle\Translation\Provider\Type;
 
 /**
- * Properties container for 'others' type of translation.
+ * Properties container for 'modules' type of translation.
  */
-class OthersType implements TypeInterface
+class ModulesType implements TypeInterface
 {
 }

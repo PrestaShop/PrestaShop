@@ -26,31 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Translation\Provider\Strategy;
+namespace PrestaShopBundle\Translation\Provider\Type;
 
 /**
- * Properties container for 'themes' type of translation.
+ * Defines properties required for each provider.
  */
-class ThemesType implements TypeInterface
+interface TypeInterface
 {
-    /**
-     * @var string
-     */
-    private $themeName;
-
-    /**
-     * @param string $themeName
-     */
-    public function __construct(string $themeName)
-    {
-        $this->themeName = $themeName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getThemeName(): string
-    {
-        return $this->themeName;
-    }
 }
