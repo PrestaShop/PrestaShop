@@ -69,7 +69,16 @@ services:
     prestashop.translation.provider_factory:
         class: PrestaShopBundle\Translation\Provider\Factory\ProviderFactory
         arguments:
-            - ["@prestashop.translation.back_provider_factory", "@prestashop.translation.front_provider_factory", "@prestashop.translation.mails_body_provider_factory", "@prestashop.translation.mails_provider_factory", "@prestashop.translation.modules_provider_factory", "@prestashop.translation.others_provider_factory", "@prestashop.translation.external_legacy_module_provider_factory", "@prestashop.translation.search_provider_factory", "@prestashop.translation.themes_provider_factory"]
+            -
+                - "@prestashop.translation.back_provider_factory"
+                - "@prestashop.translation.front_provider_factory"
+                - "@prestashop.translation.mails_body_provider_factory"
+                - "@prestashop.translation.mails_provider_factory"
+                - "@prestashop.translation.modules_provider_factory"
+                - "@prestashop.translation.others_provider_factory"
+                - "@prestashop.translation.external_legacy_module_provider_factory"
+                - "@prestashop.translation.search_provider_factory"
+                - "@prestashop.translation.themes_provider_factory"
 
     prestashop.translation.translation_catalogue_provider:
         class: PrestaShopBundle\Translation\Provider\TranslationsCatalogueProvider
