@@ -32,8 +32,8 @@ use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use PrestaShopBundle\Translation\Provider\ExternalLegacyModuleProvider;
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
-use PrestaShopBundle\Translation\Provider\Strategy\ExternalLegacyModuleType;
-use PrestaShopBundle\Translation\Provider\Strategy\TypeInterface;
+use PrestaShopBundle\Translation\Provider\Type\ExternalLegacyModuleType;
+use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 
 class ExternalLegacyModuleProviderFactory implements ProviderFactoryInterface
@@ -76,9 +76,9 @@ class ExternalLegacyModuleProviderFactory implements ProviderFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function implements(TypeInterface $strategy): bool
+    public function implements(TypeInterface $providerType): bool
     {
-        return $strategy instanceof ExternalLegacyModuleType;
+        return $providerType instanceof ExternalLegacyModuleType;
     }
 
     /**
@@ -87,7 +87,7 @@ class ExternalLegacyModuleProviderFactory implements ProviderFactoryInterface
     public function build(TypeInterface $providerType): ProviderInterface
     {
         if (!$this->implements($providerType)) {
-            throw new \RuntimeException('Bad strategy given');
+            throw new \RuntimeException(sprintf('Invalid provider type given: %s', get_class($providerType)));
         }
 
         /* @var ExternalLegacyModuleType $providerType */
