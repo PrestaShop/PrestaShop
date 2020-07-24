@@ -7,7 +7,6 @@ class Checkout extends FOBasePage {
 
     // Selectors
     this.checkoutPageBody = 'body#checkout';
-    this.personalInformationStepSection = '#checkout-personal-information-step';
     this.paymentStepSection = '#checkout-payment-step';
     this.paymentOptionInput = name => `${this.paymentStepSection} input[name='payment-option']`
       + `[data-module-name='${name}']`;
@@ -19,7 +18,17 @@ class Checkout extends FOBasePage {
     this.createAccountOptionalNotice = `${this.personalInformationStepForm} #customer-form section p`;
     this.signInLink = `${this.personalInformationStepForm} a[href="#checkout-login-form"]`;
     this.checkoutGuestForm = '#checkout-guest-form';
+    this.checkoutGuestGenderInput = pos => `${this.checkoutGuestForm} input[name='id_gender'][value='${pos}']`;
+    this.checkoutGuestFirstnameInput = `${this.checkoutGuestForm} input[name='firstname']`;
+    this.checkoutGuestLastnameInput = `${this.checkoutGuestForm} input[name='lastname']`;
+    this.checkoutGuestEmailInput = `${this.checkoutGuestForm} input[name='email']`;
     this.checkoutGuestPasswordInput = `${this.checkoutGuestForm} input[name='password']`;
+    this.checkoutGuestBirthdayInput = `${this.checkoutGuestForm} input[name='birthday']`;
+    this.checkoutGuestOptinCheckbox = `${this.checkoutGuestForm} input[name='optin']`;
+    this.checkoutGuestCustomerPrivacyCheckbox = `${this.checkoutGuestForm} input[name='customer_privacy']`;
+    this.checkoutGuestNewsletterCheckbox = `${this.checkoutGuestForm} input[name='newsletter']`;
+    this.checkoutGuestGdprCheckbox = `${this.checkoutGuestForm} input[name='psgdpr']`;
+    this.checkoutGuestContinueButton = `${this.checkoutGuestForm} button[name='continue']`;
     // Checkout login form
     this.checkoutLoginForm = `${this.personalInformationStepForm} #checkout-login-form`;
     this.emailInput = `${this.checkoutLoginForm} input[name='email']`;
@@ -220,6 +229,52 @@ class Checkout extends FOBasePage {
     await this.setValue(page, this.addressStepPhoneInput, address.phone);
     await page.click(this.addressStepContinueButton);
     return this.isStepCompleted(page, this.addressStepSection);
+  }
+
+  /**
+   * Fill personal information form and click on continue
+   * @param page
+   * @param customerData
+   * @return {Promise<boolean>}
+   */
+  async setGuestPersonalInformation(page, customerData) {
+    await page.check(this.checkoutGuestGenderInput(customerData.socialTitle === 'Mr.' ? 1 : 2));
+
+    await this.setValue(page, this.checkoutGuestFirstnameInput, customerData.firstName);
+    await this.setValue(page, this.checkoutGuestLastnameInput, customerData.lastName);
+    await this.setValue(page, this.checkoutGuestEmailInput, customerData.email);
+    await this.setValue(page, this.checkoutGuestPasswordInput, customerData.password);
+
+    // Fill birthday input
+    await this.setValue(
+      page,
+      this.checkoutGuestBirthdayInput,
+      `${customerData.monthOfBirth.padStart(2, '0')}/`
+      + `${customerData.dayOfBirth.padStart(2, '0')}/`
+      + `${customerData.yearOfBirth}`,
+    );
+
+    if (customerData.partnerOffers) {
+      await page.check(this.checkoutGuestOptinCheckbox);
+    }
+
+    if (customerData.newsletter) {
+      await page.check(this.checkoutGuestNewsletterCheckbox);
+    }
+
+    // Check customer privacy input if visible
+    if (await this.elementVisible(page, this.checkoutGuestCustomerPrivacyCheckbox, 500)) {
+      await page.check(this.checkoutGuestCustomerPrivacyCheckbox);
+    }
+
+    // Check gdpr input if visible
+    if (await this.elementVisible(page, this.checkoutGuestGdprCheckbox, 500)) {
+      await page.check(this.checkoutGuestGdprCheckbox);
+    }
+
+    // Click on continue
+    await page.click(this.checkoutGuestContinueButton);
+    return this.isStepCompleted(page, this.personalInformationStepForm, 2000);
   }
 }
 

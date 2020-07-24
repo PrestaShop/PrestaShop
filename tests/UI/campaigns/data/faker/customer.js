@@ -9,7 +9,7 @@ module.exports = class Customer {
     this.firstName = customerToCreate.firstName || faker.name.firstName();
     this.lastName = customerToCreate.lastName || faker.name.lastName();
     this.email = customerToCreate.email || faker.internet.email(this.firstName, this.lastName, 'prestashop.com');
-    this.password = customerToCreate.password || '123456789';
+    this.password = customerToCreate.password === undefined ? '123456789' : customerToCreate.password;
     this.birthDate = faker.date.between('1950-01-01', '2000-12-31');
     this.yearOfBirth = customerToCreate.yearOfBirth || this.birthDate.getFullYear().toString();
     this.monthOfBirth = customerToCreate.monthOfBirth || (this.birthDate.getMonth() + 1).toString();
@@ -17,5 +17,6 @@ module.exports = class Customer {
     this.enabled = customerToCreate.enabled === undefined ? true : customerToCreate.enabled;
     this.partnerOffers = customerToCreate.partnerOffers === undefined ? true : customerToCreate.partnerOffers;
     this.defaultCustomerGroup = customerToCreate.defaultCustomerGroup || faker.random.arrayElement(groupAccess);
+    this.newsletter = customerToCreate.newsletter === undefined ? false : customerToCreate.newsletter;
   }
 };
