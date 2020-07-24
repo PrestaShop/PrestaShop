@@ -106,6 +106,7 @@ class UpdateProductCustomizationFieldsHandler extends AbstractCustomizationField
 
         $this->deleteCustomizationFields($deletableFieldIds);
 
+        //@todo: return only ids instead.
         return $this->getProductCustomizationFieldsHandler->handle(
             new GetProductCustomizationFields($command->getProductId()->getValue())
         );
