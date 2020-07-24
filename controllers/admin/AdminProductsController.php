@@ -2578,7 +2578,6 @@ class AdminProductsControllerCore extends AdminController
 
             if ($this->object) {
                 $product->updateDefaultSupplierData(
-                    $product->id,
                     $new_default_supplier,
                     $defaultReference,
                     $defaultWholeslePrice

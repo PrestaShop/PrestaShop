@@ -7167,15 +7167,18 @@ class ProductCore extends ObjectModel
     /**
      * Update default supplier data
      *
-     * @param int $idProduct
      * @param int $idSupplier
      * @param float $wholesalePrice
      * @param string $supplierReference
      *
      * @return bool
      */
-    public function updateDefaultSupplierData(int $idProduct, int $idSupplier, string $supplierReference, float $wholesalePrice): bool
+    public function updateDefaultSupplierData(int $idSupplier, string $supplierReference, float $wholesalePrice): bool
     {
+        if (!$this->id) {
+            return false;
+        }
+
         $sql = 'UPDATE `' . _DB_PREFIX_ . 'product` ' .
              'SET ' .
              'id_supplier = %d, ' .
@@ -7189,7 +7192,7 @@ class ProductCore extends ObjectModel
                 $idSupplier,
                 pSQL($supplierReference),
                 $wholesalePrice,
-                $idProduct
+                $this->id
             )
         );
     }
