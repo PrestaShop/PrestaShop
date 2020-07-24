@@ -51,10 +51,8 @@ class DefaultCatalogueProvider implements TranslationCatalogueProviderInterface
     private $filenameFilters;
 
     /**
-     * DefaultCatalogueProvider constructor.
-     *
-     * @param string $directory
-     * @param array $filenameFilters
+     * @param string $directory Directory where to look files
+     * @param string[] $filenameFilters Array of globs to use to match files
      */
     public function __construct(string $directory, array $filenameFilters)
     {
@@ -63,10 +61,7 @@ class DefaultCatalogueProvider implements TranslationCatalogueProviderInterface
     }
 
     /**
-     * @param bool $empty
-     * @param string $locale
-     *
-     * @return MessageCatalogueInterface
+     * {@inheritdoc}
      *
      * @throws FileNotFoundException
      */

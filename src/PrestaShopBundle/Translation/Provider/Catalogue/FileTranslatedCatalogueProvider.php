@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Translation\Provider\Catalogue;
 
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
-use PrestaShopBundle\Translation\Provider\Catalogue\TranslationCatalogueProviderInterface;
 use PrestaShopBundle\Translation\Provider\TranslationFinder;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
@@ -61,9 +60,7 @@ class FileTranslatedCatalogueProvider implements TranslationCatalogueProviderInt
     }
 
     /**
-     * @param string $locale
-     *
-     * @return MessageCatalogueInterface
+     * {@inheritdoc}
      *
      * @throws FileNotFoundException
      */
