@@ -73,7 +73,7 @@
 						{else}
 							{block name="label"}
 								{if isset($input.label)}
-									<label class="control-label col-lg-3{if isset($input.required) && $input.required && $input.type != 'radio'} required{/if}">
+									<label class="control-label col-lg-3{if (isset($input.required) && $input.required && $input.type != 'radio') || ($input.name == 'dni' && $dni_required)} required{/if}">
 										{if isset($input.hint)}
 										<span class="label-tooltip" data-toggle="tooltip" data-html="true" title="{if is_array($input.hint)}
 													{foreach $input.hint as $hint}
@@ -222,7 +222,7 @@
 											{if isset($input.readonly) && $input.readonly} readonly="readonly"{/if}
 											{if isset($input.disabled) && $input.disabled} disabled="disabled"{/if}
 											{if isset($input.autocomplete) && !$input.autocomplete} autocomplete="off"{/if}
-											{if isset($input.required) && $input.required } required="required" {/if}
+											{if (isset($input.required) && $input.required) || ($input.name == 'dni' && $dni_required)} required="required" {/if}
 											{if isset($input.placeholder) && $input.placeholder } placeholder="{$input.placeholder}"{/if}
 											/>
 										{if isset($input.suffix)}
