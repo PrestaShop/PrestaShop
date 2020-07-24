@@ -39,7 +39,7 @@ export default {
       const arr = this.product.combination_name.split(',');
       let attr = '';
       arr.forEach((attribute) => {
-        const value = attribute.split('-');
+        const value = attribute.split(' - ');
         attr += attr.length ? ` - ${value[1]}` : value[1];
       });
       return attr;
