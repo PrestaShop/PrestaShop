@@ -303,7 +303,7 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
         $productSuppliersBySupplier = [];
 
         foreach ($productSuppliersForEditing as $productSupplierForEditing) {
-            if ($productSupplierForEditing->getSupplierId() !== $supplierId) {
+            if ($productSupplierForEditing->getSupplierId() === $supplierId) {
                 $productSuppliersBySupplier[] = $productSupplierForEditing;
             }
         }

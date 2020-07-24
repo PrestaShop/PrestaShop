@@ -372,7 +372,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
             $productSuppliers[] = [
                 'supplier_id' => $this->getSharedStorage()->get($productSupplier['supplier reference']),
-                'currency_id' => (int) Currency::getIdByIsoCode($productReference['currency']),
+                'currency_id' => (int) Currency::getIdByIsoCode($productSupplier['currency']),
                 'reference' => $productSupplier['product supplier reference'],
                 'price_tax_excluded' => $productSupplier['price tax excluded'],
                 //@todo: $productReference could save not only product id, but also combination id?
@@ -384,6 +384,8 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         try {
             $command = new UpdateProductSuppliersCommand($this->getSharedStorage()->get($productReference));
             $command->setProductSuppliers($productSuppliers);
+
+            $this->getCommandBus()->handle($command);
         } catch (ProductSupplierException $e) {
             $this->lastException = $e;
         }
@@ -401,8 +403,9 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $actualProductSupplierOptions = $this->getProductForEditing($productReference)->getProductSupplierOptions();
 
         foreach ($expectedProductSuppliers as $expectedProductSupplier) {
-            $actualProductSupplierOptions->getProductSuppliersForEditing();
+            $actualProductSupplierOptions->getOptionsBySupplier();
         }
+        //@todo: assert.
     }
 
     /**
@@ -418,7 +421,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             sprintf('Expected product %s to have no default supplier', $productReference)
         );
         Assert::assertEmpty(
-            $productForEditing->getProductSupplierOptions()->getProductSuppliersForEditing(),
+            $productForEditing->getProductSupplierOptions()->getOptionsBySupplier(),
             sprintf('Expected product %s to have no suppliers assigned', $productReference)
         );
     }

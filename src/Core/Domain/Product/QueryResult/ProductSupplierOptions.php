@@ -41,16 +41,16 @@ class ProductSupplierOptions
     /**
      * @var ProductSupplierOption[]
      */
-    private $productSupplierOptions;
+    private $optionsBySupplier;
 
     /**
      * @param int $defaultSupplierId
-     * @param ProductSupplierOption[] $productSupplierOptions
+     * @param ProductSupplierOption[] $optionsBySupplier
      */
-    public function __construct(int $defaultSupplierId, array $productSupplierOptions)
+    public function __construct(int $defaultSupplierId, array $optionsBySupplier)
     {
         $this->defaultSupplierId = $defaultSupplierId;
-        $this->productSupplierOptions = $productSupplierOptions;
+        $this->optionsBySupplier = $optionsBySupplier;
     }
 
     /**
@@ -64,8 +64,8 @@ class ProductSupplierOptions
     /**
      * @return ProductSupplierOption[]
      */
-    public function getProductSupplierOptions(): array
+    public function getOptionsBySupplier(): array
     {
-        return $this->productSupplierOptions;
+        return $this->optionsBySupplier;
     }
 }

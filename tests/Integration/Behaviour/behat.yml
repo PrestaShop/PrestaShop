@@ -210,3 +210,4 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\CategoryFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CarrierFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\SupplierFeatureContext
