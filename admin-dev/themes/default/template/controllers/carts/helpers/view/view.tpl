@@ -220,5 +220,5 @@
 	<div class="row alert alert-warning">
 		{l s='For this particular customer group, prices are displayed as:' d='Admin.Orderscustomers.Notification'} <b>{if $tax_calculation_method == $smarty.const.PS_TAX_EXC}{l s='Tax excluded' d='Admin.Global'}{else}{l s='Tax included' d='Admin.Global'}{/if}</b>
 	</div>
-{/block}
 </div>
+{/block}
