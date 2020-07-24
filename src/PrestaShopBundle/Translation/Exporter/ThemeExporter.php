@@ -130,7 +130,7 @@ class ThemeExporter
     {
         $mergedTranslations = $this->getCatalogueExtractedFromTemplates($themeName, $locale, $rootDir);
 
-        $themeProvider = $this->providerFactory->getProviderFor(new ThemesType($themeName));
+        $themeProvider = $this->providerFactory->build(new ThemesType($themeName));
         try {
             $themeCatalogue = $themeProvider->getFileTranslatedCatalogue($locale);
         } catch (FileNotFoundException $exception) {
