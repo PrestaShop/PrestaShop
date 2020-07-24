@@ -32,16 +32,16 @@ use PrestaShopBundle\Exception\InvalidLanguageException;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
-use PrestaShopBundle\Translation\Provider\Strategy\BackType;
-use PrestaShopBundle\Translation\Provider\Strategy\ExternalLegacyModuleType;
-use PrestaShopBundle\Translation\Provider\Strategy\FrontType;
-use PrestaShopBundle\Translation\Provider\Strategy\MailsBodyType;
-use PrestaShopBundle\Translation\Provider\Strategy\MailsType;
-use PrestaShopBundle\Translation\Provider\Strategy\ModulesType;
-use PrestaShopBundle\Translation\Provider\Strategy\OthersType;
-use PrestaShopBundle\Translation\Provider\Strategy\SearchType;
-use PrestaShopBundle\Translation\Provider\Strategy\ThemesType;
-use PrestaShopBundle\Translation\Provider\Strategy\TypeInterface;
+use PrestaShopBundle\Translation\Provider\Type\BackType;
+use PrestaShopBundle\Translation\Provider\Type\ExternalLegacyModuleType;
+use PrestaShopBundle\Translation\Provider\Type\FrontType;
+use PrestaShopBundle\Translation\Provider\Type\MailsBodyType;
+use PrestaShopBundle\Translation\Provider\Type\MailsType;
+use PrestaShopBundle\Translation\Provider\Type\ModulesType;
+use PrestaShopBundle\Translation\Provider\Type\OthersType;
+use PrestaShopBundle\Translation\Provider\Type\SearchType;
+use PrestaShopBundle\Translation\Provider\Type\ThemesType;
+use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
 use PrestaShopBundle\Translation\View\TranslationApiTreeBuilder;
 use PrestaShopBundle\Translation\View\TreeBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -356,7 +356,7 @@ class TranslationController extends ApiController
         $locale = $this->translationService->langToLocale($lang);
 
         $catalogue = $this->translationService->getTranslationsCatalogue(
-            $this->buildProviderStrategy($type, $theme, $module),
+            $this->buildProviderType($type, $theme, $module),
             $locale,
             $search
         );
@@ -378,7 +378,7 @@ class TranslationController extends ApiController
      *
      * @return TypeInterface
      */
-    private function buildProviderStrategy(
+    private function buildProviderType(
         string $type,
         ?string $theme = null,
         ?string $module = null
