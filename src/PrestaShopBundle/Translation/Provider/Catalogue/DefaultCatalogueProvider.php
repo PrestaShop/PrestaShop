@@ -26,9 +26,10 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Translation\Provider;
+namespace PrestaShopBundle\Translation\Provider\Catalogue;
 
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShopBundle\Translation\Provider\TranslationFinder;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
