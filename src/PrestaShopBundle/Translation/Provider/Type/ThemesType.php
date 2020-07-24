@@ -26,62 +26,31 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Translation\Provider\Strategy;
+namespace PrestaShopBundle\Translation\Provider\Type;
 
 /**
- * Properties container for provider to search inside translations.
+ * Properties container for 'themes' type of translation.
  */
-class SearchType implements TypeInterface
+class ThemesType implements TypeInterface
 {
     /**
      * @var string
      */
-    private $domain;
-    /**
-     * @var string|null
-     */
-    private $theme;
-    /**
-     * @var string|null
-     */
-    private $module;
+    private $themeName;
 
     /**
-     * @param string $domain
-     * @param string|null $theme
-     * @param string|null $module
+     * @param string $themeName
      */
-    public function __construct(
-        string $domain,
-        ?string $theme = null,
-        ?string $module = null
-    ) {
-        $this->domain = $domain;
-        $this->theme = $theme;
-        $this->module = $module;
+    public function __construct(string $themeName)
+    {
+        $this->themeName = $themeName;
     }
 
     /**
      * @return string
      */
-    public function getDomain(): string
+    public function getThemeName(): string
     {
-        return $this->domain;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getTheme(): ?string
-    {
-        return $this->theme;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getModule(): ?string
-    {
-        return $this->module;
+        return $this->themeName;
     }
 }

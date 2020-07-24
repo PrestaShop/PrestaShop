@@ -26,31 +26,62 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Translation\Provider\Strategy;
+namespace PrestaShopBundle\Translation\Provider\Type;
 
 /**
- * Properties container for 'front' type of translation.
+ * Properties container for provider to search inside translations.
  */
-class FrontType implements TypeInterface
+class SearchType implements TypeInterface
 {
+    /**
+     * @var string
+     */
+    private $domain;
     /**
      * @var string|null
      */
-    private $domain;
+    private $theme;
+    /**
+     * @var string|null
+     */
+    private $module;
 
     /**
-     * @param string|null $domain
+     * @param string $domain
+     * @param string|null $theme
+     * @param string|null $module
      */
-    public function __construct(?string $domain = null)
-    {
+    public function __construct(
+        string $domain,
+        ?string $theme = null,
+        ?string $module = null
+    ) {
         $this->domain = $domain;
+        $this->theme = $theme;
+        $this->module = $module;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDomain(): string
+    {
+        return $this->domain;
     }
 
     /**
      * @return string|null
      */
-    public function getDomain(): ?string
+    public function getTheme(): ?string
     {
-        return $this->domain;
+        return $this->theme;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getModule(): ?string
+    {
+        return $this->module;
     }
 }

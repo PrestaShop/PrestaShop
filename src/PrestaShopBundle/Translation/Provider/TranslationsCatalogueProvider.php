@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Translation\Provider;
 
 use PrestaShopBundle\Translation\Provider\Factory\ProviderFactory;
-use PrestaShopBundle\Translation\Provider\Strategy\TypeInterface;
+use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
 
 /**
  * Retrieves combined and formatted catalogues depending on the strategy defined by the caller.
@@ -47,7 +47,7 @@ class TranslationsCatalogueProvider
     }
 
     /**
-     * @param TypeInterface $strategy
+     * @param TypeInterface $providerType
      * @param string $locale
      * @param string $domain
      * @param array $search
@@ -57,12 +57,12 @@ class TranslationsCatalogueProvider
      * @throws \PrestaShopBundle\Exception\NotImplementedException
      */
     public function getDomainCatalogue(
-        TypeInterface $strategy,
+        TypeInterface $providerType,
         string $locale,
         string $domain,
         array $search = []
     ): array {
-        $provider = $this->providerFactory->getProviderFor($strategy);
+        $provider = $this->providerFactory->getProviderFor($providerType);
 
         $defaultCatalogue = $provider->getDefaultCatalogue($locale);
         if (null === $defaultCatalogue) {
@@ -88,7 +88,7 @@ class TranslationsCatalogueProvider
     }
 
     /**
-     * @param TypeInterface $strategy
+     * @param TypeInterface $providerType
      * @param string $locale
      * @param array $search
      *
@@ -97,11 +97,11 @@ class TranslationsCatalogueProvider
      * @throws \PrestaShopBundle\Exception\NotImplementedException
      */
     public function getCatalogue(
-        TypeInterface $strategy,
+        TypeInterface $providerType,
         string $locale,
         array $search = []
     ): array {
-        $provider = $this->providerFactory->getProviderFor($strategy);
+        $provider = $this->providerFactory->getProviderFor($providerType);
 
         $defaultCatalogue = $provider->getDefaultCatalogue($locale);
         $fileTranslatedCatalogue = $provider->getFileTranslatedCatalogue($locale);

@@ -42,7 +42,7 @@ use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\Provider\Factory\ProviderFactory;
-use PrestaShopBundle\Translation\Provider\Strategy\ThemesType;
+use PrestaShopBundle\Translation\Provider\Type\ThemesType;
 use PrestaShopBundle\Translation\Provider\TranslationFinder;
 use PrestaShopLogger;
 use Shop;

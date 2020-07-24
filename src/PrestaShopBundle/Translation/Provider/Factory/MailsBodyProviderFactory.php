@@ -31,8 +31,8 @@ namespace PrestaShopBundle\Translation\Provider\Factory;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use PrestaShopBundle\Translation\Provider\MailsBodyProvider;
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
-use PrestaShopBundle\Translation\Provider\Strategy\MailsBodyType;
-use PrestaShopBundle\Translation\Provider\Strategy\TypeInterface;
+use PrestaShopBundle\Translation\Provider\Type\MailsBodyType;
+use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
 
 class MailsBodyProviderFactory implements ProviderFactoryInterface
 {
@@ -54,9 +54,9 @@ class MailsBodyProviderFactory implements ProviderFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function implements(TypeInterface $strategy): bool
+    public function implements(TypeInterface $providerType): bool
     {
-        return $strategy instanceof MailsBodyType;
+        return $providerType instanceof MailsBodyType;
     }
 
     /**
@@ -64,6 +64,10 @@ class MailsBodyProviderFactory implements ProviderFactoryInterface
      */
     public function build(TypeInterface $providerType): ProviderInterface
     {
+        if (!$this->implements($providerType)) {
+            throw new \RuntimeException(sprintf('Invalid provider type given: %s', get_class($providerType)));
+        }
+
         return new MailsBodyProvider($this->databaseTranslationLoader, $this->resourceDirectory);
     }
 }
