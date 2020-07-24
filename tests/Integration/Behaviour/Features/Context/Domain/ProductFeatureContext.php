@@ -377,7 +377,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                 'price_tax_excluded' => $productSupplier['price tax excluded'],
                 //@todo: $productReference could save not only product id, but also combination id?
                 'combination_id' => 0,
-                'product_supplier_id' => $productSupplierId
+                'product_supplier_id' => $productSupplierId,
             ];
         }
 
@@ -401,7 +401,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $actualProductSupplierOptions = $this->getProductForEditing($productReference)->getProductSupplierOptions();
 
         foreach ($expectedProductSuppliers as $expectedProductSupplier) {
-            $actualProductSupplierOptions->getProductSuppliers();
+            $actualProductSupplierOptions->getProductSuppliersForEditing();
         }
     }
 
@@ -418,7 +418,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             sprintf('Expected product %s to have no default supplier', $productReference)
         );
         Assert::assertEmpty(
-            $productForEditing->getProductSupplierOptions()->getProductSuppliers(),
+            $productForEditing->getProductSupplierOptions()->getProductSuppliersForEditing(),
             sprintf('Expected product %s to have no suppliers assigned', $productReference)
         );
     }

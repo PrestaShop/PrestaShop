@@ -43,8 +43,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformati
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSuppliers;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryHandler\GetProductSuppliersHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSuppliersForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryHandler\GetProductSuppliersForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractorException;
 use Product;
@@ -61,17 +61,17 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
     private $numberExtractor;
 
     /**
-     * @var GetProductSuppliersHandlerInterface
+     * @var GetProductSuppliersForEditingHandlerInterface
      */
     private $getProductSuppliersHandler;
 
     /**
      * @param NumberExtractor $numberExtractor
-     * @param GetProductSuppliersHandlerInterface $getProductSuppliersHandler
+     * @param GetProductSuppliersForEditingHandlerInterface $getProductSuppliersHandler
      */
     public function __construct(
         NumberExtractor $numberExtractor,
-        GetProductSuppliersHandlerInterface $getProductSuppliersHandler
+        GetProductSuppliersForEditingHandlerInterface $getProductSuppliersHandler
     ) {
         $this->numberExtractor = $numberExtractor;
         $this->getProductSuppliersHandler = $getProductSuppliersHandler;
@@ -271,7 +271,7 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
     {
         return new ProductSupplierOptions(
             (int) $product->id_supplier,
-            $this->getProductSuppliersHandler->handle(new GetProductSuppliers((int) $product->id))
+            $this->getProductSuppliersHandler->handle(new GetProductSuppliersForEditing((int) $product->id))
         );
     }
 }

@@ -28,27 +28,28 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSuppliers;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryHandler\GetProductSuppliersHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplier;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSuppliersForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryHandler\GetProductSuppliersForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
 use ProductSupplier as ProductSupplierEntity;
 
 /**
- * Handles @var GetProductSuppliers query using legacy object model
+ * Handles @var GetProductSuppliersForEditing query using legacy object model
  */
-final class GetProductSuppliersHandler implements GetProductSuppliersHandlerInterface
+final class GetProductSuppliersForEditingHandler implements GetProductSuppliersForEditingHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(GetProductSuppliers $query): array
+    public function handle(GetProductSuppliersForEditing $query): array
     {
         $productIdValue = $query->getProductId()->getValue();
         $productSuppliers = [];
 
         /** @var ProductSupplierEntity $productSupplier */
         foreach (ProductSupplierEntity::getSupplierCollection($productIdValue) as $productSupplier) {
-            $productSuppliers[] = new ProductSupplier(
+            //@Todo:
+            $productSuppliers[] = new ProductSupplierForEditing(
                 (int) $productSupplier->id,
                 (int) $productSupplier->id_product,
                 (int) $productSupplier->id_supplier,
