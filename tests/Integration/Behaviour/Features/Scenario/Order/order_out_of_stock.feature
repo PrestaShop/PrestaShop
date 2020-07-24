@@ -79,7 +79,7 @@ Feature: Order from Back Office (BO)
     And the available stock for combination "whiteL" of product "Test Product Max Stock" should be 150
     And the available stock for product "Test Product Max Stock" should be 200
     And order "bo_order1" should have 102 products in total
-    And order "bo_order1" should contain 100 products "Test Product Max Stock - Size : M- Color : White"
+    And order "bo_order1" should contain 100 combinations "whiteM" of product "Test Product Max Stock"
     When I edit combination "whiteM" of product "Test Product Max Stock" to order "bo_order1" with following products details:
       | amount        | 160                     |
       | price         | 15                      |
@@ -88,7 +88,7 @@ Feature: Order from Back Office (BO)
     And the available stock for combination "whiteL" of product "Test Product Max Stock" should be 150
     And the available stock for product "Test Product Max Stock" should be 200
     And order "bo_order1" should have 102 products in total
-    And order "bo_order1" should contain 100 products "Test Product Max Stock - Size : M- Color : White"
+    And order "bo_order1" should contain 100 combinations "whiteM" of product "Test Product Max Stock"
     # I can decrease the number in stock (note: 100 + 60 > 150 to check the available quantity considers the amount in the order)
     When I edit combination "whiteM" of product "Test Product Max Stock" to order "bo_order1" with following products details:
       | amount        | 60                     |
@@ -97,7 +97,7 @@ Feature: Order from Back Office (BO)
     And the available stock for combination "whiteL" of product "Test Product Max Stock" should be 150
     And the available stock for product "Test Product Max Stock" should be 240
     And order "bo_order1" should have 62 products in total
-    And order "bo_order1" should contain 60 products "Test Product Max Stock - Size : M- Color : White"
+    And order "bo_order1" should contain 60 combinations "whiteM" of product "Test Product Max Stock"
     When I edit combination "whiteM" of product "Test Product Max Stock" to order "bo_order1" with following products details:
       | amount        | 150                     |
       | price         | 15                      |
@@ -105,7 +105,7 @@ Feature: Order from Back Office (BO)
     And the available stock for combination "whiteL" of product "Test Product Max Stock" should be 150
     And the available stock for product "Test Product Max Stock" should be 150
     And order "bo_order1" should have 152 products in total
-    And order "bo_order1" should contain 150 products "Test Product Max Stock - Size : M- Color : White"
+    And order "bo_order1" should contain 150 combinations "whiteM" of product "Test Product Max Stock"
     When I edit combination "whiteM" of product "Test Product Max Stock" to order "bo_order1" with following products details:
       | amount        | 149                     |
       | price         | 15                      |
@@ -113,7 +113,7 @@ Feature: Order from Back Office (BO)
     And the available stock for combination "whiteL" of product "Test Product Max Stock" should be 150
     And the available stock for product "Test Product Max Stock" should be 151
     And order "bo_order1" should have 151 products in total
-    And order "bo_order1" should contain 149 products "Test Product Max Stock - Size : M- Color : White"
+    And order "bo_order1" should contain 149 combinations "whiteM" of product "Test Product Max Stock"
 
   Scenario: Add product in order with the exact amount of stock (first add)
     Given there is a product in the catalog named "Test Product Max Stock" with a price of 15.0 and 100 items in stock
@@ -179,7 +179,7 @@ Feature: Order from Back Office (BO)
     And the available stock for combination "whiteL" of product "Test Product Max Stock" should be 150
     And the available stock for product "Test Product Max Stock" should be 300
     And order "bo_order1" should have 2 products in total
-    And order "bo_order1" should contain 0 products "Test Product Max Stock - Size : M- Color : White"
+    And order "bo_order1" should contain 0 combinations "whiteM" of product "Test Product Max Stock"
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Test Product Max Stock  |
       | combination   | whiteM                  |
@@ -189,7 +189,7 @@ Feature: Order from Back Office (BO)
     And the available stock for combination "whiteL" of product "Test Product Max Stock" should be 150
     And the available stock for product "Test Product Max Stock" should be 150
     And order "bo_order1" should have 152 products in total
-    And order "bo_order1" should contain 150 products "Test Product Max Stock - Size : M- Color : White"
+    And order "bo_order1" should contain 150 combinations "whiteM" of product "Test Product Max Stock"
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Test Product Max Stock  |
       | combination   | whiteM                  |
@@ -200,7 +200,7 @@ Feature: Order from Back Office (BO)
     And the available stock for combination "whiteL" of product "Test Product Max Stock" should be 150
     And the available stock for product "Test Product Max Stock" should be 150
     And order "bo_order1" should have 152 products in total
-    And order "bo_order1" should contain 150 products "Test Product Max Stock - Size : M- Color : White"
+    And order "bo_order1" should contain 150 combinations "whiteM" of product "Test Product Max Stock"
 
   Scenario: Add combination in order with the exact amount of stock (second addition in new invoice)
     Given there is a product in the catalog named "Test Product Max Stock" with a price of 15.0 and 100 items in stock
@@ -220,7 +220,7 @@ Feature: Order from Back Office (BO)
     And the available stock for combination "whiteL" of product "Test Product Max Stock" should be 100
     And the available stock for product "Test Product Max Stock" should be 120
     And order "bo_order1" should have 82 products in total
-    And order "bo_order1" should contain 80 products "Test Product Max Stock - Size : M- Color : White"
+    And order "bo_order1" should contain 80 combinations "whiteM" of product "Test Product Max Stock"
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Test Product Max Stock  |
       | combination   | whiteM                  |
@@ -230,7 +230,7 @@ Feature: Order from Back Office (BO)
     And the available stock for combination "whiteL" of product "Test Product Max Stock" should be 100
     And the available stock for product "Test Product Max Stock" should be 100
     And order "bo_order1" should have 102 products in total
-    And order "bo_order1" should contain 100 products "Test Product Max Stock - Size : M- Color : White"
+    And order "bo_order1" should contain 100 combinations "whiteM" of product "Test Product Max Stock"
 
   Scenario: Add product two times and empty stock but edit the first one after
     Given there is a product in the catalog named "Test Product Max Stock" with a price of 15.0 and 100 items in stock
@@ -276,7 +276,7 @@ Feature: Order from Back Office (BO)
     And the available stock for combination "whiteL" of product "Test Product Max Stock" should be 150
     And the available stock for product "Test Product Max Stock" should be 299
     And order "bo_order1" should have 3 products in total
-    And order "bo_order1" should contain 1 products "Test Product Max Stock - Size : M- Color : White"
+    And order "bo_order1" should contain 1 combinations "whiteM" of product "Test Product Max Stock"
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Test Product Max Stock  |
       | combination   | whiteM                  |
@@ -286,7 +286,7 @@ Feature: Order from Back Office (BO)
     And the available stock for combination "whiteL" of product "Test Product Max Stock" should be 150
     And the available stock for product "Test Product Max Stock" should be 150
     And order "bo_order1" should have 152 products in total
-    And order "bo_order1" should contain 150 products "Test Product Max Stock - Size : M- Color : White"
+    And order "bo_order1" should contain 150 combinations "whiteM" of product "Test Product Max Stock"
     When I edit combination "whiteM" of product "Test Product Max Stock" to order "bo_order1" with following products details:
       | amount        | 150                     |
       | price         | 15                      |
@@ -295,7 +295,7 @@ Feature: Order from Back Office (BO)
     And the available stock for combination "whiteL" of product "Test Product Max Stock" should be 150
     And the available stock for product "Test Product Max Stock" should be 150
     And order "bo_order1" should have 152 products in total
-    And order "bo_order1" should contain 150 products "Test Product Max Stock - Size : M- Color : White"
+    And order "bo_order1" should contain 150 combinations "whiteM" of product "Test Product Max Stock"
 
   Scenario: Update product that is allowed out of stock in order
     Given there is a product in the catalog named "Test Product Max Stock" with a price of 15.0 and 100 items in stock

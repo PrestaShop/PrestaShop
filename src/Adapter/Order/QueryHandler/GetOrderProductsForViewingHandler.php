@@ -207,6 +207,7 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                 $packItems[] = new OrderProductForViewing(
                     null,
                     $pack_item['id_product'],
+                    0,
                     $pack_item['name'],
                     $pack_item['reference'],
                     $pack_item['supplier_reference'],
@@ -233,6 +234,7 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
             $productsForViewing[] = new OrderProductForViewing(
                 $product['id_order_detail'],
                 $product['product_id'],
+                $product['product_attribute_id'],
                 $product['product_name'],
                 $product['product_reference'],
                 $product['product_supplier_reference'],
