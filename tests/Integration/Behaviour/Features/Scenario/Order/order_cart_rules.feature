@@ -427,7 +427,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_incl  | 7.42   |
     When I remove product "Test Product With Percent Discount" from order "bo_order1"
     Then order "bo_order1" should have 2 products in total
-    Then order "bo_order1" should contain 0 product "Test Product Cart Rule On Order"
+    Then order "bo_order1" should contain 0 product "Test Product With Percent Discount"
     Then order "bo_order1" should have 1 cart rule
     Then order "bo_order1" should have cart rule "discount five-percent" with amount "$1.19"
     Then order "bo_order1" should have following details:
@@ -516,4 +516,4 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_incl  | 7.42   |
     When I remove product "Test Product With Percent Discount" from order "bo_order1"
     Then order "bo_order1" should have 2 products in total
-    Then order "bo_order1" should contain 0 product "Test Product Cart Rule On Order"
+    Then order "bo_order1" should contain 0 product "Test Product With Percent Discount"
