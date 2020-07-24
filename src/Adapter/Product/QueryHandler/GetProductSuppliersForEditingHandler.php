@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSuppliersForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryHandler\GetProductSuppliersForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
+use Product;
 use ProductSupplier as ProductSupplierEntity;
 
 /**
@@ -48,16 +49,17 @@ final class GetProductSuppliersForEditingHandler implements GetProductSuppliersF
 
         /** @var ProductSupplierEntity $productSupplier */
         foreach (ProductSupplierEntity::getSupplierCollection($productIdValue) as $productSupplier) {
-            //@Todo:
             $productSuppliers[] = new ProductSupplierForEditing(
-                (int) $productSupplier->id,
-                (int) $productSupplier->id_product,
-                (int) $productSupplier->id_supplier,
-                (int) $productSupplier->id_currency,
-                $productSupplier->product_supplier_reference,
-                $productSupplier->product_supplier_price_te,
-                (int) $productSupplier->id_product_attribute
-            );
+                    (int) $productSupplier->id,
+                    (int) $productSupplier->id_product,
+                    (int) $productSupplier->id_supplier,
+                    Product::getProductName($productSupplier->id_product, $productSupplier->id_product_attribute),
+                    $productSupplier->product_supplier_reference,
+                    $productSupplier->product_supplier_price_te,
+                    (int) $productSupplier->id_currency,
+                    (int) $productSupplier->id_product_attribute
+                )
+            ;
         }
 
         return $productSuppliers;
