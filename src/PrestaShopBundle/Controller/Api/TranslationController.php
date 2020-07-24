@@ -401,7 +401,7 @@ class TranslationController extends ApiController
             case 'others':
                 return new OthersType();
             default:
-                throw new \RuntimeException("Unrecognized type : $type");
+                throw new \RuntimeException("Unrecognized type: $type");
         }
     }
 }

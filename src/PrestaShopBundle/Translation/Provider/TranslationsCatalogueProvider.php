@@ -32,7 +32,7 @@ use PrestaShopBundle\Translation\Provider\Factory\ProviderFactory;
 use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
 
 /**
- * Retrieves combined and formatted catalogues depending on the strategy defined by the caller.
+ * Retrieves combined and formatted catalogues depending on the provider type.
  */
 class TranslationsCatalogueProvider
 {
