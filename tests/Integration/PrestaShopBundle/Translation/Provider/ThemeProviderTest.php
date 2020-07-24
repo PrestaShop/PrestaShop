@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShopBundle\Translation\Extractor\ThemeExtractorCache;
 use PrestaShopBundle\Translation\Extractor\ThemeExtractorInterface;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
-use PrestaShopBundle\Translation\Provider\DefaultCatalogueProvider;
+use PrestaShopBundle\Translation\Provider\Catalogue\DefaultCatalogueProvider;
 use PrestaShopBundle\Translation\Provider\FrontOfficeProvider;
 use PrestaShopBundle\Translation\Provider\ThemeProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;

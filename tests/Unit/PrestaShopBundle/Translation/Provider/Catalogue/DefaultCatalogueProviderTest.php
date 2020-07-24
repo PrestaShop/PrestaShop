@@ -26,49 +26,58 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\PrestaShopBundle\Translation\Provider;
+namespace Tests\Unit\PrestaShopBundle\Translation\Provider\Catalogue;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Translation\Provider\DefaultCatalogueProvider;
-use PrestaShopBundle\Translation\Provider\FileTranslatedCatalogueProvider;
+use PrestaShopBundle\Translation\Provider\Catalogue\DefaultCatalogueProvider;
 use Symfony\Component\Translation\Dumper\XliffFileDumper;
 use Symfony\Component\Translation\MessageCatalogue;
 
-class FileTranslatedCatalogueProviderTest extends TestCase
+class DefaultCatalogueProviderTest extends TestCase
 {
     /**
      * @var string
      */
     private static $tempDir;
 
+    private static $wordings = [
+        'ShopSomeDomain' => [
+            'Some wording' => 'Some wording',
+            'Some other wording' => 'Some other wording',
+        ],
+        'ShopSomethingElse' => [
+            'Foo' => 'Foo',
+            'Bar' => 'Bar',
+        ],
+    ];
+
+    private static $emptyWordings = [
+        'ShopSomeDomain' => [
+            'Some wording' => '',
+            'Some other wording' => '',
+        ],
+        'ShopSomethingElse' => [
+            'Foo' => '',
+            'Bar' => '',
+        ],
+    ];
+
     public static function setUpBeforeClass()
     {
-        self::$tempDir = implode(
-            DIRECTORY_SEPARATOR,
-            [sys_get_temp_dir(), 'FileTranslatedCatalogueProviderTest']
-        );
-        $wordings = [
-            'ShopSomeDomain' => [
-                'Some wording' => 'Some wording',
-                'Some other wording' => 'Some other wording',
-            ],
-            'ShopSomethingElse' => [
-                'Foo' => 'Foo',
-                'Bar' => 'Bar',
-            ],
-        ];
+        self::$tempDir = implode(DIRECTORY_SEPARATOR, [sys_get_temp_dir(), 'DefaultCatalogueProviderTest']);
+
         $catalogue = new MessageCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE);
-        foreach ($wordings as $domain => $messages) {
+        foreach (self::$wordings as $domain => $messages) {
             $catalogue->add($messages, $domain);
         }
         (new XliffFileDumper())->dump($catalogue, [
-            'path' => self::$tempDir . DIRECTORY_SEPARATOR . DefaultCatalogueProvider::DEFAULT_LOCALE,
+            'path' => self::$tempDir,
         ]);
     }
 
     public function testGetCatalogueFilters()
     {
-        $catalogue = (new FileTranslatedCatalogueProvider(
+        $catalogue = (new DefaultCatalogueProvider(
             self::$tempDir,
             ['#^Shop([A-Z]|\.|$)#']
         ))
@@ -81,8 +90,7 @@ class FileTranslatedCatalogueProviderTest extends TestCase
             'ShopSomeDomain',
             'ShopSomethingElse',
         ], $domains);
-
-        $provider = new FileTranslatedCatalogueProvider(
+        $provider = new DefaultCatalogueProvider(
             self::$tempDir,
             ['#^ShopSomething([A-Z]|\.|$)#']
         );
@@ -97,24 +105,13 @@ class FileTranslatedCatalogueProviderTest extends TestCase
 
         $this->assertSame(
             $catalogue->all(),
-            $provider->getFileTranslatedCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE)->all()
+            $provider->getDefaultCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE)->all()
         );
     }
 
     public function testGetCatalogueMessages()
     {
-        $expectedWordings = [
-            'ShopSomeDomain' => [
-                'Some wording' => 'Some wording',
-                'Some other wording' => 'Some other wording',
-            ],
-            'ShopSomethingElse' => [
-                'Foo' => 'Foo',
-                'Bar' => 'Bar',
-            ],
-        ];
-
-        $provider = new FileTranslatedCatalogueProvider(
+        $provider = new DefaultCatalogueProvider(
             self::$tempDir,
             ['#^Shop([A-Z]|\.|$)#']
         );
@@ -124,6 +121,33 @@ class FileTranslatedCatalogueProviderTest extends TestCase
         $messages = $catalogue->all();
         sort($messages);
 
-        $this->assertSame(array_values($expectedWordings), $messages);
+        $this->assertSame(array_values(self::$wordings), $messages);
+    }
+
+    public function testGetCatalogueEmpty()
+    {
+        $provider = new DefaultCatalogueProvider(
+            self::$tempDir,
+            ['#^Shop([A-Z]|\.|$)#']
+        );
+
+        $catalogue = $provider->getCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE, true);
+
+        $messages = $catalogue->all();
+        sort($messages);
+
+        $this->assertSame(array_values(self::$wordings), $messages);
+
+        $provider = new DefaultCatalogueProvider(
+            self::$tempDir,
+            ['#^Shop([A-Z]|\.|$)#']
+        );
+
+        $catalogue = $provider->getCatalogue('ab-AB', true);
+
+        $messages = $catalogue->all();
+        sort($messages);
+
+        $this->assertSame(array_values(self::$emptyWordings), $messages);
     }
 }
