@@ -26,13 +26,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\PrestaShopBundle\Translation\Provider;
+namespace Tests\Unit\PrestaShopBundle\Translation\Provider\Catalogue;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
-use PrestaShopBundle\Translation\Provider\DefaultCatalogueProvider;
-use PrestaShopBundle\Translation\Provider\UserTranslatedCatalogueProvider;
+use PrestaShopBundle\Translation\Provider\Catalogue\DefaultCatalogueProvider;
+use PrestaShopBundle\Translation\Provider\Catalogue\UserTranslatedCatalogueProvider;
 use Symfony\Component\Translation\MessageCatalogue;
 
 class UserTranslatedCatalogueProviderTest extends TestCase
