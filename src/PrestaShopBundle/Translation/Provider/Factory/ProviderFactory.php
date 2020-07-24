@@ -32,6 +32,9 @@ use PrestaShopBundle\Exception\NotImplementedException;
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
 use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
 
+/**
+ * Builds translation providers
+ */
 class ProviderFactory
 {
     /**
@@ -51,7 +54,7 @@ class ProviderFactory
      *
      * @throws NotImplementedException
      */
-    public function getProviderFor(TypeInterface $providerType): ProviderInterface
+    public function build(TypeInterface $providerType): ProviderInterface
     {
         foreach ($this->factories as $factory) {
             if ($factory->implements($providerType)) {
