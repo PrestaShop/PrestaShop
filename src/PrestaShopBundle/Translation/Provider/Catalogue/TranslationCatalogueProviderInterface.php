@@ -30,10 +30,15 @@ namespace PrestaShopBundle\Translation\Provider\Catalogue;
 
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
+/**
+ * Interface for classes that return a translation catalogue for a given locale
+ */
 interface TranslationCatalogueProviderInterface
 {
     /**
-     * @param string $locale
+     * Returns the translation catalogue for the provided locale
+     *
+     * @param string $locale IETF language tag
      *
      * @return MessageCatalogueInterface
      */
