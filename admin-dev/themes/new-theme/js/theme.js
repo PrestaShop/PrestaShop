@@ -40,6 +40,7 @@ import '@scss/theme.scss';
 
 // Theme Javascript
 import NavBar from '@js/nav_bar';
+import TranslatableInput from '@js/components/translatable-input.js';
 
 // this needs to be ported into the UI kit
 import '@js/clickable-dropdown';
@@ -62,6 +63,13 @@ new NavBar();
 new Header();
 
 $(() => {
+  // Initialize the prestashop global object
+  window.prestashop = {
+    components: {
+      TranslatableInput
+    }
+  };
+
   initDatePickers();
   initInvalidFields();
   initEmailFields('input[type="email"]');
