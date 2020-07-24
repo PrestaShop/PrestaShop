@@ -203,7 +203,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
             $order->update();
 
-            $specificPrice->delete();
         } catch (Exception $e) {
             $this->contextStateManager->restoreContext();
             throw $e;
