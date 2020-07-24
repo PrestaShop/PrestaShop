@@ -37,7 +37,6 @@ use PrestaShopBundle\Translation\Provider\Type\ExternalLegacyModuleType;
 use PrestaShopBundle\Translation\Provider\Type\FrontType;
 use PrestaShopBundle\Translation\Provider\Type\MailsBodyType;
 use PrestaShopBundle\Translation\Provider\Type\MailsType;
-use PrestaShopBundle\Translation\Provider\Type\ModulesType;
 use PrestaShopBundle\Translation\Provider\Type\OthersType;
 use PrestaShopBundle\Translation\Provider\Type\SearchType;
 use PrestaShopBundle\Translation\Provider\Type\ThemesType;
@@ -166,7 +165,11 @@ class TranslationController extends ApiController
             }
 
             $selectedTheme = ('themes' === $type) ? $selected : null;
-            $selectedModule = ('modules' === $type) ? $selected : null;
+            $selectedModule = null;
+            if ('modules' === $type) {
+                $selectedModule = $selected;
+                $type = 'external_legacy_module';
+            }
 
             $searchedExpressions = [];
             if (!is_array($search) && !empty($search)) {
@@ -396,8 +399,6 @@ class TranslationController extends ApiController
                 return new MailsType();
             case 'mails_body':
                 return new MailsBodyType();
-            case 'modules':
-                return new ModulesType();
             case 'others':
                 return new OthersType();
             default:
