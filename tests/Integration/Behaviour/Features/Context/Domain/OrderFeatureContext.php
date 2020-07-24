@@ -416,16 +416,17 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I edit combination :combinationReference of product :productName to order :orderReference with following products details:
+     * @When I edit combination :combinationName of product :productName to order :orderReference with following products details:
      *
+     * @param string $combinationName
      * @param string $productName
      * @param string $orderReference
      * @param TableNode $table
      */
-    public function editCombinationToOrderWithFollowingDetails(string $combinationReference, string $productName, string $orderReference, TableNode $table)
+    public function editCombinationToOrderWithFollowingDetails(string $combinationName, string $productName, string $orderReference, TableNode $table)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
-        $productOrderDetail = $this->getOrderDetailFromOrder($productName, $orderReference, $combinationReference);
+        $productOrderDetail = $this->getOrderDetailFromOrder($productName, $orderReference, $combinationName);
         $data = $table->getRowsHash();
 
         $this->updateProductInOrder($orderId, $productOrderDetail, $data);
@@ -674,14 +675,20 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then order :orderReference should contain :quantity product(s) :productName
+     * @Then order :orderReference should contain :quantity combination(s) :combinationName of product :productName
      *
      * @param string $orderReference
      * @param int $quantity
      * @param string $productName
+     * @param string|null $combinationName
      */
-    public function orderContainsProductWithReference(string $orderReference, int $quantity, string $productName)
+    public function orderContainsProductWithReference(string $orderReference, int $quantity, string $productName, ?string $combinationName = null)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
+
+        $product = $this->getProductByName($productName);
+        $productId = $product->getProductId();
+        $combinationId = null !== $combinationName ? $this->getProductCombinationId($product, $combinationName) : null;
 
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
@@ -690,7 +697,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         $productQuantity = 0;
         foreach ($orderProducts as $orderProduct) {
-            if ($orderProduct->getName() == $productName) {
+            if ($orderProduct->getId() === $productId
+                && (null === $combinationId || $orderProduct->getCombinationId() === $combinationId)) {
                 $productQuantity += $orderProduct->getQuantity();
             }
         }
@@ -1102,15 +1110,15 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     /**
      * @param string $productName
      * @param string $orderReference
-     * @param string|null $combinationReference
+     * @param string|null $combinationName
      *
      * @return array
      */
-    private function getOrderDetailFromOrder(string $productName, string $orderReference, string $combinationReference = null): array
+    private function getOrderDetailFromOrder(string $productName, string $orderReference, string $combinationName = null): array
     {
         $product = $this->getProductByName($productName);
         $productId = $product->getProductId();
-        $combinationId = null !== $combinationReference ? $this->getProductCombinationId($product, $combinationReference) : null;
+        $combinationId = null !== $combinationName ? $this->getProductCombinationId($product, $combinationName) : null;
         $order = new Order(SharedStorage::getStorage()->get($orderReference));
         $orderDetails = $order->getProducts();
         $productOrderDetail = null;
@@ -1131,21 +1139,21 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @param FoundProduct $product
-     * @param string $combinationReference
+     * @param string $combinationName
      *
      * @return int
      */
-    private function getProductCombinationId(FoundProduct $product, string $combinationReference)
+    private function getProductCombinationId(FoundProduct $product, string $combinationName)
     {
         $combinationId = null;
         foreach ($product->getCombinations() as $productCombination) {
-            if ($productCombination->getReference() == $combinationReference) {
+            if ($productCombination->getReference() == $combinationName) {
                 $combinationId = $productCombination->getAttributeCombinationId();
                 break;
             }
         }
         if (null === $combinationId) {
-            throw new RuntimeException(sprintf('Could not find combination %s of product %s', $product->getName(), $combinationReference));
+            throw new RuntimeException(sprintf('Could not find combination %s of product %s', $product->getName(), $combinationName));
         }
 
         return $combinationId;
