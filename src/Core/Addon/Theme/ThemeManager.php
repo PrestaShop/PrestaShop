@@ -513,7 +513,7 @@ class ThemeManager implements AddonManagerInterface
         $translationService = $kernel->getContainer()->get('prestashop.service.translation');
         $themeName = $theme->getName();
         /** @var \PrestaShopBundle\Translation\Provider\ThemeProvider $themeProvider */
-        $themeProvider = $this->providerFactory->getProviderFor(
+        $themeProvider = $this->providerFactory->build(
             new ThemesType($themeName)
         );
 
