@@ -125,14 +125,14 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
             )
             ->add(
                 (new DataColumn('outstanding_allow_amount'))
-                    ->setName($this->trans('Outstanding Allowance', [], 'Admin.Global'))
+                    ->setName($this->trans('Outstanding allowance', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'outstanding_allow_amount',
                     ])
             )
             ->add(
                 (new DataColumn('outstanding'))
-                    ->setName($this->trans('Current Outstanding', [], 'Admin.Global'))
+                    ->setName($this->trans('Current outstanding', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'outstanding',
                     ])
