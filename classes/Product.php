@@ -7168,6 +7168,7 @@ class ProductCore extends ObjectModel
      * Update default supplier data
      *
      * @param int $idProduct
+     * @param int $idSupplier
      * @param float $wholesalePrice
      * @param string $supplierReference
      *
