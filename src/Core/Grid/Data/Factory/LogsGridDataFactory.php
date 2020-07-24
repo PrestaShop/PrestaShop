@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
-use PrestaShop\PrestaShop\Core\Employee\AvatarProviderInterface;
+use PrestaShop\PrestaShop\Adapter\Entity\Employee;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
@@ -43,20 +43,12 @@ final class LogsGridDataFactory implements GridDataFactoryInterface
     private $doctrineLogsDataFactory;
 
     /**
-     * @var AvatarProviderInterface
-     */
-    private $avatarProvider;
-
-    /**
      * @param GridDataFactoryInterface $doctrineLogsDataFactory
-     * @param AvatarProviderInterface $avatarProvider
      */
     public function __construct(
-        GridDataFactoryInterface $doctrineLogsDataFactory,
-        AvatarProviderInterface $avatarProvider
+        GridDataFactoryInterface $doctrineLogsDataFactory
     ) {
         $this->doctrineLogsDataFactory = $doctrineLogsDataFactory;
-        $this->avatarProvider = $avatarProvider;
     }
 
     /**
@@ -85,7 +77,8 @@ final class LogsGridDataFactory implements GridDataFactoryInterface
     private function applyModification(array $logs)
     {
         foreach ($logs as $i => $log) {
-            $logs[$i]['image'] = $this->avatarProvider->getDefaultAvatarUrl();
+            $employee = new Employee($log['id_employee']);
+            $logs[$i]['image'] = $employee->getImage();
         }
 
         return $logs;
