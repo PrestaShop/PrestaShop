@@ -139,7 +139,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             // Cart precision is more adapted
             $this->computingPrecision = $this->getPrecisionFromCart($cart);
 
-            $specificPrice = $this->createOrUpdateSpecificPrice(
+            $this->updateSpecificPrice(
                 $command->getProductPriceTaxIncluded(),
                 $command->getProductPriceTaxExcluded(),
                 $command->getProductQuantity(),
@@ -201,8 +201,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
             // Update totals amount of order
             $this->orderAmountUpdater->update($order, $cart, (int) $orderDetail->id_order_invoice);
-
-            $order->update();
         } catch (Exception $e) {
             $this->contextStateManager->restoreContext();
             throw $e;
