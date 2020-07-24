@@ -31,6 +31,9 @@ namespace PrestaShopBundle\Translation\Provider;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShopBundle\Exception\NotImplementedException;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
+use PrestaShopBundle\Translation\Provider\Catalogue\DefaultCatalogueProvider;
+use PrestaShopBundle\Translation\Provider\Catalogue\FileTranslatedCatalogueProvider;
+use PrestaShopBundle\Translation\Provider\Catalogue\UserTranslatedCatalogueProvider;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
