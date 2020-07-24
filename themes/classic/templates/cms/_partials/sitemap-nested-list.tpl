@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
 {block name='sitemap_item'}
-  <ul{if isset($is_nested)} class="nested"{/if}>
+  <ul{if !empty($is_nested)} class="nested"{/if}>
     {foreach $links as $link}
       <li>
         <a id="{$link.id}" href="{$link.url}" title="{$link.label}">
