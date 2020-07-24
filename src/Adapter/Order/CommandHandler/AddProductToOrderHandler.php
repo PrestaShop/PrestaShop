@@ -626,8 +626,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             }
             $orderDetail->unit_price_tax_excl = (float) (string) $priceTaxExcluded;
             $orderDetail->unit_price_tax_incl = (float) (string) $priceTaxIncluded;
-            $orderDetail->total_price_tax_excl = Tools::ps_round((float) (string) $priceTaxExcluded * $productQuantity, $this->computingPrecision);
-            $orderDetail->total_price_tax_incl = Tools::ps_round((float) (string) $priceTaxIncluded * $productQuantity, $this->computingPrecision);
+            $orderDetail->total_price_tax_excl = Tools::ps_round((float) (string) $priceTaxExcluded * $orderDetail->product_quantity, $this->computingPrecision);
+            $orderDetail->total_price_tax_incl = Tools::ps_round((float) (string) $priceTaxIncluded * $orderDetail->product_quantity, $this->computingPrecision);
 
             $orderDetail->update();
         }
