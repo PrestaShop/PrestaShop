@@ -169,17 +169,16 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             );
 
             // update order details
-            $this->updateOrderDetails(
+            $this->orderAmountUpdater->updateOrderDetailsWithSameProduct(
                 $order,
                 $orderDetail,
                 $product,
                 $command->getCombinationId() ? $command->getCombinationId()->getValue() : null,
-                $command->getProductQuantity(),
                 $command->getProductPriceTaxIncluded(),
                 $command->getProductPriceTaxExcluded()
             );
 
-            $this->updateOrderInvoices($order);
+            $this->orderAmountUpdater->updateOrderInvoices($order, $this->computingPrecision);
 
             StockAvailable::synchronize($product->id);
 
@@ -591,78 +590,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         // If we are targeting a specific invoice check that the ID has not been found in the OrderDetail list
         if (!empty($command->getOrderInvoiceId()) && in_array((int) $command->getOrderInvoiceId(), $invoicesContainingProduct)) {
             throw new DuplicateProductInOrderException('You cannot add this product in the order has it is already present');
-        }
-    }
-
-    /**
-     * Update order details after a specific price has been created or updated
-     *
-     * @param Order $order
-     * @param OrderDetail $updatedOrderDetail
-     * @param Product $product
-     * @param int|null $combinationId
-     * @param int $productQuantity
-     * @param Number $priceTaxIncluded
-     * @param Number $priceTaxExcluded
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
-     */
-    private function updateOrderDetails(
-        Order $order,
-        OrderDetail $updatedOrderDetail,
-        Product $product,
-        ?int $combinationId,
-        int $productQuantity,
-        Number $priceTaxIncluded,
-        Number $priceTaxExcluded
-    ): void {
-        foreach ($order->getOrderDetailList() as $row) {
-            $orderDetail = new OrderDetail($row['id_order_detail']);
-            if ((int) $orderDetail->product_id !== (int) $product->id) {
-                continue;
-            }
-            if (!empty($combinationId) && (int) $combinationId !== (int) $orderDetail->product_attribute_id) {
-                continue;
-            }
-            if ($updatedOrderDetail->id == $orderDetail->id) {
-                continue;
-            }
-            $orderDetail->unit_price_tax_excl = (float) (string) $priceTaxExcluded;
-            $orderDetail->unit_price_tax_incl = (float) (string) $priceTaxIncluded;
-            $orderDetail->total_price_tax_excl = Tools::ps_round((float) (string) $priceTaxExcluded * $orderDetail->product_quantity, $this->computingPrecision);
-            $orderDetail->total_price_tax_incl = Tools::ps_round((float) (string) $priceTaxIncluded * $orderDetail->product_quantity, $this->computingPrecision);
-
-            $orderDetail->update();
-        }
-    }
-
-    /**
-     * This method takes care of multi-invoices, all invoices are updated
-     *
-     * @param Order $order
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
-     */
-    private function updateOrderInvoices(Order $order): void
-    {
-        $orderInvoices = OrderInvoice::getInvoicesByOrderId($order->id);
-
-        foreach ($orderInvoices as $invoice) {
-            $totalProductsTaxExcluded = 0;
-            $totalProductsTaxIncluded = 0;
-            foreach ($invoice->getProducts() as $product) {
-                $totalProductsTaxExcluded += (float) $product['total_price_tax_excl'];
-                $totalProductsTaxIncluded += (float) $product['total_price_tax_incl'];
-            }
-            $invoice->total_products_wt = (float) Tools::ps_round($totalProductsTaxExcluded, $this->computingPrecision);
-            $invoice->total_products = (float) Tools::ps_round($totalProductsTaxIncluded, $this->computingPrecision);
-
-            $invoice->total_paid_tax_excl = (float) Tools::ps_round($totalProductsTaxExcluded + $invoice->total_shipping_tax_excl, $this->computingPrecision);
-            $invoice->total_paid_tax_incl = (float) Tools::ps_round($totalProductsTaxIncluded + $invoice->total_shipping_tax_incl, $this->computingPrecision);
-
-            $invoice->update();
         }
     }
 }

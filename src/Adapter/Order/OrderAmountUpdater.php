@@ -36,13 +36,16 @@ use Currency;
 use Order;
 use OrderCarrier;
 use OrderCartRule;
+use OrderDetail;
 use OrderInvoice;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Cart\CartRuleData;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShopDatabaseException;
 use PrestaShopException;
+use Product;
 use Tools;
 use Validate;
 
@@ -299,5 +302,76 @@ class OrderAmountUpdater
         $currency = new Currency((int) $cart->id_currency);
 
         return $computingPrecision->getPrecision((int) $currency->precision);
+    }
+
+    /**
+     * Update order details after a specific price has been created or updated
+     *
+     * @param Order $order
+     * @param OrderDetail $updatedOrderDetail
+     * @param Product $product
+     * @param int|null $combinationId
+     * @param int $productQuantity
+     * @param Number $priceTaxIncluded
+     * @param Number $priceTaxExcluded
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    public function updateOrderDetailsWithSameProduct(
+        Order $order,
+        OrderDetail $updatedOrderDetail,
+        Product $product,
+        ?int $combinationId,
+        Number $priceTaxIncluded,
+        Number $priceTaxExcluded
+    ): void {
+        foreach ($order->getOrderDetailList() as $row) {
+            $orderDetail = new OrderDetail($row['id_order_detail']);
+            if ((int) $orderDetail->product_id !== (int) $product->id) {
+                continue;
+            }
+            if (!empty($combinationId) && (int) $combinationId !== (int) $orderDetail->product_attribute_id) {
+                continue;
+            }
+            if ($updatedOrderDetail->id == $orderDetail->id) {
+                continue;
+            }
+            $orderDetail->unit_price_tax_excl = (float) (string) $priceTaxExcluded;
+            $orderDetail->unit_price_tax_incl = (float) (string) $priceTaxIncluded;
+            $orderDetail->total_price_tax_excl = Tools::ps_round((float) (string) $priceTaxExcluded * $orderDetail->product_quantity, $this->computingPrecision);
+            $orderDetail->total_price_tax_incl = Tools::ps_round((float) (string) $priceTaxIncluded * $orderDetail->product_quantity, $this->computingPrecision);
+
+            $orderDetail->update();
+        }
+    }
+
+    /**
+     * This method takes care of multi-invoices, all invoices are updated
+     *
+     * @param Order $order
+     * @param int $precision
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    public function updateOrderInvoices(Order $order, int $precision): void
+    {
+        $orderInvoices = OrderInvoice::getInvoicesByOrderId($order->id);
+
+        foreach ($orderInvoices as $invoice) {
+            $totalProductsTaxExcluded = 0;
+            $totalProductsTaxIncluded = 0;
+            foreach ($invoice->getProducts() as $product) {
+                $totalProductsTaxExcluded += (float) $product['total_price_tax_excl'];
+                $totalProductsTaxIncluded += (float) $product['total_price_tax_incl'];
+            }
+            $invoice->total_products_wt = (float) Tools::ps_round($totalProductsTaxExcluded, $precision);
+            $invoice->total_products = (float) Tools::ps_round($totalProductsTaxIncluded, $precision);
+
+            $invoice->total_paid_tax_excl = (float) Tools::ps_round($totalProductsTaxExcluded + $invoice->total_shipping_tax_excl, $precision);
+            $invoice->total_paid_tax_incl = (float) Tools::ps_round($totalProductsTaxIncluded + $invoice->total_shipping_tax_incl, $precision);
+
+            $invoice->update();
+        }
     }
 }
