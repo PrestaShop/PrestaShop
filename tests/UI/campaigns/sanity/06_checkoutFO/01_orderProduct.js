@@ -95,8 +95,8 @@ describe('Order a product and check order confirmation', async () => {
     const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
     await expect(isCheckoutPage, 'Browser is not in checkout Page').to.be.true;
 
-    const isStepPIComplete = await checkoutPage.isStepCompleted(page, checkoutPage.personalInformationStepForm);
-    await expect(isStepPIComplete, 'Step Personal information is not complete').to.be.true;
+    const isStepPersonalInformationComplete = await checkoutPage.isStepCompleted(page, checkoutPage.personalInformationStepForm);
+    await expect(isStepPersonalInformationComplete, 'Step Personal information is not complete').to.be.true;
   });
 
   it('should validate Step Address and go to Delivery Step', async function () {
