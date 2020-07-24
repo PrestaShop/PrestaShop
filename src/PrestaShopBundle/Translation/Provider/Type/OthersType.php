@@ -26,11 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Translation\Provider\Strategy;
+namespace PrestaShopBundle\Translation\Provider\Type;
 
 /**
- * Properties container for 'mails_body' type of translation.
+ * Properties container for 'others' type of translation.
  */
-class MailsBodyType implements TypeInterface
+class OthersType implements TypeInterface
 {
 }
