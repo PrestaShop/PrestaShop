@@ -307,12 +307,12 @@ abstract class AbstractOrderHandler
             0,
             $productQuantity,
             $combination ? $combination->id : 0,
-            $order->id_customer
+            $order->id_customer,
+            $order->id_cart
         );
 
         if (!empty($existingSpecificPrice)) {
             $specificPrice = new SpecificPrice($existingSpecificPrice['id_specific_price']);
-
             $specificPrice->price = $priceTaxExcluded;
             $specificPrice->update();
 
@@ -321,7 +321,7 @@ abstract class AbstractOrderHandler
 
         $specificPrice = new SpecificPrice();
         $specificPrice->id_shop = 0;
-        $specificPrice->id_cart = 0;
+        $specificPrice->id_cart = $order->id_cart;
         $specificPrice->id_shop_group = 0;
         $specificPrice->id_currency = $order->id_currency;
         $specificPrice->id_country = 0;
