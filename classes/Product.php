@@ -121,7 +121,11 @@ class ProductCore extends ObjectModel
     /** @var string Reference */
     public $reference;
 
-    /** @var string Supplier Reference */
+    /**
+     * @var string Supplier Reference
+     *
+     * @deprecated since 1.7.7.0
+     */
     public $supplier_reference;
 
     /** @var string Location */
@@ -7158,5 +7162,34 @@ class ProductCore extends ObjectModel
         }
 
         return $return;
+    }
+
+    /**
+     * Update default supplier data
+     *
+     * @param int $idProduct
+     * @param float $wholesalePrice
+     * @param string $supplierReference
+     *
+     * @return bool
+     */
+    public function updateDefaultSupplierData(int $idProduct, int $idSupplier, string $supplierReference, float $wholesalePrice): bool
+    {
+        $sql = 'UPDATE `' . _DB_PREFIX_ . 'product` ' .
+             'SET ' .
+             'id_supplier = %d, ' .
+             'supplier_reference = "%s", ' .
+             'wholesale_price = "%s" ' .
+             'WHERE id_product = %d';
+
+        return Db::getInstance()->execute(
+            sprintf(
+                $sql,
+                $idSupplier,
+                pSQL($supplierReference),
+                $wholesalePrice,
+                $idProduct
+            )
+        );
     }
 }
