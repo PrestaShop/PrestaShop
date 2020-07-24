@@ -62,7 +62,7 @@ class TranslationsCatalogueProvider
         string $domain,
         array $search = []
     ): array {
-        $provider = $this->providerFactory->getProviderFor($providerType);
+        $provider = $this->providerFactory->build($providerType);
 
         $defaultCatalogue = $provider->getDefaultCatalogue($locale);
         if (null === $defaultCatalogue) {
@@ -101,7 +101,7 @@ class TranslationsCatalogueProvider
         string $locale,
         array $search = []
     ): array {
-        $provider = $this->providerFactory->getProviderFor($providerType);
+        $provider = $this->providerFactory->build($providerType);
 
         $defaultCatalogue = $provider->getDefaultCatalogue($locale);
         $fileTranslatedCatalogue = $provider->getFileTranslatedCatalogue($locale);
