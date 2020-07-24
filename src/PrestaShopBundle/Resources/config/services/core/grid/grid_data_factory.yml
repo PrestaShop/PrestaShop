@@ -11,10 +11,9 @@ services:
             - 'logs'
 
     prestashop.core.grid.factory.log_decorator:
-      class: PrestaShop\PrestaShop\Core\Grid\Data\Factory\LogsGridDataFactory
-      arguments:
-        - '@prestashop.core.grid.data_factory.log'
-        - '@prestashop.adapter.employee.avatar_provider'
+        class: PrestaShop\PrestaShop\Core\Grid\Data\Factory\LogsGridDataFactory
+        arguments:
+            - '@prestashop.core.grid.data_factory.log'
 
     prestashop.core.grid.data_factory.email_logs:
         class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
@@ -101,10 +100,10 @@ services:
             - 'language'
 
     prestashop.core.grid.factory.language_decorator:
-      class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\LanguageGridDataFactory'
-      arguments:
-        - '@prestashop.core.grid.data.factory.language'
-        - '@prestashop.adapter.language.language_flag_thumbnail_provider'
+        class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\LanguageGridDataFactory'
+        arguments:
+            - '@prestashop.core.grid.data.factory.language'
+            - '@prestashop.adapter.language.language_flag_thumbnail_provider'
 
     prestashop.core.grid.data_provider.currency:
         class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
