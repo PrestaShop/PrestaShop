@@ -31,8 +31,8 @@ namespace PrestaShopBundle\Translation\Provider\Factory;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use PrestaShopBundle\Translation\Provider\OthersProvider;
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
-use PrestaShopBundle\Translation\Provider\Strategy\OthersType;
-use PrestaShopBundle\Translation\Provider\Strategy\TypeInterface;
+use PrestaShopBundle\Translation\Provider\Type\OthersType;
+use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
 
 class OthersProviderFactory implements ProviderFactoryInterface
 {
@@ -54,9 +54,9 @@ class OthersProviderFactory implements ProviderFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function implements(TypeInterface $strategy): bool
+    public function implements(TypeInterface $providerType): bool
     {
-        return $strategy instanceof OthersType;
+        return $providerType instanceof OthersType;
     }
 
     /**
@@ -64,6 +64,10 @@ class OthersProviderFactory implements ProviderFactoryInterface
      */
     public function build(TypeInterface $providerType): ProviderInterface
     {
+        if (!$this->implements($providerType)) {
+            throw new \RuntimeException(sprintf('Invalid provider type given: %s', get_class($providerType)));
+        }
+
         return new OthersProvider($this->databaseTranslationLoader, $this->resourceDirectory);
     }
 }
