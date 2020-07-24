@@ -28,27 +28,25 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult;
 
-class ProductSupplier
+/**
+ * Transfers product supplier for editing data
+ */
+class ProductSupplierForEditing
 {
     /**
      * @var int
      */
-    private $id;
+    private $productSupplierId;
 
     /**
      * @var int
      */
-    private $productId;
+    private $combinationId;
 
     /**
-     * @var int
+     * @var string[]
      */
-    private $supplierId;
-
-    /**
-     * @var int
-     */
-    private $currencyId;
+    private $localizedProductNames;
 
     /**
      * @var string
@@ -63,65 +61,54 @@ class ProductSupplier
     /**
      * @var int
      */
-    private $combinationId;
+    private $currencyId;
 
     /**
-     * @param int $id
-     * @param int $productId
-     * @param int $supplierId
-     * @param int $currencyId
+     * @param int $productSupplierId
+     * @param int $combinationId
+     * @param string[] $localizedProductNames
      * @param string $reference
      * @param string $priceTaxExcluded
-     * @param int $combinationId
+     * @param int $currencyId
      */
     public function __construct(
-        int $id,
-        int $productId,
-        int $supplierId,
-        int $currencyId,
+        int $productSupplierId,
+        int $combinationId,
+        array $localizedProductNames,
         string $reference,
         string $priceTaxExcluded,
-        int $combinationId
+        int $currencyId
     ) {
-        $this->id = $id;
-        $this->productId = $productId;
-        $this->supplierId = $supplierId;
-        $this->currencyId = $currencyId;
+        $this->productSupplierId = $productSupplierId;
+        $this->combinationId = $combinationId;
+        $this->localizedProductNames = $localizedProductNames;
         $this->reference = $reference;
         $this->priceTaxExcluded = $priceTaxExcluded;
-        $this->combinationId = $combinationId;
+        $this->currencyId = $currencyId;
     }
 
     /**
      * @return int
      */
-    public function getId(): int
+    public function getProductSupplierId(): int
     {
-        return $this->id;
+        return $this->productSupplierId;
     }
 
     /**
      * @return int
      */
-    public function getProductId(): int
+    public function getCombinationId(): int
     {
-        return $this->productId;
+        return $this->combinationId;
     }
 
     /**
-     * @return int
+     * @return string[]
      */
-    public function getSupplierId(): int
+    public function getLocalizedProductNames(): array
     {
-        return $this->supplierId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCurrencyId(): int
-    {
-        return $this->currencyId;
+        return $this->localizedProductNames;
     }
 
     /**
@@ -143,8 +130,8 @@ class ProductSupplier
     /**
      * @return int
      */
-    public function getCombinationId(): int
+    public function getCurrencyId(): int
     {
-        return $this->combinationId;
+        return $this->currencyId;
     }
 }

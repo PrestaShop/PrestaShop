@@ -46,8 +46,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\UpdateProd
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotDeleteProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSuppliers;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryHandler\GetProductSuppliersHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
@@ -75,26 +73,18 @@ final class UpdateProductSuppliersHandler extends AbstractProductHandler impleme
     private $deleteProductSupplierHandler;
 
     /**
-     * @var GetProductSuppliersHandlerInterface
-     */
-    private $getProductSuppliersHandler;
-
-    /**
      * @param AddProductSupplierHandlerInterface $addProductSupplierHandler
      * @param UpdateProductSupplierHandlerInterface $updateProductSupplierHandler
      * @param DeleteProductSupplierHandlerInterface $deleteProductSupplierHandler
-     * @param GetProductSuppliersHandlerInterface $getProductSuppliersHandler
      */
     public function __construct(
         AddProductSupplierHandlerInterface $addProductSupplierHandler,
         UpdateProductSupplierHandlerInterface $updateProductSupplierHandler,
-        DeleteProductSupplierHandlerInterface $deleteProductSupplierHandler,
-        GetProductSuppliersHandlerInterface $getProductSuppliersHandler
+        DeleteProductSupplierHandlerInterface $deleteProductSupplierHandler
     ) {
         $this->addProductSupplierHandler = $addProductSupplierHandler;
         $this->updateProductSupplierHandler = $updateProductSupplierHandler;
         $this->deleteProductSupplierHandler = $deleteProductSupplierHandler;
-        $this->getProductSuppliersHandler = $getProductSuppliersHandler;
     }
 
     /**
@@ -111,7 +101,14 @@ final class UpdateProductSuppliersHandler extends AbstractProductHandler impleme
             $this->updateDefaultSupplier($productId, $command->getDefaultSupplierId());
         }
 
-        return $this->getProductSuppliersHandler->handle(new GetProductSuppliers($productId->getValue()));
+        $productSupplierIds = [];
+
+        /** @var ProductSupplierEntity $productSupplierEntity */
+        foreach (ProductSupplierEntity::getSupplierCollection($productId->getValue()) as $productSupplierEntity) {
+            $productSupplierIds[] = new ProductSupplierId((int) $productSupplierEntity->id);
+        }
+
+        return $productSupplierIds;
     }
 
     /**

@@ -24,35 +24,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryHandler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query;
-
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSuppliersForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
 
 /**
- * Provides product suppliers
+ * Defines contract to handle @var GetProductSuppliersForEditing query
  */
-class GetProductSuppliers
+interface GetProductSuppliersForEditingHandlerInterface
 {
     /**
-     * @var ProductId
+     * @param GetProductSuppliersForEditing $query
+     *
+     * @return ProductSupplierForEditing[]
      */
-    private $productId;
-
-    /**
-     * @param int $productId
-     */
-    public function __construct(int $productId)
-    {
-        $this->productId = new ProductId($productId);
-    }
-
-    /**
-     * @return ProductId
-     */
-    public function getProductId(): ProductId
-    {
-        return $this->productId;
-    }
+    public function handle(GetProductSuppliersForEditing $query): array;
 }

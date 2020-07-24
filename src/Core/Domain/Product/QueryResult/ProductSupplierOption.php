@@ -28,44 +28,64 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
+
 /**
- * Transfers product suppliers data
+ * Transfers supplier option data for product relation
  */
-class ProductSupplierOptions
+class ProductSupplierOption
 {
+    /**
+     * @var string
+     */
+    private $supplierName;
+
     /**
      * @var int
      */
-    private $defaultSupplierId;
+    private $supplierId;
 
     /**
-     * @var ProductSupplierOption
+     * @var ProductSupplierForEditing[]
      */
-    private $productSupplierOption;
+    private $productSuppliersForEditing;
 
     /**
-     * @param int $defaultSupplierId
-     * @param ProductSupplierOption $productSupplierOption
+     * @param string $supplierName
+     * @param int $supplierId
+     * @param ProductSupplierForEditing[] $productSuppliersForEditing
      */
-    public function __construct(int $defaultSupplierId, ProductSupplierOption $productSupplierOption)
+    public function __construct(
+        string $supplierName,
+        int $supplierId,
+        array $productSuppliersForEditing
+    ) {
+        $this->supplierName = $supplierName;
+        $this->supplierId = $supplierId;
+        $this->productSuppliersForEditing = $productSuppliersForEditing;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSupplierName(): string
     {
-        $this->defaultSupplierId = $defaultSupplierId;
-        $this->productSupplierOption = $productSupplierOption;
+        return $this->supplierName;
     }
 
     /**
      * @return int
      */
-    public function getDefaultSupplierId(): int
+    public function getSupplierId(): int
     {
-        return $this->defaultSupplierId;
+        return $this->supplierId;
     }
 
     /**
-     * @return ProductSupplierOption
+     * @return ProductSupplierForEditing[]
      */
-    public function getProductSupplierOption(): ProductSupplierOption
+    public function getProductSuppliersForEditing(): array
     {
-        return $this->productSupplierOption;
+        return $this->productSuppliersForEditing;
     }
 }
