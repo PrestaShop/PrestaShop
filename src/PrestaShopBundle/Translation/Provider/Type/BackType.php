@@ -26,31 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Translation\Provider\Strategy;
+namespace PrestaShopBundle\Translation\Provider\Type;
 
 /**
- * Properties container for 'external_legacy_module' type of translation.
+ * Properties container for 'back' type of translation.
  */
-class ExternalLegacyModuleType implements TypeInterface
+class BackType implements TypeInterface
 {
-    /**
-     * @var string
-     */
-    private $moduleName;
-
-    /**
-     * @param string $moduleName
-     */
-    public function __construct(string $moduleName)
-    {
-        $this->moduleName = $moduleName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getModuleName(): string
-    {
-        return $this->moduleName;
-    }
 }

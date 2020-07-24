@@ -33,16 +33,16 @@ use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use PrestaShopBundle\Translation\Provider\ExternalModuleLegacySystemProvider;
 use PrestaShopBundle\Translation\Provider\SearchProvider;
-use PrestaShopBundle\Translation\Provider\Strategy\BackStrategy;
-use PrestaShopBundle\Translation\Provider\Strategy\ExternalLegacyModuleStrategy;
-use PrestaShopBundle\Translation\Provider\Strategy\FrontStrategy;
-use PrestaShopBundle\Translation\Provider\Strategy\MailsBodyStrategy;
-use PrestaShopBundle\Translation\Provider\Strategy\MailsStrategy;
-use PrestaShopBundle\Translation\Provider\Strategy\ModulesStrategy;
-use PrestaShopBundle\Translation\Provider\Strategy\OthersStrategy;
-use PrestaShopBundle\Translation\Provider\Strategy\SearchStrategy;
-use PrestaShopBundle\Translation\Provider\Strategy\StrategyFactory;
-use PrestaShopBundle\Translation\Provider\Strategy\ThemesStrategy;
+use PrestaShopBundle\Translation\Provider\Type\BackStrategy;
+use PrestaShopBundle\Translation\Provider\Type\ExternalLegacyModuleStrategy;
+use PrestaShopBundle\Translation\Provider\Type\FrontStrategy;
+use PrestaShopBundle\Translation\Provider\Type\MailsBodyStrategy;
+use PrestaShopBundle\Translation\Provider\Type\MailsStrategy;
+use PrestaShopBundle\Translation\Provider\Type\ModulesStrategy;
+use PrestaShopBundle\Translation\Provider\Type\OthersStrategy;
+use PrestaShopBundle\Translation\Provider\Type\SearchStrategy;
+use PrestaShopBundle\Translation\Provider\Type\StrategyFactory;
+use PrestaShopBundle\Translation\Provider\Type\ThemesStrategy;
 use PrestaShopBundle\Translation\Provider\ThemeProvider;
 
 class StrategyFactoryTest extends TestCase
