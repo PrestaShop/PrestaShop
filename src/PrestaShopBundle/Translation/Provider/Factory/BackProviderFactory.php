@@ -31,8 +31,8 @@ namespace PrestaShopBundle\Translation\Provider\Factory;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use PrestaShopBundle\Translation\Provider\BackProvider;
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
-use PrestaShopBundle\Translation\Provider\Strategy\BackType;
-use PrestaShopBundle\Translation\Provider\Strategy\TypeInterface;
+use PrestaShopBundle\Translation\Provider\Type\BackType;
+use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
 
 class BackProviderFactory implements ProviderFactoryInterface
 {
@@ -54,9 +54,9 @@ class BackProviderFactory implements ProviderFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function implements(TypeInterface $strategy): bool
+    public function implements(TypeInterface $providerType): bool
     {
-        return $strategy instanceof BackType;
+        return $providerType instanceof BackType;
     }
 
     /**
@@ -65,7 +65,7 @@ class BackProviderFactory implements ProviderFactoryInterface
     public function build(TypeInterface $providerType): ProviderInterface
     {
         if (!$this->implements($providerType)) {
-            throw new \RuntimeException('Bad strategy given');
+            throw new \RuntimeException(sprintf('Invalid provider type given: %s', get_class($providerType)));
         }
 
         /* @var BackType $providerType */

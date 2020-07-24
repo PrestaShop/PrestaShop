@@ -31,8 +31,8 @@ namespace PrestaShopBundle\Translation\Provider\Factory;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use PrestaShopBundle\Translation\Provider\FrontProvider;
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
-use PrestaShopBundle\Translation\Provider\Strategy\FrontType;
-use PrestaShopBundle\Translation\Provider\Strategy\TypeInterface;
+use PrestaShopBundle\Translation\Provider\Type\FrontType;
+use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
 
 class FrontProviderFactory implements ProviderFactoryInterface
 {
@@ -54,9 +54,9 @@ class FrontProviderFactory implements ProviderFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function implements(TypeInterface $strategy): bool
+    public function implements(TypeInterface $providerType): bool
     {
-        return $strategy instanceof FrontType;
+        return $providerType instanceof FrontType;
     }
 
     /**
@@ -64,6 +64,10 @@ class FrontProviderFactory implements ProviderFactoryInterface
      */
     public function build(TypeInterface $providerType): ProviderInterface
     {
+        if (!$this->implements($providerType)) {
+            throw new \RuntimeException(sprintf('Invalid provider type given: %s', get_class($providerType)));
+        }
+
         /* @var FrontType $providerType */
         return new FrontProvider(
             $this->databaseTranslationLoader,

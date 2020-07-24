@@ -32,7 +32,7 @@ use PrestaShop\TranslationToolsBundle\Translation\Dumper\XliffFileDumper;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\Util\Flattenizer;
 use PrestaShopBundle\Translation\Extractor\ThemeExtractorInterface;
 use PrestaShopBundle\Translation\Provider\Factory\ProviderFactory;
-use PrestaShopBundle\Translation\Provider\Strategy\ThemesType;
+use PrestaShopBundle\Translation\Provider\Type\ThemesType;
 use PrestaShopBundle\Translation\Provider\TranslationFinder;
 use PrestaShopBundle\Utils\ZipManager;
 use Symfony\Component\Filesystem\Filesystem;

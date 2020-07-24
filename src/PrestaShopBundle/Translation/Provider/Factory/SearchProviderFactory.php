@@ -34,8 +34,8 @@ use PrestaShopBundle\Translation\Loader\LegacyFileLoader;
 use PrestaShopBundle\Translation\Provider\ExternalLegacyModuleProvider;
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
 use PrestaShopBundle\Translation\Provider\SearchProvider;
-use PrestaShopBundle\Translation\Provider\Strategy\SearchType;
-use PrestaShopBundle\Translation\Provider\Strategy\TypeInterface;
+use PrestaShopBundle\Translation\Provider\Type\SearchType;
+use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
 
 class SearchProviderFactory implements ProviderFactoryInterface
 {
@@ -77,9 +77,9 @@ class SearchProviderFactory implements ProviderFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function implements(TypeInterface $strategy): bool
+    public function implements(TypeInterface $providerType): bool
     {
-        return $strategy instanceof SearchType;
+        return $providerType instanceof SearchType;
     }
 
     /**
@@ -88,7 +88,7 @@ class SearchProviderFactory implements ProviderFactoryInterface
     public function build(TypeInterface $providerType): ProviderInterface
     {
         if (!$this->implements($providerType)) {
-            throw new \RuntimeException('Bad strategy given');
+            throw new \RuntimeException(sprintf('Invalid provider type given: %s', get_class($providerType)));
         }
 
         $externalLegacyModuleProvider = null;

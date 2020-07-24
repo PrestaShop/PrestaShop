@@ -30,7 +30,7 @@ namespace PrestaShopBundle\Translation\Provider\Factory;
 
 use PrestaShopBundle\Exception\NotImplementedException;
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
-use PrestaShopBundle\Translation\Provider\Strategy\TypeInterface;
+use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
 
 class ProviderFactory
 {
@@ -45,20 +45,20 @@ class ProviderFactory
     }
 
     /**
-     * @param TypeInterface $strategy
+     * @param TypeInterface $providerType
      *
      * @return ProviderInterface
      *
      * @throws NotImplementedException
      */
-    public function getProviderFor(TypeInterface $strategy): ProviderInterface
+    public function getProviderFor(TypeInterface $providerType): ProviderInterface
     {
         foreach ($this->factories as $factory) {
-            if ($factory->implements($strategy)) {
-                return $factory->build($strategy);
+            if ($factory->implements($providerType)) {
+                return $factory->build($providerType);
             }
         }
 
-        throw new NotImplementedException(sprintf('Could not find factory for %s', get_class($strategy)));
+        throw new NotImplementedException(sprintf('Could not find factory for %s', get_class($providerType)));
     }
 }
