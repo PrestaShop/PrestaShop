@@ -17,3 +17,49 @@ admin_features_edit:
       id_feature: featureId
   requirements:
     featureId: \d+
+
+admin_features_index:
+  path: /
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Sell\Catalog\Feature:index
+    _legacy_controller: AdminFeatures
+#    _legacy_link: AdminFeatures
+
+admin_features_search:
+  path: /
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Common:searchGrid
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.feature
+    redirectRoute: admin_features_index
+    _legacy_controller: AdminFeatures
+#    _legacy_link: AdminFeatures:submitFilterfeature
+
+admin_features_delete:
+  path: /{featureId}/delete
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Sell\Catalog\Feature:delete
+    _legacy_controller: AdminFeatures
+#    _legacy_link: AdminFeatures:submitdeletefeature
+    _legacy_parameters:
+      id_feature: featureId
+  requirements:
+    featureId: \d+
+
+admin_features_bulk_delete:
+  path: /bulk-delete
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Sell\Catalog\Feature:bulkDelete
+    _legacy_controller: AdminFeatures
+#    _legacy_link: AdminFeatures:submitBulkdeletefeature
+
+admin_features_update_position:
+  path: /update-position
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Sell\Catalog\Feature:updatePosition
+    _legacy_controller: AdminFeatures
+#    _legacy_link: AdminFeatures:updatePositions

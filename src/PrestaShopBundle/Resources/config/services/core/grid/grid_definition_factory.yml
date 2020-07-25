@@ -251,3 +251,8 @@ services:
         arguments:
             - '@=service("prestashop.adapter.legacy.context").getLanguage().date_format_lite'
         public: true
+
+    prestashop.core.grid.definition.factory.feature:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
