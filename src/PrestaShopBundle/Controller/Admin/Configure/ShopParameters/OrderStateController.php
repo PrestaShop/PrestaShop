@@ -134,7 +134,6 @@ class OrderStateController extends FrameworkBundleAdminController
             'orderStateForm' => $orderStateForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'contextLangId' => $this->getContextLangId(),
-            /* @phpstan-ignore-next-line */
             'templatesPreviewUrl' => _MAIL_DIR_,
             'languages' => array_map(
                 function (array $language) {
@@ -180,7 +179,6 @@ class OrderStateController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'editableOrderState' => $this->getQueryBus()->handle(new GetOrderStateForEditing((int) $orderStateId)),
             'contextLangId' => $this->getContextLangId(),
-            /* @phpstan-ignore-next-line */
             'templatesPreviewUrl' => _MAIL_DIR_,
             'languages' => array_map(
                 function (array $language) {
