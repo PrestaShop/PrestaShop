@@ -48,7 +48,6 @@ services:
             - "@prestashop.translation.legacy_file_loader"
             - "@prestashop.translation.legacy_module.extractor"
             - "%translations_dir%"
-            - "%modules_dir%"
 
     prestashop.translation.themes_provider_factory:
         class: PrestaShopBundle\Translation\Provider\Factory\ThemesProviderFactory

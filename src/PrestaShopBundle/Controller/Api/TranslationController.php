@@ -94,10 +94,12 @@ class TranslationController extends ApiController
             if ('Messages' === $domain) {
                 $domain = 'messages';
             }
-            if (!empty($theme) && $this->container->getParameter('default_theme') !== $theme) {
+            if (!empty($module)) {
+                $providerType = new ExternalLegacyModuleType($module);
+            } elseif (!empty($theme) && $this->container->getParameter('default_theme') !== $theme) {
                 $providerType = new ThemesType($theme);
             } else {
-                $providerType = new SearchType($domain, $theme, $module);
+                $providerType = new SearchType($domain, $theme);
             }
             $catalog = $this->translationService->listDomainTranslation($providerType, $locale, $domain, $searchedExpressions);
             $info = [
