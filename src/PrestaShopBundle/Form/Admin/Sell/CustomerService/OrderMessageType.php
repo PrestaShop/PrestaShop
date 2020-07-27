@@ -52,7 +52,6 @@ class OrderMessageType extends TranslatorAwareType
             ->add('name', TranslatableType::class, [
                 'label' => $this->trans('Name', 'Admin.Global'),
                 'options' => [
-                    'error_bubbling' => true,
                     'constraints' => [
                         new TypedRegex([
                             'type' => 'generic_name',
@@ -70,7 +69,6 @@ class OrderMessageType extends TranslatorAwareType
                 'label' => $this->trans('Message', 'Admin.Global'),
                 'type' => TextareaType::class,
                 'options' => [
-                    'error_bubbling' => true,
                     'constraints' => [
                         new TypedRegex([
                             'type' => 'message',
