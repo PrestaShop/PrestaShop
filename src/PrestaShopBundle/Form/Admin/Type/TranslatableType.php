@@ -107,6 +107,13 @@ class TranslatableType extends TranslatorAwareType
     {
         foreach ($options['locales'] as $locale) {
             $typeOptions = $options['options'];
+
+            /**
+             * Makes sure that error_bubbling is true unless specified otherwise. Solves problems with errors.
+             */
+            if (!isset($typeOptions['error_bubbling'])) {
+                $typeOptions['error_bubbling'] = true;
+            }
             $typeOptions['label'] = $locale['iso_code'];
 
             if (!isset($typeOptions['required'])) {
@@ -161,7 +168,8 @@ class TranslatableType extends TranslatorAwareType
     {
         $resolver->setDefaults([
             'type' => TextType::class,
-            'options' => [],
+            'options' => [
+            ],
             'error_bubbling' => false,
             'only_enabled_locales' => false,
             'locales' => function (Options $options) {
