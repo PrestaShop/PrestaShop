@@ -41,24 +41,17 @@ class SearchType implements TypeInterface
      * @var string|null
      */
     private $theme;
-    /**
-     * @var string|null
-     */
-    private $module;
 
     /**
      * @param string $domain
      * @param string|null $theme
-     * @param string|null $module
      */
     public function __construct(
         string $domain,
-        ?string $theme = null,
-        ?string $module = null
+        ?string $theme = null
     ) {
         $this->domain = $domain;
         $this->theme = $theme;
-        $this->module = $module;
     }
 
     /**
@@ -75,13 +68,5 @@ class SearchType implements TypeInterface
     public function getTheme(): ?string
     {
         return $this->theme;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getModule(): ?string
-    {
-        return $this->module;
     }
 }

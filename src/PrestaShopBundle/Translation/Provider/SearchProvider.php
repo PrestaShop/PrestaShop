@@ -26,12 +26,10 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
-use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use PrestaShopBundle\Translation\Provider\Catalogue\DefaultCatalogueProvider;
 use PrestaShopBundle\Translation\Provider\Catalogue\FileTranslatedCatalogueProvider;
 use PrestaShopBundle\Translation\Provider\Catalogue\UserTranslatedCatalogueProvider;
-use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
@@ -50,28 +48,9 @@ class SearchProvider implements ProviderInterface
     protected $domain;
 
     /**
-     * @var string[]
-     */
-    private $filenameFilters;
-
-    /**
-     * @var string the "modules" directory path
-     */
-    private $modulesDirectory;
-
-    /**
-     * @var ExternalLegacyModuleProvider|null
-     */
-    private $externalModuleLegacySystemProvider;
-
-    /**
      * @var DatabaseTranslationLoader
      */
     private $databaseLoader;
-    /**
-     * @var string|null
-     */
-    private $moduleName;
     /**
      * @var string|null
      */
@@ -80,27 +59,18 @@ class SearchProvider implements ProviderInterface
     /**
      * @param DatabaseTranslationLoader $databaseLoader
      * @param string $resourceDirectory
-     * @param string $modulesDirectory
      * @param string $domain
-     * @param ExternalLegacyModuleProvider|null $externalModuleLegacySystemProvider
-     * @param string|null $moduleName
      * @param string|null $themeName
      */
     public function __construct(
         DatabaseTranslationLoader $databaseLoader,
         string $resourceDirectory,
-        string $modulesDirectory,
         string $domain,
-        ?ExternalLegacyModuleProvider $externalModuleLegacySystemProvider = null,
-        ?string $moduleName = null,
         ?string $themeName = null
     ) {
-        $this->modulesDirectory = $modulesDirectory;
-        $this->externalModuleLegacySystemProvider = $externalModuleLegacySystemProvider;
         $this->resourceDirectory = $resourceDirectory;
         $this->databaseLoader = $databaseLoader;
         $this->domain = $domain;
-        $this->moduleName = $moduleName;
         $this->themeName = $themeName;
     }
 
@@ -112,22 +82,11 @@ class SearchProvider implements ProviderInterface
      */
     public function getDefaultCatalogue(string $locale, bool $empty = true): ?MessageCatalogueInterface
     {
-        try {
-            return (new DefaultCatalogueProvider(
-                $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default',
-                $this->getFilenameFilters()
-            ))
-                ->getCatalogue($locale, $empty);
-        } catch (FileNotFoundException $e) {
-            if (null !== $this->moduleName && null !== $this->externalModuleLegacySystemProvider) {
-                return $this->filterCatalogue(
-                    $locale,
-                    $this->externalModuleLegacySystemProvider->getDefaultCatalogue($locale, $empty)
-                );
-            }
-        }
-
-        return null;
+        return (new DefaultCatalogueProvider(
+            $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default',
+            $this->getFilenameFilters()
+        ))
+            ->getCatalogue($locale, $empty);
     }
 
     /**
@@ -137,22 +96,11 @@ class SearchProvider implements ProviderInterface
      */
     public function getFileTranslatedCatalogue(string $locale): ?MessageCatalogueInterface
     {
-        try {
-            return (new FileTranslatedCatalogueProvider(
-                $this->resourceDirectory,
-                $this->getFilenameFilters()
-            ))
-                ->getCatalogue($locale);
-        } catch (FileNotFoundException $e) {
-            if (null !== $this->moduleName && null !== $this->externalModuleLegacySystemProvider) {
-                return $this->filterCatalogue(
-                    $locale,
-                    $this->externalModuleLegacySystemProvider->getFileTranslatedCatalogue($locale)
-                );
-            }
-        }
-
-        return null;
+        return (new FileTranslatedCatalogueProvider(
+            $this->resourceDirectory,
+            $this->getFilenameFilters()
+        ))
+            ->getCatalogue($locale);
     }
 
     /**
@@ -177,32 +125,5 @@ class SearchProvider implements ProviderInterface
     private function getFilenameFilters(): array
     {
         return ['#^' . preg_quote($this->domain, '#') . '([A-Za-z]|\.|$)#'];
-    }
-
-    /**
-     * Filters the catalogue so that only domains matching the filters are kept
-     *
-     * @param string $locale
-     * @param MessageCatalogueInterface $catalogue
-     *
-     * @return MessageCatalogueInterface
-     */
-    private function filterCatalogue(string $locale, MessageCatalogueInterface $catalogue): MessageCatalogueInterface
-    {
-        $allowedDomains = [];
-
-        // return only elements whose domain matches the filters
-        foreach ($catalogue->all() as $domain => $messages) {
-            foreach ($this->filenameFilters as $filter) {
-                if (preg_match($filter, $domain)) {
-                    $allowedDomains[$domain] = $messages;
-                    break;
-                }
-            }
-        }
-
-        $catalogue = new MessageCatalogue($locale, $allowedDomains);
-
-        return $catalogue;
     }
 }
