@@ -26,35 +26,37 @@ import $ from 'jquery';
 import prestashop from 'prestashop';
 
 function setUpCheckout() {
-  $('.js-terms a').on('click', (event) => {
+  $(prestashop.themeSelectors.checkout.termsLink).on('click', (event) => {
     event.preventDefault();
     var url = $(event.target).attr('href');
     if (url) {
       // TODO: Handle request if no pretty URL
       url += `?content_only=1`;
       $.get(url, (content) => {
-        $('#modal').find('.js-modal-content').html($(content).find('.page-cms').contents());
+        $(prestashop.themeSelectors.modal)
+          .find(prestashop.themeSelectors.modalContent)
+          .html($(content).find('.page-cms').contents());
       }).fail((resp) => {
         prestashop.emit('handleError', {eventType: 'clickTerms', resp: resp});
       });
     }
 
-    $('#modal').modal('show');
+    $(prestashop.themeSelectors.modal).modal('show');
   });
 
-  $('.js-gift-checkbox').on('click', (event) => {
+  $(prestashop.themeSelectors.checkout.giftCheckbox).on('click', (event) => {
     $('#gift').collapse('toggle');
   });
 }
 
 function toggleImage() {
   // Arrow show/hide details Checkout page
-  $('.card-block .cart-summary-products p a').on('click', function (icon) {
+  $(prestashop.themeSelectors.checkout.imagesLink).on('click', function (icon) {
     icon = $(this).find('i.material-icons');
-    if (icon.text() == 'expand_more') { 
-      icon.text('expand_less'); 
-    } else { 
-      icon.text('expand_more'); 
+    if (icon.text() == 'expand_more') {
+      icon.text('expand_less');
+    } else {
+      icon.text('expand_more');
     }
   });
 }
@@ -67,11 +69,11 @@ $(document).ready(() => {
 
   prestashop.on('updatedDeliveryForm', (params) => {
     if (typeof params.deliveryOption === 'undefined' || 0 === params.deliveryOption.length) {
-        return;
+      return;
     }
     // Hide all carrier extra content ...
-    $(".carrier-extra-content").hide();
+    $(prestashop.themeSelectors.checkout.carrierExtraContent).hide();
     // and show the one related to the selected carrier
-    params.deliveryOption.next(".carrier-extra-content").slideDown();
+    params.deliveryOption.next(prestashop.themeSelectors.checkout.carrierExtraContent).slideDown();
   });
 });

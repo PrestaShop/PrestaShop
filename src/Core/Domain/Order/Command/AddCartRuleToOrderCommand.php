@@ -82,7 +82,7 @@ class AddCartRuleToOrderCommand
         $this->orderId = new OrderId($orderId);
         $this->cartRuleName = $cartRuleName;
         $this->cartRuleType = $cartRuleType;
-        $this->value = $value ? new Number($value) : null;
+        $this->value = null !== $value ? new Number($value) : null;
         $this->orderInvoiceId = $orderInvoiceId ? new OrderInvoiceId($orderInvoiceId) : null;
     }
 

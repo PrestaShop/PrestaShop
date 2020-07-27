@@ -11,10 +11,9 @@ const loginCommon = require('@commonTests/loginBO');
 const FileFaker = require('@data/faker/file');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const FilesPage = require('@pages/BO/catalog/files');
-const AddFilePage = require('@pages/BO/catalog/files/add');
+const dashboardPage = require('@pages/BO/dashboard');
+const filesPage = require('@pages/BO/catalog/files');
+const addFilePage = require('@pages/BO/catalog/files/add');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -28,24 +27,12 @@ let numberOfFiles = 0;
 const firstFileData = new FileFaker({name: 'todelete'});
 const secondFileData = new FileFaker({name: 'todelete'});
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    filesPage: new FilesPage(page),
-    addFilePage: new AddFilePage(page),
-  };
-};
-
 // Create Files and Delete with Bulk actions
 describe('Create Files and Delete with Bulk actions', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
 
     await Promise.all([
       files.createFile('.', firstFileData.filename, `test ${firstFileData.filename}`),
@@ -63,27 +50,29 @@ describe('Create Files and Delete with Bulk actions', async () => {
     ]);
   });
 
-  // Login into BO and go to files page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to \'Catalog>Files\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFilesPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.catalogParentLink,
-      this.pageObjects.dashboardPage.filesLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.catalogParentLink,
+      dashboardPage.filesLink,
     );
 
-    await this.pageObjects.filesPage.closeSfToolBar();
+    await filesPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.filesPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.filesPage.pageTitle);
+    const pageTitle = await filesPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(filesPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfFiles = await this.pageObjects.filesPage.resetAndGetNumberOfLines();
+    numberOfFiles = await filesPage.resetAndGetNumberOfLines(page);
 
     if (numberOfFiles === 0) {
       await expect(numberOfFiles).to.be.equal(0);
@@ -105,18 +94,18 @@ describe('Create Files and Delete with Bulk actions', async () => {
       it('should go to add new file page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddFilePage${index + 1}`, baseContext);
 
-        await this.pageObjects.filesPage.goToAddNewFilePage();
-        const pageTitle = await this.pageObjects.addFilePage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.addFilePage.pageTitle);
+        await filesPage.goToAddNewFilePage(page);
+        const pageTitle = await addFilePage.getPageTitle(page);
+        await expect(pageTitle).to.contains(addFilePage.pageTitle);
       });
 
       it('should create file and check result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createFile${index + 1}`, baseContext);
 
-        const textResult = await this.pageObjects.addFilePage.createEditFile(test.args.fileToCreate);
-        await expect(textResult).to.equal(this.pageObjects.filesPage.successfulCreationMessage);
+        const textResult = await addFilePage.createEditFile(page, test.args.fileToCreate);
+        await expect(textResult).to.equal(filesPage.successfulCreationMessage);
 
-        const numberOfFilesAfterCreation = await this.pageObjects.filesPage.getNumberOfElementInGrid();
+        const numberOfFilesAfterCreation = await filesPage.getNumberOfElementInGrid(page);
         await expect(numberOfFilesAfterCreation).to.be.equal(numberOfFiles + index + 1);
       });
     });
@@ -127,16 +116,18 @@ describe('Create Files and Delete with Bulk actions', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
 
-      await this.pageObjects.filesPage.filterTable(
+      await filesPage.filterTable(
+        page,
         'name',
         'todelete',
       );
 
-      const numberOfFilesAfterFilter = await this.pageObjects.filesPage.getNumberOfElementInGrid();
+      const numberOfFilesAfterFilter = await filesPage.getNumberOfElementInGrid(page);
       await expect(numberOfFilesAfterFilter).to.be.equal(2);
 
       for (let i = 1; i <= numberOfFilesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.filesPage.getTextColumnFromTable(
+        const textColumn = await filesPage.getTextColumnFromTable(
+          page,
           i,
           'name',
         );
@@ -148,14 +139,14 @@ describe('Create Files and Delete with Bulk actions', async () => {
     it('should delete files with Bulk Actions and check Result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'BulkDelete', baseContext);
 
-      const deleteTextResult = await this.pageObjects.filesPage.deleteFilesBulkActions();
-      await expect(deleteTextResult).to.be.equal(this.pageObjects.filesPage.successfulMultiDeleteMessage);
+      const deleteTextResult = await filesPage.deleteFilesBulkActions(page);
+      await expect(deleteTextResult).to.be.equal(filesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
-      const numberOfFilesAfterReset = await this.pageObjects.filesPage.resetAndGetNumberOfLines();
+      const numberOfFilesAfterReset = await filesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfFilesAfterReset).to.be.equal(numberOfFiles);
     });
   });

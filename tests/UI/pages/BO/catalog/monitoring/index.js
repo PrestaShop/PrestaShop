@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class Monitoring extends BOBasePage {
-  constructor(page) {
-    super(page);
+class Monitoring extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Monitoring •';
 
@@ -52,101 +52,108 @@ module.exports = class Monitoring extends BOBasePage {
   /* Reset Methods */
   /**
    * Get number of element in table grid
+   * @param page
    * @param table, which table to get number of element from
    * @return {Promise<number>}
    */
-  async getNumberOfElementInGrid(table) {
-    return this.getNumberFromText(this.gridHeaderTitle(table));
+  async getNumberOfElementInGrid(page, table) {
+    return this.getNumberFromText(page, this.gridHeaderTitle(table));
   }
 
   /**
    * Reset filters in table
+   * @param page
    * @param table, which table to reset
    * @return {Promise<void>}
    */
-  async resetFilter(table) {
-    if (!(await this.elementNotVisible(this.filterResetButton(table), 2000))) {
-      await this.clickAndWaitForNavigation(this.filterResetButton(table));
+  async resetFilter(page, table) {
+    if (!(await this.elementNotVisible(page, this.filterResetButton(table), 2000))) {
+      await this.clickAndWaitForNavigation(page, this.filterResetButton(table));
     }
   }
 
   /**
    * Reset Filter And get number of elements in list
+   * @param page
    * @param table, which table to reset
    * @return {Promise<number>}
    */
-  async resetAndGetNumberOfLines(table) {
-    await this.resetFilter(table);
-    return this.getNumberOfElementInGrid(table);
+  async resetAndGetNumberOfLines(page, table) {
+    await this.resetFilter(page, table);
+    return this.getNumberOfElementInGrid(page, table);
   }
 
 
   /* Filter Methods */
   /**
    * Filter Table
+   * @param page
    * @param table, which table to filter
    * @param filterType, input / Select
    * @param filterBy, which column
    * @param value, value to put in filter
    * @return {Promise<void>}
    */
-  async filterTable(table, filterType, filterBy, value = '') {
+  async filterTable(page, table, filterType, filterBy, value = '') {
     switch (filterType) {
       case 'input':
-        await this.setValue(this.filterColumn(table, filterBy), value);
+        await this.setValue(page, this.filterColumn(table, filterBy), value);
         break;
       case 'select':
-        await this.selectByVisibleText(this.filterColumn(table, filterBy), value ? 'Yes' : 'No');
+        await this.selectByVisibleText(page, this.filterColumn(table, filterBy), value ? 'Yes' : 'No');
         break;
       default:
         throw new Error(`Filter column not found : ${filterBy}`);
     }
     // click on search
-    await this.clickAndWaitForNavigation(this.filterSearchButton(table));
+    await this.clickAndWaitForNavigation(page, this.filterSearchButton(table));
   }
 
   /* table methods */
   /**
    * get text from a column
+   * @param page
    * @param table, which table to get text from
    * @param row, row in table
    * @param column, which column
    * @return {Promise<string>}
    */
-  async getTextColumnFromTable(table, row, column) {
-    return this.getTextContent(this.tableColumn(table, row, column));
+  async getTextColumnFromTable(page, table, row, column) {
+    return this.getTextContent(page, this.tableColumn(table, row, column));
   }
 
   /**
    * Open dropdown menu in table
+   * @param page
    * @param table
    * @param row
    * @return {Promise<void>}
    */
-  async openDropdownMenu(table, row) {
+  async openDropdownMenu(page, table, row) {
     await Promise.all([
-      this.page.click(this.dropdownToggleButton(table, row)),
-      this.waitForVisibleSelector(`${this.dropdownToggleButton(table, row)}[aria-expanded='true']`),
+      page.click(this.dropdownToggleButton(table, row)),
+      this.waitForVisibleSelector(page, `${this.dropdownToggleButton(table, row)}[aria-expanded='true']`),
     ]);
   }
 
   /**
    * Delete Row in table
+   * @param page
    * @param table
    * @param row, row to delete
    * @return {Promise<string>}
    */
-  async deleteProductInGrid(table, row) {
-    await this.openDropdownMenu(table, row);
+  async deleteProductInGrid(page, table, row) {
+    await this.openDropdownMenu(page, table, row);
 
     // Click on delete and wait for modal
     await Promise.all([
-      this.page.click(this.deleteRowLink(table, row)),
-      this.waitForVisibleSelector(`${this.deleteProductModal(table)}.show`),
+      page.click(this.deleteRowLink(table, row)),
+      this.waitForVisibleSelector(page, `${this.deleteProductModal(table)}.show`),
     ]);
 
-    await this.clickAndWaitForNavigation(this.submitDeleteProductButton(table));
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.clickAndWaitForNavigation(page, this.submitDeleteProductButton(table));
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /* Categories methods */
@@ -176,48 +183,51 @@ module.exports = class Monitoring extends BOBasePage {
 
   /**
    * Delete Row in table empty categories
+   * @param page
    * @param table
    * @param row, row to delete
    * @param deletionModePosition, which mode to choose for delete
    * @return {Promise<string>}
    */
-  async deleteCategoryInGrid(table, row, deletionModePosition) {
-    this.dialogListener(true);
-    await this.openDropdownMenu(table, row);
+  async deleteCategoryInGrid(page, table, row, deletionModePosition) {
+    this.dialogListener(page, true);
+    await this.openDropdownMenu(page, table, row);
     await Promise.all([
-      this.page.click(this.deleteCategoryRowLink(row)),
-      this.waitForVisibleSelector(this.deleteModeCategoryModal),
+      page.click(this.deleteCategoryRowLink(row)),
+      this.waitForVisibleSelector(page, this.deleteModeCategoryModal),
     ]);
     // choose deletion mode
-    await this.page.click(this.deleteModeInput(deletionModePosition));
-    await this.clickAndWaitForNavigation(this.submitDeleteCategoryButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await page.click(this.deleteModeInput(deletionModePosition));
+    await this.clickAndWaitForNavigation(page, this.submitDeleteCategoryButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
    * Get toggle column value for a row
+   * @param page
    * @param table
    * @param row
    * @return {Promise<boolean>}
    */
-  async getToggleColumnValue(table, row = 1) {
-    return this.elementVisible(this.enableColumnValidIcon(table, row), 100);
+  async getToggleColumnValue(page, table, row = 1) {
+    return this.elementVisible(page, this.enableColumnValidIcon(table, row), 100);
   }
 
   // Sort methods
   /**
    * Get content from all rows
+   * @param page
    * @param table
    * @param column
    * @return {Promise<[]>}
    */
-  async getAllRowsColumnContent(table, column) {
-    const rowsNumber = await this.getNumberOfElementInGrid(table);
+  async getAllRowsColumnContent(page, table, column) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page, table);
     const allRowsContentTable = [];
     for (let i = 1; i <= rowsNumber; i++) {
-      let rowContent = await this.getTextContent(this.tableColumn(table, i, column));
+      let rowContent = await this.getTextContent(page, this.tableColumn(table, i, column));
       if (column === 'active') {
-        rowContent = await this.getToggleColumnValue(table, i).toString();
+        rowContent = await this.getToggleColumnValue(page, table, i).toString();
       }
       await allRowsContentTable.push(rowContent);
     }
@@ -226,19 +236,22 @@ module.exports = class Monitoring extends BOBasePage {
 
   /**
    * Sort table
+   * @param page
    * @param table
    * @param sortBy, column to sort with
    * @param sortDirection, asc or desc
    * @return {Promise<void>}
    */
-  async sortTable(table, sortBy, sortDirection = 'asc') {
+  async sortTable(page, table, sortBy, sortDirection = 'asc') {
     const sortColumnDiv = `${this.sortColumnDiv(table, sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(table, sortBy);
     let i = 0;
-    while (await this.elementNotVisible(sortColumnDiv, 1000) && i < 2) {
-      await this.clickAndWaitForNavigation(sortColumnSpanButton);
+    while (await this.elementNotVisible(page, sortColumnDiv, 1000) && i < 2) {
+      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
     }
-    await this.waitForVisibleSelector(sortColumnDiv);
+    await this.waitForVisibleSelector(page, sortColumnDiv);
   }
-};
+}
+
+module.exports = new Monitoring();

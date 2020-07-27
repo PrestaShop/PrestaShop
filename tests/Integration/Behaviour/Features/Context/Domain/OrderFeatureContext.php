@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use AdminController;
@@ -35,6 +37,7 @@ use Order;
 use OrderState;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscountValueException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
@@ -65,6 +68,7 @@ use stdClass;
 use Tax;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class OrderFeatureContext extends AbstractDomainFeatureContext
 {
@@ -163,18 +167,24 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         $data = $table->getRowsHash();
         $productName = $data['name'];
-        $productId = $this->getProductIdByName($productName);
+        $product = $this->getProductByName($productName);
+        $productId = $product->getProductId();
+        if (isset($data['combination'])) {
+            $combinationId = $this->getProductCombinationId($product, $data['combination']);
+        } else {
+            $combinationId = 0;
+        }
 
         try {
             $this->getCommandBus()->handle(
                 AddProductToOrderCommand::withNewInvoice(
                     $orderId,
                     $productId,
-                    0,
-                    (float) $data['price'],
-                    (float) $data['price'],
+                    $combinationId,
+                    $data['price'],
+                    $data['price'],
                     (int) $data['amount'],
-                    $data['free_shipping']
+                    PrimitiveUtils::castStringBooleanIntoBoolean($data['free_shipping'] ?? false)
                 )
             );
         } catch (InvalidProductQuantityException $e) {
@@ -245,14 +255,13 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         try {
             $this->getCommandBus()->handle(
                 AddProductToOrderCommand::toExistingInvoice(
-                    $orderId,
-                    $lastInvoice->id,
-                    $productId,
+                    (int) $orderId,
+                    (int) $lastInvoice->id,
+                    (int) $productId,
                     0,
-                    (float) $data['price'],
-                    (float) $data['price'],
-                    (int) $data['amount'],
-                    $data['free_shipping']
+                    $data['price'],
+                    $data['price'],
+                    (int) $data['amount']
                 )
             );
         } catch (InvalidProductQuantityException $e) {
@@ -403,17 +412,48 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $productOrderDetail = $this->getOrderDetailFromOrder($productName, $orderReference);
         $data = $table->getRowsHash();
 
+        $this->updateProductInOrder($orderId, $productOrderDetail, $data);
+    }
+
+    /**
+     * @When I edit combination :combinationName of product :productName to order :orderReference with following products details:
+     *
+     * @param string $combinationName
+     * @param string $productName
+     * @param string $orderReference
+     * @param TableNode $table
+     */
+    public function editCombinationToOrderWithFollowingDetails(string $combinationName, string $productName, string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $productOrderDetail = $this->getOrderDetailFromOrder($productName, $orderReference, $combinationName);
+        $data = $table->getRowsHash();
+
+        $this->updateProductInOrder($orderId, $productOrderDetail, $data);
+    }
+
+    /**
+     * @param int $orderId
+     * @param array $productOrderDetail
+     * @param array $data
+     *
+     * @throws \PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidAmountException
+     */
+    private function updateProductInOrder(int $orderId, array $productOrderDetail, array $data)
+    {
         try {
             $this->getCommandBus()->handle(
                 new UpdateProductInOrderCommand(
-                    $orderId,
-                    $productOrderDetail['id_order_detail'],
-                    (float) $data['price'],
-                    (float) $data['price'],
+                    (int) $orderId,
+                    (int) $productOrderDetail['id_order_detail'],
+                    $data['price'],
+                    $data['price'],
                     (int) $data['amount']
                 )
             );
         } catch (InvalidProductQuantityException $e) {
+            $this->lastException = $e;
+        } catch (ProductOutOfStockException $e) {
             $this->lastException = $e;
         }
     }
@@ -635,14 +675,20 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then order :orderReference should contain :quantity product(s) :productName
+     * @Then order :orderReference should contain :quantity combination(s) :combinationName of product :productName
      *
      * @param string $orderReference
      * @param int $quantity
      * @param string $productName
+     * @param string|null $combinationName
      */
-    public function orderContainsProductWithReference(string $orderReference, int $quantity, string $productName)
+    public function orderContainsProductWithReference(string $orderReference, int $quantity, string $productName, ?string $combinationName = null)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
+
+        $product = $this->getProductByName($productName);
+        $productId = $product->getProductId();
+        $combinationId = null !== $combinationName ? $this->getProductCombinationId($product, $combinationName) : null;
 
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
@@ -651,7 +697,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         $productQuantity = 0;
         foreach ($orderProducts as $orderProduct) {
-            if ($orderProduct->getName() == $productName) {
+            if ($orderProduct->getId() === $productId
+                && (null === $combinationId || $orderProduct->getCombinationId() === $combinationId)) {
                 $productQuantity += $orderProduct->getQuantity();
             }
         }
@@ -800,12 +847,16 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $orderId = SharedStorage::getStorage()->get($orderReference);
         $data = $table->getRowsHash();
 
-        $this->getQueryBus()->handle(new AddCartRuleToOrderCommand(
-            $orderId,
-            $data['name'],
-            $data['type'],
-            $data['value']
-        ));
+        try {
+            $this->getQueryBus()->handle(new AddCartRuleToOrderCommand(
+                $orderId,
+                $data['name'],
+                $data['type'],
+                $data['value']
+            ));
+        } catch (InvalidCartRuleDiscountValueException $e) {
+            $this->lastException = $e;
+        }
     }
 
     /**
@@ -832,6 +883,50 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $data['value'],
             (int) $invoices->getLast()->id
         ));
+    }
+
+    /**
+     * @Then I should get error that cart rule has invalid min percent
+     */
+    public function assertInvalidMinPercentCartRule(): void
+    {
+        $this->assertLastErrorIs(
+            InvalidCartRuleDiscountValueException::class,
+            InvalidCartRuleDiscountValueException::INVALID_MIN_PERCENT
+        );
+    }
+
+    /**
+     * @Then I should get error that cart rule has invalid max percent
+     */
+    public function assertInvalidMaxPercentCartRule(): void
+    {
+        $this->assertLastErrorIs(
+            InvalidCartRuleDiscountValueException::class,
+            InvalidCartRuleDiscountValueException::INVALID_MAX_PERCENT
+        );
+    }
+
+    /**
+     * @Then I should get error that cart rule has invalid max amount
+     */
+    public function assertInvalidMaxAmountCartRule(): void
+    {
+        $this->assertLastErrorIs(
+            InvalidCartRuleDiscountValueException::class,
+            InvalidCartRuleDiscountValueException::INVALID_MAX_AMOUNT
+        );
+    }
+
+    /**
+     * @Then I should get error that cart rule has invalid min amount
+     */
+    public function assertInvalidMinAmountCartRule(): void
+    {
+        $this->assertLastErrorIs(
+            InvalidCartRuleDiscountValueException::class,
+            InvalidCartRuleDiscountValueException::INVALID_MIN_AMOUNT
+        );
     }
 
     /**
@@ -893,7 +988,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      *
      * @return int
      */
-    private function getProductIdByName(string $productName)
+    private function getProductByName(string $productName)
     {
         $products = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
 
@@ -903,6 +998,18 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         /** @var FoundProduct $product */
         $product = reset($products);
+
+        return $product;
+    }
+
+    /**
+     * @param string $productName
+     *
+     * @return int
+     */
+    private function getProductIdByName(string $productName)
+    {
+        $product = $this->getProductByName($productName);
 
         return (int) $product->getProductId();
     }
@@ -1003,17 +1110,21 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     /**
      * @param string $productName
      * @param string $orderReference
+     * @param string|null $combinationName
      *
      * @return array
      */
-    private function getOrderDetailFromOrder(string $productName, string $orderReference): array
+    private function getOrderDetailFromOrder(string $productName, string $orderReference, string $combinationName = null): array
     {
-        $productId = (int) $this->getProductIdByName($productName);
+        $product = $this->getProductByName($productName);
+        $productId = $product->getProductId();
+        $combinationId = null !== $combinationName ? $this->getProductCombinationId($product, $combinationName) : null;
         $order = new Order(SharedStorage::getStorage()->get($orderReference));
         $orderDetails = $order->getProducts();
         $productOrderDetail = null;
         foreach ($orderDetails as $orderDetail) {
-            if ((int) $orderDetail['product_id'] === $productId) {
+            if ((int) $orderDetail['product_id'] === $productId
+                && (null === $combinationId || (int) $orderDetail['product_attribute_id'] === $combinationId)) {
                 $productOrderDetail = $orderDetail;
                 break;
             }
@@ -1024,6 +1135,28 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
 
         return $productOrderDetail;
+    }
+
+    /**
+     * @param FoundProduct $product
+     * @param string $combinationName
+     *
+     * @return int
+     */
+    private function getProductCombinationId(FoundProduct $product, string $combinationName)
+    {
+        $combinationId = null;
+        foreach ($product->getCombinations() as $productCombination) {
+            if ($productCombination->getReference() == $combinationName) {
+                $combinationId = $productCombination->getAttributeCombinationId();
+                break;
+            }
+        }
+        if (null === $combinationId) {
+            throw new RuntimeException(sprintf('Could not find combination %s of product %s', $product->getName(), $combinationName));
+        }
+
+        return $combinationId;
     }
 
     /**

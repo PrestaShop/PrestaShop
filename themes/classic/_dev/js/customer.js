@@ -23,11 +23,12 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  */
 import $ from 'jquery';
+import prestashop from 'prestashop';
 
 function initRmaItemSelector() {
-  $('#order-return-form table thead input[type=checkbox]').on('click', function() {
+  $(prestashop.themeSelectors.order.returnForm + ' table thead input[type=checkbox]').on('click', function () {
     var checked = $(this).prop('checked');
-    $('#order-return-form table tbody input[type=checkbox]').each(function(_, checkbox) {
+    $(prestashop.themeSelectors.order.returnForm + ' table tbody input[type=checkbox]').each(function (_, checkbox) {
       $(checkbox).prop('checked', checked);
     });
   });

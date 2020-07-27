@@ -104,6 +104,7 @@ class HookCore extends ObjectModel
 
         // Controller
         'actionAjaxDieBefore' => ['from' => '1.6.1.1'],
+        'actionGetProductPropertiesAfter' => ['from' => '1.7.8.0'],
     ];
 
     const MODULE_LIST_BY_HOOK_KEY = 'hook_module_exec_list_';

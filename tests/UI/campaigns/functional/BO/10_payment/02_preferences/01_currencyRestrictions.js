@@ -9,14 +9,12 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Importing pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const PreferencesPage = require('@pages/BO/payment/preferences');
-const ProductPage = require('@pages/FO/product');
-const FOBasePage = require('@pages/FO/FObasePage');
-const HomePage = require('@pages/FO/home');
-const CartPage = require('@pages/FO/cart');
-const CheckoutPage = require('@pages/FO/checkout');
+const dashboardPage = require('@pages/BO/dashboard');
+const preferencesPage = require('@pages/BO/payment/preferences');
+const productPage = require('@pages/FO/product');
+const homePage = require('@pages/FO/home');
+const cartPage = require('@pages/FO/cart');
+const checkoutPage = require('@pages/FO/checkout');
 
 // Importing data
 const {DefaultAccount} = require('@data/demo/customer');
@@ -24,48 +22,34 @@ const {DefaultAccount} = require('@data/demo/customer');
 let browserContext;
 let page;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    preferencesPage: new PreferencesPage(page),
-    productPage: new ProductPage(page),
-    foBasePage: new FOBasePage(page),
-    homePage: new HomePage(page),
-    cartPage: new CartPage(page),
-    checkoutPage: new CheckoutPage(page),
-  };
-};
-
 describe('Configure currency restrictions', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to Payment > Preferences page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to \'Payment > Preferences\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToPreferencesPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.paymentParentLink,
-      this.pageObjects.dashboardPage.preferencesLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.paymentParentLink,
+      dashboardPage.preferencesLink,
     );
 
-    await this.pageObjects.preferencesPage.closeSfToolBar();
+    await preferencesPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.preferencesPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.preferencesPage.pageTitle);
+    const pageTitle = await preferencesPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(preferencesPage.pageTitle);
   });
 
   const tests = [
@@ -79,12 +63,13 @@ describe('Configure currency restrictions', async () => {
     it(`should ${test.args.action} the euro currency for '${test.args.paymentModule}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', test.args.action + test.args.paymentModule, baseContext);
 
-      const result = await this.pageObjects.preferencesPage.setCurrencyRestriction(
+      const result = await preferencesPage.setCurrencyRestriction(
+        page,
         test.args.paymentModule,
         test.args.exist,
       );
 
-      await expect(result).to.contains(this.pageObjects.preferencesPage.successfulUpdateMessage);
+      await expect(result).to.contains(preferencesPage.successfulUpdateMessage);
     });
 
     it(`should go to FO and check the '${test.args.paymentModule}' payment module`, async function () {
@@ -96,42 +81,40 @@ describe('Configure currency restrictions', async () => {
       );
 
       // Click on view my shop
-      page = await this.pageObjects.preferencesPage.viewMyShop();
-      this.pageObjects = await init();
+      page = await preferencesPage.viewMyShop(page);
       // Change language in FO
-      await this.pageObjects.foBasePage.changeLanguage('en');
+      await homePage.changeLanguage(page, 'en');
 
       // Go to the first product page
-      await this.pageObjects.homePage.goToProductPage(1);
+      await homePage.goToProductPage(page, 1);
 
       // Add the product to the cart
-      await this.pageObjects.productPage.addProductToTheCart();
+      await productPage.addProductToTheCart(page);
 
       // Proceed to checkout the shopping cart
-      await this.pageObjects.cartPage.clickOnProceedToCheckout();
+      await cartPage.clickOnProceedToCheckout(page);
 
       // Checkout the order
       if (index === 0) {
         // Personal information step - Login
-        await this.pageObjects.checkoutPage.clickOnSignIn();
-        await this.pageObjects.checkoutPage.customerLogin(DefaultAccount);
+        await checkoutPage.clickOnSignIn(page);
+        await checkoutPage.customerLogin(page, DefaultAccount);
       }
 
       // Address step - Go to delivery step
-      const isStepAddressComplete = await this.pageObjects.checkoutPage.goToDeliveryStep();
+      const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
       await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
 
       // Delivery step - Go to payment step
-      const isStepDeliveryComplete = await this.pageObjects.checkoutPage.goToPaymentStep();
+      const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
       await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
 
       // Payment step - Choose payment step
-      const isVisible = await this.pageObjects.checkoutPage.isPaymentMethodExist(test.args.paymentModule);
+      const isVisible = await checkoutPage.isPaymentMethodExist(page, test.args.paymentModule);
       await expect(isVisible).to.be.equal(test.args.exist);
 
       // Go back to BO
-      page = await this.pageObjects.checkoutPage.closePage(browserContext, 0);
-      this.pageObjects = await init();
+      page = await checkoutPage.closePage(browserContext, page, 0);
     });
   });
 });

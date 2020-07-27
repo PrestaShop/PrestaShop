@@ -7,12 +7,11 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const CustomerSettingsPage = require('@pages/BO/shopParameters/customerSettings');
+const dashboardPage = require('@pages/BO/dashboard');
+const customerSettingsPage = require('@pages/BO/shopParameters/customerSettings');
 const {options} = require('@pages/BO/shopParameters/customerSettings/options');
-const HomePage = require('@pages/FO/home');
-const LoginFOPage = require('@pages/FO/login');
+const homePage = require('@pages/FO/home');
+const loginFOPage = require('@pages/FO/login');
 
 // Importing data
 const {DefaultAccount} = require('@data/demo/customer');
@@ -25,17 +24,6 @@ const baseContext = 'functional_BO_shopParameters_customerSettings_customer_redi
 
 let browserContext;
 let page;
-
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    customerSettingsPage: new CustomerSettingsPage(page),
-    homePage: new HomePage(page),
-    loginFOPage: new LoginFOPage(page),
-  };
-};
 
 /*
 Enable re-display cart at login
@@ -50,29 +38,29 @@ describe('Enable re-display cart at login', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to customer settings page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to \'Shop parameters > Customer Settings\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerSettingsPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.shopParametersParentLink,
-      this.pageObjects.dashboardPage.customerSettingsLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.shopParametersParentLink,
+      dashboardPage.customerSettingsLink,
     );
 
-    await this.pageObjects.customerSettingsPage.closeSfToolBar();
+    await customerSettingsPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.customerSettingsPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.customerSettingsPage.pageTitle);
+    const pageTitle = await customerSettingsPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -89,39 +77,39 @@ describe('Enable re-display cart at login', async () => {
         baseContext,
       );
 
-      const result = await this.pageObjects.customerSettingsPage.setOptionStatus(
+      const result = await customerSettingsPage.setOptionStatus(
+        page,
         options.OPTION_CART_LOGIN,
         test.args.enable,
       );
 
-      await expect(result).to.contains(this.pageObjects.customerSettingsPage.successfulUpdateMessage);
+      await expect(result).to.contains(customerSettingsPage.successfulUpdateMessage);
     });
 
     it('should login FO and add the first product to the cart then logout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `addProductToTheCart_${index}`, baseContext);
 
       // Go to FO
-      page = await this.pageObjects.customerSettingsPage.viewMyShop();
-      this.pageObjects = await init();
+      page = await customerSettingsPage.viewMyShop(page);
 
       // Login FO
-      await this.pageObjects.homePage.goToLoginPage();
-      await this.pageObjects.loginFOPage.customerLogin(DefaultAccount);
+      await homePage.goToLoginPage(page);
+      await loginFOPage.customerLogin(page, DefaultAccount);
 
-      const connected = await this.pageObjects.homePage.isCustomerConnected();
+      const connected = await homePage.isCustomerConnected(page);
       await expect(connected, 'Customer is not connected in FO').to.be.true;
 
       // Add first product to the cart
-      await this.pageObjects.homePage.goToHomePage();
-      await this.pageObjects.homePage.addProductToCartByQuickView(1, 1);
-      await this.pageObjects.homePage.proceedToCheckout();
+      await homePage.goToHomePage(page);
+      await homePage.addProductToCartByQuickView(page, 1, 1);
+      await homePage.proceedToCheckout(page);
 
       // Check number of product in cart
-      const notificationsNumber = await this.pageObjects.homePage.getCartNotificationsNumber();
+      const notificationsNumber = await homePage.getCartNotificationsNumber(page);
       await expect(notificationsNumber).to.be.above(0);
 
       // Logout from FO
-      await this.pageObjects.homePage.logout();
+      await homePage.logout(page);
     });
 
     it('should login FO and check the cart', async function () {
@@ -133,14 +121,14 @@ describe('Enable re-display cart at login', async () => {
       );
 
       // Login FO
-      await this.pageObjects.homePage.goToLoginPage();
-      await this.pageObjects.loginFOPage.customerLogin(DefaultAccount);
+      await homePage.goToLoginPage(page);
+      await loginFOPage.customerLogin(page, DefaultAccount);
 
-      const connected = await this.pageObjects.homePage.isCustomerConnected();
+      const connected = await homePage.isCustomerConnected(page);
       await expect(connected, 'Customer is not connected in FO').to.be.true;
 
       // Check number of product in cart
-      const notificationsNumber = await this.pageObjects.homePage.getCartNotificationsNumber();
+      const notificationsNumber = await homePage.getCartNotificationsNumber(page);
 
       if (test.args.enable) {
         await expect(notificationsNumber).to.be.above(0);
@@ -149,11 +137,10 @@ describe('Enable re-display cart at login', async () => {
       }
 
       // Logout from FO
-      await this.pageObjects.homePage.logout();
+      await homePage.logout(page);
 
       // Go back to BO
-      page = await this.pageObjects.homePage.closePage(browserContext, 0);
-      this.pageObjects = await init();
+      page = await homePage.closePage(browserContext, page, 0);
     });
   });
 });
