@@ -31,7 +31,6 @@ namespace PrestaShopBundle\Translation\Provider\Factory;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractor;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use PrestaShopBundle\Translation\Loader\LegacyFileLoader;
-use PrestaShopBundle\Translation\Provider\ExternalLegacyModuleProvider;
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
 use PrestaShopBundle\Translation\Provider\SearchProvider;
 use PrestaShopBundle\Translation\Provider\Type\SearchType;
@@ -43,10 +42,6 @@ class SearchProviderFactory implements ProviderFactoryInterface
      * @var DatabaseTranslationLoader
      */
     private $databaseTranslationLoader;
-    /**
-     * @var string
-     */
-    private $modulesDirectory;
     /**
      * @var string
      */
@@ -64,14 +59,12 @@ class SearchProviderFactory implements ProviderFactoryInterface
         DatabaseTranslationLoader $databaseTranslationLoader,
         LegacyFileLoader $legacyFileLoader,
         LegacyModuleExtractor $legacyModuleExtractor,
-        string $translationsDirectory,
-        string $modulesDirectory
+        string $translationsDirectory
     ) {
         $this->databaseTranslationLoader = $databaseTranslationLoader;
         $this->legacyFileLoader = $legacyFileLoader;
         $this->legacyModuleExtractor = $legacyModuleExtractor;
         $this->translationsDirectory = $translationsDirectory;
-        $this->modulesDirectory = $modulesDirectory;
     }
 
     /**
@@ -91,27 +84,10 @@ class SearchProviderFactory implements ProviderFactoryInterface
             throw new \RuntimeException(sprintf('Invalid provider type given: %s', get_class($providerType)));
         }
 
-        $externalLegacyModuleProvider = null;
-
-        /** @var SearchType $providerType */
-        if (!empty($providerType->getModule())) {
-            $externalLegacyModuleProvider = new ExternalLegacyModuleProvider(
-                $this->databaseTranslationLoader,
-                $this->modulesDirectory,
-                $this->translationsDirectory,
-                $this->legacyFileLoader,
-                $this->legacyModuleExtractor,
-                $providerType->getModule()
-            );
-        }
-
         return new SearchProvider(
             $this->databaseTranslationLoader,
             $this->translationsDirectory,
-            $this->modulesDirectory,
             $providerType->getDomain(),
-            $externalLegacyModuleProvider,
-            $providerType->getModule(),
             $providerType->getTheme()
         );
     }
