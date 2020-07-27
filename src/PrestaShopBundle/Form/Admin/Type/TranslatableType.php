@@ -105,9 +105,9 @@ class TranslatableType extends AbstractType
             /**
              * Makes sure that error_bubbling is true unless specified otherwise. Solves problems with errors.
              */
-            if (!isset($typeOptions['error_bubbling'])) {
-                $typeOptions['error_bubbling'] = true;
-            }
+//            if (!isset($typeOptions['error_bubbling'])) {
+//                $typeOptions['error_bubbling'] = true;
+//            }
             $typeOptions['label'] = $locale['iso_code'];
 
             if (!isset($typeOptions['required'])) {
@@ -132,6 +132,7 @@ class TranslatableType extends AbstractType
                 'admin_employees_change_form_language'
             );
         }
+
 
         $this->setErrorsByLocale($view, $form, $options['locales']);
     }

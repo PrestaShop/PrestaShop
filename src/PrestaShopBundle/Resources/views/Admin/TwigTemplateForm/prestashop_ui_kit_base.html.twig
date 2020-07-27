@@ -550,9 +550,9 @@
 {# Errors #}
 
 {% block form_errors -%}
-  {% if errors|length > 0 -%}
+  {% if errors|length > 0 or form.vars.errors_by_locale is defined -%}
     <div class="alert alert-danger">
-      {%- if errors|length > 1 -%}
+      {%- if errors|length > 1 or form.vars.errors_by_locale is defined -%}
         <ul class="alert-text">
           {%- for error in errors -%}
             <li> {{
@@ -562,6 +562,12 @@
               }}
             </li>
           {%- endfor -%}
+          {% if form.vars.errors_by_locale is defined %}
+            {% for error_by_locale in form.vars.errors_by_locale %}
+              {% set errorByLocale = '%error_message% - Language: %language_name%'|trans({'%error_message%': error_by_locale.error_message, '%language_name%': error_by_locale.locale_name}, 'Admin.Notifications.Error') %}
+              <li>{{ errorByLocale }}</li>
+            {% endfor %}
+          {% endif %}
         </ul>
       {%- else -%}
         <div class="alert-text">
