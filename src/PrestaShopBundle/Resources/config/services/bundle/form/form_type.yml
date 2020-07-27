@@ -683,6 +683,13 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.common.translatable_choice:
+      class: 'PrestaShopBundle\Form\Admin\Type\TranslatableChoiceType'
+      parent: 'form.type.common.translatable'
+      public: true
+      tags:
+        - { name: form.type }
+
     form.type.common.shop_choice_tree:
         class: 'PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType'
         arguments:
@@ -1153,5 +1160,23 @@ services:
       arguments:
         - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoices()'
         - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoicesAttributes()'
+      tags:
+        - { name: form.type }
+
+    prestashop.bundle.form.admin.configure.shop_parameters.order_states.order_state:
+      class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderStates\OrderStateType'
+      parent: 'form.type.translatable.aware'
+      public: true
+      arguments:
+        - "@prestashop.core.mail_template.theme_catalog"
+        - '@router'
+        - '@prestashop.adapter.legacy.configuration'
+      tags:
+        - { name: form.type }
+
+    prestashop.bundle.form.admin.configure.shop_parameters.order_return_states.order_retrun_state:
+      class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderReturnStates\OrderReturnStateType'
+      parent: 'form.type.translatable.aware'
+      public: true
       tags:
         - { name: form.type }
