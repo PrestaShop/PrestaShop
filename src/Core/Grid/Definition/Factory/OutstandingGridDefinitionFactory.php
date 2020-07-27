@@ -116,7 +116,7 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
             )
             ->add(
                 (new BadgeColumn('risk'))
-                    ->setName($this->trans('Risk', [], 'Admin.Global'))
+                    ->setName($this->trans('Risk', [], 'Admin.Orderscustomers.Feature'))
                     ->setOptions([
                         'field' => 'risk',
                         'color_field' => 'color',
@@ -125,14 +125,14 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
             )
             ->add(
                 (new DataColumn('outstanding_allow_amount'))
-                    ->setName($this->trans('Outstanding allowance', [], 'Admin.Global'))
+                    ->setName($this->trans('Outstanding allowance', [], 'Admin.Orderscustomers.Feature'))
                     ->setOptions([
                         'field' => 'outstanding_allow_amount',
                     ])
             )
             ->add(
                 (new DataColumn('outstanding'))
-                    ->setName($this->trans('Current outstanding', [], 'Admin.Global'))
+                    ->setName($this->trans('Current outstanding', [], 'Admin.Orderscustomers.Feature'))
                     ->setOptions([
                         'field' => 'outstanding',
                     ])
