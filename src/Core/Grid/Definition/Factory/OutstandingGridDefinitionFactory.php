@@ -88,7 +88,7 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
         return (new ColumnCollection())
             ->add(
                 (new DataColumn('id_invoice'))
-                    ->setName($this->trans('Invoice', [], 'Admin.Global'))
+                    ->setName($this->trans('ID', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'id_invoice',
                     ])
