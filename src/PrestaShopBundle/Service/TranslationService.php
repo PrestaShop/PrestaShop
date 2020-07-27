@@ -32,6 +32,8 @@ use PrestaShopBundle\Exception\InvalidLanguageException;
 use PrestaShopBundle\Translation\Constraints\PassVsprintf;
 use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Translation\MessageCatalogue;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Validator\Validation;
 
 class TranslationService
@@ -58,7 +60,7 @@ class TranslationService
      *
      * @return mixed
      *
-     * @throws InvalidLanguageException
+     * @throws InvalidLanguageException|Exception
      */
     public function findLanguageByLocale($locale)
     {
