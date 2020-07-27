@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class DeliverySlips extends BOBasePage {
-  constructor(page) {
-    super(page);
+class DeliverySlips extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Delivery Slips';
     this.errorMessageWhenGenerateFileByDate = 'No delivery slip was found for this period.';
@@ -30,78 +30,86 @@ module.exports = class DeliverySlips extends BOBasePage {
 
   /**
    * Generate PDF by date and download
+   * @param page
    * @param dateFrom
    * @param dateTo
    * @return {Promise<*>}
    */
-  async generatePDFByDateAndDownload(dateFrom = '', dateTo = '') {
-    await this.setValuesForGeneratingPDFByDate(dateFrom, dateTo);
+  async generatePDFByDateAndDownload(page, dateFrom = '', dateTo = '') {
+    await this.setValuesForGeneratingPDFByDate(page, dateFrom, dateTo);
 
     const [download] = await Promise.all([
-      this.page.waitForEvent('download'), // wait for download to start
-      this.page.click(this.generatePdfByDateButton),
+      page.waitForEvent('download'), // wait for download to start
+      page.click(this.generatePdfByDateButton),
     ]);
     return download.path();
   }
 
   /**
    * Get message error after generate delivery slip fail
+   * @param page
    * @param dateFrom
    * @param dateTo
    * @return {Promise<string>}
    */
-  async generatePDFByDateAndFail(dateFrom = '', dateTo = '') {
-    await this.setValuesForGeneratingPDFByDate(dateFrom, dateTo);
-    await this.page.click(this.generatePdfByDateButton);
-    return this.getTextContent(this.alertTextBlock);
+  async generatePDFByDateAndFail(page, dateFrom = '', dateTo = '') {
+    await this.setValuesForGeneratingPDFByDate(page, dateFrom, dateTo);
+    await page.click(this.generatePdfByDateButton);
+    return this.getTextContent(page, this.alertTextBlock);
   }
 
   /**
    * Set values to generate pdf by date
+   * @param page
    * @param dateFrom
    * @param dateTo
    * @returns {Promise<void>}
    */
-  async setValuesForGeneratingPDFByDate(dateFrom = '', dateTo = '') {
+  async setValuesForGeneratingPDFByDate(page, dateFrom = '', dateTo = '') {
     if (dateFrom) {
-      await this.setValue(this.dateFromInput, dateFrom);
+      await this.setValue(page, this.dateFromInput, dateFrom);
     }
 
     if (dateTo) {
-      await this.setValue(this.dateToInput, dateTo);
+      await this.setValue(page, this.dateToInput, dateTo);
     }
   }
 
   /** Edit delivery slip Prefix
+   * @param page
    * @param prefix
    * @return {Promise<void>}
    */
-  async changePrefix(prefix) {
-    await this.setValue(this.deliveryPrefixInput, prefix);
+  async changePrefix(page, prefix) {
+    await this.setValue(page, this.deliveryPrefixInput, prefix);
   }
 
   /** Edit delivery slip Prefix
+   * @param page
    * @param number
    * @return {Promise<void>}
    */
-  async changeNumber(number) {
-    await this.setValue(this.deliveryNumberInput, number);
+  async changeNumber(page, number) {
+    await this.setValue(page, this.deliveryNumberInput, number);
   }
 
   /**
    * Enable disable product image
+   * @param page
    * @param enable
    * @return {Promise<void>}
    */
-  async setEnableProductImage(enable = true) {
-    await this.page.click(this.deliveryEnableProductImage(enable ? 1 : 0));
+  async setEnableProductImage(page, enable = true) {
+    await page.click(this.deliveryEnableProductImage(enable ? 1 : 0));
   }
 
   /** Save delivery slip options
+   * @param page
    * @return {Promise<string>}
    */
-  async saveDeliverySlipOptions() {
-    await this.clickAndWaitForNavigation(this.saveDeliverySlipOptionsButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+  async saveDeliverySlipOptions(page) {
+    await this.clickAndWaitForNavigation(page, this.saveDeliverySlipOptionsButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
-};
+}
+module.exports = new DeliverySlips();

@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class CatalogPriceRules extends BOBasePage {
-  constructor(page) {
-    super(page);
+class CatalogPriceRules extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Catalog Price Rules •';
 
@@ -24,41 +24,51 @@ module.exports = class CatalogPriceRules extends BOBasePage {
     this.actionsColumn = row => `${this.tableRow(row)} td .btn-group-action`;
     this.dropdownToggleButton = row => `${this.actionsColumn(row)} button.dropdown-toggle`;
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} ul.dropdown-menu`;
+    this.confirmDeleteButton = '#popup_ok';
     this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a.delete`;
   }
 
   /* Methods */
   /**
    * Go to add new Catalog price rule page
+   * @param page
    * @returns {Promise<void>}
    */
-  async goToAddNewCatalogPriceRulePage() {
-    await this.clickAndWaitForNavigation(this.addNewCatalogPriceRuleButton);
+  async goToAddNewCatalogPriceRulePage(page) {
+    await this.clickAndWaitForNavigation(page, this.addNewCatalogPriceRuleButton);
   }
 
   /**
-   * FilterTableByName
+   * Filter table by rule name
+   * @param page
    * @param name
    * @returns {Promise<void>}
    */
-  async filterTableByRuleName(name) {
-    await this.setValue(this.filterNameColumn, name);
+  async filterTableByRuleName(page, name) {
+    await this.setValue(page, this.filterNameColumn, name);
     // click on search
-    await this.clickAndWaitForNavigation(this.filterSearchButton);
+    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
 
   /**
    * Delete catalog price rule
+   * @param page
    * @param ruleName
    * @returns {Promise<string>}
    */
-  async deleteCatalogPriceRule(ruleName) {
-    await this.dialogListener(true);
-    if (await this.elementVisible(this.filterNameColumn)) {
-      await this.filterTableByRuleName(ruleName);
+  async deleteCatalogPriceRule(page, ruleName) {
+    await this.dialogListener(page, true);
+    if (await this.elementVisible(page, this.filterNameColumn)) {
+      await this.filterTableByRuleName(page, ruleName);
     }
-    await this.waitForSelectorAndClick(this.dropdownToggleButton(1));
-    await this.clickAndWaitForNavigation(this.deleteRowLink(1));
-    return this.getTextContent(this.alertSuccessBlock);
+    await this.waitForSelectorAndClick(page, this.dropdownToggleButton(1));
+    await Promise.all([
+      page.click(this.deleteRowLink(1)),
+      this.waitForVisibleSelector(page, this.confirmDeleteButton),
+    ]);
+    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
-};
+}
+
+module.exports = new CatalogPriceRules();

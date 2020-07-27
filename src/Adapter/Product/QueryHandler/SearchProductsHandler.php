@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Currency;
@@ -144,8 +146,8 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
             $product->id,
             $product->name[$this->contextLangId],
             $this->contextLocale->formatPrice($priceTaxExcluded, $isoCodeCurrency),
-            $this->tools->round($priceTaxIncluded, $computingPrecision->getPrecision($currency->precision)),
-            $this->tools->round($priceTaxExcluded, $computingPrecision->getPrecision($currency->precision)),
+            $this->tools->round($priceTaxIncluded, $computingPrecision->getPrecision((int) $currency->precision)),
+            $this->tools->round($priceTaxExcluded, $computingPrecision->getPrecision((int) $currency->precision)),
             $product->getTaxesRate(),
             Product::getQuantity($product->id),
             $product->location,
@@ -214,7 +216,8 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
                     $this->contextLocale->formatPrice($priceTaxExcluded, $currencyIsoCode),
                     $priceTaxExcluded,
                     $priceTaxIncluded,
-                    $combination['location']
+                    $combination['location'],
+                    $combination['reference']
                 );
 
                 $productCombinations[$productCombination->getAttributeCombinationId()] = $productCombination;

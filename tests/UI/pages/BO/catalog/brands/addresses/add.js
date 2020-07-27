@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class AddBrandAddress extends BOBasePage {
-  constructor(page) {
-    super(page);
+class AddBrandAddress extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Add new address • ';
 
@@ -27,25 +27,28 @@ module.exports = class AddBrandAddress extends BOBasePage {
    */
   /**
    * Create or edit Brand Address
+   * @param page
    * @param brandAddressData
    * @return {Promise<string>}
    */
-  async createEditBrandAddress(brandAddressData) {
+  async createEditBrandAddress(page, brandAddressData) {
     // Fill information data
-    await this.selectByVisibleText(this.brandSelect, brandAddressData.brandName);
-    await this.setValue(this.lastnameInput, brandAddressData.lastName);
-    await this.setValue(this.firstnameInput, brandAddressData.firstName);
-    await this.setValue(this.addressInput, brandAddressData.address);
-    await this.setValue(this.secondaryAddressInput, brandAddressData.secondaryAddress);
-    await this.setValue(this.postalCodeInput, brandAddressData.postalCode);
-    await this.setValue(this.cityInput, brandAddressData.city);
-    await this.selectByVisibleText(this.countrySelect, brandAddressData.country);
-    await this.page.click(this.homePhoneInput);
-    await this.setValue(this.homePhoneInput, brandAddressData.homePhone);
-    await this.setValue(this.mobilePhoneInput, brandAddressData.mobilePhone);
-    await this.setValue(this.otherInput, brandAddressData.other);
+    await this.selectByVisibleText(page, this.brandSelect, brandAddressData.brandName);
+    await this.setValue(page, this.lastnameInput, brandAddressData.lastName);
+    await this.setValue(page, this.firstnameInput, brandAddressData.firstName);
+    await this.setValue(page, this.addressInput, brandAddressData.address);
+    await this.setValue(page, this.secondaryAddressInput, brandAddressData.secondaryAddress);
+    await this.setValue(page, this.postalCodeInput, brandAddressData.postalCode);
+    await this.setValue(page, this.cityInput, brandAddressData.city);
+    await this.selectByVisibleText(page, this.countrySelect, brandAddressData.country);
+    await page.click(this.homePhoneInput);
+    await this.setValue(page, this.homePhoneInput, brandAddressData.homePhone);
+    await this.setValue(page, this.mobilePhoneInput, brandAddressData.mobilePhone);
+    await this.setValue(page, this.otherInput, brandAddressData.other);
     // Click on Save button and successful message
-    await this.clickAndWaitForNavigation(this.saveButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.clickAndWaitForNavigation(page, this.saveButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
-};
+}
+
+module.exports = new AddBrandAddress();

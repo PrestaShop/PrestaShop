@@ -7,10 +7,9 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const AddressesPage = require('@pages/BO/customers/addresses');
-const AddAddressPage = require('@pages/BO/customers/addresses/add');
+const dashboardPage = require('@pages/BO/dashboard');
+const addressesPage = require('@pages/BO/customers/addresses');
+const addAddressPage = require('@pages/BO/customers/addresses/add');
 
 // Import data
 const AddressFaker = require('@data/faker/address');
@@ -24,15 +23,6 @@ let browserContext;
 let page;
 let numberOfAddresses = 0;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    addressesPage: new AddressesPage(page),
-    addAddressPage: new AddAddressPage(page),
-  };
-};
 /*
 Create 11 addresses
 Paginate between pages
@@ -44,35 +34,35 @@ describe('Pagination and sort addresses', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to addresses page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to addresses page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.customersParentLink,
-      this.pageObjects.dashboardPage.addressesLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.customersParentLink,
+      dashboardPage.addressesLink,
     );
 
-    await this.pageObjects.dashboardPage.closeSfToolBar();
+    await dashboardPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.addressesPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.addressesPage.pageTitle);
+    const pageTitle = await addressesPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(addressesPage.pageTitle);
   });
 
   it('should reset all filters and get number of addresses in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-    numberOfAddresses = await this.pageObjects.addressesPage.resetAndGetNumberOfLines();
+    numberOfAddresses = await addressesPage.resetAndGetNumberOfLines(page);
     await expect(numberOfAddresses).to.be.above(0);
   });
 
@@ -91,18 +81,18 @@ describe('Pagination and sort addresses', async () => {
       it('should go to add new address page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewAddressPage${index}`, baseContext);
 
-        await this.pageObjects.addressesPage.goToAddNewAddressPage();
-        const pageTitle = await this.pageObjects.addAddressPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.addAddressPage.pageTitleCreate);
+        await addressesPage.goToAddNewAddressPage(page);
+        const pageTitle = await addAddressPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(addAddressPage.pageTitleCreate);
       });
 
       it('should create address and check result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createAddress${index}`, baseContext);
 
-        const textResult = await this.pageObjects.addAddressPage.createEditAddress(createAddressData);
-        await expect(textResult).to.equal(this.pageObjects.addressesPage.successfulCreationMessage);
+        const textResult = await addAddressPage.createEditAddress(page, createAddressData);
+        await expect(textResult).to.equal(addressesPage.successfulCreationMessage);
 
-        const numberOfAddressesAfterCreation = await this.pageObjects.addressesPage.getNumberOfElementInGrid();
+        const numberOfAddressesAfterCreation = await addressesPage.getNumberOfElementInGrid(page);
         await expect(numberOfAddressesAfterCreation).to.be.equal(numberOfAddresses + 1 + index);
       });
     });
@@ -113,28 +103,28 @@ describe('Pagination and sort addresses', async () => {
     it('should change the item number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-      const paginationNumber = await this.pageObjects.addressesPage.selectPaginationLimit('10');
+      const paginationNumber = await addressesPage.selectPaginationLimit(page, '10');
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await this.pageObjects.addressesPage.paginationNext();
+      const paginationNumber = await addressesPage.paginationNext(page);
       expect(paginationNumber).to.contains('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await this.pageObjects.addressesPage.paginationPrevious();
+      const paginationNumber = await addressesPage.paginationPrevious(page);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should change the item number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber = await this.pageObjects.addressesPage.selectPaginationLimit('50');
+      const paginationNumber = await addressesPage.selectPaginationLimit(page, '50');
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
@@ -170,18 +160,18 @@ describe('Pagination and sort addresses', async () => {
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        let nonSortedTable = await this.pageObjects.addressesPage.getAllRowsColumnContent(test.args.sortBy);
+        let nonSortedTable = await addressesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
-        await this.pageObjects.addressesPage.sortTable(test.args.sortBy, test.args.sortDirection);
+        await addressesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        let sortedTable = await this.pageObjects.addressesPage.getAllRowsColumnContent(test.args.sortBy);
+        let sortedTable = await addressesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
           nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
 
-        const expectedResult = await this.pageObjects.addressesPage.sortArray(nonSortedTable, test.args.isFloat);
+        const expectedResult = await addressesPage.sortArray(nonSortedTable, test.args.isFloat);
 
         if (test.args.sortDirection === 'asc') {
           await expect(sortedTable).to.deep.equal(expectedResult);
@@ -197,24 +187,24 @@ describe('Pagination and sort addresses', async () => {
     it('should filter list by address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
 
-      await this.pageObjects.addressesPage.resetFilter();
-      await this.pageObjects.addressesPage.filterAddresses('input', 'address1', 'My address');
+      await addressesPage.resetFilter(page);
+      await addressesPage.filterAddresses(page, 'input', 'address1', 'My address');
 
-      const address = await this.pageObjects.addressesPage.getTextColumnFromTableAddresses(1, 'address1');
+      const address = await addressesPage.getTextColumnFromTableAddresses(page, 1, 'address1');
       await expect(address).to.contains('My address');
     });
 
     it('should delete addresses with Bulk Actions and check addresses page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteAddresses', baseContext);
 
-      const deleteTextResult = await this.pageObjects.addressesPage.deleteAddressesBulkActions();
-      await expect(deleteTextResult).to.be.equal(this.pageObjects.addressesPage.successfulDeleteMessage);
+      const deleteTextResult = await addressesPage.deleteAddressesBulkActions(page);
+      await expect(deleteTextResult).to.be.equal(addressesPage.successfulDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkDelete', baseContext);
 
-      const numberOfAddressesAfterReset = await this.pageObjects.addressesPage.resetAndGetNumberOfLines();
+      const numberOfAddressesAfterReset = await addressesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfAddressesAfterReset).to.be.equal(numberOfAddresses);
     });
   });

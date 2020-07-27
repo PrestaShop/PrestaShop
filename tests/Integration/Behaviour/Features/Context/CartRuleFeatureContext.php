@@ -232,9 +232,9 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^cart rule "(.+)" is applied on order$/
+     * @Given /^cart rule "(.+)" is applied on every order$/
      */
-    public function cartRuleIsRestrictedToOrder($cartRuleName)
+    public function cartRuleIsRestrictedToEveryOrder($cartRuleName)
     {
         $this->checkCartRuleWithNameExists($cartRuleName);
         $this->cartRules[$cartRuleName]->product_restriction = 0;

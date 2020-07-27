@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class AddCatalogPriceRule extends BOBasePage {
-  constructor(page) {
-    super(page);
+class AddCatalogPriceRule extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Catalog Price Rules > Add new •';
 
@@ -23,19 +23,22 @@ module.exports = class AddCatalogPriceRule extends BOBasePage {
   /* Methods */
   /**
    * Create/edit price rule
+   * @param page
    * @param priceRuleData
    * @returns {Promise<string>}
    */
-  async createEditCatalogPriceRule(priceRuleData) {
-    await this.setValue(this.nameInput, priceRuleData.name);
-    await this.selectByVisibleText(this.currencySelect, priceRuleData.currency);
-    await this.selectByVisibleText(this.countrySelect, priceRuleData.country);
-    await this.selectByVisibleText(this.groupSelect, priceRuleData.group);
-    await this.setValue(this.fromQuantityInput, priceRuleData.fromQuantity.toString());
-    await this.selectByVisibleText(this.reductionTypeSelect, priceRuleData.reductionType);
-    await this.selectByVisibleText(this.reductionTaxSelect, priceRuleData.reductionTax);
-    await this.setValue(this.reductionInput, priceRuleData.reduction.toString());
-    await this.clickAndWaitForNavigation(this.saveButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async createEditCatalogPriceRule(page, priceRuleData) {
+    await this.setValue(page, this.nameInput, priceRuleData.name);
+    await this.selectByVisibleText(page, this.currencySelect, priceRuleData.currency);
+    await this.selectByVisibleText(page, this.countrySelect, priceRuleData.country);
+    await this.selectByVisibleText(page, this.groupSelect, priceRuleData.group);
+    await this.setValue(page, this.fromQuantityInput, priceRuleData.fromQuantity.toString());
+    await this.selectByVisibleText(page, this.reductionTypeSelect, priceRuleData.reductionType);
+    await this.selectByVisibleText(page, this.reductionTaxSelect, priceRuleData.reductionTax);
+    await this.setValue(page, this.reductionInput, priceRuleData.reduction.toString());
+    await this.clickAndWaitForNavigation(page, this.saveButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
-};
+}
+
+module.exports = new AddCatalogPriceRule();

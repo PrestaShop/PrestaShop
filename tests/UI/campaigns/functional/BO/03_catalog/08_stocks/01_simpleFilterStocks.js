@@ -10,9 +10,8 @@ const loginCommon = require('@commonTests/loginBO');
 const {Products} = require('@data/demo/products');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const StocksPage = require('@pages/BO/catalog/stocks');
+const dashboardPage = require('@pages/BO/dashboard');
+const stocksPage = require('@pages/BO/catalog/stocks');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -25,50 +24,41 @@ let page;
 
 let numberOfProducts = 0;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    stocksPage: new StocksPage(page),
-  };
-};
-
 // Simple filter stocks
 describe('Simple filter stocks', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to stocks page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to "Catalog>Stocks" page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.catalogParentLink,
-      this.pageObjects.dashboardPage.stocksLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.catalogParentLink,
+      dashboardPage.stocksLink,
     );
 
-    await this.pageObjects.stocksPage.closeSfToolBar();
+    await stocksPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.stocksPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.stocksPage.pageTitle);
+    const pageTitle = await stocksPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(stocksPage.pageTitle);
   });
 
   it('should get number of products in list', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProductsInList', baseContext);
 
-    numberOfProducts = await this.pageObjects.stocksPage.getTotalNumberOfProducts();
+    numberOfProducts = await stocksPage.getTotalNumberOfProducts(page);
     await expect(numberOfProducts).to.be.above(0);
   });
 
@@ -84,13 +74,13 @@ describe('Simple filter stocks', async () => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        await this.pageObjects.stocksPage.simpleFilter(test.args.filterValue);
+        await stocksPage.simpleFilter(page, test.args.filterValue);
 
-        const numberOfProductsAfterFilter = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
+        const numberOfProductsAfterFilter = await stocksPage.getNumberOfProductsFromList(page);
         await expect(numberOfProductsAfterFilter).to.be.at.most(numberOfProducts);
 
         for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
-          const textColumn = await this.pageObjects.stocksPage.getTextColumnFromTableStocks(i, test.args.filterBy);
+          const textColumn = await stocksPage.getTextColumnFromTableStocks(page, i, test.args.filterBy);
           await expect(textColumn).to.contains(test.args.filterValue);
         }
       });
@@ -98,7 +88,7 @@ describe('Simple filter stocks', async () => {
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfProductsAfterReset = await this.pageObjects.stocksPage.resetFilter();
+        const numberOfProductsAfterReset = await stocksPage.resetFilter(page);
         await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
       });
     });

@@ -6,26 +6,19 @@ const baseContext = 'sanity_installShop_installShop';
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
 // Importing pages
-const InstallPage = require('@pages/install');
-const HomePage = require('@pages/FO/home');
+const installPage = require('@pages/install');
+const homePage = require('@pages/FO/home');
 
 let browserContext;
 let page;
 
 // Init objects needed
-const init = async function () {
-  return {
-    installPage: new InstallPage(page),
-    homePage: new HomePage(page),
-  };
-};
 
 describe('Install Prestashop', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-    this.pageObjects = await init();
   });
 
   after(async () => {
@@ -35,12 +28,13 @@ describe('Install Prestashop', async () => {
   // Steps
   it('should open the Install page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToInstallPage', baseContext);
-    await this.pageObjects.installPage.goTo(global.INSTALL.URL);
-    const result = await this.pageObjects.installPage.checkStepTitle(
-      this.pageObjects.installPage.firstStepPageTitle,
+    await installPage.goTo(page, global.INSTALL.URL);
+    const result = await installPage.checkStepTitle(
+      page,
+      installPage.firstStepPageTitle,
       [
-        this.pageObjects.installPage.firstStepFrTitle,
-        this.pageObjects.installPage.firstStepEnTitle,
+        installPage.firstStepFrTitle,
+        installPage.firstStepEnTitle,
       ],
     );
     await expect(result).to.be.true;
@@ -48,32 +42,35 @@ describe('Install Prestashop', async () => {
 
   it('should change language to English and check title', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'ChangeLanguageToEnglish', baseContext);
-    await this.pageObjects.installPage.setInstallLanguage();
-    const result = await this.pageObjects.installPage.checkStepTitle(
-      this.pageObjects.installPage.firstStepPageTitle,
-      this.pageObjects.installPage.firstStepEnTitle,
+    await installPage.setInstallLanguage(page);
+    const result = await installPage.checkStepTitle(
+      page,
+      installPage.firstStepPageTitle,
+      installPage.firstStepEnTitle,
     );
     await expect(result).to.be.true;
   });
 
   it('should click on next and go to step \'License Agreements\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLicenseAgreements', baseContext);
-    await this.pageObjects.installPage.nextStep();
-    const result = await this.pageObjects.installPage.checkStepTitle(
-      this.pageObjects.installPage.secondStepPageTitle,
-      this.pageObjects.installPage.secondStepEnTitle,
+    await installPage.nextStep(page);
+    const result = await installPage.checkStepTitle(
+      page,
+      installPage.secondStepPageTitle,
+      installPage.secondStepEnTitle,
     );
     await expect(result).to.be.true;
   });
 
   it('should agree to terms and conditions and go to step \'System compatibility\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSystemCompatibility', baseContext);
-    await this.pageObjects.installPage.agreeToTermsAndConditions();
-    await this.pageObjects.installPage.nextStep();
-    if (!this.pageObjects.installPage.elementVisible(this.pageObjects.installPage.thirdStepFinishedListItem)) {
-      const result = await this.pageObjects.installPage.checkStepTitle(
-        this.pageObjects.installPage.thirdStepPageTitle,
-        this.pageObjects.installPage.thirdStepEnTitle,
+    await installPage.agreeToTermsAndConditions(page);
+    await installPage.nextStep(page);
+    if (!installPage.elementVisible(page, installPage.thirdStepFinishedListItem)) {
+      const result = await installPage.checkStepTitle(
+        page,
+        installPage.thirdStepPageTitle,
+        installPage.thirdStepEnTitle,
       );
       await expect(result).to.be.true;
     }
@@ -81,46 +78,47 @@ describe('Install Prestashop', async () => {
 
   it('should click on next and go to step \'shop Information\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToShopInformation', baseContext);
-    if (!this.pageObjects.installPage.elementVisible(this.pageObjects.installPage.thirdStepFinishedListItem)) {
-      await this.pageObjects.installPage.nextStep();
+    if (!installPage.elementVisible(page, installPage.thirdStepFinishedListItem)) {
+      await installPage.nextStep(page);
     }
-    const result = await this.pageObjects.installPage.checkStepTitle(
-      this.pageObjects.installPage.fourthStepPageTitle,
-      this.pageObjects.installPage.fourthStepEnTitle,
+    const result = await installPage.checkStepTitle(
+      page,
+      installPage.fourthStepPageTitle,
+      installPage.fourthStepEnTitle,
     );
     await expect(result).to.be.true;
   });
 
   it('should fill shop Information form and go to step \'Database Configuration\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToDatabaseConfiguration', baseContext);
-    await this.pageObjects.installPage.fillInformationForm();
-    await this.pageObjects.installPage.nextStep();
-    const result = await this.pageObjects.installPage.checkStepTitle(
-      this.pageObjects.installPage.fifthStepPageTitle,
-      this.pageObjects.installPage.fifthStepEnTitle,
+    await installPage.fillInformationForm(page);
+    await installPage.nextStep(page);
+    const result = await installPage.checkStepTitle(
+      page,
+      installPage.fifthStepPageTitle,
+      installPage.fifthStepEnTitle,
     );
     await expect(result).to.be.true;
   });
 
   it('should fill database configuration form and check database connection', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkDatabaseConnection', baseContext);
-    await this.pageObjects.installPage.fillDatabaseForm();
-    const result = await this.pageObjects.installPage.isDatabaseConnected();
+    await installPage.fillDatabaseForm(page);
+    const result = await installPage.isDatabaseConnected(page);
     await expect(result).to.be.true;
   });
 
   it('should finish installation and check that installation is successful', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkInstallationSuccessful', baseContext);
-    await this.pageObjects.installPage.nextStep();
-    const result = await this.pageObjects.installPage.isInstallationSuccessful();
+    await installPage.nextStep(page);
+    const result = await installPage.isInstallationSuccessful(page);
     await expect(result).to.be.true;
   });
 
   it('should go to FO and check that Prestashop logo exists', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkPrestashopFO', baseContext);
-    page = await this.pageObjects.installPage.goToFOAfterInstall();
-    this.pageObjects = await init();
-    const result = await this.pageObjects.homePage.isHomePage();
+    page = await installPage.goToFOAfterInstall(page);
+    const result = await homePage.isHomePage(page);
     await expect(result).to.be.true;
   });
 });

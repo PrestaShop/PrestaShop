@@ -6,12 +6,10 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const LocalizationPage = require('@pages/BO/international/localization');
-const CurrenciesPage = require('@pages/BO/international/currencies');
-const LanguagesPage = require('@pages/BO/international/languages');
-const FOBasePage = require('@pages/FO/FObasePage');
+const dashboardPage = require('@pages/BO/dashboard');
+const localizationPage = require('@pages/BO/international/localization');
+const currenciesPage = require('@pages/BO/international/currencies');
+const foHomePage = require('@pages/FO/home');
 
 // Import Data
 const {Currencies} = require('@data/demo/currencies');
@@ -27,18 +25,6 @@ const contentToImport = {
   importCurrencies: true,
 };
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    localizationPage: new LocalizationPage(page),
-    currenciesPage: new CurrenciesPage(page),
-    languagesPage: new LanguagesPage(page),
-    foBasePage: new FOBasePage(page),
-  };
-};
-
 /*
 Import localization pack for 'chile' in BO
 Choose default currency CLP then check it in FO
@@ -51,34 +37,36 @@ describe('Update default currency', async () => {
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
       page = await helper.newTab(browserContext);
-      this.pageObjects = await init();
     });
+
     after(async () => {
       await helper.closeBrowserContext(browserContext);
     });
 
-    // Login into BO and go to localization page
-    loginCommon.loginBO();
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
 
     it('should go to localization page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPageToImportPack', baseContext);
 
-      await this.pageObjects.dashboardPage.goToSubMenu(
-        this.pageObjects.dashboardPage.internationalParentLink,
-        this.pageObjects.dashboardPage.localizationLink,
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.internationalParentLink,
+        dashboardPage.localizationLink,
       );
 
-      await this.pageObjects.localizationPage.closeSfToolBar();
+      await localizationPage.closeSfToolBar(page);
 
-      const pageTitle = await this.pageObjects.localizationPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.localizationPage.pageTitle);
+      const pageTitle = await localizationPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(localizationPage.pageTitle);
     });
 
     it('should import localization pack', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'importLocalizationPack', baseContext);
 
-      const textResult = await this.pageObjects.localizationPage.importLocalizationPack('Chile', contentToImport);
-      await expect(textResult).to.equal(this.pageObjects.localizationPage.importLocalizationPackSuccessfulMessage);
+      const textResult = await localizationPage.importLocalizationPack(page, 'Chile', contentToImport);
+      await expect(textResult).to.equal(localizationPage.importLocalizationPackSuccessfulMessage);
     });
   });
 
@@ -102,15 +90,15 @@ describe('Update default currency', async () => {
       before(async function () {
         browserContext = await helper.createBrowserContext(this.browser);
         page = await helper.newTab(browserContext);
-
-        this.pageObjects = await init();
       });
 
       after(async () => {
         await helper.closeBrowserContext(browserContext);
       });
 
-      loginCommon.loginBO();
+      it('should login in BO', async function () {
+        await loginCommon.loginBO(this, page);
+      });
 
       it('should go to localization page', async function () {
         await testContext.addContextItem(
@@ -120,21 +108,22 @@ describe('Update default currency', async () => {
           baseContext,
         );
 
-        await this.pageObjects.dashboardPage.goToSubMenu(
-          this.pageObjects.dashboardPage.internationalParentLink,
-          this.pageObjects.dashboardPage.localizationLink,
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.internationalParentLink,
+          dashboardPage.localizationLink,
         );
 
-        await this.pageObjects.localizationPage.closeSfToolBar();
+        await localizationPage.closeSfToolBar(page);
 
-        const pageTitle = await this.pageObjects.localizationPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.localizationPage.pageTitle);
+        const pageTitle = await localizationPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(localizationPage.pageTitle);
       });
 
       it('should choose default currency', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `setDefaultCurrency${index}`, baseContext);
 
-        const textResult = await this.pageObjects.localizationPage.setDefaultCurrency(test.args.defaultCurrency);
+        const textResult = await localizationPage.setDefaultCurrency(page, test.args.defaultCurrency);
         await expect(textResult).to.equal('Update successful');
       });
 
@@ -142,15 +131,13 @@ describe('Update default currency', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `checkCurrencyInFO${index}`, baseContext);
 
         // View my shop and init pages
-        page = await this.pageObjects.localizationPage.viewMyShop();
-        this.pageObjects = await init();
+        page = await localizationPage.viewMyShop(page);
 
-        const defaultCurrency = await this.pageObjects.foBasePage.getDefaultCurrency();
+        const defaultCurrency = await foHomePage.getDefaultCurrency(page);
         await expect(defaultCurrency).to.equal(test.args.currency);
 
         // Go back to BO
-        page = await this.pageObjects.foBasePage.closePage(browserContext, 0);
-        this.pageObjects = await init();
+        page = await foHomePage.closePage(browserContext, page, 0);
       });
 
       if (index === (tests.length - 1)) {
@@ -158,30 +145,30 @@ describe('Update default currency', async () => {
           it('should go to currencies page', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPage', baseContext);
 
-            await this.pageObjects.localizationPage.goToSubTabCurrencies();
-            const pageTitle = await this.pageObjects.currenciesPage.getPageTitle();
-            await expect(pageTitle).to.contains(this.pageObjects.currenciesPage.pageTitle);
+            await localizationPage.goToSubTabCurrencies(page);
+            const pageTitle = await currenciesPage.getPageTitle(page);
+            await expect(pageTitle).to.contains(currenciesPage.pageTitle);
           });
 
           it(`should filter by iso code of currency '${Currencies.chileanPeso.isoCode}'`, async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'filterCurrencies', baseContext);
 
-            await this.pageObjects.currenciesPage.filterTable('input', 'iso_code', Currencies.chileanPeso.isoCode);
-            const textColumn = await this.pageObjects.currenciesPage.getTextColumnFromTableCurrency(1, 'iso_code');
+            await currenciesPage.filterTable(page, 'input', 'iso_code', Currencies.chileanPeso.isoCode);
+            const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
             await expect(textColumn).to.contains(Currencies.chileanPeso.isoCode);
           });
 
           it('should delete currency', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'deleteCurrency', baseContext);
 
-            const result = await this.pageObjects.currenciesPage.deleteCurrency(1);
-            await expect(result).to.be.equal(this.pageObjects.currenciesPage.successfulDeleteMessage);
+            const result = await currenciesPage.deleteCurrency(page, 1);
+            await expect(result).to.be.equal(currenciesPage.successfulDeleteMessage);
           });
 
           it('should reset filters', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'resetCurrencies', baseContext);
 
-            const numberOfCurrenciesAfterReset = await this.pageObjects.currenciesPage.resetAndGetNumberOfLines();
+            const numberOfCurrenciesAfterReset = await currenciesPage.resetAndGetNumberOfLines(page);
             await expect(numberOfCurrenciesAfterReset).to.be.at.least(1);
           });
         });

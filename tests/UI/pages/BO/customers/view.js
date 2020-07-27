@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class ViewCustomer extends BOBasePage {
-  constructor(page) {
-    super(page);
+class ViewCustomer extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Information about customer';
     this.updateSuccessfulMessage = 'Update successful';
@@ -50,10 +50,11 @@ module.exports = class ViewCustomer extends BOBasePage {
 
   /**
    * Get number of element from title
+   * @param page
    * @param cardTitle
    * @returns {Promise<string>}
    */
-  getNumberOfElementFromTitle(cardTitle) {
+  getNumberOfElementFromTitle(page, cardTitle) {
     let selector;
     switch (cardTitle) {
       case 'Orders':
@@ -86,23 +87,25 @@ module.exports = class ViewCustomer extends BOBasePage {
       default:
         throw new Error(`${cardTitle} was not found`);
     }
-    return this.getTextContent(`${selector} .card-header span`);
+    return this.getTextContent(page, `${selector} .card-header span`);
   }
 
   /**
    * Get personal information title
+   * @param page
    * @returns {Promise<string>}
    */
-  getPersonalInformationTitle() {
-    return this.getTextContent(this.personnalInformationDiv);
+  getPersonalInformationTitle(page) {
+    return this.getTextContent(page, this.personnalInformationDiv);
   }
 
   /**
    * Get text from element
+   * @param page
    * @param element
    * @returns {Promise<string>}
    */
-  getTextFromElement(element) {
+  getTextFromElement(page, element) {
     let selector;
     switch (element) {
       case 'Personal information':
@@ -141,35 +144,38 @@ module.exports = class ViewCustomer extends BOBasePage {
       default:
         throw new Error(`${element} was not found`);
     }
-    return this.getTextContent(`${selector} .card-body`);
+    return this.getTextContent(page, `${selector} .card-body`);
   }
 
   /**
    * Set private note
+   * @param page
    * @param note
    * @returns {Promise<string>}
    */
-  async setPrivateNote(note) {
-    await this.setValue(this.privateNoteTextArea, note);
-    await this.page.click(this.privateNoteSaveButton);
-    return this.getTextContent(this.alertSuccessBlock);
+  async setPrivateNote(page, note) {
+    await this.setValue(page, this.privateNoteTextArea, note);
+    await page.click(this.privateNoteSaveButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Go to edit customer page
+   * @param page
    * @returns {Promise<void>}
    */
-  async goToEditCustomerPage() {
-    await this.clickAndWaitForNavigation(this.personnalInformationEditButton);
+  async goToEditCustomerPage(page) {
+    await this.clickAndWaitForNavigation(page, this.personnalInformationEditButton);
   }
 
   /**
    * Go to view/edit page
+   * @param page
    * @param cardTitle
    * @param row
    * @returns {Promise<void>}
    */
-  async goToPage(cardTitle, row = 1) {
+  async goToPage(page, cardTitle, row = 1) {
     let selector;
     switch (cardTitle) {
       case 'Orders':
@@ -184,6 +190,8 @@ module.exports = class ViewCustomer extends BOBasePage {
       default:
         throw new Error(`${cardTitle} was not found`);
     }
-    return this.clickAndWaitForNavigation(selector(row));
+    return this.clickAndWaitForNavigation(page, selector(row));
   }
-};
+}
+
+module.exports = new ViewCustomer();
