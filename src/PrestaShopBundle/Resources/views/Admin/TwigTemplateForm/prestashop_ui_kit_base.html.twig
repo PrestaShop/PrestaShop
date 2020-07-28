@@ -561,7 +561,7 @@
           <div class="popover-error-list">
             <ul>
               {%- for error in errors -%}
-                <li> {{
+                <li class="text-danger"> {{
                   error.messagePluralization is null
                   ? error.messageTemplate|trans(error.messageParameters, 'form_error')
                   : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
