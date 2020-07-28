@@ -33,7 +33,7 @@ use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
 use PrestaShopBundle\Translation\Provider\Type\BackType;
-use PrestaShopBundle\Translation\Provider\Type\ExternalLegacyModuleType;
+use PrestaShopBundle\Translation\Provider\Type\ModulesType;
 use PrestaShopBundle\Translation\Provider\Type\FrontType;
 use PrestaShopBundle\Translation\Provider\Type\MailsBodyType;
 use PrestaShopBundle\Translation\Provider\Type\MailsType;
@@ -113,7 +113,7 @@ class TranslationController extends ApiController
                 $domain = 'messages';
             }
             if (!empty($module)) {
-                $providerType = new ExternalLegacyModuleType($module);
+                $providerType = new ModulesType($module);
             } elseif (!empty($theme) && $this->container->getParameter('default_theme') !== $theme) {
                 $providerType = new ThemesType($theme);
             } else {
@@ -404,7 +404,7 @@ class TranslationController extends ApiController
     ): TypeInterface {
         switch ($type) {
             case self::TYPE_MODULES:
-                return new ExternalLegacyModuleType($module);
+                return new ModulesType($module);
             case self::TYPE_THEMES:
                 return new ThemesType($theme);
             case self::TYPE_BACK:
