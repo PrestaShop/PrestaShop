@@ -49,11 +49,16 @@ export default class OrderPricesRefresher {
     $.ajax(this.router.generate('admin_orders_refresh_product_prices', {orderId}))
       .then((productPricesList) => {
         productPricesList.forEach((productPrices) => {
-          let orderProductTrId = '#orderProduct_' + productPrices.orderDetailId;
+          const orderProductTrId = '#orderProduct_' + productPrices.orderDetailId;
           $(`${orderProductTrId} ${OrderViewPageMap.productEditUnitPrice}`).text(productPrices.unitPrice);
           $(`${orderProductTrId} ${OrderViewPageMap.productEditQuantity}`).text(productPrices.quantity);
           $(`${orderProductTrId} ${OrderViewPageMap.productEditAvailableQuantity}`).text(productPrices.availableQuantity);
           $(`${orderProductTrId} ${OrderViewPageMap.productEditTotalPrice}`).text(productPrices.totalPrice);
+
+          // update order row price values
+          $(`${orderProductTrId} ${OrderViewPageMap.productEditBtn}`).data('product-price-tax-incl', productPrices.unitPriceTaxInclRaw);
+          $(`${orderProductTrId} ${OrderViewPageMap.productEditBtn}`).data('product-price-tax-excl', productPrices.unitPriceTaxExclRaw);
+          $(`${orderProductTrId} ${OrderViewPageMap.productEditBtn}`).data('product-quantity', productPrices.quantity);
         });
       });
   }
