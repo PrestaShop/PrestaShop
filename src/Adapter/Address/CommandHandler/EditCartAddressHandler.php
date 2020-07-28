@@ -29,10 +29,10 @@ namespace PrestaShop\PrestaShop\Adapter\Address\CommandHandler;
 
 use Cart;
 use PrestaShop\PrestaShop\Adapter\Validate;
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCartAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCustomerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\EditCartAddressHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\EditCustomerAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotUpdateCartAddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
@@ -49,16 +49,16 @@ use PrestaShopException;
 class EditCartAddressHandler implements EditCartAddressHandlerInterface
 {
     /**
-     * @var CommandBusInterface
+     * @var EditCustomerAddressHandlerInterface
      */
-    private $commandBus;
+    private $addressHandler;
 
     /**
-     * @param CommandBusInterface $commandBus
+     * @param EditCustomerAddressHandlerInterface $addressHandler
      */
-    public function __construct(CommandBusInterface $commandBus)
+    public function __construct(EditCustomerAddressHandlerInterface $addressHandler)
     {
-        $this->commandBus = $commandBus;
+        $this->addressHandler = $addressHandler;
     }
 
     /**
@@ -79,7 +79,7 @@ class EditCartAddressHandler implements EditCartAddressHandlerInterface
 
             $addressCommand = $this->createEditAddressCommand($command, $cart);
             /** @var AddressId $addressId */
-            $addressId = $this->commandBus->handle($addressCommand);
+            $addressId = $this->addressHandler->handle($addressCommand);
 
             switch ($command->getAddressType()) {
                 case CartAddressType::DELIVERY_ADDRESS_TYPE:
