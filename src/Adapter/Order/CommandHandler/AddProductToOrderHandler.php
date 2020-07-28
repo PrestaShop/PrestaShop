@@ -175,7 +175,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 $product,
                 $command->getCombinationId() ? $command->getCombinationId()->getValue() : null,
                 $command->getProductPriceTaxIncluded(),
-                $command->getProductPriceTaxExcluded()
+                $command->getProductPriceTaxExcluded(),
+                $this->computingPrecision
             );
 
             $this->orderAmountUpdater->updateOrderInvoices($order, $this->computingPrecision);

@@ -324,7 +324,8 @@ class OrderAmountUpdater
         Product $product,
         ?int $combinationId,
         Number $priceTaxIncluded,
-        Number $priceTaxExcluded
+        Number $priceTaxExcluded,
+        int $computingPrecision
     ): void {
         foreach ($order->getOrderDetailList() as $row) {
             $orderDetail = new OrderDetail($row['id_order_detail']);
@@ -339,8 +340,8 @@ class OrderAmountUpdater
             }
             $orderDetail->unit_price_tax_excl = (float) (string) $priceTaxExcluded;
             $orderDetail->unit_price_tax_incl = (float) (string) $priceTaxIncluded;
-            $orderDetail->total_price_tax_excl = Tools::ps_round((float) (string) $priceTaxExcluded * $orderDetail->product_quantity, $this->computingPrecision);
-            $orderDetail->total_price_tax_incl = Tools::ps_round((float) (string) $priceTaxIncluded * $orderDetail->product_quantity, $this->computingPrecision);
+            $orderDetail->total_price_tax_excl = Tools::ps_round((float) (string) $priceTaxExcluded * $orderDetail->product_quantity, $computingPrecision);
+            $orderDetail->total_price_tax_incl = Tools::ps_round((float) (string) $priceTaxIncluded * $orderDetail->product_quantity, $computingPrecision);
 
             $orderDetail->update();
         }
