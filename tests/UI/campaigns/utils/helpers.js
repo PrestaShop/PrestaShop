@@ -60,7 +60,12 @@ module.exports = {
    * @return {Promise<*>}
    */
   async newTab(context) {
-    return context.newPage();
+    const page = await context.newPage();
+
+    if (global.BROWSER.interceptErrors) {
+      await this.interceptAllErrors(page);
+    }
+    return page;
   },
 
   /**
@@ -81,5 +86,59 @@ module.exports = {
    */
   async closeBrowser(browser) {
     return browser.close();
+  },
+
+  /**
+   * Intercept response errors
+   * @param page
+   */
+  interceptResponseErrors(page) {
+    page.on('response', (response) => {
+      const status = response.status().toString();
+      const url = response.request().url();
+      if (status.startsWith('4') || status.startsWith('5')) {
+        global.browserErrors.responses.push({url, status});
+      }
+    });
+  },
+
+  /**
+   * Intercept js errors
+   * @param page
+   */
+  interceptJsErrors(page) {
+    page.on('pageerror', (e) => {
+      global.browserErrors.js.push(
+        {
+          url: page.url(),
+          error: e.toString(),
+        },
+      );
+    });
+  },
+
+  /**
+   * Intercept console errors
+   * @param page
+   */
+  interceptConsoleErrors(page) {
+    page.on('console', (msg) => {
+      if (msg.type() === 'error') {
+        global.browserErrors.console.push({
+          url: page.url(),
+          error: msg.text(),
+        });
+      }
+    });
+  },
+
+  /**
+   * Intercept all errors (response, js, console)
+   * @param page
+   */
+  interceptAllErrors(page) {
+    this.interceptResponseErrors(page);
+    this.interceptJsErrors(page);
+    this.interceptConsoleErrors(page);
   },
 };
