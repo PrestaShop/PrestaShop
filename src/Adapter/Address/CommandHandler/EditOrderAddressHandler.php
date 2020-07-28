@@ -43,7 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShopException;
 
 /**
- * EditOrderAddressCommandHandler manages an order update, it then updates order and cart
+ * EditOrderAddressCommandHandler manages an address update, it then updates order and cart
  * relation to the newly created address.
  */
 class EditOrderAddressHandler implements EditOrderAddressHandlerInterface
