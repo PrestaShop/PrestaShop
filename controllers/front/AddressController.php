@@ -86,8 +86,8 @@ class AddressControllerCore extends FrontController
         if (Tools::getValue('delete')) {
             if (
                 Validate::isLoadedObject($this->context->cart)
-                && $this->context->cart->id_address_invoice == $id_address
-                || $this->context->cart->id_address_delivery == $id_address
+                && ($this->context->cart->id_address_invoice == $id_address
+                || $this->context->cart->id_address_delivery == $id_address)
             ) {
                 $this->errors[] = $this->trans(
                     'Could not delete address. You use it in the shopping cart',
