@@ -95,7 +95,10 @@ describe('Order a product and check order confirmation', async () => {
     const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
     await expect(isCheckoutPage, 'Browser is not in checkout Page').to.be.true;
 
-    const isStepPersonalInformationComplete = await checkoutPage.isStepCompleted(page, checkoutPage.personalInformationStepForm);
+    const isStepPersonalInformationComplete = await checkoutPage.isStepCompleted(
+      page,
+      checkoutPage.personalInformationStepForm,
+    );
     await expect(isStepPersonalInformationComplete, 'Step Personal information is not complete').to.be.true;
   });
 
