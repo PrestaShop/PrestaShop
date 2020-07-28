@@ -107,7 +107,7 @@ describe('Generate PDF file by date', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkGeneratedInvoicesPdfFile', baseContext);
 
       // Generate PDF
-      filePath = await this.pageObjects.invoicesPage.generatePDFByDateAndDownload(page, todayDate, todayDate);
+      filePath = await invoicesPage.generatePDFByDateAndDownload(page, todayDate, todayDate);
 
       const exist = await files.doesFileExist(filePath);
       await expect(exist, 'File does not exist').to.be.true;
