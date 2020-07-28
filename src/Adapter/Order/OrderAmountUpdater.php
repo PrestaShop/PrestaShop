@@ -350,6 +350,7 @@ class OrderAmountUpdater
      *
      * @param Order $order
      * @param int $precision
+     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
