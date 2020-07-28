@@ -91,13 +91,13 @@ class AddressControllerCore extends FrontController
                 ) {
                     $this->errors[] = $this->trans(
                         'Could not delete address. You use it in the shopping cart',
-                        array(),
+                        [],
                         'Shop.Notifications.Error'
                     );
                     return;
                 }
             }
-            
+
             $ok = $this->makeAddressPersister()->delete(
                 new Address($id_address, $this->context->language->id),
                 Tools::getValue('token')
