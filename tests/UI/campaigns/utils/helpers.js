@@ -95,9 +95,11 @@ module.exports = {
   interceptResponseErrors(page) {
     page.on('response', (response) => {
       const status = response.status().toString();
-      const url = response.request().url();
+      const url = page.url();
+      const requestUrl = response.request().url();
+
       if (status.startsWith('4') || status.startsWith('5')) {
-        global.browserErrors.responses.push({url, status});
+        global.browserErrors.responses.push({url, requestUrl, status});
       }
     });
   },
