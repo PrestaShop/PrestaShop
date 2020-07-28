@@ -26,7 +26,7 @@
 
 namespace Tests\Integration\PrestaShopBundle\Translation\Provider;
 
-use PrestaShopBundle\Translation\Provider\ExternalLegacyModuleProvider;
+use PrestaShopBundle\Translation\Provider\ModulesProvider;
 use PrestaShopBundle\Translation\Provider\SearchProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -46,7 +46,7 @@ class SearchProviderTest extends KernelTestCase
         self::bootKernel();
         $container = self::$kernel->getContainer();
         $databaseLoader = $container->get('prestashop.translation.database_loader');
-        $externalSystemProvider = $this->getMockBuilder(ExternalLegacyModuleProvider::class)
+        $externalSystemProvider = $this->getMockBuilder(ModulesProvider::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
