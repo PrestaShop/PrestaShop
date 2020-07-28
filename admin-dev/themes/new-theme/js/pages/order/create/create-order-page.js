@@ -277,7 +277,7 @@ export default class CreateOrderPage {
    */
   _onCartAddressesChanged() {
     EventEmitter.on(eventMap.cartAddressesChanged, (cartInfo) => {
-      this.addressesRenderer.render(cartInfo.addresses);
+      this.addressesRenderer.render(cartInfo.addresses, cartInfo.cartId);
       this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
       this.summaryRenderer.render(cartInfo);
     });
@@ -502,7 +502,7 @@ export default class CreateOrderPage {
    * @private
    */
   _renderCartInfo(cartInfo) {
-    this.addressesRenderer.render(cartInfo.addresses);
+    this.addressesRenderer.render(cartInfo.addresses, cartInfo.cartId);
     this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
     this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
     this.productRenderer.cleanCartBlockAlerts();
@@ -561,7 +561,7 @@ export default class CreateOrderPage {
   refreshAddressesList(refreshCartAddresses) {
     const cartId = $(createOrderMap.cartBlock).data('cartId');
     $.get(this.router.generate('admin_carts_info', {cartId})).then((cartInfo) => {
-      this.addressesRenderer.render(cartInfo.addresses);
+      this.addressesRenderer.render(cartInfo.addresses, cartInfo.cartId);
 
       if (refreshCartAddresses) {
         this._changeCartAddresses();
