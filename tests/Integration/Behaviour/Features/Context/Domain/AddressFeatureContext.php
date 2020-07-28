@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddCustomerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddManufacturerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\BulkDeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCartAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCustomerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditManufacturerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditOrderAddressCommand;
@@ -49,6 +50,7 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetManufacturerAddressForEdi
 use PrestaShop\PrestaShop\Core\Domain\Address\QueryResult\EditableCustomerAddress;
 use PrestaShop\PrestaShop\Core\Domain\Address\QueryResult\EditableManufacturerAddress;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
+use PrestaShop\PrestaShop\Core\Domain\Cart\CartAddressType;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderAddressType;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIdChoiceProvider;
 use RuntimeException;
@@ -200,6 +202,36 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I edit :addressType address for cart :cartReference with following details:
+     *
+     * @param string $addressType
+     * @param string $cartReference
+     * @param TableNode $table
+     */
+    public function editCartAddressWithFollowingDetails(string $addressType, string $cartReference, TableNode $table)
+    {
+        $cartId = SharedStorage::getStorage()->get($cartReference);
+        $testCaseData = $table->getRowsHash();
+        if ('delivery' === $addressType) {
+            $addressType = CartAddressType::DELIVERY_ADDRESS_TYPE;
+        } elseif ('invoice' === $addressType) {
+            $addressType = CartAddressType::INVOICE_ADDRESS_TYPE;
+        }
+
+        $editCartAddressCommand = new EditCartAddressCommand($cartId, $addressType);
+        $this->updateEditCommandFields($editCartAddressCommand, $testCaseData);
+
+        $this->lastException = null;
+        try {
+            /** @var AddressId $addressIdObject */
+            $addressIdObject = $this->getCommandBus()->handle($editCartAddressCommand);
+            SharedStorage::getStorage()->set($testCaseData['Address alias'], $addressIdObject->getValue());
+        } catch (AddressException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
      * @param AbstractEditAddressCommand $editAddressCommand
      * @param array $testCaseData
      */
@@ -243,6 +275,7 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
      * @Then address :addressReference is assigned to an order :orderReference for :customerReference
      *
      * @param string $addressReference
+     * @param string $orderReference
      * @param string $customerReference
      */
     public function assignAddressToOrder(string $addressReference, string $orderReference, string $customerReference)
@@ -302,6 +335,55 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
             $orderAddressId,
             sprintf('Invalid order %s address, expected %s but found %s', $addressType, $expectedAddressId, $orderAddressId)
         );
+        Assert::assertEquals(
+            $expectedAddressId,
+            $cartAddressId,
+            sprintf('Invalid cart %s address, expected %s but found %s', $addressType, $expectedAddressId, $cartAddressId)
+        );
+    }
+
+    /**
+     * @Then address :addressReference is assigned to a cart :cartReference for :customerReference
+     *
+     * @param string $addressReference
+     * @param string $cartReference
+     * @param string $customerReference
+     */
+    public function assignAddressToCart(string $addressReference, string $cartReference, string $customerReference)
+    {
+        $customerAddressId = (int) SharedStorage::getStorage()->get($addressReference);
+        $customerId = (int) SharedStorage::getStorage()->get($customerReference);
+
+        // Update cart addresses so that they match
+        $cart = new Cart();
+        $cart->id_customer = $customerId;
+        $cart->id_currency = 1;
+        $cart->id_address_delivery = $customerAddressId;
+        $cart->id_address_invoice = $customerAddressId;
+        if (false === $cart->save()) {
+            throw new RuntimeException('Cannot save cart');
+        }
+        SharedStorage::getStorage()->set($cartReference, $cart->id);
+    }
+
+    /**
+     * @Then cart :cartReference should have :addressReference as a :addressType address
+     */
+    public function checkCartAddress(string $cartReference, string $addressReference, string $addressType)
+    {
+        $cartId = SharedStorage::getStorage()->get($cartReference);
+        $cart = new Cart($cartId);
+        $cartAddressId = null;
+        switch ($addressType) {
+            case 'invoice':
+                $cartAddressId = (int) $cart->id_address_invoice;
+                break;
+            case 'delivery':
+                $cartAddressId = (int) $cart->id_address_delivery;
+                break;
+        }
+        $expectedAddressId = (int) SharedStorage::getStorage()->get($addressReference);
+
         Assert::assertEquals(
             $expectedAddressId,
             $cartAddressId,

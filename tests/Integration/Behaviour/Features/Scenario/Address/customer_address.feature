@@ -190,3 +190,76 @@ Feature: Address
     And customer "testFirstName" should have 3 deleted addresses
     And order "test-country-order" should have "test-customer-france-address" as a delivery address
     And order "test-country-order" should have "test-customer-invoice-address" as a invoice address
+
+  Scenario: edit cart delivery address (not deleted, assigned to an order)
+    Given address "test-customer-france-address" is assigned to a cart "test-delivery-cart" for "testFirstName"
+    When I edit delivery address for cart "test-delivery-cart" with following details:
+      | Address alias    | test-customer-cart-address         |
+      | First name       | testFirstName                      |
+      | Last name        | testLastName                       |
+      | Address          | Work address st. 1234567890        |
+      | City             | Birmingham                         |
+      | Country          | United States                      |
+      | State            | Alabama                            |
+      | Postal code      | 12345                              |
+    Then customer "testFirstName" should have address "test-customer-cart-address" with following details:
+      | Address alias    | test-customer-cart-address         |
+      | First name       | testFirstName                      |
+      | Last name        | testLastName                       |
+      | Address          | Work address st. 1234567890        |
+      | City             | Birmingham                         |
+      | Country          | United States                      |
+      | State            | Alabama                            |
+      | Postal code      | 12345                              |
+    # The initially deleted address is still intact
+    And customer "testFirstName" should have address "test-customer-address" with following details:
+      | Address alias    | test-edited-customer-address       |
+      | First name       | testFirstNameuh                    |
+      | Last name        | testLastNameuh                     |
+      | Address          | Work address st. 1234567890        |
+      | City             | Miami                              |
+      | Country          | United States                      |
+      | State            | Florida                            |
+      | Postal code      | 12345                              |
+    # A new address has been created, test-customer-cart-address has been deleted
+    And customer "testFirstName" should have 2 addresses
+    And customer "testFirstName" should have 4 deleted addresses
+    And cart "test-delivery-cart" should have "test-customer-france-address" as a invoice address
+    And cart "test-delivery-cart" should have "test-customer-cart-address" as a delivery address
+
+  Scenario: edit cart invoice address (already deleted)
+    # We assign a deleted address to the order
+    Given address "test-customer-france-address" is assigned to a cart "test-delivery-cart" for "testFirstName"
+    When I edit invoice address for cart "test-delivery-cart" with following details:
+      | Address alias    | test-invoice-cart-address          |
+      | First name       | testFirstName                      |
+      | Last name        | testLastName                       |
+      | Address          | Work address st. 1234567890        |
+      | City             | Birmingham                         |
+      | Country          | United States                      |
+      | State            | Alabama                            |
+      | Postal code      | 12345                              |
+    Then customer "testFirstName" should have address "test-invoice-cart-address" with following details:
+      | Address alias    | test-invoice-cart-address          |
+      | First name       | testFirstName                      |
+      | Last name        | testLastName                       |
+      | Address          | Work address st. 1234567890        |
+      | City             | Birmingham                         |
+      | Country          | United States                      |
+      | State            | Alabama                            |
+      | Postal code      | 12345                              |
+    # The initially deleted address is still intact
+    And customer "testFirstName" should have address "test-customer-address" with following details:
+      | Address alias    | test-edited-customer-address       |
+      | First name       | testFirstNameuh                    |
+      | Last name        | testLastNameuh                     |
+      | Address          | Work address st. 1234567890        |
+      | City             | Miami                              |
+      | Country          | United States                      |
+      | State            | Florida                            |
+      | Postal code      | 12345                              |
+    # A new address has been created, the edited address was already deleted so the number of deleted addresses remains the same
+    And customer "testFirstName" should have 3 addresses
+    And customer "testFirstName" should have 4 deleted addresses
+    And cart "test-delivery-cart" should have "test-invoice-cart-address" as a invoice address
+    And cart "test-delivery-cart" should have "test-customer-france-address" as a delivery address
