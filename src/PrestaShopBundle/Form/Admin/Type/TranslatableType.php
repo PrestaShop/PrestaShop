@@ -125,8 +125,8 @@ class TranslatableType extends TranslatorAwareType
     {
         $errors = [];
 
-        if ($view->vars['errors']->getChildren()) {
-            $errors[] = $view->vars['errors']->getChildren();
+        foreach ($view->vars['errors'] as $existingError) {
+            $errors[] = $existingError;
         }
 
         $errorsByLocale = $this->getErrorsByLocale($view, $form, $options['locales']);
@@ -147,7 +147,7 @@ class TranslatableType extends TranslatorAwareType
             }
         }
 
-        $view->vars['errors'] = $errors;
+        $view->vars['errors'] = new FormErrorIterator($form, $errors);
         $view->vars['locales'] = $options['locales'];
         $view->vars['default_locale'] = $this->getDefaultLocale($options['locales']);
         $view->vars['hide_locales'] = 1 >= count($options['locales']);
