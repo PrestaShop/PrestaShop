@@ -3377,7 +3377,7 @@ class AdminProductsControllerCore extends AdminController
                                 $results[$combination['id_product_attribute']]['ref'] = !empty($item['reference']) ? $item['reference'] : '';
                             }
                             if (empty($results[$combination['id_product_attribute']]['image'])) {
-                                $image_id = $combination['id_image'] ? $combination['id_image'] : $item['id_image'];
+                                $image_id = $combination['id_image'] ?? $item['id_image'];
                                 $results[$combination['id_product_attribute']]['image'] = str_replace('http://', Tools::getShopProtocol(), $context->link->getImageLink($item['link_rewrite'], $image_id, 'home_default'));
 
                             }
