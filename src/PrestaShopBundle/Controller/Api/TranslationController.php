@@ -49,6 +49,24 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class TranslationController extends ApiController
 {
+    public const TYPE_MODULES = 'modules';
+    public const TYPE_THEMES = 'themes';
+    public const TYPE_MAILS = 'mails';
+    public const TYPE_MAILS_BODY = 'mails_body';
+    public const TYPE_BACK = 'back';
+    public const TYPE_OTHERS = 'others';
+    public const TYPE_FRONT = 'front';
+
+    public const ACCEPTED_TYPES = [
+        self::TYPE_MODULES,
+        self::TYPE_THEMES,
+        self::TYPE_MAILS,
+        self::TYPE_MAILS_BODY,
+        self::TYPE_BACK,
+        self::TYPE_OTHERS,
+        self::TYPE_FRONT,
+    ];
+
     /**
      * @var QueryTranslationParamsCollection
      */
@@ -158,17 +176,17 @@ class TranslationController extends ApiController
 
             $search = $request->query->get('search');
 
-            if (!in_array($type, ['modules', 'themes', 'mails', 'mails_body', 'back', 'others', 'front'])) {
+            if (!in_array($type, self::ACCEPTED_TYPES)) {
                 throw new Exception(sprintf("The 'type' parameter '%s' is not valid", $type));
             }
 
-            if (in_array($type, ['modules', 'themes']) && empty($selected)) {
+            if (in_array($type, [self::TYPE_MODULES, self::TYPE_THEMES]) && empty($selected)) {
                 throw new Exception("The 'selected' parameter is empty.");
             }
 
-            $selectedTheme = ('themes' === $type) ? $selected : null;
+            $selectedTheme = (self::TYPE_THEMES === $type) ? $selected : null;
             $selectedModule = null;
-            if ('modules' === $type) {
+            if (self::TYPE_MODULES === $type) {
                 $selectedModule = $selected;
                 $type = 'external_legacy_module';
             }
@@ -391,17 +409,17 @@ class TranslationController extends ApiController
         switch ($type) {
             case 'external_legacy_module':
                 return new ExternalLegacyModuleType($module);
-            case 'themes':
+            case self::TYPE_THEMES:
                 return new ThemesType($theme);
-            case 'back':
+            case self::TYPE_BACK:
                 return new BackType();
-            case 'front':
+            case self::TYPE_FRONT:
                 return new FrontType();
-            case 'mails':
+            case self::TYPE_MAILS:
                 return new MailsType();
-            case 'mails_body':
+            case self::TYPE_MAILS_BODY:
                 return new MailsBodyType();
-            case 'others':
+            case self::TYPE_OTHERS:
                 return new OthersType();
             default:
                 throw new \RuntimeException("Unrecognized type: $type");
