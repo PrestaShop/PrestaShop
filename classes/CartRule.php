@@ -845,7 +845,7 @@ class CartRuleCore extends ObjectModel
 			AND ocr.`deleted` = 1
 			AND o.`id_cart` = ' . $context->cart->id);
         if ($removed_order_cartRule_id) {
-            return (!$display_error) ? false : $this->trans('You cannot use this voucher because it was manually removed.', [], 'Shop.Notifications.Error');
+            return (!$display_error) ? false : $this->trans('You cannot use this voucher because it has manually been removed.', [], 'Shop.Notifications.Error');
         }
 
         if (!$display_error) {
