@@ -53,8 +53,6 @@ final class OutstandingGridDataFactory implements GridDataFactoryInterface
     private $contextLocale;
 
     /**
-     * OutstandingGridDataFactory constructor.
-     *
      * @param GridDataFactoryInterface $outstandingDataFactory
      * @param RepositoryInterface $repositoryLocale
      * @param string $contextLocale
