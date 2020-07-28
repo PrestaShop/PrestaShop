@@ -720,9 +720,12 @@ class OrderController extends FrameworkBundleAdminController
 
             $result = [];
             foreach ($productList as $product) {
+
                 $result[] = [
                     'orderDetailId' => $product->getOrderDetailId(),
                     'unitPrice' => $product->getUnitPrice(),
+                    'unitPriceTaxExclRaw' => $product->getUnitPriceTaxExclRaw(),
+                    'unitPriceTaxInclRaw' => $product->getUnitPriceTaxInclRaw(),
                     'quantity' => $product->getQuantity(),
                     'availableQuantity' => $product->getAvailableQuantity(),
                     'totalPrice' => $product->getTotalPrice(),
