@@ -72,8 +72,8 @@ function tinySetup(config) {
     rel_list: [{title: 'nofollow', value: 'nofollow'}]
   };
 
-  if (typeof defaultTinyMceConfig !== 'undefined') {
-    Object.assign(default_config, defaultTinyMceConfig);
+  if (typeof window.defaultTinyMceConfig !== 'undefined') {
+    Object.assign(default_config, window.defaultTinyMceConfig);
   }
 
   $.each(default_config, function(index, el) {
