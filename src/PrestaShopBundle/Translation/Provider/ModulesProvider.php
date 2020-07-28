@@ -42,9 +42,9 @@ use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
- * Be able to retrieve information from legacy translation files
+ * Retrieves translations from modules
  */
-class ExternalLegacyModuleProvider implements ProviderInterface
+class ModulesProvider implements ProviderInterface
 {
     /**
      * @var string Path where translation files are found
