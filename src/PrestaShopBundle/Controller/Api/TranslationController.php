@@ -185,11 +185,7 @@ class TranslationController extends ApiController
             }
 
             $selectedTheme = (self::TYPE_THEMES === $type) ? $selected : null;
-            $selectedModule = null;
-            if (self::TYPE_MODULES === $type) {
-                $selectedModule = $selected;
-                $type = 'external_legacy_module';
-            }
+            $selectedModule = (self::TYPE_MODULES === $type) ? $selected : null;
 
             $searchedExpressions = [];
             if (!is_array($search) && !empty($search)) {
@@ -407,7 +403,7 @@ class TranslationController extends ApiController
         ?string $module = null
     ): TypeInterface {
         switch ($type) {
-            case 'external_legacy_module':
+            case self::TYPE_MODULES:
                 return new ExternalLegacyModuleType($module);
             case self::TYPE_THEMES:
                 return new ThemesType($theme);
