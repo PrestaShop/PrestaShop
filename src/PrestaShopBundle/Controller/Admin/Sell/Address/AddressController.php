@@ -359,8 +359,6 @@ class AddressController extends FrameworkBundleAdminController
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-
-            return $this->redirectToRoute('admin_addresses_index');
         }
 
         $customerInfo = $editableAddress->getLastName() . ' ' .
@@ -451,8 +449,6 @@ class AddressController extends FrameworkBundleAdminController
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-
-            return $this->redirectToRoute('admin_orders_view', ['orderId' => $orderId]);
         }
 
         $customerInfo = $editableAddress->getLastName() . ' ' .
