@@ -161,7 +161,7 @@ class SqlManager extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteSQLQuery(page);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**

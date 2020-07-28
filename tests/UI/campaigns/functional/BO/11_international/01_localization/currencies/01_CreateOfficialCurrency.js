@@ -128,7 +128,7 @@ describe('Create official currency and check it in FO', async () => {
       page = await currenciesPage.viewMyShop(page);
 
       // Check currency
-      await foHomePage.changeCurrency(Currencies.mad.isoCode, Currencies.mad.symbol);
+      await foHomePage.changeCurrency(page, Currencies.mad.isoCode, Currencies.mad.symbol);
 
       // Go back to BO
       page = await foHomePage.closePage(browserContext, page, 0);
@@ -188,7 +188,7 @@ describe('Create official currency and check it in FO', async () => {
       let textError = '';
 
       try {
-        await foHomePage.changeCurrency(Currencies.mad.isoCode, Currencies.mad.symbol);
+        await foHomePage.changeCurrency(page, Currencies.mad.isoCode, Currencies.mad.symbol);
       } catch (e) {
         textError = e.toString();
       }
