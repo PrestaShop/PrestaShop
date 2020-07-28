@@ -31,7 +31,7 @@ namespace PrestaShopBundle\Translation\Provider\Type;
 /**
  * Properties container for 'external_legacy_module' type of translation.
  */
-class ExternalLegacyModuleType implements TypeInterface
+class ModulesType implements TypeInterface
 {
     /**
      * @var string
