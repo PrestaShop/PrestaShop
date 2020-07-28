@@ -28,6 +28,7 @@ import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 import {EventEmitter} from '@components/event-emitter';
 import OrderViewEventMap from '@pages/order/view/order-view-event-map';
 import OrderPrices from '@pages/order/view/order-prices';
+import ConfirmModal from '@components/modal';
 
 const $ = window.$;
 
@@ -41,6 +42,7 @@ export default class OrderProductEdit {
     this.priceTaxCalculator = new OrderPrices();
     this.productEditSaveBtn = $(OrderViewPageMap.productEditSaveBtn);
     this.quantityInput = $(OrderViewPageMap.productEditQuantityInput);
+    this.invoiceSelect = $(OrderViewPageMap.productAddInvoiceSelect);
   }
 
   setupListener() {
@@ -79,6 +81,7 @@ export default class OrderProductEdit {
       this.priceTaxIncludedInput.val(this.taxIncluded);
       this.updateTotal();
     });
+
     this.productEditSaveBtn.on('click', (event) => {
       const $btn = $(event.currentTarget);
       const confirmed = window.confirm($btn.data('updateMessage'));
@@ -86,10 +89,7 @@ export default class OrderProductEdit {
         return;
       }
       $btn.prop('disabled', true);
-      this.editProduct(
-        $(event.currentTarget).data('orderId'),
-        this.orderDetailId
-      );
+      this.handleEditProductWithConfirmationModal(event);
     });
     this.productEditCancelBtn.on('click', () => {
       EventEmitter.emit(OrderViewEventMap.productEditionCanceled, {orderDetailId: this.orderDetailId});
@@ -158,6 +158,31 @@ export default class OrderProductEdit {
     this.productRow.addClass('d-none').after(this.productRowEdit.removeClass('d-none'));
 
     this.setupListener();
+  }
+
+  handleEditProductWithConfirmationModal(event) {
+    const currentPriceTaxExclRaw = $(`#orderProduct_${this.orderDetailId} ${OrderViewPageMap.productEditBtn}`).data('product-price-tax-excl');
+    if (currentPriceTaxExclRaw == this.priceTaxExcludedInput.val()) {
+      this.editProduct(
+          $(event.currentTarget).data('orderId'),
+          this.orderDetailId
+      );
+      return;
+    }
+
+    const modalEditPrice = new ConfirmModal({
+      id: 'modal-confirm-new-price',
+      confirmTitle: this.invoiceSelect.data('modal-edit-price-title'),
+      confirmMessage: this.invoiceSelect.data('modal-edit-price-body'),
+      confirmButtonLabel: this.invoiceSelect.data(' '),
+      closeButtonLabel: this.invoiceSelect.data('modal-edit-price-cancel'),
+    }, () => {
+      this.editProduct(
+          $(event.currentTarget).data('orderId'),
+          this.orderDetailId
+      );
+    });
+    modalEditPrice.show();
   }
 
   editProduct(orderId, orderDetailId) {
