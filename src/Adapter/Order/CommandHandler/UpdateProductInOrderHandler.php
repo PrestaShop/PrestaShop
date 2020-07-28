@@ -29,12 +29,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Cart;
+use Context;
 use Exception;
 use Hook;
 use Order;
 use OrderDetail;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -56,9 +58,31 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
      */
     private $orderProductQuantityUpdater;
 
-    public function __construct(OrderProductQuantityUpdater $orderProductQuantityUpdater)
+    /**
+     * @var OrderAmountUpdater
+     */
+    private $orderAmountUpdater;
+
+    /**
+     * @var int
+     */
+    private $computingPrecision;
+
+
+
+    /**
+     * UpdateProductInOrderHandler constructor.
+     * @param OrderProductQuantityUpdater $orderProductQuantityUpdater
+     * @param OrderAmountUpdater $orderAmountUpdater
+     */
+    public function __construct(
+        OrderProductQuantityUpdater $orderProductQuantityUpdater,
+        OrderAmountUpdater $orderAmountUpdater
+    )
     {
+        $this->computingPrecision = Context::getContext()->getComputingPrecision();
         $this->orderProductQuantityUpdater = $orderProductQuantityUpdater;
+        $this->orderAmountUpdater = $orderAmountUpdater;
     }
 
     /**
@@ -102,29 +126,33 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             $product = $this->getProduct(new ProductId((int) $orderDetail->product_id), (int) $order->id_lang);
             $combination = $this->getCombination((int) $orderDetail->product_attribute_id);
 
-            // Add specific price for the product being added
-            $specificPrice = $this->createSpecificPriceIfNeeded(
+            $this->updateSpecificPrice(
                 $command->getPriceTaxIncluded(),
                 $command->getPriceTaxExcluded(),
+                $command->getQuantity(),
                 $order,
-                $cart,
                 $product,
                 $combination
             );
 
-            if (null !== $specificPrice) {
-                $temporarySpecificPrices[] = $specificPrice;
-            }
-
             // Update quantity and amounts
             $order = $this->orderProductQuantityUpdater->update($order, $orderDetail, $productQuantity, $orderInvoice);
 
-            Hook::exec('actionOrderEdited', ['order' => $order]);
+            // update order details
+            $this->orderAmountUpdater->updateOrderDetailsWithSameProduct(
+                $order,
+                $orderDetail,
+                $product,
+                $combination->id ?? null,
+                $command->getPriceTaxIncluded(),
+                $command->getPriceTaxExcluded(),
+                $this->computingPrecision
+            );
 
-            // Delete temporary specific prices
-            $this->clearTemporarySpecificPrices($temporarySpecificPrices);
+            $this->orderAmountUpdater->updateOrderInvoices($order, $this->computingPrecision);
+
+            Hook::exec('actionOrderEdited', ['order' => $order]);
         } catch (Exception $e) {
-            $this->clearTemporarySpecificPrices($temporarySpecificPrices);
             throw $e;
         }
     }
