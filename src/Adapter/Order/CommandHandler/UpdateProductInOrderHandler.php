@@ -68,18 +68,16 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
      */
     private $computingPrecision;
 
-
-
     /**
      * UpdateProductInOrderHandler constructor.
+     *
      * @param OrderProductQuantityUpdater $orderProductQuantityUpdater
      * @param OrderAmountUpdater $orderAmountUpdater
      */
     public function __construct(
         OrderProductQuantityUpdater $orderProductQuantityUpdater,
         OrderAmountUpdater $orderAmountUpdater
-    )
-    {
+    ) {
         $this->computingPrecision = Context::getContext()->getComputingPrecision();
         $this->orderProductQuantityUpdater = $orderProductQuantityUpdater;
         $this->orderAmountUpdater = $orderAmountUpdater;
