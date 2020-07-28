@@ -30,13 +30,13 @@ namespace PrestaShopBundle\Translation\Provider\Factory;
 
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
-use PrestaShopBundle\Translation\Provider\ExternalLegacyModuleProvider;
+use PrestaShopBundle\Translation\Provider\ModulesProvider;
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
-use PrestaShopBundle\Translation\Provider\Type\ExternalLegacyModuleType;
+use PrestaShopBundle\Translation\Provider\Type\ModulesType;
 use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 
-class ExternalLegacyModuleProviderFactory implements ProviderFactoryInterface
+class ModulesProviderFactory implements ProviderFactoryInterface
 {
     /**
      * @var DatabaseTranslationLoader
@@ -78,7 +78,7 @@ class ExternalLegacyModuleProviderFactory implements ProviderFactoryInterface
      */
     public function implements(TypeInterface $providerType): bool
     {
-        return $providerType instanceof ExternalLegacyModuleType;
+        return $providerType instanceof ModulesType;
     }
 
     /**
@@ -90,8 +90,8 @@ class ExternalLegacyModuleProviderFactory implements ProviderFactoryInterface
             throw new \RuntimeException(sprintf('Invalid provider type given: %s', get_class($providerType)));
         }
 
-        /* @var ExternalLegacyModuleType $providerType */
-        return new ExternalLegacyModuleProvider(
+        /* @var ModulesType $providerType */
+        return new ModulesProvider(
             $this->databaseTranslationLoader,
             $this->modulesDirectory,
             $this->translationsDirectory,
