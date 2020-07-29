@@ -65,7 +65,7 @@ final class ZoneGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName()
     {
-        return $this->trans('Zones', [], 'Admin.Global');
+        return $this->trans('Zones', [], 'Admin.International.Feature');
     }
 
     /**
