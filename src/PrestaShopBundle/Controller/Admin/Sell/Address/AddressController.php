@@ -347,7 +347,7 @@ class AddressController extends FrameworkBundleAdminController
             }
 
             $addressForm = $addressFormBuilder->getFormFor($addressId, $formData);
-        } catch (Exception $exception) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
             return $this->redirectToRoute('admin_addresses_index');
@@ -442,10 +442,10 @@ class AddressController extends FrameworkBundleAdminController
 
             // Address form is built based on address id to fill the data related to this address
             $addressForm = $addressFormBuilder->getFormFor($addressId, $formData);
-        } catch (Exception $exception) {
+        } catch (Exception $e) {
             $this->addFlash(
                 'error',
-                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+                $this->getErrorMessageForException($e, $this->getErrorMessages($e))
             );
 
             return $this->redirectToRoute('admin_orders_view', ['orderId' => $orderId]);
@@ -543,10 +543,10 @@ class AddressController extends FrameworkBundleAdminController
 
             // Address form is built based on address id to fill the data related to this address
             $addressForm = $addressFormBuilder->getFormFor($addressId, $formData);
-        } catch (Exception $exception) {
+        } catch (Exception $e) {
             $this->addFlash(
                 'error',
-                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+                $this->getErrorMessageForException($e, $this->getErrorMessages($e))
             );
 
             return $this->redirectToRoute('admin_carts_view', ['cartId' => $cartId]);
