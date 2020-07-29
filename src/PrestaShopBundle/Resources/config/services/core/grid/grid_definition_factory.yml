@@ -280,3 +280,8 @@ services:
             - '@prestashop.adapter.legacy.configuration'
             - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
         public: true
+
+    prestashop.core.grid.definition.factory.zone:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ZoneGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      public: true
