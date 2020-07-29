@@ -1,8 +1,8 @@
 #stores {
   .page-stores {
     .store-item {
-      padding-left: 0.75rem;
       padding-right: 0.75rem;
+      padding-left: 0.75rem;
     }
     width: 85%;
     margin: 0 auto;
@@ -13,8 +13,8 @@
     }
     .store-item-container {
       display: flex;
-      justify-content: space-around;
       align-items: center;
+      justify-content: space-around;
       padding: $large-space 0;
       ul {
         margin-bottom: 0;
@@ -37,10 +37,10 @@
       }
     }
     .store-item-footer {
-      margin-top: 0.5rem;
-      padding-top: 0.5rem;
       display: flex;
       justify-content: space-around;
+      padding-top: 0.5rem;
+      margin-top: 0.5rem;
       &.divide-top {
         border-top: $gray-light 1px solid;
       }
@@ -49,8 +49,8 @@
       }
       i.material-icons{
         margin-right: $small-space;
-        color: $gray;
         font-size: $base-font-size;
+        color: $gray;
       }
       li{
         margin-bottom: $small-space;
