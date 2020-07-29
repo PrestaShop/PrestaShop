@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Zone\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Command\EditZoneCommand;
 use PrestaShop\PrestaShop\Core\Domain\Zone\CommandHandler\EditZoneHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\CannotEditZoneException;
-use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\InvalidZoneValuesException;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneException;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneNotFoundException;
 use PrestaShopException;
@@ -65,10 +64,6 @@ final class EditZoneHandler implements EditZoneHandlerInterface
         }
 
         try {
-            if (false === $zone->validateFields(false)) {
-                throw new InvalidZoneValuesException('Zone contains invalid values.');
-            }
-
             if (!$zone->update()) {
                 throw new CannotEditZoneException(sprintf('Cannot update zone with id "%s"', $zone->id));
             }
