@@ -165,7 +165,7 @@ class ZoneController extends FrameworkBundleAdminController
             $result = $formHandler->handleFor($zoneId, $zoneForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_zones_index');
             }
