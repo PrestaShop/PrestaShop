@@ -168,8 +168,7 @@ class TranslatableType extends TranslatorAwareType
     {
         $resolver->setDefaults([
             'type' => TextType::class,
-            'options' => [
-            ],
+            'options' => [],
             'error_bubbling' => false,
             'only_enabled_locales' => false,
             'locales' => function (Options $options) {
