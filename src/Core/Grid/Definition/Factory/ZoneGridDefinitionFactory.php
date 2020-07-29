@@ -106,7 +106,7 @@ final class ZoneGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new ActionColumn('actions'))
-                    ->setName($this->trans('Actions', [], 'Admin.Actions'))
+                    ->setName($this->trans('Actions', [], 'Admin.Global'))
                     ->setOptions([
                         'actions' => $this->getRowActions(),
                     ])
