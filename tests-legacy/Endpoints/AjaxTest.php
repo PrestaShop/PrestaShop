@@ -68,7 +68,7 @@ class AjaxTest extends AbstractEndpointAdminTest
         ob_start();
         require _PS_ROOT_DIR_ . '/admin-dev/ajax.php';
         $output = json_decode(ob_get_clean());
-        $this->assertTrue(is_array($output)); 
+        $this->assertTrue(is_array($output));
     }
 
     // Import calls
@@ -82,7 +82,7 @@ class AjaxTest extends AbstractEndpointAdminTest
         ob_start();
         require _PS_ROOT_DIR_ . '/admin-dev/ajax.php';
         $output = json_decode(ob_get_clean());
-        $this->assertTrue(is_array($output)); 
+        $this->assertTrue(is_array($output));
     }
 
     public function testAjaxEndpointForProductPack()
@@ -146,22 +146,6 @@ class AjaxTest extends AbstractEndpointAdminTest
             // Test some properties, not all of them
             $this->assertObjectHasAttribute('id_category', $firstElem);
         }
-    }
-
-    // Zones
-
-    public function testAjaxEndpointForZones()
-    {
-        $_GET['getZones'] = 1;
-        $_GET['token'] = Tools::getAdminTokenLite('AdminZones');
-
-        ob_start();
-        require _PS_ROOT_DIR_ . '/admin-dev/ajax.php';
-        $output = json_decode(ob_get_clean());
-
-        $this->assertObjectHasAttribute('hasError', $output);
-        $this->assertObjectHasAttribute('errors', $output);
-        $this->assertObjectHasAttribute('data', $output);
     }
 
     // Email HTML
