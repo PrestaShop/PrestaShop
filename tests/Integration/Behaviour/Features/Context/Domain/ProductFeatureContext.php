@@ -28,6 +28,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use Cache;
+use Carrier;
 use Context;
 use Language;
 use PHPUnit\Framework\Assert;
@@ -38,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCategoriesCom
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPackCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductShippingCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldConstraintException;
@@ -56,6 +58,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags as Local
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\PackedProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNotesType;
 use Product;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -255,6 +259,94 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         } catch (ProductException $e) {
             $this->lastException = $e;
         }
+    }
+
+    /**
+     * @When I update product :productReference shipping information with following values:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function updateProductShipping(string $productReference, TableNode $table): void
+    {
+        $data = $table->getRowsHash();
+        $productId = $this->getSharedStorage()->get($productReference);
+
+        try {
+            $command = new UpdateProductShippingCommand($productId);
+            $unhandledData = $this->setUpdateShippingCommandData($data, $command);
+
+            Assert::assertEmpty(
+                $unhandledData,
+                sprintf('Not all provided values handled in scenario. %s', var_export($unhandledData))
+            );
+
+            $this->getCommandBus()->handle($command);
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @param array $data
+     * @param UpdateProductShippingCommand $command
+     *
+     * @return array values that was provided, but wasn't handled
+     */
+    private function setUpdateShippingCommandData(array $data, UpdateProductShippingCommand $command): array
+    {
+        $unhandledValues = $data;
+
+        if (isset($data['width'])) {
+            $command->setWidth($data['width']);
+            unset($unhandledValues['width']);
+        }
+
+        if (isset($data['height'])) {
+            $command->setHeight($data['height']);
+            unset($unhandledValues['height']);
+        }
+
+        if (isset($data['depth'])) {
+            $command->setDepth($data['depth']);
+            unset($unhandledValues['depth']);
+        }
+
+        if (isset($data['weight'])) {
+            $command->setWeight($data['weight']);
+            unset($unhandledValues['weight']);
+        }
+
+        if (isset($data['additional_shipping_cost'])) {
+            $command->setAdditionalShippingCost($data['additional_shipping_cost']);
+            unset($unhandledValues['additional_shipping_cost']);
+        }
+
+        if (isset($data['delivery time notes type'])) {
+            $command->setDeliveryTimeNotesType(DeliveryTimeNotesType::ALLOWED_TYPES[$data['delivery time notes type']]);
+            unset($unhandledValues['delivery time notes type']);
+        }
+
+        if (isset($data['delivery time in stock notes'])) {
+            $command->setLocalizedDeliveryTimeInStockNotes(
+                $this->parseLocalizedArray($data['delivery time in stock notes'])
+            );
+            unset($unhandledValues['delivery time in stock notes']);
+        }
+
+        if (isset($data['delivery time out of stock notes'])) {
+            $command->setLocalizedDeliveryTimeOutOfStockNotes(
+                $this->parseLocalizedArray($data['delivery time out of stock notes'])
+            );
+            unset($unhandledValues['delivery time out of stock notes']);
+        }
+
+        if (isset($data['carriers'])) {
+            $command->setCarrierReferences($this->getCarrierReferenceIds($data['carriers']));
+            unset($unhandledValues['carriers']);
+        }
+
+        return $unhandledValues;
     }
 
     /**
@@ -472,6 +564,12 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
         $this->assertTaxRulesGroup($data, $productForEditing);
         $this->assertPriceFields($data, $productForEditing->getPricesInformation());
+        $this->assertShippingInformation($data, $productForEditing->getShippingInformation());
+
+        // Assertions checking isset() can hide some errors if it doesn't find array key,
+        // to make sure all provided fields were checked we need to unset every asserted field
+        // and finally, if provided data is not empty, it means there are some unnasserted values left
+        Assert::assertEmpty($data, sprintf('Some provided fields haven\'t been asserted: %s', implode(',', $data)));
     }
 
     /**
@@ -832,6 +930,21 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then product :productReference should have no carriers assigned
+     *
+     * @param string $productReference
+     */
+    public function assertProductHasNoCarriers(string $productReference)
+    {
+        $productForEditing = $this->getProductForEditing($productReference);
+
+        Assert::assertEmpty(
+            $productForEditing->getShippingInformation()->getCarrierReferences(),
+            sprintf('Expected product "%s" to have no carriers assigned', $productReference)
+        );
+    }
+
+    /**
      * @Then I should get error that product for packing quantity is invalid
      */
     public function assertPackProductQuantityError()
@@ -901,6 +1014,22 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         } catch (ProductException $e) {
             $this->lastException = $e;
         }
+    }
+
+    /**
+     * @param string $carrierReferencesInput
+     *
+     * @return int[]
+     */
+    private function getCarrierReferenceIds(string $carrierReferencesInput): array
+    {
+        $referenceIds = [];
+        foreach (PrimitiveUtils::castStringArrayIntoArray($carrierReferencesInput) as $carrierReference) {
+            $carrier = new Carrier($this->getSharedStorage()->get($carrierReference));
+            $referenceIds[] = (int) $carrier->id_reference;
+        }
+
+        return $referenceIds;
     }
 
     /**
@@ -975,7 +1104,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      * @param array $data
      * @param string $propertyName
      */
-    private function assertBoolProperty(ProductForEditing $productForEditing, array $data, string $propertyName): void
+    private function assertBoolProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
     {
         if (isset($data[$propertyName])) {
             $expectedValue = PrimitiveUtils::castStringBooleanIntoBoolean($data[$propertyName]);
@@ -985,6 +1114,8 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                 $actualValue,
                 sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
             );
+
+            unset($data[$propertyName]);
         }
     }
 
@@ -993,7 +1124,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      * @param array $data
      * @param string $propertyName
      */
-    private function assertStringProperty(ProductForEditing $productForEditing, array $data, string $propertyName): void
+    private function assertStringProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
     {
         if (isset($data[$propertyName])) {
             $expectedValue = $data[$propertyName];
@@ -1004,6 +1135,8 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                 $actualValue,
                 sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
             );
+
+            unset($data[$propertyName]);
         }
     }
 
@@ -1011,7 +1144,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      * @param array $data
      * @param ProductForEditing $productForEditing
      */
-    private function assertTaxRulesGroup(array $data, ProductForEditing $productForEditing)
+    private function assertTaxRulesGroup(array &$data, ProductForEditing $productForEditing)
     {
         if (!isset($data['tax rules group'])) {
             return;
@@ -1035,13 +1168,15 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                 )
             );
         }
+
+        unset($data['tax rules group']);
     }
 
     /**
      * @param array $data
      * @param ProductPricesInformation $pricesInfo
      */
-    private function assertPriceFields(array $data, ProductPricesInformation $pricesInfo): void
+    private function assertPriceFields(array &$data, ProductPricesInformation $pricesInfo): void
     {
         if (isset($data['on_sale'])) {
             $expectedOnSale = PrimitiveUtils::castStringBooleanIntoBoolean($data['on_sale']);
@@ -1052,6 +1187,8 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                 $pricesInfo->isOnSale(),
                 sprintf('Expected product %s', $onSaleInWords)
             );
+
+            unset($data['on_sale']);
         }
 
         if (isset($data['unity'])) {
@@ -1063,6 +1200,8 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                 $actualUnity,
                 sprintf('Tax rules group expected to be "%s", but got "%s"', $expectedUnity, $actualUnity)
             );
+
+            unset($data['unity']);
         }
 
         $this->assertNumberPriceFields($data, $pricesInfo);
@@ -1072,7 +1211,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      * @param array $expectedPrices
      * @param ProductPricesInformation $actualPrices
      */
-    private function assertNumberPriceFields(array $expectedPrices, ProductPricesInformation $actualPrices)
+    private function assertNumberPriceFields(array &$expectedPrices, ProductPricesInformation $actualPrices)
     {
         $numberPriceFields = [
             'price',
@@ -1094,7 +1233,109 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                         sprintf('Product %s expected to be "%s", but is "%s"', $field, $expectedNumber, $actualNumber)
                     );
                 }
+
+                unset($expectedPrices[$field]);
             }
+        }
+    }
+
+    /**
+     * @param array $data
+     * @param ProductShippingInformation $productShippingInformation
+     */
+    private function assertShippingInformation(array &$data, ProductShippingInformation $productShippingInformation): void
+    {
+        if (isset($data['carriers'])) {
+            $expectedReferenceIds = $this->getCarrierReferenceIds($data['carriers']);
+            $actualReferenceIds = $productShippingInformation->getCarrierReferences();
+
+            Assert::assertEquals(
+                $expectedReferenceIds,
+                $actualReferenceIds,
+                'Unexpected carrier references in product shipping information'
+            );
+
+            unset($data['carriers']);
+        }
+
+        $this->assertNumberShippingFields($data, $productShippingInformation);
+        $this->assertDeliveryTimeNotes($data, $productShippingInformation);
+    }
+
+    /**
+     * @param array $expectedValues
+     * @param ProductShippingInformation $actualValues
+     */
+    private function assertNumberShippingFields(array &$expectedValues, ProductShippingInformation $actualValues)
+    {
+        $numberShippingFields = [
+            'width',
+            'height',
+            'depth',
+            'weight',
+            'additional_shipping_cost',
+        ];
+
+        $propertyAccessor = PropertyAccess::createPropertyAccessor();
+
+        foreach ($numberShippingFields as $field) {
+            if (isset($expectedValues[$field])) {
+                $expectedNumber = new Number((string) $expectedValues[$field]);
+                $actualNumber = $propertyAccessor->getValue($actualValues, $field);
+
+                if (!$expectedNumber->equals($actualNumber)) {
+                    throw new RuntimeException(
+                        sprintf('Product %s expected to be "%s", but is "%s"', $field, $expectedNumber, $actualNumber)
+                    );
+                }
+
+                unset($expectedValues[$field]);
+            }
+        }
+    }
+
+    /**
+     * @param array $data
+     * @param ProductShippingInformation $productShippingInformation
+     */
+    private function assertDeliveryTimeNotes(array &$data, ProductShippingInformation $productShippingInformation)
+    {
+        $notesTypeNamedValues = [
+            'none' => DeliveryTimeNotesType::TYPE_NONE,
+            'default' => DeliveryTimeNotesType::TYPE_DEFAULT,
+            'specific' => DeliveryTimeNotesType::TYPE_SPECIFIC,
+        ];
+
+        if (isset($data['delivery time notes type'])) {
+            $expectedType = $notesTypeNamedValues[$data['delivery time notes type']];
+            $actualType = $productShippingInformation->getDeliveryTimeNotesType();
+            Assert::assertEquals($expectedType, $actualType, 'Unexpected delivery time notes type value');
+
+            unset($data['delivery time notes type']);
+        }
+
+        if (isset($data['delivery time in stock notes'])) {
+            $expectedLocalizedOutOfStockNotes = $this->parseLocalizedArray($data['delivery time in stock notes']);
+            $actualLocalizedOutOfStockNotes = $productShippingInformation->getLocalizedDeliveryTimeInStockNotes();
+            Assert::assertEquals(
+                $expectedLocalizedOutOfStockNotes,
+                $actualLocalizedOutOfStockNotes,
+                'Unexpected product delivery time in stock notes'
+            );
+
+            unset($data['delivery time in stock notes']);
+        }
+
+        if (isset($data['delivery time out of stock notes'])) {
+            $expectedLocalizedOutOfStockNotes = $this->parseLocalizedArray($data['delivery time out of stock notes']);
+            $actualLocalizedOutOfStockNotes = $productShippingInformation->getLocalizedDeliveryTimeOutOfStockNotes();
+            Assert::assertEquals(
+                $expectedLocalizedOutOfStockNotes,
+                $actualLocalizedOutOfStockNotes,
+                'Unexpected product delivery time out of stock notes'
+            );
+
+            unset($data['delivery time out of stock notes']);
         }
     }
 
@@ -1123,6 +1364,13 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             'unit_price' => ProductConstraintException::INVALID_UNIT_PRICE,
             'tax rules group' => ProductConstraintException::INVALID_TAX_RULES_GROUP_ID,
             'tag' => ProductConstraintException::INVALID_TAG,
+            'width' => ProductConstraintException::INVALID_WIDTH,
+            'height' => ProductConstraintException::INVALID_HEIGHT,
+            'depth' => ProductConstraintException::INVALID_DEPTH,
+            'weight' => ProductConstraintException::INVALID_WEIGHT,
+            'additional_shipping_cost' => ProductConstraintException::INVALID_ADDITIONAL_SHIPPING_COST,
+            'delivery_in_stock' => ProductConstraintException::INVALID_DELIVERY_TIME_IN_STOCK_NOTES,
+            'delivery_out_stock' => ProductConstraintException::INVALID_DELIVERY_TIME_OUT_OF_STOCK_NOTES,
         ];
 
         if (!array_key_exists($fieldName, $constraintErrorFieldMap)) {

@@ -40,8 +40,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationOp
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
+use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractorException;
 use Product;
 use Tag;
 
@@ -78,7 +80,8 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             $this->getBasicInformation($product),
             $this->getCategoriesInformation($product),
             $this->getPricesInformation($product),
-            $this->getOptions($product)
+            $this->getOptions($product),
+            $this->getShippingInformation($product)
         );
     }
 
@@ -170,6 +173,32 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             $product->ean13,
             $product->mpn,
             $product->reference
+        );
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return ProductShippingInformation
+     *
+     * @throws NumberExtractorException
+     */
+    private function getShippingInformation(Product $product): ProductShippingInformation
+    {
+        $carrierReferences = array_map(function ($carrier) {
+            return (int) $carrier['id_reference'];
+        }, $product->getCarriers());
+
+        return new ProductShippingInformation(
+            $this->numberExtractor->extract($product, 'width'),
+            $this->numberExtractor->extract($product, 'height'),
+            $this->numberExtractor->extract($product, 'depth'),
+            $this->numberExtractor->extract($product, 'weight'),
+            $this->numberExtractor->extract($product, 'additional_shipping_cost'),
+            $carrierReferences,
+            (int) $product->additional_delivery_times,
+            $product->delivery_in_stock,
+            $product->delivery_out_stock
         );
     }
 
