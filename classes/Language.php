@@ -1436,32 +1436,30 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
     public static function updateMultilangFromCldr($lang)
     {
-        $cldrLocale = $lang->getLocale();
-        $cldrFile = _PS_TRANSLATIONS_DIR_ . 'cldr/datas/main/' . $cldrLocale . '/territories.json';
+        $translatableCountries = Db::getInstance()->executeS('SELECT c.`iso_code`, cl.* FROM `' . _DB_PREFIX_ . 'country` c
+            INNER JOIN `' . _DB_PREFIX_ . 'country_lang` cl ON c.`id_country` = cl.`id_country`
+            WHERE cl.`id_lang` = "' . (int) $lang->id . '" ', true, false);
 
-        if (file_exists($cldrFile)) {
-            $cldrContent = json_decode(file_get_contents($cldrFile), true);
+        if (empty($translatableCountries)) {
+            return;
+        }
 
-            if (!empty($cldrContent)) {
-                $translatableCountries = Db::getInstance()->executeS('SELECT c.`iso_code`, cl.* FROM `' . _DB_PREFIX_ . 'country` c
-                    INNER JOIN `' . _DB_PREFIX_ . 'country_lang` cl ON c.`id_country` = cl.`id_country`
-                    WHERE cl.`id_lang` = "' . (int) $lang->id . '" ', true, false);
+        $container = SymfonyContainer::getInstance();
+        /** @var LocaleRepository $localeRepoCLDR */
+        $localeRepoCLDR = $container->get('prestashop.core.localization.cldr.locale_repository');
+        $localeCLDR = $localeRepoCLDR->getLocale($lang->locale);
+        $territories = $localeCLDR->getAllTerritories();
 
-                if (!empty($translatableCountries)) {
-                    $cldrLanguages = $cldrContent['main'][$cldrLocale]['localeDisplayNames']['territories'];
-
-                    foreach ($translatableCountries as $country) {
-                        if (isset($cldrLanguages[$country['iso_code']]) &&
-                            !empty($cldrLanguages[$country['iso_code']])
-                        ) {
-                            $sql = 'UPDATE `' . _DB_PREFIX_ . 'country_lang`
-                                SET `name` = "' . pSQL(ucwords($cldrLanguages[$country['iso_code']])) . '"
-                                WHERE `id_country` = "' . (int) $country['id_country'] . '" AND `id_lang` = "' . (int) $lang->id . '" LIMIT 1;';
-                            Db::getInstance()->execute($sql);
-                        }
-                    }
-                }
+        foreach ($translatableCountries as $country) {
+            if (empty($territories[$country['iso_code']])) {
+                continue;
             }
+            $territoryData = $territories[$country['iso_code']];
+            $sql = 'UPDATE `' . _DB_PREFIX_ . 'country_lang`
+                    SET `name` = "' . pSQL(ucwords($territoryData->getName())) . '"
+                    WHERE `id_country` = "' . (int) $country['id_country'] . '"
+                    AND `id_lang` = "' . (int) $lang->id . '" LIMIT 1;';
+            Db::getInstance()->execute($sql);
         }
     }
 

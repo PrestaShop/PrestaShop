@@ -577,6 +577,24 @@ class Reader implements ReaderInterface
             $localeData->setCurrencies($currencies);
         }
 
+        // Territories
+        $localeDisplayNamesData = $xmlLocaleData->localeDisplayNames;
+        if (isset($localeDisplayNamesData->territories)) {
+            $territories = [];
+            foreach ($localeDisplayNamesData->territories->children() as $territoryNode) {
+                $territoryCode = (string) $territoryNode->attributes()->type;
+                $variant = (string) $territoryNode->attributes()->variant;
+                if (!empty($territories[$territoryCode]) && empty($variant)) {
+                    continue;
+                }
+                $territoryData = new TerritoryData();
+                $territoryData->setIsoCode($territoryCode);
+                $territoryData->setName((string) $territoryNode);
+                $territories[$territoryCode] = $territoryData;
+            }
+            $localeData->setTerritories($territories);
+        }
+
         return $localeData;
     }
 

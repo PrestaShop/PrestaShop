@@ -107,6 +107,13 @@ class LocaleData
     protected $currencies;
 
     /**
+     * All territories, by ISO code.
+     *
+     * @var TerritoryData[]
+     */
+    protected $territories;
+
+    /**
      * Override this object's data with another LocaleData object.
      *
      * @param LocaleData $localeData Locale data to use for the override
@@ -168,6 +175,13 @@ class LocaleData
                 }
                 $this->currencies[$code]->overrideWith($currencyData);
             }
+        }
+
+        if (null !== $localeData->getTerritories()) {
+            if (null === $this->territories) {
+                $this->territories = [];
+            }
+            $this->territories = array_merge($this->territories, $localeData->getTerritories());
         }
 
         return $this;
@@ -365,6 +379,26 @@ class LocaleData
     public function setCurrencies($currencies)
     {
         $this->currencies = $currencies;
+
+        return $this;
+    }
+
+    /**
+     * @return TerritoryData[]
+     */
+    public function getTerritories()
+    {
+        return $this->territories;
+    }
+
+    /**
+     * @param TerritoryData[] $territories
+     *
+     * @return LocaleData
+     */
+    public function setTerritories(array $territories)
+    {
+        $this->territories = $territories;
 
         return $this;
     }
