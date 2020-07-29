@@ -107,6 +107,13 @@ final class Locale implements LocaleInterface
      */
     protected $currencies;
 
+    /**
+     * All territories, by ISO code.
+     *
+     * @var TerritoryData[]
+     */
+    protected $territories;
+
     public function __construct(LocaleData $localeData)
     {
         $this->localeCode = $localeData->getLocaleCode();
@@ -118,6 +125,7 @@ final class Locale implements LocaleInterface
         $this->percentPatterns = $localeData->getPercentPatterns();
         $this->currencyPatterns = $localeData->getCurrencyPatterns();
         $this->currencies = $localeData->getCurrencies();
+        $this->territories = $localeData->getTerritories();
     }
 
     /**
@@ -300,5 +308,15 @@ final class Locale implements LocaleInterface
     public function getAllCurrencies()
     {
         return $this->currencies;
+    }
+
+    /**
+     * Get CLDR data of all territories.
+     *
+     * @return TerritoryData[] Data of all territories
+     */
+    public function getAllTerritories()
+    {
+        return $this->territories;
     }
 }
