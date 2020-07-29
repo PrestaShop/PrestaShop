@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\Zone\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Zone\Command\AddZoneCommand;
 use PrestaShop\PrestaShop\Core\Domain\Zone\CommandHandler\AddZoneHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\InvalidZoneValuesException;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\MissingZoneRequiredFieldsException;
 use PrestaShop\PrestaShop\Core\Domain\Zone\ValueObject\ZoneId;
 use Zone;
@@ -54,10 +53,6 @@ final class AddZoneHandler implements AddZoneHandlerInterface
             $missingFields = array_keys($errors);
 
             throw new MissingZoneRequiredFieldsException($missingFields, sprintf('One or more required fields for zone are missing. Missing fields are: %s', implode(', ', $missingFields)));
-        }
-
-        if (false === $zone->validateFields(false)) {
-            throw new InvalidZoneValuesException('Zone contains invalid field values');
         }
 
         $zone->add();

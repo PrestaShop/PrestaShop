@@ -36,7 +36,6 @@ use PrestaShop\PrestaShop\Core\Domain\Zone\Command\ToggleZoneStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\CannotEditZoneException;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\CannotToggleZoneStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\DeleteZoneException;
-use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\InvalidZoneValuesException;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\MissingZoneRequiredFieldsException;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneException;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneNotFoundException;
@@ -313,10 +312,6 @@ class ZoneController extends FrameworkBundleAdminController
         return [
             CannotEditZoneException::class => $this->trans(
                 'An error occurred while editing the zone.',
-                'Admin.International.Notification'
-            ),
-            InvalidZoneValuesException::class => $this->trans(
-                'Invalid value(s) provided for zone.',
                 'Admin.International.Notification'
             ),
             MissingZoneRequiredFieldsException::class => $this->trans(
