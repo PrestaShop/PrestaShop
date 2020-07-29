@@ -136,7 +136,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             $order = $this->orderProductQuantityUpdater->update($order, $orderDetail, $productQuantity, $orderInvoice);
 
             // update order details
-            $this->orderAmountUpdater->updateOrderDetailsWithSameProduct(
+            $this->updateOrderDetailsWithSameProduct(
                 $order,
                 $orderDetail,
                 $product,
