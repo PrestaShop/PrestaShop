@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
-use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -43,7 +42,6 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
