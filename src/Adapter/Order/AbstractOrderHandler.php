@@ -296,7 +296,7 @@ abstract class AbstractOrderHandler
         Order $order,
         Product $product,
         $combination
-    ): ?SpecificPrice {
+    ): void {
         $existingSpecificPrice = SpecificPrice::getSpecificPrice(
             $product->id,
             0,
@@ -317,7 +317,7 @@ abstract class AbstractOrderHandler
                 $specificPrice->delete();
             }
 
-            return null;
+            return;
         }
 
         if (!empty($existingSpecificPrice)) {
@@ -325,7 +325,7 @@ abstract class AbstractOrderHandler
             $specificPrice->price = $priceTaxExcluded;
             $specificPrice->update();
 
-            return $specificPrice;
+            return;
         }
 
         $specificPrice = new SpecificPrice();
@@ -347,6 +347,6 @@ abstract class AbstractOrderHandler
         $specificPrice->to = '0000-00-00 00:00:00';
         $specificPrice->add();
 
-        return $specificPrice;
+        return;
     }
 }
