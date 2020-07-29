@@ -63,6 +63,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInforma
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNotesType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use Product;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -392,6 +393,26 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I set product :productReference default supplier to :supplierReference
+     *
+     * @param string $productReference
+     * @param string $supplierReference
+     *
+     * @throws SupplierException
+     */
+    public function updateProductDefaultSupplier(string $productReference, string $supplierReference)
+    {
+        try {
+            $command = new UpdateProductSuppliersCommand($this->getSharedStorage()->get($productReference));
+            $command->setDefaultSupplierId($this->getSharedStorage()->get($supplierReference));
+
+            $this->getCommandBus()->handle($command);
+        } catch (ProductSupplierException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
      * @Then product :productReference should have following suppliers:
      *
      * @param string $productReference
@@ -643,10 +664,20 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $this->assertPriceFields($data, $productForEditing->getPricesInformation());
         $this->assertShippingInformation($data, $productForEditing->getShippingInformation());
 
+        if (isset($data['default supplier'])) {
+            $expectedSupplierId = $this->getSharedStorage()->get($data['default supplier']);
+            $actualSupplierId = $productForEditing->getProductSupplierOptions()->getDefaultSupplierId();
+
+            Assert::assertEquals($expectedSupplierId, $actualSupplierId, 'Unexpected product default supplier');
+            unset($data['default supplier']);
+        }
+
         // Assertions checking isset() can hide some errors if it doesn't find array key,
         // to make sure all provided fields were checked we need to unset every asserted field
         // and finally, if provided data is not empty, it means there are some unnasserted values left
         Assert::assertEmpty($data, sprintf('Some provided fields haven\'t been asserted: %s', implode(',', $data)));
+
+
     }
 
     /**

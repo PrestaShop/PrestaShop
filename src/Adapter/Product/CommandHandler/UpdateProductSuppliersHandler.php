@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationC
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\AddProductSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\DeleteProductSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSupplierCommand;
@@ -49,7 +48,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use ProductSupplier as ProductSupplierEntity;
 
 /**
@@ -97,18 +95,41 @@ final class UpdateProductSuppliersHandler extends AbstractProductHandler impleme
         if (null !== $command->getProductSuppliers()) {
             $this->updateProductSuppliers($productId, $command->getProductSuppliers());
         }
-        if (null !== $command->getDefaultSupplierId()) {
-            $this->updateDefaultSupplier($productId, $command->getDefaultSupplierId());
+
+        $this->handleDefaultSupplierUpdate($command);
+
+        return $this->getProductSupplierIds($productId);
+    }
+
+    /**
+     * @param UpdateProductSuppliersCommand $command
+     *
+     * @throws CannotUpdateProductException
+     * @throws ProductException
+     */
+    private function handleDefaultSupplierUpdate(UpdateProductSuppliersCommand $command): void
+    {
+        $productId = $command->getProductId();
+        $deletedAllProductSuppliers = null !== $command->getProductSuppliers() && empty($command->getProductSuppliers());
+        $defaultSupplierIsNotProvided = null === $command->getDefaultSupplierId() && null !== $command->getProductSuppliers();
+        $defaultSupplierIsProvided = null !== $command->getDefaultSupplierId();
+
+        if ($deletedAllProductSuppliers) {
+            $this->removeDefaultSupplier($productId);
+
+            return;
         }
 
-        $productSupplierIds = [];
+        if ($defaultSupplierIsProvided) {
+            $this->updateDefaultSupplier($productId, $command->getDefaultSupplierId()->getValue());
 
-        /** @var ProductSupplierEntity $productSupplierEntity */
-        foreach (ProductSupplierEntity::getSupplierCollection($productId->getValue()) as $productSupplierEntity) {
-            $productSupplierIds[] = new ProductSupplierId((int) $productSupplierEntity->id);
+            return;
         }
 
-        return $productSupplierIds;
+        if ($defaultSupplierIsNotProvided) {
+            $firstSupplier = $command->getProductSuppliers()[0];
+            $this->updateDefaultSupplier($productId, $firstSupplier->getSupplierId());
+        }
     }
 
     /**
@@ -184,16 +205,26 @@ final class UpdateProductSuppliersHandler extends AbstractProductHandler impleme
 
     /**
      * @param ProductId $productId
-     * @param SupplierId $defaultSupplierId
      *
      * @throws CannotUpdateProductException
      * @throws ProductException
-     * @throws ProductNotFoundException
      */
-    private function updateDefaultSupplier(ProductId $productId, SupplierId $defaultSupplierId): void
+    private function removeDefaultSupplier(ProductId $productId): void
+    {
+        $this->updateDefaultSupplier($productId, 0);
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param int $defaultSupplierId
+     *
+     * @throws CannotUpdateProductException
+     * @throws ProductException
+     */
+    private function updateDefaultSupplier(ProductId $productId, int $defaultSupplierId): void
     {
         $product = $this->getProduct($productId);
-        $product->id_supplier = $defaultSupplierId->getValue();
+        $product->id_supplier = $defaultSupplierId;
         $this->fieldsToUpdate['id_supplier'] = true;
 
         $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_DEFAULT_SUPPLIER);
@@ -234,5 +265,22 @@ final class UpdateProductSuppliersHandler extends AbstractProductHandler impleme
         foreach ($productSupplierIds as $productSupplierId) {
             $this->deleteProductSupplierHandler->handle(new DeleteProductSupplierCommand($productSupplierId));
         }
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return ProductSupplierId[]
+     */
+    private function getProductSupplierIds(ProductId $productId): array
+    {
+        $productSupplierIds = [];
+
+        /** @var ProductSupplierEntity $productSupplierEntity */
+        foreach (ProductSupplierEntity::getSupplierCollection($productId->getValue()) as $productSupplierEntity) {
+            $productSupplierIds[] = new ProductSupplierId((int) $productSupplierEntity->id);
+        }
+
+        return $productSupplierIds;
     }
 }
