@@ -312,7 +312,7 @@ class ZoneController extends FrameworkBundleAdminController
     {
         return [
             CannotEditZoneException::class => $this->trans(
-                'An error occurred while editing zone.',
+                'An error occurred while editing the zone.',
                 'Admin.International.Notification'
             ),
             InvalidZoneValuesException::class => $this->trans(
