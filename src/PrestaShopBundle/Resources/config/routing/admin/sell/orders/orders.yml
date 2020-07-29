@@ -353,11 +353,11 @@ admin_orders_display_customization_image:
     name: \w+
     value: \w+
 
-admin_orders_refresh_product_prices:
+admin_orders_product_prices:
   path: /{orderId}/products/refresh-prices
   methods: [GET]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Order:refreshProductPrices
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:productPrices
     _legacy_controller: AdminOrders
   requirements:
     orderId: \d+
