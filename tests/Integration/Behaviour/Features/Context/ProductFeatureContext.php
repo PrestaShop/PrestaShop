@@ -39,6 +39,8 @@ use Product;
 use SpecificPrice;
 use StockAvailable;
 use TaxRulesGroup;
+use Tests\Integration\Behaviour\Features\Context\Util\CombinationDetails;
+use Tests\Integration\Behaviour\Features\Context\Util\ProductCombinationFactory;
 
 class ProductFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -351,28 +353,20 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkProductWithNameExists($productName);
         $productId = (int) $this->products[$productName]->id;
         $combinationsList = $table->getColumnsHash();
-        $attributesList = \Attribute::getAttributes((int) Configuration::get('PS_LANG_DEFAULT'));
-        foreach ($combinationsList as $combinationDetails) {
-            $combinationName = $combinationDetails['reference'];
-            $combination = new Combination();
-            $combination->reference = $combinationName;
-            $combination->id_product = $productId;
-            $combination->quantity = (int) $combinationDetails['quantity'];
-            $combination->add();
-            StockAvailable::setQuantity($productId, $combination->id, (int) $combination->quantity);
-            $this->combinations[$productName][$combinationName] = $combination;
-            $combinationAttributes = explode(';', $combinationDetails['attributes']);
-            $combinationAttributesIds = [];
-            foreach ($combinationAttributes as $combinationAttribute) {
-                list($attributeGroup, $attributeName) = explode(':', $combinationAttribute);
-                foreach ($attributesList as $attributeDetail) {
-                    if ($attributeDetail['attribute_group'] == $attributeGroup && $attributeDetail['name'] == $attributeName) {
-                        $combinationAttributesIds[] = (int) $attributeDetail['id_attribute'];
-                        continue 2;
-                    }
-                }
-            }
-            $combination->setAttributes($combinationAttributesIds);
+
+        $combinationDetails = [];
+        foreach ($combinationsList as $combination) {
+            $combinationDetails[] = new CombinationDetails(
+                $combination['reference'],
+                (int) $combination['quantity'],
+                explode(';', $combination['attributes'])
+            );
+        }
+
+        $combinations = ProductCombinationFactory::makeCombinations($productId, $combinationDetails);
+
+        foreach ($combinations as $combination) {
+            $this->combinations[$productName][$combination->reference] = $combination;
         }
     }
 

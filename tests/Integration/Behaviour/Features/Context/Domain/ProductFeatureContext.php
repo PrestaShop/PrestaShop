@@ -60,9 +60,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\PackedProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNotesType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNotesType;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use Product;
 use RuntimeException;
@@ -676,8 +676,6 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         // to make sure all provided fields were checked we need to unset every asserted field
         // and finally, if provided data is not empty, it means there are some unnasserted values left
         Assert::assertEmpty($data, sprintf('Some provided fields haven\'t been asserted: %s', implode(',', $data)));
-
-
     }
 
     /**
