@@ -1458,3 +1458,11 @@ services:
         public: true
         tags:
             - { name: form.type }
+
+    form.type.improve.international.locations.zone_type:
+      class: 'PrestaShopBundle\Form\Admin\Improve\International\Locations\ZoneType'
+      public: true
+      arguments:
+        - '@translator'
+      tags:
+        - { name: form.type }
