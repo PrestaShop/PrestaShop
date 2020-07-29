@@ -63,6 +63,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInforma
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNotesType;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use Product;
@@ -414,9 +415,11 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $tableNode->getColumnsHash();
         $productSuppliers = [];
+        $references = [];
 
         foreach ($data as $productSupplier) {
             $productSupplierId = null;
+            $references[] = $productSupplier['reference'];
 
             if ($this->getSharedStorage()->exists($productSupplier['reference'])) {
                 $productSupplierId = $this->getSharedStorage()->get($productSupplier['reference']);
@@ -437,7 +440,18 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             $command = new UpdateProductSuppliersCommand($this->getSharedStorage()->get($productReference));
             $command->setProductSuppliers($productSuppliers);
 
-            $this->getCommandBus()->handle($command);
+            $productSupplierIds = $this->getCommandBus()->handle($command);
+
+            Assert::assertSameSize(
+                $references,
+                $productSupplierIds,
+                'Cannot set references in shared storage. References and actual product suppliers doesn\'t match.'
+            );
+
+            /** @var ProductSupplierId $productSupplierId */
+            foreach ($productSupplierIds as $key => $productSupplierId) {
+                $this->getSharedStorage()->set($references[$key], $productSupplierId->getValue());
+            }
         } catch (ProductSupplierException $e) {
             $this->lastException = $e;
         }
