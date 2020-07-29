@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class TaxRules extends BOBasePage {
-  constructor(page) {
-    super(page);
+class TaxRules extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Tax Rules •';
 
@@ -18,9 +18,11 @@ module.exports = class TaxRules extends BOBasePage {
 
   /**
    * Go to add tax Rules group Page
+   * @param page
    * @return {Promise<void>}
    */
-  async goToAddNewTaxRulesGroupPage() {
-    await this.clickAndWaitForNavigation(this.addNewTaxRulesGroupLink);
+  async goToAddNewTaxRulesGroupPage(page) {
+    await this.clickAndWaitForNavigation(page, this.addNewTaxRulesGroupLink);
   }
-};
+}
+module.exports = new TaxRules();

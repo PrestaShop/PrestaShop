@@ -34,6 +34,7 @@ npm-debug.log.*
 !/img/.htaccess
 !/img/index.php
 !/img/404.gif
+!/img/app_icon.png
 !/img/bg_500.png
 !/img/bg_loader.png
 !/img/favicon.ico

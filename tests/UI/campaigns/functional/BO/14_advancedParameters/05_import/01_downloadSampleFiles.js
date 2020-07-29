@@ -8,9 +8,8 @@ const files = require('@utils/files');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const ImportPage = require('@pages/BO/advancedParameters/import');
+const dashboardPage = require('@pages/BO/dashboard');
+const importPage = require('@pages/BO/advancedParameters/import');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -22,43 +21,34 @@ let browserContext;
 let page;
 let filePath;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    importPage: new ImportPage(page),
-  };
-};
-
 describe('Download import sample csv files', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login from BO and go to webservice page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to import page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToImportPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.advancedParametersLink,
-      this.pageObjects.dashboardPage.importLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.advancedParametersLink,
+      dashboardPage.importLink,
     );
 
-    await this.pageObjects.importPage.closeSfToolBar();
+    await importPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.importPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.importPage.pageTitle);
+    const pageTitle = await importPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(importPage.pageTitle);
   });
 
   const sampleFiles = [
@@ -146,7 +136,7 @@ describe('Download import sample csv files', async () => {
       it(`should download ${sampleFile.args.type} sample file`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${sampleFile.args.type}DownloadFile`, baseContext);
 
-        filePath = await this.pageObjects.importPage.downloadSampleFile(sampleFile.args.type);
+        filePath = await importPage.downloadSampleFile(page, sampleFile.args.type);
 
         const doesFileExist = await files.doesFileExist(filePath);
         await expect(doesFileExist, `${sampleFile.args.type} sample file was not downloaded`).to.be.true;

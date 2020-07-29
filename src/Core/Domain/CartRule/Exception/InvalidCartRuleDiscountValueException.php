@@ -33,4 +33,28 @@ namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Exception;
  */
 class InvalidCartRuleDiscountValueException extends InvalidCartRuleValueException
 {
+    /**
+     * Code used when an invalid percent value is under min value
+     */
+    const INVALID_MIN_PERCENT = 10;
+
+    /**
+     * Code used when an invalid percent value is above max value
+     */
+    const INVALID_MAX_PERCENT = 20;
+
+    /**
+     * Code used when the specified amount is under min value
+     */
+    const INVALID_MIN_AMOUNT = 30;
+
+    /**
+     * Code used when the specified amount is above max value
+     */
+    const INVALID_MAX_AMOUNT = 40;
+
+    /**
+     * Code used when free shipping cannot be applied
+     */
+    const INVALID_FREE_SHIPPING = 50;
 }

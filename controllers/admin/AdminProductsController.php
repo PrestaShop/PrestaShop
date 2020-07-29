@@ -2598,7 +2598,7 @@ class AdminProductsControllerCore extends AdminController
 
             $elements_to_manage = [];
 
-            // get form inforamtion
+            // get form information
             foreach ($attributes as $attribute) {
                 foreach ($warehouses as $warehouse) {
                     $key = $warehouse['id_warehouse'] . '_' . $product->id . '_' . $attribute['id_product_attribute'];

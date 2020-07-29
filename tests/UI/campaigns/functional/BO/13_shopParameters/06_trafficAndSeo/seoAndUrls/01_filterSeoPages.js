@@ -7,9 +7,8 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const SeoAndUrlsPage = require('@pages/BO/shopParameters/trafficAndSeo/seoAndUrls');
+const dashboardPage = require('@pages/BO/dashboard');
+const seoAndUrlsPage = require('@pages/BO/shopParameters/trafficAndSeo/seoAndUrls');
 
 // Import data
 const {contact} = require('@data/demo/seoPages');
@@ -23,15 +22,6 @@ let browserContext;
 let page;
 let numberOfSeoPages = 0;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    seoAndUrlsPage: new SeoAndUrlsPage(page),
-  };
-};
-
 /*
 Filter SEO pages with id, page, page title and friendly url
  */
@@ -40,35 +30,35 @@ describe('Filter SEO pages with id, page, page title and friendly url', async ()
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to contact page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to \'Shop parameters > SEO and Urls\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSeoAndUrlsPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.shopParametersParentLink,
-      this.pageObjects.dashboardPage.trafficAndSeoLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.shopParametersParentLink,
+      dashboardPage.trafficAndSeoLink,
     );
 
-    await this.pageObjects.seoAndUrlsPage.closeSfToolBar();
+    await seoAndUrlsPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.seoAndUrlsPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.seoAndUrlsPage.pageTitle);
+    const pageTitle = await seoAndUrlsPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
   });
 
   it('should reset all filters and get number of SEO pages in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfSeoPages = await this.pageObjects.seoAndUrlsPage.resetAndGetNumberOfLines();
+    numberOfSeoPages = await seoAndUrlsPage.resetAndGetNumberOfLines(page);
     await expect(numberOfSeoPages).to.be.above(0);
   });
 
@@ -84,16 +74,18 @@ describe('Filter SEO pages with id, page, page title and friendly url', async ()
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
 
-        await this.pageObjects.seoAndUrlsPage.filterTable(
+        await seoAndUrlsPage.filterTable(
+          page,
           test.args.filterBy,
           test.args.filterValue,
         );
 
-        const numberOfSeoPagesAfterFilter = await this.pageObjects.seoAndUrlsPage.getNumberOfElementInGrid();
+        const numberOfSeoPagesAfterFilter = await seoAndUrlsPage.getNumberOfElementInGrid(page);
         await expect(numberOfSeoPagesAfterFilter).to.be.at.most(numberOfSeoPages);
 
         for (let i = 1; i <= numberOfSeoPagesAfterFilter; i++) {
-          const textColumn = await this.pageObjects.seoAndUrlsPage.getTextColumnFromTable(
+          const textColumn = await seoAndUrlsPage.getTextColumnFromTable(
+            page,
             i,
             test.args.filterBy,
           );
@@ -105,7 +97,7 @@ describe('Filter SEO pages with id, page, page title and friendly url', async ()
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfSeoPagesAfterReset = await this.pageObjects.seoAndUrlsPage.resetAndGetNumberOfLines();
+        const numberOfSeoPagesAfterReset = await seoAndUrlsPage.resetAndGetNumberOfLines(page);
         await expect(numberOfSeoPagesAfterReset).to.equal(numberOfSeoPages);
       });
     });

@@ -1,9 +1,9 @@
 require('module-alias/register');
 const LocalizationBasePage = require('@pages/BO/international/localization/localizationBasePage');
 
-module.exports = class Localization extends LocalizationBasePage {
-  constructor(page) {
-    super(page);
+class Localization extends LocalizationBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Localization • ';
     this.importLocalizationPackSuccessfulMessage = 'Localization pack imported successfully.';
@@ -28,54 +28,59 @@ module.exports = class Localization extends LocalizationBasePage {
   /* Methods */
   /**
    * Import a localization pack
+   * @param page
    * @param country
    * @param contentToImport
    * @param downloadPackData
    * @return {Promise<void>}
    */
-  async importLocalizationPack(country, contentToImport, downloadPackData = true) {
+  async importLocalizationPack(page, country, contentToImport, downloadPackData = true) {
     // Choose which country to import
-    await this.selectByVisibleText(this.importlocalizationPackSelect, country);
+    await this.selectByVisibleText(page, this.importlocalizationPackSelect, country);
     // Set content import checkboxes
-    await this.updateCheckboxValue(this.importStatesCheckbox, contentToImport.importStates);
-    await this.updateCheckboxValue(this.importTaxesCheckbox, contentToImport.importTaxes);
-    await this.updateCheckboxValue(this.importCurrenciesCheckbox, contentToImport.importCurrencies);
-    await this.updateCheckboxValue(this.importLanguagesCheckbox, contentToImport.importLanguages);
-    await this.updateCheckboxValue(this.importUnitsCheckbox, contentToImport.importUnits);
+    await this.updateCheckboxValue(page, this.importStatesCheckbox, contentToImport.importStates);
+    await this.updateCheckboxValue(page, this.importTaxesCheckbox, contentToImport.importTaxes);
+    await this.updateCheckboxValue(page, this.importCurrenciesCheckbox, contentToImport.importCurrencies);
+    await this.updateCheckboxValue(page, this.importLanguagesCheckbox, contentToImport.importLanguages);
+    await this.updateCheckboxValue(page, this.importUnitsCheckbox, contentToImport.importUnits);
     await this.updateCheckboxValue(
+      page,
       this.updatepriceDisplayForGroupsCHeckbox,
       contentToImport.updatePriceDisplayForGroups,
     );
     // Choose if we download pack of data
-    await this.page.click(this.downloadPackDataSwitch(downloadPackData ? 1 : 0));
+    await page.click(this.downloadPackDataSwitch(downloadPackData ? 1 : 0));
     // Import the pack
-    await this.clickAndWaitForNavigation(this.importButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.clickAndWaitForNavigation(page, this.importButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
 
   /**
    * Select default language
+   * @param page
    * @param language
    * @param languageFromBrowser
    * @returns {Promise<string>}
    */
-  async setDefaultLanguage(language, languageFromBrowser = true) {
-    await this.selectByVisibleText(this.defaultLanguageSelector, language);
-    await this.waitForSelectorAndClick(this.languageFromBrowserLabel(languageFromBrowser ? 1 : 0));
-    await this.waitForSelectorAndClick(this.saveConfigurationFormButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+  async setDefaultLanguage(page, language, languageFromBrowser = true) {
+    await this.selectByVisibleText(page, this.defaultLanguageSelector, language);
+    await this.waitForSelectorAndClick(page, this.languageFromBrowserLabel(languageFromBrowser ? 1 : 0));
+    await this.waitForSelectorAndClick(page, this.saveConfigurationFormButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
    * Set default currency
+   * @param page
    * @param currency
    * @returns {Promise<string>}
    */
-  async setDefaultCurrency(currency) {
-    this.dialogListener();
-    await this.selectByVisibleText(this.defaultCurrencySelect, currency);
-    await this.waitForSelectorAndClick(this.saveConfigurationFormButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+  async setDefaultCurrency(page, currency) {
+    this.dialogListener(page);
+    await this.selectByVisibleText(page, this.defaultCurrencySelect, currency);
+    await this.waitForSelectorAndClick(page, this.saveConfigurationFormButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
-};
+}
+module.exports = new Localization();

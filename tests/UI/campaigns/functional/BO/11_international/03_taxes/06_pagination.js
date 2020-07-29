@@ -6,9 +6,8 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const TaxesPage = require('@pages/BO/international/taxes');
+const dashboardPage = require('@pages/BO/dashboard');
+const taxesPage = require('@pages/BO/international/taxes');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -20,52 +19,43 @@ let page;
 
 let numberOfTaxes = 0;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    taxesPage: new TaxesPage(page),
-  };
-};
-
 describe('Taxes pagination', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to taxes page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.internationalParentLink,
-      this.pageObjects.dashboardPage.taxesLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.internationalParentLink,
+      dashboardPage.taxesLink,
     );
 
-    await this.pageObjects.taxesPage.closeSfToolBar();
+    await taxesPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.taxesPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.taxesPage.pageTitle);
+    const pageTitle = await taxesPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(taxesPage.pageTitle);
   });
 
   it('should reset all filters and get number of taxes in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfTaxes = await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
+    numberOfTaxes = await taxesPage.resetAndGetNumberOfLines(page);
     await expect(numberOfTaxes).to.be.at.least(11);
 
-    const paginationLabelText = await this.pageObjects.taxesPage.getPaginationLabel();
+    const paginationLabelText = await taxesPage.getPaginationLabel(page);
     await expect(paginationLabelText).to.contains('(page 1 / 1)');
   });
 
@@ -73,28 +63,28 @@ describe('Taxes pagination', async () => {
     it('should change the item number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-      const paginationNumber = await this.pageObjects.taxesPage.selectPaginationLimit('10');
+      const paginationNumber = await taxesPage.selectPaginationLimit(page, '10');
       expect(paginationNumber).to.contains('(page 1 / 4)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await this.pageObjects.taxesPage.paginationNext();
+      const paginationNumber = await taxesPage.paginationNext(page);
       await expect(paginationNumber).to.contains('(page 2 / 4)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await this.pageObjects.taxesPage.paginationPrevious();
+      const paginationNumber = await taxesPage.paginationPrevious(page);
       await expect(paginationNumber).to.contains('(page 1 / 4)');
     });
 
     it('should change the item number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber = await this.pageObjects.taxesPage.selectPaginationLimit('50');
+      const paginationNumber = await taxesPage.selectPaginationLimit(page, '50');
       await expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });

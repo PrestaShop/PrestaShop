@@ -13,7 +13,7 @@ npm install
 ## Available command line parameters
 | Parameter           | Description      |
 |---------------------|----------------- |
-| URL_FO              | URL of your PrestaShop website Front Office (default to **`http://localhost:8080/`**) |
+| URL_FO              | URL of your PrestaShop website Front Office (default to **`http://localhost/prestashop/`**) |
 | URL_BO              | URL of your PrestaShop website Back Office (default to **`URL_FO + admin-dev/`**) |
 | URL_INSTALL         | URL of the Install folder (default to **`URL_FO + install-dev/`**) |
 | FIRSTNAME           | Firstname of your admin employee (default to **`demo`**) |
@@ -22,8 +22,9 @@ npm install
 | PASSWD              | PASSWD of your PrestaShop website (default to **`prestashop_demo`**) |
 | SHOPNAME            | Shop Name of tour PrestaShop (default to **`Prestashop`**) |
 | DB_USER             | Login user of your MySql (default to **`root`**) |
+| DB_NAME             | Name of the MySql database (default to **`prestashop_db`**) |
 | DB_PASSWD           | Password for your MySql (default to **`empty`**) |
-| HEADLESS            | Boolean to run tests in headless or not (default to **`true`**) |
+| HEADLESS            | Boolean to run tests in [headless mode](https://en.wikipedia.org/wiki/Headless_software) or not (default to **`true`**) |
 
 Before running tests, you should install your shop manually or run the install script **`campaigns/sanity/01_installShop/*`** with the [`specific-test` command](README.md#specific-test).
 

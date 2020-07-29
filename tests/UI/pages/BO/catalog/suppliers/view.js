@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class ViewSupplier extends BOBasePage {
-  constructor(page) {
-    super(page);
+class ViewSupplier extends BOBasePage {
+  constructor() {
+    super();
 
     // Selectors
     this.contentDiv = 'div.content-div';
@@ -14,4 +14,6 @@ module.exports = class ViewSupplier extends BOBasePage {
   /*
   Methods
    */
-};
+}
+
+module.exports = new ViewSupplier();

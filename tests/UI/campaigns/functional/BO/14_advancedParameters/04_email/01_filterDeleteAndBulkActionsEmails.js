@@ -7,15 +7,13 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const EmailPage = require('@pages/BO/advancedParameters/email');
-const FOBasePage = require('@pages/FO/FObasePage');
-const HomePage = require('@pages/FO/home');
-const ProductPage = require('@pages/FO/product');
-const CartPage = require('@pages/FO/cart');
-const CheckoutPage = require('@pages/FO/checkout');
-const OrderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
+const dashboardPage = require('@pages/BO/dashboard');
+const emailPage = require('@pages/BO/advancedParameters/email');
+const homePage = require('@pages/FO/home');
+const productPage = require('@pages/FO/product');
+const cartPage = require('@pages/FO/cart');
+const checkoutPage = require('@pages/FO/checkout');
+const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
 // Import data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
@@ -44,21 +42,6 @@ const year = today.getFullYear();
 // Date today (yyy-mm-dd)
 const dateToday = `${year}-${month}-${day}`;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    emailPage: new EmailPage(page),
-    foBasePage: new FOBasePage(page),
-    homePage: new HomePage(page),
-    productPage: new ProductPage(page),
-    cartPage: new CartPage(page),
-    checkoutPage: new CheckoutPage(page),
-    orderConfirmationPage: new OrderConfirmationPage(page),
-  };
-};
-
 /*
 Create an order to have 2 email logs in email table
 Filter email logs list
@@ -70,64 +53,61 @@ describe('Filter, delete and bulk actions email log', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   describe('Create order to have email logs', async () => {
     it('should go to FO and create an order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createOrderInFO', baseContext);
 
       // Click on view my shop
-      page = await this.pageObjects.dashboardPage.viewMyShop();
-      this.pageObjects = await init();
+      page = await dashboardPage.viewMyShop(page);
 
       // Change language in FO
-      await this.pageObjects.foBasePage.changeLanguage('en');
+      await homePage.changeLanguage(page, 'en');
 
       // Go to the first product page
-      await this.pageObjects.homePage.goToProductPage(1);
+      await homePage.goToProductPage(page, 1);
 
       // Add the created product to the cart
-      await this.pageObjects.productPage.addProductToTheCart();
+      await productPage.addProductToTheCart(page);
 
       // Proceed to checkout the shopping cart
-      await this.pageObjects.cartPage.clickOnProceedToCheckout();
+      await cartPage.clickOnProceedToCheckout(page);
 
       // Checkout the order
 
       // Personal information step - Login
-      await this.pageObjects.checkoutPage.clickOnSignIn();
-      await this.pageObjects.checkoutPage.customerLogin(DefaultAccount);
+      await checkoutPage.clickOnSignIn(page);
+      await checkoutPage.customerLogin(page, DefaultAccount);
 
       // Address step - Go to delivery step
-      const isStepAddressComplete = await this.pageObjects.checkoutPage.goToDeliveryStep();
+      const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
       await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
 
       // Delivery step - Go to payment step
-      const isStepDeliveryComplete = await this.pageObjects.checkoutPage.goToPaymentStep();
+      const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
       await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
 
       // Payment step - Choose payment step
-      await this.pageObjects.checkoutPage.choosePaymentAndOrder(PaymentMethods.wirePayment.moduleName);
+      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
 
       // Check the confirmation message
-      const cardTitle = await this.pageObjects.orderConfirmationPage.getOrderConfirmationCardTitle();
-      await expect(cardTitle).to.contains(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
+      await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
 
       // Logout from FO
-      await this.pageObjects.foBasePage.logout();
+      await orderConfirmationPage.logout(page);
 
       // Go Back to BO
-      page = await this.pageObjects.orderConfirmationPage.closePage(browserContext, 0);
-      this.pageObjects = await init();
+      page = await orderConfirmationPage.closePage(browserContext, page, 0);
     });
   });
 
@@ -135,19 +115,20 @@ describe('Filter, delete and bulk actions email log', async () => {
     it('should go to \'Advanced parameters > E-mail\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEmailPage', baseContext);
 
-      await this.pageObjects.dashboardPage.goToSubMenu(
-        this.pageObjects.dashboardPage.advancedParametersLink,
-        this.pageObjects.dashboardPage.emailLink,
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.advancedParametersLink,
+        dashboardPage.emailLink,
       );
 
-      const pageTitle = await this.pageObjects.emailPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.emailPage.pageTitle);
+      const pageTitle = await emailPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(emailPage.pageTitle);
     });
 
     it('should reset all filters and get number of email logs', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
 
-      numberOfEmails = await this.pageObjects.emailPage.resetAndGetNumberOfLines();
+      numberOfEmails = await emailPage.resetAndGetNumberOfLines(page);
       await expect(numberOfEmails).to.be.above(0);
     });
     const tests = [
@@ -202,17 +183,18 @@ describe('Filter, delete and bulk actions email log', async () => {
       it(`should filter email logs by '${test.args.filterBy}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.identifier, baseContext);
 
-        await this.pageObjects.emailPage.filterEmailLogs(
+        await emailPage.filterEmailLogs(
+          page,
           test.args.filterType,
           test.args.filterBy,
           test.args.filterValue,
         );
 
-        const numberOfEmailsAfterFilter = await this.pageObjects.emailPage.getNumberOfElementInGrid();
+        const numberOfEmailsAfterFilter = await emailPage.getNumberOfElementInGrid(page);
         await expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfEmails);
 
         for (let row = 1; row <= numberOfEmailsAfterFilter; row++) {
-          const textColumn = await this.pageObjects.emailPage.getTextColumn(test.args.filterBy, row);
+          const textColumn = await emailPage.getTextColumn(page, test.args.filterBy, row);
           await expect(textColumn).to.contains(test.args.filterValue);
         }
       });
@@ -220,7 +202,7 @@ describe('Filter, delete and bulk actions email log', async () => {
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.identifier}Reset`, baseContext);
 
-        const numberOfEmailsAfterReset = await this.pageObjects.emailPage.resetAndGetNumberOfLines();
+        const numberOfEmailsAfterReset = await emailPage.resetAndGetNumberOfLines(page);
         await expect(numberOfEmailsAfterReset).to.be.equal(numberOfEmails);
       });
     });
@@ -228,13 +210,13 @@ describe('Filter, delete and bulk actions email log', async () => {
     it('should filter email logs by date sent \'From\' and \'To\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByDateSent', baseContext);
 
-      await this.pageObjects.emailPage.filterEmailLogsByDate(dateToday, dateToday);
+      await emailPage.filterEmailLogsByDate(page, dateToday, dateToday);
 
-      const numberOfEmailsAfterFilter = await this.pageObjects.emailPage.getNumberOfElementInGrid();
+      const numberOfEmailsAfterFilter = await emailPage.getNumberOfElementInGrid(page);
       await expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfEmails);
 
       for (let row = 1; row <= numberOfEmailsAfterFilter; row++) {
-        const textColumn = await this.pageObjects.emailPage.getTextColumn('date_add', row);
+        const textColumn = await emailPage.getTextColumn(page, 'date_add', row);
         await expect(textColumn).to.contains(dateToday);
       }
     });
@@ -242,7 +224,7 @@ describe('Filter, delete and bulk actions email log', async () => {
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'dateSentReset', baseContext);
 
-      const numberOfEmailsAfterReset = await this.pageObjects.emailPage.resetAndGetNumberOfLines();
+      const numberOfEmailsAfterReset = await emailPage.resetAndGetNumberOfLines(page);
       await expect(numberOfEmailsAfterReset).to.be.equal(numberOfEmails);
     });
   });
@@ -251,23 +233,23 @@ describe('Filter, delete and bulk actions email log', async () => {
     it('should filter email logs by \'subject\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterBySubjectToDelete', baseContext);
 
-      await this.pageObjects.emailPage.filterEmailLogs('input', 'subject', PaymentMethods.wirePayment.name);
+      await emailPage.filterEmailLogs(page, 'input', 'subject', PaymentMethods.wirePayment.name);
 
-      const numberOfEmailsAfterFilter = await this.pageObjects.emailPage.getNumberOfElementInGrid();
+      const numberOfEmailsAfterFilter = await emailPage.getNumberOfElementInGrid(page);
       await expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfEmails);
     });
 
     it('should delete email log', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteEmail', baseContext);
 
-      const textResult = await this.pageObjects.emailPage.deleteEmailLog(1);
-      await expect(textResult).to.equal(this.pageObjects.emailPage.successfulMultiDeleteMessage);
+      const textResult = await emailPage.deleteEmailLog(page, 1);
+      await expect(textResult).to.equal(emailPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
-      const numberOfEmailsAfterReset = await this.pageObjects.emailPage.resetAndGetNumberOfLines();
+      const numberOfEmailsAfterReset = await emailPage.resetAndGetNumberOfLines(page);
       await expect(numberOfEmailsAfterReset).to.be.equal(numberOfEmails - 1);
     });
   });
@@ -276,8 +258,8 @@ describe('Filter, delete and bulk actions email log', async () => {
     it('should delete all email logs', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'BulkDelete', baseContext);
 
-      const deleteTextResult = await this.pageObjects.emailPage.deleteEmailLogsBulkActions();
-      await expect(deleteTextResult).to.be.equal(this.pageObjects.emailPage.successfulMultiDeleteMessage);
+      const deleteTextResult = await emailPage.deleteEmailLogsBulkActions(page);
+      await expect(deleteTextResult).to.be.equal(emailPage.successfulMultiDeleteMessage);
     });
   });
 });

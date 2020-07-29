@@ -38,6 +38,6 @@ final class ProductWithoutDescriptionGridDefinitionFactory extends AbstractProdu
      */
     protected function getName()
     {
-        return $this->trans('List of products without description', [], 'Admin.Catalog.Feature');
+        return $this->trans('List of products without description and summary', [], 'Admin.Catalog.Feature');
     }
 }
