@@ -46,7 +46,7 @@ export default class OrderPricesRefresher {
   }
 
   refreshProductPrices(orderId) {
-    $.ajax(this.router.generate('admin_orders_refresh_product_prices', {orderId}))
+    $.ajax(this.router.generate('admin_orders_product_prices', {orderId}))
       .then((productPricesList) => {
         productPricesList.forEach((productPrices) => {
           const orderProductTrId = '#orderProduct_' + productPrices.orderDetailId;
