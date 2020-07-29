@@ -127,7 +127,6 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             $this->updateSpecificPrice(
                 $command->getPriceTaxIncluded(),
                 $command->getPriceTaxExcluded(),
-                $command->getQuantity(),
                 $order,
                 $product,
                 $combination

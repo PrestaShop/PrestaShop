@@ -281,7 +281,6 @@ abstract class AbstractOrderHandler
      *
      * @param Number $priceTaxIncluded
      * @param Number $priceTaxExcluded
-     * @param int $productQuantity
      * @param Order $order
      * @param Product $product
      * @param $combination
@@ -294,7 +293,6 @@ abstract class AbstractOrderHandler
     protected function updateSpecificPrice(
         Number $priceTaxIncluded,
         Number $priceTaxExcluded,
-        int $productQuantity,
         Order $order,
         Product $product,
         $combination
@@ -305,13 +303,13 @@ abstract class AbstractOrderHandler
             $order->id_currency,
             0,
             0,
-            $productQuantity,
+            0,
             $combination ? $combination->id : 0,
             $order->id_customer,
             $order->id_cart
         );
 
-        $productOriginalPrice = New Number((string) $product->price);
+        $productOriginalPrice = new Number((string) $product->price);
 
         if ($productOriginalPrice->equals($priceTaxExcluded)) {
             if (!empty($existingSpecificPrice)) {
