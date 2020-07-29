@@ -99,6 +99,7 @@ module.exports = {
     translation_settings: './js/pages/translation-settings',
     translations: './js/app/pages/translations',
     webservice: './js/pages/webservice',
+    zone: './js/pages/zone',
     theme: ['./scss/theme.scss'],
   },
   output: {
