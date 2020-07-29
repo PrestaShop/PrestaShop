@@ -146,8 +146,6 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
                 $this->computingPrecision
             );
 
-            $this->orderAmountUpdater->updateOrderInvoices($order, $this->computingPrecision);
-
             Hook::exec('actionOrderEdited', ['order' => $order]);
         } catch (Exception $e) {
             throw $e;
