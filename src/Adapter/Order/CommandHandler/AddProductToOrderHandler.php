@@ -168,7 +168,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             );
 
             // update order details
-            $this->orderAmountUpdater->updateOrderDetailsWithSameProduct(
+            $this->updateOrderDetailsWithSameProduct(
                 $order,
                 $orderDetail,
                 $product,
