@@ -34,6 +34,7 @@ use Currency;
 use Customer;
 use Group;
 use Order;
+use OrderDetail;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
@@ -44,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use PrestaShopException;
 use Product;
 use SpecificPrice;
+use Tools;
 use Validate;
 
 /**
@@ -348,5 +350,48 @@ abstract class AbstractOrderHandler
         $specificPrice->add();
 
         return;
+    }
+
+    /**
+     * Update order details after a specific price has been created or updated
+     *
+     * @param Order $order
+     * @param OrderDetail $updatedOrderDetail
+     * @param Product $product
+     * @param int|null $combinationId
+     * @param int $productQuantity
+     * @param Number $priceTaxIncluded
+     * @param Number $priceTaxExcluded
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    protected function updateOrderDetailsWithSameProduct(
+        Order $order,
+        OrderDetail $updatedOrderDetail,
+        Product $product,
+        ?int $combinationId,
+        Number $priceTaxIncluded,
+        Number $priceTaxExcluded,
+        int $computingPrecision
+    ): void {
+        foreach ($order->getOrderDetailList() as $row) {
+            $orderDetail = new OrderDetail($row['id_order_detail']);
+            if ((int) $orderDetail->product_id !== (int) $product->id) {
+                continue;
+            }
+            if (!empty($combinationId) && (int) $combinationId !== (int) $orderDetail->product_attribute_id) {
+                continue;
+            }
+            if ($updatedOrderDetail->id == $orderDetail->id) {
+                continue;
+            }
+            $orderDetail->unit_price_tax_excl = (float) (string) $priceTaxExcluded;
+            $orderDetail->unit_price_tax_incl = (float) (string) $priceTaxIncluded;
+            $orderDetail->total_price_tax_excl = Tools::ps_round((float) (string) $priceTaxExcluded * $orderDetail->product_quantity, $computingPrecision);
+            $orderDetail->total_price_tax_incl = Tools::ps_round((float) (string) $priceTaxIncluded * $orderDetail->product_quantity, $computingPrecision);
+
+            $orderDetail->update();
+        }
     }
 }
