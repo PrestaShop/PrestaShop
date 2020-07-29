@@ -223,7 +223,7 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             $customerTableAlias = false;
-            if (in_array($filterName, ['firstname', 'lastname', 'company'])) {
+            if (in_array($filterName, ['firstname', 'lastname', 'company', 'email'])) {
                 $customerTableAlias = true;
             }
 
