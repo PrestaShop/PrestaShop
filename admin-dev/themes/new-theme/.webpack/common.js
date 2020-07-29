@@ -106,6 +106,7 @@ module.exports = {
     translation_settings: './js/pages/translation-settings',
     translations: './js/app/pages/translations',
     webservice: './js/pages/webservice',
+    zone: './js/pages/zone',
     multistore_header: './js/components/multistore-header.js',
     theme: './scss/theme.scss',
     orders: './scss/pages/orders/orders.scss',
