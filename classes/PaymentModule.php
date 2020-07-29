@@ -820,7 +820,7 @@ abstract class PaymentModuleCore extends Module
             return false;
         }
 
-        return Currency((int) $id_currency);
+        return Currency::getCurrencyInstance((int) $id_currency);
     }
 
     /**
