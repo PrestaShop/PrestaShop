@@ -431,7 +431,7 @@ class CartCore extends ObjectModel
         if ($cart_vat_amount == 0 || $cartAmountTaxExcluded == 0) {
             return 0;
         } else {
-            return Tools::ps_round($cart_vat_amount / $cartAmountTaxExcluded, 3);
+            return Tools::ps_round($cart_vat_amount / $cartAmountTaxExcluded, Context::getContext()->getComputingPrecision());
         }
     }
 
@@ -3628,7 +3628,7 @@ class CartCore extends ObjectModel
             }
         }
 
-        $shipping_cost = (float) Tools::ps_round((float) $shipping_cost, 2);
+        $shipping_cost = (float) Tools::ps_round((float) $shipping_cost, Context::getContext()->getComputingPrecision());
         Cache::store($cache_id, $shipping_cost);
 
         return $shipping_cost;
