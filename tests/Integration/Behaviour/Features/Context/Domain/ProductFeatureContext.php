@@ -60,6 +60,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\PackedProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNotesType;
@@ -68,10 +69,44 @@ use Product;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use Tests\Integration\Behaviour\Features\Context\Util\CombinationDetails;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
+use Tests\Integration\Behaviour\Features\Context\Util\ProductCombinationFactory;
 
 class ProductFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * @Given product :productReference has combinations with following details:
+     *
+     * @param string $productReference
+     * @param TableNode $tableNode
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    public function addCombinationsToProduct(string $productReference, TableNode $tableNode)
+    {
+        $details = $tableNode->getColumnsHash();
+        $combinationsDetails = [];
+
+        foreach ($details as $combination) {
+            $combinationsDetails[] = new CombinationDetails(
+                $combination['reference'],
+                (int) $combination['quantity'],
+                explode(';', $combination['attributes'])
+            );
+        }
+
+        $combinations = ProductCombinationFactory::makeCombinations(
+            $this->getSharedStorage()->get($productReference),
+            $combinationsDetails
+        );
+
+        foreach ($combinations as $combination) {
+            $this->getSharedStorage()->set($combination->reference, $combination->id);
+        }
+    }
+
     /**
      * @Then I set tax rule group :taxRulesGroupReference to product :productReference
      *
@@ -351,6 +386,22 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         }
 
         return $unhandledValues;
+    }
+
+    /**
+     * @When I delete product :productReference suppliers
+     *
+     * @param string $productReference
+     */
+    public function deleteProductSuppliers(string $productReference)
+    {
+        try {
+            $command = new UpdateProductSuppliersCommand($this->getSharedStorage()->get($productReference));
+            $command->setProductSuppliers([]);
+            $this->getCommandBus()->handle($command);
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
     }
 
     /**
@@ -637,6 +688,22 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then product :productReference should not have a default supplier
+     *
+     * @param string $productReference
+     */
+    public function assertProductHasNoDefaultSupplier(string $productReference)
+    {
+        $productForEditing = $this->getProductForEditing($productReference);
+        $defaultSupplierId = $productForEditing->getProductSupplierOptions()->getDefaultSupplierId();
+
+        Assert::assertEmpty(
+            $defaultSupplierId,
+            sprintf('Product "%s" expected to have no default supplier', $productReference)
+        );
+    }
+
+    /**
      * @Then product :productReference should have following values:
      * @Then product :productReference has following values:
      *
@@ -663,14 +730,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $this->assertTaxRulesGroup($data, $productForEditing);
         $this->assertPriceFields($data, $productForEditing->getPricesInformation());
         $this->assertShippingInformation($data, $productForEditing->getShippingInformation());
-
-        if (isset($data['default supplier'])) {
-            $expectedSupplierId = $this->getSharedStorage()->get($data['default supplier']);
-            $actualSupplierId = $productForEditing->getProductSupplierOptions()->getDefaultSupplierId();
-
-            Assert::assertEquals($expectedSupplierId, $actualSupplierId, 'Unexpected product default supplier');
-            unset($data['default supplier']);
-        }
+        $this->assertDefaultSupplier($data, $productForEditing->getProductSupplierOptions());
 
         // Assertions checking isset() can hide some errors if it doesn't find array key,
         // to make sure all provided fields were checked we need to unset every asserted field
@@ -1092,6 +1152,21 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             CustomizationFieldConstraintException::class,
             CustomizationFieldConstraintException::INVALID_NAME
         );
+    }
+
+    /**
+     * @param array $data
+     * @param ProductSupplierOptions $productSupplierOptions
+     */
+    private function assertDefaultSupplier(array $data, ProductSupplierOptions $productSupplierOptions): void
+    {
+        if (isset($data['default supplier'])) {
+            $expectedSupplierId = $this->getSharedStorage()->get($data['default supplier']);
+            $actualSupplierId = $productSupplierOptions->getDefaultSupplierId();
+
+            Assert::assertEquals($expectedSupplierId, $actualSupplierId, 'Unexpected product default supplier');
+            unset($data['default supplier']);
+        }
     }
 
     /**

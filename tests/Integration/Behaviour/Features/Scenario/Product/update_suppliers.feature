@@ -30,23 +30,13 @@ Feature: Update product suppliers from Back Office (BO)
       | meta description     | en-US:                          |
       | meta keywords        | en-US:sup,2                     |
       | shops                | [shop1]                         |
-    And I add product "product1" with following information:
+
+  Scenario: Update standard product suppliers
+    Given I add product "product1" with following information:
       | name       | en-US:magic staff                         |
       | is_virtual | false                                     |
+    And product product1 type should be standard
     And product product1 should have no suppliers assigned
-#    And product "product1" has combinations with following details:
-#      | reference    | quantity | attributes |
-#      | combination1 | 100      | Size:L     |
-#      | combination2 | 100      | Size:M     |
-#    When I update product product1 suppliers with following values:
-#      | reference         | supplier reference    | product supplier reference     | currency      | price tax excluded | combination reference |
-#      | product1suppl1    | supplier1             | this is input reference        | USD           | 19                 | combination1          |
-#    Then product product1 should have following suppliers:
-#      | reference         | supplier reference    | product supplier reference     | currency      | price tax excluded | combination reference |
-#      | product1suppl1    | supplier1             | this is input reference        | USD           | 19                 | combination1          |
-
-    #@todo: assume we will provide one product combination per reference, can we ?
-  Scenario: I update product suppliers
     When I update product product1 suppliers with following values:
       | reference         | supplier reference    | product supplier reference     | currency      | price tax excluded |
       | product1supplier1 | supplier1             | my first supplier for product1 | USD           | 10                 |
@@ -61,3 +51,22 @@ Feature: Update product suppliers from Back Office (BO)
       | product1supplier1     | my first supplier for product1 | USD           | 10                 |
     And product product1 should have following values:
       | default supplier | supplier2 |
+
+  Scenario: Remove standard product suppliers
+    Given product product1 type should be standard
+    And product product1 should have following suppliers:
+      | reference             | product supplier reference     | currency      | price tax excluded |
+      | product1supplier1     | my first supplier for product1 | USD           | 10                 |
+    And product product1 should have following values:
+      | default supplier | supplier2 |
+    When I delete product product1 suppliers
+    Then product product1 should have no suppliers assigned
+    And product product1 should not have a default supplier
+    And product product1 should have following values:
+      | default supplier | supplier2 |
+
+#  Scenario: Update combination product suppliers
+#    And product "Test Product Max Stock" has combinations with following details:
+#      | reference | quantity | attributes         |
+#      | whiteM    | 150      | Size:M;Color:White |
+#      | whiteL    | 150      | Size:L;Color:White |
