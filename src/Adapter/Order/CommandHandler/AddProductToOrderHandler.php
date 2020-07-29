@@ -178,8 +178,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 $this->computingPrecision
             );
 
-            $this->orderAmountUpdater->updateOrderInvoices($order, $this->computingPrecision);
-
             StockAvailable::synchronize($product->id);
 
             // Update weight SUM
