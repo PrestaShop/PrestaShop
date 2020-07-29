@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Cart;
-use Context;
 use Exception;
 use Hook;
 use Order;
@@ -78,7 +77,6 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
         OrderProductQuantityUpdater $orderProductQuantityUpdater,
         OrderAmountUpdater $orderAmountUpdater
     ) {
-        $this->computingPrecision = Context::getContext()->getComputingPrecision();
         $this->orderProductQuantityUpdater = $orderProductQuantityUpdater;
         $this->orderAmountUpdater = $orderAmountUpdater;
     }
@@ -94,6 +92,9 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
 
         try {
             $order = $this->getOrder($command->getOrderId());
+            $cart = Cart::getCartByOrderId($order->id);
+            $this->computingPrecision = $this->getPrecisionFromCart($cart);
+
             $orderDetail = new OrderDetail($command->getOrderDetailId());
             $orderInvoice = null;
             if (!empty($command->getOrderInvoiceId())) {
@@ -117,7 +118,6 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
                 throw new OrderException('An error occurred while editing the product line.');
             }
 
-            $cart = Cart::getCartByOrderId($order->id);
             if (!($cart instanceof Cart)) {
                 throw new OrderException('Cart linked to the order cannot be found.');
             }
