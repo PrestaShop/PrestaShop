@@ -1155,3 +1155,11 @@ services:
         - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoicesAttributes()'
       tags:
         - { name: form.type }
+
+    form.type.improve.international.locations.zone_type:
+      class: 'PrestaShopBundle\Form\Admin\Improve\International\Locations\ZoneType'
+      public: true
+      arguments:
+        - '@translator'
+      tags:
+        - { name: form.type }
