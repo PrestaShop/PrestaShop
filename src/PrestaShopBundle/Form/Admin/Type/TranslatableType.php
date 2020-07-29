@@ -133,21 +133,21 @@ class TranslatableType extends TranslatorAwareType
 
         if (!empty($errorsByLocale)) {
             foreach ($errorsByLocale as $errorByLocale) {
-
                 /** Needs to be translated */
                 $modifiedErrorMessage = $this->trans(
                     '%error_message% - Language: %language_name%',
                     'Admin.Notifications.Error',
                     [
                         '%error_message%' => $errorByLocale['error_message'],
-                        '%language_name%' => $errorByLocale['locale_name']
+                        '%language_name%' => $errorByLocale['locale_name'],
                     ]
                 );
                 $errors[] = new FormError($modifiedErrorMessage);
             }
         }
 
-        $view->vars['errors'] = new FormErrorIterator($form, $errors);
+        $varsForm = $view->vars['errors']->getForm();
+        $view->vars['errors'] = new FormErrorIterator($varsForm, $errors);
         $view->vars['locales'] = $options['locales'];
         $view->vars['default_locale'] = $this->getDefaultLocale($options['locales']);
         $view->vars['hide_locales'] = 1 >= count($options['locales']);
@@ -198,6 +198,7 @@ class TranslatableType extends TranslatorAwareType
      * @param FormView $view
      * @param FormInterface $form
      * @param array $locales
+     *
      * @return array|null
      */
     private function getErrorsByLocale(FormView $view, FormInterface $form, array $locales)
@@ -231,7 +232,6 @@ class TranslatableType extends TranslatorAwareType
             $form,
             $locales
         );
-
 
         return $errorsByLocale;
     }
