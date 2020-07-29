@@ -25,6 +25,8 @@
  */
 class TaxCore extends ObjectModel
 {
+    const TAX_DEFAULT_PRECISION = 3;
+
     /** @var string Name */
     public $name;
 

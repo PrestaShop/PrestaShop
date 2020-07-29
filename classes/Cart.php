@@ -431,7 +431,7 @@ class CartCore extends ObjectModel
         if ($cart_vat_amount == 0 || $cartAmountTaxExcluded == 0) {
             return 0;
         } else {
-            return Tools::ps_round($cart_vat_amount / $cartAmountTaxExcluded, Context::getContext()->getComputingPrecision());
+            return Tools::ps_round($cart_vat_amount / $cartAmountTaxExcluded, Tax::TAX_DEFAULT_PRECISION);
         }
     }
 
