@@ -402,13 +402,14 @@ class LocalizationPackCore
             foreach ($xml->languages->language as $data) {
                 /** @var SimpleXMLElement $data */
                 $attributes = $data->attributes();
+                $isoCode = (string) $attributes['iso_code'];
                 // if we are not in an installation context or if the pack is not available in the local directory
-                if (Language::getIdByIso($attributes['iso_code']) && !$install_mode) {
+                if (Language::getIdByIso($isoCode) && !$install_mode) {
                     continue;
                 }
 
-                $freshInstall = empty(Language::getIdByIso($attributes['iso_code']));
-                $errors = Language::downloadAndInstallLanguagePack($attributes['iso_code'], $attributes['version'], $attributes, $freshInstall);
+                $freshInstall = empty(Language::getIdByIso($isoCode));
+                $errors = Language::downloadAndInstallLanguagePack($isoCode, $attributes['version'], $attributes, $freshInstall);
                 if ($errors !== true && is_array($errors)) {
                     $this->_errors = array_merge($this->_errors, $errors);
                 }
