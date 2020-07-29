@@ -347,6 +347,13 @@ class AddressController extends FrameworkBundleAdminController
             }
 
             $addressForm = $addressFormBuilder->getFormFor($addressId, $formData);
+        } catch (Exception $exception) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_addresses_index');
+        }
+
+        try {
             $addressForm->handleRequest($request);
             $result = $addressFormHandler->handleFor($addressId, $addressForm);
 
@@ -364,8 +371,6 @@ class AddressController extends FrameworkBundleAdminController
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-
-            return $this->redirectToRoute('admin_addresses_index');
         }
 
         $customerInfo = $editableAddress->getLastName() . ' ' .
@@ -399,21 +404,21 @@ class AddressController extends FrameworkBundleAdminController
      */
     public function editOrderAddressAction(int $orderId, string $addressType, Request $request): Response
     {
-        try {
-            // @todo: don't rely on Order ObjectModel, use a Adapter DataProvider
-            $order = new Order($orderId);
-            $addressId = null;
-            switch ($addressType) {
-                case 'delivery':
-                    $addressType = OrderAddressType::DELIVERY_ADDRESS_TYPE;
-                    $addressId = $order->id_address_delivery;
-                    break;
-                case 'invoice':
-                    $addressType = OrderAddressType::INVOICE_ADDRESS_TYPE;
-                    $addressId = $order->id_address_invoice;
-                    break;
-            }
+        // @todo: don't rely on Order ObjectModel, use a Adapter DataProvider
+        $order = new Order($orderId);
+        $addressId = null;
+        switch ($addressType) {
+            case 'delivery':
+                $addressType = OrderAddressType::DELIVERY_ADDRESS_TYPE;
+                $addressId = $order->id_address_delivery;
+                break;
+            case 'invoice':
+                $addressType = OrderAddressType::INVOICE_ADDRESS_TYPE;
+                $addressId = $order->id_address_invoice;
+                break;
+        }
 
+        try {
             /** @var EditableCustomerAddress $editableAddress */
             $editableAddress = $this->getQueryBus()->handle(new GetCustomerAddressForEditing((int) $addressId));
 
@@ -437,6 +442,17 @@ class AddressController extends FrameworkBundleAdminController
 
             // Address form is built based on address id to fill the data related to this address
             $addressForm = $addressFormBuilder->getFormFor($addressId, $formData);
+        } catch (Exception $exception) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+            );
+
+            return $this->redirectToRoute('admin_orders_view', ['orderId' => $orderId]);
+        }
+
+        try {
+
             $addressForm->handleRequest($request);
 
             // Form is handled based on Order ID because that's the order that needs update
@@ -456,8 +472,6 @@ class AddressController extends FrameworkBundleAdminController
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-
-            return $this->redirectToRoute('admin_orders_view', ['orderId' => $orderId]);
         }
 
         $customerInfo = $editableAddress->getLastName() . ' ' .
@@ -492,21 +506,21 @@ class AddressController extends FrameworkBundleAdminController
      */
     public function editCartAddressAction(int $cartId, string $addressType, Request $request): Response
     {
-        try {
-            // @todo: don't rely on Cart ObjectModel, use a Adapter DataProvider
-            $cart = new Cart($cartId);
-            $addressId = null;
-            switch ($addressType) {
-                case 'delivery':
-                    $addressType = CartAddressType::DELIVERY_ADDRESS_TYPE;
-                    $addressId = $cart->id_address_delivery;
-                    break;
-                case 'invoice':
-                    $addressType = CartAddressType::INVOICE_ADDRESS_TYPE;
-                    $addressId = $cart->id_address_invoice;
-                    break;
-            }
+        // @todo: don't rely on Cart ObjectModel, use a Adapter DataProvider
+        $cart = new Cart($cartId);
+        $addressId = null;
+        switch ($addressType) {
+            case 'delivery':
+                $addressType = CartAddressType::DELIVERY_ADDRESS_TYPE;
+                $addressId = $cart->id_address_delivery;
+                break;
+            case 'invoice':
+                $addressType = CartAddressType::INVOICE_ADDRESS_TYPE;
+                $addressId = $cart->id_address_invoice;
+                break;
+        }
 
+        try {
             /** @var EditableCustomerAddress $editableAddress */
             $editableAddress = $this->getQueryBus()->handle(new GetCustomerAddressForEditing((int) $addressId));
 
@@ -530,6 +544,16 @@ class AddressController extends FrameworkBundleAdminController
 
             // Address form is built based on address id to fill the data related to this address
             $addressForm = $addressFormBuilder->getFormFor($addressId, $formData);
+        } catch (Exception $exception) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+            );
+
+            return $this->redirectToRoute('admin_carts_view', ['cartId' => $cartId]);
+        }
+
+        try {
             $addressForm->handleRequest($request);
 
             // Form is handled based on Cart ID because that's the cart that needs update
@@ -549,8 +573,6 @@ class AddressController extends FrameworkBundleAdminController
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-
-            return $this->redirectToRoute('admin_carts_view', ['cartId' => $cartId]);
         }
 
         $customerInfo = $editableAddress->getLastName() . ' ' .
