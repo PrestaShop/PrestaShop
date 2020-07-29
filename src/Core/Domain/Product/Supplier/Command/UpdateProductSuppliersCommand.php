@@ -70,9 +70,9 @@ class UpdateProductSuppliersCommand
     }
 
     /**
-     * @return ProductSupplier[]
+     * @return ProductSupplier[]|null
      */
-    public function getProductSuppliers(): array
+    public function getProductSuppliers(): ?array
     {
         return $this->productSuppliers;
     }

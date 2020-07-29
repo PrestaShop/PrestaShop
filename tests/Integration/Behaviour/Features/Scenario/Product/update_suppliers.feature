@@ -50,9 +50,14 @@ Feature: Update product suppliers from Back Office (BO)
     When I update product product1 suppliers with following values:
       | reference         | supplier reference    | product supplier reference     | currency      | price tax excluded |
       | product1supplier1 | supplier1             | my first supplier for product1 | USD           | 10                 |
-    And product product1 should have following suppliers:
+    Then product product1 should have following suppliers:
       | reference             | product supplier reference     | currency      | price tax excluded |
       | product1supplier1     | my first supplier for product1 | USD           | 10                 |
     And product product1 should have following values:
-    #todo: not implemented
       | default supplier | supplier1 |
+    When I set product product1 default supplier to supplier2
+    Then product product1 should have following suppliers:
+      | reference             | product supplier reference     | currency      | price tax excluded |
+      | product1supplier1     | my first supplier for product1 | USD           | 10                 |
+    And product product1 should have following values:
+      | default supplier | supplier2 |
