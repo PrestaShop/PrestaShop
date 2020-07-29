@@ -118,7 +118,6 @@ class ControllerTest extends TestCase
         return [
             ['AdminCarriersController'],
             ['AdminStatusesController'],
-            ['AdminZonesController'],
             ['AdminLoginController'],
             ['AdminQuickAccessesController'],
             ['AdminCustomerThreadsController'],
