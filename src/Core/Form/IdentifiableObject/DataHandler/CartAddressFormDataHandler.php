@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCartAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidAddressTypeException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 
 class CartAddressFormDataHandler implements FormDataHandlerInterface

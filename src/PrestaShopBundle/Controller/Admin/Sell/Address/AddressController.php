@@ -452,7 +452,6 @@ class AddressController extends FrameworkBundleAdminController
         }
 
         try {
-
             $addressForm->handleRequest($request);
 
             // Form is handled based on Order ID because that's the order that needs update
