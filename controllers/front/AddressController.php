@@ -90,7 +90,7 @@ class AddressControllerCore extends FrontController
                 || $this->context->cart->id_address_delivery == $id_address)
             ) {
                 $this->errors[] = $this->trans(
-                    'Could not delete address. You use it in the shopping cart',
+                    'Could not delete the address since it is used in the shopping cart.',
                     [],
                     'Shop.Notifications.Error'
                 );
