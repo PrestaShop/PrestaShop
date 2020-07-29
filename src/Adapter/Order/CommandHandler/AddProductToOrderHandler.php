@@ -197,10 +197,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
             $order = $order->refreshShippingCost();
 
-            Hook::exec('actionOrderEdited', ['order' => $order]);
-
             // Update totals amount of order
             $this->orderAmountUpdater->update($order, $cart, (int) $orderDetail->id_order_invoice);
+            Hook::exec('actionOrderEdited', ['order' => $order]);
         } catch (Exception $e) {
             $this->contextStateManager->restoreContext();
             throw $e;
