@@ -357,7 +357,6 @@ abstract class AbstractOrderHandler
      *
      * @param Order $order
      * @param OrderDetail $updatedOrderDetail
-     * @param Product $product
      * @param int|null $combinationId
      * @param int $productQuantity
      * @param Number $priceTaxIncluded
@@ -369,7 +368,6 @@ abstract class AbstractOrderHandler
     protected function updateOrderDetailsWithSameProduct(
         Order $order,
         OrderDetail $updatedOrderDetail,
-        Product $product,
         ?int $combinationId,
         Number $priceTaxIncluded,
         Number $priceTaxExcluded,
@@ -377,7 +375,7 @@ abstract class AbstractOrderHandler
     ): void {
         foreach ($order->getOrderDetailList() as $row) {
             $orderDetail = new OrderDetail($row['id_order_detail']);
-            if ((int) $orderDetail->product_id !== (int) $product->id) {
+            if ((int) $orderDetail->product_id !== (int) $updatedOrderDetail->product_id) {
                 continue;
             }
             if (!empty($combinationId) && (int) $combinationId !== (int) $orderDetail->product_attribute_id) {
