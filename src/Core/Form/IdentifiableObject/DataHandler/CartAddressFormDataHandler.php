@@ -61,20 +61,10 @@ class CartAddressFormDataHandler implements FormDataHandlerInterface
     /**
      * {@inheritdoc}
      *
-     * @throws CountryConstraintException
-     * @throws StateConstraintException
-     * @throws InvalidAddressTypeException
-     * @throws OrderException
-     */
-
-    /**
-     * @param int $cartId
-     * @param array $data
-     *
-     * @throws CountryConstraintException
-     * @throws InvalidAddressTypeException
-     * @throws StateConstraintException
      * @throws CartConstraintException
+     * @throws CountryConstraintException
+     * @throws StateConstraintException
+     * @throws InvalidAddressTypeException
      */
     public function update($cartId, array $data)
     {

@@ -387,7 +387,7 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
         Assert::assertEquals(
             $expectedAddressId,
             $cartAddressId,
-            sprintf('Invalid cart %s address, expected %s but found %s', $addressType, $expectedAddressId, $cartAddressId)
+            sprintf('Invalid cart %s address, expected %d but found %d', $addressType, $expectedAddressId, $cartAddressId)
         );
     }
 

@@ -74,7 +74,7 @@ class EditCartAddressHandler implements EditCartAddressHandlerInterface
         try {
             $cart = new Cart($command->getCartId()->getValue());
             if (!Validate::isLoadedObject($cart) || $command->getCartId()->getValue() !== (int) $cart->id) {
-                throw new CartNotFoundException(sprintf('Cart with id "%s" was not found', $command->getCartId()->getValue()));
+                throw new CartNotFoundException(sprintf('Cart with id "%d" was not found', $command->getCartId()->getValue()));
             }
 
             $addressCommand = $this->createEditAddressCommand($command, $cart);
@@ -90,10 +90,10 @@ class EditCartAddressHandler implements EditCartAddressHandlerInterface
                     break;
             }
             if (!$cart->update()) {
-                throw new CannotUpdateCartAddressException(sprintf('An error occurred when updating address for cart "%s"', $command->getCartId()->getValue()));
+                throw new CannotUpdateCartAddressException(sprintf('An error occurred when updating address for cart "%d"', $command->getCartId()->getValue()));
             }
         } catch (PrestaShopException $e) {
-            throw new CannotUpdateCartAddressException(sprintf('An error occurred when updating address for cart "%s"', $command->getCartId()->getValue()));
+            throw new CannotUpdateCartAddressException(sprintf('An error occurred when updating address for cart "%d"', $command->getCartId()->getValue()));
         }
 
         return $addressId;
