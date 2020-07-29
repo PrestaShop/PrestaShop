@@ -90,19 +90,66 @@ class PreferencesType extends TranslatorAwareType
         $isSslEnabled = $configuration->getBoolean('PS_SSL_ENABLED');
 
         if ($this->isSecure) {
-            $builder->add('enable_ssl', SwitchType::class);
+            $builder->add('enable_ssl', SwitchType::class, [
+                    'required' => false,
+                    'label' => $this->trans('Enable SSL', 'Admin.Shopparameters.Feature'),
+                    'help' => $this->trans(
+                        'If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.',
+                        'Admin.Shopparameters.Help'
+                    ),
+            ]);
         }
 
         $builder
             ->add('enable_ssl_everywhere', SwitchType::class, [
+                'required' => false,
                 'disabled' => !$isSslEnabled,
+                'label' => $this->trans(
+                    'When enabled, all the pages of your shop will be SSL-secured. SSL',
+                    'Admin.Shopparameters.Help'
+                ),
+                'help' => $this->trans(
+                    'When enabled, all the pages of your shop will be SSL-secured.',
+                    'Admin.Shopparameters.Help'
+                )
             ])
             ->add('enable_token', SwitchType::class, [
+                'required' => false,
                 'disabled' => !$this->isContextDependantOptionEnabled(),
+                    'label' => $this->trans(
+                        'Increase front office security',
+                        'Admin.Shopparameters.Feature'
+                    ),
+                    'help' => $this->trans(
+                        'Enable or disable token in the Front Office to improve PrestaShop\'s security.',
+                        'Admin.Shopparameters.Help'
+                    )
             ])
-            ->add('allow_html_iframes', SwitchType::class)
-            ->add('use_htmlpurifier', SwitchType::class)
-            ->add('price_round_mode', ChoiceType::class, [
+            ->add('allow_html_iframes', SwitchType::class, [
+                'required' => false,
+                'label' => $this->trans(
+                        'Allow iframes on HTML fields',
+                        'Admin.Shopparameters.Feature'
+                    ),
+                    'help' => $this->trans(
+                        'Allow iframes on text fields like product description. We recommend that you leave this option disabled.',
+                        'Admin.Shopparameters.Help'
+                    )
+            ])
+            ->add('use_htmlpurifier', SwitchType::class, [
+                'required' => false,
+                'label' => $this->trans(
+                        'Use HTMLPurifier Library',
+                        'Admin.Shopparameters.Feature'
+                    ),
+                    'help' => $this->trans(
+                        'Clean the HTML content on text fields. We recommend that you leave this option enabled.',
+                        'Admin.Shopparameters.Help'
+                    )
+            ])
+            ->add(
+                'price_round_mode',ChoiceType::class, [
+                'required' => false,
                 'choices_as_values' => true,
                 'choices' => [
                     'Round up away from zero, when it is half way there (recommended)' => $configuration->get('PS_ROUND_HALF_UP'),
@@ -112,20 +159,61 @@ class PreferencesType extends TranslatorAwareType
                     'Round up to the nearest value' => $configuration->get('PS_ROUND_UP'),
                     'Round down to the nearest value' => $configuration->get('PS_ROUND_DOWN'),
                 ],
+                'label' => $this->trans('Round mode', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans(
+                    'You can choose among 6 different ways of rounding prices. "Round up away from zero ..." is the recommended behavior.',
+                    'Admin.Shopparameters.Help'
+                )
             ])
             ->add('price_round_type', ChoiceType::class, [
+                'required' => false,
                 'choices_as_values' => true,
                 'choices' => [
                     'Round on each item' => Order::ROUND_ITEM,
                     'Round on each line' => Order::ROUND_LINE,
                     'Round on the total' => Order::ROUND_TOTAL,
                 ],
+                'label' => $this->trans('Round type', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans(
+                    'You can choose when to round prices: either on each item, each line or the total (of an invoice, for example).',
+                    'Admin.Shopparameters.Help'
+                )
             ])
-            ->add('display_suppliers', SwitchType::class)
-            ->add('display_manufacturers', SwitchType::class)
-            ->add('display_best_sellers', SwitchType::class)
+            ->add(
+                'display_suppliers', SwitchType::class, [
+                'required' => false,
+                'label' => $this->trans('Display suppliers', 'Admin.Shopparameters.Feature'),
+                    'help' => $this->trans(
+                        'Enable suppliers page on your front office even when its module is disabled.',
+                        'Admin.Shopparameters.Help'
+                    )
+            ])
+            ->add(
+                'display_manufacturers', SwitchType::class, [
+                'required' => false,
+                'label' => $this->trans('Display brands', 'Admin.Shopparameters.Feature'),
+                    'help' => $this->trans(
+                        'Enable brands page on your front office even when its module is disabled.',
+                        'Admin.Shopparameters.Help'
+                    )
+            ])
+            ->add(
+                'display_best_sellers', SwitchType::class, [
+                'required' => false,
+                'label' => $this->trans('Display best sellers', 'Admin.Shopparameters.Feature'),
+                    'help' => $this->trans(
+                        'Enable best sellers page on your front office even when its respective module is disabled.',
+                        'Admin.Shopparameters.Help'
+                    )
+            ])
             ->add('multishop_feature_active', SwitchType::class, [
+                'required' => false,
                 'disabled' => !$this->isContextDependantOptionEnabled(),
+                'label' => $this->trans('Enable Multistore', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans(
+                    'Enable best sellers page on your front office even when its respective module is disabled.',
+                    'Admin.Shopparameters.Help'
+                )
             ])
             ->add('shop_activity', ChoiceType::class, [
                 'required' => false,
@@ -153,6 +241,7 @@ class PreferencesType extends TranslatorAwareType
                     'Sport and Entertainment' => 19,
                     'Travel' => 20,
                 ],
+                'label' => $this->trans('Main Shop Activity', 'Admin.Shopparameters.Feature'),
                 'choice_translation_domain' => 'Install',
             ]);
     }
