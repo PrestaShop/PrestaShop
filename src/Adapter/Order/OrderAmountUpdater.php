@@ -305,47 +305,4 @@ class OrderAmountUpdater
 
         return $computingPrecision->getPrecision((int) $currency->precision);
     }
-
-    /**
-     * Update order details after a specific price has been created or updated
-     *
-     * @param Order $order
-     * @param OrderDetail $updatedOrderDetail
-     * @param Product $product
-     * @param int|null $combinationId
-     * @param int $productQuantity
-     * @param Number $priceTaxIncluded
-     * @param Number $priceTaxExcluded
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
-     */
-    public function updateOrderDetailsWithSameProduct(
-        Order $order,
-        OrderDetail $updatedOrderDetail,
-        Product $product,
-        ?int $combinationId,
-        Number $priceTaxIncluded,
-        Number $priceTaxExcluded,
-        int $computingPrecision
-    ): void {
-        foreach ($order->getOrderDetailList() as $row) {
-            $orderDetail = new OrderDetail($row['id_order_detail']);
-            if ((int) $orderDetail->product_id !== (int) $product->id) {
-                continue;
-            }
-            if (!empty($combinationId) && (int) $combinationId !== (int) $orderDetail->product_attribute_id) {
-                continue;
-            }
-            if ($updatedOrderDetail->id == $orderDetail->id) {
-                continue;
-            }
-            $orderDetail->unit_price_tax_excl = (float) (string) $priceTaxExcluded;
-            $orderDetail->unit_price_tax_incl = (float) (string) $priceTaxIncluded;
-            $orderDetail->total_price_tax_excl = Tools::ps_round((float) (string) $priceTaxExcluded * $orderDetail->product_quantity, $computingPrecision);
-            $orderDetail->total_price_tax_incl = Tools::ps_round((float) (string) $priceTaxIncluded * $orderDetail->product_quantity, $computingPrecision);
-
-            $orderDetail->update();
-        }
-    }
 }
