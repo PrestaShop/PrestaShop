@@ -224,6 +224,17 @@ final class UpdateProductSuppliersHandler extends AbstractProductHandler impleme
     private function updateDefaultSupplier(ProductId $productId, int $defaultSupplierId): void
     {
         $product = $this->getProduct($productId);
+
+        // if product has no combinations, assign default supplier_reference
+        if ($defaultSupplierId && !$product->hasCombinations()) {
+            $product->supplier_reference = ProductSupplierEntity::getProductSupplierReference(
+                $product->id,
+                0,
+                $defaultSupplierId
+            );
+            $this->fieldsToUpdate['supplier_reference'] = true;
+        }
+
         $product->id_supplier = $defaultSupplierId;
         $this->fieldsToUpdate['id_supplier'] = true;
 
