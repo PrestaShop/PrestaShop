@@ -528,22 +528,4 @@ class FrameworkBundleAdminController extends Controller
             $e->getMessage()
         );
     }
-
-    /**
-     * @param Request $request
-     *
-     * @return Filters
-     */
-    protected function buildFiltersParamsByRequest(Request $request, Filters $filters)
-    {
-        $filtersParams = is_array($request->query->get($filters->getFilterId())) ?
-            array_merge($filters::getDefaults(), $request->query->get($filters->getFilterId())) :
-            $filters::getDefaults()
-        ;
-        foreach (array_keys($filters::getDefaults()) as $key) {
-            $filters->set($key, $filtersParams[$key]);
-        }
-
-        return $filters;
-    }
 }
