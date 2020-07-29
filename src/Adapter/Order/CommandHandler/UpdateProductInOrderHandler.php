@@ -132,9 +132,6 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
                 $combination
             );
 
-            // Update quantity and amounts
-            $order = $this->orderProductQuantityUpdater->update($order, $orderDetail, $productQuantity, $orderInvoice);
-
             // update order details
             $this->updateOrderDetailsWithSameProduct(
                 $order,
@@ -144,6 +141,9 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
                 $command->getPriceTaxExcluded(),
                 $this->computingPrecision
             );
+
+            // Update quantity and amounts
+            $order = $this->orderProductQuantityUpdater->update($order, $orderDetail, $productQuantity, $orderInvoice);
 
             Hook::exec('actionOrderEdited', ['order' => $order]);
         } catch (Exception $e) {
