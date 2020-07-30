@@ -32,7 +32,6 @@ use PrestaShopBundle\Translation\Extractor\ThemeExtractorCache;
 use PrestaShopBundle\Translation\Extractor\ThemeExtractorInterface;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use PrestaShopBundle\Translation\Provider\Catalogue\DefaultCatalogueProvider;
-use PrestaShopBundle\Translation\Provider\FrontOfficeProvider;
 use PrestaShopBundle\Translation\Provider\ThemeProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Filesystem\Filesystem;
@@ -94,12 +93,12 @@ class ThemeProviderTest extends KernelTestCase
     public function testItLoadsCatalogueFromXliffFilesInThemeDirectory()
     {
         $provider = new ThemeProvider(
-            $this->buildNullFrontOfficeProvider(),
             $this->createMock(DatabaseTranslationLoader::class),
             $this->createMock(ThemeExtractorInterface::class),
             $this->buildThemeRepository(),
             $this->filesystem,
             self::THEMES_DIR,
+            '',
             $this->themeName
         );
 
@@ -137,12 +136,12 @@ class ThemeProviderTest extends KernelTestCase
             ->willReturn($this->buildCatalogueFromMessages($expectedCatalogue));
 
         $provider = new ThemeProvider(
-            $this->buildNullFrontOfficeProvider(),
             $this->createMock(DatabaseTranslationLoader::class),
             $themeExtractorMock,
             $this->buildThemeRepository(),
             $this->filesystem,
             self::THEMES_DIR,
+            '',
             $this->themeName
         );
 
@@ -228,21 +227,5 @@ class ThemeProviderTest extends KernelTestCase
         }
 
         return $catalogue;
-    }
-
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|FrontOfficeProvider
-     */
-    private function buildNullFrontOfficeProvider()
-    {
-        $mock = $this->createMock(FrontOfficeProvider::class);
-
-        $mock->method('getDefaultCatalogue')
-            ->willReturn(new MessageCatalogue(ThemeExtractorInterface::DEFAULT_LOCALE));
-
-        $mock->method('getFileTranslatedCatalogue')
-            ->willReturn(new MessageCatalogue(ThemeExtractorInterface::DEFAULT_LOCALE));
-
-        return $mock;
     }
 }

@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Translation\Provider\Type;
 
 /**
- * Properties container for 'external_legacy_module' type of translation.
+ * Properties container for 'modules' type of translation.
  */
 class ModulesType implements TypeInterface
 {

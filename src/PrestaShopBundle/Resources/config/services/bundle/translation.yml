@@ -52,12 +52,12 @@ services:
     prestashop.translation.themes_provider_factory:
         class: PrestaShopBundle\Translation\Provider\Factory\ThemesProviderFactory
         arguments:
-            - "@prestashop.translation.frontoffice_provider"
             - "@prestashop.translation.database_loader"
             - "@prestashop.translation.theme_extractor_cache"
             - "@prestashop.core.addon.theme.repository"
             - "@filesystem"
             - "%themes_dir%"
+            - "%translations_dir%"
 
     prestashop.translation.provider_factory:
         class: PrestaShopBundle\Translation\Provider\Factory\ProviderFactory
@@ -76,15 +76,6 @@ services:
         class: PrestaShopBundle\Translation\Provider\TranslationsCatalogueProvider
         arguments:
             - "@prestashop.translation.provider_factory"
-
-    #TRANSLATIONS PROVIDERS
-    prestashop.translation.frontoffice_provider:
-        class: PrestaShopBundle\Translation\Provider\FrontOfficeProvider
-        arguments:
-            - "@prestashop.translation.database_loader"
-            - "%translations_dir%"
-        tags:
-            - { name: "ps.translation_provider" }
 
     # TRANSLATIONS
     prestashop.translation.database_loader:

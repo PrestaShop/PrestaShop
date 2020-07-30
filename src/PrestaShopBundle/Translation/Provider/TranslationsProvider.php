@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider;
 
-use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShopBundle\Exception\NotImplementedException;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use PrestaShopBundle\Translation\Provider\Catalogue\DefaultCatalogueProvider;
@@ -50,10 +49,6 @@ abstract class TranslationsProvider implements ProviderInterface
      * @var string
      */
     private $resourceDirectory;
-    /**
-     * @var string|null
-     */
-    private $domain;
 
     /**
      * @param DatabaseTranslationLoader $databaseLoader
@@ -68,13 +63,7 @@ abstract class TranslationsProvider implements ProviderInterface
     }
 
     /**
-     * @param string $locale
-     * @param bool $empty
-     *
-     * @return MessageCatalogueInterface
-     *
-     * @throws FileNotFoundException
-     * @throws NotImplementedException
+     * {@inheritdoc}
      */
     public function getDefaultCatalogue(string $locale, bool $empty = true): MessageCatalogueInterface
     {
@@ -87,12 +76,7 @@ abstract class TranslationsProvider implements ProviderInterface
     }
 
     /**
-     * @param string $locale
-     *
-     * @return MessageCatalogueInterface
-     *
-     * @throws FileNotFoundException
-     * @throws NotImplementedException
+     * {@inheritdoc}
      */
     public function getFileTranslatedCatalogue(string $locale): MessageCatalogueInterface
     {
@@ -105,11 +89,7 @@ abstract class TranslationsProvider implements ProviderInterface
     }
 
     /**
-     * @param string $locale
-     *
-     * @return MessageCatalogueInterface
-     *
-     * @throws NotImplementedException
+     * {@inheritdoc}
      */
     public function getUserTranslatedCatalogue(string $locale): MessageCatalogueInterface
     {

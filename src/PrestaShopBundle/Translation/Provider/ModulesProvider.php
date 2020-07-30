@@ -272,7 +272,7 @@ class ModulesProvider implements ProviderInterface
             // analyze files and extract wordings
             $additionalDefaultCatalogue = $this->legacyModuleExtractor->extract($this->moduleName, $locale);
             $defaultCatalogue = $this->filterDomains($additionalDefaultCatalogue);
-        } catch (UnsupportedLocaleException|\InvalidArgumentException $exception) {
+        } catch (UnsupportedLocaleException | \InvalidArgumentException $exception) {
             // Do nothing as support of legacy files is deprecated
         }
 
@@ -313,7 +313,7 @@ class ModulesProvider implements ProviderInterface
         return implode(DIRECTORY_SEPARATOR, [
                 $this->modulesDirectory,
                 $this->moduleName,
-                'translations'
+                'translations',
             ]) . DIRECTORY_SEPARATOR;
     }
 
@@ -327,7 +327,6 @@ class ModulesProvider implements ProviderInterface
             $this->moduleName,
             'translations',
         ]) . DIRECTORY_SEPARATOR;
-
     }
 
     /**

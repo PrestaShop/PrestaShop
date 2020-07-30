@@ -41,8 +41,8 @@ use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShopBundle\Service\TranslationService;
-use PrestaShopBundle\Translation\Provider\Type\ThemesType;
 use PrestaShopBundle\Translation\Provider\TranslationFinder;
+use PrestaShopBundle\Translation\Provider\Type\ThemesType;
 use PrestaShopLogger;
 use Shop;
 use Symfony\Component\Filesystem\Filesystem;
@@ -500,12 +500,6 @@ class ThemeManager implements AddonManagerInterface
 
         $translationService = $kernel->getContainer()->get('prestashop.service.translation');
         $themeName = $theme->getName();
-        $providerFactory = $kernel->getContainer()->get('prestashop.translation.provider_factory');
-        /** @var \PrestaShopBundle\Translation\Provider\ThemeProvider $themeProvider */
-        $themeProvider = $providerFactory->build(
-            new ThemesType($themeName)
-        );
-
         $themePath = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_') . $themeName;
         $translationFolder = $themePath . DIRECTORY_SEPARATOR . 'translations' . DIRECTORY_SEPARATOR;
 
@@ -535,7 +529,7 @@ class ThemeManager implements AddonManagerInterface
                 );
 
                 // get all default domain from catalog
-                $allDomains = $this->getDefaultDomains($locale, $themeProvider);
+                $allDomains = $this->getDefaultDomains($locale, $themeName);
 
                 // do the import
                 $this->handleImport($translationService, $messageCatalog, $allDomains, $lang, $locale, $themeName);
@@ -549,12 +543,24 @@ class ThemeManager implements AddonManagerInterface
      * Get all default domain from catalog.
      *
      * @param string $locale
-     * @param \PrestaShopBundle\Translation\Provider\ThemeProvider $themeProvider
+     * @param string $themeName
      *
      * @return array
      */
-    private function getDefaultDomains($locale, $themeProvider)
+    private function getDefaultDomains($locale, $themeName)
     {
+        global $kernel; // sf kernel
+
+        if (!(null !== $kernel && $kernel instanceof \Symfony\Component\HttpKernel\KernelInterface)) {
+            return;
+        }
+
+        $providerFactory = $kernel->getContainer()->get('prestashop.translation.provider_factory');
+        /** @var \PrestaShopBundle\Translation\Provider\ThemeProvider $themeProvider */
+        $themeProvider = $providerFactory->build(
+            new ThemesType($themeName)
+        );
+
         $allDomains = [];
 
         $defaultCatalogue = $themeProvider

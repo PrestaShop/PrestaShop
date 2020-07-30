@@ -67,7 +67,7 @@ class ThemeProvider implements ProviderInterface
     /**
      * @var ProviderInterface
      */
-    private $frontOfficeProvider;
+    private $frontProvider;
     /**
      * @var DatabaseTranslationLoader
      */
@@ -82,7 +82,7 @@ class ThemeProvider implements ProviderInterface
     private $theme;
 
     /**
-     * @param ProviderInterface $frontOfficeProvider Provider for core front office translations
+     * @param ProviderInterface $frontProvider Provider for core front office translations
      * @param DatabaseTranslationLoader $databaseLoader
      * @param ThemeExtractorInterface $themeExtractor
      * @param ThemeRepository $themeRepository
@@ -91,7 +91,7 @@ class ThemeProvider implements ProviderInterface
      * @param string $themeName
      */
     public function __construct(
-        ProviderInterface $frontOfficeProvider,
+        ProviderInterface $frontProvider,
         DatabaseTranslationLoader $databaseLoader,
         ThemeExtractorInterface $themeExtractor,
         ThemeRepository $themeRepository,
@@ -99,7 +99,7 @@ class ThemeProvider implements ProviderInterface
         string $themeResourcesDir,
         string $themeName
     ) {
-        $this->frontOfficeProvider = $frontOfficeProvider;
+        $this->frontProvider = $frontProvider;
         $this->themeExtractor = $themeExtractor;
         $this->themeRepository = $themeRepository;
         $this->filesystem = $filesystem;
@@ -124,7 +124,7 @@ class ThemeProvider implements ProviderInterface
         bool $empty = true,
         $refreshCache = false
     ): MessageCatalogueInterface {
-        $defaultCatalogue = $this->frontOfficeProvider->getDefaultCatalogue($locale);
+        $defaultCatalogue = $this->frontProvider->getDefaultCatalogue($locale);
 
         $defaultCatalogue->addCatalogue(
             // Extracts wordings from the theme's templates
@@ -146,7 +146,7 @@ class ThemeProvider implements ProviderInterface
     public function getFileTranslatedCatalogue(string $locale): MessageCatalogueInterface
     {
         // load front office catalogue
-        $catalogue = $this->frontOfficeProvider->getFileTranslatedCatalogue($locale);
+        $catalogue = $this->frontProvider->getFileTranslatedCatalogue($locale);
 
         try {
             $fileTranslatedCatalogue = (new FileTranslatedCatalogueProvider(
@@ -192,7 +192,7 @@ class ThemeProvider implements ProviderInterface
         $this->theme = $this->themeRepository->getInstanceByName($this->themeName);
 
         if (!($this->theme instanceof Theme)) {
-            throw new \RuntimeException('Theme doesnt exist');
+            throw new \RuntimeException(sprintf('The theme "%s" doesnt exist', $this->themeName));
         }
     }
 
