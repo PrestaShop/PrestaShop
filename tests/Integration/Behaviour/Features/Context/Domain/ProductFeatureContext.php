@@ -1172,7 +1172,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      * @param array $data
      * @param ProductSupplierOptions $productSupplierOptions
      */
-    private function assertDefaultSupplier(array $data, ProductSupplierOptions $productSupplierOptions): void
+    private function assertDefaultSupplier(array &$data, ProductSupplierOptions $productSupplierOptions): void
     {
         if (isset($data['default supplier'])) {
             $expectedSupplierId = $this->getSharedStorage()->get($data['default supplier']);
