@@ -42,7 +42,7 @@ use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use PrestaShopLoggerCore;
+use PrestaShopLogger;
 
 /**
  * Class LogGridDefinitionFactory is responsible for creating new instance of Log grid definition.
@@ -273,10 +273,10 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     private function getSeveritysChoices()
     {
         return [
-            $this->trans('Informative only', [], 'Admin.Advparameters.Help') => PrestaShopLoggerCore::LOG_SEVERITY_LEVEL_INFORMATIVE,
-            $this->trans('Warning', [], 'Admin.Advparameters.Help') => PrestaShopLoggerCore::LOG_SEVERITY_LEVEL_WARNING,
-            $this->trans('Error', [], 'Admin.Advparameters.Help') => PrestaShopLoggerCore::LOG_SEVERITY_LEVEL_ERROR,
-            $this->trans('Major issue (crash)!', [], 'Admin.Advparameters.Help') => PrestaShopLoggerCore::LOG_SEVERITY_LEVEL_MAJOR,
+            $this->trans('Informative only', [], 'Admin.Advparameters.Help') => PrestaShopLogger::LOG_SEVERITY_LEVEL_INFORMATIVE,
+            $this->trans('Warning', [], 'Admin.Advparameters.Help') => PrestaShopLogger::LOG_SEVERITY_LEVEL_WARNING,
+            $this->trans('Error', [], 'Admin.Advparameters.Help') => PrestaShopLogger::LOG_SEVERITY_LEVEL_ERROR,
+            $this->trans('Major issue (crash)!', [], 'Admin.Advparameters.Help') => PrestaShopLogger::LOG_SEVERITY_LEVEL_MAJOR,
         ];
     }
 }
