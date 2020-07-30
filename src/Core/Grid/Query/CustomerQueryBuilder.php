@@ -222,10 +222,7 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            $customerTableAlias = false;
-            if (in_array($filterName, ['firstname', 'lastname', 'company', 'email'])) {
-                $customerTableAlias = true;
-            }
+            $customerTableAlias = in_array($filterName, ['firstname', 'lastname', 'company', 'email']);
 
             $qb->andWhere(($customerTableAlias ? 'c.' : '') . '`' . $filterName . '` LIKE :' . $filterName);
             $qb->setParameter($filterName, '%' . $filterValue . '%');
