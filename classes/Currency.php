@@ -863,8 +863,12 @@ class CurrencyCore extends ObjectModel
             $query = Currency::getIdByQuery($idShop, $includeDeleted);
             $query->where('iso_code = \'' . pSQL($isoCode) . '\'');
 
-            $result = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
-            Cache::store($cacheId, $result);
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
+            if (empty($result)) {
+                return 0;
+            }
+
+            Cache::store($cacheId, (int) $result);
 
             return $result;
         }
