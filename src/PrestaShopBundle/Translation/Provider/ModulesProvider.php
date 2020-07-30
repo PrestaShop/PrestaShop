@@ -119,7 +119,7 @@ class ModulesProvider implements ProviderInterface
     {
         try {
             $defaultCatalogue = (new DefaultCatalogueProvider(
-                $this->getDefaultResourceDirectory(),
+                $this->translationsDirectory,
                 $this->getFilenameFilters()
             ))
                 ->getCatalogue($locale, $empty);
@@ -142,14 +142,8 @@ class ModulesProvider implements ProviderInterface
     public function getFileTranslatedCatalogue(string $locale): MessageCatalogueInterface
     {
         try {
-            $resourceDirectory = implode(DIRECTORY_SEPARATOR, [
-                    $this->translationsDirectory,
-                    $this->moduleName,
-                    'translations',
-                ]) . DIRECTORY_SEPARATOR;
-
             return (new FileTranslatedCatalogueProvider(
-                $resourceDirectory,
+                $this->getDefaultModuleDirectory(),
                 $this->getFilenameFilters()
             ))
                 ->getCatalogue($locale);
@@ -193,7 +187,7 @@ class ModulesProvider implements ProviderInterface
 
         try {
             $catalogueFromLegacyTranslationFiles = $this->legacyFileLoader->load(
-                $this->getDefaultResourceDirectory(),
+                $this->getBuiltInModuleDirectory(),
                 $locale
             );
         } catch (UnsupportedLocaleException $exception) {
@@ -265,14 +259,8 @@ class ModulesProvider implements ProviderInterface
 
         try {
             // look up files in the core translations
-            $resourceDirectory = implode(DIRECTORY_SEPARATOR, [
-                $this->translationsDirectory,
-                $this->moduleName,
-                'translations',
-            ]) . DIRECTORY_SEPARATOR;
-
             $defaultCatalogue = (new DefaultCatalogueProvider(
-                $resourceDirectory . DIRECTORY_SEPARATOR . 'default',
+                $this->getDefaultModuleDirectory() . DIRECTORY_SEPARATOR . 'default',
                 $this->getFilenameFilters()
             ))
                 ->getCatalogue($locale);
@@ -284,7 +272,7 @@ class ModulesProvider implements ProviderInterface
             // analyze files and extract wordings
             $additionalDefaultCatalogue = $this->legacyModuleExtractor->extract($this->moduleName, $locale);
             $defaultCatalogue = $this->filterDomains($additionalDefaultCatalogue);
-        } catch (UnsupportedLocaleException $exception) {
+        } catch (UnsupportedLocaleException|\InvalidArgumentException $exception) {
             // Do nothing as support of legacy files is deprecated
         }
 
@@ -320,9 +308,26 @@ class ModulesProvider implements ProviderInterface
     /**
      * @return string
      */
-    private function getDefaultResourceDirectory(): string
+    private function getBuiltInModuleDirectory(): string
     {
-        return implode(DIRECTORY_SEPARATOR, [$this->modulesDirectory, $this->moduleName, 'translations']) . DIRECTORY_SEPARATOR;
+        return implode(DIRECTORY_SEPARATOR, [
+                $this->modulesDirectory,
+                $this->moduleName,
+                'translations'
+            ]) . DIRECTORY_SEPARATOR;
+    }
+
+    /**
+     * @return string
+     */
+    private function getDefaultModuleDirectory()
+    {
+        return implode(DIRECTORY_SEPARATOR, [
+            $this->translationsDirectory,
+            $this->moduleName,
+            'translations',
+        ]) . DIRECTORY_SEPARATOR;
+
     }
 
     /**

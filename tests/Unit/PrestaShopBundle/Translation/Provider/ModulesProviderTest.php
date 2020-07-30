@@ -38,7 +38,7 @@ use Symfony\Component\Translation\Dumper\XliffFileDumper;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
-class ExternalModuleLegacySystemProviderTest extends TestCase
+class ModulesProviderTest extends TestCase
 {
     /**
      * @var string
@@ -99,7 +99,8 @@ class ExternalModuleLegacySystemProviderTest extends TestCase
             self::$tempDir,
             self::$tempDir,
             $legacyFileLoader,
-            $legacyModuleExtractor
+            $legacyModuleExtractor,
+            'moduleName'
         ));
     }
 
@@ -131,21 +132,18 @@ class ExternalModuleLegacySystemProviderTest extends TestCase
     public function testGetDefaultCatalogue()
     {
         $catalogue = $this->externalModuleLegacySystemProvider->getDefaultCatalogue(
-            DefaultCatalogueProvider::DEFAULT_LOCALE,
-            'moduleName'
+            DefaultCatalogueProvider::DEFAULT_LOCALE
         );
         $this->assertSame(self::$wordings, $catalogue->all());
 
         $catalogue = $this->externalModuleLegacySystemProvider->getDefaultCatalogue(
             DefaultCatalogueProvider::DEFAULT_LOCALE,
-            'moduleName',
             true
         );
         $this->assertSame(self::$wordings, $catalogue->all());
 
         $catalogue = $this->externalModuleLegacySystemProvider->getDefaultCatalogue(
             'fr-FR',
-            'moduleName',
             true
         );
         $catalogueFr = self::$emptyWordings;
@@ -160,8 +158,7 @@ class ExternalModuleLegacySystemProviderTest extends TestCase
     public function testGetFilesystemCatalogue()
     {
         $catalogue = $this->externalModuleLegacySystemProvider->getFileTranslatedCatalogue(
-            DefaultCatalogueProvider::DEFAULT_LOCALE,
-        'moduleName'
+            DefaultCatalogueProvider::DEFAULT_LOCALE
         );
         $this->assertSame(self::$wordings, $catalogue->all());
     }

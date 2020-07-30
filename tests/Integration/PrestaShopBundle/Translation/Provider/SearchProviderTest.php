@@ -53,16 +53,12 @@ class SearchProviderTest extends KernelTestCase
 
         $resourcesDir = __DIR__ . '/../../../../Resources/translations';
         $this->provider = new SearchProvider(
-            $externalSystemProvider,
             $databaseLoader,
             $resourcesDir,
-            ''
+            'AdminActions'
         );
 
-//        $this->provider->setDomain('AdminActions');
-//        $this->provider->setLocale('fr-FR');
-
-        $langId = \Language::getIdByIso('fr');
+        $langId = \Language::getIdByIso('fr', true);
         if (!$langId) {
             $lang = new \Language();
             $lang->locale = 'fr-FR';
@@ -74,7 +70,7 @@ class SearchProviderTest extends KernelTestCase
 
     public function testItExtractsOnlyTheSelectedCataloguesFromXliffFiles()
     {
-        $catalogue = $this->provider->getDefaultCatalogue('fr-FR', 'AdminActions');
+        $catalogue = $this->provider->getDefaultCatalogue('fr-FR', false);
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
         // Check that only the selected domain is in the catalogue
@@ -85,6 +81,21 @@ class SearchProviderTest extends KernelTestCase
 
         $adminTranslations = $catalogue->all('AdminActions');
         $this->assertCount(91, $adminTranslations);
+        $this->assertSame('Download file', $catalogue->get('Download file', 'AdminActions'));
+
+
+        $catalogue = $this->provider->getFileTranslatedCatalogue('fr-FR');
+        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
+
+        // Check that only the selected domain is in the catalogue
+        $this->assertSame(['AdminActions'], $catalogue->getDomains());
+
+        // Check integrity of translations
+        $this->assertArrayHasKey('AdminActions', $catalogue->all());
+
+        $adminTranslations = $catalogue->all('AdminActions');
+        // There is no translation for 'Continue'
+        $this->assertCount(90, $adminTranslations);
         $this->assertSame('Télécharger le fichier', $catalogue->get('Download file', 'AdminActions'));
     }
 

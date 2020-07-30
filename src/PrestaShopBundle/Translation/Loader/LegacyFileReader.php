@@ -67,7 +67,7 @@ class LegacyFileReader
         }
 
         // Load a global array $_MODULE
-        include_once $filePath;
+        include $filePath;
 
         return $_MODULE;
     }
