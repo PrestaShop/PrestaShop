@@ -75,8 +75,9 @@ class CustomerAddressType extends TranslatorAwareType
      * as well as extension of TranslationAwareType instead of using translator as dependency.
      *
      * @param TranslatorInterface $translator
+     * @param array $locales
      * @param ConfigurableFormChoiceProviderInterface $stateChoiceProvider
-     * @param $contextCountryId
+     * @param int $contextCountryId
      * @param RouterInterface $router
      */
     public function __construct(
