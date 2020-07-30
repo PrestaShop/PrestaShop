@@ -42,6 +42,7 @@ class ProductSupplierForEditing
      * @var int
      */
     private $productId;
+
     /**
      * @var int
      */
