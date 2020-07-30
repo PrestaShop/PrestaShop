@@ -160,7 +160,7 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             $productTypeValue = ProductType::TYPE_VIRTUAL;
         } elseif (Pack::isPack($product->id)) {
             $productTypeValue = ProductType::TYPE_PACK;
-        } elseif (!empty($product->getAttributeCombinations())) {
+        } elseif ($product->hasCombinations()) {
             $productTypeValue = ProductType::TYPE_COMBINATION;
         } else {
             $productTypeValue = ProductType::TYPE_STANDARD;

@@ -312,7 +312,7 @@ final class UpdateProductSuppliersHandler extends AbstractProductHandler impleme
         $productSupplierIds = [];
 
         /** @var ProductSupplierEntity $productSupplierEntity */
-        foreach (ProductSupplierEntity::getSupplierCollection($productId->getValue()) as $productSupplierEntity) {
+        foreach (ProductSupplierEntity::getSupplierCollection($productId->getValue(), false) as $productSupplierEntity) {
             $productSupplierIds[] = new ProductSupplierId((int) $productSupplierEntity->id);
         }
 

@@ -92,19 +92,19 @@ Feature: Update product suppliers from Back Office (BO)
       | reference | quantity | attributes         |
       | whiteM    | 15       | Size:M;Color:White |
       | whiteL    | 15       | Size:L;Color:White |
-    And product product1 type should be combination
-#    And product product1 should not have any suppliers assigned
-#    And product product1 default supplier reference should be empty
-#    And product "product2" has combinations with following details:
-#      | reference | quantity | attributes         |
-#      | whiteM    | 150      | Size:M;Color:White |
-#      | whiteL    | 150      | Size:L;Color:White |
-#    When I update product product2 suppliers with following values:
-#      | reference      | supplier reference    | product supplier reference        | currency      | price tax excluded | combination |
-#      | product2whiteM | supplier1             | sup white shirt M 1               | USD           | 5                  | whiteM      |
-#      | product2whiteL | supplier1             | sup white shirt L 2               | USD           | 5                  | whiteL      |
-#    Then product product1 should have following suppliers:
-#      | reference      | product supplier reference        | currency      | price tax excluded | combination |
-#      | product2whiteM | sup white shirt M 1               | USD           | 5                  | whiteM      |
-#      | product2whiteL | sup white shirt L 2               | USD           | 5                  | whiteL      |
-#    Then product product1 default supplier reference should be empty
+    And product product2 type should be combination
+    And product product2 should not have any suppliers assigned
+    And product product2 default supplier reference should be empty
+    And product "product2" has following combinations:
+      | reference | quantity | attributes         |
+      | whiteM    | 15      | Size:M;Color:White  |
+      | whiteL    | 15      | Size:L;Color:White  |
+    When I update product product2 suppliers with following values:
+      | reference      | supplier reference    | product supplier reference        | currency      | price tax excluded | combination |
+      | product2whiteM | supplier1             | sup white shirt M 1               | USD           | 5                  | whiteM      |
+      | product2whiteL | supplier1             | sup white shirt L 2               | USD           | 5                  | whiteL      |
+    Then product product2 should have following suppliers:
+      | reference      | product supplier reference        | currency      | price tax excluded | combination |
+      | product2whiteM | sup white shirt M 1               | USD           | 5                  | whiteM      |
+      | product2whiteL | sup white shirt L 2               | USD           | 5                  | whiteL      |
+    Then product product2 default supplier reference should be empty

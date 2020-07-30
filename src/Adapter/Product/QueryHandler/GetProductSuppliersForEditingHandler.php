@@ -48,7 +48,7 @@ final class GetProductSuppliersForEditingHandler implements GetProductSuppliersF
         $productSuppliers = [];
 
         /** @var ProductSupplierEntity $productSupplier */
-        foreach (ProductSupplierEntity::getSupplierCollection($productIdValue) as $productSupplier) {
+        foreach (ProductSupplierEntity::getSupplierCollection($productIdValue, false) as $productSupplier) {
             $productSuppliers[] = new ProductSupplierForEditing(
                     (int) $productSupplier->id,
                     (int) $productSupplier->id_product,

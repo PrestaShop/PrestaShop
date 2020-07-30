@@ -105,7 +105,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         );
 
         foreach ($combinations as $combination) {
-            $this->getSharedStorage()->set($combination->reference, $combination->id);
+            $this->getSharedStorage()->set($combination->reference, (int) $combination->id);
         }
     }
 
@@ -428,7 +428,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             }
 
             if (isset($productSupplier['combination']) && $this->getSharedStorage()->exists($productSupplier['combination'])) {
-                $combinationId = $this->getSharedStorage()->get((int) $productSupplier['combination']);
+                $combinationId = $this->getSharedStorage()->get($productSupplier['combination']);
             }
 
             $productSuppliers[] = [
