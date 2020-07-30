@@ -99,14 +99,12 @@ class ThemeProviderTest extends KernelTestCase
             $this->createMock(ThemeExtractorInterface::class),
             $this->buildThemeRepository(),
             $this->filesystem,
-            self::THEMES_DIR
+            self::THEMES_DIR,
+            $this->themeName
         );
 
         // load catalogue from Xliff files within the theme
-        $catalogue = $provider->getFileTranslatedCatalogue(
-            DefaultCatalogueProvider::DEFAULT_LOCALE,
-            $this->themeName
-        );
+        $catalogue = $provider->getFileTranslatedCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE);
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
@@ -144,11 +142,15 @@ class ThemeProviderTest extends KernelTestCase
             $themeExtractorMock,
             $this->buildThemeRepository(),
             $this->filesystem,
-            self::THEMES_DIR
+            self::THEMES_DIR,
+            $this->themeName
         );
 
         // load catalogue from Xliff files within the theme
-        $catalogue = $provider->getDefaultCatalogue($shouldEmptyCatalogue, $this->themeName);
+        $catalogue = $provider->getDefaultCatalogue(
+            DefaultCatalogueProvider::DEFAULT_LOCALE,
+            $shouldEmptyCatalogue
+        );
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 

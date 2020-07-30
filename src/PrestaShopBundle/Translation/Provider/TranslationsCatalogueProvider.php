@@ -93,9 +93,9 @@ class TranslationsCatalogueProvider
      * Filters the catalogue so that only domains matching the filters are kept
      *
      * @param string $locale
-     * @param array $catalogue
-     *
+     * @param MessageCatalogueInterface $catalogue
      * @param string $domain
+     *
      * @return MessageCatalogueInterface
      */
     private function filterCatalogue(string $locale, MessageCatalogueInterface $catalogue, string $domain): MessageCatalogueInterface
@@ -113,23 +113,6 @@ class TranslationsCatalogueProvider
         }
 
         return new MessageCatalogue($locale, $filteredCatalogue);
-
-
-
-        $allowedDomains = [];
-        $filenameFilters = ['#^' . preg_quote($domain, '#') . '([A-Za-z]|\.|$)#'];
-
-        // return only elements whose domain matches the filters
-        foreach ($catalogue as $domain => $messages) {
-            foreach ($filenameFilters as $filter) {
-                if (preg_match($filter, $domain)) {
-                    $allowedDomains[$domain] = $messages;
-                    break;
-                }
-            }
-        }
-
-        return new MessageCatalogue($locale, $allowedDomains);
     }
 
     /**
@@ -149,12 +132,16 @@ class TranslationsCatalogueProvider
         $provider = $this->providerFactory->build($providerType);
 
         $defaultCatalogue = $provider->getDefaultCatalogue($locale);
+        $defaultCatalogueMessages = $defaultCatalogue->all();
+        if (empty($defaultCatalogueMessages)) {
+            return [];
+        }
         $fileTranslatedCatalogue = $provider->getFileTranslatedCatalogue($locale);
         $userTranslatedCatalogue = $provider->getUserTranslatedCatalogue($locale);
 
         $translations = [];
 
-        foreach ($defaultCatalogue->all() as $domain => $messages) {
+        foreach ($defaultCatalogueMessages as $domain => $messages) {
             $missingTranslations = 0;
             $translations[$domain] = [];
 

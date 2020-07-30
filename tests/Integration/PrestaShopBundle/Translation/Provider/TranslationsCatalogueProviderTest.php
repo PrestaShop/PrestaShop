@@ -28,23 +28,36 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Translation\Provider;
 
+use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
+use PrestaShopBundle\Translation\Provider\BackProvider;
+use PrestaShopBundle\Translation\Provider\Factory\ProviderFactory;
+use PrestaShopBundle\Translation\Provider\FrontProvider;
+use PrestaShopBundle\Translation\Provider\ModulesProvider;
 use PrestaShopBundle\Translation\Provider\TranslationsCatalogueProvider;
+use PrestaShopBundle\Translation\Provider\Type\BackType;
+use PrestaShopBundle\Translation\Provider\Type\FrontType;
+use PrestaShopBundle\Translation\Provider\Type\ModulesType;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class TranslationsCatalogueProviderTest extends KernelTestCase
 {
     /**
-     * @var TranslationsCatalogueProvider
+     * @var \Symfony\Component\DependencyInjection\ContainerInterface|null
      */
-    private $provider;
+    private $container;
+
+    /**
+     * @var DatabaseTranslationLoader|null
+     */
+    private $translationDatabaseLoader;
 
     protected function setUp()
     {
         self::bootKernel();
-        $container = self::$kernel->getContainer();
-        $this->provider = $container->get('prestashop.translation.translations_catalogue_provider');
+        $this->container = self::$kernel->getContainer();
+        $this->translationDatabaseLoader = $this->container->get('prestashop.translation.database_loader');
 
-        $langId = \Language::getIdByIso('fr');
+        $langId = \Language::getIdByIso('fr', true);
         if (!$langId) {
             $lang = new \Language();
             $lang->locale = 'fr-FR';
@@ -60,7 +73,23 @@ class TranslationsCatalogueProviderTest extends KernelTestCase
      */
     public function testGetCatalogueForBackoffice()
     {
-        $messages = $this->provider->getCatalogue('back', 'fr-FR');
+        $providerFactory = $this->createMock(ProviderFactory::class);
+        $backType = new BackType();
+
+        $providerFactory
+            ->expects($this->any())
+            ->method('build')
+            ->with($backType)
+            ->willReturn(
+                new BackProvider(
+                    $this->translationDatabaseLoader,
+                    $this->getDefaultTranslationsDirectory()
+                )
+            );
+
+        $provider = new TranslationsCatalogueProvider($providerFactory);
+
+        $messages = $provider->getCatalogue(new BackType(), 'fr-FR');
         $this->assertIsArray($messages);
 
         // Check integrity of translations
@@ -95,7 +124,23 @@ class TranslationsCatalogueProviderTest extends KernelTestCase
      */
     public function testGetCatalogueForFrontoffice()
     {
-        $messages = $this->provider->getCatalogue('front', 'fr-FR');
+        $providerFactory = $this->createMock(ProviderFactory::class);
+        $frontType = new FrontType();
+
+        $providerFactory
+            ->expects($this->any())
+            ->method('build')
+            ->with($frontType)
+            ->willReturn(
+                new FrontProvider(
+                    $this->translationDatabaseLoader,
+                    $this->getDefaultTranslationsDirectory()
+                )
+            );
+
+        $provider = new TranslationsCatalogueProvider($providerFactory);
+
+        $messages = $provider->getCatalogue(new FrontType(), 'fr-FR');
         $this->assertIsArray($messages);
 
         // Check integrity of translations
@@ -135,41 +180,61 @@ class TranslationsCatalogueProviderTest extends KernelTestCase
      */
     public function testGetCatalogueForModules()
     {
-        $messages = $this->provider->getCatalogue('modules', 'fr-FR');
+        $providerFactory = $this->createMock(ProviderFactory::class);
+        $moduleType = new ModulesType('checkpayment');
+
+        $providerFactory
+            ->expects($this->any())
+            ->method('build')
+            ->with($moduleType)
+            ->willReturn(
+                new ModulesProvider(
+                    $this->translationDatabaseLoader,
+                    $this->getBuiltInModuleDirectory(),
+                    $this->getDefaultTranslationsDirectory(),
+                    $this->container->get('prestashop.translation.legacy_file_loader'),
+                    $this->container->get('prestashop.translation.legacy_module.extractor'),
+                    'checkpayment'
+                )
+            );
+
+        $provider = new TranslationsCatalogueProvider($providerFactory);
+
+        $messages = $provider->getCatalogue(new ModulesType('checkpayment'), 'fr-FR');
         $this->assertIsArray($messages);
 
         // check only the specific module translations have been loaded
         $domains = array_keys($messages);
         // for some reason domains may not be in the same order as the test
         sort($domains);
-        $this->assertSame(['ModulesCheckpaymentAdmin', 'ModulesCheckpaymentShop', 'ModulesWirepaymentAdmin', 'ModulesWirepaymentShop'], $domains);
+        $this->assertSame(['ModulesCheckpaymentAdmin', 'ModulesCheckpaymentShop'], $domains);
 
         // Check integrity of translations
-        $this->assertCount(22, $messages['ModulesWirepaymentAdmin']);
-        $this->assertArrayHasKey('__metadata', $messages['ModulesWirepaymentAdmin']);
-        $this->assertArrayHasKey('missing_translations', $messages['ModulesWirepaymentAdmin']['__metadata']);
-        $this->assertSame(21, $messages['ModulesWirepaymentAdmin']['__metadata']['count']);
+        $this->assertCount(16, $messages['ModulesCheckpaymentAdmin']);
+        $this->assertArrayHasKey('__metadata', $messages['ModulesCheckpaymentAdmin']);
+        $this->assertArrayHasKey('missing_translations', $messages['ModulesCheckpaymentAdmin']['__metadata']);
+        $this->assertSame(15, $messages['ModulesCheckpaymentAdmin']['__metadata']['count']);
 
-        $this->assertArrayHasKey('Wire payment', $messages['ModulesWirepaymentAdmin']);
+        $this->assertArrayHasKey('Payments by check', $messages['ModulesCheckpaymentAdmin']);
         $this->assertSame(
             [
-                'default' => 'Wire payment',
-                'xliff' => 'Transfert bancaire',
+                'default' => 'Payments by check',
+                'xliff' => 'Chèque',
                 'database' => null,
             ],
-            $messages['ModulesWirepaymentAdmin']['Wire payment']
+            $messages['ModulesCheckpaymentAdmin']['Payments by check']
         );
 
-        $this->assertCount(21, $messages['ModulesWirepaymentShop']);
-        $this->assertSame(20, $messages['ModulesWirepaymentShop']['__metadata']['count']);
-        $this->assertArrayHasKey('Wire payment', $messages['ModulesWirepaymentAdmin']);
+        $this->assertCount(20, $messages['ModulesCheckpaymentShop']);
+        $this->assertSame(19, $messages['ModulesCheckpaymentShop']['__metadata']['count']);
+        $this->assertArrayHasKey('Pay by check', $messages['ModulesCheckpaymentShop']);
         $this->assertSame(
             [
-                'default' => 'Pay by bank wire',
-                'xliff' => 'Payer par virement bancaire',
+                'default' => 'Pay by check',
+                'xliff' => 'Payer par chèque',
                 'database' => null,
             ],
-            $messages['ModulesWirepaymentShop']['Pay by bank wire']
+            $messages['ModulesCheckpaymentShop']['Pay by check']
         );
     }
 
@@ -179,7 +244,26 @@ class TranslationsCatalogueProviderTest extends KernelTestCase
      */
     public function testGetDomainCatalogueForModule()
     {
-        $messages = $this->provider->getDomainCatalogue('fr-FR', 'ModulesCheckpaymentShop');
+        $providerFactory = $this->createMock(ProviderFactory::class);
+        $moduleType = new ModulesType('checkPaymentShop');
+
+        $providerFactory
+            ->expects($this->any())
+            ->method('build')
+            ->with($moduleType)
+            ->willReturn(
+                new ModulesProvider(
+                    $this->translationDatabaseLoader,
+                    $this->getBuiltInModuleDirectory(),
+                    $this->getDefaultTranslationsDirectory(),
+                    $this->container->get('prestashop.translation.legacy_file_loader'),
+                    $this->container->get('prestashop.translation.legacy_module.extractor'),
+                    'checkpayment'
+                )
+            );
+
+        $provider = new TranslationsCatalogueProvider($providerFactory);
+        $messages = $provider->getDomainCatalogue($moduleType, 'fr-FR', 'ModulesCheckpaymentShop');
         $this->assertIsArray($messages);
 
         // Check integrity of translations
@@ -204,5 +288,21 @@ class TranslationsCatalogueProviderTest extends KernelTestCase
             );
         }
         self::$kernel->shutdown();
+    }
+
+    /**
+     * @return string
+     */
+    private function getBuiltInModuleDirectory()
+    {
+        return __DIR__ . '/../../../../Resources/modules';
+    }
+
+    /**
+     * @return string
+     */
+    private function getDefaultTranslationsDirectory()
+    {
+        return __DIR__ . '/../../../../Resources/translations';
     }
 }

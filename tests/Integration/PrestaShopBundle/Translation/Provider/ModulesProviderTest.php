@@ -33,7 +33,7 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 use Tests\Integration\PrestaShopBundle\Translation\CatalogueVerifier;
 
 /**
- * @doc ./vendor/bin/phpunit -c tests/Integration/phpunit.xml --filter="ExternalModuleLegacySystemProviderTest"
+ * @doc ./vendor/bin/phpunit -c tests/Integration/phpunit.xml --filter="ModulesProviderTest"
  */
 class ModulesProviderTest extends KernelTestCase
 {
@@ -65,20 +65,22 @@ class ModulesProviderTest extends KernelTestCase
         $phpExtractor = $container->get('prestashop.translation.extractor.php');
         $smartyExtractor = $container->get('prestashop.translation.extractor.smarty.legacy');
         $twigExtractor = $container->get('prestashop.translation.extractor.twig');
+        $modulesDirectory = $this->getBuiltInModuleDirectory();
 
         $extractor = new LegacyModuleExtractor(
             $phpExtractor,
             $smartyExtractor,
             $twigExtractor,
-            $this->getModuleDirectory()
+            $modulesDirectory
         );
 
         $this->provider = new ModulesProvider(
             $databaseLoader,
-            '',
-            $this->getModuleDirectory(),
+            $modulesDirectory,
+            $this->getDefaultModuleDirectory(),
             $legacyFileLoader,
-            $extractor
+            $extractor,
+            self::MODULE_NAME
         );
     }
 
@@ -92,7 +94,7 @@ class ModulesProviderTest extends KernelTestCase
         $locale,
         array $expected
     ) {
-        $legacyCatalogue = $this->provider->getFileTranslatedCatalogue($locale, self::MODULE_NAME);
+        $legacyCatalogue = $this->provider->getFileTranslatedCatalogue($locale);
 
         $this->assertInstanceOf(MessageCatalogueInterface::class, $legacyCatalogue);
 
@@ -138,8 +140,16 @@ class ModulesProviderTest extends KernelTestCase
     /**
      * @return string
      */
-    private function getModuleDirectory()
+    private function getBuiltInModuleDirectory()
     {
         return __DIR__ . '/../../../../Resources/modules';
+    }
+
+    /**
+     * @return string
+     */
+    private function getDefaultModuleDirectory()
+    {
+        return __DIR__ . '/../../../../Resources';
     }
 }
