@@ -759,6 +759,9 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         $key = 'Language::getIdByIso_' . $iso_code;
         if ($no_cache || !Cache::isStored($key)) {
             $id_lang = Db::getInstance()->getValue('SELECT `id_lang` FROM `' . _DB_PREFIX_ . 'lang` WHERE `iso_code` = \'' . pSQL(strtolower($iso_code)) . '\'');
+            if (empty($id_lang)) {
+                return null;
+            }
 
             Cache::store($key, $id_lang);
 
