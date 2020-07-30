@@ -8,6 +8,8 @@ Feature: Update product suppliers from Back Office (BO)
   Background:
     Given shop "shop1" with name "test_shop" exists
     And language "language1" with locale "en-US" exists
+
+  Scenario: Update standard product suppliers
     And I add new supplier supplier1 with following properties:
       | name                 | my supplier 1                   |
       | address              | Donelaicio st. 1                |
@@ -30,8 +32,6 @@ Feature: Update product suppliers from Back Office (BO)
       | meta description     | en-US:                          |
       | meta keywords        | en-US:sup,2                     |
       | shops                | [shop1]                         |
-
-  Scenario: Update standard product suppliers
     Given I add product "product1" with following information:
       | name       | en-US:magic staff                         |
       | is_virtual | false                                     |
@@ -62,8 +62,6 @@ Feature: Update product suppliers from Back Office (BO)
     When I delete product product1 suppliers
     Then product product1 should have no suppliers assigned
     And product product1 should not have a default supplier
-    And product product1 should have following values:
-      | default supplier | supplier2 |
 
 #  Scenario: Update combination product suppliers
 #    And product "Test Product Max Stock" has combinations with following details:

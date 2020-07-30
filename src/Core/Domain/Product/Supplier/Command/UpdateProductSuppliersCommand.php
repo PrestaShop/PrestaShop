@@ -102,6 +102,13 @@ class UpdateProductSuppliersCommand
      */
     public function setProductSuppliers(array $productSuppliers): void
     {
+        // empty array is handled differently than null.
+        if (empty($productSuppliers)) {
+            $this->productSuppliers = [];
+
+            return;
+        }
+
         foreach ($productSuppliers as $productSupplier) {
             $this->productSuppliers[] = new ProductSupplier(
                 $productSupplier['supplier_id'],

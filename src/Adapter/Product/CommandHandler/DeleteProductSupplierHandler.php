@@ -75,7 +75,7 @@ final class DeleteProductSupplierHandler extends AbstractProductSupplierHandler 
      */
     private function refreshProductDefaultSupplier(ProductSupplier $productSupplier): void
     {
-        $productId = $productSupplier->id_product;
+        $productId = (int) $productSupplier->id_product;
         $product = $this->getProduct(new ProductId($productId));
 
         if ((int) $product->id_supplier !== (int) $productSupplier->id_supplier) {

@@ -502,10 +502,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     public function assertProductHasNoSuppliers(string $productReference)
     {
         $productForEditing = $this->getProductForEditing($productReference);
-        Assert::assertEmpty(
-            $productForEditing->getProductSupplierOptions()->getDefaultSupplierId(),
-            sprintf('Expected product %s to have no default supplier', $productReference)
-        );
+
         Assert::assertEmpty(
             $productForEditing->getProductSupplierOptions()->getOptionsBySupplier(),
             sprintf('Expected product %s to have no suppliers assigned', $productReference)
