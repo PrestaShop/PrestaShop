@@ -23,37 +23,22 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Address;
+namespace PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler;
 
-use Address;
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCartAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 
 /**
- * Provides reusable methods for manufacturer address address command/query handlers
- *
- * @deprecated Since 1.7.7 Use AbstractAddressHandler instead
+ * Interface for services that handles command which edits cart address
  */
-abstract class AbstractManufacturerAddressHandler
+interface EditCartAddressHandlerInterface
 {
     /**
-     * Gets legacy Address
+     * @param EditCartAddressCommand $command
      *
-     * @param AddressId $addressId
-     *
-     * @return Address
-     *
-     * @throws AddressNotFoundException
+     * @return AddressId The newly created address id
      */
-    protected function getAddress(AddressId $addressId)
-    {
-        $address = new Address($addressId->getValue());
-
-        if ($address->id !== $addressId->getValue()) {
-            throw new AddressNotFoundException(sprintf('Address with id "%s" was not found.', $addressId->getValue()));
-        }
-
-        return $address;
-    }
+    public function handle(EditCartAddressCommand $command): AddressId;
 }

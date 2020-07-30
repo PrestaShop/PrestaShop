@@ -23,37 +23,13 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Address;
-
-use Address;
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
+namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
 
 /**
- * Provides reusable methods for manufacturer address address command/query handlers
- *
- * @deprecated Since 1.7.7 Use AbstractAddressHandler instead
+ * Thrown on failure to update address
  */
-abstract class AbstractManufacturerAddressHandler
+class CannotUpdateCartAddressException extends AddressException
 {
-    /**
-     * Gets legacy Address
-     *
-     * @param AddressId $addressId
-     *
-     * @return Address
-     *
-     * @throws AddressNotFoundException
-     */
-    protected function getAddress(AddressId $addressId)
-    {
-        $address = new Address($addressId->getValue());
-
-        if ($address->id !== $addressId->getValue()) {
-            throw new AddressNotFoundException(sprintf('Address with id "%s" was not found.', $addressId->getValue()));
-        }
-
-        return $address;
-    }
 }

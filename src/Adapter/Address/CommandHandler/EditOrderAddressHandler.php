@@ -28,9 +28,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Address\CommandHandler;
 
 use Order;
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCustomerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditOrderAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\EditCustomerAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\EditOrderAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotUpdateOrderAddressException;
@@ -38,27 +38,46 @@ use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderDeliveryAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderInvoiceAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\ChangeOrderDeliveryAddressHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\ChangeOrderInvoiceAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderAddressType;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShopException;
 
 /**
- * EditOrderAddressCommandHandler manages an order update, it then updates order and cart
+ * EditOrderAddressCommandHandler manages an address update, it then updates order and cart
  * relation to the newly created address.
  */
 class EditOrderAddressHandler implements EditOrderAddressHandlerInterface
 {
     /**
-     * @var CommandBusInterface
+     * @var EditCustomerAddressHandlerInterface
      */
-    private $commandBus;
+    private $addressHandler;
 
     /**
-     * @param CommandBusInterface $commandBus
+     * @var ChangeOrderDeliveryAddressHandlerInterface
      */
-    public function __construct(CommandBusInterface $commandBus)
-    {
-        $this->commandBus = $commandBus;
+    private $deliveryAddressHandler;
+
+    /**
+     * @var ChangeOrderInvoiceAddressHandlerInterface
+     */
+    private $invoiceAddressHandler;
+
+    /**
+     * @param EditCustomerAddressHandlerInterface $addressHandler
+     * @param ChangeOrderDeliveryAddressHandlerInterface $deliveryAddressHandler
+     * @param ChangeOrderInvoiceAddressHandlerInterface $invoiceAddressHandler
+     */
+    public function __construct(
+        EditCustomerAddressHandlerInterface $addressHandler,
+        ChangeOrderDeliveryAddressHandlerInterface $deliveryAddressHandler,
+        ChangeOrderInvoiceAddressHandlerInterface $invoiceAddressHandler
+    ) {
+        $this->addressHandler = $addressHandler;
+        $this->deliveryAddressHandler = $deliveryAddressHandler;
+        $this->invoiceAddressHandler = $invoiceAddressHandler;
     }
 
     /**
@@ -74,16 +93,16 @@ class EditOrderAddressHandler implements EditOrderAddressHandlerInterface
         try {
             $addressCommand = $this->createEditAddressCommand($command);
             /** @var AddressId $addressId */
-            $addressId = $this->commandBus->handle($addressCommand);
+            $addressId = $this->addressHandler->handle($addressCommand);
 
             switch ($command->getAddressType()) {
                 case OrderAddressType::DELIVERY_ADDRESS_TYPE:
-                    $this->commandBus->handle(new ChangeOrderDeliveryAddressCommand(
+                    $this->deliveryAddressHandler->handle(new ChangeOrderDeliveryAddressCommand(
                         $command->getOrderId()->getValue(), $addressId->getValue()
                     ));
                     break;
                 case OrderAddressType::INVOICE_ADDRESS_TYPE:
-                    $this->commandBus->handle(new ChangeOrderInvoiceAddressCommand(
+                    $this->invoiceAddressHandler->handle(new ChangeOrderInvoiceAddressCommand(
                         $command->getOrderId()->getValue(), $addressId->getValue()
                     ));
                     break;
