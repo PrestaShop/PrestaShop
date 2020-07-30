@@ -493,10 +493,32 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $expectedProductSuppliers = $table->getColumnsHash();
         $actualProductSupplierOptions = $this->getProductForEditing($productReference)->getProductSupplierOptions();
 
-        foreach ($expectedProductSuppliers as $expectedProductSupplier) {
-            $actualProductSupplierOptions->getOptionsBySupplier();
+        foreach ($expectedProductSuppliers as &$expectedProductSupplier) {
+            if (isset($expectedProductSupplier['combination'])) {
+                $expectedProductSupplier['combination'] = $this->getSharedStorage()->get($expectedProductSupplier['combination']);
+            } else {
+                $expectedProductSupplier['combination'] = CombinationId::NO_COMBINATION;
+            }
+            $expectedProductSupplier['price tax excluded'] = new Number($expectedProductSupplier['price tax excluded']);
         }
-        //@todo: assert.
+
+        $actualProductSuppliers = [];
+        foreach ($actualProductSupplierOptions->getOptionsBySupplier() as $actualProductSupplierOption) {
+            foreach ($actualProductSupplierOption->getProductSuppliersForEditing() as $productSupplierForEditing) {
+                $actualProductSuppliers[] = [
+                    'product supplier reference' => $productSupplierForEditing->getReference(),
+                    'currency' => Currency::getIsoCodeById($productSupplierForEditing->getCurrencyId()),
+                    'price tax excluded' => new Number($productSupplierForEditing->getPriceTaxExcluded()),
+                    'combination' => $productSupplierForEditing->getCombinationId(),
+                ];
+            }
+        }
+
+        Assert::assertEquals(
+            $expectedProductSuppliers,
+            $actualProductSuppliers,
+            sprintf('Product "%s" suppliers doesn\'t match', $productReference)
+        );
     }
 
     /**
