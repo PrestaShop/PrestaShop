@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use LogicException;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
@@ -90,6 +91,8 @@ final class UpdateProductSuppliersHandler extends AbstractProductHandler impleme
      */
     public function handle(UpdateProductSuppliersCommand $command): array
     {
+        $this->assertCommandIsNotEmpty($command);
+
         $productId = $command->getProductId();
 
         if (null !== $command->getProductSuppliers()) {
@@ -110,9 +113,9 @@ final class UpdateProductSuppliersHandler extends AbstractProductHandler impleme
     private function handleDefaultSupplierUpdate(UpdateProductSuppliersCommand $command): void
     {
         $productId = $command->getProductId();
+        $defaultSupplierId = $command->getDefaultSupplierId();
+        $defaultSupplierIsProvided = null !== $defaultSupplierId;
         $deletedAllProductSuppliers = null !== $command->getProductSuppliers() && empty($command->getProductSuppliers());
-        $defaultSupplierIsNotProvided = null === $command->getDefaultSupplierId() && null !== $command->getProductSuppliers();
-        $defaultSupplierIsProvided = null !== $command->getDefaultSupplierId();
 
         if ($deletedAllProductSuppliers) {
             $this->removeDefaultSupplier($productId);
@@ -120,15 +123,34 @@ final class UpdateProductSuppliersHandler extends AbstractProductHandler impleme
             return;
         }
 
-        if ($defaultSupplierIsProvided) {
-            $this->updateDefaultSupplier($productId, $command->getDefaultSupplierId()->getValue());
+        if (!$defaultSupplierIsProvided) {
+            $firstSupplier = $command->getProductSuppliers()[0];
+            $this->updateDefaultSupplier($productId, $firstSupplier->getSupplierId());
 
             return;
         }
 
-        if ($defaultSupplierIsNotProvided) {
-            $firstSupplier = $command->getProductSuppliers()[0];
-            $this->updateDefaultSupplier($productId, $firstSupplier->getSupplierId());
+        $providedDefaultSupplierIsNotAssignedToProduct = $defaultSupplierIsProvided
+            && !ProductSupplierEntity::getIdByProductAndSupplier(
+                $productId->getValue(),
+                0,
+                $defaultSupplierId->getValue()
+            )
+        ;
+
+        if ($providedDefaultSupplierIsNotAssignedToProduct) {
+            throw new CannotUpdateProductException(
+                sprintf(
+                    'Cannot update product #%s default supplier #%s, because such supplier is not assigned to product',
+                    $productId->getValue(),
+                    $defaultSupplierId->getValue()
+                ),
+                CannotUpdateProductException::FAILED_UPDATE_DEFAULT_SUPPLIER
+            );
+        }
+
+        if ($defaultSupplierIsProvided) {
+            $this->updateDefaultSupplier($productId, $command->getDefaultSupplierId()->getValue());
         }
     }
 
@@ -196,8 +218,11 @@ final class UpdateProductSuppliersHandler extends AbstractProductHandler impleme
         $command->setCurrencyId($productSupplier->getCurrencyId())
             ->setReference($productSupplier->getReference())
             ->setPriceTaxExcluded($productSupplier->getPriceTaxExcluded())
-            ->setCombinationId($productSupplier->getCombinationId())
         ;
+
+        if ($productSupplier->getCombinationId()) {
+            $command->setCombinationId($productSupplier->getCombinationId());
+        }
 
         $this->updateProductSupplierHandler->handle($command);
     }
@@ -292,5 +317,20 @@ final class UpdateProductSuppliersHandler extends AbstractProductHandler impleme
         }
 
         return $productSupplierIds;
+    }
+
+    /**
+     * @param UpdateProductSuppliersCommand $command
+     */
+    private function assertCommandIsNotEmpty(UpdateProductSuppliersCommand $command): void
+    {
+        if (null !== $command->getDefaultSupplierId() || null !== $command->getProductSuppliers()) {
+            return;
+        }
+
+        throw new LogicException(sprintf(
+            '%s command properties are empty. You must set at least one property to update',
+            UpdateProductSuppliersCommand::class
+        ));
     }
 }
