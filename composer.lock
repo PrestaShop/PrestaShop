@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "6b962cbfae2189f57005b04a942ab96b",
@@ -4731,23 +4731,20 @@
         },
         {
             "name": "prestashop/ps_linklist",
-            "version": "v3.2.0",
+            "version": "v3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_linklist.git",
-                "reference": "4abf07d4ee2b007df78849fc9475c2dcab087a69"
+                "reference": "8fd44ffe2626d92035e9a7ed02fb7de97c59fc0a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/4abf07d4ee2b007df78849fc9475c2dcab087a69",
-                "reference": "4abf07d4ee2b007df78849fc9475c2dcab087a69",
+                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/8fd44ffe2626d92035e9a7ed02fb7de97c59fc0a",
+                "reference": "8fd44ffe2626d92035e9a7ed02fb7de97c59fc0a",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.6.0"
-            },
-            "require-dev": {
-                "prestashop/php-dev-tools": "^3.4"
             },
             "type": "prestashop-module",
             "autoload": {
@@ -4771,7 +4768,7 @@
             ],
             "description": "PrestaShop - Link list",
             "homepage": "https://github.com/PrestaShop/ps_linklist",
-            "time": "2020-07-10T07:10:55+00:00"
+            "time": "2020-04-15T14:45:38+00:00"
         },
         {
             "name": "prestashop/ps_mainmenu",
