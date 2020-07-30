@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider;
 
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShopBundle\Exception\NotImplementedException;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
@@ -35,9 +37,36 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
  */
 interface ProviderInterface
 {
-    public function getDefaultCatalogue(string $locale): ?MessageCatalogueInterface;
+    /**
+     * Returns not translated catalogue.
+     *
+     * @param string $locale
+     * @param bool $empty
+     *
+     * @return MessageCatalogueInterface
+     *
+     * @throws FileNotFoundException
+     * @throws NotImplementedException
+     */
+    public function getDefaultCatalogue(string $locale, bool $empty = true): MessageCatalogueInterface;
 
-    public function getFileTranslatedCatalogue(string $locale): ?MessageCatalogueInterface;
+    /**
+     * Returns translations from project files.
+     *
+     * @param string $locale
+     *
+     * @return MessageCatalogueInterface
+     *
+     * @throws FileNotFoundException
+     */
+    public function getFileTranslatedCatalogue(string $locale): MessageCatalogueInterface;
 
-    public function getUserTranslatedCatalogue(string $locale): ?MessageCatalogueInterface;
+    /**
+     * Returns user defined translations.
+     *
+     * @param string $locale
+     *
+     * @return MessageCatalogueInterface
+     */
+    public function getUserTranslatedCatalogue(string $locale): MessageCatalogueInterface;
 }

@@ -28,9 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider\Type;
 
-/**
- * Properties container for 'mails' type of translation.
- */
 class MailsType implements TypeInterface
 {
 }

@@ -83,7 +83,6 @@ class SearchProviderTest extends KernelTestCase
         $this->assertCount(91, $adminTranslations);
         $this->assertSame('Download file', $catalogue->get('Download file', 'AdminActions'));
 
-
         $catalogue = $this->provider->getFileTranslatedCatalogue('fr-FR');
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 

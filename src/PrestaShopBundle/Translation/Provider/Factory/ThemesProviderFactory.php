@@ -31,18 +31,15 @@ namespace PrestaShopBundle\Translation\Provider\Factory;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShopBundle\Translation\Extractor\ThemeExtractorInterface;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
+use PrestaShopBundle\Translation\Provider\FrontProvider;
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
+use PrestaShopBundle\Translation\Provider\ThemeProvider;
 use PrestaShopBundle\Translation\Provider\Type\ThemesType;
 use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
-use PrestaShopBundle\Translation\Provider\ThemeProvider;
 use Symfony\Component\Filesystem\Filesystem;
 
 class ThemesProviderFactory implements ProviderFactoryInterface
 {
-    /**
-     * @var ProviderInterface
-     */
-    private $frontOfficeProvider;
     /**
      * @var DatabaseTranslationLoader
      */
@@ -63,21 +60,25 @@ class ThemesProviderFactory implements ProviderFactoryInterface
      * @var string
      */
     private $themeResourcesDir;
+    /**
+     * @var string
+     */
+    private $frontResourcesDir;
 
     public function __construct(
-        ProviderInterface $frontOfficeProvider,
         DatabaseTranslationLoader $databaseTranslationLoader,
         ThemeExtractorInterface $themeExtractor,
         ThemeRepository $themeRepository,
         Filesystem $filesystem,
-        string $themeResourcesDir
+        string $themeResourcesDir,
+        string $frontResourcesDir
     ) {
-        $this->frontOfficeProvider = $frontOfficeProvider;
         $this->databaseTranslationLoader = $databaseTranslationLoader;
         $this->themeExtractor = $themeExtractor;
         $this->themeRepository = $themeRepository;
         $this->filesystem = $filesystem;
         $this->themeResourcesDir = $themeResourcesDir;
+        $this->frontResourcesDir = $frontResourcesDir;
     }
 
     /**
@@ -99,7 +100,7 @@ class ThemesProviderFactory implements ProviderFactoryInterface
 
         /* @var ThemesType $providerType */
         return new ThemeProvider(
-            $this->frontOfficeProvider,
+            new FrontProvider($this->databaseTranslationLoader, $this->frontResourcesDir),
             $this->databaseTranslationLoader,
             $this->themeExtractor,
             $this->themeRepository,

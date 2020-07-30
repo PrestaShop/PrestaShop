@@ -28,9 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider\Type;
 
-/**
- * Defines properties required for each provider.
- */
 interface TypeInterface
 {
 }

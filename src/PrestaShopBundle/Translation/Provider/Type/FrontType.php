@@ -28,29 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider\Type;
 
-/**
- * Properties container for 'front' type of translation.
- */
 class FrontType implements TypeInterface
 {
-    /**
-     * @var string|null
-     */
-    private $domain;
-
-    /**
-     * @param string|null $domain
-     */
-    public function __construct(?string $domain = null)
-    {
-        $this->domain = $domain;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getDomain(): ?string
-    {
-        return $this->domain;
-    }
 }

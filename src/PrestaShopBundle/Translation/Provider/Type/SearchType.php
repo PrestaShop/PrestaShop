@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Translation\Provider\Type;
 
 /**
- * Properties container for provider to search inside translations.
+ * Properties container for provider to search for translations files within a directory.
  */
 class SearchType implements TypeInterface
 {
