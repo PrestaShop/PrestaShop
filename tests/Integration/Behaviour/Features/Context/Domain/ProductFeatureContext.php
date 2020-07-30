@@ -427,7 +427,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
             $productSuppliers[] = [
                 'supplier_id' => $this->getSharedStorage()->get($productSupplier['supplier reference']),
-                'currency_id' => (int) Currency::getIdByIsoCode($productSupplier['currency']),
+                'currency_id' => (int) Currency::getIdByIsoCode($productSupplier['currency'], 0, true),
                 'reference' => $productSupplier['product supplier reference'],
                 'price_tax_excluded' => $productSupplier['price tax excluded'],
                 //@todo: $productReference could save not only product id, but also combination id?
@@ -472,7 +472,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             $command->setDefaultSupplierId($this->getSharedStorage()->get($supplierReference));
 
             $this->getCommandBus()->handle($command);
-        } catch (ProductSupplierException $e) {
+        } catch (ProductException $e) {
             $this->lastException = $e;
         }
     }
@@ -495,7 +495,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then product :productReference should have no suppliers assigned
+     * @Then product :productReference should not have any suppliers assigned
      *
      * @param string $productReference
      */
@@ -506,6 +506,21 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         Assert::assertEmpty(
             $productForEditing->getProductSupplierOptions()->getOptionsBySupplier(),
             sprintf('Expected product %s to have no suppliers assigned', $productReference)
+        );
+    }
+
+    /**
+     * @Then product :productReference default supplier reference should be empty
+     *
+     * @param string $productReference
+     */
+    public function assertProductDefaultSupplierReferenceIsEmpty(string $productReference)
+    {
+        $productForEditing = $this->getProductForEditing($productReference);
+
+        Assert::assertEmpty(
+            $productForEditing->getProductSupplierOptions()->getDefaultSupplierReference(),
+            sprintf('Expected product "%s" default supplier reference to be empty', $productReference)
         );
     }
 
@@ -615,6 +630,17 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             $this->getSharedStorage()->get($productReference),
             $defaultCategoryId,
             $categoryIds
+        );
+    }
+
+    /**
+     * @Then I should get error that I cannot update default supplier
+     */
+    public function assertFailedUpdateDefaultSupplierWhichIsNotAssigned()
+    {
+        $this->assertLastErrorIs(
+            CannotUpdateProductException::class,
+            CannotUpdateProductException::FAILED_UPDATE_DEFAULT_SUPPLIER
         );
     }
 
@@ -1172,11 +1198,21 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     private function assertDefaultSupplier(array &$data, ProductSupplierOptions $productSupplierOptions): void
     {
         if (isset($data['default supplier'])) {
-            $expectedSupplierId = $this->getSharedStorage()->get($data['default supplier']);
-            $actualSupplierId = $productSupplierOptions->getDefaultSupplierId();
-
-            Assert::assertEquals($expectedSupplierId, $actualSupplierId, 'Unexpected product default supplier');
+            Assert::assertEquals(
+                $this->getSharedStorage()->get($data['default supplier']),
+                $productSupplierOptions->getDefaultSupplierId(),
+                'Unexpected product default supplier'
+            );
             unset($data['default supplier']);
+        }
+
+        if (isset($data['default supplier reference'])) {
+            Assert::assertEquals(
+                $data['default supplier reference'],
+                $productSupplierOptions->getDefaultSupplierReference(),
+                'Unexpected product default supplier reference'
+            );
+            unset($data['default supplier reference']);
         }
     }
 

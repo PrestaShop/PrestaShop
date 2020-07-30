@@ -8,6 +8,8 @@ Feature: Update product suppliers from Back Office (BO)
   Background:
     Given shop "shop1" with name "test_shop" exists
     And language "language1" with locale "en-US" exists
+    And there is a currency named "currency1" with iso code "USD" and exchange rate of 0.92
+    And there is a currency named "currency3" with iso code "EUR" and exchange rate of 0.63
 
   Scenario: Update standard product suppliers
     And I add new supplier supplier1 with following properties:
@@ -36,7 +38,8 @@ Feature: Update product suppliers from Back Office (BO)
       | name       | en-US:magic staff                         |
       | is_virtual | false                                     |
     And product product1 type should be standard
-    And product product1 should have no suppliers assigned
+    And product product1 should not have any suppliers assigned
+    And product product1 default supplier reference should be empty
     When I update product product1 suppliers with following values:
       | reference         | supplier reference    | product supplier reference     | currency      | price tax excluded |
       | product1supplier1 | supplier1             | my first supplier for product1 | USD           | 10                 |
@@ -44,23 +47,40 @@ Feature: Update product suppliers from Back Office (BO)
       | reference             | product supplier reference     | currency      | price tax excluded |
       | product1supplier1     | my first supplier for product1 | USD           | 10                 |
     And product product1 should have following values:
-      | default supplier | supplier1 |
+      | default supplier           | supplier1                      |
+      | default supplier reference | my first supplier for product1 |
     When I set product product1 default supplier to supplier2
+    Then I should get error that I cannot update default supplier
     Then product product1 should have following suppliers:
       | reference             | product supplier reference     | currency      | price tax excluded |
       | product1supplier1     | my first supplier for product1 | USD           | 10                 |
     And product product1 should have following values:
-      | default supplier | supplier2 |
+      | default supplier           | supplier1                      |
+      | default supplier reference | my first supplier for product1 |
+    When I update product product1 suppliers with following values:
+      | reference         | supplier reference    | product supplier reference      | currency      | price tax excluded |
+      | product1supplier1 | supplier1             | my first supplier for product1  | USD           | 10                 |
+      | product1supplier2 | supplier2             | my second supplier for product1 | EUR           | 11                 |
+    And I set product product1 default supplier to supplier2
+    Then product product1 should have following suppliers:
+      | reference             | product supplier reference      | currency      | price tax excluded |
+      | product1supplier1     | my first supplier for product1  | USD           | 10                 |
+      | product1supplier2     | my second supplier for product1 | EUR           | 11                 |
+    And product product1 should have following values:
+      | default supplier           | supplier2                       |
+      | default supplier reference | my second supplier for product1 |
 
   Scenario: Remove standard product suppliers
     Given product product1 type should be standard
     And product product1 should have following suppliers:
-      | reference             | product supplier reference     | currency      | price tax excluded |
-      | product1supplier1     | my first supplier for product1 | USD           | 10                 |
+      | reference             | product supplier reference      | currency      | price tax excluded |
+      | product1supplier1     | my first supplier for product1  | USD           | 10                 |
+      | product1supplier2     | my second supplier for product1 | EUR           | 11                 |
     And product product1 should have following values:
-      | default supplier | supplier2 |
+      | default supplier           | supplier2                       |
+      | default supplier reference | my second supplier for product1 |
     When I delete product product1 suppliers
-    Then product product1 should have no suppliers assigned
+    Then product product1 should not have any suppliers assigned
     And product product1 should not have a default supplier
 
 #  Scenario: Update combination product suppliers
