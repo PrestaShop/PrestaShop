@@ -275,13 +275,20 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
         $productSuppliersForEditing = $this->getProductSuppliersForEditingHandler->handle(new GetProductSuppliersForEditing((int) $product->id));
         $supplierOptions = [];
 
+        $processedSuppliers = [];
         foreach ($productSuppliersForEditing as $productSupplierForEditing) {
             $supplierId = $productSupplierForEditing->getSupplierId();
+
+            if (in_array($supplierId, $processedSuppliers)) {
+                continue;
+            }
+
             $supplierOptions[] = new ProductSupplierOption(
                 Supplier::getNameById($supplierId),
                 $supplierId,
                 $this->filterProductSuppliersBySupplier($supplierId, $productSuppliersForEditing)
             );
+            $processedSuppliers[] = $supplierId;
         }
 
         return new ProductSupplierOptions(

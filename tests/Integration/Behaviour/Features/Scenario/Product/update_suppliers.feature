@@ -45,16 +45,16 @@ Feature: Update product suppliers from Back Office (BO)
       | reference         | supplier reference    | product supplier reference     | currency      | price tax excluded |
       | product1supplier1 | supplier1             | my first supplier for product1 | USD           | 10                 |
     Then product product1 should have following suppliers:
-      | reference             | product supplier reference     | currency      | price tax excluded |
-      | product1supplier1     | my first supplier for product1 | USD           | 10                 |
+      | product supplier reference     | currency      | price tax excluded |
+      | my first supplier for product1 | USD           | 10                 |
     And product product1 should have following values:
       | default supplier           | supplier1                      |
       | default supplier reference | my first supplier for product1 |
     When I set product product1 default supplier to supplier2
     Then I should get error that I cannot update default supplier
     Then product product1 should have following suppliers:
-      | reference             | product supplier reference     | currency      | price tax excluded |
-      | product1supplier1     | my first supplier for product1 | USD           | 10                 |
+      | product supplier reference     | currency      | price tax excluded |
+      | my first supplier for product1 | USD           | 10                 |
     And product product1 should have following values:
       | default supplier           | supplier1                      |
       | default supplier reference | my first supplier for product1 |
@@ -64,9 +64,9 @@ Feature: Update product suppliers from Back Office (BO)
       | product1supplier2 | supplier2             | my second supplier for product1 | EUR           | 11                 |
     And I set product product1 default supplier to supplier2
     Then product product1 should have following suppliers:
-      | reference             | product supplier reference      | currency      | price tax excluded |
-      | product1supplier1     | my first supplier for product1  | USD           | 10                 |
-      | product1supplier2     | my second supplier for product1 | EUR           | 11                 |
+      | product supplier reference      | currency      | price tax excluded |
+      | my first supplier for product1  | USD           | 10                 |
+      | my second supplier for product1 | EUR           | 11                 |
     And product product1 should have following values:
       | default supplier           | supplier2                       |
       | default supplier reference | my second supplier for product1 |
@@ -74,9 +74,9 @@ Feature: Update product suppliers from Back Office (BO)
   Scenario: Remove standard product suppliers
     Given product product1 type should be standard
     And product product1 should have following suppliers:
-      | reference             | product supplier reference      | currency      | price tax excluded |
-      | product1supplier1     | my first supplier for product1  | USD           | 10                 |
-      | product1supplier2     | my second supplier for product1 | EUR           | 11                 |
+      | product supplier reference      | currency      | price tax excluded |
+      | my first supplier for product1  | USD           | 10                 |
+      | my second supplier for product1 | EUR           | 11                 |
     And product product1 should have following values:
       | default supplier           | supplier2                       |
       | default supplier reference | my second supplier for product1 |
@@ -104,7 +104,7 @@ Feature: Update product suppliers from Back Office (BO)
       | product2whiteM | supplier1             | sup white shirt M 1               | USD           | 5                  | whiteM      |
       | product2whiteL | supplier1             | sup white shirt L 2               | USD           | 5                  | whiteL      |
     Then product product2 should have following suppliers:
-      | reference      | product supplier reference        | currency      | price tax excluded | combination |
-      | product2whiteM | sup white shirt M 1               | USD           | 5                  | whiteM      |
-      | product2whiteL | sup white shirt L 2               | USD           | 5                  | whiteL      |
+      | product supplier reference        | currency      | price tax excluded | combination |
+      | sup white shirt M 1               | USD           | 5                  | whiteM      |
+      | sup white shirt L 2               | USD           | 5                  | whiteL      |
     Then product product2 default supplier reference should be empty
