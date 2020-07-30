@@ -34,6 +34,7 @@ use Currency;
 use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCategoriesCommand;
@@ -77,7 +78,7 @@ use Tests\Integration\Behaviour\Features\Context\Util\ProductCombinationFactory;
 class ProductFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @Given product :productReference has combinations with following details:
+     * @Given product :productReference has following combinations:
      *
      * @param string $productReference
      * @param TableNode $tableNode
@@ -419,10 +420,15 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
         foreach ($data as $productSupplier) {
             $productSupplierId = null;
+            $combinationId = CombinationId::NO_COMBINATION;
             $references[] = $productSupplier['reference'];
 
             if ($this->getSharedStorage()->exists($productSupplier['reference'])) {
                 $productSupplierId = $this->getSharedStorage()->get($productSupplier['reference']);
+            }
+
+            if (isset($productSupplier['combination']) && $this->getSharedStorage()->exists($productSupplier['combination'])) {
+                $combinationId = $this->getSharedStorage()->get((int) $productSupplier['combination']);
             }
 
             $productSuppliers[] = [
@@ -430,8 +436,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                 'currency_id' => (int) Currency::getIdByIsoCode($productSupplier['currency'], 0, true),
                 'reference' => $productSupplier['product supplier reference'],
                 'price_tax_excluded' => $productSupplier['price tax excluded'],
-                //@todo: $productReference could save not only product id, but also combination id?
-                'combination_id' => 0,
+                'combination_id' => $combinationId,
                 'product_supplier_id' => $productSupplierId,
             ];
         }
