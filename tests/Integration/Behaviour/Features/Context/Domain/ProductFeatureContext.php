@@ -391,11 +391,11 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I delete product :productReference suppliers
+     * @When I delete all product :productReference suppliers
      *
      * @param string $productReference
      */
-    public function deleteProductSuppliers(string $productReference)
+    public function deleteAllProductSuppliers(string $productReference)
     {
         try {
             $command = new UpdateProductSuppliersCommand($this->getSharedStorage()->get($productReference));
