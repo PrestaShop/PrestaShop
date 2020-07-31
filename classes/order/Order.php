@@ -2586,6 +2586,7 @@ class OrderCore extends ObjectModel
                     'total_tax_base' => $total_tax_base,
                     'unit_amount' => $unit_amount,
                     'total_amount' => $total_amount,
+                    'id_order_invoice' => $order_detail['id_order_invoice'],
                 ];
             }
         }
