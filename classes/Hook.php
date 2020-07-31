@@ -102,6 +102,14 @@ class HookCore extends ObjectModel
         'displayProductTabContent' => ['from' => '1.7.0.0'],
         'displayProductTab' => ['from' => '1.7.0.0'],
 
+        // Order page
+        'displayAdminOrderRight' => ['from' => '1.7.7.0'],
+        'displayAdminOrderLeft' => ['from' => '1.7.7.0'],
+        'displayAdminOrderTabOrder' => ['from' => '1.7.7.0'],
+        'displayAdminOrderTabShip' => ['from' => '1.7.7.0'],
+        'displayAdminOrderContentOrder' => ['from' => '1.7.7.0'],
+        'displayAdminOrderContentShip' => ['from' => '1.7.7.0'],
+
         // Controller
         'actionAjaxDieBefore' => ['from' => '1.6.1.1'],
     ];
