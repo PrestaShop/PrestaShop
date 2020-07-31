@@ -27,7 +27,7 @@
     {if $logged}
       <a
         class="logout hidden-sm-down"
-        href="{$logout_url}"
+        href="{$urls.actions.logout}"
         rel="nofollow"
       >
         <i class="material-icons">&#xE7FF;</i>
