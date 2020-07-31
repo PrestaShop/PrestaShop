@@ -77,7 +77,7 @@ final class AddProductSupplierHandler extends AbstractProductSupplierHandler imp
      * @throws ProductNotFoundException
      * @throws SupplierNotFoundException
      */
-    private function fillEntityWithCommandData(ProductSupplier $productSupplier, AddProductSupplierCommand $command)
+    private function fillEntityWithCommandData(ProductSupplier $productSupplier, AddProductSupplierCommand $command): void
     {
         $productIdValue = $command->getProductId()->getValue();
         $supplierIdValue = $command->getSupplierId()->getValue();
