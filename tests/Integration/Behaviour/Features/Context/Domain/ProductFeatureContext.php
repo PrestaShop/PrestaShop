@@ -105,7 +105,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
             $this->getSharedStorage()->set($productReference, $productId->getValue());
         } catch (ProductException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -142,7 +142,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         try {
             $this->getCommandBus()->handle(UpdateProductPackCommand::cleanPack($packId));
         } catch (ProductException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -237,7 +237,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         try {
             $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -257,7 +257,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             $this->setUpdateOptionsCommandData($data, $command);
             $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -283,7 +283,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
             $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -593,7 +593,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         try {
             $this->getCommandBus()->handle(new UpdateProductTagsCommand($productId, $localizedTagsList));
         } catch (ProductException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -634,7 +634,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         try {
             $this->getQueryBus()->handle($command);
         } catch (ProductException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -654,7 +654,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         try {
             $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -720,7 +720,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         try {
             $this->updateProductCustomizationFields($productReference, ['name'], $fieldsForUpdate);
         } catch (ProductException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -1012,7 +1012,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                 $this->getSharedStorage()->set($fieldReferences[$key], $customizationField->getCustomizationFieldId());
             }
         } catch (ProductException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -1095,7 +1095,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                 $products
             ));
         } catch (ProductException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -1461,7 +1461,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                 $categoryIds
             ));
         } catch (ProductException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
