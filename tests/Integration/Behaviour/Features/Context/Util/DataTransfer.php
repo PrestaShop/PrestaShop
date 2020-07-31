@@ -34,7 +34,7 @@ class DataTransfer
      * @param object $subObject
      * @param object $object
      * @param bool $throwException false: skip bad data / true: throws Exceptions
-     * @param array $blackList properties to ignore
+     * @param array $blockList properties to ignore
      *
      * @return object $object
      *
@@ -44,7 +44,7 @@ class DataTransfer
         $subObject,
         $object,
         $throwException = false,
-        $blackList = [])
+        $blockList = [])
     {
         $reflectionObject = new \ReflectionObject($subObject);
         $reflectionMethods = $reflectionObject->getMethods(\ReflectionMethod::IS_PUBLIC);
@@ -66,7 +66,7 @@ class DataTransfer
         foreach ($attributes as $attribute => $value) {
             $setter = 'set' . $attribute;
 
-            if (in_array($attribute, $blackList)) {
+            if (in_array($attribute, $blockList)) {
                 continue;
             }
 

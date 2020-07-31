@@ -270,10 +270,10 @@ class ProductLazyArray extends AbstractLazyArray
      */
     public function getEmbeddedAttributes()
     {
-        $whitelist = $this->getProductAttributeWhitelist();
+        $allowList = $this->getProductAttributeWhitelist();
         $embeddedProductAttributes = [];
         foreach ($this->product as $attribute => $value) {
-            if (in_array($attribute, $whitelist)) {
+            if (in_array($attribute, $allowList)) {
                 $embeddedProductAttributes[$attribute] = $value;
             }
         }

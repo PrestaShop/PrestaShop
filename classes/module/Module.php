@@ -219,7 +219,7 @@ abstract class ModuleCore implements ModuleInterface
     const CACHE_FILE_TRUSTED_MODULES_LIST = '/config/xml/trusted_modules_list.xml';
     const CACHE_FILE_UNTRUSTED_MODULES_LIST = '/config/xml/untrusted_modules_list.xml';
 
-    public static $hosted_modules_blacklist = ['autoupgrade'];
+    public static $hosted_modules_blocklist = ['autoupgrade'];
 
     /**
      * Set the flag to indicate we are doing an import.
@@ -1578,7 +1578,7 @@ abstract class ModuleCore implements ModuleInterface
             if (!isset($module->tab)) {
                 $module->tab = 'others';
             }
-            if (defined('_PS_HOST_MODE_') && in_array($module->name, self::$hosted_modules_blacklist)) {
+            if (defined('_PS_HOST_MODE_') && in_array($module->name, self::$hosted_modules_blocklist)) {
                 unset($module_list[$key]);
             } elseif (isset($modules_installed[$module->name])) {
                 $module->installed = true;

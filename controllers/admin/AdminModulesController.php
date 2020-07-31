@@ -858,7 +858,7 @@ class AdminModulesControllerCore extends AdminController
                     // Check potential error
                     if (!($module = Module::getInstanceByName(urldecode($name)))) {
                         $this->errors[] = $this->trans('Module not found');
-                    } elseif (($this->context->mode >= Context::MODE_HOST_CONTRIB) && in_array($module->name, Module::$hosted_modules_blacklist)) {
+                    } elseif (($this->context->mode >= Context::MODE_HOST_CONTRIB) && in_array($module->name, Module::$hosted_modules_blocklist)) {
                         $this->errors[] = $this->trans('You do not have permission to access this module.', [], 'Admin.Modules.Notification');
                     } elseif ($key == 'install' && !$this->access('add')) {
                         $this->errors[] = $this->trans('You do not have permission to install this module.', [], 'Admin.Modules.Notification');

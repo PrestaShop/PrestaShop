@@ -197,12 +197,12 @@ class SearchCore
             }
         }
 
-        $blacklist = Tools::strtolower(Configuration::get('PS_SEARCH_BLACKLIST', $id_lang));
-        if (!empty($blacklist)) {
-            $string = preg_replace('/(?<=\s)(' . $blacklist . ')(?=\s)/Su', '', $string);
-            $string = preg_replace('/^(' . $blacklist . ')(?=\s)/Su', '', $string);
-            $string = preg_replace('/(?<=\s)(' . $blacklist . ')$/Su', '', $string);
-            $string = preg_replace('/^(' . $blacklist . ')$/Su', '', $string);
+        $blocklist = Tools::strtolower(Configuration::get('PS_SEARCH_BLACKLIST', $id_lang));
+        if (!empty($blocklist)) {
+            $string = preg_replace('/(?<=\s)(' . $blocklist . ')(?=\s)/Su', '', $string);
+            $string = preg_replace('/^(' . $blocklist . ')(?=\s)/Su', '', $string);
+            $string = preg_replace('/(?<=\s)(' . $blocklist . ')$/Su', '', $string);
+            $string = preg_replace('/^(' . $blocklist . ')$/Su', '', $string);
         }
 
         // If the language is constituted with symbol and there is no "words", then split every chars

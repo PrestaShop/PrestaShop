@@ -545,7 +545,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     }
 
     /**
-     * Cleans the products array with only whitelisted properties.
+     * Cleans the products array with only allowed properties.
      *
      * @param array[] $products
      *

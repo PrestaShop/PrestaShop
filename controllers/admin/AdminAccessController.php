@@ -30,7 +30,7 @@
 class AdminAccessControllerCore extends AdminController
 {
     /** @var array : Black list of id_tab that do not have access */
-    public $accesses_black_list = [];
+    public $accesses_block_list = [];
 
     public function __construct()
     {
@@ -42,8 +42,8 @@ class AdminAccessControllerCore extends AdminController
         $this->lang = false;
         $this->context = Context::getContext();
 
-        // Blacklist AdminLogin
-        $this->accesses_black_list[] = Tab::getIdFromClassName('AdminLogin');
+        // Blocklist AdminLogin
+        $this->accesses_block_list[] = Tab::getIdFromClassName('AdminLogin');
 
         parent::__construct();
     }
@@ -71,7 +71,7 @@ class AdminAccessControllerCore extends AdminController
                 unset($tabs[$key]);
             }
 
-            foreach ($this->accesses_black_list as $id_tab) {
+            foreach ($this->accesses_block_list as $id_tab) {
                 if ($tab['id_tab'] == (int) $id_tab) {
                     unset($tabs[$key]);
                 }

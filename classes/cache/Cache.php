@@ -72,9 +72,9 @@ abstract class CacheCore
     protected $sql_tables_cached = [];
 
     /**
-     * @var array List of blacklisted tables for SQL cache, these tables won't be indexed
+     * @var array List of blocklisted tables for SQL cache, these tables won't be indexed
      */
-    protected $blacklist = [
+    protected $blocklist = [
         'cart',
         'cart_cart_rule',
         'cart_product',
@@ -645,7 +645,7 @@ abstract class CacheCore
      */
     protected function isBlacklist($query)
     {
-        foreach ($this->blacklist as $find) {
+        foreach ($this->blocklist as $find) {
             if (false !== strpos($query, _DB_PREFIX_ . $find)) {
                 return true;
             }

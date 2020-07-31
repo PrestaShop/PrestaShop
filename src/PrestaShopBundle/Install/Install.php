@@ -951,9 +951,9 @@ class Install extends AbstractInstall
     public function getAddonsModulesList($params = [])
     {
         /**
-         * TODO: Remove blacklist once 1.7 is out.
+         * TODO: Remove blocklist once 1.7 is out.
          */
-        $blacklist = [
+        $blocklist = [
             'bankwire',
             'blockadvertising',
             'blockbanner',
@@ -1006,7 +1006,7 @@ class Install extends AbstractInstall
 
         if ($xml !== false && isset($xml->module)) {
             foreach ($xml->module as $modaddons) {
-                if (in_array($modaddons->name, $blacklist)) {
+                if (in_array($modaddons->name, $blocklist)) {
                     continue;
                 }
                 $addons_modules[] = ['id_module' => $modaddons->id, 'name' => $modaddons->name];

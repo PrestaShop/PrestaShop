@@ -800,9 +800,9 @@ class AdminControllerCore extends Controller
         }
 
         $cookie = Context::getContext()->cookie;
-        $whitelist = ['date_add', 'id_lang', 'id_employee', 'email', 'profile', 'passwd', 'remote_addr', 'shopContext', 'collapse_menu', 'checksum'];
+        $allowed = ['date_add', 'id_lang', 'id_employee', 'email', 'profile', 'passwd', 'remote_addr', 'shopContext', 'collapse_menu', 'checksum'];
         foreach ($cookie->getAll() as $key => $value) {
-            if (!in_array($key, $whitelist)) {
+            if (!in_array($key, $allowed)) {
                 unset($cookie->$key);
             }
         }

@@ -1463,7 +1463,7 @@ class ToolsCore
             $return_str = Tools::replaceAccentedChars($return_str);
         }
 
-        // Remove all non-whitelist chars.
+        // Remove all non-authorized chars.
         if ($allow_accented_chars) {
             $return_str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]\-\p{L}]/u', '', $return_str);
         } else {

@@ -975,7 +975,7 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * Checks if user's location is whitelisted.
+     * Checks if user's location is allowed.
      *
      * @staticvar bool|null $allowed
      *

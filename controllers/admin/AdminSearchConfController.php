@@ -262,7 +262,7 @@ class AdminSearchConfControllerCore extends AdminController
                         'cast' => 'intval',
                     ],
                     'PS_SEARCH_BLACKLIST' => [
-                        'title' => $this->trans('Blacklisted words', [], 'Admin.Shopparameters.Feature'),
+                        'title' => $this->trans('Blocklisted words', [], 'Admin.Shopparameters.Feature'),
                         'validation' => 'isGenericName',
                         'hint' => $this->trans(
                             'Please enter the index words separated by a "|".',
