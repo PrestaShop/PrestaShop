@@ -40,6 +40,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShopException;
 use ProductSupplier;
 
+/**
+ * Handles @var DeleteProductSupplierCommand using legacy object model
+ */
 final class DeleteProductSupplierHandler extends AbstractProductSupplierHandler implements DeleteProductSupplierHandlerInterface
 {
     /**
@@ -78,11 +81,16 @@ final class DeleteProductSupplierHandler extends AbstractProductSupplierHandler 
         $productId = (int) $productSupplier->id_product;
         $product = $this->getProduct(new ProductId($productId));
 
+        // check if default supplier was deleted with this command
         if ((int) $product->id_supplier !== (int) $productSupplier->id_supplier) {
             return;
         }
 
         $product->id_supplier = 0;
+        $product->supplier_reference = '';
+        $this->fieldsToUpdate['id_supplier'] = true;
+        $this->fieldsToUpdate['supplier_reference'] = true;
+
         $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_DEFAULT_SUPPLIER);
     }
 }
