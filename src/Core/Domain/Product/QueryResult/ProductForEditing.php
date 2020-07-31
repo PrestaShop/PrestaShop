@@ -65,6 +65,7 @@ class ProductForEditing
      * @var ProductCustomizationOptions
      */
     private $customizationOptions;
+
     /**
      * @var ProductSupplierOptions
      */
