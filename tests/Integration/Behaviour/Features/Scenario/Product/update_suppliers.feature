@@ -72,7 +72,7 @@ Feature: Update product suppliers from Back Office (BO)
     And product product1 should have following values:
       | default supplier           | supplier2                       |
       | default supplier reference | my second supplier for product1 |
-    When I delete product product1 suppliers
+    When I delete all product product1 suppliers
     Then product product1 should not have any suppliers assigned
     And product product1 should not have a default supplier
     And product product1 default supplier reference should be empty
