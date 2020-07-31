@@ -257,6 +257,10 @@ final class UpdateProductSuppliersHandler extends AbstractProductHandler impleme
                 $defaultSupplierId
             );
             $this->fieldsToUpdate['supplier_reference'] = true;
+        // clear default supplier reference if there is no default supplier left
+        } elseif (!$defaultSupplierId) {
+            $product->supplier_reference = '';
+            $this->fieldsToUpdate['supplier_reference'] = true;
         }
 
         $product->id_supplier = $defaultSupplierId;
