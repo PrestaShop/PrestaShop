@@ -144,7 +144,7 @@ abstract class AbstractDomainFeatureContext implements Context
             throw new RuntimeException(sprintf('Last error should be "%s", but got "%s"', $expectedError, $e ? get_class($e) : 'null'), 0, $e);
         }
         if (null !== $errorCode && $e->getCode() !== $errorCode) {
-            throw new RuntimeException(sprintf('Last error should have code "%s", but has "%s"', $errorCode, $e? $e->getCode() : 'null'), 0, $e);
+            throw new RuntimeException(sprintf('Last error should have code "%s", but has "%s"', $errorCode, $e ? $e->getCode() : 'null'), 0, $e);
         }
     }
 
