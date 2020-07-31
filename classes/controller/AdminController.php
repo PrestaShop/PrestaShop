@@ -23,7 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
@@ -4718,7 +4718,7 @@ class AdminControllerCore extends Controller
      */
     protected function buildContainer()
     {
-        return ContainerBuilder::getContainer('admin', _PS_MODE_DEV_);
+        return SymfonyContainer::getInstance();
     }
 
     /**

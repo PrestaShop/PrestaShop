@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Adapter\Container\LegacyContainer;
 use PrestaShop\PrestaShop\Adapter\Container\LegacyContainerBuilder;
 use PrestaShop\PrestaShop\Core\EnvironmentInterface;
 use PrestaShopBundle\DependencyInjection\Compiler\LoadServicesFromModulesPass;
+use PrestaShopBundle\Exception\ServiceContainerException;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Resource\FileResource;
@@ -90,6 +91,11 @@ class ContainerBuilder
      */
     public static function getContainer($containerName, $isDebug)
     {
+        if ($containerName === 'admin') {
+            throw new ServiceContainerException(
+                'You should use `SymfonyContainer::getInstance()` instead of `ContainerBuilder::getContainer(\'admin\')`'
+            );
+        }
         if (!isset(self::$containers[$containerName])) {
             $builder = new ContainerBuilder(new Environment($isDebug));
             self::$containers[$containerName] = $builder->buildContainer($containerName);
