@@ -87,6 +87,11 @@ class EditableEmployee
     private $avatarUrl;
 
     /**
+     * @var bool
+     */
+    private $hasEnabledGravatar;
+
+    /**
      * @param EmployeeId $employeeId
      * @param FirstName $firstName
      * @param LastName $lastName
@@ -97,6 +102,7 @@ class EditableEmployee
      * @param bool $active
      * @param int $profileId
      * @param array $shopAssociation
+     * @param bool $hasEnabledGravatar
      */
     public function __construct(
         EmployeeId $employeeId,
@@ -108,7 +114,8 @@ class EditableEmployee
         $languageId,
         $active,
         $profileId,
-        array $shopAssociation
+        array $shopAssociation,
+        bool $hasEnabledGravatar = false
     ) {
         $this->employeeId = $employeeId;
         $this->firstName = $firstName;
@@ -120,6 +127,7 @@ class EditableEmployee
         $this->profileId = $profileId;
         $this->shopAssociation = $shopAssociation;
         $this->avatarUrl = $avatarUrl;
+        $this->hasEnabledGravatar = $hasEnabledGravatar;
     }
 
     /**
@@ -200,5 +208,13 @@ class EditableEmployee
     public function getAvatarUrl()
     {
         return $this->avatarUrl;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasEnabledGravatar()
+    {
+        return $this->hasEnabledGravatar;
     }
 }
