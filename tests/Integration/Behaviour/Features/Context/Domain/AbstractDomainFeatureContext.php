@@ -28,7 +28,6 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 use Behat\Testwork\Tester\Result\TestResult;
 use Exception;
@@ -47,16 +46,6 @@ abstract class AbstractDomainFeatureContext implements Context
      * Shared storage key for last thrown exception
      */
     const LAST_EXCEPTION_STORAGE_KEY = 'LAST_EXCEPTION';
-
-    /**
-     * @var Exception|null
-     */
-    protected $lastException;
-
-    /**
-     * @var int
-     */
-    protected $lastErrorCode;
 
     /**
      * @BeforeSuite
@@ -84,7 +73,7 @@ abstract class AbstractDomainFeatureContext implements Context
     /**
      * @BeforeScenario
      */
-    public function cleanLastException(BeforeScenarioScope $scope)
+    public function cleanLastException()
     {
         $this->getSharedStorage()->set(self::LAST_EXCEPTION_STORAGE_KEY, null);
     }
