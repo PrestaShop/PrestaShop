@@ -35,7 +35,7 @@
       </a>
       <a
         class="account"
-        href="{$my_account_url}"
+        href="{$urls.pages.my_account}"
         title="{l s='View my customer account' d='Shop.Theme.Customeraccount'}"
         rel="nofollow"
       >
@@ -44,7 +44,7 @@
       </a>
     {else}
       <a
-        href="{$my_account_url}"
+        href="{$urls.pages.my_account}"
         title="{l s='Log in to your customer account' d='Shop.Theme.Customeraccount'}"
         rel="nofollow"
       >
