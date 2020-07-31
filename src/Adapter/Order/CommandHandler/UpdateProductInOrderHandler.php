@@ -58,11 +58,6 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
     private $orderProductQuantityUpdater;
 
     /**
-     * @var OrderAmountUpdater
-     */
-    private $orderAmountUpdater;
-
-    /**
      * @var int
      */
     private $computingPrecision;
@@ -74,11 +69,9 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
      * @param OrderAmountUpdater $orderAmountUpdater
      */
     public function __construct(
-        OrderProductQuantityUpdater $orderProductQuantityUpdater,
-        OrderAmountUpdater $orderAmountUpdater
+        OrderProductQuantityUpdater $orderProductQuantityUpdater
     ) {
         $this->orderProductQuantityUpdater = $orderProductQuantityUpdater;
-        $this->orderAmountUpdater = $orderAmountUpdater;
     }
 
     /**
