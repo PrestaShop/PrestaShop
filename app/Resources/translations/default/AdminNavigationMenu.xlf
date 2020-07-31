@@ -60,11 +60,6 @@
         <target>Advanced Parameters</target>
         <note>Line: 33</note>
       </trans-unit>
-      <trans-unit id="20ad345341cfd791c1a3f9ef20c35577">
-        <source><![CDATA[Attributes & Features]]></source>
-        <target><![CDATA[Attributes & Features]]></target>
-        <note>Line: 35</note>
-      </trans-unit>
       <trans-unit id="287234a1ff35a314b5b6bc4e5828e745">
         <source>Attributes</source>
         <target>Attributes</target>
@@ -563,7 +558,7 @@ Comment: subtab</note>
       <trans-unit id="72d6d7a1885885bb55a565fd1070581a">
         <source>Import</source>
         <target>Import</target>
-        <note>Line: 314</note>
+        <note>Line: 317</note>
       </trans-unit>
     </body>
   </file>
@@ -671,7 +666,7 @@ Comment: subtab</note>
       <trans-unit id="6ea7071301eeb50e00bf88f5a46ded8e">
         <source>Modules catalog</source>
         <target>Modules catalog</target>
-        <note>Line: 71</note>
+        <note>Line: 72</note>
       </trans-unit>
     </body>
   </file>
@@ -725,7 +720,7 @@ Comment: subtab</note>
       <trans-unit id="0b8d92bc19b720bb1065649535463409">
         <source>Translations</source>
         <target>Translations</target>
-        <note>Line: 109</note>
+        <note>Line: 110</note>
       </trans-unit>
     </body>
   </file>
@@ -744,6 +739,15 @@ Comment: subtab</note>
         <source><![CDATA[Theme & Logo]]></source>
         <target><![CDATA[Theme & Logo]]></target>
         <note>Line: 28</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Forms/form_combinations.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="20ad345341cfd791c1a3f9ef20c35577">
+        <source><![CDATA[Attributes & Features]]></source>
+        <target><![CDATA[Attributes & Features]]></target>
+        <note>Line: 38</note>
       </trans-unit>
     </body>
   </file>
