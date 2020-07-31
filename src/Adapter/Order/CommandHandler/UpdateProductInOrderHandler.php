@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockExcepti
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use Product;
 use StockAvailable;
+use Tools;
 use Validate;
 
 /**
@@ -56,11 +57,6 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
      * @var OrderProductQuantityUpdater
      */
     private $orderProductQuantityUpdater;
-
-    /**
-     * @var int
-     */
-    private $computingPrecision;
 
     /**
      * UpdateProductInOrderHandler constructor.
@@ -79,14 +75,10 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
      */
     public function handle(UpdateProductInOrderCommand $command)
     {
-        // Return value
-        $res = true;
-        $temporarySpecificPrices = [];
-
         try {
             $order = $this->getOrder($command->getOrderId());
             $cart = Cart::getCartByOrderId($order->id);
-            $this->computingPrecision = $this->getPrecisionFromCart($cart);
+            $computingPrecision = $this->getPrecisionFromCart($cart);
 
             $orderDetail = new OrderDetail($command->getOrderDetailId());
             $orderInvoice = null;
@@ -100,13 +92,13 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             // @todo: use https://github.com/PrestaShop/decimal for price computations
             // Update OrderDetail prices
             $productQuantity = $command->getQuantity();
-            $unitProductPriceTaxIncl = (float) $command->getPriceTaxIncluded()->round(2);
-            $unitProductPriceTaxExcl = (float) $command->getPriceTaxExcluded()->round(2);
+            $unitProductPriceTaxIncl = (float) $command->getPriceTaxIncluded()->round($computingPrecision);
+            $unitProductPriceTaxExcl = (float) $command->getPriceTaxExcluded()->round($computingPrecision);
 
             $orderDetail->unit_price_tax_incl = $unitProductPriceTaxIncl;
             $orderDetail->unit_price_tax_excl = $unitProductPriceTaxExcl;
-            $orderDetail->total_price_tax_incl = $unitProductPriceTaxIncl * $productQuantity;
-            $orderDetail->total_price_tax_excl = $unitProductPriceTaxExcl * $productQuantity;
+            $orderDetail->total_price_tax_incl = Tools::ps_round($unitProductPriceTaxIncl * $productQuantity, $computingPrecision);
+            $orderDetail->total_price_tax_excl = Tools::ps_round($unitProductPriceTaxExcl * $productQuantity, $computingPrecision);
             if (!$orderDetail->save()) {
                 throw new OrderException('An error occurred while editing the product line.');
             }
@@ -132,7 +124,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
                 $combination->id ?? null,
                 $command->getPriceTaxIncluded(),
                 $command->getPriceTaxExcluded(),
-                $this->computingPrecision
+                $computingPrecision
             );
 
             // Update quantity and amounts
