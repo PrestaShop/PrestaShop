@@ -92,14 +92,17 @@ final class UpdateProductSuppliersHandler extends AbstractProductHandler impleme
     public function handle(UpdateProductSuppliersCommand $command): array
     {
         $this->assertCommandIsNotEmpty($command);
-
         $productId = $command->getProductId();
 
         if (null !== $command->getProductSuppliers()) {
             $this->updateProductSuppliers($productId, $command->getProductSuppliers());
         }
 
-        $this->handleDefaultSupplierUpdate($command);
+        $deletedAllProductSuppliers = is_array($command->getProductSuppliers()) && empty($command->getProductSuppliers());
+
+        if (!$deletedAllProductSuppliers) {
+            $this->handleDefaultSupplierUpdate($command);
+        }
 
         return $this->getProductSupplierIds($productId);
     }
@@ -115,13 +118,6 @@ final class UpdateProductSuppliersHandler extends AbstractProductHandler impleme
         $productId = $command->getProductId();
         $defaultSupplierId = $command->getDefaultSupplierId();
         $defaultSupplierIsProvided = null !== $defaultSupplierId;
-        $deletedAllProductSuppliers = null !== $command->getProductSuppliers() && empty($command->getProductSuppliers());
-
-        if ($deletedAllProductSuppliers) {
-            $this->removeDefaultSupplier($productId);
-
-            return;
-        }
 
         if (!$defaultSupplierIsProvided) {
             $firstSupplier = $command->getProductSuppliers()[0];
@@ -225,17 +221,6 @@ final class UpdateProductSuppliersHandler extends AbstractProductHandler impleme
         }
 
         $this->updateProductSupplierHandler->handle($command);
-    }
-
-    /**
-     * @param ProductId $productId
-     *
-     * @throws CannotUpdateProductException
-     * @throws ProductException
-     */
-    private function removeDefaultSupplier(ProductId $productId): void
-    {
-        $this->updateDefaultSupplier($productId, 0);
     }
 
     /**
