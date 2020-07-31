@@ -553,6 +553,6 @@ textarea {
 .modal-dialog-centered {
   display: flex;
   align-items: center;
-  // 30px correspond to the default margin size from bootstrap 4.0.0-alpha.5 for modal-dialog class
+  // 30px corresponds to the default margin size from bootstrap 4.0.0-alpha.5 for modal-dialog class
   min-height: calc(100% - (30px * 2));
 }
