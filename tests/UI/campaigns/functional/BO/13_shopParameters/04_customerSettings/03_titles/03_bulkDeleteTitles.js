@@ -22,7 +22,7 @@ const TitleFaker = require('@data/faker/title');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_shopParameters_customerSettings_titles_CRUDTitles';
+const baseContext = 'functional_BO_shopParameters_customerSettings_titles_bulkDeleteTitles';
 
 // Import expect from chai
 const {expect} = require('chai');
