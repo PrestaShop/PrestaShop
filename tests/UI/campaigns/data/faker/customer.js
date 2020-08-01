@@ -1,6 +1,10 @@
 const faker = require('faker');
 
-const genders = ['Mr.', 'Mrs.'];
+const {Titles} = require('@data/demo/titles');
+
+
+const genders = Object.values(Titles).map(title => title.name);
+
 const {groupAccess} = require('@data/demo/groupAccess');
 
 module.exports = class Customer {
