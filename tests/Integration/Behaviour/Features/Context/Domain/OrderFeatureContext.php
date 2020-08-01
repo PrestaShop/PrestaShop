@@ -188,9 +188,9 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 )
             );
         } catch (InvalidProductQuantityException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         } catch (ProductOutOfStockException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -231,7 +231,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 new DeleteProductFromOrderCommand($orderId, $orderDetailId)
             );
         } catch (OrderException | OrderNotFoundException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -265,7 +265,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 )
             );
         } catch (InvalidProductQuantityException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -452,9 +452,9 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 )
             );
         } catch (InvalidProductQuantityException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         } catch (ProductOutOfStockException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -855,7 +855,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 $data['value']
             ));
         } catch (InvalidCartRuleDiscountValueException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 

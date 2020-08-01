@@ -43,14 +43,9 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 abstract class AbstractDomainFeatureContext implements Context
 {
     /**
-     * @var Exception|null
+     * Shared storage key for last thrown exception
      */
-    protected $lastException;
-
-    /**
-     * @var int
-     */
-    protected $lastErrorCode;
+    const LAST_EXCEPTION_STORAGE_KEY = 'LAST_EXCEPTION';
 
     /**
      * @BeforeSuite
@@ -68,9 +63,37 @@ abstract class AbstractDomainFeatureContext implements Context
      */
     public function checkLastException(AfterScenarioScope $scope)
     {
-        if (TestResult::FAILED === $scope->getTestResult()->getResultCode() && null !== $this->lastException) {
-            throw new RuntimeException(sprintf('Might be related to the last exception: %s %s', get_class($this->lastException), $this->lastException->getTraceAsString()));
+        $e = $this->getLastException();
+
+        if (TestResult::FAILED === $scope->getTestResult()->getResultCode() && null !== $e) {
+            throw new RuntimeException(sprintf('Might be related to the last exception: %s %s', get_class($e), $e->getTraceAsString()));
         }
+    }
+
+    /**
+     * @BeforeScenario
+     */
+    public function cleanLastException()
+    {
+        $this->getSharedStorage()->set(self::LAST_EXCEPTION_STORAGE_KEY, null);
+    }
+
+    protected function setLastException(Exception $e): void
+    {
+        $this->getSharedStorage()->set(self::LAST_EXCEPTION_STORAGE_KEY, $e);
+    }
+
+    protected function getLastException(): ?Exception
+    {
+        if (!$this->getSharedStorage()->exists(self::LAST_EXCEPTION_STORAGE_KEY)) {
+            return null;
+        }
+
+        if (!$e = $this->getSharedStorage()->get(self::LAST_EXCEPTION_STORAGE_KEY)) {
+            return null;
+        }
+
+        return $e;
     }
 
     /**
@@ -104,8 +127,10 @@ abstract class AbstractDomainFeatureContext implements Context
 
     protected function assertLastErrorIsNull()
     {
-        if (null !== $this->lastException) {
-            throw new RuntimeException(sprintf('An unexpected exception was thrown %s: %s', get_class($this->lastException), $this->lastException->getMessage()), 0, $this->lastException);
+        $e = $this->getLastException();
+
+        if (null !== $e) {
+            throw new RuntimeException(sprintf('An unexpected exception was thrown %s: %s', get_class($e), $e->getMessage()), 0, $e);
         }
     }
 
@@ -115,11 +140,13 @@ abstract class AbstractDomainFeatureContext implements Context
      */
     protected function assertLastErrorIs($expectedError, $errorCode = null)
     {
-        if (!$this->lastException instanceof $expectedError) {
-            throw new RuntimeException(sprintf('Last error should be "%s", but got "%s"', $expectedError, $this->lastException ? get_class($this->lastException) : 'null'), 0, $this->lastException);
+        $e = $this->getLastException();
+
+        if (!$e instanceof $expectedError) {
+            throw new RuntimeException(sprintf('Last error should be "%s", but got "%s"', $expectedError, $e ? get_class($e) : 'null'), 0, $e);
         }
-        if (null !== $errorCode && $this->lastException->getCode() !== $errorCode) {
-            throw new RuntimeException(sprintf('Last error should have code "%s", but has "%s"', $errorCode, $this->lastException ? $this->lastException->getCode() : 'null'), 0, $this->lastException);
+        if (null !== $errorCode && $e->getCode() !== $errorCode) {
+            throw new RuntimeException(sprintf('Last error should have code "%s", but has "%s"', $errorCode, $e ? $e->getCode() : 'null'), 0, $e);
         }
     }
 
