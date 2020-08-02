@@ -821,6 +821,21 @@ class OrderCore extends ObjectModel
         WHERE ocr.`deleted` = 0 AND ocr.`id_order` = ' . (int) $this->id);
     }
 
+    /**
+     *  Return the list of all order cart rules, even the softy deleted ones
+     *
+     * @return array|false
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public function getDeletedCartRules()
+    {
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+        SELECT *
+        FROM `' . _DB_PREFIX_ . 'order_cart_rule` ocr
+        WHERE ocr.`deleted` = 1 AND ocr.`id_order` = ' . (int) $this->id);
+    }
+
     public static function getDiscountsCustomer($id_customer, $id_cart_rule)
     {
         $cache_id = 'Order::getDiscountsCustomer_' . (int) $id_customer . '-' . (int) $id_cart_rule;

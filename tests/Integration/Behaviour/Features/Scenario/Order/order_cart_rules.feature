@@ -501,6 +501,96 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
+  Scenario: Add product with associated discount to order, I remove the discount of this product, if I remove the propduct and add it again the discount is applied again
+    Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
+    Then order "bo_order1" should have 2 products in total
+    Then order "bo_order1" should have 0 invoices
+    Then order "bo_order1" should have 0 cart rule
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
+    And there is a product in the catalog named "Test Product With Percent Discount" with a price of 350.00 and 100 items in stock
+    Given there is a cart rule named "CartRulePercentForSpecificProduct" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
+    And cart rule "CartRulePercentForSpecificProduct" is restricted to product "Test Product With Percent Discount"
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product With Percent Discount |
+      | amount        | 1                                  |
+      | price         | 350.00                             |
+    Then order "bo_order1" should have 3 products in total
+    Then order "bo_order1" should contain 1 product "Test Product With Percent Discount"
+    Then order "bo_order1" should have 1 cart rule
+    Then order "bo_order1" should have cart rule "CartRulePercentForSpecificProduct" with amount "$175.00"
+    Then order "bo_order1" should have following details:
+      | total_products           | 373.80 |
+      | total_products_wt        | 396.23 |
+      | total_discounts_tax_excl | 175.00 |
+      | total_discounts_tax_incl | 185.50 |
+      | total_paid_tax_excl      | 205.80 |
+      | total_paid_tax_incl      | 218.15 |
+      | total_paid               | 218.15 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    When I remove cart rule "CartRulePercentForSpecificProduct" from order "bo_order1"
+    Then order "bo_order1" should have 3 products in total
+    Then order "bo_order1" should contain 1 product "Test Product With Percent Discount"
+    And order "bo_order1" should not have cart rule "CartRulePercentForSpecificProduct"
+    Then order "bo_order1" should have 0 cart rule
+    Then order "bo_order1" should have following details:
+      | total_products           | 373.80 |
+      | total_products_wt        | 396.23 |
+      | total_discounts_tax_excl | 0.000  |
+      | total_discounts_tax_incl | 0.000  |
+      | total_paid_tax_excl      | 380.80 |
+      | total_paid_tax_incl      | 403.65 |
+      | total_paid               | 403.65 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    When I remove product "Test Product With Percent Discount" from order "bo_order1"
+    Then order "bo_order1" should have 2 products in total
+    Then order "bo_order1" should contain 0 product "Test Product With Percent Discount"
+    Then order "bo_order1" should have 0 cart rule
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product With Percent Discount |
+      | amount        | 1                                  |
+      | price         | 350.00                             |
+    Then order "bo_order1" should have 3 products in total
+    Then order "bo_order1" should contain 1 product "Test Product With Percent Discount"
+    Then order "bo_order1" should have 1 cart rule
+    Then order "bo_order1" should have cart rule "CartRulePercentForSpecificProduct" with amount "$175.00"
+    Then order "bo_order1" should have following details:
+      | total_products           | 373.80 |
+      | total_products_wt        | 396.23 |
+      | total_discounts_tax_excl | 175.00 |
+      | total_discounts_tax_incl | 185.50 |
+      | total_paid_tax_excl      | 205.80 |
+      | total_paid_tax_incl      | 218.15 |
+      | total_paid               | 218.15 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+
   Scenario: Add discount to the specific order, then remove it When I perform add/remove product actions the discount is not reapplied
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
     Then order "bo_order1" should have 2 products in total
