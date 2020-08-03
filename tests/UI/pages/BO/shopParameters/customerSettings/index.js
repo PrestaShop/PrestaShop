@@ -9,7 +9,10 @@ class CustomerSettings extends BOBasePage {
     this.pageTitle = 'Customers •';
     this.successfulUpdateMessage = 'Update successful';
 
-    // Selectors
+    // Header selectors
+    this.titlesSubtab = '#subtab-AdminGenders';
+
+    // Form selectors
     this.generalForm = '#configuration_form';
     this.redisplayCartAtLoginLabel = toggle => `label[for='form_general_redisplay_cart_at_login_${toggle}']`;
     this.enablePartnerOfferLabel = toggle => `label[for='form_general_enable_offers_${toggle}']`;
@@ -23,6 +26,16 @@ class CustomerSettings extends BOBasePage {
   /*
     Methods
   */
+
+  /**
+   * Click on subtitle page
+   * @param page
+   * @return {Promise<void>}
+   */
+  async goToTitlesPage(page) {
+    await this.clickAndWaitForNavigation(page, this.titlesSubtab);
+  }
+
   /**
    * Set option status
    * @param page
