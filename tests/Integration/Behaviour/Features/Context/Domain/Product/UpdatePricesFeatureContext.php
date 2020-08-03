@@ -35,6 +35,7 @@ use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
+use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -120,7 +121,42 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
             unset($data['unity']);
         }
 
+        $this->assertTaxRulesGroup($data, $pricesInfo);
         $this->assertNumberPriceFields($data, $pricesInfo);
+
+        Assert::assertEmpty($data, sprintf('Some provided product price fields haven\'t been asserted: %s', implode(',', $data)));
+    }
+
+    /**
+     * @param array $data
+     * @param ProductPricesInformation $pricesInfo
+     */
+    private function assertTaxRulesGroup(array &$data, ProductPricesInformation $pricesInfo)
+    {
+        if (!isset($data['tax rules group'])) {
+            return;
+        }
+
+        $expectedName = $data['tax rules group'];
+
+        if ('' === $expectedName) {
+            $expectedId = 0;
+        } else {
+            $expectedId = (int) TaxRulesGroupFeatureContext::getTaxRulesGroupByName($expectedName)->id;
+        }
+        $actualId = $pricesInfo->getTaxRulesGroupId();
+
+        if ($expectedId !== $actualId) {
+            throw new RuntimeException(
+                sprintf(
+                    'Expected tax rules group "%s", but got "%s"',
+                    $expectedName,
+                    (new \TaxRulesGroup($actualId))->name
+                )
+            );
+        }
+
+        unset($data['tax rules group']);
     }
 
     /**

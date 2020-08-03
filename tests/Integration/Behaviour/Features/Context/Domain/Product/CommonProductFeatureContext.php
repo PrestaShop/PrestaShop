@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use RuntimeException;
-use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class CommonProductFeatureContext extends AbstractProductFeatureContext
@@ -113,12 +112,10 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
         $this->assertStringProperty($productForEditing, $data, 'mpn');
         $this->assertStringProperty($productForEditing, $data, 'reference');
 
-        $this->assertTaxRulesGroup($data, $productForEditing);
-
         // Assertions checking isset() can hide some errors if it doesn't find array key,
         // to make sure all provided fields were checked we need to unset every asserted field
         // and finally, if provided data is not empty, it means there are some unnasserted values left
-        Assert::assertEmpty($data, sprintf('Some provided fields haven\'t been asserted: %s', implode(',', $data)));
+        Assert::assertEmpty($data, sprintf('Some provided product fields haven\'t been asserted: %s', implode(',', $data)));
     }
 
     /**
@@ -211,38 +208,6 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
 
             unset($data[$propertyName]);
         }
-    }
-
-    /**
-     * @param array $data
-     * @param ProductForEditing $productForEditing
-     */
-    private function assertTaxRulesGroup(array &$data, ProductForEditing $productForEditing)
-    {
-        if (!isset($data['tax rules group'])) {
-            return;
-        }
-
-        $expectedName = $data['tax rules group'];
-
-        if ('' === $expectedName) {
-            $expectedId = 0;
-        } else {
-            $expectedId = (int) TaxRulesGroupFeatureContext::getTaxRulesGroupByName($expectedName)->id;
-        }
-        $actualId = $productForEditing->getPricesInformation()->getTaxRulesGroupId();
-
-        if ($expectedId !== $actualId) {
-            throw new RuntimeException(
-                sprintf(
-                    'Expected tax rules group "%s", but got "%s"',
-                    $expectedName,
-                    TaxRulesGroupFeatureContext::getTaxRulesGroupByName($actualId)->name
-                )
-            );
-        }
-
-        unset($data['tax rules group']);
     }
 
     /**
