@@ -62,4 +62,24 @@ export default class OrderPricesRefresher {
         });
       });
   }
+
+  checkOtherProductPricesMatch(givenPrice, productId, combinationId) {
+    const productRows = document.querySelectorAll('tr.cellProduct');
+    let unmatchingPriceExists = false;
+
+    productRows.forEach((product) => {
+      const productEditBtn = document.querySelector(`#${product.id} ${OrderViewPageMap.productEditBtn}`);
+      const currentProductId = productEditBtn.dataset.productId;
+      const currentCombinationId = productEditBtn.dataset.combinationId;
+
+      if (currentProductId != productId || currentCombinationId != combinationId) {
+        return;
+      }
+      if (givenPrice !== productEditBtn.dataset.productPriceTaxIncl) {
+        unmatchingPriceExists = true;
+      }
+    });
+
+    return !unmatchingPriceExists;
+  }
 }
