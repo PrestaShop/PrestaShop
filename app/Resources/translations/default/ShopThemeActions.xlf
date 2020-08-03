@@ -18,67 +18,17 @@
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/catalog/_partials/active_filters.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="66f5930c826cca9e8251ed8e85f151da">
-        <source>Reset all filter</source>
-        <target>Reset all filter</target>
-        <note>Context:
-File: themes/StarterTheme/templates/catalog/_partials/active_filters.tpl:34</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/catalog/product.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="63a6a88c066880c5ac42394a22803ca6">
-        <source>Refresh</source>
-        <target>Refresh</target>
-        <note>Context:
-File: themes/StarterTheme/templates/catalog/product.tpl:165</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/checkout/_partials/address-form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="56ed5ee3432287e536a4913eabb9227e">
-        <source>Save Address</source>
-        <target>Save Address</target>
-        <note>Context:
-File: themes/StarterTheme/templates/checkout/_partials/address-form.tpl:37</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/checkout/_partials/cart-voucher.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="444bcb3a3fcf8389296c49467f27e1d6">
-        <source>ok</source>
-        <target>ok</target>
-        <note>Context:
-File: themes/StarterTheme/templates/checkout/_partials/cart-voucher.tpl:44</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5486191906ec27c1c4bb5bd3e46b3442">
-        <source>Order with an obligation to pay</source>
-        <target>Order with an obligation to pay</target>
-        <note>Context:
-File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="themes/classic/modules/contactform/views/templates/widget/contactform.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="94966d90747b97d1f0f206c98a8b1ac3">
-        <source>Send</source>
-        <target>Send</target>
-        <note>Line: 130</note>
-      </trans-unit>
       <trans-unit id="cbe55e77ffa67d13322eb1ce7d22f1ba">
         <source>Choose file</source>
         <target>Choose file</target>
         <note>Line: 92</note>
+      </trans-unit>
+      <trans-unit id="94966d90747b97d1f0f206c98a8b1ac3">
+        <source>Send</source>
+        <target>Send</target>
+        <note>Line: 130</note>
       </trans-unit>
     </body>
   </file>
@@ -207,7 +157,7 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
       <trans-unit id="c91e4ee170226d66e90f99ba917e4c20">
         <source>Quick view</source>
         <target>Quick view</target>
-        <note>Line: 96</note>
+        <note>Line: 94</note>
       </trans-unit>
     </body>
   </file>
@@ -295,15 +245,15 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
   </file>
   <file original="themes/classic/templates/checkout/_partials/cart-voucher.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="12a7a93d72ded50311b52c7d0a853e3c">
-        <source>Take advantage of our exclusive offers:</source>
-        <target>Take advantage of our exclusive offers:</target>
-        <note>Line: 78</note>
-      </trans-unit>
       <trans-unit id="ec211f7c20af43e742bf2570c3cb84f9">
         <source>Add</source>
         <target>Add</target>
         <note>Line: 60</note>
+      </trans-unit>
+      <trans-unit id="12a7a93d72ded50311b52c7d0a853e3c">
+        <source>Take advantage of our exclusive offers:</source>
+        <target>Take advantage of our exclusive offers:</target>
+        <note>Line: 78</note>
       </trans-unit>
     </body>
   </file>

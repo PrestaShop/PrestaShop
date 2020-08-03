@@ -41,11 +41,6 @@
         <target>Transplant to</target>
         <note>Line: 55</note>
       </trans-unit>
-      <trans-unit id="d5f1381c5f97f928df4ef8d18c2a27c0">
-        <source>Exceptions</source>
-        <target>Exceptions</target>
-        <note>Line: 81</note>
-      </trans-unit>
       <trans-unit id="c5cc1164fe38560fcd4fb85ca074a789">
         <source>Available hooks</source>
         <target>Available hooks</target>
@@ -55,6 +50,11 @@
         <source>Already registered hooks</source>
         <target>Already registered hooks</target>
         <note>Line: 70</note>
+      </trans-unit>
+      <trans-unit id="d5f1381c5f97f928df4ef8d18c2a27c0">
+        <source>Exceptions</source>
+        <target>Exceptions</target>
+        <note>Line: 81</note>
       </trans-unit>
     </body>
   </file>
@@ -138,49 +138,6 @@
         <source>Two columns with a small right column.</source>
         <target>Two columns with a small right column.</target>
         <note>Line: 37</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCmsContentController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d0d4e3688fdaee5afa292083b855e143">
-        <source>Add new category</source>
-        <target>Add new category</target>
-        <note>Line: 187</note>
-      </trans-unit>
-      <trans-unit id="4fb1231b615c9fc59cdb5729577b0919">
-        <source>Edit category: %name%</source>
-        <target>Edit category: %name%</target>
-        <note>Line: 190</note>
-      </trans-unit>
-      <trans-unit id="aa6f77f824eff8e896510f1bbaf9f8e5">
-        <source>Add new page</source>
-        <target>Add new page</target>
-        <note>Line: 195</note>
-      </trans-unit>
-      <trans-unit id="23b8a311aed9d1b2e76424acc4eff45f">
-        <source>Edit page: %meta_title%</source>
-        <target>Edit page: %meta_title%</target>
-        <note>Line: 198</note>
-      </trans-unit>
-      <trans-unit id="5aa00a736e77bff80d8a530b0522803d">
-        <source>Category: %category%</source>
-        <target>Category: %category%</target>
-        <note>Line: 201</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCmsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="897b3f9a5dc0ebb8ab90e033e7ce61f3">
-        <source>Page Category</source>
-        <target>Page Category</target>
-        <note>Line: 166</note>
-      </trans-unit>
-      <trans-unit id="cc4fbd30d676ea2f9994b7063a8ada15">
-        <source>Pages in this category</source>
-        <target>Pages in this category</target>
-        <note>Line: 310</note>
       </trans-unit>
     </body>
   </file>
@@ -316,40 +273,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminThemesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b5c941eace89787ab475237451189eac">
-        <source>Import theme</source>
-        <target>Import theme</target>
-        <note>Line: 172</note>
-      </trans-unit>
-      <trans-unit id="f5ad3d3e217e4b7ea1729eb997dfbe1e">
-        <source>Your current theme</source>
-        <target>Your current theme</target>
-        <note>Line: 405</note>
-      </trans-unit>
-      <trans-unit id="410901e83305e49595778896745950a9">
-        <source><![CDATA[Invoice & Email Logos]]></source>
-        <target><![CDATA[Invoice & Email Logos]]></target>
-        <note>Line: 409</note>
-      </trans-unit>
-      <trans-unit id="90dafb1cce6579655041476ab07fab90">
-        <source>Favicons</source>
-        <target>Favicons</target>
-        <note>Line: 410</note>
-      </trans-unit>
-      <trans-unit id="3388a09e80639f10038e6725fb32f444">
-        <source>Select a theme for the "%name%" shop</source>
-        <target>Select a theme for the "%name%" shop</target>
-        <note>Line: 508</note>
-      </trans-unit>
-      <trans-unit id="8d5cc12b0e7ecbe4e624baa345323035">
-        <source>Theme appearance</source>
-        <target>Theme appearance</target>
-        <note>Line: 529</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/Core/Grid/Definition/Factory/CmsPageDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="1f6162e1430a8d5020bf4c20dc02499f">
@@ -375,6 +298,11 @@
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Improve/Design/Pages/CmsPageType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="79e48ca19eefe7806fbaf27df903e8d5">
+        <source>Page category</source>
+        <target>Page category</target>
+        <note>Line: 90</note>
+      </trans-unit>
       <trans-unit id="21f93401134586a6c481422bf01fccfd">
         <source>Only letters and the hyphen (-) character are allowed.</source>
         <target>Only letters and the hyphen (-) character are allowed.</target>
@@ -389,11 +317,6 @@
         <source>Indexation by search engines</source>
         <target>Indexation by search engines</target>
         <note>Line: 259</note>
-      </trans-unit>
-      <trans-unit id="79e48ca19eefe7806fbaf27df903e8d5">
-        <source>Page category</source>
-        <target>Page category</target>
-        <note>Line: 90</note>
       </trans-unit>
     </body>
   </file>
@@ -545,15 +468,15 @@
         <target>Adaptation to Right-to-Left languages</target>
         <note>Line: 31</note>
       </trans-unit>
-      <trans-unit id="8ed22009aa8884b512b3e3a85d1aeb87">
-        <source>Theme to adapt</source>
-        <target>Theme to adapt</target>
-        <note>Line: 42</note>
-      </trans-unit>
       <trans-unit id="fb3f98de7e392f98c02ba257e6c46f9a">
         <source>Generate RTL stylesheet</source>
         <target>Generate RTL stylesheet</target>
         <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="8ed22009aa8884b512b3e3a85d1aeb87">
+        <source>Theme to adapt</source>
+        <target>Theme to adapt</target>
+        <note>Line: 42</note>
       </trans-unit>
     </body>
   </file>
@@ -602,6 +525,11 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/Theme/index.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="d721757161f7f70c5b0949fdb6ec2c30">
+        <source>Theme</source>
+        <target>Theme</target>
+        <note>Line: 28</note>
+      </trans-unit>
       <trans-unit id="36866999eeb441da24edc6fd075e1765">
         <source>Add new theme</source>
         <target>Add new theme</target>
@@ -612,16 +540,6 @@
         <target>Export current theme</target>
         <note>Line: 37</note>
       </trans-unit>
-      <trans-unit id="859a82ffb385f9227c656960996025eb">
-        <source>Visit the theme catalog</source>
-        <target>Visit the theme catalog</target>
-        <note>Line: 153</note>
-      </trans-unit>
-      <trans-unit id="d721757161f7f70c5b0949fdb6ec2c30">
-        <source>Theme</source>
-        <target>Theme</target>
-        <note>Line: 28</note>
-      </trans-unit>
       <trans-unit id="6b8e9498b52135e7f6cee757294a6079">
         <source>My current theme</source>
         <target>My current theme</target>
@@ -631,6 +549,11 @@
         <source>Use this theme</source>
         <target>Use this theme</target>
         <note>Line: 123</note>
+      </trans-unit>
+      <trans-unit id="859a82ffb385f9227c656960996025eb">
+        <source>Visit the theme catalog</source>
+        <target>Visit the theme catalog</target>
+        <note>Line: 153</note>
       </trans-unit>
       <trans-unit id="6fe78057f585de51da0f61d514143fe1">
         <source>Explore more than a thousand themes</source>

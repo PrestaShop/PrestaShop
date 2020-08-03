@@ -2,15 +2,15 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="classes/form/CustomerFormatter.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="b8760dae14ad4963c909f83424de3e7f">
-        <source>(E.g.: %date_format%)</source>
-        <target>(E.g.: %date_format%)</target>
-        <note>Line: 215</note>
-      </trans-unit>
       <trans-unit id="ae12c6cc3c51c7dfc05571539d8980d9">
         <source>Only letters and the dot (.) character, followed by a space, are allowed.</source>
         <target>Only letters and the dot (.) character, followed by a space, are allowed.</target>
         <note>Line: 139</note>
+      </trans-unit>
+      <trans-unit id="b8760dae14ad4963c909f83424de3e7f">
+        <source>(E.g.: %date_format%)</source>
+        <target>(E.g.: %date_format%)</target>
+        <note>Line: 215</note>
       </trans-unit>
     </body>
   </file>
@@ -58,11 +58,6 @@
   </file>
   <file original="themes/classic/templates/catalog/_partials/product-customization.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="7e8cfff1e4f6fbdc4d6f4149c84e17ed">
-        <source>250 char. max</source>
-        <target>250 char. max</target>
-        <note>Line: 39</note>
-      </trans-unit>
       <trans-unit id="20f4168399201bd498e52bafeb59b478">
         <source>Don't forget to save your customization to be able to add to cart</source>
         <target>Don't forget to save your customization to be able to add to cart</target>
@@ -72,6 +67,11 @@
         <source>Your message here</source>
         <target>Your message here</target>
         <note>Line: 38</note>
+      </trans-unit>
+      <trans-unit id="7e8cfff1e4f6fbdc4d6f4149c84e17ed">
+        <source>250 char. max</source>
+        <target>250 char. max</target>
+        <note>Line: 39</note>
       </trans-unit>
       <trans-unit id="9378eeabb3f4f2c5122659d50560a448">
         <source>No selected file</source>

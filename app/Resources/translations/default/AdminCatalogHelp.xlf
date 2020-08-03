@@ -55,11 +55,6 @@
         <target>For your eyes only. This will never be displayed to the customer.</target>
         <note>Line: 63</note>
       </trans-unit>
-      <trans-unit id="4c04b0afd7a378940377c1948fa65e5f">
-        <source>This is the code users should enter to apply the voucher to a cart. Either create your own code or generate one by clicking on "Generate".</source>
-        <target>This is the code users should enter to apply the voucher to a cart. Either create your own code or generate one by clicking on "Generate".</target>
-        <note>Line: 75</note>
-      </trans-unit>
       <trans-unit id="b9fe1289d4d385c85d61f262aea8de40">
         <source>Caution! If you leave this field blank, the rule will automatically be applied to benefiting customers.</source>
         <target>Caution! If you leave this field blank, the rule will automatically be applied to benefiting customers.</target>
@@ -84,26 +79,6 @@
         <source>Cart rules are applied by priority. A cart rule with a priority of "1" will be processed before a cart rule with a priority of "2".</source>
         <target>Cart rules are applied by priority. A cart rule with a priority of "1" will be processed before a cart rule with a priority of "2".</target>
         <note>Line: 130</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/categories/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="db11ee64aeb094a9cccbd04957e3416f">
-        <source><![CDATA[If you want a category to appear in the menu of your shop, go to [1]Modules > Modules & Services > Installed modules.[/1] Then, configure your menu module.]]></source>
-        <target><![CDATA[If you want a category to appear in the menu of your shop, go to [1]Modules > Modules & Services > Installed modules.[/1] Then, configure your menu module.]]></target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/categories/helpers/form/form.tpl:50</note>
-      </trans-unit>
-      <trans-unit id="5bc1667deb2b522c0cac00de5f15ffbc">
-        <source>Recommended dimensions (for the default theme): %1spx x %2spx</source>
-        <target>Recommended dimensions (for the default theme): %1spx x %2spx</target>
-        <note>Line: 60</note>
-      </trans-unit>
-      <trans-unit id="0f6ae5ebf937764fc48db601df56d0ca">
-        <source><![CDATA[If you want a category to appear in the menu of your shop, go to [1]Modules > Modules Manager.[/1] Then, configure your menu module.]]></source>
-        <target><![CDATA[If you want a category to appear in the menu of your shop, go to [1]Modules > Modules Manager.[/1] Then, configure your menu module.]]></target>
-        <note>Line: 50</note>
       </trans-unit>
     </body>
   </file>
@@ -148,15 +123,6 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
         <source>Save then add another value</source>
         <target>Save then add another value</target>
         <note>Line: 565</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCategoriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7e35726fb991605ab3d0e6406599e6ef">
-        <source>To add "tags," click in the field, write something, and then press "Enter."</source>
-        <target>To add "tags," click in the field, write something, and then press "Enter."</target>
-        <note>Line: 618</note>
       </trans-unit>
     </body>
   </file>
@@ -263,31 +229,12 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminManufacturersController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="643544fd7876fa0f017ba6233f46b4c3">
-        <source>To add "tags," click inside the field, write something, and then press "Enter."</source>
-        <target>To add "tags," click inside the field, write something, and then press "Enter."</target>
-        <note>Line: 396</note>
-      </trans-unit>
-      <trans-unit id="b7d8f05036844ad562ed08715bb480b4">
-        <source>Company name for this brand</source>
-        <target>Company name for this brand</target>
-        <note>Line: 523</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/admin/AdminSuppliersController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="dd0479e67d24cd2c2868d4c6b2dcba9a">
         <source>Company name for this supplier</source>
         <target>Company name for this supplier</target>
         <note>Line: 145</note>
-      </trans-unit>
-      <trans-unit id="3ef61077e04c24d0b712a1b0ea036255">
-        <source>To add "tags" click in the field, write something and then press "Enter".</source>
-        <target>To add "tags" click in the field, write something and then press "Enter".</target>
-        <note>Line: 266</note>
       </trans-unit>
     </body>
   </file>
@@ -358,15 +305,15 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Product/ProductQuantity.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="e63e2ba42470a41ba75e0d7ea35a410f">
-        <source>Combine several attributes, e.g.: "Size: all", "Color: red".</source>
-        <target>Combine several attributes, e.g.: "Size: all", "Color: red".</target>
-        <note>Line: 82</note>
-      </trans-unit>
       <trans-unit id="16a5534d559007de7e8f5b4f17112203">
         <source>Leave empty to disable</source>
         <target>Leave empty to disable</target>
         <note>Line: 175</note>
+      </trans-unit>
+      <trans-unit id="e63e2ba42470a41ba75e0d7ea35a410f">
+        <source>Combine several attributes, e.g.: "Size: all", "Color: red".</source>
+        <target>Combine several attributes, e.g.: "Size: all", "Color: red".</target>
+        <note>Line: 82</note>
       </trans-unit>
     </body>
   </file>
@@ -520,9 +467,9 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
         <target><![CDATA[Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. To create a combination, you need to create your product attributes first. Go to Catalog > Attributes & Features for this!]]></target>
         <note>Line: 32</note>
       </trans-unit>
-      <trans-unit id="57a23510ca35a7354d9208151c344364">
-        <source><![CDATA[To add combinations, you first need to create proper attributes and values in [1]Attributes & Features[/1]. <br> When done, you may enter the wanted attributes (like "size" or "color") and their respective values ("XS", "red", "all", etc.) in the field below; or simply select them from the right column. Then click on "Generate": it will automatically create all the combinations for you!]]></source>
-        <target><![CDATA[To add combinations, you first need to create proper attributes and values in [1]Attributes & Features[/1]. <br> When done, you may enter the wanted attributes (like "size" or "color") and their respective values ("XS", "red", "all", etc.) in the field below; or simply select them from the right column. Then click on "Generate": it will automatically create all the combinations for you!]]></target>
+      <trans-unit id="ab80db7e778c7415ca2f34deb46d5f44">
+        <source><![CDATA[To add combinations, you first need to create proper attributes and values in [1]%attributes_and_features_label%[/1]. <br> When done, you may enter the wanted attributes (like "size" or "color") and their respective values ("XS", "red", "all", etc.) in the field below; or simply select them from the right column. Then click on "%generate_label%": it will automatically create all the combinations for you!]]></source>
+        <target><![CDATA[To add combinations, you first need to create proper attributes and values in [1]%attributes_and_features_label%[/1]. <br> When done, you may enter the wanted attributes (like "size" or "color") and their respective values ("XS", "red", "all", etc.) in the field below; or simply select them from the right column. Then click on "%generate_label%": it will automatically create all the combinations for you!]]></target>
         <note>Line: 38</note>
       </trans-unit>
     </body>
@@ -596,9 +543,9 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Forms/form_supplier_combination.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="214396125ea99914d7f6faef5d612b85">
-        <source>You can specify product reference(s) for each associated supplier. Click "Save" after changing selected suppliers to display the associated product references.</source>
-        <target>You can specify product reference(s) for each associated supplier. Click "Save" after changing selected suppliers to display the associated product references.</target>
+      <trans-unit id="738971709fcd7de4b5f8a87eb1e663a1">
+        <source>You can specify product reference(s) for each associated supplier. Click "%save_label%" after changing selected suppliers to display the associated product references.</source>
+        <target>You can specify product reference(s) for each associated supplier. Click "%save_label%" after changing selected suppliers to display the associated product references.</target>
         <note>Line: 31</note>
       </trans-unit>
     </body>
@@ -624,6 +571,16 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
         <target>Number of days this file can be accessed by customers. Set to zero for unlimited access.</target>
         <note>Line: 141</note>
       </trans-unit>
+      <trans-unit id="ea8d1b4f32f86030683d8f9252c0a3e1">
+        <source>The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity.</source>
+        <target>The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity.</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="1914ce33841a6e52c0577751d9004159">
+        <source><![CDATA[The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]]]></source>
+        <target><![CDATA[The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]]]></target>
+        <note>Line: 74</note>
+      </trans-unit>
       <trans-unit id="dbcf3c5f67528da5cf59dc0c042748da">
         <source>Upload a file from your computer (%maxUploadSize% max.)</source>
         <target>Upload a file from your computer (%maxUploadSize% max.)</target>
@@ -643,16 +600,6 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
         <source>If set, the file will not be downloadable after this date. Leave blank if you do not wish to attach an expiration date.</source>
         <target>If set, the file will not be downloadable after this date. Leave blank if you do not wish to attach an expiration date.</target>
         <note>Line: 132</note>
-      </trans-unit>
-      <trans-unit id="ea8d1b4f32f86030683d8f9252c0a3e1">
-        <source>The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity.</source>
-        <target>The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity.</target>
-        <note>Line: 47</note>
-      </trans-unit>
-      <trans-unit id="1914ce33841a6e52c0577751d9004159">
-        <source><![CDATA[The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]]]></source>
-        <target><![CDATA[The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]]]></target>
-        <note>Line: 74</note>
       </trans-unit>
     </body>
   </file>
@@ -697,6 +644,11 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Panels/options.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="0041a5c39ca241f883f4e0516a32d290">
+        <source>This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.</source>
+        <target>This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.</target>
+        <note>Line: 125</note>
+      </trans-unit>
       <trans-unit id="6fcccfb9dbed970c59c18752f6372703">
         <source>Tags are meant to help your customers find your products via the search bar.</source>
         <target>Tags are meant to help your customers find your products via the search bar.</target>
@@ -726,11 +678,6 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
         <source>This type of product code is widely used in the United States, Canada, the United Kingdom, Australia, New Zealand and in other countries.</source>
         <target>This type of product code is widely used in the United States, Canada, the United Kingdom, Australia, New Zealand and in other countries.</target>
         <note>Line: 136</note>
-      </trans-unit>
-      <trans-unit id="0041a5c39ca241f883f4e0516a32d290">
-        <source>This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.</source>
-        <target>This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.</target>
-        <note>Line: 125</note>
       </trans-unit>
       <trans-unit id="c268a2747d5680c617c361cd505c4576">
         <source>MPN is used internationally to identify the Manufacturer Part Number.</source>
@@ -799,10 +746,15 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Categories/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="d4be87a5a7a7e9bf633dc6d356968333">
-        <source>Click on "Displayed" to index the category on your shop.</source>
-        <target>Click on "Displayed" to index the category on your shop.</target>
+      <trans-unit id="5d57e03bdb23114707da20a5d5937b82">
+        <source>Click on "%displayed_label%" to index the category on your shop.</source>
+        <target>Click on "%displayed_label%" to index the category on your shop.</target>
         <note>Line: 44</note>
+      </trans-unit>
+      <trans-unit id="19318118b1173f172418b3282cb037d7">
+        <source><![CDATA[If you want a category to appear in the menu of your shop, go to [1]Modules > Module Manager[/1] and configure your menu module.]]></source>
+        <target><![CDATA[If you want a category to appear in the menu of your shop, go to [1]Modules > Module Manager[/1] and configure your menu module.]]></target>
+        <note>Line: 48</note>
       </trans-unit>
       <trans-unit id="42f9ee5026d32792987af851a2ea0343">
         <source>This is the main image for your category, displayed in the category page. The category description will overlap this image and appear in its top-left corner.</source>
@@ -824,20 +776,15 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
         <target>Only letters, numbers, underscore (_) and the minus (-) character are allowed.</target>
         <note>Line: 166</note>
       </trans-unit>
-      <trans-unit id="53d98bd116f47fdfe15c8eb4525c5e99">
-        <source>You now have three default customer groups.</source>
-        <target>You now have three default customer groups.</target>
-        <note>Line: 179</note>
-      </trans-unit>
       <trans-unit id="463848257c086c4816d9f4c020a8d19e">
         <source>Mark all of the customer groups which you would like to have access to this category.</source>
         <target>Mark all of the customer groups which you would like to have access to this category.</target>
         <note>Line: 171</note>
       </trans-unit>
-      <trans-unit id="19318118b1173f172418b3282cb037d7">
-        <source><![CDATA[If you want a category to appear in the menu of your shop, go to [1]Modules > Module Manager[/1] and configure your menu module.]]></source>
-        <target><![CDATA[If you want a category to appear in the menu of your shop, go to [1]Modules > Module Manager[/1] and configure your menu module.]]></target>
-        <note>Line: 48</note>
+      <trans-unit id="53d98bd116f47fdfe15c8eb4525c5e99">
+        <source>You now have three default customer groups.</source>
+        <target>You now have three default customer groups.</target>
+        <note>Line: 179</note>
       </trans-unit>
     </body>
   </file>
@@ -847,11 +794,6 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
         <source>Upload a brand logo from your computer.</source>
         <target>Upload a brand logo from your computer.</target>
         <note>Line: 60</note>
-      </trans-unit>
-      <trans-unit id="8ed6ad2c4486cdf4c66666671a6d4bf5">
-        <source>To add "tags", click inside the field, write something, and then press "Enter".</source>
-        <target>To add "tags", click inside the field, write something, and then press "Enter".</target>
-        <note>Line: 86</note>
       </trans-unit>
     </body>
   </file>

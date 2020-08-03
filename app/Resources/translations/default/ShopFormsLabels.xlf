@@ -61,16 +61,6 @@
   </file>
   <file original="classes/form/CustomerFormatter.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="5e74f2daf4ae8030571ceee5b4837579">
-        <source>Social title</source>
-        <target>Social title</target>
-        <note>Line: 101</note>
-      </trans-unit>
-      <trans-unit id="ccd41dac2cc2284362975a05bd9ce363">
-        <source>Birthdate</source>
-        <target>Birthdate</target>
-        <note>Line: 207</note>
-      </trans-unit>
       <trans-unit id="20db0bfeecd8fe60533206a2b5e9891a">
         <source>First name</source>
         <target>First name</target>
@@ -92,6 +82,16 @@
         <note>Line: 156
 Comment: Please localize this string with the applicable registration number type in your country. For example : "SIRET" in France and "Código fiscal" in Spain.</note>
       </trans-unit>
+      <trans-unit id="5e74f2daf4ae8030571ceee5b4837579">
+        <source>Social title</source>
+        <target>Social title</target>
+        <note>Line: 101</note>
+      </trans-unit>
+      <trans-unit id="ccd41dac2cc2284362975a05bd9ce363">
+        <source>Birthdate</source>
+        <target>Birthdate</target>
+        <note>Line: 207</note>
+      </trans-unit>
     </body>
   </file>
   <file original="classes/form/CustomerLoginFormatter.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -108,29 +108,8 @@ Comment: Please localize this string with the applicable registration number typ
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/customer/_partials/order-messages.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
-        <source>From</source>
-        <target>From</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/_partials/order-messages.tpl:31</note>
-      </trans-unit>
-      <trans-unit id="7bc873cba11f035df692c3549366c722">
-        <source>-- Choose --</source>
-        <target>-- Choose --</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/_partials/order-messages.tpl:64</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="themes/classic/modules/contactform/views/templates/widget/contactform.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="4c2a8fe7eaf24721cc7a9f0175115bd4">
-        <source>Message</source>
-        <target>Message</target>
-        <note>Line: 101</note>
-      </trans-unit>
       <trans-unit id="b357b524e740bc85b9790a0712d84a30">
         <source>Email address</source>
         <target>Email address</target>
@@ -150,6 +129,11 @@ File: themes/StarterTheme/templates/customer/_partials/order-messages.tpl:64</no
         <source>Attachment</source>
         <target>Attachment</target>
         <note>Line: 90</note>
+      </trans-unit>
+      <trans-unit id="4c2a8fe7eaf24721cc7a9f0175115bd4">
+        <source>Message</source>
+        <target>Message</target>
+        <note>Line: 101</note>
       </trans-unit>
     </body>
   </file>

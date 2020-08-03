@@ -9,35 +9,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/languages/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f1dd3f4aa197c3cb588dce3911e990b2">
-        <source>A language pack is available for this ISO.</source>
-        <target>A language pack is available for this ISO.</target>
-        <note>Line: 39</note>
-      </trans-unit>
-      <trans-unit id="3ad7d3a0bcf9313e6efc3ef183b779d0">
-        <source>The Prestashop version compatible with this language and your system is:</source>
-        <target>The Prestashop version compatible with this language and your system is:</target>
-        <note>Line: 40</note>
-      </trans-unit>
-      <trans-unit id="6b1fb1c361571071fe0f6e2055c39dcb">
-        <source>After creating the language, you can import the content of the language pack, which you can download under "International -- Translations."</source>
-        <target>After creating the language, you can import the content of the language pack, which you can download under "International -- Translations."</target>
-        <note>Line: 41</note>
-      </trans-unit>
-      <trans-unit id="a6669356dbb699457f5750c1b6e0ab0d">
-        <source>No language pack is available on prestashop.com for this ISO code</source>
-        <target>No language pack is available on prestashop.com for this ISO code</target>
-        <note>Line: 42</note>
-      </trans-unit>
-      <trans-unit id="2c148c0631e11553ded2c0cb527be862">
-        <source>This language pack is NOT complete and cannot be used in the front or back office because some files are missing.</source>
-        <target>This language pack is NOT complete and cannot be used in the front or back office because some files are missing.</target>
-        <note>Line: 64</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_errors.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="5d27fef01a54790de11db21f1ed47892">
@@ -58,16 +29,6 @@
         <source>Warning! Your hosting provider is using the Suhosin patch for PHP, which limits the maximum number of fields allowed in a form:</source>
         <target>Warning! Your hosting provider is using the Suhosin patch for PHP, which limits the maximum number of fields allowed in a form:</target>
         <note>Line: 39</note>
-      </trans-unit>
-      <trans-unit id="bbfb7a636f839052067cc86c39fa595a">
-        <source>%limit% for suhosin.post.max_vars.</source>
-        <target>%limit% for suhosin.post.max_vars.</target>
-        <note>Line: 41</note>
-      </trans-unit>
-      <trans-unit id="e97da54b23c78752578cd7fa01e8866d">
-        <source>%limit% for suhosin.request.max_vars.</source>
-        <target>%limit% for suhosin.request.max_vars.</target>
-        <note>Line: 42</note>
       </trans-unit>
       <trans-unit id="308c1cf98be9973142833c9a9dbbc2ef">
         <source>Please ask your hosting provider to increase the Suhosin limit to</source>
@@ -94,6 +55,16 @@
         <target>%s at least, or you will have to edit the translation files.</target>
         <note>Line: 49</note>
       </trans-unit>
+      <trans-unit id="bbfb7a636f839052067cc86c39fa595a">
+        <source>%limit% for suhosin.post.max_vars.</source>
+        <target>%limit% for suhosin.post.max_vars.</target>
+        <note>Line: 41</note>
+      </trans-unit>
+      <trans-unit id="e97da54b23c78752578cd7fa01e8866d">
+        <source>%limit% for suhosin.request.max_vars.</source>
+        <target>%limit% for suhosin.request.max_vars.</target>
+        <note>Line: 42</note>
+      </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -110,29 +81,29 @@
       <trans-unit id="87c6e26b4d5c8e6c145691758c25b769">
         <source>Fatal error: IETF code %s is not correct</source>
         <target>Fatal error: IETF code %s is not correct</target>
-        <note>Line: 891</note>
+        <note>Line: 894</note>
       </trans-unit>
       <trans-unit id="bec88b0b441e9deb3008eb5b2a57ec70">
         <source>Sorry this language is not available</source>
         <target>Sorry this language is not available</target>
-        <note>Line: 1148</note>
+        <note>Line: 1151</note>
       </trans-unit>
       <trans-unit id="edeb9e20655b946e4bee4ac44a6c0a7f">
         <source>Server does not have permissions for writing.</source>
         <target>Server does not have permissions for writing.</target>
-        <note>Line: 1174
+        <note>Line: 1177
 Comment: @todo Throw exception</note>
       </trans-unit>
       <trans-unit id="19429992fd747ce8d7606c7ddb7fa272">
         <source>Language pack unavailable.</source>
         <target>Language pack unavailable.</target>
-        <note>Line: 1187
+        <note>Line: 1190
 Comment: @todo Throw exception</note>
       </trans-unit>
       <trans-unit id="2e3dec4700000b6db379437f7d8d9fac">
         <source>An error occurred while creating the language: %s</source>
         <target>An error occurred while creating the language: %s</target>
-        <note>Line: 1257</note>
+        <note>Line: 1260</note>
       </trans-unit>
     </body>
   </file>
@@ -218,11 +189,6 @@ Comment: @todo Throw exception</note>
         <target>An error occurred while uninstalling the module: %s</target>
         <note>Line: 533</note>
       </trans-unit>
-      <trans-unit id="962f6e835582ebb404a37893f46c60f3">
-        <source>An error has occurred, this module does not exist: %s</source>
-        <target>An error has occurred, this module does not exist: %s</target>
-        <note>Line: 539</note>
-      </trans-unit>
       <trans-unit id="e7ae5e7fbebb7b087110d07b06bd2418">
         <source>An error occurred during the configuration setup: %1$s</source>
         <target>An error occurred during the configuration setup: %1$s</target>
@@ -259,7 +225,7 @@ Comment: @todo Throw exception</note>
       <trans-unit id="ae99f365ee39176c3ab50b76a95cf629">
         <source>Cannot add configuration %1$s for %2$s language</source>
         <target>Cannot add configuration %1$s for %2$s language</target>
-        <note>Line: 1541</note>
+        <note>Line: 1538</note>
       </trans-unit>
     </body>
   </file>
@@ -300,69 +266,6 @@ Comment: @todo Throw exception</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminCurrenciesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1a93d2c04e8276471b3c198d1ad95098">
-        <source>The currency conversion rate cannot be equal to 0.</source>
-        <target>The currency conversion rate cannot be equal to 0.</target>
-        <note>Line: 284</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminLanguagesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="4749a02e87a1b69cc421bf97c5353956">
-        <source>When you delete a language, all related translations in the database will be deleted. Are you sure you want to proceed?</source>
-        <target>When you delete a language, all related translations in the database will be deleted. Are you sure you want to proceed?</target>
-        <note>Line: 103</note>
-      </trans-unit>
-      <trans-unit id="5c61f1e9d7d492c795142ceb39900050">
-        <source>Flag and "No picture" image fields are required.</source>
-        <target>Flag and "No picture" image fields are required.</target>
-        <note>Line: 416</note>
-      </trans-unit>
-      <trans-unit id="1b3a472a4556d51d2169e947280e0400">
-        <source>An error occurred while resizing "No picture" image to your product directory.</source>
-        <target>An error occurred while resizing "No picture" image to your product directory.</target>
-        <note>Line: 480</note>
-      </trans-unit>
-      <trans-unit id="2b9a5da945495f5101d57abbf2a7083c">
-        <source>An error occurred while resizing "No picture" image to your category directory.</source>
-        <target>An error occurred while resizing "No picture" image to your category directory.</target>
-        <note>Line: 483</note>
-      </trans-unit>
-      <trans-unit id="fea874a66e2e09d727c76264844ff688">
-        <source>An error occurred while resizing "No picture" image to your brand directory.</source>
-        <target>An error occurred while resizing "No picture" image to your brand directory.</target>
-        <note>Line: 486</note>
-      </trans-unit>
-      <trans-unit id="5f17acb89d2ab83c9138774bfd05ab16">
-        <source>An error occurred during image deletion process.</source>
-        <target>An error occurred during image deletion process.</target>
-        <note>Line: 518</note>
-      </trans-unit>
-      <trans-unit id="7aa19852b281887173d096f6700cdebf">
-        <source>Iso code is not valid</source>
-        <target>Iso code is not valid</target>
-        <note>Line: 545</note>
-      </trans-unit>
-      <trans-unit id="da7e8b45fda5783ed027b88cc33fdfc1">
-        <source>Technical Error: ps_version is not valid</source>
-        <target>Technical Error: ps_version is not valid</target>
-        <note>Line: 551</note>
-      </trans-unit>
-      <trans-unit id="29298b5d89d0bbdfa92fb1d6e27188bd">
-        <source>Wrong ISO code, or the selected language pack is unavailable.</source>
-        <target>Wrong ISO code, or the selected language pack is unavailable.</target>
-        <note>Line: 564</note>
-      </trans-unit>
-      <trans-unit id="dc2dde59d57d3bfd6881be1392c54280">
-        <source>Technical Error: translation server unreachable.</source>
-        <target>Technical Error: translation server unreachable.</target>
-        <note>Line: 568</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/admin/AdminStatesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="aa28d701be690425c5518b723668f6f7">
@@ -393,20 +296,6 @@ Comment: @todo Throw exception</note>
         <source>An error has occurred: Cannot save the current tax rule.</source>
         <target>An error has occurred: Cannot save the current tax rule.</target>
         <note>Line: 491</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminTaxesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="3311c10f0830ae7b6ad64674777c3f34">
-        <source>This tax is currently in use as a tax rule. Are you sure you'd like to continue?</source>
-        <target>This tax is currently in use as a tax rule. Are you sure you'd like to continue?</target>
-        <note>Line: 152</note>
-      </trans-unit>
-      <trans-unit id="8eeccbbbc36b19ed4e82d2eca4055d4d">
-        <source>This tax is currently in use as a tax rule. If you continue, this tax will be removed from the tax rule. Are you sure you'd like to continue?</source>
-        <target>This tax is currently in use as a tax rule. If you continue, this tax will be removed from the tax rule. Are you sure you'd like to continue?</target>
-        <note>Line: 177</note>
       </trans-unit>
     </body>
   </file>
@@ -623,16 +512,6 @@ Comment: @todo Throw exception</note>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/CurrencyController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="8246d0c794e7db090587c4797b2a234f">
-        <source>You cannot delete the default currency</source>
-        <target>You cannot delete the default currency</target>
-        <note>Line: 540</note>
-      </trans-unit>
-      <trans-unit id="7c77e53206853cb381e91e037554faa3">
-        <source>You cannot disable the default currency</source>
-        <target>You cannot disable the default currency</target>
-        <note>Line: 544</note>
-      </trans-unit>
       <trans-unit id="9289665482a13fc74be054caef49b63e">
         <source>This currency already exists.</source>
         <target>This currency already exists.</target>
@@ -648,29 +527,29 @@ Comment: @todo Throw exception</note>
         <target>%currency% is the default currency for shop %shop_name%, and therefore cannot be disabled</target>
         <note>Line: 523</note>
       </trans-unit>
+      <trans-unit id="8246d0c794e7db090587c4797b2a234f">
+        <source>You cannot delete the default currency</source>
+        <target>You cannot delete the default currency</target>
+        <note>Line: 540</note>
+      </trans-unit>
+      <trans-unit id="7c77e53206853cb381e91e037554faa3">
+        <source>You cannot disable the default currency</source>
+        <target>You cannot disable the default currency</target>
+        <note>Line: 544</note>
+      </trans-unit>
+      <trans-unit id="32308f335c5aca97078cb283ce88f9d3">
+        <source>Oops... it looks like this ISO code already exists. If you are: [1][2]trying to create an alternative currency, you must type a different ISO code[/2][2]trying to modify the currency with ISO code %isoCode%, make sure you did not check the creation box[/2][/1]</source>
+        <target>Oops... it looks like this ISO code already exists. If you are: [1][2]trying to create an alternative currency, you must type a different ISO code[/2][2]trying to modify the currency with ISO code %isoCode%, make sure you did not check the creation box[/2][/1]</target>
+        <note>Line: 548</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/LanguageController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="8bd94436fa6738863292fb9823368694">
-        <source>You cannot delete the default language.</source>
-        <target>You cannot delete the default language.</target>
-        <note>Line: 363</note>
-      </trans-unit>
-      <trans-unit id="f25eedbf89efbd0cfce488fe01f9c4cb">
-        <source>You cannot delete the language currently in use. Please select a different language.</source>
-        <target>You cannot delete the language currently in use. Please select a different language.</target>
-        <note>Line: 371</note>
-      </trans-unit>
       <trans-unit id="2f236f9450ce8714611e468181064659">
         <source>You cannot change the status of the default language.</source>
         <target>You cannot change the status of the default language.</target>
         <note>Line: 367</note>
-      </trans-unit>
-      <trans-unit id="59382adebc7f0d65c42fe773d443e4c7">
-        <source>This ISO code is already linked to another language.</source>
-        <target>This ISO code is already linked to another language.</target>
-        <note>Line: 353</note>
       </trans-unit>
       <trans-unit id="8037670f9e6df1f09e040ff8ab047fac">
         <source>An error occurred while copying "No Picture" image to your product folder.</source>
@@ -686,6 +565,21 @@ Comment: @todo Throw exception</note>
         <source>An error occurred while copying "No picture" image to your brand folder.</source>
         <target>An error occurred while copying "No picture" image to your brand folder.</target>
         <note>Line: 327</note>
+      </trans-unit>
+      <trans-unit id="59382adebc7f0d65c42fe773d443e4c7">
+        <source>This ISO code is already linked to another language.</source>
+        <target>This ISO code is already linked to another language.</target>
+        <note>Line: 353</note>
+      </trans-unit>
+      <trans-unit id="8bd94436fa6738863292fb9823368694">
+        <source>You cannot delete the default language.</source>
+        <target>You cannot delete the default language.</target>
+        <note>Line: 363</note>
+      </trans-unit>
+      <trans-unit id="f25eedbf89efbd0cfce488fe01f9c4cb">
+        <source>You cannot delete the language currently in use. Please select a different language.</source>
+        <target>You cannot delete the language currently in use. Please select a different language.</target>
+        <note>Line: 371</note>
       </trans-unit>
     </body>
   </file>
@@ -705,15 +599,20 @@ Comment: @todo Throw exception</note>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/TranslationsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="f22def68c5c456936078623b6dcd27ff">
-        <source>The translations have been successfully added.</source>
-        <target>The translations have been successfully added.</target>
-        <note>Line: 165</note>
-      </trans-unit>
       <trans-unit id="6cfb80c26b415f8f6467cf07b0c700dd">
         <source>The translation was successfully copied.</source>
         <target>The translation was successfully copied.</target>
-        <note>Line: 247</note>
+        <note>Line: 254</note>
+      </trans-unit>
+      <trans-unit id="f22def68c5c456936078623b6dcd27ff">
+        <source>The translations have been successfully added.</source>
+        <target>The translations have been successfully added.</target>
+        <note>Line: 172</note>
+      </trans-unit>
+      <trans-unit id="962f6e835582ebb404a37893f46c60f3">
+        <source>An error has occurred, this module does not exist: %s</source>
+        <target>An error has occurred, this module does not exist: %s</target>
+        <note>Line: 138</note>
       </trans-unit>
     </body>
   </file>

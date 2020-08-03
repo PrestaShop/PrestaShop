@@ -252,6 +252,11 @@
   </file>
   <file original="modules/welcome/views/templates/lost.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="a0bfb8e59e6c13fc8d990781f77694fe">
+        <source>Continue</source>
+        <target>Continue</target>
+        <note>Line: 31</note>
+      </trans-unit>
       <trans-unit id="c1971ccebcf29ddc64c66218a75ea67d">
         <source>Hey! Are you lost?</source>
         <target>Hey! Are you lost?</target>
@@ -271,11 +276,6 @@
         <source>Quit the Welcome tutorial</source>
         <target>Quit the Welcome tutorial</target>
         <note>Line: 35</note>
-      </trans-unit>
-      <trans-unit id="a0bfb8e59e6c13fc8d990781f77694fe">
-        <source>Continue</source>
-        <target>Continue</target>
-        <note>Line: 31</note>
       </trans-unit>
     </body>
   </file>

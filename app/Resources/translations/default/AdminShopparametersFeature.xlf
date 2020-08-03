@@ -31,6 +31,11 @@
   </file>
   <file original="admin-dev/themes/default/template/controllers/groups/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="734d291b0d07bae874a51370a032312e">
+        <source>Discount: %.2f%%</source>
+        <target>Discount: %.2f%%</target>
+        <note>Line: 71</note>
+      </trans-unit>
       <trans-unit id="c20aefc1b11dc684191ded8079cedab4">
         <source>Group information</source>
         <target>Group information</target>
@@ -65,20 +70,6 @@
         <source>Please use filters to narrow your search.</source>
         <target>Please use filters to narrow your search.</target>
         <note>Line: 83</note>
-      </trans-unit>
-      <trans-unit id="734d291b0d07bae874a51370a032312e">
-        <source>Discount: %.2f%%</source>
-        <target>Discount: %.2f%%</target>
-        <note>Line: 71</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="57297718fdb439175177cf6b196172d1">
-        <source>Order status</source>
-        <target>Order status</target>
-        <note>Line: 1576</note>
       </trans-unit>
     </body>
   </file>
@@ -271,6 +262,16 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
   </file>
   <file original="controllers/admin/AdminGendersController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="63889cfb9d3cbe05d1bd2be5cc9953fd">
+        <source>Male</source>
+        <target>Male</target>
+        <note>Line: 136</note>
+      </trans-unit>
+      <trans-unit id="b719ce180ec7bd9641fece2f920f4817">
+        <source>Female</source>
+        <target>Female</target>
+        <note>Line: 141</note>
+      </trans-unit>
       <trans-unit id="5e74f2daf4ae8030571ceee5b4837579">
         <source>Social title</source>
         <target>Social title</target>
@@ -300,16 +301,6 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <source>Image height</source>
         <target>Image height</target>
         <note>Line: 166</note>
-      </trans-unit>
-      <trans-unit id="63889cfb9d3cbe05d1bd2be5cc9953fd">
-        <source>Male</source>
-        <target>Male</target>
-        <note>Line: 136</note>
-      </trans-unit>
-      <trans-unit id="b719ce180ec7bd9641fece2f920f4817">
-        <source>Female</source>
-        <target>Female</target>
-        <note>Line: 141</note>
       </trans-unit>
     </body>
   </file>
@@ -394,15 +385,20 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
   </file>
   <file original="controllers/admin/AdminReferrersController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="ae5d01b6efa819cc7a7c05a8c57fcc2c">
-        <source>Visitors</source>
-        <target>Visitors</target>
-        <note>Line: 501</note>
-      </trans-unit>
       <trans-unit id="d7e637a6e9ff116de2fa89551240a94d">
         <source>Visits</source>
         <target>Visits</target>
         <note>Line: 502</note>
+      </trans-unit>
+      <trans-unit id="a28735af01fbb1e35371cb120985ac47">
+        <source>Registrations</source>
+        <target>Registrations</target>
+        <note>Line: 504</note>
+      </trans-unit>
+      <trans-unit id="ae5d01b6efa819cc7a7c05a8c57fcc2c">
+        <source>Visitors</source>
+        <target>Visitors</target>
+        <note>Line: 501</note>
       </trans-unit>
       <trans-unit id="453aceb005ceaf54a47da15fee8b2a26">
         <source>Pages</source>
@@ -524,11 +520,6 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <target>Registration rate</target>
         <note>Line: 507</note>
       </trans-unit>
-      <trans-unit id="a28735af01fbb1e35371cb120985ac47">
-        <source>Registrations</source>
-        <target>Registrations</target>
-        <note>Line: 504</note>
-      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminSearchConfController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -553,15 +544,15 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <target>Building the product index may take a few minutes.</target>
         <note>Line: 95</note>
       </trans-unit>
-      <trans-unit id="b90813d74ad3dc25c5b976d932fd72d7">
-        <source>If your server stops before the process ends, you can resume the indexing by clicking "Add missing products to the index".</source>
-        <target>If your server stops before the process ends, you can resume the indexing by clicking "Add missing products to the index".</target>
-        <note>Line: 96</note>
-      </trans-unit>
       <trans-unit id="d86f8ed15ec7a8f87fb1b0ed501dbb6b">
         <source>Add missing products to the index</source>
         <target>Add missing products to the index</target>
         <note>Line: 100</note>
+      </trans-unit>
+      <trans-unit id="80a087b1e6a8c144b2f7acb705bde01c">
+        <source>If your server stops before the process ends, you can resume the indexing by clicking "%add_missing_products_label%".</source>
+        <target>If your server stops before the process ends, you can resume the indexing by clicking "%add_missing_products_label%".</target>
+        <note>Line: 96</note>
       </trans-unit>
       <trans-unit id="9897b2f361910e5188f231de872d8856">
         <source>Re-build the entire index</source>
@@ -582,6 +573,21 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <source>Search exact end match</source>
         <target>Search exact end match</target>
         <note>Line: 163</note>
+      </trans-unit>
+      <trans-unit id="b0d4e69d1ce1d2db2c060d311a4e2144">
+        <source>Fuzzy search</source>
+        <target>Fuzzy search</target>
+        <note>Line: 191</note>
+      </trans-unit>
+      <trans-unit id="dc759a9deb56cc5ad4974559da2a148f">
+        <source>Maximum approximate words allowed by fuzzy search</source>
+        <target>Maximum approximate words allowed by fuzzy search</target>
+        <note>Line: 215</note>
+      </trans-unit>
+      <trans-unit id="91ef1a24c02b7efb35b5ff3c79230d5c">
+        <source>Maximum word length (in characters)</source>
+        <target>Maximum word length (in characters)</target>
+        <note>Line: 230</note>
       </trans-unit>
       <trans-unit id="8e7ace556216459cd9197423709bdd3a">
         <source>Minimum word length (in characters)</source>
@@ -673,25 +679,15 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <target>Result</target>
         <note>Line: 434</note>
       </trans-unit>
-      <trans-unit id="b0d4e69d1ce1d2db2c060d311a4e2144">
-        <source>Fuzzy search</source>
-        <target>Fuzzy search</target>
-        <note>Line: 191</note>
-      </trans-unit>
-      <trans-unit id="91ef1a24c02b7efb35b5ff3c79230d5c">
-        <source>Maximum word length (in characters)</source>
-        <target>Maximum word length (in characters)</target>
-        <note>Line: 230</note>
-      </trans-unit>
-      <trans-unit id="dc759a9deb56cc5ad4974559da2a148f">
-        <source>Maximum approximate words allowed by fuzzy search</source>
-        <target>Maximum approximate words allowed by fuzzy search</target>
-        <note>Line: 215</note>
-      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminSearchEnginesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="b6f05e5ddde1ec63d992d61144452dfa">
+        <source>Referrer</source>
+        <target>Referrer</target>
+        <note>Line: 64</note>
+      </trans-unit>
       <trans-unit id="9aa1b03934893d7134a660af4204f2a9">
         <source>Server</source>
         <target>Server</target>
@@ -711,11 +707,6 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <source>Add new search engine</source>
         <target>Add new search engine</target>
         <note>Line: 93</note>
-      </trans-unit>
-      <trans-unit id="b6f05e5ddde1ec63d992d61144452dfa">
-        <source>Referrer</source>
-        <target>Referrer</target>
-        <note>Line: 64</note>
       </trans-unit>
     </body>
   </file>
@@ -794,6 +785,11 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <source>Return statuses</source>
         <target>Return statuses</target>
         <note>Line: 235</note>
+      </trans-unit>
+      <trans-unit id="57297718fdb439175177cf6b196172d1">
+        <source>Order status</source>
+        <target>Order status</target>
+        <note>Line: 270</note>
       </trans-unit>
       <trans-unit id="69a31da4cb502aa192d07ae4a8f48613">
         <source>Status name</source>
@@ -1006,15 +1002,15 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
   </file>
   <file original="modules/statslive/statslive.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="a55533db46597bee3cd16899c007257e">
-        <source>There are no visitors online.</source>
-        <target>There are no visitors online.</target>
-        <note>Line: 216</note>
-      </trans-unit>
       <trans-unit id="ec0fc0100c4fc1ce4eea230c3dc10360">
         <source>Undefined</source>
         <target>Undefined</target>
         <note>Line: 207</note>
+      </trans-unit>
+      <trans-unit id="a55533db46597bee3cd16899c007257e">
+        <source>There are no visitors online.</source>
+        <target>There are no visitors online.</target>
+        <note>Line: 216</note>
       </trans-unit>
     </body>
   </file>
@@ -1084,6 +1080,21 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="41032c67b9a3d88ff9a824a1f0845513">
+        <source>Round on each item</source>
+        <target>Round on each item</target>
+        <note>Line: 119</note>
+      </trans-unit>
+      <trans-unit id="a899eacfb98f1740127be5fe16bee5c7">
+        <source>Round on each line</source>
+        <target>Round on each line</target>
+        <note>Line: 120</note>
+      </trans-unit>
+      <trans-unit id="6d19eb8a9ca35d858824737173ebd011">
+        <source>Round on the total</source>
+        <target>Round on the total</target>
+        <note>Line: 121</note>
+      </trans-unit>
       <trans-unit id="843fbaec27e324378999e09cc665a7f4">
         <source>Round up away from zero, when it is half way there (recommended)</source>
         <target>Round up away from zero, when it is half way there (recommended)</target>
@@ -1114,21 +1125,6 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <target>Round down to the nearest value</target>
         <note>Line: 113</note>
       </trans-unit>
-      <trans-unit id="41032c67b9a3d88ff9a824a1f0845513">
-        <source>Round on each item</source>
-        <target>Round on each item</target>
-        <note>Line: 119</note>
-      </trans-unit>
-      <trans-unit id="a899eacfb98f1740127be5fe16bee5c7">
-        <source>Round on each line</source>
-        <target>Round on each line</target>
-        <note>Line: 120</note>
-      </trans-unit>
-      <trans-unit id="6d19eb8a9ca35d858824737173ebd011">
-        <source>Round on the total</source>
-        <target>Round on the total</target>
-        <note>Line: 121</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/GeneralType.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1142,6 +1138,11 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <source>Enable guest checkout</source>
         <target>Enable guest checkout</target>
         <note>Line: 83</note>
+      </trans-unit>
+      <trans-unit id="9bf6ad8b3a08781c7f86684e464e75de">
+        <source>Disable reordering option</source>
+        <target>Disable reordering option</target>
+        <note>Line: 88</note>
       </trans-unit>
       <trans-unit id="f30598053df0edf94d9463a2133d7f13">
         <source>Recalculate shipping costs after editing the order</source>
@@ -1162,11 +1163,6 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <source>Terms of service</source>
         <target>Terms of service</target>
         <note>Line: 120</note>
-      </trans-unit>
-      <trans-unit id="9bf6ad8b3a08781c7f86684e464e75de">
-        <source>Disable reordering option</source>
-        <target>Disable reordering option</target>
-        <note>Line: 88</note>
       </trans-unit>
       <trans-unit id="010193873d7a198ce7004342b145dbc9">
         <source>Page for terms and conditions</source>
@@ -1399,11 +1395,6 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <target>Display unavailable product attributes on the product page</target>
         <note>Line: 55</note>
       </trans-unit>
-      <trans-unit id="01dabe7ae47f9848c5e38f353a8f866f">
-        <source>Display the "add to cart" button when a product has attributes</source>
-        <target>Display the "add to cart" button when a product has attributes</target>
-        <note>Line: 63</note>
-      </trans-unit>
       <trans-unit id="0a91cf360875af4259f26bc7e2971132">
         <source>Separator of attribute anchor on the product links</source>
         <target>Separator of attribute anchor on the product links</target>
@@ -1508,20 +1499,6 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/OrderPreferences/Blocks/order_preferences_general.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="0fb43a164e61d758c5eddcceb67be0c1">
-        <source>Disable Reordering Option</source>
-        <target>Disable Reordering Option</target>
-        <note>Line: 52</note>
-      </trans-unit>
-      <trans-unit id="960e3de6241e862401f2bd93539e0381">
-        <source>Page for the Terms and conditions</source>
-        <target>Page for the Terms and conditions</target>
-        <note>Line: 96</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/OrderPreferences/Blocks/order_preferences_gift_options.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="bf3b3ed0e4fd43efff9c26b3d35c6c2f">
@@ -1552,11 +1529,6 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <target>Rewritten URL</target>
         <note>Line: 85</note>
       </trans-unit>
-      <trans-unit id="b49c4d1248da006daf31db2577b7be4a">
-        <source>Meta tags</source>
-        <target>Meta tags</target>
-        <note>Line: 31</note>
-      </trans-unit>
       <trans-unit id="c0a1f9eff88edb62c46edb084004e32b">
         <source>Page name</source>
         <target>Page name</target>
@@ -1566,6 +1538,11 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <source>Page title</source>
         <target>Page title</target>
         <note>Line: 54</note>
+      </trans-unit>
+      <trans-unit id="b49c4d1248da006daf31db2577b7be4a">
+        <source>Meta tags</source>
+        <target>Meta tags</target>
+        <note>Line: 31</note>
       </trans-unit>
     </body>
   </file>
@@ -1599,15 +1576,15 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/robots_file_generation.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="7959e21ff0b83542251ca0b4e9a62eea">
-        <source>Generate robots.txt file</source>
-        <target>Generate robots.txt file</target>
-        <note>Line: 59</note>
-      </trans-unit>
       <trans-unit id="345d6249c20c6319bb09edaaf536744b">
         <source>Robots file generation</source>
         <target>Robots file generation</target>
         <note>Line: 31</note>
+      </trans-unit>
+      <trans-unit id="7959e21ff0b83542251ca0b4e9a62eea">
+        <source>Generate robots.txt file</source>
+        <target>Generate robots.txt file</target>
+        <note>Line: 59</note>
       </trans-unit>
     </body>
   </file>
@@ -1627,6 +1604,11 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/set_up_urls_configuration.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="3cb0403ba2ec65e9030c1013b5edb42d">
+        <source>Set up URLs</source>
+        <target>Set up URLs</target>
+        <note>Line: 32</note>
+      </trans-unit>
       <trans-unit id="a7686ea311b65874a504a343c08a4341">
         <source>Accented URL</source>
         <target>Accented URL</target>
@@ -1646,11 +1628,6 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <source>Disable Apache's mod_security module</source>
         <target>Disable Apache's mod_security module</target>
         <note>Line: 97</note>
-      </trans-unit>
-      <trans-unit id="3cb0403ba2ec65e9030c1013b5edb42d">
-        <source>Set up URLs</source>
-        <target>Set up URLs</target>
-        <note>Line: 32</note>
       </trans-unit>
     </body>
   </file>
@@ -1753,6 +1730,11 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <target>Enable SSL</target>
         <note>Line: 46</note>
       </trans-unit>
+      <trans-unit id="ab08050bd76be6690d1beff885570dfb">
+        <source>Please click here to check if your shop supports HTTPS.</source>
+        <target>Please click here to check if your shop supports HTTPS.</target>
+        <note>Line: 59</note>
+      </trans-unit>
       <trans-unit id="73369322b5e1145bb2fc2268ce4d31f0">
         <source>Enable SSL on all pages</source>
         <target>Enable SSL on all pages</target>
@@ -1783,14 +1765,14 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <target>Round type</target>
         <note>Line: 114</note>
       </trans-unit>
-      <trans-unit id="0a1e355325f75fe4cc3bf08b0f31f1c2">
-        <source>Number of decimals</source>
-        <target>Number of decimals</target>
+      <trans-unit id="9fcc7a5ba2d12f5c77290e0bc6457a93">
+        <source>Display suppliers</source>
+        <target>Display suppliers</target>
         <note>Line: 122</note>
       </trans-unit>
-      <trans-unit id="267b70f19458077fe93a3fd63a6a648a">
-        <source>Display brands and suppliers</source>
-        <target>Display brands and suppliers</target>
+      <trans-unit id="9cc328444bdc1b5f54550d04d57138a9">
+        <source>Display brands</source>
+        <target>Display brands</target>
         <note>Line: 130</note>
       </trans-unit>
       <trans-unit id="922256753aa354c111471e85d4809ec5">
@@ -1807,21 +1789,6 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <source>Main Shop Activity</source>
         <target>Main Shop Activity</target>
         <note>Line: 162</note>
-      </trans-unit>
-      <trans-unit id="ab08050bd76be6690d1beff885570dfb">
-        <source>Please click here to check if your shop supports HTTPS.</source>
-        <target>Please click here to check if your shop supports HTTPS.</target>
-        <note>Line: 59</note>
-      </trans-unit>
-      <trans-unit id="9fcc7a5ba2d12f5c77290e0bc6457a93">
-        <source>Display suppliers</source>
-        <target>Display suppliers</target>
-        <note>Line: 122</note>
-      </trans-unit>
-      <trans-unit id="9cc328444bdc1b5f54550d04d57138a9">
-        <source>Display brands</source>
-        <target>Display brands</target>
-        <note>Line: 130</note>
       </trans-unit>
     </body>
   </file>

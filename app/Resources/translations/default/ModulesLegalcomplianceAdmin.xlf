@@ -16,6 +16,11 @@
         <target>This module helps merchants comply with applicable e-commerce laws.</target>
         <note>Line: 80</note>
       </trans-unit>
+      <trans-unit id="bb8956c67b82c7444a80c6b2433dd8b4">
+        <source>Are you sure you want to uninstall this module?</source>
+        <target>Are you sure you want to uninstall this module?</target>
+        <note>Line: 81</note>
+      </trans-unit>
       <trans-unit id="3b528a3fe35bcd29ad2ab0e77fe01d4d">
         <source>Could not install new hook</source>
         <target>Could not install new hook</target>
@@ -270,11 +275,6 @@
         <source>-- Select associated page --</source>
         <target>-- Select associated page --</target>
         <note>Line: 1640</note>
-      </trans-unit>
-      <trans-unit id="bb8956c67b82c7444a80c6b2433dd8b4">
-        <source>Are you sure you want to uninstall this module?</source>
-        <target>Are you sure you want to uninstall this module?</target>
-        <note>Line: 81</note>
       </trans-unit>
     </body>
   </file>

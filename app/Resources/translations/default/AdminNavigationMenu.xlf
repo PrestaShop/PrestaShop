@@ -11,15 +11,15 @@
   </file>
   <file original="admin-dev/themes/default/template/search_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="c32516babc5b6c47eb8ce1bfc223253c">
-        <source>Catalog</source>
-        <target>Catalog</target>
-        <note>Line: 41</note>
-      </trans-unit>
       <trans-unit id="fce9a6a1bd2a2050eb86d33103f46fd3">
         <source>Invoices</source>
         <target>Invoices</target>
         <note>Line: 60</note>
+      </trans-unit>
+      <trans-unit id="c32516babc5b6c47eb8ce1bfc223253c">
+        <source>Catalog</source>
+        <target>Catalog</target>
+        <note>Line: 41</note>
       </trans-unit>
     </body>
   </file>
@@ -59,11 +59,6 @@
         <source>Advanced Parameters</source>
         <target>Advanced Parameters</target>
         <note>Line: 33</note>
-      </trans-unit>
-      <trans-unit id="20ad345341cfd791c1a3f9ef20c35577">
-        <source><![CDATA[Attributes & Features]]></source>
-        <target><![CDATA[Attributes & Features]]></target>
-        <note>Line: 35</note>
       </trans-unit>
       <trans-unit id="287234a1ff35a314b5b6bc4e5828e745">
         <source>Attributes</source>
@@ -401,11 +396,6 @@ Comment: subtab</note>
         <target>Modules Catalog</target>
         <note>Line: 134</note>
       </trans-unit>
-      <trans-unit id="e699cbe9208f8353248889781f83d636">
-        <source>Module manager</source>
-        <target>Module manager</target>
-        <note>Line: 135</note>
-      </trans-unit>
       <trans-unit id="5f265dfcb9ab68a1258ec25393ffb886">
         <source>Module Manager</source>
         <target>Module Manager</target>
@@ -563,7 +553,7 @@ Comment: subtab</note>
       <trans-unit id="72d6d7a1885885bb55a565fd1070581a">
         <source>Import</source>
         <target>Import</target>
-        <note>Line: 314</note>
+        <note>Line: 317</note>
       </trans-unit>
     </body>
   </file>
@@ -671,7 +661,7 @@ Comment: subtab</note>
       <trans-unit id="6ea7071301eeb50e00bf88f5a46ded8e">
         <source>Modules catalog</source>
         <target>Modules catalog</target>
-        <note>Line: 71</note>
+        <note>Line: 72</note>
       </trans-unit>
     </body>
   </file>
@@ -725,7 +715,7 @@ Comment: subtab</note>
       <trans-unit id="0b8d92bc19b720bb1065649535463409">
         <source>Translations</source>
         <target>Translations</target>
-        <note>Line: 109</note>
+        <note>Line: 110</note>
       </trans-unit>
     </body>
   </file>
@@ -744,6 +734,15 @@ Comment: subtab</note>
         <source><![CDATA[Theme & Logo]]></source>
         <target><![CDATA[Theme & Logo]]></target>
         <note>Line: 28</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Forms/form_combinations.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="20ad345341cfd791c1a3f9ef20c35577">
+        <source><![CDATA[Attributes & Features]]></source>
+        <target><![CDATA[Attributes & Features]]></target>
+        <note>Line: 38</note>
       </trans-unit>
     </body>
   </file>

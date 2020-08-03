@@ -2,16 +2,6 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="admin-dev/themes/default/template/controllers/referrers/form_settings.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="ce162159505d90c37be3dd2b464c3360">
-        <source>There is a huge quantity of data, so each connection corresponding to a referrer is indexed. You can also refresh this index by clicking the "Refresh index" button. This process may take a while, and it's only needed if you modified or added a referrer, or if you want changes to be retroactive.</source>
-        <target>There is a huge quantity of data, so each connection corresponding to a referrer is indexed. You can also refresh this index by clicking the "Refresh index" button. This process may take a while, and it's only needed if you modified or added a referrer, or if you want changes to be retroactive.</target>
-        <note>Line: 32</note>
-      </trans-unit>
-      <trans-unit id="6c4defc21d9e7428d7fe81a81f8eb05d">
-        <source>Your data is cached in order to sort it and filter it. You can refresh the cache by clicking on the "Refresh cache" button.</source>
-        <target>Your data is cached in order to sort it and filter it. You can refresh the cache by clicking on the "Refresh cache" button.</target>
-        <note>Line: 45</note>
-      </trans-unit>
       <trans-unit id="42bb6e7b5d150acfa5243c250d864cbc">
         <source>Direct traffic can be quite resource-intensive. You should consider enabling it only if you have a strong need for it.</source>
         <target>Direct traffic can be quite resource-intensive. You should consider enabling it only if you have a strong need for it.</target>
@@ -127,15 +117,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminContactsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a2b086325f59e6c2fbd410511f4fdfb3">
-        <source>Further information regarding this contact.</source>
-        <target>Further information regarding this contact.</target>
-        <note>Line: 124</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/admin/AdminGendersController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="62c7ceb6de5c4d39e49c9762af6ddb4d">
@@ -182,6 +163,11 @@
         <target>Customers in this group can view prices.</target>
         <note>Line: 373</note>
       </trans-unit>
+      <trans-unit id="c7a5c6872a29383d6ab0db08e6b40e15">
+        <source>Need to hide prices for all groups? Save time, enable catalog mode in Product Settings instead.</source>
+        <target>Need to hide prices for all groups? Save time, enable catalog mode in Product Settings instead.</target>
+        <note>Line: 374</note>
+      </trans-unit>
       <trans-unit id="d38245fbe312b2dafef8450b67e94f50">
         <source>%group_name% - All persons without a customer account or customers that are not logged in.</source>
         <target>%group_name% - All persons without a customer account or customers that are not logged in.</target>
@@ -201,11 +187,6 @@
         <source>PrestaShop has three default customer groups:</source>
         <target>PrestaShop has three default customer groups:</target>
         <note>Line: 623</note>
-      </trans-unit>
-      <trans-unit id="c7a5c6872a29383d6ab0db08e6b40e15">
-        <source>Need to hide prices for all groups? Save time, enable catalog mode in Product Settings instead.</source>
-        <target>Need to hide prices for all groups? Save time, enable catalog mode in Product Settings instead.</target>
-        <note>Line: 374</note>
       </trans-unit>
     </body>
   </file>
@@ -280,6 +261,36 @@
         <target>It checks if the searched term is the exact end of the indexed word.</target>
         <note>Line: 184</note>
       </trans-unit>
+      <trans-unit id="b080303b551112c7b9dcdf6a21051f42">
+        <source>By default, the fuzzy search is enabled. It means spelling errors are allowed, e.g. you can search for "bird" with words like "burd", "bard" or "beerd".</source>
+        <target>By default, the fuzzy search is enabled. It means spelling errors are allowed, e.g. you can search for "bird" with words like "burd", "bard" or "beerd".</target>
+        <note>Line: 196</note>
+      </trans-unit>
+      <trans-unit id="39e61e5c1261f090e3c56f494a315f07">
+        <source>Disabling this option will require exact spelling for the search to match results.</source>
+        <target>Disabling this option will require exact spelling for the search to match results.</target>
+        <note>Line: 201</note>
+      </trans-unit>
+      <trans-unit id="2324c421f8c5376051c024f15232cd80">
+        <source>Enable approximate string matching.</source>
+        <target>Enable approximate string matching.</target>
+        <note>Line: 207</note>
+      </trans-unit>
+      <trans-unit id="a4b432b49016cf0de70c747fde4f815b">
+        <source>Note that this option is resource-consuming: the more you search, the longer it takes.</source>
+        <target>Note that this option is resource-consuming: the more you search, the longer it takes.</target>
+        <note>Line: 220</note>
+      </trans-unit>
+      <trans-unit id="6392d16e9ae94967fe13716b69e1d0b2">
+        <source>Only words fewer or equal to this maximum length will be searched.</source>
+        <target>Only words fewer or equal to this maximum length will be searched.</target>
+        <note>Line: 235</note>
+      </trans-unit>
+      <trans-unit id="2b610a936a358875e6f5a01564a3a0e6">
+        <source>This parameter will only be used if the fuzzy search is activated: the lower the value, the more tolerant your search will be.</source>
+        <target>This parameter will only be used if the fuzzy search is activated: the lower the value, the more tolerant your search will be.</target>
+        <note>Line: 240</note>
+      </trans-unit>
       <trans-unit id="645115aba5ef431a04da95c746477544">
         <source>Only words this size or larger will be indexed.</source>
         <target>Only words this size or larger will be indexed.</target>
@@ -304,36 +315,6 @@
         <source>Search this word instead.</source>
         <target>Search this word instead.</target>
         <note>Line: 437</note>
-      </trans-unit>
-      <trans-unit id="b080303b551112c7b9dcdf6a21051f42">
-        <source>By default, the fuzzy search is enabled. It means spelling errors are allowed, e.g. you can search for "bird" with words like "burd", "bard" or "beerd".</source>
-        <target>By default, the fuzzy search is enabled. It means spelling errors are allowed, e.g. you can search for "bird" with words like "burd", "bard" or "beerd".</target>
-        <note>Line: 196</note>
-      </trans-unit>
-      <trans-unit id="2324c421f8c5376051c024f15232cd80">
-        <source>Enable approximate string matching.</source>
-        <target>Enable approximate string matching.</target>
-        <note>Line: 207</note>
-      </trans-unit>
-      <trans-unit id="a4b432b49016cf0de70c747fde4f815b">
-        <source>Note that this option is resource-consuming: the more you search, the longer it takes.</source>
-        <target>Note that this option is resource-consuming: the more you search, the longer it takes.</target>
-        <note>Line: 220</note>
-      </trans-unit>
-      <trans-unit id="39e61e5c1261f090e3c56f494a315f07">
-        <source>Disabling this option will require exact spelling for the search to match results.</source>
-        <target>Disabling this option will require exact spelling for the search to match results.</target>
-        <note>Line: 201</note>
-      </trans-unit>
-      <trans-unit id="6392d16e9ae94967fe13716b69e1d0b2">
-        <source>Only words fewer or equal to this maximum length will be searched.</source>
-        <target>Only words fewer or equal to this maximum length will be searched.</target>
-        <note>Line: 235</note>
-      </trans-unit>
-      <trans-unit id="2b610a936a358875e6f5a01564a3a0e6">
-        <source>This parameter will only be used if the fuzzy search is activated: the lower the value, the more tolerant your search will be.</source>
-        <target>This parameter will only be used if the fuzzy search is activated: the lower the value, the more tolerant your search will be.</target>
-        <note>Line: 240</note>
       </trans-unit>
       <trans-unit id="88851f53412ccb796508fd5f48e7a44f">
         <source><![CDATA[Forbidden characters: <>;=#{}]]></source>
@@ -461,16 +442,6 @@
         <target>Automatically updates the shipping costs when you edit an order.</target>
         <note>Line: 101</note>
       </trans-unit>
-      <trans-unit id="fff92cdf417b8a468af180474057a575">
-        <source>Require customers to accept or decline terms of service before processing an order.</source>
-        <target>Require customers to accept or decline terms of service before processing an order.</target>
-        <note>Line: 121</note>
-      </trans-unit>
-      <trans-unit id="38cb366ab3534fefcbc7d051a3b122fd">
-        <source>Choose the page which contains your store's terms and conditions of use.</source>
-        <target>Choose the page which contains your store's terms and conditions of use.</target>
-        <note>Line: 126</note>
-      </trans-unit>
       <trans-unit id="df2a562b17ec12920cee57e20b02ab67">
         <source>Allow the customer to ship orders to multiple addresses. This option will convert the customer's cart into one or more orders.</source>
         <target>Allow the customer to ship orders to multiple addresses. This option will convert the customer's cart into one or more orders.</target>
@@ -480,6 +451,16 @@
         <source>It allows you to delay shipping if your customers request it.</source>
         <target>It allows you to delay shipping if your customers request it.</target>
         <note>Line: 116</note>
+      </trans-unit>
+      <trans-unit id="fff92cdf417b8a468af180474057a575">
+        <source>Require customers to accept or decline terms of service before processing an order.</source>
+        <target>Require customers to accept or decline terms of service before processing an order.</target>
+        <note>Line: 121</note>
+      </trans-unit>
+      <trans-unit id="38cb366ab3534fefcbc7d051a3b122fd">
+        <source>Choose the page which contains your store's terms and conditions of use.</source>
+        <target>Choose the page which contains your store's terms and conditions of use.</target>
+        <note>Line: 126</note>
       </trans-unit>
     </body>
   </file>
@@ -552,10 +533,20 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/product_preferences_general.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="54ae4e3e39f5a1f636cfcf2744433678">
-        <source>The catalog mode is actually to disable products checkout (prices, add to cart, etc.) on your shop, like a retail website does.</source>
-        <target>The catalog mode is actually to disable products checkout (prices, add to cart, etc.) on your shop, like a retail website does.</target>
+      <trans-unit id="bd92437d0543aa142ccea7c021c9efe9">
+        <source>Catalog mode disables the shopping cart on your store. Visitors will be able to browse your products catalog, but not buy them.</source>
+        <target>Catalog mode disables the shopping cart on your store. Visitors will be able to browse your products catalog, but not buy them.</target>
         <note>Line: 38</note>
+      </trans-unit>
+      <trans-unit id="2f00a538942083503dd09c585cc6d91c">
+        <source>Have specific needs? Edit particular groups to let them see prices or not.</source>
+        <target>Have specific needs? Edit particular groups to let them see prices or not.</target>
+        <note>Line: 42</note>
+      </trans-unit>
+      <trans-unit id="bbaceb858ee14af2da60e07d63fd8678">
+        <source>Display product prices when in catalog mode.</source>
+        <target>Display product prices when in catalog mode.</target>
+        <note>Line: 46</note>
       </trans-unit>
       <trans-unit id="80af0f0b70143f575fdfd6fa3ca3cb89">
         <source>Set the maximum size of the summary of your product description (in characters).</source>
@@ -577,21 +568,6 @@
         <target>When active, new products will be activated by default during creation.</target>
         <note>Line: 83</note>
       </trans-unit>
-      <trans-unit id="bd92437d0543aa142ccea7c021c9efe9">
-        <source>Catalog mode disables the shopping cart on your store. Visitors will be able to browse your products catalog, but not buy them.</source>
-        <target>Catalog mode disables the shopping cart on your store. Visitors will be able to browse your products catalog, but not buy them.</target>
-        <note>Line: 38</note>
-      </trans-unit>
-      <trans-unit id="2f00a538942083503dd09c585cc6d91c">
-        <source>Have specific needs? Edit particular groups to let them see prices or not.</source>
-        <target>Have specific needs? Edit particular groups to let them see prices or not.</target>
-        <note>Line: 42</note>
-      </trans-unit>
-      <trans-unit id="bbaceb858ee14af2da60e07d63fd8678">
-        <source>Display product prices when in catalog mode.</source>
-        <target>Display product prices when in catalog mode.</target>
-        <note>Line: 46</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/product_preferences_page.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -601,9 +577,14 @@
         <target>Set to "0" to disable this feature.</target>
         <note>Line: 47</note>
       </trans-unit>
-      <trans-unit id="265b491d10a9a79c9b43655659826614">
-        <source>Display or hide the "add to cart" button on category pages for products that have attributes forcing customers to see product details.</source>
-        <target>Display or hide the "add to cart" button on category pages for products that have attributes forcing customers to see product details.</target>
+      <trans-unit id="572a918fa0b6c312c2c8c3447ce57421">
+        <source>Display the "%add_to_cart_label%" button when a product has attributes</source>
+        <target>Display the "%add_to_cart_label%" button when a product has attributes</target>
+        <note>Line: 63</note>
+      </trans-unit>
+      <trans-unit id="26071fff3423bbdfda80e24ef3a0d6e3">
+        <source>Display or hide the "%add_to_cart_label%" button on category pages for products that have attributes forcing customers to see product details.</source>
+        <target>Display or hide the "%add_to_cart_label%" button on category pages for products that have attributes forcing customers to see product details.</target>
         <note>Line: 63</note>
       </trans-unit>
       <trans-unit id="f70d03fbb967b69ef8222c4a2b4ab334">
@@ -634,9 +615,9 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/product_preferences_stock.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="885af23392ddb34eaabf65d3b86b216c">
-        <source>By default, the Add to Cart button is hidden when a product is unavailable. You can choose to have it displayed in all cases.</source>
-        <target>By default, the Add to Cart button is hidden when a product is unavailable. You can choose to have it displayed in all cases.</target>
+      <trans-unit id="b5e585ab39ea18b6354e53370bfe7472">
+        <source>By default, the "%add_to_cart_label%" button is hidden when a product is unavailable. You can choose to have it displayed in all cases.</source>
+        <target>By default, the "%add_to_cart_label%" button is hidden when a product is unavailable. You can choose to have it displayed in all cases.</target>
         <note>Line: 38</note>
       </trans-unit>
       <trans-unit id="4b7f36059725914c3abe3fe69a42d860">
@@ -675,15 +656,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/OrderPreferences/Blocks/order_preferences_general.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="86d8ec764d429d4ebe6e39de9ff8c4a4">
-        <source>Allows you to delay shipping at your customers' request.</source>
-        <target>Allows you to delay shipping at your customers' request.</target>
-        <note>Line: 82</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/domain_name_management.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="55ed6eb3effe909461f682de73f89f82">
@@ -695,6 +667,11 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="0210e7a00cf2cd3cca0e4d7ed3bdf86f">
+        <source>To add tags, click in the field, write something, and then press the "Enter" key.</source>
+        <target>To add tags, click in the field, write something, and then press the "Enter" key.</target>
+        <note>Line: 70</note>
+      </trans-unit>
       <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
         <source>Invalid characters:</source>
         <target>Invalid characters:</target>
@@ -729,11 +706,6 @@
         <source>Only letters and hyphens are allowed.</source>
         <target>Only letters and hyphens are allowed.</target>
         <note>Line: 81</note>
-      </trans-unit>
-      <trans-unit id="0210e7a00cf2cd3cca0e4d7ed3bdf86f">
-        <source>To add tags, click in the field, write something, and then press the "Enter" key.</source>
-        <target>To add tags, click in the field, write something, and then press the "Enter" key.</target>
-        <note>Line: 70</note>
       </trans-unit>
     </body>
   </file>
@@ -801,15 +773,15 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/preferences.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="500294c9fd031bb4f00a82b5d27dc22c">
-        <source>If you own an SSL certificate for your shop's domain name, you can activate SSL encryption (https://) for customer account identification and order processing.</source>
-        <target>If you own an SSL certificate for your shop's domain name, you can activate SSL encryption (https://) for customer account identification and order processing.</target>
-        <note>Line: 53</note>
-      </trans-unit>
       <trans-unit id="a3a0f3b2f4c12d1c11b9916c8c10c48c">
         <source>If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.</source>
         <target>If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.</target>
         <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="500294c9fd031bb4f00a82b5d27dc22c">
+        <source>If you own an SSL certificate for your shop's domain name, you can activate SSL encryption (https://) for customer account identification and order processing.</source>
+        <target>If you own an SSL certificate for your shop's domain name, you can activate SSL encryption (https://) for customer account identification and order processing.</target>
+        <note>Line: 53</note>
       </trans-unit>
       <trans-unit id="d86a9baf93dba6b27dbbb04cef8d3aae">
         <source>When enabled, all the pages of your shop will be SSL-secured.</source>
@@ -841,14 +813,14 @@
         <target>You can choose when to round prices: either on each item, each line or the total (of an invoice, for example).</target>
         <note>Line: 118</note>
       </trans-unit>
-      <trans-unit id="2d21e9a3fe59f46db5ffdc26448e3ab6">
-        <source>Choose how many decimals you want to display</source>
-        <target>Choose how many decimals you want to display</target>
+      <trans-unit id="7c6efc73556c295515e6f3c2129eee32">
+        <source>Enable suppliers page on your front office even when its module is disabled.</source>
+        <target>Enable suppliers page on your front office even when its module is disabled.</target>
         <note>Line: 126</note>
       </trans-unit>
-      <trans-unit id="b6d90c5c27a4d2d48ead626c17be303c">
-        <source>Enable brands and suppliers pages on your front office even when their respective modules are disabled.</source>
-        <target>Enable brands and suppliers pages on your front office even when their respective modules are disabled.</target>
+      <trans-unit id="8e17743ca02e7c24310531d34d0c89ff">
+        <source>Enable brands page on your front office even when its module is disabled.</source>
+        <target>Enable brands page on your front office even when its module is disabled.</target>
         <note>Line: 134</note>
       </trans-unit>
       <trans-unit id="0678cf17f202cb7fd14d79054a2e628c">
@@ -860,16 +832,6 @@
         <source>The multistore feature allows you to manage several e-shops with one Back Office. If this feature is enabled, a "Multistore" page will be available in the "Advanced Parameters" menu.</source>
         <target>The multistore feature allows you to manage several e-shops with one Back Office. If this feature is enabled, a "Multistore" page will be available in the "Advanced Parameters" menu.</target>
         <note>Line: 150</note>
-      </trans-unit>
-      <trans-unit id="7c6efc73556c295515e6f3c2129eee32">
-        <source>Enable suppliers page on your front office even when its module is disabled.</source>
-        <target>Enable suppliers page on your front office even when its module is disabled.</target>
-        <note>Line: 126</note>
-      </trans-unit>
-      <trans-unit id="8e17743ca02e7c24310531d34d0c89ff">
-        <source>Enable brands page on your front office even when its module is disabled.</source>
-        <target>Enable brands page on your front office even when its module is disabled.</target>
-        <note>Line: 134</note>
       </trans-unit>
     </body>
   </file>

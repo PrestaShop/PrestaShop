@@ -2,9 +2,9 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="admin-dev/themes/default/template/controllers/countries/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="9fc79b58296e3a108fbe2f8852b652f4">
-        <source>Required fields for the address (click for more details):</source>
-        <target>Required fields for the address (click for more details):</target>
+      <trans-unit id="1ca15789ea9a5a5e8bddca102f41eea5">
+        <source>Some countries require different elements than others. Click on the button below to get the valid default address format for this country.</source>
+        <target>Some countries require different elements than others. Click on the button below to get the valid default address format for this country.</target>
         <note>Line: 35</note>
       </trans-unit>
       <trans-unit id="5dfe48d86e43b22b76d36dcaadd5caf9">
@@ -27,11 +27,6 @@
         <target>Clear format</target>
         <note>Line: 48</note>
       </trans-unit>
-      <trans-unit id="1ca15789ea9a5a5e8bddca102f41eea5">
-        <source>Some countries require different elements than others. Click on the button below to get the valid default address format for this country.</source>
-        <target>Some countries require different elements than others. Click on the button below to get the valid default address format for this country.</target>
-        <note>Line: 35</note>
-      </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/controllers/countries/helpers/list/list_footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -40,20 +35,6 @@
         <source>Assign to a new zone</source>
         <target>Assign to a new zone</target>
         <note>Line: 148</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/currencies/status.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a0375b8965a19b59896d90e7e08041f3">
-        <source>This currency is disabled</source>
-        <target>This currency is disabled</target>
-        <note>Line: 37</note>
-      </trans-unit>
-      <trans-unit id="5a654deb20d708c9f56c1d7bc5e35c38">
-        <source>This currency is enabled</source>
-        <target>This currency is enabled</target>
-        <note>Line: 38</note>
       </trans-unit>
     </body>
   </file>
@@ -116,16 +97,6 @@
         <target>Modify translations</target>
         <note>Line: 189</note>
       </trans-unit>
-      <trans-unit id="a9e4402481bd9b8e36752bf731f67eb6">
-        <source>Theme:</source>
-        <target>Theme:</target>
-        <note>Line: 100</note>
-      </trans-unit>
-      <trans-unit id="53b3cae42737979c884275593a01f468">
-        <source>Module:</source>
-        <target>Module:</target>
-        <note>Line: 102</note>
-      </trans-unit>
       <trans-unit id="f05b91496296629228c94a6b4b0a335f">
         <source>Expressions to translate:</source>
         <target>Expressions to translate:</target>
@@ -140,6 +111,16 @@
         <source>expressions</source>
         <target>expressions</target>
         <note>Line: 116</note>
+      </trans-unit>
+      <trans-unit id="a9e4402481bd9b8e36752bf731f67eb6">
+        <source>Theme:</source>
+        <target>Theme:</target>
+        <note>Line: 100</note>
+      </trans-unit>
+      <trans-unit id="53b3cae42737979c884275593a01f468">
+        <source>Module:</source>
+        <target>Module:</target>
+        <note>Line: 102</note>
       </trans-unit>
     </body>
   </file>
@@ -204,30 +185,6 @@
         <source>Display tax label (e.g. "Tax incl.")</source>
         <target>Display tax label (e.g. "Tax incl.")</target>
         <note>Line: 341</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminLanguagesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a4bc4ae2cbf8be348ecfc863538998bf">
-        <source>Check to see if a language pack is available for this ISO code.</source>
-        <target>Check to see if a language pack is available for this ISO code.</target>
-        <note>Line: 246</note>
-      </trans-unit>
-      <trans-unit id="22a31963fda5661b3a0919f7bda0debc">
-        <source>Translation files</source>
-        <target>Translation files</target>
-        <note>Line: 277</note>
-      </trans-unit>
-      <trans-unit id="704075d95dec2f52e92cbe2c6e2f61c7">
-        <source>Theme files</source>
-        <target>Theme files</target>
-        <note>Line: 281</note>
-      </trans-unit>
-      <trans-unit id="37f3a51de63012d9060d5ff8ccab2b0f">
-        <source>Mail files</source>
-        <target>Mail files</target>
-        <note>Line: 285</note>
       </trans-unit>
     </body>
   </file>
@@ -315,15 +272,15 @@
   </file>
   <file original="controllers/admin/AdminZonesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="77f1ebd0522a27ee9502ab13a242d823">
-        <source>Add new zone</source>
-        <target>Add new zone</target>
-        <note>Line: 75</note>
-      </trans-unit>
       <trans-unit id="dad1f8d794ee0dd7753fe75e73b78f31">
         <source>Zones</source>
         <target>Zones</target>
         <note>Line: 95</note>
+      </trans-unit>
+      <trans-unit id="77f1ebd0522a27ee9502ab13a242d823">
+        <source>Add new zone</source>
+        <target>Add new zone</target>
+        <note>Line: 75</note>
       </trans-unit>
     </body>
   </file>
@@ -537,6 +494,11 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Currency/Blocks/exchange_rates.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="e75e316ab3a0a8c0c5fc4b48d1a7033f">
+        <source>Exchange rate</source>
+        <target>Exchange rate</target>
+        <note>Line: 28</note>
+      </trans-unit>
       <trans-unit id="31b7dce9ac35e52f1c4719ac210b7419">
         <source>Live exchange rates</source>
         <target>Live exchange rates</target>
@@ -557,24 +519,19 @@
         <target>Update exchange rates</target>
         <note>Line: 55</note>
       </trans-unit>
-      <trans-unit id="e75e316ab3a0a8c0c5fc4b48d1a7033f">
-        <source>Exchange rate</source>
-        <target>Exchange rate</target>
-        <note>Line: 28</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Currency/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="02c86eb2792f3262c21d030a87e19793">
-        <source>Symbol</source>
-        <target>Symbol</target>
-        <note>Line: 83</note>
-      </trans-unit>
       <trans-unit id="ad68f9bafd9bf2dcf3865dac55662fd5">
         <source>ISO code</source>
         <target>ISO code</target>
         <note>Line: 88</note>
+      </trans-unit>
+      <trans-unit id="02c86eb2792f3262c21d030a87e19793">
+        <source>Symbol</source>
+        <target>Symbol</target>
+        <note>Line: 83</note>
       </trans-unit>
       <trans-unit id="c6c555ee393714da87d0fc9702b80912">
         <source>1. Enter symbol</source>
@@ -596,31 +553,6 @@
         <target>Edit symbol / format</target>
         <note>Line: 43</note>
       </trans-unit>
-      <trans-unit id="7d9ccccf4e5cc7d7949f26f0a2f5f341">
-        <source>Select a currency</source>
-        <target>Select a currency</target>
-        <note>Line: 68</note>
-      </trans-unit>
-      <trans-unit id="586e27d3575f00e51ad43b66eb34e49f">
-        <source>Currency name</source>
-        <target>Currency name</target>
-        <note>Line: 78</note>
-      </trans-unit>
-      <trans-unit id="2b417805040de3a3df31c8fd3626b57c">
-        <source>Decimals</source>
-        <target>Decimals</target>
-        <note>Line: 102</note>
-      </trans-unit>
-      <trans-unit id="60bc390fb7113b18e8526d72ddee6474">
-        <source>Loading currency data</source>
-        <target>Loading currency data</target>
-        <note>Line: 148</note>
-      </trans-unit>
-      <trans-unit id="cec4e83264fad118a0e5464430e4c7da">
-        <source>Please wait while currency data is being loaded</source>
-        <target>Please wait while currency data is being loaded</target>
-        <note>Line: 151</note>
-      </trans-unit>
       <trans-unit id="c98f65428c24bcc8ef00214412eca27e">
         <source>%price%</source>
         <target>%price%</target>
@@ -636,10 +568,35 @@
         <target>Restoring your currency's default settings will delete all the customizations you made before. Parameters will look just the same as when the currency is freshly imported.</target>
         <note>Line: 50</note>
       </trans-unit>
+      <trans-unit id="7d9ccccf4e5cc7d7949f26f0a2f5f341">
+        <source>Select a currency</source>
+        <target>Select a currency</target>
+        <note>Line: 68</note>
+      </trans-unit>
+      <trans-unit id="586e27d3575f00e51ad43b66eb34e49f">
+        <source>Currency name</source>
+        <target>Currency name</target>
+        <note>Line: 78</note>
+      </trans-unit>
+      <trans-unit id="2b417805040de3a3df31c8fd3626b57c">
+        <source>Decimals</source>
+        <target>Decimals</target>
+        <note>Line: 102</note>
+      </trans-unit>
       <trans-unit id="1f8ff57ebb190230dac54ccb4dbe562b">
         <source>Restore default settings</source>
         <target>Restore default settings</target>
         <note>Line: 132</note>
+      </trans-unit>
+      <trans-unit id="60bc390fb7113b18e8526d72ddee6474">
+        <source>Loading currency data</source>
+        <target>Loading currency data</target>
+        <note>Line: 148</note>
+      </trans-unit>
+      <trans-unit id="cec4e83264fad118a0e5464430e4c7da">
+        <source>Please wait while currency data is being loaded</source>
+        <target>Please wait while currency data is being loaded</target>
+        <note>Line: 151</note>
       </trans-unit>
     </body>
   </file>
@@ -699,26 +656,17 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Geolocation/index.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d1e4ac2093276d0228ca8470e7ecbf98">
-        <source>In order to use Geolocation, please download [1]this file[/1] and extract it (using Winrar or Gzip) into the /app/Resources/geoip/ directory.</source>
-        <target>In order to use Geolocation, please download [1]this file[/1] and extract it (using Winrar or Gzip) into the /app/Resources/geoip/ directory.</target>
-        <note>Line: 37</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Language/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="c5836008c1649301e29351a55db8f65c">
-        <source>Flag</source>
-        <target>Flag</target>
-        <note>Line: 71</note>
-      </trans-unit>
       <trans-unit id="e59a41e120686e63cbb743f003bea4e6">
         <source>Language code</source>
         <target>Language code</target>
         <note>Line: 56</note>
+      </trans-unit>
+      <trans-unit id="c5836008c1649301e29351a55db8f65c">
+        <source>Flag</source>
+        <target>Flag</target>
+        <note>Line: 71</note>
       </trans-unit>
       <trans-unit id="534fd46732986cba0efeda8701592427">
         <source>Date format</source>
@@ -930,20 +878,25 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Translations/Blocks/export_language.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="6700e23ddf33bd4421249c9ef94d6295">
-        <source>Export a language</source>
-        <target>Export a language</target>
-        <note>Line: 32</note>
-      </trans-unit>
       <trans-unit id="84a63a234d9b35094275bfb41ad46b47">
         <source>Select your theme</source>
         <target>Select your theme</target>
         <note>Line: 59</note>
       </trans-unit>
+      <trans-unit id="6700e23ddf33bd4421249c9ef94d6295">
+        <source>Export a language</source>
+        <target>Export a language</target>
+        <note>Line: 32</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Translations/Blocks/modify_translations.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="c96f531c0eda2dece593a2f8df3a58a8">
+        <source>Select your language</source>
+        <target>Select your language</target>
+        <note>Line: 88</note>
+      </trans-unit>
       <trans-unit id="021257190c6e64120915e008a94a06f8">
         <source>Type of translation</source>
         <target>Type of translation</target>
@@ -958,11 +911,6 @@
         <source>Select your module</source>
         <target>Select your module</target>
         <note>Line: 79</note>
-      </trans-unit>
-      <trans-unit id="c96f531c0eda2dece593a2f8df3a58a8">
-        <source>Select your language</source>
-        <target>Select your language</target>
-        <note>Line: 88</note>
       </trans-unit>
     </body>
   </file>

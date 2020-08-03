@@ -2,9 +2,9 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="admin-dev/themes/default/template/footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="3dd9c50a1e72020b9cc83e92aa7d07b9">
-        <source>Load time: </source>
-        <target>Load time: </target>
+      <trans-unit id="7286baef44d09300636a4b99c533523c">
+        <source>Load time:</source>
+        <target>Load time:</target>
         <note>Line: 34</note>
       </trans-unit>
       <trans-unit id="bbaff12800505b22a853e8b7f4eb6a22">
@@ -36,11 +36,6 @@
         <source>Training</source>
         <target>Training</target>
         <note>Line: 87</note>
-      </trans-unit>
-      <trans-unit id="7286baef44d09300636a4b99c533523c">
-        <source>Load time:</source>
-        <target>Load time:</target>
-        <note>Line: 34</note>
       </trans-unit>
     </body>
   </file>

@@ -1,44 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_linklist/controllers/admin/AdminLinkWidgetController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e2a999acc8db5fd702e2f91b25b45222">
-        <source>Link Widget</source>
-        <target>Link Widget</target>
-        <note>Line: 232</note>
-      </trans-unit>
-      <trans-unit id="85ec26fb32110f2fa7ffc9b12015959a">
-        <source>Link block configuration</source>
-        <target>Link block configuration</target>
-        <note>Line: 77</note>
-      </trans-unit>
-      <trans-unit id="5436b31a608ba3794ba11014cf59c26c">
-        <source>Link Blocks</source>
-        <target>Link Blocks</target>
-        <note>Line: 87</note>
-      </trans-unit>
-      <trans-unit id="e3352eb748a4c1cbcd1b41e98582bcac">
-        <source>Name of the link block</source>
-        <target>Name of the link block</target>
-        <note>Line: 131</note>
-      </trans-unit>
-      <trans-unit id="04313a11bf4a501b7cf2273ea7b32862">
-        <source>Please mark every page that you want to display in this block.</source>
-        <target>Please mark every page that you want to display in this block.</target>
-        <note>Line: 166</note>
-      </trans-unit>
-      <trans-unit id="15d95ad5102ba429be8ddcb646b7d42b">
-        <source>Please add every page that you want to display in this block.</source>
-        <target>Please add every page that you want to display in this block.</target>
-        <note>Line: 173</note>
-      </trans-unit>
-      <trans-unit id="83915d1254927f41241e8630890bec6e">
-        <source>Themes</source>
-        <target>Themes</target>
-        <note>Line: 231</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="modules/ps_linklist/ps_linklist.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="b5750478c3c490d2c1df5dfdfdd6b7a4">
@@ -64,29 +25,29 @@
   </file>
   <file original="modules/ps_linklist/src/Core/Grid/Definition/Factory/LinkBlockDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="b718adec73e04ce3ec720dd11a06a308">
-        <source>ID</source>
-        <target>ID</target>
-        <note>Line: 83</note>
-      </trans-unit>
       <trans-unit id="83ef1503b3bd9858cc923a74e5f9e917">
         <source>Name of the block</source>
         <target>Name of the block</target>
         <note>Line: 89</note>
       </trans-unit>
+      <trans-unit id="b718adec73e04ce3ec720dd11a06a308">
+        <source>ID</source>
+        <target>ID</target>
+        <note>Line: 83</note>
+      </trans-unit>
     </body>
   </file>
   <file original="modules/ps_linklist/src/Form/Type/CustomUrlType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="e6b391a8d2c4d45902a23a8b6585703d">
-        <source>URL</source>
-        <target>URL</target>
-        <note>Line: 47</note>
-      </trans-unit>
       <trans-unit id="b78a3223503896721cca1303f776159b">
         <source>Title</source>
         <target>Title</target>
         <note>Line: 43</note>
+      </trans-unit>
+      <trans-unit id="e6b391a8d2c4d45902a23a8b6585703d">
+        <source>URL</source>
+        <target>URL</target>
+        <note>Line: 47</note>
       </trans-unit>
     </body>
   </file>
@@ -125,30 +86,6 @@
         <source>New link block</source>
         <target>New link block</target>
         <note>Line: 45</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_linklist/views/templates/admin/linkwidget/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="52f5e0bc3859bc5f5e25130b6c7e8881">
-        <source>Position</source>
-        <target>Position</target>
-        <note>Line: 74</note>
-      </trans-unit>
-      <trans-unit id="7dce122004969d56ae2e0245cb754d35">
-        <source>Edit</source>
-        <target>Edit</target>
-        <note>Line: 95</note>
-      </trans-unit>
-      <trans-unit id="f2a6c498fb90ee345d997f888fce3b18">
-        <source>Delete</source>
-        <target>Delete</target>
-        <note>Line: 103</note>
-      </trans-unit>
-      <trans-unit id="49ee3087348e8d44e1feda1917443987">
-        <source>Name</source>
-        <target>Name</target>
-        <note>Line: 217</note>
       </trans-unit>
     </body>
   </file>

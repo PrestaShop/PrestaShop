@@ -20,11 +20,6 @@
   </file>
   <file original="controllers/front/DiscountController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="6adf97f83acf6453d4a6a4b1070f3754">
-        <source>None</source>
-        <target>None</target>
-        <note>Line: 192</note>
-      </trans-unit>
       <trans-unit id="bafd7322c6e97d25b6299b5d6fe8920b">
         <source>No</source>
         <target>No</target>
@@ -34,6 +29,11 @@
         <source>Yes</source>
         <target>Yes</target>
         <note>Line: 110</note>
+      </trans-unit>
+      <trans-unit id="6adf97f83acf6453d4a6a4b1070f3754">
+        <source>None</source>
+        <target>None</target>
+        <note>Line: 192</note>
       </trans-unit>
     </body>
   </file>
@@ -160,38 +160,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/cms/category.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="38629047675346c704697fb85268192f">
-        <source>List of subcategories in %category_name%:</source>
-        <target>List of subcategories in %category_name%:</target>
-        <note>Context:
-File: themes/StarterTheme/templates/cms/category.tpl:34</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/cms/stores.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="673ae02fffb72f0fe68a66f096a01347">
-        <source>Phone:</source>
-        <target>Phone:</target>
-        <note>Context:
-File: themes/StarterTheme/templates/cms/stores.tpl:47</note>
-      </trans-unit>
-      <trans-unit id="6a1e265f92087bb6dd18194833fe946b">
-        <source>Email:</source>
-        <target>Email:</target>
-        <note>Context:
-File: themes/StarterTheme/templates/cms/stores.tpl:53</note>
-      </trans-unit>
-      <trans-unit id="80a0c205cd57b22fca7f174253870300">
-        <source>Opening hours</source>
-        <target>Opening hours</target>
-        <note>Context:
-File: themes/StarterTheme/templates/cms/stores.tpl:56</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="themes/classic/modules/contactform/views/templates/widget/contactform.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="02d4482d332e1aef3437cd61c9bcc624">
@@ -203,25 +171,25 @@ File: themes/StarterTheme/templates/cms/stores.tpl:56</note>
   </file>
   <file original="themes/classic/modules/ps_contactinfo/ps_contactinfo-rich.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="0e2fb5b02182fd28b9b96e86ed27838f">
-        <source>Fax:</source>
-        <target>Fax:</target>
-        <note>Line: 47</note>
+      <trans-unit id="3aea774cdcd8f2c45549f10758a71323">
+        <source>Store information</source>
+        <target>Store information</target>
+        <note>Line: 27</note>
       </trans-unit>
       <trans-unit id="1300caaefd15b839f37952dc7cc75d82">
         <source>Call us:</source>
         <target>Call us:</target>
         <note>Line: 37</note>
       </trans-unit>
+      <trans-unit id="0e2fb5b02182fd28b9b96e86ed27838f">
+        <source>Fax:</source>
+        <target>Fax:</target>
+        <note>Line: 47</note>
+      </trans-unit>
       <trans-unit id="a0bfe0853cf82bdf5dcb9b0bac76c357">
         <source>Email us:</source>
         <target>Email us:</target>
         <note>Line: 57</note>
-      </trans-unit>
-      <trans-unit id="3aea774cdcd8f2c45549f10758a71323">
-        <source>Store information</source>
-        <target>Store information</target>
-        <note>Line: 27</note>
       </trans-unit>
     </body>
   </file>
@@ -302,15 +270,15 @@ File: themes/StarterTheme/templates/cms/stores.tpl:56</note>
   </file>
   <file original="themes/classic/modules/ps_shoppingcart/modal.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="d0f369aab921195580d8319855bbb69f">
-        <source>%label%:</source>
-        <target>%label%:</target>
-        <note>Line: 72</note>
-      </trans-unit>
       <trans-unit id="d3d2e617335f08df83599665eef8a418">
         <source>Close</source>
         <target>Close</target>
         <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="d0f369aab921195580d8319855bbb69f">
+        <source>%label%:</source>
+        <target>%label%:</target>
+        <note>Line: 72</note>
       </trans-unit>
     </body>
   </file>
@@ -361,15 +329,15 @@ File: themes/StarterTheme/templates/cms/stores.tpl:56</note>
   </file>
   <file original="themes/classic/templates/cms/category.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="1d34e1ee316477a8f64a835307f5b84e">
-        <source>List of pages in %category_name%:</source>
-        <target>List of pages in %category_name%:</target>
-        <note>Line: 45</note>
-      </trans-unit>
       <trans-unit id="6c5c05a5b907385c60c3baa4087ea1a1">
         <source>List of sub categories in %name%:</source>
         <target>List of sub categories in %name%:</target>
         <note>Line: 34</note>
+      </trans-unit>
+      <trans-unit id="1d34e1ee316477a8f64a835307f5b84e">
+        <source>List of pages in %category_name%:</source>
+        <target>List of pages in %category_name%:</target>
+        <note>Line: 45</note>
       </trans-unit>
     </body>
   </file>

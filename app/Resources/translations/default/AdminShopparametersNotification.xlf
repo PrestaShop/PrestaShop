@@ -95,6 +95,11 @@
   </file>
   <file original="controllers/admin/AdminSearchConfController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="a7c14cc18f4351bf0a0353f3c3e76e62">
+        <source>We are thrilled to introduce you to the fuzzy search, one of the new features from 1.7.7! Please note that it is still in beta version, so feel free to share improvement ideas on GitHub to have it enhanced.</source>
+        <target>We are thrilled to introduce you to the fuzzy search, one of the new features from 1.7.7! Please note that it is still in beta version, so feel free to share improvement ideas on GitHub to have it enhanced.</target>
+        <note>Line: 128</note>
+      </trans-unit>
       <trans-unit id="d2317f906b956432eebb5c8814bfb65e">
         <source>Aliases and results are both required.</source>
         <target>Aliases and results are both required.</target>
@@ -114,11 +119,6 @@
         <source>Creation successful</source>
         <target>Creation successful</target>
         <note>Line: 475</note>
-      </trans-unit>
-      <trans-unit id="a7c14cc18f4351bf0a0353f3c3e76e62">
-        <source>We are thrilled to introduce you to the fuzzy search, one of the new features from 1.7.7! Please note that it is still in beta version, so feel free to share improvement ideas on GitHub to have it enhanced.</source>
-        <target>We are thrilled to introduce you to the fuzzy search, one of the new features from 1.7.7! Please note that it is still in beta version, so feel free to share improvement ideas on GitHub to have it enhanced.</target>
-        <note>Line: 128</note>
       </trans-unit>
     </body>
   </file>
@@ -251,29 +251,29 @@
         <target>Before you can use this tool, you need to:</target>
         <note>Line: 42</note>
       </trans-unit>
-      <trans-unit id="636fc324804393cc1d3306a541cc871f">
-        <source>1) Create a blank .htaccess file in your root directory.</source>
-        <target>1) Create a blank .htaccess file in your root directory.</target>
-        <note>Line: 44</note>
-      </trans-unit>
       <trans-unit id="1a53c64bc79e181125e94976211eb401">
         <source>2) Give it write permissions (CHMOD 666 on Unix system).</source>
         <target>2) Give it write permissions (CHMOD 666 on Unix system).</target>
         <note>Line: 46</note>
       </trans-unit>
+      <trans-unit id="636fc324804393cc1d3306a541cc871f">
+        <source>1) Create a blank .htaccess file in your root directory.</source>
+        <target>1) Create a blank .htaccess file in your root directory.</target>
+        <note>Line: 44</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/shop_urls_configuration.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="4836c0b3d56db59ba29844b8bcec084d">
-        <source>Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.</source>
-        <target>Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.</target>
-        <note>Line: 65</note>
-      </trans-unit>
       <trans-unit id="117fb47c0109ce0c9415a7f60f084c39">
         <source>The multistore option is enabled. If you want to change the URL of your shop, you must go to the "Multistore" page under the "Advanced Parameters" menu.</source>
         <target>The multistore option is enabled. If you want to change the URL of your shop, you must go to the "Multistore" page under the "Advanced Parameters" menu.</target>
         <note>Line: 44</note>
+      </trans-unit>
+      <trans-unit id="4836c0b3d56db59ba29844b8bcec084d">
+        <source>Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.</source>
+        <target>Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.</target>
+        <note>Line: 65</note>
       </trans-unit>
     </body>
   </file>

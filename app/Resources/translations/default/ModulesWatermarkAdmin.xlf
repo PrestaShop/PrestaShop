@@ -27,6 +27,11 @@
         <target>You have to enable the GD extension on your server to install this module</target>
         <note>Line: 114</note>
       </trans-unit>
+      <trans-unit id="52d64d6b501f39da58f81dccebc9ebb6">
+        <source>Unable to remove watermark section from .htaccess file</source>
+        <target>Unable to remove watermark section from .htaccess file</target>
+        <note>Line: 136</note>
+      </trans-unit>
       <trans-unit id="842262778d363362c95aa210c9752c25">
         <source>Opacity required.</source>
         <target>Opacity required.</target>
@@ -111,11 +116,6 @@
         <source>Logged in customers can see images without watermark</source>
         <target>Logged in customers can see images without watermark</target>
         <note>Line: 558</note>
-      </trans-unit>
-      <trans-unit id="52d64d6b501f39da58f81dccebc9ebb6">
-        <source>Unable to remove watermark section from .htaccess file</source>
-        <target>Unable to remove watermark section from .htaccess file</target>
-        <note>Line: 136</note>
       </trans-unit>
     </body>
   </file>

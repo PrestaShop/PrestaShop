@@ -41,11 +41,6 @@
         <target>PrestaShop comes with a number of carrier modules that you can activate. You can also buy carrier modules on the PrestaShop Addons marketplace. Recommended modules are listed below: install the module that matches your carrier, and configure it!</target>
         <note>Line: 31</note>
       </trans-unit>
-      <trans-unit id="5bacfd2dc472feddb875fc29134b03bb">
-        <source>If there is no existing module for your carrier, then you can register that carrier by hand using the information that it can provide you: shipping rates, regional zones, size and weight limits, etc. Click on the "Add new carrier" button below to open the Carrier Wizard, which will help you register a new carrier in a few steps.</source>
-        <target>If there is no existing module for your carrier, then you can register that carrier by hand using the information that it can provide you: shipping rates, regional zones, size and weight limits, etc. Click on the "Add new carrier" button below to open the Carrier Wizard, which will help you register a new carrier in a few steps.</target>
-        <note>Line: 32</note>
-      </trans-unit>
       <trans-unit id="12a118b904361ef7a25365b2ff29cfa9">
         <source>Note: DO NOT register a new carrier if there already exists a module for it! Using a module will be much faster and more accurate!</source>
         <target>Note: DO NOT register a new carrier if there already exists a module for it! Using a module will be much faster and more accurate!</target>

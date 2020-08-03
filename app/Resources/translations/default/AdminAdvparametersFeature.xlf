@@ -14,74 +14,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="cbfb910715c99134a5987630fff104da">
-        <source>Sample Categories file</source>
-        <target>Sample Categories file</target>
-        <note>Line: 325</note>
-      </trans-unit>
-      <trans-unit id="e6d1ad59ffb524154c47ef02bb67bb79">
-        <source>Sample Products file</source>
-        <target>Sample Products file</target>
-        <note>Line: 328</note>
-      </trans-unit>
-      <trans-unit id="2a08996307b8694521492f3ca7b5df40">
-        <source>Sample Combinations file</source>
-        <target>Sample Combinations file</target>
-        <note>Line: 331</note>
-      </trans-unit>
-      <trans-unit id="b12be4b8c3871a251b314b36da7b847e">
-        <source>Sample Customers file</source>
-        <target>Sample Customers file</target>
-        <note>Line: 334</note>
-      </trans-unit>
-      <trans-unit id="eafce46b9013f4d12336785c388b664c">
-        <source>Sample Addresses file</source>
-        <target>Sample Addresses file</target>
-        <note>Line: 337</note>
-      </trans-unit>
-      <trans-unit id="cadad3173909b0c9a319da9c48ebe8a8">
-        <source>Sample Brands file</source>
-        <target>Sample Brands file</target>
-        <note>Line: 340</note>
-      </trans-unit>
-      <trans-unit id="2028e5ca793760b03ead6560e353b6f2">
-        <source>Sample Suppliers file</source>
-        <target>Sample Suppliers file</target>
-        <note>Line: 343</note>
-      </trans-unit>
-      <trans-unit id="4e76fa0dec3ddee7efdb0871ef5dd37c">
-        <source>Sample Aliases file</source>
-        <target>Sample Aliases file</target>
-        <note>Line: 346</note>
-      </trans-unit>
-      <trans-unit id="7c5b94a32245a59bf441c8dcd4d65cfd">
-        <source>Sample Store Contacts file</source>
-        <target>Sample Store Contacts file</target>
-        <note>Line: 349</note>
-      </trans-unit>
-      <trans-unit id="754fec39af6e1ff8618a1a3cd414af47">
-        <source>Sample Supply Orders file</source>
-        <target>Sample Supply Orders file</target>
-        <note>Line: 353</note>
-      </trans-unit>
-      <trans-unit id="85769e64d6e480bba48ea2332db57ed7">
-        <source>Sample Supply Order Details file</source>
-        <target>Sample Supply Order Details file</target>
-        <note>Line: 356</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="9d20a93036ba910dd75ffbcec173798e">
-        <source>Price per unit</source>
-        <target>Price per unit</target>
-        <note>Line: 930</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/default/template/controllers/shop/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="99104e1966b34f0320d33c5892946a82">
@@ -449,12 +381,12 @@ Comment: voluntary do affectation here</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminWebserviceController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/blockwishlist/src/Grid/Definition/BaseStatisticsGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="45fff8bcdd979fde32df8435f29553ab">
-        <source>Generate!</source>
-        <target>Generate!</target>
-        <note>Line: 138</note>
+      <trans-unit id="c33e404a441c6ba9648f88af3c68a1ca">
+        <source>Statistics</source>
+        <target>Statistics</target>
+        <note>Line: 39</note>
       </trans-unit>
     </body>
   </file>
@@ -497,9 +429,9 @@ Comment: voluntary do affectation here</note>
   </file>
   <file original="src/Core/Form/ChoiceProvider/MailMethodChoiceProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="11812952ae95fbc6ebc323426262bb51">
-        <source>Use PHP's mail() function (recommended; works in most cases)</source>
-        <target>Use PHP's mail() function (recommended; works in most cases)</target>
+      <trans-unit id="f2fc8e9d7dc8852da27437d55be02453">
+        <source>Use /usr/sbin/sendmail (recommended; works in most cases)</source>
+        <target>Use /usr/sbin/sendmail (recommended; works in most cases)</target>
         <note>Line: 70</note>
       </trans-unit>
       <trans-unit id="e6095b01597caf275fb24fa766fb8a57">
@@ -568,6 +500,11 @@ Comment: voluntary do affectation here</note>
         <target>Template</target>
         <note>Line: 131</note>
       </trans-unit>
+      <trans-unit id="dcc459e0cef1e36a18a356fbc5789b16">
+        <source>Erase all</source>
+        <target>Erase all</target>
+        <note>Line: 250</note>
+      </trans-unit>
       <trans-unit id="5d6103b662f41b07e10687f03aca8fdc">
         <source>Recipient</source>
         <target>Recipient</target>
@@ -582,11 +519,6 @@ Comment: voluntary do affectation here</note>
         <source>Sent</source>
         <target>Sent</target>
         <note>Line: 152</note>
-      </trans-unit>
-      <trans-unit id="dcc459e0cef1e36a18a356fbc5789b16">
-        <source>Erase all</source>
-        <target>Erase all</target>
-        <note>Line: 250</note>
       </trans-unit>
     </body>
   </file>
@@ -625,6 +557,11 @@ Comment: voluntary do affectation here</note>
   </file>
   <file original="src/Core/Import/EntityField/Provider/AddressFieldsProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="d37c2bf1bd3143847fca087b354f920e">
+        <source>Customer ID</source>
+        <target>Customer ID</target>
+        <note>Line: 61</note>
+      </trans-unit>
       <trans-unit id="a10d0bff85112a2b35f885a38088cd20">
         <source>Active  (0/1)</source>
         <target>Active  (0/1)</target>
@@ -634,11 +571,6 @@ Comment: voluntary do affectation here</note>
         <source>Customer email</source>
         <target>Customer email</target>
         <note>Line: 60</note>
-      </trans-unit>
-      <trans-unit id="d37c2bf1bd3143847fca087b354f920e">
-        <source>Customer ID</source>
-        <target>Customer ID</target>
-        <note>Line: 61</note>
       </trans-unit>
     </body>
   </file>
@@ -999,15 +931,6 @@ Comment: voluntary do affectation here</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/SqlManagerController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="26420bd9e260012164a58a0f002e4821">
-        <source>Add new SQL query</source>
-        <target>Add new SQL query</target>
-        <note>Line: 92</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Controller/Api/StockController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="ae5977a08e8a3d45283789d99c67c3c3">
@@ -1124,31 +1047,6 @@ Comment: voluntary do affectation here</note>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/SmartyType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="770d85a02ce8841bd4dac97b57c7fa17">
-        <source>Template compilation</source>
-        <target>Template compilation</target>
-        <note>Line: 53</note>
-      </trans-unit>
-      <trans-unit id="ab0cf104f39708eabd07b8cb67e149ba">
-        <source>Cache</source>
-        <target>Cache</target>
-        <note>Line: 58</note>
-      </trans-unit>
-      <trans-unit id="0d6bf1934cab1de045b189eed03c3d42">
-        <source>Should be enabled except for debugging.</source>
-        <target>Should be enabled except for debugging.</target>
-        <note>Line: 59</note>
-      </trans-unit>
-      <trans-unit id="1c9e9fdb43035d78fc94dd37c357869c">
-        <source>Multi-front optimizations</source>
-        <target>Multi-front optimizations</target>
-        <note>Line: 63</note>
-      </trans-unit>
-      <trans-unit id="bfa7e629b4eaa924530242510a50679e">
-        <source>Caching type</source>
-        <target>Caching type</target>
-        <note>Line: 76</note>
-      </trans-unit>
       <trans-unit id="dbe2df5641344e1d14be812243f91ec5">
         <source>Never clear cache files</source>
         <target>Never clear cache files</target>
@@ -1183,6 +1081,31 @@ Comment: voluntary do affectation here</note>
         <source>Force compilation</source>
         <target>Force compilation</target>
         <note>Line: 49</note>
+      </trans-unit>
+      <trans-unit id="770d85a02ce8841bd4dac97b57c7fa17">
+        <source>Template compilation</source>
+        <target>Template compilation</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="ab0cf104f39708eabd07b8cb67e149ba">
+        <source>Cache</source>
+        <target>Cache</target>
+        <note>Line: 58</note>
+      </trans-unit>
+      <trans-unit id="0d6bf1934cab1de045b189eed03c3d42">
+        <source>Should be enabled except for debugging.</source>
+        <target>Should be enabled except for debugging.</target>
+        <note>Line: 59</note>
+      </trans-unit>
+      <trans-unit id="1c9e9fdb43035d78fc94dd37c357869c">
+        <source>Multi-front optimizations</source>
+        <target>Multi-front optimizations</target>
+        <note>Line: 63</note>
+      </trans-unit>
+      <trans-unit id="bfa7e629b4eaa924530242510a50679e">
+        <source>Caching type</source>
+        <target>Caching type</target>
+        <note>Line: 76</note>
       </trans-unit>
     </body>
   </file>
@@ -1357,6 +1280,11 @@ Comment: voluntary do affectation here</note>
         <target>Field separator</target>
         <note>Line: 124</note>
       </trans-unit>
+      <trans-unit id="e08caeac3f80ffa7889cdf1c8f30111f">
+        <source>Multiple value separator</source>
+        <target>Multiple value separator</target>
+        <note>Line: 131</note>
+      </trans-unit>
       <trans-unit id="1269b023d7c37aceefb33ef49c9fec4d">
         <source>Delete all [1]categories[/1] before import</source>
         <target>Delete all [1]categories[/1] before import</target>
@@ -1386,11 +1314,6 @@ Comment: voluntary do affectation here</note>
         <source>Next step</source>
         <target>Next step</target>
         <note>Line: 176</note>
-      </trans-unit>
-      <trans-unit id="e08caeac3f80ffa7889cdf1c8f30111f">
-        <source>Multiple value separator</source>
-        <target>Multiple value separator</target>
-        <note>Line: 131</note>
       </trans-unit>
     </body>
   </file>
@@ -1428,6 +1351,11 @@ Comment: voluntary do affectation here</note>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Email/Blocks/smtp_configuration.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="60aaf44d4b562252c04db7f98497e9aa">
+        <source>Port</source>
+        <target>Port</target>
+        <note>Line: 82</note>
+      </trans-unit>
       <trans-unit id="c098053744ce979cbd030908105d54fe">
         <source>Mail domain name</source>
         <target>Mail domain name</target>
@@ -1456,11 +1384,6 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="762160912d2bac8eb64bc00b711d6f6c">
         <source>Port number to use.</source>
         <target>Port number to use.</target>
-        <note>Line: 82</note>
-      </trans-unit>
-      <trans-unit id="60aaf44d4b562252c04db7f98497e9aa">
-        <source>Port</source>
-        <target>Port</target>
         <note>Line: 82</note>
       </trans-unit>
     </body>
@@ -1515,6 +1438,16 @@ Comment: voluntary do affectation here</note>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Employee/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="eb626c94531ec554f93b2b78a77c8b1b">
+        <source>Employees</source>
+        <target>Employees</target>
+        <note>Line: 37</note>
+      </trans-unit>
+      <trans-unit id="b6d4223e60986fa4c9af77ee5f7149c5">
+        <source>Sign in</source>
+        <target>Sign in</target>
+        <note>Line: 186</note>
+      </trans-unit>
       <trans-unit id="e3a918d60c36cd5892cd6913d72f68d9">
         <source>You are currently connected as %username%</source>
         <target>You are currently connected as %username%</target>
@@ -1525,16 +1458,6 @@ Comment: voluntary do affectation here</note>
         <target>Sign out from PrestaShop Addons</target>
         <note>Line: 181</note>
       </trans-unit>
-      <trans-unit id="b6d4223e60986fa4c9af77ee5f7149c5">
-        <source>Sign in</source>
-        <target>Sign in</target>
-        <note>Line: 186</note>
-      </trans-unit>
-      <trans-unit id="d52c376b3badee6132116bb9af74d0d2">
-        <source>Subscribe to PrestaShop newsletter</source>
-        <target>Subscribe to PrestaShop newsletter</target>
-        <note>Line: 205</note>
-      </trans-unit>
       <trans-unit id="435a2d71a0c6c33cd2c917b00b8e0da1">
         <source>Default page</source>
         <target>Default page</target>
@@ -1544,11 +1467,6 @@ Comment: voluntary do affectation here</note>
         <source>Permission profile</source>
         <target>Permission profile</target>
         <note>Line: 225</note>
-      </trans-unit>
-      <trans-unit id="eb626c94531ec554f93b2b78a77c8b1b">
-        <source>Employees</source>
-        <target>Employees</target>
-        <note>Line: 37</note>
       </trans-unit>
     </body>
   </file>
@@ -1717,6 +1635,15 @@ Comment: voluntary do affectation here</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/RequestSql/index.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="26420bd9e260012164a58a0f002e4821">
+        <source>Add new SQL query</source>
+        <target>Add new SQL query</target>
+        <note>Line: 36</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/RequestSql/view.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="526a00f8a3c4c865b9c1834f38b5e2c6">
@@ -1728,10 +1655,15 @@ Comment: voluntary do affectation here</note>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Webservice/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="51ba9470e0c6fcc53b976a6854b0f2e0">
-        <source>Set the resource permissions for this key:</source>
-        <target>Set the resource permissions for this key:</target>
-        <note>Line: 56</note>
+      <trans-unit id="897356954c2cd3d41b221e3f24f99bba">
+        <source>Key</source>
+        <target>Key</target>
+        <note>Line: 39</note>
+      </trans-unit>
+      <trans-unit id="52699c78843b98f98620186a59b0a3fa">
+        <source>Key description</source>
+        <target>Key description</target>
+        <note>Line: 44</note>
       </trans-unit>
       <trans-unit id="58af3456f86b42c86f963d896a62644f">
         <source>Webservice Accounts</source>
@@ -1743,20 +1675,15 @@ Comment: voluntary do affectation here</note>
         <target>Webservice account key.</target>
         <note>Line: 40</note>
       </trans-unit>
+      <trans-unit id="51ba9470e0c6fcc53b976a6854b0f2e0">
+        <source>Set the resource permissions for this key:</source>
+        <target>Set the resource permissions for this key:</target>
+        <note>Line: 56</note>
+      </trans-unit>
       <trans-unit id="d08ccf52b4cdd08e41cfb99ec42e0b29">
         <source>Permissions</source>
         <target>Permissions</target>
         <note>Line: 64</note>
-      </trans-unit>
-      <trans-unit id="897356954c2cd3d41b221e3f24f99bba">
-        <source>Key</source>
-        <target>Key</target>
-        <note>Line: 39</note>
-      </trans-unit>
-      <trans-unit id="52699c78843b98f98620186a59b0a3fa">
-        <source>Key description</source>
-        <target>Key description</target>
-        <note>Line: 44</note>
       </trans-unit>
     </body>
   </file>
@@ -1844,11 +1771,6 @@ Comment: voluntary do affectation here</note>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="74c9e12c3a19cfb79b79faf579934844">
-        <source>Add server</source>
-        <target>Add server</target>
-        <note>Line: 35</note>
-      </trans-unit>
       <trans-unit id="5b8c99dad1893a85076709b2d3c2d2d0">
         <source>IP Address</source>
         <target>IP Address</target>
@@ -1858,6 +1780,11 @@ Comment: voluntary do affectation here</note>
         <source>Weight</source>
         <target>Weight</target>
         <note>Line: 57</note>
+      </trans-unit>
+      <trans-unit id="74c9e12c3a19cfb79b79faf579934844">
+        <source>Add server</source>
+        <target>Add server</target>
+        <note>Line: 35</note>
       </trans-unit>
       <trans-unit id="003744a685f896a2d9764655f67f1a24">
         <source>Add Server</source>
@@ -1873,15 +1800,15 @@ Comment: voluntary do affectation here</note>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="f8d698aea36fcbead2b9d5359ffca76f">
-        <source>Smarty</source>
-        <target>Smarty</target>
-        <note>Line: 42</note>
-      </trans-unit>
       <trans-unit id="ec3028a12402ab7f43962a6f3a667b6e">
         <source>Debug mode</source>
         <target>Debug mode</target>
         <note>Line: 64</note>
+      </trans-unit>
+      <trans-unit id="f8d698aea36fcbead2b9d5359ffca76f">
+        <source>Smarty</source>
+        <target>Smarty</target>
+        <note>Line: 42</note>
       </trans-unit>
       <trans-unit id="010a6cb0eccdea35662ad711d443f2ec">
         <source>Optional features</source>
@@ -2012,6 +1939,11 @@ Comment: voluntary do affectation here</note>
         <target>Shop URL:</target>
         <note>Line: 118</note>
       </trans-unit>
+      <trans-unit id="24c5ec8e15ae9467ee0f820610512d67">
+        <source>Shop path:</source>
+        <target>Shop path:</target>
+        <note>Line: 121</note>
+      </trans-unit>
       <trans-unit id="b5b3eed3efd6cfebfea270066a1e1f9b">
         <source>Current theme in use:</source>
         <target>Current theme in use:</target>
@@ -2027,9 +1959,9 @@ Comment: voluntary do affectation here</note>
         <target>Mail method:</target>
         <note>Line: 137</note>
       </trans-unit>
-      <trans-unit id="f882852afa750c241cdb951bc52539fd">
-        <source>You are using the PHP mail() function.</source>
-        <target>You are using the PHP mail() function.</target>
+      <trans-unit id="0398efcdf22e008d4ab53cc6eeab7a71">
+        <source>You are using /usr/sbin/sendmail</source>
+        <target>You are using /usr/sbin/sendmail</target>
         <note>Line: 140</note>
       </trans-unit>
       <trans-unit id="cffa72aaebae1bd90bbe1b8d827ecb1c">
@@ -2102,11 +2034,6 @@ Comment: voluntary do affectation here</note>
         <target>List of changed files</target>
         <note>Line: 234</note>
       </trans-unit>
-      <trans-unit id="24c5ec8e15ae9467ee0f820610512d67">
-        <source>Shop path:</source>
-        <target>Shop path:</target>
-        <note>Line: 121</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/MailTheme/Blocks/list_mail_theme_layouts.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -2138,6 +2065,15 @@ Comment: voluntary do affectation here</note>
         <source>Price tax included</source>
         <target>Price tax included</target>
         <note>Line: 81</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/products.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9d20a93036ba910dd75ffbcec173798e">
+        <source>Price per unit</source>
+        <target>Price per unit</target>
+        <note>Line: 62</note>
       </trans-unit>
     </body>
   </file>

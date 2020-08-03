@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="controllers/admin/AdminEmployeesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7bc873cba11f035df692c3549366c722">
-        <source>-- Choose --</source>
-        <target>-- Choose --</target>
-        <note>Line: 392</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e81c4e4f2b7b93b481e13a8553c2ae1b">
@@ -299,9 +290,9 @@ Comment: Special case for Product : either one or the other. Not both.</note>
         <target>At the top of the screen, please select the "Import" tab</target>
         <note>Line: 44</note>
       </trans-unit>
-      <trans-unit id="6463499cc4522ee5cef415d727f543a3">
-        <source>Click on the "Browse" button and select the backup file from your hard drive.</source>
-        <target>Click on the "Browse" button and select the backup file from your hard drive.</target>
+      <trans-unit id="2e516ba34e888923fa0f76e5dad9e24a">
+        <source>Click on the "%phpmyadmin_browse_label%" button and select the backup file from your hard drive.</source>
+        <target>Click on the "%phpmyadmin_browse_label%" button and select the backup file from your hard drive.</target>
         <note>Line: 45</note>
       </trans-unit>
       <trans-unit id="85614411a0c7c3eb8c7c7a81be9fb918">
@@ -314,9 +305,9 @@ Comment: Special case for Product : either one or the other. Not both.</note>
         <target>If your backup file exceeds this limit, contact your hosting provider for assistance.</target>
         <note>Line: 48</note>
       </trans-unit>
-      <trans-unit id="44b2f277fe0d0365bbc168e617387c73">
-        <source>Click on the "Go" button and please wait patiently for the import process to conclude. This may take several minutes.</source>
-        <target>Click on the "Go" button and please wait patiently for the import process to conclude. This may take several minutes.</target>
+      <trans-unit id="4a67f50a5bcc2387568637556809af28">
+        <source>Click on the "%phpmyadmin_go_label%" button and please wait patiently for the import process to conclude. This may take several minutes.</source>
+        <target>Click on the "%phpmyadmin_go_label%" button and please wait patiently for the import process to conclude. This may take several minutes.</target>
         <note>Line: 50</note>
       </trans-unit>
     </body>
@@ -347,10 +338,15 @@ Comment: Special case for Product : either one or the other. Not both.</note>
         <target>You can read information on import at:</target>
         <note>Line: 37</note>
       </trans-unit>
-      <trans-unit id="4e7357d876d6d15fe084be41934e6555">
-        <source>http://doc.prestashop.com/display/PS17/Import</source>
-        <target>http://doc.prestashop.com/display/PS17/Import</target>
+      <trans-unit id="de7b4d4ecc0e454c441f08058fdac203">
+        <source>https://doc.prestashop.com/display/PS17/Import</source>
+        <target>https://doc.prestashop.com/display/PS17/Import</target>
         <note>Line: 39</note>
+      </trans-unit>
+      <trans-unit id="3bb4a695db0c87a3d70a2deffddeb743">
+        <source>Read more about the CSV format at:</source>
+        <target>Read more about the CSV format at:</target>
+        <note>Line: 43</note>
       </trans-unit>
       <trans-unit id="9d23c31f2dcc1ace9296037f327563a4">
         <source>https://en.wikipedia.org/wiki/Comma-separated_values</source>
@@ -391,16 +387,6 @@ Comment: Special case for Product : either one or the other. Not both.</note>
         <source>Sends an email to let you know your import is complete. It can be useful when handling large files, as the import may take some time.</source>
         <target>Sends an email to let you know your import is complete. It can be useful when handling large files, as the import may take some time.</target>
         <note>Line: 166</note>
-      </trans-unit>
-      <trans-unit id="3bb4a695db0c87a3d70a2deffddeb743">
-        <source>Read more about the CSV format at:</source>
-        <target>Read more about the CSV format at:</target>
-        <note>Line: 43</note>
-      </trans-unit>
-      <trans-unit id="de7b4d4ecc0e454c441f08058fdac203">
-        <source>https://doc.prestashop.com/display/PS17/Import</source>
-        <target>https://doc.prestashop.com/display/PS17/Import</target>
-        <note>Line: 39</note>
       </trans-unit>
     </body>
   </file>
@@ -443,11 +429,6 @@ Comment: Special case for Product : either one or the other. Not both.</note>
         <source>Password should be at least %num% characters long.</source>
         <target>Password should be at least %num% characters long.</target>
         <note>Line: 80</note>
-      </trans-unit>
-      <trans-unit id="0b2827832fff3d973ee0ed2e6c7d4b23">
-        <source>PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, you can disable this option.</source>
-        <target>PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, you can disable this option.</target>
-        <note>Line: 206</note>
       </trans-unit>
       <trans-unit id="c4e326fcaa83c6b1ca3856175bb86d2e">
         <source>This page will be displayed just after login.</source>
@@ -496,24 +477,24 @@ Comment: Special case for Product : either one or the other. Not both.</note>
         <target>How do I create a new SQL query?</target>
         <note>Line: 34</note>
       </trans-unit>
-      <trans-unit id="555f1c93c6aa30a9b28e5cb37eaade53">
-        <source>Click "Add New".</source>
-        <target>Click "Add New".</target>
+      <trans-unit id="bd98e6133da373d5d4d0241cae2e5df5">
+        <source>Click "%add_new_label%".</source>
+        <target>Click "%add_new_label%".</target>
         <note>Line: 36</note>
       </trans-unit>
-      <trans-unit id="b7ccdf6ab58f5514acc520721ddc9f08">
-        <source>Fill in the fields and click "Save".</source>
-        <target>Fill in the fields and click "Save".</target>
+      <trans-unit id="6fe4a9d3d016ffb7ac0c79b9b34f759b">
+        <source>Fill in the fields and click "%save_label%".</source>
+        <target>Fill in the fields and click "%save_label%".</target>
         <note>Line: 37</note>
       </trans-unit>
-      <trans-unit id="64427cd6d9efe12b779a1e3bb2fafc06">
-        <source>You can then view the query results by clicking on the Edit action in the dropdown menu</source>
-        <target>You can then view the query results by clicking on the Edit action in the dropdown menu</target>
+      <trans-unit id="b6244b10c31060f4136acddff13a2729">
+        <source>You can then view the query results by clicking on the "%view_label%" action in the dropdown menu</source>
+        <target>You can then view the query results by clicking on the "%view_label%" action in the dropdown menu</target>
         <note>Line: 38</note>
       </trans-unit>
-      <trans-unit id="29147406190a86209d5f4b3080cc7fa9">
-        <source>You can also export the query results as a CSV file by clicking on the Export button</source>
-        <target>You can also export the query results as a CSV file by clicking on the Export button</target>
+      <trans-unit id="09fac4ee316f450e3defd79540c2d9fe">
+        <source>You can also export the query results as a CSV file by clicking on the "%export_label%" button</source>
+        <target>You can also export the query results as a CSV file by clicking on the "%export_label%" button</target>
         <note>Line: 39</note>
       </trans-unit>
     </body>
@@ -568,9 +549,9 @@ Comment: Special case for Product : either one or the other. Not both.</note>
         <target>Set the amount of hours during which the front office cookies are valid. After that amount of time, the customer will have to log in again.</target>
         <note>Line: 57</note>
       </trans-unit>
-      <trans-unit id="a676520f8296be0319ad6268657471ea">
-        <source>Set the amount of hours during which the back office cookies are valid. After that amount of time, the PrestaShop user will have to log in again.</source>
-        <target>Set the amount of hours during which the back office cookies are valid. After that amount of time, the PrestaShop user will have to log in again.</target>
+      <trans-unit id="b67a6169f1139b421eabe8278277b0ae">
+        <source>When you access your back office and decide to stay logged in, your cookies lifetime defines your browser session. Set here the number of hours during which you want them valid before logging in again.</source>
+        <target>When you access your back office and decide to stay logged in, your cookies lifetime defines your browser session. Set here the number of hours during which you want them valid before logging in again.</target>
         <note>Line: 64</note>
       </trans-unit>
       <trans-unit id="a067e61c044ba333fae23b61c83d87c4">
@@ -607,11 +588,6 @@ Comment: Special case for Product : either one or the other. Not both.</note>
         <source>This will display notifications when new messages are posted in your shop.</source>
         <target>This will display notifications when new messages are posted in your shop.</target>
         <note>Line: 153</note>
-      </trans-unit>
-      <trans-unit id="b67a6169f1139b421eabe8278277b0ae">
-        <source>When you access your back office and decide to stay logged in, your cookies lifetime defines your browser session. Set here the number of hours during which you want them valid before logging in again.</source>
-        <target>When you access your back office and decide to stay logged in, your cookies lifetime defines your browser session. Set here the number of hours during which you want them valid before logging in again.</target>
-        <note>Line: 64</note>
       </trans-unit>
     </body>
   </file>

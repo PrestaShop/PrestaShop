@@ -47,6 +47,11 @@
         <target>orders / month</target>
         <note>Line: 158</note>
       </trans-unit>
+      <trans-unit id="691d502cfd0e0626cd3b058e5682ad1c">
+        <source>items</source>
+        <target>items</target>
+        <note>Line: 159</note>
+      </trans-unit>
       <trans-unit id="dc270bcf468689b19074a5eef7581b52">
         <source>Not enough</source>
         <target>Not enough</target>
@@ -81,11 +86,6 @@
         <source>Global</source>
         <target>Global</target>
         <note>Line: 319</note>
-      </trans-unit>
-      <trans-unit id="691d502cfd0e0626cd3b058e5682ad1c">
-        <source>items</source>
-        <target>items</target>
-        <note>Line: 159</note>
       </trans-unit>
     </body>
   </file>
