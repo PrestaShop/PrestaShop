@@ -85,6 +85,7 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
      * @param EmployeeFormAccessCheckerInterface $employeeFormAccessChecker
      * @param EmployeeDataProviderInterface $employeeDataProvider
      * @param Hashing $hashing
+     * @param ImageUploaderInterface|null $imageUploader
      */
     public function __construct(
         CommandBusInterface $bus,

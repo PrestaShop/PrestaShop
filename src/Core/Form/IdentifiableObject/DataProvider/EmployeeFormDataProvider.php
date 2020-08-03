@@ -93,6 +93,7 @@ final class EmployeeFormDataProvider implements FormDataProviderInterface
     {
         $data = [
             'active' => true,
+            'has_enabled_gravatar' => false,
         ];
 
         if ($this->isMultistoreFeatureActive) {
