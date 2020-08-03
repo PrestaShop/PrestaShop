@@ -330,7 +330,7 @@ class ProductCore extends ObjectModel
      *
      * Long description for delivery in-stock product information.
      *
-     * @var string
+     * @var string[]
      */
     public $delivery_in_stock;
 
@@ -339,7 +339,7 @@ class ProductCore extends ObjectModel
      *
      * Long description for delivery out-stock product information.
      *
-     * @var string
+     * @var string[]
      */
     public $delivery_out_stock;
 
@@ -5566,6 +5566,12 @@ class ProductCore extends ObjectModel
         } else {
             $row['unit_price'] = 0.0;
         }
+
+        Hook::exec('actionGetProductPropertiesAfterUnitPrice', [
+            'id_lang' => $id_lang,
+            'product' => &$row,
+            'context' => $context,
+        ]);
 
         self::$productPropertiesCache[$cache_key] = $row;
 

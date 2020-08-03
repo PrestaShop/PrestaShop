@@ -7,9 +7,8 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const SeoAndUrlsPage = require('@pages/BO/shopParameters/trafficAndSeo/seoAndUrls');
+const dashboardPage = require('@pages/BO/dashboard');
+const seoAndUrlsPage = require('@pages/BO/shopParameters/trafficAndSeo/seoAndUrls');
 
 
 // Import test context
@@ -20,59 +19,50 @@ const baseContext = 'functional_BO_shopParameters_trafficAndSeo_seoAndUrls_helpe
 let browserContext;
 let page;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    seoAndUrlsPage: new SeoAndUrlsPage(page),
-  };
-};
-
 describe('Helper card', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to Traffic & SEO page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to \'Shop Parameters > Traffic & SEO\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSeoPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.shopParametersParentLink,
-      this.pageObjects.dashboardPage.trafficAndSeoLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.shopParametersParentLink,
+      dashboardPage.trafficAndSeoLink,
     );
 
-    await this.pageObjects.seoAndUrlsPage.closeSfToolBar();
+    await seoAndUrlsPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.seoAndUrlsPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.seoAndUrlsPage.pageTitle);
+    const pageTitle = await seoAndUrlsPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
   });
 
   it('should open the help side bar and check the document language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
 
-    const isHelpSidebarVisible = await this.pageObjects.seoAndUrlsPage.openHelpSideBar();
+    const isHelpSidebarVisible = await seoAndUrlsPage.openHelpSideBar(page);
     await expect(isHelpSidebarVisible).to.be.true;
 
-    const documentURL = await this.pageObjects.seoAndUrlsPage.getHelpDocumentURL();
+    const documentURL = await seoAndUrlsPage.getHelpDocumentURL(page);
     await expect(documentURL).to.contains('country=en');
   });
 
   it('should close the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
 
-    const isHelpSidebarClosed = await this.pageObjects.seoAndUrlsPage.closeHelpSideBar();
+    const isHelpSidebarClosed = await seoAndUrlsPage.closeHelpSideBar(page);
     await expect(isHelpSidebarClosed).to.be.true;
   });
 });

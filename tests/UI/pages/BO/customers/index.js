@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class Customers extends BOBasePage {
-  constructor(page) {
-    super(page);
+class Customers extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Manage your Customers • ';
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
@@ -64,45 +64,50 @@ module.exports = class Customers extends BOBasePage {
    */
   /**
    * Reset input filters
+   * @param page
    * @returns {Promise<void>}
    */
-  async resetFilter() {
-    if (!(await this.elementNotVisible(this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(this.filterResetButton);
+  async resetFilter(page) {
+    if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
+      await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
   }
 
   /**
    * Get number of elements in grid
+   * @param page
    * @returns {Promise<number>}
    */
-  async getNumberOfElementInGrid() {
-    return this.getNumberFromText(this.customerGridTitle);
+  async getNumberOfElementInGrid(page) {
+    return this.getNumberFromText(page, this.customerGridTitle);
   }
 
   /**
    * Reset Filter And get number of elements in list
+   * @param page
    * @returns {Promise<number>}
    */
-  async resetAndGetNumberOfLines() {
-    await this.resetFilter();
-    return this.getNumberOfElementInGrid();
+  async resetAndGetNumberOfLines(page) {
+    await this.resetFilter(page);
+    return this.getNumberOfElementInGrid(page);
   }
 
   /**
    * Filter list of customers
+   * @param page
    * @param filterType, input or select to choose method of filter
    * @param filterBy, column to filter
    * @param value, value to filter with
    * @return {Promise<void>}
    */
-  async filterCustomers(filterType, filterBy, value = '') {
+  async filterCustomers(page, filterType, filterBy, value = '') {
     switch (filterType) {
       case 'input':
-        await this.setValue(this.customerFilterColumnInput(filterBy), value);
+        await this.setValue(page, this.customerFilterColumnInput(filterBy), value);
         break;
       case 'select':
         await this.selectByVisibleText(
+          page,
           this.customerFilterColumnInput(filterBy),
           value,
         );
@@ -111,17 +116,19 @@ module.exports = class Customers extends BOBasePage {
       // Do nothing
     }
     // click on search
-    await this.clickAndWaitForNavigation(this.filterSearchButton);
+    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
 
   /**
    * Filter Customers by select that contains values (Yes/No)
+   * @param page
    * @param filterBy
    * @param value
    * @return {Promise<void>}
    */
-  async filterCustomersSwitch(filterBy, value) {
+  async filterCustomersSwitch(page, filterBy, value) {
     await this.filterCustomers(
+      page,
       'select',
       filterBy,
       value ? 'Yes' : 'No',
@@ -130,25 +137,27 @@ module.exports = class Customers extends BOBasePage {
 
   /**
    * Get Value of columns Enabled, Newsletter or Partner Offers
+   * @param page
    * @param row, row in table
    * @param column, column to check
    * @return {Promise<boolean>}
    */
-  async getToggleColumnValue(row, column) {
-    await this.waitForVisibleSelector(this.customersListTableColumn(row, column), 2000);
-    return this.elementVisible(this.customersListColumnValidIcon(row, column), 100);
+  async getToggleColumnValue(page, row, column) {
+    await this.waitForVisibleSelector(page, this.customersListTableColumn(row, column), 2000);
+    return this.elementVisible(page, this.customersListColumnValidIcon(row, column), 100);
   }
 
   /**
    * Quick edit toggle column value
+   * @param page
    * @param row, row in table
    * @param column, column to update
    * @param valueWanted, Value wanted in column
    * @return {Promise<boolean>}, return true if action is done, false otherwise
    */
-  async updateToggleColumnValue(row, column, valueWanted = true) {
-    if (await this.getToggleColumnValue(row, column) !== valueWanted) {
-      await this.clickAndWaitForNavigation(`${this.customersListTableColumn(row, column)} i`);
+  async updateToggleColumnValue(page, row, column, valueWanted = true) {
+    if (await this.getToggleColumnValue(page, row, column) !== valueWanted) {
+      await this.clickAndWaitForNavigation(page, `${this.customersListTableColumn(row, column)} i`);
       return true;
     }
     return false;
@@ -156,45 +165,48 @@ module.exports = class Customers extends BOBasePage {
 
   /**
    * get text from a column
+   * @param page
    * @param row, row in table
    * @param column, which column
    * @returns {Promise<string>}
    */
-  async getTextColumnFromTableCustomers(row, column) {
-    return this.getTextContent(this.customersListTableColumn(row, column));
+  async getTextColumnFromTableCustomers(page, row, column) {
+    return this.getTextContent(page, this.customersListTableColumn(row, column));
   }
 
   /**
    * * Get all information for a customer in table
+   * @param page
    * @param row, row of customer in table
    * @param row
    * @returns {Promise<{firstName: string, lastName: string, newsletter: boolean, socialTitle: string,
    * id: string, partnerOffers: boolean, email: string, sales: string, status: boolean}>}
    */
-  async getCustomerFromTable(row) {
+  async getCustomerFromTable(page, row) {
     return {
-      id: await this.getTextColumnFromTableCustomers(row, 'id_customer'),
-      socialTitle: await this.getTextColumnFromTableCustomers(row, 'social_title'),
-      firstName: await this.getTextColumnFromTableCustomers(row, 'firstname'),
-      lastName: await this.getTextColumnFromTableCustomers(row, 'lastname'),
-      email: await this.getTextColumnFromTableCustomers(row, 'email'),
-      sales: await this.getTextColumnFromTableCustomers(row, 'total_spent'),
-      status: await this.getToggleColumnValue(row, 'active'),
-      newsletter: await this.getToggleColumnValue(row, 'newsletter'),
-      partnerOffers: await this.getToggleColumnValue(row, 'optin'),
+      id: await this.getTextColumnFromTableCustomers(page, row, 'id_customer'),
+      socialTitle: await this.getTextColumnFromTableCustomers(page, row, 'social_title'),
+      firstName: await this.getTextColumnFromTableCustomers(page, row, 'firstname'),
+      lastName: await this.getTextColumnFromTableCustomers(page, row, 'lastname'),
+      email: await this.getTextColumnFromTableCustomers(page, row, 'email'),
+      sales: await this.getTextColumnFromTableCustomers(page, row, 'total_spent'),
+      status: await this.getToggleColumnValue(page, row, 'active'),
+      newsletter: await this.getToggleColumnValue(page, row, 'newsletter'),
+      partnerOffers: await this.getToggleColumnValue(page, row, 'optin'),
     };
   }
 
   /**
    * Get content from all rows
+   * @param page
    * @param column
    * @return {Promise<[]>}
    */
-  async getAllRowsColumnContent(column) {
-    const rowsNumber = await this.getNumberOfElementInGrid();
+  async getAllRowsColumnContent(page, column) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
     for (let i = 1; i <= rowsNumber; i++) {
-      const rowContent = await this.getTextColumnFromTableCustomers(i, column);
+      const rowContent = await this.getTextColumnFromTableCustomers(page, i, column);
       await allRowsContentTable.push(rowContent);
     }
     return allRowsContentTable;
@@ -202,186 +214,201 @@ module.exports = class Customers extends BOBasePage {
 
   /**
    * Go to Customer Page
+   * @param page
    * @return {Promise<void>}
    */
-  async goToAddNewCustomerPage() {
-    await this.clickAndWaitForNavigation(this.addNewCustomerLink);
+  async goToAddNewCustomerPage(page) {
+    await this.clickAndWaitForNavigation(page, this.addNewCustomerLink);
   }
 
   /**
    * View Customer in list
+   * @param page
    * @param row, row in table
    * @return {Promise<void>}
    */
-  async goToViewCustomerPage(row) {
+  async goToViewCustomerPage(page, row) {
     await Promise.all([
-      this.page.click(this.customersListTableToggleDropDown(row)),
-      this.waitForVisibleSelector(`${this.customersListTableToggleDropDown(row)}[aria-expanded='true']`),
+      page.click(this.customersListTableToggleDropDown(row)),
+      this.waitForVisibleSelector(page, `${this.customersListTableToggleDropDown(row)}[aria-expanded='true']`),
     ]);
-    await this.clickAndWaitForNavigation(this.customersListTableViewLink(row));
+    await this.clickAndWaitForNavigation(page, this.customersListTableViewLink(row));
   }
 
   /**
    * Go to Edit customer page
+   * @param page
    * @param row, row in table
    * @return {Promise<void>}
    */
-  async goToEditCustomerPage(row) {
-    await this.clickAndWaitForNavigation(this.customersListTableEditLink(row));
+  async goToEditCustomerPage(page, row) {
+    await this.clickAndWaitForNavigation(page, this.customersListTableEditLink(row));
   }
 
   /**
    * Delete Customer
+   * @param page
    * @param row, row in table
    * @param allowRegistrationAfterDelete, Deletion method to choose in modal
    * @returns {Promise<string>}
    */
-  async deleteCustomer(row, allowRegistrationAfterDelete = true) {
+  async deleteCustomer(page, row, allowRegistrationAfterDelete = true) {
     // Click on dropDown
     await Promise.all([
-      this.page.click(this.customersListTableToggleDropDown(row)),
-      this.waitForVisibleSelector(`${this.customersListTableToggleDropDown(row)}[aria-expanded='true']`),
+      page.click(this.customersListTableToggleDropDown(row)),
+      this.waitForVisibleSelector(page, `${this.customersListTableToggleDropDown(row)}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      this.page.click(this.customersListTableDeleteLink(row)),
-      this.waitForVisibleSelector(this.deleteCustomerModal),
+      page.click(this.customersListTableDeleteLink(row)),
+      this.waitForVisibleSelector(page, this.deleteCustomerModal),
     ]);
-    await this.chooseRegistrationAndDelete(allowRegistrationAfterDelete);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.chooseRegistrationAndDelete(page, allowRegistrationAfterDelete);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
    * Delete all Customers with Bulk Actions
+   * @param page
    * @param allowRegistrationAfterDelete, Deletion method to choose in modal
    * @returns {Promise<string>}
    */
-  async deleteCustomersBulkActions(allowRegistrationAfterDelete = true) {
+  async deleteCustomersBulkActions(page, allowRegistrationAfterDelete = true) {
     // Click on Select All
     await Promise.all([
-      this.page.$eval(this.selectAllRowsLabel, el => el.click()),
-      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
+      page.$eval(this.selectAllRowsLabel, el => el.click()),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
-      this.page.click(this.bulkActionsToggleButton),
-      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
+      page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      this.page.click(this.bulkActionsDeleteButton),
-      this.waitForVisibleSelector(this.deleteCustomerModal),
+      page.click(this.bulkActionsDeleteButton),
+      this.waitForVisibleSelector(page, this.deleteCustomerModal),
     ]);
-    await this.chooseRegistrationAndDelete(allowRegistrationAfterDelete);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.chooseRegistrationAndDelete(page, allowRegistrationAfterDelete);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
    * Choose if customer can register after delete and perform delete action
+   * @param page
    * @param allowRegistrationAfterDelete
    * @return {Promise<void>}
    */
-  async chooseRegistrationAndDelete(allowRegistrationAfterDelete) {
+  async chooseRegistrationAndDelete(page, allowRegistrationAfterDelete) {
     // Choose deletion method
-    if (allowRegistrationAfterDelete) await this.page.click(this.deleteCustomerModalMethodInput(0));
-    else await this.page.click(this.deleteCustomerModalMethodInput(1));
+    if (allowRegistrationAfterDelete) {
+      await page.click(this.deleteCustomerModalMethodInput(0));
+    } else {
+      await page.click(this.deleteCustomerModalMethodInput(1));
+    }
+
     // Click on delete button and wait for action to finish
-    await this.clickAndWaitForNavigation(this.deleteCustomerModalDeleteButton);
-    await this.waitForVisibleSelector(this.alertSuccessBlockParagraph);
+    await this.clickAndWaitForNavigation(page, this.deleteCustomerModalDeleteButton);
+    await this.waitForVisibleSelector(page, this.alertSuccessBlockParagraph);
   }
 
   /**
    * Enable / disable customers by Bulk Actions
+   * @param page
    * @param enable
    * @returns {Promise<string>}
    */
-  async changeCustomersEnabledColumnBulkActions(enable = true) {
+  async changeCustomersEnabledColumnBulkActions(page, enable = true) {
     // Click on Select All
     await Promise.all([
-      this.page.$eval(this.selectAllRowsLabel, el => el.click()),
-      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
+      page.$eval(this.selectAllRowsLabel, el => el.click()),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
-      this.page.click(this.bulkActionsToggleButton),
-      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
+      page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
-    await this.clickAndWaitForNavigation(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /* Sort functions */
   /**
    * Sort table by clicking on column name
+   * @param page
    * @param sortBy, column to sort with
    * @param sortDirection, asc or desc
    * @return {Promise<void>}
    */
-  async sortTable(sortBy, sortDirection) {
+  async sortTable(page, sortBy, sortDirection) {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
     let i = 0;
-    while (await this.elementNotVisible(sortColumnDiv, 1000) && i < 2) {
-      await this.clickAndWaitForNavigation(sortColumnSpanButton);
+    while (await this.elementNotVisible(page, sortColumnDiv, 1000) && i < 2) {
+      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
     }
-    await this.waitForVisibleSelector(sortColumnDiv);
+    await this.waitForVisibleSelector(page, sortColumnDiv);
   }
 
   /**
    * Set required fields
+   * @param page
    * @param id
    * @param valueWanted
    * @returns {Promise<string>}
    */
-  async setRequiredFields(id, valueWanted = true) {
+  async setRequiredFields(page, id, valueWanted = true) {
     // Check if form is open
-    if (await this.elementNotVisible(`${this.requiredFieldsForm}.show`, 1000)) {
+    if (await this.elementNotVisible(page, `${this.requiredFieldsForm}.show`, 1000)) {
       await Promise.all([
-        this.waitForSelectorAndClick(this.setRequiredFieldsButton),
-        this.waitForVisibleSelector(`${this.requiredFieldsForm}.show`),
+        this.waitForSelectorAndClick(page, this.setRequiredFieldsButton),
+        this.waitForVisibleSelector(page, `${this.requiredFieldsForm}.show`),
       ]);
     }
 
     // Click on checkbox if not selected
-    const isCheckboxSelected = await this.isCheckboxSelected(this.requiredFieldCheckBox(id));
+    const isCheckboxSelected = await this.isCheckboxSelected(page, this.requiredFieldCheckBox(id));
     if (valueWanted !== isCheckboxSelected) {
-      await this.page.$eval(`${this.requiredFieldCheckBox(id)} + i`, el => el.click());
+      await page.$eval(`${this.requiredFieldCheckBox(id)} + i`, el => el.click());
     }
 
     // Save setting
-    await this.clickAndWaitForNavigation(this.saveButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.clickAndWaitForNavigation(page, this.saveButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   // Export methods
   /**
    * Click on link to export customers to a csv file
+   * @param page
    * @return {Promise<*>}
    */
-  async exportDataToCsv() {
+  async exportDataToCsv(page) {
     await Promise.all([
-      this.page.click(this.customerGridActionsButton),
-      this.waitForVisibleSelector(`${this.gridActionDropDownMenu}.show`),
+      page.click(this.customerGridActionsButton),
+      this.waitForVisibleSelector(page, `${this.gridActionDropDownMenu}.show`),
     ]);
 
     const [download] = await Promise.all([
-      this.page.waitForEvent('download'),
-      this.page.click(this.gridActionExportLink),
-      this.page.waitForSelector(`${this.gridActionDropDownMenu}.show`, {state: 'hidden'}),
+      page.waitForEvent('download'),
+      page.click(this.gridActionExportLink),
+      page.waitForSelector(`${this.gridActionDropDownMenu}.show`, {state: 'hidden'}),
     ]);
     return download.path();
   }
 
   /**
    * Get customer from table in csv format
+   * @param page
    * Adding an empty csv case after email is for company column which is always empty (Except when B2B mode is enabled)
    * @param row
    * @return {Promise<string>}
    */
-  async getCustomerInCsvFormat(row) {
-    const customer = await this.getCustomerFromTable(row);
+  async getCustomerInCsvFormat(page, row) {
+    const customer = await this.getCustomerFromTable(page, row);
     return `${customer.id};`
       + `${customer.socialTitle};`
       + `${customer.firstName};`
@@ -396,37 +423,43 @@ module.exports = class Customers extends BOBasePage {
   /* Pagination methods */
   /**
    * Get pagination label
+   * @param page
    * @return {Promise<string>}
    */
-  getPaginationLabel() {
-    return this.getTextContent(this.paginationLabel);
+  getPaginationLabel(page) {
+    return this.getTextContent(page, this.paginationLabel);
   }
 
   /**
    * Select pagination limit
+   * @param page
    * @param number
    * @returns {Promise<string>}
    */
-  async selectPaginationLimit(number) {
-    await this.selectByVisibleText(this.paginationLimitSelect, number);
-    return this.getPaginationLabel();
+  async selectPaginationLimit(page, number) {
+    await this.selectByVisibleText(page, this.paginationLimitSelect, number);
+    return this.getPaginationLabel(page);
   }
 
   /**
    * Click on next
+   * @param page
    * @returns {Promise<string>}
    */
-  async paginationNext() {
-    await this.clickAndWaitForNavigation(this.paginationNextLink);
-    return this.getPaginationLabel();
+  async paginationNext(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    return this.getPaginationLabel(page);
   }
 
   /**
    * Click on previous
+   * @param page
    * @returns {Promise<string>}
    */
-  async paginationPrevious() {
-    await this.clickAndWaitForNavigation(this.paginationPreviousLink);
-    return this.getPaginationLabel();
+  async paginationPrevious(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    return this.getPaginationLabel(page);
   }
-};
+}
+
+module.exports = new Customers();

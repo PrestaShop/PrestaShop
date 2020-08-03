@@ -7,10 +7,9 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const AddressesPage = require('@pages/BO/customers/addresses');
-const AddAddressPage = require('@pages/BO/customers/addresses/add');
+const dashboardPage = require('@pages/BO/dashboard');
+const addressesPage = require('@pages/BO/customers/addresses');
+const addAddressPage = require('@pages/BO/customers/addresses/add');
 
 // Import data
 const AddressFaker = require('@data/faker/address');
@@ -28,51 +27,41 @@ let numberOfAddresses = 0;
 const createAddressData = new AddressFaker({email: 'pub@prestashop.com', country: 'France'});
 const editAddressData = new AddressFaker({country: 'France'});
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    addressesPage: new AddressesPage(page),
-    addAddressPage: new AddAddressPage(page),
-  };
-};
-
 // Create, Read, Update and Delete address in BO
 describe('Create, Read, Update and Delete address in BO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to addresses page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to \'Customers>Addresses\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.customersParentLink,
-      this.pageObjects.dashboardPage.addressesLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.customersParentLink,
+      dashboardPage.addressesLink,
     );
 
-    await this.pageObjects.addressesPage.closeSfToolBar();
+    await addressesPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.addressesPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.addressesPage.pageTitle);
+    const pageTitle = await addressesPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(addressesPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-    numberOfAddresses = await this.pageObjects.addressesPage.resetAndGetNumberOfLines();
+    numberOfAddresses = await addressesPage.resetAndGetNumberOfLines(page);
     await expect(numberOfAddresses).to.be.above(0);
   });
   // 1 : Create address
@@ -80,18 +69,18 @@ describe('Create, Read, Update and Delete address in BO', async () => {
     it('should go to add new address page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewAddressPage', baseContext);
 
-      await this.pageObjects.addressesPage.goToAddNewAddressPage();
-      const pageTitle = await this.pageObjects.addAddressPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.addAddressPage.pageTitleCreate);
+      await addressesPage.goToAddNewAddressPage(page);
+      const pageTitle = await addAddressPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addAddressPage.pageTitleCreate);
     });
 
     it('should create address and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAddress', baseContext);
 
-      const textResult = await this.pageObjects.addAddressPage.createEditAddress(createAddressData);
-      await expect(textResult).to.equal(this.pageObjects.addressesPage.successfulCreationMessage);
+      const textResult = await addAddressPage.createEditAddress(page, createAddressData);
+      await expect(textResult).to.equal(addressesPage.successfulCreationMessage);
 
-      const numberOfAddressesAfterCreation = await this.pageObjects.addressesPage.getNumberOfElementInGrid();
+      const numberOfAddressesAfterCreation = await addressesPage.getNumberOfElementInGrid(page);
       await expect(numberOfAddressesAfterCreation).to.be.equal(numberOfAddresses + 1);
     });
   });
@@ -101,54 +90,57 @@ describe('Create, Read, Update and Delete address in BO', async () => {
     it('should go to \'Customers>Addresses\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPageToUpdate', baseContext);
 
-      await this.pageObjects.addressesPage.goToSubMenu(
-        this.pageObjects.addressesPage.customersParentLink,
-        this.pageObjects.addressesPage.addressesLink,
+      await addressesPage.goToSubMenu(
+        page,
+        addressesPage.customersParentLink,
+        addressesPage.addressesLink,
       );
 
-      const pageTitle = await this.pageObjects.addressesPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.addressesPage.pageTitle);
+      const pageTitle = await addressesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addressesPage.pageTitle);
     });
 
     it('should filter list by first name and last name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
 
-      await this.pageObjects.addressesPage.resetFilter();
+      await addressesPage.resetFilter(page);
 
-      await this.pageObjects.addressesPage.filterAddresses(
+      await addressesPage.filterAddresses(
+        page,
         'input',
         'firstname',
         createAddressData.firstName,
       );
 
-      await this.pageObjects.addressesPage.filterAddresses(
+      await addressesPage.filterAddresses(
+        page,
         'input',
         'lastname',
         createAddressData.lastName,
       );
 
-      const firstName = await this.pageObjects.addressesPage.getTextColumnFromTableAddresses(1, 'firstname');
+      const firstName = await addressesPage.getTextColumnFromTableAddresses(page, 1, 'firstname');
       await expect(firstName).to.contains(createAddressData.firstName);
 
-      const lastName = await this.pageObjects.addressesPage.getTextColumnFromTableAddresses(1, 'lastname');
+      const lastName = await addressesPage.getTextColumnFromTableAddresses(page, 1, 'lastname');
       await expect(lastName).to.contains(createAddressData.lastName);
     });
 
     it('should go to edit address page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditAddressPage', baseContext);
 
-      await this.pageObjects.addressesPage.goToEditAddressPage(1);
-      const pageTitle = await this.pageObjects.addAddressPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.addAddressPage.pageTitleEdit);
+      await addressesPage.goToEditAddressPage(page, 1);
+      const pageTitle = await addAddressPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addAddressPage.pageTitleEdit);
     });
 
     it('should update address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateAddress', baseContext);
 
-      const textResult = await this.pageObjects.addAddressPage.createEditAddress(editAddressData);
-      await expect(textResult).to.equal(this.pageObjects.addressesPage.successfulUpdateMessage);
+      const textResult = await addAddressPage.createEditAddress(page, editAddressData);
+      await expect(textResult).to.equal(addressesPage.successfulUpdateMessage);
 
-      const numberOfAddressesAfterUpdate = await this.pageObjects.addressesPage.resetAndGetNumberOfLines();
+      const numberOfAddressesAfterUpdate = await addressesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfAddressesAfterUpdate).to.be.equal(numberOfAddresses + 1);
     });
   });
@@ -158,46 +150,49 @@ describe('Create, Read, Update and Delete address in BO', async () => {
     it('should go to \'Customers>Addresses\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPageToDelete', baseContext);
 
-      await this.pageObjects.addressesPage.goToSubMenu(
-        this.pageObjects.addressesPage.customersParentLink,
-        this.pageObjects.addressesPage.addressesLink,
+      await addressesPage.goToSubMenu(
+        page,
+        addressesPage.customersParentLink,
+        addressesPage.addressesLink,
       );
 
-      const pageTitle = await this.pageObjects.addressesPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.addressesPage.pageTitle);
+      const pageTitle = await addressesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addressesPage.pageTitle);
     });
 
     it('should filter list by first name and last name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
-      await this.pageObjects.addressesPage.resetFilter();
+      await addressesPage.resetFilter(page);
 
-      await this.pageObjects.addressesPage.filterAddresses(
+      await addressesPage.filterAddresses(
+        page,
         'input',
         'firstname',
         editAddressData.firstName,
       );
 
-      await this.pageObjects.addressesPage.filterAddresses(
+      await addressesPage.filterAddresses(
+        page,
         'input',
         'lastname',
         editAddressData.lastName,
       );
 
-      const firstName = await this.pageObjects.addressesPage.getTextColumnFromTableAddresses(1, 'firstname');
+      const firstName = await addressesPage.getTextColumnFromTableAddresses(page, 1, 'firstname');
       await expect(firstName).to.contains(editAddressData.firstName);
 
-      const lastName = await this.pageObjects.addressesPage.getTextColumnFromTableAddresses(1, 'lastname');
+      const lastName = await addressesPage.getTextColumnFromTableAddresses(page, 1, 'lastname');
       await expect(lastName).to.contains(editAddressData.lastName);
     });
 
     it('should delete address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteAddress', baseContext);
 
-      const textResult = await this.pageObjects.addressesPage.deleteAddress(1);
-      await expect(textResult).to.equal(this.pageObjects.addressesPage.successfulDeleteMessage);
+      const textResult = await addressesPage.deleteAddress(page, 1);
+      await expect(textResult).to.equal(addressesPage.successfulDeleteMessage);
 
-      const numberOfAddressesAfterDelete = await this.pageObjects.addressesPage.resetAndGetNumberOfLines();
+      const numberOfAddressesAfterDelete = await addressesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfAddressesAfterDelete).to.be.equal(numberOfAddresses);
     });
   });

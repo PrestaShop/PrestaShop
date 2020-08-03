@@ -135,6 +135,9 @@ final class EmployeeType extends AbstractType
                     'accept' => 'gif,jpg,jpeg,jpe,png',
                 ],
             ])
+            ->add('has_enabled_gravatar', SwitchType::class, [
+                'required' => false,
+            ])
         ;
 
         if ($options['is_restricted_access']) {

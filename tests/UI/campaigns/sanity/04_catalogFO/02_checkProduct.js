@@ -6,20 +6,14 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'sanity_catalogFO_checkProduct';
 // Importing pages
-const HomePage = require('@pages/FO/home');
-const ProductPage = require('@pages/FO/product');
+const homePage = require('@pages/FO/home');
+const productPage = require('@pages/FO/product');
+
 const ProductData = require('@data/FO/product');
 
 let browserContext;
 let page;
 
-// creating pages objects in a function
-const init = async function () {
-  return {
-    homePage: new HomePage(page),
-    productPage: new ProductPage(page),
-  };
-};
 
 /*
   Open the FO home page
@@ -30,8 +24,6 @@ describe('Check the Product page', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
   after(async () => {
     await helper.closeBrowserContext(browserContext);
@@ -40,21 +32,21 @@ describe('Check the Product page', async () => {
   // Steps
   it('should open the shop page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
-    await this.pageObjects.homePage.goTo(global.FO.URL);
-    const result = await this.pageObjects.homePage.isHomePage();
+    await homePage.goTo(page, global.FO.URL);
+    const result = await homePage.isHomePage(page);
     await expect(result).to.be.true;
   });
 
   it('should go to the first product page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
-    await this.pageObjects.homePage.goToProductPage('1');
-    const pageTitle = await this.pageObjects.productPage.getPageTitle();
+    await homePage.goToProductPage(page, 1);
+    const pageTitle = await productPage.getPageTitle(page);
     await expect(pageTitle.toUpperCase()).to.contains(ProductData.firstProductData.name);
   });
 
   it('should check the product page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkProductPage', baseContext);
-    const result = await this.pageObjects.productPage.getProductInformation(ProductData.firstProductData);
+    const result = await productPage.getProductInformation(page, ProductData.firstProductData);
     await Promise.all([
       expect(result.name.toLowerCase()).to.equal(ProductData.firstProductData.name.toLocaleLowerCase()),
       expect(result.price).to.equal(ProductData.firstProductData.price),

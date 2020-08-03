@@ -7,11 +7,10 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const GeneralPage = require('@pages/BO/shopParameters/general');
-const MaintenancePage = require('@pages/BO/shopParameters/general/maintenance');
-const HomePage = require('@pages/FO/home');
+const dashboardPage = require('@pages/BO/dashboard');
+const generalPage = require('@pages/BO/shopParameters/general');
+const maintenancePage = require('@pages/BO/shopParameters/general/maintenance');
+const homePage = require('@pages/FO/home');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -22,17 +21,6 @@ let browserContext;
 let page;
 
 const newMaintenanceText = 'Maintenance';
-
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    generalPage: new GeneralPage(page),
-    maintenancePage: new MaintenancePage(page),
-    homePage: new HomePage(page),
-  };
-};
 
 /*
 Disable shop
@@ -45,136 +33,129 @@ describe('Enable/Disable shop', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to maintenance page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to \'Shop parameters > General\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToShopParamsPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.shopParametersParentLink,
-      this.pageObjects.dashboardPage.shopParametersGeneralLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.shopParametersParentLink,
+      dashboardPage.shopParametersGeneralLink,
     );
 
-    await this.pageObjects.generalPage.closeSfToolBar();
+    await generalPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.generalPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.generalPage.pageTitle);
+    const pageTitle = await generalPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(generalPage.pageTitle);
   });
 
   it('should go to \'Maintenance\' tab', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToMaintenancePage', baseContext);
 
-    await this.pageObjects.generalPage.goToSubTabMaintenance();
-    const pageTitle = await this.pageObjects.maintenancePage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.maintenancePage.pageTitle);
+    await generalPage.goToSubTabMaintenance(page);
+    const pageTitle = await maintenancePage.getPageTitle(page);
+    await expect(pageTitle).to.contains(maintenancePage.pageTitle);
   });
 
   it('should disable the shop', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'disableShop', baseContext);
 
-    const result = await this.pageObjects.maintenancePage.changeShopStatus(false);
-    await expect(result).to.contains(this.pageObjects.maintenancePage.successfulUpdateMessage);
+    const result = await maintenancePage.changeShopStatus(page, false);
+    await expect(result).to.contains(maintenancePage.successfulUpdateMessage);
   });
 
   it('should verify the existence of the maintenance text', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'verifyMaintenanceText', baseContext);
 
-    page = await this.pageObjects.maintenancePage.viewMyShop();
-    this.pageObjects = await init();
+    page = await maintenancePage.viewMyShop(page);
 
-    const pageContent = await this.pageObjects.homePage.getTextContent(this.pageObjects.homePage.content);
-    await expect(pageContent).to.equal(this.pageObjects.maintenancePage.maintenanceText);
+    const pageContent = await homePage.getTextContent(page, homePage.content);
+    await expect(pageContent).to.equal(maintenancePage.maintenanceText);
 
     // Go back to BO
-    page = await this.pageObjects.homePage.closePage(browserContext, 0);
-    this.pageObjects = await init();
+    page = await homePage.closePage(browserContext, page, 0);
   });
 
   it('should update the maintenance text', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'updateMaintenanceText', baseContext);
 
-    const result = await this.pageObjects.maintenancePage.changeMaintenanceTextShopStatus(newMaintenanceText);
-    await expect(result).to.contains(this.pageObjects.maintenancePage.successfulUpdateMessage);
+    const result = await maintenancePage.changeMaintenanceTextShopStatus(page, newMaintenanceText);
+    await expect(result).to.contains(maintenancePage.successfulUpdateMessage);
   });
 
   it('should verify the existence of the new maintenance text', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'verifyNewMaintenanceText', baseContext);
 
-    page = await this.pageObjects.maintenancePage.viewMyShop();
-    this.pageObjects = await init();
+    page = await maintenancePage.viewMyShop(page);
 
-    const pageContent = await this.pageObjects.homePage.getTextContent(this.pageObjects.homePage.content);
+    const pageContent = await homePage.getTextContent(page, homePage.content);
     await expect(pageContent).to.equal(newMaintenanceText);
 
-    page = await this.pageObjects.homePage.closePage(browserContext, 0);
-    this.pageObjects = await init();
+    page = await homePage.closePage(browserContext, page, 0);
   });
 
   it('should back to the default maintenance text', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'backToDefaultMaintenanceText', baseContext);
 
-    const result = await this.pageObjects.maintenancePage.changeMaintenanceTextShopStatus(
-      this.pageObjects.maintenancePage.maintenanceText,
+    const result = await maintenancePage.changeMaintenanceTextShopStatus(
+      page,
+      maintenancePage.maintenanceText,
     );
 
-    await expect(result).to.contains(this.pageObjects.maintenancePage.successfulUpdateMessage);
+    await expect(result).to.contains(maintenancePage.successfulUpdateMessage);
   });
 
   it('should add my IP address in Maintenance ip input', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'addMyIpAddress', baseContext);
 
-    const result = await this.pageObjects.maintenancePage.addMyIpAddress();
-    await expect(result).to.contains(this.pageObjects.maintenancePage.successfulUpdateMessage);
+    const result = await maintenancePage.addMyIpAddress(page);
+    await expect(result).to.contains(maintenancePage.successfulUpdateMessage);
   });
 
   it('should verify that the Home page is displayed successfully', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'verifyFOHomePage', baseContext);
 
-    page = await this.pageObjects.maintenancePage.viewMyShop();
-    this.pageObjects = await init();
+    page = await maintenancePage.viewMyShop(page);
 
-    const pageContent = await this.pageObjects.homePage.getTextContent(this.pageObjects.homePage.content);
-    await expect(pageContent).to.not.equal(this.pageObjects.maintenancePage.maintenanceText);
+    const pageContent = await homePage.getTextContent(page, homePage.content);
+    await expect(pageContent).to.not.equal(maintenancePage.maintenanceText);
 
-    const result = await this.pageObjects.homePage.isHomePage();
+    const result = await homePage.isHomePage(page);
     await expect(result).to.be.true;
 
-    page = await this.pageObjects.homePage.closePage(browserContext, 0);
-    this.pageObjects = await init();
+    page = await homePage.closePage(browserContext, page, 0);
   });
 
   it('should delete the maintenance ip address and enable the shop', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteIpAddressAndEnableShop', baseContext);
 
-    let result = await this.pageObjects.maintenancePage.addMaintenanceIPAddress(' ');
-    await expect(result).to.contains(this.pageObjects.maintenancePage.successfulUpdateMessage);
+    let result = await maintenancePage.addMaintenanceIPAddress(page, ' ');
+    await expect(result).to.contains(maintenancePage.successfulUpdateMessage);
 
-    result = await this.pageObjects.maintenancePage.changeShopStatus();
-    await expect(result).to.contains(this.pageObjects.maintenancePage.successfulUpdateMessage);
+    result = await maintenancePage.changeShopStatus(page);
+    await expect(result).to.contains(maintenancePage.successfulUpdateMessage);
   });
 
   it('should verify that the shop is enabled', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'verifyEnabledShop', baseContext);
 
-    page = await this.pageObjects.maintenancePage.viewMyShop();
-    this.pageObjects = await init();
+    page = await maintenancePage.viewMyShop(page);
 
-    const pageContent = await this.pageObjects.homePage.getTextContent(this.pageObjects.homePage.content);
-    await expect(pageContent).to.not.equal(this.pageObjects.maintenancePage.maintenanceText);
+    const pageContent = await homePage.getTextContent(page, homePage.content);
+    await expect(pageContent).to.not.equal(maintenancePage.maintenanceText);
 
-    const result = await this.pageObjects.homePage.isHomePage();
+    const result = await homePage.isHomePage(page);
     await expect(result).to.be.true;
 
-    page = await this.pageObjects.homePage.closePage(browserContext, 0);
-    this.pageObjects = await init();
+    page = await homePage.closePage(browserContext, page, 0);
   });
 });

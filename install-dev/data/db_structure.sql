@@ -832,6 +832,7 @@ CREATE TABLE `PREFIX_employee` (
   `last_connection_date` date DEFAULT NULL,
   `reset_password_token` varchar(40) DEFAULT NULL,
   `reset_password_validity` datetime DEFAULT NULL,
+  `has_enabled_gravatar` TINYINT UNSIGNED DEFAULT 0 NOT NULL,
   PRIMARY KEY (`id_employee`),
   KEY `employee_login` (`email`, `passwd`),
   KEY `id_employee_passwd` (`id_employee`, `passwd`),

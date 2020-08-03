@@ -25,6 +25,7 @@
 {% use '@PrestaShop/Admin/TwigTemplateForm/form_div_layout.html.twig' %}
 {% use '@PrestaShop/Admin/TwigTemplateForm/typeahead.html.twig' %}
 {% use '@PrestaShop/Admin/TwigTemplateForm/material.html.twig' %}
+{% use '@PrestaShop/Admin/TwigTemplateForm/translatable_choice.html.twig' %}
 
 {# Widgets #}
 
@@ -351,6 +352,15 @@
     {{ form_widget(form.to) }}
   {% endspaceless %}
 {% endblock date_range_widget %}
+
+{% block color_picker_widget %}
+  {% spaceless %}
+    {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' colorpicker')|trim)}) %}
+    <div class="input-group colorpicker">
+      <input type="text" class="form-control" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+    </div>
+  {% endspaceless %}
+{% endblock color_picker_widget %}
 
 {% block search_and_reset_widget %}
     {% spaceless %}
@@ -803,6 +813,14 @@
     <small class="form-text">{{ help }}</small>
   {% endif %}
 {% endblock form_help %}
+
+{% block form_hint %}
+  {% if hint %}
+    <div class="row col-lg hint-box">
+      <div class="alert alert-info">{{ hint|raw }}</div>
+    </div>
+  {% endif %}
+{% endblock form_hint %}
 
 {% block custom_content_widget %}
   {% include template with data %}

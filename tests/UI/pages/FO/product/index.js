@@ -1,9 +1,9 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
-module.exports = class Product extends FOBasePage {
-  constructor(page) {
-    super(page);
+class Product extends FOBasePage {
+  constructor() {
+    super();
 
     // Selectors for product page
     this.productName = '#main h1[itemprop="name"]';
@@ -33,151 +33,168 @@ module.exports = class Product extends FOBasePage {
 
   /**
    * Get Product information (Product name, price, description)
+   * @param page
    * @returns {Promise<{price: (number), name: (string), description: (string)}>}
    */
-  async getProductInformation() {
+  async getProductInformation(page) {
     return {
-      name: await this.getTextContent(this.productName),
-      price: parseFloat(await this.getAttributeContent(this.productPrice, 'content')),
-      description: await this.getTextContent(this.productDescription),
+      name: await this.getTextContent(page, this.productName),
+      price: parseFloat(await this.getAttributeContent(page, this.productPrice, 'content')),
+      description: await this.getTextContent(page, this.productDescription),
     };
   }
 
   /**
    * Click on Add to cart button then on Proceed to checkout button in the modal
+   * @param page
    * @param quantity
    * @param attributeToChoose
    * @param proceedToCheckout
    * @returns {Promise<void>}
    */
-  async addProductToTheCart(quantity = 1, attributeToChoose = '', proceedToCheckout = true) {
-    await this.page.waitForTimeout(1000);
+  async addProductToTheCart(page, quantity = 1, attributeToChoose = '', proceedToCheckout = true) {
+    await page.waitForTimeout(1000);
     if (attributeToChoose.color) {
       await Promise.all([
-        this.waitForVisibleSelector(this.colorInput(attributeToChoose.color)),
-        this.page.click(this.colorInput(attributeToChoose.color)),
+        this.waitForVisibleSelector(page, this.colorInput(attributeToChoose.color)),
+        page.click(this.colorInput(attributeToChoose.color)),
       ]);
     }
     if (quantity !== 1) {
-      await this.setValue(this.productQuantity, attributeToChoose.quantity.toString());
+      await this.setValue(page, this.productQuantity, attributeToChoose.quantity.toString());
     }
-    await this.waitForSelectorAndClick(this.addToCartButton);
-    await this.waitForVisibleSelector(`${this.blockCartModal}[style*='display: block;']`);
+    await this.waitForSelectorAndClick(page, this.addToCartButton);
+    await this.waitForVisibleSelector(page, `${this.blockCartModal}[style*='display: block;']`);
     if (proceedToCheckout) {
-      await this.waitForVisibleSelector(this.proceedToCheckoutButton);
-      await this.clickAndWaitForNavigation(this.proceedToCheckoutButton);
+      await this.waitForVisibleSelector(page, this.proceedToCheckoutButton);
+      await this.clickAndWaitForNavigation(page, this.proceedToCheckoutButton);
     } else {
-      await this.waitForSelectorAndClick(this.continueShoppingButton);
-      await this.page.waitForSelector(this.continueShoppingButton, {hidden: true});
+      await this.waitForSelectorAndClick(page, this.continueShoppingButton);
+      await page.waitForSelector(this.continueShoppingButton, {hidden: true});
     }
   }
 
   /**
    * Is quantity displayed
+   * @param page
    * @returns {Promise<boolean>}
    */
-  async isQuantityDisplayed() {
-    await this.waitForSelectorAndClick(this.productDetail);
-    return this.elementVisible(this.productQuantitySpan, 1000);
+  async isQuantityDisplayed(page) {
+    await this.waitForSelectorAndClick(page, this.productDetail);
+    return this.elementVisible(page, this.productQuantitySpan, 1000);
   }
 
   /**
    * Is availability product displayed
+   * @param page
    * @returns {boolean}
    */
-  isAvailabilityQuantityDisplayed() {
-    return this.elementVisible(this.productAvailabilityIcon, 1000);
+  isAvailabilityQuantityDisplayed(page) {
+    return this.elementVisible(page, this.productAvailabilityIcon, 1000);
   }
 
   /**
    * Is price displayed
+   * @param page
    * @returns {boolean}
    */
-  isPriceDisplayed() {
-    return this.elementVisible(this.productPrice, 1000);
+  isPriceDisplayed(page) {
+    return this.elementVisible(page, this.productPrice, 1000);
   }
 
   /**
    * Is add to cart button displayed
+   * @param page
    * @returns {boolean}
    */
-  isAddToCartButtonDisplayed() {
-    return this.elementVisible(this.addToCartButton, 1000);
+  isAddToCartButtonDisplayed(page) {
+    return this.elementVisible(page, this.addToCartButton, 1000);
   }
 
   /**
    * Is unavailable product size displayed
+   * @param page
    * @param size
    * @returns {Promise<boolean>}
    */
-  async isUnavailableProductSizeDisplayed(size) {
-    await this.page.waitForTimeout(2000);
-    const exist = await this.page.$(this.productSizeOption(size)) !== null;
+  async isUnavailableProductSizeDisplayed(page, size) {
+    await page.waitForTimeout(2000);
+    const exist = await page.$(this.productSizeOption(size)) !== null;
     return exist;
   }
 
   /**
    * Is unavailable product color displayed
+   * @param page
    * @param color
    * @returns {boolean}
    */
-  isUnavailableProductColorDisplayed(color) {
-    return this.elementVisible(this.productColorInput(color), 1000);
+  isUnavailableProductColorDisplayed(page, color) {
+    return this.elementVisible(page, this.productColorInput(color), 1000);
   }
 
   /**
    * Get product page URL
+   * @param page
    * @returns {Promise<string>}
    */
-  getProductPageURL() {
-    return this.getAttributeContent(this.metaLink, 'content');
+  getProductPageURL(page) {
+    return this.getAttributeContent(page, this.metaLink, 'content');
   }
 
   /**
    * Get discount column title
+   * @param page
    * @returns {Promise<string>}
    */
-  getDiscountColumnTitle() {
-    return this.getTextContent(this.discountColumn);
+  getDiscountColumnTitle(page) {
+    return this.getTextContent(page, this.discountColumn);
   }
 
   /**
    * Get discount value
+   * @param page
    * @returns {Promise<string>}
    */
-  getDiscountValue() {
-    return this.getTextContent(this.discountValue);
+  getDiscountValue(page) {
+    return this.getTextContent(page, this.discountValue);
   }
 
   /**
    * Is add to cart button enabled
+   * @param page
    * @returns {boolean}
    */
-  isAddToCartButtonEnabled() {
-    return this.elementNotVisible(`${this.addToCartButton}:disabled`, 1000);
+  isAddToCartButtonEnabled(page) {
+    return this.elementNotVisible(page, `${this.addToCartButton}:disabled`, 1000);
   }
 
   /**
    * Get product availability label
+   * @param page
    * @returns {Promise<string>}
    */
-  getProductAvailabilityLabel() {
-    return this.getTextContent(this.productAvailability, false);
+  getProductAvailabilityLabel(page) {
+    return this.getTextContent(page, this.productAvailability, false);
   }
 
   /**
    * Check if delivery information text is visible
+   * @param page
    * @return {boolean}
    */
-  isDeliveryInformationVisible() {
-    return this.elementVisible(this.deliveryInformationSpan, 1000);
+  isDeliveryInformationVisible(page) {
+    return this.elementVisible(page, this.deliveryInformationSpan, 1000);
   }
 
   /**
    * Get delivery information text
+   * @param page
    * @return {Promise<string>}
    */
-  getDeliveryInformationText() {
-    return this.getTextContent(this.deliveryInformationSpan);
+  getDeliveryInformationText(page) {
+    return this.getTextContent(page, this.deliveryInformationSpan);
   }
-};
+}
+
+module.exports = new Product();

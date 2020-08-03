@@ -7,11 +7,10 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const ProductSettingsPage = require('@pages/BO/shopParameters/productSettings');
-const ProductsPage = require('@pages/BO/catalog/products');
-const AddProductPage = require('@pages/BO/catalog/products/add');
+const dashboardPage = require('@pages/BO/dashboard');
+const productSettingsPage = require('@pages/BO/shopParameters/productSettings');
+const productsPage = require('@pages/BO/catalog/products');
+const addProductPage = require('@pages/BO/catalog/products/add');
 
 // Import data
 const ProductFaker = require('@data/faker/product');
@@ -27,17 +26,6 @@ let page;
 const productData = new ProductFaker({type: 'Standard product', status: false});
 const editProductData = new ProductFaker({name: 'testForceFriendlyURL', type: 'Standard product', status: false});
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    productSettingsPage: new ProductSettingsPage(page),
-    productsPage: new ProductsPage(page),
-    addProductPage: new AddProductPage(page),
-  };
-};
-
 /*
 Enable force update friendly URL
 Create then edit product
@@ -49,37 +37,37 @@ describe('Enable/Disable force update friendly URL', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to product settings page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to \'Catalog > Products\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.catalogParentLink,
-      this.pageObjects.dashboardPage.productsLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.catalogParentLink,
+      dashboardPage.productsLink,
     );
 
-    await this.pageObjects.productsPage.closeSfToolBar();
+    await productsPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.productsPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
+    const pageTitle = await productsPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(productsPage.pageTitle);
   });
 
   it('should go to create product page and create a product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
-    await this.pageObjects.productsPage.goToAddProductPage();
-    const validationMessage = await this.pageObjects.addProductPage.createEditBasicProduct(productData);
-    await expect(validationMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
+    await productsPage.goToAddProductPage(page);
+    const validationMessage = await addProductPage.createEditBasicProduct(page, productData);
+    await expect(validationMessage).to.equal(addProductPage.settingUpdatedMessage);
   });
 
   const tests = [
@@ -102,17 +90,18 @@ describe('Enable/Disable force update friendly URL', async () => {
         this,
         'testIdentifier',
         'goToProductSettingsPageTo'
-          + `${this.pageObjects.addProductPage.uppercaseFirstCharacter(test.args.action)}FriendlyURL`,
+          + `${addProductPage.uppercaseFirstCharacter(test.args.action)}FriendlyURL`,
         baseContext,
       );
 
-      await this.pageObjects.addProductPage.goToSubMenu(
-        this.pageObjects.addProductPage.shopParametersParentLink,
-        this.pageObjects.addProductPage.productSettingsLink,
+      await addProductPage.goToSubMenu(
+        page,
+        addProductPage.shopParametersParentLink,
+        addProductPage.productSettingsLink,
       );
 
-      const pageTitle = await this.pageObjects.productSettingsPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.productSettingsPage.pageTitle);
+      const pageTitle = await productSettingsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
     });
 
     it(`should ${test.args.action} force update friendly URL`, async function () {
@@ -122,56 +111,57 @@ describe('Enable/Disable force update friendly URL', async () => {
         baseContext,
       );
 
-      const result = await this.pageObjects.productSettingsPage.setForceUpdateFriendlyURLStatus(test.args.enable);
-      await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
+      const result = await productSettingsPage.setForceUpdateFriendlyURLStatus(page, test.args.enable);
+      await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
     });
 
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToProductsPage${index}`, baseContext);
 
-      await this.pageObjects.productSettingsPage.goToSubMenu(
-        this.pageObjects.productSettingsPage.catalogParentLink,
-        this.pageObjects.productSettingsPage.productsLink,
+      await productSettingsPage.goToSubMenu(
+        page,
+        productSettingsPage.catalogParentLink,
+        productSettingsPage.productsLink,
       );
 
-      const pageTitle = await this.pageObjects.productsPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
+      const pageTitle = await productsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should go to the created product page', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        `goToProductPageToCheckFriendlyURL${this.pageObjects.productsPage.uppercaseFirstCharacter(test.args.action)}`,
+        `goToProductPageToCheckFriendlyURL${productsPage.uppercaseFirstCharacter(test.args.action)}`,
         baseContext,
       );
 
-      await this.pageObjects.productsPage.resetFilter();
-      await this.pageObjects.productsPage.goToProductPage(1);
+      await productsPage.resetFilter(page);
+      await productsPage.goToProductPage(page, 1);
 
-      const pageTitle = await this.pageObjects.addProductPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.addProductPage.pageTitle);
+      const pageTitle = await addProductPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addProductPage.pageTitle);
     });
 
     it('should update the product name and check the friendly URL', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        `UpdateProductAndCheckFriendlyURL${this.pageObjects.addProductPage.uppercaseFirstCharacter(test.args.action)}`,
+        `UpdateProductAndCheckFriendlyURL${addProductPage.uppercaseFirstCharacter(test.args.action)}`,
         baseContext,
       );
 
-      const validationMessage = await this.pageObjects.addProductPage.createEditBasicProduct(test.args.editProduct);
-      await expect(validationMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
+      const validationMessage = await addProductPage.createEditBasicProduct(page, test.args.editProduct);
+      await expect(validationMessage).to.equal(addProductPage.settingUpdatedMessage);
 
-      const friendlyURL = await this.pageObjects.addProductPage.getFriendlyURL();
+      const friendlyURL = await addProductPage.getFriendlyURL(page);
       await expect(friendlyURL).to.equal(test.args.friendlyURL.toLowerCase());
     });
   });
   it('should delete product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-    const testResult = await this.pageObjects.addProductPage.deleteProduct();
-    await expect(testResult).to.equal(this.pageObjects.productsPage.productDeletedSuccessfulMessage);
+    const testResult = await addProductPage.deleteProduct(page);
+    await expect(testResult).to.equal(productsPage.productDeletedSuccessfulMessage);
   });
 });

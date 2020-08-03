@@ -10,9 +10,8 @@ const loginCommon = require('@commonTests/loginBO');
 const {demoBrands} = require('@data/demo/brands');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const BrandsPage = require('@pages/BO/catalog/brands');
+const dashboardPage = require('@pages/BO/dashboard');
+const brandsPage = require('@pages/BO/catalog/brands');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -23,51 +22,42 @@ let browserContext;
 let page;
 let numberOfBrands = 0;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    brandsPage: new BrandsPage(page),
-  };
-};
-
 // Filter And Quick Edit brands
 describe('Filter And Quick Edit brands', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to brands page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   // GO to Brands Page
   it('should go to brands page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.catalogParentLink,
-      this.pageObjects.dashboardPage.brandsAndSuppliersLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.catalogParentLink,
+      dashboardPage.brandsAndSuppliersLink,
     );
 
-    await this.pageObjects.brandsPage.closeSfToolBar();
+    await brandsPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.brandsPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.brandsPage.pageTitle);
+    const pageTitle = await brandsPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(brandsPage.pageTitle);
   });
 
   it('should reset all filters and get Number of brands in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-    numberOfBrands = await this.pageObjects.brandsPage.resetAndGetNumberOfLines('manufacturer');
+    numberOfBrands = await brandsPage.resetAndGetNumberOfLines(page, 'manufacturer');
     await expect(numberOfBrands).to.be.above(0);
   });
 
@@ -109,20 +99,21 @@ describe('Filter And Quick Edit brands', async () => {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
         if (test.args.filterBy === 'active') {
-          await this.pageObjects.brandsPage.filterBrandsEnabled(test.args.filterValue);
+          await brandsPage.filterBrandsEnabled(page, test.args.filterValue);
         } else {
-          await this.pageObjects.brandsPage.filterBrands(
+          await brandsPage.filterBrands(
+            page,
             test.args.filterType,
             test.args.filterBy,
             test.args.filterValue,
           );
         }
 
-        const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
+        const numberOfBrandsAfterFilter = await brandsPage.getNumberOfElementInGrid(page, 'manufacturer');
         await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
 
         for (let i = 1; i <= numberOfBrandsAfterFilter; i++) {
-          const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableBrands(i, test.args.filterBy);
+          const textColumn = await brandsPage.getTextColumnFromTableBrands(page, i, test.args.filterBy);
 
           if (test.expected !== undefined) {
             await expect(textColumn).to.contains(test.expected);
@@ -135,7 +126,7 @@ describe('Filter And Quick Edit brands', async () => {
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines('manufacturer');
+        const numberOfBrandsAfterReset = await brandsPage.resetAndGetNumberOfLines(page, 'manufacturer');
         await expect(numberOfBrandsAfterReset).to.equal(numberOfBrands);
       });
     });
@@ -146,11 +137,11 @@ describe('Filter And Quick Edit brands', async () => {
     it('should filter by brand name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
-      await this.pageObjects.brandsPage.filterBrands('input', 'name', demoBrands.first.name);
-      const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
+      await brandsPage.filterBrands(page, 'input', 'name', demoBrands.first.name);
+      const numberOfBrandsAfterFilter = await brandsPage.getNumberOfElementInGrid(page, 'manufacturer');
       await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
 
-      const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableBrands(1, 'name');
+      const textColumn = await brandsPage.getTextColumnFromTableBrands(page, 1, 'name');
       await expect(textColumn).to.contains(demoBrands.first.name);
     });
 
@@ -163,17 +154,18 @@ describe('Filter And Quick Edit brands', async () => {
       it(`should ${test.args.action} first brand`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Brand`, baseContext);
 
-        const isActionPerformed = await this.pageObjects.brandsPage.updateEnabledValue(1, test.args.enabledValue);
+        const isActionPerformed = await brandsPage.updateEnabledValue(page, 1, test.args.enabledValue);
 
         if (isActionPerformed) {
-          const resultMessage = await this.pageObjects.brandsPage.getTextContent(
-            this.pageObjects.brandsPage.alertSuccessBlockParagraph,
+          const resultMessage = await brandsPage.getTextContent(
+            page,
+            brandsPage.alertSuccessBlockParagraph,
           );
 
-          await expect(resultMessage).to.contains(this.pageObjects.brandsPage.successfulUpdateStatusMessage);
+          await expect(resultMessage).to.contains(brandsPage.successfulUpdateStatusMessage);
         }
 
-        const brandsStatus = await this.pageObjects.brandsPage.getToggleColumnValue(1);
+        const brandsStatus = await brandsPage.getToggleColumnValue(page, 1);
         await expect(brandsStatus).to.be.equal(test.args.enabledValue);
       });
     });
@@ -181,7 +173,7 @@ describe('Filter And Quick Edit brands', async () => {
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterQuickEdit', baseContext);
 
-      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines('manufacturer');
+      const numberOfBrandsAfterReset = await brandsPage.resetAndGetNumberOfLines(page, 'manufacturer');
       await expect(numberOfBrandsAfterReset).to.equal(numberOfBrands);
     });
   });
