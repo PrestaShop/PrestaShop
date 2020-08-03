@@ -136,6 +136,7 @@ services:
             - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
             - '@prestashop.adapter.shop.context'
             - '@prestashop.adapter.feature.multistore'
+            - "@=service('prestashop.adapter.legacy.configuration').get('PS_ROOT_CATEGORY')"
         public: true
 
     prestashop.core.grid.query_builder.cms_page:
