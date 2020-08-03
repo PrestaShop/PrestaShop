@@ -192,8 +192,8 @@ class ProfileController extends FrameworkBundleAdminController
             }
         }
 
-        /** @var EditableProfile $editableProfiler */
-        $editableProfiler = $this->getQueryBus()->handle(new GetProfileForEditing((int) $profileId));
+        /** @var EditableProfile $editableProfile */
+        $editableProfile = $this->getQueryBus()->handle(new GetProfileForEditing((int) $profileId));
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Profiles/edit.html.twig', [
             'profileForm' => $form->createView(),
@@ -201,11 +201,12 @@ class ProfileController extends FrameworkBundleAdminController
                 'Edit: %value%',
                 'Admin.Catalog.Feature',
                 [
-                    '%value%' => $editableProfiler->getLocalizedNames()[$this->getContextLangId()],
+                    '%value%' => $editableProfile->getLocalizedNames()[$this->getContextLangId()],
                 ]
             ),
             'help_link' => $this->generateSidebarLink('AdminProfiles'),
             'enableSidebar' => true,
+            'editableProfile' => $editableProfile,
         ]);
     }
 

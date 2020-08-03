@@ -19,6 +19,12 @@ services:
         - !php/const _PS_EMPLOYEE_IMG_DIR_
         - !php/const _PS_TMP_IMG_DIR_
 
+    prestashop.adapter.image.uploader.profile_image_uploader:
+      class: 'PrestaShop\PrestaShop\Adapter\Image\Uploader\ProfileImageUploader'
+      arguments:
+        - !php/const _PS_PROFILE_IMG_DIR_
+        - !php/const _PS_TMP_IMG_DIR_
+
     prestashop.adapter.image.uploader.manufacturer_image_uploader:
       class: 'PrestaShop\PrestaShop\Adapter\Image\Uploader\ManufacturerImageUploader'
 
