@@ -27,40 +27,18 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
-use Cache;
 use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
-use Product;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext;
-use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class CommonProductFeatureContext extends AbstractProductFeatureContext
 {
-    /**
-     * @Then I set tax rule group :taxRulesGroupReference to product :productReference
-     *
-     * @param string $taxRulesGroupReference
-     * @param string $productName
-     */
-    public function setProductTaxRulesGroup(string $taxRulesGroupReference, string $productName)
-    {
-        $taxRulesGroupId = SharedStorage::getStorage()->get($taxRulesGroupReference);
-        $productId = $this->getProductIdByName($productName);
-
-        $product = new Product($productId);
-        $product->id_tax_rules_group = $taxRulesGroupId;
-        $product->save();
-
-        // Important to clean this cache or Product::getIdTaxRulesGroupByIdProduct still returns the initial value
-        Cache::clean('product_id_tax_rules_group_*');
-    }
-
     /**
      * @Then /^product "(.+)" localized "(.+)" should be "(.+)"$/
      * @Given /^product "(.+)" localized "(.+)" is "(.+)"$/

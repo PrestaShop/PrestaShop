@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
+use Cache;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
@@ -60,6 +61,7 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
         if (isset($data['tax rules group'])) {
             $taxRulesGroupId = (int) TaxRulesGroupFeatureContext::getTaxRulesGroupByName($data['tax rules group'])->id;
             $command->setTaxRulesGroupId($taxRulesGroupId);
+            Cache::clean('product_id_tax_rules_group_*');
         }
         if (isset($data['on_sale'])) {
             $command->setOnSale(PrimitiveUtils::castStringBooleanIntoBoolean($data['on_sale']));
