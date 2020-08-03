@@ -29,8 +29,12 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
+use PHPUnit\Framework\Assert;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -74,6 +78,78 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
             $this->getQueryBus()->handle($command);
         } catch (ProductException $e) {
             $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then product :productReference should have following prices information:
+     *
+     * @param string $productReference
+     * @param TableNode $tableNode
+     */
+    public function assertPriceFields(string $productReference, TableNode $tableNode): void
+    {
+        $data = $tableNode->getRowsHash();
+        $pricesInfo = $this->getProductForEditing($productReference)->getPricesInformation();
+
+        if (isset($data['on_sale'])) {
+            $expectedOnSale = PrimitiveUtils::castStringBooleanIntoBoolean($data['on_sale']);
+            $onSaleInWords = $expectedOnSale ? 'to be on sale' : 'not to be on sale';
+
+            Assert::assertEquals(
+                $expectedOnSale,
+                $pricesInfo->isOnSale(),
+                sprintf('Expected product %s', $onSaleInWords)
+            );
+
+            unset($data['on_sale']);
+        }
+
+        if (isset($data['unity'])) {
+            $expectedUnity = $data['unity'];
+            $actualUnity = $pricesInfo->getUnity();
+
+            Assert::assertEquals(
+                $expectedUnity,
+                $actualUnity,
+                sprintf('Tax rules group expected to be "%s", but got "%s"', $expectedUnity, $actualUnity)
+            );
+
+            unset($data['unity']);
+        }
+
+        $this->assertNumberPriceFields($data, $pricesInfo);
+    }
+
+    /**
+     * @param array $expectedPrices
+     * @param ProductPricesInformation $actualPrices
+     */
+    private function assertNumberPriceFields(array &$expectedPrices, ProductPricesInformation $actualPrices)
+    {
+        $numberPriceFields = [
+            'price',
+            'ecotax',
+            'wholesale_price',
+            'unit_price',
+            'unit_price_ratio',
+        ];
+
+        $propertyAccessor = PropertyAccess::createPropertyAccessor();
+
+        foreach ($numberPriceFields as $field) {
+            if (isset($expectedPrices[$field])) {
+                $expectedNumber = new Number((string) $expectedPrices[$field]);
+                $actualNumber = $propertyAccessor->getValue($actualPrices, $field);
+
+                if (!$expectedNumber->equals($actualNumber)) {
+                    throw new RuntimeException(
+                        sprintf('Product %s expected to be "%s", but is "%s"', $field, $expectedNumber, $actualNumber)
+                    );
+                }
+
+                unset($expectedPrices[$field]);
+            }
         }
     }
 }

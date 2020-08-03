@@ -31,7 +31,6 @@ use Cache;
 use Context;
 use Language;
 use PHPUnit\Framework\Assert;
-use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
@@ -40,10 +39,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
 use Product;
 use RuntimeException;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -141,7 +138,6 @@ class ProductFeatureContext extends AbstractProductFeatureContext
         $this->assertStringProperty($productForEditing, $data, 'reference');
 
         $this->assertTaxRulesGroup($data, $productForEditing);
-        $this->assertPriceFields($data, $productForEditing->getPricesInformation());
 
         // Assertions checking isset() can hide some errors if it doesn't find array key,
         // to make sure all provided fields were checked we need to unset every asserted field
@@ -198,73 +194,6 @@ class ProductFeatureContext extends AbstractProductFeatureContext
             ProductConstraintException::class,
             $this->getConstraintErrorCode($fieldName)
         );
-    }
-
-    /**
-     * @param array $data
-     * @param ProductPricesInformation $pricesInfo
-     */
-    private function assertPriceFields(array &$data, ProductPricesInformation $pricesInfo): void
-    {
-        if (isset($data['on_sale'])) {
-            $expectedOnSale = PrimitiveUtils::castStringBooleanIntoBoolean($data['on_sale']);
-            $onSaleInWords = $expectedOnSale ? 'to be on sale' : 'not to be on sale';
-
-            Assert::assertEquals(
-                $expectedOnSale,
-                $pricesInfo->isOnSale(),
-                sprintf('Expected product %s', $onSaleInWords)
-            );
-
-            unset($data['on_sale']);
-        }
-
-        if (isset($data['unity'])) {
-            $expectedUnity = $data['unity'];
-            $actualUnity = $pricesInfo->getUnity();
-
-            Assert::assertEquals(
-                $expectedUnity,
-                $actualUnity,
-                sprintf('Tax rules group expected to be "%s", but got "%s"', $expectedUnity, $actualUnity)
-            );
-
-            unset($data['unity']);
-        }
-
-        $this->assertNumberPriceFields($data, $pricesInfo);
-    }
-
-    /**
-     * @param array $expectedPrices
-     * @param ProductPricesInformation $actualPrices
-     */
-    private function assertNumberPriceFields(array &$expectedPrices, ProductPricesInformation $actualPrices)
-    {
-        $numberPriceFields = [
-            'price',
-            'ecotax',
-            'wholesale_price',
-            'unit_price',
-            'unit_price_ratio',
-        ];
-
-        $propertyAccessor = PropertyAccess::createPropertyAccessor();
-
-        foreach ($numberPriceFields as $field) {
-            if (isset($expectedPrices[$field])) {
-                $expectedNumber = new Number((string) $expectedPrices[$field]);
-                $actualNumber = $propertyAccessor->getValue($actualPrices, $field);
-
-                if (!$expectedNumber->equals($actualNumber)) {
-                    throw new RuntimeException(
-                        sprintf('Product %s expected to be "%s", but is "%s"', $field, $expectedNumber, $actualNumber)
-                    );
-                }
-
-                unset($expectedPrices[$field]);
-            }
-        }
     }
 
     /**
