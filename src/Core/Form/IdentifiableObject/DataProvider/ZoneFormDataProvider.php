@@ -52,7 +52,7 @@ final class ZoneFormDataProvider implements FormDataProviderInterface
      *
      * @param int $id
      *
-     * @return mixed
+     * @return array
      */
     public function getData($id)
     {
