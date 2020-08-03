@@ -105,6 +105,6 @@ services:
     prestashop.bundle.controller_stack:
         class: PrestaShopBundle\EventListener\ControllerListener
         arguments:
-          - '@prestashop.core.routing.controller_stack'
+          - '@prestashop.bundle.routing.controller_stack'
         tags:
           - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }

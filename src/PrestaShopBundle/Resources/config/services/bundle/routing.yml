@@ -53,3 +53,9 @@ services:
         class: 'PrestaShopBundle\Routing\Linter\AdminRouteProvider'
         arguments:
             - '@router'
+
+    prestashop.bundle.routing.controller_stack:
+        class: 'PrestaShopBundle\Routing\ControllerStack'
+
+    controller_stack:
+        alias: 'prestashop.bundle.routing.controller_stack'

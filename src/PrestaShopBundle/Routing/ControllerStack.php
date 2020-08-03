@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Routing;
+namespace PrestaShopBundle\Routing;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -71,7 +71,7 @@ class ControllerStack
      *
      * @return Controller|null
      */
-    public function getMasterController()
+    public function getRootController()
     {
         if (!$this->controllers) {
             return null;

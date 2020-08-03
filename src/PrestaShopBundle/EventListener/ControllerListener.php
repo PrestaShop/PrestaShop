@@ -26,8 +26,9 @@
 
 namespace PrestaShopBundle\EventListener;
 
-use PrestaShop\PrestaShop\Core\Routing\ControllerStack;
+use PrestaShopBundle\Routing\ControllerStack;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * This class listens to Symfony kernel
@@ -53,6 +54,8 @@ class ControllerListener
      */
     public function onKernelController(FilterControllerEvent $event)
     {
-        $this->controllerStack->push($event->getController()[0]);
+        if ($event->getController()[0] instanceof Controller) {
+            $this->controllerStack->push($event->getController()[0]);
+        }
     }
 }

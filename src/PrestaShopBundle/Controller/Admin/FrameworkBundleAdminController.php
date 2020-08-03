@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
 use PrestaShopBundle\Security\Voter\PageVoter;
+use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
@@ -548,7 +549,7 @@ class FrameworkBundleAdminController extends Controller
         $checkPath = true): void
     {
         if (null === $this->getContext()->controller) {
-            throw new \RuntimeException('No context controller available');
+            throw new RuntimeException('No context controller available');
         }
 
         $this->getContext()->controller->addCSS(
@@ -569,7 +570,7 @@ class FrameworkBundleAdminController extends Controller
     public function addJS($jsUri, $checkPath = true): void
     {
         if (null === $this->getContext()->controller) {
-            throw new \RuntimeException('No context controller available');
+            throw new RuntimeException('No context controller available');
         }
 
         $this->getContext()->controller->addJS(
