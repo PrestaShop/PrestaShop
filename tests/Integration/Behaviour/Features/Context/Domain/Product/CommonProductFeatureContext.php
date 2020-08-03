@@ -24,29 +24,23 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace Tests\Integration\Behaviour\Features\Context\Domain;
+namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use Cache;
-use Context;
 use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use Product;
 use RuntimeException;
-use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
-use Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateTagsFeatureContext;
+use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
-class ProductFeatureContext extends AbstractProductFeatureContext
+class CommonProductFeatureContext extends AbstractProductFeatureContext
 {
     /**
      * @Then I set tax rule group :taxRulesGroupReference to product :productReference
@@ -312,37 +306,5 @@ class ProductFeatureContext extends AbstractProductFeatureContext
         }
 
         return $constraintErrorFieldMap[$fieldName];
-    }
-
-    /**
-     * @param string $productName
-     *
-     * @return int
-     */
-    private function getProductIdByName(string $productName): int
-    {
-        /** @var FoundProduct[] */
-        $products = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
-
-        if (empty($products)) {
-            throw new RuntimeException(sprintf('Product with name "%s" was not found', $productName));
-        }
-
-        /** @var FoundProduct $product */
-        $product = reset($products);
-
-        return $product->getProductId();
-    }
-
-    /**
-     * @param string $productReference
-     *
-     * @return CustomizationField[]
-     */
-    private function getProductCustomizationFields(string $productReference): array
-    {
-        return $this->getQueryBus()->handle(new GetProductCustomizationFields(
-            $this->getSharedStorage()->get($productReference)
-        ));
     }
 }

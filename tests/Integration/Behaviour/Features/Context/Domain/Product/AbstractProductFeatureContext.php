@@ -28,8 +28,12 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
+use Context;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
+use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
 
@@ -47,6 +51,26 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
         return $this->getQueryBus()->handle(new GetProductForEditing(
             $productId
         ));
+    }
+
+    /**
+     * @param string $productName
+     *
+     * @return int
+     */
+    protected function getProductIdByName(string $productName): int
+    {
+        /** @var FoundProduct[] */
+        $products = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
+
+        if (empty($products)) {
+            throw new RuntimeException(sprintf('Product with name "%s" was not found', $productName));
+        }
+
+        /** @var FoundProduct $product */
+        $product = reset($products);
+
+        return $product->getProductId();
     }
 
     /**
