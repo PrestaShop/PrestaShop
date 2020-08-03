@@ -26,10 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
+use PrestaShop\PrestaShop\Adapter\Image\Uploader\ProfileImageUploader;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Command\AddProfileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Command\EditProfileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject\ProfileId;
+use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Saves or updates Profile using form data
@@ -42,11 +45,20 @@ final class ProfileFormDataHandler implements FormDataHandlerInterface
     private $bus;
 
     /**
-     * @param CommandBusInterface $bus
+     * @var ImageUploaderInterface
      */
-    public function __construct(CommandBusInterface $bus)
-    {
+    private $imageUploader;
+
+    /**
+     * @param CommandBusInterface $bus
+     * @param ImageUploaderInterface|null $imageUploader
+     */
+    public function __construct(
+        CommandBusInterface $bus,
+        ImageUploaderInterface $imageUploader = null
+    ) {
         $this->bus = $bus;
+        $this->imageUploader = $imageUploader ?? new ProfileImageUploader();
     }
 
     /**
@@ -57,6 +69,12 @@ final class ProfileFormDataHandler implements FormDataHandlerInterface
         /** @var ProfileId $profileId */
         $profileId = $this->bus->handle(new AddProfileCommand($data['name']));
 
+        /** @var UploadedFile $uploadedAvatar */
+        $uploadedAvatar = $data['avatarUrl'] ?? null;
+        if (!empty($uploadedAvatar) && $uploadedAvatar instanceof UploadedFile) {
+            $this->imageUploader->upload($profileId->getValue(), $uploadedAvatar);
+        }
+
         return $profileId->getValue();
     }
 
@@ -65,6 +83,12 @@ final class ProfileFormDataHandler implements FormDataHandlerInterface
      */
     public function update($profileId, array $data)
     {
+        /** @var UploadedFile $uploadedAvatar */
+        $uploadedAvatar = $data['avatarUrl'];
+        if ($uploadedAvatar instanceof UploadedFile) {
+            $this->imageUploader->upload($profileId, $uploadedAvatar);
+        }
+
         /* @var ProfileId $profileId */
         $this->bus->handle(new EditProfileCommand($profileId, $data['name']));
     }

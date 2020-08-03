@@ -53,6 +53,16 @@ class ProfileCore extends ObjectModel
     protected static $_cache_accesses = [];
 
     /**
+     * {@inheritdoc}
+     */
+    public function __construct($id = null, $idLang = null, $idShop = null, $translator = null)
+    {
+        parent::__construct($id, $idLang, $idShop, $translator);
+
+        $this->image_dir = _PS_PROFILE_IMG_DIR_;
+    }
+
+    /**
      * Get all available profiles.
      *
      * @return array Profiles
