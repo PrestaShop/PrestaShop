@@ -30,6 +30,7 @@ import OrderViewEventMap from '@pages/order/view/order-view-event-map';
 import OrderPrices from '@pages/order/view/order-prices';
 import OrderProductRenderer from '@pages/order/view/order-product-renderer';
 import ConfirmModal from '@components/modal';
+import OrderPricesRefresher from '@pages/order/view/order-prices-refresher';
 
 const $ = window.$;
 
@@ -56,6 +57,7 @@ export default class OrderProductAdd {
     this.currencyPrecision = $(OrderViewPageMap.productsTable).data('currencyPrecision');
     this.priceTaxCalculator = new OrderPrices();
     this.orderProductRenderer = new OrderProductRenderer();
+    this.orderPricesRefresher = new OrderPricesRefresher();
   }
 
   setupListener() {
@@ -189,6 +191,9 @@ export default class OrderProductAdd {
     const orderId = $(event.currentTarget).data('orderId');
 
     if (invoiceId === 0) {
+      const combinationId = typeof $(':selected', this.combinationsSelect).val() === 'undefined' ? 0 : $(':selected', this.combinationsSelect).val();
+      const productPriceMatch = this.orderPricesRefresher.checkOtherProductPricesMatch(this.priceTaxIncludedInput.val(), this.productIdInput.val(), combinationId);
+
       const modalEditPrice = new ConfirmModal({
         id: 'modal-confirm-new-price',
         confirmTitle: this.invoiceSelect.data('modal-edit-price-title'),
@@ -196,7 +201,7 @@ export default class OrderProductAdd {
         confirmButtonLabel: this.invoiceSelect.data('modal-edit-price-apply'),
         closeButtonLabel: this.invoiceSelect.data('modal-edit-price-cancel'),
       }, () => {
-        this.addProduct(orderId)
+        this.addProduct(orderId);
       });
 
       const modal = new ConfirmModal({
@@ -206,7 +211,11 @@ export default class OrderProductAdd {
         confirmButtonLabel: this.invoiceSelect.data('modal-apply'),
         closeButtonLabel: this.invoiceSelect.data('modal-cancel'),
       }, () => {
-        modalEditPrice.show();
+        if (!productPriceMatch) {
+          modalEditPrice.show();
+        } else {
+          this.addProduct(orderId);
+        }
       });
       modal.show();
     } else {
