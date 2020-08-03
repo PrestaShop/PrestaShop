@@ -348,8 +348,6 @@ abstract class AbstractOrderHandler
         $specificPrice->from = '0000-00-00 00:00:00';
         $specificPrice->to = '0000-00-00 00:00:00';
         $specificPrice->add();
-
-        return;
     }
 
     /**
