@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use Product;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
+use Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateTagsFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -80,7 +81,10 @@ class ProductFeatureContext extends AbstractProductFeatureContext
         $expectedLocalizedValues = $this->parseLocalizedArray($localizedValues);
 
         if ('tags' === $fieldName) {
-            $this->assertLocalizedTags($expectedLocalizedValues, $productForEditing);
+            UpdateTagsFeatureContext::assertLocalizedTags(
+                $expectedLocalizedValues,
+                $this->extractValueFromProductForEditing($productForEditing, $fieldName)
+            );
 
             return;
         }

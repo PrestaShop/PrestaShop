@@ -34,7 +34,6 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags as LocalizedTagsDto;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use RuntimeException;
 
 class UpdateTagsFeatureContext extends AbstractProductFeatureContext
@@ -71,20 +70,15 @@ class UpdateTagsFeatureContext extends AbstractProductFeatureContext
      *
      * @param array $localizedTagStrings key value pairs where key is language id and value is string representation of array separated by comma
      *                                   e.g. [1 => 'hello,goodbye', 2 => 'bonjour,Au revoir']
-     * @param ProductForEditing $productForEditing
+     * @param LocalizedTagsDto[] $actualLocalizedTagsList
      */
-    private function assertLocalizedTags(array $localizedTagStrings, ProductForEditing $productForEditing)
+    public static function assertLocalizedTags(array $localizedTagStrings, array $actualLocalizedTagsList)
     {
-        $fieldName = 'tags';
-        /** @var LocalizedTagsDto[] $actualLocalizedTags */
-        $actualLocalizedTagsList = $this->extractValueFromProductForEditing($productForEditing, $fieldName);
-
         foreach ($localizedTagStrings as $langId => $tagsString) {
             $langIso = Language::getIsoById($langId);
 
             if (empty($tagsString)) {
                 // if tags string is empty, then we should not have any actual value in this language
-                /** @var LocalizedTagsDto $actualLocalizedTags */
                 foreach ($actualLocalizedTagsList as $actualLocalizedTags) {
                     if ($actualLocalizedTags->getLanguageId() === $langId) {
                         throw new RuntimeException(sprintf(
@@ -111,8 +105,7 @@ class UpdateTagsFeatureContext extends AbstractProductFeatureContext
                     $expectedTags,
                     $actualLocalizedTags->getTags(),
                     sprintf(
-                        'Expected %s in "%s" language was "%s", but got "%s"',
-                        $fieldName,
+                        'Expected tags in "%s" language was "%s", but got "%s"',
                         $langIso,
                         var_export($expectedTags, true),
                         var_export($actualLocalizedTags->getTags(), true)
