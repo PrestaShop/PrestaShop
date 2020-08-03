@@ -78,77 +78,77 @@ Comment: Link to localized forum</note>
       <trans-unit id="5ad366cc586498f65b4f18a9a87bb1ed">
         <source>Field required</source>
         <target>Field required</target>
-        <note>Line: 85</note>
+        <note>Line: 74</note>
       </trans-unit>
       <trans-unit id="ab141dcb233ea3357d0a86584ff65a49">
         <source>shop name</source>
         <target>shop name</target>
-        <note>Line: 93</note>
+        <note>Line: 82</note>
       </trans-unit>
       <trans-unit id="96f52200c7a597ff32a0bb66f794d183">
         <source>The field %field% is limited to %limit% characters</source>
         <target>The field %field% is limited to %limit% characters</target>
-        <note>Line: 106</note>
+        <note>Line: 95</note>
       </trans-unit>
       <trans-unit id="342f5c77ed008542e78094607ce1f7f3">
         <source>firstname</source>
         <target>firstname</target>
-        <note>Line: 100</note>
+        <note>Line: 89</note>
       </trans-unit>
       <trans-unit id="2399cf4ca7b49f2706f6e147a32efa78">
         <source>Your lastname contains some invalid characters</source>
         <target>Your lastname contains some invalid characters</target>
-        <note>Line: 104</note>
+        <note>Line: 93</note>
       </trans-unit>
       <trans-unit id="8ad75c5a8821cc294f189181722acb56">
         <source>lastname</source>
         <target>lastname</target>
-        <note>Line: 106</note>
+        <note>Line: 95</note>
       </trans-unit>
       <trans-unit id="74d36cb95a84f88728b3d69678aba185">
         <source>The password and its confirmation are different</source>
         <target>The password and its confirmation are different</target>
-        <note>Line: 114</note>
+        <note>Line: 103</note>
       </trans-unit>
       <trans-unit id="3d282d50434c9dee33c39a09d5283406">
         <source>This e-mail address is invalid</source>
         <target>This e-mail address is invalid</target>
-        <note>Line: 120</note>
+        <note>Line: 109</note>
       </trans-unit>
       <trans-unit id="316ec028b21331289425813b583e4b8f">
         <source>Image folder %s is not writable</source>
         <target>Image folder %s is not writable</target>
-        <note>Line: 158</note>
+        <note>Line: 147</note>
       </trans-unit>
       <trans-unit id="aa2154c174605e6c5bae0daa7ea56352">
         <source>An error occurred during logo copy.</source>
         <target>An error occurred during logo copy.</target>
-        <note>Line: 168</note>
+        <note>Line: 157</note>
       </trans-unit>
       <trans-unit id="6b6ab7122be1b8361066f56eed537aab">
         <source>An error occurred during logo upload.</source>
         <target>An error occurred during logo upload.</target>
-        <note>Line: 175</note>
+        <note>Line: 164</note>
       </trans-unit>
       <trans-unit id="496d2fd133e6dd3ffcf1d92b77807751">
         <source>Sports and Entertainment</source>
         <target>Sports and Entertainment</target>
-        <note>Line: 265</note>
+        <note>Line: 254</note>
       </trans-unit>
       <trans-unit id="989a45a4ca01ee222f4370172bf8850d">
         <source>Invalid shop name</source>
         <target>Invalid shop name</target>
-        <note>Line: 91</note>
+        <note>Line: 80</note>
       </trans-unit>
       <trans-unit id="68499acecfba9d3bf0ca8711f300d3ed">
         <source>Your firstname contains some invalid characters</source>
         <target>Your firstname contains some invalid characters</target>
-        <note>Line: 98</note>
+        <note>Line: 87</note>
       </trans-unit>
       <trans-unit id="89605cda87edd2daeebbe3534b7beb0d">
         <source>The password is incorrect (must be alphanumeric string with at least 8 characters)</source>
         <target>The password is incorrect (must be alphanumeric string with at least 8 characters)</target>
-        <note>Line: 112</note>
+        <note>Line: 101</note>
       </trans-unit>
     </body>
   </file>
@@ -176,48 +176,48 @@ Comment: Link to localized forum</note>
       <trans-unit id="cdc5a0619e8dadc368c1d5feb2d83986">
         <source>Create file parameters</source>
         <target>Create file parameters</target>
-        <note>Line: 301
+        <note>Line: 300
 Comment: We fill the process step used for Ajax queries</note>
       </trans-unit>
       <trans-unit id="0b1b557a66c34f8467d364c5f6ac36a5">
         <source>Create database tables</source>
         <target>Create database tables</target>
-        <note>Line: 302</note>
+        <note>Line: 301</note>
       </trans-unit>
       <trans-unit id="22242e741d52f57289ac8b72b9e8c96d">
         <source>Create default shop and languages</source>
         <target>Create default shop and languages</target>
-        <note>Line: 303</note>
+        <note>Line: 302</note>
       </trans-unit>
       <trans-unit id="33f1b48d4dac0408b87bb952b6b0799f">
         <source>Populate database tables</source>
         <target>Populate database tables</target>
-        <note>Line: 305</note>
+        <note>Line: 304</note>
       </trans-unit>
       <trans-unit id="039c15f5a6879d4a65fb0f67f8f90f09">
         <source>Configure shop information</source>
         <target>Configure shop information</target>
-        <note>Line: 306</note>
+        <note>Line: 305</note>
       </trans-unit>
       <trans-unit id="23de8b7f5abcac68c426e405975411bb">
         <source>Install demonstration data</source>
         <target>Install demonstration data</target>
-        <note>Line: 314</note>
+        <note>Line: 313</note>
       </trans-unit>
       <trans-unit id="e819ad111fcd4023d34b419946936265">
         <source>Install modules</source>
         <target>Install modules</target>
-        <note>Line: 308</note>
+        <note>Line: 307</note>
       </trans-unit>
       <trans-unit id="fe931ab87bd95a63a886c40e311ab838">
         <source>Install Addons modules</source>
         <target>Install Addons modules</target>
-        <note>Line: 309</note>
+        <note>Line: 308</note>
       </trans-unit>
       <trans-unit id="7ad8960b5505289cf368e247f7ac72ef">
         <source>Install theme</source>
         <target>Install theme</target>
-        <note>Line: 311</note>
+        <note>Line: 310</note>
       </trans-unit>
     </body>
   </file>
@@ -395,97 +395,97 @@ Comment: We fill the process step used for Ajax queries</note>
       <trans-unit id="87b616fe8f0a5ee54271f2eae643c069">
         <source>Install demo products</source>
         <target>Install demo products</target>
-        <note>Line: 59</note>
+        <note>Line: 58</note>
       </trans-unit>
       <trans-unit id="93cba07454f06a4a960172bbd6e2a435">
         <source>Yes</source>
         <target>Yes</target>
-        <note>Line: 63</note>
+        <note>Line: 62</note>
       </trans-unit>
       <trans-unit id="bafd7322c6e97d25b6299b5d6fe8920b">
         <source>No</source>
         <target>No</target>
-        <note>Line: 67</note>
+        <note>Line: 66</note>
       </trans-unit>
       <trans-unit id="75b105f67d0774e4bb7b69de06d20dbb">
         <source>Demo products are a good way to learn how to use PrestaShop. You should install them if you are not familiar with it.</source>
         <target>Demo products are a good way to learn how to use PrestaShop. You should install them if you are not familiar with it.</target>
-        <note>Line: 70</note>
+        <note>Line: 69</note>
       </trans-unit>
       <trans-unit id="59716c97497eb9694541f7c3d37b1a4d">
         <source>Country</source>
         <target>Country</target>
-        <note>Line: 78</note>
+        <note>Line: 74</note>
       </trans-unit>
       <trans-unit id="a7bb58222222b064f0721e6e0fe4c486">
         <source>Select your country</source>
         <target>Select your country</target>
-        <note>Line: 81</note>
+        <note>Line: 77</note>
       </trans-unit>
       <trans-unit id="65d03d6bab79cbe2135c384592e70715">
         <source>Shop timezone</source>
         <target>Shop timezone</target>
-        <note>Line: 93</note>
+        <note>Line: 89</note>
       </trans-unit>
       <trans-unit id="5a9d7616b5690c569919362f77dc9ec5">
         <source>Select your timezone</source>
         <target>Select your timezone</target>
-        <note>Line: 96</note>
+        <note>Line: 92</note>
       </trans-unit>
       <trans-unit id="97e0d62d1db5473366dd6e7ebd56f596">
         <source>Shop logo</source>
         <target>Shop logo</target>
-        <note>Line: 108</note>
+        <note>Line: 104</note>
       </trans-unit>
       <trans-unit id="65ff4245dba0a751bdd9f2530cb8788b">
         <source>Optional - You can add you logo at a later time.</source>
         <target>Optional - You can add you logo at a later time.</target>
-        <note>Line: 112</note>
+        <note>Line: 108</note>
       </trans-unit>
       <trans-unit id="a0623b78a5f2cfe415d9dbbd4428ea40">
         <source>Your Account</source>
         <target>Your Account</target>
-        <note>Line: 121</note>
+        <note>Line: 117</note>
       </trans-unit>
       <trans-unit id="20db0bfeecd8fe60533206a2b5e9891a">
         <source>First name</source>
         <target>First name</target>
-        <note>Line: 125</note>
+        <note>Line: 121</note>
       </trans-unit>
       <trans-unit id="8d3f5eff9c40ee315d452392bed5309b">
         <source>Last name</source>
         <target>Last name</target>
-        <note>Line: 135</note>
+        <note>Line: 131</note>
       </trans-unit>
       <trans-unit id="8b5dd64ab8d0b8158906796b53a200e2">
         <source>E-mail address</source>
         <target>E-mail address</target>
-        <note>Line: 145</note>
+        <note>Line: 141</note>
       </trans-unit>
       <trans-unit id="a838dd011a3bb99084a43912a71cdc46">
         <source>This email address will be your username to access your store's back office.</source>
         <target>This email address will be your username to access your store's back office.</target>
-        <note>Line: 150</note>
+        <note>Line: 146</note>
       </trans-unit>
       <trans-unit id="ecb77be87bda4dd34d51cfedbef9b6c3">
         <source>Shop password</source>
         <target>Shop password</target>
-        <note>Line: 156</note>
+        <note>Line: 152</note>
       </trans-unit>
       <trans-unit id="af2d11e28485cf3841ea367fdcdb4713">
         <source>Must be at least 8 characters</source>
         <target>Must be at least 8 characters</target>
-        <note>Line: 164</note>
+        <note>Line: 160</note>
       </trans-unit>
       <trans-unit id="540155f9adc935c8f3a9d8a77beb8860">
         <source>Re-type to confirm</source>
         <target>Re-type to confirm</target>
-        <note>Line: 170</note>
+        <note>Line: 166</note>
       </trans-unit>
       <trans-unit id="6794fece26df4610c0523bffd7a45231">
         <source><![CDATA[All information you give us is collected by us and is subject to data processing and statistics, it is necessary for the members of the PrestaShop company in order to respond to your requests. Your personal data may be communicated to service providers and partners as part of partner relationships. Under the current "Act on Data Processing, Data Files and Individual Liberties" you have the right to access, rectify and oppose to the processing of your personal data through this <a href="%s" onclick="return !window.open(this.href)">link</a>.]]></source>
         <target><![CDATA[All information you give us is collected by us and is subject to data processing and statistics, it is necessary for the members of the PrestaShop company in order to respond to your requests. Your personal data may be communicated to service providers and partners as part of partner relationships. Under the current "Act on Data Processing, Data Files and Individual Liberties" you have the right to access, rectify and oppose to the processing of your personal data through this <a href="%s" onclick="return !window.open(this.href)">link</a>.]]></target>
-        <note>Line: 178</note>
+        <note>Line: 174</note>
       </trans-unit>
     </body>
   </file>
@@ -549,7 +549,12 @@ Comment: We fill the process step used for Ajax queries</note>
       <trans-unit id="4a8b0cfe8f2ecd6b3b34b2ed853f02a8">
         <source>Test your database connection now!</source>
         <target>Test your database connection now!</target>
-        <note>Line: 74</note>
+        <note>Line: 72</note>
+      </trans-unit>
+      <trans-unit id="615081c1bdd1f281451f7fcebe9332ac">
+        <source>Drop existing tables</source>
+        <target>Drop existing tables</target>
+        <note>Line: 68</note>
       </trans-unit>
     </body>
   </file>
@@ -826,6 +831,16 @@ Comment: We fill the process step used for Ajax queries</note>
         <target>Oops! Please correct the item(s) below, and then click "Refresh" to test the compatibility of your new system.</target>
         <note>Line: 35</note>
       </trans-unit>
+      <trans-unit id="3388c1aa7b0c78c5751c56bd8984e095">
+        <source>Refresh information</source>
+        <target>Refresh information</target>
+        <note>Line: 51</note>
+      </trans-unit>
+      <trans-unit id="a023e6b72fd99acbf5329340a09ea1f9">
+        <source>Oops! Please correct the item(s) below, and then click "%refresh_label%" to test the compatibility of your new system.</source>
+        <target>Oops! Please correct the item(s) below, and then click "%refresh_label%" to test the compatibility of your new system.</target>
+        <note>Line: 35</note>
+      </trans-unit>
     </body>
   </file>
   <file original="install-dev/theme/views/welcome.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -991,57 +1006,57 @@ File: modules/autoupgrade/classes/UpgradePage.php:414</note>
       <trans-unit id="7433acfc71c103b95ddc7f861ecd55ee">
         <source>At least one table with same prefix was already found, please change your prefix or drop your database</source>
         <target>At least one table with same prefix was already found, please change your prefix or drop your database</target>
-        <note>Line: 79</note>
+        <note>Line: 78</note>
       </trans-unit>
       <trans-unit id="0e29192ae1f901f7c586dbe2e163324e">
         <source>Server name is not valid</source>
         <target>Server name is not valid</target>
-        <note>Line: 53</note>
+        <note>Line: 52</note>
       </trans-unit>
       <trans-unit id="432b416ae18332365f49829f82d8e522">
         <source>You must enter a database name</source>
         <target>You must enter a database name</target>
-        <note>Line: 57</note>
+        <note>Line: 56</note>
       </trans-unit>
       <trans-unit id="eb6e8b3fa25d57b419896d6f8b3609da">
         <source>You must enter a database login</source>
         <target>You must enter a database login</target>
-        <note>Line: 61</note>
+        <note>Line: 60</note>
       </trans-unit>
       <trans-unit id="5ed7d7dbcbdd7f2ed850627bdc97945b">
         <source>Tables prefix is invalid</source>
         <target>Tables prefix is invalid</target>
-        <note>Line: 65</note>
+        <note>Line: 64</note>
       </trans-unit>
       <trans-unit id="2f866a47ae9b2bffaca244ccd79d4ea7">
         <source>Cannot convert database data to utf-8</source>
         <target>Cannot convert database data to utf-8</target>
-        <note>Line: 74</note>
+        <note>Line: 73</note>
       </trans-unit>
       <trans-unit id="00151f099adaa8a1ad25dff0862b121b">
         <source>The values of auto_increment increment and offset must be set to 1</source>
         <target>The values of auto_increment increment and offset must be set to 1</target>
-        <note>Line: 82</note>
+        <note>Line: 81</note>
       </trans-unit>
       <trans-unit id="2c3fc7088c5715d31d1f0a33d1e7c79c">
         <source>Your database login does not have the privileges to create table on the database "%s". Ask your hosting provider:</source>
         <target>Your database login does not have the privileges to create table on the database "%s". Ask your hosting provider:</target>
-        <note>Line: 85</note>
+        <note>Line: 84</note>
       </trans-unit>
       <trans-unit id="ce799e40a5e7b523d011b80868fe4ca4">
         <source>Database Server is not found. Please verify the login, password and server fields</source>
         <target>Database Server is not found. Please verify the login, password and server fields</target>
-        <note>Line: 94</note>
+        <note>Line: 93</note>
       </trans-unit>
       <trans-unit id="9a0b7b3a849553ab760177a12f4ebc7f">
         <source>Connection to MySQL server succeeded, but database "%database%" not found</source>
         <target>Connection to MySQL server succeeded, but database "%database%" not found</target>
-        <note>Line: 99</note>
+        <note>Line: 98</note>
       </trans-unit>
       <trans-unit id="0462e75865c8794c7785f7c6952ae7a3">
         <source>Attempt to create the database automatically</source>
         <target>Attempt to create the database automatically</target>
-        <note>Line: 101</note>
+        <note>Line: 100</note>
       </trans-unit>
     </body>
   </file>

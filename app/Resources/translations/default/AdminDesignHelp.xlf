@@ -322,6 +322,13 @@ Once you click on "Adapt to RTL", any RTL-specific file that you might have adde
 Once you click on "Adapt to RTL", any RTL-specific file that you might have added to your theme might be deleted by the created stylesheet.</target>
         <note>Line: 37</note>
       </trans-unit>
+      <trans-unit id="46b1aed6e580d075f9d45d67f8a65164">
+        <source>Be careful! Please check your theme in an RTL language before generating the RTL stylesheet: your theme could be already adapted to RTL.
+Once you enable the "%generate_rtl_label%" option, any RTL-specific file that you might have added to your theme might be deleted by the created stylesheet.</source>
+        <target>Be careful! Please check your theme in an RTL language before generating the RTL stylesheet: your theme could be already adapted to RTL.
+Once you enable the "%generate_rtl_label%" option, any RTL-specific file that you might have added to your theme might be deleted by the created stylesheet.</target>
+        <note>Line: 37</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/Theme/import.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -363,6 +370,11 @@ Once you click on "Adapt to RTL", any RTL-specific file that you might have adde
         <source>If you check a field, change its value, and save, the multistore behavior will not apply to this shop (or group), for this particular parameter.</source>
         <target>If you check a field, change its value, and save, the multistore behavior will not apply to this shop (or group), for this particular parameter.</target>
         <note>Line: 299</note>
+      </trans-unit>
+      <trans-unit id="a1db50531c5baec8c2b17b2c58790c09">
+        <source>You are editing this page for a specific shop or group. Click "%yes_label%" to check all fields, "%no_label%" to uncheck all.</source>
+        <target>You are editing this page for a specific shop or group. Click "%yes_label%" to check all fields, "%no_label%" to uncheck all.</target>
+        <note>Line: 298</note>
       </trans-unit>
     </body>
   </file>
