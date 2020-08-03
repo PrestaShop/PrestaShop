@@ -1409,11 +1409,11 @@ function dniRequired() {
     data: 'token=' + address_token + '&ajax=1&dni_required=1&tab=AdminAddresses&id_country=' + $('#id_country').val(),
     success: function(resp) {
       if (resp && resp.dni_required) {
-        $("#dni_required label").addClass("required");
-        $("#dni_required input").prop('required', 'required');
+        $('#dni_required label').addClass('required');
+        $('#dni_required input').prop('required', 'required');
       } else {
-        $("#dni_required label").removeClass("required");
-        $("#dni_required input").removeProp('required');
+        $('#dni_required label').removeClass('required');
+        $('#dni_required input').removeProp('required');
       }
     }
   });
