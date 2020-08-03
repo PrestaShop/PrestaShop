@@ -291,7 +291,7 @@ class ZoneController extends FrameworkBundleAdminController
      */
     public function bulkToggleStatus(string $status, Request $request)
     {
-        $status = $status == 'enable';
+        $status = $status === 'enable';
         $zoneIds = $this->getBulkZonesFromRequest($request);
 
         try {
