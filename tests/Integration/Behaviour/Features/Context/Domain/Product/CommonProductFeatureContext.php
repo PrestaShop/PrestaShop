@@ -34,10 +34,41 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use RuntimeException;
+use Tests\Integration\Behaviour\Features\Context\Util\CombinationDetails;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
+use Tests\Integration\Behaviour\Features\Context\Util\ProductCombinationFactory;
 
 class CommonProductFeatureContext extends AbstractProductFeatureContext
 {
+    /**
+     * @Given product :productReference has following combinations:
+     *
+     * @param string $productReference
+     * @param TableNode $tableNode
+     */
+    public function addCombinationsToProduct(string $productReference, TableNode $tableNode)
+    {
+        $details = $tableNode->getColumnsHash();
+        $combinationsDetails = [];
+
+        foreach ($details as $combination) {
+            $combinationsDetails[] = new CombinationDetails(
+                $combination['reference'],
+                (int) $combination['quantity'],
+                explode(';', $combination['attributes'])
+            );
+        }
+
+        $combinations = ProductCombinationFactory::makeCombinations(
+            $this->getSharedStorage()->get($productReference),
+            $combinationsDetails
+        );
+
+        foreach ($combinations as $combination) {
+            $this->getSharedStorage()->set($combination->reference, (int) $combination->id);
+        }
+    }
+
     /**
      * @Then /^product "(.+)" localized "(.+)" should be "(.+)"$/
      * @Given /^product "(.+)" localized "(.+)" is "(.+)"$/

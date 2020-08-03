@@ -47,7 +47,7 @@ Feature: Update product suppliers from Back Office (BO)
     Then product product1 should have following suppliers:
       | product supplier reference     | currency      | price tax excluded |
       | my first supplier for product1 | USD           | 10                 |
-    And product product1 should have following values:
+    And product product1 should have following supplier values:
       | default supplier           | supplier1                      |
       | default supplier reference | my first supplier for product1 |
     When I update product product1 suppliers with following values:
@@ -59,7 +59,7 @@ Feature: Update product suppliers from Back Office (BO)
       | product supplier reference      | currency      | price tax excluded |
       | my first supplier for product1  | USD           | 10                 |
       | my second supplier for product1 | EUR           | 11                 |
-    And product product1 should have following values:
+    And product product1 should have following supplier values:
       | default supplier           | supplier2                       |
       | default supplier reference | my second supplier for product1 |
 
@@ -69,7 +69,7 @@ Feature: Update product suppliers from Back Office (BO)
       | product supplier reference      | currency      | price tax excluded |
       | my first supplier for product1  | USD           | 10                 |
       | my second supplier for product1 | EUR           | 11                 |
-    And product product1 should have following values:
+    And product product1 should have following supplier values:
       | default supplier           | supplier2                       |
       | default supplier reference | my second supplier for product1 |
     When I delete all product product1 suppliers

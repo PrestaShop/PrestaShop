@@ -205,6 +205,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePricesFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateShippingFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateTagsFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductSuppliersFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CategoryFeatureContext
