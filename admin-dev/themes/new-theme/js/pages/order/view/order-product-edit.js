@@ -29,6 +29,7 @@ import {EventEmitter} from '@components/event-emitter';
 import OrderViewEventMap from '@pages/order/view/order-view-event-map';
 import OrderPrices from '@pages/order/view/order-prices';
 import ConfirmModal from '@components/modal';
+import OrderPricesRefresher from '@pages/order/view/order-prices-refresher';
 
 const $ = window.$;
 
@@ -43,6 +44,7 @@ export default class OrderProductEdit {
     this.productEditSaveBtn = $(OrderViewPageMap.productEditSaveBtn);
     this.quantityInput = $(OrderViewPageMap.productEditQuantityInput);
     this.invoiceSelect = $(OrderViewPageMap.productAddInvoiceSelect);
+    this.orderPricesRefresher = new OrderPricesRefresher();
   }
 
   setupListener() {
@@ -161,8 +163,12 @@ export default class OrderProductEdit {
   }
 
   handleEditProductWithConfirmationModal(event) {
-    const currentPriceTaxExclRaw = $(`#orderProduct_${this.orderDetailId} ${OrderViewPageMap.productEditBtn}`).data('product-price-tax-excl');
-    if (currentPriceTaxExclRaw == this.priceTaxExcludedInput.val()) {
+    const productId = $(`#orderProduct_${this.orderDetailId} ${OrderViewPageMap.productEditBtn}`).data('product-id');
+    const combinationId = $(`#orderProduct_${this.orderDetailId} ${OrderViewPageMap.productEditBtn}`).data('combination-id');
+
+    const productPriceMatch = this.orderPricesRefresher.checkOtherProductPricesMatch(this.priceTaxIncludedInput.val(), productId, combinationId);
+
+    if (productPriceMatch) {
       this.editProduct(
           $(event.currentTarget).data('orderId'),
           this.orderDetailId
