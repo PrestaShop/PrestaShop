@@ -80,7 +80,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\AddressFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\OrderRefundFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\TaxFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\ProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePricesFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
@@ -187,7 +187,16 @@ default:
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\ProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\CommonProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\AddProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateBasicInformationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCategoriesFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCustomizationFieldsFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateOptionsFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePackFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePricesFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateShippingFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateTagsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CategoryFeatureContext
