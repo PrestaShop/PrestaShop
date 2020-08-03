@@ -53,7 +53,7 @@ final class ZoneFormDataHandler implements FormDataHandlerInterface
      *
      * @param array $data
      *
-     * @return mixed
+     * @return int
      */
     public function create(array $data)
     {
