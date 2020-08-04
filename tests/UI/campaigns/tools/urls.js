@@ -12,7 +12,7 @@ const loginBO = async function (page) {
 
   await Promise.all([
     page.click('#submit_login'),
-    page.waitForNavigation({waitUntil: 'load'}),
+    page.waitForNavigation({waitUntil: 'networkidle'}),
   ]);
 
   const block = await page.$('button.onboarding-button-shut-down');
@@ -35,7 +35,7 @@ const loginFO = async function (page) {
 
   await Promise.all([
     page.click('#submit-login'),
-    page.waitForNavigation('load'),
+    page.waitForNavigation('networkidle'),
   ]);
 };
 
