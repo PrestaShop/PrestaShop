@@ -114,7 +114,7 @@ class TranslationService
      */
     public function getTranslationsCatalogue(TypeInterface $providerType, string $locale, array $search)
     {
-        return $this->container->get('prestashop.translation.translation_catalogue_provider')
+        return $this->container->get('prestashop.translation.provider.translation_catalogue')
             ->getCatalogue(
                 $providerType,
                 $locale,
@@ -134,8 +134,6 @@ class TranslationService
      *
      * @throws Exception
      * @todo: we need to improve the Vuejs application to send the information
-     *
-     * @todo: we need module information here
      */
     public function listDomainTranslation(
         TypeInterface $providerType,
@@ -143,7 +141,7 @@ class TranslationService
         string $domain,
         array $search
     ): array {
-        $catalogue = $this->container->get('prestashop.translation.translation_catalogue_provider')
+        $catalogue = $this->container->get('prestashop.translation.provider.translation_catalogue')
             ->getDomainCatalogue(
                 $providerType,
                 $locale,

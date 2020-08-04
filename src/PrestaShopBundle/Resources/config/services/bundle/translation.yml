@@ -2,58 +2,58 @@ services:
     _defaults:
         public: true
 
-    prestashop.translation.back_provider_factory:
+    prestashop.translation.provider.factory.back:
         class: PrestaShopBundle\Translation\Provider\Factory\BackProviderFactory
         arguments:
-            - "@prestashop.translation.database_loader"
+            - "@prestashop.translation.loader.database"
             - "%translations_dir%"
 
-    prestashop.translation.front_provider_factory:
+    prestashop.translation.provider.factory.front:
         class: PrestaShopBundle\Translation\Provider\Factory\FrontProviderFactory
         arguments:
-            - "@prestashop.translation.database_loader"
+            - "@prestashop.translation.loader.database"
             - "%translations_dir%"
 
-    prestashop.translation.mails_body_provider_factory:
+    prestashop.translation.provider.factory.mails_body:
         class: PrestaShopBundle\Translation\Provider\Factory\MailsBodyProviderFactory
         arguments:
-            - "@prestashop.translation.database_loader"
+            - "@prestashop.translation.loader.database"
             - "%translations_dir%"
 
-    prestashop.translation.mails_provider_factory:
+    prestashop.translation.provider.factory.mails:
         class: PrestaShopBundle\Translation\Provider\Factory\MailsProviderFactory
         arguments:
-            - "@prestashop.translation.database_loader"
+            - "@prestashop.translation.loader.database"
             - "%translations_dir%"
 
-    prestashop.translation.others_provider_factory:
+    prestashop.translation.provider.factory.others:
         class: PrestaShopBundle\Translation\Provider\Factory\OthersProviderFactory
         arguments:
-            - "@prestashop.translation.database_loader"
+            - "@prestashop.translation.loader.database"
             - "%translations_dir%"
 
-    prestashop.translation.modules_provider_factory:
+    prestashop.translation.provider.factory.modules:
         class: PrestaShopBundle\Translation\Provider\Factory\ModulesProviderFactory
         arguments:
-            - "@prestashop.translation.database_loader"
+            - "@prestashop.translation.loader.database"
             - "%modules_dir%"
             - "%translations_dir%"
-            - "@prestashop.translation.legacy_file_loader"
-            - "@prestashop.translation.legacy_module.extractor"
+            - "@prestashop.translation.loader.legacy_file"
+            - "@prestashop.translation.extractor.legacy_module"
 
-    prestashop.translation.search_provider_factory:
+    prestashop.translation.provider.factory.search:
         class: PrestaShopBundle\Translation\Provider\Factory\SearchProviderFactory
         arguments:
-            - "@prestashop.translation.database_loader"
-            - "@prestashop.translation.legacy_file_loader"
-            - "@prestashop.translation.legacy_module.extractor"
+            - "@prestashop.translation.loader.database"
+            - "@prestashop.translation.loader.legacy_file"
+            - "@prestashop.translation.extractor.legacy_module"
             - "%translations_dir%"
 
-    prestashop.translation.themes_provider_factory:
+    prestashop.translation.provider.factory.themes:
         class: PrestaShopBundle\Translation\Provider\Factory\ThemesProviderFactory
         arguments:
-            - "@prestashop.translation.database_loader"
-            - "@prestashop.translation.theme_extractor_cache"
+            - "@prestashop.translation.loader.database"
+            - "@prestashop.translation.extractor.theme_cache"
             - "@prestashop.core.addon.theme.repository"
             - "@filesystem"
             - "%themes_dir%"
@@ -63,42 +63,42 @@ services:
         class: PrestaShopBundle\Translation\Provider\Factory\ProviderFactory
         arguments:
             -
-                - "@prestashop.translation.back_provider_factory"
-                - "@prestashop.translation.front_provider_factory"
-                - "@prestashop.translation.mails_body_provider_factory"
-                - "@prestashop.translation.mails_provider_factory"
-                - "@prestashop.translation.others_provider_factory"
-                - "@prestashop.translation.modules_provider_factory"
-                - "@prestashop.translation.search_provider_factory"
-                - "@prestashop.translation.themes_provider_factory"
+                - "@prestashop.translation.provider.factory.back"
+                - "@prestashop.translation.provider.factory.front"
+                - "@prestashop.translation.provider.factory.mails_body"
+                - "@prestashop.translation.provider.factory.mails"
+                - "@prestashop.translation.provider.factory.others"
+                - "@prestashop.translation.provider.factory.modules"
+                - "@prestashop.translation.provider.factory.search"
+                - "@prestashop.translation.provider.factory.themes"
 
-    prestashop.translation.translation_catalogue_provider:
+    prestashop.translation.provider.translation_catalogue:
         class: PrestaShopBundle\Translation\Provider\TranslationsCatalogueProvider
         arguments:
             - "@prestashop.translation.provider_factory"
 
     # TRANSLATIONS
-    prestashop.translation.database_loader:
+    prestashop.translation.loader.database:
         class: PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader
         arguments:
             - "@doctrine.orm.entity_manager"
         tags:
             - {name: translation.loader, alias: db}
 
-    prestashop.translation.sql_loader:
+    prestashop.translation.loader.sql:
         class: PrestaShopBundle\Translation\Loader\SqlTranslationLoader
         tags:
             - {name: translation.loader, alias: db}
 
-    prestashop.translation.legacy_file_reader:
+    prestashop.translation.reader.legacy_file:
         class: PrestaShopBundle\Translation\Loader\LegacyFileReader
         arguments:
             - "@prestashop.core.translation.locale.converter"
 
-    prestashop.translation.legacy_file_loader:
+    prestashop.translation.loader.legacy_file:
       class: PrestaShopBundle\Translation\Loader\LegacyFileLoader
       arguments:
-          - "@prestashop.translation.legacy_file_reader"
+          - "@prestashop.translation.reader.legacy_file"
       tags:
           - {name: translation.loader, alias: legacy_files}
 
@@ -110,18 +110,18 @@ services:
             - "@prestashop.compiler.smarty.template"
             - true
 
-    prestashop.translation.theme_extractor:
+    prestashop.translation.extractor.theme:
         class: PrestaShopBundle\Translation\Extractor\ThemeExtractor
         arguments:
             - "@prestashop.translation.extractor.smarty.legacy"
 
-    prestashop.translation.theme_extractor_cache:
+    prestashop.translation.extractor.theme_cache:
         class: PrestaShopBundle\Translation\Extractor\ThemeExtractorCache
         arguments:
-            - "@prestashop.translation.theme_extractor"
+            - "@prestashop.translation.extractor.theme"
             - "%themes_translations_dir%"
 
-    prestashop.translation.legacy_module.extractor:
+    prestashop.translation.extractor.legacy_module:
         class: PrestaShopBundle\Translation\Extractor\LegacyModuleExtractor
         arguments:
             - "@prestashop.translation.extractor.php"
@@ -132,10 +132,10 @@ services:
     prestashop.translation.dumper.xliff:
         class: PrestaShop\TranslationToolsBundle\Translation\Dumper\XliffFileDumper
 
-    prestashop.translation.theme.exporter:
+    prestashop.translation.exporter.theme:
         class: PrestaShopBundle\Translation\Exporter\ThemeExporter
         arguments:
-            - "@prestashop.translation.theme_extractor_cache"
+            - "@prestashop.translation.extractor.theme_cache"
             - "@prestashop.core.addon.theme.repository"
             - "@prestashop.translation.provider_factory"
             - "@prestashop.translation.dumper.xliff"

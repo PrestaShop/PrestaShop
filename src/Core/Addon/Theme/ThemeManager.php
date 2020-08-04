@@ -486,15 +486,28 @@ class ThemeManager implements AddonManagerInterface
     }
 
     /**
+     * @return \AppKernel|\Symfony\Component\HttpKernel\KernelInterface|void
+     */
+    private function getKernel()
+    {
+        global $kernel; // sf kernel
+
+        if (!(null !== $kernel && $kernel instanceof \Symfony\Component\HttpKernel\KernelInterface)) {
+            return;
+        }
+
+        return $kernel;
+    }
+
+    /**
      * Import translation from Theme to Database.
      *
      * @param Theme $theme
      */
     private function importTranslationToDatabase(Theme $theme)
     {
-        global $kernel; // sf kernel
-
-        if (!(null !== $kernel && $kernel instanceof \Symfony\Component\HttpKernel\KernelInterface)) {
+        $kernel = $this->getKernel();
+        if (null === $kernel) {
             return;
         }
 
@@ -549,9 +562,8 @@ class ThemeManager implements AddonManagerInterface
      */
     private function getDefaultDomains($locale, $themeName)
     {
-        global $kernel; // sf kernel
-
-        if (!(null !== $kernel && $kernel instanceof \Symfony\Component\HttpKernel\KernelInterface)) {
+        $kernel = $this->getKernel();
+        if (null === $kernel) {
             return;
         }
 

@@ -60,8 +60,8 @@ class ModulesProviderTest extends KernelTestCase
     {
         self::bootKernel();
         $container = self::$kernel->getContainer();
-        $databaseLoader = $container->get('prestashop.translation.database_loader');
-        $legacyFileLoader = $container->get('prestashop.translation.legacy_file_loader');
+        $databaseLoader = $container->get('prestashop.translation.loader.database');
+        $legacyFileLoader = $container->get('prestashop.translation.loader.legacy_file');
         $phpExtractor = $container->get('prestashop.translation.extractor.php');
         $smartyExtractor = $container->get('prestashop.translation.extractor.smarty.legacy');
         $twigExtractor = $container->get('prestashop.translation.extractor.twig');

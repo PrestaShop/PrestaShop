@@ -28,7 +28,7 @@ services:
           - "@prestashop.adapter.legacy.configuration"
           - "@filesystem"
           - "@prestashop.core.admin.lang.repository"
-          - "@prestashop.translation.theme.exporter"
+          - "@prestashop.translation.exporter.theme"
 
     prestashop.core.addon.theme.theme_manager_builder:
         class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder

@@ -165,14 +165,11 @@ class TranslationsCatalogueProvider
     private function filterCatalogue(MessageCatalogueInterface $catalogue, string $locale, string $domain): MessageCatalogueInterface
     {
         $filteredCatalogue = [];
-        $filenameFilters = ['#^' . preg_quote($domain, '#') . '([A-Za-z]|\.|$)#'];
 
         foreach ($catalogue->getDomains() as $catalogueDomain) {
-            foreach ($filenameFilters as $filter) {
-                if (preg_match($filter, $catalogueDomain)) {
-                    $filteredCatalogue[$catalogueDomain] = $catalogue->all($catalogueDomain);
-                    break;
-                }
+            if (preg_match('#^' . preg_quote($domain, '#') . '([A-Za-z]|\.|$)#', $catalogueDomain)) {
+                $filteredCatalogue[$catalogueDomain] = $catalogue->all($catalogueDomain);
+                break;
             }
         }
 

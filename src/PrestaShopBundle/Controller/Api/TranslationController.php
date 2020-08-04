@@ -115,6 +115,8 @@ class TranslationController extends ApiController
             if (!empty($module)) {
                 $providerType = new ModulesType($module);
             } elseif (!empty($theme) && $this->container->getParameter('default_theme') !== $theme) {
+                // default theme is build in the Core,
+                // its translations are not within a theme folder like the imported ones
                 $providerType = new ThemesType($theme);
             } else {
                 $providerType = new SearchType($domain, $theme);
@@ -184,8 +186,14 @@ class TranslationController extends ApiController
                 throw new Exception("The 'selected' parameter is empty.");
             }
 
-            $selectedTheme = (self::TYPE_THEMES === $type) ? $selected : null;
-            $selectedModule = (self::TYPE_MODULES === $type) ? $selected : null;
+            $translationProviderTypeParameters = [];
+            $selectedTheme = null;
+            if (self::TYPE_THEMES === $type) {
+                $selectedTheme = $selected;
+                $translationProviderTypeParameters['theme'] = $selected;
+            } elseif(self::TYPE_MODULES === $type) {
+                $translationProviderTypeParameters['module'] = $selected;
+            }
 
             $searchedExpressions = [];
             if (!is_array($search) && !empty($search)) {
@@ -193,7 +201,12 @@ class TranslationController extends ApiController
             }
 
             return $this->jsonResponse(
-                $this->getTree($lang, $type, $searchedExpressions, $selectedTheme, $selectedModule),
+                $this->getTree(
+                    $lang,
+                    $this->buildProviderType($type, $translationProviderTypeParameters),
+                    $searchedExpressions,
+                    $selectedTheme
+                ),
                 $request
             );
         } catch (Exception $exception) {
@@ -361,21 +374,20 @@ class TranslationController extends ApiController
      * Returns a translation domain tree
      *
      * @param string $lang
-     * @param string $type "themes", "modules", "mails", "mails_body", "back" or "others"
+     * @param TypeInterface $type
      * @param array $search Search strings
      * @param string|null $theme Selected theme name. Set only if type = "themes"
-     * @param string|null $module
      *
      * @return array
      *
      * @throws Exception
      */
-    private function getTree(string $lang, string $type, array $search, ?string $theme = null, ?string $module = null)
+    private function getTree(string $lang, TypeInterface $type, array $search, ?string $theme = null)
     {
         $locale = $this->translationService->langToLocale($lang);
 
         $catalogue = $this->translationService->getTranslationsCatalogue(
-            $this->buildProviderType($type, $theme, $module),
+            $type,
             $locale,
             $search
         );
@@ -392,21 +404,19 @@ class TranslationController extends ApiController
 
     /**
      * @param string $type
-     * @param string|null $theme
-     * @param string|null $module
+     * @param array $providerConfig
      *
      * @return TypeInterface
      */
     private function buildProviderType(
         string $type,
-        ?string $theme = null,
-        ?string $module = null
+        array $providerConfig
     ): TypeInterface {
         switch ($type) {
             case self::TYPE_MODULES:
-                return new ModulesType($module);
+                return new ModulesType($providerConfig['module']);
             case self::TYPE_THEMES:
-                return new ThemesType($theme);
+                return new ThemesType($providerConfig['theme']);
             case self::TYPE_BACK:
                 return new BackType();
             case self::TYPE_FRONT:
@@ -418,7 +428,7 @@ class TranslationController extends ApiController
             case self::TYPE_OTHERS:
                 return new OthersType();
             default:
-                throw new \RuntimeException("Unrecognized type: $type");
+                throw new \RuntimeException(sprintf('Unrecognized type: %s', $type));
         }
     }
 }

@@ -54,7 +54,7 @@ services:
     prestashop.service.translation:
         class: PrestaShopBundle\Service\TranslationService
         arguments:
-            - "%default_theme%"
+            - "%env(PS_THEME_NAME)%"
         properties:
             container: "@service_container"
 
