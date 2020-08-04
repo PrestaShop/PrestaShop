@@ -415,9 +415,9 @@ abstract class CacheCore
      *
      * @param string $key query hash
      * @param string $table table name
-     * @param array $tables the tables associated with the query
+     * @param array $otherTables the tables associated with the query
      */
-    private function addQueryKeyToTableMap($key, $table, $tables)
+    private function addQueryKeyToTableMap($key, $table, $otherTables)
     {
         // the name of the cache entry which cache the table map
         $cacheKey = $this->getTableMapCacheKey($table);
@@ -429,8 +429,7 @@ abstract class CacheCore
                 $this->adjustTableCacheSize($table);
             }
 
-            $otherTables = $tables;
-            unset($otherTables[array_search($table, $tables)]);
+            unset($otherTables[array_search($table, $otherTables)]);
             $this->sql_tables_cached[$table][$key] = [
                 'count' => 1,
                 'otherTables' => $otherTables,
