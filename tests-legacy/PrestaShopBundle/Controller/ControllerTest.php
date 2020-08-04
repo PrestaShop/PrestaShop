@@ -115,7 +115,6 @@ class ControllerTest extends TestCase
     {
         return array(
             array('AdminCarriersController'),
-            array('AdminStatusesController'),
             array('AdminZonesController'),
             array('AdminLoginController'),
             array('AdminQuickAccessesController'),
