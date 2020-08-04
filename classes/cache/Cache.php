@@ -350,7 +350,7 @@ abstract class CacheCore
             return;
         }
 
-        if (empty($result) || $result === false) {
+        if (empty($result)) {
             $result = [];
         }
 
