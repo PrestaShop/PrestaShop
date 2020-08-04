@@ -267,7 +267,7 @@ class OrderStateController extends FrameworkBundleAdminController
                     'Admin.Notifications.Success')
             );
         }
-        
+
         $orderReturnStateForm = $this->get('prestashop.core.form.identifiable_object.builder.order_return_state_form_builder')->getFormFor($orderReturnStateId);
         $orderReturnStateForm->handleRequest($request);
 
