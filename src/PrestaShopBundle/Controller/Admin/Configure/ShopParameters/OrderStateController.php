@@ -70,6 +70,14 @@ class OrderStateController extends FrameworkBundleAdminController
             $this->buildFiltersParamsByRequest($request, $orderReturnStatesFilters)
         );
 
+        if ($this->get('prestashop.adapter.multistore_feature')->isActive()) {
+            $this->addFlash(
+                'info',
+                $this->trans('Note that this page is available in all shops context only, this is why your context has just switched.',
+                    'Admin.Notifications.Success')
+            );
+        }
+
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/OrderStates/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'orderStatesGrid' => $this->presentGrid($orderStatesGrid),
@@ -113,6 +121,14 @@ class OrderStateController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request)
     {
+        if ($this->get('prestashop.adapter.multistore_feature')->isActive()) {
+            $this->addFlash(
+                'info',
+                $this->trans('Note that this feature is available in all shops context only. It will be added to all your stores.',
+                    'Admin.Notifications.Success')
+            );
+        }
+
         $orderStateForm = $this->get('prestashop.core.form.identifiable_object.builder.order_state_form_builder')->getForm();
         $orderStateForm->handleRequest($request);
 
@@ -153,6 +169,14 @@ class OrderStateController extends FrameworkBundleAdminController
      */
     public function editAction(int $orderStateId, Request $request)
     {
+        if ($this->get('prestashop.adapter.multistore_feature')->isActive()) {
+            $this->addFlash(
+                'info',
+                $this->trans('Note that this feature is available in all shops context only. It will be added to all your stores.',
+                    'Admin.Notifications.Success')
+            );
+        }
+
         $orderStateForm = $this->get('prestashop.core.form.identifiable_object.builder.order_state_form_builder')->getFormFor($orderStateId);
         $orderStateForm->handleRequest($request);
 
@@ -198,6 +222,14 @@ class OrderStateController extends FrameworkBundleAdminController
      */
     public function createOrderReturnStateAction(Request $request)
     {
+        if ($this->get('prestashop.adapter.multistore_feature')->isActive()) {
+            $this->addFlash(
+                'info',
+                $this->trans('Note that this feature is available in all shops context only. It will be added to all your stores.',
+                    'Admin.Notifications.Success')
+            );
+        }
+
         $orderReturnStateForm = $this->get('prestashop.core.form.identifiable_object.builder.order_return_state_form_builder')->getForm();
         $orderReturnStateForm->handleRequest($request);
 
@@ -230,6 +262,14 @@ class OrderStateController extends FrameworkBundleAdminController
      */
     public function editOrderReturnStateAction(int $orderReturnStateId, Request $request)
     {
+        if ($this->get('prestashop.adapter.multistore_feature')->isActive()) {
+            $this->addFlash(
+                'info',
+                $this->trans('Note that this feature is available in all shops context only. It will be added to all your stores.',
+                    'Admin.Notifications.Success')
+            );
+        }
+        
         $orderReturnStateForm = $this->get('prestashop.core.form.identifiable_object.builder.order_return_state_form_builder')->getFormFor($orderReturnStateId);
         $orderReturnStateForm->handleRequest($request);
 
