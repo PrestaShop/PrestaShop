@@ -425,7 +425,7 @@ abstract class CacheCore
         $this->initializeTableCache($table);
 
         if (!isset($this->sql_tables_cached[$table][$key])) {
-            if ((count($this->sql_tables_cached[$table]) + 1) > $this->maxCachedObjectsByTable) {
+            if (count($this->sql_tables_cached[$table]) >= $this->maxCachedObjectsByTable) {
                 $this->adjustTableCacheSize($table);
             }
 
