@@ -256,7 +256,13 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         $data = $table->getRowsHash();
         $productName = $data['name'];
-        $productId = $this->getProductIdByName($productName);
+        $product = $this->getProductByName($productName);
+
+        if (isset($data['combination'])) {
+            $combinationId = $this->getProductCombinationId($product, $data['combination']);
+        } else {
+            $combinationId = 0;
+        }
 
         $this->lastException = null;
         try {
@@ -264,8 +270,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 AddProductToOrderCommand::toExistingInvoice(
                     (int) $orderId,
                     (int) $lastInvoice->id,
-                    (int) $productId,
-                    0,
+                    (int) $product->getProductId(),
+                    (int) $combinationId,
                     $data['price'],
                     $data['price'],
                     (int) $data['amount']
