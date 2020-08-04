@@ -484,6 +484,7 @@ abstract class CacheCore
         $invalidKeys = [];
         if (isset($this->sql_tables_cached[$table])) {
             if ($keyToKeep && isset($this->sql_tables_cached[$table][$keyToKeep])) {
+                $toKeep = $this->sql_tables_cached[$table][$keyToKeep];
                 // remove the key we plan to keep before adjusting the table cache size
                 unset($this->sql_tables_cached[$table][$keyToKeep]);
             }
@@ -511,7 +512,7 @@ abstract class CacheCore
             $this->_deleteMulti($invalidKeys);
 
             if ($keyToKeep) {
-                $this->sql_tables_cached[$table][$keyToKeep] = 1;
+                $this->sql_tables_cached[$table][$keyToKeep] = $toKeep;
             }
         }
         $this->adjustTableCacheSize = false;
