@@ -181,6 +181,8 @@ class SurvivalTest extends WebTestCase
             'admin_attachments_create' => ['Add new', 'admin_attachments_create'],
             'admin_orders_index' => ['Orders', 'admin_orders_index'],
             'admin_orders_create' => ['Add new', 'admin_orders_create'],
+            'admin_order_states' => ['Order States', 'admin_order_states'],
+            'admin_order_states_create' => ['Add new', 'admin_order_states'],
         ];
     }
 
