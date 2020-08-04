@@ -599,7 +599,7 @@ class EmployeeCore extends ObjectModel
      */
     public function getImage()
     {
-        $defaultSystem = Tools::getAdminImageUrl('prestashop-avatar.png');
+        $defaultSystem = Tools::getAdminImageUrl('pr/default.jpg');
         $imageUrl = null;
 
         // Default from Profile
