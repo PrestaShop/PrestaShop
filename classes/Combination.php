@@ -408,6 +408,7 @@ class CombinationCore extends ObjectModel
 
     /**
      * For a given product_attribute reference, returns the corresponding id.
+     * if idProduct is empty|0 search is done in all combinations
      *
      * @param int $idProduct
      * @param string $reference
@@ -424,7 +425,9 @@ class CombinationCore extends ObjectModel
         $query->select('pa.id_product_attribute');
         $query->from('product_attribute', 'pa');
         $query->where('pa.reference LIKE \'%' . pSQL($reference) . '%\'');
-        $query->where('pa.id_product = ' . (int) $idProduct);
+        if (!empty($idProduct)) {
+            $query->where('pa.id_product = ' . (int) $idProduct);
+        }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
