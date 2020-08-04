@@ -144,6 +144,51 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should contain 30 products "Test Duplicate Product"
     And order "bo_order1" should contain 60 products "Test Duplicate Product 2"
 
-    #todo: the PR #20111 includes some tools to easily add customizations, once it is merge and rebase some additional tests should be added to check combinations:
-    # - two same products with different combination are perfectly allowed
-    # - tow identical combination follow the same rules
+    Scenario: two same products with different combination are perfectly allowed
+      Given there is a product in the catalog named "My Product" with a price of 10.00 and 200 items in stock
+      And product "My Product" has combinations with following details:
+        | reference    | quantity | attributes |
+        | combination1 | 100      | Size:L     |
+        | combination2 | 100      | Size:M     |
+      Then the available stock for combination "combination1" of product "My Product" should be 100
+      And the available stock for combination "combination2" of product "My Product" should be 100
+      When I add products to order "bo_order1" without invoice and the following products details:
+        | name          | My Product    |
+        | combination   | combination1  |
+        | amount        | 30            |
+        | price         | 10            |
+      Then the available stock for combination "combination1" of product "My Product" should be 70
+      And the available stock for combination "combination2" of product "My Product" should be 100
+      Given I update order "bo_order1" status to "Payment accepted"
+      Then order "bo_order1" should have 1 invoices
+      When I add products to order "bo_order1" to first invoice and the following products details:
+        | name          | My Product    |
+        | combination   | combination2  |
+        | amount        | 30            |
+        | price         | 10            |
+      Then the available stock for combination "combination1" of product "My Product" should be 70
+      Then the available stock for combination "combination2" of product "My Product" should be 70
+
+  Scenario: Add the same product with same combination to an invoice containing it is forbidden
+    Given there is a product in the catalog named "My Product" with a price of 10.00 and 200 items in stock
+    And product "My Product" has combinations with following details:
+      | reference    | quantity | attributes |
+      | combination1 | 100      | Size:L     |
+      | combination2 | 100      | Size:M     |
+      Then the available stock for combination "combination1" of product "My Product" should be 100
+    When I add products to order "bo_order1" without invoice and the following products details:
+      | name          | My Product    |
+      | combination   | combination1  |
+      | amount        | 30            |
+      | price         | 10            |
+      Then the available stock for combination "combination1" of product "My Product" should be 70
+    Given I update order "bo_order1" status to "Payment accepted"
+    Then order "bo_order1" should have 1 invoices
+    When I add products to order "bo_order1" to first invoice and the following products details:
+      | name          | My Product    |
+      | combination   | combination1  |
+      | amount        | 30            |
+      | price         | 10            |
+    Then I should get error that adding duplicate product is forbidden
+    And the available stock for combination "combination1" of product "My Product" should be 70
+    And order "bo_order1" should have 32 products in total
