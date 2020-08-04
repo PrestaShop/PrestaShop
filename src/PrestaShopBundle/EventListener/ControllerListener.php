@@ -24,11 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\EventListener;
 
 use PrestaShopBundle\Routing\ControllerStack;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
 /**
  * This class listens to Symfony kernel

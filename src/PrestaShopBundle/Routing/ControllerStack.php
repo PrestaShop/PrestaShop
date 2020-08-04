@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Routing;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
