@@ -27,8 +27,8 @@
 namespace PrestaShopBundle\EventListener;
 
 use PrestaShopBundle\Routing\ControllerStack;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
 /**
  * This class listens to Symfony kernel
