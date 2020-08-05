@@ -501,7 +501,7 @@ class HookCore extends ObjectModel
     public static function isModuleRegisteredOnHook($module_instance, $hook_name, $id_shop)
     {
         $prefix = _DB_PREFIX_;
-        $id_hook = (int) Hook::getIdByName($hook_name);
+        $id_hook = (int) Hook::getIdByName($hook_name, true);
         $id_shop = (int) $id_shop;
         $id_module = (int) $module_instance->id;
 
@@ -515,6 +515,17 @@ class HookCore extends ObjectModel
         return !empty($rows);
     }
 
+    /**
+     * Registers a module to a given hook
+     *
+     * @param Module $module_instance The affected module
+     * @param string|string[] $hook_name Hook name(s) to register this module to
+     * @param int[]|null $shop_list List of shop ids
+     *
+     * @return bool
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
     public static function registerHook($module_instance, $hook_name, $shop_list = null)
     {
         $return = true;
@@ -529,18 +540,16 @@ class HookCore extends ObjectModel
                 return false;
             }
 
-            $hook_name = static::normalizeHookName($hook_name);
-
             Hook::exec(
                 'actionModuleRegisterHookBefore',
-                array(
+                [
                     'object' => $module_instance,
                     'hook_name' => $hook_name,
-                )
+                ]
             );
 
             // Get hook id
-            $id_hook = Hook::getIdByName($hook_name);
+            $id_hook = Hook::getIdByName($hook_name, false);
 
             // If hook does not exist, we create it
             if (!$id_hook) {
@@ -581,7 +590,7 @@ class HookCore extends ObjectModel
                 }
 
                 // Register module in hook
-                $return &= Db::getInstance()->insert('hook_module', [
+                $return = $return && Db::getInstance()->insert('hook_module', [
                     'id_module' => (int) $module_instance->id,
                     'id_hook' => (int) $id_hook,
                     'id_shop' => (int) $shop_id,
@@ -590,11 +599,17 @@ class HookCore extends ObjectModel
 
                 if (!in_array($shop_id, $shop_list_employee)) {
                     $where = '`id_module` = ' . (int) $module_instance->id . ' AND `id_shop` = ' . (int) $shop_id;
-                    $return &= Db::getInstance()->delete('module_shop', $where);
+                    $return = $return && Db::getInstance()->delete('module_shop', $where);
                 }
             }
 
-            Hook::exec('actionModuleRegisterHookAfter', ['object' => $module_instance, 'hook_name' => $hook_name]);
+            Hook::exec(
+                'actionModuleRegisterHookAfter',
+                [
+                    'object' => $module_instance,
+                    'hook_name' => $hook_name,
+                ]
+            );
         }
 
         return $return;
@@ -607,7 +622,7 @@ class HookCore extends ObjectModel
             $hook_id = $hook_name;
             $hook_name = Hook::getNameById((int) $hook_id);
         } else {
-            $hook_id = Hook::getIdByName($hook_name);
+            $hook_id = Hook::getIdByName($hook_name, false);
         }
 
         if (!$hook_id) {
@@ -625,7 +640,13 @@ class HookCore extends ObjectModel
         // Clean modules position
         $module_instance->cleanPositions($hook_id, $shop_list);
 
-        Hook::exec('actionModuleUnRegisterHookAfter', ['object' => $module_instance, 'hook_name' => $hook_name]);
+        Hook::exec(
+            'actionModuleUnRegisterHookAfter',
+            [
+                'object' => $module_instance,
+                'hook_name' => $hook_name,
+            ]
+        );
 
         return $result;
     }
