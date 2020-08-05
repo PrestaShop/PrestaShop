@@ -259,9 +259,9 @@ class HookCore extends ObjectModel
      *
      * @since 1.7.1.0
      *
-     * @return array Array of hookName => hookAliases[]
+     * @return string[][] Array of hookName => hookAliases[]
      */
-    private static function getHookAliasesList()
+    private static function getHookAliasesList(): array
     {
         $cacheId = 'hook_aliases';
         if (!Cache::isStored($cacheId)) {
@@ -328,7 +328,7 @@ class HookCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      */
-    private static function getHookAliasDictionary()
+    private static function getHookAliasDictionary(): array
     {
         $cacheId = 'hook_alias';
 
@@ -353,12 +353,12 @@ class HookCore extends ObjectModel
      *
      * @since 1.7.1.0
      *
-     * @param static $module
+     * @param Module $module
      * @param string $hookName
      *
      * @return bool
      */
-    private static function isHookCallableOn($module, $hookName)
+    private static function isHookCallableOn(Module $module, string $hookName): bool
     {
         $aliases = array_merge(
             [$hookName],
@@ -379,13 +379,13 @@ class HookCore extends ObjectModel
      *
      * @since 1.7.1.0
      *
-     * @param static $module
+     * @param Module $module
      * @param string $hookName
      * @param array $hookArgs
      *
-     * @return string
+     * @return mixed
      */
-    private static function callHookOn($module, $hookName, $hookArgs)
+    private static function callHookOn(Module $module, string $hookName, array $hookArgs)
     {
         if (is_callable([$module, 'hook' . $hookName])) {
             return Hook::coreCallHook($module, 'hook' . $hookName, $hookArgs);
