@@ -105,7 +105,7 @@ class ProductRedirectOption
      *
      * @return static
      *
-     * @throws ProductConstraintException
+     * @throws LogicException
      */
     public static function buildRedirect(string $redirectType, int $redirectTargetId): self
     {
@@ -114,6 +114,22 @@ class ProductRedirectOption
         }
 
         return new self($redirectType, $redirectTargetId);
+    }
+
+    /**
+     * @return string
+     */
+    public function getRedirectType(): string
+    {
+        return $this->redirectType;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRedirectTargetId(): int
+    {
+        return $this->redirectTargetId;
     }
 
     /**
