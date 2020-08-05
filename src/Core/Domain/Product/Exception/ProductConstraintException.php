@@ -160,4 +160,14 @@ class ProductConstraintException extends ProductException
      * When product delivery time out of stock notes are invalid
      */
     const INVALID_DELIVERY_TIME_OUT_OF_STOCK_NOTES = 260;
+
+    /**
+     * When product redirect type is invalid
+     */
+    const INVALID_REDIRECT_TYPE = 270;
+
+    /**
+     * When product redirect target
+     */
+    const INVALID_REDIRECT_TARGET_ID = 280;
 }
