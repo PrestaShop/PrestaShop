@@ -142,8 +142,11 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             'mpn' => 'options.mpn',
             'reference' => 'options.reference',
             'tags' => 'options.localizedTags',
-            //@todo
-            'redirect_type' => 'options.localizedTags',
+            'meta_title' => 'productSeoInformation.localizedMetaTitles',
+            'meta_description' => 'productSeoInformation.localizedMetaDescriptions',
+            'link_rewrite' => 'productSeoInformation.localizedLinkRewrites',
+            'redirect_type' => 'productSeoInformation.redirectType',
+            'redirect_target' => 'productSeoInformation.redirectTargetId',
         ];
 
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
