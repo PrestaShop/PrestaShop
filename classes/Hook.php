@@ -281,7 +281,7 @@ class HookCore extends ObjectModel
     {
         $cacheId = 'hook_aliases';
         if (!Cache::isStored($cacheId)) {
-            $hookAliasList = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'hook_alias`');
+            $hookAliasList = Db::getInstance()->executeS('SELECT `name`, `alias` FROM `' . _DB_PREFIX_ . 'hook_alias`');
             $hookAliases = [];
             if ($hookAliasList) {
                 foreach ($hookAliasList as $ha) {
@@ -373,7 +373,6 @@ class HookCore extends ObjectModel
      * @return bool
      *
      * @since 1.7.1.0
-     *
      */
     public static function isHookCallableOn(Module $module, string $hookName, $testAliases = true): bool
     {
@@ -457,15 +456,15 @@ class HookCore extends ObjectModel
      * @since 1.5.0
      *
      * @return array<int, array<int, array{
-     *      id_hook: string|int,
-     *      title: string,
-     *      description: string,
-     *      hm.position: string|int,
-     *      m.position: string|int,
-     *      id_module: string,
-     *      name: string,
-     *      active: string|int
-     * }>>
+     *                    id_hook: string|int,
+     *                    title: string,
+     *                    description: string,
+     *                    hm.position: string|int,
+     *                    m.position: string|int,
+     *                    id_module: string,
+     *                    name: string,
+     *                    active: string|int
+     *                    CS }>>
      */
     public static function getHookModuleList()
     {
