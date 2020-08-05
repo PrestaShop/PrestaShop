@@ -72,11 +72,11 @@ class ProductRedirectOption
      * Available redirection types
      */
     const AVAILABLE_REDIRECT_TYPES = [
-        'no_redirect' => self::TYPE_NO_REDIRECT,
-        'category_permanent' => self::TYPE_CATEGORY_PERMANENT,
-        'category_temporary' => self::TYPE_CATEGORY_TEMPORARY,
-        'product_permanent' => self::TYPE_PRODUCT_PERMANENT,
-        'product_temporary' => self::TYPE_PRODUCT_TEMPORARY,
+        self::TYPE_NO_REDIRECT => self::TYPE_NO_REDIRECT,
+        self::TYPE_CATEGORY_PERMANENT => self::TYPE_CATEGORY_PERMANENT,
+        self::TYPE_CATEGORY_TEMPORARY => self::TYPE_CATEGORY_TEMPORARY,
+        self::TYPE_PRODUCT_PERMANENT => self::TYPE_PRODUCT_PERMANENT,
+        self::TYPE_PRODUCT_TEMPORARY => self::TYPE_PRODUCT_TEMPORARY,
     ];
 
     /**
