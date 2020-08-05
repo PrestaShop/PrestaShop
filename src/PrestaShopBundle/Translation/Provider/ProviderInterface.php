@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Translation\Provider;
 
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
-use PrestaShopBundle\Exception\NotImplementedException;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
@@ -46,7 +45,6 @@ interface ProviderInterface
      * @return MessageCatalogueInterface
      *
      * @throws FileNotFoundException
-     * @throws NotImplementedException
      */
     public function getDefaultCatalogue(string $locale, bool $empty = true): MessageCatalogueInterface;
 

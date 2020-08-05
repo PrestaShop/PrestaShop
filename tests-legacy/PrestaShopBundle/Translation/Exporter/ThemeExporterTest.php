@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\TranslationToolsBundle\Translation\Dumper\XliffFileDumper;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\Util\Flattenizer;
 use PrestaShopBundle\Translation\Exporter\ThemeExporter;
+use PrestaShopBundle\Translation\Provider\Type\ThemesType;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
@@ -52,7 +53,7 @@ class ThemeExporterTest extends TestCase
 
     private $extractorMock;
 
-    private $providerMock;
+    private $providerFactoryMock;
 
     private $repositoryMock;
 
@@ -64,11 +65,15 @@ class ThemeExporterTest extends TestCase
 
     private $finderMock;
 
+    private $themeType;
+
     protected function setUp()
     {
+        $this->themeType = new ThemesType(self::THEME_NAME);
+
         $this->mockThemeExtractor();
 
-        $this->mockThemeProvider();
+        $this->mockProviderFactory();
 
         $this->mockThemeRepository();
 
@@ -84,8 +89,8 @@ class ThemeExporterTest extends TestCase
 
         $this->themeExporter = new ThemeExporter(
             $this->extractorMock,
-            $this->providerMock,
             $this->repositoryMock,
+            $this->providerFactoryMock,
             $this->dumperMock,
             $this->zipManagerMock,
             new Filesystem()
@@ -202,13 +207,13 @@ class ThemeExporterTest extends TestCase
         Flattenizer::$finder = $this->finderMock;
     }
 
-    protected function mockThemeProvider()
+    protected function mockProviderFactory()
     {
-        $this->providerMock = $this->getMockBuilder('\PrestaShopBundle\Translation\Provider\ThemeProvider')
+        $themeProviderMock = $this->getMockBuilder('\PrestaShopBundle\Translation\Provider\ThemeProvider')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->providerMock->method('getDefaultCatalogue')
+        $themeProviderMock->method('getDefaultCatalogue')
             ->willReturn(new MessageCatalogue(
                 self::LOCALE,
                 array(
@@ -220,7 +225,7 @@ class ThemeExporterTest extends TestCase
                 )
             ));
 
-        $this->providerMock->method('getFileTranslatedCatalogue')
+        $themeProviderMock->method('getFileTranslatedCatalogue')
             ->willReturn(new MessageCatalogue(
                 self::LOCALE,
                 array(
@@ -232,7 +237,7 @@ class ThemeExporterTest extends TestCase
                 )
             ));
 
-        $this->providerMock->method('getUserTranslatedCatalogue')
+        $themeProviderMock->method('getUserTranslatedCatalogue')
             ->willReturn(new MessageCatalogue(
                 self::LOCALE,
                 array(
@@ -242,5 +247,11 @@ class ThemeExporterTest extends TestCase
                     ),
                 )
             ));
+
+        $this->providerFactoryMock = $this->getMockBuilder('\PrestaShopBundle\Translation\Provider\Factory\ProviderFactory')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->providerFactoryMock->method('build')
+            ->willReturn($themeProviderMock);
     }
 }

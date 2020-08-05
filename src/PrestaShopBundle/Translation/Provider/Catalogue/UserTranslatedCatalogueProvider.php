@@ -84,15 +84,4 @@ class UserTranslatedCatalogueProvider implements TranslationCatalogueProviderInt
 
         return $catalogue;
     }
-
-    /**
-     * @param string $locale
-     * @param string|null $themeName
-     *
-     * @return MessageCatalogueInterface
-     */
-    public function getUserTranslatedCatalogue(string $locale, ?string $themeName = null): MessageCatalogueInterface
-    {
-        return $this->getCatalogue($locale, $themeName);
-    }
 }

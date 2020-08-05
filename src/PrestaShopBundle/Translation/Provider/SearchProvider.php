@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use PrestaShopBundle\Translation\Provider\Catalogue\DefaultCatalogueProvider;
 use PrestaShopBundle\Translation\Provider\Catalogue\FileTranslatedCatalogueProvider;
@@ -79,8 +80,10 @@ class SearchProvider implements ProviderInterface
      * @param bool $empty
      *
      * @return MessageCatalogueInterface|null
+     *
+     * @throws FileNotFoundException
      */
-    public function getDefaultCatalogue(string $locale, bool $empty = true): ?MessageCatalogueInterface
+    public function getDefaultCatalogue(string $locale, bool $empty = true): MessageCatalogueInterface
     {
         return (new DefaultCatalogueProvider(
             $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default',
@@ -93,8 +96,10 @@ class SearchProvider implements ProviderInterface
      * @param string $locale
      *
      * @return MessageCatalogueInterface|null
+     *
+     * @throws FileNotFoundException
      */
-    public function getFileTranslatedCatalogue(string $locale): ?MessageCatalogueInterface
+    public function getFileTranslatedCatalogue(string $locale): MessageCatalogueInterface
     {
         return (new FileTranslatedCatalogueProvider(
             $this->resourceDirectory,

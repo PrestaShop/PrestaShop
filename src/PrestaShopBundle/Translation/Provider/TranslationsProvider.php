@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider;
 
-use PrestaShopBundle\Exception\NotImplementedException;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use PrestaShopBundle\Translation\Provider\Catalogue\DefaultCatalogueProvider;
 use PrestaShopBundle\Translation\Provider\Catalogue\FileTranslatedCatalogueProvider;
@@ -72,7 +71,7 @@ abstract class TranslationsProvider implements ProviderInterface
             $this->getFilenameFilters()
         );
 
-        return $provider->getDefaultCatalogue($locale, $empty);
+        return $provider->getCatalogue($locale, $empty);
     }
 
     /**
@@ -85,7 +84,7 @@ abstract class TranslationsProvider implements ProviderInterface
             $this->getFilenameFilters()
         );
 
-        return $provider->getFileTranslatedCatalogue($locale);
+        return $provider->getCatalogue($locale);
     }
 
     /**
@@ -98,26 +97,16 @@ abstract class TranslationsProvider implements ProviderInterface
             $this->getTranslationDomains()
         );
 
-        return $provider->getUserTranslatedCatalogue($locale);
+        return $provider->getCatalogue($locale);
     }
 
     /**
      * @return array|string[]
-     *
-     * @throws NotImplementedException
      */
-    protected function getFilenameFilters(): array
-    {
-        throw new NotImplementedException('You must implement the method in the specific class');
-    }
+    abstract protected function getFilenameFilters(): array;
 
     /**
      * @return array|string[]
-     *
-     * @throws NotImplementedException
      */
-    protected function getTranslationDomains(): array
-    {
-        throw new NotImplementedException('You must implement the method in the specific class');
-    }
+    abstract protected function getTranslationDomains(): array;
 }

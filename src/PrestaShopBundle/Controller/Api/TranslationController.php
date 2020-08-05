@@ -191,7 +191,7 @@ class TranslationController extends ApiController
             if (self::TYPE_THEMES === $type) {
                 $selectedTheme = $selected;
                 $translationProviderTypeParameters['theme'] = $selected;
-            } elseif(self::TYPE_MODULES === $type) {
+            } elseif (self::TYPE_MODULES === $type) {
                 $translationProviderTypeParameters['module'] = $selected;
             }
 

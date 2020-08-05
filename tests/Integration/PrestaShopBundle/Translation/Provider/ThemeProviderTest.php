@@ -31,8 +31,10 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShopBundle\Translation\Extractor\ThemeExtractorCache;
 use PrestaShopBundle\Translation\Extractor\ThemeExtractorInterface;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
-use PrestaShopBundle\Translation\Provider\Catalogue\DefaultCatalogueProvider;
+use PrestaShopBundle\Translation\Provider\Catalogue\TranslationCatalogueProviderInterface;
+use PrestaShopBundle\Translation\Provider\FrontProvider;
 use PrestaShopBundle\Translation\Provider\ThemeProvider;
+use PrestaShopBundle\Translation\Provider\Type\FrontType;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -68,6 +70,11 @@ class ThemeProviderTest extends KernelTestCase
      */
     private $filesystem;
 
+    /**
+     * @var FrontProvider
+     */
+    private $frontProvider;
+
     protected function setUp()
     {
         self::bootKernel();
@@ -76,6 +83,9 @@ class ThemeProviderTest extends KernelTestCase
         $this->cacheDir = $this->container->getParameter('themes_translations_dir');
         $this->configDir = $this->container->getParameter('kernel.cache_dir') . '/themes-config/';
         $this->filesystem = $this->container->get('filesystem');
+        $this->frontProvider = $this->container->get('prestashop.translation.provider.factory.front')->build(
+            new FrontType()
+        );
     }
 
     protected function tearDown()
@@ -93,17 +103,17 @@ class ThemeProviderTest extends KernelTestCase
     public function testItLoadsCatalogueFromXliffFilesInThemeDirectory()
     {
         $provider = new ThemeProvider(
+            $this->frontProvider,
             $this->createMock(DatabaseTranslationLoader::class),
             $this->createMock(ThemeExtractorInterface::class),
             $this->buildThemeRepository(),
             $this->filesystem,
             self::THEMES_DIR,
-            '',
             $this->themeName
         );
 
         // load catalogue from Xliff files within the theme
-        $catalogue = $provider->getFileTranslatedCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE);
+        $catalogue = $provider->getFileTranslatedCatalogue(TranslationCatalogueProviderInterface::DEFAULT_LOCALE);
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
@@ -136,18 +146,18 @@ class ThemeProviderTest extends KernelTestCase
             ->willReturn($this->buildCatalogueFromMessages($expectedCatalogue));
 
         $provider = new ThemeProvider(
+            $this->frontProvider,
             $this->createMock(DatabaseTranslationLoader::class),
             $themeExtractorMock,
             $this->buildThemeRepository(),
             $this->filesystem,
             self::THEMES_DIR,
-            '',
             $this->themeName
         );
 
         // load catalogue from Xliff files within the theme
         $catalogue = $provider->getDefaultCatalogue(
-            DefaultCatalogueProvider::DEFAULT_LOCALE,
+            TranslationCatalogueProviderInterface::DEFAULT_LOCALE,
             $shouldEmptyCatalogue
         );
 
@@ -227,5 +237,13 @@ class ThemeProviderTest extends KernelTestCase
         }
 
         return $catalogue;
+    }
+
+    /**
+     * @return string
+     */
+    private function getDefaultTranslationsDirectory()
+    {
+        return __DIR__ . '/../../../../Resources/translations';
     }
 }

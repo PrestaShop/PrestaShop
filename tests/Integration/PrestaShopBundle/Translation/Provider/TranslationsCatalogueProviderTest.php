@@ -55,7 +55,7 @@ class TranslationsCatalogueProviderTest extends KernelTestCase
     {
         self::bootKernel();
         $this->container = self::$kernel->getContainer();
-        $this->translationDatabaseLoader = $this->container->get('prestashop.translation.database_loader');
+        $this->translationDatabaseLoader = $this->container->get('prestashop.translation.loader.database');
 
         $langId = \Language::getIdByIso('fr', true);
         if (!$langId) {

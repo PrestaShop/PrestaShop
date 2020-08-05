@@ -38,8 +38,6 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
  */
 class DefaultCatalogueProvider implements TranslationCatalogueProviderInterface
 {
-    const DEFAULT_LOCALE = 'en-US';
-
     /**
      * @var string
      */
@@ -79,24 +77,11 @@ class DefaultCatalogueProvider implements TranslationCatalogueProviderInterface
             $defaultCatalogue->addCatalogue($filteredCatalogue);
         }
 
-        if ($empty && $locale !== self::DEFAULT_LOCALE) {
+        if ($empty && $locale !== TranslationCatalogueProviderInterface::DEFAULT_LOCALE) {
             $defaultCatalogue = $this->emptyCatalogue($defaultCatalogue);
         }
 
         return $defaultCatalogue;
-    }
-
-    /**
-     * @param string $locale
-     * @param bool $empty
-     *
-     * @return MessageCatalogueInterface
-     *
-     * @throws FileNotFoundException
-     */
-    public function getDefaultCatalogue(string $locale, bool $empty = true): MessageCatalogueInterface
-    {
-        return $this->getCatalogue($locale, $empty);
     }
 
     /**

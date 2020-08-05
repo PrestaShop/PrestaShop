@@ -36,6 +36,7 @@ use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use PrestaShopBundle\Translation\Provider\Catalogue\DefaultCatalogueProvider;
 use PrestaShopBundle\Translation\Provider\Catalogue\FileTranslatedCatalogueProvider;
+use PrestaShopBundle\Translation\Provider\Catalogue\TranslationCatalogueProviderInterface;
 use PrestaShopBundle\Translation\Provider\Catalogue\UserTranslatedCatalogueProvider;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -126,7 +127,7 @@ class ModulesProvider implements ProviderInterface
         } catch (FileNotFoundException $e) {
             $defaultCatalogue = $this->getCachedDefaultCatalogue($locale);
 
-            if ($empty && $locale !== DefaultCatalogueProvider::DEFAULT_LOCALE) {
+            if ($empty && $locale !== TranslationCatalogueProviderInterface::DEFAULT_LOCALE) {
                 return $this->emptyCatalogue(clone $defaultCatalogue);
             }
         }
@@ -272,7 +273,7 @@ class ModulesProvider implements ProviderInterface
             // analyze files and extract wordings
             $additionalDefaultCatalogue = $this->legacyModuleExtractor->extract($this->moduleName, $locale);
             $defaultCatalogue = $this->filterDomains($additionalDefaultCatalogue);
-        } catch (UnsupportedLocaleException | \InvalidArgumentException $exception) {
+        } catch (UnsupportedLocaleException $exception) {
             // Do nothing as support of legacy files is deprecated
         }
 
@@ -302,7 +303,9 @@ class ModulesProvider implements ProviderInterface
      */
     private function getFilenameFilters(): array
     {
-        return ['#^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|$)#'];
+        $filters = ['#^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|$)#'];
+
+        return $filters;
     }
 
     /**

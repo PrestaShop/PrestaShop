@@ -70,6 +70,11 @@ class FileTranslatedCatalogueProvider implements TranslationCatalogueProviderInt
         $translationFinder = new TranslationFinder();
         $localeResourceDirectory = rtrim($this->directory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $locale;
 
+        if ($locale === TranslationCatalogueProviderInterface::DEFAULT_LOCALE && !is_dir($localeResourceDirectory)) {
+            $localeResourceDirectory = rtrim($this->directory, DIRECTORY_SEPARATOR) .
+                DIRECTORY_SEPARATOR .
+                'default';
+        }
         foreach ($this->filenameFilters as $filter) {
             $filteredCatalogue = $translationFinder->getCatalogueFromPaths(
                 [$localeResourceDirectory],
@@ -80,17 +85,5 @@ class FileTranslatedCatalogueProvider implements TranslationCatalogueProviderInt
         }
 
         return $catalogue;
-    }
-
-    /**
-     * @param string $locale
-     *
-     * @return MessageCatalogueInterface
-     *
-     * @throws FileNotFoundException
-     */
-    public function getFileTranslatedCatalogue(string $locale): MessageCatalogueInterface
-    {
-        return $this->getCatalogue($locale);
     }
 }

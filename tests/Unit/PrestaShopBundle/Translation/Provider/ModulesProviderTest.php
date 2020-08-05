@@ -32,7 +32,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
-use PrestaShopBundle\Translation\Provider\Catalogue\DefaultCatalogueProvider;
+use PrestaShopBundle\Translation\Provider\Catalogue\TranslationCatalogueProviderInterface;
 use PrestaShopBundle\Translation\Provider\ModulesProvider;
 use Symfony\Component\Translation\Dumper\XliffFileDumper;
 use Symfony\Component\Translation\Loader\LoaderInterface;
@@ -46,24 +46,24 @@ class ModulesProviderTest extends TestCase
     private static $tempDir;
 
     private static $wordings = [
-        'ModulesModulenameSomeDomain' => [
-            'Some wording' => 'Some wording',
-            'Some other wording' => 'Some other wording',
-        ],
         'ModulesModulenameSomethingElse' => [
             'Foo' => 'Foo',
             'Bar' => 'Bar',
         ],
+        'ModulesModulenameSomeDomain' => [
+            'Some wording' => 'Some wording',
+            'Some other wording' => 'Some other wording',
+        ],
     ];
 
     private static $emptyWordings = [
-        'ModulesModulenameSomeDomain' => [
-            'Some wording' => '',
-            'Some other wording' => '',
-        ],
         'ModulesModulenameSomethingElse' => [
             'Foo' => '',
             'Bar' => '',
+        ],
+        'ModulesModulenameSomeDomain' => [
+            'Some wording' => '',
+            'Some other wording' => '',
         ],
     ];
 
@@ -79,7 +79,7 @@ class ModulesProviderTest extends TestCase
         /** @var MockObject|LoaderInterface $legacyFileLoader */
         $legacyFileLoader = $this->createMock(LoaderInterface::class);
 
-        $catalogue = new MessageCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE);
+        $catalogue = new MessageCatalogue(TranslationCatalogueProviderInterface::DEFAULT_LOCALE);
         foreach (self::$wordings as $domain => $messages) {
             $catalogue->add($messages, $domain);
         }
@@ -106,7 +106,7 @@ class ModulesProviderTest extends TestCase
 
     public static function setUpBeforeClass()
     {
-        $catalogue = new MessageCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE);
+        $catalogue = new MessageCatalogue(TranslationCatalogueProviderInterface::DEFAULT_LOCALE);
         foreach (self::$wordings as $domain => $messages) {
             $catalogue->add($messages, $domain);
         }
@@ -115,8 +115,8 @@ class ModulesProviderTest extends TestCase
         if (!is_dir(self::$tempDir)) {
             mkdir(self::$tempDir);
         }
-        if (!is_dir(self::$tempDir . DIRECTORY_SEPARATOR . DefaultCatalogueProvider::DEFAULT_LOCALE)) {
-            mkdir(self::$tempDir . DIRECTORY_SEPARATOR . DefaultCatalogueProvider::DEFAULT_LOCALE);
+        if (!is_dir(self::$tempDir . DIRECTORY_SEPARATOR . TranslationCatalogueProviderInterface::DEFAULT_LOCALE)) {
+            mkdir(self::$tempDir . DIRECTORY_SEPARATOR . TranslationCatalogueProviderInterface::DEFAULT_LOCALE);
         }
         (new XliffFileDumper())->dump($catalogue, [
             'path' => implode(DIRECTORY_SEPARATOR, [self::$tempDir, 'moduleName', 'translations']) . DIRECTORY_SEPARATOR,
@@ -124,7 +124,7 @@ class ModulesProviderTest extends TestCase
         (new XliffFileDumper())->dump($catalogue, [
             'path' => implode(
                     DIRECTORY_SEPARATOR,
-                    [self::$tempDir, 'moduleName', 'translations', DefaultCatalogueProvider::DEFAULT_LOCALE]
+                    [self::$tempDir, 'moduleName', 'translations', TranslationCatalogueProviderInterface::DEFAULT_LOCALE]
                 ) . DIRECTORY_SEPARATOR,
         ]);
     }
@@ -132,34 +132,38 @@ class ModulesProviderTest extends TestCase
     public function testGetDefaultCatalogue()
     {
         $catalogue = $this->externalModuleLegacySystemProvider->getDefaultCatalogue(
-            DefaultCatalogueProvider::DEFAULT_LOCALE
-        );
-        $this->assertSame(self::$wordings, $catalogue->all());
+            TranslationCatalogueProviderInterface::DEFAULT_LOCALE
+        )->all();
+
+        $this->assertSame(self::$wordings, $catalogue);
 
         $catalogue = $this->externalModuleLegacySystemProvider->getDefaultCatalogue(
-            DefaultCatalogueProvider::DEFAULT_LOCALE,
+            TranslationCatalogueProviderInterface::DEFAULT_LOCALE,
             true
-        );
-        $this->assertSame(self::$wordings, $catalogue->all());
+        )->all();
+
+        $this->assertSame(self::$wordings, $catalogue);
 
         $catalogue = $this->externalModuleLegacySystemProvider->getDefaultCatalogue(
             'fr-FR',
             true
-        );
+        )->all();
+
         $catalogueFr = self::$emptyWordings;
         foreach (array_keys($catalogueFr) as $translationKey) {
-            $translationKeyLocale = sprintf('%s.%s', $translationKey, DefaultCatalogueProvider::DEFAULT_LOCALE);
+            $translationKeyLocale = sprintf('%s.%s', $translationKey, TranslationCatalogueProviderInterface::DEFAULT_LOCALE);
             $catalogueFr[$translationKeyLocale] = $catalogueFr[$translationKey];
             unset($catalogueFr[$translationKey]);
         }
-        $this->assertSame($catalogueFr, $catalogue->all());
+        $this->assertSame($catalogueFr, $catalogue);
     }
 
     public function testGetFilesystemCatalogue()
     {
         $catalogue = $this->externalModuleLegacySystemProvider->getFileTranslatedCatalogue(
-            DefaultCatalogueProvider::DEFAULT_LOCALE
-        );
-        $this->assertSame(self::$wordings, $catalogue->all());
+            TranslationCatalogueProviderInterface::DEFAULT_LOCALE
+        )->all();
+
+        $this->assertSame(self::$wordings, $catalogue);
     }
 }

@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider;
 
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShopBundle\Exception\NotImplementedException;
 use PrestaShopBundle\Translation\Provider\Factory\ProviderFactory;
 use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -56,7 +58,7 @@ class TranslationsCatalogueProvider
      *
      * @return array
      *
-     * @throws \PrestaShopBundle\Exception\NotImplementedException
+     * @throws FileNotFoundException|NotImplementedException
      */
     public function getDomainCatalogue(
         TypeInterface $providerType,
@@ -72,8 +74,12 @@ class TranslationsCatalogueProvider
         }
         $defaultCatalogue = $this->filterCatalogue($defaultCatalogue, $locale, $domain)->all($domain);
 
-        $fileTranslatedCatalogue = $provider->getFileTranslatedCatalogue($locale);
-        $fileTranslatedCatalogue = (null !== $fileTranslatedCatalogue) ? $this->filterCatalogue($fileTranslatedCatalogue, $locale, $domain)->all($domain) : [];
+        try {
+            $fileTranslatedCatalogue = $provider->getFileTranslatedCatalogue($locale);
+            $fileTranslatedCatalogue = (null !== $fileTranslatedCatalogue) ? $this->filterCatalogue($fileTranslatedCatalogue, $locale, $domain)->all($domain) : [];
+        } catch (FileNotFoundException $exception) {
+            $fileTranslatedCatalogue = [];
+        }
 
         $userTranslatedCatalogue = $provider->getUserTranslatedCatalogue($locale);
         $userTranslatedCatalogue = (null !== $userTranslatedCatalogue) ? $this->filterCatalogue($userTranslatedCatalogue, $locale, $domain)->all($domain) : [];
@@ -96,7 +102,8 @@ class TranslationsCatalogueProvider
      *
      * @return array
      *
-     * @throws \PrestaShopBundle\Exception\NotImplementedException
+     * @throws NotImplementedException
+     * @throws FileNotFoundException
      */
     public function getCatalogue(
         TypeInterface $providerType,

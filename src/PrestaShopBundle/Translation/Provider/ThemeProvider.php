@@ -118,6 +118,8 @@ class ThemeProvider implements ProviderInterface
      * @param bool $refreshCache [default=false] Force cache to be refreshed
      *
      * @return MessageCatalogueInterface
+     *
+     * @throws FileNotFoundException
      */
     public function getDefaultCatalogue(
         string $locale,
@@ -142,6 +144,8 @@ class ThemeProvider implements ProviderInterface
      * @param string $locale
      *
      * @return MessageCatalogueInterface
+     *
+     * @throws FileNotFoundException
      */
     public function getFileTranslatedCatalogue(string $locale): MessageCatalogueInterface
     {
@@ -192,7 +196,7 @@ class ThemeProvider implements ProviderInterface
         $this->theme = $this->themeRepository->getInstanceByName($this->themeName);
 
         if (!($this->theme instanceof Theme)) {
-            throw new \RuntimeException(sprintf('The theme "%s" doesnt exist', $this->themeName));
+            throw new \RuntimeException(sprintf('The theme "%s" doesn\'t exist', $this->themeName));
         }
     }
 

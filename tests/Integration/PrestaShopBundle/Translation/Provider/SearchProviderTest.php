@@ -45,7 +45,7 @@ class SearchProviderTest extends KernelTestCase
     {
         self::bootKernel();
         $container = self::$kernel->getContainer();
-        $databaseLoader = $container->get('prestashop.translation.database_loader');
+        $databaseLoader = $container->get('prestashop.translation.loader.database');
         $externalSystemProvider = $this->getMockBuilder(ModulesProvider::class)
             ->disableOriginalConstructor()
             ->getMock()
