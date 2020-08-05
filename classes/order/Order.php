@@ -2551,6 +2551,11 @@ class OrderCore extends ObjectModel
                 $tax_rates[$tax->id] = $tax->rate;
             }
 
+             // deduct product price from $expected_total_base if there is no tax in product
+            if (empty($tax_calculator->getTaxesAmount($discounted_price_tax_excl))) {
+                $expected_total_base -= $discounted_price_tax_excl;
+            }
+
             foreach ($tax_calculator->getTaxesAmount($discounted_price_tax_excl) as $id_tax => $unit_amount) {
                 $total_tax_base = 0;
                 switch ($round_type) {
