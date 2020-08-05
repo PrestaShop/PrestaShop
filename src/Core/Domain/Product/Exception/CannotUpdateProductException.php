@@ -75,4 +75,9 @@ class CannotUpdateProductException extends ProductException
      * When product default category update fails
      */
     const FAILED_UPDATE_DEFAULT_CATEGORY = 90;
+
+    /**
+     * When product seo options update fails
+     */
+    const FAILED_UPDATE_SEO = 100;
 }
