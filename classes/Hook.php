@@ -710,16 +710,16 @@ class HookCore extends ObjectModel
      *
      * @param string $hook_name Hook Name
      * @param array $hook_args Parameters for the functions
-     * @param int $id_module Execute hook for this module only
+     * @param int|null $id_module Execute hook for this module only
      * @param bool $array_return If specified, module output will be set by name in an array
      * @param bool $check_exceptions Check permission exceptions
      * @param bool $use_push Force change to be refreshed on Dashboard widgets
-     * @param int $id_shop If specified, hook will be execute the shop with this ID
+     * @param int|null $id_shop If specified, hook will be execute the shop with this ID
      * @param bool $chain If specified, hook will chain the return of hook module
      *
      * @throws PrestaShopException
      *
-     * @return string/array modules output
+     * @return mixed Module's output
      */
     public static function exec(
         $hook_name,
@@ -732,7 +732,7 @@ class HookCore extends ObjectModel
         $chain = false
     ) {
         if (defined('PS_INSTALLATION_IN_PROGRESS')) {
-            return;
+            return null;
         }
 
         $hookRegistry = self::getHookRegistry();
@@ -764,29 +764,19 @@ class HookCore extends ObjectModel
             if ($isRegistryEnabled) {
                 $hookRegistry->collect();
             }
-            if ($array_return) {
-                return [];
-            } else {
-                return '';
-            }
+            return ($array_return) ? [] : '';
         }
 
         // Check if hook exists
-        if (!$id_hook = Hook::getIdByName($hook_name)) {
+        if (!$id_hook = Hook::getIdByName($hook_name, false)) {
             if ($isRegistryEnabled) {
                 $hookRegistry->collect();
             }
-            if ($array_return) {
-                return [];
-            } else {
-                return false;
-            }
+            return ($array_return) ? [] : false;
         }
 
         if (array_key_exists($hook_name, self::$deprecated_hooks)) {
-            $deprecVersion = isset(self::$deprecated_hooks[$hook_name]['from']) ?
-                    self::$deprecated_hooks[$hook_name]['from'] :
-                    _PS_VERSION_;
+            $deprecVersion = self::$deprecated_hooks[$hook_name]['from'] ?? _PS_VERSION_;
             Tools::displayAsDeprecated('The hook ' . $hook_name . ' is deprecated in PrestaShop v.' . $deprecVersion);
         }
 
@@ -803,11 +793,7 @@ class HookCore extends ObjectModel
 
         // Look on modules list
         $altern = 0;
-        if ($array_return) {
-            $output = [];
-        } else {
-            $output = '';
-        }
+        $output = ($array_return) ? [] : '';
 
         if ($disable_non_native_modules && !isset(Hook::$native_module)) {
             Hook::$native_module = Module::getNativeModuleList();
@@ -825,27 +811,36 @@ class HookCore extends ObjectModel
             }
         }
 
-        foreach ($module_list as $key => $array) {
+        foreach ($module_list as $key => $hookRegistration) {
             // Check errors
-            if ($id_module && $id_module != $array['id_module']) {
+            if ($id_module && $id_module != $hookRegistration['id_module']) {
                 continue;
             }
 
-            if ((bool) $disable_non_native_modules && Hook::$native_module && count(Hook::$native_module) && !in_array($array['module'], Hook::$native_module)) {
+            if ((bool) $disable_non_native_modules && Hook::$native_module && count(Hook::$native_module) && !in_array($hookRegistration['module'], Hook::$native_module)) {
                 continue;
+            }
+
+            $registeredHookId = $hookRegistration['id_hook'];
+            if ($registeredHookId === $id_hook) {
+                // the module is registered to the canonical hook name
+                $registeredHookName = $hook_name;
+            } else {
+                // the module is registered to an alias
+                $registeredHookName = static::getNameById($hookRegistration['id_hook']);
             }
 
             // Check permissions
             if ($check_exceptions) {
-                $exceptions = Module::getExceptionsStatic($array['id_module'], $array['id_hook']);
+                $exceptions = Module::getExceptionsStatic($hookRegistration['id_module'], $hookRegistration['id_hook']);
 
                 $controller_obj = Context::getContext()->controller;
                 if ($controller_obj === null) {
                     $controller = null;
                 } else {
                     $controller = isset($controller_obj->controller_name) ?
-                                $controller_obj->controller_name :
-                                $controller_obj->php_self;
+                        $controller_obj->controller_name
+                        : $controller_obj->php_self;
                 }
 
                 //check if current controller is a module controller
@@ -864,12 +859,12 @@ class HookCore extends ObjectModel
                 if (isset($matching_name[$controller]) && in_array($matching_name[$controller], $exceptions)) {
                     continue;
                 }
-                if (Validate::isLoadedObject($context->employee) && !Module::getPermissionStatic($array['id_module'], 'view', $context->employee)) {
+                if (Validate::isLoadedObject($context->employee) && !Module::getPermissionStatic($hookRegistration['id_module'], 'view', $context->employee)) {
                     continue;
                 }
             }
 
-            if (!($moduleInstance = Module::getInstanceByName($array['module']))) {
+            if (!($moduleInstance = Module::getInstanceByName($hookRegistration['module']))) {
                 continue;
             }
 
@@ -881,7 +876,7 @@ class HookCore extends ObjectModel
                 $hookRegistry->hookedByModule($moduleInstance);
             }
 
-            if (Hook::isHookCallableOn($moduleInstance, $hook_name)) {
+            if (Hook::isHookCallableOn($moduleInstance, $registeredHookName)) {
                 $hook_args['altern'] = ++$altern;
 
                 if ($use_push && isset($moduleInstance->push_filename) && file_exists($moduleInstance->push_filename)) {
@@ -892,7 +887,7 @@ class HookCore extends ObjectModel
                     $hook_args = $output;
                 }
 
-                $display = Hook::callHookOn($moduleInstance, $hook_name, $hook_args);
+                $display = Hook::callHookOn($moduleInstance, $registeredHookName, $hook_args);
 
                 if ($array_return) {
                     $output[$moduleInstance->name] = $display;
@@ -906,13 +901,13 @@ class HookCore extends ObjectModel
                 if ($isRegistryEnabled) {
                     $hookRegistry->hookedByCallback($moduleInstance, $hook_args);
                 }
-            } elseif (Hook::isDisplayHookName($hook_name)) {
+            } elseif (Hook::isDisplayHookName($registeredHookName)) {
                 if ($moduleInstance instanceof WidgetInterface) {
                     if (0 !== $key && true === $chain) {
                         $hook_args = $output;
                     }
 
-                    $display = Hook::coreRenderWidget($moduleInstance, $hook_name, $hook_args);
+                    $display = Hook::coreRenderWidget($moduleInstance, $registeredHookName, $hook_args);
 
                     if ($array_return) {
                         $output[$moduleInstance->name] = $display;
