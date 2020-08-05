@@ -6,8 +6,13 @@ class EmailThemes extends BOBasePage {
     super();
 
     this.pageTitle = 'Email Theme •';
+    this.emailThemeConfigurationSuccessfulMessage = 'Email theme configuration saved successfully';
 
-    // Selectors
+    // Configuration form selectors
+    this.configurationForm = 'form[action*=\'save-configuration\']';
+    this.defaultEmailThemeSelect = '#form_configuration_defaultTheme';
+    this.configurationFormSaveButton = `${this.configurationForm} .card-footer button`;
+
     // Email Theme table selectors
     this.emailThemeTable = 'table.grid-table';
     this.tableBody = `${this.emailThemeTable} tbody`;
@@ -16,8 +21,22 @@ class EmailThemes extends BOBasePage {
     this.columnActionPreviewLink = 'td.action-type a[href*=\'/preview\']';
   }
 
-  /* Methods */
+  /* Configuration form methods */
 
+  /**
+   * Choose default email theme and save configuration
+   * @param page
+   * @param emailTheme
+   * @return {Promise<string>}
+   */
+  async selectDefaultEmailTheme(page, emailTheme) {
+    await this.selectByVisibleText(page, this.defaultEmailThemeSelect, emailTheme);
+    await this.clickAndWaitForNavigation(page, this.configurationFormSaveButton);
+
+    return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /* Email themes grid methods */
   /**
    * Preview email theme
    * @param page
