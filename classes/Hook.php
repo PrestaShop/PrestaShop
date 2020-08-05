@@ -274,29 +274,30 @@ class HookCore extends ObjectModel
     }
 
     /**
-     * Return backward compatibility hook names.
+     * Returns all backward compatibility hook names for a given canonical hook name.
+     *
+     * @param string $canonicalHookName Canonical hook name
+     *
+     * @return string[] List of aliases
      *
      * @since 1.7.1.0
      *
-     * @param $hookName
-     *
-     * @return array
      */
-    private static function getHookAliasesFor($hookName)
+    private static function getHookAliasesFor(string $canonicalHookName): array
     {
-        $cacheId = 'hook_aliases_' . $hookName;
+        $cacheId = 'hook_aliases_' . $canonicalHookName;
         if (!Cache::isStored($cacheId)) {
             $aliasesList = Hook::getHookAliasesList();
 
-            if (isset($aliasesList[$hookName])) {
-                Cache::store($cacheId, $aliasesList[$hookName]);
+            if (isset($aliasesList[$canonicalHookName])) {
+                Cache::store($cacheId, $aliasesList[$canonicalHookName]);
 
-                return $aliasesList[$hookName];
+                return $aliasesList[$canonicalHookName];
             }
 
             // look up if this hook is an alias of another one
-            $retroName = array_keys(array_filter($aliasesList, function ($elem) use ($hookName) {
-                return in_array($hookName, $elem);
+            $retroName = array_keys(array_filter($aliasesList, function ($elem) use ($canonicalHookName) {
+                return in_array($canonicalHookName, $elem);
             }));
 
             if (empty($retroName)) {
