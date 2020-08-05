@@ -123,8 +123,11 @@ describe('Filter And Quick Edit Categories', async () => {
           test.args.filterValue,
         );
 
+        // At least 1 category should be displayed after these filters
+        // Can't know most categories that can be displayed
+        // because we don't have total of categories and subcategories
         const numberOfCategoriesAfterFilter = await categoriesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
+        await expect(numberOfCategoriesAfterFilter).to.be.at.least(1);
 
         for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
           const textColumn = await categoriesPage.getTextColumnFromTableCategories(
