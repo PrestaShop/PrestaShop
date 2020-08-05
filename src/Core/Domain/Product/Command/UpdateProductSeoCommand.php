@@ -70,6 +70,14 @@ class UpdateProductSeoCommand
     }
 
     /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
+    }
+
+    /**
      * @return string[]|null
      */
     public function getLocalizedMetaTitles(): ?array
