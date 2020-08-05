@@ -197,7 +197,7 @@ class ProductCore extends ObjectModel
      *
      * @see ProductInterface
      */
-    public $redirect_type = '';
+    public $redirect_type = ProductInterface::REDIRECT_TYPE_NOT_FOUND;
 
     /**
      * @var int Product identifier or Category identifier depends on redirect_type
