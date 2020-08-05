@@ -184,40 +184,29 @@ class HookCore extends ObjectModel
     }
 
     /**
-     * Return hook ID from name.
+     * Returns the hook ID from a given hook name.
      *
-     * @param string $hook_name Hook name
+     * By default, if the provided hook name is an alias, this method will return the id of their canonical hook.
+     * Otherwise, it will treat the alias as a normal hook and will return false if it's not registered in the hooks table.
      *
-     * @return int Hook ID
+     * @param string $hookName Hook name
+     * @param bool $withAliases [default=true] Set to FALSE to ignore hook aliases
+     * @param bool $refreshCache [default=false] Set to TRUE to force cache refresh
+     *
+     * @return int|false Hook ID, or false if it doesn't exist
+     *
+     * @throws PrestaShopDatabaseException
      */
-    public static function getIdByName($hook_name)
+    public static function getIdByName($hookName, bool $withAliases = true, bool $refreshCache = false)
     {
-        $hook_name = strtolower($hook_name);
-        if (!Validate::isHookName($hook_name)) {
+        $hookName = strtolower($hookName);
+        if (!Validate::isHookName($hookName)) {
             return false;
         }
 
-        $cache_id = 'hook_idsbyname';
-        if (!Cache::isStored($cache_id)) {
-            // Get all hook ID by name and alias
-            $hook_ids = [];
-            $db = Db::getInstance();
-            $result = $db->executeS('
-			SELECT `id_hook`, `name`
-			FROM `' . _DB_PREFIX_ . 'hook`
-			UNION
-			SELECT `id_hook`, ha.`alias` as name
-			FROM `' . _DB_PREFIX_ . 'hook_alias` ha
-			INNER JOIN `' . _DB_PREFIX_ . 'hook` h ON ha.name = h.name', false);
-            while ($row = $db->nextRow($result)) {
-                $hook_ids[strtolower($row['name'])] = $row['id_hook'];
-            }
-            Cache::store($cache_id, $hook_ids);
-        } else {
-            $hook_ids = Cache::retrieve($cache_id);
-        }
+        $hook_ids = self::getAllHookIds($withAliases, $refreshCache);
 
-        return isset($hook_ids[$hook_name]) ? $hook_ids[$hook_name] : false;
+        return isset($hook_ids[$hookName]) ? $hook_ids[$hookName] : false;
     }
 
     /**
@@ -1030,5 +1019,52 @@ class HookCore extends ObjectModel
         }
 
         return null;
+    }
+
+    /**
+     * Returns all hook IDs, indexed by hook name.
+     *
+     * @param bool $withAliases [default=false] If true, includes hook aliases along their canonical hook id.
+     * @param bool $refreshCache [default=false] Force cache refresh
+     *
+     * @return int[]
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    private static function getAllHookIds(bool $withAliases = false, bool $refreshCache = false): array
+    {
+        $cacheId = 'hook_idsbyname';
+        if ($withAliases) {
+            $cacheId .= 'hook_idsbyname_withalias';
+        }
+
+        if (!$refreshCache && Cache::isStored($cacheId)) {
+            return Cache::retrieve($cacheId);
+        }
+
+        $db = Db::getInstance();
+        // Get all hook IDs by name and alias
+        $hookIds = [];
+
+        if ($withAliases) {
+            $sql = 'SELECT `id_hook`, `name`
+                FROM `' . _DB_PREFIX_ . 'hook`
+                UNION
+                SELECT `id_hook`, ha.`alias` as name
+                FROM `' . _DB_PREFIX_ . 'hook_alias` ha
+                INNER JOIN `' . _DB_PREFIX_ . 'hook` h ON ha.name = h.name';
+        } else {
+            $sql = 'SELECT `id_hook`, `name` FROM `' . _DB_PREFIX_ . 'hook`';
+        }
+
+        $result = $db->executeS($sql, false);
+
+        while ($row = $db->nextRow($result)) {
+            $hookIds[strtolower($row['name'])] = $row['id_hook'];
+        }
+
+        Cache::store($cacheId, $hookIds);
+
+        return $hookIds;
     }
 }
