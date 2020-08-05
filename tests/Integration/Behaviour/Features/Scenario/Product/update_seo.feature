@@ -9,4 +9,9 @@ Feature: Update product SEO options from Back Office (BO)
     Given I add product "product1" with following information:
       | name       | en-US: waterproof boots   |
       | is_virtual | false                     |
-    #@todo: finish up implementing
+    And product product1 should have following values:
+      | redirect_type    | 404                 |
+    And product product1 should not have a redirect target
+    And product "product1" localized "meta_title" is "en-US:"
+    And product "product1" localized "meta_description" is "en-US:"
+    And product "product1" localized "link_rewrite" is "en-US:"
