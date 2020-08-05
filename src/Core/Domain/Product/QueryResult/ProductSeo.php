@@ -33,5 +33,89 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
  */
 class ProductSeo
 {
-    //@todo: implement
+    /**
+     * @var string[]
+     */
+    private $localizedMetaTitles;
+
+    /**
+     * @var string[]
+     */
+    private $localizedMetaDescriptions;
+
+    /**
+     * @var string[]
+     */
+    private $localizedLinkRewrites;
+
+    /**
+     * @var string
+     */
+    private $redirectType;
+
+    /**
+     * @var int
+     */
+    private $redirectTargetId;
+
+    /**
+     * @param string[] $localizedMetaTitles
+     * @param string[] $localizedMetaDescriptions
+     * @param string[] $localizedLinkRewrites
+     * @param string $redirectType
+     * @param int $redirectTargetId
+     */
+    public function __construct(
+        array $localizedMetaTitles,
+        array $localizedMetaDescriptions,
+        array $localizedLinkRewrites,
+        string $redirectType,
+        int $redirectTargetId
+    ) {
+        $this->localizedMetaTitles = $localizedMetaTitles;
+        $this->localizedMetaDescriptions = $localizedMetaDescriptions;
+        $this->localizedLinkRewrites = $localizedLinkRewrites;
+        $this->redirectType = $redirectType;
+        $this->redirectTargetId = $redirectTargetId;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedMetaTitles(): array
+    {
+        return $this->localizedMetaTitles;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedMetaDescriptions(): array
+    {
+        return $this->localizedMetaDescriptions;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedLinkRewrites(): array
+    {
+        return $this->localizedLinkRewrites;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRedirectType(): string
+    {
+        return $this->redirectType;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRedirectTargetId(): int
+    {
+        return $this->redirectTargetId;
+    }
 }
