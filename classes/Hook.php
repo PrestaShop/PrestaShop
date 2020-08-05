@@ -137,7 +137,7 @@ class HookCore extends ObjectModel
             return 'displayHeader';
         }
 
-        $hookNamesByAlias = Hook::getHookAliasDictionary();
+        $hookNamesByAlias = Hook::getCanonicalHookNames();
         if (isset($hookNamesByAlias[$loweredName])) {
             return $hookNamesByAlias[$loweredName];
         }
@@ -236,7 +236,7 @@ class HookCore extends ObjectModel
     }
 
     /**
-     * Returns a list of hook names, indexed by alias.
+     * Returns a list of hook names, indexed by lower case alias.
      *
      * @since 1.5.0
      *
@@ -251,7 +251,7 @@ class HookCore extends ObjectModel
             E_USER_DEPRECATED
         );
 
-        return self::getHookAliasDictionary();
+        return self::getCanonicalHookNames();
     }
 
     /**
@@ -321,13 +321,13 @@ class HookCore extends ObjectModel
     }
 
     /**
-     * Returns a list of hook names, indexed by alias.
+     * Returns a list of hook names, indexed by lower case alias.
      *
      * @return array Array of hook names, indexed by lower case alias
      *
      * @throws PrestaShopDatabaseException
      */
-    private static function getHookAliasDictionary(): array
+    private static function getCanonicalHookNames(): array
     {
         $cacheId = 'hook_alias';
 
@@ -415,7 +415,7 @@ class HookCore extends ObjectModel
      */
     public static function getRetroHookName($hookName)
     {
-        $hookNamesByAlias = static::getHookAliasDictionary();
+        $hookNamesByAlias = static::getCanonicalHookNames();
         if (isset($hookNamesByAlias[strtolower($hookName)])) {
             // return the canonical name (?)
             return $hookNamesByAlias[strtolower($hookName)];
