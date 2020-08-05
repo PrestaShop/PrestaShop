@@ -259,7 +259,7 @@ class HookCore extends ObjectModel
      *
      * @since 1.7.1.0
      *
-     * @return string[][] Array of hookName => hookAliases[]
+     * @return array<string, array<string>> Array of hookName => hookAliases[]
      */
     private static function getHookAliasesList(): array
     {
@@ -436,48 +436,58 @@ class HookCore extends ObjectModel
     }
 
     /**
-     * Get list of all registered hooks with modules.
+     * Get list of all registered hooks with modules, indexed by hook id and module id
      *
      * @since 1.5.0
      *
-     * @return array
+     * @return array<int, array<int, array{
+     *      id_hook: string|int,
+     *      title: string,
+     *      description: string,
+     *      hm.position: string|int,
+     *      m.position: string|int,
+     *      id_module: string,
+     *      name: string,
+     *      active: string|int
+     * }>>
      */
     public static function getHookModuleList()
     {
         $cache_id = 'hook_module_list';
-        if (!Cache::isStored($cache_id)) {
-            $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT h.id_hook, h.name as h_name, title, description, h.position, hm.position as hm_position, m.id_module, m.name, active
-			FROM `' . _DB_PREFIX_ . 'hook_module` hm
-			STRAIGHT_JOIN `' . _DB_PREFIX_ . 'hook` h ON (h.id_hook = hm.id_hook AND hm.id_shop = ' . (int) Context::getContext()->shop->id . ')
-			STRAIGHT_JOIN `' . _DB_PREFIX_ . 'module` as m ON (m.id_module = hm.id_module)
-			ORDER BY hm.position');
-            $list = [];
-            foreach ($results as $result) {
-                if (!isset($list[$result['id_hook']])) {
-                    $list[$result['id_hook']] = [];
-                }
-
-                $list[$result['id_hook']][$result['id_module']] = [
-                    'id_hook' => $result['id_hook'],
-                    'title' => $result['title'],
-                    'description' => $result['description'],
-                    'hm.position' => $result['position'],
-                    'm.position' => $result['hm_position'],
-                    'id_module' => $result['id_module'],
-                    'name' => $result['name'],
-                    'active' => $result['active'],
-                ];
-            }
-            Cache::store($cache_id, $list);
-
-            // @todo remove this in 1.6, we keep it in 1.5 for retrocompatibility
-            Hook::$_hook_modules_cache = $list;
-
-            return $list;
+        if (Cache::isStored($cache_id)) {
+            return Cache::retrieve($cache_id);
         }
 
-        return Cache::retrieve($cache_id);
+        $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            'SELECT h.id_hook, h.name as h_name, title, description, h.position, hm.position as hm_position, m.id_module, m.name, active
+            FROM `' . _DB_PREFIX_ . 'hook_module` hm
+            STRAIGHT_JOIN `' . _DB_PREFIX_ . 'hook` h ON (h.id_hook = hm.id_hook AND hm.id_shop = ' . (int) Context::getContext()->shop->id . ')
+            STRAIGHT_JOIN `' . _DB_PREFIX_ . 'module` as m ON (m.id_module = hm.id_module)
+            ORDER BY hm.position'
+        );
+        $list = [];
+        foreach ($results as $result) {
+            if (!isset($list[$result['id_hook']])) {
+                $list[$result['id_hook']] = [];
+            }
+
+            $list[$result['id_hook']][$result['id_module']] = [
+                'id_hook' => $result['id_hook'],
+                'title' => $result['title'],
+                'description' => $result['description'],
+                'hm.position' => $result['position'],
+                'm.position' => $result['hm_position'],
+                'id_module' => $result['id_module'],
+                'name' => $result['name'],
+                'active' => $result['active'],
+            ];
+        }
+        Cache::store($cache_id, $list);
+
+        // @todo remove this in 1.6, we keep it in 1.5 for retrocompatibility
+        Hook::$_hook_modules_cache = $list;
+
+        return $list;
     }
 
     /**
@@ -486,7 +496,7 @@ class HookCore extends ObjectModel
      * @since 1.5.0
      *
      * @param int $id_hook
-     * @param int $id_module
+     * @param int|null $id_module
      *
      * @return array Modules List
      */
