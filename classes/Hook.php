@@ -138,11 +138,8 @@ class HookCore extends ObjectModel
         }
 
         $hookNamesByAlias = Hook::getCanonicalHookNames();
-        if (isset($hookNamesByAlias[$loweredName])) {
-            return $hookNamesByAlias[$loweredName];
-        }
 
-        return $hookName;
+        return $hookNamesByAlias[$loweredName] ?? $hookName;
     }
 
     public static function isDisplayHookName($hook_name)
@@ -277,7 +274,7 @@ class HookCore extends ObjectModel
      *
      * @return array<string, array<string>> Array of hookName => hookAliases[]
      */
-    private static function getHookAliasesList(): array
+    private static function getAllHookAliases(): array
     {
         $cacheId = 'hook_aliases';
         if (!Cache::isStored($cacheId)) {
@@ -308,36 +305,19 @@ class HookCore extends ObjectModel
     private static function getHookAliasesFor(string $canonicalHookName): array
     {
         $cacheId = 'hook_aliases_' . $canonicalHookName;
-        if (!Cache::isStored($cacheId)) {
-            $aliasesList = Hook::getHookAliasesList();
-
-            if (isset($aliasesList[$canonicalHookName])) {
-                Cache::store($cacheId, $aliasesList[$canonicalHookName]);
-
-                return $aliasesList[$canonicalHookName];
-            }
-
-            // look up if this hook is an alias of another one
-            $retroName = array_keys(array_filter($aliasesList, function ($elem) use ($canonicalHookName) {
-                return in_array($canonicalHookName, $elem);
-            }));
-
-            if (empty($retroName)) {
-                Cache::store($cacheId, []);
-
-                return [];
-            }
-
-            Cache::store($cacheId, $retroName);
-
-            return $retroName;
+        if (Cache::isStored($cacheId)) {
+            return Cache::retrieve($cacheId);
         }
 
-        return Cache::retrieve($cacheId);
+        $aliases = Hook::getAllHookAliases()[$canonicalHookName] ?? [];
+
+        Cache::store($cacheId, $aliases);
+
+        return $aliases;
     }
 
     /**
-     * Returns a list of hook names, indexed by lower case alias.
+     * Returns a list of canonical hook names, indexed by lower case alias.
      *
      * @return array Array of hook names, indexed by lower case alias
      *
@@ -364,22 +344,38 @@ class HookCore extends ObjectModel
     }
 
     /**
-     * Check if a hook or one of its old names is callable on a module.
+     * Returns a list containing the canonical name for the provided hook name followed by all its aliases.
+     *
+     * @param string $hookName
+     *
+     * @return array
+     */
+    public static function getAllKnownNames(string $hookName): array
+    {
+        $canonical = static::normalizeHookName($hookName);
+
+        return array_unique(
+            array_merge(
+                [$canonical],
+                static::getHookAliasesFor($canonical)
+            )
+        );
+    }
+
+    /**
+     * Check if a hook is callable on a module.
      *
      * @param Module $module Module instance
      * @param string $hookName Hook name
-     * @param bool $testAliases [default=true] Set to FALSE to avoid checking for aliases
+     * @param bool $strict [default=false] Set to TRUE to avoid checking if aliases are callable as well
      *
      * @return bool
      *
      * @since 1.7.1.0
      */
-    public static function isHookCallableOn(Module $module, string $hookName, $testAliases = true): bool
+    public static function isHookCallableOn(Module $module, string $hookName, $strict = false): bool
     {
-        $hooksToCheck = [$hookName];
-        if ($testAliases) {
-            $hooksToCheck = array_merge($hooksToCheck, Hook::getHookAliasesFor($hookName));
-        }
+        $hooksToCheck = (!$strict) ? static::getAllKnownNames($hookName) : [$hookName];
 
         foreach ($hooksToCheck as $currentHookName) {
             if (is_callable([$module, self::getMethodName($currentHookName)])) {
@@ -391,7 +387,7 @@ class HookCore extends ObjectModel
     }
 
     /**
-     * Call a hook (or one of its old name) on a module.
+     * Call a hook (or one of its alternative names) on a module.
      *
      * @since 1.7.1.0
      *
@@ -403,12 +399,18 @@ class HookCore extends ObjectModel
      */
     private static function callHookOn(Module $module, string $hookName, array $hookArgs)
     {
+        // Note: we need to make sure to call the exact hook name first.
+        // This especially important when the module uses __call() to process the right hook.
+        // Since is_callable() will always return true when __call() is available,
+        // if the module was expecting an aliased hook name to be invoked, but we send
+        // the canonical hook name instead, the hook will never be acknowledged by the module.
         $methodName = self::getMethodName($hookName);
         if (is_callable([$module, $methodName])) {
             return static::coreCallHook($module, $methodName, $hookArgs);
         }
 
-        foreach (static::getHookAliasesFor($hookName) as $hook) {
+        // fall back to all other names
+        foreach (static::getAllKnownNames($hookName) as $hook) {
             $methodName = self::getMethodName($hook);
             if (is_callable([$module, $methodName])) {
                 return static::coreCallHook($module, $methodName, $hookArgs);
