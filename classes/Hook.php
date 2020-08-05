@@ -350,22 +350,24 @@ class HookCore extends ObjectModel
     /**
      * Check if a hook or one of its old names is callable on a module.
      *
-     * @since 1.7.1.0
-     *
-     * @param Module $module
-     * @param string $hookName
+     * @param Module $module Module instance
+     * @param string $hookName Hook name
+     * @param bool $testAliases [default=true] Set to FALSE to avoid checking for aliases
      *
      * @return bool
+     *
+     * @since 1.7.1.0
+     *
      */
-    private static function isHookCallableOn(Module $module, string $hookName): bool
+    public static function isHookCallableOn(Module $module, string $hookName, $testAliases = true): bool
     {
-        $aliases = array_merge(
-            [$hookName],
-            Hook::getHookAliasesFor($hookName)
-        );
+        $hooksToCheck = [$hookName];
+        if ($testAliases) {
+            $hooksToCheck = array_merge($hooksToCheck, Hook::getHookAliasesFor($hookName));
+        }
 
-        foreach ($aliases as $currentHookName) {
-            if (is_callable([$module, 'hook' . $currentHookName])) {
+        foreach ($hooksToCheck as $currentHookName) {
+            if (is_callable([$module, self::getMethodName($currentHookName)])) {
                 return true;
             }
         }
@@ -386,12 +388,15 @@ class HookCore extends ObjectModel
      */
     private static function callHookOn(Module $module, string $hookName, array $hookArgs)
     {
-        if (is_callable([$module, 'hook' . $hookName])) {
-            return Hook::coreCallHook($module, 'hook' . $hookName, $hookArgs);
+        $methodName = self::getMethodName($hookName);
+        if (is_callable([$module, $methodName])) {
+            return static::coreCallHook($module, $methodName, $hookArgs);
         }
-        foreach (Hook::getHookAliasesFor($hookName) as $hook) {
-            if (is_callable([$module, 'hook' . $hook])) {
-                return Hook::coreCallHook($module, 'hook' . $hook, $hookArgs);
+
+        foreach (static::getHookAliasesFor($hookName) as $hook) {
+            $methodName = self::getMethodName($hook);
+            if (is_callable([$module, $methodName])) {
+                return static::coreCallHook($module, $methodName, $hookArgs);
             }
         }
 
@@ -1190,5 +1195,17 @@ class HookCore extends ObjectModel
         Cache::store($cacheId, $hookIds);
 
         return $hookIds;
+    }
+
+    /**
+     * Returns the name of the method to invoke in a module for a given hook name
+     *
+     * @param string $hookName Hook name
+     *
+     * @return string Method name
+     */
+    private static function getMethodName(string $hookName): string
+    {
+        return 'hook' . ucfirst($hookName);
     }
 }
