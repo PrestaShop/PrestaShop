@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationOp
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOption;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOptions;
@@ -96,7 +97,8 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             $this->getPricesInformation($product),
             $this->getOptions($product),
             $this->getShippingInformation($product),
-            $this->getSupplierOptions($product)
+            $this->getSupplierOptions($product),
+            $this->getSeoInformation($product)
         );
     }
 
@@ -317,5 +319,21 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
         }
 
         return $productSuppliersBySupplier;
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return ProductSeoInformation
+     */
+    private function getSeoInformation(Product $product): ProductSeoInformation
+    {
+        return new ProductSeoInformation(
+            $product->meta_title,
+            $product->meta_description,
+            $product->link_rewrite,
+            $product->redirect_type,
+            (int) $product->id_type_redirected
+        );
     }
 }
