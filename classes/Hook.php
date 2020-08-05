@@ -345,10 +345,10 @@ class HookCore extends ObjectModel
      */
     private static function getCanonicalHookNames(): array
     {
-        $cacheId = 'hook_alias';
+        $cacheId = 'hook_canonical_names';
 
         if (!Cache::isStored($cacheId)) {
-            $databaseResults = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'hook_alias`');
+            $databaseResults = Db::getInstance()->executeS('SELECT name, alias FROM `' . _DB_PREFIX_ . 'hook_alias`');
             $hooksByAlias = [];
             if ($databaseResults) {
                 foreach ($databaseResults as $record) {
