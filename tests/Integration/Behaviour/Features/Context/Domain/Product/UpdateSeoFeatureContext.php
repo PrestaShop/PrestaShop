@@ -28,7 +28,24 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
+use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductRedirectOption;
+
 class UpdateSeoFeatureContext extends AbstractProductFeatureContext
 {
-    //@todo: implement
+    /**
+     * @Then product :productReference should not have a redirect target
+     *
+     * @param string $productReference
+     */
+    public function assertHasNoRedirectTargetId(string $productReference)
+    {
+        $productForEditing = $this->getProductForEditing($productReference);
+
+        Assert::assertEquals(
+            ProductRedirectOption::NO_TARGET_VALUE,
+            $productForEditing->getProductSeoInformation()->getRedirectTargetId(),
+            'Product "%s" expected to have no redirect target'
+        );
+    }
 }
