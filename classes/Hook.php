@@ -288,7 +288,6 @@ class HookCore extends ObjectModel
      * @return string[] List of aliases
      *
      * @since 1.7.1.0
-     *
      */
     private static function getHookAliasesFor(string $canonicalHookName): array
     {
@@ -334,7 +333,7 @@ class HookCore extends ObjectModel
 
         if (!Cache::isStored($cacheId)) {
             $databaseResults = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'hook_alias`');
-            $hooksByAlias = array();
+            $hooksByAlias = [];
             if ($databaseResults) {
                 foreach ($databaseResults as $record) {
                     $hooksByAlias[strtolower($record['alias'])] = $record['name'];
@@ -366,7 +365,7 @@ class HookCore extends ObjectModel
         );
 
         foreach ($aliases as $currentHookName) {
-            if (is_callable(array($module, 'hook' . $currentHookName))) {
+            if (is_callable([$module, 'hook' . $currentHookName])) {
                 return true;
             }
         }
@@ -523,6 +522,7 @@ class HookCore extends ObjectModel
      * @param int[]|null $shop_list List of shop ids
      *
      * @return bool
+     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
@@ -666,12 +666,11 @@ class HookCore extends ObjectModel
      *
      * @param string|null $hookName Hook name (null to return all hooks)
      *
-     * @return array[]|false Returns an array of hook registrations, or false if the provided hook name is not registered.
+     * @return array[]|false returns an array of hook registrations, or false if the provided hook name is not registered
      *
      * @throws PrestaShopDatabaseException
      *
      * @since 1.5.0
-     *
      */
     public static function getHookModuleExecList($hookName = null)
     {
@@ -690,7 +689,6 @@ class HookCore extends ObjectModel
         if (!empty($aliases)) {
             $alreadyIncludedModuleIds = array_column($modulesToInvoke, 'id_module');
             foreach ($aliases as $alias) {
-
                 $hookAlias = strtolower($alias);
                 if (isset($allHookRegistrations[$hookAlias])) {
                     foreach ($allHookRegistrations[$hookAlias] as $registeredAlias) {
@@ -764,6 +762,7 @@ class HookCore extends ObjectModel
             if ($isRegistryEnabled) {
                 $hookRegistry->collect();
             }
+
             return ($array_return) ? [] : '';
         }
 
@@ -772,6 +771,7 @@ class HookCore extends ObjectModel
             if ($isRegistryEnabled) {
                 $hookRegistry->collect();
             }
+
             return ($array_return) ? [] : false;
         }
 
@@ -988,6 +988,7 @@ class HookCore extends ObjectModel
      * @param string|null $hookName Hook name (to be used when the hook registration is dynamic and context sensitive)
      *
      * @return array[][]
+     *
      * @throws PrestaShopDatabaseException
      */
     private static function getAllHookRegistrations(Context $context, ?string $hookName): array
@@ -1147,7 +1148,7 @@ class HookCore extends ObjectModel
     /**
      * Returns all hook IDs, indexed by hook name.
      *
-     * @param bool $withAliases [default=false] If true, includes hook aliases along their canonical hook id.
+     * @param bool $withAliases [default=false] If true, includes hook aliases along their canonical hook id
      * @param bool $refreshCache [default=false] Force cache refresh
      *
      * @return int[]
