@@ -30,9 +30,11 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
 
 use LogicException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Product\ProductInterface;
 
 /**
  * Holds values for product redirect option.
+ * todo: there are type constants declared already in @var ProductInterface. Should I reuse them? deprecate them?
  */
 class ProductRedirectOption
 {
