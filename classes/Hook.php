@@ -255,6 +255,22 @@ class HookCore extends ObjectModel
     }
 
     /**
+     * Indicates whether the provided hook is an alias of another one
+     *
+     * @param string $hookName Hook name to test
+     *
+     * @return bool TRUE if the hook is an alias, false otherwise
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public static function isAlias(string $hookName): bool
+    {
+        $aliases = self::getCanonicalHookNames();
+
+        return isset($aliases[strtolower($hookName)]);
+    }
+
+    /**
      * Get the list of hook aliases, indexed by hook name
      *
      * @since 1.7.1.0
