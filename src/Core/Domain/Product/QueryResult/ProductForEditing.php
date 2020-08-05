@@ -24,10 +24,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
 /**
  * Product information for editing
+ *
+ * @todo: should we follow {...}Information or {..}Options concept? do we need those suffixes at all?
+ *      could be simply ProductPrices, ProductOptions, ProductCategories, ProductBasic(s)|(Info), ProductCustomizations?
  */
 class ProductForEditing
 {
