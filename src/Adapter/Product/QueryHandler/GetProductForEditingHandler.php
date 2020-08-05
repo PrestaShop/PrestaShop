@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationOp
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
@@ -81,7 +82,8 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             $this->getCategoriesInformation($product),
             $this->getPricesInformation($product),
             $this->getOptions($product),
-            $this->getShippingInformation($product)
+            $this->getShippingInformation($product),
+            $this->getSeoInformation($product)
         );
     }
 
@@ -186,7 +188,7 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
      */
     private function getShippingInformation(Product $product): ProductShippingInformation
     {
-        $carrierReferences = array_map(function ($carrier) {
+        $carrierReferences = array_map(function ($carrier): int {
             return (int) $carrier['id_reference'];
         }, $product->getCarriers());
 
@@ -249,5 +251,21 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             default:
                 return ProductCustomizationOptions::createNotCustomizable();
         }
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return ProductSeoInformation
+     */
+    private function getSeoInformation(Product $product): ProductSeoInformation
+    {
+        return new ProductSeoInformation(
+            $product->meta_title,
+            $product->meta_description,
+            $product->link_rewrite,
+            $product->redirect_type,
+            (int) $product->id_type_redirected
+        );
     }
 }
