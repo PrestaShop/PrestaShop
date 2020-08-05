@@ -211,6 +211,8 @@ class HookCore extends ObjectModel
 
     /**
      * Return hook ID from name.
+     *
+     * @throws PrestaShopObjectNotFoundException
      */
     public static function getNameById($hook_id)
     {
@@ -220,6 +222,11 @@ class HookCore extends ObjectModel
 							SELECT `name`
 							FROM `' . _DB_PREFIX_ . 'hook`
 							WHERE `id_hook` = ' . (int) $hook_id);
+
+            if (false === $result) {
+                throw new PrestaShopObjectNotFoundException('The hook id #%s does not exist in database', $hook_id);
+            }
+
             Cache::store($cache_id, $result);
 
             return $result;
