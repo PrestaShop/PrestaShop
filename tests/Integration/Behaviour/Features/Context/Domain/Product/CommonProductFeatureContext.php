@@ -129,6 +129,14 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
         $data = $table->getRowsHash();
 
         $this->assertBoolProperty($productForEditing, $data, 'active');
+        $this->assertStringProperty($productForEditing, $data, 'visibility');
+        $this->assertStringProperty($productForEditing, $data, 'condition');
+        $this->assertStringProperty($productForEditing, $data, 'isbn');
+        $this->assertStringProperty($productForEditing, $data, 'upc');
+        $this->assertStringProperty($productForEditing, $data, 'ean13');
+        $this->assertStringProperty($productForEditing, $data, 'mpn');
+        $this->assertStringProperty($productForEditing, $data, 'reference');
+        $this->assertStringProperty($productForEditing, $data, 'redirect_type');
 
         // Assertions checking isset() can hide some errors if it doesn't find array key,
         // to make sure all provided fields were checked we need to unset every asserted field
