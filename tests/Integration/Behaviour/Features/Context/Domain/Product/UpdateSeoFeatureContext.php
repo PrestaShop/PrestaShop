@@ -28,11 +28,38 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
+use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductRedirectOption;
 
 class UpdateSeoFeatureContext extends AbstractProductFeatureContext
 {
+    /**
+     * @When I update product :productReference SEO information with following values:
+     *
+     * @param string $productReference
+     * @param TableNode $tableNode
+     */
+    public function updateSeo(string $productReference, TableNode $tableNode)
+    {
+        $dataRows = $tableNode->getRowsHash();
+        $productId = $this->getSharedStorage()->get($productReference);
+
+        try {
+            $command = new UpdateProductSeoCommand($productId);
+            $unhandledData = $this->fillUpdateSeoCommand($dataRows, $command);
+            Assert::assertEmpty(
+                $unhandledData,
+                sprintf('Not all provided data was handled in scenario. Unhandled: %s', var_export($unhandledData, true))
+            );
+            $this->getCommandBus()->handle($command);
+        } catch (ProductException $e) {
+            $this->setLastException($e);
+        }
+    }
+
     /**
      * @Then product :productReference should not have a redirect target
      *
@@ -47,5 +74,52 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
             $productForEditing->getProductSeoInformation()->getRedirectTargetId(),
             'Product "%s" expected to have no redirect target'
         );
+    }
+
+    /**
+     * @Then product :productReference redirect target should be :targetReference
+     *
+     * @param string $productReference
+     * @param string $targetReference
+     */
+    public function assertRedirectTarget(string $productReference, string $targetReference)
+    {
+        $productSeo = $this->getProductForEditing($productReference)->getProductSeoInformation();
+        $targetId = $this->getSharedStorage()->get($targetReference);
+
+        Assert::assertEquals($targetId, $productSeo->getRedirectTargetId(), 'Unexpected product redirect target');
+    }
+
+    /**
+     * Fills command with data and returns all additional data that wasn't handled if there is any
+     *
+     * @param array $dataRows
+     * @param UpdateProductSeoCommand $command
+     *
+     * @return array
+     */
+    private function fillUpdateSeoCommand(array $dataRows, UpdateProductSeoCommand $command): array
+    {
+        if (isset($dataRows['meta_title'])) {
+            $command->setLocalizedMetaTitles($this->parseLocalizedArray($dataRows['meta_title']));
+            unset($dataRows['meta_title']);
+        }
+
+        if (isset($dataRows['meta_description'])) {
+            $command->setLocalizedMetaDescriptions($this->parseLocalizedArray($dataRows['meta_description']));
+            unset($dataRows['meta_description']);
+        }
+
+        if (isset($dataRows['link_rewrite'])) {
+            $command->setLocalizedLinkRewrites($this->parseLocalizedArray($dataRows['link_rewrite']));
+            unset($dataRows['link_rewrite']);
+        }
+
+        if (isset($dataRows['redirect_type'], $dataRows['redirect_target'])) {
+            $command->setRedirectOption($dataRows['redirect_type'], $this->getSharedStorage()->get($dataRows['redirect_target']));
+            unset($dataRows['redirect_type'], $dataRows['redirect_target']);
+        }
+
+        return $dataRows;
     }
 }
