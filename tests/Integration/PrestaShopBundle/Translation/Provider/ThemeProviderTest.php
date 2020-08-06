@@ -134,6 +134,7 @@ class ThemeProviderTest extends KernelTestCase
      * @param array[] $expectedCatalogue
      *
      * @dataProvider provideFixturesForExtractDefaultCatalogue
+     *
      * @throws FileNotFoundException
      */
     public function testItExtractsDefaultCatalogueFromThemeFiles(
