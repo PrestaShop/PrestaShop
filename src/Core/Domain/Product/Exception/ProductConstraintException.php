@@ -170,4 +170,19 @@ class ProductConstraintException extends ProductException
      * When product redirect target
      */
     const INVALID_REDIRECT_TARGET_ID = 280;
+
+    /**
+     * When product meta description is invalid
+     */
+    const INVALID_META_DESCRIPTION = 290;
+
+    /**
+     * When product meta title is invalid
+     */
+    const INVALID_META_TITLE = 300;
+
+    /**
+     * When product link rewrite is invalid
+     */
+    const INVALID_LINK_REWRITE = 310;
 }
