@@ -143,4 +143,25 @@ Feature: Update product SEO options from Back Office (BO)
     Then product "product2" localized "meta_description" should be "en-US:product2 meta description;fr-FR:toolazytofindFRtrans meta desc1"
     Then product "product2" localized "link_rewrite" should be "en-US:waterproof-boots;fr-FR:toolazytofindFRtrans-link-rewr"
 
-    #todo: scenario for invalid localized fields
+  Scenario: Update product SEO multi-lang fields with invalid values
+    Given product "product2" localized "meta_title" should be "en-US:metatitl prod1;fr-FR:toolazytofindFRtrans meta title1"
+    And product "product2" localized "meta_description" should be "en-US:product2 meta description;fr-FR:toolazytofindFRtrans meta desc1"
+    And product "product2" localized "link_rewrite" should be "en-US:waterproof-boots;fr-FR:toolazytofindFRtrans-link-rewr"
+    When I update product product2 SEO information with following values:
+      | meta_title       | en-US:#{           |
+    Then I should get error that product meta_title is invalid
+    When I update product product2 SEO information with following values:
+      | meta_description       | en-US:#{           |
+    Then I should get error that product meta_description is invalid
+    When I update product product2 SEO information with following values:
+      | link_rewrite       | en-US:#{&_             |
+    Then I should get error that product link_rewrite is invalid
+    When I update product product2 localized SEO field meta_title with a value of 256 symbols length
+    Then I should get error that product meta_title is invalid
+    When I update product product2 localized SEO field meta_description with a value of 513 symbols length
+    Then I should get error that product meta_description is invalid
+    When I update product product2 localized SEO field link_rewrite with a value of 256 symbols length
+    Then I should get error that product link_rewrite is invalid
+    And product "product2" localized "meta_title" should be "en-US:metatitl prod1;fr-FR:toolazytofindFRtrans meta title1"
+    And product "product2" localized "meta_description" should be "en-US:product2 meta description;fr-FR:toolazytofindFRtrans meta desc1"
+    And product "product2" localized "link_rewrite" should be "en-US:waterproof-boots;fr-FR:toolazytofindFRtrans-link-rewr"

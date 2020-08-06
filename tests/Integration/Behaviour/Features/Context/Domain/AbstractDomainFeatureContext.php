@@ -30,6 +30,7 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 use Behat\Testwork\Tester\Result\TestResult;
+use Configuration;
 use Exception;
 use Language;
 use ObjectModel;
@@ -175,5 +176,13 @@ abstract class AbstractDomainFeatureContext implements Context
         }
 
         return $localizedArray;
+    }
+
+    /**
+     * @return int
+     */
+    protected function getDefaultLangId(): int
+    {
+        return (int) Configuration::get('PS_LANG_DEFAULT');
     }
 }
