@@ -290,7 +290,7 @@ class SeoAndUrls extends BOBasePage {
    * @param toEnable
    * @return {Promise<string>}
    */
-  async enableDisableAttributesInProductMetaTitle(page, toEnable = true) {
+  async setStatusAttributesInProductMetaTitle(page, toEnable = true) {
     await this.waitForSelectorAndClick(page, this.switchDisplayAttributesLabel(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveSeoOptionsFormButton);
     return this.getTextContent(page, this.alertSuccessBlock);

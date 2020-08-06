@@ -62,7 +62,7 @@ describe('Enable/Disable display attributes in product meta title', async () => 
     it(`should ${test.args.action} display attributes in product meta title`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}DisplayAttributes`, baseContext);
 
-      const result = await seoAndUrlsPage.enableDisableAttributesInProductMetaTitle(page, test.args.enable);
+      const result = await seoAndUrlsPage.setStatusAttributesInProductMetaTitle(page, test.args.enable);
       await expect(result).to.contains(seoAndUrlsPage.successfulSettingsUpdateMessage);
     });
 
