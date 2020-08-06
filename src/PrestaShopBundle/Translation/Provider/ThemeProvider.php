@@ -126,7 +126,8 @@ class ThemeProvider implements ProviderInterface
         bool $empty = true,
         $refreshCache = false
     ): MessageCatalogueInterface {
-        $defaultCatalogue = $this->frontProvider->getDefaultCatalogue($locale);
+//        $defaultCatalogue = $this->frontProvider->getDefaultCatalogue($locale);
+        $defaultCatalogue = new MessageCatalogue($locale);
 
         $defaultCatalogue->addCatalogue(
             // Extracts wordings from the theme's templates

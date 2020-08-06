@@ -193,7 +193,7 @@ class TranslationsCatalogueProviderTest extends KernelTestCase
                     $this->getBuiltInModuleDirectory(),
                     $this->getDefaultTranslationsDirectory(),
                     $this->container->get('prestashop.translation.loader.legacy_file'),
-                    $this->container->get('prestashop.translation.legacy_module.extractor'),
+                    $this->container->get('prestashop.translation.extractor.legacy_module'),
                     'checkpayment'
                 )
             );
@@ -257,7 +257,7 @@ class TranslationsCatalogueProviderTest extends KernelTestCase
                     $this->getBuiltInModuleDirectory(),
                     $this->getDefaultTranslationsDirectory(),
                     $this->container->get('prestashop.translation.loader.legacy_file'),
-                    $this->container->get('prestashop.translation.legacy_module.extractor'),
+                    $this->container->get('prestashop.translation.extractor.legacy_module'),
                     'checkpayment'
                 )
             );
