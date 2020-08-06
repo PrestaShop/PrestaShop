@@ -861,3 +861,6 @@ INNER JOIN `PREFIX_hook` AS hfrom ON hm.id_hook = hfrom.id_hook AND hfrom.name =
 INNER JOIN `PREFIX_hook` AS hto ON hto.name = 'actionPerformancePageSave'
 SET hm.id_hook = hto.id_hook;
 DELETE FROM `PREFIX_hook` WHERE name = 'actionPerformancePageFormSave';
+
+/* Update wrong hook alias */
+UPDATE `PREFIX_hook_alias` SET name = 'displayHeader', alias = 'Header' WHERE name = 'Header' AND alias = 'displayHeader';

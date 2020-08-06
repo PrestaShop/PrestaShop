@@ -309,7 +309,9 @@ class HookCore extends ObjectModel
             return Cache::retrieve($cacheId);
         }
 
-        $aliases = Hook::getAllHookAliases()[$canonicalHookName] ?? [];
+        $allAliases = Hook::getAllHookAliases();
+
+        $aliases = $allAliases[$canonicalHookName] ?? [];
 
         Cache::store($cacheId, $aliases);
 
