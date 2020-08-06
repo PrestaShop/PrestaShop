@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductSeoHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use Product;
 
 /**
@@ -67,16 +68,19 @@ class UpdateProductSeoHandler extends AbstractProductHandler implements UpdatePr
 
         if (null !== $command->getLocalizedMetaDescriptions()) {
             $product->meta_description = $command->getLocalizedMetaDescriptions();
+            $this->validateLocalizedField($product, 'meta_description', ProductConstraintException::INVALID_META_DESCRIPTION);
             $this->fieldsToUpdate['meta_description'] = true;
         }
 
         if (null !== $command->getLocalizedMetaTitles()) {
             $product->meta_title = $command->getLocalizedMetaTitles();
+            $this->validateLocalizedField($product, 'meta_title', ProductConstraintException::INVALID_META_TITLE);
             $this->fieldsToUpdate['meta_title'] = true;
         }
 
         if (null !== $command->getLocalizedLinkRewrites()) {
             $product->link_rewrite = $command->getLocalizedLinkRewrites();
+            $this->validateLocalizedField($product, 'link_rewrite', ProductConstraintException::INVALID_LINK_REWRITE);
             $this->fieldsToUpdate['link_rewrite'] = true;
         }
     }
