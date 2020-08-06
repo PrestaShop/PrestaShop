@@ -103,7 +103,8 @@ class ProductRedirectOption
      * Builds self with a provided type and target id
      *
      * @param string $redirectType
-     * @param int $redirectTargetId
+     * @param int $redirectTargetId when redirecting to category and target id is 0, then main category will be used
+     *                              when redirecting to product, target id is mandatory and cannot be 0
      *
      * @return static
      *

@@ -116,7 +116,11 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
         }
 
         if (isset($dataRows['redirect_type'], $dataRows['redirect_target'])) {
-            $command->setRedirectOption($dataRows['redirect_type'], $this->getSharedStorage()->get($dataRows['redirect_target']));
+            if ($this->getSharedStorage()->exists($dataRows['redirect_target'])) {
+                $targetId = $this->getSharedStorage()->get($dataRows['redirect_target']);
+            }
+
+            $command->setRedirectOption($dataRows['redirect_type'], $targetId ?? 0);
             unset($dataRows['redirect_type'], $dataRows['redirect_target']);
         }
 
