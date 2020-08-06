@@ -126,13 +126,8 @@ class ThemeProvider implements ProviderInterface
         bool $empty = true,
         $refreshCache = false
     ): MessageCatalogueInterface {
-//        $defaultCatalogue = $this->frontProvider->getDefaultCatalogue($locale);
-        $defaultCatalogue = new MessageCatalogue($locale);
-
-        $defaultCatalogue->addCatalogue(
-            // Extracts wordings from the theme's templates
-            $this->themeExtractor->extract($this->theme, $locale, $refreshCache)
-        );
+        // Extracts wordings from the theme's templates
+        $defaultCatalogue = $this->themeExtractor->extract($this->theme, $locale, $refreshCache);
 
         if ($empty) {
             $this->emptyCatalogue($defaultCatalogue);
