@@ -69,3 +69,26 @@ Feature: Update product SEO options from Back Office (BO)
     Then product product2 should have following values:
       | redirect_type    | 404                        |
     And product product2 should not have a redirect target
+
+  Scenario: I update product seo information providing invalid redirect type
+    And category "men" in default language named "Men" exists
+    And product product2 should have following values:
+      | redirect_type    | 404                        |
+    And product product2 should not have a redirect target
+    When I update product product2 SEO information with following values:
+      | redirect_type    | 303-men-category           |
+      | redirect_target  | men                        |
+    Then I should get error that product redirect_type is invalid
+    And product product2 should have following values:
+      | redirect_type    | 404                        |
+    And product product2 should not have a redirect target
+    When I update product product2 SEO information with following values:
+      | redirect_type    | 303-product1               |
+      | redirect_target  | product1                   |
+    Then I should get error that product redirect_type is invalid
+    And product product2 should have following values:
+      | redirect_type    | 404                        |
+    And product product2 should not have a redirect target
+    And product "product2" localized "meta_title" should be "en-US:product2 meta title"
+    And product "product2" localized "meta_description" should be "en-US:product2 meta description"
+    And product "product2" localized "link_rewrite" should be "en-US:waterproof-boots"
