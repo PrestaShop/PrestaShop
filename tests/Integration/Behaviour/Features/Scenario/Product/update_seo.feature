@@ -92,3 +92,40 @@ Feature: Update product SEO options from Back Office (BO)
     And product "product2" localized "meta_title" should be "en-US:product2 meta title"
     And product "product2" localized "meta_description" should be "en-US:product2 meta description"
     And product "product2" localized "link_rewrite" should be "en-US:waterproof-boots"
+
+  Scenario: I update product seo redirect type providing valid redirect target
+    Given category "men" in default language named "Men" exists
+    And category "clothes" in default language named "Clothes" exists
+    And product product2 should have following values:
+      | redirect_type    | 404                        |
+    And product product2 should not have a redirect target
+    And product "product2" localized "meta_title" should be "en-US:product2 meta title"
+    And product "product2" localized "meta_description" should be "en-US:product2 meta description"
+    And product "product2" localized "link_rewrite" should be "en-US:waterproof-boots"
+    When I update product product2 SEO information with following values:
+      | redirect_type    | 301-product               |
+      | redirect_target  | product1                  |
+    And product product2 should have following values:
+      | redirect_type    | 301-product                |
+    And product product2 redirect target should be product1
+    When I update product product2 SEO information with following values:
+      | redirect_type    | 302-product               |
+      | redirect_target  | product1                  |
+    And product product2 should have following values:
+      | redirect_type    | 302-product                |
+    And product product2 redirect target should be product1
+    When I update product product2 SEO information with following values:
+      | redirect_type    | 301-category              |
+      | redirect_target  | men                       |
+    And product product2 should have following values:
+      | redirect_type    | 301-category              |
+    And product product2 redirect target should be men
+    When I update product product2 SEO information with following values:
+      | redirect_type    | 302-category              |
+      | redirect_target  | clothes                   |
+    And product product2 should have following values:
+      | redirect_type    | 302-category              |
+    And product product2 redirect target should be clothes
+    And product "product2" localized "meta_title" should be "en-US:product2 meta title"
+    And product "product2" localized "meta_description" should be "en-US:product2 meta description"
+    And product "product2" localized "link_rewrite" should be "en-US:waterproof-boots"
