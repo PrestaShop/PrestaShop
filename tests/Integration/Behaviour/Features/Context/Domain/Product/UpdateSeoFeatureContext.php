@@ -33,6 +33,8 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductRedirectOption;
+use RuntimeException;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class UpdateSeoFeatureContext extends AbstractProductFeatureContext
 {
@@ -54,6 +56,42 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
                 $unhandledData,
                 sprintf('Not all provided data was handled in scenario. Unhandled: %s', var_export($unhandledData, true))
             );
+            $this->getCommandBus()->handle($command);
+        } catch (ProductException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I update product :productReference localized SEO field :field with a value of :length symbols length
+     *
+     * @param string $productReference
+     * @param string $field
+     * @param int $length
+     */
+    public function updateLocalizedSeoFieldsTooLongValue(string $productReference, string $field, int $length)
+    {
+        try {
+            $command = new UpdateProductSeoCommand($this->getSharedStorage()->get($productReference));
+            switch ($field) {
+                case 'meta_title':
+                    $command->setLocalizedMetaTitles([
+                        $this->getDefaultLangId() => PrimitiveUtils::generateRandomString($length),
+                    ]);
+                    break;
+                case 'meta_description':
+                    $command->setLocalizedMetaDescriptions([
+                        $this->getDefaultLangId() => PrimitiveUtils::generateRandomString($length),
+                    ]);
+                    break;
+                case 'link_rewrite':
+                    $command->setLocalizedLinkRewrites([
+                        $this->getDefaultLangId() => PrimitiveUtils::generateRandomString($length),
+                    ]);
+                    break;
+                default:
+                    throw new RuntimeException(sprintf('Invalid field "%s" provided to scenario', $field));
+            }
             $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {
             $this->setLastException($e);

@@ -231,6 +231,9 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
             'delivery_out_stock' => ProductConstraintException::INVALID_DELIVERY_TIME_OUT_OF_STOCK_NOTES,
             'redirect_target' => ProductConstraintException::INVALID_REDIRECT_TARGET_ID,
             'redirect_type' => ProductConstraintException::INVALID_REDIRECT_TYPE,
+            'meta_title' => ProductConstraintException::INVALID_META_TITLE,
+            'meta_description' => ProductConstraintException::INVALID_META_DESCRIPTION,
+            'link_rewrite' => ProductConstraintException::INVALID_LINK_REWRITE,
         ];
 
         if (!array_key_exists($fieldName, $constraintErrorFieldMap)) {
