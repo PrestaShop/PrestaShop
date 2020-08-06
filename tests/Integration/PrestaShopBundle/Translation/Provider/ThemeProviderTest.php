@@ -190,10 +190,10 @@ class ThemeProviderTest extends KernelTestCase
         ];
 
         return  [
-//            'not empty catalogue' => [
-//                false,
-//                $extractedMessages,
-//            ],
+            'not empty catalogue' => [
+                false,
+                $extractedMessages,
+            ],
             'empty catalogue' => [
                 true,
                 $emptyCatalogue,
