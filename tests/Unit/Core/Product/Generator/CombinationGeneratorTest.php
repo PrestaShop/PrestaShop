@@ -50,7 +50,7 @@ class CombinationGeneratorTest extends TestCase
      * @param array $valuesByGroup
      * @param array $expectedCombinations
      */
-    public function testGenerateBulkCombinationsFromValidData(array $valuesByGroup, array $expectedCombinations)
+    public function testGenerateCombinationsFromValidData(array $valuesByGroup, array $expectedCombinations)
     {
         $yieldedCombinations = $this->combinationGenerator->generate($valuesByGroup);
         $generatedCombinations = [];
