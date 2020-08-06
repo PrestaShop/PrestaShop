@@ -164,7 +164,9 @@ class ProductCore extends ObjectModel
     /** @var string|array Meta description or array of meta description by id_lang */
     public $meta_description;
 
-    /** @var string|array Meta keywords or array of meta keywords by id_lang */
+    /**
+     * @deprecated
+     */
     public $meta_keywords;
 
     /** @var string|array Meta title or array of meta title by id_lang */
