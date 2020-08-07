@@ -24,56 +24,63 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace Tests\Integration\Behaviour\Features\Context;
+declare(strict_types=1);
 
-use RuntimeException;
-use Shop;
+namespace Tests\Integration\Behaviour\Features\Context\Util;
 
-class ShopFeatureContext extends AbstractPrestaShopFeatureContext
+/**
+ * Transfers combination details data
+ */
+class CombinationDetails
 {
     /**
-     * @Given single shop :shopReference context is loaded
-     *
-     * @param string $shopReference
+     * @var string
      */
-    public function loadSingleShopContext(string $shopReference)
-    {
-        /** @var Shop $shop */
-        $shop = SharedStorage::getStorage()->get($shopReference);
-
-        Shop::setContext(Shop::CONTEXT_SHOP, $shop->id);
-    }
+    private $reference;
 
     /**
-     * @Given shop :reference with name :shopName exists
-     *
+     * @var int
+     */
+    private $quantity;
+
+    /**
+     * @var array
+     */
+    private $attributes;
+
+    /**
      * @param string $reference
-     * @param string $shopName
+     * @param int $quantity
+     * @param string[] $attributes
      */
-    public function shopWithNameExists(string $reference, string $shopName)
+    public function __construct(string $reference, int $quantity, array $attributes)
     {
-        $shopId = Shop::getIdByName($shopName);
-
-        if (false === $shopId) {
-            throw new RuntimeException(sprintf('Shop with name "%s" does not exist', $shopName));
-        }
-
-        SharedStorage::getStorage()->set($reference, new Shop($shopId));
+        $this->reference = $reference;
+        $this->quantity = $quantity;
+        $this->attributes = $attributes;
     }
 
     /**
-     * @Given single shop context is loaded
+     * @return string
      */
-    public function singleShopContextIsLoaded()
+    public function getReference(): string
     {
-        Shop::setContext(Shop::CONTEXT_SHOP);
+        return $this->reference;
     }
 
     /**
-     * @Given multiple shop context is loaded
+     * @return int
      */
-    public function multipleShopContextIsLoaded()
+    public function getQuantity(): int
     {
-        Shop::setContext(Shop::CONTEXT_ALL);
+        return $this->quantity;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAttributes(): array
+    {
+        return $this->attributes;
     }
 }

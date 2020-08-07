@@ -41,7 +41,7 @@ use Tag;
 /**
  * Handles UpdateProductTagsCommand using legacy object model
  */
-class UpdateProductTagsHandler extends AbstractProductHandler implements UpdateProductTagsHandlerInterface
+final class UpdateProductTagsHandler extends AbstractProductHandler implements UpdateProductTagsHandlerInterface
 {
     /**
      * {@inheritdoc}

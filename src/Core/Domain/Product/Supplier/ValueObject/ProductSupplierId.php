@@ -24,50 +24,51 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierConstraintException;
 
 /**
- * Is thrown when updating a product failed
+ * Holds product supplier identification value
  */
-class CannotUpdateProductException extends ProductException
+class ProductSupplierId
 {
     /**
-     * When basic information update fails
+     * @var int
      */
-    const FAILED_UPDATE_BASIC_INFO = 10;
+    private $value;
 
     /**
-     * When updating product fields associated with price fails
+     * @param int $value
      */
-    const FAILED_UPDATE_PRICES = 20;
+    public function __construct(int $value)
+    {
+        $this->assertValueIsGreaterThanZero($value);
+        $this->value = $value;
+    }
 
     /**
-     * When product options update fails
+     * @return int
      */
-    const FAILED_UPDATE_OPTIONS = 30;
+    public function getValue(): int
+    {
+        return $this->value;
+    }
 
     /**
-     * When product tags update fails
+     * @param int $value
+     *
+     * @throws ProductSupplierConstraintException
      */
-    const FAILED_UPDATE_TAGS = 40;
-
-    /**
-     * When product categories update fails
-     */
-    const FAILED_UPDATE_CATEGORIES = 50;
-
-    /**
-     * When product properties associated with customization fields update fails
-     */
-    const FAILED_UPDATE_CUSTOMIZATION_FIELDS = 60;
-
-    /**
-     * When product shipping options update fails
-     */
-    const FAILED_UPDATE_SHIPPING_OPTIONS = 70;
-
-    /**
-     * When product default supplier update fails
-     */
-    const FAILED_UPDATE_DEFAULT_SUPPLIER = 80;
+    private function assertValueIsGreaterThanZero(int $value): void
+    {
+        if (0 >= $value) {
+            throw new ProductSupplierConstraintException(
+                sprintf('Invalid product supplier id %d', $value),
+                ProductSupplierConstraintException::INVALID_ID
+            );
+        }
+    }
 }

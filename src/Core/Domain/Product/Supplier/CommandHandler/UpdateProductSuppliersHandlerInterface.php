@@ -24,50 +24,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplier;
 
 /**
- * Is thrown when updating a product failed
+ * Defines contract to handle @var UpdateProductSuppliersCommand
  */
-class CannotUpdateProductException extends ProductException
+interface UpdateProductSuppliersHandlerInterface
 {
     /**
-     * When basic information update fails
+     * @param UpdateProductSuppliersCommand $command
+     *
+     * @return ProductSupplier[] new product suppliers list
      */
-    const FAILED_UPDATE_BASIC_INFO = 10;
-
-    /**
-     * When updating product fields associated with price fails
-     */
-    const FAILED_UPDATE_PRICES = 20;
-
-    /**
-     * When product options update fails
-     */
-    const FAILED_UPDATE_OPTIONS = 30;
-
-    /**
-     * When product tags update fails
-     */
-    const FAILED_UPDATE_TAGS = 40;
-
-    /**
-     * When product categories update fails
-     */
-    const FAILED_UPDATE_CATEGORIES = 50;
-
-    /**
-     * When product properties associated with customization fields update fails
-     */
-    const FAILED_UPDATE_CUSTOMIZATION_FIELDS = 60;
-
-    /**
-     * When product shipping options update fails
-     */
-    const FAILED_UPDATE_SHIPPING_OPTIONS = 70;
-
-    /**
-     * When product default supplier update fails
-     */
-    const FAILED_UPDATE_DEFAULT_SUPPLIER = 80;
+    public function handle(UpdateProductSuppliersCommand $command): array;
 }

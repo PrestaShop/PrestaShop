@@ -24,50 +24,66 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
 /**
- * Is thrown when updating a product failed
+ * Transfers product suppliers data
  */
-class CannotUpdateProductException extends ProductException
+class ProductSupplierOptions
 {
     /**
-     * When basic information update fails
+     * @var int
      */
-    const FAILED_UPDATE_BASIC_INFO = 10;
+    private $defaultSupplierId;
 
     /**
-     * When updating product fields associated with price fails
+     * @var string
      */
-    const FAILED_UPDATE_PRICES = 20;
+    private $defaultSupplierReference;
 
     /**
-     * When product options update fails
+     * @var ProductSupplierOption[]
      */
-    const FAILED_UPDATE_OPTIONS = 30;
+    private $optionsBySupplier;
 
     /**
-     * When product tags update fails
+     * @param int $defaultSupplierId
+     * @param ProductSupplierOption[] $optionsBySupplier
+     * @param string $defaultSupplierReference
      */
-    const FAILED_UPDATE_TAGS = 40;
+    public function __construct(
+        int $defaultSupplierId,
+        string $defaultSupplierReference,
+        array $optionsBySupplier
+    ) {
+        $this->defaultSupplierId = $defaultSupplierId;
+        $this->defaultSupplierReference = $defaultSupplierReference;
+        $this->optionsBySupplier = $optionsBySupplier;
+    }
 
     /**
-     * When product categories update fails
+     * @return int
      */
-    const FAILED_UPDATE_CATEGORIES = 50;
+    public function getDefaultSupplierId(): int
+    {
+        return $this->defaultSupplierId;
+    }
 
     /**
-     * When product properties associated with customization fields update fails
+     * @return ProductSupplierOption[]
      */
-    const FAILED_UPDATE_CUSTOMIZATION_FIELDS = 60;
+    public function getOptionsBySupplier(): array
+    {
+        return $this->optionsBySupplier;
+    }
 
     /**
-     * When product shipping options update fails
+     * @return string
      */
-    const FAILED_UPDATE_SHIPPING_OPTIONS = 70;
-
-    /**
-     * When product default supplier update fails
-     */
-    const FAILED_UPDATE_DEFAULT_SUPPLIER = 80;
+    public function getDefaultSupplierReference(): string
+    {
+        return $this->defaultSupplierReference;
+    }
 }

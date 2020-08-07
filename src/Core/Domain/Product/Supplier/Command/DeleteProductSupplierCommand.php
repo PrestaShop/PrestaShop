@@ -24,50 +24,35 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 
 /**
- * Is thrown when updating a product failed
+ * Deletes product supplier
  */
-class CannotUpdateProductException extends ProductException
+class DeleteProductSupplierCommand
 {
     /**
-     * When basic information update fails
+     * @var ProductSupplierId
      */
-    const FAILED_UPDATE_BASIC_INFO = 10;
+    private $productSupplierId;
 
     /**
-     * When updating product fields associated with price fails
+     * @param int $productSupplierId
      */
-    const FAILED_UPDATE_PRICES = 20;
+    public function __construct(int $productSupplierId)
+    {
+        $this->productSupplierId = new ProductSupplierId($productSupplierId);
+    }
 
     /**
-     * When product options update fails
+     * @return ProductSupplierId
      */
-    const FAILED_UPDATE_OPTIONS = 30;
-
-    /**
-     * When product tags update fails
-     */
-    const FAILED_UPDATE_TAGS = 40;
-
-    /**
-     * When product categories update fails
-     */
-    const FAILED_UPDATE_CATEGORIES = 50;
-
-    /**
-     * When product properties associated with customization fields update fails
-     */
-    const FAILED_UPDATE_CUSTOMIZATION_FIELDS = 60;
-
-    /**
-     * When product shipping options update fails
-     */
-    const FAILED_UPDATE_SHIPPING_OPTIONS = 70;
-
-    /**
-     * When product default supplier update fails
-     */
-    const FAILED_UPDATE_DEFAULT_SUPPLIER = 80;
+    public function getProductSupplierId(): ProductSupplierId
+    {
+        return $this->productSupplierId;
+    }
 }
