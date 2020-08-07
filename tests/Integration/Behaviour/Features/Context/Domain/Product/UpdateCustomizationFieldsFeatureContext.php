@@ -297,11 +297,16 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
      */
     private function updateProductCustomizationFields(string $productReference, array $fieldReferences, array $fieldsForUpdate): void
     {
+        $productId = $this->getSharedStorage()->get($productReference);
+
         try {
-            $newCustomizationFieldIds = $this->getCommandBus()->handle(new UpdateProductCustomizationFieldsCommand(
-                $this->getSharedStorage()->get($productReference),
-                $fieldsForUpdate
-            ));
+            if (empty($fieldsForUpdate)) {
+                $command = UpdateProductCustomizationFieldsCommand::deleteAll($productId);
+            } else {
+                $command = UpdateProductCustomizationFieldsCommand::replace($productId, $fieldsForUpdate);
+            }
+
+            $newCustomizationFieldIds = $this->getCommandBus()->handle($command);
 
             Assert::assertSameSize(
                 $fieldReferences,
