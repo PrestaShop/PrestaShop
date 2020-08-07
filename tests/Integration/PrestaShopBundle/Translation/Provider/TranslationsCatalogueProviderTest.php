@@ -200,7 +200,7 @@ class TranslationsCatalogueProviderTest extends KernelTestCase
 
         $provider = new TranslationsCatalogueProvider($providerFactory);
 
-        $messages = $provider->getCatalogue(new ModulesType('checkpayment'), 'fr-FR');
+        $messages = $provider->getCatalogue($moduleType, 'fr-FR');
         $this->assertIsArray($messages);
 
         // check only the specific module translations have been loaded
