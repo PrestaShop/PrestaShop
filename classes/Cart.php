@@ -1967,23 +1967,23 @@ class CartCore extends ObjectModel
             $cartRules = $this->getTotalCalculationCartRules($type, $type == Cart::BOTH);
         }
 
-        $calculator = $this->newCalculator($products, $cartRules, $id_carrier);
         $computePrecision = Context::getContext()->getComputingPrecision();
+        $calculator = $this->newCalculator($products, $cartRules, $id_carrier, $computePrecision);
         switch ($type) {
             case Cart::ONLY_SHIPPING:
                 $calculator->calculateRows();
-                $calculator->calculateFees($computePrecision);
+                $calculator->calculateFees();
                 $amount = $calculator->getFees()->getInitialShippingFees();
 
                 break;
             case Cart::ONLY_WRAPPING:
                 $calculator->calculateRows();
-                $calculator->calculateFees($computePrecision);
+                $calculator->calculateFees();
                 $amount = $calculator->getFees()->getInitialWrappingFees();
 
                 break;
             case Cart::BOTH:
-                $calculator->processCalculation($computePrecision);
+                $calculator->processCalculation();
                 $amount = $calculator->getTotal();
 
                 break;
@@ -1999,7 +1999,7 @@ class CartCore extends ObjectModel
 
                 break;
             case Cart::ONLY_DISCOUNTS:
-                $calculator->processCalculation($computePrecision);
+                $calculator->processCalculation();
                 $amount = $calculator->getDiscountTotal();
 
                 break;
@@ -2022,12 +2022,13 @@ class CartCore extends ObjectModel
      * @param array $products list of products to calculate on
      * @param array $cartRules list of cart rules to apply
      * @param int $id_carrier carrier id (fees calculation)
+     * @param int|null $computePrecision
      *
      * @return \PrestaShop\PrestaShop\Core\Cart\Calculator
      */
-    public function newCalculator($products, $cartRules, $id_carrier)
+    public function newCalculator($products, $cartRules, $id_carrier, $computePrecision = null)
     {
-        $calculator = new Calculator($this, $id_carrier);
+        $calculator = new Calculator($this, $id_carrier, $computePrecision);
 
         /** @var PriceCalculator $priceCalculator */
         $priceCalculator = ServiceLocator::get(PriceCalculator::class);

@@ -27,6 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Cart;
 
 use Cart;
+use Context;
+use Tools;
 
 /**
  * provides methods to process cart calculation.
@@ -70,7 +72,12 @@ class Calculator
      */
     protected $isProcessed = false;
 
-    public function __construct(Cart $cart, $carrierId)
+    /**
+     * @var int|null
+     */
+    protected $computePrecision;
+
+    public function __construct(Cart $cart, $carrierId, ?int $computePrecision = null)
     {
         $this->setCart($cart);
         $this->setCarrierId($carrierId);
@@ -78,6 +85,11 @@ class Calculator
         $this->fees = new Fees();
         $this->cartRules = new CartRuleCollection();
         $this->cartRuleCalculator = new CartRuleCalculator();
+
+        if (null === $computePrecision) {
+            $computePrecision = Context::getContext()->getComputingPrecision();
+        }
+        $this->computePrecision = $computePrecision;
     }
 
     /**
@@ -117,16 +129,16 @@ class Calculator
     /**
      * run the whole calculation process: calculate rows, discounts, fees.
      *
-     * @param int $computePrecision
+     * @param int $computePrecision Not used since 1.7.7.0, kept for backward compatibility
      *
      * @return $this
      */
-    public function processCalculation($computePrecision)
+    public function processCalculation($computePrecision = null)
     {
         // calculate product rows
         $this->calculateRows();
         // calculate fees
-        $this->calculateFees($computePrecision);
+        $this->calculateFees();
         // calculate discounts
         $this->calculateCartRules();
         // store state
@@ -149,14 +161,14 @@ class Calculator
         }
 
         $amount = $this->getRowTotalWithoutDiscount();
-        $amount = $amount->sub($this->getDiscountTotal());
+        $amount = $amount->sub($this->rounded($this->getDiscountTotal(), $this->computePrecision));
         $shippingFees = $this->fees->getInitialShippingFees();
         if (null !== $shippingFees) {
-            $amount = $amount->add($shippingFees);
+            $amount = $amount->add($this->rounded($shippingFees, $this->computePrecision));
         }
         $wrappingFees = $this->fees->getFinalWrappingFees();
         if (null !== $wrappingFees) {
-            $amount = $amount->add($wrappingFees);
+            $amount = $amount->add($this->rounded($wrappingFees, $this->computePrecision));
         }
 
         return $amount;
@@ -321,11 +333,11 @@ class Calculator
     /**
      * calculate wrapping and shipping fees (rows have to be calculated first).
      *
-     * @param int $computePrecision
+     * @param int|null $computePrecision Not used since 1.7.7.0, kept for backward compatibility
      */
-    public function calculateFees($computePrecision)
+    public function calculateFees($computePrecision = null)
     {
-        $this->fees->processCalculation($this->cart, $this->cartRows, $computePrecision, $this->id_carrier);
+        $this->fees->processCalculation($this->cart, $this->cartRows, $this->computePrecision, $this->id_carrier);
     }
 
     /**
@@ -334,5 +346,19 @@ class Calculator
     public function getCartRulesData()
     {
         return $this->cartRuleCalculator->getCartRulesData();
+    }
+
+    /**
+     * @param AmountImmutable $amount
+     * @param int $computePrecision
+     *
+     * @return AmountImmutable
+     */
+    private function rounded(AmountImmutable $amount, int $computePrecision)
+    {
+        return new AmountImmutable(
+            Tools::ps_round($amount->getTaxIncluded(), $computePrecision),
+            Tools::ps_round($amount->getTaxExcluded(), $computePrecision)
+        );
     }
 }
