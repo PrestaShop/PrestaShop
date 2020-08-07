@@ -52,6 +52,11 @@ class ObjectPresenter implements PresenterInterface
         foreach ($fields as $fieldName => $null) {
             $presentedObject[$fieldName] = $object->{$fieldName};
         }
+        
+        if (get_class($object) === 'Product') {
+			$presentedObject['ecotax_tax_inc'] = $object->getEcotax();
+		}
+		
         $presentedObject['id'] = $object->id;
 
         $mustRemove = ['deleted', 'active'];
