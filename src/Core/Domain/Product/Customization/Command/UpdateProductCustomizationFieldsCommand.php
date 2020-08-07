@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command;
 
+use LogicException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
@@ -47,13 +48,37 @@ class UpdateProductCustomizationFieldsCommand
     private $customizationFields = [];
 
     /**
+     * Builds command to replace existing customization fields with provided ones.
+     *
      * @param int $productId
      * @param array $customizationFields
+     *
+     * @return static
      */
-    public function __construct(int $productId, array $customizationFields)
+    public static function replace(int $productId, array $customizationFields): self
     {
-        $this->productId = new ProductId($productId);
-        $this->setCustomizationFields($customizationFields);
+        if (empty($customizationFields)) {
+            throw new LogicException(sprintf(
+                'Providing empty array will remove all customization fields. Use %s::deleteAll()', self::class
+            ));
+        }
+
+        return new self(
+            $productId,
+            $customizationFields
+        );
+    }
+
+    /**
+     * Builds command to delete all existing CustomizationFields for provided product
+     *
+     * @param int $productId
+     *
+     * @return UpdateProductCustomizationFieldsCommand
+     */
+    public static function deleteAll(int $productId): self
+    {
+        return new self($productId, []);
     }
 
     /**
@@ -70,6 +95,18 @@ class UpdateProductCustomizationFieldsCommand
     public function getCustomizationFields(): array
     {
         return $this->customizationFields;
+    }
+
+    /**
+     * Use static factories to initiate this class
+     *
+     * @param int $productId
+     * @param array $customizationFields
+     */
+    private function __construct(int $productId, array $customizationFields)
+    {
+        $this->productId = new ProductId($productId);
+        $this->setCustomizationFields($customizationFields);
     }
 
     /**
