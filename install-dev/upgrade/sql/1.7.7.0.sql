@@ -843,3 +843,22 @@ VALUES (NULL, 'actionOrderMessageFormBuilderModifier', 'Modify order message ide
         'This hook allows to modify data which is about to be used in template for credit slip grid', '1'),
        (NULL, 'displayAfterTitleTag', 'After title tag', 'Use this hook to add content after title tag', '1')
 ;
+
+/* Update wrong hook names */
+UPDATE `PREFIX_hook_module` AS hm
+INNER JOIN `PREFIX_hook` AS hfrom ON hm.id_hook = hfrom.id_hook AND hfrom.name = 'actionAdministrationPageFormSave'
+INNER JOIN `PREFIX_hook` AS hto ON hto.name = 'actionAdministrationPageSave'
+SET hm.id_hook = hto.id_hook;
+DELETE FROM `PREFIX_hook` WHERE name = 'actionAdministrationPageFormSave';
+
+UPDATE `PREFIX_hook_module` AS hm
+INNER JOIN `PREFIX_hook` AS hfrom ON hm.id_hook = hfrom.id_hook AND hfrom.name = 'actionMaintenancePageFormSave'
+INNER JOIN `PREFIX_hook` AS hto ON hto.name = 'actionMaintenancePageSave'
+SET hm.id_hook = hto.id_hook;
+DELETE FROM `PREFIX_hook` WHERE name = 'actionMaintenancePageFormSave';
+
+UPDATE `PREFIX_hook_module` AS hm
+INNER JOIN `PREFIX_hook` AS hfrom ON hm.id_hook = hfrom.id_hook AND hfrom.name = 'actionPerformancePageFormSave'
+INNER JOIN `PREFIX_hook` AS hto ON hto.name = 'actionPerformancePageSave'
+SET hm.id_hook = hto.id_hook;
+DELETE FROM `PREFIX_hook` WHERE name = 'actionPerformancePageFormSave';

@@ -39,6 +39,10 @@ describe('View customer from orders page', async () => {
     page = await helper.newTab(browserContext);
   });
 
+  after(async () => {
+    await helper.closeBrowserContext(browserContext);
+  });
+
   it('should login in BO', async function () {
     await loginCommon.loginBO(this, page);
   });
