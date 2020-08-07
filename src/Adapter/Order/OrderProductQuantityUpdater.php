@@ -144,8 +144,6 @@ class OrderProductQuantityUpdater
 
             // Update prices on the order after cart rules are recomputed
             $this->orderAmountUpdater->update($order, $cart, null !== $orderInvoice ? (int) $orderInvoice->id : null);
-
-            $this->updateOrderInvoice($orderDetail, $orderInvoice);
         } finally {
             $this->contextStateManager->restoreContext();
         }
