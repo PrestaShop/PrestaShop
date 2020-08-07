@@ -8,6 +8,7 @@ class Translations extends BOBasePage {
     this.pageTitle = 'Translations • ';
     this.validationMessage = 'Translations successfully updated';
     this.validationResetMessage = 'Translations successfully reset';
+    this.successAlertMessage = 'The translations have been successfully added.';
 
     // Selectors
     // Modify translation form
@@ -21,6 +22,12 @@ class Translations extends BOBasePage {
     this.saveTranslationButton = '#app button[type=\'submit\']';
     this.resetTranslationButton = '#app  button[class*=\'btn-outline-secondary\']';
     this.growlMessage = '#growls-default div.growl-message';
+    // Add/Update language form
+    this.addUpdateLanguageForm = 'form[action*=\'add-update-language\']';
+    this.languageToAddSelect = '#select2-form_iso_localization_pack-container';
+    this.searchLanguageInput = 'span.select2-search.select2-search--dropdown input';
+    this.searchLanguageResult = 'li.select2-results__option--highlighted';
+    this.addUpdateLanguageButton = `${this.addUpdateLanguageForm} .card-footer button`;
     // Export language form
     this.exportLanguageSelect = '#form_iso_code';
     this.exportLanguageThemeSelect = '#form_theme_name';
@@ -83,6 +90,20 @@ class Translations extends BOBasePage {
   }
 
   /**
+   * Add/Update language
+   * @param page
+   * @param language
+   * @returns {Promise<string>}
+   */
+  async addUpdateLanguage(page, language) {
+    await this.waitForSelectorAndClick(page, this.languageToAddSelect);
+    await this.setValue(page, this.searchLanguageInput, language);
+    await this.waitForSelectorAndClick(page, this.searchLanguageResult);
+    await page.click(this.addUpdateLanguageButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+  }
+
+  /**
    * Export language
    * @param page
    * @param language
@@ -101,4 +122,5 @@ class Translations extends BOBasePage {
     return download.path();
   }
 }
+
 module.exports = new Translations();

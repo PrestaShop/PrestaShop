@@ -191,6 +191,7 @@ export default class OrderViewPage {
     $(OrderViewPageMap.productPackModal.modal).on('show.bs.modal', (event) => {
       const button = $(event.relatedTarget);
       const packItems = button.data('packItems');
+      const modal = $(OrderViewPageMap.productPackModal.modal);
       $(OrderViewPageMap.productPackModal.rows).remove();
       packItems.forEach((item) => {
         const $item = $(OrderViewPageMap.productPackModal.template).clone();

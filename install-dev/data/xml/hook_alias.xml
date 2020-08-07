@@ -337,10 +337,13 @@
       <alias>actionAfterDeleteProductInCart</alias>
       <name>actionDeleteProductInCartAfter</name>
     </hook_alias>
-
     <hook_alias id="displayInvoice">
       <alias>displayInvoice</alias>
       <name>displayAdminOrderTop</name>
+    </hook_alias>
+    <hook_alias id="displayBackOfficeOrderActions">
+      <alias>displayBackOfficeOrderActions</alias>
+      <name>displayAdminOrderSide</name>
     </hook_alias>
   </entities>
 </entity_hook_alias>
