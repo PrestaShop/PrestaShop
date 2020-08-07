@@ -146,11 +146,15 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
     private function assignProductToCategories(int $productId, int $defaultCategoryId, array $categoryIds): void
     {
         try {
-            $this->getCommandBus()->handle(new UpdateProductCategoriesCommand(
-                $productId,
-                $defaultCategoryId,
-                $categoryIds
-            ));
+            if (empty($categoryIds) && !empty($defaultCategoryId)) {
+                $command = UpdateProductCategoriesCommand::updateOnlyDefault($productId, $defaultCategoryId);
+            } elseif (empty($categoryIds) && empty($defaultCategoryId)) {
+                $command = UpdateProductCategoriesCommand::deleteAllExceptDefault($productId);
+            } else {
+                $command = UpdateProductCategoriesCommand::replace($productId, $defaultCategoryId, $categoryIds);
+            }
+
+            $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {
             $this->setLastException($e);
         }
