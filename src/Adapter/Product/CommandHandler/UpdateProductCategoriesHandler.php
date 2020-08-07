@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use Category;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductCategoriesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -49,36 +48,61 @@ final class UpdateProductCategoriesHandler extends AbstractProductHandler implem
     public function handle(UpdateProductCategoriesCommand $command): void
     {
         $product = $this->getProduct($command->getProductId());
-        $defaultCategoryId = $command->getDefaultCategoryId()->getValue();
-        $categoryIds = $this->formatCategoryIdsList($command);
+        $categoryIds = $command->getCategoryIds();
+        $defaultCategoryId = $command->getDefaultCategoryId();
+
+        if (empty($categoryIds) && !empty($defaultCategoryId)) {
+            $this->updateOnlyDefaultCategory($product, $defaultCategoryId->getValue());
+
+            return;
+        }
+
+        if (empty($categoryIds) && empty($defaultCategoryId)) {
+            $currentDefaultCategory = $product->id_category_default;
+
+            $this->updateCategories($product, [$currentDefaultCategory]);
+
+            return;
+        }
+
+        $categoryIds[] = $defaultCategoryId;
+        $categoryIds = array_map(function ($categoryId) {
+            return $categoryId->getValue();
+        }, $categoryIds);
 
         $this->updateCategories($product, $categoryIds);
+        $this->updateDefaultCategory($product, $defaultCategoryId->getValue());
+    }
 
+    /**
+     * @param Product $product
+     * @param int $defaultCategoryId
+     *
+     * @throws CannotUpdateProductException
+     * @throws ProductException
+     */
+    private function updateOnlyDefaultCategory(Product $product, int $defaultCategoryId): void
+    {
+        $currentProductCategories = Product::getProductCategories();
+        $currentProductCategories[] = $defaultCategoryId;
+
+        $this->updateCategories($product, $currentProductCategories);
+        $this->updateDefaultCategory($product, $defaultCategoryId);
+    }
+
+    /**
+     * @param Product $product
+     * @param int $defaultCategoryId
+     *
+     * @throws CannotUpdateProductException
+     * @throws ProductException
+     */
+    private function updateDefaultCategory(Product $product, int $defaultCategoryId): void
+    {
         $product->id_category_default = $defaultCategoryId;
         $product->setFieldsToUpdate(['id_category_default']);
 
         $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_CATEGORIES);
-    }
-
-    /**
-     * Re-map array to contain scalar values instead of object,
-     * append default category id to the list
-     * and filter-out duplicate values
-     *
-     * @param UpdateProductCategoriesCommand $command
-     *
-     * @return int[]
-     */
-    private function formatCategoryIdsList(UpdateProductCategoriesCommand $command): array
-    {
-        $categoryIds = array_map(function (CategoryId $categoryId) {
-            return $categoryId->getValue();
-        }, $command->getCategoryIds());
-
-        $categoryIds[] = $command->getDefaultCategoryId()->getValue();
-        $categoryIds = array_unique($categoryIds, SORT_REGULAR);
-
-        return $categoryIds;
     }
 
     /**
@@ -90,13 +114,10 @@ final class UpdateProductCategoriesHandler extends AbstractProductHandler implem
      */
     private function updateCategories(Product $product, array $categoryIds): void
     {
+        $categoryIds = array_unique($categoryIds);
+
         try {
-            if (false === Category::categoriesExists($categoryIds)) {
-                throw new CannotUpdateProductException(
-                    sprintf('Failed to update product #%d categories. Some of categories doesn\'t exist.', $product->id),
-                    CannotUpdateProductException::FAILED_UPDATE_CATEGORIES
-                );
-            }
+            $this->assertCategoriesExists($product, $categoryIds);
 
             if (false === $product->updateCategories($categoryIds)) {
                 throw new CannotUpdateProductException(
@@ -109,6 +130,22 @@ final class UpdateProductCategoriesHandler extends AbstractProductHandler implem
                 sprintf('Error occurred when trying to update product #%d categories', $product->id),
                 0,
                 $e
+            );
+        }
+    }
+
+    /**
+     * @param Product $product
+     * @param array $categoryIds
+     *
+     * @throws CannotUpdateProductException
+     */
+    private function assertCategoriesExists(Product $product, array $categoryIds): void
+    {
+        if (false === Category::categoriesExists($categoryIds)) {
+            throw new CannotUpdateProductException(
+                sprintf('Failed to update product #%d categories. Some of categories doesn\'t exist.', $product->id),
+                CannotUpdateProductException::FAILED_UPDATE_CATEGORIES
             );
         }
     }

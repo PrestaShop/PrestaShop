@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
+use LogicException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
@@ -39,7 +40,7 @@ class UpdateProductCategoriesCommand
     private $productId;
 
     /**
-     * @var CategoryId
+     * @var CategoryId|null
      */
     private $defaultCategoryId;
 
@@ -49,20 +50,49 @@ class UpdateProductCategoriesCommand
     private $categoryIds;
 
     /**
+     * Builds command to replace all product existing categories to provided ones
+     *
      * @param int $productId
      * @param int $defaultCategoryId
-     * @param int[] $categoryIds
+     * @param array $categoryIds
+     *
+     * @return UpdateProductCategoriesCommand
      */
-    public function __construct(int $productId, int $defaultCategoryId, array $categoryIds)
+    public static function replace(int $productId, int $defaultCategoryId, array $categoryIds): self
     {
-        $this->defaultCategoryId = new CategoryId($defaultCategoryId);
-        $this->productId = new ProductId($productId);
+        if (empty($categoryIds)) {
+            throw new LogicException(sprintf(
+                'Providing empty array will remove all categories except default. Use %s::deleteAllExceptDefault()',
+                self::class
+            ));
+        }
 
-        $this->categoryIds = array_map(
-            function ($id) {
-                return new CategoryId($id);
-            }, $categoryIds
-        );
+        return new self($productId, $defaultCategoryId, $categoryIds);
+    }
+
+    /**
+     * Builds command to delete all product categories except the default one
+     *
+     * @param int $productId
+     *
+     * @return UpdateProductCategoriesCommand
+     */
+    public static function deleteAllExceptDefault(int $productId): self
+    {
+        return new self($productId);
+    }
+
+    /**
+     * Builds command to update only default category
+     *
+     * @param int $productId
+     * @param int $defaultCategoryId
+     *
+     * @return UpdateProductCategoriesCommand
+     */
+    public static function updateOnlyDefault(int $productId, int $defaultCategoryId): self
+    {
+        return new self($productId, $defaultCategoryId);
     }
 
     /**
@@ -87,5 +117,24 @@ class UpdateProductCategoriesCommand
     public function getCategoryIds(): array
     {
         return $this->categoryIds;
+    }
+
+    /**
+     * Use static factories to initiate this class
+     *
+     * @param int $productId
+     * @param int $defaultCategoryId
+     * @param int[] $categoryIds
+     */
+    private function __construct(int $productId, ?int $defaultCategoryId = null, array $categoryIds = [])
+    {
+        $this->productId = new ProductId($productId);
+        $this->defaultCategoryId = null !== $defaultCategoryId ? new CategoryId($defaultCategoryId) : null;
+
+        $this->categoryIds = array_map(
+            function ($id) {
+                return new CategoryId($id);
+            }, $categoryIds
+        );
     }
 }
