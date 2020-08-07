@@ -34,17 +34,13 @@
 
     <div class="col-md-6 text-right d-print-none">
       <a href="#"
-         class="float-right tooltip-link js-order-notes-toggle-btn {% if isNoteOpen %}is-opened{% endif %}"
+         class="float-right tooltip-link js-order-notes-toggle-btn{% if isNoteOpen %} is-opened{% endif %}"
       >
-        {% if isNoteOpen %}
-          <i class="material-icons">remove</i>
-        {% else %}
-          <i class="material-icons">add</i>
-        {% endif %}
+        <i class="material-icons">{% if isNoteOpen %}remove{% else %}add{% endif %}</i>
       </a>
     </div>
 
-    <div class="col-md-12 mt-3 js-order-notes-block {% if not isNoteOpen %}d-none{% endif %}">
+    <div class="col-md-12 mt-3 js-order-notes-block{% if not isNoteOpen %} d-none{% endif %}">
       {{ form_start(internalNoteForm, {
         'action': path('admin_orders_set_internal_note', {'orderId': orderForViewing.getId()})
       }) }}
