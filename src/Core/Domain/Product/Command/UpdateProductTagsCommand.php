@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
+use LogicException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -48,16 +49,6 @@ class UpdateProductTagsCommand
     private $localizedTagsList;
 
     /**
-     * @param int $productId
-     * @param array $localizedTags
-     */
-    public function __construct(int $productId, array $localizedTags)
-    {
-        $this->productId = new ProductId($productId);
-        $this->setLocalizedTagsList($localizedTags);
-    }
-
-    /**
      * @return ProductId
      */
     public function getProductId(): ProductId
@@ -71,6 +62,49 @@ class UpdateProductTagsCommand
     public function getLocalizedTagsList(): array
     {
         return $this->localizedTagsList;
+    }
+
+    /**
+     * Builds command to replace all existing localized tags with provided ones for product
+     *
+     * @param int $productId
+     * @param array[] $localizedTagsList key-value pairs where each key represents language id and value is the array of tags
+     *
+     * @return static
+     */
+    public static function replace(int $productId, array $localizedTagsList): self
+    {
+        if (empty($localizedTagsList)) {
+            throw new LogicException(sprintf(
+                'Providing empty array will remove all tags. Use %s::deleteAll()', self::class
+            ));
+        }
+
+        return new self($productId, $localizedTagsList);
+    }
+
+    /**
+     * Builds command to delete all existing tags for product
+     *
+     * @param int $productId
+     *
+     * @return static
+     */
+    public static function deleteAll(int $productId): self
+    {
+        return new self($productId, []);
+    }
+
+    /**
+     * Use static factories to initiate this class
+     *
+     * @param int $productId
+     * @param array $localizedTags
+     */
+    private function __construct(int $productId, array $localizedTags)
+    {
+        $this->productId = new ProductId($productId);
+        $this->setLocalizedTagsList($localizedTags);
     }
 
     /**
