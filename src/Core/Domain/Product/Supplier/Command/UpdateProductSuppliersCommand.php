@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command;
 
+use LogicException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
@@ -54,11 +55,49 @@ class UpdateProductSuppliersCommand
     private $defaultSupplierId;
 
     /**
+     * Builds command to replace all product existing suppliers to provided ones
+     *
      * @param int $productId
+     * @param array $productSuppliers
+     * @param int|null $defaultSupplierId if not provided, the first supplier in list becomes default
+     *
+     * @return UpdateProductSuppliersCommand
      */
-    public function __construct(int $productId)
+    public static function replace(int $productId, array $productSuppliers, ?int $defaultSupplierId = null): self
     {
-        $this->productId = new ProductId($productId);
+        if (empty($productSuppliers)) {
+            throw new LogicException(sprintf(
+                'Providing empty array will remove all productSuppliers. Use %s::deleteAll()',
+                self::class
+            ));
+        }
+
+        return new self($productId, $defaultSupplierId, $productSuppliers);
+    }
+
+    /**
+     * Builds command to delete all product suppliers except the default one
+     *
+     * @param int $productId
+     *
+     * @return UpdateProductSuppliersCommand
+     */
+    public static function deleteAll(int $productId): self
+    {
+        return new self($productId, null, []);
+    }
+
+    /**
+     * Builds command to update only default supplier
+     *
+     * @param int $productId
+     * @param int $defaultSupplierId
+     *
+     * @return UpdateProductSuppliersCommand
+     */
+    public static function updateOnlyDefault(int $productId, int $defaultSupplierId): self
+    {
+        return new self($productId, $defaultSupplierId);
     }
 
     /**
@@ -86,21 +125,28 @@ class UpdateProductSuppliersCommand
     }
 
     /**
-     * @param int $supplierId
+     * Use static factories to initiate this class
+     *
+     * @param int $productId
+     * @param int|null $defaultSupplierId
+     * @param array $productSuppliers
      *
      * @throws SupplierException
      */
-    public function setDefaultSupplierId(int $supplierId): self
+    private function __construct(int $productId, ?int $defaultSupplierId = null, ?array $productSuppliers = null)
     {
-        $this->defaultSupplierId = new SupplierId($supplierId);
+        $this->productId = new ProductId($productId);
+        $this->defaultSupplierId = $defaultSupplierId !== null ? new SupplierId($defaultSupplierId) : null;
 
-        return $this;
+        if (is_array($productSuppliers)) {
+            $this->setProductSuppliers($productSuppliers);
+        }
     }
 
     /**
      * @param array[] $productSuppliers
      */
-    public function setProductSuppliers(array $productSuppliers): void
+    private function setProductSuppliers(array $productSuppliers): void
     {
         // empty array is handled differently than null.
         if (empty($productSuppliers)) {

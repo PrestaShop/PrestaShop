@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use LogicException;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
@@ -91,7 +90,6 @@ final class UpdateProductSuppliersHandler extends AbstractProductHandler impleme
      */
     public function handle(UpdateProductSuppliersCommand $command): array
     {
-        $this->assertCommandIsNotEmpty($command);
         $productId = $command->getProductId();
 
         if (null !== $command->getProductSuppliers()) {
@@ -119,7 +117,7 @@ final class UpdateProductSuppliersHandler extends AbstractProductHandler impleme
         $defaultSupplierId = $command->getDefaultSupplierId();
         $defaultSupplierIsProvided = null !== $defaultSupplierId;
 
-        if (!$defaultSupplierIsProvided) {
+        if (!$defaultSupplierIsProvided && !empty($command->getProductSuppliers())) {
             $firstSupplier = $command->getProductSuppliers()[0];
             $this->updateDefaultSupplier($productId, $firstSupplier->getSupplierId());
 
@@ -306,20 +304,5 @@ final class UpdateProductSuppliersHandler extends AbstractProductHandler impleme
         }
 
         return $productSupplierIds;
-    }
-
-    /**
-     * @param UpdateProductSuppliersCommand $command
-     */
-    private function assertCommandIsNotEmpty(UpdateProductSuppliersCommand $command): void
-    {
-        if (null !== $command->getDefaultSupplierId() || null !== $command->getProductSuppliers()) {
-            return;
-        }
-
-        throw new LogicException(sprintf(
-            '%s command properties are empty. You must set at least one property to update',
-            UpdateProductSuppliersCommand::class
-        ));
     }
 }
