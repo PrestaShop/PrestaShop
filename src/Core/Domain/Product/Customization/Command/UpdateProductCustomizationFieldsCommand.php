@@ -78,14 +78,12 @@ class UpdateProductCustomizationFieldsCommand
     private function setCustomizationFields(array $customizationFields): void
     {
         foreach ($customizationFields as $customizationField) {
-            $byModule = isset($customizationField['added_by_module']) ? (bool) $customizationField['added_by_module'] : false;
-
             $this->customizationFields[] = new CustomizationField(
                 (int) $customizationField['type'],
                 $customizationField['localized_names'],
                 (bool) $customizationField['is_required'],
-                !empty($customizationField['id']) ? (int) $customizationField['id'] : null,
-                $byModule
+                (bool) $customizationField['added_by_module'],
+                (int) $customizationField['id'] ?? null
             );
         }
     }
