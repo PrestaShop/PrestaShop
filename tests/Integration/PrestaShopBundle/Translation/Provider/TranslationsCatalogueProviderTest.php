@@ -186,7 +186,7 @@ class TranslationsCatalogueProviderTest extends KernelTestCase
         $providerFactory
             ->expects($this->any())
             ->method('build')
-            ->with($moduleType)
+//            ->with($moduleType)
             ->willReturn(
                 new ModulesProvider(
                     $this->translationDatabaseLoader,
