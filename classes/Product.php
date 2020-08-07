@@ -7997,23 +7997,24 @@ class ProductCore extends ObjectModel
 
         return $return;
     }
-    
+
     /**
-     * Get Product ecotax 
-     * 
+     * Get Product ecotax
+     *
      * @return ecotax
      */
-    public function getEcotax($include_tax = true){
-		$ecotax_rate = 0;
-		
-		if($include_tax){
-			$ecotax_rate = (float) Tax::getProductEcotaxRate();
-		}
-		
-		return  Tools::ps_round(
-			(float) $this->ecotax * (1 + $ecotax_rate / 100),
-			Context::getContext()->currency->precision,
-			null
-		);
-	}
+    public function getEcotax($include_tax = true)
+    {
+        $ecotax_rate = 0;
+
+        if ($include_tax) {
+            $ecotax_rate = (float) Tax::getProductEcotaxRate();
+        }
+
+        return  Tools::ps_round(
+            (float) $this->ecotax * (1 + $ecotax_rate / 100),
+            Context::getContext()->currency->precision,
+            null
+        );
+    }
 }
