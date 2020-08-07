@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
+use LogicException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QuantifiedProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -48,19 +49,7 @@ class UpdateProductPackCommand
     private $products = [];
 
     /**
-     * Builds command to remove all items from the pack
-     *
-     * @param int $packId the id of product which becomes the pack after it contains packed items
-     *
-     * @return UpdateProductPackCommand
-     */
-    public static function cleanPack(int $packId): self
-    {
-        return new self($packId, []);
-    }
-
-    /**
-     * Builds command to upsert pack with new products list.
+     * Builds command to replace pack with new products list.
      * Provided products will replace all previous products in the pack
      *
      * @param int $packId the id of product which becomes the pack after it contains packed items
@@ -69,15 +58,27 @@ class UpdateProductPackCommand
      *
      * @return UpdateProductPackCommand
      */
-    public static function upsertPack(int $packId, array $products): self
+    public static function replace(int $packId, array $products): self
     {
         if (empty($products)) {
-            throw new ProductPackException(
-                'Empty array of products provided. Use UpdateProductPackCommand::cleanPack to empty the pack.'
-            );
+            throw new LogicException(sprintf(
+                'Empty array of products provided. Use %s::deleteAll to delete all products from pack', self::class
+            ));
         }
 
         return new self($packId, $products);
+    }
+
+    /**
+     * Builds command to delete all products from the pack
+     *
+     * @param int $packId the id of product which becomes the pack after it contains packed items
+     *
+     * @return UpdateProductPackCommand
+     */
+    public static function deleteAll(int $packId): self
+    {
+        return new self($packId, []);
     }
 
     /**
@@ -119,7 +120,7 @@ class UpdateProductPackCommand
             $this->products[] = new QuantifiedProduct(
                 $product['product_id'],
                 $product['quantity'],
-                isset($product['combination_id']) ? $product['combination_id'] : null
+                (int) $product['combination_id'] ?? null
             );
         }
     }

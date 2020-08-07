@@ -72,7 +72,7 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
         $packId = $this->getSharedStorage()->get($packReference);
 
         try {
-            $this->getCommandBus()->handle(UpdateProductPackCommand::cleanPack($packId));
+            $this->getCommandBus()->handle(UpdateProductPackCommand::deleteAll($packId));
         } catch (ProductException $e) {
             $this->setLastException($e);
         }
@@ -167,7 +167,7 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
     private function upsertPack(int $packId, array $products): void
     {
         try {
-            $this->getCommandBus()->handle(UpdateProductPackCommand::upsertPack(
+            $this->getCommandBus()->handle(UpdateProductPackCommand::replace(
                 $packId,
                 $products
             ));
