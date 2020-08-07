@@ -8005,11 +8005,7 @@ class ProductCore extends ObjectModel
      */
     public function getEcotax($include_tax = true)
     {
-        $ecotax_rate = 0;
-
-        if ($include_tax) {
-            $ecotax_rate = (float) Tax::getProductEcotaxRate();
-        }
+        $ecotax_rate = $include_tax ? (float) Tax::getProductEcotaxRate() : 0;
 
         return  Tools::ps_round(
             (float) $this->ecotax * (1 + $ecotax_rate / 100),
