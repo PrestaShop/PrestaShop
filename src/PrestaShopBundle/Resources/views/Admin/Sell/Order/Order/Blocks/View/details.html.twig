@@ -39,8 +39,8 @@
   {{ 'Merchandise returns'|trans({}, 'Admin.Orderscustomers.Feature') }} ({{ orderForViewing.returns.orderReturns|length }})
 {% endset %}
 
-<div class="mt-2">
-  <ul class="nav nav nav-tabs d-print-none" role="tablist">
+<div id="orderTabs" class="mt-2">
+  <ul id="orderTabTitles" class="nav nav nav-tabs d-print-none" role="tablist">
     <li class="nav-item">
       <a class="nav-link active show" id="historyTab" data-toggle="tab" href="#historyTabContent" role="tab" aria-controls="historyTabContent" aria-expanded="true" aria-selected="false">
         <i class="material-icons">history</i>
@@ -67,7 +67,7 @@
     </li>
   </ul>
 
-  <div class="tab-content">
+  <div id="orderTabContents" class="tab-content">
     <div class="tab-pane d-print-block fade show active" id="historyTabContent" role="tabpanel" aria-labelledby="historyTab">
       {% embed '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/details_card.html.twig' %}
         {% block header %}
@@ -114,7 +114,7 @@
 {% set displayAdminOrderTabLink = renderhook('displayAdminOrderTabLink', {'id_order': orderForViewing.id}) %}
 {% set displayAdminOrderTabContent = renderhook('displayAdminOrderTabContent', {'id_order': orderForViewing.id}) %}
 {% if displayAdminOrderTabLink is not empty or displayAdminOrderTabContent is not empty%}
-  <div class="mt-2" id="order_hook_tabs">
+  <div id="orderHookTabs" class="mt-2" id="order_hook_tabs">
     <ul class="nav nav nav-tabs" role="tablist">
       {# Rendering of hook displayAdminOrderTabLink, we expect tab links #}
       {{ displayAdminOrderTabLink|raw }}
