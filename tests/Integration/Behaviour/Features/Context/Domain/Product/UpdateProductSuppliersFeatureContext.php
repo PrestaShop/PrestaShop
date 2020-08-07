@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 
 class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
 {
@@ -50,9 +49,8 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
     public function deleteAllProductSuppliers(string $productReference)
     {
         try {
-            $command = new UpdateProductSuppliersCommand($this->getSharedStorage()->get($productReference));
-            $command->setProductSuppliers([]);
-            $this->getCommandBus()->handle($command);
+            $productId = $this->getSharedStorage()->get($productReference);
+            $this->getCommandBus()->handle(UpdateProductSuppliersCommand::deleteAll($productId));
         } catch (ProductException $e) {
             $this->setLastException($e);
         }
@@ -94,10 +92,10 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
         }
 
         try {
-            $command = new UpdateProductSuppliersCommand($this->getSharedStorage()->get($productReference));
-            $command->setProductSuppliers($productSuppliers);
-
-            $productSupplierIds = $this->getCommandBus()->handle($command);
+            $productSupplierIds = $this->getCommandBus()->handle(UpdateProductSuppliersCommand::replace(
+                $this->getSharedStorage()->get($productReference),
+                $productSuppliers
+            ));
 
             Assert::assertSameSize(
                 $references,
@@ -119,16 +117,14 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      *
      * @param string $productReference
      * @param string $supplierReference
-     *
-     * @throws SupplierException
      */
-    public function updateProductDefaultSupplier(string $productReference, string $supplierReference)
+    public function updateOnlyProductDefaultSupplier(string $productReference, string $supplierReference)
     {
         try {
-            $command = new UpdateProductSuppliersCommand($this->getSharedStorage()->get($productReference));
-            $command->setDefaultSupplierId($this->getSharedStorage()->get($supplierReference));
-
-            $this->getCommandBus()->handle($command);
+            $this->getCommandBus()->handle(UpdateProductSuppliersCommand::updateOnlyDefault(
+                $this->getSharedStorage()->get($productReference),
+                $this->getSharedStorage()->get($supplierReference)
+            ));
         } catch (ProductException $e) {
             $this->setLastException($e);
         }
