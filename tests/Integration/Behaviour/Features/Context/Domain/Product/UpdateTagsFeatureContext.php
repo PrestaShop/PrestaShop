@@ -57,7 +57,13 @@ class UpdateTagsFeatureContext extends AbstractProductFeatureContext
         }
 
         try {
-            $this->getCommandBus()->handle(new UpdateProductTagsCommand($productId, $localizedTagsList));
+            if (empty($localizedTagsList)) {
+                $command = UpdateProductTagsCommand::deleteAll($productId);
+            } else {
+                $command = UpdateProductTagsCommand::replace($productId, $localizedTagsList);
+            }
+
+            $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {
             $this->setLastException($e);
         }
