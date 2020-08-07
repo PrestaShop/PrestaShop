@@ -85,6 +85,20 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @When I assign product :productReference to default category :categoryReference
+     *
+     * @param string $productReference
+     * @param string $categoryReference
+     */
+    public function updateOnlyDefaultCategory(string $productReference, string $categoryReference)
+    {
+        $this->assignProductToCategories(
+            $this->getSharedStorage()->get($productReference),
+            $this->getSharedStorage()->get($categoryReference)
+        );
+    }
+
+    /**
      * @Then product :productReference should be assigned to following categories:
      *
      * @param string $productReference

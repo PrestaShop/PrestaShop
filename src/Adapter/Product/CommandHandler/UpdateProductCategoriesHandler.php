@@ -83,7 +83,7 @@ final class UpdateProductCategoriesHandler extends AbstractProductHandler implem
      */
     private function updateOnlyDefaultCategory(Product $product, int $defaultCategoryId): void
     {
-        $currentProductCategories = Product::getProductCategories();
+        $currentProductCategories = array_map('intval', $product->getCategories());
         $currentProductCategories[] = $defaultCategoryId;
 
         $this->updateCategories($product, $currentProductCategories);

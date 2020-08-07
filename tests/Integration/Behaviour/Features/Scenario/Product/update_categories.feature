@@ -98,4 +98,12 @@ Feature: Update product categories from Back Office (BO)
       And product product3 should be assigned to following categories:
         | categories       | [accessories] |
         | default category | accessories   |
-#    Scenario: Update only default category which exists, but is not yet assigned to product
+
+    Scenario: Update only default category which exists, but is not yet assigned to product
+      Given product product3 should be assigned to following categories:
+        | categories       | [accessories] |
+        | default category | accessories   |
+      When I assign product product3 to default category "men"
+      Then product product3 should be assigned to following categories:
+        | categories       | [accessories, men] |
+        | default category | men                |
