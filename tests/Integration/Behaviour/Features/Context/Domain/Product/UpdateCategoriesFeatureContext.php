@@ -75,6 +75,16 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @When I delete all categories from product :productReference except the default one
+     *
+     * @param string $productReference
+     */
+    public function deleteAllProductCategoriesExceptDefault(string $productReference)
+    {
+        $this->assignProductToCategories($this->getSharedStorage()->get($productReference));
+    }
+
+    /**
      * @Then product :productReference should be assigned to following categories:
      *
      * @param string $productReference
@@ -143,7 +153,7 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
      * @param int $defaultCategoryId
      * @param array $categoryIds
      */
-    private function assignProductToCategories(int $productId, int $defaultCategoryId, array $categoryIds): void
+    private function assignProductToCategories(int $productId, ?int $defaultCategoryId = null, array $categoryIds = []): void
     {
         try {
             if (empty($categoryIds) && !empty($defaultCategoryId)) {

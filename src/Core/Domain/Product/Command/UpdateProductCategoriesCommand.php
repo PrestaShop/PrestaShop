@@ -96,9 +96,9 @@ class UpdateProductCategoriesCommand
     }
 
     /**
-     * @return CategoryId
+     * @return CategoryId|null
      */
-    public function getDefaultCategoryId(): CategoryId
+    public function getDefaultCategoryId(): ?CategoryId
     {
         return $this->defaultCategoryId;
     }
