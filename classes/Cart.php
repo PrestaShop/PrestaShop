@@ -3704,7 +3704,7 @@ class CartCore extends ObjectModel
             $this->updateProductWeight($this->id);
         }
 
-        return self::$_totalWeight[(int) $this->id];
+        return (isset(self::$_totalWeight[$this->id]) ? self::$_totalWeight[$this->id] : 0);
     }
 
     /**
