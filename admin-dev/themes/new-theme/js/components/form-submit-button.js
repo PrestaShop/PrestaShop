@@ -81,7 +81,7 @@ export default class FormSubmitButton {
 
       const $form = $('<form>', {
         action: $btn.data('form-submit-url'),
-        method: method,
+        method,
       });
 
       if (addInput) {
