@@ -410,10 +410,10 @@ class AdminControllerCore extends Controller
     const AUTH_COOKIE_LIFETIME = 3600;
     
     /** @var array */
-    protected $_conf;
+    public $_conf;
 
     /** @var float @var */
-    protected $timer_start;
+    public $timer_start;
 
     public function __construct($forceControllerName = '', $default_theme_name = 'default')
     {
