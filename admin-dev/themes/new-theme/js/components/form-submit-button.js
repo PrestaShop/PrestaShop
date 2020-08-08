@@ -74,14 +74,14 @@ export default class FormSubmitButton {
           addInput = $('<input>', {
             type: '_hidden',
             name: '_method',
-            value: method,
+            value: btnMethod,
           });
         }
       }
 
       const $form = $('<form>', {
         action: $btn.data('form-submit-url'),
-        method: 'POST',
+        method: method,
       });
 
       if (addInput) {
