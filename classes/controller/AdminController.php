@@ -408,7 +408,7 @@ class AdminControllerCore extends Controller
 
     /** @var int Auth cookie lifetime */
     const AUTH_COOKIE_LIFETIME = 3600;
-    
+
     /** @var array */
     public $_conf;
 
