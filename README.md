@@ -126,6 +126,12 @@ You can discuss about e-commerce, help other merchants and get help, and contrib
 
 Thank you for downloading and using the PrestaShop Open Source e-commerce solution!
 
+Testing Powered by
+--------
+<a target="_blank" href="https://www.browserstack.com/"><img width="200" src="https://www.browserstack.com/images/layout/browserstack-logo-600x315.png"></a><br>
+[[BrowserStack Open-Source Program](https://www.browserstack.com/open-source)]<br>
+
+
 [available-features]: https://www.prestashop.com/en/online-store-builder
 [download]: https://www.prestashop.com/en/download
 [forums]: https://www.prestashop.com/forums/
