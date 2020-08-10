@@ -171,12 +171,12 @@ export default class OrderViewPage {
   }
 
   resetToolTips() {
-    $(OrderViewPageMap.productEditBtn).pstooltip();
+    $(OrderViewPageMap.productEditButtons).pstooltip();
     $(OrderViewPageMap.productDeleteBtn).pstooltip();
   }
 
   listenForProductEdit() {
-    $(OrderViewPageMap.productEditBtn).off('click').on('click', (event) => {
+    $(OrderViewPageMap.productEditButtons).off('click').on('click', (event) => {
       const $btn = $(event.currentTarget);
       this.orderProductRenderer.moveProductsPanelToModificationPosition();
       this.orderProductRenderer.editProductFromList(
