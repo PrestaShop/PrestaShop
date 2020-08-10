@@ -43,6 +43,8 @@ function makeQuery (url) {
         return;
     }
 
+    pendingQuery = true
+
     // We need to add a parameter to the URL
     // to make it different from the one we're on,
     // otherwise when you do "duplicate tab" under chrome
