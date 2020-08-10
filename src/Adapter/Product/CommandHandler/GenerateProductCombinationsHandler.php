@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\Combinatio
 use PrestaShop\PrestaShop\Core\Product\Generator\CombinationGeneratorInterface;
 use PrestaShopException;
 use Product;
+use SpecificPriceRule;
 
 /**
  * Handles @see GenerateProductCombinationsCommand using legacy object model
@@ -53,6 +54,7 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
 
     /**
      * {@inheritdoc}
+     *
      * @todo: multistore
      */
     public function handle(GenerateProductCombinationsCommand $command): array
@@ -60,7 +62,15 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
         $product = $this->getProduct($command->getProductId());
         $generatedCombinations = $this->combinationGenerator->generate($command->getGroupedAttributeIds());
 
-        return $this->addCombinations($product, $generatedCombinations);
+        SpecificPriceRule::disableAnyApplication();
+
+        $combinationIds = $this->addCombinations($product, $generatedCombinations);
+
+        Product::updateDefaultAttribute($product->id);
+        SpecificPriceRule::enableAnyApplication();
+        SpecificPriceRule::applyAllRules([$product->id]);
+
+        return $combinationIds;
     }
 
     /**
