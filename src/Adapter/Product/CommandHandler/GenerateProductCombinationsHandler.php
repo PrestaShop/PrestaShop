@@ -137,6 +137,7 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
             ));
         }
         $combinationId = (int) $newCombination->id;
+        //@todo: transaction to rollback if saveProductAttributeAssociation() doesn't succeed
         $this->saveProductAttributeAssociation($combinationId, $generatedCombination);
 
         return new CombinationId($combinationId);

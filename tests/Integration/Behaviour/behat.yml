@@ -229,3 +229,5 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\AttachmentFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\SpecificPricePrioritiesFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\RelatedProductsFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\AttributeGroupFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\AttributeFeatureContext

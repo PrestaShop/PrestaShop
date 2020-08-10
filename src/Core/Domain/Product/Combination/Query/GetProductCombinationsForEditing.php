@@ -26,25 +26,33 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query;
 
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetProductCombinations;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetProductCombinationsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Handles @see GetProductCombinations using legacy object model
+ * Retrieves product combinations
  */
-final class GetProductCombinationsHandler extends AbstractProductHandler implements GetProductCombinationsHandlerInterface
+class GetProductCombinationsForEditing
 {
     /**
-     * {@inheritdoc}
+     * @var ProductId
      */
-    public function handle(GetProductCombinations $query): array
+    private $productId;
+
+    /**
+     * @param int $productId
+     */
+    public function __construct(int $productId)
     {
-        $product = $this->getProduct($query->getProductId());
-        //@todo: allow pagination?
-        //@todo: format array to some DTO collection.
-        return $product->getAttributeCombinations();
+        $this->productId = new ProductId($productId);
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
     }
 }
