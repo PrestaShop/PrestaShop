@@ -62,9 +62,11 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockExcepti
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use PrestaShopCollection;
 use Product;
 use RuntimeException;
+use SpecificPrice;
 use stdClass;
 use Tax;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
@@ -1004,6 +1006,90 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $taxName,
             $orderReference
         ));
+    }
+
+    /**
+     * @Then product :productName in order :orderReference should have no specific price
+     *
+     * @param string $productName
+     * @param string $orderReference
+     */
+    public function assertNoSpecificPrice(string $productName, string $orderReference)
+    {
+        $productId = $this->getProductIdByName($productName);
+        // @todo: maybe manage combination as well
+        $combinationId = 0;
+        $orderId = $this->getSharedStorage()->get($orderReference);
+
+        $specificPriceId = $this->getSpecificPriceId($productId, $combinationId, $orderId);
+        Assert::assertNull(
+            $specificPriceId,
+            sprintf(
+                'Product %s from order %s should have no specific price',
+                $productName,
+                $orderReference
+            )
+        );
+    }
+
+    /**
+     * @Then /^product "(.*)" in order "(.*)" should have specific price (\d+\.\d+)$/
+     *
+     * @param string $productName
+     * @param string $orderReference
+     * @param float $expectedPrice
+     */
+    public function assertSpecificPrice(string $productName, string $orderReference, float $expectedPrice)
+    {
+        $productId = $this->getProductIdByName($productName);
+        // @todo: maybe manage combination as well
+        $combinationId = 0;
+        $orderId = $this->getSharedStorage()->get($orderReference);
+
+        $specificPriceId = $this->getSpecificPriceId($productId, $combinationId, $orderId);
+        Assert::assertNotNull(
+            $specificPriceId,
+            sprintf(
+                'Product %s from order %s should have specific price',
+                $productName,
+                $orderReference
+            )
+        );
+
+        $specificPrice = new SpecificPrice($specificPriceId);
+        Assert::assertEquals(
+            $expectedPrice,
+            $specificPrice->price
+        );
+        Assert::assertEquals('amount', $specificPrice->reduction_type);
+        Assert::assertFalse((bool) $specificPrice->reduction_tax);
+    }
+
+    /**
+     * @param int $productId
+     * @param int $combinationId
+     * @param int $orderId
+     *
+     * @return int|null
+     */
+    private function getSpecificPriceId(int $productId, int $combinationId, int $orderId): ?int
+    {
+        $order = new Order($orderId);
+
+        $specificPriceId = SpecificPrice::exists(
+            $productId,
+            $combinationId,
+            0,
+            0,
+            0,
+            $order->id_currency,
+            $order->id_customer,
+            1,
+            DateTime::NULL_VALUE,
+            DateTime::NULL_VALUE
+        );
+
+        return $specificPriceId ? (int) $specificPriceId : null;
     }
 
     /**
