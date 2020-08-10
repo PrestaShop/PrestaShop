@@ -133,9 +133,9 @@ Feature: Update product SEO options from Back Office (BO)
 
   Scenario: Update product SEO multi-lang fields
     Given language "french" with locale "fr-FR" exists
-    And product "product2" localized "meta_title" should be "en-US:product2 meta title;fr-FR:"
-    And product "product2" localized "meta_description" should be "en-US:product2 meta description;fr-FR:"
-    And product "product2" localized "link_rewrite" should be "en-US:waterproof-boots;fr-FR:"
+    And product "product2" localized "meta_title" should be "en-US:product2 meta title;fr-FR:product2 meta title"
+    And product "product2" localized "meta_description" should be "en-US:product2 meta description;fr-FR:product2 meta description"
+    And product "product2" localized "link_rewrite" should be "en-US:waterproof-boots;fr-FR:waterproof-boots"
     When I update product product2 SEO information with following values:
       | meta_title       | en-US:metatitl prod1;fr-FR:toolazytofindFRtrans meta title1           |
       | meta_description | en-US:product2 meta description;fr-FR:toolazytofindFRtrans meta desc1 |
