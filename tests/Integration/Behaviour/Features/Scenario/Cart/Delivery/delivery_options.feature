@@ -1,4 +1,8 @@
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart --tags delivery-options
+
 @reset-database-before-feature
+@delivery-options
+@clear-cache-after-feature
 Feature: Compute correct delivery options
   As a customer
   I should be provided relevant delivery options depending on my cart content and my customer profile
