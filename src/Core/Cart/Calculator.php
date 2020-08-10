@@ -27,7 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Cart;
 
 use Cart;
-use Context;
+use Currency;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use Tools;
 
 /**
@@ -87,7 +88,8 @@ class Calculator
         $this->cartRuleCalculator = new CartRuleCalculator();
 
         if (null === $computePrecision) {
-            $computePrecision = Context::getContext()->getComputingPrecision();
+            $currency = new Currency((int) $cart->id_currency);
+            $computePrecision = (new ComputingPrecision())->getPrecision($currency->precision);
         }
         $this->computePrecision = $computePrecision;
     }
