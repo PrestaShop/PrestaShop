@@ -72,7 +72,7 @@ class OrderStateController extends FrameworkBundleAdminController
             $this->addFlash(
                 'info',
                 $this->trans('Note that this page is available in all shops context only, this is why your context has just switched.',
-                    'Admin.Notifications.Success')
+                    'Admin.Notifications.Info')
             );
         }
 
@@ -123,7 +123,7 @@ class OrderStateController extends FrameworkBundleAdminController
             $this->addFlash(
                 'info',
                 $this->trans('Note that this feature is available in all shops context only. It will be added to all your stores.',
-                    'Admin.Notifications.Success')
+                    'Admin.Notifications.Info')
             );
         }
 
@@ -171,7 +171,7 @@ class OrderStateController extends FrameworkBundleAdminController
             $this->addFlash(
                 'info',
                 $this->trans('Note that this feature is available in all shops context only. It will be added to all your stores.',
-                    'Admin.Notifications.Success')
+                    'Admin.Notifications.Info')
             );
         }
 
@@ -224,7 +224,7 @@ class OrderStateController extends FrameworkBundleAdminController
             $this->addFlash(
                 'info',
                 $this->trans('Note that this feature is available in all shops context only. It will be added to all your stores.',
-                    'Admin.Notifications.Success')
+                    'Admin.Notifications.Info')
             );
         }
 
@@ -264,7 +264,7 @@ class OrderStateController extends FrameworkBundleAdminController
             $this->addFlash(
                 'info',
                 $this->trans('Note that this feature is available in all shops context only. It will be added to all your stores.',
-                    'Admin.Notifications.Success')
+                    'Admin.Notifications.Info')
             );
         }
 
