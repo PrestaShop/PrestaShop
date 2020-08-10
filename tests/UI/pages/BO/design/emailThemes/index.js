@@ -9,9 +9,8 @@ class EmailThemes extends BOBasePage {
     this.emailThemeConfigurationSuccessfulMessage = 'Email theme configuration saved successfully';
 
     // Configuration form selectors
-    this.configurationForm = 'form[action*=\'save-configuration\']';
-    this.defaultEmailThemeSelect = '#form_configuration_defaultTheme';
-    this.configurationFormSaveButton = `${this.configurationForm} .card-footer button`;
+    this.defaultEmailThemeSelect = '#form_defaultTheme';
+    this.configurationFormSaveButton = '#save-configuration-form';
 
     // Email Theme table selectors
     this.emailThemeTable = 'table.grid-table';
