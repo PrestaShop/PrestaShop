@@ -390,3 +390,11 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductCategoryUpdater
         arguments:
             - '@prestashop.adapter.product.repository.product_repository'
+
+    prestashop.adapter.product.command_handler.generate_product_combinations_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\GenerateProductCombinationsHandler
+        arguments:
+            - '@prestashop.core.product.combination_generator'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand
