@@ -62,6 +62,7 @@ class ProductCombinationFeatureContext extends AbstractProductFeatureContext
     public function assertProductCombinations(): void
     {
         //@TODO: implement
+        // Should ProductForEditing contain combinations? I suppose it should have dedicated query
     }
 
     /**
