@@ -31,17 +31,12 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult;
 /**
  * Transfers product combination data
  */
-class ProductCombination
+class ProductCombinationForEditing
 {
     /**
      * @var int
      */
     private $combinationId;
-
-    /**
-     * @var string
-     */
-    private $name;
 
     /**
      * @var CombinationAttributeInformation[]
@@ -50,17 +45,14 @@ class ProductCombination
 
     /**
      * @param int $combinationId
-     * @param string $name
      * @param array $attributesInformation
      * @todo: add additional properties when needed (for update command)
      */
     public function __construct(
         int $combinationId,
-        string $name,
         array $attributesInformation
     ) {
         $this->combinationId = $combinationId;
-        $this->name = $name;
         $this->attributesInformation = $attributesInformation;
     }
 
@@ -75,8 +67,17 @@ class ProductCombination
     /**
      * @return string
      */
-    public function getName(): string
+    public function buildCombinationName(): string
     {
-        return $this->name;
+        $combinedNames = [];
+        foreach ($this->attributesInformation as $combinationAttributeInformation) {
+            $combinedNames[] = sprintf(
+                '%s - %s',
+                $combinationAttributeInformation->getAttributeGroupName(),
+                $combinationAttributeInformation->getAttributeName()
+            );
+        }
+
+        return implode(', ', $combinedNames);
     }
 }
