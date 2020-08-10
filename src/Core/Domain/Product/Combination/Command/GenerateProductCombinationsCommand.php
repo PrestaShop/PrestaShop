@@ -70,7 +70,7 @@ class GenerateProductCombinationsCommand
     }
 
     /**
-     * @return int[]
+     * @return array
      */
     public function getGroupedAttributeIds(): array
     {
