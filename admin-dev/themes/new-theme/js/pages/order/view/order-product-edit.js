@@ -173,8 +173,8 @@ export default class OrderProductEdit {
   }
 
   handleEditProductWithConfirmationModal(event) {
-    const productId = $(`#orderProduct_${this.orderDetailId} ${OrderViewPageMap.productEditBtn}`).data('product-id');
-    const combinationId = $(`#orderProduct_${this.orderDetailId} ${OrderViewPageMap.productEditBtn}`).data('combination-id');
+    const productId = $(`#orderProduct_${this.orderDetailId} ${OrderViewPageMap.productEditButtons}`).data('product-id');
+    const combinationId = $(`#orderProduct_${this.orderDetailId} ${OrderViewPageMap.productEditButtons}`).data('combination-id');
 
     const productPriceMatch = this.orderPricesRefresher.checkOtherProductPricesMatch(this.priceTaxIncludedInput.val(), productId, combinationId);
 

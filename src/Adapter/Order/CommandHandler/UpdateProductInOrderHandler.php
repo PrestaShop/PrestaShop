@@ -62,7 +62,6 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
      * UpdateProductInOrderHandler constructor.
      *
      * @param OrderProductQuantityUpdater $orderProductQuantityUpdater
-     * @param OrderAmountUpdater $orderAmountUpdater
      */
     public function __construct(
         OrderProductQuantityUpdater $orderProductQuantityUpdater
