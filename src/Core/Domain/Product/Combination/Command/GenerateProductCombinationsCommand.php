@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 /**
  * Generates attribute combinations for product
  */
-class GenerateCombinationsCommand
+class GenerateProductCombinationsCommand
 {
     /**
      * @var ProductId
