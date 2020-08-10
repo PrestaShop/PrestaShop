@@ -53,6 +53,14 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
     private $combinationGenerator;
 
     /**
+     * @param CombinationGeneratorInterface $combinationGenerator
+     */
+    public function __construct(CombinationGeneratorInterface $combinationGenerator)
+    {
+        $this->combinationGenerator = $combinationGenerator;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @todo: multistore
