@@ -56,7 +56,7 @@ use Tag;
 /**
  * Handles the query GetEditableProduct using legacy ObjectModel
  */
-class GetProductForEditingHandler extends AbstractProductHandler implements GetProductForEditingHandlerInterface
+final class GetProductForEditingHandler extends AbstractProductHandler implements GetProductForEditingHandlerInterface
 {
     /**
      * @var NumberExtractor

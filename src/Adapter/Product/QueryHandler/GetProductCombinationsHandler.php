@@ -28,47 +28,23 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
-use Pack;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetPackedProducts;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetPackedProductsHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\PackedProduct;
+use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetProductCombinations;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetProductCombinationsHandlerInterface;
 
 /**
- * Handles GetPackedProducts query using legacy object model
+ * Handles @see GetProductCombinations using legacy object model
  */
-final class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
+final class GetProductCombinationsHandler extends AbstractProductHandler implements GetProductCombinationsHandlerInterface
 {
-    /**
-     * @var int
-     */
-    private $defaultLangId;
-
-    /**
-     * @param int $defaultLangId
-     */
-    public function __construct(int $defaultLangId)
-    {
-        $this->defaultLangId = $defaultLangId;
-    }
-
     /**
      * {@inheritdoc}
      */
-    public function handle(GetPackedProducts $query): array
+    public function handle(GetProductCombinations $query): array
     {
-        $packId = $query->getPackId()->getValue();
-
-        $packedItems = Pack::getItems($packId, $this->defaultLangId);
-
-        $packedProducts = [];
-        foreach ($packedItems as $packedItem) {
-            $packedProducts[] = new PackedProduct(
-                (int) $packedItem->id,
-                (int) $packedItem->pack_quantity,
-                (int) $packedItem->id_pack_product_attribute
-            );
-        }
-
-        return $packedProducts;
+        $product = $this->getProduct($query->getProductId());
+        //@todo: allow pagination?
+        //@todo: format array to some DTO collection.
+        return $product->getAttributeCombinations();
     }
 }
