@@ -34,6 +34,7 @@ use Iterator;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\GenerateProductCombinationsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Product\Generator\CombinationGeneratorInterface;
@@ -84,10 +85,11 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
             } catch (PrestaShopException $e) {
                 throw new CombinationException(
                     sprintf(
-                        'Failed to add combination for product #%d. Combination: %s',
+                        'Error occurred when trying to add combination for product #%d. Combination: %s',
                         $product->id,
                         var_export($generatedCombination, true)
-                    )
+                    ),
+                    $e
                 );
             }
         }
@@ -108,7 +110,14 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
         $newCombination->default_on = 0;
         $product->setAvailableDate();
 
-        $combinationId = (int) $newCombination->add();
+        if (!$newCombination->add()) {
+            throw new CannotAddCombinationException(sprintf(
+                'Failed adding new combination for product #%d. Combination: %s',
+                $product->id,
+                var_export($generatedCombination, true)
+            ));
+        }
+        $combinationId = (int) $newCombination->id;
         $this->saveProductAttributeAssociation($combinationId, $generatedCombination);
 
         return new CombinationId($combinationId);
