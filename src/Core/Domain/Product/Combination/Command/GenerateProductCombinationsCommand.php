@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\ValueObject\AttributeId;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\ValueObject\AttributeGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
@@ -41,19 +43,21 @@ class GenerateProductCombinationsCommand
     private $productId;
 
     /**
-     * @var int[]
+     * @var array
      */
     private $groupedAttributeIds;
 
     /**
      * @param int $productId
-     * @param int[] $groupedAttributeIds key-value pairs where key is the attribute group id and value is the list of that group attribute ids
+     * @param array $groupedAttributeIds key-value pairs where key is the attribute group id and value is the list of that group attribute ids
      */
     public function __construct(
         int $productId,
         array $groupedAttributeIds
     ) {
         $this->productId = new ProductId($productId);
+        //@todo: should I loop here and put to objects of AttributeGroupId and AttributeId?
+        //  (this would require another object because I wouldn't be able to keep AttributeGroupId(object) as array index
         $this->groupedAttributeIds = $groupedAttributeIds;
     }
 
