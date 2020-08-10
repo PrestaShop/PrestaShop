@@ -26,3 +26,4 @@ Feature: Generate attribute combinations for product in Back Office (BO)
     When I generate combinations for product product1 using following attributes:
       | size       | [s,m,l]                 |
       | color      | [white,black,blue,red]  |
+    Then product product1 should have following combinations:
