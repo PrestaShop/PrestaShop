@@ -478,3 +478,11 @@ services:
             - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.adapter.product.repository.stock_available_repository'
             - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_ADVANCED_STOCK_MANAGEMENT')"
+
+    prestashop.adapter.product.command_handler.generate_product_combinations_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\GenerateProductCombinationsHandler
+        arguments:
+            - '@prestashop.core.product.combination_generator'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand
