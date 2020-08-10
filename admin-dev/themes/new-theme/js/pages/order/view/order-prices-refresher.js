@@ -77,7 +77,6 @@ export default class OrderPricesRefresher {
       if (currentProductId != productId || currentCombinationId != combinationId) {
         return;
       }
-      console.log(productEditBtn.data('product-price-tax-incl'));
       if (givenPrice !== productEditBtn.data('product-price-tax-incl')) {
         unmatchingPriceExists = true;
       }
