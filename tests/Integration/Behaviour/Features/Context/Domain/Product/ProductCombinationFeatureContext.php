@@ -30,6 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetProductCombinationsForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -57,11 +58,13 @@ class ProductCombinationFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then product :productReference should have following combinations
+     * @Then product :productReference should have following combinations:
+     *
+     * @param string $productReference
      */
-    public function assertProductCombinations(): void
+    public function assertProductCombinations(string $productReference): void
     {
-        //@TODO: implement
+        $this->getQueryBus()->handle(new GetProductCombinationsForEditing($this->getSharedStorage()->get($productReference)));
         // Should ProductForEditing contain combinations? I suppose it should have dedicated query
     }
 

@@ -488,7 +488,7 @@ services:
               command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand
 
     prestashop.adapter.product.query_handler.get_product_combinations_handler:
-        class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductCombinationsHandler
+        class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductCombinationsForEditingHandler
         tags:
             - name: tactician.handler
-              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetProductCombinations
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetProductCombinationsForEditing
