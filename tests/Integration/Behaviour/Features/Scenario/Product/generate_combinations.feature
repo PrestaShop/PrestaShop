@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags generate-combinations
 @reset-database-before-feature
+@clear-cache-before-feature
 @generate-combinations
 Feature: Generate attribute combinations for product in Back Office (BO)
   As an employee
@@ -18,8 +19,10 @@ Feature: Generate attribute combinations for product in Back Office (BO)
     And attribute "red" named "Red" in en language exists
 
   Scenario: Generate product combinations
-    Given language "fr" with locale "fr-FR" exists
     When I add product "product1" with following information:
       | name       | en-US:universal T-shirt |
       | is_virtual | false                   |
     Then product product1 type should be standard
+    When I generate combinations for product product1 using following attributes:
+      | size       | [s,m,l]                 |
+      | color      | [white,black,blue,red]  |
