@@ -28,10 +28,17 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use Combination;
+use Db;
+use Iterator;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\GenerateProductCombinationsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Product\Generator\CombinationGeneratorInterface;
+use PrestaShopException;
+use Product;
 
 /**
  * Handles @see GenerateProductCombinationsCommand using legacy object model
@@ -48,6 +55,79 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
      */
     public function handle(GenerateProductCombinationsCommand $command): array
     {
-        // TODO: Implement handle() method.
+        $product = $this->getProduct($command->getProductId());
+        $generatedCombinations = $this->combinationGenerator->generate($command->getGroupedAttributeIds());
+
+        return $this->addCombinations($product, $generatedCombinations);
+    }
+
+    /**
+     * @param Product $product
+     * @param Iterator $generatedCombinations
+     *
+     * @return CombinationId[]
+     *
+     * @throws CombinationException
+     */
+    private function addCombinations(Product $product, Iterator $generatedCombinations): array
+    {
+        $addedCombinationIds = [];
+        foreach ($generatedCombinations as $generatedCombination) {
+            $combinationExists = $product->productAttributeExists($generatedCombination, false, null, true);
+
+            if ($combinationExists) {
+                continue;
+            }
+
+            try {
+                $addedCombinationIds[] = $this->addCombination($product, $generatedCombination);
+            } catch (PrestaShopException $e) {
+                throw new CombinationException(
+                    sprintf(
+                        'Failed to add combination for product #%d. Combination: %s',
+                        $product->id,
+                        var_export($generatedCombination, true)
+                    )
+                );
+            }
+        }
+
+        return $addedCombinationIds;
+    }
+
+    /**
+     * @param Product $product
+     * @param int[] $generatedCombination
+     *
+     * @return CombinationId
+     */
+    private function addCombination(Product $product, array $generatedCombination): CombinationId
+    {
+        $newCombination = new Combination();
+        $newCombination->id_product = $product->id;
+        $newCombination->default_on = 0;
+        $product->setAvailableDate();
+
+        $combinationId = (int) $newCombination->add();
+        $this->saveProductAttributeAssociation($combinationId, $generatedCombination);
+
+        return new CombinationId($combinationId);
+    }
+
+    /**
+     * @param int $combinationId
+     * @param array $attributeIds
+     */
+    private function saveProductAttributeAssociation(int $combinationId, array $attributeIds): void
+    {
+        $attributesList = [];
+        foreach ($attributeIds as $attributeId) {
+            $attributesList[] = [
+                'id_product_attribute' => $combinationId,
+                'id_attribute' => $attributeId,
+            ];
+        }
+
+        Db::getInstance()->insert('product_attribute_combination', $attributesList);
     }
 }
