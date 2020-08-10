@@ -53,6 +53,7 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
 
     /**
      * {@inheritdoc}
+     * @todo: multistore
      */
     public function handle(GenerateProductCombinationsCommand $command): array
     {
