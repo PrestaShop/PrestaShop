@@ -135,7 +135,7 @@ export default class OrderProductRenderer {
   }
 
   resetAllEditRows() {
-    $(OrderViewPageMap.productEditBtn).each((key, editButton) => {
+    $(OrderViewPageMap.productEditButtons).each((key, editButton) => {
       this.resetEditRow($(editButton).data('orderDetailId'));
     });
   }

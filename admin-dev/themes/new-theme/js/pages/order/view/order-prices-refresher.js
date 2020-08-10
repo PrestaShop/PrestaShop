@@ -49,16 +49,17 @@ export default class OrderPricesRefresher {
     $.ajax(this.router.generate('admin_orders_product_prices', {orderId}))
       .then((productPricesList) => {
         productPricesList.forEach((productPrices) => {
-          const orderProductTrId = '#orderProduct_' + productPrices.orderDetailId;
+          const orderProductTrId = OrderViewPageMap.productsTableRow(productPrices.orderDetailId);
           $(`${orderProductTrId} ${OrderViewPageMap.productEditUnitPrice}`).text(productPrices.unitPrice);
           $(`${orderProductTrId} ${OrderViewPageMap.productEditQuantity}`).text(productPrices.quantity);
           $(`${orderProductTrId} ${OrderViewPageMap.productEditAvailableQuantity}`).text(productPrices.availableQuantity);
           $(`${orderProductTrId} ${OrderViewPageMap.productEditTotalPrice}`).text(productPrices.totalPrice);
 
           // update order row price values
-          $(`${orderProductTrId} ${OrderViewPageMap.productEditBtn}`).data('product-price-tax-incl', productPrices.unitPriceTaxInclRaw);
-          $(`${orderProductTrId} ${OrderViewPageMap.productEditBtn}`).data('product-price-tax-excl', productPrices.unitPriceTaxExclRaw);
-          $(`${orderProductTrId} ${OrderViewPageMap.productEditBtn}`).data('product-quantity', productPrices.quantity);
+          const productEditButton = $(OrderViewPageMap.productEditBtn(productPrices.orderDetailId));
+          productEditButton.data('product-price-tax-incl', productPrices.unitPriceTaxInclRaw);
+          productEditButton.data('product-price-tax-excl', productPrices.unitPriceTaxExclRaw);
+          productEditButton.data('product-quantity', productPrices.quantity);
         });
       });
   }
@@ -67,15 +68,17 @@ export default class OrderPricesRefresher {
     const productRows = document.querySelectorAll('tr.cellProduct');
     let unmatchingPriceExists = false;
 
-    productRows.forEach((product) => {
-      const productEditBtn = document.querySelector(`#${product.id} ${OrderViewPageMap.productEditBtn}`);
-      const currentProductId = productEditBtn.dataset.productId;
-      const currentCombinationId = productEditBtn.dataset.combinationId;
+    productRows.forEach((productRow) => {
+      const productRowId = $(productRow).attr('id');
+      const productEditBtn = $(`#${productRowId} ${OrderViewPageMap.productEditButtons}`);
+      const currentProductId = productEditBtn.data('product-id');
+      const currentCombinationId = productEditBtn.data('combination-id');
 
       if (currentProductId != productId || currentCombinationId != combinationId) {
         return;
       }
-      if (givenPrice !== productEditBtn.dataset.productPriceTaxIncl) {
+      console.log(productEditBtn.data('product-price-tax-incl'));
+      if (givenPrice !== productEditBtn.data('product-price-tax-incl')) {
         unmatchingPriceExists = true;
       }
     });
