@@ -54,6 +54,7 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
             $products[] = [
                 'product_id' => $this->getSharedStorage()->get($productReference),
                 'quantity' => (int) $quantity,
+                'combination_id' => isset($data['combination']) ? $this->getSharedStorage()->get($data['combination']) : null,
             ];
         }
 
