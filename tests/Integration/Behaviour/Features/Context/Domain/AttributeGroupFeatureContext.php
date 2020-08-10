@@ -32,9 +32,8 @@ use AttributeGroup;
 use Language;
 use PHPUnit\Framework\Assert;
 use RuntimeException;
-use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
 
-class AttributeGroupFeatureContext extends AbstractProductFeatureContext
+class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
 {
     /**
      * @Given attribute group :reference named :name in :langIso language exists
@@ -51,7 +50,7 @@ class AttributeGroupFeatureContext extends AbstractProductFeatureContext
             throw new RuntimeException(sprintf('Language by iso code "%s" was not found', $langIso));
         }
 
-        $attributeGroups = AttributeGroup::getAttributesGroups($this->getDefaultLangId());
+        $attributeGroups = AttributeGroup::getAttributesGroups($langId);
         $foundGroupId = null;
 
         foreach ($attributeGroups as $attributeGroup) {
