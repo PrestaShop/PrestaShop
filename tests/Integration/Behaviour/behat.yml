@@ -228,6 +228,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductSuppliersFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateSeoFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStockFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\ProductCombinationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CategoryFeatureContext
