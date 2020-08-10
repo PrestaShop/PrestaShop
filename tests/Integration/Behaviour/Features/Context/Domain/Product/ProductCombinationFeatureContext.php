@@ -28,9 +28,59 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
-class ProductCombinationFeatureContext
+use Behat\Gherkin\Node\TableNode;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
+
+class ProductCombinationFeatureContext extends AbstractProductFeatureContext
 {
-    public function generateCombinations()
+    /**
+     * @When I generate combinations for product :productReference using following attributes:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function generateCombinations(string $productReference, TableNode $table): void
     {
+        $tableData = $table->getRowsHash();
+        $groupedAttributeIds = $this->parseGroupedAttributeIds($tableData);
+
+        try {
+            $this->getCommandBus()->handle(new GenerateProductCombinationsCommand(
+                $this->getSharedStorage()->get($productReference),
+                $groupedAttributeIds
+            ));
+        } catch (ProductException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then product :productReference should have following combinations
+     */
+    public function assertProductCombinations(): void
+    {
+        //@TODO: implement
+    }
+
+    /**
+     * @param array $tableData
+     *
+     * @return array
+     */
+    private function parseGroupedAttributeIds(array $tableData): array
+    {
+        $groupedAttributeIds = [];
+        foreach ($tableData as $attributeGroupReference => $attributeReferences) {
+            $attributeIds = [];
+            foreach (PrimitiveUtils::castStringArrayIntoArray($attributeReferences) as $attributeReference) {
+                $attributeIds[] = $this->getSharedStorage()->get($attributeReference);
+            }
+
+            $groupedAttributeIds[$this->getSharedStorage()->get($attributeGroupReference)] = $attributeIds;
+        }
+
+        return $groupedAttributeIds;
     }
 }
