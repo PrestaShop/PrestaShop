@@ -3704,7 +3704,7 @@ class CartCore extends ObjectModel
             $this->updateProductWeight($this->id);
         }
 
-        return (float) (self::$_totalWeight[(int) $this->id] ?? 0);
+        return self::$_totalWeight[(int) $this->id] ?? 0;
     }
 
     /**
