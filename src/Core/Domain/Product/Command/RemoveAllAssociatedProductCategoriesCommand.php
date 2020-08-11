@@ -24,17 +24,35 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteAllProductCategoriesCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Defines contract to handle @see DeleteAllProductCategoriesCommand
+ * Removes all product-category associations
  */
-interface DeleteAllProductCategoriesHandlerInterface
+class RemoveAllAssociatedProductCategoriesCommand
 {
     /**
-     * @param DeleteAllProductCategoriesCommand $command
+     * @var ProductId
      */
-    public function handle(DeleteAllProductCategoriesCommand $command): void;
+    private $productId;
+
+    /**
+     * @param int $productId
+     */
+    public function __construct(int $productId)
+    {
+        $this->productId = new ProductId($productId);
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
+    }
 }

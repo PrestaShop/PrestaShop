@@ -29,13 +29,13 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductCategoryHandler;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteAllProductCategoriesCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\DeleteAllProductCategoriesHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductCategoriesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\RemoveAllAssociatedProductCategoriesHandlerInterface;
 
 /**
- * Handles @see DeleteAllProductCategoriesCommand using legacy object model
+ * Handles @see RemoveAllAssociatedProductCategoriesCommand using legacy object model
  */
-final class DeleteAllProductCategoriesHandler extends AbstractProductCategoryHandler implements DeleteAllProductCategoriesHandlerInterface
+final class RemoveAllAssociatedProductCategoriesHandler extends AbstractProductCategoryHandler implements RemoveAllAssociatedProductCategoriesHandlerInterface
 {
     /**
      * @var int
@@ -53,7 +53,7 @@ final class DeleteAllProductCategoriesHandler extends AbstractProductCategoryHan
     /**
      * {@inheritdoc}
      */
-    public function handle(DeleteAllProductCategoriesCommand $command): void
+    public function handle(RemoveAllAssociatedProductCategoriesCommand $command): void
     {
         $product = $this->getProduct($command->getProductId());
 

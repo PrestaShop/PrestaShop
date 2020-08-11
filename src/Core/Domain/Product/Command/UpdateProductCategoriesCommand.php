@@ -109,9 +109,9 @@ class UpdateProductCategoriesCommand
     {
         if (empty($categoryIds)) {
             throw new RuntimeException(sprintf(
-                'Empty categoryIds provided in %s, use %s to delete categories',
+                'Empty categoryIds provided in %s. To remove categories use %s.',
                 self::class,
-                DeleteAllProductCategoriesCommand::class
+                RemoveAllAssociatedProductCategoriesCommand::class
             ));
         }
     }

@@ -30,7 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteAllProductCategoriesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
@@ -109,7 +109,7 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
     public function deleteAllProductCategoriesExceptDefault(string $productReference)
     {
         try {
-            $this->getCommandBus()->handle(new DeleteAllProductCategoriesCommand($this->getSharedStorage()->get($productReference)));
+            $this->getCommandBus()->handle(new RemoveAllAssociatedProductCategoriesCommand($this->getSharedStorage()->get($productReference)));
         } catch (ProductException $e) {
             $this->setLastException($e);
         }
