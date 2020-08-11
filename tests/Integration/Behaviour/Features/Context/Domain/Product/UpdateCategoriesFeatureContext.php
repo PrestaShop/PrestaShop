@@ -30,6 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteAllProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
@@ -98,6 +99,20 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
 
         Assert::assertEquals($expectedDefaultCategoryId, $actualDefaultCategoryId, 'Unexpected default category assigned to product');
         Assert::assertEquals($actualCategoryIds, $expectedCategoryIds, 'Unexpected categories assigned to product');
+    }
+
+    /**
+     * @When I delete all categories from product :productReference
+     *
+     * @param string $productReference
+     */
+    public function deleteAllProductCategoriesExceptDefault(string $productReference)
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteAllProductCategoriesCommand($this->getSharedStorage()->get($productReference)));
+        } catch (ProductException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
