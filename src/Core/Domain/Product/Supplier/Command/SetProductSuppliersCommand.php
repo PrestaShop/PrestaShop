@@ -99,7 +99,7 @@ class SetProductSuppliersCommand
     {
         if (empty($productSuppliers)) {
             throw new RuntimeException(sprintf(
-                'Empty array of product suppliers provided in %s. To delete all product suppliers use %s.',
+                'Empty array of product suppliers provided in %s. To remove all product suppliers use %s.',
                 self::class,
                 RemoveAllAssociatedProductSuppliersCommand::class
             ));
