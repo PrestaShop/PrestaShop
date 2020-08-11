@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use Combination;
 use Db;
+use Doctrine\DBAL\Connection;
 use Iterator;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
@@ -53,11 +54,28 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
     private $combinationGenerator;
 
     /**
-     * @param CombinationGeneratorInterface $combinationGenerator
+     * @var Connection
      */
-    public function __construct(CombinationGeneratorInterface $combinationGenerator)
-    {
+    private $connection;
+
+    /**
+     * @var string
+     */
+    private $dbPrefix;
+
+    /**
+     * @param CombinationGeneratorInterface $combinationGenerator
+     * @param Connection $connection
+     * @param string $dbPrefix
+     */
+    public function __construct(
+        CombinationGeneratorInterface $combinationGenerator,
+        Connection $connection,
+        string $dbPrefix
+    ) {
         $this->combinationGenerator = $combinationGenerator;
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
     }
 
     /**
@@ -127,6 +145,8 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
         $newCombination = new Combination();
         $newCombination->id_product = $product->id;
         $newCombination->default_on = 0;
+
+        $this->connection->beginTransaction();
         $product->setAvailableDate();
 
         if (!$newCombination->add()) {
@@ -137,8 +157,9 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
             ));
         }
         $combinationId = (int) $newCombination->id;
-        //@todo: transaction to rollback if saveProductAttributeAssociation() doesn't succeed
+
         $this->saveProductAttributeAssociation($combinationId, $generatedCombination);
+        $this->connection->commit();
 
         return new CombinationId($combinationId);
     }
@@ -157,6 +178,16 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
             ];
         }
 
-        Db::getInstance()->insert('product_attribute_combination', $attributesList);
+        try {
+            if (!Db::getInstance()->insert('product_attribute_combination', $attributesList)) {
+                $this->connection->rollBack();
+
+                throw new CannotAddCombinationException('Failed saving product-combination associations');
+            }
+        } catch (PrestaShopException $e) {
+            $this->connection->rollBack();
+
+            throw new CannotAddCombinationException('Failed saving product-combination associations', 0, $e);
+        }
     }
 }
