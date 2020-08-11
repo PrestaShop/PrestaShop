@@ -11,26 +11,42 @@ class SeoAndUrls extends BOBasePage {
     this.addNewSeoPageLink = '#page-header-desc-configuration-add';
     this.successfulSettingsUpdateMessage = 'The settings have been successfully updated.';
 
-    // Selectors grid panel
+    // Grid selectors
     this.gridPanel = '#meta_grid_panel';
     this.gridTable = '#meta_grid_table';
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
+
+    // Sort Selectors
+    this.tableHead = `${this.gridPanel} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+
     // Filters
     this.filterColumn = filterBy => `${this.gridTable} #meta_${filterBy}`;
     this.filterSearchButton = `${this.gridTable} button[name='meta[actions][search]']`;
     this.filterResetButton = `${this.gridTable} button[name='meta[actions][reset]']`;
+
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
+
     // Actions buttons in Row
     this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
     this.editRowLink = row => `${this.actionsColumn(row)} a[href*='/edit']`;
     this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
     this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-url*='/delete']`;
-    // Set up URL form
+
+    // Pagination selectors
+    this.paginationLimitSelect = '#paginator_select_page_limit';
+    this.paginationLabel = `${this.gridPanel} .col-form-label`;
+    this.paginationNextLink = `${this.gridPanel} #pagination_next_url`;
+    this.paginationPreviousLink = `${this.gridPanel} [aria-label='Previous']`;
+
+
+    // Set up URL form selectors
     this.switchFriendlyUrlLabel = toggle => `label[for='meta_settings_form_set_up_urls_friendly_url_${toggle}']`;
     this.switchAccentedUrlLabel = toggle => `label[for='meta_settings_form_set_up_urls_accented_url_${toggle}']`;
     this.saveSeoAndUrlFormButton = '#main-div form:nth-child(1) div:nth-child(1) div.card-footer button';
@@ -55,6 +71,22 @@ class SeoAndUrls extends BOBasePage {
    */
   async getTextColumnFromTable(page, row, column) {
     return this.getTextContent(page, this.tableColumn(row, column));
+  }
+
+  /**
+   * Get content from all rows
+   * @param page
+   * @param column
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(page, column) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable = [];
+    for (let row = 1; row <= rowsNumber; row++) {
+      const rowContent = await this.getTextColumnFromTable(page, row, column);
+      await allRowsContentTable.push(rowContent);
+    }
+    return allRowsContentTable;
   }
 
   /**
@@ -84,6 +116,25 @@ class SeoAndUrls extends BOBasePage {
     ]);
     await this.clickAndWaitForNavigation(page, this.deleteRowLink(row));
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
+  }
+
+  /* Sort functions */
+  /**
+   * Sort table by clicking on column name
+   * @param page
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page, sortBy, sortDirection) {
+    const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+    let i = 0;
+    while (await this.elementNotVisible(page, sortColumnDiv, 1000) && i < 2) {
+      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      i += 1;
+    }
+    await this.waitForVisibleSelector(page, sortColumnDiv);
   }
 
   /* Reset methods */
@@ -131,6 +182,48 @@ class SeoAndUrls extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
 
+  /* Pagination methods */
+  /**
+   * Get pagination label
+   * @param page
+   * @return {Promise<string>}
+   */
+  getPaginationLabel(page) {
+    return this.getTextContent(page, this.paginationLabel);
+  }
+
+  /**
+   * Select pagination limit
+   * @param page
+   * @param number
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page, number) {
+    await this.selectByVisibleText(page, this.paginationLimitSelect, number);
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on next
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on previous
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    return this.getPaginationLabel(page);
+  }
+
+  /* Form methods */
   /**
    * Enable/disable friendly url
    * @param page
