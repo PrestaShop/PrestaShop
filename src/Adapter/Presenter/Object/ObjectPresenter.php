@@ -30,6 +30,7 @@ use Exception;
 use Hook;
 use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
+use Product;
 
 class ObjectPresenter implements PresenterInterface
 {
@@ -53,7 +54,7 @@ class ObjectPresenter implements PresenterInterface
             $presentedObject[$fieldName] = $object->{$fieldName};
         }
 
-        if (get_class($object) === 'Product') {
+        if ($object instanceof Product) {
             $presentedObject['ecotax_tax_inc'] = $object->getEcotax();
         }
 
