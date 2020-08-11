@@ -74,6 +74,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.emailThemeLink = '#subtab-AdminParentMailTheme';
     // Pages
     this.pagesLink = '#subtab-AdminCmsContent';
+    // Positions
+    this.positionsLink = '#subtab-AdminModulesPositions';
     // Link widget
     this.linkWidgetLink = '#subtab-AdminLinkWidget';
 

@@ -33,7 +33,7 @@ namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 final class ComputingPrecision implements ComputingPrecisionInterface
 {
     const MULTIPLIER = 1;
-    const MINIMAL_VALUE = 2;
+    const MINIMAL_VALUE = 0;
 
     /**
      * {@inheritdoc}
