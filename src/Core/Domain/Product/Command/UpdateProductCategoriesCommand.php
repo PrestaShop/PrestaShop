@@ -28,9 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
-use LogicException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use RuntimeException;
 
 /**
  * Updates product-category associations
@@ -108,7 +108,7 @@ class UpdateProductCategoriesCommand
     private function assertCategoryIdsAreNotEmpty(array $categoryIds): void
     {
         if (empty($categoryIds)) {
-            throw new LogicException(sprintf(
+            throw new RuntimeException(sprintf(
                 'Empty categoryIds provided in %s, use %s to delete categories',
                 self::class,
                 DeleteAllProductCategoriesCommand::class
