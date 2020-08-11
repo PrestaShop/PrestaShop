@@ -125,8 +125,8 @@ describe('Update exchange rate', async () => {
     it('should click on Update exchange rate button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickUpdateExchangeRates', baseContext);
 
-      // Click update exchange rates button and check successful message
-      const textResult = await currenciesPage.clickUpdateExchangeRates(page);
+      // Click on update exchange rates button and check successful message
+      const textResult = await currenciesPage.updateExchangeRate(page);
       await expect(textResult).to.contains(currenciesPage.successfulUpdateMessage);
     });
 

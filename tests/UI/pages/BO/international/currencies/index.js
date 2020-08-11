@@ -203,7 +203,7 @@ class Currencies extends LocalizationBasePage {
    * @param page
    * @returns {Promise<string>}
    */
-  async clickUpdateExchangeRates(page) {
+  async updateExchangeRate(page) {
     await this.clickAndWaitForNavigation(page, this.updateExchangeRatesButton);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
