@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
+use LogicException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
@@ -55,14 +56,9 @@ class UpdateProductCategoriesCommand
      */
     public function __construct(int $productId, int $defaultCategoryId, array $categoryIds)
     {
+        $this->setCategoryIds($categoryIds);
         $this->defaultCategoryId = new CategoryId($defaultCategoryId);
         $this->productId = new ProductId($productId);
-
-        $this->categoryIds = array_map(
-            function ($id) {
-                return new CategoryId($id);
-            }, $categoryIds
-        );
     }
 
     /**
@@ -87,5 +83,34 @@ class UpdateProductCategoriesCommand
     public function getCategoryIds(): array
     {
         return $this->categoryIds;
+    }
+
+    /**
+     * @param int[] $categoryIds
+     */
+    private function setCategoryIds(array $categoryIds): void
+    {
+        $this->assertCategoryIdsAreNotEmpty($categoryIds);
+
+        $this->categoryIds = array_map(
+            function ($id) {
+                return new CategoryId($id);
+            }, $categoryIds
+        );
+    }
+
+    /**
+     * @param int[] $categoryIds
+     */
+    private function assertCategoryIdsAreNotEmpty(array $categoryIds)
+    {
+        if (empty($categoryIds)) {
+            throw new LogicException(sprintf(
+                'Empty categoryIds provided in %s, use %s to delete categories',
+                self::class,
+                //@todo:
+                '@todo: DeleteProductCategories command:class'
+            ));
+        }
     }
 }
