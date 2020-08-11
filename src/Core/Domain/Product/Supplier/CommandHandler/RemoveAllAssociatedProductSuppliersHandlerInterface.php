@@ -26,15 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\DeleteAllProductSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
 
 /**
- * Defines contract to handle @see DeleteAllProductSuppliersCommand
+ * Defines contract to handle @see RemoveAllAssociatedProductSuppliersCommand
  */
-interface DeleteAllProductSuppliersHandlerInterface
+interface RemoveAllAssociatedProductSuppliersHandlerInterface
 {
     /**
-     * @param DeleteAllProductSuppliersCommand $command
+     * @param RemoveAllAssociatedProductSuppliersCommand $command
      */
-    public function handle(DeleteAllProductSuppliersCommand $command): void;
+    public function handle(RemoveAllAssociatedProductSuppliersCommand $command): void;
 }
