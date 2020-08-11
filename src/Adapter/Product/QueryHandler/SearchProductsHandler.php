@@ -158,8 +158,9 @@ final class SearchProductsHandler extends AbstractOrderHandler implements Search
         ?Order $order = null,
         ?Address $address = null
     ): FoundProduct {
-        $priceTaxExcluded = $this->getProductPriceForOrder((int) $product->id, 0, false, $computingPrecision, $order);
-        $priceTaxIncluded = $this->getProductPriceForOrder((int) $product->id, 0, true, $computingPrecision, $order);
+        // It's important to use null (not 0) as attribute ID so that Product::priceCalculation can fallback to default combination
+        $priceTaxExcluded = $this->getProductPriceForOrder((int) $product->id, null, false, $computingPrecision, $order);
+        $priceTaxIncluded = $this->getProductPriceForOrder((int) $product->id, null, true, $computingPrecision, $order);
         $product->loadStockData();
 
         return new FoundProduct(
@@ -255,7 +256,7 @@ final class SearchProductsHandler extends AbstractOrderHandler implements Search
 
     /**
      * @param int $productId
-     * @param int $productAttributeId
+     * @param int|null $productAttributeId
      * @param bool $withTaxes
      * @param int $computingPrecision
      * @param Order|null $order
@@ -264,10 +265,10 @@ final class SearchProductsHandler extends AbstractOrderHandler implements Search
      */
     private function getProductPriceForOrder(
         int $productId,
-        int $productAttributeId,
+        ?int $productAttributeId,
         bool $withTaxes,
         int $computingPrecision,
-        ?Order $order = null)
+        ?Order $order)
     {
         if (null === $order) {
             return Product::getPriceStatic($productId, $withTaxes, $productAttributeId, $computingPrecision);
