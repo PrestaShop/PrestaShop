@@ -65,7 +65,7 @@ class SetProductSuppliersCommand
     {
         $this->setProductSuppliers($productSuppliers);
         $this->productId = new ProductId($productId);
-        $this->defaultSupplierId = $defaultSupplierId;
+        $this->defaultSupplierId = new SupplierId($defaultSupplierId);
     }
 
     /**
@@ -97,13 +97,11 @@ class SetProductSuppliersCommand
      */
     private function setProductSuppliers(array $productSuppliers): void
     {
-        // empty array is handled differently than null.
         if (empty($productSuppliers)) {
             throw new RuntimeException(sprintf(
-                'Empty array of product suppliers provided in %s. To remove all product suppliers use %s.',
+                'Empty array of product suppliers provided in %s. To delete all product suppliers use %s.',
                 self::class,
-                //@todo: RemoveAllProductSuppliersCommand::class
-                'RemoveAllProductSuppliersCommand'
+                DeleteAllProductSuppliersCommand::class
             ));
         }
 

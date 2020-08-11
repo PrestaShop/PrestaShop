@@ -36,11 +36,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplier
 class ProductSupplierId
 {
     /**
-     * Indicates that no product supplier is assigned
-     */
-    const NO_PRODUCT_SUPPLIER = 0;
-
-    /**
      * @var int
      */
     private $value;
