@@ -64,17 +64,21 @@ export default class OrderPricesRefresher {
       });
   }
 
-  checkOtherProductPricesMatch(givenPrice, productId, combinationId) {
+  checkOtherProductPricesMatch(givenPrice, productId, combinationId, orderDetailId) {
     const productRows = document.querySelectorAll('tr.cellProduct');
     let unmatchingPriceExists = false;
 
     productRows.forEach((productRow) => {
       const productRowId = $(productRow).attr('id');
+      // No need to check edited row (especially if it's the only one for this product)
+      if (orderDetailId && productRowId === `orderProduct_${orderDetailId}`) {
+        return;
+      }
       const productEditBtn = $(`#${productRowId} ${OrderViewPageMap.productEditButtons}`);
       const currentProductId = productEditBtn.data('product-id');
       const currentCombinationId = productEditBtn.data('combination-id');
 
-      if (currentProductId != productId || currentCombinationId != combinationId) {
+      if (currentProductId !== productId || currentCombinationId !== combinationId) {
         return;
       }
       if (givenPrice !== productEditBtn.data('product-price-tax-incl')) {
