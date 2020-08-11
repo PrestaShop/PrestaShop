@@ -261,24 +261,6 @@ abstract class AbstractOrderHandler
     }
 
     /**
-     * Clean all the specific prices that were created but this handler
-     *
-     * @param SpecificPrice[] $temporarySpecificPrices
-     *
-     * @throws \PrestaShopException
-     */
-    protected function clearTemporarySpecificPrices(array $temporarySpecificPrices): void
-    {
-        if (empty($temporarySpecificPrices)) {
-            return;
-        }
-
-        foreach ($temporarySpecificPrices as $specificPrice) {
-            $specificPrice->delete();
-        }
-    }
-
-    /**
      * Create a specific price, or update it if it already exists
      *
      * @param Number $priceTaxIncluded
