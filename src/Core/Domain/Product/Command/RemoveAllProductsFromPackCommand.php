@@ -41,9 +41,9 @@ class RemoveAllProductsFromPackCommand
     private $packId;
 
     /**
-     * @param ProductId $packId
+     * @param int $packId
      */
-    public function __construct(ProductId $packId)
+    public function __construct(int $packId)
     {
         $this->packId = new ProductId($packId);
     }
