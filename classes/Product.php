@@ -124,7 +124,11 @@ class ProductCore extends ObjectModel
     /** @var string Reference */
     public $reference;
 
-    /** @var string Supplier Reference */
+    /**
+     * @var string Supplier Reference
+     *
+     * @deprecated since 1.7.7.0
+     */
     public $supplier_reference;
 
     /** @var string Location */
@@ -7999,17 +8003,51 @@ class ProductCore extends ObjectModel
     }
 
     /**
+     * Update default supplier data
+     *
+     * @param int $idSupplier
+     * @param float $wholesalePrice
+     * @param string $supplierReference
+     *
+     * @return bool
+     */
+    public function updateDefaultSupplierData(int $idSupplier, string $supplierReference, float $wholesalePrice): bool
+    {
+        if (!$this->id) {
+            return false;
+        }
+
+        $sql = 'UPDATE `' . _DB_PREFIX_ . 'product` ' .
+             'SET ' .
+             'id_supplier = %d, ' .
+             'supplier_reference = "%s", ' .
+             'wholesale_price = "%s" ' .
+             'WHERE id_product = %d';
+
+        return Db::getInstance()->execute(
+            sprintf(
+                $sql,
+                $idSupplier,
+                pSQL($supplierReference),
+                $wholesalePrice,
+                $this->id
+            )
+        );
+    }
+
+    /**
      * Get Product ecotax
      *
      * @return ecotax
      */
-    public function getEcotax($include_tax = true)
+    public function getEcotax($precision = null, $include_tax = true)
     {
+        $precision = $precision ? $precision : Context::getContext()->currency->precision;
         $ecotax_rate = $include_tax ? (float) Tax::getProductEcotaxRate() : 0;
 
         return  Tools::ps_round(
             (float) $this->ecotax * (1 + $ecotax_rate / 100),
-            Context::getContext()->currency->precision,
+            $precision,
             null
         );
     }
