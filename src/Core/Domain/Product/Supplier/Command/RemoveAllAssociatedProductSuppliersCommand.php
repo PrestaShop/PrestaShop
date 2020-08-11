@@ -31,9 +31,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Deletes all product suppliers for provided product
+ * Removes all product suppliers for provided product
  */
-class DeleteAllProductSuppliersCommand
+class RemoveAllAssociatedProductSuppliersCommand
 {
     /**
      * @var ProductId

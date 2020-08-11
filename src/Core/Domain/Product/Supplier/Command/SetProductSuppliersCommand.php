@@ -101,7 +101,7 @@ class SetProductSuppliersCommand
             throw new RuntimeException(sprintf(
                 'Empty array of product suppliers provided in %s. To delete all product suppliers use %s.',
                 self::class,
-                DeleteAllProductSuppliersCommand::class
+                RemoveAllAssociatedProductSuppliersCommand::class
             ));
         }
 

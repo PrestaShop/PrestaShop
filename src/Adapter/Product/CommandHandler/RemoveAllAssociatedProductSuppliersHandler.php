@@ -29,16 +29,16 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductSupplierHandler;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\DeleteAllProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\DeleteProductSupplierCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\DeleteAllProductSuppliersHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\DeleteProductSupplierHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\RemoveAllAssociatedProductSuppliersHandlerInterface;
 use ProductSupplier;
 
 /**
- * Handles @see DeleteAllProductSuppliersCommand using legacy object model
+ * Handles @see RemoveAllAssociatedProductSuppliersCommand using legacy object model
  */
-final class DeleteAllProductSuppliersHandler extends AbstractProductSupplierHandler implements DeleteAllProductSuppliersHandlerInterface
+final class RemoveAllAssociatedProductSuppliersHandler extends AbstractProductSupplierHandler implements RemoveAllAssociatedProductSuppliersHandlerInterface
 {
     /**
      * @var DeleteProductSupplierHandlerInterface
@@ -57,7 +57,7 @@ final class DeleteAllProductSuppliersHandler extends AbstractProductSupplierHand
     /**
      * {@inheritdoc}
      */
-    public function handle(DeleteAllProductSuppliersCommand $command): void
+    public function handle(RemoveAllAssociatedProductSuppliersCommand $command): void
     {
         $product = $this->getProduct($command->getProductId());
 
