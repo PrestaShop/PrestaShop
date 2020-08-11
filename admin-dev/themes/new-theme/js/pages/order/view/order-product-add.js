@@ -194,16 +194,6 @@ export default class OrderProductAdd {
       const combinationId = typeof $(':selected', this.combinationsSelect).val() === 'undefined' ? 0 : $(':selected', this.combinationsSelect).val();
       const productPriceMatch = this.orderPricesRefresher.checkOtherProductPricesMatch(this.priceTaxIncludedInput.val(), this.productIdInput.val(), combinationId);
 
-      const modalEditPrice = new ConfirmModal({
-        id: 'modal-confirm-new-price',
-        confirmTitle: this.invoiceSelect.data('modal-edit-price-title'),
-        confirmMessage: this.invoiceSelect.data('modal-edit-price-body'),
-        confirmButtonLabel: this.invoiceSelect.data('modal-edit-price-apply'),
-        closeButtonLabel: this.invoiceSelect.data('modal-edit-price-cancel'),
-      }, () => {
-        this.addProduct(orderId);
-      });
-
       const modal = new ConfirmModal({
         id: 'modal-confirm-new-invoice',
         confirmTitle: this.invoiceSelect.data('modal-title'),
@@ -212,6 +202,15 @@ export default class OrderProductAdd {
         closeButtonLabel: this.invoiceSelect.data('modal-cancel'),
       }, () => {
         if (!productPriceMatch) {
+          const modalEditPrice = new ConfirmModal({
+            id: 'modal-confirm-new-price',
+            confirmTitle: this.invoiceSelect.data('modal-edit-price-title'),
+            confirmMessage: this.invoiceSelect.data('modal-edit-price-body'),
+            confirmButtonLabel: this.invoiceSelect.data('modal-edit-price-apply'),
+            closeButtonLabel: this.invoiceSelect.data('modal-edit-price-cancel'),
+          }, () => {
+            this.addProduct(orderId);
+          });
           modalEditPrice.show();
         } else {
           this.addProduct(orderId);
