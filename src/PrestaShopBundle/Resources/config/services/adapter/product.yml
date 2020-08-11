@@ -130,6 +130,12 @@ services:
         - name: tactician.handler
           command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCategoriesCommand
 
+    prestashop.adapter.product.command_handler.delete_all_product_categories_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DeleteAllProductCategoriesHandler
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteAllProductCategoriesCommand
+
     prestashop.adapter.product.command_handler.add_customization_field_handler:
       class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddCustomizationFieldHandler
       tags:
