@@ -44,7 +44,6 @@ use Order;
 use OrderCarrier;
 use OrderDetail;
 use OrderInvoice;
-use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
@@ -55,7 +54,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\AddProductToO
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use Product;
 use Shop;
-use SpecificPrice;
 use StockAvailable;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
@@ -236,39 +234,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         );
 
         return $orderDetail;
-    }
-
-    /**
-     * @param Order $order
-     * @param Cart $cart
-     *
-     * @return SpecificPrice[]
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
-     */
-    private function restoreOrderProductsSpecificPrices(Order $order, Cart $cart): array
-    {
-        $specificPrices = [];
-        foreach ($order->getOrderDetailList() as $row) {
-            $orderDetail = new OrderDetail($row['id_order_detail']);
-            $product = new Product((int) $orderDetail->product_id);
-
-            $specificPrice = $this->createSpecificPriceIfNeeded(
-                new Number((string) $orderDetail->unit_price_tax_incl),
-                new Number((string) $orderDetail->unit_price_tax_excl),
-                $order,
-                $cart,
-                $product,
-                new Combination($orderDetail->product_attribute_id)
-            );
-
-            if (null !== $specificPrice) {
-                $specificPrices[] = $specificPrice;
-            }
-        }
-
-        return $specificPrices;
     }
 
     /**
