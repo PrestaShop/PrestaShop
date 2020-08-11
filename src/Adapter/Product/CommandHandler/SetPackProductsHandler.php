@@ -65,7 +65,7 @@ final class SetPackProductsHandler extends AbstractProductHandler implements Set
         }
 
         //reset cache_default_attribute
-        $pack->setDefaultAttribute(0);
+        $pack->setDefaultAttribute(CombinationId::NO_COMBINATION);
 
         foreach ($productsForPacking as $productForPacking) {
             $productId = $productForPacking->getProductId()->getValue();
