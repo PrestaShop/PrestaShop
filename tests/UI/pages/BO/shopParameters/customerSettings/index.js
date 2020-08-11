@@ -11,6 +11,7 @@ class CustomerSettings extends BOBasePage {
 
     // Header selectors
     this.titlesSubtab = '#subtab-AdminGenders';
+    this.groupsSubtab = '#subtab-AdminGroups';
 
     // Form selectors
     this.generalForm = '#configuration_form';
@@ -28,12 +29,21 @@ class CustomerSettings extends BOBasePage {
   */
 
   /**
-   * Click on subtitle page
+   * Click on tab titles
    * @param page
    * @return {Promise<void>}
    */
   async goToTitlesPage(page) {
     await this.clickAndWaitForNavigation(page, this.titlesSubtab);
+  }
+
+  /**
+   * Click on tab groups
+   * @param page
+   * @return {Promise<void>}
+   */
+  async goToGroupsPage(page) {
+    await this.clickAndWaitForNavigation(page, this.groupsSubtab);
   }
 
   /**
