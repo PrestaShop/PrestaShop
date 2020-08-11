@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductExcep
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
@@ -52,7 +53,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
     public function deleteAllProductSuppliers(string $productReference)
     {
         try {
-            $command = new UpdateProductSuppliersCommand($this->getSharedStorage()->get($productReference));
+            $command = new SetProductSuppliersCommand($this->getSharedStorage()->get($productReference));
             $command->setProductSuppliers([]);
             $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {
@@ -96,7 +97,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
         }
 
         try {
-            $command = new UpdateProductSuppliersCommand($this->getSharedStorage()->get($productReference));
+            $command = new SetProductSuppliersCommand($this->getSharedStorage()->get($productReference));
             $command->setProductSuppliers($productSuppliers);
 
             $productSupplierIds = $this->getCommandBus()->handle($command);
@@ -127,7 +128,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
     public function updateProductDefaultSupplier(string $productReference, string $supplierReference)
     {
         try {
-            $command = new UpdateProductSuppliersCommand($this->getSharedStorage()->get($productReference));
+            $command = new SetProductSuppliersCommand($this->getSharedStorage()->get($productReference));
             $command->setDefaultSupplierId($this->getSharedStorage()->get($supplierReference));
 
             $this->getCommandBus()->handle($command);
