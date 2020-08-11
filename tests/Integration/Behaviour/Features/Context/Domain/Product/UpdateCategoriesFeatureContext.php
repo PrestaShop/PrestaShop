@@ -31,7 +31,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductCategoriesCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCategoriesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use RuntimeException;
@@ -161,7 +161,7 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
     private function assignProductToCategories(int $productId, int $defaultCategoryId, array $categoryIds): void
     {
         try {
-            $this->getCommandBus()->handle(new UpdateProductCategoriesCommand(
+            $this->getCommandBus()->handle(new SetAssociatedProductCategoriesCommand(
                 $productId,
                 $defaultCategoryId,
                 $categoryIds

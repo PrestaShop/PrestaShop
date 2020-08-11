@@ -30,18 +30,18 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductCategoryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCategoriesCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductCategoriesHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductCategoriesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\SetAssociatedProductCategoriesHandlerInterface;
 
 /**
- * Handles @var UpdateProductCategoriesCommand using legacy object model
+ * Handles @var SetAssociatedProductCategoriesCommand using legacy object model
  */
-final class UpdateProductCategoriesHandler extends AbstractProductCategoryHandler implements UpdateProductCategoriesHandlerInterface
+final class SetAssociatedProductCategoriesHandler extends AbstractProductCategoryHandler implements SetAssociatedProductCategoriesHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(UpdateProductCategoriesCommand $command): void
+    public function handle(SetAssociatedProductCategoriesCommand $command): void
     {
         $product = $this->getProduct($command->getProductId());
         $defaultCategoryId = $command->getDefaultCategoryId()->getValue();
@@ -56,11 +56,11 @@ final class UpdateProductCategoriesHandler extends AbstractProductCategoryHandle
      * append default category id to the list
      * and filter-out duplicate values
      *
-     * @param UpdateProductCategoriesCommand $command
+     * @param SetAssociatedProductCategoriesCommand $command
      *
      * @return int[]
      */
-    private function formatCategoryIdsList(UpdateProductCategoriesCommand $command): array
+    private function formatCategoryIdsList(SetAssociatedProductCategoriesCommand $command): array
     {
         $categoryIds = array_map(function (CategoryId $categoryId) {
             return $categoryId->getValue();

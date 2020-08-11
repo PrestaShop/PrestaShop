@@ -33,9 +33,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use RuntimeException;
 
 /**
- * Updates product-category associations
+ * Sets new product-category associations
  */
-class UpdateProductCategoriesCommand
+class SetAssociatedProductCategoriesCommand
 {
     /**
      * @var ProductId
