@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Cart;
-use CartRule;
 use OrderCartRule;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
