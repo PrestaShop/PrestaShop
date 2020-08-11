@@ -59,7 +59,7 @@ final class SetPackProductsHandler extends AbstractProductHandler implements Set
 
         if (false === Pack::deleteItems($packId)) {
             throw new ProductPackException(
-                sprintf('Failed deleting previous products from pack #%d before adding new ones', $packId),
+                sprintf('Failed removing previous products from pack #%d before adding new ones', $packId),
                 ProductPackException::FAILED_DELETING_PRODUCTS_FROM_PACK
             );
         }
