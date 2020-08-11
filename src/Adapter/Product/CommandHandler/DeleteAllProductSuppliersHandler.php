@@ -30,7 +30,10 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductSupplierHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\DeleteAllProductSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\DeleteProductSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\DeleteAllProductSuppliersHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\DeleteProductSupplierHandlerInterface;
+use ProductSupplier;
 
 /**
  * Handles @see DeleteAllProductSuppliersCommand using legacy object model
@@ -38,10 +41,28 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\DeleteAllP
 final class DeleteAllProductSuppliersHandler extends AbstractProductSupplierHandler implements DeleteAllProductSuppliersHandlerInterface
 {
     /**
+     * @var DeleteProductSupplierHandlerInterface
+     */
+    private $deleteProductSupplierHandler;
+
+    /**
+     * @param DeleteProductSupplierHandlerInterface $deleteProductSupplierHandler
+     */
+    public function __construct(
+        DeleteProductSupplierHandlerInterface $deleteProductSupplierHandler
+    ) {
+        $this->deleteProductSupplierHandler = $deleteProductSupplierHandler;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(DeleteAllProductSuppliersCommand $command): void
     {
-        // TODO: Implement handle() method.
+        $product = $this->getProduct($command->getProductId());
+
+        foreach (ProductSupplier::getSupplierCollection($product->id) as $productSupplier) {
+            $this->deleteProductSupplierHandler->handle(new DeleteProductSupplierCommand((int) $productSupplier->id));
+        }
     }
 }
