@@ -483,6 +483,8 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\GenerateProductCombinationsHandler
         arguments:
             - '@prestashop.core.product.combination_generator'
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand
