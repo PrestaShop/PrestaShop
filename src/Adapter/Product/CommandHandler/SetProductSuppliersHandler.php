@@ -234,20 +234,6 @@ final class SetProductSuppliersHandler extends AbstractProductHandler implements
     {
         $product = $this->getProduct($productId);
 
-        // if product has no combinations, assign default supplier_reference
-        if ($defaultSupplierId && !$product->hasCombinations()) {
-            $product->supplier_reference = ProductSupplierEntity::getProductSupplierReference(
-                $product->id,
-                0,
-                $defaultSupplierId
-            );
-            $this->fieldsToUpdate['supplier_reference'] = true;
-        // clear default supplier reference if there is no default supplier left
-        } elseif (!$defaultSupplierId) {
-            $product->supplier_reference = '';
-            $this->fieldsToUpdate['supplier_reference'] = true;
-        }
-
         $product->id_supplier = $defaultSupplierId;
         $this->fieldsToUpdate['id_supplier'] = true;
 
