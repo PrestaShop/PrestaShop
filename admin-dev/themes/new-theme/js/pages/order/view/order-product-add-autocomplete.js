@@ -29,6 +29,7 @@ const $ = window.$;
 
 export default class OrderProductAutocomplete {
   constructor(input) {
+    this.activeSearchRequest = null;
     this.router = new Router();
     this.input = input;
     this.results = [];
@@ -44,8 +45,15 @@ export default class OrderProductAutocomplete {
       event.stopImmediatePropagation();
       this.updateResults(this.results);
     });
-    this.input.on('keyup', event => this.search(event.currentTarget.value, $(event.currentTarget).data('currency'), $(event.currentTarget).data('order')));
+    this.input.on('keyup', event => this.delaySearch(event.currentTarget));
     $(document).on('click', () => this.dropdownMenu.hide());
+  }
+
+  delaySearch(input) {
+    clearTimeout(this.searchTimeoutId);
+    this.searchTimeoutId = setTimeout(() => {
+      this.search(input.value, $(input).data('currency'), $(input).data('order'));
+    }, 300);
   }
 
   search(search, currency, orderId) {
@@ -56,9 +64,13 @@ export default class OrderProductAutocomplete {
     if (orderId) {
       params.order_id = orderId;
     }
-
-    $.get(this.router.generate('admin_products_search', params))
-      .then(response => this.updateResults(response));
+    if (this.activeSearchRequest !== null) {
+      this.activeSearchRequest.abort();
+    }
+    this.activeSearchRequest = $.get(this.router.generate('admin_products_search', params));
+    this.activeSearchRequest
+      .then(response => this.updateResults(response))
+      .always(() => { this.activeSearchRequest = null; });
   }
 
   updateResults(results) {
