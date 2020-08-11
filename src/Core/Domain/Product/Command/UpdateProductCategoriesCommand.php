@@ -32,6 +32,9 @@ use LogicException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
+/**
+ * Updates product-category associations
+ */
 class UpdateProductCategoriesCommand
 {
     /**
