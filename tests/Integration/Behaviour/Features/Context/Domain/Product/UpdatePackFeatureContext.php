@@ -30,7 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPackCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetPackProductsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetPackedProducts;
@@ -72,7 +72,7 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
         $packId = $this->getSharedStorage()->get($packReference);
 
         try {
-            $this->getCommandBus()->handle(UpdateProductPackCommand::cleanPack($packId));
+            $this->getCommandBus()->handle(SetPackProductsCommand::cleanPack($packId));
         } catch (ProductException $e) {
             $this->setLastException($e);
         }
@@ -167,7 +167,7 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
     private function upsertPack(int $packId, array $products): void
     {
         try {
-            $this->getCommandBus()->handle(UpdateProductPackCommand::upsertPack(
+            $this->getCommandBus()->handle(SetPackProductsCommand::upsertPack(
                 $packId,
                 $products
             ));
