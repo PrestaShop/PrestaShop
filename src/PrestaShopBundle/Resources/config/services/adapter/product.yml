@@ -160,7 +160,6 @@ services:
         - '@prestashop.adapter.product.command_handler.add_customization_field_handler'
         - '@prestashop.adapter.product.command_handler.update_customization_field_handler'
         - '@prestashop.adapter.product.command_handler.delete_customization_field_handler'
-        - '@prestashop.adapter.product.query_handler.get_product_customization_fields_handler'
       tags:
         - name: tactician.handler
           command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateProductCustomizationFieldsCommand

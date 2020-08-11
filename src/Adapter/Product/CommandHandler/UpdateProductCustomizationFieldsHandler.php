@@ -38,8 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\Delet
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\UpdateCustomizationFieldHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\UpdateProductCustomizationFieldsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationField;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryHandler\GetProductCustomizationFieldsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -65,26 +64,18 @@ class UpdateProductCustomizationFieldsHandler extends AbstractCustomizationField
     private $deleteCustomizationFieldHandler;
 
     /**
-     * @var GetProductCustomizationFieldsHandlerInterface
-     */
-    private $getProductCustomizationFieldsHandler;
-
-    /**
      * @param AddCustomizationFieldHandlerInterface $addCustomizationFieldHandler
      * @param UpdateCustomizationFieldHandlerInterface $updateCustomizationFieldHandler
      * @param DeleteCustomizationFieldHandlerInterface $deleteCustomizationFieldHandler
-     * @param GetProductCustomizationFieldsHandlerInterface $getProductCustomizationFieldsHandler
      */
     public function __construct(
         AddCustomizationFieldHandlerInterface $addCustomizationFieldHandler,
         UpdateCustomizationFieldHandlerInterface $updateCustomizationFieldHandler,
-        DeleteCustomizationFieldHandlerInterface $deleteCustomizationFieldHandler,
-        GetProductCustomizationFieldsHandlerInterface $getProductCustomizationFieldsHandler
+        DeleteCustomizationFieldHandlerInterface $deleteCustomizationFieldHandler
     ) {
         $this->addCustomizationFieldHandler = $addCustomizationFieldHandler;
         $this->updateCustomizationFieldHandler = $updateCustomizationFieldHandler;
         $this->deleteCustomizationFieldHandler = $deleteCustomizationFieldHandler;
-        $this->getProductCustomizationFieldsHandler = $getProductCustomizationFieldsHandler;
     }
 
     /**
@@ -105,11 +96,11 @@ class UpdateProductCustomizationFieldsHandler extends AbstractCustomizationField
         }
 
         $this->deleteCustomizationFields($deletableFieldIds);
+        $product = $this->getProduct($command->getProductId());
 
-        //@todo: return only ids instead.
-        return $this->getProductCustomizationFieldsHandler->handle(
-            new GetProductCustomizationFields($command->getProductId()->getValue())
-        );
+        return array_map(function ($customizationFieldId) {
+            return new CustomizationFieldId($customizationFieldId);
+        }, $product->getNonDeletedCustomizationFieldIds());
     }
 
     /**

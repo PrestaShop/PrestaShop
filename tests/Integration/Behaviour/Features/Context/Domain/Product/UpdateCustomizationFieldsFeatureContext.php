@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateProduc
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use RuntimeException;
@@ -297,20 +298,20 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
     private function updateProductCustomizationFields(string $productReference, array $fieldReferences, array $fieldsForUpdate): void
     {
         try {
-            $newCustomizationFields = $this->getCommandBus()->handle(new UpdateProductCustomizationFieldsCommand(
+            $newCustomizationFieldIds = $this->getCommandBus()->handle(new UpdateProductCustomizationFieldsCommand(
                 $this->getSharedStorage()->get($productReference),
                 $fieldsForUpdate
             ));
 
             Assert::assertSameSize(
                 $fieldReferences,
-                $newCustomizationFields,
+                $newCustomizationFieldIds,
                 'Cannot set references in shared storage. References and actual customization fields doesn\'t match.'
             );
 
-            /** @var CustomizationField $customizationField */
-            foreach ($newCustomizationFields as $key => $customizationField) {
-                $this->getSharedStorage()->set($fieldReferences[$key], $customizationField->getCustomizationFieldId());
+            /** @var CustomizationFieldId $customizationFieldId */
+            foreach ($newCustomizationFieldIds as $key => $customizationFieldId) {
+                $this->getSharedStorage()->set($fieldReferences[$key], $customizationFieldId->getValue());
             }
         } catch (ProductException $e) {
             $this->setLastException($e);
