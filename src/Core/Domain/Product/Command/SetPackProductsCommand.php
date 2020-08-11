@@ -49,13 +49,11 @@ class SetPackProductsCommand
     private $products;
 
     /**
-     * Use static factories to build this command
-     *
      * @param int $packId
      * @param array $products array of elements where each element contains product information
      *                        which allows building @var QuantifiedProduct
      */
-    private function __construct(int $packId, array $products)
+    public function __construct(int $packId, array $products)
     {
         $this->packId = new ProductId($packId);
         $this->setProducts($products);
