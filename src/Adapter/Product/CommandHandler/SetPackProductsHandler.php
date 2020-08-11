@@ -31,19 +31,22 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPackCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductPackHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetPackProductsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\SetPackProductsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QuantifiedProduct;
 use PrestaShopException;
 
-final class UpdateProductPackHandler extends AbstractProductHandler implements UpdateProductPackHandlerInterface
+/**
+ * Handles @see SetPackProductsCommand using legacy object model
+ */
+final class SetPackProductsHandler extends AbstractProductHandler implements SetPackProductsHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(UpdateProductPackCommand $command): void
+    public function handle(SetPackProductsCommand $command): void
     {
         $productsForPacking = $command->getProducts();
         $pack = $this->getProduct($command->getPackId());
