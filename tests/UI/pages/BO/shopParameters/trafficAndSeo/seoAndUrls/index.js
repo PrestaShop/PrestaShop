@@ -21,6 +21,11 @@ class SeoAndUrls extends BOBasePage {
     this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
     this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
 
+    // Bulk Actions
+    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
+    this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
+    this.bulkActionsDeleteButton = `${this.gridPanel} #meta_grid_bulk_action_delete_seo_urls`;
+
     // Filters
     this.filterColumn = filterBy => `${this.gridTable} #meta_${filterBy}`;
     this.filterSearchButton = `${this.gridTable} button[name='meta[actions][search]']`;
@@ -59,6 +64,33 @@ class SeoAndUrls extends BOBasePage {
    */
   async goToNewSeoUrlPage(page) {
     await this.clickAndWaitForNavigation(page, this.addNewSeoPageLink);
+  }
+
+  /* Bulk actions methods */
+
+  /**
+   * Delete seo pages by bulk actions
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async bulkDeleteSeoUrlPage(page) {
+    // Confirm delete in js modal
+    this.dialogListener(page, true);
+
+    // Click on Select All
+    await Promise.all([
+      page.$eval(this.selectAllRowsLabel, el => el.click()),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
+    ]);
+
+    // Click on button bulk action
+    await Promise.all([
+      page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
+    ]);
+
+    await this.clickAndWaitForNavigation(page, this.bulkActionsDeleteButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /* Column methods */
