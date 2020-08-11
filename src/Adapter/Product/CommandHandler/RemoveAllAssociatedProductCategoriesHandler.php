@@ -28,14 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductCategoryHandler;
+use PrestaShop\PrestaShop\Adapter\Product\AbstractProductCategoriesAssociationHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\RemoveAllAssociatedProductCategoriesHandlerInterface;
 
 /**
  * Handles @see RemoveAllAssociatedProductCategoriesCommand using legacy object model
  */
-final class RemoveAllAssociatedProductCategoriesHandler extends AbstractProductCategoryHandler implements RemoveAllAssociatedProductCategoriesHandlerInterface
+final class RemoveAllAssociatedProductCategoriesHandler extends AbstractProductCategoriesAssociationHandler implements RemoveAllAssociatedProductCategoriesHandlerInterface
 {
     /**
      * @var int

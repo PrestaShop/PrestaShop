@@ -37,7 +37,7 @@ use Product;
 /**
  * Provides reusable methods for product category handlers
  */
-abstract class AbstractProductCategoryHandler extends AbstractProductHandler
+abstract class AbstractProductCategoriesAssociationHandler extends AbstractProductHandler
 {
     /**
      * @param Product $product

@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductCategoryHandler;
+use PrestaShop\PrestaShop\Adapter\Product\AbstractProductCategoriesAssociationHandler;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\SetAssociatedProductCategoriesHandlerInterface;
@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\SetAssociatedProduc
 /**
  * Handles @var SetAssociatedProductCategoriesCommand using legacy object model
  */
-final class SetAssociatedProductCategoriesHandler extends AbstractProductCategoryHandler implements SetAssociatedProductCategoriesHandlerInterface
+final class SetAssociatedProductCategoriesHandler extends AbstractProductCategoriesAssociationHandler implements SetAssociatedProductCategoriesHandlerInterface
 {
     /**
      * {@inheritdoc}
