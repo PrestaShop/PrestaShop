@@ -105,7 +105,7 @@ class UpdateProductCategoriesCommand
     /**
      * @param int[] $categoryIds
      */
-    private function assertCategoryIdsAreNotEmpty(array $categoryIds)
+    private function assertCategoryIdsAreNotEmpty(array $categoryIds): void
     {
         if (empty($categoryIds)) {
             throw new LogicException(sprintf(
