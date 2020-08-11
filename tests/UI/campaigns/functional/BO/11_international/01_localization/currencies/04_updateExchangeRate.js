@@ -93,7 +93,7 @@ describe('Update exchange rate', async () => {
 
   describe('Update exchange rates', async () => {
     it(`should filter by iso code of currency '${Currencies.mad.isoCode}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
 
       // Filter
       await currenciesPage.filterTable(page, 'input', 'iso_code', Currencies.mad.isoCode);
@@ -131,15 +131,11 @@ describe('Update exchange rate', async () => {
     });
 
     it(`should filter by iso code of currency '${Currencies.mad.isoCode}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToCheckValue', baseContext);
 
       // Filter
       await currenciesPage.filterTable(page, 'input', 'iso_code', Currencies.mad.isoCode);
 
-      const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfCurrenciesAfterFilter).to.be.equal(numberOfCurrencies);
-
-      // Check currency to delete
       const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
       await expect(textColumn).to.contains(Currencies.mad.isoCode);
     });
