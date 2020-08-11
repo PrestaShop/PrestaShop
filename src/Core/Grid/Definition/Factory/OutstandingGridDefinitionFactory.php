@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BadgeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Risk;
@@ -57,10 +58,13 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
     private $configuration;
 
     /**
+     * @param HookDispatcherInterface $hookDispatcher
      * @param ConfigurationInterface $configuration
      */
-    public function __construct(ConfigurationInterface $configuration)
+    public function __construct(HookDispatcherInterface $hookDispatcher, ConfigurationInterface $configuration)
     {
+        parent::__construct($hookDispatcher);
+
         $this->configuration = $configuration;
     }
 
