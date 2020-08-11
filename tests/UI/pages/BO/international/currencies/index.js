@@ -34,6 +34,10 @@ class Currencies extends LocalizationBasePage {
     this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
     this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-url*='/delete']`;
+    this.editRowLink = row => `${this.actionsColumn(row)} a[href*='/edit']`;
+    // Exchange rate form
+    this.exchangeRateForm = 'form[name=\'exchange_rates\']';
+    this.updateExchangeRatesButton = `${this.exchangeRateForm} .btn.btn-primary`;
   }
 
   /* Header Methods */
@@ -181,6 +185,26 @@ class Currencies extends LocalizationBasePage {
       ),
     ]);
     await this.clickAndWaitForNavigation(page, this.deleteRowLink(row));
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Go to edit currency page
+   * @param page
+   * @param row
+   * @returns {Promise<void>}
+   */
+  async goToEditCurrencyPage(page, row = 1) {
+    await this.clickAndWaitForNavigation(page, this.editRowLink(row));
+  }
+
+  /**
+   * Click on update exchange rates
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async updateExchangeRate(page) {
+    await this.clickAndWaitForNavigation(page, this.updateExchangeRatesButton);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 }
