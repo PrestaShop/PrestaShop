@@ -37,12 +37,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductExcep
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\AddProductSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\DeleteProductSupplierCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSupplierCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\AddProductSupplierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\DeleteProductSupplierHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\SetProductSuppliersHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\UpdateProductSupplierHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\UpdateProductSuppliersHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotDeleteProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier;
@@ -52,9 +52,9 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use ProductSupplier as ProductSupplierEntity;
 
 /**
- * Handles @var UpdateProductSuppliersCommand using legacy object model
+ * Handles @var SetProductSuppliersCommand using legacy object model
  */
-final class UpdateProductSuppliersHandler extends AbstractProductHandler implements UpdateProductSuppliersHandlerInterface
+final class SetProductSuppliersHandler extends AbstractProductHandler implements SetProductSuppliersHandlerInterface
 {
     /**
      * @var AddProductSupplierHandlerInterface
@@ -89,7 +89,7 @@ final class UpdateProductSuppliersHandler extends AbstractProductHandler impleme
     /**
      * {@inheritdoc}
      */
-    public function handle(UpdateProductSuppliersCommand $command): array
+    public function handle(SetProductSuppliersCommand $command): array
     {
         $this->assertCommandIsNotEmpty($command);
         $productId = $command->getProductId();
@@ -108,12 +108,12 @@ final class UpdateProductSuppliersHandler extends AbstractProductHandler impleme
     }
 
     /**
-     * @param UpdateProductSuppliersCommand $command
+     * @param SetProductSuppliersCommand $command
      *
      * @throws CannotUpdateProductException
      * @throws ProductException
      */
-    private function handleDefaultSupplierUpdate(UpdateProductSuppliersCommand $command): void
+    private function handleDefaultSupplierUpdate(SetProductSuppliersCommand $command): void
     {
         $productId = $command->getProductId();
         $defaultSupplierId = $command->getDefaultSupplierId();
@@ -309,9 +309,9 @@ final class UpdateProductSuppliersHandler extends AbstractProductHandler impleme
     }
 
     /**
-     * @param UpdateProductSuppliersCommand $command
+     * @param SetProductSuppliersCommand $command
      */
-    private function assertCommandIsNotEmpty(UpdateProductSuppliersCommand $command): void
+    private function assertCommandIsNotEmpty(SetProductSuppliersCommand $command): void
     {
         if (null !== $command->getDefaultSupplierId() || null !== $command->getProductSuppliers()) {
             return;
@@ -319,7 +319,7 @@ final class UpdateProductSuppliersHandler extends AbstractProductHandler impleme
 
         throw new LogicException(sprintf(
             '%s command properties are empty. You must set at least one property to update',
-            UpdateProductSuppliersCommand::class
+            SetProductSuppliersCommand::class
         ));
     }
 }
