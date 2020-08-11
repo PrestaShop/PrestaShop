@@ -30,6 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllProductsFromPackCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetPackProductsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackException;
@@ -58,21 +59,24 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
         }
 
         $packId = $this->getSharedStorage()->get($packReference);
-
-        $this->upsertPack($packId, $products);
+        try {
+            $this->getCommandBus()->handle(new SetPackProductsCommand($packId, $products));
+        } catch (ProductException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
-     * @When I clean pack :packReference
+     * @When I remove all products from pack :packReference
      *
      * @param string $packReference
      */
-    public function cleanPack(string $packReference)
+    public function removeAllProductsFromPack(string $packReference)
     {
         $packId = $this->getSharedStorage()->get($packReference);
 
         try {
-            $this->getCommandBus()->handle(SetPackProductsCommand::cleanPack($packId));
+            $this->getCommandBus()->handle(new RemoveAllProductsFromPackCommand($packId));
         } catch (ProductException $e) {
             $this->setLastException($e);
         }
@@ -158,21 +162,5 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
             ProductPackException::class,
             ProductPackException::CANNOT_ADD_PACK_INTO_PACK
         );
-    }
-
-    /**
-     * @param int $packId
-     * @param array $products
-     */
-    private function upsertPack(int $packId, array $products): void
-    {
-        try {
-            $this->getCommandBus()->handle(SetPackProductsCommand::upsertPack(
-                $packId,
-                $products
-            ));
-        } catch (ProductException $e) {
-            $this->setLastException($e);
-        }
     }
 }
