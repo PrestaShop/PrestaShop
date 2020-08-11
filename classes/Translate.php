@@ -180,7 +180,7 @@ class TranslateCore
         $fallback = true,
         $escape = true
     ) {
-        global $_MODULES, $_MODULE, $_LANGADM;
+        global $_MODULE, $_LANGADM;
 
         static $langCache = [];
         // $_MODULES is a cache of translations for all module.
@@ -194,6 +194,8 @@ class TranslateCore
         }
 
         if (empty($iso)) {
+            // using global $_MODULES only when $locale is not set to prevent getting translation in wrong language
+            global $_MODULES;
             $iso = Context::getContext()->language->iso_code;
         }
 
