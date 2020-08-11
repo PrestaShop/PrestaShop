@@ -166,7 +166,7 @@ export default class OrderProductEdit {
     const productId = $(`#orderProduct_${this.orderDetailId} ${OrderViewPageMap.productEditButtons}`).data('product-id');
     const combinationId = $(`#orderProduct_${this.orderDetailId} ${OrderViewPageMap.productEditButtons}`).data('combination-id');
 
-    const productPriceMatch = this.orderPricesRefresher.checkOtherProductPricesMatch(this.priceTaxIncludedInput.val(), productId, combinationId);
+    const productPriceMatch = this.orderPricesRefresher.checkOtherProductPricesMatch(this.priceTaxIncludedInput.val(), productId, combinationId, this.orderDetailId);
 
     if (productPriceMatch) {
       this.editProduct(
