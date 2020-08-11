@@ -70,11 +70,6 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
             throw new OrderException('Invalid cart provided.');
         }
 
-        $cartRule = new CartRule($orderCartRule->id_cart_rule);
-        if (!Validate::isLoadedObject($cartRule)) {
-            throw new OrderException('Invalid cart rule provided.');
-        }
-
         // Delete Order Cart Rule and update Order
         $orderCartRule->softDelete();
         $cart->removeCartRule($orderCartRule->id_cart_rule);
