@@ -22,7 +22,7 @@ const baseContext = 'functional_BO_international_localization_currencies_updateE
 let browserContext;
 let page;
 let numberOfCurrencies = 0;
-const newExchangeRate = '6';
+const newExchangeRate = 6;
 
 describe('Update exchange rate', async () => {
   // before and after functions

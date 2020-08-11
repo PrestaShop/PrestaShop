@@ -77,7 +77,7 @@ class AddCurrency extends BOBasePage {
    * @returns {Promise<string>}
    */
   async updateExchangeRate(page, value) {
-    await this.setValue(page, this.exchangeRateInput, value);
+    await this.setValue(page, this.exchangeRateInput, value.toString());
     await this.clickAndWaitForNavigation(page, this.saveButton);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
