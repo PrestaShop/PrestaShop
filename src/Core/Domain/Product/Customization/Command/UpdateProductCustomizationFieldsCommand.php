@@ -51,9 +51,7 @@ class UpdateProductCustomizationFieldsCommand
      * Builds command to replace existing customization fields with provided ones.
      *
      * @param int $productId
-     * @param array[] $customizationFields
-     *
-     * @see UpdateProductCustomizationFieldsCommand::setCustomizationFields() for $customizationFields array structure.
+     * @param array $customizationFields
      *
      * @return static
      */
