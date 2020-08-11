@@ -91,29 +91,34 @@ final class SetProductSuppliersHandler extends AbstractProductHandler implements
     public function handle(SetProductSuppliersCommand $command): array
     {
         $productId = $command->getProductId();
+        $defaultSupplierIdValue = $command->getDefaultSupplierId()->getValue();
+        $this->assertDefaultSupplierIsOneOfProvidedSuppliers($command);
 
         $this->setProductSuppliers($productId, $command->getProductSuppliers());
-        $this->updateProductDefaultSupplier($productId, $command->getDefaultSupplierId()->getValue());
+        $this->updateProductDefaultSupplier($productId, $defaultSupplierIdValue);
 
         return $this->getProductSupplierIds($productId);
     }
 
     /**
-     * @param int $productId
-     * @param int $defaultSupplierId
+     * @param SetProductSuppliersCommand $command
      *
      * @throws CannotUpdateProductException
      */
-    private function assertDefaultSupplierIsExistingProductSupplier(int $productId, int $defaultSupplierId): void
+    private function assertDefaultSupplierIsOneOfProvidedSuppliers(SetProductSuppliersCommand $command): void
     {
-        if (!empty(ProductSupplierEntity::getIdByProductAndSupplier($productId, 0, $defaultSupplierId))) {
-            return;
+        $defaultSupplierId = $command->getDefaultSupplierId()->getValue();
+
+        foreach ($command->getProductSuppliers() as $productSupplier) {
+            if ($productSupplier->getSupplierId() === $defaultSupplierId) {
+                return;
+            }
         }
 
         throw new CannotUpdateProductException(
             sprintf(
-                'Cannot update product #%s default supplier #%s, because such supplier is not assigned to product',
-                $productId,
+                'Cannot update product #%s default supplier #%s, it is not one of provided product suppliers',
+                $command->getProductId()->getValue(),
                 $defaultSupplierId
             ),
             CannotUpdateProductException::FAILED_UPDATE_DEFAULT_SUPPLIER
@@ -202,10 +207,6 @@ final class SetProductSuppliersHandler extends AbstractProductHandler implements
      */
     private function updateProductDefaultSupplier(ProductId $productId, int $defaultSupplierId): void
     {
-        if (ProductSupplierId::NO_PRODUCT_SUPPLIER !== $defaultSupplierId) {
-            $this->assertDefaultSupplierIsExistingProductSupplier($productId->getValue(), $defaultSupplierId);
-        }
-
         $product = $this->getProduct($productId);
 
         $product->id_supplier = $defaultSupplierId;
