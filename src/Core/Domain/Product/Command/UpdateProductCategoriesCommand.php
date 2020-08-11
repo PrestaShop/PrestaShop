@@ -111,8 +111,7 @@ class UpdateProductCategoriesCommand
             throw new LogicException(sprintf(
                 'Empty categoryIds provided in %s, use %s to delete categories',
                 self::class,
-                //@todo:
-                '@todo: DeleteProductCategories command:class'
+                DeleteAllProductCategoriesCommand::class
             ));
         }
     }

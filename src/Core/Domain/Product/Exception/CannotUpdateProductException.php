@@ -70,4 +70,9 @@ class CannotUpdateProductException extends ProductException
      * When product default supplier update fails
      */
     const FAILED_UPDATE_DEFAULT_SUPPLIER = 80;
+
+    /**
+     * When product default category update fails
+     */
+    const FAILED_UPDATE_DEFAULT_CATEGORY = 90;
 }

@@ -28,20 +28,15 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use Category;
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Adapter\Product\AbstractProductCategoryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductCategoriesHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShopException;
-use Product;
 
 /**
  * Handles @var UpdateProductCategoriesCommand using legacy object model
  */
-final class UpdateProductCategoriesHandler extends AbstractProductHandler implements UpdateProductCategoriesHandlerInterface
+final class UpdateProductCategoriesHandler extends AbstractProductCategoryHandler implements UpdateProductCategoriesHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -53,11 +48,7 @@ final class UpdateProductCategoriesHandler extends AbstractProductHandler implem
         $categoryIds = $this->formatCategoryIdsList($command);
 
         $this->updateCategories($product, $categoryIds);
-
-        $product->id_category_default = $defaultCategoryId;
-        $product->setFieldsToUpdate(['id_category_default']);
-
-        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_CATEGORIES);
+        $this->updateDefaultCategory($product, $defaultCategoryId);
     }
 
     /**
@@ -79,37 +70,5 @@ final class UpdateProductCategoriesHandler extends AbstractProductHandler implem
         $categoryIds = array_unique($categoryIds, SORT_REGULAR);
 
         return $categoryIds;
-    }
-
-    /**
-     * @param Product $product
-     * @param array $categoryIds
-     *
-     * @throws CannotUpdateProductException
-     * @throws ProductException
-     */
-    private function updateCategories(Product $product, array $categoryIds): void
-    {
-        try {
-            if (false === Category::categoriesExists($categoryIds)) {
-                throw new CannotUpdateProductException(
-                    sprintf('Failed to update product #%d categories. Some of categories doesn\'t exist.', $product->id),
-                    CannotUpdateProductException::FAILED_UPDATE_CATEGORIES
-                );
-            }
-
-            if (false === $product->updateCategories($categoryIds)) {
-                throw new CannotUpdateProductException(
-                    sprintf('Failed to update product #%d categories', $product->id),
-                    CannotUpdateProductException::FAILED_UPDATE_CATEGORIES
-                );
-            }
-        } catch (PrestaShopException $e) {
-            throw new ProductException(
-                sprintf('Error occurred when trying to update product #%d categories', $product->id),
-                0,
-                $e
-            );
-        }
     }
 }

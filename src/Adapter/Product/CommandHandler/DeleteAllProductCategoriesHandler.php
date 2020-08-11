@@ -28,20 +28,36 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Adapter\Product\AbstractProductCategoryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteAllProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\DeleteAllProductCategoriesHandlerInterface;
 
 /**
  * Handles @see DeleteAllProductCategoriesCommand using legacy object model
  */
-final class DeleteAllProductCategoriesHandler extends AbstractProductHandler implements DeleteAllProductCategoriesHandlerInterface
+final class DeleteAllProductCategoriesHandler extends AbstractProductCategoryHandler implements DeleteAllProductCategoriesHandlerInterface
 {
+    /**
+     * @var int
+     */
+    private $homeCategoryId;
+
+    /**
+     * @param int $homeCategoryId
+     */
+    public function __construct(int $homeCategoryId)
+    {
+        $this->homeCategoryId = $homeCategoryId;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function handle(DeleteAllProductCategoriesCommand $command): void
     {
-        // TODO: Implement handle() method.
+        $product = $this->getProduct($command->getProductId());
+
+        $this->updateCategories($product, [$this->homeCategoryId]);
+        $this->updateDefaultCategory($product, $this->homeCategoryId);
     }
 }
