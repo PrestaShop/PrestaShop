@@ -41,7 +41,7 @@ abstract class AbstractProductCategoriesAssociationHandler extends AbstractProdu
 {
     /**
      * @param Product $product
-     * @param array $categoryIds
+     * @param int[] $categoryIds
      *
      * @throws CannotUpdateProductException
      * @throws ProductException
@@ -72,7 +72,6 @@ abstract class AbstractProductCategoriesAssociationHandler extends AbstractProdu
      *
      * @throws CannotUpdateProductException
      * @throws ProductException
-     * @throws \PrestaShopDatabaseException
      */
     protected function updateDefaultCategory(Product $product, int $categoryId): void
     {
@@ -93,10 +92,9 @@ abstract class AbstractProductCategoriesAssociationHandler extends AbstractProdu
     }
 
     /**
-     * @param array $categoryIds
+     * @param int[] $categoryIds
      *
      * @throws CannotUpdateProductException
-     * @throws \PrestaShopDatabaseException
      */
     protected function assertCategoriesExists(array $categoryIds): void
     {
