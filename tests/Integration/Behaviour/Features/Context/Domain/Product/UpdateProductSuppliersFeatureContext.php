@@ -36,12 +36,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOptions;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\DeleteAllProductSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 
 class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
 {
@@ -53,21 +51,22 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
     public function deleteAllProductSuppliers(string $productReference)
     {
         try {
-            $command = new SetProductSuppliersCommand($this->getSharedStorage()->get($productReference));
-            $command->setProductSuppliers([]);
-            $this->getCommandBus()->handle($command);
+            $this->getCommandBus()->handle(new DeleteAllProductSuppliersCommand(
+                $this->getSharedStorage()->get($productReference))
+            );
         } catch (ProductException $e) {
             $this->setLastException($e);
         }
     }
 
     /**
-     * @When I update product :productReference suppliers with following values:
+     * @When I set product :productReference default supplier to :defaultSupplierReference and following suppliers:
      *
      * @param string $productReference
+     * @param string $defaultSupplierReference
      * @param TableNode $tableNode
      */
-    public function updateProductSuppliers(string $productReference, TableNode $tableNode): void
+    public function updateProductSuppliers(string $productReference, string $defaultSupplierReference, TableNode $tableNode): void
     {
         $data = $tableNode->getColumnsHash();
         $productSuppliers = [];
@@ -97,8 +96,11 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
         }
 
         try {
-            $command = new SetProductSuppliersCommand($this->getSharedStorage()->get($productReference));
-            $command->setProductSuppliers($productSuppliers);
+            $command = new SetProductSuppliersCommand(
+                $this->getSharedStorage()->get($productReference),
+                $productSuppliers,
+                $this->getSharedStorage()->get($defaultSupplierReference)
+            );
 
             $productSupplierIds = $this->getCommandBus()->handle($command);
 
@@ -112,26 +114,6 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
             foreach ($productSupplierIds as $key => $productSupplierId) {
                 $this->getSharedStorage()->set($references[$key], $productSupplierId->getValue());
             }
-        } catch (ProductSupplierException $e) {
-            $this->setLastException($e);
-        }
-    }
-
-    /**
-     * @When I set product :productReference default supplier to :supplierReference
-     *
-     * @param string $productReference
-     * @param string $supplierReference
-     *
-     * @throws SupplierException
-     */
-    public function updateProductDefaultSupplier(string $productReference, string $supplierReference)
-    {
-        try {
-            $command = new SetProductSuppliersCommand($this->getSharedStorage()->get($productReference));
-            $command->setDefaultSupplierId($this->getSharedStorage()->get($supplierReference));
-
-            $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {
             $this->setLastException($e);
         }
@@ -186,19 +168,6 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
         Assert::assertEmpty(
             $this->getProductSupplierOptions($productReference)->getOptionsBySupplier(),
             sprintf('Expected product %s to have no suppliers assigned', $productReference)
-        );
-    }
-
-    /**
-     * @Then product :productReference default supplier reference should be empty
-     *
-     * @param string $productReference
-     */
-    public function assertProductDefaultSupplierReferenceIsEmpty(string $productReference)
-    {
-        Assert::assertEmpty(
-            $this->getProductSupplierOptions($productReference)->getDefaultSupplierReference(),
-            sprintf('Expected product "%s" default supplier reference to be empty', $productReference)
         );
     }
 
