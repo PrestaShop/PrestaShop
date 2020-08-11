@@ -1,11 +1,11 @@
 const faker = require('faker');
 
 const {Titles} = require('@data/demo/titles');
+const {groupAccess} = require('@data/demo/groupAccess');
 
 
 const genders = Object.values(Titles).map(title => title.name);
-
-const {groupAccess} = require('@data/demo/groupAccess');
+const groups = Object.values(groupAccess).map(group => group.name);
 
 module.exports = class Customer {
   constructor(customerToCreate = {}) {
@@ -20,7 +20,7 @@ module.exports = class Customer {
     this.dayOfBirth = customerToCreate.dayOfBirth || this.birthDate.getDate().toString();
     this.enabled = customerToCreate.enabled === undefined ? true : customerToCreate.enabled;
     this.partnerOffers = customerToCreate.partnerOffers === undefined ? true : customerToCreate.partnerOffers;
-    this.defaultCustomerGroup = customerToCreate.defaultCustomerGroup || faker.random.arrayElement(groupAccess);
+    this.defaultCustomerGroup = customerToCreate.defaultCustomerGroup || faker.random.arrayElement(groups);
     this.newsletter = customerToCreate.newsletter === undefined ? false : customerToCreate.newsletter;
   }
 };
