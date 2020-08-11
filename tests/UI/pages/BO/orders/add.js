@@ -1,6 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+// Needed to create customer in orders page
+const addCustomerPage = require('@pages/BO/customers/add');
+
 class AddOrder extends BOBasePage {
   constructor() {
     super();
@@ -9,6 +12,8 @@ class AddOrder extends BOBasePage {
     this.noCustomerFoundText = 'No customers found';
 
     // Customer selectors
+    this.addCustomerLink = '#customer-add-btn';
+    this.addCustomerIframe = 'iframe.fancybox-iframe';
     this.customerSearchInput = '#customer-search-input';
     this.customerSearchLoadingNoticeBlock = '#customer-search-loading-notice';
     // Empty results
@@ -50,6 +55,28 @@ class AddOrder extends BOBasePage {
    */
   getCustomerNameFromResult(page, cardPosition = 1) {
     return this.getTextContent(page, this.customerSearchResultNameTitle(cardPosition));
+  }
+
+  /**
+   * Click on add new customer and new customer iFrame
+   * @param page
+   * @param customerData
+   * @return {Promise<string>}
+   */
+  async addNewCustomer(page, customerData) {
+    await page.click(this.addCustomerLink);
+    await this.waitForVisibleSelector(page, this.addCustomerIframe);
+
+    const customerFrame = await page.frame({url: new RegExp('sell/customers/new', 'gmi')});
+
+    await addCustomerPage.fillCustomerForm(customerFrame, customerData);
+
+    await Promise.all([
+      customerFrame.click(addCustomerPage.saveCustomerButton),
+      page.waitForSelector(this.addCustomerIframe, {state: 'hidden'}),
+    ]);
+
+    return this.getCustomerNameFromResult(page);
   }
 }
 
