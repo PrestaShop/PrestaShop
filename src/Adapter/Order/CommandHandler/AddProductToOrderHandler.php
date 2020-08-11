@@ -575,14 +575,14 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         }
 
         // If it's a new invoice (or no invoice), the ID is null, so we check if the Order has invoice (in which case
-        // a new one is going to be created) If it doesn't have invoices we do'nt allow adding duplicate OrderDetail
+        // a new one is going to be created) If it doesn't have invoices we don't allow adding duplicate OrderDetail
         if (empty($command->getOrderInvoiceId()) && !$order->hasInvoice()) {
-            throw new DuplicateProductInOrderException('You cannot add this product in the order has it is already present');
+            throw new DuplicateProductInOrderException('You cannot add this product in the order as it is already present');
         }
 
         // If we are targeting a specific invoice check that the ID has not been found in the OrderDetail list
         if (!empty($command->getOrderInvoiceId()) && in_array((int) $command->getOrderInvoiceId(), $invoicesContainingProduct)) {
-            throw new DuplicateProductInOrderException('You cannot add this product in the order has it is already present');
+            throw new DuplicateProductInOrderException('You cannot add this product in the order as it is already present');
         }
     }
 }
