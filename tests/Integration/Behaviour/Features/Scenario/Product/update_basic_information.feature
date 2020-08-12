@@ -22,6 +22,7 @@ Feature: Update product basic information from Back Office (BO)
     And product "product1" localized "name" should be "en-US:photo of funny mug"
     And product "product1" localized "description" should be "en-US:nice mug"
     And product "product1" localized "description_short" should be "en-US:Just a nice mug"
+    And product "product1" should have following manufacturer "studioDesign"
 
   Scenario: I update product basic information providing invalid product name
     Given product "product1" localized "name" is "en-US:photo of funny mug"

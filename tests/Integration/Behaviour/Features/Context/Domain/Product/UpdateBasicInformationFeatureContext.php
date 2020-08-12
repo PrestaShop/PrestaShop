@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -72,5 +73,19 @@ class UpdateBasicInformationFeatureContext extends AbstractProductFeatureContext
         } catch (ProductException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @Then product :productReference should have following manufacturer :manufacturerReference
+     *
+     * @param string $productReference
+     * @param string $manufacturerReference
+     */
+    public function assertManufacturerId(string $productReference, string $manufacturerReference): void
+    {
+        $expectedId = $this->getSharedStorage()->get($manufacturerReference);
+        $actualId = $this->getProductForEditing($productReference)->getBasicInformation()->getManufacturerId();
+
+        Assert::assertEquals($expectedId, $actualId, 'Unexpected product manufacturer id');
     }
 }
