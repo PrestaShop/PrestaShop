@@ -30,11 +30,12 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use RuntimeException;
 
 /**
- * Updates product customization fields
+ * Sets product customization fields
  */
-class UpdateProductCustomizationFieldsCommand
+class SetProductCustomizationFieldsCommand
 {
     /**
      * @var ProductId
@@ -77,6 +78,14 @@ class UpdateProductCustomizationFieldsCommand
      */
     private function setCustomizationFields(array $customizationFields): void
     {
+        if (empty($customizationFields)) {
+            throw new RuntimeException(sprintf(
+                'Empty customization fields array provided in %s. To remove customization fields use %s',
+                self::class,
+                    //@todo:
+                    'RemoveAllCustomizationFieldsFromProduct'
+            ));
+        }
         foreach ($customizationFields as $customizationField) {
             $this->customizationFields[] = new CustomizationField(
                 (int) $customizationField['type'],
