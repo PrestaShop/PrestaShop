@@ -703,7 +703,7 @@ class OrderController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function productPricesAction(int $orderId, Request $request): Response
+    public function getProductPricesAction(int $orderId, Request $request): Response
     {
         try {
             $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
