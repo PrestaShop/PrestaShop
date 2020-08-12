@@ -75,7 +75,7 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
         foreach ($attributesInformationByCombinationId as $combinationId => $attributesInformation) {
             $combinationsForEditing[] = new ProductCombinationForEditing(
                 $combinationId,
-                $attributesInformationByCombinationId
+                $attributesInformation
             );
         }
 
