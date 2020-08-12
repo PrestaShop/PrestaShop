@@ -5,38 +5,38 @@
 .ps-alert-error,
 .ps-alert-success {
   .item {
-    align-items: center;
-    border: 2px $brand-danger solid;
     display: flex;
-    background-color: $brand-danger;
+    align-items: center;
     margin-bottom: 1rem;
+    background-color: $brand-danger;
+    border: 2px $brand-danger solid;
 
     i {
-      border: 15px $brand-danger solid;
       display: flex;
+      border: 15px $brand-danger solid;
 
       svg {
-        background-color: $brand-danger;
         width: 24px;
         height: 24px;
+        background-color: $brand-danger;
       }
     }
 
     p {
-      background-color: $body-bg;
-      margin: 0;
-      padding: 18px 20px 18px 20px;
       width: 100%;
+      padding: 18px 20px;
+      margin: 0;
+      background-color: $body-bg;
     }
   }
 }
 
 .ps-alert-success {
-  padding: 0.25rem 0.25rem 2.75rem 0.25rem;
+  padding: 0.25rem 0.25rem 2.75rem;
 
   .item {
-    border-color: $brand-success;
     background-color: $brand-success;
+    border-color: $brand-success;
 
     i {
       border-color: $brand-success;

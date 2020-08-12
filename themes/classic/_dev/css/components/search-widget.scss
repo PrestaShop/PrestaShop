@@ -1,13 +1,13 @@
 .search-widget {
   display: inline-block;
-  @include search-box;
+  @include search-box();
 }
 .header-top {
   .search-widget {
     form {
       input[type="text"] {
-        min-width: inherit;
         width: 100%;
+        min-width: inherit;
       }
     }
   }
@@ -43,7 +43,7 @@
         margin: 0 auto;
         input[type="text"] {
           min-width: inherit;
-          background: white;
+          background: #fff;
         }
       }
     }
