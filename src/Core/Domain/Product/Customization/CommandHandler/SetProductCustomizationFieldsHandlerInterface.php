@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\Customiz
 /**
  * Defines contract to handle @var SetProductCustomizationFieldsCommand
  */
-interface UpdateProductCustomizationFieldsHandlerInterface
+interface SetProductCustomizationFieldsHandlerInterface
 {
     /**
      * @param SetProductCustomizationFieldsCommand $command

@@ -35,8 +35,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCu
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateCustomizationFieldCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\AddCustomizationFieldHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\DeleteCustomizationFieldHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\SetProductCustomizationFieldsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\UpdateCustomizationFieldHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\UpdateProductCustomizationFieldsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
@@ -46,7 +46,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 /**
  * Handles @var SetProductCustomizationFieldsCommand using legacy object model
  */
-class UpdateProductCustomizationFieldsHandler extends AbstractCustomizationFieldHandler implements UpdateProductCustomizationFieldsHandlerInterface
+class SetProductCustomizationFieldsHandler extends AbstractCustomizationFieldHandler implements SetProductCustomizationFieldsHandlerInterface
 {
     /**
      * @var AddCustomizationFieldHandlerInterface
