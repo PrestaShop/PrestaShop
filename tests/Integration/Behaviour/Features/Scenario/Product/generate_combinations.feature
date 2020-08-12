@@ -24,6 +24,13 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | is_virtual | false                   |
     Then product product1 type should be standard
     When I generate combinations for product product1 using following attributes:
-      | size       | [s,m,l]                 |
-      | color      | [white,black,blue,red]  |
+      | size       | [s,m]               |
+      | color      | [white,black,blue]  |
     Then product product1 should have following combinations:
+      | combination name                 |
+      | Size - S, Color - White          |
+      | Size - S, Color - Black          |
+      | Size - S, Color - Blue           |
+      | Size - M, Color - White          |
+      | Size - M, Color - Black          |
+      | Size - M, Color - Blue           |
