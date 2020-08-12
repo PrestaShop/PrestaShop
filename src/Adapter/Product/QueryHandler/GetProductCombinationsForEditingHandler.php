@@ -75,10 +75,30 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
         foreach ($attributesInformationByCombinationId as $combinationId => $attributesInformation) {
             $combinationsForEditing[] = new ProductCombinationForEditing(
                 $combinationId,
+                $this->buildCombinationName($attributesInformation),
                 $attributesInformation
             );
         }
 
         return $combinationsForEditing;
+    }
+
+    /**
+     * @param array $attributesInformation
+     *
+     * @return string
+     */
+    private function buildCombinationName(array $attributesInformation): string
+    {
+        $combinedNameParts = [];
+        foreach ($attributesInformation as $combinationAttributeInformation) {
+            $combinedNameParts[] = sprintf(
+                '%s - %s',
+                $combinationAttributeInformation->getAttributeGroupName(),
+                $combinationAttributeInformation->getAttributeName()
+            );
+        }
+
+        return implode(', ', $combinedNameParts);
     }
 }
