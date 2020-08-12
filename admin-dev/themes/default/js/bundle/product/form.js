@@ -79,7 +79,7 @@ $(document).ready(function() {
 function resetEditor() {
   const languageEditorsSelector = '.summary-description-container .panel.active div.translation-field.active textarea.autoload_rte';
   $(languageEditorsSelector).each(function(index, textarea) {
-    if(window.tinyMCE) {
+    if (window.tinyMCE) {
       const editor = window.tinyMCE.get(textarea.id);
       if (editor) {
         //Reset content to force refresh of editor
