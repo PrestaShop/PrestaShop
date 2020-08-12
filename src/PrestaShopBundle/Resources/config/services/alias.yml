@@ -20,3 +20,6 @@ services:
 
     theme_manager:
       alias: prestashop.core.addon.theme.theme_manager
+
+    theme_validator:
+      alias: prestashop.core.addon.theme.theme_validator

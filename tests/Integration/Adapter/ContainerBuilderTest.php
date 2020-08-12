@@ -31,6 +31,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Module\Banner\Repository\FrontRepository;
 use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
+use PrestaShopBundle\Exception\ServiceContainerException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
@@ -91,5 +92,11 @@ class ContainerBuilderTest extends TestCase
 
         $container = ContainerBuilder::getContainer('front', true);
         $container->get('ps_banner.admin_repository');
+    }
+
+    public function testBuildContainerAdminThrowException()
+    {
+        $this->expectException(ServiceContainerException::class);
+        ContainerBuilder::getContainer('admin', false);
     }
 }

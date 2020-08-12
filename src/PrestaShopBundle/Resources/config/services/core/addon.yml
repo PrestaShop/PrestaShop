@@ -30,11 +30,19 @@ services:
           - "@prestashop.core.admin.lang.repository"
           - "@prestashop.translation.theme.exporter"
 
+
+    prestashop.core.addon.theme.theme_validator:
+        class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeValidator
+        arguments:
+          - '@translator'
+          - '@prestashop.adapter.legacy.configuration'
+
     prestashop.core.addon.theme.theme_manager_builder:
         class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder
         arguments:
             - '@=service("prestashop.adapter.legacy.context").getContext()'
             - '@prestashop.adapter.legacy_db'
+            - '@prestashop.core.addon.theme.theme_validator'
 
     prestashop.core.addon.theme.theme_manager:
         class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager
