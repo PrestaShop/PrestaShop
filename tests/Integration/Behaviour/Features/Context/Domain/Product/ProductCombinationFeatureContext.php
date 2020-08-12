@@ -78,7 +78,7 @@ class ProductCombinationFeatureContext extends AbstractProductFeatureContext
         foreach ($combinationsForEditing as $key => $combinationForEditing) {
             Assert::assertEquals(
                 $dataRows[$key]['combination name'],
-                $combinationForEditing->buildCombinationName(),
+                $combinationForEditing->getCombinationName(),
                 'Unexpected combination'
             );
         }

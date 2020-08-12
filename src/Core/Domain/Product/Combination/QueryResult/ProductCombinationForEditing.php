@@ -44,16 +44,24 @@ class ProductCombinationForEditing
     private $attributesInformation;
 
     /**
+     * @var string
+     */
+    private $combinationName;
+
+    /**
      * @param int $combinationId
-     * @param array $attributesInformation
+     * @param string $combinationName
+     * @param CombinationAttributeInformation[] $attributesInformation
      * @todo: add additional properties when needed (for update command)
      */
     public function __construct(
         int $combinationId,
+        string $combinationName,
         array $attributesInformation
     ) {
         $this->combinationId = $combinationId;
         $this->attributesInformation = $attributesInformation;
+        $this->combinationName = $combinationName;
     }
 
     /**
@@ -75,17 +83,8 @@ class ProductCombinationForEditing
     /**
      * @return string
      */
-    public function buildCombinationName(): string
+    public function getCombinationName(): string
     {
-        $combinedNameParts = [];
-        foreach ($this->attributesInformation as $combinationAttributeInformation) {
-            $combinedNameParts[] = sprintf(
-                '%s - %s',
-                $combinationAttributeInformation->getAttributeGroupName(),
-                $combinationAttributeInformation->getAttributeName()
-            );
-        }
-
-        return implode(', ', $combinedNameParts);
+        return $this->combinationName;
     }
 }
