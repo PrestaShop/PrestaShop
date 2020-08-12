@@ -30,9 +30,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
 /**
  * Product information for editing
- *
- * @todo: should we follow {...}Information or {..}Options concept? do we need those suffixes at all?
- *      could be simply ProductPrices, ProductOptions, ProductCategories, ProductBasic(s)|(Info), ProductCustomizations?
  */
 class ProductForEditing
 {
@@ -82,9 +79,9 @@ class ProductForEditing
     private $shippingInformation;
 
     /**
-     * @var ProductSeoInformation
+     * @var ProductSeoOptions
      */
-    private $productSeoInformation;
+    private $productSeoOptions;
 
     /**
      * @param int $productId
@@ -96,7 +93,7 @@ class ProductForEditing
      * @param ProductOptions $options
      * @param ProductShippingInformation $shippingInformation
      * @param ProductSupplierOptions $productSupplierOptions
-     * @param ProductSeoInformation $productSeoInformation
+     * @param ProductSeoOptions $productSeoOptions
      */
     public function __construct(
         int $productId,
@@ -108,7 +105,7 @@ class ProductForEditing
         ProductOptions $options,
         ProductShippingInformation $shippingInformation,
         ProductSupplierOptions $productSupplierOptions,
-        ProductSeoInformation $productSeoInformation
+        ProductSeoOptions $productSeoOptions
     ) {
         $this->productId = $productId;
         $this->active = $active;
@@ -119,7 +116,7 @@ class ProductForEditing
         $this->options = $options;
         $this->shippingInformation = $shippingInformation;
         $this->productSupplierOptions = $productSupplierOptions;
-        $this->productSeoInformation = $productSeoInformation;
+        $this->productSeoOptions = $productSeoOptions;
     }
 
     /**
@@ -195,10 +192,10 @@ class ProductForEditing
     }
 
     /**
-     * @return ProductSeoInformation
+     * @return ProductSeoOptions
      */
-    public function getProductSeoInformation(): ProductSeoInformation
+    public function getProductSeoOptions(): ProductSeoOptions
     {
-        return $this->productSeoInformation;
+        return $this->productSeoOptions;
     }
 }

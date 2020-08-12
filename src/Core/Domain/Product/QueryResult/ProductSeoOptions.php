@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 /**
  * Transfers data about Product SEO options
  */
-class ProductSeoInformation
+class ProductSeoOptions
 {
     /**
      * @var string[]
