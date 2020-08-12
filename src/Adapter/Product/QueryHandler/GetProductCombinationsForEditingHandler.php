@@ -46,7 +46,6 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
     {
         $product = $this->getProduct($query->getProductId());
         //@todo: allow pagination?
-        //@todo: format array to some DTO collection.
         $combinations = $product->getAttributeCombinations();
 
         return $this->formatCombinationsForEditing($combinations);
@@ -54,14 +53,13 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
 
     /**
      * @param array $combinations
-     * @todo: resource hungry. Recheck
+     * @todo: 2 loops for massive combination arrays ? RIP
      *
-     * @return ProductCombinationForEditing
+     * @return ProductCombinationForEditing[]
      */
-    private function formatCombinationsForEditing(array $combinations): ProductCombinationForEditing
+    private function formatCombinationsForEditing(array $combinations): array
     {
         $combinationsForEditing = [];
-        //@todo: combination attributes info here
         $attributesInformationByCombinationId = [];
 
         foreach ($combinations as $combination) {
