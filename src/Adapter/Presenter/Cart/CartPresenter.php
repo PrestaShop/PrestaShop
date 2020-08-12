@@ -156,7 +156,7 @@ class CartPresenter implements PresenterInterface
         }
 
         if ($rawProduct['price_amount'] && $rawProduct['unit_price_ratio'] > 0) {
-            if($rawProduct['id_product_attribute'] > 0) {
+            if ($rawProduct['id_product_attribute'] > 0) {
                 $combination = new Combination($rawProduct['id_product_attribute']);
                 if (0 != $combination->unit_price_impact && 0 != $rawProduct['unit_price_ratio']) {
                     $unitPrice = ($price_tax_exc / $rawProduct['unit_price_ratio']) + $combination->unit_price_impact;
