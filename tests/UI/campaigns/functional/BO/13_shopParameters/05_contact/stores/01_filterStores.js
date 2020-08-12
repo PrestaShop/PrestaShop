@@ -22,14 +22,11 @@ const baseContext = 'functional_BO_shopParameters_contact_stores_filterStores';
 // Import expect from chai
 const {expect} = require('chai');
 
-
 // Browser and tab
 let browserContext;
 let page;
 
-
 let numberOfStores = 0;
-
 
 describe('Filter stores', async () => {
   // before and after functions
