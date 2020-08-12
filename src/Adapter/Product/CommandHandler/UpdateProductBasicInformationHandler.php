@@ -28,7 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use Manufacturer;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductBasicInformationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -72,26 +75,46 @@ final class UpdateProductBasicInformationHandler extends AbstractProductHandler 
         }
 
         $localizedNames = $command->getLocalizedNames();
-        $localizedDescriptions = $command->getLocalizedDescriptions();
-        $localizedShortDescriptions = $command->getLocalizedShortDescriptions();
-
         if (null !== $localizedNames) {
             $product->name = $localizedNames;
             $this->validateLocalizedField($product, 'name', ProductConstraintException::INVALID_NAME);
             $this->setLocalizedFieldToUpdate('name', $localizedNames);
         }
 
+        $localizedDescriptions = $command->getLocalizedDescriptions();
         if (null !== $localizedDescriptions) {
             $product->description = $localizedDescriptions;
             $this->validateLocalizedField($product, 'description', ProductConstraintException::INVALID_DESCRIPTION);
             $this->setLocalizedFieldToUpdate('description', $localizedDescriptions);
         }
 
+        $localizedShortDescriptions = $command->getLocalizedShortDescriptions();
         if (null !== $localizedShortDescriptions) {
             $product->description_short = $localizedShortDescriptions;
             $this->validateLocalizedField($product, 'description_short', ProductConstraintException::INVALID_SHORT_DESCRIPTION);
             $this->setLocalizedFieldToUpdate('description_short', $localizedShortDescriptions);
         }
+
+        $manufacturerId = $command->getManufacturerId();
+        if (null !== $manufacturerId) {
+            $this->assertManufacturerExists($manufacturerId);
+            $product->id_manufacturer = $manufacturerId->getValue();
+            $this->fieldsToUpdate['id_manufacturer'] = true;
+        }
+    }
+
+    /**
+     * @param ManufacturerId $manufacturerId
+     *
+     * @throws ManufacturerNotFoundException
+     */
+    private function assertManufacturerExists(ManufacturerId $manufacturerId): void
+    {
+        if (Manufacturer::manufacturerExists($manufacturerId->getValue())) {
+            return;
+        }
+
+        throw new ManufacturerNotFoundException(sprintf('Manufacturer #%s does not exist', $manufacturerId));
     }
 
     /**

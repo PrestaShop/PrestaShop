@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
@@ -59,6 +60,11 @@ class UpdateProductBasicInformationCommand
      * @var string[]|null key value pairs where key is the id of language
      */
     private $localizedShortDescriptions;
+
+    /**
+     * @var ManufacturerId|null
+     */
+    private $manufacturerId;
 
     /**
      * @param int $productId
@@ -152,6 +158,26 @@ class UpdateProductBasicInformationCommand
     public function setLocalizedShortDescriptions(array $localizedShortDescriptions): UpdateProductBasicInformationCommand
     {
         $this->localizedShortDescriptions = $localizedShortDescriptions;
+
+        return $this;
+    }
+
+    /**
+     * @return ManufacturerId|null
+     */
+    public function getManufacturerId(): ?ManufacturerId
+    {
+        return $this->manufacturerId;
+    }
+
+    /**
+     * @param int $manufacturerId
+     *
+     * @return UpdateProductBasicInformationCommand
+     */
+    public function setManufacturerId(int $manufacturerId): UpdateProductBasicInformationCommand
+    {
+        $this->manufacturerId = new ManufacturerId($manufacturerId);
 
         return $this;
     }
