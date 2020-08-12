@@ -440,7 +440,7 @@ abstract class PaymentModuleCore extends Module
                         ];
 
                         if (isset($product['unit_price_ratio']) && $product['unit_price_ratio'] > 0) {
-                            if($product['id_product_attribute'] > 0) {
+                            if ($product['id_product_attribute'] > 0) {
                                 $combination = new Combination($product['id_product_attribute']);
                                 if (0 != $combination->unit_price_impact && 0 != $product['unit_price_ratio']) {
                                     $unitPrice = ($price / $product['unit_price_ratio']) + $combination->unit_price_impact;
