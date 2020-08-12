@@ -69,15 +69,15 @@ class ProductCombinationForEditing
      */
     public function buildCombinationName(): string
     {
-        $combinedNames = [];
+        $combinedNameParts = [];
         foreach ($this->attributesInformation as $combinationAttributeInformation) {
-            $combinedNames[] = sprintf(
+            $combinedNameParts[] = sprintf(
                 '%s - %s',
                 $combinationAttributeInformation->getAttributeGroupName(),
                 $combinationAttributeInformation->getAttributeName()
             );
         }
 
-        return implode(', ', $combinedNames);
+        return implode(', ', $combinedNameParts);
     }
 }
