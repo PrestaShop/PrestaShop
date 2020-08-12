@@ -57,6 +57,7 @@ final class RemoveAllAssociatedProductCategoriesHandler extends AbstractProductC
     {
         $product = $this->getProduct($command->getProductId());
 
+        // remove all categories associated with this product, keep only home Category
         $this->updateCategories($product, [$this->homeCategoryId]);
         $this->updateDefaultCategory($product, $this->homeCategoryId);
     }

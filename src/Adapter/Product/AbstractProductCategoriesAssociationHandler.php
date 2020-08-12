@@ -43,6 +43,8 @@ abstract class AbstractProductCategoriesAssociationHandler extends AbstractProdu
      * @param Product $product
      * @param int[] $categoryIds
      *
+     * Warning: $categoryIds will replace current categories, erasing previous data.
+     *
      * @throws CannotUpdateProductException
      * @throws ProductException
      */
