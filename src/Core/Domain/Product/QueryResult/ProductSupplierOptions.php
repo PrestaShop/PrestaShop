@@ -39,11 +39,6 @@ class ProductSupplierOptions
     private $defaultSupplierId;
 
     /**
-     * @var string
-     */
-    private $defaultSupplierReference;
-
-    /**
      * @var ProductSupplierOption[]
      */
     private $optionsBySupplier;
@@ -51,15 +46,12 @@ class ProductSupplierOptions
     /**
      * @param int $defaultSupplierId
      * @param ProductSupplierOption[] $optionsBySupplier
-     * @param string $defaultSupplierReference
      */
     public function __construct(
         int $defaultSupplierId,
-        string $defaultSupplierReference,
         array $optionsBySupplier
     ) {
         $this->defaultSupplierId = $defaultSupplierId;
-        $this->defaultSupplierReference = $defaultSupplierReference;
         $this->optionsBySupplier = $optionsBySupplier;
     }
 
@@ -77,13 +69,5 @@ class ProductSupplierOptions
     public function getOptionsBySupplier(): array
     {
         return $this->optionsBySupplier;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDefaultSupplierReference(): string
-    {
-        return $this->defaultSupplierReference;
     }
 }
