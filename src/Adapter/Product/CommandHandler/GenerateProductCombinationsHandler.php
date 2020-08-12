@@ -59,23 +59,21 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
     private $connection;
 
     /**
-     * @var string
+     * @var Db
      */
-    private $dbPrefix;
+    private $dbInstance;
 
     /**
      * @param CombinationGeneratorInterface $combinationGenerator
      * @param Connection $connection
-     * @param string $dbPrefix
      */
     public function __construct(
         CombinationGeneratorInterface $combinationGenerator,
-        Connection $connection,
-        string $dbPrefix
+        Connection $connection
     ) {
         $this->combinationGenerator = $combinationGenerator;
         $this->connection = $connection;
-        $this->dbPrefix = $dbPrefix;
+        $this->dbInstance = Db::getInstance();
     }
 
     /**
@@ -185,7 +183,7 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
         }
 
         try {
-            if (!Db::getInstance()->insert('product_attribute_combination', $attributesList)) {
+            if (!$this->dbInstance->insert('product_attribute_combination', $attributesList)) {
                 throw new CannotAddCombinationException('Failed saving product-combination associations');
             }
         } catch (PrestaShopException $e) {
