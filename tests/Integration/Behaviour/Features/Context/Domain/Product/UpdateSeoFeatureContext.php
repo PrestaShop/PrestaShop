@@ -109,7 +109,7 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
 
         Assert::assertEquals(
             ProductRedirectOption::NO_TARGET_VALUE,
-            $productForEditing->getProductSeoInformation()->getRedirectTargetId(),
+            $productForEditing->getProductSeoOptions()->getRedirectTargetId(),
             'Product "%s" expected to have no redirect target'
         );
     }
@@ -122,7 +122,7 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
      */
     public function assertRedirectTarget(string $productReference, string $targetReference)
     {
-        $productSeo = $this->getProductForEditing($productReference)->getProductSeoInformation();
+        $productSeo = $this->getProductForEditing($productReference)->getProductSeoOptions();
         $targetId = $this->getSharedStorage()->get($targetReference);
 
         Assert::assertEquals($targetId, $productSeo->getRedirectTargetId(), 'Unexpected product redirect target');

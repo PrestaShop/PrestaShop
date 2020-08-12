@@ -142,11 +142,11 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             'mpn' => 'options.mpn',
             'reference' => 'options.reference',
             'tags' => 'options.localizedTags',
-            'meta_title' => 'productSeoInformation.localizedMetaTitles',
-            'meta_description' => 'productSeoInformation.localizedMetaDescriptions',
-            'link_rewrite' => 'productSeoInformation.localizedLinkRewrites',
-            'redirect_type' => 'productSeoInformation.redirectType',
-            'redirect_target' => 'productSeoInformation.redirectTargetId',
+            'meta_title' => 'productSeoOptions.localizedMetaTitles',
+            'meta_description' => 'productSeoOptions.localizedMetaDescriptions',
+            'link_rewrite' => 'productSeoOptions.localizedLinkRewrites',
+            'redirect_type' => 'productSeoOptions.redirectType',
+            'redirect_target' => 'productSeoOptions.redirectTargetId',
         ];
 
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
