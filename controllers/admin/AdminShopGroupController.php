@@ -192,7 +192,7 @@ class AdminShopGroupControllerCore extends AdminController
                     'label' => $this->trans('Color', [], 'Admin.Catalog.Feature'),
                     'name' => 'color',
                     'desc' => [
-                        $this->trans('It will only apply to this group of shops, each store keeps its individual color.', [], 'Admin.Shopparameters.Feature'),
+                        $this->trans('It will only be applied to this group of shops, each store will keep its individual color.', [], 'Admin.Shopparameters.Feature'),
                     ],
                     'hint' => $this->trans('Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").', [], 'Admin.Catalog.Help'),
                 ],
