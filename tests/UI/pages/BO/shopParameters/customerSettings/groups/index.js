@@ -15,7 +15,7 @@ class Groups extends BOBasePage {
     // Form selectors
     this.gridForm = '#form-group';
     this.gridTableHeaderTitle = `${this.gridForm} .panel-heading`;
-    this.gridTableNumberOfTitlesSpan = `${this.gridTableHeaderTitle} span.badge`;
+    this.gridTableNumberOfGroupsSpan = `${this.gridTableHeaderTitle} span.badge`;
 
     // Table selectors
     this.gridTable = '#table-group';
@@ -31,6 +31,16 @@ class Groups extends BOBasePage {
     this.tableBodyRows = `${this.tableBody} tr`;
     this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
     this.tableBodyColumns = row => `${this.tableBodyRow(row)} td`;
+
+    // Row actions selectors
+    this.tableColumnActions = row => `${this.tableBodyColumns(row)} .btn-group-action`;
+    this.tableColumnActionsEditLink = row => `${this.tableColumnActions(row)} a.edit`;
+    this.tableColumnActionsToggleButton = row => `${this.tableColumnActions(row)} button.dropdown-toggle`;
+    this.tableColumnActionsDropdownMenu = row => `${this.tableColumnActions(row)} .dropdown-menu`;
+    this.tableColumnActionsDeleteLink = row => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
+
+    // Confirmation modal
+    this.deleteModalButtonYes = '#popup_ok';
   }
 
   /* Header methods */
@@ -51,7 +61,7 @@ class Groups extends BOBasePage {
    * @return {Promise<number>}
    */
   getNumberOfElementInGrid(page) {
-    return this.getNumberFromText(page, this.gridTableNumberOfTitlesSpan);
+    return this.getNumberFromText(page, this.gridTableNumberOfGroupsSpan);
   }
 
   /**
@@ -138,6 +148,37 @@ class Groups extends BOBasePage {
       default:
         throw new Error(`Column ${columnName} was not found`);
     }
+  }
+
+  /**
+   * Go to edit group page
+   * @param page
+   * @param row
+   * @return {Promise<void>}
+   */
+  async gotoEditGroupPage(page, row) {
+    await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(row));
+  }
+
+  /**
+   * Delete group from row
+   * @param page
+   * @param row
+   * @return {Promise<string>}
+   */
+  async deleteGroup(page, row) {
+    await Promise.all([
+      page.click(this.tableColumnActionsToggleButton(row)),
+      this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(row)),
+    ]);
+
+    await page.click(this.tableColumnActionsDeleteLink(row));
+
+    // Confirm delete action
+    await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
+
+    // Get successful message
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 }
 
