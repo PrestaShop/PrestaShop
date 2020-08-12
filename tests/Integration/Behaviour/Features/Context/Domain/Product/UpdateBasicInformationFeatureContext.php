@@ -76,16 +76,27 @@ class UpdateBasicInformationFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then product :productReference should have following manufacturer :manufacturerReference
+     * @Then manufacturer :manufacturerReference should be assigned to product :productReference
      *
-     * @param string $productReference
      * @param string $manufacturerReference
+     * @param string $productReference
      */
-    public function assertManufacturerId(string $productReference, string $manufacturerReference): void
+    public function assertManufacturerId(string $manufacturerReference, string $productReference): void
     {
         $expectedId = $this->getSharedStorage()->get($manufacturerReference);
         $actualId = $this->getProductForEditing($productReference)->getBasicInformation()->getManufacturerId();
 
         Assert::assertEquals($expectedId, $actualId, 'Unexpected product manufacturer id');
+    }
+
+    /**
+     * @Then product :productReference should have no manufacturer assigned
+     *
+     * @param string $productReference
+     */
+    public function assertProductHasNoManufacturer(string $productReference): void
+    {
+        $manufacturerId = $this->getProductForEditing($productReference)->getBasicInformation()->getManufacturerId();
+        Assert::assertEmpty($manufacturerId, sprintf('Expected product "%s" to have no manufacturer assigned', $productReference));
     }
 }
