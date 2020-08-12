@@ -414,7 +414,7 @@ class AdminShopControllerCore extends AdminController
                 'label' => $this->trans('Color', [], 'Admin.Catalog.Feature'),
                 'name' => 'color',
                 'desc' => [
-                    $this->trans('It will apply to the multistore header to underline your shop context.', [], 'Admin.Shopparameters.Feature'),
+                    $this->trans('It will only be applied to the multistore header to highlight your shop context.', [], 'Admin.Shopparameters.Feature'),
                 ],
                 'hint' => $this->trans('Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").', [], 'Admin.Catalog.Help'),
             ];
