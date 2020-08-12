@@ -354,10 +354,10 @@ admin_orders_display_customization_image:
     value: \w+
 
 admin_orders_product_prices:
-  path: /{orderId}/products/refresh-prices
+  path: /{orderId}/products/prices
   methods: [GET]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Order:productPrices
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:getProductPrices
     _legacy_controller: AdminOrders
   requirements:
     orderId: \d+
