@@ -63,6 +63,10 @@ class UpdateBasicInformationFeatureContext extends AbstractProductFeatureContext
             $command->setLocalizedShortDescriptions($this->parseLocalizedArray($data['description_short']));
         }
 
+        if (isset($data['manufacturer'])) {
+            $command->setManufacturerId($this->getSharedStorage()->get($data['manufacturer']));
+        }
+
         try {
             $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {

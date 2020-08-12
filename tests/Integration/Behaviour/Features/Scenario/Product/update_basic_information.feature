@@ -11,11 +11,13 @@ Feature: Update product basic information from Back Office (BO)
       | is_virtual        | false                     |
     And product "product1" type should be standard
     And product "product1" localized "name" should be "en-US:funny mug"
+    And manufacturer studioDesign named "Studio Design" exists
     When I update product "product1" basic information with following values:
       | name              | en-US:photo of funny mug  |
       | is_virtual        | true                      |
-      | description       | en-US:nice mug        |
-      | description_short | en-US:Just a nice mug |
+      | description       | en-US:nice mug            |
+      | description_short | en-US:Just a nice mug     |
+      | manufacturer      | studioDesign              |
     Then product "product1" type should be virtual
     And product "product1" localized "name" should be "en-US:photo of funny mug"
     And product "product1" localized "description" should be "en-US:nice mug"
