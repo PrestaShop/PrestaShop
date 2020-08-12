@@ -111,7 +111,8 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             $this->getProductType($product),
             $product->name,
             $product->description,
-            $product->description_short
+            $product->description_short,
+            (int) $product->id_manufacturer
         );
     }
 
