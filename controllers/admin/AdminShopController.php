@@ -389,6 +389,16 @@ class AdminShopControllerCore extends AdminController
             }
         }
 
+        $this->fields_form['input'][] = [
+            'type' => 'color',
+            'label' => $this->trans('Color', [], 'Admin.Catalog.Feature'),
+            'name' => 'color',
+            'desc' => [
+                $this->trans('It will only be applied to the multistore header to highlight your shop context.', [], 'Admin.Shopparameters.Feature'),
+            ],
+            'hint' => $this->trans('Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").', [], 'Admin.Catalog.Help'),
+        ];
+
         if ($display_group_list) {
             $options = [];
             foreach (ShopGroup::getShopGroups() as $group) {
@@ -408,16 +418,6 @@ class AdminShopControllerCore extends AdminController
             } else {
                 $group_desc = $this->trans('You can only move your shop to a shop group with all "share" options disabled -- or to a shop group with no customers/orders.', [], 'Admin.Shopparameters.Notification');
             }
-
-            $this->fields_form['input'][] = [
-                'type' => 'color',
-                'label' => $this->trans('Color', [], 'Admin.Catalog.Feature'),
-                'name' => 'color',
-                'desc' => [
-                    $this->trans('It will only be applied to the multistore header to highlight your shop context.', [], 'Admin.Shopparameters.Feature'),
-                ],
-                'hint' => $this->trans('Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").', [], 'Admin.Catalog.Help'),
-            ];
 
             $this->fields_form['input'][] = [
                 'type' => 'select',
