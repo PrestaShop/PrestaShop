@@ -51,12 +51,8 @@ function makeQuery (url) {
     // it mixes up the cache between the AJAX request (that
     // returns JSON) and the non-AJAX request (that returns
     // HTML) and you just get a mess of JSON on the duplicated tab.
-    
-    const slightlyDifferentURL = [
-        url,
-        url.indexOf('?') >= 0 ? '&' : '?',
-        'from-xhr'
-    ].join('');
+    const separator = url.indexOf('?') >= 0 ? '&' : '?';
+    const slightlyDifferentURL = url + separator + 'from-xhr';
 
     $
         .get(slightlyDifferentURL, null, null, 'json')
