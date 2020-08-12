@@ -65,6 +65,14 @@ class ProductCombinationForEditing
     }
 
     /**
+     * @return CombinationAttributeInformation[]
+     */
+    public function getAttributesInformation(): array
+    {
+        return $this->attributesInformation;
+    }
+
+    /**
      * @return string
      */
     public function buildCombinationName(): string
