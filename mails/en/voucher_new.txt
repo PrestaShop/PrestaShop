@@ -1,13 +1,13 @@
+{shop_url}
 
-[{shop_url}] 
+Hi {firstname} {lastname},
 
-Hi {firstname} {lastname}, 
+Voucher code has been generated
 
-Here is the code of your voucher: {voucher_num}
+Here is your new voucher code: {voucher_num}
 
-Simply copy/paste this code during the payment process for your next
-order. 		 
+In order to use it, just copy/paste this code during check out.
 
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
+[{shop_name}]({shop_url})
 
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail=utm_campaign=footer_1-7)

@@ -1,16 +1,13 @@
+{shop_url}
 
-[{shop_url}] 
+Hi {firstname} {lastname},
 
-Hi, 
+There are now less than {last_qty} items in stock.
 
-The remaining stock is now less than the specified minimum of
-{last_qty}.
+Remaining stock: {qty}
 
-REMAINING STOCK: {qty}
+Replenish your inventory, go to the Catalog > Stocks section of your back office to manage your stock.
 
-You are advised to open the product's admin Product Page in order to
-replenish your inventory. 		 
+[{shop_name}]({shop_url})
 
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
-
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail=utm_campaign=footer_1-7)

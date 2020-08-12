@@ -1,16 +1,15 @@
+{shop_url}
 
-[{shop_url}] 
+Hi {firstname} {lastname},
 
-Hi {firstname} {lastname}, 
+Order ID {order_name} - Voucher code generated
 
-A voucher has been created in your name as a result of your order
-with the reference {order_name}.
+We are pleased to inform you that a voucher has been generated in your name for order with the reference {order_name}.
 
 VOUCHER CODE: {voucher_num} in the amount of {voucher_amount}
 
-Simply copy/paste this code during the payment process for your next
-order. 		 
+In order to use it, just copy/paste this code during check out.
 
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
+[{shop_name}]({shop_url})
 
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail=utm_campaign=footer_1-7)

@@ -1,15 +1,11 @@
+{shop_url}
 
-[{shop_url}] 
+Hi {firstname} {lastname},
 
-Hi {firstname} {lastname}, 
+{reply}
 
-{reply} 
+Please do not reply directly to this email, we will not receive it. In order to reply, click on the following link: {link}
 
-Please do not reply directly to this email, we will not receive it. 
+[{shop_name}]({shop_url})
 
-In order to reply, please use the following link: {link}
-[{link}] 
-
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
-
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail=utm_campaign=footer_1-7)

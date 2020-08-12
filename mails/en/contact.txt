@@ -1,16 +1,17 @@
+{shop_url}
 
-[{shop_url}] 
+Message from a {shop_name} customer
 
-Message from a {shop_name} customer 
+Customer Email Address: {email}
 
-CUSTOMER E-MAIL ADDRESS: {email}
+Order ID #:  {order_name}
 
-CUSTOMER MESSAGE: {message}
+Attached file: {attached_file}
 
-ORDER ID: {order_name}
+Customer message:
 
-ATTACHED FILE: {attached_file} 		 
+{message}
 
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
+[{shop_name}]({shop_url})
 
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail=utm_campaign=footer_1-7)

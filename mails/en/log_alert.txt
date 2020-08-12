@@ -1,13 +1,13 @@
+{shop_url}
 
-[{shop_url}] 
+Hi {firstname} {lastname},
 
-Hi {firstname} {lastname}, 
+New alert message saved
 
-WARNING: you have received a new log alert in your Back Office.
+WARNING: you have received a new log alert in your back office.
 
-You can check for it in the "TOOLS" > "LOGS" section of your Back
-Office. 		 
+You can check for it in the Advanced Parameters > Logs section of your back office.
 
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
+[{shop_name}]({shop_url})
 
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail=utm_campaign=footer_1-7)
