@@ -29,8 +29,10 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetProductCombinationsForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\ProductCombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -61,11 +63,45 @@ class ProductCombinationFeatureContext extends AbstractProductFeatureContext
      * @Then product :productReference should have following combinations:
      *
      * @param string $productReference
+     * @param TableNode $table
      */
-    public function assertProductCombinations(string $productReference): void
+    public function assertProductCombinations(string $productReference, TableNode $table): void
     {
-        $this->getQueryBus()->handle(new GetProductCombinationsForEditing($this->getSharedStorage()->get($productReference)));
-        // Should ProductForEditing contain combinations? I suppose it should have dedicated query
+        $dataRows = $table->getColumnsHash();
+        $combinationsForEditing = $this->getQueryBus()->handle(new GetProductCombinationsForEditing(
+            $this->getSharedStorage()->get($productReference)
+        ));
+
+        Assert::assertEquals(count($combinationsForEditing), count($dataRows), 'Unexpected combinations count');
+
+        /** @var ProductCombinationForEditing $combinationForEditing */
+        foreach ($combinationsForEditing as $key => $combinationForEditing) {
+            Assert::assertEquals(
+                $dataRows[$key]['combination name'],
+                $combinationForEditing->buildCombinationName(),
+                'Unexpected combination'
+            );
+        }
+    }
+
+    /**
+     * @param string $groupsAttributesReferencesPairs
+     *
+     * @return array
+     */
+    private function parseAttributes(string $groupsAttributesReferencesPairs): array
+    {
+        $attributeByGroupIds = [];
+        $groupAttributeReferencesPairs = explode(';', $groupsAttributesReferencesPairs);
+        foreach ($groupAttributeReferencesPairs as $groupAttributeReferencesPair) {
+            $groupAttributePair = explode(':', $groupAttributeReferencesPair);
+            $groupId = $this->getSharedStorage()->get($groupAttributePair[0]);
+            $attributeId = $this->getSharedStorage()->get($groupAttributePair[1]);
+
+            $attributeByGroupIds[][$groupId] = $attributeId;
+        }
+
+        return $attributeByGroupIds;
     }
 
     /**
