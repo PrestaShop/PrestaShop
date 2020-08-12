@@ -31,7 +31,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use Language;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateProductCustomizationFieldsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
@@ -298,7 +298,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
     private function updateProductCustomizationFields(string $productReference, array $fieldReferences, array $fieldsForUpdate): void
     {
         try {
-            $newCustomizationFieldIds = $this->getCommandBus()->handle(new UpdateProductCustomizationFieldsCommand(
+            $newCustomizationFieldIds = $this->getCommandBus()->handle(new SetProductCustomizationFieldsCommand(
                 $this->getSharedStorage()->get($productReference),
                 $fieldsForUpdate
             ));

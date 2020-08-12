@@ -31,8 +31,8 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractCustomizationFieldHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\AddCustomizationFieldCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\DeleteCustomizationFieldCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateCustomizationFieldCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\AddCustomizationFieldHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\DeleteCustomizationFieldHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\UpdateCustomizationFieldHandlerInterface;
@@ -44,7 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Handles @var UpdateProductCustomizationFieldsCommand using legacy object model
+ * Handles @var SetProductCustomizationFieldsCommand using legacy object model
  */
 class UpdateProductCustomizationFieldsHandler extends AbstractCustomizationFieldHandler implements UpdateProductCustomizationFieldsHandlerInterface
 {
@@ -83,7 +83,7 @@ class UpdateProductCustomizationFieldsHandler extends AbstractCustomizationField
      *
      * Creates, updates or deletes customization fields depending on differences of existing and provided fields
      */
-    public function handle(UpdateProductCustomizationFieldsCommand $command): array
+    public function handle(SetProductCustomizationFieldsCommand $command): array
     {
         $deletableFieldIds = $this->getDeletableFieldIds($command);
 
@@ -133,12 +133,12 @@ class UpdateProductCustomizationFieldsHandler extends AbstractCustomizationField
     }
 
     /**
-     * @param UpdateProductCustomizationFieldsCommand $command
+     * @param SetProductCustomizationFieldsCommand $command
      *
      * @throws ProductException
      * @throws ProductNotFoundException
      */
-    private function getDeletableFieldIds(UpdateProductCustomizationFieldsCommand $command): array
+    private function getDeletableFieldIds(SetProductCustomizationFieldsCommand $command): array
     {
         $product = $this->getProduct($command->getProductId());
 
