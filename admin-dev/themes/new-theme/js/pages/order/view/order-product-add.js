@@ -32,7 +32,7 @@ import OrderProductRenderer from '@pages/order/view/order-product-renderer';
 import ConfirmModal from '@components/modal';
 import OrderPricesRefresher from '@pages/order/view/order-prices-refresher';
 
-const $ = window.$;
+const {$} = window;
 
 export default class OrderProductAdd {
   constructor() {
@@ -61,21 +61,40 @@ export default class OrderProductAdd {
   }
 
   setupListener() {
-    this.combinationsSelect.on('change', (event) => {
-      this.priceTaxExcludedInput.val(window.ps_round(
-        $(event.currentTarget).find(':selected').data('priceTaxExcluded'),
-        this.currencyPrecision
-      ));
-      this.priceTaxIncludedInput.val(window.ps_round(
-        $(event.currentTarget).find(':selected').data('priceTaxIncluded'),
-        this.currencyPrecision
-      ));
-      this.locationText.html($(event.currentTarget).find(':selected').data('location'));
-      this.available = $(event.currentTarget).find(':selected').data('stock');
+    this.combinationsSelect.on('change', event => {
+      this.priceTaxExcludedInput.val(
+        window.ps_round(
+          $(event.currentTarget)
+            .find(':selected')
+            .data('priceTaxExcluded'),
+          this.currencyPrecision
+        )
+      );
+
+      this.priceTaxIncludedInput.val(
+        window.ps_round(
+          $(event.currentTarget)
+            .find(':selected')
+            .data('priceTaxIncluded'),
+          this.currencyPrecision
+        )
+      );
+
+      this.locationText.html(
+        $(event.currentTarget)
+          .find(':selected')
+          .data('location')
+      );
+
+      this.available = $(event.currentTarget)
+        .find(':selected')
+        .data('stock');
+
       this.quantityInput.trigger('change');
       this.orderProductRenderer.toggleColumn(OrderViewPageMap.productsCellLocation);
     });
-    this.quantityInput.on('change keyup', (event) => {
+
+    this.quantityInput.on('change keyup', event => {
       if (this.available !== null) {
         const newQuantity = Number(event.target.value);
         const remainingAvailable = this.available - newQuantity;
@@ -92,11 +111,13 @@ export default class OrderProductAdd {
         );
       }
     });
+
     this.productIdInput.on('change', () => {
       this.productAddActionBtn.removeAttr('disabled');
       this.invoiceSelect.removeAttr('disabled');
     });
-    this.priceTaxIncludedInput.on('change keyup', (event) => {
+
+    this.priceTaxIncludedInput.on('change keyup', event => {
       const taxIncluded = parseFloat(event.target.value);
       const taxExcluded = this.priceTaxCalculator.calculateTaxExcluded(
         taxIncluded,
@@ -104,12 +125,14 @@ export default class OrderProductAdd {
         this.currencyPrecision
       );
       const quantity = parseInt(this.quantityInput.val(), 10);
+
       this.priceTaxExcludedInput.val(taxExcluded);
       this.totalPriceText.html(
         this.priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, this.currencyPrecision)
       );
     });
-    this.priceTaxExcludedInput.on('change keyup', (event) => {
+
+    this.priceTaxExcludedInput.on('change keyup', event => {
       const taxExcluded = parseFloat(event.target.value);
       const taxIncluded = this.priceTaxCalculator.calculateTaxIncluded(
         taxExcluded,
@@ -117,11 +140,13 @@ export default class OrderProductAdd {
         this.currencyPrecision
       );
       const quantity = parseInt(this.quantityInput.val(), 10);
+
       this.priceTaxIncludedInput.val(taxIncluded);
       this.totalPriceText.html(
         this.priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, this.currencyPrecision)
       );
     });
+
     this.productAddActionBtn.on('click', event => this.handleAddProductWithConfirmationModal(event));
     this.invoiceSelect.on('change', () => this.orderProductRenderer.toggleProductAddNewInvoiceInfo());
   }
@@ -142,10 +167,15 @@ export default class OrderProductAdd {
 
   setCombinations(combinations) {
     this.combinationsSelect.empty();
-    Object.values(combinations).forEach((val) => {
-      this.combinationsSelect.append(`<option value="${val.attributeCombinationId}" data-price-tax-excluded="${val.priceTaxExcluded}" data-price-tax-included="${val.priceTaxIncluded}" data-stock="${val.stock}" data-location="${val.location}">${val.attribute}</option>`);
+
+    Object.values(combinations).forEach(val => {
+      this.combinationsSelect.append(
+        `<option value="${val.attributeCombinationId}" data-price-tax-excluded="${val.priceTaxExcluded}" data-price-tax-included="${val.priceTaxIncluded}" data-stock="${val.stock}" data-location="${val.location}">${val.attribute}</option>`
+      );
     });
+
     this.combinationsBlock.toggleClass('d-none', Object.keys(combinations).length === 0);
+
     if (Object.keys(combinations).length > 0) {
       this.combinationsSelect.trigger('change');
     }
@@ -163,27 +193,31 @@ export default class OrderProductAdd {
       price_tax_excl: this.priceTaxExcludedInput.val(),
       quantity: this.quantityInput.val(),
       invoice_id: this.invoiceSelect.val(),
-      free_shipping: this.freeShippingSelect.prop('checked'),
+      free_shipping: this.freeShippingSelect.prop('checked')
     };
+
     $.ajax({
       url: this.router.generate('admin_orders_add_product', {orderId}),
       method: 'POST',
-      data: params,
-    }).then((response) => {
-      EventEmitter.emit(OrderViewEventMap.productAddedToOrder, {
-        orderId,
-        orderProductId: params.product_id,
-        newRow: response,
-      });
-    }, (response) => {
-      this.productAddActionBtn.prop('disabled', false);
-      this.invoiceSelect.prop('disabled', false);
-      this.combinationsSelect.prop('disabled', false);
+      data: params
+    }).then(
+      response => {
+        EventEmitter.emit(OrderViewEventMap.productAddedToOrder, {
+          orderId,
+          orderProductId: params.product_id,
+          newRow: response
+        });
+      },
+      response => {
+        this.productAddActionBtn.prop('disabled', false);
+        this.invoiceSelect.prop('disabled', false);
+        this.combinationsSelect.prop('disabled', false);
 
-      if (response.responseJSON && response.responseJSON.message) {
-        $.growl.error({message: response.responseJSON.message});
+        if (response.responseJSON && response.responseJSON.message) {
+          $.growl.error({message: response.responseJSON.message});
+        }
       }
-    });
+    );
   }
 
   handleAddProductWithConfirmationModal(event) {
@@ -191,31 +225,46 @@ export default class OrderProductAdd {
     const orderId = $(event.currentTarget).data('orderId');
 
     if (invoiceId === 0) {
-      const combinationId = typeof $(':selected', this.combinationsSelect).val() === 'undefined' ? 0 : $(':selected', this.combinationsSelect).val();
-      const productPriceMatch = this.orderPricesRefresher.checkOtherProductPricesMatch(this.priceTaxIncludedInput.val(), this.productIdInput.val(), combinationId);
+      const combinationId =
+        typeof $(':selected', this.combinationsSelect).val() === 'undefined'
+          ? 0
+          : $(':selected', this.combinationsSelect).val();
+      const productPriceMatch = this.orderPricesRefresher.checkOtherProductPricesMatch(
+        this.priceTaxIncludedInput.val(),
+        this.productIdInput.val(),
+        combinationId
+      );
 
-      const modal = new ConfirmModal({
-        id: 'modal-confirm-new-invoice',
-        confirmTitle: this.invoiceSelect.data('modal-title'),
-        confirmMessage: this.invoiceSelect.data('modal-body'),
-        confirmButtonLabel: this.invoiceSelect.data('modal-apply'),
-        closeButtonLabel: this.invoiceSelect.data('modal-cancel'),
-      }, () => {
-        if (!productPriceMatch) {
-          const modalEditPrice = new ConfirmModal({
-            id: 'modal-confirm-new-price',
-            confirmTitle: this.invoiceSelect.data('modal-edit-price-title'),
-            confirmMessage: this.invoiceSelect.data('modal-edit-price-body'),
-            confirmButtonLabel: this.invoiceSelect.data('modal-edit-price-apply'),
-            closeButtonLabel: this.invoiceSelect.data('modal-edit-price-cancel'),
-          }, () => {
+      const modal = new ConfirmModal(
+        {
+          id: 'modal-confirm-new-invoice',
+          confirmTitle: this.invoiceSelect.data('modal-title'),
+          confirmMessage: this.invoiceSelect.data('modal-body'),
+          confirmButtonLabel: this.invoiceSelect.data('modal-apply'),
+          closeButtonLabel: this.invoiceSelect.data('modal-cancel')
+        },
+        () => {
+          if (!productPriceMatch) {
+            const modalEditPrice = new ConfirmModal(
+              {
+                id: 'modal-confirm-new-price',
+                confirmTitle: this.invoiceSelect.data('modal-edit-price-title'),
+                confirmMessage: this.invoiceSelect.data('modal-edit-price-body'),
+                confirmButtonLabel: this.invoiceSelect.data('modal-edit-price-apply'),
+                closeButtonLabel: this.invoiceSelect.data('modal-edit-price-cancel')
+              },
+              () => {
+                this.addProduct(orderId);
+              }
+            );
+
+            modalEditPrice.show();
+          } else {
             this.addProduct(orderId);
-          });
-          modalEditPrice.show();
-        } else {
-          this.addProduct(orderId);
+          }
         }
-      });
+      );
+
       modal.show();
     } else {
       this.addProduct(orderId);

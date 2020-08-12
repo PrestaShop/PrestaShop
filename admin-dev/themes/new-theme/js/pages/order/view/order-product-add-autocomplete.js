@@ -25,7 +25,7 @@
 import Router from '@components/router';
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 
-const $ = window.$;
+const {$} = window;
 
 export default class OrderProductAutocomplete {
   constructor(input) {
@@ -41,16 +41,19 @@ export default class OrderProductAutocomplete {
   }
 
   listenForSearch() {
-    this.input.on('click', (event) => {
+    this.input.on('click', event => {
       event.stopImmediatePropagation();
       this.updateResults(this.results);
     });
+
     this.input.on('keyup', event => this.delaySearch(event.currentTarget));
+
     $(document).on('click', () => this.dropdownMenu.hide());
   }
 
   delaySearch(input) {
     clearTimeout(this.searchTimeoutId);
+
     this.searchTimeoutId = setTimeout(() => {
       this.search(input.value, $(input).data('currency'), $(input).data('order'));
     }, 300);
@@ -58,37 +61,48 @@ export default class OrderProductAutocomplete {
 
   search(search, currency, orderId) {
     const params = {search_phrase: search};
+
     if (currency) {
       params.currency_id = currency;
     }
+
     if (orderId) {
       params.order_id = orderId;
     }
+
     if (this.activeSearchRequest !== null) {
       this.activeSearchRequest.abort();
     }
+
     this.activeSearchRequest = $.get(this.router.generate('admin_products_search', params));
     this.activeSearchRequest
       .then(response => this.updateResults(response))
-      .always(() => { this.activeSearchRequest = null; });
+      .always(() => {
+        this.activeSearchRequest = null;
+      });
   }
 
   updateResults(results) {
     this.dropdownMenu.empty();
+
     if (!results || !results.products || Object.keys(results.products).length <= 0) {
       this.dropdownMenu.hide();
       return;
     }
 
     this.results = results.products;
-    Object.values(this.results).forEach((val) => {
+
+    Object.values(this.results).forEach(val => {
       const link = $(`<a class="dropdown-item" data-id="${val.productId}" href="#">${val.name}</a>`);
+
       link.on('click', event => {
         event.preventDefault();
         this.onItemClicked($(event.target).data('id'));
       });
+
       this.dropdownMenu.append(link);
     });
+
     this.dropdownMenu.show();
   }
 
