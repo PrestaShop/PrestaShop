@@ -158,7 +158,13 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
         }
         $combinationId = (int) $newCombination->id;
 
-        $this->saveProductAttributeAssociation($combinationId, $generatedCombination);
+        try {
+            $this->saveProductAttributeAssociation($combinationId, $generatedCombination);
+        } catch (CannotAddCombinationException $e) {
+            $this->connection->rollBack();
+            throw $e;
+        }
+
         $this->connection->commit();
 
         return new CombinationId($combinationId);
@@ -180,13 +186,9 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
 
         try {
             if (!Db::getInstance()->insert('product_attribute_combination', $attributesList)) {
-                $this->connection->rollBack();
-
                 throw new CannotAddCombinationException('Failed saving product-combination associations');
             }
         } catch (PrestaShopException $e) {
-            $this->connection->rollBack();
-
             throw new CannotAddCombinationException('Failed saving product-combination associations', 0, $e);
         }
     }
