@@ -31,6 +31,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use Language;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCustomizationFieldsFromProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
@@ -110,13 +111,19 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
     }
 
     /**
-     * @When I delete all customization fields from product :productReference
+     * @When I remove all customization fields from product :productReference
      *
      * @param string $productReference
      */
     public function updateCustomizationFieldsWithEmptyArray(string $productReference)
     {
-        $this->updateProductCustomizationFields($productReference, [], []);
+        try {
+            $this->getCommandBus()->handle(new RemoveAllCustomizationFieldsFromProductCommand(
+                $this->getSharedStorage()->get($productReference)
+            ));
+        } catch (ProductException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
