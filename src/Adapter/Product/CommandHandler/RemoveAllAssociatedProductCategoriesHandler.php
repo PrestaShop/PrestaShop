@@ -58,6 +58,7 @@ final class RemoveAllAssociatedProductCategoriesHandler extends AbstractProductC
         $product = $this->getProduct($command->getProductId());
 
         // remove all categories associated with this product, keep only home Category
+        // @todo: this is likely to break with multishop
         $this->updateCategories($product, [$this->homeCategoryId]);
         $this->updateDefaultCategory($product, $this->homeCategoryId);
     }
