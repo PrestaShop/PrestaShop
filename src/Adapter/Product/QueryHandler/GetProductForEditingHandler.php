@@ -41,16 +41,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOption;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSuppliersForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryHandler\GetProductSuppliersForEditingHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractorException;
 use Product;
-use Supplier;
 use Tag;
 
 /**
@@ -64,20 +58,12 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
     private $numberExtractor;
 
     /**
-     * @var GetProductSuppliersForEditingHandlerInterface
-     */
-    private $getProductSuppliersForEditingHandler;
-
-    /**
      * @param NumberExtractor $numberExtractor
-     * @param GetProductSuppliersForEditingHandlerInterface $getProductSuppliersForEditingHandler
      */
     public function __construct(
-        NumberExtractor $numberExtractor,
-        GetProductSuppliersForEditingHandlerInterface $getProductSuppliersForEditingHandler
+        NumberExtractor $numberExtractor
     ) {
         $this->numberExtractor = $numberExtractor;
-        $this->getProductSuppliersForEditingHandler = $getProductSuppliersForEditingHandler;
     }
 
     /**
@@ -95,8 +81,7 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             $this->getCategoriesInformation($product),
             $this->getPricesInformation($product),
             $this->getOptions($product),
-            $this->getShippingInformation($product),
-            $this->getSupplierOptions($product)
+            $this->getShippingInformation($product)
         );
     }
 
@@ -263,59 +248,5 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             default:
                 return ProductCustomizationOptions::createNotCustomizable();
         }
-    }
-
-    /**
-     * @param Product $product
-     *
-     * @return ProductSupplierOptions
-     */
-    private function getSupplierOptions(Product $product): ProductSupplierOptions
-    {
-        $productSuppliersForEditing = $this->getProductSuppliersForEditingHandler->handle(new GetProductSuppliersForEditing((int) $product->id));
-        $supplierOptions = [];
-
-        $processedSuppliers = [];
-        foreach ($productSuppliersForEditing as $productSupplierForEditing) {
-            $supplierId = $productSupplierForEditing->getSupplierId();
-
-            if (in_array($supplierId, $processedSuppliers)) {
-                continue;
-            }
-
-            $supplierOptions[] = new ProductSupplierOption(
-                Supplier::getNameById($supplierId),
-                $supplierId,
-                $this->filterProductSuppliersBySupplier($supplierId, $productSuppliersForEditing)
-            );
-            $processedSuppliers[] = $supplierId;
-        }
-
-        return new ProductSupplierOptions(
-            (int) $product->id_supplier,
-            $product->supplier_reference,
-            $supplierOptions
-        );
-    }
-
-    /**
-     * Gets EditableProductSuppliers list for its supplier
-     *
-     * @param int $supplierId
-     * @param ProductSupplierForEditing[] $productSuppliersForEditing
-     *
-     * @return ProductSupplierForEditing[]
-     */
-    private function filterProductSuppliersBySupplier(int $supplierId, array $productSuppliersForEditing): array
-    {
-        $productSuppliersBySupplier = [];
-
-        foreach ($productSuppliersForEditing as $productSupplierForEditing) {
-            if ($productSupplierForEditing->getSupplierId() === $supplierId) {
-                $productSuppliersBySupplier[] = $productSupplierForEditing;
-            }
-        }
-
-        return $productSuppliersBySupplier;
     }
 }

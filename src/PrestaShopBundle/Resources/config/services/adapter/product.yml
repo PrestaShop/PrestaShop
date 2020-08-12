@@ -70,7 +70,6 @@ services:
       class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductForEditingHandler
       arguments:
         - '@prestashop.core.util.number.number_extractor'
-        - '@prestashop.adapter.product.query_handler.get_product_suppliers_for_editing_handler'
       tags:
         - name: tactician.handler
           command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing
@@ -175,6 +174,14 @@ services:
       tags:
         - name: tactician.handler
           command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSuppliersForEditing
+
+    prestashop.adapter.product.query_handler.get_product_supplier_options_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductSupplierOptionsHandler
+        arguments:
+            - '@prestashop.adapter.product.query_handler.get_product_suppliers_for_editing_handler'
+        tags:
+            -   name: tactician.handler
+                command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions
 
     prestashop.adapter.product.command_handler.add_product_supplier_handler:
       class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddProductSupplierHandler

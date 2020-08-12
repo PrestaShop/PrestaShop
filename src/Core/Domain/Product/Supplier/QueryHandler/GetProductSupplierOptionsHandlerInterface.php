@@ -24,50 +24,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryHandler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 
 /**
- * Transfers product suppliers data
+ * Defines cotntract to handle @see GetProductSupplierOptions
  */
-class ProductSupplierOptions
+interface GetProductSupplierOptionsHandlerInterface
 {
-    /**
-     * @var int
-     */
-    private $defaultSupplierId;
-
-    /**
-     * @var ProductSupplierOption[]
-     */
-    private $optionsBySupplier;
-
-    /**
-     * @param int $defaultSupplierId
-     * @param ProductSupplierOption[] $optionsBySupplier
-     */
-    public function __construct(
-        int $defaultSupplierId,
-        array $optionsBySupplier
-    ) {
-        $this->defaultSupplierId = $defaultSupplierId;
-        $this->optionsBySupplier = $optionsBySupplier;
-    }
-
-    /**
-     * @return int
-     */
-    public function getDefaultSupplierId(): int
-    {
-        return $this->defaultSupplierId;
-    }
-
-    /**
-     * @return ProductSupplierOption[]
-     */
-    public function getOptionsBySupplier(): array
-    {
-        return $this->optionsBySupplier;
-    }
+    public function handle(GetProductSupplierOptions $query): ProductSupplierOptions;
 }
