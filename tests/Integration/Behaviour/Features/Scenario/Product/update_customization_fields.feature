@@ -100,7 +100,7 @@ Feature: Update product customization fields in Back Office (BO)
     And product product1 should have following customization fields:
       | reference             | type    | name                                  | is required |
       | customField2          | text    | en-US:bottom;fr-FR:texte du bas       | true        |
-    When I delete all customization fields from product product1
+    When I remove all customization fields from product product1
     Then product "product1" should not be customizable
     Then product product1 should have 0 customizable text fields
     And product product1 should have 0 customizable file fields
