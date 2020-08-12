@@ -8042,7 +8042,7 @@ class ProductCore extends ObjectModel
      */
     public function getEcotax($precision = null, $include_tax = true)
     {
-        $precision = $precision ? $precision : Context::getContext()->currency->precision;
+        $precision = $precision ?? Context::getContext()->currency->precision;
         $ecotax_rate = $include_tax ? (float) Tax::getProductEcotaxRate() : 0;
 
         return  Tools::ps_round(
