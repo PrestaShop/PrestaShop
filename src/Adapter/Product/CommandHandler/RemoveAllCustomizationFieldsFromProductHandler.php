@@ -28,11 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\DeleteCustomizationFieldCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCustomizationFieldsFromProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\DeleteCustomizationFieldHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\RemoveAllCustomizationFieldsFromProductInterface;
 
-final class RemoveAllCustomizationFieldsFromProductHandler implements RemoveAllCustomizationFieldsFromProductInterface
+final class RemoveAllCustomizationFieldsFromProductHandler extends AbstractProductHandler implements RemoveAllCustomizationFieldsFromProductInterface
 {
     /**
      * @var DeleteCustomizationFieldHandlerInterface
@@ -52,5 +54,14 @@ final class RemoveAllCustomizationFieldsFromProductHandler implements RemoveAllC
      */
     public function handle(RemoveAllCustomizationFieldsFromProductCommand $command): void
     {
+        $product = $this->getProduct($command->getProductId());
+
+        $customizationFieldIds = array_map(function ($field) {
+            return (int) $field['id_customization_field'];
+        }, $product->getCustomizationFieldIds());
+
+        foreach ($customizationFieldIds as $customizationFieldId) {
+            $this->deleteCustomizationFieldHandler->handle(new DeleteCustomizationFieldCommand($customizationFieldId));
+        }
     }
 }
