@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationOp
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOption;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOptions;
@@ -98,7 +98,7 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             $this->getOptions($product),
             $this->getShippingInformation($product),
             $this->getSupplierOptions($product),
-            $this->getSeoInformation($product)
+            $this->getSeoOptions($product)
         );
     }
 
@@ -324,11 +324,11 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
     /**
      * @param Product $product
      *
-     * @return ProductSeoInformation
+     * @return ProductSeoOptions
      */
-    private function getSeoInformation(Product $product): ProductSeoInformation
+    private function getSeoOptions(Product $product): ProductSeoOptions
     {
-        return new ProductSeoInformation(
+        return new ProductSeoOptions(
             $product->meta_title,
             $product->meta_description,
             $product->link_rewrite,
