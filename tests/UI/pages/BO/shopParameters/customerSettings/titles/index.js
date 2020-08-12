@@ -192,6 +192,11 @@ class Titles extends BOBasePage {
 
   /* Bulk actions methods */
 
+  /**
+   * Bulk delete titles
+   * @param page
+   * @return {Promise<string>}
+   */
   async bulkDeleteTitles(page) {
     // To confirm bulk delete action with dialog
     this.dialogListener(page, true);
