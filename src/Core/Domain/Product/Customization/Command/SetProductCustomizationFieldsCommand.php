@@ -82,10 +82,10 @@ class SetProductCustomizationFieldsCommand
             throw new RuntimeException(sprintf(
                 'Empty customization fields array provided in %s. To remove customization fields use %s',
                 self::class,
-                    //@todo:
-                    'RemoveAllCustomizationFieldsFromProduct'
+                    RemoveAllCustomizationFieldsFromProductCommand::class
             ));
         }
+
         foreach ($customizationFields as $customizationField) {
             $this->customizationFields[] = new CustomizationField(
                 (int) $customizationField['type'],
