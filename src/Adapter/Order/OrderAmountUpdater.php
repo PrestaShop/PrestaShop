@@ -246,7 +246,8 @@ class OrderAmountUpdater
         $firstInvoice = $invoiceCollection->getFirst();
 
         foreach ($invoiceCollection as $invoice) {
-            $currentInvoiceProducts = $invoiceProducts[$invoice->id];
+            // If all the invoice's products have been removed the offset won't exist
+            $currentInvoiceProducts = isset($invoiceProducts[$invoice->id]) ? $invoiceProducts[$invoice->id] : [];
 
             // Shipping are computed on first invoice only
             $carrierId = $order->id_carrier;

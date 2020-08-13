@@ -153,6 +153,8 @@ Feature: Order from Back Office (BO)
       | amount        | 1                                 |
       | price         | 12                                |
     Then order "bo_order1" should have 3 products in total
+    And order "bo_order1" should contain 1 product "Test Product With Specific Price"
+    And cart of order "bo_order1" should contain 1 product "Test Product With Specific Price"
     Then order "bo_order1" should have following details:
       | total_products           | 35.800 |
       | total_products_wt        | 37.950 |
@@ -168,6 +170,8 @@ Feature: Order from Back Office (BO)
     When I remove product "Test Product With Specific Price" from order "bo_order1"
     Then product "Test Product With Specific Price" in order "bo_order1" should have no specific price
     And order "bo_order1" should have 2 products in total
+    And order "bo_order1" should contain 0 product "Test Product With Specific Price"
+    And cart of order "bo_order1" should contain 0 product "Test Product With Specific Price"
     Then order "bo_order1" should have following details:
       | total_products           | 23.800 |
       | total_products_wt        | 25.230 |
@@ -177,5 +181,99 @@ Feature: Order from Back Office (BO)
       | total_paid_tax_incl      | 32.650 |
       | total_paid               | 32.650 |
       | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+
+  Scenario: Add product with specific price twice, the specific price is only removed when both products are removed
+    Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
+    Then order "bo_order1" should have 2 products in total
+    Then order "bo_order1" should have 0 invoices
+    Then order "bo_order1" should have 0 cart rule
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    Given there is a product in the catalog named "Test Product With Specific Price" with a price of 15.0 and 100 items in stock
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product With Specific Price  |
+      | amount        | 3                                 |
+      | price         | 12                                |
+    Then order "bo_order1" should have 5 products in total
+    And order "bo_order1" should contain 3 products "Test Product With Specific Price"
+    And cart of order "bo_order1" should contain 3 products "Test Product With Specific Price"
+    And the available stock for product "Test Product With Specific Price" should be 97
+    Then order "bo_order1" should have following details:
+      | total_products           | 59.800 |
+      | total_products_wt        | 63.390 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 66.8   |
+      | total_paid_tax_incl      | 70.810 |
+      | total_paid               | 70.810 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    Then product "Test Product With Specific Price" in order "bo_order1" should have specific price 12.0
+    Given I update order "bo_order1" status to "Payment accepted"
+    And order "bo_order1" should have 1 invoices
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product With Specific Price  |
+      | amount        | 2                                 |
+      | price         | 14                                |
+    Then product "Test Product With Specific Price" in order "bo_order1" should have specific price 14.0
+    And order "bo_order1" should have 7 products in total
+    And order "bo_order1" should contain 5 products "Test Product With Specific Price"
+    And cart of order "bo_order1" should contain 5 products "Test Product With Specific Price"
+    And the available stock for product "Test Product With Specific Price" should be 95
+    Then order "bo_order1" should have following details:
+      | total_products           | 93.800 |
+      | total_products_wt        | 99.430 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 100.80 |
+      | total_paid_tax_incl      | 106.85 |
+      | total_paid               | 106.85 |
+      | total_paid_real          | 70.810 |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    When I remove product "Test Product With Specific Price" from order "bo_order1"
+    Then product "Test Product With Specific Price" in order "bo_order1" should have specific price 14.0
+    And order "bo_order1" should have 4 products in total
+    And order "bo_order1" should contain 2 products "Test Product With Specific Price"
+    And cart of order "bo_order1" should contain 2 products "Test Product With Specific Price"
+    And the available stock for product "Test Product With Specific Price" should be 98
+    Then order "bo_order1" should have following details:
+      | total_products           | 51.800 |
+      | total_products_wt        | 54.910 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 58.800 |
+      | total_paid_tax_incl      | 62.330 |
+      | total_paid               | 62.330 |
+      | total_paid_real          | 70.810 |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    When I remove product "Test Product With Specific Price" from order "bo_order1"
+    Then product "Test Product With Specific Price" in order "bo_order1" should have no specific price
+    And order "bo_order1" should have 2 products in total
+    And order "bo_order1" should contain 0 product "Test Product With Specific Price"
+    And cart of order "bo_order1" should contain 0 product "Test Product With Specific Price"
+    And the available stock for product "Test Product With Specific Price" should be 100
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 70.810 |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
