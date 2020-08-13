@@ -82,6 +82,7 @@ final class GetProductSupplierOptionsHandler extends AbstractProductHandler impl
 
         return new ProductSupplierOptions(
             (int) $product->id_supplier,
+            $product->supplier_reference,
             $supplierOptions
         );
     }
