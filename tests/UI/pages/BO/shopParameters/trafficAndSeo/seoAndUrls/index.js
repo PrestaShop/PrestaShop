@@ -55,6 +55,10 @@ class SeoAndUrls extends BOBasePage {
     this.switchFriendlyUrlLabel = toggle => `label[for='meta_settings_form_set_up_urls_friendly_url_${toggle}']`;
     this.switchAccentedUrlLabel = toggle => `label[for='meta_settings_form_set_up_urls_accented_url_${toggle}']`;
     this.saveSeoAndUrlFormButton = '#main-div form:nth-child(1) div:nth-child(1) div.card-footer button';
+    // Seo options form
+    this.switchDisplayAttributesLabel = toggle => 'label[for=\'meta_settings_form_seo_options_product'
+      + `_attributes_in_title_${toggle}']`;
+    this.saveSeoOptionsFormButton = '#main-div form:nth-child(1) div:nth-child(4) div.card-footer button';
   }
 
   /* header methods */
@@ -277,6 +281,18 @@ class SeoAndUrls extends BOBasePage {
   async enableDisableAccentedURL(page, toEnable = true) {
     await this.waitForSelectorAndClick(page, this.switchAccentedUrlLabel(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveSeoAndUrlFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /**
+   * Enable/Disable attributes in product meta title
+   * @param page
+   * @param toEnable
+   * @return {Promise<string>}
+   */
+  async setStatusAttributesInProductMetaTitle(page, toEnable = true) {
+    await this.waitForSelectorAndClick(page, this.switchDisplayAttributesLabel(toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(page, this.saveSeoOptionsFormButton);
     return this.getTextContent(page, this.alertSuccessBlock);
   }
 }
