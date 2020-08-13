@@ -1,3 +1,15 @@
+// Config
+// Tools
+@import "~prestakit/dist/css/bootstrap-prestashop-ui-kit";
+@import "~bootstrap/scss/mixins/breakpoints";
+// Settings
+@import "@scss/config/_settings";
+@import "@scss/config/_keyframes";
+
+// Tools with vars overwritten
+@import "~bootstrap/scss/mixins/transition";
+@import "~bootstrap/scss/mixins/border-radius";
+
 .product-page {
   padding-bottom: 80px;
 

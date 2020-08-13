@@ -26,6 +26,10 @@
 
 {% form_theme productPriceForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product.css') }}" type="text/css" media="all">
+{% endblock %}
+
 {# @todo: starter for product page. Feel free to move/modify while appending more fields to form #}
 {% block content %}
   {% block product_price_form %}

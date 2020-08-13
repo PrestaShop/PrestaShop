@@ -1,3 +1,8 @@
+// Config
+@import "@scss/config/_settings";
+@import "@scss/config/_keyframes";
+@import "@scss/config/_bootstrap";
+
 .products-catalog {
   > .content {
     margin-bottom: 20px;
@@ -27,8 +32,8 @@
 
   .icon-caret {
     display: inline-block;
-    font-size: .625rem;
-    vertical-align: .0625rem;
+    font-size: 0.625rem;
+    vertical-align: 0.0625rem;
     cursor: pointer;
 
     &.-current {

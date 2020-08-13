@@ -57,8 +57,6 @@
 @import "components/timeline";
 
 // Pages specifics SCSS files
-@import "pages/product_page";
-@import "pages/products_catalog";
 @import "pages/translation_page";
 @import "pages/stock_page";
 @import "pages/invoices";
@@ -69,12 +67,9 @@
 @import "pages/cms_page";
 @import "pages/employee";
 @import "pages/error";
-@import "pages/orders";
 @import "pages/order_states";
 @import "pages/attribute";
 @import "pages/customer_thread";
-@import "pages/orders_view";
-@import "pages/orders_create";
 
 // Main Layout
 @import "pages/modules";
@@ -148,7 +143,7 @@ span.twitter-typeahead {
 }
 
 table.table {
-  font-size: .8rem;
+  font-size: 0.8rem;
 }
 
 // Needed to override the default inline style of modal header in translations-app
