@@ -28,10 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Adapter\Product\CombinationDataProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetProductCombinationsForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetProductCombinationsForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationAttributeInformation;
@@ -44,23 +42,16 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\ProductCom
 final class GetProductCombinationsForEditingHandler extends AbstractProductHandler implements GetProductCombinationsForEditingHandlerInterface
 {
     /**
-     * @var Connection
+     * @var CombinationDataProvider
      */
-    private $connection;
+    private $combinationDataProvider;
 
     /**
-     * @var string
+     * @param CombinationDataProvider $combinationDataProvider
      */
-    private $dbPrefix;
-
-    /**
-     * @param Connection $connection
-     * @param string $dbPrefix
-     */
-    public function __construct(Connection $connection, string $dbPrefix)
+    public function __construct(CombinationDataProvider $combinationDataProvider)
     {
-        $this->connection = $connection;
-        $this->dbPrefix = $dbPrefix;
+        $this->combinationDataProvider = $combinationDataProvider;
     }
 
     /**
@@ -69,37 +60,22 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
     public function handle(GetProductCombinationsForEditing $query): ProductCombinationsForEditing
     {
         $product = $this->getProduct($query->getProductId());
-        $combinationsQb = $this->getCombinationsQueryBuilder((int) $product->id, $query->getOffset(), $query->getLimit());
-        $combinations = $this->getCombinations($combinationsQb);
+        $combinationsInfo = $this->combinationDataProvider->getCombinationsInfo((int) $product->id, $query->getLimit(), $query->getOffset());
 
         $combinationIds = array_map(function ($combination): int {
             return (int) $combination['id_product_attribute'];
-        }, $combinations);
+        }, $combinationsInfo['combinations']);
 
-        $attributesInformation = $this->getAttributesInformationByCombinationId($combinationIds, $query->getLanguageId());
+        $attributesInformation = $this->combinationDataProvider->getAttributesInfoByCombinationIds(
+            $combinationIds,
+            $query->getLanguageId()
+        );
 
         return $this->formatCombinationsForEditing(
-            $combinations,
+            $combinationsInfo['combinations'],
             $attributesInformation,
-            $this->getTotalCombinationsCount($combinationsQb)
+            $combinationsInfo['total_count']
         );
-    }
-
-    /**
-     * @param QueryBuilder $combinationsQb
-     *
-     * @return array
-     */
-    private function getCombinations(QueryBuilder $combinationsQb): array
-    {
-        //@todo: select all necessary values for combination editing like quantity, price etc. (UpdateCombinations PR)
-        //@todo: check Product::getAttributeCombinations for quantities
-        //@todo: Add an object like `CombinationInformation` for this?
-        return $combinationsQb
-            ->select('pa.id_product_attribute')
-            ->execute()
-            ->fetchAll()
-        ;
     }
 
     /**
@@ -118,7 +94,16 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
 
         foreach ($combinations as $combination) {
             $combinationId = (int) $combination['id_product_attribute'];
-            $combinationAttributesInformation = $attributesInformationByCombinationId[$combinationId];
+            $combinationAttributesInformation = [];
+
+            foreach ($attributesInformationByCombinationId[$combinationId] as $attributesInfo) {
+                $combinationAttributesInformation[] = new CombinationAttributeInformation(
+                    (int) $attributesInfo['id_attribute_group'],
+                    $attributesInfo['attribute_group_name'],
+                    (int) $attributesInfo['id_attribute'],
+                    $attributesInfo['attribute_name']
+                );
+            }
 
             $combinationsForEditing[] = new CombinationForEditing(
                 $combinationId,
@@ -147,109 +132,5 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
         }
 
         return implode(', ', $combinedNameParts);
-    }
-
-    /**
-     * @param int[] $combinationIds
-     * @param LanguageId $langId
-     *
-     * @todo: move queries to some dedicated service. Or whole method to Combination|Product obj model?
-     *
-     * @return CombinationAttributeInformation[]
-     */
-    private function getAttributesInformationByCombinationId(array $combinationIds, LanguageId $langId): array
-    {
-        $qb = $this->connection->createQueryBuilder();
-        $qb->select('pac.id_attribute')
-            ->addSelect('pac.id_product_attribute')
-            ->from($this->dbPrefix . 'product_attribute_combination', 'pac')
-            ->where($qb->expr()->in('pac.id_product_attribute', ':combinationIds'))
-            ->setParameter('combinationIds', $combinationIds, Connection::PARAM_INT_ARRAY)
-        ;
-
-        $attributeCombinationAssociations = $qb->execute()->fetchAll();
-
-        $attributeIds = array_unique(array_map(function ($attributeByCombination) {
-            return $attributeByCombination['id_attribute'];
-        }, $attributeCombinationAssociations));
-
-        $qb = $this->connection->createQueryBuilder();
-        $qb->select('a.id_attribute')
-            ->addSelect('ag.id_attribute_group')
-            ->addSelect('al.name AS attribute_name')
-            ->addSelect('agl.name AS attribute_group_name')
-            ->from($this->dbPrefix . 'attribute', 'a')
-            ->leftJoin(
-                'a',
-                $this->dbPrefix . 'attribute_lang',
-                'al',
-                'a.id_attribute = al.id_attribute AND al.id_lang = :langId'
-            )->leftJoin(
-                'a',
-                $this->dbPrefix . 'attribute_group',
-                'ag',
-                'a.id_attribute_group = ag.id_attribute_group'
-            )->leftJoin(
-                'ag',
-                $this->dbPrefix . 'attribute_group_lang',
-                'agl',
-                'agl.id_attribute_group = ag.id_attribute_group AND agl.id_lang = :langId'
-            )->where($qb->expr()->in('a.id_attribute', ':attributeIds'))
-            ->setParameter('attributeIds', $attributeIds, Connection::PARAM_INT_ARRAY)
-            ->setParameter('langId', $langId->getValue())
-        ;
-
-        $attributesInfo = $qb->execute()->fetchAll();
-
-        $attributesInfoByAttributeId = [];
-        foreach ($attributesInfo as $attributeInfo) {
-            $attributesInfoByAttributeId[(int) $attributeInfo['id_attribute']][] = new CombinationAttributeInformation(
-                (int) $attributeInfo['id_attribute_group'],
-                $attributeInfo['attribute_group_name'],
-                (int) $attributeInfo['id_attribute'],
-                $attributeInfo['attribute_name']
-            );
-        }
-
-        $attributesInformationByCombinationId = [];
-        foreach ($attributeCombinationAssociations as $attributeCombinationAssociation) {
-            $combinationId = (int) $attributeCombinationAssociation['id_product_attribute'];
-            $attributeId = (int) $attributeCombinationAssociation['id_attribute'];
-            $attributesInformationByCombinationId[$combinationId] = $attributesInfoByAttributeId[$attributeId];
-        }
-
-        return $attributesInformationByCombinationId;
-    }
-
-    /**
-     * @param QueryBuilder $qb
-     *
-     * @return int
-     */
-    private function getTotalCombinationsCount(QueryBuilder $qb): int
-    {
-        $qb->select('COUNT(pa.id_product_attribute) AS total_combinations');
-
-        return (int) $qb->execute()->fetch()['total_combinations'];
-    }
-
-    /**
-     * @param int $productId
-     * @param int $offset
-     * @param int $limit
-     *
-     * @return QueryBuilder
-     */
-    private function getCombinationsQueryBuilder(int $productId, int $offset, int $limit): QueryBuilder
-    {
-        $qb = $this->connection->createQueryBuilder();
-        $qb->from($this->dbPrefix . 'product_attribute', 'pa')
-            ->where('pa.id_product = :productId')
-            ->setParameter('productId', $productId)
-            ->setFirstResult($offset)
-            ->setMaxResults($limit)
-        ;
-
-        return $qb;
     }
 }
