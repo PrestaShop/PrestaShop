@@ -87,7 +87,9 @@ final class DeleteProductSupplierHandler extends AbstractProductSupplierHandler 
         }
 
         $product->id_supplier = 0;
+        $product->supplier_reference = '';
         $this->fieldsToUpdate['id_supplier'] = true;
+        $this->fieldsToUpdate['supplier_reference'] = true;
 
         $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_DEFAULT_SUPPLIER);
     }
