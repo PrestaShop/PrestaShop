@@ -17,7 +17,7 @@ const {stores} = require('@data/demo/stores');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_shopParameters_contact_stores_filterStores';
+const baseContext = 'functional_BO_shopParameters_contact_stores_filterAndQuickEditStores';
 
 // Import expect from chai
 const {expect} = require('chai');
@@ -28,7 +28,7 @@ let page;
 
 let numberOfStores = 0;
 
-describe('Filter stores', async () => {
+describe('Filter and quick edit stores', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -204,6 +204,65 @@ describe('Filter stores', async () => {
         const numberOfStoresAfterReset = await storesPage.resetAndGetNumberOfLines(page);
         await expect(numberOfStoresAfterReset).to.equal(numberOfStores);
       });
+    });
+  });
+
+  describe('Quick edit stores', async () => {
+    it(`should filter by name '${stores.second.name}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
+
+      await storesPage.filterTable(
+        page,
+        'input',
+        'sl!name',
+        stores.second.name,
+      );
+
+      const numberOfStoresAfterFilter = await storesPage.getNumberOfElementInGrid(page);
+      await expect(numberOfStoresAfterFilter).to.be.at.most(numberOfStores);
+
+      const textColumn = await storesPage.getTextColumn(
+        page,
+        1,
+        'sl!name',
+      );
+
+      await expect(textColumn).to.contains(stores.second.name);
+    });
+
+    const tests = [
+      {
+        args:
+          {
+            action: 'disable',
+            statusWanted: false,
+          },
+      },
+      {
+        args:
+          {
+            action: 'enable',
+            statusWanted: true,
+          },
+      },
+    ];
+
+    tests.forEach((test) => {
+      it(`should ${test.args.action} first element in grid`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Store`, baseContext);
+
+        await storesPage.setStoreStatus(page, 1, test.args.statusWanted);
+
+        const storeStatus = await storesPage.getStoreStatus(page, 1);
+        await expect(storeStatus).to.equal(test.args.statusWanted);
+      });
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterQuickEdit', baseContext);
+
+      const numberOfStoresAfterReset = await storesPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfStoresAfterReset).to.equal(numberOfStores);
     });
   });
 });

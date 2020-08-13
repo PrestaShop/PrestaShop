@@ -181,6 +181,21 @@ class Stores extends BOBasePage {
   getStoreStatus(page, row) {
     return this.elementVisible(page, `${this.tableColumnStatus(row)} a.action-enabled`, 1000);
   }
+
+  /**
+   * Set store status by clicking on column status
+   * @param page
+   * @param row
+   * @param wantedStatus
+   * @return {Promise<void>}
+   */
+  async setStoreStatus(page, row, wantedStatus) {
+    const actualStatus = await this.getStoreStatus(page, row);
+
+    if (actualStatus !== wantedStatus) {
+      await this.clickAndWaitForNavigation(page, `${this.tableColumnStatus(row)} a`);
+    }
+  }
 }
 
 module.exports = new Stores();
