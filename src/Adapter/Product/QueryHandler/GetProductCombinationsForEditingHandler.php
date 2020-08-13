@@ -29,12 +29,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetProductCombinationsForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetProductCombinationsForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationAttributeInformation;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\ProductCombinationForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\ProductCombinationsForEditing;
 
 /**
  * Handles @see GetProductCombinationsForEditing using legacy object model
@@ -64,42 +66,68 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
     /**
      * {@inheritdoc}
      */
-    public function handle(GetProductCombinationsForEditing $query): array
+    public function handle(GetProductCombinationsForEditing $query): ProductCombinationsForEditing
     {
         $product = $this->getProduct($query->getProductId());
-        $combinations = $this->getCombinations((int) $product->id, $query->getOffset(), $query->getLimit());
+        $combinationsQb = $this->getCombinationsQueryBuilder((int) $product->id, $query->getOffset(), $query->getLimit());
+        $combinations = $this->getCombinations($combinationsQb);
 
-        $combinationIds = array_map(function ($combination) {
+        $combinationIds = array_map(function ($combination): int {
             return (int) $combination['id_product_attribute'];
         }, $combinations);
 
         $attributesInformation = $this->getAttributesInformationByCombinationId($combinationIds, $query->getLanguageId());
 
-        return $this->formatCombinationsForEditing($combinations, $attributesInformation);
+        return $this->formatCombinationsForEditing(
+            $combinations,
+            $attributesInformation,
+            $this->getTotalCombinationsCount($combinationsQb)
+        );
+    }
+
+    /**
+     * @param QueryBuilder $combinationsQb
+     *
+     * @return array
+     */
+    private function getCombinations(QueryBuilder $combinationsQb): array
+    {
+        //@todo: select all necessary values for combination editing like quantity, price etc. (UpdateCombinations PR)
+        //@todo: check Product::getAttributeCombinations for quantities
+        //@todo: Add an object like `CombinationInformation` for this?
+        return $combinationsQb
+            ->select('pa.id_product_attribute')
+            ->execute()
+            ->fetchAll()
+        ;
     }
 
     /**
      * @param array $combinations
-     * @param array<int, ProductCombinationForEditing> $attributesInformationByCombinationId
+     * @param array<int, CombinationForEditing> $attributesInformationByCombinationId
+     * @param int $totalCombinationsCount
      *
-     * @return ProductCombinationForEditing[]
+     * @return ProductCombinationsForEditing
      */
-    private function formatCombinationsForEditing(array $combinations, array $attributesInformationByCombinationId): array
-    {
+    private function formatCombinationsForEditing(
+        array $combinations,
+        array $attributesInformationByCombinationId,
+        int $totalCombinationsCount
+    ): ProductCombinationsForEditing {
         $combinationsForEditing = [];
 
         foreach ($combinations as $combination) {
             $combinationId = (int) $combination['id_product_attribute'];
             $combinationAttributesInformation = $attributesInformationByCombinationId[$combinationId];
 
-            $combinationsForEditing[] = new ProductCombinationForEditing(
+            $combinationsForEditing[] = new CombinationForEditing(
                 $combinationId,
                 $this->buildCombinationName($combinationAttributesInformation),
                 $combinationAttributesInformation
             );
         }
 
-        return $combinationsForEditing;
+        return new ProductCombinationsForEditing($totalCombinationsCount, $combinationsForEditing);
     }
 
     /**
@@ -179,25 +207,34 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
     }
 
     /**
+     * @param QueryBuilder $qb
+     *
+     * @return int
+     */
+    private function getTotalCombinationsCount(QueryBuilder $qb): int
+    {
+        $qb->select('COUNT(pa.id_product_attribute) AS total_combinations');
+
+        return (int) $qb->execute()->fetch()['total_combinations'];
+    }
+
+    /**
      * @param int $productId
      * @param int $offset
      * @param int $limit
      *
-     * @return array
+     * @return QueryBuilder
      */
-    private function getCombinations(int $productId, int $offset, int $limit): array
+    private function getCombinationsQueryBuilder(int $productId, int $offset, int $limit): QueryBuilder
     {
         $qb = $this->connection->createQueryBuilder();
-        //@todo: select all necessary values for combination editing like quantity, price etc. (UpdateCombinations PR)
-        //@todo: maybe add an object like `CombinationInformation` for this?
-        $qb->select('pa.id_product_attribute')
-            ->addSelect('pa.id_product')
-            ->from($this->dbPrefix . 'product_attribute', 'pa')
+        $qb->from($this->dbPrefix . 'product_attribute', 'pa')
             ->where('pa.id_product = :productId')
             ->setParameter('productId', $productId)
             ->setFirstResult($offset)
-            ->setMaxResults($limit);
+            ->setMaxResults($limit)
+        ;
 
-        return $qb->execute()->fetchAll();
+        return $qb;
     }
 }
