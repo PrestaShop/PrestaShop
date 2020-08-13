@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 use Combination;
 use Db;
 use Doctrine\DBAL\Connection;
+use Exception;
 use Iterator;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
@@ -158,7 +159,7 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
 
         try {
             $this->saveProductAttributeAssociation($combinationId, $generatedCombination);
-        } catch (CannotAddCombinationException $e) {
+        } catch (Exception $e) {
             $this->connection->rollBack();
             throw $e;
         }
