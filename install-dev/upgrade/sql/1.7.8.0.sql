@@ -16,4 +16,3 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
 ;
 
 ALTER TABLE `PREFIX_employee` ADD `has_enabled_gravatar` TINYINT UNSIGNED DEFAULT 0 NOT NULL;
-ALTER TABLE `PREFIX_shop` ADD `color` VARCHAR(50) NULL DEFAULT NULL AFTER `name`;
