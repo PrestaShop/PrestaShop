@@ -160,18 +160,26 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
     private function getAttributesInformationByCombinationId(array $combinationIds, LanguageId $langId): array
     {
         $qb = $this->connection->createQueryBuilder();
-        $qb->select('a.id_attribute')
+        $qb->select('pac.id_attribute')
             ->addSelect('pac.id_product_attribute')
+            ->from($this->dbPrefix . 'product_attribute_combination', 'pac')
+            ->where($qb->expr()->in('pac.id_product_attribute', ':combinationIds'))
+            ->setParameter('combinationIds', $combinationIds, Connection::PARAM_INT_ARRAY)
+        ;
+
+        $attributeCombinationAssociations = $qb->execute()->fetchAll();
+
+        $attributeIds = array_unique(array_map(function ($attributeByCombination) {
+            return $attributeByCombination['id_attribute'];
+        }, $attributeCombinationAssociations));
+
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('a.id_attribute')
             ->addSelect('ag.id_attribute_group')
             ->addSelect('al.name AS attribute_name')
             ->addSelect('agl.name AS attribute_group_name')
-            ->from($this->dbPrefix . 'product_attribute_combination', 'pac')
+            ->from($this->dbPrefix . 'attribute', 'a')
             ->leftJoin(
-                'pac',
-                $this->dbPrefix . 'attribute',
-                'a',
-                'pac.id_attribute = a.id_attribute'
-            )->leftJoin(
                 'a',
                 $this->dbPrefix . 'attribute_lang',
                 'al',
@@ -186,21 +194,28 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
                 $this->dbPrefix . 'attribute_group_lang',
                 'agl',
                 'agl.id_attribute_group = ag.id_attribute_group AND agl.id_lang = :langId'
-            )->where($qb->expr()->in('pac.id_product_attribute', ':combinationIds'))
-            ->setParameter('combinationIds', $combinationIds, Connection::PARAM_INT_ARRAY)
+            )->where($qb->expr()->in('a.id_attribute', ':attributeIds'))
+            ->setParameter('attributeIds', $attributeIds, Connection::PARAM_INT_ARRAY)
             ->setParameter('langId', $langId->getValue())
         ;
 
-        $results = $qb->execute()->fetchAll();
+        $attributesInfo = $qb->execute()->fetchAll();
+
+        $attributesInfoByAttributeId = [];
+        foreach ($attributesInfo as $attributeInfo) {
+            $attributesInfoByAttributeId[(int) $attributeInfo['id_attribute']][] = new CombinationAttributeInformation(
+                (int) $attributeInfo['id_attribute_group'],
+                $attributeInfo['attribute_group_name'],
+                (int) $attributeInfo['id_attribute'],
+                $attributeInfo['attribute_name']
+            );
+        }
 
         $attributesInformationByCombinationId = [];
-        foreach ($results as $result) {
-            $attributesInformationByCombinationId[(int) $result['id_product_attribute']][] = new CombinationAttributeInformation(
-                (int) $result['id_attribute_group'],
-                $result['attribute_group_name'],
-                (int) $result['id_attribute'],
-                $result['attribute_name']
-            );
+        foreach ($attributeCombinationAssociations as $attributeCombinationAssociation) {
+            $combinationId = (int) $attributeCombinationAssociation['id_product_attribute'];
+            $attributeId = (int) $attributeCombinationAssociation['id_attribute'];
+            $attributesInformationByCombinationId[$combinationId] = $attributesInfoByAttributeId[$attributeId];
         }
 
         return $attributesInformationByCombinationId;
