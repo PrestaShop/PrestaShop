@@ -45,7 +45,7 @@ class GetProductSupplierOptions
      */
     public function __construct(int $productId)
     {
-        $this->productId = new ProductId($productId);
+        $this->productId = $productId;
     }
 
     /**
