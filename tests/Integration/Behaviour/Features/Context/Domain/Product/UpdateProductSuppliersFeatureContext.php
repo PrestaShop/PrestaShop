@@ -159,6 +159,21 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @Then product :productReference default supplier reference should be empty
+     *
+     * @param string $productReference
+     */
+    public function assertProductDefaultSupplierReferenceIsEmpty(string $productReference)
+    {
+        $productForEditing = $this->getProductForEditing($productReference);
+
+        Assert::assertEmpty(
+            $productForEditing->getProductSupplierOptions()->getDefaultSupplierReference(),
+            sprintf('Expected product "%s" default supplier reference to be empty', $productReference)
+        );
+    }
+
+    /**
      * @Then product :productReference should not have any suppliers assigned
      *
      * @param string $productReference
