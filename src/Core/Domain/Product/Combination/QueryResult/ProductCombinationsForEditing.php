@@ -29,62 +29,43 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult;
 
 /**
- * Transfers product combination data
+ * Transfers product combinations data
  */
-class ProductCombinationForEditing
+class ProductCombinationsForEditing
 {
+    /**
+     * @var CombinationForEditing[]
+     */
+    private $combinations;
+
     /**
      * @var int
      */
-    private $combinationId;
+    private $totalCombinationsCount;
 
     /**
-     * @var CombinationAttributeInformation[]
+     * @param int $totalCombinationsCount
+     * @param CombinationForEditing[] $combinations
      */
-    private $attributesInformation;
+    public function __construct(int $totalCombinationsCount, array $combinations)
+    {
+        $this->totalCombinationsCount = $totalCombinationsCount;
+        $this->combinations = $combinations;
+    }
 
     /**
-     * @var string
+     * @return CombinationForEditing[]
      */
-    private $combinationName;
-
-    /**
-     * @param int $combinationId
-     * @param string $combinationName
-     * @param CombinationAttributeInformation[] $attributesInformation
-     * @todo: add additional properties when needed (for update command)
-     */
-    public function __construct(
-        int $combinationId,
-        string $combinationName,
-        array $attributesInformation
-    ) {
-        $this->combinationId = $combinationId;
-        $this->attributesInformation = $attributesInformation;
-        $this->combinationName = $combinationName;
+    public function getCombinations(): array
+    {
+        return $this->combinations;
     }
 
     /**
      * @return int
      */
-    public function getCombinationId(): int
+    public function getTotalCombinationsCount(): int
     {
-        return $this->combinationId;
-    }
-
-    /**
-     * @return CombinationAttributeInformation[]
-     */
-    public function getAttributesInformation(): array
-    {
-        return $this->attributesInformation;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCombinationName(): string
-    {
-        return $this->combinationName;
+        return $this->totalCombinationsCount;
     }
 }
