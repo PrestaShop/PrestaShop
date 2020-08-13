@@ -32,7 +32,8 @@ use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetProductCombinationsForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\ProductCombinationForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\ProductCombinationsForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -68,16 +69,22 @@ class ProductCombinationFeatureContext extends AbstractProductFeatureContext
     public function assertProductCombinations(string $productReference, TableNode $table): void
     {
         $dataRows = $table->getColumnsHash();
-        $totalExpectedCombinations = count($dataRows);
+        $expectedCombinationsCount = count($dataRows);
+
+        /** @var ProductCombinationsForEditing $combinationsForEditing */
         $combinationsForEditing = $this->getQueryBus()->handle(new GetProductCombinationsForEditing(
             $this->getSharedStorage()->get($productReference),
             $this->getDefaultLangId(),
-            $totalExpectedCombinations
+            $expectedCombinationsCount
         ));
 
-        Assert::assertEquals(count($combinationsForEditing), $totalExpectedCombinations, 'Unexpected combinations count');
+        Assert::assertEquals(
+            count($combinationsForEditing->getCombinations()),
+            $expectedCombinationsCount,
+            'Unexpected combinations count'
+        );
 
-        /** @var ProductCombinationForEditing $combinationForEditing */
+        /** @var CombinationForEditing $combinationForEditing */
         foreach ($combinationsForEditing as $key => $combinationForEditing) {
             Assert::assertEquals(
                 $dataRows[$key]['combination name'],
