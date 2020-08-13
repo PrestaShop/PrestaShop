@@ -676,13 +676,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             $id_product_attributes[] = $row['id_product_attribute'];
                         }
                     }
-                    $id_attributes = Db::getInstance()->executeS('SELECT pac2.`id_attribute` FROM `' . _DB_PREFIX_ . 'product_attribute_combination` pac2'.
-                        ((!Product::isAvailableWhenOutOfStock($this->product->out_of_stock) && Configuration::get('PS_DISP_UNAVAILABLE_ATTR') == 0) ?
-                        ' INNER JOIN `' . _DB_PREFIX_ . 'stock_available` pa ON pa.id_product_attribute = pac2.id_product_attribute
+                    $id_attributes = Db::getInstance()->executeS('SELECT pac2.`id_attribute` FROM `'._DB_PREFIX_.'product_attribute_combination` pac2'.
+                        ((!Product::isAvailableWhenOutOfStock($this->product->out_of_stock) && 0 == Configuration::get('PS_DISP_UNAVAILABLE_ATTR')) ?
+                        ' INNER JOIN `'._DB_PREFIX_.'stock_available` pa ON pa.id_product_attribute = pac2.id_product_attribute
                         WHERE pa.quantity > 0 AND ' :
                         ' WHERE ').
-                        'pac2.`id_product_attribute` IN (' . implode(',', array_map('intval', $id_product_attributes)) . ')
-                        AND pac2.id_attribute NOT IN (' . implode(',', array_map('intval', $current_selected_attributes)) . ')');
+                        'pac2.`id_product_attribute` IN ('.implode(',', array_map('intval', $id_product_attributes)).')
+                        AND pac2.id_attribute NOT IN ('.implode(',', array_map('intval', $current_selected_attributes)).')');
                     foreach ($id_attributes as $k => $row) {
                         $id_attributes[$k] = (int) $row['id_attribute'];
                     }
@@ -998,7 +998,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                         }
                     );
                     if (count($checkProductAttribute)) {
-                        $alternativeProductAttribute = array();
+                        $alternativeProductAttribute = [];
                         foreach ($checkProductAttribute as $key => $attribute) {
                             $alternativeAttribute = array_filter(
                                 $availableProductAttributes,
@@ -1010,16 +1010,18 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                                 $alternativeProductAttribute[$key] = $value;
                             }
                         }
-    
+
                         if (count($alternativeProductAttribute)) {
-                            usort($alternativeProductAttribute, function($a, $b) {
+                            usort($alternativeProductAttribute, function ($a, $b) {
                                 $aValue = $a['quantity'];
                                 $bValue = $b['quantity'];
                                 if ($a == $b) {
                                     return 0;
                                 }
+
                                 return ($a > $b) ? -1 : 1;
                             });
+
                             return (int) array_shift($alternativeProductAttribute)['id_product_attribute'];
                         }
                     }
