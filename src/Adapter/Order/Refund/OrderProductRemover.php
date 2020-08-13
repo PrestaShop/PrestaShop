@@ -37,6 +37,7 @@ use OrderHistory;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DeleteCustomizedProductFromOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DeleteProductFromOrderException;
 use Psr\Log\LoggerInterface;
+use SpecificPrice;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class OrderProductRemover
@@ -65,9 +66,8 @@ class OrderProductRemover
     /**
      * @param Order $order
      * @param OrderDetail $orderDetail
-     * @param int $quantity
      */
-    public function deleteProductFromOrder(Order $order, OrderDetail $orderDetail, int $quantity)
+    public function deleteProductFromOrder(Order $order, OrderDetail $orderDetail)
     {
         $cart = new Cart($order->id_cart);
 
@@ -79,6 +79,8 @@ class OrderProductRemover
         }
 
         $this->updateCart($cart, $orderDetail);
+
+        $this->deleteSpecificPrice($order, $orderDetail, $cart);
 
         $this->deleteOrderDetail(
             $order,
@@ -186,6 +188,37 @@ class OrderProductRemover
         foreach ($removedOrderCartRules as $removedOrderCartRuleId) {
             $orderCartRule = new OrderCartRule($removedOrderCartRuleId);
             $orderCartRule->delete();
+        }
+    }
+
+    /**
+     * @param Order $order
+     * @param OrderDetail $orderDetail
+     * @param Cart $cart
+     */
+    private function deleteSpecificPrice(Order $order,
+                                         OrderDetail $orderDetail,
+                                         Cart $cart
+    ): void {
+        $productQuantity = $cart->getProductQuantity($orderDetail->product_id, $orderDetail->product_attribute_id);
+        if (!isset($productQuantity['quantity']) || (int) $productQuantity['quantity'] > 0) {
+            return;
+        }
+
+        $existingSpecificPrice = SpecificPrice::getSpecificPrice(
+            (int) $orderDetail->product_id,
+            0,
+            $order->id_currency,
+            0,
+            0,
+            0,
+            (int) $orderDetail->product_attribute_id,
+            $order->id_customer,
+            $order->id_cart
+        );
+        if (!empty($existingSpecificPrice)) {
+            $specificPrice = new SpecificPrice($existingSpecificPrice['id_specific_price']);
+            $specificPrice->delete();
         }
     }
 }
