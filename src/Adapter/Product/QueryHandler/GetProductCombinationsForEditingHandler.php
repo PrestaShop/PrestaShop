@@ -67,37 +67,35 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
     public function handle(GetProductCombinationsForEditing $query): array
     {
         $product = $this->getProduct($query->getProductId());
-        $paginatedCombinations = $this->getPaginatedCombinations((int) $product->id, $query->getOffset(), $query->getLimit());
-        $attributesInformation = $this->getAttributesInformation($paginatedCombinations, $query->getLanguageId());
+        $combinations = $this->getCombinations((int) $product->id, $query->getOffset(), $query->getLimit());
 
-        return $this->formatCombinationsForEditing($attributesInformation);
+        $combinationIds = array_map(function ($combination) {
+            return (int) $combination['id_product_attribute'];
+        }, $combinations);
+
+        $attributesInformation = $this->getAttributesInformationByCombinationId($combinationIds, $query->getLanguageId());
+
+        return $this->formatCombinationsForEditing($combinations, $attributesInformation);
     }
 
     /**
      * @param array $combinations
+     * @param array<int, ProductCombinationForEditing> $attributesInformationByCombinationId
      *
      * @return ProductCombinationForEditing[]
      */
-    private function formatCombinationsForEditing(array $combinations): array
+    private function formatCombinationsForEditing(array $combinations, array $attributesInformationByCombinationId): array
     {
         $combinationsForEditing = [];
-        $attributesInformationByCombinationId = [];
 
         foreach ($combinations as $combination) {
             $combinationId = (int) $combination['id_product_attribute'];
-            $attributesInformationByCombinationId[$combinationId][] = new CombinationAttributeInformation(
-                (int) $combination['id_attribute_group'],
-                $combination['attribute_group_name'],
-                (int) $combination['id_attribute'],
-                $combination['attribute_name']
-            );
-        }
+            $combinationAttributesInformation = $attributesInformationByCombinationId[$combinationId];
 
-        foreach ($attributesInformationByCombinationId as $combinationId => $attributesInformation) {
             $combinationsForEditing[] = new ProductCombinationForEditing(
                 $combinationId,
-                $this->buildCombinationName($attributesInformation),
-                $attributesInformation
+                $this->buildCombinationName($combinationAttributesInformation),
+                $combinationAttributesInformation
             );
         }
 
@@ -105,7 +103,7 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
     }
 
     /**
-     * @param array $attributesInformation
+     * @param CombinationAttributeInformation[] $attributesInformation
      *
      * @return string
      */
@@ -124,12 +122,14 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
     }
 
     /**
-     * @param int[] $paginatedCombinations
+     * @param int[] $combinationIds
      * @param LanguageId $langId
      *
-     * @return array
+     * @todo: move queries to some dedicated service. Or whole method to Combination|Product obj model?
+     *
+     * @return CombinationAttributeInformation[]
      */
-    private function getAttributesInformation(array $paginatedCombinations, LanguageId $langId): array
+    private function getAttributesInformationByCombinationId(array $combinationIds, LanguageId $langId): array
     {
         $qb = $this->connection->createQueryBuilder();
         $qb->select('a.id_attribute')
@@ -159,17 +159,37 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
                 'agl',
                 'agl.id_attribute_group = ag.id_attribute_group AND agl.id_lang = :langId'
             )->where($qb->expr()->in('pac.id_product_attribute', ':combinationIds'))
-            ->setParameter('combinationIds', $paginatedCombinations, Connection::PARAM_INT_ARRAY)
+            ->setParameter('combinationIds', $combinationIds, Connection::PARAM_INT_ARRAY)
             ->setParameter('langId', $langId->getValue())
         ;
 
-        return $qb->execute()->fetchAll();
+        $results = $qb->execute()->fetchAll();
+
+        $attributesInformationByCombinationId = [];
+        foreach ($results as $result) {
+            $attributesInformationByCombinationId[(int) $result['id_product_attribute']][] = new CombinationAttributeInformation(
+                (int) $result['id_attribute_group'],
+                $result['attribute_group_name'],
+                (int) $result['id_attribute'],
+                $result['attribute_name']
+            );
+        }
+
+        return $attributesInformationByCombinationId;
     }
 
-    private function getPaginatedCombinations(int $productId, int $offset, int $limit): array
+    /**
+     * @param int $productId
+     * @param int $offset
+     * @param int $limit
+     *
+     * @return array
+     */
+    private function getCombinations(int $productId, int $offset, int $limit): array
     {
-        //@todo: retrieve more values than id
         $qb = $this->connection->createQueryBuilder();
+        //@todo: select all necessary values for combination editing like quantity, price etc. (UpdateCombinations PR)
+        //@todo: maybe add an object like `CombinationInformation` for this?
         $qb->select('pa.id_product_attribute')
             ->addSelect('pa.id_product')
             ->from($this->dbPrefix . 'product_attribute', 'pa')
@@ -178,8 +198,6 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
             ->setFirstResult($offset)
             ->setMaxResults($limit);
 
-        return array_map(function ($result) {
-            return (int) $result['id_product_attribute'];
-        }, $qb->execute()->fetchAll());
+        return $qb->execute()->fetchAll();
     }
 }
