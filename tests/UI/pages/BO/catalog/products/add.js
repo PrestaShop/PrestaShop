@@ -30,7 +30,9 @@ class AddProduct extends BOBasePage {
     this.productTaxRuleSelect = '#step2_id_tax_rules_group_rendered';
     this.productDeleteLink = '.product-footer a.delete';
     this.dangerMessageShortDescription = '#form_step1_description_short .has-danger li';
-
+    this.packItemsInput = '#form_step1_inputPackItems';
+    this.packQuantityInput = '#form_step1_inputPackItems-curPackItemQty';
+    this.addProductToPackButton = '#form_step1_inputPackItems-curPackItemAdd';
     // Form nav
     this.formNavList = '#form-nav';
     this.forNavlistItemLink = id => `${this.formNavList} #tab_step${id} a`;
@@ -134,6 +136,9 @@ class AddProduct extends BOBasePage {
   async createEditBasicProduct(page, productData) {
     await this.setBasicSetting(page, productData);
     await this.setProductStatus(page, productData.status);
+    if (productData.type === 'Pack of products') {
+      await this.addPackOfProducts(page, productData.pack);
+    }
     return this.saveProduct(page);
   }
 
@@ -406,6 +411,34 @@ class AddProduct extends BOBasePage {
    */
   async goToCatalogPage(page) {
     await this.clickAndWaitForNavigation(page, this.goToCatalogButton);
+  }
+
+  /**
+   * Add product to pack
+   * @param page
+   * @param product
+   * @param quantity
+   * @returns {Promise<void>}
+   */
+  async addProductToPack(page, product, quantity) {
+    await page.type(this.packItemsInput, product);
+    await this.waitForSelectorAndClick(page, '#js_form_step1_inputPackItems .tt-selectable tr:nth-child(1) td:nth-child(1)');
+    await this.setValue(page, this.packQuantityInput, quantity.toString());
+    await page.click(this.addProductToPackButton);
+  }
+
+  /**
+   * Add pack of products
+   * @param page
+   * @param pack
+   * @returns {Promise<void>}
+   */
+  async addPackOfProducts(page, pack) {
+    const keys = Object.keys(pack);
+    /*eslint-disable*/
+    for (const key of keys) {
+      await this.addProductToPack(page, key, pack[key]);
+    }
   }
 }
 

@@ -16,6 +16,10 @@ module.exports = class Product {
       Color: ['White', 'Black'],
       Size: ['S', 'M'],
     };
+    this.pack = productToCreate.pack || {
+      demo_1: faker.random.number({min: 10, max: 100}),
+      demo_2: faker.random.number({min: 10, max: 100}),
+    };
     this.taxRule = productToCreate.taxRule || 'FR Taux standard (20%)';
     this.specificPrice = productToCreate.specificPrice || {
       combinations: 'Size - S, Color - White',
