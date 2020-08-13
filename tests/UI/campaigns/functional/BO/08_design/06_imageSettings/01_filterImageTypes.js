@@ -27,7 +27,7 @@ let page;
 
 let numberOfImageTypes = 0;
 
-describe('Filter image types', async () => {
+describe('Filter image types by id, name, width, height and status in pages', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -64,7 +64,7 @@ describe('Filter image types', async () => {
     await expect(numberOfImageTypes).to.be.above(0);
   });
 
-  describe('Filter image setting', async () => {
+  describe('Filter image types', async () => {
     const tests = [
       {
         args:
