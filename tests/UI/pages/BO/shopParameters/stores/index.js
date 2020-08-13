@@ -44,6 +44,16 @@ class Stores extends BOBasePage {
     this.tableColumnPhone = row => `${this.tableBodyColumn(row)}:nth-child(9)`;
     this.tableColumnFax = row => `${this.tableBodyColumn(row)}:nth-child(10)`;
     this.tableColumnStatus = row => `${this.tableBodyColumn(row)}:nth-child(11)`;
+
+    // Row actions selectors
+    this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
+    this.tableColumnActionsEditLink = row => `${this.tableColumnActions(row)} a.edit`;
+    this.tableColumnActionsToggleButton = row => `${this.tableColumnActions(row)} button.dropdown-toggle`;
+    this.tableColumnActionsDropdownMenu = row => `${this.tableColumnActions(row)} .dropdown-menu`;
+    this.tableColumnActionsDeleteLink = row => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
+
+    // Confirmation modal
+    this.deleteModalButtonYes = '#popup_ok';
   }
 
   /* Header methods */
@@ -195,6 +205,37 @@ class Stores extends BOBasePage {
     if (actualStatus !== wantedStatus) {
       await this.clickAndWaitForNavigation(page, `${this.tableColumnStatus(row)} a`);
     }
+  }
+
+  /**
+   * Go to edit store page
+   * @param page
+   * @param row
+   * @return {Promise<void>}
+   */
+  async gotoEditStorePage(page, row) {
+    await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(row));
+  }
+
+  /**
+   * Delete store from row
+   * @param page
+   * @param row
+   * @return {Promise<string>}
+   */
+  async deleteStore(page, row) {
+    await Promise.all([
+      page.click(this.tableColumnActionsToggleButton(row)),
+      this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(row)),
+    ]);
+
+    await page.click(this.tableColumnActionsDeleteLink(row));
+
+    // Confirm delete action
+    await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
+
+    // Get successful message
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 }
 
