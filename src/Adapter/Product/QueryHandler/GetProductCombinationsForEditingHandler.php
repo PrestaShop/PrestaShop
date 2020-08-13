@@ -66,8 +66,7 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
     public function handle(GetProductCombinationsForEditing $query): array
     {
         $product = $this->getProduct($query->getProductId());
-        //@todo: hardcoded pagination
-        $paginatedCombinations = $this->getPaginatedCombinations((int) $product->id, 0, 5);
+        $paginatedCombinations = $this->getPaginatedCombinations((int) $product->id, $query->getOffset(), $query->getLimit());
         $attributesInformation = $this->getAttributesInformation($paginatedCombinations);
 
         return $this->formatCombinationsForEditing($attributesInformation);
