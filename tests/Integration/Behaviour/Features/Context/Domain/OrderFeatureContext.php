@@ -742,6 +742,39 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then cart of order :orderReference should contain :quantity product(s) :productName
+     *
+     * @param string $orderReference
+     * @param int $quantity
+     * @param string $productName
+     * @param string|null $combinationName
+     */
+    public function cartOrderContainsProductWithReference(string $orderReference, int $quantity, string $productName, ?string $combinationName = null)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $order = new Order($orderId);
+        $cart = new Cart($order->id_cart);
+
+        $product = $this->getProductByName($productName);
+        $productId = $product->getProductId();
+        $combinationId = null !== $combinationName ? $this->getProductCombinationId($product, $combinationName) : 0;
+
+        $cartQuantities = $cart->getProductQuantity($productId, $combinationId);
+        $productQuantity = (int) $cartQuantities['quantity'];
+        if ($productQuantity === $quantity) {
+            return;
+        }
+        throw new RuntimeException(
+            sprintf(
+                'Cart of order was expected to have "%d" products "%s" in it. Instead got "%d"',
+                $quantity,
+                $productName,
+                $productQuantity
+            )
+        );
+    }
+
+    /**
      * @Then order :orderReference should contain :quantity refunded products :productName
      *
      * @param string $orderReference
