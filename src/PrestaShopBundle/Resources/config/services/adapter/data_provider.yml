@@ -118,3 +118,10 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Employee\ContextEmployeeProvider
         arguments:
             - '@=service("prestashop.adapter.legacy.context").getContext().employee'
+
+    prestashop.adapter.product.combination_data_provider:
+        class: PrestaShop\PrestaShop\Adapter\Product\CombinationDataProvider
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
+
