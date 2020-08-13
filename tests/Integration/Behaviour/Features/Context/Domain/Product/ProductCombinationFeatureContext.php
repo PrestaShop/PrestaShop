@@ -68,11 +68,13 @@ class ProductCombinationFeatureContext extends AbstractProductFeatureContext
     public function assertProductCombinations(string $productReference, TableNode $table): void
     {
         $dataRows = $table->getColumnsHash();
+        $totalExpectedCombinations = count($dataRows);
         $combinationsForEditing = $this->getQueryBus()->handle(new GetProductCombinationsForEditing(
-            $this->getSharedStorage()->get($productReference)
+            $this->getSharedStorage()->get($productReference),
+            $totalExpectedCombinations
         ));
 
-        Assert::assertEquals(count($combinationsForEditing), count($dataRows), 'Unexpected combinations count');
+        Assert::assertEquals(count($combinationsForEditing), $totalExpectedCombinations, 'Unexpected combinations count');
 
         /** @var ProductCombinationForEditing $combinationForEditing */
         foreach ($combinationsForEditing as $key => $combinationForEditing) {
