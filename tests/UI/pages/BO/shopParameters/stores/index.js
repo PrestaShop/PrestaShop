@@ -54,6 +54,15 @@ class Stores extends BOBasePage {
 
     // Confirmation modal
     this.deleteModalButtonYes = '#popup_ok';
+
+    // Bulk actions selectors
+    this.bulkActionBlock = 'div.bulk-actions';
+    this.bulkActionMenuButton = '#bulk_action_menu_store';
+    this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
+    this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
+    this.enableSelectionink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
+    this.disableSelectionLink = `${this.bulkActionDropdownMenu} li:nth-child(5)`;
+    this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(7)`;
   }
 
   /* Header methods */
@@ -235,6 +244,74 @@ class Stores extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
 
     // Get successful message
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+  }
+
+  /* Bulk actions methods */
+
+  /**
+   * Select all rows for bulk action
+   * @param page
+   * @return {Promise<void>}
+   */
+  async selectAllRow(page) {
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(page, this.selectAllLink),
+    ]);
+
+    await Promise.all([
+      page.click(this.selectAllLink),
+      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+    ]);
+  }
+
+  /**
+   * Enable / disable stores by bulk actions
+   * @param page
+   * @param statusWanted
+   * @return {Promise<string>}
+   */
+  async bulkUpdateStoreStatus(page, statusWanted) {
+    // Select all rows
+    await this.selectAllRow(page);
+
+    // Perform bulk update status
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(
+        page,
+        this.enableSelectionink,
+      ),
+    ]);
+
+    await this.clickAndWaitForNavigation(
+      page,
+      statusWanted ? this.enableSelectionink : this.disableSelectionLink,
+    );
+  }
+
+  /**
+   * Bulk delete stores
+   * @param page
+   * @return {Promise<string>}
+   */
+  async bulkDeleteStores(page) {
+    // To confirm bulk delete action with dialog
+    this.dialogListener(page, true);
+
+    // Select all rows
+    await this.selectAllRow(page);
+
+    // Perform delete
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(page, this.bulkDeleteLink),
+    ]);
+
+    await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
+
+    // Return successful message
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 }

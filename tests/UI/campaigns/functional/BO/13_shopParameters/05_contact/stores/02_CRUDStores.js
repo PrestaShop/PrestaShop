@@ -18,7 +18,7 @@ const StoreFaker = require('@data/faker/store');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_shopParameters_stores_CRUDStores';
+const baseContext = 'functional_BO_shopParameters_contact_stores_CRUDStores';
 
 // Import expect from chai
 const {expect} = require('chai');
