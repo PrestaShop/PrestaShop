@@ -43,7 +43,7 @@ class Stores extends BOBasePage {
     this.tableColumnCountry = row => `${this.tableBodyColumn(row)}:nth-child(8)`;
     this.tableColumnPhone = row => `${this.tableBodyColumn(row)}:nth-child(9)`;
     this.tableColumnFax = row => `${this.tableBodyColumn(row)}:nth-child(10)`;
-    this.tableColumnStatus = row => `${this.tableBodyColumn(row)}:nth-child(11)`;
+    this.tableColumnStatus = row => `${this.tableBodyColumn(row)}:nth-child(11) a`;
 
     // Row actions selectors
     this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
@@ -198,7 +198,7 @@ class Stores extends BOBasePage {
    * @return {Promise<boolean>}
    */
   getStoreStatus(page, row) {
-    return this.elementVisible(page, `${this.tableColumnStatus(row)} a.action-enabled`, 1000);
+    return this.elementVisible(page, `${this.tableColumnStatus(row)}.action-enabled`, 1000);
   }
 
   /**
@@ -212,7 +212,7 @@ class Stores extends BOBasePage {
     const actualStatus = await this.getStoreStatus(page, row);
 
     if (actualStatus !== wantedStatus) {
-      await this.clickAndWaitForNavigation(page, `${this.tableColumnStatus(row)} a`);
+      await this.clickAndWaitForNavigation(page, this.tableColumnStatus(row));
     }
   }
 
