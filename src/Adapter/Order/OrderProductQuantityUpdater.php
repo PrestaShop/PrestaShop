@@ -134,10 +134,10 @@ class OrderProductQuantityUpdater
                     $customization->quantity = $newQuantity;
                     $customization->save();
                 }
-            }
 
-            // Update quantity on the cart and stock
-            $cart = $this->updateProductQuantity($cart, $order, $orderDetail, $oldQuantity, $newQuantity);
+                // Update quantity on the cart and stock
+                $cart = $this->updateProductQuantity($cart, $order, $orderDetail, $oldQuantity, $newQuantity);
+            }
 
             // Update product stocks
             $this->updateStocks($cart, $orderDetail, $oldQuantity, $newQuantity);
