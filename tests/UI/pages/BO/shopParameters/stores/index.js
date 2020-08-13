@@ -43,7 +43,26 @@ class Stores extends BOBasePage {
     this.tableColumnCountry = row => `${this.tableBodyColumn(row)}:nth-child(8)`;
     this.tableColumnPhone = row => `${this.tableBodyColumn(row)}:nth-child(9)`;
     this.tableColumnFax = row => `${this.tableBodyColumn(row)}:nth-child(10)`;
-    this.tableColumnStatus = row => `${this.tableBodyColumn(row)}:nth-child(11)`;
+    this.tableColumnStatus = row => `${this.tableBodyColumn(row)}:nth-child(11) a`;
+
+    // Row actions selectors
+    this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
+    this.tableColumnActionsEditLink = row => `${this.tableColumnActions(row)} a.edit`;
+    this.tableColumnActionsToggleButton = row => `${this.tableColumnActions(row)} button.dropdown-toggle`;
+    this.tableColumnActionsDropdownMenu = row => `${this.tableColumnActions(row)} .dropdown-menu`;
+    this.tableColumnActionsDeleteLink = row => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
+
+    // Confirmation modal
+    this.deleteModalButtonYes = '#popup_ok';
+
+    // Bulk actions selectors
+    this.bulkActionBlock = 'div.bulk-actions';
+    this.bulkActionMenuButton = '#bulk_action_menu_store';
+    this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
+    this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
+    this.enableSelectionink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
+    this.disableSelectionLink = `${this.bulkActionDropdownMenu} li:nth-child(5)`;
+    this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(7)`;
   }
 
   /* Header methods */
@@ -179,7 +198,121 @@ class Stores extends BOBasePage {
    * @return {Promise<boolean>}
    */
   getStoreStatus(page, row) {
-    return this.elementVisible(page, `${this.tableColumnStatus(row)} a.action-enabled`, 1000);
+    return this.elementVisible(page, `${this.tableColumnStatus(row)}.action-enabled`, 1000);
+  }
+
+  /**
+   * Set store status by clicking on column status
+   * @param page
+   * @param row
+   * @param wantedStatus
+   * @return {Promise<void>}
+   */
+  async setStoreStatus(page, row, wantedStatus) {
+    const actualStatus = await this.getStoreStatus(page, row);
+
+    if (actualStatus !== wantedStatus) {
+      await this.clickAndWaitForNavigation(page, this.tableColumnStatus(row));
+    }
+  }
+
+  /**
+   * Go to edit store page
+   * @param page
+   * @param row
+   * @return {Promise<void>}
+   */
+  async gotoEditStorePage(page, row) {
+    await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(row));
+  }
+
+  /**
+   * Delete store from row
+   * @param page
+   * @param row
+   * @return {Promise<string>}
+   */
+  async deleteStore(page, row) {
+    await Promise.all([
+      page.click(this.tableColumnActionsToggleButton(row)),
+      this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(row)),
+    ]);
+
+    await page.click(this.tableColumnActionsDeleteLink(row));
+
+    // Confirm delete action
+    await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
+
+    // Get successful message
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+  }
+
+  /* Bulk actions methods */
+
+  /**
+   * Select all rows for bulk action
+   * @param page
+   * @return {Promise<void>}
+   */
+  async selectAllRow(page) {
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(page, this.selectAllLink),
+    ]);
+
+    await Promise.all([
+      page.click(this.selectAllLink),
+      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+    ]);
+  }
+
+  /**
+   * Enable / disable stores by bulk actions
+   * @param page
+   * @param statusWanted
+   * @return {Promise<void>}
+   */
+  async bulkUpdateStoreStatus(page, statusWanted) {
+    // Select all rows
+    await this.selectAllRow(page);
+
+    // Perform bulk update status
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(
+        page,
+        this.enableSelectionink,
+      ),
+    ]);
+
+    await this.clickAndWaitForNavigation(
+      page,
+      statusWanted ? this.enableSelectionink : this.disableSelectionLink,
+    );
+  }
+
+  /**
+   * Bulk delete stores
+   * @param page
+   * @return {Promise<string>}
+   */
+  async bulkDeleteStores(page) {
+    // To confirm bulk delete action with dialog
+    this.dialogListener(page, true);
+
+    // Select all rows
+    await this.selectAllRow(page);
+
+    // Perform delete
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(page, this.bulkDeleteLink),
+    ]);
+
+    await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
+
+    // Return successful message
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 }
 
