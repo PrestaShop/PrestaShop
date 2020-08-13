@@ -24,19 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
 namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCategoriesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductCategoriesCommand;
 
 /**
- * Defines contract for AssignProductToCategoriesHandler
+ * Defines contract to handle @see RemoveAllAssociatedProductCategoriesCommand
  */
-interface UpdateProductCategoriesHandlerInterface
+interface RemoveAllAssociatedProductCategoriesHandlerInterface
 {
     /**
-     * @param UpdateProductCategoriesCommand $command
+     * @param RemoveAllAssociatedProductCategoriesCommand $command
      */
-    public function handle(UpdateProductCategoriesCommand $command): void;
+    public function handle(RemoveAllAssociatedProductCategoriesCommand $command): void;
 }

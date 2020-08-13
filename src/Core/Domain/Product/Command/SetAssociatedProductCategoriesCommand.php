@@ -30,8 +30,12 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use RuntimeException;
 
-class UpdateProductCategoriesCommand
+/**
+ * Sets new product-category associations
+ */
+class SetAssociatedProductCategoriesCommand
 {
     /**
      * @var ProductId
@@ -55,14 +59,9 @@ class UpdateProductCategoriesCommand
      */
     public function __construct(int $productId, int $defaultCategoryId, array $categoryIds)
     {
+        $this->setCategoryIds($categoryIds);
         $this->defaultCategoryId = new CategoryId($defaultCategoryId);
         $this->productId = new ProductId($productId);
-
-        $this->categoryIds = array_map(
-            function ($id) {
-                return new CategoryId($id);
-            }, $categoryIds
-        );
     }
 
     /**
@@ -87,5 +86,33 @@ class UpdateProductCategoriesCommand
     public function getCategoryIds(): array
     {
         return $this->categoryIds;
+    }
+
+    /**
+     * @param int[] $categoryIds
+     */
+    private function setCategoryIds(array $categoryIds): void
+    {
+        $this->assertCategoryIdsAreNotEmpty($categoryIds);
+
+        $this->categoryIds = array_map(
+            function ($id) {
+                return new CategoryId($id);
+            }, $categoryIds
+        );
+    }
+
+    /**
+     * @param int[] $categoryIds
+     */
+    private function assertCategoryIdsAreNotEmpty(array $categoryIds): void
+    {
+        if (empty($categoryIds)) {
+            throw new RuntimeException(sprintf(
+                'Empty categoryIds provided in %s. To remove categories use %s.',
+                self::class,
+                RemoveAllAssociatedProductCategoriesCommand::class
+            ));
+        }
     }
 }
