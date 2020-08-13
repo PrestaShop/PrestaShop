@@ -66,9 +66,13 @@ export default class OrderPricesRefresher {
 
   checkOtherProductPricesMatch(givenPrice, productId, combinationId, orderDetailId) {
     const productRows = document.querySelectorAll('tr.cellProduct');
+    // We convert the expected values into int/float to avoid a type mismatch that would be wrongly interpreted
+    const expectedProductId = Number(productId);
+    const expectedCombinationId = Number(combinationId);
+    const expectedGivenPrice = Number(givenPrice);
     let unmatchingPriceExists = false;
 
-    productRows.forEach(productRow => {
+    productRows.forEach((productRow) => {
       const productRowId = $(productRow).attr('id');
 
       // No need to check edited row (especially if it's the only one for this product)
@@ -77,14 +81,14 @@ export default class OrderPricesRefresher {
       }
 
       const productEditBtn = $(`#${productRowId} ${OrderViewPageMap.productEditButtons}`);
-      const currentProductId = productEditBtn.data('product-id');
-      const currentCombinationId = productEditBtn.data('combination-id');
+      const currentProductId = Number(productEditBtn.data('product-id'));
+      const currentCombinationId = Number(productEditBtn.data('combination-id'));
 
-      if (currentProductId !== productId || currentCombinationId !== combinationId) {
+      if (currentProductId !== expectedProductId || currentCombinationId !== expectedCombinationId) {
         return;
       }
 
-      if (givenPrice !== productEditBtn.data('product-price-tax-incl')) {
+      if (expectedGivenPrice !== Number(productEditBtn.data('product-price-tax-incl'))) {
         unmatchingPriceExists = true;
       }
     });
