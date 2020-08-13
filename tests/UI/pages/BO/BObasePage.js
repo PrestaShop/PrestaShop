@@ -76,6 +76,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.pagesLink = '#subtab-AdminCmsContent';
     // Positions
     this.positionsLink = '#subtab-AdminModulesPositions';
+    // Image settings
+    this.imageSettingsLink = '#subtab-AdminImages';
     // Link widget
     this.linkWidgetLink = '#subtab-AdminLinkWidget';
 
