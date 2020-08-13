@@ -58,6 +58,7 @@ Feature: Update product suppliers from Back Office (BO)
       | my second supplier for product1 | EUR           | 11                 |
     And product product1 should have following supplier values:
       | default supplier           | supplier2                       |
+      | default supplier reference | my second supplier for product1 |
 
   Scenario: Remove product suppliers
     Given product product1 type should be standard
@@ -67,9 +68,11 @@ Feature: Update product suppliers from Back Office (BO)
       | my second supplier for product1 | EUR           | 11                 |
     And product product1 should have following supplier values:
       | default supplier           | supplier2                       |
+      | default supplier reference | my second supplier for product1 |
     When I delete all product product1 suppliers
     Then product product1 should not have any suppliers assigned
     And product product1 should not have a default supplier
+    And product product1 default supplier reference should be empty
 
   Scenario: Update product default supplier when it is not assigned to product
     Given product product1 should not have any suppliers assigned
@@ -80,6 +83,7 @@ Feature: Update product suppliers from Back Office (BO)
     Then I should get error that I cannot update default supplier
     And product product1 should not have any suppliers assigned
     And product product1 should not have a default supplier
+    And product product1 default supplier reference should be empty
 
   Scenario: Update combination product suppliers
     Given I add product "product2" with following information:
@@ -91,6 +95,7 @@ Feature: Update product suppliers from Back Office (BO)
       | whiteL    | 13       | Size:L;Color:White |
     And product product2 type should be combination
     And product product2 should not have any suppliers assigned
+    And product product2 default supplier reference should be empty
     And product "product2" has following combinations:
       | reference | quantity | attributes          |
       | whiteM    | 15       | Size:M;Color:White  |
@@ -103,3 +108,4 @@ Feature: Update product suppliers from Back Office (BO)
       | product supplier reference        | currency      | price tax excluded | combination |
       | sup white shirt M 1               | USD           | 5                  | whiteM      |
       | sup white shirt L 2               | USD           | 3                  | whiteL      |
+    Then product product2 default supplier reference should be empty
