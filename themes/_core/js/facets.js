@@ -24,26 +24,30 @@
  */
 import $ from 'jquery';
 
-let pendingQuery = false;
+let currentRequest = null;
 
-function updateResults (data) {
-    pendingQuery = false;
+function updateResults(data) {
     prestashop.emit('updateProductList', data);
     window.history.pushState(data, document.title, data.current_url);
 }
 
-function handleError () {
-    // TODO: feedback
-    pendingQuery = false;
-}
-
-function makeQuery (url) {
-    if (pendingQuery) {
-        // wait for current results
+function handleError(xhr, textStatus) {
+    if (textStatus === 'abort') {
         return;
     }
+    // TODO: feedback
+}
 
-    pendingQuery = true
+function cleanRequest(xhr) {
+    if (currentRequest === xhr) {
+        currentRequest = null;
+    }
+}
+
+function makeQuery(url) {
+    if (currentRequest) {
+        currentRequest.abort();
+    }
 
     // We need to add a parameter to the URL
     // to make it different from the one we're on,
@@ -54,15 +58,17 @@ function makeQuery (url) {
     const separator = url.indexOf('?') >= 0 ? '&' : '?';
     const slightlyDifferentURL = url + separator + 'from-xhr';
 
-    $
-        .get(slightlyDifferentURL, null, null, 'json')
-        .then(updateResults)
-        .fail(handleError)
-    ;
+    currentRequest = $.ajax({
+        url: slightlyDifferentURL,
+        dataType: 'json',
+        success: updateResults,
+        error: handleError,
+        complete: cleanRequest,
+    });
 }
 
 $(document).ready(function () {
     prestashop.on('updateFacets', (param) => {
-      makeQuery(param);
+        makeQuery(param);
     });
 });
