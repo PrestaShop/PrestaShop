@@ -229,12 +229,6 @@ export default class OrderProductAdd {
         typeof $(':selected', this.combinationsSelect).val() === 'undefined'
           ? 0
           : $(':selected', this.combinationsSelect).val();
-      const productPriceMatch = this.orderPricesRefresher.checkOtherProductPricesMatch(
-        this.priceTaxIncludedInput.val(),
-        this.productIdInput.val(),
-        combinationId
-      );
-
       const modal = new ConfirmModal(
         {
           id: 'modal-confirm-new-invoice',
@@ -244,6 +238,11 @@ export default class OrderProductAdd {
           closeButtonLabel: this.invoiceSelect.data('modal-cancel')
         },
         () => {
+          const productPriceMatch = this.orderPricesRefresher.checkOtherProductPricesMatch(
+            this.priceTaxIncludedInput.val(),
+            this.productIdInput.val(),
+            combinationId
+          );
           if (!productPriceMatch) {
             const modalEditPrice = new ConfirmModal(
               {
