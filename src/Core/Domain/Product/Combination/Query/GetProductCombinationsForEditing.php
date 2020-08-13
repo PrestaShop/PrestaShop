@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query;
 
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
@@ -41,6 +42,11 @@ class GetProductCombinationsForEditing
     private $productId;
 
     /**
+     * @var LanguageId
+     */
+    private $languageId;
+
+    /**
      * @var int
      */
     private $limit;
@@ -52,16 +58,19 @@ class GetProductCombinationsForEditing
 
     /**
      * @param int $productId
+     * @param int $languageId
      * @param int $limit
      * @param int $offset
      */
     public function __construct(
         int $productId,
+        int $languageId,
         //@todo: where do we put default limit? Or leave it required here and take care of it in presentation? (like in some grid filters)
         int $limit,
         int $offset = 0
     ) {
         $this->productId = new ProductId($productId);
+        $this->languageId = new LanguageId($languageId);
         $this->limit = $limit;
         $this->offset = $offset;
     }
@@ -72,6 +81,14 @@ class GetProductCombinationsForEditing
     public function getProductId(): ProductId
     {
         return $this->productId;
+    }
+
+    /**
+     * @return LanguageId
+     */
+    public function getLanguageId(): LanguageId
+    {
+        return $this->languageId;
     }
 
     /**

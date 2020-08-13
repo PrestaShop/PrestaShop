@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetProductCombinationsForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetProductCombinationsForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationAttributeInformation;
@@ -67,7 +68,7 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
     {
         $product = $this->getProduct($query->getProductId());
         $paginatedCombinations = $this->getPaginatedCombinations((int) $product->id, $query->getOffset(), $query->getLimit());
-        $attributesInformation = $this->getAttributesInformation($paginatedCombinations);
+        $attributesInformation = $this->getAttributesInformation($paginatedCombinations, $query->getLanguageId());
 
         return $this->formatCombinationsForEditing($attributesInformation);
     }
@@ -124,14 +125,12 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
 
     /**
      * @param int[] $paginatedCombinations
+     * @param LanguageId $langId
      *
      * @return array
      */
-    private function getAttributesInformation(array $paginatedCombinations): array
+    private function getAttributesInformation(array $paginatedCombinations, LanguageId $langId): array
     {
-        //@todo:
-        $langId = \Configuration::get('PS_LANG_DEFAULT');
-
         $qb = $this->connection->createQueryBuilder();
         $qb->select('a.id_attribute')
             ->addSelect('pac.id_product_attribute')
@@ -161,7 +160,7 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
                 'agl.id_attribute_group = ag.id_attribute_group AND agl.id_lang = :langId'
             )->where($qb->expr()->in('pac.id_product_attribute', ':combinationIds'))
             ->setParameter('combinationIds', $paginatedCombinations, Connection::PARAM_INT_ARRAY)
-            ->setParameter('langId', $langId)
+            ->setParameter('langId', $langId->getValue())
         ;
 
         return $qb->execute()->fetchAll();
