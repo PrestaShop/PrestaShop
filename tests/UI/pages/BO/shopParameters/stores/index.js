@@ -270,7 +270,7 @@ class Stores extends BOBasePage {
    * Enable / disable stores by bulk actions
    * @param page
    * @param statusWanted
-   * @return {Promise<string>}
+   * @return {Promise<void>}
    */
   async bulkUpdateStoreStatus(page, statusWanted) {
     // Select all rows
