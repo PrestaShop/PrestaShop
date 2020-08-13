@@ -178,9 +178,11 @@ class TranslateCore
         $js = false,
         $locale = null,
         $fallback = true,
-        $escape = true
+        $escape = true,
+        $useCache = true
     ) {
-        global $_MODULE, $_LANGADM;
+        $translations = [];
+        global $_MODULES, $_MODULE, $_LANGADM;
 
         static $langCache = [];
         // $_MODULES is a cache of translations for all module.
@@ -194,12 +196,10 @@ class TranslateCore
         }
 
         if (empty($iso)) {
-            // using global $_MODULES only when $locale is not set to prevent getting translation in wrong language
-            global $_MODULES;
             $iso = Context::getContext()->language->iso_code;
         }
 
-        if (!isset($translationsMerged[$name][$iso])) {
+        if (!$useCache || !isset($translationsMerged[$name][$iso])) {
             $filesByPriority = [
                 // PrestaShop 1.5 translations
                 _PS_MODULE_DIR_ . $name . '/translations/' . $iso . '.php',
@@ -213,6 +213,10 @@ class TranslateCore
                 if (file_exists($file)) {
                     include_once $file;
                     $_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
+                    if (!$useCache) {
+                        include $file;
+                        $translations = !empty($translations) ? array_merge($translations, $_MODULE) : $_MODULE;
+                    }
                 }
             }
             $translationsMerged[$name][$iso] = true;
@@ -234,14 +238,22 @@ class TranslateCore
                 $defaultKeyFile = strtolower('<{' . $name . '}prestashop>' . $file) . '_' . $key;
             }
 
-            if (isset($currentKeyFile) && !empty($_MODULES[$currentKeyFile])) {
+            if ($useCache && isset($currentKeyFile) && !empty($_MODULES[$currentKeyFile])) {
                 $ret = stripslashes($_MODULES[$currentKeyFile]);
-            } elseif (isset($defaultKeyFile) && !empty($_MODULES[$defaultKeyFile])) {
+            } elseif (!$useCache && isset($currentKeyFile) && !empty($translations[$currentKeyFile])) {
+                $ret = stripslashes($translations[$currentKeyFile]);
+            } elseif ($useCache && isset($defaultKeyFile) && !empty($_MODULES[$defaultKeyFile])) {
                 $ret = stripslashes($_MODULES[$defaultKeyFile]);
-            } elseif (!empty($_MODULES[$currentKey])) {
+            } elseif (!$useCache && isset($defaultKeyFile) && !empty($translations[$defaultKeyFile])) {
+                $ret = stripslashes($translations[$defaultKeyFile]);
+            } elseif ($useCache && !empty($_MODULES[$currentKey])) {
                 $ret = stripslashes($_MODULES[$currentKey]);
-            } elseif (!empty($_MODULES[$defaultKey])) {
+            } elseif (!$useCache && !empty($translations[$currentKey])) {
+                $ret = stripslashes($translations[$currentKey]);
+            } elseif ($useCache && !empty($_MODULES[$defaultKey])) {
                 $ret = stripslashes($_MODULES[$defaultKey]);
+            } elseif (!$useCache && !empty($translations[$defaultKey])) {
+                $ret = stripslashes($translations[$defaultKey]);
             } elseif (!empty($_LANGADM)) {
                 // if translation was not found in module, look for it in AdminController or Helpers
                 $ret = stripslashes(Translate::getGenericAdminTranslation($string, $key, $_LANGADM));
