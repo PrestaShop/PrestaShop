@@ -71,6 +71,7 @@ class ProductCombinationFeatureContext extends AbstractProductFeatureContext
         $totalExpectedCombinations = count($dataRows);
         $combinationsForEditing = $this->getQueryBus()->handle(new GetProductCombinationsForEditing(
             $this->getSharedStorage()->get($productReference),
+            $this->getDefaultLangId(),
             $totalExpectedCombinations
         ));
 
