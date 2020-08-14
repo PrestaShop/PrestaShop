@@ -38,13 +38,14 @@ class ImageSettings extends BOBasePage {
     this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
     this.tableColumnWidth = row => `${this.tableBodyColumn(row)}:nth-child(4)`;
     this.tableColumnHeight = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
-    this.tableColumnStatus = (row, columnPos) => `${this.tableBodyColumn(row)}:nth-child(${columnPos}) span`;
+    this.tableColumnStatus = (row, columnPos, status) => `${this.tableBodyColumn(row)}:nth-child(${columnPos})`
+    + ` span.action-${status}`;
 
-    this.tableColumnProducts = row => this.tableColumnStatus(row, 6);
-    this.tableColumnCategories = row => this.tableColumnStatus(row, 7);
-    this.tableColumnManufacturers = row => this.tableColumnStatus(row, 8);
-    this.tableColumnSuppliers = row => this.tableColumnStatus(row, 9);
-    this.tableColumnStores = row => this.tableColumnStatus(row, 10);
+    this.tableColumnProducts = (row, status) => this.tableColumnStatus(row, 6, status);
+    this.tableColumnCategories = (row, status) => this.tableColumnStatus(row, 7, status);
+    this.tableColumnManufacturers = (row, status) => this.tableColumnStatus(row, 8, status);
+    this.tableColumnSuppliers = (row, status) => this.tableColumnStatus(row, 9, status);
+    this.tableColumnStores = (row, status) => this.tableColumnStatus(row, 10, status);
   }
 
   /* Header methods */
@@ -165,30 +166,30 @@ class ImageSettings extends BOBasePage {
 
     switch (columnName) {
       case 'products':
-        columnSelector = this.tableColumnProducts(row);
+        columnSelector = this.tableColumnProducts;
         break;
 
       case 'categories':
-        columnSelector = this.tableColumnCategories(row);
+        columnSelector = this.tableColumnCategories;
         break;
 
       case 'manufacturers':
-        columnSelector = this.tableColumnManufacturers(row);
+        columnSelector = this.tableColumnManufacturers;
         break;
 
       case 'suppliers':
-        columnSelector = this.tableColumnSuppliers(row);
+        columnSelector = this.tableColumnSuppliers;
         break;
 
       case 'stores':
-        columnSelector = this.tableColumnStores(row);
+        columnSelector = this.tableColumnStores;
         break;
 
       default:
         throw new Error(`Column ${columnName} was not found`);
     }
 
-    return this.elementVisible(page, `${columnSelector}.action-enabled`, 1000);
+    return this.elementVisible(page, columnSelector(row, 'enabled'), 1000);
   }
 }
 
