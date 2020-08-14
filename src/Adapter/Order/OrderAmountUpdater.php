@@ -261,29 +261,24 @@ class OrderAmountUpdater
                 $computingPrecision
             );
 
-            $invoice->total_products = (float) $cart->getOrderTotal(
-                false,
-                Cart::ONLY_PRODUCTS,
-                $currentInvoiceProducts,
-                $carrierId
+            $invoice->total_products = Tools::ps_round(
+                (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $currentInvoiceProducts, $carrierId),
+                $computingPrecision
             );
-            $invoice->total_products_wt = (float) $cart->getOrderTotal(
-                true,
-                Cart::ONLY_PRODUCTS,
-                $currentInvoiceProducts,
-                $carrierId
+            $invoice->total_products_wt = Tools::ps_round(
+                (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $currentInvoiceProducts, $carrierId),
+                $computingPrecision
             );
 
-            $invoice->total_discount_tax_excl = $invoice->total_discount_tax_incl = 0;
-            foreach ($order->getCartRules() as $orderCartRuleData) {
-                $orderCartRule = new OrderCartRule($orderCartRuleData['id_order_cart_rule']);
-                if ($orderCartRule->id_order_invoice == 0 || $orderCartRule->id_order_invoice == $invoice->id) {
-                    $invoice->total_discount_tax_incl += $orderCartRule->value;
-                    $invoice->total_discount_tax_excl += $orderCartRule->value_tax_excl;
-                }
-            }
-            $invoice->total_discount_tax_excl = Tools::ps_round($invoice->total_discount_tax_excl, $computingPrecision);
-            $invoice->total_discount_tax_incl = Tools::ps_round($invoice->total_discount_tax_incl, $computingPrecision);
+            $invoice->total_discount_tax_excl = Tools::ps_round(
+                (float) $cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $currentInvoiceProducts, $carrierId),
+                $computingPrecision
+            );
+
+            $invoice->total_discount_tax_incl = Tools::ps_round(
+                (float) $cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $currentInvoiceProducts, $carrierId),
+                $computingPrecision
+            );
 
             if (!$invoice->update()) {
                 throw new OrderException('Could not update order invoice in database.');

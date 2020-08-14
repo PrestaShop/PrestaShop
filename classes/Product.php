@@ -1089,7 +1089,7 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * @see ObjectModel::validateField()
+     * @see ObjectModel::resetStaticCache()
      *
      * reset static cache (eg unit testing purpose).
      */

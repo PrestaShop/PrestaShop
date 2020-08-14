@@ -707,11 +707,10 @@ class OrderController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
      *
      * @param int $orderId
-     * @param Request $request
      *
      * @return Response
      */
-    public function getProductPricesAction(int $orderId, Request $request): Response
+    public function getProductPricesAction(int $orderId): Response
     {
         try {
             $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
@@ -733,7 +732,7 @@ class OrderController extends FrameworkBundleAdminController
         } catch (Exception $e) {
             return $this->json(
                 ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
-                Response::HTTP_BAD_REQUEST
+                Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
 
