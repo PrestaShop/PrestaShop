@@ -54,7 +54,7 @@ class TranslatableInput {
     const form = localeItem.closest('form');
     EventEmitter.emit('languageSelected', {
       selectedLocale: localeItem.data('locale'),
-      form
+      form,
     });
   }
 

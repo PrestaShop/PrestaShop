@@ -29,17 +29,17 @@ const initComponents = () => {
   // Initialize the prestashop global object
   window.prestashop = {
     components: {
-      enableTranslatableInput,
+      EnableTranslatableInput,
     },
   };
 };
 
 export default initComponents;
 
-const enableTranslatableInput = function () {
-  if (window.prestashop.components.enableTranslatableInput.enabled) {
+const EnableTranslatableInput = function () {
+  if (window.prestashop.components.EnableTranslatableInput.enabled) {
     return;
   }
   new TranslatableInput();
-  window.prestashop.components.enableTranslatableInput.enabled = true;
+  window.prestashop.components.EnableTranslatableInput.enabled = true;
 };
