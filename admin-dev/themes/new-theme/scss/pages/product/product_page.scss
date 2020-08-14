@@ -1,10 +1,11 @@
 // Config
 // Tools
-@import "@scss/config/_bootstrap";
 @import "~bootstrap/scss/mixins/breakpoints";
 // Settings
 @import "@scss/config/_settings";
 @import "@scss/config/_keyframes";
+
+@import "@scss/config/_bootstrap";
 
 // Tools with vars overwritten
 @import "~bootstrap/scss/mixins/transition";
@@ -319,6 +320,7 @@
           height: 100%;
           line-height: 130px;
           @include border-radius(0);
+
           &.bg {
             background-repeat: no-repeat;
             background-position: center center;
