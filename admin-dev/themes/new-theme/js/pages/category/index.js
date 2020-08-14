@@ -77,7 +77,7 @@ $(() => {
 
   new TranslatableField();
   new TinyMCEEditor();
-  const translatorInput = new window.prestashop.components.enableTranslatableInput();
+  const translatorInput = window.prestashop.components.TranslatableInput();
   new ChoiceTable();
   new TextWithRecommendedLengthCounter();
 
