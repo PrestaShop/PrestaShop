@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use Combination;
 use Db;
-use Doctrine\DBAL\Connection;
 use Exception;
 use Iterator;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
@@ -55,25 +54,17 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
     private $combinationGenerator;
 
     /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
      * @var Db
      */
     private $dbInstance;
 
     /**
      * @param CombinationGeneratorInterface $combinationGenerator
-     * @param Connection $connection
      */
     public function __construct(
-        CombinationGeneratorInterface $combinationGenerator,
-        Connection $connection
+        CombinationGeneratorInterface $combinationGenerator
     ) {
         $this->combinationGenerator = $combinationGenerator;
-        $this->connection = $connection;
         $this->dbInstance = Db::getInstance();
     }
 
@@ -145,7 +136,7 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
         $newCombination->id_product = $product->id;
         $newCombination->default_on = 0;
 
-        $this->connection->beginTransaction();
+        $this->dbInstance->execute('START TRANSACTION');
         $product->setAvailableDate();
 
         if (!$newCombination->add()) {
@@ -160,11 +151,11 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
         try {
             $this->saveProductAttributeAssociation($combinationId, $generatedCombination);
         } catch (Exception $e) {
-            $this->connection->rollBack();
+            $this->dbInstance->execute('ROLLBACK');
             throw $e;
         }
 
-        $this->connection->commit();
+        $this->dbInstance->execute('COMMIT');
 
         return new CombinationId($combinationId);
     }
