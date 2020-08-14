@@ -196,9 +196,10 @@ class OrderProductRemover
      * @param OrderDetail $orderDetail
      * @param Cart $cart
      */
-    private function deleteSpecificPrice(Order $order,
-                                         OrderDetail $orderDetail,
-                                         Cart $cart
+    private function deleteSpecificPrice(
+        Order $order,
+        OrderDetail $orderDetail,
+        Cart $cart
     ): void {
         $productQuantity = $cart->getProductQuantity($orderDetail->product_id, $orderDetail->product_attribute_id);
         if (!isset($productQuantity['quantity']) || (int) $productQuantity['quantity'] > 0) {
