@@ -58,16 +58,31 @@ final class AttributeId
     }
 
     /**
+     * @param $value
+     *
+     * @return bool
+     */
+    public static function isValid($value): bool
+    {
+        return is_int($value) && 0 < $value;
+    }
+
+    /**
      * Validates that the value is integer and is greater than zero
      *
      * @param int $value
      *
      * @throws AttributeConstraintException
      */
-    private function assertIsIntegerGreaterThanZero($value)
+    private function assertIsIntegerGreaterThanZero($value): void
     {
-        if (!is_int($value) || 0 >= $value) {
-            throw new AttributeConstraintException(sprintf('Invalid attribute id "%s".', var_export($value, true)), AttributeConstraintException::INVALID_ID);
+        if (self::isValid($value)) {
+            return;
         }
+
+        throw new AttributeConstraintException(
+            sprintf('Invalid attribute id "%s".', var_export($value, true)),
+            AttributeConstraintException::INVALID_ID
+        );
     }
 }
