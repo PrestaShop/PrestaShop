@@ -99,6 +99,7 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
      */
     private function addCombinations(Product $product, Iterator $generatedCombinations): array
     {
+        $productId = (int) $product->id;
         $addedCombinationIds = [];
         foreach ($generatedCombinations as $generatedCombination) {
             $combinationExists = $product->productAttributeExists($generatedCombination, false, null, true);
@@ -108,12 +109,13 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
             }
 
             try {
-                $addedCombinationIds[] = $this->addCombination($product, $generatedCombination);
+                $product->setAvailableDate();
+                $addedCombinationIds[] = $this->addCombination($productId, $generatedCombination);
             } catch (PrestaShopException $e) {
                 throw new CombinationException(
                     sprintf(
                         'Error occurred when trying to add combination for product #%d. Combination: %s',
-                        $product->id,
+                        $productId,
                         var_export($generatedCombination, true)
                     ),
                     $e
@@ -125,24 +127,27 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
     }
 
     /**
-     * @param Product $product
+     * @param int $productId
      * @param int[] $generatedCombination
      *
      * @return CombinationId
+     * @throws CannotAddCombinationException
+     * @throws PrestaShopException
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException
      */
-    private function addCombination(Product $product, array $generatedCombination): CombinationId
+    private function addCombination(int $productId, array $generatedCombination): CombinationId
     {
         $newCombination = new Combination();
-        $newCombination->id_product = $product->id;
+        $newCombination->id_product = $productId;
         $newCombination->default_on = 0;
 
         $this->dbInstance->beginTransaction();
-        $product->setAvailableDate();
 
         if (!$newCombination->add()) {
             throw new CannotAddCombinationException(sprintf(
                 'Failed adding new combination for product #%d. Combination: %s',
-                $product->id,
+                $productId,
                 var_export($generatedCombination, true)
             ));
         }
