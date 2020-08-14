@@ -203,6 +203,21 @@ abstract class DbCore
     abstract public function getBestEngine();
 
     /**
+     * Starts transaction
+     */
+    abstract public function beginTransaction(): void;
+
+    /**
+     * Commits transaction
+     */
+    abstract public function commit(): void;
+
+    /**
+     * Rollbacks transaction
+     */
+    abstract public function rollback(): void;
+
+    /**
      * Returns database object instance.
      *
      * @param bool $master Decides whether the connection to be returned by the master server or the slave server

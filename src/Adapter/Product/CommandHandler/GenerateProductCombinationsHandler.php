@@ -136,7 +136,7 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
         $newCombination->id_product = $product->id;
         $newCombination->default_on = 0;
 
-        $this->dbInstance->execute('START TRANSACTION');
+        $this->dbInstance->beginTransaction();
         $product->setAvailableDate();
 
         if (!$newCombination->add()) {
@@ -151,11 +151,11 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
         try {
             $this->saveProductAttributeAssociation($combinationId, $generatedCombination);
         } catch (Exception $e) {
-            $this->dbInstance->execute('ROLLBACK');
+            $this->dbInstance->rollback();
             throw $e;
         }
 
-        $this->dbInstance->execute('COMMIT');
+        $this->dbInstance->commit();
 
         return new CombinationId($combinationId);
     }
