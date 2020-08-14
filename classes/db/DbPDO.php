@@ -500,19 +500,19 @@ class DbPDOCore extends Db
         return $value;
     }
 
-    public function beginTransaction(): void
+    public function beginTransaction(): bool
     {
-        $this->link->beginTransaction();
+        return $this->link->beginTransaction();
     }
 
-    public function commit(): void
+    public function commit(): bool
     {
-        $this->link->commit();
+        return $this->link->commit();
     }
 
-    public function rollback(): void
+    public function rollback(): bool
     {
-        $this->link->rollBack();
+        return $this->link->rollBack();
     }
 
     /**
