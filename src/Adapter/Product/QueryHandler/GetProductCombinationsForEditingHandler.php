@@ -60,11 +60,12 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
     public function handle(GetProductCombinationsForEditing $query): ProductCombinationsForEditing
     {
         $product = $this->getProduct($query->getProductId());
-        $combinationsInfo = $this->combinationDataProvider->getCombinationsInfo((int) $product->id, $query->getLimit(), $query->getOffset());
+        $productId = (int) $product->id;
+        $combinations = $this->combinationDataProvider->getProductCombinations($productId, $query->getLimit(), $query->getOffset());
 
         $combinationIds = array_map(function ($combination): int {
             return (int) $combination['id_product_attribute'];
-        }, $combinationsInfo['combinations']);
+        }, $combinations);
 
         $attributesInformation = $this->combinationDataProvider->getAttributesInfoByCombinationIds(
             $combinationIds,
@@ -72,9 +73,9 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
         );
 
         return $this->formatCombinationsForEditing(
-            $combinationsInfo['combinations'],
+            $combinations,
             $attributesInformation,
-            $combinationsInfo['total_count']
+            $this->combinationDataProvider->getTotalCombinationsCount($productId)
         );
     }
 
