@@ -65,11 +65,11 @@ class CombinationDataProvider
      * @param int $offset
      * @param array $filters
      *
-     * @return array
+     * @return array<int, array<string, mixed>>
      */
-    public function getCombinationsInfo(int $productId, int $limit, int $offset = 0, array $filters = []): array
+    public function getProductCombinations(int $productId, int $limit, int $offset = 0, array $filters = []): array
     {
-        //@todo: filters not handled.
+        //@todo: filters are not handled.
         $qb = $this->getCombinationsQueryBuilder($productId)
             ->select('pa.*')
             ->setParameter('productId', $productId)
@@ -77,19 +77,58 @@ class CombinationDataProvider
             ->setMaxResults($limit)
         ;
 
-        return [
-            'combinations' => $qb->execute()->fetchAll(),
-            'total_count' => $this->getTotalCombinationsCount($productId),
-        ];
+        return  $qb->execute()->fetchAll();
+    }
+
+    /**
+     * @param int $productId
+     *
+     * @return int
+     */
+    public function getTotalCombinationsCount(int $productId): int
+    {
+        $qb = $this->getCombinationsQueryBuilder($productId)->select('COUNT(pa.id_product_attribute) AS total_combinations');
+
+        return (int) $qb->execute()->fetch()['total_combinations'];
     }
 
     /**
      * @param int[] $combinationIds
      * @param LanguageId $langId
      *
-     * @return array
+     * @return array<int, array<string, mixed>>
      */
     public function getAttributesInfoByCombinationIds(array $combinationIds, LanguageId $langId): array
+    {
+        $attributeCombinationAssociations = $this->getAttributeCombinationAssociations($combinationIds);
+
+        $attributeIds = array_unique(array_map(function ($attributeByCombination) {
+            return $attributeByCombination['id_attribute'];
+        }, $attributeCombinationAssociations));
+
+        $attributesInfo = $this->getAttributesInformation($attributeIds, $langId->getValue());
+
+        $attributesInfoByAttributeId = [];
+        foreach ($attributesInfo as $attributeInfo) {
+            $attributesInfoByAttributeId[(int) $attributeInfo['id_attribute']][] = $attributeInfo;
+        }
+
+        $attributesInfoByCombinationId = [];
+        foreach ($attributeCombinationAssociations as $attributeCombinationAssociation) {
+            $combinationId = (int) $attributeCombinationAssociation['id_product_attribute'];
+            $attributeId = (int) $attributeCombinationAssociation['id_attribute'];
+            $attributesInfoByCombinationId[$combinationId] = $attributesInfoByAttributeId[$attributeId];
+        }
+
+        return $attributesInfoByCombinationId;
+    }
+
+    /**
+     * @param int[] $combinationIds
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function getAttributeCombinationAssociations(array $combinationIds): array
     {
         $qb = $this->connection->createQueryBuilder();
         $qb->select('pac.id_attribute')
@@ -99,12 +138,17 @@ class CombinationDataProvider
             ->setParameter('combinationIds', $combinationIds, Connection::PARAM_INT_ARRAY)
         ;
 
-        $attributeCombinationAssociations = $qb->execute()->fetchAll();
+        return $qb->execute()->fetchAll();
+    }
 
-        $attributeIds = array_unique(array_map(function ($attributeByCombination) {
-            return $attributeByCombination['id_attribute'];
-        }, $attributeCombinationAssociations));
-
+    /**
+     * @param int[] $attributeIds
+     * @param int $langId
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function getAttributesInformation(array $attributeIds, int $langId): array
+    {
         $qb = $this->connection->createQueryBuilder();
         $qb->select('a.id_attribute')
             ->addSelect('ag.id_attribute_group')
@@ -128,36 +172,10 @@ class CombinationDataProvider
                 'agl.id_attribute_group = ag.id_attribute_group AND agl.id_lang = :langId'
             )->where($qb->expr()->in('a.id_attribute', ':attributeIds'))
             ->setParameter('attributeIds', $attributeIds, Connection::PARAM_INT_ARRAY)
-            ->setParameter('langId', $langId->getValue())
+            ->setParameter('langId', $langId)
         ;
 
-        $attributesInfo = $qb->execute()->fetchAll();
-
-        $attributesInfoByAttributeId = [];
-        foreach ($attributesInfo as $attributeInfo) {
-            $attributesInfoByAttributeId[(int) $attributeInfo['id_attribute']][] = $attributeInfo;
-        }
-
-        $attributesInfoByCombinationId = [];
-        foreach ($attributeCombinationAssociations as $attributeCombinationAssociation) {
-            $combinationId = (int) $attributeCombinationAssociation['id_product_attribute'];
-            $attributeId = (int) $attributeCombinationAssociation['id_attribute'];
-            $attributesInfoByCombinationId[$combinationId] = $attributesInfoByAttributeId[$attributeId];
-        }
-
-        return $attributesInfoByCombinationId;
-    }
-
-    /**
-     * @param int $productId
-     *
-     * @return int
-     */
-    private function getTotalCombinationsCount(int $productId): int
-    {
-        $qb = $this->getCombinationsQueryBuilder($productId)->select('COUNT(pa.id_product_attribute) AS total_combinations');
-
-        return (int) $qb->execute()->fetch()['total_combinations'];
+        return $qb->execute()->fetchAll();
     }
 
     /**
