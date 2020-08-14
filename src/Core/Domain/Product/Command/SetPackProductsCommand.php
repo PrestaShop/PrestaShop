@@ -84,8 +84,7 @@ class SetPackProductsCommand
             throw new RuntimeException(sprintf(
                 'Empty products array provided in %s. Use %s to remove all pack products',
                 self::class,
-                //@todo:
-                'todo'
+                RemoveAllProductsFromPackCommand::class
             ));
         }
 
