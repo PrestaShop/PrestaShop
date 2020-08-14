@@ -95,26 +95,6 @@ class ProductCombinationFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @param string $groupsAttributesReferencesPairs
-     *
-     * @return array
-     */
-    private function parseAttributes(string $groupsAttributesReferencesPairs): array
-    {
-        $attributeByGroupIds = [];
-        $groupAttributeReferencesPairs = explode(';', $groupsAttributesReferencesPairs);
-        foreach ($groupAttributeReferencesPairs as $groupAttributeReferencesPair) {
-            $groupAttributePair = explode(':', $groupAttributeReferencesPair);
-            $groupId = $this->getSharedStorage()->get($groupAttributePair[0]);
-            $attributeId = $this->getSharedStorage()->get($groupAttributePair[1]);
-
-            $attributeByGroupIds[][$groupId] = $attributeId;
-        }
-
-        return $attributeByGroupIds;
-    }
-
-    /**
      * @param array $tableData
      *
      * @return array
