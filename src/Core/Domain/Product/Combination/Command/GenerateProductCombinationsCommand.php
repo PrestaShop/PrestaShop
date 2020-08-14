@@ -28,6 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception\AttributeConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\ValueObject\AttributeId;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\AttributeGroupConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\ValueObject\AttributeGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
@@ -53,9 +57,8 @@ class GenerateProductCombinationsCommand
         int $productId,
         array $groupedAttributeIds
     ) {
+        $this->assertAttributesListIsValid($groupedAttributeIds);
         $this->productId = new ProductId($productId);
-        //@todo: should I loop here and put to objects of AttributeGroupId and AttributeId?
-        //  (this would require another object because I wouldn't be able to keep AttributeGroupId(object) as array index
         $this->groupedAttributeIds = $groupedAttributeIds;
     }
 
@@ -73,5 +76,40 @@ class GenerateProductCombinationsCommand
     public function getGroupedAttributeIds(): array
     {
         return $this->groupedAttributeIds;
+    }
+
+    /**
+     * @param array $groupedAttributeIds
+     *
+     * @throws AttributeConstraintException
+     * @throws AttributeGroupConstraintException
+     */
+    private function assertAttributesListIsValid(array $groupedAttributeIds): void
+    {
+        foreach ($groupedAttributeIds as $groupId => $attributeIds) {
+            if (!AttributeGroupId::isValid($groupId)) {
+                throw new AttributeGroupConstraintException(
+                    sprintf(
+                        'Invalid attribute group id "%s" provided in %s',
+                        var_export($groupId, true),
+                        self::class
+                    ),
+                    AttributeGroupConstraintException::INVALID_ID
+                );
+            }
+
+            foreach ($attributeIds as $attributeId) {
+                if (!AttributeId::isValid($attributeId)) {
+                    throw new AttributeConstraintException(
+                        sprintf(
+                            'Invalid attribute id "%s" provided in %s',
+                            var_export($attributeId, true),
+                            self::class
+                        ),
+                        AttributeConstraintException::INVALID_ID
+                    );
+                }
+            }
+        }
     }
 }
