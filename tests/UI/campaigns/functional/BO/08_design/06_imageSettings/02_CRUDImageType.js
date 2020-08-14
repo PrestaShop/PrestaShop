@@ -89,7 +89,7 @@ describe('Create, update and delete image type in BO', async () => {
     });
   });
 
-  describe('Update imageType created', async () => {
+  describe('Update image type created', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
 
@@ -125,7 +125,7 @@ describe('Create, update and delete image type in BO', async () => {
     });
   });
 
-  describe('Delete imageType', async () => {
+  describe('Delete image type', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForDelete', baseContext);
 
