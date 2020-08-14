@@ -385,10 +385,6 @@ class CookieCore
         }
 
         $sameSite = Configuration::get('PS_COOKIE_SAMESITE');
-        // SameSite=None is only available when Secure is set
-        if (empty($sameSite) || ($sameSite === Cookie::SAMESITE_NONE && !$this->_secure)) {
-            $sameSite = Cookie::SAMESITE_LAX;
-        }
 
         /*
          * The alternative signature supporting an options array is only available since
