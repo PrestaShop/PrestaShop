@@ -47,7 +47,7 @@ class GetProductCombinationsForEditing
     private $languageId;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $limit;
 
@@ -65,9 +65,8 @@ class GetProductCombinationsForEditing
     public function __construct(
         int $productId,
         int $languageId,
-        //@todo: where do we put default limit? Or leave it required here and take care of it in presentation? (like in some grid filters)
-        int $limit,
-        int $offset = 0
+        ?int $limit = null,
+        ?int $offset = null
     ) {
         $this->productId = new ProductId($productId);
         $this->languageId = new LanguageId($languageId);
@@ -92,9 +91,9 @@ class GetProductCombinationsForEditing
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getLimit(): int
+    public function getLimit(): ?int
     {
         return $this->limit;
     }
