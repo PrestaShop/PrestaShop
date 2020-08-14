@@ -389,6 +389,21 @@ class DbMySQLiCore extends Db
         return $value;
     }
 
+    public function beginTransaction(): void
+    {
+        $this->link->begin_transaction();
+    }
+
+    public function commit(): void
+    {
+        $this->link->commit();
+    }
+
+    public function rollback(): void
+    {
+        $this->link->rollback();
+    }
+
     /**
      * Tries to connect to the database and create a table (checking creation privileges).
      *
