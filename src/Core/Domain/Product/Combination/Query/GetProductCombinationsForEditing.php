@@ -52,7 +52,7 @@ class GetProductCombinationsForEditing
     private $limit;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $offset;
 
@@ -99,9 +99,9 @@ class GetProductCombinationsForEditing
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getOffset(): int
+    public function getOffset(): ?int
     {
         return $this->offset;
     }
