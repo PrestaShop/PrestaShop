@@ -389,19 +389,19 @@ class DbMySQLiCore extends Db
         return $value;
     }
 
-    public function beginTransaction(): void
+    public function beginTransaction(): bool
     {
-        $this->link->begin_transaction();
+        return $this->link->begin_transaction();
     }
 
-    public function commit(): void
+    public function commit(): bool
     {
-        $this->link->commit();
+        return $this->link->commit();
     }
 
-    public function rollback(): void
+    public function rollback(): bool
     {
-        $this->link->rollback();
+        return $this->link->rollback();
     }
 
     /**
