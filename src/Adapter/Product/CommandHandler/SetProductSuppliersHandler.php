@@ -215,13 +215,14 @@ final class SetProductSuppliersHandler extends AbstractProductHandler implements
             $this->fieldsToUpdate['supplier_reference'] = true;
             $this->fieldsToUpdate['wholesale_price'] = true;
         } elseif ($defaultSupplierId && !$product->hasCombinations()) {
-            //@todo: What do i do with wholesale_price in this case?
             $product->supplier_reference = ProductSupplierEntity::getProductSupplierReference(
                 $product->id,
                 0,
                 $defaultSupplierId
             );
+            $product->wholesale_price = ProductSupplierEntity::getProductSupplierPrice($product->id, 0, $defaultSupplierId);
             $this->fieldsToUpdate['supplier_reference'] = true;
+            $this->fieldsToUpdate['wholesale_price'] = true;
         }
 
         $product->id_supplier = $defaultSupplierId;
