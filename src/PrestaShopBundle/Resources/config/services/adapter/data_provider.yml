@@ -80,6 +80,8 @@ services:
         class: PrestaShop\PrestaShop\Adapter\CombinationDataProvider
         arguments:
             - "@prestashop.core.localization.locale.context_locale"
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
 
     prestashop.adapter.data_provider.cms:
         class: PrestaShop\PrestaShop\Adapter\CMS\CMSDataProvider
@@ -118,10 +120,3 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Employee\ContextEmployeeProvider
         arguments:
             - '@=service("prestashop.adapter.legacy.context").getContext().employee'
-
-    prestashop.adapter.product.combination_data_provider:
-        class: PrestaShop\PrestaShop\Adapter\Product\CombinationDataProvider
-        arguments:
-            - '@doctrine.dbal.default_connection'
-            - '%database_prefix%'
-
