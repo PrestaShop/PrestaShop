@@ -183,6 +183,6 @@ abstract class AbstractDomainFeatureContext implements Context
      */
     protected function getDefaultLangId(): int
     {
-        return Configuration::get('PS_LANG_DEFAULT');
+        return (int) Configuration::get('PS_LANG_DEFAULT');
     }
 }
