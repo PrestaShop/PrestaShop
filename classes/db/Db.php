@@ -204,18 +204,22 @@ abstract class DbCore
 
     /**
      * Starts transaction
+     *
+     * @return bool true on success or false on failure
      */
-    abstract public function beginTransaction(): void;
+    abstract public function beginTransaction(): bool;
 
     /**
      * Commits transaction
+     *
+     * @return bool true on success or false on failure
      */
-    abstract public function commit(): void;
+    abstract public function commit(): bool;
 
     /**
      * Rollbacks transaction
      */
-    abstract public function rollback(): void;
+    abstract public function rollback(): bool;
 
     /**
      * Returns database object instance.
