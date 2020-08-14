@@ -332,6 +332,9 @@
   <configuration id="PS_COOKIE_CHECKIP" name="PS_COOKIE_CHECKIP">
     <value>1</value>
   </configuration>
+  <configuration id="PS_COOKIE_SAMESITE" name="PS_COOKIE_SAMESITE">
+    <value>Lax</value>
+  </configuration>
   <configuration id="PS_USE_ECOTAX" name="PS_USE_ECOTAX">
     <value>0</value>
   </configuration>
