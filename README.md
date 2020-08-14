@@ -142,7 +142,7 @@ Thank you for downloading and using the PrestaShop Open Source e-commerce soluti
 [sysadmin-guide]: https://doc.prestashop.com/display/PS16/System+Administrator+Guide
 [addons]: https://addons.prestashop.com/
 [contributors-md]: CONTRIBUTORS.md
-[example-nginx]: docs/server_config/nginx.conf.dist
+[example-nginx]: https://devdocs.prestashop.com/1.7/basics/installation/nginx/
 [docker-compose]: https://docs.docker.com/compose/
 [install-guide-dev]: https://devdocs.prestashop.com/1.7/basics/installation/
 [system-requirements]: https://devdocs.prestashop.com/1.7/basics/installation/system-requirements/
