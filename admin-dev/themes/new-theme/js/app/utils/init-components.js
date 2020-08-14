@@ -23,48 +23,23 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-// Dependencies
+import TranslatableInput from '@js/components/translatable-input.js';
 
-import 'prestakit/dist/js/prestashop-ui-kit';
-import 'jquery-ui-dist/jquery-ui';
-import 'bootstrap-tokenfield';
-import 'eonasdan-bootstrap-datetimepicker';
-import 'jwerty';
-import 'magnific-popup';
-import 'dropzone';
-import 'typeahead.js/dist/typeahead.jquery';
-import 'typeahead.js/dist/bloodhound.min';
-import 'sprintf-js';
+const initComponents = () => {
+  // Initialize the prestashop global object
+  window.prestashop = {
+    components: {
+      enableTranslatableInput,
+    },
+  };
+};
 
-import '@scss/theme.scss';
+export default initComponents;
 
-// Theme Javascript
-import NavBar from '@js/nav_bar';
-
-// this needs to be ported into the UI kit
-import '@js/clickable-dropdown';
-
-import '@js/maintenance-page';
-import '@js/translation-page/index';
-
-import Header from '@js/header';
-
-import initDatePickers from '@js/app/utils/datepicker';
-import initInvalidFields from '@js/app/utils/fields';
-import initEmailFields from '@js/app/utils/email-idn';
-import initComponents from '@js/app/utils/init-components';
-
-const {$} = window;
-
-// Theme Javascript
-window.Dropzone.autoDiscover = false;
-
-new NavBar();
-new Header();
-
-$(() => {
-  initComponents();
-  initDatePickers();
-  initInvalidFields();
-  initEmailFields('input[type="email"]');
-});
+const enableTranslatableInput = function () {
+  if (window.prestashop.components.enableTranslatableInput.enabled) {
+    return;
+  }
+  new TranslatableInput();
+  window.prestashop.components.enableTranslatableInput.enabled = true;
+};

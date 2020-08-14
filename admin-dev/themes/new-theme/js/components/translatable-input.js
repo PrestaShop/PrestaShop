@@ -90,8 +90,8 @@ class TranslatableInput {
     $.post({
       url: changeLanguageUrl,
       data: {
-        language_iso_code: selectedLocale
-      }
+        language_iso_code: selectedLocale,
+      },
     });
   }
 }
