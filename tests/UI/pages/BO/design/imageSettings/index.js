@@ -46,6 +46,16 @@ class ImageSettings extends BOBasePage {
     this.tableColumnManufacturers = (row, status) => this.tableColumnStatus(row, 8, status);
     this.tableColumnSuppliers = (row, status) => this.tableColumnStatus(row, 9, status);
     this.tableColumnStores = (row, status) => this.tableColumnStatus(row, 10, status);
+
+    // Row actions selectors
+    this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
+    this.tableColumnActionsEditLink = row => `${this.tableColumnActions(row)} a.edit`;
+    this.tableColumnActionsToggleButton = row => `${this.tableColumnActions(row)} button.dropdown-toggle`;
+    this.tableColumnActionsDropdownMenu = row => `${this.tableColumnActions(row)} .dropdown-menu`;
+    this.tableColumnActionsDeleteLink = row => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
+
+    // Confirmation modal
+    this.deleteModalButtonYes = '#popup_ok';
   }
 
   /* Header methods */
@@ -190,6 +200,37 @@ class ImageSettings extends BOBasePage {
     }
 
     return this.elementVisible(page, columnSelector(row, 'enabled'), 1000);
+  }
+
+  /**
+   * Go to edit imageType page
+   * @param page
+   * @param row
+   * @return {Promise<void>}
+   */
+  async gotoEditImageTypePage(page, row) {
+    await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(row));
+  }
+
+  /**
+   * Delete image type from row
+   * @param page
+   * @param row
+   * @return {Promise<string>}
+   */
+  async deleteImageType(page, row) {
+    await Promise.all([
+      page.click(this.tableColumnActionsToggleButton(row)),
+      this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(row)),
+    ]);
+
+    await page.click(this.tableColumnActionsDeleteLink(row));
+
+    // Confirm delete action
+    await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
+
+    // Get successful message
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 }
 
