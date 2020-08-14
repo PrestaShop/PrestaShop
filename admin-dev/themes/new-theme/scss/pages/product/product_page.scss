@@ -2,10 +2,12 @@
 // Tools
 @import "~bootstrap/scss/mixins/breakpoints";
 // Settings
+/* stylelint-disable */
 @import "@scss/config/_settings";
 @import "@scss/config/_keyframes";
 
 @import "@scss/config/_bootstrap";
+/* stylelint-enable */
 
 // Tools with vars overwritten
 @import "~bootstrap/scss/mixins/transition";
