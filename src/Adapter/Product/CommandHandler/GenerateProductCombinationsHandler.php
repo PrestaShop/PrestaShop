@@ -78,12 +78,14 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
         $product = $this->getProduct($command->getProductId());
         $generatedCombinations = $this->combinationGenerator->generate($command->getGroupedAttributeIds());
 
+        // avoid applying specificPrice on each combination.
         SpecificPriceRule::disableAnyApplication();
 
         $combinationIds = $this->addCombinations($product, $generatedCombinations);
 
         Product::updateDefaultAttribute($product->id);
         SpecificPriceRule::enableAnyApplication();
+        // apply all specific price rules at once after all the combinations are generated
         SpecificPriceRule::applyAllRules([$product->id]);
 
         return $combinationIds;
@@ -131,6 +133,7 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
      * @param int[] $generatedCombination
      *
      * @return CombinationId
+     *
      * @throws CannotAddCombinationException
      * @throws PrestaShopException
      * @throws \PrestaShopDatabaseException
