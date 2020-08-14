@@ -67,15 +67,18 @@ class CombinationDataProvider
      *
      * @return array<int, array<string, mixed>>
      */
-    public function getProductCombinations(int $productId, int $limit, int $offset = 0, array $filters = []): array
+    public function getProductCombinations(int $productId, ?int $limit = null, int $offset = 0, array $filters = []): array
     {
         //@todo: filters are not handled.
         $qb = $this->getCombinationsQueryBuilder($productId)
             ->select('pa.*')
             ->setParameter('productId', $productId)
             ->setFirstResult($offset)
-            ->setMaxResults($limit)
         ;
+
+        if ($limit) {
+            $qb->setMaxResults($limit);
+        }
 
         return  $qb->execute()->fetchAll();
     }
