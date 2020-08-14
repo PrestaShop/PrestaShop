@@ -36,7 +36,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\SetPackProductsHand
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QuantifiedProduct;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShopException;
 
 /**
@@ -60,7 +59,7 @@ final class SetPackProductsHandler extends AbstractProductHandler implements Set
 
         if (false === Pack::deleteItems($packId)) {
             throw new ProductPackException(
-                sprintf('Failed removing previous products from pack #%d before adding new ones', $packId),
+                sprintf('Failed to remove previous products from pack #%d before adding new ones', $packId),
                 ProductPackException::FAILED_DELETING_PRODUCTS_FROM_PACK
             );
         }
@@ -82,7 +81,7 @@ final class SetPackProductsHandler extends AbstractProductHandler implements Set
 
                 if (false === $packed) {
                     throw new ProductPackException(
-                        $this->appendIdsToMessage('Failed adding product to pack.', $productForPacking, $packId),
+                        $this->appendIdsToMessage('Failed to add product to pack.', $productForPacking, $packId),
                         ProductPackException::FAILED_ADDING_TO_PACK
                     );
                 }
