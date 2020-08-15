@@ -119,7 +119,7 @@ class GeneralConfiguration implements DataConfigurationInterface
      */
     protected function validateSameSite(string $sameSite): bool
     {
-        $forceSsl = Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE');
+        $forceSsl = $this->configuration->get('PS_SSL_ENABLED') && $this->configuration->get('PS_SSL_ENABLED_EVERYWHERE');
         if ($sameSite === Cookie::SAMESITE_NONE) {
             return $forceSsl;
         }
