@@ -55,7 +55,7 @@ class ObjectPresenter implements PresenterInterface
         }
 
         if ($object instanceof Product) {
-            $presentedObject['ecotax_tax_inc'] = $object->getEcotax();
+            $presentedObject['ecotax_tax_inc'] = $object->getEcotax(null, true, true);
         }
 
         $presentedObject['id'] = $object->id;
