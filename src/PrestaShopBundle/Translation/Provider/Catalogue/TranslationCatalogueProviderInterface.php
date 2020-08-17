@@ -35,6 +35,8 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
  */
 interface TranslationCatalogueProviderInterface
 {
+    const DEFAULT_LOCALE = 'en-US';
+
     /**
      * Returns the translation catalogue for the provided locale
      *

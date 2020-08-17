@@ -41,8 +41,8 @@ use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShopBundle\Service\TranslationService;
-use PrestaShopBundle\Translation\Provider\Type\ThemesType;
 use PrestaShopBundle\Translation\Provider\TranslationFinder;
+use PrestaShopBundle\Translation\Provider\Type\ThemesType;
 use PrestaShopLogger;
 use Shop;
 use Symfony\Component\Filesystem\Filesystem;
@@ -582,7 +582,6 @@ class ThemeManager implements AddonManagerInterface
      */
     private function getDefaultDomains($locale, $themeName)
     {
-
         if (null === $kernel = $this->getKernel()) {
             return null;
         }

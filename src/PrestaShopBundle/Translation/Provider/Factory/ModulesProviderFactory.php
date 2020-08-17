@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Translation\Provider\Factory;
 
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
-use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
+use PrestaShopBundle\Translation\Loader\DatabaseTranslationReader;
 use PrestaShopBundle\Translation\Provider\ModulesProvider;
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
 use PrestaShopBundle\Translation\Provider\Type\ModulesType;
@@ -39,9 +39,9 @@ use Symfony\Component\Translation\Loader\LoaderInterface;
 class ModulesProviderFactory implements ProviderFactoryInterface
 {
     /**
-     * @var DatabaseTranslationLoader
+     * @var DatabaseTranslationReader
      */
-    private $databaseTranslationLoader;
+    private $databaseTranslationReader;
     /**
      * @var string
      */
@@ -60,13 +60,13 @@ class ModulesProviderFactory implements ProviderFactoryInterface
     private $legacyModuleExtractor;
 
     public function __construct(
-        DatabaseTranslationLoader $databaseTranslationLoader,
+        DatabaseTranslationReader $databaseTranslationReader,
         string $modulesDirectory,
         string $translationsDirectory,
         LoaderInterface $legacyFileLoader,
         LegacyModuleExtractorInterface $legacyModuleExtractor
     ) {
-        $this->databaseTranslationLoader = $databaseTranslationLoader;
+        $this->databaseTranslationReader = $databaseTranslationReader;
         $this->modulesDirectory = $modulesDirectory;
         $this->translationsDirectory = $translationsDirectory;
         $this->legacyFileLoader = $legacyFileLoader;
@@ -92,7 +92,7 @@ class ModulesProviderFactory implements ProviderFactoryInterface
 
         /* @var ModulesType $providerType */
         return new ModulesProvider(
-            $this->databaseTranslationLoader,
+            $this->databaseTranslationReader,
             $this->modulesDirectory,
             $this->translationsDirectory,
             $this->legacyFileLoader,
