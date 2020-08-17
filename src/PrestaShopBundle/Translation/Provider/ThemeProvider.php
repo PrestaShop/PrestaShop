@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShopBundle\Translation\Extractor\ThemeExtractorInterface;
-use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
+use PrestaShopBundle\Translation\Loader\DatabaseTranslationReader;
 use PrestaShopBundle\Translation\Provider\Catalogue\FileTranslatedCatalogueProvider;
 use PrestaShopBundle\Translation\Provider\Catalogue\UserTranslatedCatalogueProvider;
 use Symfony\Component\Filesystem\Filesystem;
@@ -67,11 +67,11 @@ class ThemeProvider implements ProviderInterface
     /**
      * @var ProviderInterface
      */
-    private $frontOfficeProvider;
+    private $frontProvider;
     /**
-     * @var DatabaseTranslationLoader
+     * @var DatabaseTranslationReader
      */
-    private $databaseLoader;
+    private $databaseReader;
     /**
      * @var string
      */
@@ -82,8 +82,8 @@ class ThemeProvider implements ProviderInterface
     private $theme;
 
     /**
-     * @param ProviderInterface $frontOfficeProvider Provider for core front office translations
-     * @param DatabaseTranslationLoader $databaseLoader
+     * @param ProviderInterface $frontProvider Provider for core front office translations
+     * @param DatabaseTranslationReader $databaseReader
      * @param ThemeExtractorInterface $themeExtractor
      * @param ThemeRepository $themeRepository
      * @param Filesystem $filesystem
@@ -91,20 +91,20 @@ class ThemeProvider implements ProviderInterface
      * @param string $themeName
      */
     public function __construct(
-        ProviderInterface $frontOfficeProvider,
-        DatabaseTranslationLoader $databaseLoader,
+        ProviderInterface $frontProvider,
+        DatabaseTranslationReader $databaseReader,
         ThemeExtractorInterface $themeExtractor,
         ThemeRepository $themeRepository,
         Filesystem $filesystem,
         string $themeResourcesDir,
         string $themeName
     ) {
-        $this->frontOfficeProvider = $frontOfficeProvider;
+        $this->frontProvider = $frontProvider;
         $this->themeExtractor = $themeExtractor;
         $this->themeRepository = $themeRepository;
         $this->filesystem = $filesystem;
         $this->themeResourcesDirectory = $themeResourcesDir;
-        $this->databaseLoader = $databaseLoader;
+        $this->databaseReader = $databaseReader;
         $this->themeName = $themeName;
 
         $this->validateTheme();
@@ -118,18 +118,16 @@ class ThemeProvider implements ProviderInterface
      * @param bool $refreshCache [default=false] Force cache to be refreshed
      *
      * @return MessageCatalogueInterface
+     *
+     * @throws FileNotFoundException
      */
     public function getDefaultCatalogue(
         string $locale,
         bool $empty = true,
         $refreshCache = false
     ): MessageCatalogueInterface {
-        $defaultCatalogue = $this->frontOfficeProvider->getDefaultCatalogue($locale);
-
-        $defaultCatalogue->addCatalogue(
-            // Extracts wordings from the theme's templates
-            $this->themeExtractor->extract($this->theme, $locale, $refreshCache)
-        );
+        // Extracts wordings from the theme's templates
+        $defaultCatalogue = $this->themeExtractor->extract($this->theme, $locale, $refreshCache);
 
         if ($empty) {
             $this->emptyCatalogue($defaultCatalogue);
@@ -142,11 +140,13 @@ class ThemeProvider implements ProviderInterface
      * @param string $locale
      *
      * @return MessageCatalogueInterface
+     *
+     * @throws FileNotFoundException
      */
     public function getFileTranslatedCatalogue(string $locale): MessageCatalogueInterface
     {
         // load front office catalogue
-        $catalogue = $this->frontOfficeProvider->getFileTranslatedCatalogue($locale);
+        $catalogue = $this->frontProvider->getFileTranslatedCatalogue($locale);
 
         try {
             $fileTranslatedCatalogue = (new FileTranslatedCatalogueProvider(
@@ -178,7 +178,7 @@ class ThemeProvider implements ProviderInterface
         }
 
         return (new UserTranslatedCatalogueProvider(
-            $this->databaseLoader,
+            $this->databaseReader,
             $translationDomains
         ))
             ->getCatalogue($locale, $this->themeName);
@@ -192,7 +192,7 @@ class ThemeProvider implements ProviderInterface
         $this->theme = $this->themeRepository->getInstanceByName($this->themeName);
 
         if (!($this->theme instanceof Theme)) {
-            throw new \RuntimeException('Theme doesnt exist');
+            throw new \RuntimeException(sprintf('The theme "%s" doesn\'t exist', $this->themeName));
         }
     }
 

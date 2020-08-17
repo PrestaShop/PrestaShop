@@ -44,16 +44,31 @@ class SearchProviderTest extends KernelTestCase
     {
         self::bootKernel();
         $container = self::$kernel->getContainer();
-        $databaseLoader = $container->get('prestashop.translation.database_loader');
-
+        $databaseLoader = $container->get('prestashop.translation.loader.database');
         $resourcesDir = __DIR__ . '/../../../../Resources/translations';
+        $databaseContent = [
+            [
+                'lang' => 'fr-FR',
+                'key' => 'Invalid name',
+                'translation' => 'Traduction customisée',
+                'domain' => 'ShopFormsErrors',
+                'theme' => null,
+            ],
+            [
+                'lang' => 'fr-FR',
+                'key' => 'Some made up text',
+                'translation' => 'Un texte inventé',
+                'domain' => 'ShopActions',
+                'theme' => 'classic',
+            ],
+        ];
         $this->provider = new SearchProvider(
-            $databaseLoader,
+            new MockDatabaseTranslationReader([]),
             $resourcesDir,
             'AdminActions'
         );
 
-        $langId = \Language::getIdByIso('fr');
+        $langId = \Language::getIdByIso('fr', true);
         if (!$langId) {
             $lang = new \Language();
             $lang->locale = 'fr-FR';

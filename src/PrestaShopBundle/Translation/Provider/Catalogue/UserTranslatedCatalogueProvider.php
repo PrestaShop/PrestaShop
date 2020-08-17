@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider\Catalogue;
 
-use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
+use PrestaShopBundle\Translation\Loader\DatabaseTranslationReader;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
@@ -38,9 +38,9 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 class UserTranslatedCatalogueProvider implements TranslationCatalogueProviderInterface
 {
     /**
-     * @var DatabaseTranslationLoader
+     * @var DatabaseTranslationReader
      */
-    private $databaseLoader;
+    private $databaseTranslationReader;
 
     /**
      * @var array
@@ -48,14 +48,14 @@ class UserTranslatedCatalogueProvider implements TranslationCatalogueProviderInt
     private $translationDomains;
 
     /**
-     * @param DatabaseTranslationLoader $databaseLoader
+     * @param DatabaseTranslationReader $databaseTranslationReader
      * @param array $translationDomains
      */
     public function __construct(
-        DatabaseTranslationLoader $databaseLoader,
+        DatabaseTranslationReader $databaseTranslationReader,
         array $translationDomains
     ) {
-        $this->databaseLoader = $databaseLoader;
+        $this->databaseTranslationReader = $databaseTranslationReader;
         $this->translationDomains = $translationDomains;
     }
 
@@ -70,8 +70,7 @@ class UserTranslatedCatalogueProvider implements TranslationCatalogueProviderInt
         $catalogue = new MessageCatalogue($locale);
 
         foreach ($this->translationDomains as $translationDomain) {
-            $domainCatalogue = $this->databaseLoader->load(
-                null,
+            $domainCatalogue = $this->databaseTranslationReader->load(
                 $locale,
                 $translationDomain,
                 $themeName
