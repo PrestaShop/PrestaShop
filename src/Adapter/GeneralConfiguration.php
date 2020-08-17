@@ -111,7 +111,7 @@ class GeneralConfiguration implements DataConfigurationInterface
 
     /**
      * Validate SameSite.
-     * The SameSite=None is only working when Secure is settle
+     * The SameSite=None is only working when Secure is settled
      *
      * @param string $sameSite
      *
