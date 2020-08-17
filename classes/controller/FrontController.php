@@ -398,7 +398,6 @@ class FrontControllerCore extends Controller
                 $cart->update();
             }
             /* Select an address if not set */
-
         }
 
         if (!isset($cart) || !$cart->id) {
