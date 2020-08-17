@@ -24,106 +24,44 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Loader;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\QueryBuilder;
-use PrestaShopBundle\Entity\Lang;
-use PrestaShopBundle\Entity\Translation;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
+/**
+ * Loads database translations.
+ *
+ * Notice: this loader is to be used exclusively to initialize the back office translator!
+ * It does not support themes so it's not suitable for front office translations.
+ */
 class DatabaseTranslationLoader implements LoaderInterface
 {
     /** @var EntityManagerInterface */
     protected $entityManager;
+    /**
+     * @var DatabaseTranslationReader
+     */
+    private $reader;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param DatabaseTranslationReader $reader
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(DatabaseTranslationReader $reader)
     {
-        $this->entityManager = $entityManager;
+        $this->reader = $reader;
     }
 
     /**
      * {@inheritdoc}
      *
-     * @todo: this method doesn't match the interface
+     * @return MessageCatalogue
      */
-    public function load($resource, $locale, $domain = 'messages', $theme = null)
+    public function load($resource, $locale, $domain = 'messages')
     {
-        static $langs = [];
-        $catalogue = new MessageCatalogue($locale);
-
-        // do not try and load translations for a locale that cannot be saved to DB anyway
-        if ($locale === 'default') {
-            return $catalogue;
-        }
-
-        if (!array_key_exists($locale, $langs)) {
-            $langs[$locale] = $this->entityManager->getRepository('PrestaShopBundle:Lang')->findOneBy(['locale' => $locale]);
-        }
-
-        /** @var EntityRepository $translationRepository */
-        $translationRepository = $this->entityManager->getRepository('PrestaShopBundle:Translation');
-
-        $queryBuilder = $translationRepository->createQueryBuilder('t');
-
-        $this->addLangConstraint($queryBuilder, $langs[$locale]);
-
-        $this->addThemeConstraint($queryBuilder, $theme);
-
-        $this->addDomainConstraint($queryBuilder, $domain);
-
-        $translations = $queryBuilder
-            ->getQuery()
-            ->getResult();
-
-        /** @var Translation $translation */
-        foreach ($translations as $translation) {
-            $catalogue->set($translation->getKey(), $translation->getTranslation(), $translation->getDomain());
-        }
-
-        return $catalogue;
-    }
-
-    /**
-     * @param QueryBuilder $queryBuilder
-     * @param Lang $currentLang
-     */
-    private function addLangConstraint(QueryBuilder $queryBuilder, Lang $currentLang)
-    {
-        $queryBuilder->andWhere('t.lang =:lang')
-            ->setParameter('lang', $currentLang);
-    }
-
-    /**
-     * @param QueryBuilder $queryBuilder
-     * @param string|null $theme
-     */
-    private function addThemeConstraint(QueryBuilder $queryBuilder, $theme)
-    {
-        if (null === $theme) {
-            $queryBuilder->andWhere('t.theme IS NULL');
-        } else {
-            $queryBuilder
-                ->andWhere('t.theme = :theme')
-                ->setParameter('theme', $theme);
-        }
-    }
-
-    /**
-     * @param QueryBuilder $queryBuilder
-     * @param string $domain
-     */
-    private function addDomainConstraint(QueryBuilder $queryBuilder, $domain)
-    {
-        if ($domain !== '*') {
-            $queryBuilder->andWhere('REGEXP(t.domain, :domain) = true')
-                ->setParameter('domain', $domain);
-        }
+        return $this->reader->load($locale, $domain);
     }
 }

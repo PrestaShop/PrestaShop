@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider\Factory;
 
-use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
+use PrestaShopBundle\Translation\Loader\DatabaseTranslationReader;
 use PrestaShopBundle\Translation\Provider\MailsProvider;
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
 use PrestaShopBundle\Translation\Provider\Type\MailsType;
@@ -37,17 +37,17 @@ use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
 class MailsProviderFactory implements ProviderFactoryInterface
 {
     /**
-     * @var DatabaseTranslationLoader
+     * @var DatabaseTranslationReader
      */
-    private $databaseTranslationLoader;
+    private $databaseTranslationReader;
     /**
      * @var string
      */
     private $resourceDirectory;
 
-    public function __construct(DatabaseTranslationLoader $databaseTranslationLoader, string $resourceDirectory)
+    public function __construct(DatabaseTranslationReader $databaseTranslationReader, string $resourceDirectory)
     {
-        $this->databaseTranslationLoader = $databaseTranslationLoader;
+        $this->databaseTranslationReader = $databaseTranslationReader;
         $this->resourceDirectory = $resourceDirectory;
     }
 
@@ -68,6 +68,6 @@ class MailsProviderFactory implements ProviderFactoryInterface
             throw new \RuntimeException(sprintf('Invalid provider type given: %s', get_class($providerType)));
         }
 
-        return new MailsProvider($this->databaseTranslationLoader, $this->resourceDirectory);
+        return new MailsProvider($this->databaseTranslationReader, $this->resourceDirectory);
     }
 }

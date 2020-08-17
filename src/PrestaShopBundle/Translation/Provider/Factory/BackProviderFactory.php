@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider\Factory;
 
-use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
+use PrestaShopBundle\Translation\Loader\DatabaseTranslationReader;
 use PrestaShopBundle\Translation\Provider\BackProvider;
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
 use PrestaShopBundle\Translation\Provider\Type\BackType;
@@ -37,17 +37,17 @@ use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
 class BackProviderFactory implements ProviderFactoryInterface
 {
     /**
-     * @var DatabaseTranslationLoader
+     * @var DatabaseTranslationReader
      */
-    private $databaseTranslationLoader;
+    private $databaseTranslationReader;
     /**
      * @var string
      */
     private $resourceDirectory;
 
-    public function __construct(DatabaseTranslationLoader $databaseTranslationLoader, string $resourceDirectory)
+    public function __construct(DatabaseTranslationReader $databaseTranslationReader, string $resourceDirectory)
     {
-        $this->databaseTranslationLoader = $databaseTranslationLoader;
+        $this->databaseTranslationReader = $databaseTranslationReader;
         $this->resourceDirectory = $resourceDirectory;
     }
 
@@ -70,7 +70,7 @@ class BackProviderFactory implements ProviderFactoryInterface
 
         /* @var BackType $providerType */
         return new BackProvider(
-            $this->databaseTranslationLoader,
+            $this->databaseTranslationReader,
             $this->resourceDirectory
         );
     }
