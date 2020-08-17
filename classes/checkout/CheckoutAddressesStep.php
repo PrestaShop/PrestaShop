@@ -105,6 +105,8 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
                     $this->getCheckoutSession()->setIdAddressDelivery($id_address);
                     if ($this->use_same_address) {
                         $this->getCheckoutSession()->setIdAddressInvoice($id_address);
+                    } else {
+                        $this->getCheckoutSession()->setIdAddressInvoice(null);
                     }
                 } else {
                     $this->getCheckoutSession()->setIdAddressInvoice($id_address);
