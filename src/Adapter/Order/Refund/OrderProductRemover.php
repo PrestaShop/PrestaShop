@@ -206,19 +206,24 @@ class OrderProductRemover
             return;
         }
 
-        $existingSpecificPrice = SpecificPrice::getSpecificPrice(
+        // WARNING: DO NOT use SpecificPrice::getSpecificPrice as it filters out fields that are not in database
+        // hence it ignores the customer or cart restriction and results are biased
+        $existingSpecificPriceId = SpecificPrice::exists(
             (int) $orderDetail->product_id,
+            (int) $orderDetail->product_attribute_id,
+            0,
+            0,
             0,
             $order->id_currency,
-            0,
-            0,
-            0,
-            (int) $orderDetail->product_attribute_id,
             $order->id_customer,
+            SpecificPrice::ORDER_DEFAULT_FROM_QUANTITY,
+            SpecificPrice::ORDER_DEFAULT_DATE,
+            SpecificPrice::ORDER_DEFAULT_DATE,
+            false,
             $order->id_cart
         );
-        if (!empty($existingSpecificPrice)) {
-            $specificPrice = new SpecificPrice($existingSpecificPrice['id_specific_price']);
+        if (!empty($existingSpecificPriceId)) {
+            $specificPrice = new SpecificPrice($existingSpecificPriceId);
             $specificPrice->delete();
         }
     }
