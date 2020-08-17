@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Translation\Provider\Factory;
 
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractor;
-use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
+use PrestaShopBundle\Translation\Loader\DatabaseTranslationReader;
 use PrestaShopBundle\Translation\Loader\LegacyFileLoader;
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
 use PrestaShopBundle\Translation\Provider\SearchProvider;
@@ -39,9 +39,9 @@ use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
 class SearchProviderFactory implements ProviderFactoryInterface
 {
     /**
-     * @var DatabaseTranslationLoader
+     * @var DatabaseTranslationReader
      */
-    private $databaseTranslationLoader;
+    private $databaseTranslationReader;
     /**
      * @var string
      */
@@ -56,12 +56,12 @@ class SearchProviderFactory implements ProviderFactoryInterface
     private $legacyModuleExtractor;
 
     public function __construct(
-        DatabaseTranslationLoader $databaseTranslationLoader,
+        DatabaseTranslationReader $databaseTranslationReader,
         LegacyFileLoader $legacyFileLoader,
         LegacyModuleExtractor $legacyModuleExtractor,
         string $translationsDirectory
     ) {
-        $this->databaseTranslationLoader = $databaseTranslationLoader;
+        $this->databaseTranslationReader = $databaseTranslationReader;
         $this->legacyFileLoader = $legacyFileLoader;
         $this->legacyModuleExtractor = $legacyModuleExtractor;
         $this->translationsDirectory = $translationsDirectory;
@@ -85,7 +85,7 @@ class SearchProviderFactory implements ProviderFactoryInterface
         }
 
         return new SearchProvider(
-            $this->databaseTranslationLoader,
+            $this->databaseTranslationReader,
             $this->translationsDirectory,
             $providerType->getDomain(),
             $providerType->getTheme()
