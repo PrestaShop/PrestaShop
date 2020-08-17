@@ -75,10 +75,11 @@ class ModulesProviderTest extends KernelTestCase
 
         $this->provider = new ModulesProvider(
             $databaseLoader,
-            '',
             $this->getModuleDirectory(),
+            '',
             $legacyFileLoader,
-            $extractor
+            $extractor,
+            self::MODULE_NAME
         );
     }
 
@@ -92,7 +93,7 @@ class ModulesProviderTest extends KernelTestCase
         $locale,
         array $expected
     ) {
-        $legacyCatalogue = $this->provider->getFileTranslatedCatalogue($locale, self::MODULE_NAME);
+        $legacyCatalogue = $this->provider->getFileTranslatedCatalogue($locale);
 
         $this->assertInstanceOf(MessageCatalogueInterface::class, $legacyCatalogue);
 
