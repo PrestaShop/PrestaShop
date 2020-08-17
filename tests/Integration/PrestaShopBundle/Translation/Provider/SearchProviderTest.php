@@ -26,7 +26,6 @@
 
 namespace Tests\Integration\PrestaShopBundle\Translation\Provider;
 
-use PrestaShopBundle\Translation\Provider\ModulesProvider;
 use PrestaShopBundle\Translation\Provider\SearchProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -46,21 +45,13 @@ class SearchProviderTest extends KernelTestCase
         self::bootKernel();
         $container = self::$kernel->getContainer();
         $databaseLoader = $container->get('prestashop.translation.database_loader');
-        $externalSystemProvider = $this->getMockBuilder(ModulesProvider::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
 
         $resourcesDir = __DIR__ . '/../../../../Resources/translations';
         $this->provider = new SearchProvider(
-            $externalSystemProvider,
             $databaseLoader,
             $resourcesDir,
-            ''
+            'AdminActions'
         );
-
-//        $this->provider->setDomain('AdminActions');
-//        $this->provider->setLocale('fr-FR');
 
         $langId = \Language::getIdByIso('fr');
         if (!$langId) {
@@ -74,7 +65,7 @@ class SearchProviderTest extends KernelTestCase
 
     public function testItExtractsOnlyTheSelectedCataloguesFromXliffFiles()
     {
-        $catalogue = $this->provider->getDefaultCatalogue('fr-FR', 'AdminActions');
+        $catalogue = $this->provider->getDefaultCatalogue('fr-FR', false);
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
         // Check that only the selected domain is in the catalogue
@@ -85,6 +76,20 @@ class SearchProviderTest extends KernelTestCase
 
         $adminTranslations = $catalogue->all('AdminActions');
         $this->assertCount(91, $adminTranslations);
+        $this->assertSame('Download file', $catalogue->get('Download file', 'AdminActions'));
+
+        $catalogue = $this->provider->getFileTranslatedCatalogue('fr-FR');
+        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
+
+        // Check that only the selected domain is in the catalogue
+        $this->assertSame(['AdminActions'], $catalogue->getDomains());
+
+        // Check integrity of translations
+        $this->assertArrayHasKey('AdminActions', $catalogue->all());
+
+        $adminTranslations = $catalogue->all('AdminActions');
+        // There is no translation for 'Continue'
+        $this->assertCount(90, $adminTranslations);
         $this->assertSame('Télécharger le fichier', $catalogue->get('Download file', 'AdminActions'));
     }
 
