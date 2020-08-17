@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Order;
 
 use Cart;
 use Combination;
+use Configuration;
 use Context;
 use Currency;
 use Customer;
@@ -51,6 +52,8 @@ use Validate;
  */
 abstract class AbstractOrderHandler
 {
+    const COMPARISON_PRECISION = 6;
+
     /**
      * @param OrderId $orderId
      *
@@ -187,9 +190,7 @@ abstract class AbstractOrderHandler
      * @param Number $priceTaxExcluded
      * @param Order $order
      * @param Product $product
-     * @param $combination
-     *
-     * @return SpecificPrice
+     * @param Combination|null $combination
      *
      * @throws PrestaShopException
      * @throws \PrestaShopDatabaseException
@@ -199,35 +200,25 @@ abstract class AbstractOrderHandler
         Number $priceTaxExcluded,
         Order $order,
         Product $product,
-        $combination
+        ?Combination $combination
     ): void {
-        $existingSpecificPrice = SpecificPrice::getSpecificPrice(
-            $product->id,
-            0,
-            $order->id_currency,
-            0,
-            0,
-            0,
-            $combination ? $combination->id : 0,
-            $order->id_customer,
-            $order->id_cart
-        );
+        $productSpecificPrice = $this->getProductSpecificPriceInOrder($product, $order, $combination);
 
-        $productOriginalPrice = new Number((string) $product->price);
+        $productOriginalPrice = $this->getProductRegularPrice($product, $order, $combination);
+        $roundedPrice = new Number($priceTaxExcluded->round(self::COMPARISON_PRECISION));
 
-        if ($productOriginalPrice->equals($priceTaxExcluded)) {
-            if (!empty($existingSpecificPrice)) {
-                $specificPrice = new SpecificPrice($existingSpecificPrice['id_specific_price']);
-                $specificPrice->delete();
+        if ($productOriginalPrice->equals($roundedPrice)) {
+            // Product specific price is not useful any more we can delete it
+            if (null !== $productSpecificPrice) {
+                $productSpecificPrice->delete();
             }
 
             return;
         }
 
-        if (!empty($existingSpecificPrice)) {
-            $specificPrice = new SpecificPrice($existingSpecificPrice['id_specific_price']);
-            $specificPrice->price = $priceTaxExcluded;
-            $specificPrice->update();
+        if (null !== $productSpecificPrice) {
+            $productSpecificPrice->price = $priceTaxExcluded;
+            $productSpecificPrice->update();
 
             return;
         }
@@ -243,13 +234,79 @@ abstract class AbstractOrderHandler
         $specificPrice->id_product = $product->id;
         $specificPrice->id_product_attribute = $combination ? $combination->id : 0;
         $specificPrice->price = (float) (string) $priceTaxExcluded;
-        $specificPrice->from_quantity = 1;
+        $specificPrice->from_quantity = SpecificPrice::ORDER_DEFAULT_FROM_QUANTITY;
         $specificPrice->reduction = 0;
         $specificPrice->reduction_type = 'amount';
         $specificPrice->reduction_tax = !$priceTaxIncluded->equals($priceTaxExcluded);
-        $specificPrice->from = '0000-00-00 00:00:00';
-        $specificPrice->to = '0000-00-00 00:00:00';
+        $specificPrice->from = SpecificPrice::ORDER_DEFAULT_DATE;
+        $specificPrice->to = SpecificPrice::ORDER_DEFAULT_DATE;
         $specificPrice->add();
+    }
+
+    /**
+     * @param Product $product
+     * @param Order $order
+     * @param Combination|null $combination
+     *
+     * @return SpecificPrice|null
+     */
+    protected function getProductSpecificPriceInOrder(
+        Product $product,
+        Order $order,
+        ?Combination $combination
+    ): ?SpecificPrice {
+        // WARNING: DO NOT use SpecificPrice::getSpecificPrice as it filters out fields that are not in database
+        // hence it ignores the customer or cart restriction and results are biased
+        $existingSpecificPriceId = SpecificPrice::exists(
+            $product->id,
+            $combination ? $combination->id : 0,
+            0,
+            0,
+            0,
+            $order->id_currency,
+            $order->id_customer,
+            SpecificPrice::ORDER_DEFAULT_FROM_QUANTITY,
+            SpecificPrice::ORDER_DEFAULT_DATE,
+            SpecificPrice::ORDER_DEFAULT_DATE,
+            false,
+            $order->id_cart
+        );
+
+        if (!empty($existingSpecificPriceId)) {
+            return new SpecificPrice($existingSpecificPriceId);
+        }
+
+        return null;
+    }
+
+    /**
+     * @param Product $product
+     * @param Order $order
+     * @param Combination|null $combination
+     *
+     * @return Number
+     */
+    protected function getProductRegularPrice(
+        Product $product,
+        Order $order,
+        ?Combination $combination
+    ): Number {
+        // Get price via getPriceStatic so that the catalog price rules are applied
+
+        return new Number((string) Product::getPriceStatic(
+            $product->id,
+            false,
+            null !== $combination ? $combination->id : 0,
+            self::COMPARISON_PRECISION,
+            null,
+            false,
+            true,
+            1,
+            false,
+            $order->id_customer, // We still use the customer ID in case this customer has some special prices
+            null, // But we keep the cart null as we don't want this order overridden price
+            $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)}
+        ));
     }
 
     /**
