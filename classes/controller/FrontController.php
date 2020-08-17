@@ -391,21 +391,7 @@ class FrontControllerCore extends Controller
                 $cart->update();
             }
             /* Select an address if not set */
-            if (isset($cart) && (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0 ||
-                !isset($cart->id_address_invoice) || $cart->id_address_invoice == 0) && $this->context->cookie->id_customer) {
-                $to_update = false;
-                if (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0) {
-                    $to_update = true;
-                    $cart->id_address_delivery = (int) Address::getFirstCustomerAddressId($cart->id_customer);
-                }
-                if (!isset($cart->id_address_invoice) || $cart->id_address_invoice == 0) {
-                    $to_update = true;
-                    $cart->id_address_invoice = (int) Address::getFirstCustomerAddressId($cart->id_customer);
-                }
-                if ($to_update) {
-                    $cart->update();
-                }
-            }
+
         }
 
         if (!isset($cart) || !$cart->id) {
