@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="classes/PaymentModule.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="44aa13304026bb46ad79f4151f16634a" approved="yes">
+        <source>(waiting for validation)</source>
+        <target state="final">(en attente de validation)</target>
+        <note>Line: 630</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/components/footer.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="96dad7f0d711c3408786ba1ee05402b3" approved="yes">
+        <source><![CDATA[<a href="{shop_url}">{shop_name}</a> powered by <a href="{prestashop_url}">PrestaShop™</a>]]></source>
+        <target state="final"><![CDATA[<a href="{shop_url}">{shop_name}</a> propulsé par <a href="{prestashop_url}">PrestaShop™</a>]]></target>
+        <note>Line: 6</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/account.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="2498c963bfc06e8fca88007ec322b769" approved="yes">
+        <source>Your login email address on {shop_name}</source>
+        <target state="final">Votre adresse e-mail de connexion sur {shop_name}</target>
+        <note>Line: 25</note>
+      </trans-unit>
+      <trans-unit id="7cfb9d536fcd7aa70c333e8e73b287e2" approved="yes">
+        <source>Here is your login email address:</source>
+        <target state="final">Voici votre adresse e-mail de connexion :</target>
+        <note>Line: 30</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/backoffice_order.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="bffeb374bf71938ffc4faa42afbf1679" approved="yes">
+        <source><![CDATA[Please go on <a href="{order_link}">{order_link}</a> to finalize the payment.]]></source>
+        <target state="final"><![CDATA[Veuillez vous rendre sur <a href="{order_link}">{order_link}</a> pour finaliser votre paiement.]]></target>
+        <note>Line: 25</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/bankwire.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="9b33ea5c9409a67cb6e1f6bc3f0828f0" approved="yes">
+        <source>Awaiting wire payment</source>
+        <target state="final">En attente du paiement</target>
+        <note>Line: 25</note>
+      </trans-unit>
+      <trans-unit id="f4a6af01d092af11dca29cb89578b124" approved="yes">
+        <source>You have selected to pay by wire transfer.</source>
+        <target state="final">Pour rappel, vous avez sélectionné le mode de paiement par virement bancaire.</target>
+        <note>Line: 50</note>
+      </trans-unit>
+      <trans-unit id="fc1ae3c1dd1d9d9a44da719fa9966f0e" approved="yes">
+        <source>Here are the bank details for your transfer:</source>
+        <target state="final">Voici les informations dont vous avez besoin pour effectuer votre virement :</target>
+        <note>Line: 53</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/cheque.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="a51341e25ff7710496cf86468d797169" approved="yes">
+        <source><![CDATA[If you have a guest account, you can follow your order via the <a href="{guest_tracking_url}">"Guest Tracking"</a> section on our shop.]]></source>
+        <target state="final"><![CDATA[Si vous avez un compte invité, vous pouvez suivre votre commande via la section <a href="{guest_tracking_url}">"Suivi invité"</a> sur notre boutique.]]></target>
+        <note>Line: 87</note>
+      </trans-unit>
+      <trans-unit id="d698e777b19f6f487ae0490950174fde" approved="yes">
+        <source>Awaiting check payment</source>
+        <target state="final">En attente du paiement par chèque</target>
+        <note>Line: 25</note>
+      </trans-unit>
+      <trans-unit id="ecf01c46965fdfd36eb98b271276c0d5" approved="yes">
+        <source>You have selected to pay by check.</source>
+        <target state="final">Vous avez choisi de payer par chèque.</target>
+        <note>Line: 50</note>
+      </trans-unit>
+      <trans-unit id="b6592595266708e46d1d420ab7153213" approved="yes">
+        <source>Here are the bank details for your check:</source>
+        <target state="final">Voici les informations dont vous avez besoin pour effectuer le paiement :</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="ed750ed3b775eb7ed37644ceb05c713b" approved="yes">
+        <source>Your order with the reference [1]{order_name}[/1] has been placed successfully and will be [1]shipped as soon as we receive your payment[/1].</source>
+        <target state="final">Votre commande ayant pour référence [1]{order_name}[/1] a bien été prise en compte, elle sera [1]expédiée dès réception de votre paiement[/1].</target>
+        <note>Line: 30</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/contact.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="31e15b28c2f071f74f47eb8bcd612d94" approved="yes">
+        <source>Customer e-mail address:</source>
+        <target state="final">Adresse e-mail du client :</target>
+        <note>Line: 22</note>
+      </trans-unit>
+      <trans-unit id="83fa39a28a4d159061c408fbd6a249e7" approved="yes">
+        <source>Order ID:</source>
+        <target state="final">Commande # :</target>
+        <note>Line: 24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/contact_form.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="1edbec13a38606f19c0bae544a7c6552" approved="yes">
+        <source>Your message to {shop_name} Customer Service</source>
+        <target state="final">Votre message à l'attention du service client de {shop_name}</target>
+        <note>Line: 7</note>
+      </trans-unit>
+      <trans-unit id="e92ba0cecb0593f537515b2aa2d1c701" approved="yes">
+        <source>Your message has been sent successfully.</source>
+        <target state="final">Votre message a bien été envoyé à notre service client.</target>
+        <note>Line: 22</note>
+      </trans-unit>
+      <trans-unit id="76890cf906149b370ea6f7d1bd8eaf9a" approved="yes">
+        <source>We will answer as soon as possible.</source>
+        <target state="final">Nous vous répondrons dans les meilleurs délais.</target>
+        <note>Line: 41</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/credit_slip.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="72dbe899c04eb3875b29b5b274340dac" approved="yes">
+        <source>Credit slip created</source>
+        <target state="final">Nouvel avoir</target>
+        <note>Line: 24</note>
+      </trans-unit>
+      <trans-unit id="99f89e9a116e1c07f62ba17fb0312db6" approved="yes">
+        <source><![CDATA[You can review this credit slip and download your invoice from the <a href="{history_url}">"My credit slips"</a> section of your account by clicking <a href="{my_account_url}">"My account"</a> on our shop.]]></source>
+        <target state="final"><![CDATA[Vous pouvez accéder à cet avoir et télécharger votre facture dans <a href="{history_url}">"Historique des commandes"</a> de la rubrique  <a href="{my_account_url}">"Mon compte"</a> sur notre site.]]></target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="4c15700279d273ce67d98810a4b87943" approved="yes">
+        <source>We have generated a credit slip in your name for order with the reference [1]{order_name}[/1].</source>
+        <target state="final">Nous avons généré un avoir à votre nom relatif à votre commande ayant pour référence [1]{order_name}[/1].</target>
+        <note>Line: 29</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

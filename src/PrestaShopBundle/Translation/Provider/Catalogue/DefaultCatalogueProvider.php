@@ -38,8 +38,6 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
  */
 class DefaultCatalogueProvider implements TranslationCatalogueProviderInterface
 {
-    const DEFAULT_LOCALE = 'en-US';
-
     /**
      * @var string
      */

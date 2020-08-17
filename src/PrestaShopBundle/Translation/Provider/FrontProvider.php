@@ -31,7 +31,7 @@ namespace PrestaShopBundle\Translation\Provider;
 /**
  * Provides translation catalogues for Frontoffice.
  */
-class FrontProvider extends TranslationsProvider
+class FrontProvider extends AbstractTranslationsProvider
 {
     /**
      * @return array|string[]
@@ -39,9 +39,8 @@ class FrontProvider extends TranslationsProvider
     protected function getFilenameFilters(): array
     {
         return [
-           '#^Shop*#',
-           '#^Modules(.*)Shop#',
-       ];
+            '#^Shop*#',
+        ];
     }
 
     /**
@@ -51,7 +50,6 @@ class FrontProvider extends TranslationsProvider
     {
         return [
             '^Shop*',
-            '^Modules(.*)Shop',
         ];
     }
 }
