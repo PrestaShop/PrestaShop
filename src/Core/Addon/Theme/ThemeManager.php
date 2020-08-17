@@ -41,7 +41,6 @@ use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShopBundle\Service\TranslationService;
-use PrestaShopBundle\Translation\Provider\Factory\ProviderFactory;
 use PrestaShopBundle\Translation\Provider\Type\ThemesType;
 use PrestaShopBundle\Translation\Provider\TranslationFinder;
 use PrestaShopLogger;
@@ -115,10 +114,6 @@ class ThemeManager implements AddonManagerInterface
      * @var TranslationFinder
      */
     private $translationFinder;
-    /**
-     * @var ProviderFactory
-     */
-    private $providerFactory;
 
     /**
      * @param Shop $shop
@@ -142,8 +137,7 @@ class ThemeManager implements AddonManagerInterface
         Finder $finder,
         HookConfigurator $hookConfigurator,
         ThemeRepository $themeRepository,
-        ImageTypeRepository $imageTypeRepository,
-        ProviderFactory $providerFactory
+        ImageTypeRepository $imageTypeRepository
     ) {
         $this->translationFinder = new TranslationFinder();
         $this->shop = $shop;
@@ -156,7 +150,6 @@ class ThemeManager implements AddonManagerInterface
         $this->hookConfigurator = $hookConfigurator;
         $this->themeRepository = $themeRepository;
         $this->imageTypeRepository = $imageTypeRepository;
-        $this->providerFactory = $providerFactory;
     }
 
     /**
@@ -513,11 +506,9 @@ class ThemeManager implements AddonManagerInterface
     }
 
     /**
-     * Import translation from Theme to Database.
-     *
-     * @param Theme $theme
+     * @return \AppKernel|\Symfony\Component\HttpKernel\KernelInterface|void
      */
-    private function importTranslationToDatabase(Theme $theme)
+    private function getKernel()
     {
         global $kernel; // sf kernel
 
@@ -525,12 +516,22 @@ class ThemeManager implements AddonManagerInterface
             return;
         }
 
+        return $kernel;
+    }
+
+    /**
+     * Import translation from Theme to Database.
+     *
+     * @param Theme $theme
+     */
+    private function importTranslationToDatabase(Theme $theme)
+    {
+        if (null === $kernel = $this->getKernel()) {
+            return null;
+        }
+
         $translationService = $kernel->getContainer()->get('prestashop.service.translation');
         $themeName = $theme->getName();
-        /** @var \PrestaShopBundle\Translation\Provider\ThemeProvider $themeProvider */
-        $themeProvider = $this->providerFactory->build(
-            new ThemesType($themeName)
-        );
 
         $themePath = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_') . $themeName;
         $translationFolder = $themePath . DIRECTORY_SEPARATOR . 'translations' . DIRECTORY_SEPARATOR;
@@ -561,7 +562,7 @@ class ThemeManager implements AddonManagerInterface
                 );
 
                 // get all default domain from catalog
-                $allDomains = $this->getDefaultDomains($locale, $themeProvider);
+                $allDomains = $this->getDefaultDomains($locale, $themeName);
 
                 // do the import
                 $this->handleImport($translationService, $messageCatalog, $allDomains, $lang, $locale, $themeName);
@@ -575,12 +576,23 @@ class ThemeManager implements AddonManagerInterface
      * Get all default domain from catalog.
      *
      * @param string $locale
-     * @param \PrestaShopBundle\Translation\Provider\ThemeProvider $themeProvider
+     * @param string $themeName
      *
      * @return array
      */
-    private function getDefaultDomains($locale, $themeProvider)
+    private function getDefaultDomains($locale, $themeName)
     {
+
+        if (null === $kernel = $this->getKernel()) {
+            return null;
+        }
+
+        $providerFactory = $kernel->getContainer()->get('prestashop.translation.provider_factory');
+        /** @var \PrestaShopBundle\Translation\Provider\ThemeProvider $themeProvider */
+        $themeProvider = $providerFactory->build(
+            new ThemesType($themeName)
+        );
+
         $allDomains = [];
 
         $defaultCatalogue = $themeProvider
