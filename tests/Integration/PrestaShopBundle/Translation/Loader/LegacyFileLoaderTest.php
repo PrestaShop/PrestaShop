@@ -66,7 +66,7 @@ class LegacyFileLoaderTest extends KernelTestCase
     public function testItExtractsTranslationsFromLegacyFiles($locale, $expected)
     {
         self::bootKernel();
-        $extractor = self::$kernel->getContainer()->get('prestashop.translation.legacy_file_loader');
+        $extractor = self::$kernel->getContainer()->get('prestashop.translation.loader.legacy_file');
 
         $catalogue = $extractor->load($this->getTranslationsFolder(), $locale);
 

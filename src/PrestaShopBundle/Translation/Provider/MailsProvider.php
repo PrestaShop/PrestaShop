@@ -31,7 +31,7 @@ namespace PrestaShopBundle\Translation\Provider;
 /**
  * Provides translation catalogues for Mails.
  */
-class MailsProvider extends TranslationsProvider
+class MailsProvider extends AbstractTranslationsProvider
 {
     /**
      * @return array|string[]
