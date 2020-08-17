@@ -76,10 +76,10 @@ class TranslationControllerTest extends ApiTestCase
     {
         return [
             [
-                'syntax error wanted' => ['locale' => 'fr_Fr', 'domain' => 'AdminGlobal'],
+                'syntax error wanted' => ['locale' => 'fr_Fr', 'domain' => 'AdminActions'],
             ],
             [
-                ['locale' => 'defaultt', 'domain' => 'AdminGlobal'],
+                ['locale' => 'defaultt', 'domain' => 'AdminActions'],
             ],
         ];
     }
@@ -91,10 +91,10 @@ class TranslationControllerTest extends ApiTestCase
     {
         return [
             [
-                ['locale' => 'en-US', 'domain' => 'AdminGlobal'],
+                ['locale' => 'en-US', 'domain' => 'AdminActions'],
             ],
             [
-                ['locale' => 'en-US', 'domain' => 'AdminNavigationMenu'],
+                ['locale' => 'fr-FR', 'domain' => 'AdminActions'],
             ],
         ];
     }

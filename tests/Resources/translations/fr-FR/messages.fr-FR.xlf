@@ -1,0 +1,943 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev/themes/default/template/controllers/attribute_generator/content.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="32aa6a8b290538b9af3531ea1e1a9dbf" approved="yes">
+        <source>Tax Excluded</source>
+        <target state="final">HT</target>
+        <note>Line: 41</note>
+      </trans-unit>
+      <trans-unit id="8794a5dad880ed1a30d82081872b050e" approved="yes">
+        <source>Tax Included</source>
+        <target state="final">TTC</target>
+        <note>Line: 42</note>
+      </trans-unit>
+      <trans-unit id="181ba1a9e1a38f1a83277046cdbbc2bc" approved="yes">
+        <source>%d product(s) successfully created.</source>
+        <target state="final">%d produit(s) créé(s) avec succès.</target>
+        <note>Line: 66</note>
+      </trans-unit>
+      <trans-unit id="81315cfd898aada1e99e0034b4b078c3" approved="yes">
+        <source>Attributes generator</source>
+        <target state="final">Générateur de déclinaisons de produits</target>
+        <note>Line: 71</note>
+      </trans-unit>
+      <trans-unit id="422f3f656e1a5f95e8b5cf7565d815b5" approved="yes">
+        <source>The Combinations Generator is a tool that allows you to easily create a series of combinations by selecting the related attributes. For example, if you're selling t-shirts in three different sizes and two different colors, the generator will create six combinations for you.</source>
+        <target state="final">Le générateur de déclinaisons est un outil qui vous permet de créer facilement une série de déclinaisons en sélectionnant les attributs associés. Par exemple, si vous vendez des T-shirts, en 3 tailles différentes et 2 couleurs différentes, le générateur va créer 6 déclinaisons pour vous.</target>
+        <note>Line: 94</note>
+      </trans-unit>
+      <trans-unit id="cfe938f78378cfd9739d4321cfa7ff78" approved="yes">
+        <source>You're currently generating combinations for the following product:</source>
+        <target state="final">Vous êtes actuellement en train de générer des combinaisons pour ce produit :</target>
+        <note>Line: 96</note>
+      </trans-unit>
+      <trans-unit id="31fd7663706f9829ba8e64b229df4e3f" approved="yes">
+        <source>Step 1: On the left side, select the attributes you want to use (Hold down the "Ctrl" key on your keyboard and validate by clicking on "Add")</source>
+        <target state="final">Étape 1 : Sur le côté gauche, sélectionnez les attributs que vous souhaitez utiliser (en maintenant la touche "CTRL" de votre clavier et de valider en cliquant sur "Ajouter")</target>
+        <note>Line: 98</note>
+      </trans-unit>
+      <trans-unit id="928929ae9eb360f552df9c62c5fef6e2" approved="yes">
+        <source>Impact on the product price</source>
+        <target state="final">Impact sur le prix du produit</target>
+        <note>Line: 107</note>
+      </trans-unit>
+      <trans-unit id="2cbb96b1bb8e0942f609bba818277f7c" approved="yes">
+        <source>Impact on the product weight</source>
+        <target state="final">Impact sur le poids du produit</target>
+        <note>Line: 108</note>
+      </trans-unit>
+      <trans-unit id="4e927d0c87a6edc742e9c664f18a53c7" approved="yes">
+        <source>Select a default quantity, and reference, for each combination the generator will create for this product.</source>
+        <target state="final">Sélectionnez une quantité et une référence par défaut pour toutes les déclinaisons que le générateur va créer pour ce produit.</target>
+        <note>Line: 125</note>
+      </trans-unit>
+      <trans-unit id="1b8bea6c0d2655c4e2c1070c9beee03a" approved="yes">
+        <source>Default Quantity:</source>
+        <target state="final">Quantité par défaut :</target>
+        <note>Line: 129</note>
+      </trans-unit>
+      <trans-unit id="49d079be0fc1fcccefdee6bdf67b02ff" approved="yes">
+        <source>Default Reference:</source>
+        <target state="final">Référence par défaut :</target>
+        <note>Line: 133</note>
+      </trans-unit>
+      <trans-unit id="fb6d5b178b6f3ce02379006b7610ed6d" approved="yes">
+        <source>Please click on "Generate these combinations".</source>
+        <target state="final">Veuillez cliquer sur "Générer ces déclinaisons".</target>
+        <note>Line: 138</note>
+      </trans-unit>
+      <trans-unit id="e3c57b7da599fa0a9410c456b59f6dd3" approved="yes">
+        <source>Generate these combinations</source>
+        <target state="final">Générer ces combinaisons</target>
+        <note>Line: 139</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/carrier_wizard/summary.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="62acf0bc057112bf91cd1ff9f1426c6c" approved="yes">
+        <source>[undefined]</source>
+        <target state="final">[indéfini]</target>
+        <note>Line: 27</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/cart_rules/actions.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="bcca39c6f36c3085c46429511614b227" approved="yes">
+        <source>If enabled, the voucher will not apply to products already on sale.</source>
+        <target state="final">Si activé, le bon de réduction ne s'appliquera pas aux produits déjà en promotion.</target>
+        <note>Line: 145</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/cart_rules/product_rule_group.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="d6d9190e86f812c0490da9360e12cee1" approved="yes">
+        <source>Add a rule concerning</source>
+        <target state="final">Ajouter une règle qui concerne</target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="c5536e008327e8873c8daf321a088873" approved="yes">
+        <source>The product(s) are matching one of these:</source>
+        <target state="final">Les produits correspondent à l'un de ces critères :</target>
+        <note>Line: 65</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/carts/helpers/view/view.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="f14b582c1b0eab88ed5904fb781568c0" approved="yes">
+        <source>Discount name</source>
+        <target state="final">Nom de la réduction</target>
+        <note>Line: 203</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/customer_threads/helpers/options/options.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="1e65b02f3464a517e0946a46d496327c" approved="yes">
+        <source>Sync success</source>
+        <target state="final">Synchronisation effectuée avec succès</target>
+        <note>Line: 75</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/customer_threads/helpers/view/modal.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="d3d2e617335f08df83599665eef8a418" approved="yes">
+        <source>Close</source>
+        <target state="final">Fermer</target>
+        <note>Line: 62</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/customer_threads/helpers/view/view.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="3bf63a999cda6c9d95c3827e7942f41d" approved="yes">
+        <source>Customer since: %s</source>
+        <target state="final">Client depuis : %s</target>
+        <note>Line: 79</note>
+      </trans-unit>
+      <trans-unit id="8df41ed5ebc778c45f74a201e822613a" approved="yes">
+        <source>Choose a template</source>
+        <target state="final">Choisir un modèle </target>
+        <note>Line: 116</note>
+      </trans-unit>
+      <trans-unit id="94966d90747b97d1f0f206c98a8b1ac3" approved="yes">
+        <source>Send</source>
+        <target state="final">Envoyer</target>
+        <note>Line: 119</note>
+      </trans-unit>
+      <trans-unit id="2605a817441c19cc88eb9e5d17845dc0" approved="yes">
+        <source>You can add a comment here.</source>
+        <target state="final">Vous pouvez ajouter un commentaire ici.</target>
+        <note>Line: 155</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/customer_threads/message.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="d13d8380c3f4de07fef91a42fe6c60d7" approved="yes">
+        <source>Customer ID:</source>
+        <target state="final">ID client :</target>
+        <note>Line: 127</note>
+      </trans-unit>
+      <trans-unit id="d1228f5476d15142b1358ae4b5fa2454" approved="yes">
+        <source>Order #</source>
+        <target state="final">Commande n°</target>
+        <note>Line: 134</note>
+      </trans-unit>
+      <trans-unit id="c851a34d4806acb02a55df148f9d7f25" approved="yes">
+        <source>Product #</source>
+        <target state="final">Produit n°</target>
+        <note>Line: 141</note>
+      </trans-unit>
+      <trans-unit id="47a0be8d1015d526a1fbaa56c3102135" approved="yes">
+        <source>Subject:</source>
+        <target state="final">Sujet :</target>
+        <note>Line: 147</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="d1554912e46f8d36a800ad8b604225f1" approved="yes">
+        <source>Valid orders:</source>
+        <target state="final">Commandes valides :</target>
+        <note>Line: 192</note>
+      </trans-unit>
+      <trans-unit id="0c71153e10e4cca705c7de8625f23344" approved="yes">
+        <source>%firstname% %lastname% has not registered any addresses yet</source>
+        <target state="final">%firstname% %lastname% n'a pas encore enregistré d'adresse</target>
+        <note>Line: 654</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="908f8d9f34f375a55dd5b6a86489d364" approved="yes">
+        <source>No result</source>
+        <target state="final">Aucun résultat</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="37a502907cd750af8c65517a75d00030" approved="yes">
+        <source>Real Time</source>
+        <target state="final">Temps Réel</target>
+        <note>Line: 62</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/groups/helpers/view/view.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="a1e7379abfdbc3b8e03506e5489c6110" approved="yes">
+        <source>Discount:</source>
+        <target state="final">Remise :</target>
+        <note>Line: 36</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="801ab24683a4a8c433c6eb40c48bcd9d" approved="yes">
+        <source>Download</source>
+        <target state="final">Téléchargement</target>
+        <note>Line: 151</note>
+      </trans-unit>
+      <trans-unit id="3bb4a695db0c87a3d70a2deffddeb743" approved="yes">
+        <source>Read more about the CSV format at:</source>
+        <target state="final">Plus d'informations sur le format CSV sur :</target>
+        <note>Line: 44</note>
+      </trans-unit>
+      <trans-unit id="e81c4e4f2b7b93b481e13a8553c2ae1b" approved="yes">
+        <source>or</source>
+        <target state="final">OU</target>
+        <note>Line: 81</note>
+      </trans-unit>
+      <trans-unit id="e4cdcd51e6cf787d4ecc7d813f0c23cb" approved="yes">
+        <source>The locale must be installed</source>
+        <target state="final">Les locales doivent être installées</target>
+        <note>Line: 188</note>
+      </trans-unit>
+      <trans-unit id="e08caeac3f80ffa7889cdf1c8f30111f" approved="yes">
+        <source>Multiple value separator</source>
+        <target state="final">Séparateur de champs à valeurs multiples</target>
+        <note>Line: 208</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/import/helpers/view/view.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="5f613cee6c941423b73e1f87ea3b99bc" approved="yes">
+        <source>Please name your data matching configuration in order to save it.</source>
+        <target state="final">Veuillez saisir un nom pour l'enregistrement de votre configuration.</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="43a37c093f7655efe882a7ffd7ce2e8d" approved="yes">
+        <source>Match your data</source>
+        <target state="final">Correspondance des données</target>
+        <note>Line: 61</note>
+      </trans-unit>
+      <trans-unit id="e275f3b49dc3286ef66d7c2774a1f79b" approved="yes">
+        <source>Please match each column of your source file to one of the destination columns.</source>
+        <target state="final">Veuillez faire correspondre chaque colonne de votre fichier source avec l'une des colonnes cibles.</target>
+        <note>Line: 63</note>
+      </trans-unit>
+      <trans-unit id="4d83ebfaf28dd4436e1165a1764750db" approved="yes">
+        <source>Load a data matching configuration</source>
+        <target state="final">Charger une configuration d'import</target>
+        <note>Line: 67</note>
+      </trans-unit>
+      <trans-unit id="f19dbf2edb3a0bd74b0524d960ff21eb" approved="yes">
+        <source>Load</source>
+        <target state="final">Charger</target>
+        <note>Line: 76</note>
+      </trans-unit>
+      <trans-unit id="e195639ebd7491676218b40af7aeafe3" approved="yes">
+        <source>Save your data matching configuration</source>
+        <target state="final">Sauvegarder votre configuration d'import</target>
+        <note>Line: 81</note>
+      </trans-unit>
+      <trans-unit id="371ed088d2c0e456f5cae0bb97fe7c4b" approved="yes">
+        <source>Two columns cannot have the same type of values</source>
+        <target state="final">Deux colonnes ne peuvent pas être mise en correspondance avec le même champ.</target>
+        <note>Line: 91</note>
+      </trans-unit>
+      <trans-unit id="6a00e03023004b3330275e8d9842b54c" approved="yes">
+        <source>This column must be set:</source>
+        <target state="final">Cette colonne est requise :</target>
+        <note>Line: 94</note>
+      </trans-unit>
+      <trans-unit id="3b057f0f92ac8d274701c269ac00c5fa" approved="yes">
+        <source>Rows to skip</source>
+        <target state="final">Lignes à passer</target>
+        <note>Line: 114</note>
+      </trans-unit>
+      <trans-unit id="225ba2bdb1c56af16651110411fc21b1" approved="yes">
+        <source>Indicate how many of the first rows of your file should be skipped when importing the data. For instance set it to 1 if the first row of your file contains headers.</source>
+        <target state="final">Indiquez combien de lignes parmi les premières lignes du fichier doivent être ignorées lors de l'import des données. Par exemple, indiquez 1 si la première ligne de votre fichier contient les en-têtes.</target>
+        <note>Line: 117</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/login/content.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="dc647eb65e6711e155375218212b3964" approved="yes">
+        <source>Password</source>
+        <target state="final">Mot de passe</target>
+        <note>Line: 68</note>
+      </trans-unit>
+      <trans-unit id="685de99eb748aa2bba879a87af2ffed4" approved="yes">
+        <source>Your password has been successfully changed.</source>
+        <target state="final">Votre mot de passe a été modifié avec succès.</target>
+        <note>Line: 118</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/manufacturers/helpers/view/view.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="0071aa279bd1583754a544277740f047" approved="yes">
+        <source>Delete item #</source>
+        <target state="final">Supprimer l'élément n°</target>
+        <note>Line: 112</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/modules/ad_bar.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="4df29b3cd68e3d8e40be0ad31188f17c" approved="yes">
+        <source>You might be interested in</source>
+        <target state="final">Vous serez peut-être intéressé par</target>
+        <note>Line: 27</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/modules/configure.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="deccbe4e9083c3b5f7cd2632722765bb" approved="yes">
+        <source>Translate</source>
+        <target state="final">Traduire</target>
+        <note>Line: 84</note>
+      </trans-unit>
+      <trans-unit id="06933067aafd48425d67bcb01bba5cb6" approved="yes">
+        <source>Update</source>
+        <target state="final">Mettre à jour</target>
+        <note>Line: 92</note>
+      </trans-unit>
+      <trans-unit id="c439b45b0a80369402e0d6158b55590f" approved="yes">
+        <source>Generate RTL Stylesheets</source>
+        <target state="final">Générer des feuilles de style RTL</target>
+        <note>Line: 100</note>
+      </trans-unit>
+      <trans-unit id="53103fcc4656f55c219b600ded3c7438" approved="yes">
+        <source>Manage hooks</source>
+        <target state="final">Points d'accroche</target>
+        <note>Line: 107</note>
+      </trans-unit>
+      <trans-unit id="a27dfe771799a09fd55fea73286eb6ab" approved="yes">
+        <source>Uninstall</source>
+        <target state="final">Désinstaller</target>
+        <note>Line: 73</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/modules/content-legacy.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="fe6b7985acf4b17efbfe1b38545299d9" approved="yes">
+        <source>See all modules</source>
+        <target state="final">Voir tous les modules</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="4181fcfe54e8fadc0644e1cadde3483f" approved="yes">
+        <source>To add a new module, simply connect to your PrestaShop Addons account and all your purchases will be automatically imported.</source>
+        <target state="final">Pour ajouter un nouveau module, connectez-vous simplement à votre compte PrestaShop Addons et tous vos achats seront automatiquement importés.</target>
+        <note>Line: 67</note>
+      </trans-unit>
+      <trans-unit id="82010160301993d2d752d8f185b31d0c" approved="yes">
+        <source>Can I add my own modules?</source>
+        <target state="final">Puis-je ajouter mes propres modules ?</target>
+        <note>Line: 84</note>
+      </trans-unit>
+      <trans-unit id="bb2ee5b5f12b6eae3c1716d26cddeab7" approved="yes">
+        <source>Please note that for security reasons, you can only add modules that are being distributed on PrestaShop Addons, the official marketplace.</source>
+        <target state="final">Pour des raisons de sécurité, nous pouvez ajouter uniquement des modules qui sont distribués sur PrestaShop Addons, notre place de marché officielle.</target>
+        <note>Line: 85</note>
+      </trans-unit>
+      <trans-unit id="95e3873b64426add2f3818e6a98dc9fb" approved="yes">
+        <source>Search on PrestaShop Marketplace:</source>
+        <target state="final">Rechercher sur la marketplace de PrestaShop :</target>
+        <note>Line: 43</note>
+      </trans-unit>
+      <trans-unit id="3a2d5fe857d8f9541136a124c2edec6c" approved="yes">
+        <source>Or</source>
+        <target state="final">Ou</target>
+        <note>Line: 53</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/modules/favorites.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="e55f75a29310d7b60f7ac1d390c8ae42" approved="yes">
+        <source>Module</source>
+        <target state="final">Module</target>
+        <note>Line: 51</note>
+      </trans-unit>
+      <trans-unit id="7e4a9cd054588a95b0394d92a2030e72" approved="yes">
+        <source>Normal view</source>
+        <target state="final">Vue normale</target>
+        <note>Line: 35</note>
+      </trans-unit>
+      <trans-unit id="d7af23f5f349f2c4eace4927943b2760" approved="yes">
+        <source>Favorites view</source>
+        <target state="final">Vue par favoris</target>
+        <note>Line: 39</note>
+      </trans-unit>
+      <trans-unit id="5c6ba25104401c9ee0650230fc6ba413" approved="yes">
+        <source>Tab</source>
+        <target state="final">Menu</target>
+        <note>Line: 52</note>
+      </trans-unit>
+      <trans-unit id="af1b98adf7f686b84cd0b443e022b7a0" approved="yes">
+        <source>Categories</source>
+        <target state="final">Catégories</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="920beb5dda21b04a332e0457cb0cfbec" approved="yes">
+        <source>Interest</source>
+        <target state="final">Intérêt</target>
+        <note>Line: 54</note>
+      </trans-unit>
+      <trans-unit id="01165dcf77c191e6c69b31d98b0ec6ff" approved="yes">
+        <source>Favorite</source>
+        <target state="final">Favoris</target>
+        <note>Line: 55</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/modules/filters.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="3182ea023795eb83ed0ce3beea5beb73" approved="yes">
+        <source>Other Modules</source>
+        <target state="final">Autres modules</target>
+        <note>Line: 60</note>
+      </trans-unit>
+      <trans-unit id="d9e87fc7a13ba398295447791c67b586" approved="yes">
+        <source>Installed Modules</source>
+        <target state="final">Modules installés</target>
+        <note>Line: 34</note>
+      </trans-unit>
+      <trans-unit id="a0f454ebaee933c7791ffcdda76944b3" approved="yes">
+        <source>Disabled Modules</source>
+        <target state="final">Modules désactivés</target>
+        <note>Line: 43</note>
+      </trans-unit>
+      <trans-unit id="1f0e9c979b965d24aa3c2c4b832c3ba1" approved="yes">
+        <source>Filter by</source>
+        <target state="final">Filtrer par</target>
+        <note>Line: 31</note>
+      </trans-unit>
+      <trans-unit id="7b4d2812164df0dceca0b53bb650e52d" approved="yes">
+        <source><![CDATA[Installed & Not Installed]]></source>
+        <target state="final"><![CDATA[Installés et non installés]]></target>
+        <note>Line: 33</note>
+      </trans-unit>
+      <trans-unit id="94c8dec8d2fcfa80c9b6f4669be43eb0" approved="yes">
+        <source>Modules Not Installed </source>
+        <target state="final">Modules non installés</target>
+        <note>Line: 35</note>
+      </trans-unit>
+      <trans-unit id="6b8f34307b46c249a91d84e52ae94caf" approved="yes">
+        <source><![CDATA[Enabled & Disabled]]></source>
+        <target state="final"><![CDATA[Activés & désactivés]]></target>
+        <note>Line: 41</note>
+      </trans-unit>
+      <trans-unit id="dfe6e46e2d3e3ba76b5d9aee197c0747" approved="yes">
+        <source>Enabled Modules</source>
+        <target state="final">Modules activés</target>
+        <note>Line: 42</note>
+      </trans-unit>
+      <trans-unit id="02684cc6b6ea1811a064f475a5fd1d18" approved="yes">
+        <source>Authors</source>
+        <target state="final">Auteurs</target>
+        <note>Line: 49</note>
+      </trans-unit>
+      <trans-unit id="00c3388449f7c4d73cc8c417d7d38554" approved="yes">
+        <source>All Modules</source>
+        <target state="final">Tous les modules</target>
+        <note>Line: 51</note>
+      </trans-unit>
+      <trans-unit id="d546df356f9b15d6d20b1e5d8b310fed" approved="yes">
+        <source>Free Modules</source>
+        <target state="final">Modules gratuits</target>
+        <note>Line: 52</note>
+      </trans-unit>
+      <trans-unit id="d071f451a57ab54fa6890d0f501a99d4" approved="yes">
+        <source>Partner Modules (Free)</source>
+        <target state="final">Modules partenaires (Gratuits)</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="02ae741da806bbeafc0ae6a84ce752d3" approved="yes">
+        <source>Must Have</source>
+        <target state="final">Incontournable</target>
+        <note>Line: 54</note>
+      </trans-unit>
+      <trans-unit id="174704dbe8a3a7d144b0ce840e734077" approved="yes">
+        <source>Modules purchased on Addons</source>
+        <target state="final">Modules achetés sur Addons</target>
+        <note>Line: 55</note>
+      </trans-unit>
+      <trans-unit id="fbdc9a432c8e6a94bb54864ae4f5fb7f" approved="yes">
+        <source>All authors</source>
+        <target state="final">Tous</target>
+        <note>Line: 56</note>
+      </trans-unit>
+      <trans-unit id="c3987e4cac14a8456515f0d200da04ee" approved="yes">
+        <source>All countries</source>
+        <target state="final">Tous les pays</target>
+        <note>Line: 67</note>
+      </trans-unit>
+      <trans-unit id="d188407e1d066cd41925efebe2dab3da" approved="yes">
+        <source>Current country:</source>
+        <target state="final">Pays actuel :</target>
+        <note>Line: 68</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/modules/js.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="45e06e5610d29d675a875a6f7731b73d" approved="yes">
+        <source>Would you like to delete the content related to this module ?</source>
+        <target state="final">Souhaitez-vous supprimer le contenu lié à ce module ?</target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="c0d19e251d0ff55ecb860e7349f779a4" approved="yes">
+        <source>Confirm reset</source>
+        <target state="final">Confirmer la réinitialisation</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="d65c99010166606287266e4af4f0b934" approved="yes">
+        <source>No - reset only the parameters</source>
+        <target state="final">Non - réinitialiser seulement les paramètres</target>
+        <note>Line: 30</note>
+      </trans-unit>
+      <trans-unit id="0426ba52f94430cf093652d1ea18fedf" approved="yes">
+        <source>Yes - reset everything</source>
+        <target state="final">Oui - tout réinitialiser</target>
+        <note>Line: 31</note>
+      </trans-unit>
+      <trans-unit id="25b22a00db3085743f478140b8281a26" approved="yes">
+        <source>Preferences saved</source>
+        <target state="final">Préférences enregistrées</target>
+        <note>Line: 38</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/modules/list.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="4f9b5fa08f2ef86fdc5d0ceefc271981" approved="yes">
+        <source>Remove from Favorites</source>
+        <target state="final">Supprimer des favoris</target>
+        <note>Line: 168</note>
+      </trans-unit>
+      <trans-unit id="7263f59f5d8aeaf7d2117fcd4b70930a" approved="yes">
+        <source>Mark as Favorite</source>
+        <target state="final">Ajouter aux favoris</target>
+        <note>Line: 171</note>
+      </trans-unit>
+      <trans-unit id="59fcbc24a474d290fa540a3a27e2ff05" approved="yes">
+        <source>Module %1s </source>
+        <target state="final">Module %1s</target>
+        <note>Line: 41</note>
+      </trans-unit>
+      <trans-unit id="3846bafee4cc9ce49c24a0b499d3e08d" approved="yes">
+        <source>Official, PrestaShop certified module. Free, secure and includes updates!</source>
+        <target state="final">Module Officiel gratuit, validé par PrestaShop et mis à jour régulièrement !</target>
+        <note>Line: 61</note>
+      </trans-unit>
+      <trans-unit id="52dd3893c24e9cf4be761dcaee6bea39" approved="yes">
+        <source>Update it!</source>
+        <target state="final">Mettre à jour !</target>
+        <note>Line: 90</note>
+      </trans-unit>
+      <trans-unit id="29c632cf1c7f140b6e86f3af04df48d4" approved="yes">
+        <source>Install the selection</source>
+        <target state="final">Installer la sélection</target>
+        <note>Line: 196</note>
+      </trans-unit>
+      <trans-unit id="7245ac07bbd56e6d0f7489a7dddb836f" approved="yes">
+        <source>Uninstall the selection</source>
+        <target state="final">Désinstaller la sélection</target>
+        <note>Line: 202</note>
+      </trans-unit>
+      <trans-unit id="df3f079de6961496f0460dcfdbf9bca3" approved="yes">
+        <source>by</source>
+        <target state="final">par</target>
+        <note>Line: 55</note>
+      </trans-unit>
+      <trans-unit id="ba6b1bc4d8bfe5e6e835afa72f102a02" approved="yes">
+        <source>You bought this module on PrestaShop Addons. Thank You.</source>
+        <target state="final">Vous avez acheté ce module sur PrestaShop Addons. Merci !</target>
+        <note>Line: 57</note>
+      </trans-unit>
+      <trans-unit id="fe5a7fc9d9c907efdf6a384a71cd53fc" approved="yes">
+        <source>Bought</source>
+        <target state="final">Acheté</target>
+        <note>Line: 57</note>
+      </trans-unit>
+      <trans-unit id="0461779839539a8ee8fb2dca43cf5bec" approved="yes">
+        <source>This module is available on PrestaShop Addons</source>
+        <target state="final">Ce module est disponible sur PrestaShop Addons.</target>
+        <note>Line: 59</note>
+      </trans-unit>
+      <trans-unit id="2cc1943d4c0b46bfcf503a75c44f988b" approved="yes">
+        <source>Popular</source>
+        <target state="final">Populaire</target>
+        <note>Line: 59</note>
+      </trans-unit>
+      <trans-unit id="0008feba81a131902ece95d59f1b8f21" approved="yes">
+        <source>Official</source>
+        <target state="final">Officiel</target>
+        <note>Line: 61</note>
+      </trans-unit>
+      <trans-unit id="28f60d4760851bab00345a3cb86871f7" approved="yes">
+        <source>Need update</source>
+        <target state="final">Nécessite une mise à jour</target>
+        <note>Line: 64</note>
+      </trans-unit>
+      <trans-unit id="b24ce0cd392a5b0b8dedc66c25213594" approved="yes">
+        <source>Free</source>
+        <target state="final">gratuit</target>
+        <note>Line: 84</note>
+      </trans-unit>
+      <trans-unit id="43340e6cc4e88197d57f8d6d5ea50a46" approved="yes">
+        <source>Read more</source>
+        <target state="final">En savoir plus</target>
+        <note>Line: 73</note>
+      </trans-unit>
+      <trans-unit id="349838fb1d851d3e2014b9fe39203275" approved="yes">
+        <source>Install</source>
+        <target state="final">Installer</target>
+        <note>Line: 115</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/modules/login_addons.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="ee0e3cf3fd1a733924756c6534826843" approved="yes">
+        <source>If you want to be able to fully use the AdminModules panel and have free modules available, you should enable the following configuration on your server:</source>
+        <target state="final">Si vous souhaitez utiliser pleinement le panneau AdminModules et afficher les modules libres, vous devriez activer la configuration suivante sur votre serveur :</target>
+        <note>Line: 31</note>
+      </trans-unit>
+      <trans-unit id="c84172ea13aaad319bfb3324c8fda5ed" approved="yes">
+        <source>Enable PHP's allow_url_fopen setting</source>
+        <target state="final">Activer allow_url_fopen</target>
+        <note>Line: 33</note>
+      </trans-unit>
+      <trans-unit id="27d8cabeab5ec86130d0e9048a085b57" approved="yes">
+        <source>Enable PHP's OpenSSL extension</source>
+        <target state="final">Activer l'extension OpenSSL de PHP</target>
+        <note>Line: 34</note>
+      </trans-unit>
+      <trans-unit id="40218c0320e986d6b29fde4259ac43c2" approved="yes">
+        <source>Connect your shop to PrestaShop's marketplace in order to automatically import all your Addons purchases.</source>
+        <target state="final">Connectez-vous à la place de marché de PrestaShop afin d'importer automatiquement tous vos achats.</target>
+        <note>Line: 41</note>
+      </trans-unit>
+      <trans-unit id="a5f61298da21626d0f490ebd06ecd811" approved="yes">
+        <source>Don't have an account?</source>
+        <target state="final">Vous n'avez pas de compte ?</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="030547d47b4cb2e88a3c9a581a61487a" approved="yes">
+        <source>Discover the Power of PrestaShop Addons! Explore the PrestaShop Official Marketplace and find over 3 500 innovative modules and themes that optimize conversion rates, increase traffic, build customer loyalty and maximize your productivity</source>
+        <target state="final">Les clés pour réussir votre boutique sont sur PrestaShop Addons ! Découvrez sur la place de marché officielle de PrestaShop plus de 3 500 modules et thèmes pour augmenter votre trafic, optimiser vos conversions, fidéliser vos clients et vous faciliter l’e-commerce.</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="74ec9ffc8d108924d191065b416d8544" approved="yes">
+        <source>Connect to PrestaShop Addons</source>
+        <target state="final">Connectez-vous à PrestaShop Addons</target>
+        <note>Line: 50</note>
+      </trans-unit>
+      <trans-unit id="b05d72142020283dc6812fd3a9bc691c" approved="yes">
+        <source>I forgot my password</source>
+        <target state="final">Mot de passe oublié</target>
+        <note>Line: 62</note>
+      </trans-unit>
+      <trans-unit id="2fe4fe0a0ebea41ce43eb3dc3fce4ea3" approved="yes">
+        <source>Create an Account</source>
+        <target state="final">Créer un compte</target>
+        <note>Line: 72</note>
+      </trans-unit>
+      <trans-unit id="b6d4223e60986fa4c9af77ee5f7149c5" approved="yes">
+        <source>Sign in</source>
+        <target state="final">Connexion</target>
+        <note>Line: 80</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/modules/modal_not_trusted.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="5724be5bf0b6c384f8f0e4ec5c56960e" approved="yes">
+        <source>What Should I Do?</source>
+        <target state="final">Que devrais-je faire ?</target>
+        <note>Line: 79</note>
+      </trans-unit>
+      <trans-unit id="34afcb42ab73990082d328d9b34811b5" approved="yes">
+        <source>Proceed with the installation</source>
+        <target state="final">Continuer l'installation</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="9c4573ad0738d689dcb4dfb11ea6ce5a" approved="yes">
+        <source>Do you want to install this module that could not be verified by PrestaShop?</source>
+        <target state="final">Souhaitez-vous installer ce module qui n'a pas pu être vérifié par PrestaShop ?</target>
+        <note>Line: 30</note>
+      </trans-unit>
+      <trans-unit id="cff96407d828626ba1219454e9dde40c" approved="yes">
+        <source>Since you may not have downloaded this module from PrestaShop Addons, we cannot assert that the module is not adding some undisclosed functionalities. We advise you to install it only if you trust the source of the content.</source>
+        <target state="final">Vous n'avez probablement pas téléchargé ce module depuis PrestaShop Addons, nous ne pouvons garantir qu'il n'ajoute pas certaines fonctionnalités cachées. Nous vous conseillons de l'installer uniquement si vous faites confiance à son auteur.</target>
+        <note>Line: 62</note>
+      </trans-unit>
+      <trans-unit id="cb6c308b881809f8ab33d50efad0b665" approved="yes">
+        <source>What's the risk?</source>
+        <target state="final">Quel est le risque ?</target>
+        <note>Line: 63</note>
+      </trans-unit>
+      <trans-unit id="b1c3bf188b7df9285d57df41f00c7041" approved="yes">
+        <source>Am I at Risk?</source>
+        <target state="final">Suis-je concerné ?</target>
+        <note>Line: 73</note>
+      </trans-unit>
+      <trans-unit id="144f70b53defb91dacdb0a4ac79b7e70" approved="yes">
+        <source>A module that hasn't been verified may be dangerous and could add hidden functionalities like backdoors, ads, hidden links, spam, etc. Don’t worry, this alert is simply a warning.</source>
+        <target state="final">Un module qui n'a pas pu être vérifié peut être dangereux et ajouter des fonctionnalités cachées comme des portes dérobées, publicités, lien cachés, spam, etc. Pas d'inquiétude, cette alerte est un simple avertissement.</target>
+        <note>Line: 75</note>
+      </trans-unit>
+      <trans-unit id="50d39ed39f0e1c95d185acc6b89de6f8" approved="yes">
+        <source>PrestaShop, being an open-source software, has an awesome community with a long history of developing and sharing high quality modules. Before installing this module, making sure its author is a known community member is always a good idea (by checking [1]our forum[/1] for instance).</source>
+        <target state="final">Étant un logiciel open-source, PrestaShop possède une fabuleuse communauté riche d'une longue expérience en développement et partage de modules de qualité. Avant d'installer un module, s'assurer que son auteur est un membre reconnu de la communauté est toujours une bonne idée (en parcourant [1]notre forum[/1] par exemple).</target>
+        <note>Line: 77</note>
+      </trans-unit>
+      <trans-unit id="9bbcbf7c1f7c1df3c3d9d3b7767fac09" approved="yes">
+        <source>If you trust or find the author of this module to be an active community member, you can proceed with the installation.</source>
+        <target state="final">Si vous connaissez l'auteur de ce module ou qu'il est un membre actif de la communauté, vous pouvez continuer l'installation en toute confiance.</target>
+        <note>Line: 81</note>
+      </trans-unit>
+      <trans-unit id="67afee0d8b56356469f89525a1423331" approved="yes">
+        <source>Otherwise you can look for similar modules on the official marketplace. [1]Click here to browse PrestaShop Addons[/1].</source>
+        <target state="final">Vous pouvez sinon rechercher des modules similaires sur notre place de marché officielle. [1]Cliquez ici pour parcourir le catalogue de PrestaShop Addons[/1].</target>
+        <note>Line: 83</note>
+      </trans-unit>
+      <trans-unit id="0557fa923dcee4d0f86b1409f5c2167f" approved="yes">
+        <source>Back</source>
+        <target state="final">Précédent</target>
+        <note>Line: 88</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/modules/modal_not_trusted_blocked.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="e88e176e72b122566ada523a7297e4e5" approved="yes">
+        <source>This module could not be verified by PrestaShop.</source>
+        <target state="final">Ce module n'a pas vu être vérifié par PrestaShop.</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="d16d7b2c414d4750596290776d0bfbf7" approved="yes">
+        <source>Since you may not have installed this module from PrestaShop Addons, we cannot assert that the module is complying with our safety requirements (e.g. that it is not adding some undisclosed functionalities such as ads, hidden links, spam, etc...).</source>
+        <target state="final">Il semblerait que nous n'ayez pas installé ce module depuis PrestaShop Addons, aussi nous ne pouvons garantir qu'il réponde à nos critères de sécurité (par ex. qu'il n'ajoute pas des fonctionnalités dissimulées comme de la publicité, des liens cachés, du spam, etc...).</target>
+        <note>Line: 58</note>
+      </trans-unit>
+      <trans-unit id="64b9168c0ef9c05d1568a15c6e273bf1" approved="yes">
+        <source>You can search for similar modules on the official marketplace.</source>
+        <target state="final">Vous pouvez rechercher des modules similaires sur la place de marché officielle.</target>
+        <note>Line: 60</note>
+      </trans-unit>
+      <trans-unit id="57acfffeede560e141ea67a4487fe065" approved="yes">
+        <source>[1]Click here to browse our catalog on PrestaShop Addons[/1].</source>
+        <target state="final">[1]Cliquez ici pour parcourir le catalogue de PrestaShop Addons[/1].</target>
+        <note>Line: 62</note>
+      </trans-unit>
+      <trans-unit id="6754e4799f554bcdf4fef4782bf4d7de" approved="yes">
+        <source>This generally happens when the module isn't distributed through our official marketplace, PrestaShop Addons - or when your server failed to communicate with PrestaShop Addons.</source>
+        <target state="final">Ceci se produit généralement lorsque le module n'est pas distribué via notre place de marché officielle PrestaShop Addons, ou quand votre serveur n'arrive pas à communiquer avec PrestaShop Addons.</target>
+        <note>Line: 30</note>
+      </trans-unit>
+      <trans-unit id="a517747c3d12f99244ae598910d979c5" approved="yes">
+        <source>Author</source>
+        <target state="final">Auteur</target>
+        <note>Line: 44</note>
+      </trans-unit>
+      <trans-unit id="249212ebba2907c6087887db076179e6" approved="yes">
+        <source>Back to modules list</source>
+        <target state="final">Retour à la liste des modules</target>
+        <note>Line: 51</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/modules/modal_not_trusted_country.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="54752f2f929b686b98ddb16e40c4a1be" approved="yes">
+        <source>You are about to install "%s", a module which is not compatible with your country.</source>
+        <target state="final">Vous êtes sur le point d'installer "%s", un module qui n'est pas compatible avec votre pays.</target>
+        <note>Line: 30</note>
+      </trans-unit>
+      <trans-unit id="1a56544ab8d473b3383731fbe3fc9d07" approved="yes">
+        <source>This module was not verified by PrestaShop hence we cannot certify that it works well in your country and that it complies with our quality requirements.</source>
+        <target state="final">Ce module n'est pas vérifié par PrestaShop, nous ne pouvons donc certifier qu'il fonctionnera correctement dans votre pays ni qu'il répond à nos critères de qualité.</target>
+        <note>Line: 32</note>
+      </trans-unit>
+      <trans-unit id="d1ce387d44c3dc9cdc4e30ad64dbf47e" approved="yes">
+        <source>Use at your own risk.</source>
+        <target state="final">Vous l'utilisez à vos propres risques.</target>
+        <note>Line: 33</note>
+      </trans-unit>
+      <trans-unit id="080e6f65e34e2ffe7162beb258f4577d" approved="yes">
+        <source>If you are unsure about this, you should contact the Customer Service of %s to ask them to make the module compatible with your country.</source>
+        <target state="final">Si vous n'êtes pas sûr de vous, vous pouvez contacter le Service Client de %s pour leur demander un module compatible avec votre pays.</target>
+        <note>Line: 38</note>
+      </trans-unit>
+      <trans-unit id="17e8aa9ff6f7c374738eb3a15270583c" approved="yes">
+        <source>Moreover, we recommend that you use an equivalent module: compatible modules for your country are listed in the "Modules" tab of your back office.</source>
+        <target state="final">De plus, nous vous recommandons d'utiliser un module équivalent : les modules compatibles avec votre pays sont listés dans l'onglet "Modules" de votre back-office.</target>
+        <note>Line: 39</note>
+      </trans-unit>
+      <trans-unit id="1de1cd538749db5ea85a79c300b092e3" approved="yes">
+        <source>If you are unsure about this module, you can look for similar modules on the official marketplace.</source>
+        <target state="final">Si vous n'êtes pas sûr de ce module, vous pouvez aussi rechercher des modules similaires sur la place de marché officielle.</target>
+        <note>Line: 42</note>
+      </trans-unit>
+      <trans-unit id="f7df37601ea653a7a5bf63e3556772d3" approved="yes">
+        <source>Click here to browse PrestaShop Addons.</source>
+        <target state="final">Cliquez ici pour parcourir le catalogue de PrestaShop Addons.</target>
+        <note>Line: 43</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/modules/modal_translation.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="1311e5ddedf25a4f6cd6059cbf04c21e" approved="yes">
+        <source>Manage translations</source>
+        <target state="final">Gérer les traductions</target>
+        <note>Line: 29</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/modules/page.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="b10a51e4d433fa3330b26d266502db00" approved="yes">
+        <source>Addons membership provides access to all our PrestaShop modules.</source>
+        <target state="final">Se connecter à Addons permet d'accéder à tous nos modules PrestaShop.</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="20afba9e56de0c1da3d5188111d72947" approved="yes">
+        <source>Once connected, your new modules will be automatically installed.</source>
+        <target state="final">Une fois connecté, vos nouveaux modules seront automatiquement installés.</target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="d9776f0775997b2e698c6975420b5c5d" approved="yes">
+        <source>Sign up</source>
+        <target state="final">S'inscrire</target>
+        <note>Line: 32</note>
+      </trans-unit>
+      <trans-unit id="bce8bac0184c6cd6d977e8a42a99aa99" approved="yes">
+        <source>Connect to PrestaShop Marketplace account</source>
+        <target state="final">Connectez-vous à la place de marché de PrestaShop</target>
+        <note>Line: 32</note>
+      </trans-unit>
+      <trans-unit id="bffe9a3c9a7e00ba00a11749e022d911" approved="yes">
+        <source>Log in</source>
+        <target state="final">Se connecter</target>
+        <note>Line: 32</note>
+      </trans-unit>
+      <trans-unit id="6dc2462f2851bdac265c852f023b6d3f" approved="yes">
+        <source>The module must either be a Zip file (.zip) or a tarball file (.tar, .tar.gz, .tgz).</source>
+        <target state="final">Le fichier contenant le module doit être soit une archive ZIP (.zip) soit un fichier "tarball" (.tar, .tar.gz, .tgz).</target>
+        <note>Line: 43</note>
+      </trans-unit>
+      <trans-unit id="6779ef184c16fbd18a0bc13ebda839c5" approved="yes">
+        <source>Upload a module from your computer.</source>
+        <target state="final">Mettez en ligne le module depuis votre ordinateur</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="5b48d0f5735d2f9b73a8f3ec7c4858ba" approved="yes">
+        <source>Module file</source>
+        <target state="final">Fichier du module</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="92fbf0e5d97b8afd7e73126b52bdc4bb" approved="yes">
+        <source>Choose a file</source>
+        <target state="final">Choisissez un fichier</target>
+        <note>Line: 59</note>
+      </trans-unit>
+      <trans-unit id="8634e049945e0e8562673698a1abb485" approved="yes">
+        <source>Upload this module</source>
+        <target state="final">Charger le module</target>
+        <note>Line: 71</note>
+      </trans-unit>
+      <trans-unit id="f2063dc3ff5945f5bf0c430da46e1109" approved="yes">
+        <source>An upgrade is available for some of your modules!</source>
+        <target state="final">Des mises à jour sont disponibles pour certains de vos modules !</target>
+        <note>Line: 81</note>
+      </trans-unit>
+      <trans-unit id="d78986947356ddd37b43d57df289dee9" approved="yes">
+        <source>Favorites</source>
+        <target state="final">Favoris</target>
+        <note>Line: 107</note>
+      </trans-unit>
+      <trans-unit id="b1c94ca2fbc3e78fc30069c8d0f01680" approved="yes">
+        <source>All</source>
+        <target state="final">Tous</target>
+        <note>Line: 110</note>
+      </trans-unit>
+      <trans-unit id="96e36efe70e72835ae51946e2650f9e7" approved="yes">
+        <source>Add a new module</source>
+        <target state="final">Ajouter un nouveau module</target>
+        <note>Line: 42</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/modules/page_header_toolbar-legacy.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="28080c3603fb7e10f228381b181cae2c" approved="yes">
+        <source>List of modules</source>
+        <target state="final">Liste des modules</target>
+        <note>Line: 31</note>
+      </trans-unit>
+      <trans-unit id="71803586f945801418d03befeb4acd99" approved="yes">
+        <source>Update all</source>
+        <target state="final">Mettre à jour tous les modules</target>
+        <note>Line: 48</note>
+      </trans-unit>
+      <trans-unit id="a3105b7aa9edb1c07765bfdcdc2405b8" approved="yes">
+        <source>Check for update</source>
+        <target state="final">Vérifier les mises à jour</target>
+        <note>Line: 55</note>
+      </trans-unit>
+      <trans-unit id="6a26f548831e6a8c26bfbbd9f6ec61e0" approved="yes">
+        <source>Help</source>
+        <target state="final">Aide</target>
+        <note>Line: 78</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
