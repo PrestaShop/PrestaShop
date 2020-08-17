@@ -33,9 +33,10 @@ use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 use PrestaShopBundle\Translation\DomainNormalizer;
 use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
-use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
+use PrestaShopBundle\Translation\Loader\DatabaseTranslationReader;
 use PrestaShopBundle\Translation\Provider\Catalogue\DefaultCatalogueProvider;
 use PrestaShopBundle\Translation\Provider\Catalogue\FileTranslatedCatalogueProvider;
+use PrestaShopBundle\Translation\Provider\Catalogue\TranslationCatalogueProviderInterface;
 use PrestaShopBundle\Translation\Provider\Catalogue\UserTranslatedCatalogueProvider;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -77,16 +78,16 @@ class ModulesProvider implements ProviderInterface
     private $defaultCatalogueCache;
 
     /**
-     * @var DatabaseTranslationLoader
+     * @var DatabaseTranslationReader
      */
-    private $databaseLoader;
+    private $databaseReader;
     /**
      * @var string
      */
     private $moduleName;
 
     /**
-     * @param DatabaseTranslationLoader $databaseLoader
+     * @param DatabaseTranslationReader $databaseReader
      * @param string $modulesDirectory
      * @param string $translationsDirectory
      * @param LoaderInterface $legacyFileLoader
@@ -94,7 +95,7 @@ class ModulesProvider implements ProviderInterface
      * @param string $moduleName
      */
     public function __construct(
-        DatabaseTranslationLoader $databaseLoader,
+        DatabaseTranslationReader $databaseReader,
         string $modulesDirectory,
         string $translationsDirectory,
         LoaderInterface $legacyFileLoader,
@@ -103,7 +104,7 @@ class ModulesProvider implements ProviderInterface
     ) {
         $this->legacyFileLoader = $legacyFileLoader;
         $this->legacyModuleExtractor = $legacyModuleExtractor;
-        $this->databaseLoader = $databaseLoader;
+        $this->databaseReader = $databaseReader;
         $this->modulesDirectory = $modulesDirectory;
         $this->translationsDirectory = $translationsDirectory;
         $this->moduleName = $moduleName;
@@ -119,14 +120,14 @@ class ModulesProvider implements ProviderInterface
     {
         try {
             $defaultCatalogue = (new DefaultCatalogueProvider(
-                $this->getDefaultResourceDirectory(),
+                $this->translationsDirectory,
                 $this->getFilenameFilters()
             ))
                 ->getCatalogue($locale, $empty);
         } catch (FileNotFoundException $e) {
             $defaultCatalogue = $this->getCachedDefaultCatalogue($locale);
 
-            if ($empty && $locale !== DefaultCatalogueProvider::DEFAULT_LOCALE) {
+            if ($empty && $locale !== TranslationCatalogueProviderInterface::DEFAULT_LOCALE) {
                 return $this->emptyCatalogue(clone $defaultCatalogue);
             }
         }
@@ -142,14 +143,8 @@ class ModulesProvider implements ProviderInterface
     public function getFileTranslatedCatalogue(string $locale): MessageCatalogueInterface
     {
         try {
-            $resourceDirectory = implode(DIRECTORY_SEPARATOR, [
-                    $this->translationsDirectory,
-                    $this->moduleName,
-                    'translations',
-                ]) . DIRECTORY_SEPARATOR;
-
             return (new FileTranslatedCatalogueProvider(
-                $resourceDirectory,
+                $this->getDefaultModuleDirectory(),
                 $this->getFilenameFilters()
             ))
                 ->getCatalogue($locale);
@@ -168,7 +163,7 @@ class ModulesProvider implements ProviderInterface
         $translationDomains = ['^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|$)'];
 
         return (new UserTranslatedCatalogueProvider(
-            $this->databaseLoader,
+            $this->databaseReader,
             $translationDomains
         ))
             ->getCatalogue($locale);
@@ -193,7 +188,7 @@ class ModulesProvider implements ProviderInterface
 
         try {
             $catalogueFromLegacyTranslationFiles = $this->legacyFileLoader->load(
-                $this->getDefaultResourceDirectory(),
+                $this->getBuiltInModuleDirectory(),
                 $locale
             );
         } catch (UnsupportedLocaleException $exception) {
@@ -265,14 +260,8 @@ class ModulesProvider implements ProviderInterface
 
         try {
             // look up files in the core translations
-            $resourceDirectory = implode(DIRECTORY_SEPARATOR, [
-                $this->translationsDirectory,
-                $this->moduleName,
-                'translations',
-            ]) . DIRECTORY_SEPARATOR;
-
             $defaultCatalogue = (new DefaultCatalogueProvider(
-                $resourceDirectory . DIRECTORY_SEPARATOR . 'default',
+                $this->getDefaultModuleDirectory() . DIRECTORY_SEPARATOR . 'default',
                 $this->getFilenameFilters()
             ))
                 ->getCatalogue($locale);
@@ -314,15 +303,33 @@ class ModulesProvider implements ProviderInterface
      */
     private function getFilenameFilters(): array
     {
-        return ['#^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|$)#'];
+        $filters = ['#^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|$)#'];
+
+        return $filters;
     }
 
     /**
      * @return string
      */
-    private function getDefaultResourceDirectory(): string
+    private function getBuiltInModuleDirectory(): string
     {
-        return implode(DIRECTORY_SEPARATOR, [$this->modulesDirectory, $this->moduleName, 'translations']) . DIRECTORY_SEPARATOR;
+        return implode(DIRECTORY_SEPARATOR, [
+            $this->modulesDirectory,
+            $this->moduleName,
+            'translations',
+        ]) . DIRECTORY_SEPARATOR;
+    }
+
+    /**
+     * @return string
+     */
+    private function getDefaultModuleDirectory()
+    {
+        return implode(DIRECTORY_SEPARATOR, [
+            $this->translationsDirectory,
+            $this->moduleName,
+            'translations',
+        ]) . DIRECTORY_SEPARATOR;
     }
 
     /**

@@ -32,8 +32,6 @@ use PrestaShopBundle\Exception\InvalidLanguageException;
 use PrestaShopBundle\Translation\Constraints\PassVsprintf;
 use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\Translation\MessageCatalogue;
-use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Validator\Validation;
 
 class TranslationService
@@ -116,7 +114,7 @@ class TranslationService
      */
     public function getTranslationsCatalogue(TypeInterface $providerType, string $locale, array $search)
     {
-        return $this->container->get('prestashop.translation.translation_catalogue_provider')
+        return $this->container->get('prestashop.translation.provider.translation_catalogue')
             ->getCatalogue(
                 $providerType,
                 $locale,
@@ -145,7 +143,7 @@ class TranslationService
         string $domain,
         array $search
     ): array {
-        $catalogue = $this->container->get('prestashop.translation.translation_catalogue_provider')
+        $catalogue = $this->container->get('prestashop.translation.provider.translation_catalogue')
             ->getDomainCatalogue(
                 $providerType,
                 $locale,
