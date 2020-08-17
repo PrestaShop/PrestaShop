@@ -1617,8 +1617,8 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/product.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="a9e0d1b71fb7197367e0518bb6b34fdd">
-        <source>The file is too large. Maximum size allowed is: [1]. The file you are trying to upload is [2].</source>
-        <target>The file is too large. Maximum size allowed is: [1]. The file you are trying to upload is [2].</target>
+        <source>The file is too large. Maximum size allowed is: [1] MB. The file you are trying to upload is [2] MB.</source>
+        <target>The file is too large. Maximum size allowed is: [1] MB. The file you are trying to upload is [2] MB.</target>
         <note>Line: 339</note>
       </trans-unit>
     </body>
