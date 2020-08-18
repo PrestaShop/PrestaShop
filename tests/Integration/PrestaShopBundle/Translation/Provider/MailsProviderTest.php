@@ -48,21 +48,21 @@ class MailsProviderTest extends TestCase
         $databaseContent = [
             [
                 'lang' => 'fr-FR',
-                'key' => 'Invalid name',
+                'key' => 'Some text to translate',
                 'translation' => 'Traduction customisée',
-                'domain' => 'ShopFormsErrors',
+                'domain' => 'EmailsSubject',
                 'theme' => null,
             ],
             [
                 'lang' => 'fr-FR',
                 'key' => 'Some made up text',
                 'translation' => 'Un texte inventé',
-                'domain' => 'ShopActions',
+                'domain' => 'EmailsSubject',
                 'theme' => 'classic',
             ],
         ];
 
-        $this->databaseReader = new MockDatabaseTranslationReader([]);
+        $this->databaseReader = new MockDatabaseTranslationReader($databaseContent);
     }
 
     /**
@@ -132,5 +132,34 @@ class MailsProviderTest extends TestCase
             '',
             $catalogue->get('Your order return status has changed', 'EmailsSubject')
         );
+    }
+
+    public function testItLoadsCustomizedTranslationsFromDatabase()
+    {
+        $provider = new MailsProvider(
+            $this->databaseReader,
+            self::TRANSLATIONS_DIR
+        );
+
+        // load catalogue from database translations
+        $catalogue = $provider->getUserTranslatedCatalogue('fr-FR');
+
+        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
+
+        // Check integrity of translations
+        $messages = $catalogue->all();
+        $domains = $catalogue->getDomains();
+        sort($domains);
+
+        // verify all catalogues are loaded
+        $this->assertSame([
+            'EmailsSubject',
+        ], $domains);
+
+        // verify that the catalogues are complete
+        $this->assertCount(1, $messages['EmailsSubject']);
+
+        // verify translations
+        $this->assertSame('Traduction customisée', $catalogue->get('Some text to translate', 'EmailsSubject'));
     }
 }
