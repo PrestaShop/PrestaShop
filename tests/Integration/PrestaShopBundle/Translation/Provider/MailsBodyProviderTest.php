@@ -48,21 +48,21 @@ class MailsBodyProviderTest extends TestCase
         $databaseContent = [
             [
                 'lang' => 'fr-FR',
-                'key' => 'Invalid name',
+                'key' => 'Some text to translate',
                 'translation' => 'Traduction customisée',
-                'domain' => 'ShopFormsErrors',
+                'domain' => 'EmailsBody',
                 'theme' => null,
             ],
             [
                 'lang' => 'fr-FR',
                 'key' => 'Some made up text',
                 'translation' => 'Un texte inventé',
-                'domain' => 'ShopActions',
+                'domain' => 'EmailsBody',
                 'theme' => 'classic',
             ],
         ];
 
-        $this->databaseReader = new MockDatabaseTranslationReader([]);
+        $this->databaseReader = new MockDatabaseTranslationReader($databaseContent);
     }
 
     /**
@@ -132,5 +132,34 @@ class MailsBodyProviderTest extends TestCase
             '',
             $catalogue->get('We will answer as soon as possible.', 'EmailsBody')
         );
+    }
+
+    public function testItLoadsCustomizedTranslationsFromDatabase()
+    {
+        $provider = new MailsBodyProvider(
+            $this->databaseReader,
+            self::TRANSLATIONS_DIR
+        );
+
+        // load catalogue from database translations
+        $catalogue = $provider->getUserTranslatedCatalogue('fr-FR');
+
+        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
+
+        // Check integrity of translations
+        $messages = $catalogue->all();
+        $domains = $catalogue->getDomains();
+        sort($domains);
+
+        // verify all catalogues are loaded
+        $this->assertSame([
+            'EmailsBody',
+        ], $domains);
+
+        // verify that the catalogues are complete
+        $this->assertCount(1, $messages['EmailsBody']);
+
+        // verify translations
+        $this->assertSame('Traduction customisée', $catalogue->get('Some text to translate', 'EmailsBody'));
     }
 }

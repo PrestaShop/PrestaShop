@@ -1,6 +1,6 @@
 <phpunit bootstrap="bootstrap.php"
          stopOnFailure="true"
-         processIsolation="true"
+         processIsolation="false"
 >
     <!-- process isolation is required since the introduction of GenerateMailTemplatesCommandTest file -->
     <php>
