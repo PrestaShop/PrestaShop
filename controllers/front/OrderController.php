@@ -46,6 +46,13 @@ class OrderControllerCore extends FrontController
     protected $cartChecksum;
 
     /**
+     * Overrides the same parameter in FrontController
+     *
+     * @var bool automaticallyAllocateInvoiceAddress
+     */
+    protected $automaticallyAllocateInvoiceAddress = false;
+
+    /**
      * Initialize order controller.
      *
      * @see FrontController::init()

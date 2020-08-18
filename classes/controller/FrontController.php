@@ -171,6 +171,14 @@ class FrontControllerCore extends Controller
     protected $cccReducer;
 
     /**
+     * Set this parameter to false if you don't want cart's invoice address
+     * to be set automatically (this bad behavior is kept for legacy and BC purpose)
+     *
+     * @var bool automaticallyAllocateInvoiceAddress
+     */
+    protected $automaticallyAllocateInvoiceAddress = true;
+
+    /**
      * Controller constructor.
      *
      * @global bool $useSSL SSL connection flag
@@ -398,6 +406,21 @@ class FrontControllerCore extends Controller
                 $cart->update();
             }
             /* Select an address if not set */
+            if (isset($cart) && (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0 ||
+                    !isset($cart->id_address_invoice) || $cart->id_address_invoice == 0) && $this->context->cookie->id_customer) {
+                $to_update = false;
+                if (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0) {
+                    $to_update = true;
+                    $cart->id_address_delivery = (int) Address::getFirstCustomerAddressId($cart->id_customer);
+                }
+                if ($this->automaticallyAllocateInvoiceAddress && (!isset($cart->id_address_invoice) || $cart->id_address_invoice == 0)) {
+                    $to_update = true;
+                    $cart->id_address_invoice = (int) Address::getFirstCustomerAddressId($cart->id_customer);
+                }
+                if ($to_update) {
+                    $cart->update();
+                }
+            }
         }
 
         if (!isset($cart) || !$cart->id) {
