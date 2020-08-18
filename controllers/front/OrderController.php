@@ -336,7 +336,7 @@ class OrderControllerCore extends FrontController
         return $termsAndConditions->format();
     }
 
-    /*
+    /**
      * @param CheckoutSession $session
      * @param $translator
      *
