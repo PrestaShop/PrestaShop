@@ -396,8 +396,6 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
                             && $address->id_country != Configuration::get('VATNUMBER_COUNTRY');
         $carrier = new Carrier($this->order->id_carrier);
 
-        $tax_breakdowns = $this->getTaxBreakdown();
-
         $data = [
             'tax_exempt' => $tax_exempt,
             'use_one_after_another_method' => $this->order_invoice->useOneAfterAnotherTaxComputationMethod(),
@@ -406,7 +404,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'shipping_tax_breakdown' => $this->order_invoice->getShippingTaxesBreakdown($this->order),
             'ecotax_tax_breakdown' => $this->order_invoice->getEcoTaxTaxesBreakdown(),
             'wrapping_tax_breakdown' => $this->order_invoice->getWrappingTaxesBreakdown(),
-            'tax_breakdowns' => $tax_breakdowns,
+            'tax_breakdowns' => $this->getTaxBreakdown(),
             'order' => $debug ? null : $this->order,
             'order_invoice' => $debug ? null : $this->order_invoice,
             'carrier' => $debug ? null : $carrier,

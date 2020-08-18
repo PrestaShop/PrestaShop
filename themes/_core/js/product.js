@@ -159,10 +159,89 @@ function updateProduct(event, eventType, updateUrl) {
     updateDelay = 750;
   }
 
-  currentRequestDelayedId = setTimeout(
-    function updateProductRequest() {
-      if (formSerialized === '') {
-        return;
+  currentRequestDelayedId = setTimeout(function updateProductRequest() {
+
+    if (formSerialized === '') {
+      return;
+    }
+
+    currentRequest = $.ajax({
+      url: updateUrl + ((updateUrl.indexOf('?') === -1) ? '?' : '&') + formSerialized + preview,
+      method: 'POST',
+      data: {
+        ajax: 1,
+        action: 'refresh',
+        quantity_wanted: eventType === 'updatedProductCombination' ? $quantityWantedInput.attr('min') : $quantityWantedInput.val()
+      },
+      dataType: 'json',
+      beforeSend() {
+        if (currentRequest !== null) {
+          currentRequest.abort();
+        }
+      },
+      error(jqXHR, textStatus, errorThrown) {
+        if (textStatus !== 'abort'
+            && $('section#main > .ajax-error').length === 0
+        ) {
+          showErrorNextToAddtoCartButton();
+        }
+      },
+      success(data, textStatus, errorThrown) {
+        // Avoid image to blink each time we modify the product quantity
+        // Can not compare directly cause of HTML comments in data.
+        const $newImagesContainer = $('<div>').append(data.product_cover_thumbnails);
+
+        // Used to avoid image blinking if same image = epileptic friendly
+        if ($('.quickview .images-container, .page-product:not(.modal-open) .row .images-container, .page-product:not(.modal-open) .product-container .images-container').html() !== $newImagesContainer.find('.quickview .images-container, .page-product:not(.modal-open) .row .images-container, .page-product:not(.modal-open) .product-container .images-container').html()) {
+          $('.quickview .images-container, .page-product:not(.modal-open) .row .images-container, .page-product:not(.modal-open) .product-container .images-container').replaceWith(data.product_cover_thumbnails);
+        }
+
+        $(
+          '.quickview .product-prices, .page-product:not(.modal-open) .row .product-prices, .page-product:not(.modal-open) .product-container .product-prices',
+        )
+          .first()
+          .replaceWith(data.product_prices);
+        $(
+          '.quickview .product-customization, .page-product:not(.modal-open) .row .product-customization, .page-product:not(.modal-open) .product-container .product-customization',
+        )
+          .first()
+          .replaceWith(data.product_customization);
+        $(
+          '.quickview .product-variants, .page-product:not(.modal-open) .row .product-variants, .page-product:not(.modal-open) .product-container .product-variants',
+        )
+          .first()
+          .replaceWith(data.product_variants);
+        $(
+          '.quickview .product-discounts, .page-product:not(.modal-open) .row .product-discounts, .page-product:not(.modal-open) .product-container .product-discounts',
+        )
+          .first()
+          .replaceWith(data.product_discounts);
+        $(
+          '.quickview .product-additional-info, .page-product:not(.modal-open) .row .product-additional-info, .page-product:not(.modal-open) .product-container .product-additional-info',
+        )
+          .first()
+          .replaceWith(data.product_additional_info);
+        $('.quickview #product-details, #product-details').replaceWith(data.product_details);
+        $(
+          '.quickview .product-flags, .page-product:not(.modal-open) .row .product-flags, .page-product:not(.modal-open) .product-container .product-flags',
+        )
+          .first()
+          .replaceWith(data.product_flags);
+        replaceAddToCartSections(data);
+        const minimalProductQuantity = parseInt(data.product_minimal_quantity, 10);
+
+        // Prevent quantity input from blinking with classic theme.
+        if (!isNaN(minimalProductQuantity)
+            && eventType !== 'updatedProductQuantity'
+        ) {
+          $quantityWantedInput.attr('min', minimalProductQuantity);
+          $quantityWantedInput.val(minimalProductQuantity);
+        }
+        prestashop.emit('updatedProduct', data);
+      },
+      complete(jqXHR, textStatus) {
+        currentRequest = null;
+        currentRequestDelayedId = null;
       }
 
       currentRequest = $.ajax({

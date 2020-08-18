@@ -108,16 +108,16 @@ Feature: Add discounts to order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0   |
       | total_shipping_tax_incl  | 7.42  |
       | total_discounts_tax_excl | 15.4  |
-      | total_discounts_tax_incl | 16.33 |
+      | total_discounts_tax_incl | 16.32 |
       | total_paid_tax_excl      | 15.4  |
-      | total_paid_tax_incl      | 16.32 |
-      | total_paid               | 16.32 |
+      | total_paid_tax_incl      | 16.33 |
+      | total_paid               | 16.33 |
       | total_paid_real          | 0     |
     Then Order "bo_order1" should have following prices:
       | products      | $23.80 |
       | discounts     | $15.40 |
       | shipping      | $7.00  |
-      | taxes         | $0.92  |
+      | taxes         | $0.93  |
       | total         | $15.40 |
 
   Scenario: Add amount discount matching fifty percent on products only
@@ -133,16 +133,16 @@ Feature: Add discounts to order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0   |
       | total_shipping_tax_incl  | 7.42  |
       | total_discounts_tax_excl | 11.9  |
-      | total_discounts_tax_incl | 12.62 |
+      | total_discounts_tax_incl | 12.61 |
       | total_paid_tax_excl      | 18.9  |
-      | total_paid_tax_incl      | 20.03 |
-      | total_paid               | 20.03 |
+      | total_paid_tax_incl      | 20.04 |
+      | total_paid               | 20.04 |
       | total_paid_real          | 0     |
     Then Order "bo_order1" should have following prices:
       | products      | $23.80 |
       | discounts     | $11.90 |
       | shipping      | $7.00  |
-      | taxes         | $1.13  |
+      | taxes         | $1.14  |
       | total         | $18.90 |
 
   Scenario: Add amount type discount to order and update single invoice

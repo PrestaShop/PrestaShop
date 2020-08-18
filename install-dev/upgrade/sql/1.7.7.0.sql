@@ -595,6 +595,9 @@ UPDATE `PREFIX_order_cart_rule` SET `value_tax_excl` = RIGHT(`value_tax_excl`, 1
 ALTER TABLE `PREFIX_order_cart_rule` CHANGE `value` `value` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
 ALTER TABLE `PREFIX_order_cart_rule` CHANGE `value_tax_excl` `value_tax_excl` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
 
+/* add deleted field */
+ALTER TABLE `PREFIX_order_cart_rule` ADD `deleted` TINYINT(1) UNSIGNED NOT NULL;
+
 UPDATE
     `PREFIX_order_detail` `od`
 SET
@@ -862,3 +865,6 @@ INNER JOIN `PREFIX_hook` AS hfrom ON hm.id_hook = hfrom.id_hook AND hfrom.name =
 INNER JOIN `PREFIX_hook` AS hto ON hto.name = 'actionPerformancePageSave'
 SET hm.id_hook = hto.id_hook;
 DELETE FROM `PREFIX_hook` WHERE name = 'actionPerformancePageFormSave';
+
+/* Update wrong hook alias */
+UPDATE `PREFIX_hook_alias` SET name = 'displayHeader', alias = 'Header' WHERE name = 'Header' AND alias = 'displayHeader';

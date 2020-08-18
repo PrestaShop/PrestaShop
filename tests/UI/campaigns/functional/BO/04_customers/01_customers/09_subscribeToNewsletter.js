@@ -122,7 +122,7 @@ describe('Check customer subscription to newsletter from BO', async () => {
       await moduleManagerPage.searchModule(page, psEmailSubscription.tag, psEmailSubscription.name);
       await moduleManagerPage.goToConfigurationPage(page, psEmailSubscription.name);
 
-      const pageTitle = await psEmailSubscriptionPage.getPageTitle(page);
+      const pageTitle = await psEmailSubscriptionPage.getPageSubtitle(page);
       await expect(pageTitle).to.contains(psEmailSubscription.name);
     });
 

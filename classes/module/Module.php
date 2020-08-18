@@ -3383,9 +3383,8 @@ abstract class ModuleCore implements ModuleInterface
         $registeredHookList = Hook::getHookModuleList();
         foreach ($hooks_list as $current_hook) {
             $hook_name = $current_hook['name'];
-            $retro_hook_name = Hook::getRetroHookName($hook_name);
 
-            if (is_callable([$this, 'hook' . ucfirst($hook_name)]) || is_callable([$this, 'hook' . ucfirst($retro_hook_name)])) {
+            if (!Hook::isAlias($hook_name) && Hook::isHookCallableOn($this, $hook_name)) {
                 $possible_hooks_list[] = [
                     'id_hook' => $current_hook['id_hook'],
                     'name' => $hook_name,

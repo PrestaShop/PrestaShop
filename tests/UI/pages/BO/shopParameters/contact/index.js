@@ -9,6 +9,7 @@ class Contacts extends BOBasePage {
 
     // Selectors
     // Header selectors
+    this.storesTabLink = '#subtab-AdminStores';
     this.addNewContactButton = '#page-header-desc-configuration-add';
     // List of contacts
     this.contactsGridPanel = '#contact_grid_panel';
@@ -41,6 +42,15 @@ class Contacts extends BOBasePage {
   /*
   Methods
    */
+
+  /**
+   * Click on tab stores
+   * @param page
+   * @return {Promise<void>}
+   */
+  async goToStoresPage(page) {
+    await this.clickAndWaitForNavigation(page, this.storesTabLink);
+  }
 
   /**
    * Reset input filters

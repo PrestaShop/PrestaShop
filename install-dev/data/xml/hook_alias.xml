@@ -34,8 +34,8 @@
       <name>displayHome</name>
     </hook_alias>
     <hook_alias id="header">
-      <alias>displayHeader</alias>
-      <name>Header</name>
+      <alias>Header</alias>
+      <name>displayHeader</name>
     </hook_alias>
     <hook_alias id="cart">
       <alias>cart</alias>

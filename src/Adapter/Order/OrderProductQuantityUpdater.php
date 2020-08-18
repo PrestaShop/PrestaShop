@@ -144,8 +144,6 @@ class OrderProductQuantityUpdater
 
             // Update prices on the order after cart rules are recomputed
             $this->orderAmountUpdater->update($order, $cart, null !== $orderInvoice ? (int) $orderInvoice->id : null);
-
-            $this->updateOrderInvoice($orderDetail, $orderInvoice);
         } finally {
             $this->contextStateManager->restoreContext();
         }
@@ -395,47 +393,6 @@ class OrderProductQuantityUpdater
 
         if (!Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'customization` WHERE `quantity` = 0')) {
             throw new OrderException('Could not delete customization from database.');
-        }
-    }
-
-    /**
-     * @todo The invoice update is managed through the OrderAmountUpdater now, this method
-     * existed before. The only use case where it can be usefull is if the OrderDetail->id_order_invoice
-     * can be different from the Invoice fetched from the command value in the UpdateProductQuantityHandler
-     * This is the last use case that requires manual update of the invoice If it is not needed, this method
-     * along with the command should be cleaned so that the invoice id is ALWAYS the one from the OrderDetail
-     *
-     * @param OrderDetail $orderDetail
-     * @param OrderInvoice|null $orderInvoice
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
-     */
-    private function updateOrderInvoice(OrderDetail $orderDetail, ?OrderInvoice $orderInvoice): void
-    {
-        if ($orderDetail->id_order_invoice != 0) {
-            $orderDetailInvoice = new OrderInvoice($orderDetail->id_order_invoice);
-            // @todo: use https://github.com/PrestaShop/decimal for price computations
-            $orderDetailInvoice->total_paid_tax_excl -= $orderDetail->total_price_tax_excl;
-            $orderDetailInvoice->total_paid_tax_incl -= $orderDetail->total_price_tax_incl;
-            $orderDetailInvoice->total_products -= $orderDetail->total_price_tax_excl;
-            $orderDetailInvoice->total_products_wt -= $orderDetail->total_price_tax_incl;
-
-            $orderDetailInvoice->update();
-        }
-
-        // Apply change on OrderInvoice
-        if (isset($orderInvoice) && $orderDetail->id_order_invoice != $orderInvoice->id) {
-            $orderInvoice->total_products += $orderDetail->total_price_tax_excl;
-            $orderInvoice->total_products_wt += $orderDetail->total_price_tax_incl;
-
-            $orderInvoice->total_paid_tax_excl += $orderDetail->total_price_tax_excl;
-            $orderInvoice->total_paid_tax_incl += $orderDetail->total_price_tax_incl;
-
-            $orderDetail->id_order_invoice = $orderInvoice->id;
-
-            $orderInvoice->update();
-            $orderDetail->update();
         }
     }
 

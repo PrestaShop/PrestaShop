@@ -33,9 +33,9 @@ class AddCustomer extends BOBasePage {
    * Fill form for add/edit customer
    * @param page
    * @param customerData
-   * @return {Promise<string>}
+   * @return {Promise<void>}
    */
-  async createEditCustomer(page, customerData) {
+  async fillCustomerForm(page, customerData) {
     await page.click(this.socialTitleInput(customerData.socialTitle === 'Mr.' ? 0 : 1));
     await this.setValue(page, this.firstNameInput, customerData.firstName);
     await this.setValue(page, this.lastNameInput, customerData.lastName);
@@ -48,6 +48,19 @@ class AddCustomer extends BOBasePage {
     await page.click(this.partnerOffersSwitchLabel(customerData.partnerOffers ? 1 : 0));
     await this.setCustomerGroupAccess(page, customerData.defaultCustomerGroup);
     await this.selectByVisibleText(page, this.defaultCustomerGroupSelect, customerData.defaultCustomerGroup);
+  }
+
+
+  /**
+   * Fill form for add/edit customer and get successful message after saving
+   * @param page
+   * @param customerData
+   * @return {Promise<string>}
+   */
+  async createEditCustomer(page, customerData) {
+    // Fill form
+    await this.fillCustomerForm(page, customerData);
+
     // Save Customer
     await this.clickAndWaitForNavigation(page, this.saveCustomerButton);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);

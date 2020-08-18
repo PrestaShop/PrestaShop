@@ -818,7 +818,22 @@ class OrderCore extends ObjectModel
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
         SELECT *
         FROM `' . _DB_PREFIX_ . 'order_cart_rule` ocr
-        WHERE ocr.`id_order` = ' . (int) $this->id);
+        WHERE ocr.`deleted` = 0 AND ocr.`id_order` = ' . (int) $this->id);
+    }
+
+    /**
+     *  Return the list of all order cart rules, even the softy deleted ones
+     *
+     * @return array|false
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public function getDeletedCartRules()
+    {
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+        SELECT *
+        FROM `' . _DB_PREFIX_ . 'order_cart_rule` ocr
+        WHERE ocr.`deleted` = 1 AND ocr.`id_order` = ' . (int) $this->id);
     }
 
     public static function getDiscountsCustomer($id_customer, $id_cart_rule)
@@ -827,9 +842,9 @@ class OrderCore extends ObjectModel
         if (!Cache::isStored($cache_id)) {
             $result = (int) Db::getInstance()->getValue('
             SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'orders` o
-            LEFT JOIN ' . _DB_PREFIX_ . 'order_cart_rule ocr ON (ocr.id_order = o.id_order)
-            WHERE o.id_customer = ' . (int) $id_customer . '
-            AND ocr.id_cart_rule = ' . (int) $id_cart_rule);
+            LEFT JOIN `' . _DB_PREFIX_ . 'order_cart_rule` ocr ON (ocr.`id_order` = o.`id_order`)
+            WHERE o.`id_customer` = ' . (int) $id_customer . '
+            AND ocr.`deleted` = 0 AND ocr.`id_cart_rule` = ' . (int) $id_cart_rule);
             Cache::store($cache_id, $result);
 
             return $result;
