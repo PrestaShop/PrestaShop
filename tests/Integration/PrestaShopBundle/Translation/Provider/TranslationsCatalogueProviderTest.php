@@ -71,7 +71,7 @@ class TranslationsCatalogueProviderTest extends KernelTestCase
                 'theme' => 'classic',
             ],
         ];
-        $this->databaseReader = new MockDatabaseTranslationReader([]);
+        $this->databaseReader = new MockDatabaseTranslationReader($databaseContent);
 
         $langId = \Language::getIdByIso('fr', true);
         if (!$langId) {
@@ -166,7 +166,7 @@ class TranslationsCatalogueProviderTest extends KernelTestCase
      * The provider should retrieve all translations from files that
      * look like `AdminSomething` or `ModulesSomethingAdmin`
      */
-    public function testGetCatalogueForModules()
+    public function testGetCatalogueForModule()
     {
         $providerFactory = $this->createMock(ProviderFactory::class);
 
