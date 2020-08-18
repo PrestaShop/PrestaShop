@@ -69,7 +69,7 @@
       {{ product.quantityRefunded }} ({{ product.amountRefunded }} {{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }})
     {% endif %}
   </td>
-  <td class="cellProductAvailableQuantity">{{ product.availableQuantity }}</td>
+  <td class="cellProductAvailableQuantity text-center">{{ product.availableQuantity }}</td>
   <td class="cellProductTotalPrice">{{ product.totalPrice }}</td>
   {% if orderForViewing.hasInvoice() %}
     <td>{{ product.orderInvoiceNumber }}</td>
