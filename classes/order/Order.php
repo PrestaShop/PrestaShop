@@ -1673,8 +1673,11 @@ class OrderCore extends ObjectModel
      */
     public function setCurrentState($id_order_state, $id_employee = 0)
     {
-        if (empty($id_order_state)) {
+        if (empty($id_order_state) || $id_order_state == $this->current_state) {
             return false;
+        }
+        if ($id_order_state == $this->current_state) {
+            return;
         }
         $history = new OrderHistory();
         $history->id_order = (int) $this->id;
