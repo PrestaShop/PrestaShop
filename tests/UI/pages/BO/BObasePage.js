@@ -4,8 +4,8 @@ const fs = require('fs');
 const imgGen = require('js-image-generator');
 
 module.exports = class BOBasePage extends CommonPage {
-  constructor(page) {
-    super(page);
+  constructor() {
+    super();
 
     // Successful Messages
     this.successfulCreationMessage = 'Successful creation.';
@@ -74,6 +74,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.emailThemeLink = '#subtab-AdminParentMailTheme';
     // Pages
     this.pagesLink = '#subtab-AdminCmsContent';
+    // Positions
+    this.positionsLink = '#subtab-AdminModulesPositions';
     // Link widget
     this.linkWidgetLink = '#subtab-AdminLinkWidget';
 
@@ -161,65 +163,71 @@ module.exports = class BOBasePage extends CommonPage {
    */
   /**
    * Open a subMenu if closed and click on a sublink
+   * @param page
    * @param parentSelector
    * @param linkSelector
    * @returns {Promise<void>}
    */
-  async goToSubMenu(parentSelector, linkSelector) {
-    if (await this.elementNotVisible(`${parentSelector}.open`, 1000)) {
+  async goToSubMenu(page, parentSelector, linkSelector) {
+    if (await this.elementNotVisible(page, `${parentSelector}.open`, 1000)) {
       // open the block
-      await this.scrollTo(parentSelector);
+      await this.scrollTo(page, parentSelector);
 
       await Promise.all([
-        this.page.click(parentSelector),
-        this.waitForVisibleSelector(`${parentSelector}.open`),
+        page.click(parentSelector),
+        this.waitForVisibleSelector(page, `${parentSelector}.open`),
       ]);
     }
-    await this.scrollTo(linkSelector);
-    await this.clickAndWaitForNavigation(linkSelector);
-    await this.waitForVisibleSelector(`${linkSelector}.link-active`);
+    await this.scrollTo(page, linkSelector);
+    await this.clickAndWaitForNavigation(page, linkSelector);
+    await this.waitForVisibleSelector(page, `${linkSelector}.link-active`);
   }
 
   /**
    * Returns to the dashboard then logout
+   * @param page
    * @returns {Promise<void>}
    */
-  async logoutBO() {
-    if (this.elementVisible(this.userProfileIcon, 1000)) await this.page.click(this.userProfileIcon);
-    else await this.page.$eval(this.userProfileIconNonMigratedPages, el => el.click());
-    await this.waitForVisibleSelector(this.userProfileLogoutLink);
-    await this.clickAndWaitForNavigation(this.userProfileLogoutLink);
+  async logoutBO(page) {
+    if (await this.elementVisible(page, this.userProfileIcon, 1000)) {
+      await page.click(this.userProfileIcon);
+    } else await page.$eval(this.userProfileIconNonMigratedPages, el => el.click());
+    await this.waitForVisibleSelector(page, this.userProfileLogoutLink);
+    await this.clickAndWaitForNavigation(page, this.userProfileLogoutLink);
   }
 
   /**
    * Close the onboarding modal if exists
+   * @param page
    * @returns {Promise<void>}
    */
-  async closeOnboardingModal() {
-    if (await this.elementVisible(this.onboardingCloseButton, 1000)) {
-      await this.page.click(this.onboardingCloseButton);
-      await this.waitForVisibleSelector(this.onboardingStopButton);
-      await this.page.click(this.onboardingStopButton);
+  async closeOnboardingModal(page) {
+    if (await this.elementVisible(page, this.onboardingCloseButton, 1000)) {
+      await page.click(this.onboardingCloseButton);
+      await this.waitForVisibleSelector(page, this.onboardingStopButton);
+      await page.click(this.onboardingStopButton);
     }
   }
 
   /**
    * Click on View My Shop and wait for page to open in a new Tab
+   * @param page
    * @return FOPage, page opened
    */
-  async viewMyShop() {
-    return this.openLinkWithTargetBlank(this.headerShopNameLink);
+  async viewMyShop(page) {
+    return this.openLinkWithTargetBlank(page, this.headerShopNameLink);
   }
 
   /**
    * Set value on tinyMce textarea
+   * @param page
    * @param iFrameSelector
    * @param value
    * @return {Promise<void>}
    */
-  async setValueOnTinymceInput(iFrameSelector, value) {
+  async setValueOnTinymceInput(page, iFrameSelector, value) {
     const args = {selector: iFrameSelector, vl: value};
-    await this.page.evaluate(async (args) => {
+    await page.evaluate(async (args) => {
       /* eslint-env browser */
       const iFrameElement = await document.querySelector(args.selector);
       const iFrameHtml = iFrameElement.contentDocument.documentElement;
@@ -230,104 +238,113 @@ module.exports = class BOBasePage extends CommonPage {
 
   /**
    * Close symfony Toolbar
+   * @param page
    * @return {Promise<void>}
    */
-  async closeSfToolBar() {
-    if (await this.elementVisible(`${this.sfToolbarMainContentDiv}[style='display: block;']`, 1000)) {
-      await this.page.click(this.sfCloseToolbarLink);
+  async closeSfToolBar(page) {
+    if (await this.elementVisible(page, `${this.sfToolbarMainContentDiv}[style='display: block;']`, 1000)) {
+      await page.click(this.sfCloseToolbarLink);
     }
   }
 
   /**
    * Generate an image then upload it
+   * @param page
    * @param selector
    * @param imageName
    * @return {Promise<void>}
    */
-  async generateAndUploadImage(selector, imageName) {
+  async generateAndUploadImage(page, selector, imageName) {
     await imgGen.generateImage(200, 200, 1, (err, image) => {
       fs.writeFileSync(imageName, image.data);
     });
-    const input = await this.page.$(selector);
+    const input = await page.$(selector);
     await input.setInputFiles(imageName);
   }
 
   /**
    * Delete a file from the project
+   * @param page
    * @param file
    * @param wait
    * @return {Promise<void>}
    */
-  async deleteFile(file, wait = 0) {
+  async deleteFile(page, file, wait = 0) {
     fs.unlinkSync(file);
-    await this.page.waitForTimeout(wait);
+    await page.waitForTimeout(wait);
   }
 
   /**
    * Open help side bar
+   * @param page
    * @returns {Promise<boolean>}
    */
-  async openHelpSideBar() {
-    await this.waitForSelectorAndClick(this.helpButton);
-    return this.elementVisible(`${this.rightSidebar}.sidebar-open`, 2000);
+  async openHelpSideBar(page) {
+    await this.waitForSelectorAndClick(page, this.helpButton);
+    return this.elementVisible(page, `${this.rightSidebar}.sidebar-open`, 2000);
   }
 
   /**
    * Close help side bar
+   * @param page
    * @returns {Promise<boolean>}
    */
-  async closeHelpSideBar() {
-    await this.waitForSelectorAndClick(this.helpButton);
-    return this.elementVisible(`${this.rightSidebar}:not(.sidebar-open)`, 2000);
+  async closeHelpSideBar(page) {
+    await this.waitForSelectorAndClick(page, this.helpButton);
+    return this.elementVisible(page, `${this.rightSidebar}:not(.sidebar-open)`, 2000);
   }
 
   /**
    * Get help document URL
+   * @param page
    * @returns {Promise<string>}
    */
-  async getHelpDocumentURL() {
-    return this.getAttributeContent(this.helpDocumentURL, 'data');
+  async getHelpDocumentURL(page) {
+    return this.getAttributeContent(page, this.helpDocumentURL, 'data');
   }
 
   /**
    * Check if Submenu is visible
+   * @param page
    * @param parentSelector
    * @param linkSelector
    * @return {Promise<boolean>}
    */
-  async isSubmenuVisible(parentSelector, linkSelector) {
-    if (await this.elementNotVisible(`${parentSelector}.open`, 1000)) {
+  async isSubmenuVisible(page, parentSelector, linkSelector) {
+    if (await this.elementNotVisible(page, `${parentSelector}.open`, 1000)) {
       // Scroll before opening menu
-      await this.scrollTo(parentSelector);
+      await this.scrollTo(page, parentSelector);
 
       await Promise.all([
-        this.page.click(parentSelector),
-        this.waitForVisibleSelector(`${parentSelector}.open`),
+        page.click(parentSelector),
+        this.waitForVisibleSelector(page, `${parentSelector}.open`),
       ]);
 
-      await this.waitForVisibleSelector(`${parentSelector}.open`);
+      await this.waitForVisibleSelector(page, `${parentSelector}.open`);
     }
-    return this.elementVisible(linkSelector, 1000);
+    return this.elementVisible(page, linkSelector, 1000);
   }
 
   /**
    * Close growl message and return its value
+   * @param page
    * @return {Promise<string>}
    */
-  async closeGrowlMessage() {
-    const growlMessageText = await this.getTextContent(this.growlMessageBlock);
+  async closeGrowlMessage(page) {
+    const growlMessageText = await this.getTextContent(page, this.growlMessageBlock);
     await Promise.all([
-      this.page.$eval(this.growlCloseButton, e => e.click()),
-      this.page.waitForSelector(this.growlMessageBlock, {state: 'hidden'}),
+      page.$eval(this.growlCloseButton, e => e.click()),
+      page.waitForSelector(this.growlMessageBlock, {state: 'hidden'}),
     ]);
     return growlMessageText;
   }
 
   /**
    * Get error message from alert danger block
+   * @param page
    * @return {Promise<string>}
    */
-  getAlertDangerMessage() {
-    return this.getTextContent(this.alertDangerBlockParagraph);
+  getAlertDangerMessage(page) {
+    return this.getTextContent(page, this.alertDangerBlockParagraph);
   }
 };

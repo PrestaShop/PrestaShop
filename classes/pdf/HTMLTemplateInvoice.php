@@ -461,28 +461,6 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         return $breakdowns;
     }
 
-    /*
-    protected function getTaxLabel($tax_breakdowns)
-    {
-        $tax_label = '';
-        $all_taxes = array();
-
-        foreach ($tax_breakdowns as $type => $bd)
-            foreach ($bd as $line)
-                if(isset($line['id_tax']))
-                    $all_taxes[] = $line['id_tax'];
-
-        $taxes = array_unique($all_taxes);
-
-        foreach ($taxes as $id_tax) {
-            $tax = new Tax($id_tax);
-            $tax_label .= $tax->id.': '.$tax->name[$this->order->id_lang].' ('.$tax->rate.'%) ';
-        }
-
-        return $tax_label;
-    }
-    */
-
     /**
      * Returns the invoice template associated to the country iso_code.
      *

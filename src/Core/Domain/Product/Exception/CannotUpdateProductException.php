@@ -52,7 +52,7 @@ class CannotUpdateProductException extends ProductException
     const FAILED_UPDATE_TAGS = 40;
 
     /**
-     * When failed to assign product categories
+     * When product categories update fails
      */
     const FAILED_UPDATE_CATEGORIES = 50;
 
@@ -60,4 +60,19 @@ class CannotUpdateProductException extends ProductException
      * When product properties associated with customization fields update fails
      */
     const FAILED_UPDATE_CUSTOMIZATION_FIELDS = 60;
+
+    /**
+     * When product shipping options update fails
+     */
+    const FAILED_UPDATE_SHIPPING_OPTIONS = 70;
+
+    /**
+     * When product default supplier update fails
+     */
+    const FAILED_UPDATE_DEFAULT_SUPPLIER = 80;
+
+    /**
+     * When product default category update fails
+     */
+    const FAILED_UPDATE_DEFAULT_CATEGORY = 90;
 }

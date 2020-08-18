@@ -80,7 +80,6 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
         $refundData = $table->getColumnsHash();
 
         try {
-            $this->lastException = null;
             $command = $this->createIssuePartialRefundCommand(
                 $orderId,
                 $refundData,
@@ -91,7 +90,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
 
             $this->getCommandBus()->handle($command);
         } catch (OrderException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -115,7 +114,6 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
         $refundData = $table->getColumnsHash();
 
         try {
-            $this->lastException = null;
             $command = $this->createIssueStandardRefundCommand(
                 $orderId,
                 $refundData,
@@ -125,7 +123,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
 
             $this->getCommandBus()->handle($command);
         } catch (OrderException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -152,7 +150,6 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
         $refundData = $table->getColumnsHash();
 
         try {
-            $this->lastException = null;
             $command = $this->createIssueReturnProductCommand(
                 $orderId,
                 $refundData,
@@ -163,7 +160,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
 
             $this->getCommandBus()->handle($command);
         } catch (OrderException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -241,8 +238,8 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
             InvalidCancelProductException::class,
             InvalidCancelProductException::QUANTITY_TOO_HIGH
         );
-        if ($maxRefund !== $this->lastException->getRefundableQuantity()) {
-            throw new RuntimeException(sprintf('Invalid refundable quantity in exception, expected %s but got %s', $maxRefund, $this->lastException->getRefundableQuantity()));
+        if ($maxRefund !== $this->getLastException()->getRefundableQuantity()) {
+            throw new RuntimeException(sprintf('Invalid refundable quantity in exception, expected %s but got %s', $maxRefund, $this->getLastException()->getRefundableQuantity()));
         }
     }
 
@@ -514,7 +511,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
 
             $this->getCommandBus()->handle($command);
         } catch (OrderException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 }

@@ -122,7 +122,42 @@ class ProductConstraintException extends ProductException
     const INVALID_TAG = 180;
 
     /**
-     * When product customizability value is invalid
+     * When product additional time notes type is invalid
      */
-    const INVALID_CUSTOMIZABILITY = 190;
+    const INVALID_ADDITIONAL_TIME_NOTES_TYPE = 190;
+
+    /**
+     * When product width is invalid
+     */
+    const INVALID_WIDTH = 200;
+
+    /**
+     * When product height is invalid
+     */
+    const INVALID_HEIGHT = 210;
+
+    /**
+     * When product depth is invalid
+     */
+    const INVALID_DEPTH = 220;
+
+    /**
+     * When product weight is invalid
+     */
+    const INVALID_WEIGHT = 230;
+
+    /**
+     * When product additional shipping cost is invalid
+     */
+    const INVALID_ADDITIONAL_SHIPPING_COST = 240;
+
+    /**
+     * When product delivery time in stock notes are invalid
+     */
+    const INVALID_DELIVERY_TIME_IN_STOCK_NOTES = 250;
+
+    /**
+     * When product delivery time out of stock notes are invalid
+     */
+    const INVALID_DELIVERY_TIME_OUT_OF_STOCK_NOTES = 260;
 }

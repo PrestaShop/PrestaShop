@@ -2,9 +2,9 @@ require('module-alias/register');
 // Importing page
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class Product extends BOBasePage {
-  constructor(page) {
-    super(page);
+class Product extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Products •';
     this.productDeletedSuccessfulMessage = 'Product successfully deleted.';
@@ -78,133 +78,146 @@ module.exports = class Product extends BOBasePage {
    */
   /**
    * Filter products Min - Max
+   * @param page
    * @param min
    * @param max
    * @return {Promise<void>}
    */
-  async filterIDProducts(min, max) {
-    await this.page.type(this.productFilterIDMinInput, min.toString());
-    await this.page.type(this.productFilterIDMaxInput, max.toString());
-    await this.clickAndWaitForNavigation(this.filterSearchButton);
+  async filterIDProducts(page, min, max) {
+    await page.type(this.productFilterIDMinInput, min.toString());
+    await page.type(this.productFilterIDMaxInput, max.toString());
+    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
 
   /**
    * Get Product ID
+   * @param page
    * @param row
    * @returns {Promise<string>}
    */
-  async getProductIDFromList(row) {
-    return this.getNumberFromText(this.productsListTableColumnID(row));
+  async getProductIDFromList(page, row) {
+    return this.getNumberFromText(page, this.productsListTableColumnID(row));
   }
 
   /**
    * Get Product Name
+   * @param page
    * @param row
    * @returns {Promise<string>}
    */
-  async getProductNameFromList(row) {
-    return this.getTextContent(this.productsListTableColumnName(row));
+  async getProductNameFromList(page, row) {
+    return this.getTextContent(page, this.productsListTableColumnName(row));
   }
 
   /**
    * Get Product Reference
+   * @param page
    * @param row
    * @returns {Promise<string>}
    */
-  async getProductReferenceFromList(row) {
-    return this.getTextContent(this.productsListTableColumnReference(row));
+  async getProductReferenceFromList(page, row) {
+    return this.getTextContent(page, this.productsListTableColumnReference(row));
   }
 
   /**
    * Get Product Category
+   * @param page
    * @param row
    * @returns {Promise<string>}
    */
-  async getProductCategoryFromList(row) {
-    return this.getTextContent(this.productsListTableColumnCategory(row));
+  async getProductCategoryFromList(page, row) {
+    return this.getTextContent(page, this.productsListTableColumnCategory(row));
   }
 
   /**
    * Filter price Min - Max
+   * @param page
    * @param min
    * @param max
    * @return {Promise<void>}
    */
-  async filterPriceProducts(min, max) {
-    await this.page.type(this.productFilterPriceMinInput, min.toString());
-    await this.page.type(this.productFilterPriceMaxInput, max.toString());
-    await this.clickAndWaitForNavigation(this.filterSearchButton);
+  async filterPriceProducts(page, min, max) {
+    await page.type(this.productFilterPriceMinInput, min.toString());
+    await page.type(this.productFilterPriceMaxInput, max.toString());
+    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
 
   /**
    * Get Product Price
+   * @param page
    * @param row
    * @param withTaxes
    * @returns {Promise<number>}
    */
-  async getProductPriceFromList(row, withTaxes) {
+  async getProductPriceFromList(page, row, withTaxes) {
     const selector = withTaxes ? this.productsListTableColumnPriceTTC : this.productsListTableColumnPrice;
-    const text = await this.getTextContent(selector(row));
+    const text = await this.getTextContent(page, selector(row));
     const price = /\d+(\.\d+)?/g.exec(text).toString();
     return parseFloat(price);
   }
 
   /**
    * Filter Quantity Min - Max
+   * @param page
    * @param min
    * @param max
    * @return {Promise<void>}
    */
-  async filterQuantityProducts(min, max) {
-    await this.page.type(this.productFilterQuantityMinInput, min.toString());
-    await this.page.type(this.productFilterQuantityMaxInput, max.toString());
-    await this.clickAndWaitForNavigation(this.filterSearchButton);
+  async filterQuantityProducts(page, min, max) {
+    await page.type(this.productFilterQuantityMinInput, min.toString());
+    await page.type(this.productFilterQuantityMaxInput, max.toString());
+    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
 
   /**
    * Get Product Quantity
+   * @param page
    * @param row
    * @returns {Promise<string>}
    */
-  async getProductQuantityFromList(row) {
-    return this.getNumberFromText(this.productsListTableColumnQuantity(row));
+  async getProductQuantityFromList(page, row) {
+    return this.getNumberFromText(page, this.productsListTableColumnQuantity(row));
   }
 
   /**
    * Get Product Status
+   * @param page
    * @param row
    * @returns {Promise<string>}
    */
-  async getProductStatusFromList(row) {
-    return this.getTextContent(this.productsListTableColumnStatus(row));
+  async getProductStatusFromList(page, row) {
+    return this.getTextContent(page, this.productsListTableColumnStatus(row));
   }
 
   /**
    * Filter products
+   * @param page
    * @param filterBy
    * @param value
    * @param filterType
    * @return {Promise<void>}
    */
-  async filterProducts(filterBy, value = '', filterType = 'input') {
+  async filterProducts(page, filterBy, value = '', filterType = 'input') {
     switch (filterType) {
       case 'input':
         switch (filterBy) {
           case 'id_product':
-            await this.filterIDProducts(value.min, value.max);
+            await this.filterIDProducts(page, value.min, value.max);
             break;
           case 'price':
-            await this.filterPriceProducts(value.min, value.max);
+            await this.filterPriceProducts(page, value.min, value.max);
             break;
           case 'sav_quantity':
-            await this.filterQuantityProducts(value.min, value.max);
+            await this.filterQuantityProducts(page, value.min, value.max);
             break;
           default:
-            await this.page.type(this.productFilterInput(filterBy), value);
+            await page.type(this.productFilterInput(filterBy), value);
         }
         break;
       case 'select':
-        await this.selectByVisibleText(this.productFilterSelect(filterBy),
+        await this.selectByVisibleText(
+          page,
+          this.productFilterSelect(filterBy),
           value ? 'Active' : 'Inactive',
         );
         break;
@@ -212,31 +225,32 @@ module.exports = class Product extends BOBasePage {
       // Do nothing
     }
     // click on search
-    await this.clickAndWaitForNavigation(this.filterSearchButton);
+    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
 
   /**
    * Get Text Column
+   * @param page
    * @param columnName
    * @param row
    * @returns {Promise<string|number>}
    */
-  async getTextColumn(columnName, row) {
+  async getTextColumn(page, columnName, row) {
     switch (columnName) {
       case 'id_product':
-        return this.getProductIDFromList(row);
+        return this.getProductIDFromList(page, row);
       case 'name':
-        return this.getProductNameFromList(row);
+        return this.getProductNameFromList(page, row);
       case 'reference':
-        return this.getProductReferenceFromList(row);
+        return this.getProductReferenceFromList(page, row);
       case 'name_category':
-        return this.getProductCategoryFromList(row);
+        return this.getProductCategoryFromList(page, row);
       case 'price':
-        return this.getProductPriceFromList(row);
+        return this.getProductPriceFromList(page, row);
       case 'sav_quantity':
-        return this.getProductQuantityFromList(row);
+        return this.getProductQuantityFromList(page, row);
       case 'active':
-        return this.getProductStatusFromList(row);
+        return this.getProductStatusFromList(page, row);
       default:
       // Do nothing
     }
@@ -245,14 +259,15 @@ module.exports = class Product extends BOBasePage {
 
   /**
    * Get content from all rows
+   * @param page
    * @param column
    * @return {Promise<[]>}
    */
-  async getAllRowsColumnContent(column) {
-    const rowsNumber = await this.getNumberOfProductsFromList();
+  async getAllRowsColumnContent(page, column) {
+    const rowsNumber = await this.getNumberOfProductsFromList(page);
     const allRowsContentTable = [];
     for (let i = 1; i <= rowsNumber; i++) {
-      const rowContent = await this.getTextColumn(column, i);
+      const rowContent = await this.getTextColumn(page, column, i);
       await allRowsContentTable.push(rowContent);
     }
     return allRowsContentTable;
@@ -260,60 +275,69 @@ module.exports = class Product extends BOBasePage {
 
   /**
    * Get number of products displayed in list
+   * @param page
    * @returns {Promise<number>}
    */
-  async getNumberOfProductsFromList() {
-    const found = await this.elementVisible(this.paginationNextLink, 1000);
+  async getNumberOfProductsFromList(page) {
+    const found = await this.elementVisible(page, this.paginationNextLink, 1000);
     // In case we filter products and there is only one page, link next from pagination does not appear
-    if (!found) return (await this.page.$$(this.productRow)).length;
+    if (!found) {
+      return (await page.$$(this.productRow)).length;
+    }
 
-    const footerText = await this.getTextContent(this.productNumberBloc);
+    const footerText = await this.getTextContent(page, this.productNumberBloc);
     const numberOfProduct = /\d+/g.exec(footerText.match(/out of ([0-9]+)/)).toString();
     return parseInt(numberOfProduct, 10);
   }
 
   /**
    * Get number of products displayed on the page
+   * @param page
    * @returns {Promise<number>}
    */
-  async getNumberOfProductsOnPage() {
-    return (await this.page.$$(this.productRow)).length;
+  async getNumberOfProductsOnPage(page) {
+    return (await page.$$(this.productRow)).length;
   }
 
   /**
    * Reset input filters
+   * @param page
    * @return {Promise<void>}
    */
-  async resetFilter() {
-    if (!(await this.elementNotVisible(this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(this.filterResetButton);
+  async resetFilter(page) {
+    if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
+      await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
-    await this.waitForVisibleSelector(this.filterSearchButton, 2000);
+    await this.waitForVisibleSelector(page, this.filterSearchButton, 2000);
   }
 
   /**
    * Reset Filter And get number of elements in list
+   * @param page
    * @returns {Promise<number>}
    */
-  async resetAndGetNumberOfLines() {
-    await this.resetFilter();
-    return this.getNumberOfProductsFromList();
+  async resetAndGetNumberOfLines(page) {
+    await this.resetFilter(page);
+    return this.getNumberOfProductsFromList(page);
   }
 
   /**
    * Filter by Category from Dropdown
+   * @param page
    * @param value
    * @return {Promise<void>}
    */
-  async filterProductsByCategory(value = 'home') {
+  async filterProductsByCategory(page, value = 'home') {
     // Click and wait to be open
-    await this.page.click(this.filterByCategoriesButton);
-    await this.waitForVisibleSelector(`${this.filterByCategoriesButton}[aria-expanded='true']`);
+    await page.click(this.filterByCategoriesButton);
+    await this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='true']`);
+
     // Click on expand button
-    await this.page.click(this.filterByCategoriesExpandButton);
+    await page.click(this.filterByCategoriesExpandButton);
+
     // Choose category to filter with
     const args = {allCategoriesSelector: this.filterByCategoriesCategoryLabel, val: value};
-    const found = await this.page.evaluate(async (args) => {
+    const found = await page.evaluate(async (args) => {
       /* eslint-env browser */
       const allCategories = [...await document.querySelectorAll(args.allCategoriesSelector)];
       const category = await allCategories.find(el => el.textContent.includes(args.val));
@@ -323,106 +347,120 @@ module.exports = class Product extends BOBasePage {
       await category.querySelector('input').click();
       return true;
     }, args);
+
     if (!found) {
       throw new Error(`${value} not found as a category`);
     }
-    await this.page.waitForNavigation();
+    await page.waitForNavigation();
   }
 
   /**
    * Reset DropDown Filter Category
+   * @param page
    * @return {Promise<void>}
    */
-  async resetFilterCategory() {
+  async resetFilterCategory(page) {
     // Click and wait to be open
-    await this.page.click(this.filterByCategoriesButton);
-    await this.waitForVisibleSelector(`${this.filterByCategoriesButton}[aria-expanded='true']`);
+    await page.click(this.filterByCategoriesButton);
+    await this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='true']`);
     await Promise.all([
-      this.waitForVisibleSelector(`${this.filterByCategoriesButton}[aria-expanded='false']`),
-      this.clickAndWaitForNavigation(this.filterByCategoriesUnselectButton),
+      this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='false']`),
+      this.clickAndWaitForNavigation(page, this.filterByCategoriesUnselectButton),
     ]);
   }
 
   /**
    * GOTO form Add Product
+   * @param page
    * @return {Promise<void>}
    */
-  async goToAddProductPage() {
-    await this.clickAndWaitForNavigation(this.addProductButton);
+  async goToAddProductPage(page) {
+    await this.clickAndWaitForNavigation(page, this.addProductButton);
   }
 
   /**
    * GOTO edit product page from row
+   * @param page
    * @param row
    * @returns {Promise<void>}
    */
-  async goToEditProductPage(row) {
-    await this.clickAndWaitForNavigation(this.productRowEditLink(row));
+  async goToEditProductPage(page, row) {
+    await this.clickAndWaitForNavigation(page, this.productRowEditLink(row));
   }
 
   /**
    * Delete product with dropdown Menu
+   * @param page
    * @param productData
    * @returns {Promise<string>}
    */
-  async deleteProduct(productData) {
+  async deleteProduct(page, productData) {
     // Filter By reference first
-    await this.filterProducts('reference', productData.reference);
+    await this.filterProducts(page, 'reference', productData.reference);
+
     // Then delete first product and only product shown
     await Promise.all([
-      this.waitForVisibleSelector(`${this.dropdownToggleButton(1)}[aria-expanded='true']`),
-      this.page.click(this.dropdownToggleButton(1)),
+      this.waitForVisibleSelector(page, `${this.dropdownToggleButton(1)}[aria-expanded='true']`),
+      page.click(this.dropdownToggleButton(1)),
     ]);
+
     await Promise.all([
-      this.waitForVisibleSelector(this.catalogDeletionModalDialog),
-      this.page.click(this.dropdownMenuDeleteLink(1)),
+      this.waitForVisibleSelector(page, this.catalogDeletionModalDialog),
+      page.click(this.dropdownMenuDeleteLink(1)),
     ]);
-    await this.clickAndWaitForNavigation(this.modalDialogDeleteNowButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+
+    await this.clickAndWaitForNavigation(page, this.modalDialogDeleteNowButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
    * Delete All products with Bulk Actions
+   * @param page
    * @returns {Promise<string>}
    */
-  async deleteAllProductsWithBulkActions() {
+  async deleteAllProductsWithBulkActions(page) {
     // Then delete first product and only product shown
     await Promise.all([
-      this.waitForVisibleSelector(this.productBulkMenuButton),
-      this.page.click(this.selectAllBulkCheckboxLabel),
+      this.waitForVisibleSelector(page, this.productBulkMenuButton),
+      page.click(this.selectAllBulkCheckboxLabel),
     ]);
+
     await Promise.all([
-      this.waitForVisibleSelector(`${this.productBulkMenuButton}[aria-expanded='true']`),
-      this.page.click(this.productBulkMenuButton),
+      this.waitForVisibleSelector(page, `${this.productBulkMenuButton}[aria-expanded='true']`),
+      page.click(this.productBulkMenuButton),
     ]);
+
     await Promise.all([
-      this.waitForVisibleSelector(this.catalogDeletionModalDialog),
-      this.page.click(this.productBulkDeleteLink),
+      this.waitForVisibleSelector(page, this.catalogDeletionModalDialog),
+      page.click(this.productBulkDeleteLink),
     ]);
-    await this.clickAndWaitForNavigation(this.modalDialogDeleteNowButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+
+    await this.clickAndWaitForNavigation(page, this.modalDialogDeleteNowButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
    * Get Value of column Displayed
+   * @param page
    * @param row, row in table
    * @return {Promise<boolean>}
    */
-  async getToggleColumnValue(row) {
-    return this.elementVisible(this.productsListTableColumnStatusEnabled(row), 100);
+  async getToggleColumnValue(page, row) {
+    return this.elementVisible(page, this.productsListTableColumnStatusEnabled(row), 100);
   }
 
   /**
    * Quick edit toggle column value
+   * @param page
    * @param row, row in table
    * @param valueWanted, Value wanted in column
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
-  async updateToggleColumnValue(row, valueWanted = true) {
-    await this.waitForVisibleSelector(this.productsListTableColumnStatus(row), 2000);
-    const actualValue = await this.getToggleColumnValue(row);
+  async updateToggleColumnValue(page, row, valueWanted = true) {
+    await this.waitForVisibleSelector(page, this.productsListTableColumnStatus(row), 2000);
+    const actualValue = await this.getToggleColumnValue(page, row);
     if (actualValue !== valueWanted) {
-      await this.clickAndWaitForNavigation(this.productsListTableColumnStatus(row));
+      await this.clickAndWaitForNavigation(page, this.productsListTableColumnStatus(row));
       return true;
     }
     return false;
@@ -430,67 +468,76 @@ module.exports = class Product extends BOBasePage {
 
   /**
    * Go to product page
+   * @param page
    * @param row
    * @returns {Promise<void>}
    */
-  async goToProductPage(row = 1) {
-    await this.waitForVisibleSelector(this.productsListTableColumnName(row));
-    await this.clickAndWaitForNavigation(this.productsListTableColumnName(row));
+  async goToProductPage(page, row = 1) {
+    await this.waitForVisibleSelector(page, this.productsListTableColumnName(row));
+    await this.clickAndWaitForNavigation(page, this.productsListTableColumnName(row));
   }
 
   /* Sort methods */
   /**
    * Sort table by clicking on column name
+   * @param page
    * @param sortBy, column to sort with
    * @param sortDirection, asc or desc
    * @return {Promise<void>}
    */
-  async sortTable(sortBy, sortDirection = 'asc') {
+  async sortTable(page, sortBy, sortDirection = 'asc') {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
     let i = 0;
-    while (await this.elementNotVisible(sortColumnDiv, 500) && i < 2) {
-      await this.page.hover(this.sortColumnDiv(sortBy));
-      await this.clickAndWaitForNavigation(sortColumnSpanButton);
+
+    while (await this.elementNotVisible(page, sortColumnDiv, 500) && i < 2) {
+      await page.hover(this.sortColumnDiv(sortBy));
+      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
     }
-    await this.waitForVisibleSelector(sortColumnDiv);
+    await this.waitForVisibleSelector(page, sortColumnDiv);
   }
 
   /* Pagination methods */
   /**
    * Get pagination label
+   * @param page
    * @return {Promise<string>}
    */
-  getPaginationLabel() {
-    return this.getTextContent(this.paginationLabel);
+  getPaginationLabel(page) {
+    return this.getTextContent(page, this.paginationLabel);
   }
 
   /**
    * Select pagination limit
+   * @param page
    * @param number
    * @returns {Promise<string>}
    */
-  async selectPaginationLimit(number) {
-    await this.selectByVisibleText(this.paginationLimitSelect, number);
-    return this.getPaginationLabel();
+  async selectPaginationLimit(page, number) {
+    await this.selectByVisibleText(page, this.paginationLimitSelect, number);
+    return this.getPaginationLabel(page);
   }
 
   /**
    * Click on next
+   * @param page
    * @returns {Promise<string>}
    */
-  async paginationNext() {
-    await this.clickAndWaitForNavigation(this.paginationNextLink);
-    return this.getPaginationLabel();
+  async paginationNext(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    return this.getPaginationLabel(page);
   }
 
   /**
    * Click on previous
+   * @param page
    * @returns {Promise<string>}
    */
-  async paginationPrevious() {
-    await this.clickAndWaitForNavigation(this.paginationPreviousLink);
-    return this.getPaginationLabel();
+  async paginationPrevious(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    return this.getPaginationLabel(page);
   }
-};
+}
+
+module.exports = new Product();

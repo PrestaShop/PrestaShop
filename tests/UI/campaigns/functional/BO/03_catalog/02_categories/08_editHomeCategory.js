@@ -8,10 +8,9 @@ const files = require('@utils/files');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const CategoriesPage = require('@pages/BO/catalog/categories');
-const EditCategoryPage = require('@pages/BO/catalog/categories/add');
+const dashboardPage = require('@pages/BO/dashboard');
+const categoriesPage = require('@pages/BO/catalog/categories');
+const editCategoryPage = require('@pages/BO/catalog/categories/add');
 
 // Import data
 const CategoryFaker = require('@data/faker/category');
@@ -25,24 +24,12 @@ let browserContext;
 let page;
 const editCategoryData = new CategoryFaker({name: 'Home'});
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    categoriesPage: new CategoriesPage(page),
-    editCategoryPage: new EditCategoryPage(page),
-  };
-};
-
 // Edit home category
 describe('Edit home category', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
@@ -50,35 +37,37 @@ describe('Edit home category', async () => {
     await files.deleteFile(`${editCategoryData.name}.jpg`);
   });
 
-  // Login into BO and go to categories page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to \'Catalog > Categories\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.catalogParentLink,
-      this.pageObjects.dashboardPage.categoriesLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.catalogParentLink,
+      dashboardPage.categoriesLink,
     );
 
-    await this.pageObjects.categoriesPage.closeSfToolBar();
+    await categoriesPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.categoriesPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.categoriesPage.pageTitle);
+    const pageTitle = await categoriesPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(categoriesPage.pageTitle);
   });
 
   it('should go to Edit Home category page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEditHomePage', baseContext);
 
-    await this.pageObjects.categoriesPage.goToEditHomeCategoryPage();
-    const pageTitle = await this.pageObjects.editCategoryPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.editCategoryPage.pageTitleEdit);
+    await categoriesPage.goToEditHomeCategoryPage(page);
+    const pageTitle = await editCategoryPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(editCategoryPage.pageTitleEdit);
   });
 
   it('should update the category', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'updateCategory', baseContext);
 
-    const textResult = await this.pageObjects.editCategoryPage.editHomeCategory(editCategoryData);
-    await expect(textResult).to.equal(this.pageObjects.categoriesPage.successfulUpdateMessage);
+    const textResult = await editCategoryPage.editHomeCategory(page, editCategoryData);
+    await expect(textResult).to.equal(categoriesPage.successfulUpdateMessage);
   });
 });

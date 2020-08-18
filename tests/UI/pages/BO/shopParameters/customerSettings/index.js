@@ -2,14 +2,17 @@ require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 const {options} = require('@pages/BO/shopParameters/customerSettings/options.js');
 
-module.exports = class customerSettings extends BOBasePage {
-  constructor(page) {
-    super(page);
+class CustomerSettings extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Customers •';
     this.successfulUpdateMessage = 'Update successful';
 
-    // Selectors
+    // Header selectors
+    this.titlesSubtab = '#subtab-AdminGenders';
+
+    // Form selectors
     this.redisplayCartAtLoginLabel = toggle => `label[for='form_redisplay_cart_at_login_${toggle}']`;
     this.enablePartnerOfferLabel = toggle => `label[for='form_enable_offers_${toggle}']`;
     this.sendEmailAfterRegistrationLabel = toggle => 'label'
@@ -22,13 +25,24 @@ module.exports = class customerSettings extends BOBasePage {
   /*
     Methods
   */
+
+  /**
+   * Click on subtitle page
+   * @param page
+   * @return {Promise<void>}
+   */
+  async goToTitlesPage(page) {
+    await this.clickAndWaitForNavigation(page, this.titlesSubtab);
+  }
+
   /**
    * Set option status
+   * @param page
    * @param option, option to enable or disable
    * @param toEnable, value wanted
    * @return {Promise<string>}
    */
-  async setOptionStatus(option, toEnable = true) {
+  async setOptionStatus(page, option, toEnable = true) {
     let selector;
     switch (option) {
       case options.OPTION_B2B:
@@ -49,8 +63,10 @@ module.exports = class customerSettings extends BOBasePage {
       default:
         throw new Error(`${option} was not found`);
     }
-    await this.waitForSelectorAndClick(selector(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveGeneralFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
+    await this.waitForSelectorAndClick(page, selector(toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
-};
+}
+
+module.exports = new CustomerSettings();

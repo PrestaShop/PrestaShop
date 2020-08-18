@@ -2,47 +2,55 @@ body,
 html {
   height: 100%;
 }
+
 body {
-  direction: ltr;
-  font-family: 'Noto Sans', sans-serif;
+  font-family: "Noto Sans", sans-serif;
   font-size: $base-font-size;
+  line-height: 1.25em;
+  color: $gray-darker;
+  direction: ltr;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: $gray-darker;
-  line-height: 1.25em;
 }
+
 ul {
-  list-style: none;
   padding-left: 0;
+  list-style: none;
 }
+
 a:hover {
   color: $brand-primary;
   text-decoration: none;
 }
+
 p {
   font-size: 0.9375rem;
-  color: $gray;
   font-weight: 400;
+  color: $gray;
 }
+
 .dropdown-item:focus,
 .dropdown-item:hover {
   background: none;
 }
+
 .color,
 .custom-checkbox input[type="checkbox"] + span.color {
+  display: inline-block;
   width: 1.25rem;
   height: 1.25rem;
-  display: inline-block;
   margin: 0.3125rem;
-  @include box-shadow-light;
-  border: 1px solid rgba(0,0,0,0.05);
   cursor: pointer;
   background-size: contain;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  @include box-shadow-light();
+
   &.active,
   &:hover {
     border: 2px solid $gray-darker;
   }
 }
+
 .facet-label {
   &.active,
   &:hover {
@@ -51,155 +59,197 @@ p {
     }
   }
 }
+
 .h1,
 .h2,
 .h3 {
-  text-transform: uppercase;
   color: $gray-darker;
+  text-transform: uppercase;
 }
+
 .h4 {
   font-weight: $headings-font-weight;
   color: $gray-darker;
 }
+
 .btn-primary,
 .btn-secondary {
-  @include box-shadow-light;
-  text-transform: uppercase;
-  font-weight: 600;
+  @include box-shadow-light();
   padding: 0.5rem 1.25rem;
+  font-weight: 600;
+  text-transform: uppercase;
+
   .material-icons {
     margin-right: $small-space;
   }
 }
+
 .btn-tertiary {
   @extend .btn-secondary;
-  background-color: #F7F7F7;
-  text-transform: lowercase;
-  color: $gray;
-  box-shadow: 0.0625rem 0.0625rem 0.0625rem 0 rgba(0, 0, 0, 0.1);
   padding: 0.25rem;
   margin: 0.25rem 0;
-  font-weight: 400;
   font-size: $font-size-sm;
+  font-weight: 400;
+  color: $gray;
+  text-transform: lowercase;
+  background-color: #f7f7f7;
+  box-shadow: 0.0625rem 0.0625rem 0.0625rem 0 rgba(0, 0, 0, 0.1);
+
   .material-icons {
     font-size: $base-font-size;
   }
+
   &:hover {
-    box-shadow: 0.0625rem 0.0625rem 0.0625rem 0 rgba(0, 0, 0, 0.2);
     border: $input-btn-border-width solid rgba(35, 35, 35, 0.2);
+    box-shadow: 0.0625rem 0.0625rem 0.0625rem 0 rgba(0, 0, 0, 0.2);
   }
 }
+
 .btn-unstyle {
-  background-color: transparent;
-  border: none;
   padding: 0;
   text-align: inherit;
+  background-color: transparent;
+  border: none;
+
   &:focus {
     outline: 0;
+
     .expand-more {
       color: $brand-primary;
     }
   }
 }
+
 .card {
-  @include box-shadow;
+  @include box-shadow();
 }
-label ,.label {
+
+label,
+.label {
+  font-size: 0.875rem;
   color: $gray-darker;
   text-align: right;
-  font-size: 0.875rem;
 }
-small.label, small.value {
+
+small.label,
+small.value {
   font-size: 0.8125rem;
 }
+
 .form-control-label {
   padding-top: 0.625rem;
 }
+
 .form-control {
-  background: $gray-light;
-  color: $gray;
-  border: $input-btn-border-width solid $input-border-color;
   padding: 0.5rem 1rem;
+  color: $gray;
+  background: $gray-light;
+  border: $input-btn-border-width solid $input-border-color;
+
   &:focus {
-    background-color: white;
-    outline: 0.1875rem solid $brand-primary;
     color: $gray-darker;
+    background-color: #fff;
+    outline: 0.1875rem solid $brand-primary;
   }
 }
+
 .input-group {
   &.focus {
     outline: 0.1875rem solid $brand-primary;
   }
+
   .form-control:focus {
     outline: none;
   }
+
   .input-group-btn {
     height: 100%;
+
     > .btn {
+      padding: 0.625rem 1rem;
+      margin-left: 0;
+      font-size: 0.6875rem;
+      font-weight: 500;
+      color: #fff;
+      text-transform: uppercase;
       border: 0;
       box-shadow: none;
-      color: #ffffff;
-      font-size: 0.6875rem;
-      font-weight: normal;
-      margin-left: 0;
-      padding: 0.625rem 1rem;
-      text-transform: uppercase;
-      &[data-action="show-password"]{
+      &[data-action="show-password"] {
+        padding: 0.78rem 1rem;
         background: $gray;
-        padding: .78rem 1rem;
       }
     }
   }
 }
-input, textarea {
+
+input,
+textarea {
+  /* stylelint-disable */
   &::-webkit-input-placeholder {
     color: $gray;
   }
+
   &::-moz-placeholder {
     color: $gray;
   }
+
   &:-ms-input-placeholder {
     color: $gray;
   }
+
   &:-moz-placeholder {
     color: $gray;
   }
+
   &:active {
     &::-webkit-input-placeholder {
       color: $gray-darker;
     }
+
     &::-moz-placeholder {
       color: $gray-darker;
     }
+
     &:-ms-input-placeholder {
       color: $gray-darker;
     }
+
     &:-moz-placeholder {
       color: $gray-darker;
     }
   }
+  /* stylelint-enable */
 }
 .form-control-select {
   height: 2.625rem;
+  padding: 0 0.5rem;
+  background:
+    $gray-light
+    url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAD9CzEMAAAAPklEQVR4Ae3TwREAEBQD0V/6do4SXPZg7EsBhsQ8IEmSMOsiuEfg3gL3oXC7wK0bd1G4o8X9F4yIkyQfSrIByQBjp7QuND8AAAAASUVORK5CYII=")
+    no-repeat scroll right 0.5rem center / 1.25rem 1.25rem;
+  /* stylelint-disable */
   -moz-appearance: none;
   -webkit-appearance: none;
-  background: $gray-light url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAD9CzEMAAAAPklEQVR4Ae3TwREAEBQD0V/6do4SXPZg7EsBhsQ8IEmSMOsiuEfg3gL3oXC7wK0bd1G4o8X9F4yIkyQfSrIByQBjp7QuND8AAAAASUVORK5CYII=") no-repeat scroll right 0.5rem center / 1.25rem 1.25rem;
-  padding: 0 0.5rem;
+  /* stylelint-enable */
 }
+
 .form-control-valign {
   padding-top: 0.5rem;
 }
+
 .form-control-comment {
-  font-size: 0.875rem;
   padding-top: 0.5rem;
+  font-size: 0.875rem;
   color: $gray;
 }
+
 .form-control-submit {
   &.disabled {
+    color: #fff;
     background: $brand-info;
-    color: white;
   }
 }
+
 .form-group {
   &.has-error {
     input,
@@ -211,68 +261,81 @@ input, textarea {
     }
   }
 }
+
 .group-span-filestyle {
   label {
     margin: 0;
   }
+
   .btn-default {
-    background: $brand-primary;
-    color: white;
-    text-transform: uppercase;
-    border-radius: 0;
-    font-size: 0.875rem;
     padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    color: #fff;
+    text-transform: uppercase;
+    background: $brand-primary;
+    border-radius: 0;
   }
 }
+
 .bootstrap-touchspin {
-  width: auto;
-  float: left;
   display: inline-block;
-  @include box-shadow-light;
+  float: left;
+  width: auto;
+  @include box-shadow-light();
+
   input {
     &:focus {
       outline: none;
     }
+
     &.form-control,
     &.input-group {
-      color: $gray-darker;
-      background-color: white;
+      float: left;
+      width: 3rem;
       height: $input-height;
       padding: 0.175rem 0.5rem;
-      width: 3rem;
+      color: $gray-darker;
+      background-color: #fff;
       border: $input-btn-border-width solid $input-border-color;
-      float: left;
     }
   }
+
   .btn-touchspin {
     @extend .btn-default;
-    background-color: white;
-    border: $input-btn-border-width solid $input-border-color;
     height: $input-height / 2 + 0.0625rem;
+    background-color: #fff;
+    border: $input-btn-border-width solid $input-border-color;
+
     &:hover {
       background-color: $gray-light;
     }
   }
+
   .input-group-btn-vertical {
-    color: $gray-darker;
-    width: auto;
     float: left;
+    width: auto;
+    color: $gray-darker;
+
     .bootstrap-touchspin-up {
       border-radius: 0;
     }
+
     .bootstrap-touchspin-down {
       border-radius: 0;
     }
+
     .touchspin-up {
-      &:after {
+      &::after {
         content: "\E5CE";
       }
     }
+
     .touchspin-down {
-      &:after {
+      &::after {
         content: "\E5CF";
       }
     }
+
     i {
       top: 0.0625rem;
       left: 0.1875rem;
@@ -280,52 +343,58 @@ input, textarea {
     }
   }
 }
+
 .custom-radio {
-  display: inline-block;
   position: relative;
+  display: inline-block;
   width: 20px;
   height: 20px;
+  margin-right: 1.25rem;
   vertical-align: middle;
   cursor: pointer;
-  border-radius: 50%;
+  background: #fff;
   border: $gray 2px solid;
-  background: white;
-  margin-right: 1.25rem;
+  border-radius: 50%;
+
   input[type="radio"] {
-    opacity: 0;
     cursor: pointer;
-  }
-  input[type="radio"] {
+    opacity: 0;
+
     &:checked + span {
+      position: absolute;
+      top: 0.125rem;
+      left: 0.125rem;
       display: block;
-      background-color: $brand-primary;
       width: 12px;
       height: 12px;
+      background-color: $brand-primary;
       border-radius: 50%;
-      position: absolute;
-      left: 0.125rem;
-      top: 0.125rem;
     }
+
     &:focus + span {
       border-color: $gray;
     }
   }
 }
+
 .custom-checkbox {
   position: relative;
+
   input[type="checkbox"] {
-    margin-top: 0.25rem;
-    opacity: 0;
-    cursor: pointer;
     position: absolute;
+    margin-top: 0.25rem;
+    cursor: pointer;
+    opacity: 0;
+
     + span {
-      margin-right: 3px;
       display: inline-block;
       width: 0.9375rem;
       height: 0.9375rem;
+      margin-right: 3px;
       vertical-align: middle;
       cursor: pointer;
       border: 2px $gray-darker solid;
+
       .checkbox-checked {
         display: none;
         margin: -0.25rem -0.125rem;
@@ -333,123 +402,148 @@ input, textarea {
         color: $gray-darker;
       }
     }
+
     &:checked + span {
       .checkbox-checked {
         display: block;
       }
     }
+
     &:focus + span {
       border-color: $gray;
     }
   }
+
   label {
     text-align: left;
   }
 }
+
 .text-muted {
   font-size: 0.875rem;
 }
+
 .done {
-  color: $brand-success;
   display: inline-block;
   padding: 0 0.8125rem;
   margin-right: 1.563rem;
+  color: $brand-success;
 }
+
 .thumb-mask {
   > .mask {
     position: relative;
     width: 3.438rem;
     height: 3.438rem;
+    margin: $small-space 0;
     overflow: hidden;
     border: $gray-light 1px solid;
-    margin: $small-space 0;
+
     img {
       width: 55px;
       height: 55px;
     }
   }
 }
+
 .definition-list {
   dl {
     display: flex;
     flex-wrap: wrap;
+
     dt {
-      font-weight: normal;
+      font-weight: 500;
     }
+
     dd,
     dt {
       flex: 0 0 45%;
-      background: $gray-light;
       padding: 0.625rem;
       margin: 0.125rem;
+      background: $gray-light;
+
       &:nth-of-type(even) {
         background: $gray-lighter;
       }
     }
   }
 }
+
 .help-block {
   margin-top: $small-space;
 }
+
 .btn.disabled,
 .btn.disabled:hover {
   background: $gray;
 }
+
 .alert-warning {
   .material-icons {
-    color: $warning;
-    font-size: 2rem;
-    margin-right: $small-space;
     padding-top: $extra-small-space;
+    margin-right: $small-space;
+    font-size: 2rem;
+    color: $warning;
   }
+
   .alert-text {
-    font-size: 0.9375rem;
     padding-top: $small-space;
+    font-size: 0.9375rem;
   }
+
   .alert-link {
-    border-radius: 2px;
-    border-width: 2px;
-    margin-left: $small-space;
     padding: $extra-small-space $medium-space;
-    font-weight: 600;
+    margin-left: $small-space;
     font-size: 0.8125rem;
+    font-weight: 600;
     color: $btn-tertiary-color;
+    border-width: 2px;
+    border-radius: 2px;
   }
+
   ul li:last-child .alert-link {
-    color: white;
+    color: #fff;
   }
+
   .warning-buttons {
     margin-top: $extra-small-space;
   }
 }
+
 .btn-warning {
-  @include transition(all .4s ease-in-out);
+  @include transition(all 0.4s ease-in-out);
 }
+
 .btn-tertiary-outline {
   color: $btn-tertiary-color;
-  background-image: none;
   background-color: transparent;
-  border-color: $btn-tertiary-color;
+  background-image: none;
   border: 0.15rem solid $btn-tertiary-color;
-  @include transition(all .4s ease-in-out);
+  border-color: $btn-tertiary-color;
+  @include transition(all 0.4s ease-in-out);
+
   &:hover {
-    border-color: $btn-tertiary-hover;
     color: $btn-tertiary-hover;
+    border-color: $btn-tertiary-hover;
   }
 }
+
 .alert {
   font-size: 0.8125rem;
 }
+
 .nav-item {
   .nav-link,
   .nav-separtor {
+    font-weight: 600;
     color: $gray;
-    font-weight: bold;
+
     &.active {
       color: $gray-darker;
     }
   }
 }
+
 .separator {
   margin: 0;
   border-color: rgba(0, 0, 0, 0.25);
@@ -459,5 +553,6 @@ input, textarea {
 .modal-dialog-centered {
   display: flex;
   align-items: center;
-  min-height: calc(100% - (30px * 2)); // 30px correspond to the default margin size from bootstrap 4.0.0-alpha.5 for modal-dialog class
+  // 30px corresponds to the default margin size from bootstrap 4.0.0-alpha.5 for modal-dialog class
+  min-height: calc(100% - (30px * 2));
 }

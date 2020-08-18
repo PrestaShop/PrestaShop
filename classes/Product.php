@@ -124,7 +124,11 @@ class ProductCore extends ObjectModel
     /** @var string Reference */
     public $reference;
 
-    /** @var string Supplier Reference */
+    /**
+     * @var string Supplier Reference
+     *
+     * @deprecated since 1.7.7.0
+     */
     public $supplier_reference;
 
     /** @var string Location */
@@ -330,7 +334,7 @@ class ProductCore extends ObjectModel
      *
      * Long description for delivery in-stock product information.
      *
-     * @var string
+     * @var string[]
      */
     public $delivery_in_stock;
 
@@ -339,7 +343,7 @@ class ProductCore extends ObjectModel
      *
      * Long description for delivery out-stock product information.
      *
-     * @var string
+     * @var string[]
      */
     public $delivery_out_stock;
 
@@ -5567,6 +5571,12 @@ class ProductCore extends ObjectModel
             $row['unit_price'] = 0.0;
         }
 
+        Hook::exec('actionGetProductPropertiesAfterUnitPrice', [
+            'id_lang' => $id_lang,
+            'product' => &$row,
+            'context' => $context,
+        ]);
+
         self::$productPropertiesCache[$cache_key] = $row;
 
         return self::$productPropertiesCache[$cache_key];
@@ -7990,5 +8000,38 @@ class ProductCore extends ObjectModel
         }
 
         return $return;
+    }
+
+    /**
+     * Update default supplier data
+     *
+     * @param int $idSupplier
+     * @param float $wholesalePrice
+     * @param string $supplierReference
+     *
+     * @return bool
+     */
+    public function updateDefaultSupplierData(int $idSupplier, string $supplierReference, float $wholesalePrice): bool
+    {
+        if (!$this->id) {
+            return false;
+        }
+
+        $sql = 'UPDATE `' . _DB_PREFIX_ . 'product` ' .
+             'SET ' .
+             'id_supplier = %d, ' .
+             'supplier_reference = "%s", ' .
+             'wholesale_price = "%s" ' .
+             'WHERE id_product = %d';
+
+        return Db::getInstance()->execute(
+            sprintf(
+                $sql,
+                $idSupplier,
+                pSQL($supplierReference),
+                $wholesalePrice,
+                $this->id
+            )
+        );
     }
 }

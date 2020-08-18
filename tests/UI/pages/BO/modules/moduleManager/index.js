@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class moduleManager extends BOBasePage {
-  constructor(page) {
-    super(page);
+class ModuleManager extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Module manager •';
 
@@ -34,65 +34,70 @@ module.exports = class moduleManager extends BOBasePage {
 
   /**
    * Search Module in Page module Catalog
+   * @param page
    * @param moduleTag, Tag of Module
    * @param moduleName, Name of module
    * @return {Promise<void>}
    */
-  async searchModule(moduleTag, moduleName) {
-    await this.page.type(this.searchModuleTagInput, moduleTag);
-    await this.page.click(this.searchModuleButton);
-    await this.waitForVisibleSelector(this.moduleBlock(moduleName));
+  async searchModule(page, moduleTag, moduleName) {
+    await page.type(this.searchModuleTagInput, moduleTag);
+    await page.click(this.searchModuleButton);
+    await this.waitForVisibleSelector(page, this.moduleBlock(moduleName));
   }
 
   /**
    * Click on button configure of a module
+   * @param page
    * @param moduleName, Name of module
    * @return {Promise<void>}
    */
-  async goToConfigurationPage(moduleName) {
-    if (await this.elementNotVisible(this.configureModuleButton(moduleName), 1000)) {
+  async goToConfigurationPage(page, moduleName) {
+    if (await this.elementNotVisible(page, this.configureModuleButton(moduleName), 1000)) {
       await Promise.all([
-        this.page.click(this.actionsDropdownButton(moduleName)),
-        this.waitForVisibleSelector(`${this.actionsDropdownButton(moduleName)}[aria-expanded='true']`),
+        page.click(this.actionsDropdownButton(moduleName)),
+        this.waitForVisibleSelector(page, `${this.actionsDropdownButton(moduleName)}[aria-expanded='true']`),
       ]);
     }
-    await this.page.click(this.configureModuleButton(moduleName));
+    await page.click(this.configureModuleButton(moduleName));
   }
 
   /**
    * Filter modules by status
+   * @param page
    * @param enabled
    * @return {Promise<void>}
    */
-  async filterByStatus(enabled) {
+  async filterByStatus(page, enabled) {
     await Promise.all([
-      this.page.click(this.statusDropdownDiv),
-      this.waitForVisibleSelector(`${this.statusDropdownDiv}[aria-expanded='true']`),
+      page.click(this.statusDropdownDiv),
+      this.waitForVisibleSelector(page, `${this.statusDropdownDiv}[aria-expanded='true']`),
     ]);
     await Promise.all([
-      this.page.click(this.statusDropdownItemLink(enabled ? 1 : 0)),
-      this.waitForVisibleSelector(`${this.statusDropdownDiv}[aria-expanded='false']`),
+      page.click(this.statusDropdownItemLink(enabled ? 1 : 0)),
+      this.waitForVisibleSelector(page, `${this.statusDropdownDiv}[aria-expanded='false']`),
     ]);
   }
 
   /**
    * Get status of module (enable/disable)
+   * @param page
    * @param moduleName
    * @return {Promise<boolean>}
    */
-  async isModuleEnabled(moduleName) {
-    return this.elementNotVisible(this.disableModuleButton(moduleName), 1000);
+  async isModuleEnabled(page, moduleName) {
+    return this.elementNotVisible(page, this.disableModuleButton(moduleName), 1000);
   }
 
   /**
    * Get all modules status
+   * @param page
    * @returns {Promise<[]>}
    */
-  async getAllModulesStatus() {
+  async getAllModulesStatus(page) {
     const modulesStatus = [];
-    const allModulesNames = await this.getAllModulesNames();
+    const allModulesNames = await this.getAllModulesNames(page);
     for (let i = 0; i < allModulesNames.length; i++) {
-      const moduleStatus = await this.isModuleEnabled();
+      const moduleStatus = await this.isModuleEnabled(page);
       await modulesStatus.push({name: allModulesNames[i], status: moduleStatus});
     }
     return modulesStatus;
@@ -100,10 +105,11 @@ module.exports = class moduleManager extends BOBasePage {
 
   /**
    * Get All modules names
+   * @param page
    * @return {Promise<table>}
    */
-  async getAllModulesNames() {
-    return this.page.$$eval(
+  async getAllModulesNames(page) {
+    return page.$$eval(
       this.allModulesBlock,
       all => all.map(el => el.getAttribute('data-name')),
     );
@@ -111,27 +117,31 @@ module.exports = class moduleManager extends BOBasePage {
 
   /**
    * Filter by category
+   * @param page
    * @param category
    * @return {Promise<void>}
    */
-  async filterByCategory(category) {
+  async filterByCategory(page, category) {
     await Promise.all([
-      this.page.click(this.categoriesSelectDiv),
-      this.waitForVisibleSelector(`${this.categoriesSelectDiv}[aria-expanded='true']`),
+      page.click(this.categoriesSelectDiv),
+      this.waitForVisibleSelector(page, `${this.categoriesSelectDiv}[aria-expanded='true']`),
     ]);
     await Promise.all([
-      this.page.click(this.categoryDropdownItem(category)),
-      this.waitForVisibleSelector(`${this.categoriesSelectDiv}[aria-expanded='false']`),
+      page.click(this.categoryDropdownItem(category)),
+      this.waitForVisibleSelector(page, `${this.categoriesSelectDiv}[aria-expanded='false']`),
     ]);
   }
 
   /**
    * Get modules block title (administration / payment ...)
+   * @param page
    * @param position
    * @return {Promise<void>}
    */
-  async getBlockModuleTitle(position) {
-    const modulesBlocks = await this.page.$$eval(this.modulesListBlockTitle, all => all.map(el => el.textContent));
+  async getBlockModuleTitle(page, position) {
+    const modulesBlocks = await page.$$eval(this.modulesListBlockTitle, all => all.map(el => el.textContent));
     return modulesBlocks[position - 1];
   }
-};
+}
+
+module.exports = new ModuleManager();

@@ -8,22 +8,14 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_orders_orders_filterOrders';
 
 // importing pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const OrdersPage = require('@pages/BO/orders');
+const dashboardPage = require('@pages/BO/dashboard');
+const ordersPage = require('@pages/BO/orders');
+
 const {Orders} = require('@data/demo/orders');
 
 let numberOfOrders;
 let browserContext;
 let page;
-// creating pages objects in a function
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    ordersPage: new OrdersPage(page),
-  };
-};
 
 /*
 Filter orders By :
@@ -34,30 +26,32 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-    this.pageObjects = await init();
   });
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
-  // Steps
-  loginCommon.loginBO();
+
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to the Orders page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.ordersParentLink,
-      this.pageObjects.dashboardPage.ordersLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.ordersParentLink,
+      dashboardPage.ordersLink,
     );
 
-    const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
+    const pageTitle = await ordersPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(ordersPage.pageTitle);
   });
 
   it('should reset all filters and get number of orders', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
 
-    numberOfOrders = await this.pageObjects.ordersPage.resetAndGetNumberOfLines();
+    numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
     await expect(numberOfOrders).to.be.above(0);
   });
 
@@ -140,17 +134,18 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
     it(`should filter the Orders table by '${test.args.filterBy}' and check the result`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', test.args.identifier, baseContext);
 
-      await this.pageObjects.ordersPage.filterOrders(
+      await ordersPage.filterOrders(
+        page,
         test.args.filterType,
         test.args.filterBy,
         test.args.filterValue,
       );
 
-      const numberOfOrdersAfterFilter = await this.pageObjects.ordersPage.getNumberOfElementInGrid();
+      const numberOfOrdersAfterFilter = await ordersPage.getNumberOfElementInGrid(page);
       await expect(numberOfOrdersAfterFilter).to.be.at.most(numberOfOrders);
 
       for (let row = 1; row <= numberOfOrdersAfterFilter; row++) {
-        const textColumn = await this.pageObjects.ordersPage.getTextColumn(test.args.filterBy, row);
+        const textColumn = await ordersPage.getTextColumn(page, test.args.filterBy, row);
         await expect(textColumn).to.contains(test.args.filterValue);
       }
     });
@@ -158,7 +153,7 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.identifier}Reset`, baseContext);
 
-      const numberOfOrdersAfterReset = await this.pageObjects.ordersPage.resetAndGetNumberOfLines();
+      const numberOfOrdersAfterReset = await ordersPage.resetAndGetNumberOfLines(page);
       await expect(numberOfOrdersAfterReset).to.be.equal(numberOfOrders);
     });
   });

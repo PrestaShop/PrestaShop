@@ -32,6 +32,8 @@ use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 
 /**
  * Provides reusable methods for manufacturer address address command/query handlers
+ *
+ * @deprecated Since 1.7.7 Use AbstractAddressHandler instead
  */
 abstract class AbstractManufacturerAddressHandler
 {

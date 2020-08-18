@@ -7,10 +7,9 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const ProductsPage = require('@pages/BO/catalog/products/index');
-const AddProductPage = require('@pages/BO/catalog/products/add');
+const dashboardPage = require('@pages/BO/dashboard');
+const productsPage = require('@pages/BO/catalog/products/index');
+const addProductPage = require('@pages/BO/catalog/products/add');
 
 // Import data
 const ProductFaker = require('@data/faker/product');
@@ -24,16 +23,6 @@ let browserContext;
 let page;
 let numberOfProducts = 0;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    productsPage: new ProductsPage(page),
-    addProductPage: new AddProductPage(page),
-  };
-};
-
 /*
 Create 3 products
 Sort products table
@@ -45,35 +34,35 @@ describe('Pagination and sort products', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to products page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to products page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.catalogParentLink,
-      this.pageObjects.dashboardPage.productsLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.catalogParentLink,
+      dashboardPage.productsLink,
     );
 
-    await this.pageObjects.productsPage.closeSfToolBar();
+    await productsPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.productsPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
+    const pageTitle = await productsPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(productsPage.pageTitle);
   });
 
   it('should reset all filters and get number of products', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-    numberOfProducts = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
+    numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
     await expect(numberOfProducts).to.be.above(0);
   });
 
@@ -158,18 +147,18 @@ describe('Pagination and sort products', async () => {
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        let nonSortedTable = await this.pageObjects.productsPage.getAllRowsColumnContent(test.args.sortBy);
+        let nonSortedTable = await productsPage.getAllRowsColumnContent(page, test.args.sortBy);
 
-        await this.pageObjects.productsPage.sortTable(test.args.sortBy, test.args.sortDirection);
+        await productsPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        let sortedTable = await this.pageObjects.productsPage.getAllRowsColumnContent(test.args.sortBy);
+        let sortedTable = await productsPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
           nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
 
-        const expectedResult = await this.pageObjects.productsPage.sortArray(nonSortedTable, test.args.isFloat);
+        const expectedResult = await productsPage.sortArray(nonSortedTable, test.args.isFloat);
 
         if (test.args.sortDirection === 'asc') {
           await expect(sortedTable).to.deep.equal(expectedResult);
@@ -193,17 +182,17 @@ describe('Pagination and sort products', async () => {
       it('should create product and check result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createProduct${index}`, baseContext);
 
-        await this.pageObjects.productsPage.goToAddProductPage();
-        const createProductMessage = await this.pageObjects.addProductPage.createEditBasicProduct(createProductData);
-        await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
+        await productsPage.goToAddProductPage(page);
+        const createProductMessage = await addProductPage.createEditBasicProduct(page, createProductData);
+        await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
       });
 
       it('should go to catalog page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToCatalogPage${index}`, baseContext);
 
-        await this.pageObjects.addProductPage.goToCatalogPage();
-        const pageTitle = await this.pageObjects.productsPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
+        await addProductPage.goToCatalogPage(page);
+        const pageTitle = await productsPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(productsPage.pageTitle);
       });
     });
   });
@@ -213,28 +202,28 @@ describe('Pagination and sort products', async () => {
     it('should change the item number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
-      const paginationNumber = await this.pageObjects.productsPage.selectPaginationLimit('20');
+      const paginationNumber = await productsPage.selectPaginationLimit(page, '20');
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await this.pageObjects.productsPage.paginationNext();
+      const paginationNumber = await productsPage.paginationNext(page);
       expect(paginationNumber).to.contains('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await this.pageObjects.productsPage.paginationPrevious();
+      const paginationNumber = await productsPage.paginationPrevious(page);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should change the item number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber = await this.pageObjects.productsPage.selectPaginationLimit('50');
+      const paginationNumber = await productsPage.selectPaginationLimit(page, '50');
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
@@ -243,16 +232,18 @@ describe('Pagination and sort products', async () => {
   describe('Delete the created products', async () => {
     it('should delete products with bulk Actions', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDelete', baseContext);
+
       // Filter By reference first
-      await this.pageObjects.productsPage.filterProducts('name', 'todelete');
-      const deleteTextResult = await this.pageObjects.productsPage.deleteAllProductsWithBulkActions();
-      await expect(deleteTextResult).to.equal(this.pageObjects.productsPage.productMultiDeletedSuccessfulMessage);
+      await productsPage.filterProducts(page, 'name', 'todelete');
+      const deleteTextResult = await productsPage.deleteAllProductsWithBulkActions(page);
+      await expect(deleteTextResult).to.equal(productsPage.productMultiDeletedSuccessfulMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersLast', baseContext);
-      await this.pageObjects.productsPage.resetFilterCategory();
-      const numberOfProducts = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
+
+      await productsPage.resetFilterCategory(page);
+      const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
       await expect(numberOfProducts).to.be.above(0);
     });
   });

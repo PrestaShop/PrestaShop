@@ -320,7 +320,7 @@ abstract class PaymentModuleCore extends Module
             // We don't use the following condition to avoid the float precision issues : http://www.php.net/manual/en/language.types.float.php
             // if ($order->total_paid != $order->total_paid_real)
             // We use number_format in order to compare two string
-            if ($order_status->logable && number_format($cart_total_paid, _PS_PRICE_COMPUTE_PRECISION_) != number_format($amount_paid, _PS_PRICE_COMPUTE_PRECISION_)) {
+            if ($order_status->logable && number_format($cart_total_paid, Context::getContext()->getComputingPrecision()) != number_format($amount_paid, _PS_PRICE_COMPUTE_PRECISION_)) {
                 $id_order_state = Configuration::get('PS_OS_ERROR');
             }
 
@@ -472,7 +472,7 @@ abstract class PaymentModuleCore extends Module
                         }
 
                         $product_var_tpl_list[] = $product_var_tpl;
-                        // Check if is not a virutal product for the displaying of shipping
+                        // Check if is not a virtual product for the displaying of shipping
                         if (!$product['is_virtual']) {
                             $virtual_product &= false;
                         }
@@ -753,9 +753,9 @@ abstract class PaymentModuleCore extends Module
     }
 
     /**
-     * @param object Address $the_address that needs to be txt formated
+     * @param Address $the_address that needs to be txt formatted
      *
-     * @return string the txt formated address block
+     * @return string the txt formatted address block
      */
     protected function _getTxtFormatedAddress($the_address)
     {
@@ -776,7 +776,9 @@ abstract class PaymentModuleCore extends Module
     }
 
     /**
-     * @param object Address $the_address that needs to be txt formated
+     * @param Address Address $the_address that needs to be txt formatted
+     * @param string $line_sep
+     * @param array $fields_style
      *
      * @return string the txt formated address block
      */
@@ -786,7 +788,7 @@ abstract class PaymentModuleCore extends Module
     }
 
     /**
-     * @param int $current_id_currency optional but on 1.5 it will be REQUIRED
+     * @param int $current_id_currency
      *
      * @return Currency|array|false
      */
@@ -800,10 +802,10 @@ abstract class PaymentModuleCore extends Module
             return false;
         }
         if ($this->currencies_mode == 'checkbox') {
-            $currencies = Currency::getPaymentCurrencies($this->id);
+            return Currency::getPaymentCurrencies($this->id);
+        }
 
-            return $currencies;
-        } elseif ($this->currencies_mode == 'radio') {
+        if ($this->currencies_mode == 'radio') {
             $currencies = Currency::getPaymentCurrenciesSpecial($this->id);
             $currency = $currencies['id_currency'];
             if ($currency == -1) {
@@ -817,9 +819,8 @@ abstract class PaymentModuleCore extends Module
         if (!isset($id_currency) || empty($id_currency)) {
             return false;
         }
-        $currency = new Currency((int) $id_currency);
 
-        return $currency;
+        return Currency::getCurrencyInstance((int) $id_currency);
     }
 
     /**
@@ -862,7 +863,7 @@ abstract class PaymentModuleCore extends Module
      * @see Module::getPaymentModules() if you need a list of module related to the user context
      * @since 1.4.5
      *
-     * @return array module informations
+     * @return array module information
      */
     public static function getInstalledPaymentModules()
     {
@@ -952,6 +953,8 @@ abstract class PaymentModuleCore extends Module
         $order = new Order();
         $order->product_list = $productList;
 
+        $computingPrecision = Context::getContext()->getComputingPrecision();
+
         if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_delivery') {
             $address = new Address((int) $addressId);
             $context->country = new Country((int) $address->id_country, (int) $cart->id_lang);
@@ -990,29 +993,59 @@ abstract class PaymentModuleCore extends Module
         $order->gift_message = $cart->gift_message;
         $order->mobile_theme = $cart->mobile_theme;
         $order->conversion_rate = $currency->conversion_rate;
-        $amount_paid = !$dont_touch_amount ? Tools::ps_round((float) $amount_paid, Context::getContext()->getComputingPrecision()) : $amount_paid;
+        $amount_paid = !$dont_touch_amount ? Tools::ps_round((float) $amount_paid, $computingPrecision) : $amount_paid;
         $order->total_paid_real = 0;
 
-        $order->total_products = (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $order->product_list, $carrierId);
-        $order->total_products_wt = (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $order->product_list, $carrierId);
-        $order->total_discounts_tax_excl = (float) abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $order->product_list, $carrierId));
-        $order->total_discounts_tax_incl = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $order->product_list, $carrierId));
+        $order->total_products = Tools::ps_round(
+            (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $order->product_list, $carrierId),
+            $computingPrecision
+        );
+        $order->total_products_wt = Tools::ps_round(
+            (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $order->product_list, $carrierId),
+            $computingPrecision
+        );
+        $order->total_discounts_tax_excl = Tools::ps_round(
+            (float) abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $order->product_list, $carrierId)),
+            $computingPrecision
+        );
+        $order->total_discounts_tax_incl = Tools::ps_round(
+            (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $order->product_list, $carrierId)),
+            $computingPrecision
+        );
         $order->total_discounts = $order->total_discounts_tax_incl;
 
-        $order->total_shipping_tax_excl = (float) $cart->getPackageShippingCost($carrierId, false, null, $order->product_list);
-        $order->total_shipping_tax_incl = (float) $cart->getPackageShippingCost($carrierId, true, null, $order->product_list);
+        $order->total_shipping_tax_excl = Tools::ps_round(
+            (float) $cart->getPackageShippingCost($carrierId, false, null, $order->product_list),
+            $computingPrecision
+        );
+        $order->total_shipping_tax_incl = Tools::ps_round(
+            (float) $cart->getPackageShippingCost($carrierId, true, null, $order->product_list),
+            $computingPrecision
+        );
         $order->total_shipping = $order->total_shipping_tax_incl;
 
         if (null !== $carrier && Validate::isLoadedObject($carrier)) {
             $order->carrier_tax_rate = $carrier->getTaxesRate(new Address((int) $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
         }
 
-        $order->total_wrapping_tax_excl = (float) abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $order->product_list, $carrierId));
-        $order->total_wrapping_tax_incl = (float) abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $order->product_list, $carrierId));
+        $order->total_wrapping_tax_excl = Tools::ps_round(
+            (float) abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $order->product_list, $carrierId)),
+            $computingPrecision
+        );
+        $order->total_wrapping_tax_incl = Tools::ps_round(
+            (float) abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $order->product_list, $carrierId)),
+            $computingPrecision
+        );
         $order->total_wrapping = $order->total_wrapping_tax_incl;
 
-        $order->total_paid_tax_excl = (float) Tools::ps_round((float) $cart->getOrderTotal(false, Cart::BOTH, $order->product_list, $carrierId), Context::getContext()->getComputingPrecision());
-        $order->total_paid_tax_incl = (float) Tools::ps_round((float) $cart->getOrderTotal(true, Cart::BOTH, $order->product_list, $carrierId), Context::getContext()->getComputingPrecision());
+        $order->total_paid_tax_excl = Tools::ps_round(
+            (float) $cart->getOrderTotal(false, Cart::BOTH, $order->product_list, $carrierId),
+            $computingPrecision
+        );
+        $order->total_paid_tax_incl = Tools::ps_round(
+            (float) $cart->getOrderTotal(true, Cart::BOTH, $order->product_list, $carrierId),
+            $computingPrecision
+        );
         $order->total_paid = $order->total_paid_tax_incl;
         $order->round_mode = Configuration::get('PS_PRICE_ROUND_MODE');
         $order->round_type = Configuration::get('PS_ROUND_TYPE');
@@ -1033,16 +1066,16 @@ abstract class PaymentModuleCore extends Module
         }
 
         // Amount paid by customer is not the right one -> Status = payment error
-        // We don't use the following condition to avoid the float precision issues : http://www.php.net/manual/en/language.types.float.php
+        // We don't use the following condition to avoid the float precision issues : https://www.php.net/manual/en/language.types.float.php
         // if ($order->total_paid != $order->total_paid_real)
         // We use number_format in order to compare two string
         if ($order_status->logable
             && number_format(
                 $cart_total_paid,
-                Context::getContext()->getComputingPrecision()
+                $computingPrecision
             ) != number_format(
                 $amount_paid,
-                Context::getContext()->getComputingPrecision()
+                $computingPrecision
             )
         ) {
             $id_order_state = Configuration::get('PS_OS_ERROR');
@@ -1135,12 +1168,12 @@ abstract class PaymentModuleCore extends Module
                 // Set the new voucher value
                 $voucher->reduction_amount = $remainingValue;
                 if ($voucher->reduction_tax) {
-                    // Add total shipping amout only if reduction amount > total shipping
+                    // Add total shipping amount only if reduction amount > total shipping
                     if ($voucher->free_shipping == 1 && $voucher->reduction_amount >= $order->total_shipping_tax_incl) {
                         $voucher->reduction_amount -= $order->total_shipping_tax_incl;
                     }
                 } else {
-                    // Add total shipping amout only if reduction amount > total shipping
+                    // Add total shipping amount only if reduction amount > total shipping
                     if ($voucher->free_shipping == 1 && $voucher->reduction_amount >= $order->total_shipping_tax_excl) {
                         $voucher->reduction_amount -= $order->total_shipping_tax_excl;
                     }

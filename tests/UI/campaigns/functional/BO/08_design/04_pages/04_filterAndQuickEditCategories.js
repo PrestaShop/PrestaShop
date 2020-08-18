@@ -10,10 +10,9 @@ const loginCommon = require('@commonTests/loginBO');
 const CategoryPageFaker = require('@data/faker/CMScategory');
 
 // Import pages
-const LoginPage = require('@pages/BO/login/index');
-const DashboardPage = require('@pages/BO/dashboard/index');
-const PagesPage = require('@pages/BO/design/pages/index');
-const AddPageCategoryPage = require('@pages/BO/design/pages/pageCategory/add');
+const dashboardPage = require('@pages/BO/dashboard/index');
+const pagesPage = require('@pages/BO/design/pages/index');
+const addPageCategoryPage = require('@pages/BO/design/pages/pageCategory/add');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -28,46 +27,36 @@ let numberOfCategories = 0;
 const firstCategoryData = new CategoryPageFaker();
 const secondCategoryData = new CategoryPageFaker();
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    addPageCategoryPage: new AddPageCategoryPage(page),
-    pagesPage: new PagesPage(page),
-  };
-};
-
 // Filter And Quick Edit Pages
 describe('Filter And Quick Edit Categories', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   // Go to Design>Pages page
   it('should go to "Design>Pages" page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCmsPagesPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.designParentLink,
-      this.pageObjects.dashboardPage.pagesLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.designParentLink,
+      dashboardPage.pagesLink,
     );
 
-    await this.pageObjects.pagesPage.closeSfToolBar();
+    await pagesPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
+    const pageTitle = await pagesPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(pagesPage.pageTitle);
   });
 
   // 1 : Create two categories and Filter with all inputs and selects in grid table
@@ -80,24 +69,24 @@ describe('Filter And Quick Edit Categories', async () => {
         it('should go to add new page category', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToAddCategory${index + 1}`, baseContext);
 
-          await this.pageObjects.pagesPage.goToAddNewPageCategory();
-          const pageTitle = await this.pageObjects.addPageCategoryPage.getPageTitle();
-          await expect(pageTitle).to.contains(this.pageObjects.addPageCategoryPage.pageTitleCreate);
+          await pagesPage.goToAddNewPageCategory(page);
+          const pageTitle = await addPageCategoryPage.getPageTitle(page);
+          await expect(pageTitle).to.contains(addPageCategoryPage.pageTitleCreate);
         });
 
         it('should create category ', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `createCategory${index + 1}`, baseContext);
 
-          const textResult = await this.pageObjects.addPageCategoryPage.createEditPageCategory(categoryToCreate);
-          await expect(textResult).to.equal(this.pageObjects.pagesPage.successfulCreationMessage);
+          const textResult = await addPageCategoryPage.createEditPageCategory(page, categoryToCreate);
+          await expect(textResult).to.equal(pagesPage.successfulCreationMessage);
         });
 
         it('should go back to categories list', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `backToCategories${index + 1}`, baseContext);
 
-          await this.pageObjects.pagesPage.backToList();
-          const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
-          await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
+          await pagesPage.backToList(page);
+          const pageTitle = await pagesPage.getPageTitle(page);
+          await expect(pageTitle).to.contains(pagesPage.pageTitle);
         });
       });
     });
@@ -107,7 +96,7 @@ describe('Filter And Quick Edit Categories', async () => {
       it('should reset filter and get number of categories in BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'resetBeforeFilter', baseContext);
 
-        numberOfCategories = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page_category');
+        numberOfCategories = await pagesPage.resetAndGetNumberOfLines(page, 'cms_page_category');
         await expect(numberOfCategories).to.be.above(0);
       });
 
@@ -164,21 +153,24 @@ describe('Filter And Quick Edit Categories', async () => {
         it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-          await this.pageObjects.pagesPage.filterTable(
+          await pagesPage.filterTable(
+            page,
             'cms_page_category',
             test.args.filterType,
             test.args.filterBy,
             test.args.filterValue,
           );
 
-          const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.getNumberOfElementInGrid(
+          const numberOfCategoriesAfterFilter = await pagesPage.getNumberOfElementInGrid(
+            page,
             'cms_page_category',
           );
 
           await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
 
           for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
-            const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTableCmsPageCategory(
+            const textColumn = await pagesPage.getTextColumnFromTableCmsPageCategory(
+              page,
               i,
               test.args.filterBy,
             );
@@ -194,7 +186,8 @@ describe('Filter And Quick Edit Categories', async () => {
         it('should reset all filters', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `reset_${test.args.testIdentifier}`, baseContext);
 
-          const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetAndGetNumberOfLines(
+          const numberOfCategoriesAfterFilter = await pagesPage.resetAndGetNumberOfLines(
+            page,
             'cms_page_category',
           );
 
@@ -208,20 +201,23 @@ describe('Filter And Quick Edit Categories', async () => {
       it('should filter by category name', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkActions', baseContext);
 
-        await this.pageObjects.pagesPage.filterTable(
+        await pagesPage.filterTable(
+          page,
           'cms_page_category',
           'input',
           'name',
           firstCategoryData.name,
         );
 
-        const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.getNumberOfElementInGrid(
+        const numberOfCategoriesAfterFilter = await pagesPage.getNumberOfElementInGrid(
+          page,
           'cms_page_category',
         );
 
         await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
 
-        const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTableCmsPageCategory(
+        const textColumn = await pagesPage.getTextColumnFromTableCmsPageCategory(
+          page,
           1,
           'name',
         );
@@ -238,20 +234,22 @@ describe('Filter And Quick Edit Categories', async () => {
         it(`should ${categoryStatus.args.status} the category`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `bulk${categoryStatus.args.status}`, baseContext);
 
-          const isActionPerformed = await this.pageObjects.pagesPage.updateToggleColumnValue(
+          const isActionPerformed = await pagesPage.updateToggleColumnValue(
+            page,
             'cms_page_category',
             1,
             categoryStatus.args.enable,
           );
 
           if (isActionPerformed) {
-            const resultMessage = await this.pageObjects.pagesPage.getTextContent(
-              this.pageObjects.pagesPage.alertSuccessBlockParagraph,
+            const resultMessage = await pagesPage.getTextContent(
+              page,
+              pagesPage.alertSuccessBlockParagraph,
             );
-            await expect(resultMessage).to.contains(this.pageObjects.pagesPage.successfulUpdateStatusMessage);
+            await expect(resultMessage).to.contains(pagesPage.successfulUpdateStatusMessage);
           }
 
-          const currentStatus = await this.pageObjects.pagesPage.getToggleColumnValue('cms_page_category', 1);
+          const currentStatus = await pagesPage.getToggleColumnValue(page, 'cms_page_category', 1);
           await expect(currentStatus).to.be.equal(categoryStatus.args.enable);
         });
 
@@ -263,7 +261,8 @@ describe('Filter And Quick Edit Categories', async () => {
             baseContext,
           );
 
-          const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetAndGetNumberOfLines(
+          const numberOfCategoriesAfterFilter = await pagesPage.resetAndGetNumberOfLines(
+            page,
             'cms_page_category',
           );
 
@@ -274,8 +273,8 @@ describe('Filter And Quick Edit Categories', async () => {
       it('should delete categories with Bulk Actions and check Result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCategories', baseContext);
 
-        const deleteTextResult = await this.pageObjects.pagesPage.deleteWithBulkActions('cms_page_category');
-        await expect(deleteTextResult).to.be.equal(this.pageObjects.pagesPage.successfulMultiDeleteMessage);
+        const deleteTextResult = await pagesPage.deleteWithBulkActions(page, 'cms_page_category');
+        await expect(deleteTextResult).to.be.equal(pagesPage.successfulMultiDeleteMessage);
       });
     });
   });

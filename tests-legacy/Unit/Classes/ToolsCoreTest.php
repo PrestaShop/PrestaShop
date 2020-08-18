@@ -31,10 +31,37 @@ use Tools;
 
 class ToolsCoreTest extends TestCase
 {
-    protected function setUp() {
+    const PS_ROUND_UP = 0;
+    const PS_ROUND_DOWN = 1;
+    const PS_ROUND_HALF_UP = 2;
+    const PS_ROUND_HALF_DOWN = 3;
+    const PS_ROUND_HALF_EVEN = 4;
+    const PS_ROUND_HALF_ODD = 5;
+
+    protected function setUp()
+    {
         $_POST = array();
         $_GET = array();
         Tools::resetRequest();
+
+        if (!defined('PS_ROUND_UP')) {
+            define('PS_ROUND_UP', self::PS_ROUND_UP);
+        }
+        if (!defined('PS_ROUND_DOWN')) {
+            define('PS_ROUND_DOWN', self::PS_ROUND_DOWN);
+        }
+        if (!defined('PS_ROUND_HALF_UP')) {
+            define('PS_ROUND_HALF_UP', self::PS_ROUND_HALF_UP);
+        }
+        if (!defined('PS_ROUND_HALF_DOWN')) {
+            define('PS_ROUND_HALF_DOWN', self::PS_ROUND_HALF_DOWN);
+        }
+        if (!defined('PS_ROUND_HALF_EVEN')) {
+            define('PS_ROUND_HALF_EVEN', self::PS_ROUND_HALF_EVEN);
+        }
+        if (!defined('PS_ROUND_HALF_ODD')) {
+            define('PS_ROUND_HALF_ODD', self::PS_ROUND_HALF_ODD);
+        }
     }
 
     private function setPostAndGet(array $post = array(), array $get = array())
@@ -199,7 +226,7 @@ class ToolsCoreTest extends TestCase
     }
 
     /**
-     *  @dataProvider dirProvider
+     * @dataProvider dirProvider
      *
      */
     public function testGetDirectories($path, $haveFiles)
@@ -211,7 +238,7 @@ class ToolsCoreTest extends TestCase
         $this->assertEquals(
             $res1,
             $res2,
-            'Results differ between getDirectoriesWithGlob and getDirectoriesWithReaddir for path '.$path
+            'Results differ between getDirectoriesWithGlob and getDirectoriesWithReaddir for path ' . $path
         );
 
         $haveFilesTest = ($res1 !== []);
@@ -328,7 +355,8 @@ class ToolsCoreTest extends TestCase
         $this->assertEquals($expected, $actual, "Expected $source to be $expected in camel case, got $actual instead.");
     }
 
-    public static function tearDownAfterClass() {
+    public static function tearDownAfterClass()
+    {
         $_POST = array();
         $_GET = array();
     }
@@ -336,7 +364,8 @@ class ToolsCoreTest extends TestCase
     /**
      * @dataProvider getStrReplaceFirstProvider
      */
-    public function testStrReplaceFirst($search, $replace, $subject, $cur, $expected) {
+    public function testStrReplaceFirst($search, $replace, $subject, $cur, $expected)
+    {
         $this->assertEquals($expected, Tools::StrReplaceFirst($search, $replace, $subject, $cur));
     }
 
@@ -382,13 +411,109 @@ class ToolsCoreTest extends TestCase
         ];
     }
 
-    public function getStrReplaceFirstProvider() {
+    public function getStrReplaceFirstProvider()
+    {
         return [
             ['s', 'f', 'seed', 0, 'feed'],
             ['s', 'f', 'seed', 1, 'seed'],
             ['e', 'o', 'feed', 0, 'foed'],
             ['e', 'o', 'feed', 1, 'foed'],
             ['e', 'o', 'feed', 2, 'feod'],
+        ];
+    }
+
+    /**
+     * @dataProvider getRoundingHelperSamples
+     */
+    public function testRoundHelper(float $expectedResult, float $value, int $mode)
+    {
+        $this->assertSame($expectedResult, Tools::round_helper($value, $mode));
+    }
+
+    /**
+     * @dataProvider getMathRoundSamples
+     */
+    public function testMathRound(float $expectedResult, float $value, int $precision, int $mode)
+    {
+        $this->assertSame($expectedResult, Tools::math_round($value, $precision, $mode));
+    }
+
+    /**
+     * @dataProvider getFloorfSamples
+     */
+    public function testFloorf(float $expectedResult, float $value, int $precision)
+    {
+        $this->assertSame($expectedResult, Tools::floorf($value, $precision));
+    }
+
+    /**
+     * @dataProvider getCeilfSamples
+     */
+    public function testCeilf(float $expectedResult, float $value, int $precision)
+    {
+        $this->assertSame($expectedResult, Tools::ceilf($value, $precision));
+    }
+
+    public function getRoundingHelperSamples()
+    {
+        return [
+            [25, 25.32, self::PS_ROUND_UP],
+            [26, 25.52, self::PS_ROUND_UP],
+            [25, 25.32, self::PS_ROUND_HALF_DOWN],
+            [25, 25.50, self::PS_ROUND_HALF_DOWN],
+            [25, 25.32, self::PS_ROUND_HALF_EVEN],
+            [26, 25.50, self::PS_ROUND_HALF_EVEN],
+            [25, 25.32, self::PS_ROUND_HALF_ODD],
+            [25, 25.50, self::PS_ROUND_HALF_ODD],
+            [26, 25.51, self::PS_ROUND_HALF_ODD],
+            [25, 25.49, self::PS_ROUND_HALF_ODD],
+        ];
+    }
+
+    public function getMathRoundSamples()
+    {
+        return [
+            // 0 precision
+            [25, 25.32, 0, self::PS_ROUND_UP],
+            [26, 25.52, 0, self::PS_ROUND_UP],
+            [25, 25.32, 0, self::PS_ROUND_HALF_DOWN],
+            [25, 25.50, 0, self::PS_ROUND_HALF_DOWN],
+            [25, 25.32, 0, self::PS_ROUND_HALF_EVEN],
+            [26, 25.50, 0, self::PS_ROUND_HALF_EVEN],
+            [25, 25.32, 0, self::PS_ROUND_HALF_ODD],
+            [25, 25.50, 0, self::PS_ROUND_HALF_ODD],
+            [26, 25.51, 0, self::PS_ROUND_HALF_ODD],
+            [25, 25.49, 0, self::PS_ROUND_HALF_ODD],
+            // 2 precision
+            [25.32, 25.321, 2, self::PS_ROUND_UP],
+            [25.53, 25.525, 2, self::PS_ROUND_UP],
+            [25.32, 25.325, 2, self::PS_ROUND_HALF_DOWN],
+            [25.5, 25.505, 2, self::PS_ROUND_HALF_DOWN],
+            [25.32, 25.325, 2, self::PS_ROUND_HALF_EVEN],
+            [25.5, 25.505, 2, self::PS_ROUND_HALF_EVEN],
+            [25.33, 25.325, 2, self::PS_ROUND_HALF_ODD],
+            [25.51, 25.505, 2, self::PS_ROUND_HALF_ODD],
+            [25.51, 25.515, 2, self::PS_ROUND_HALF_ODD],
+            [25.49, 25.495, 2, self::PS_ROUND_HALF_ODD],
+        ];
+    }
+
+    public function getFloorfSamples()
+    {
+        return [
+            [25, 25.32, 0],
+            [25.3, 25.32, 1],
+            [25.32, 25.32, 2],
+        ];
+    }
+
+    public function getCeilfSamples()
+    {
+        return [
+            [26, 25.32, 0],
+            [25.4, 25.32, 1],
+            [25.32, 25.32, 2],
+            [25.33, 25.325, 2],
         ];
     }
 }

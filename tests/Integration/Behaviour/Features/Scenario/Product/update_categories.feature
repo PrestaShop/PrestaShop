@@ -89,3 +89,12 @@ Feature: Update product categories from Back Office (BO)
       And product product3 should be assigned to following categories:
         | categories       | [women, accessories] |
         | default category | accessories          |
+
+  Scenario: I delete all categories from product
+    Given product product3 should be assigned to following categories:
+      | categories       | [women, accessories] |
+      | default category | accessories          |
+    When I delete all categories from product product3
+    And product product3 should be assigned to following categories:
+      | categories       | [home] |
+      | default category | home   |

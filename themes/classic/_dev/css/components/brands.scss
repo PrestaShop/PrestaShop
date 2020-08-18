@@ -2,29 +2,29 @@
   #main {
     ul {
       display: flex;
-      align-items: flex-start;
       flex-wrap: wrap;
+      align-items: flex-start;
 
       .brand {
+        position: relative;
+        width: calc(20% - 10px);
+        min-width: 210px;
         padding: 10px;
         margin: 5px;
         text-align: center;
-        background: white;
+        background: #fff;
         transition: 0.4s ease-out;
-        width: calc(20% - 10px);
-        min-width: 210px;
-        position: relative;
 
         &-infos {
           a {
             &::before {
-              content: "";
               position: absolute;
-              width: 100%;
-              height: 100%;
-              z-index: 1;
               top: 0;
               left: 0;
+              z-index: 1;
+              width: 100%;
+              height: 100%;
+              content: "";
             }
           }
         }
@@ -51,8 +51,8 @@
     #main {
       ul {
         display: flex;
-        align-items: flex-start;
         flex-wrap: wrap;
+        align-items: flex-start;
         justify-content: center;
       }
     }

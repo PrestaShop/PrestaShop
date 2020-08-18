@@ -8,9 +8,9 @@ const testContext = require('@utils/testContext');
 const baseContext = 'sanity_productsBO_filterProducts';
 
 // importing pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const ProductsPage = require('@pages/BO/catalog/products');
+const dashboardPage = require('@pages/BO/dashboard');
+const productsPage = require('@pages/BO/catalog/products');
+
 const {Products} = require('@data/demo/products');
 const {Categories} = require('@data/demo/categories');
 const {DefaultFrTax} = require('@data/demo/tax');
@@ -19,53 +19,50 @@ let browserContext;
 let page;
 let numberOfProducts = 0;
 
-// creating pages objects in a function
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    productsPage: new ProductsPage(page),
-  };
-};
-
 // Test of filters in products page
 describe('Filter in Products Page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-    this.pageObjects = await init();
   });
+
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
+
   // Steps
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to Products page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.catalogParentLink,
-      this.pageObjects.dashboardPage.productsLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.catalogParentLink,
+      dashboardPage.productsLink,
     );
 
-    const pageTitle = await this.pageObjects.productsPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
+    const pageTitle = await productsPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(productsPage.pageTitle);
   });
 
   it('should reset all filters and get Number of products in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
-    await this.pageObjects.productsPage.resetFilterCategory();
-    numberOfProducts = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
+
+    await productsPage.resetFilterCategory(page);
+    numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
     await expect(numberOfProducts).to.be.above(0);
 
     // Do not loop more than the products displayed via the pagination
-    const numberOfProductsOnPage = await this.pageObjects.productsPage.getNumberOfProductsOnPage();
+    const numberOfProductsOnPage = await productsPage.getNumberOfProductsOnPage(page);
+
     // Check that prices have correct tax values
     for (let i = 1; i <= numberOfProducts && i <= numberOfProductsOnPage; i++) {
-      const productPrice = await this.pageObjects.productsPage.getProductPriceFromList(i);
-      const productPriceTTC = await this.pageObjects.productsPage.getProductPriceFromList(i, true);
+      const productPrice = await productsPage.getProductPriceFromList(page, i);
+      const productPriceTTC = await productsPage.getProductPriceFromList(page, i, true);
       const conversionRate = (100 + parseInt(DefaultFrTax.rate, 10)) / 100;
       await expect(parseFloat(productPrice)).to.equal(parseFloat((productPriceTTC / conversionRate).toFixed(2)));
     }
@@ -76,27 +73,32 @@ describe('Filter in Products Page', async () => {
     {args: {identifier: 'filterReference', filterBy: 'reference', filterValue: Products.demo_1.reference}},
     {args: {identifier: 'filterCategory', filterBy: 'category', filterValue: Categories.men.name}},
   ];
+
   tests.forEach((test) => {
     it(`should filter list by ${test.args.filterBy} and check result`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `filterBy_${test.args.identifier}`, baseContext);
+
       if (test.args.filterBy === 'category') {
-        await this.pageObjects.productsPage.filterProductsByCategory(test.args.filterValue);
+        await productsPage.filterProductsByCategory(page, test.args.filterValue);
       } else {
-        await this.pageObjects.productsPage.filterProducts(test.args.filterBy, test.args.filterValue);
+        await productsPage.filterProducts(page, test.args.filterBy, test.args.filterValue);
       }
-      const numberOfProductsAfterFilter = await this.pageObjects.productsPage.getNumberOfProductsFromList();
+
+      const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
       await expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
     });
 
     it('should reset filter and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `resetFilters_${test.args.identifier}`, baseContext);
+
       let numberOfProductsAfterReset;
       if (test.args.filterBy === 'category') {
-        await this.pageObjects.productsPage.resetFilterCategory();
-        numberOfProductsAfterReset = await this.pageObjects.productsPage.getNumberOfProductsFromList();
+        await productsPage.resetFilterCategory(page);
+        numberOfProductsAfterReset = await productsPage.getNumberOfProductsFromList(page);
       } else {
-        numberOfProductsAfterReset = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
+        numberOfProductsAfterReset = await productsPage.resetAndGetNumberOfLines(page);
       }
+
       await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
     });
   });

@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class ViewShoppingCarts extends BOBasePage {
-  constructor(page) {
-    super(page);
+class ViewShoppingCarts extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'View';
   }
@@ -11,4 +11,6 @@ module.exports = class ViewShoppingCarts extends BOBasePage {
   /*
   Methods
    */
-};
+}
+
+module.exports = new ViewShoppingCarts();

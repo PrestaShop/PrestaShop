@@ -1,13 +1,17 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class EmailThemes extends BOBasePage {
-  constructor(page) {
-    super(page);
+class EmailThemes extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Email Theme •';
+    this.emailThemeConfigurationSuccessfulMessage = 'Email theme configuration saved successfully';
 
-    // Selectors
+    // Configuration form selectors
+    this.defaultEmailThemeSelect = '#form_defaultTheme';
+    this.configurationFormSaveButton = '#save-configuration-form';
+
     // Email Theme table selectors
     this.emailThemeTable = 'table.grid-table';
     this.tableBody = `${this.emailThemeTable} tbody`;
@@ -16,22 +20,37 @@ module.exports = class EmailThemes extends BOBasePage {
     this.columnActionPreviewLink = 'td.action-type a.preview-link';
   }
 
-  /* Methods */
+  /* Configuration form methods */
 
   /**
+   * Choose default email theme and save configuration
+   * @param page
+   * @param emailTheme
+   * @return {Promise<string>}
+   */
+  async selectDefaultEmailTheme(page, emailTheme) {
+    await this.selectByVisibleText(page, this.defaultEmailThemeSelect, emailTheme);
+    await this.clickAndWaitForNavigation(page, this.configurationFormSaveButton);
+
+    return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /* Email themes grid methods */
+  /**
    * Preview email theme
+   * @param page
    * @param name
    * @return {Promise<void>}
    */
-  async previewEmailTheme(name) {
-    const tableRows = await this.page.$$(this.tableRows);
+  async previewEmailTheme(page, name) {
+    const tableRows = await page.$$(this.tableRows);
     let found = false;
     for (let i = 0; i < tableRows.length; i++) {
       const textColumnName = await tableRows[i].$eval(this.columnName, columnName => columnName.textContent);
       if (textColumnName.includes(name)) {
         await Promise.all([
           tableRows[i].$eval(this.columnActionPreviewLink, el => el.click()),
-          this.page.waitForNavigation(),
+          page.waitForNavigation(),
         ]);
         found = true;
         break;
@@ -41,4 +60,6 @@ module.exports = class EmailThemes extends BOBasePage {
       throw Error(`${name} was not found in theme emails table`);
     }
   }
-};
+}
+
+module.exports = new EmailThemes();

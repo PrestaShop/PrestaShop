@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class CreditSlips extends BOBasePage {
-  constructor(page) {
-    super(page);
+class CreditSlips extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Credit Slips •';
     this.errorMessageWhenGenerateFileByDate = 'No order slips were found for this period.';
@@ -38,136 +38,149 @@ module.exports = class CreditSlips extends BOBasePage {
    */
   /**
    * Reset input filters
+   * @param page
    * @returns {Promise<void>}
    */
-  async resetFilter() {
-    if (await this.elementVisible(this.filterResetButton, 2000)) {
-      await this.clickAndWaitForNavigation(this.filterResetButton);
+  async resetFilter(page) {
+    if (await this.elementVisible(page, this.filterResetButton, 2000)) {
+      await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
   }
 
   /**
    * Get number of elements in grid
+   * @param page
    * @returns {Promise<number>}
    */
-  async getNumberOfElementInGrid() {
-    return this.getNumberFromText(this.creditSlipsGridTitle);
+  async getNumberOfElementInGrid(page) {
+    return this.getNumberFromText(page, this.creditSlipsGridTitle);
   }
 
   /**
    * Reset Filter And get number of elements in list
+   * @param page
    * @returns {Promise<number>}
    */
-  async resetAndGetNumberOfLines() {
-    await this.resetFilter();
-    return this.getNumberOfElementInGrid();
+  async resetAndGetNumberOfLines(page) {
+    await this.resetFilter(page);
+    return this.getNumberOfElementInGrid(page);
   }
 
   /**
    * Filter credit slips
+   * @param page
    * @param filterBy, column to filter
    * @param value, value to filter with
    * @return {Promise<void>}
    */
-  async filterCreditSlips(filterBy, value = '') {
-    await this.setValue(this.creditSlipsFilterColumnInput(filterBy), value.toString());
+  async filterCreditSlips(page, filterBy, value = '') {
+    await this.setValue(page, this.creditSlipsFilterColumnInput(filterBy), value.toString());
     // click on search
-    await this.clickAndWaitForNavigation(this.filterSearchButton);
+    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
 
   /**
    * Filter credit slips by date
+   * @param page
    * @param dateFrom
    * @param dateTo
    * @return {Promise<void>}
    */
-  async filterCreditSlipsByDate(dateFrom, dateTo) {
-    await this.page.type(this.creditSlipsFilterColumnInput('date_issued_from'), dateFrom);
-    await this.page.type(this.creditSlipsFilterColumnInput('date_issued_to'), dateTo);
+  async filterCreditSlipsByDate(page, dateFrom, dateTo) {
+    await page.type(this.creditSlipsFilterColumnInput('date_issued_from'), dateFrom);
+    await page.type(this.creditSlipsFilterColumnInput('date_issued_to'), dateTo);
     // click on search
-    await this.clickAndWaitForNavigation(this.filterSearchButton);
+    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
 
   /**
    * get text from a column
+   * @param page
    * @param row, row in table
    * @param column, which column
    * @returns {Promise<string>}
    */
-  async getTextColumnFromTableCreditSlips(row, column) {
-    return this.getTextContent(this.creditSlipsTableColumn(row, column));
+  async getTextColumnFromTableCreditSlips(page, row, column) {
+    return this.getTextContent(page, this.creditSlipsTableColumn(row, column));
   }
 
   /**
    * Download credit slip
+   * @param page
    * @param lineNumber
    * @return {Promise<*>}
    */
-  async downloadCreditSlip(lineNumber = 1) {
+  async downloadCreditSlip(page, lineNumber = 1) {
     const [download] = await Promise.all([
-      this.page.waitForEvent('download'), // wait for download to start
-      this.page.click(this.creditSlipDownloadButton(lineNumber)),
+      page.waitForEvent('download'), // wait for download to start
+      page.click(this.creditSlipDownloadButton(lineNumber)),
     ]);
     return download.path();
   }
 
   /**
    * Generate PDF by date and download it
+   * @param page
    * @param dateFrom
    * @param dateTo
    * @return {Promise<*>}
    */
-  async generatePDFByDateAndDownload(dateFrom = '', dateTo = '') {
-    await this.setValuesForGeneratingPDFByDate(dateFrom, dateTo);
+  async generatePDFByDateAndDownload(page, dateFrom = '', dateTo = '') {
+    await this.setValuesForGeneratingPDFByDate(page, dateFrom, dateTo);
 
     const [download] = await Promise.all([
-      this.page.waitForEvent('download'), // wait for download to start
-      this.page.click(this.generatePdfByDateButton),
+      page.waitForEvent('download'), // wait for download to start
+      page.click(this.generatePdfByDateButton),
     ]);
     return download.path();
   }
 
   /**
    * Get message error after generate credit slip fail
+   * @param page
    * @param dateFrom
    * @param dateTo
    * @return {Promise<string>}
    */
-  async generatePDFByDateAndFail(dateFrom = '', dateTo = '') {
-    await this.setValuesForGeneratingPDFByDate(dateFrom, dateTo);
-    await this.page.click(this.generatePdfByDateButton);
-    return this.getTextContent(this.alertTextBlock);
+  async generatePDFByDateAndFail(page, dateFrom = '', dateTo = '') {
+    await this.setValuesForGeneratingPDFByDate(page, dateFrom, dateTo);
+    await page.click(this.generatePdfByDateButton);
+    return this.getTextContent(page, this.alertTextBlock);
   }
 
   /**
    * Set values to generate pdf by date
+   * @param page
    * @param dateFrom
    * @param dateTo
    * @returns {Promise<void>}
    */
-  async setValuesForGeneratingPDFByDate(dateFrom = '', dateTo = '') {
+  async setValuesForGeneratingPDFByDate(page, dateFrom = '', dateTo = '') {
     if (dateFrom) {
-      await this.setValue(this.dateFromInput, dateFrom);
+      await this.setValue(page, this.dateFromInput, dateFrom);
     }
 
     if (dateTo) {
-      await this.setValue(this.dateToInput, dateTo);
+      await this.setValue(page, this.dateToInput, dateTo);
     }
   }
 
   /** Edit credit slip Prefix
+   * @param page
    * @param prefix
    * @return {Promise<void>}
    */
-  async changePrefix(prefix) {
-    await this.setValue(this.invoicePrefixInput, prefix);
+  async changePrefix(page, prefix) {
+    await this.setValue(page, this.invoicePrefixInput, prefix);
   }
 
   /** Save credit slip options
+   * @param page
    * @return {Promise<void>}
    */
-  async saveCreditSlipOptions() {
-    await this.clickAndWaitForNavigation(this.saveCreditSlipOptionsButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+  async saveCreditSlipOptions(page) {
+    await this.clickAndWaitForNavigation(page, this.saveCreditSlipOptionsButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
-};
+}
+module.exports = new CreditSlips();

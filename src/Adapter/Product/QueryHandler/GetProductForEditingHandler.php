@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
@@ -40,9 +40,17 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationOp
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOption;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSuppliersForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryHandler\GetProductSuppliersForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
+use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractorException;
 use Product;
+use Supplier;
 use Tag;
 
 /**
@@ -56,12 +64,20 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
     private $numberExtractor;
 
     /**
+     * @var GetProductSuppliersForEditingHandlerInterface
+     */
+    private $getProductSuppliersForEditingHandler;
+
+    /**
      * @param NumberExtractor $numberExtractor
+     * @param GetProductSuppliersForEditingHandlerInterface $getProductSuppliersForEditingHandler
      */
     public function __construct(
-        NumberExtractor $numberExtractor
+        NumberExtractor $numberExtractor,
+        GetProductSuppliersForEditingHandlerInterface $getProductSuppliersForEditingHandler
     ) {
         $this->numberExtractor = $numberExtractor;
+        $this->getProductSuppliersForEditingHandler = $getProductSuppliersForEditingHandler;
     }
 
     /**
@@ -78,7 +94,9 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             $this->getBasicInformation($product),
             $this->getCategoriesInformation($product),
             $this->getPricesInformation($product),
-            $this->getOptions($product)
+            $this->getOptions($product),
+            $this->getShippingInformation($product),
+            $this->getSupplierOptions($product)
         );
     }
 
@@ -142,7 +160,7 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             $productTypeValue = ProductType::TYPE_VIRTUAL;
         } elseif (Pack::isPack($product->id)) {
             $productTypeValue = ProductType::TYPE_PACK;
-        } elseif (!empty($product->getAttributeCombinations())) {
+        } elseif ($product->hasCombinations()) {
             $productTypeValue = ProductType::TYPE_COMBINATION;
         } else {
             $productTypeValue = ProductType::TYPE_STANDARD;
@@ -174,6 +192,32 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
     }
 
     /**
+     * @param Product $product
+     *
+     * @return ProductShippingInformation
+     *
+     * @throws NumberExtractorException
+     */
+    private function getShippingInformation(Product $product): ProductShippingInformation
+    {
+        $carrierReferences = array_map(function ($carrier) {
+            return (int) $carrier['id_reference'];
+        }, $product->getCarriers());
+
+        return new ProductShippingInformation(
+            $this->numberExtractor->extract($product, 'width'),
+            $this->numberExtractor->extract($product, 'height'),
+            $this->numberExtractor->extract($product, 'depth'),
+            $this->numberExtractor->extract($product, 'weight'),
+            $this->numberExtractor->extract($product, 'additional_shipping_cost'),
+            $carrierReferences,
+            (int) $product->additional_delivery_times,
+            $product->delivery_in_stock,
+            $product->delivery_out_stock
+        );
+    }
+
+    /**
      * @param int $productId
      *
      * @return LocalizedTags[]
@@ -200,7 +244,7 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
      *
      * @return ProductCustomizationOptions
      */
-    public function getCustomizationOptions(Product $product): ProductCustomizationOptions
+    private function getCustomizationOptions(Product $product): ProductCustomizationOptions
     {
         if (!Customization::isFeatureActive()) {
             return ProductCustomizationOptions::createNotCustomizable();
@@ -219,5 +263,59 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             default:
                 return ProductCustomizationOptions::createNotCustomizable();
         }
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return ProductSupplierOptions
+     */
+    private function getSupplierOptions(Product $product): ProductSupplierOptions
+    {
+        $productSuppliersForEditing = $this->getProductSuppliersForEditingHandler->handle(new GetProductSuppliersForEditing((int) $product->id));
+        $supplierOptions = [];
+
+        $processedSuppliers = [];
+        foreach ($productSuppliersForEditing as $productSupplierForEditing) {
+            $supplierId = $productSupplierForEditing->getSupplierId();
+
+            if (in_array($supplierId, $processedSuppliers)) {
+                continue;
+            }
+
+            $supplierOptions[] = new ProductSupplierOption(
+                Supplier::getNameById($supplierId),
+                $supplierId,
+                $this->filterProductSuppliersBySupplier($supplierId, $productSuppliersForEditing)
+            );
+            $processedSuppliers[] = $supplierId;
+        }
+
+        return new ProductSupplierOptions(
+            (int) $product->id_supplier,
+            $product->supplier_reference,
+            $supplierOptions
+        );
+    }
+
+    /**
+     * Gets EditableProductSuppliers list for its supplier
+     *
+     * @param int $supplierId
+     * @param ProductSupplierForEditing[] $productSuppliersForEditing
+     *
+     * @return ProductSupplierForEditing[]
+     */
+    private function filterProductSuppliersBySupplier(int $supplierId, array $productSuppliersForEditing): array
+    {
+        $productSuppliersBySupplier = [];
+
+        foreach ($productSuppliersForEditing as $productSupplierForEditing) {
+            if ($productSupplierForEditing->getSupplierId() === $supplierId) {
+                $productSuppliersBySupplier[] = $productSupplierForEditing;
+            }
+        }
+
+        return $productSuppliersBySupplier;
     }
 }
