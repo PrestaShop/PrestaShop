@@ -98,6 +98,7 @@
 		<td colspan="1">&nbsp;</td>
 	</tr>
 
+{if isset($is_virtual_order) && $is_virtual_order}
 	<tr>
 		<td colspan="6" class="left">
 
@@ -106,6 +107,7 @@
 		</td>
 		<td colspan="1">&nbsp;</td>
 	</tr>
+{/if}
 
 	<tr>
 		<td colspan="12" height="10">&nbsp;</td>
