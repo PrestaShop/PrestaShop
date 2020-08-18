@@ -172,7 +172,7 @@ class FrontControllerCore extends Controller
 
     /**
      * Set this parameter to false if you don't want cart's invoice address
-     * to be set automatically (this bad behavior is kept for legacy and BC purpose)
+     * to be set automatically (this behavior is kept for legacy and BC purpose)
      *
      * @var bool automaticallyAllocateInvoiceAddress
      */
