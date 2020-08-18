@@ -78,9 +78,6 @@ export default class FormFieldToggle {
     const $modulesFormGroup = $('.js-module-form-group');
     const $emailFormGroup = $('.js-email-form-group');
     const $themesFormGroup = $('.js-theme-form-group');
-    const $themesSelect = $themesFormGroup.find('select');
-    const $noThemeOption = $themesSelect.find('.js-no-theme');
-    const $firstThemeOption = $themesSelect.find('option:not(.js-no-theme):first');
 
     switch (selectedOption) {
       case back:
@@ -89,11 +86,7 @@ export default class FormFieldToggle {
         break;
 
       case themes:
-        if ($noThemeOption.is(':selected')) {
-          $themesSelect.val($firstThemeOption.val());
-        }
-
-        this.hide($modulesFormGroup, $emailFormGroup, $noThemeOption);
+        this.hide($modulesFormGroup, $emailFormGroup);
         this.show($themesFormGroup);
         break;
 
