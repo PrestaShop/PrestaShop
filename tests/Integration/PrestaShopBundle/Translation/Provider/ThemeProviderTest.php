@@ -97,19 +97,19 @@ class ThemeProviderTest extends KernelTestCase
                 'lang' => 'fr-FR',
                 'key' => 'Invalid name',
                 'translation' => 'Traduction customisée',
-                'domain' => 'ShopFormsErrors',
+                'domain' => 'fakeDomain',
                 'theme' => null,
             ],
             [
                 'lang' => 'fr-FR',
                 'key' => 'Some made up text',
                 'translation' => 'Un texte inventé',
-                'domain' => 'ShopActions',
-                'theme' => 'classic',
+                'domain' => 'fakeDomain',
+                'theme' => 'fakeThemeForTranslations',
             ],
         ];
 
-        $this->databaseReader = new MockDatabaseTranslationReader([]);
+        $this->databaseReader = new MockDatabaseTranslationReader($databaseContent);
     }
 
     protected function tearDown()
@@ -223,6 +223,40 @@ class ThemeProviderTest extends KernelTestCase
                 $emptyCatalogue,
             ],
         ];
+    }
+
+    public function testItLoadsCustomizedTranslationsFromDatabase()
+    {
+        $provider = new ThemeProvider(
+            $this->frontProvider,
+            $this->databaseReader,
+            $this->createMock(ThemeExtractorInterface::class),
+            $this->buildThemeRepository(),
+            $this->filesystem,
+            self::THEMES_DIR,
+            $this->themeName
+        );
+
+        // load catalogue from database translations
+        $catalogue = $provider->getUserTranslatedCatalogue('fr-FR');
+
+        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
+
+        // Check integrity of translations
+        $messages = $catalogue->all();
+        $domains = $catalogue->getDomains();
+        sort($domains);
+
+        // verify all catalogues are loaded
+        $this->assertSame([
+            'fakeDomain',
+        ], $domains);
+
+        // verify that the catalogues are complete
+        $this->assertCount(1, $messages['fakeDomain']);
+
+        // verify translations
+        $this->assertSame('Un texte inventé', $catalogue->get('Some made up text', 'fakeDomain'));
     }
 
     /**

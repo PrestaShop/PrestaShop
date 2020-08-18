@@ -31,6 +31,8 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\TranslationToolsBundle\Translation\Dumper\XliffFileDumper;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\Util\Flattenizer;
 use PrestaShopBundle\Translation\Exporter\ThemeExporter;
+use PrestaShopBundle\Translation\Provider\Factory\ProviderFactory;
+use PrestaShopBundle\Translation\Provider\ModulesProvider;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
@@ -82,10 +84,17 @@ class ThemeExporterTest extends TestCase
 
         $this->mockFinder();
 
+        $providerFactory = $this->createMock(ProviderFactory::class);
+
+        $providerFactory
+            ->expects($this->any())
+            ->method('build')
+            ->willReturn($this->providerMock);
+
         $this->themeExporter = new ThemeExporter(
             $this->extractorMock,
-            $this->providerMock,
             $this->repositoryMock,
+            $providerFactory,
             $this->dumperMock,
             $this->zipManagerMock,
             new Filesystem()

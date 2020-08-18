@@ -48,21 +48,21 @@ class OthersProviderTest extends TestCase
         $databaseContent = [
             [
                 'lang' => 'fr-FR',
-                'key' => 'Invalid name',
+                'key' => 'Some text to translate',
                 'translation' => 'Traduction customisée',
-                'domain' => 'ShopFormsErrors',
+                'domain' => 'messages',
                 'theme' => null,
             ],
             [
                 'lang' => 'fr-FR',
                 'key' => 'Some made up text',
                 'translation' => 'Un texte inventé',
-                'domain' => 'ShopActions',
+                'domain' => 'messages',
                 'theme' => 'classic',
             ],
         ];
 
-        $this->databaseReader = new MockDatabaseTranslationReader([]);
+        $this->databaseReader = new MockDatabaseTranslationReader($databaseContent);
     }
 
     /**
@@ -132,5 +132,34 @@ class OthersProviderTest extends TestCase
             '',
             $catalogue->get('%d product(s) successfully created.', 'messages')
         );
+    }
+
+    public function testItLoadsCustomizedTranslationsFromDatabase()
+    {
+        $provider = new OthersProvider(
+            $this->databaseReader,
+            self::TRANSLATIONS_DIR
+        );
+
+        // load catalogue from database translations
+        $catalogue = $provider->getUserTranslatedCatalogue('fr-FR');
+
+        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
+
+        // Check integrity of translations
+        $messages = $catalogue->all();
+        $domains = $catalogue->getDomains();
+        sort($domains);
+
+        // verify all catalogues are loaded
+        $this->assertSame([
+            'messages',
+        ], $domains);
+
+        // verify that the catalogues are complete
+        $this->assertCount(1, $messages['messages']);
+
+        // verify translations
+        $this->assertSame('Traduction customisée', $catalogue->get('Some text to translate', 'messages'));
     }
 }
