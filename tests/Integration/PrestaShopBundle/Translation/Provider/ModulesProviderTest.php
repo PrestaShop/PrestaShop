@@ -26,9 +26,11 @@
 
 namespace Tests\Integration\PrestaShopBundle\Translation\Provider;
 
+use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractor;
 use PrestaShopBundle\Translation\Provider\ModulesProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 use Tests\Integration\PrestaShopBundle\Translation\CatalogueVerifier;
 
@@ -63,16 +65,16 @@ class ModulesProviderTest extends KernelTestCase
         $databaseContent = [
             [
                 'lang' => 'fr-FR',
-                'key' => 'Invalid name',
+                'key' => 'Some text to translate',
                 'translation' => 'Traduction customisée',
-                'domain' => 'ShopFormsErrors',
+                'domain' => 'ModulesTranslationtest',
                 'theme' => null,
             ],
             [
                 'lang' => 'fr-FR',
                 'key' => 'Some made up text',
                 'translation' => 'Un texte inventé',
-                'domain' => 'ShopActions',
+                'domain' => 'ModulesTranslationtest',
                 'theme' => 'classic',
             ],
         ];
@@ -90,7 +92,7 @@ class ModulesProviderTest extends KernelTestCase
         );
 
         $this->provider = new ModulesProvider(
-            new MockDatabaseTranslationReader([]),
+            new MockDatabaseTranslationReader($databaseContent),
             $modulesDirectory,
             $this->getDefaultModuleDirectory(),
             $legacyFileLoader,
@@ -150,6 +152,30 @@ class ModulesProviderTest extends KernelTestCase
                 ],
             ],
         ];
+    }
+
+    public function testItLoadsCustomizedTranslationsFromDatabase()
+    {
+        // load catalogue from database translations
+        $catalogue = $this->provider->getUserTranslatedCatalogue('fr-FR');
+
+        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
+
+        // Check integrity of translations
+        $messages = $catalogue->all();
+        $domains = $catalogue->getDomains();
+        sort($domains);
+
+        // verify all catalogues are loaded
+        $this->assertSame([
+            'ModulesTranslationtest',
+        ], $domains);
+
+        // verify that the catalogues are complete
+        $this->assertCount(1, $messages['ModulesTranslationtest']);
+
+        // verify translations
+        $this->assertSame('Traduction customisée', $catalogue->get('Some text to translate', 'ModulesTranslationtest'));
     }
 
     /**
