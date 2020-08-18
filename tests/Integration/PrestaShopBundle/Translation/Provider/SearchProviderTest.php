@@ -49,21 +49,28 @@ class SearchProviderTest extends KernelTestCase
         $databaseContent = [
             [
                 'lang' => 'fr-FR',
-                'key' => 'Invalid name',
+                'key' => 'Some text to translate',
                 'translation' => 'Traduction customisée',
-                'domain' => 'ShopFormsErrors',
+                'domain' => 'AdminActions',
+                'theme' => null,
+            ],
+            [
+                'lang' => 'fr-FR',
+                'key' => 'Some other text to translate',
+                'translation' => 'Traduction de texte aléatoire',
+                'domain' => 'AdminActionsNumberTwo',
                 'theme' => null,
             ],
             [
                 'lang' => 'fr-FR',
                 'key' => 'Some made up text',
                 'translation' => 'Un texte inventé',
-                'domain' => 'ShopActions',
+                'domain' => 'AdminActions',
                 'theme' => 'classic',
             ],
         ];
         $this->provider = new SearchProvider(
-            new MockDatabaseTranslationReader([]),
+            new MockDatabaseTranslationReader($databaseContent),
             $resourcesDir,
             'AdminActions'
         );
@@ -106,6 +113,31 @@ class SearchProviderTest extends KernelTestCase
         // There is no translation for 'Continue'
         $this->assertCount(90, $adminTranslations);
         $this->assertSame('Télécharger le fichier', $catalogue->get('Download file', 'AdminActions'));
+    }
+
+    public function testItLoadsCustomizedTranslationsFromDatabase()
+    {
+        // load catalogue from database translations
+        $catalogue = $this->provider->getUserTranslatedCatalogue('fr-FR');
+
+        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
+
+        // Check integrity of translations
+        $messages = $catalogue->all();
+        $domains = $catalogue->getDomains();
+        sort($domains);
+
+        // verify all catalogues are loaded
+        $this->assertSame([
+            'AdminActions',
+            'AdminActionsNumberTwo',
+        ], $domains);
+
+        // verify that the catalogues are complete
+        $this->assertCount(1, $messages['AdminActions']);
+
+        // verify translations
+        $this->assertSame('Traduction customisée', $catalogue->get('Some text to translate', 'AdminActions'));
     }
 
     protected function tearDown()

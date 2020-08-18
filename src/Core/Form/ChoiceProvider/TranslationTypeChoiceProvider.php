@@ -54,7 +54,7 @@ final class TranslationTypeChoiceProvider implements FormChoiceProviderInterface
     {
         return [
             $this->translator->trans('Back office translations', [], 'Admin.International.Feature') => 'back',
-            $this->translator->trans('Themes translations', [], 'Admin.International.Feature') => 'themes',
+            $this->translator->trans('Front office Translations', [], 'Admin.International.Feature') => 'themes',
             $this->translator->trans('Installed modules translations', [], 'Admin.International.Feature') => 'modules',
             $this->translator->trans('Email translations', [], 'Admin.International.Feature') => 'mails',
             $this->translator->trans('Other translations', [], 'Admin.International.Feature') => 'others',
