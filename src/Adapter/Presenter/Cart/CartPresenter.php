@@ -28,11 +28,11 @@ namespace PrestaShop\PrestaShop\Adapter\Presenter\Cart;
 
 use Cart;
 use CartRule;
+use Combination;
 use Configuration;
 use Context;
 use Country;
 use Hook;
-use Combination;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
@@ -144,7 +144,7 @@ class CartPresenter implements PresenterInterface
                 $rawProduct[$field] = '';
             }
         }
-        
+
         $price_tax_exc = $rawProduct['price'];
 
         if ($this->includeTaxes()) {
