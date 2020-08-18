@@ -33,6 +33,7 @@ use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
 use PrestaShopBundle\Translation\Provider\Type\BackType;
+use PrestaShopBundle\Translation\Provider\Type\CoreFrontType;
 use PrestaShopBundle\Translation\Provider\Type\FrontType;
 use PrestaShopBundle\Translation\Provider\Type\MailsBodyType;
 use PrestaShopBundle\Translation\Provider\Type\MailsType;
@@ -56,6 +57,7 @@ class TranslationController extends ApiController
     public const TYPE_BACK = 'back';
     public const TYPE_OTHERS = 'others';
     public const TYPE_FRONT = 'front';
+    public const TYPE_CORE_FRONT = 'core_front';
 
     public const ACCEPTED_TYPES = [
         self::TYPE_MODULES,
@@ -178,6 +180,10 @@ class TranslationController extends ApiController
 
             if (!in_array($type, self::ACCEPTED_TYPES)) {
                 throw new Exception(sprintf("The 'type' parameter '%s' is not valid", $type));
+            }
+
+            if (self::TYPE_THEMES === $type && '0' === $selected) {
+                $type = self::TYPE_CORE_FRONT;
             }
 
             if (in_array($type, [self::TYPE_MODULES, self::TYPE_THEMES]) && empty($selected)) {
@@ -411,6 +417,8 @@ class TranslationController extends ApiController
                 return new BackType();
             case self::TYPE_FRONT:
                 return new FrontType();
+            case self::TYPE_CORE_FRONT:
+                return new CoreFrontType();
             case self::TYPE_MAILS:
                 return new MailsType();
             case self::TYPE_MAILS_BODY:
