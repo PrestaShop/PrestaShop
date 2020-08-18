@@ -105,6 +105,9 @@ export default class OrderProductEdit {
   displayProduct(product) {
     this.productRowEdit = $(OrderViewPageMap.productEditRowTemplate).clone(true);
     this.productRowEdit.attr('id', `editOrderProduct_${this.orderDetailId}`);
+    this.productRowEdit.find('*[id]').each(function removeAllIds() {
+      $(this).removeAttr('id');
+    });
 
     // Find controls
     this.productEditSaveBtn = this.productRowEdit.find(OrderViewPageMap.productEditSaveBtn);

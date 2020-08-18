@@ -391,15 +391,22 @@ class OrderController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_orders_index');
         }
 
+        $formFactory = $this->get('form.factory');
         $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class, [], [
             'order_id' => $orderId,
         ]);
-        $updateOrderStatusForm = $this->createForm(UpdateOrderStatusType::class, [
-            'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
-        ]);
-        $updateOrderStatusActionBarForm = $this->createForm(UpdateOrderStatusType::class, [
-            'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
-        ]);
+        $updateOrderStatusForm = $formFactory->createNamed(
+            'update_order_status',
+            UpdateOrderStatusType::class, [
+                'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
+            ]
+        );
+        $updateOrderStatusActionBarForm = $formFactory->createNamed(
+            'update_order_status_action_bar',
+            UpdateOrderStatusType::class, [
+                'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
+            ]
+        );
         $addOrderPaymentForm = $this->createForm(OrderPaymentType::class, [
             'id_currency' => $orderForViewing->getCurrencyId(),
         ], [
