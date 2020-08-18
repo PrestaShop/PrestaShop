@@ -272,11 +272,11 @@ abstract class AbstractOrderHandler
             $order->id_cart
         );
 
-        if (!empty($existingSpecificPriceId)) {
-            return new SpecificPrice($existingSpecificPriceId);
+        if (empty($existingSpecificPriceId)) {
+            return null;
         }
 
-        return null;
+        return new SpecificPrice($existingSpecificPriceId);
     }
 
     /**
