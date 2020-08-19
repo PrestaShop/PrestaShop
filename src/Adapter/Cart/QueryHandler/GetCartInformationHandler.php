@@ -162,13 +162,13 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         }
 
         // Add addresses already assigned to cart if absent (in case they are deleted)
-        if (!isset($cartAddresses[$cart->id_address_delivery])) {
+        if (0 !== (int) $cart->id_address_delivery && !isset($cartAddresses[$cart->id_address_delivery])) {
             $cartAddresses[$cart->id_address_delivery] = $this->buildCartAddress(
                 $cart->id_address_delivery,
                 $cart
             );
         }
-        if (!isset($cartAddresses[$cart->id_address_invoice])) {
+        if (0 !== (int) $cart->id_address_invoice && !isset($cartAddresses[$cart->id_address_invoice])) {
             $cartAddresses[$cart->id_address_invoice] = $this->buildCartAddress(
                 $cart->id_address_invoice,
                 $cart
