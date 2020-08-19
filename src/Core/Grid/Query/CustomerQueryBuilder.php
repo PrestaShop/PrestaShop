@@ -222,7 +222,7 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            $qb->andWhere('c.`' .  $filterName . '` LIKE :' . $filterName);
+            $qb->andWhere('c.`' . $filterName . '` LIKE :' . $filterName);
             $qb->setParameter($filterName, '%' . $filterValue . '%');
         }
     }
