@@ -4423,9 +4423,17 @@ exit;
     public static function redirectToInstall()
     {
         if (file_exists(__DIR__ . '/../install')) {
-            header('Location: install/');
+            if (defined('_PS_ADMIN_DIR_')) {
+                header('Location: ../install/');
+            } else {
+                header('Location: install/');
+            }
         } elseif (file_exists(__DIR__ . '/../install-dev')) {
-            header('Location: install-dev/');
+            if (defined('_PS_ADMIN_DIR_')) {
+                header('Location: ../install-dev/');
+            } else {
+                header('Location: install-dev/');
+            }
         } else {
             die('Error: "install" directory is missing');
         }
