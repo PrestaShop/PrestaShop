@@ -35,11 +35,11 @@ const initComponents = () => {
         enabled: false,
         enable() {
           // Already enabled
-          if (window.prestashop.translatableInput.enabled === true) {
+          if (window.prestashop.components.translatableInput.enabled === true) {
             return;
           }
-          window.prestashop.translatableInput.instance = new TranslatableInput();
-          window.prestashop.translatableInput.enabled = true;
+          window.prestashop.components.translatableInput.instance = new TranslatableInput();
+          window.prestashop.components.translatableInput.enabled = true;
         },
         instance: null,
       },
@@ -47,11 +47,11 @@ const initComponents = () => {
         enabled: false,
         enable() {
           // Already enabled
-          if (window.prestashop.TinyMCEEditor.enabled === true) {
+          if (window.prestashop.components.TinyMCEEditor.enabled === true) {
             return;
           }
-          window.prestashop.TinyMCEEditor.instance = new TinyMCEEditor();
-          window.prestashop.TinyMCEEditor.enabled = true;
+          window.prestashop.components.TinyMCEEditor.instance = new TinyMCEEditor();
+          window.prestashop.components.TinyMCEEditor.enabled = true;
         },
         instance: null,
       },
