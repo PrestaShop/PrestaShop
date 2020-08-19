@@ -75,7 +75,9 @@ class TranslatableInput {
 
     localeButton.text(selectedLocale);
     form.find(this.localeInputSelector).addClass('d-none');
-    form.find(`${this.localeInputSelector}.js-locale-${selectedLocale}`).removeClass('d-none');
+    form
+      .find(`${this.localeInputSelector}.js-locale-${selectedLocale}`)
+      .removeClass('d-none');
 
     if (changeLanguageUrl) {
       this.saveSelectedLanguage(changeLanguageUrl, selectedLocale);
