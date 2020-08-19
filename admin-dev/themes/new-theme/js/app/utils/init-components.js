@@ -23,23 +23,51 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import TranslatableField from '@js/components/translatable-field.js';
 import TranslatableInput from '@js/components/translatable-input.js';
+import TinyMCEEditor from '@js/components/tinymce-editor.js';
 
 const initComponents = () => {
   // Initialize the prestashop global object
   window.prestashop = {
     components: {
-      enableTranslatableInput,
+      translatableInput: {
+        enabled: false,
+        enable() {
+          // Already enabled
+          if (window.prestashop.translatableInput.enabled === true) {
+            return;
+          }
+          window.prestashop.translatableInput.instance = new TranslatableInput();
+          window.prestashop.translatableInput.enabled = true;
+        },
+        instance: null,
+      },
+      TinyMCEEditor: {
+        enabled: false,
+        enable() {
+          // Already enabled
+          if (window.prestashop.TinyMCEEditor.enabled === true) {
+            return;
+          }
+          window.prestashop.TinyMCEEditor.instance = new TinyMCEEditor();
+          window.prestashop.TinyMCEEditor.enabled = true;
+        },
+        instance: null,
+      },
+      TranslatableField: {
+        enabled: false,
+        enable() {
+          // Already enabled
+          if (window.prestashop.TranslatableField.enabled === true) {
+            return;
+          }
+          window.prestashop.TranslatableField.instance = new TranslatableField();
+          window.prestashop.TranslatableField.enabled = true;
+        },
+        instance: null,
+      },
     },
   };
 };
-
 export default initComponents;
-
-const enableTranslatableInput = function () {
-  if (window.prestashop.components.enableTranslatableInput.enabled) {
-    return;
-  }
-  new TranslatableInput();
-  window.prestashop.components.enableTranslatableInput.enabled = true;
-};
