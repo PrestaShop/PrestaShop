@@ -172,8 +172,8 @@ class OrderAmountUpdater
         $newCartRules = $cart->getCartRules();
         // We need the calculator to compute the discuont on the whole products because they can interact with each
         // other so they can't be computed independently
-        $calculator = $cart->newCalculator($order->getCartProducts(), $newCartRules, null);
-        $calculator->processCalculation($computingPrecision);
+        $calculator = $cart->newCalculator($order->getCartProducts(), $newCartRules, null, $computingPrecision);
+        $calculator->processCalculation();
 
         foreach ($order->getCartRules() as $orderCartRuleData) {
             /** @var CartRuleData $cartRuleData */
@@ -193,6 +193,8 @@ class OrderAmountUpdater
 
             // This one is no longer in the new cart rules so we delete it
             $orderCartRule = new OrderCartRule($orderCartRuleData['id_order_cart_rule']);
+            // This one really needs to be deleted because it doesn't match the applied cart rules any more
+            // we don't use soft deleted here (unlike in the handler) but hard delete
             if (!$orderCartRule->delete()) {
                 throw new OrderException('Could not delete order cart rule from database.');
             }

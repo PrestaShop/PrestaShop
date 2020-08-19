@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Cart;
-use CartRule;
 use OrderCartRule;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
@@ -70,13 +69,8 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
             throw new OrderException('Invalid cart provided.');
         }
 
-        $cartRule = new CartRule($orderCartRule->id_cart_rule);
-        if (!Validate::isLoadedObject($cartRule)) {
-            throw new OrderException('Invalid cart rule provided.');
-        }
-
         // Delete Order Cart Rule and update Order
-        $orderCartRule->delete();
+        $orderCartRule->softDelete();
         $cart->removeCartRule($orderCartRule->id_cart_rule);
 
         $this->orderAmountUpdater->update($order, $cart, $orderCartRule->id_order_invoice);

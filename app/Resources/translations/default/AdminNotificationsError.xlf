@@ -94,12 +94,12 @@
       <trans-unit id="e07269088946aa33a280b8c05529b46c">
         <source>Cannot parse feed.</source>
         <target>Cannot parse feed.</target>
-        <note>Line: 963</note>
+        <note>Line: 1021</note>
       </trans-unit>
       <trans-unit id="6f775dff2aa88bce2301e5d5309c5f7e">
         <source>No default currency</source>
         <target>No default currency</target>
-        <note>Line: 970</note>
+        <note>Line: 1028</note>
       </trans-unit>
     </body>
   </file>
@@ -179,42 +179,47 @@
       <trans-unit id="fed3c8d832129d27b64c34fe410e7346">
         <source>Property %s is empty.</source>
         <target>Property %s is empty.</target>
-        <note>Line: 1101</note>
+        <note>Line: 1125</note>
       </trans-unit>
       <trans-unit id="872d428c40b36bba9fc5fafaa76c6f22">
         <source>Property %1$s has a bad value (allowed values are: %2$s).</source>
         <target>Property %1$s has a bad value (allowed values are: %2$s).</target>
-        <note>Line: 1115</note>
+        <note>Line: 1139</note>
       </trans-unit>
       <trans-unit id="9599d22695068a773c0f10ea1fd26a74">
         <source>Your entry in field %1$s (language %2$s) exceeds max length %3$d chars (incl. html tags).</source>
         <target>Your entry in field %1$s (language %2$s) exceeds max length %3$d chars (incl. html tags).</target>
-        <note>Line: 1131</note>
+        <note>Line: 1155</note>
       </trans-unit>
       <trans-unit id="2674ff1d6f5ff826dae13cd4db1ca9b0">
         <source>The length of property %1$s is currently %2$d chars. It must be between %3$d and %4$d chars.</source>
         <target>The length of property %1$s is currently %2$d chars. It must be between %3$d and %4$d chars.</target>
-        <note>Line: 1137</note>
+        <note>Line: 1161</note>
       </trans-unit>
       <trans-unit id="1448270fc6dbabe70584c87fa27cc96f">
         <source>Validation function not found: %s.</source>
         <target>Validation function not found: %s.</target>
-        <note>Line: 1153</note>
+        <note>Line: 1177</note>
       </trans-unit>
       <trans-unit id="6938fc7c0e5b0b07a6ba370bcb84bbd3">
         <source>Property %s is not valid</source>
         <target>Property %s is not valid</target>
-        <note>Line: 1171</note>
+        <note>Line: 1195</note>
       </trans-unit>
       <trans-unit id="ee66f9c9930cb33d2a5dde9b240d3f7e">
         <source>is required.</source>
         <target>is required.</target>
-        <note>Line: 1229</note>
+        <note>Line: 1253</note>
       </trans-unit>
       <trans-unit id="0fec856489067e4d21aa315324c441dc">
         <source>%1$s is too long. Maximum length: %2$d</source>
         <target>%1$s is too long. Maximum length: %2$d</target>
-        <note>Line: 1236</note>
+        <note>Line: 1260</note>
+      </trans-unit>
+      <trans-unit id="0e2338b37ab3dfeed544e8233b53d4e0">
+        <source>The %1$s field is too long (%2$d chars max).</source>
+        <target>The %1$s field is too long (%2$d chars max).</target>
+        <note>Line: 1157</note>
       </trans-unit>
     </body>
   </file>
@@ -294,58 +299,58 @@
       <trans-unit id="df2751083713a6a971814c07d88c3eb5">
         <source>The 'From' date format is invalid (YYYY-MM-DD)</source>
         <target>The 'From' date format is invalid (YYYY-MM-DD)</target>
-        <note>Line: 902</note>
+        <note>Line: 899</note>
       </trans-unit>
       <trans-unit id="f500b8d6f94abcca48cda7c033c64996">
         <source>The 'To' date format is invalid (YYYY-MM-DD)</source>
         <target>The 'To' date format is invalid (YYYY-MM-DD)</target>
-        <note>Line: 910</note>
+        <note>Line: 907</note>
       </trans-unit>
       <trans-unit id="83379252d4737a0b2a63a9388bb36890">
         <source>An error occurred while attempting to delete the image. (cannot load object).</source>
         <target>An error occurred while attempting to delete the image. (cannot load object).</target>
-        <note>Line: 1017</note>
+        <note>Line: 1014</note>
       </trans-unit>
       <trans-unit id="2a0c56d5a5183a9b65b8e2817f75ded2">
         <source>You cannot delete this item.</source>
         <target>You cannot delete this item.</target>
-        <note>Line: 1104
+        <note>Line: 1101
 Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       </trans-unit>
       <trans-unit id="204c3558e41366f3d558ce8e01426a22">
         <source>field %s is required.</source>
         <target>field %s is required.</target>
-        <note>Line: 1489</note>
+        <note>Line: 1486</note>
       </trans-unit>
       <trans-unit id="c2c0e06097c62422199e29a5574e9fc4">
         <source>Cannot add configuration %s</source>
         <target>Cannot add configuration %s</target>
-        <note>Line: 1552</note>
+        <note>Line: 1549</note>
       </trans-unit>
       <trans-unit id="2782e6f430c2658c79aecfcecdc0d0e8">
         <source>The field %field_name% is required at least in %lang%.</source>
         <target>The field %field_name% is required at least in %lang%.</target>
-        <note>Line: 3761</note>
+        <note>Line: 3681</note>
       </trans-unit>
       <trans-unit id="114eadc70de249729e9287a6b450c6e0">
         <source>The %field_name% field (%lang%) is invalid.</source>
         <target>The %field_name% field (%lang%) is invalid.</target>
-        <note>Line: 3796</note>
+        <note>Line: 3716</note>
       </trans-unit>
       <trans-unit id="b4186b9ed7c957a1cd9f4e7ce916e603">
         <source>%s: Incorrect value</source>
         <target>%s: Incorrect value</target>
-        <note>Line: 4002</note>
+        <note>Line: 3922</note>
       </trans-unit>
       <trans-unit id="c87956ad745e55231c633c03fe0f0d5b">
         <source>An error occurred while assigning a zone to the selection.</source>
         <target>An error occurred while assigning a zone to the selection.</target>
-        <note>Line: 4254</note>
+        <note>Line: 4174</note>
       </trans-unit>
       <trans-unit id="93463ceee9a3d376b18ee618bc2fffe4">
         <source>You must select at least one element to assign a new zone.</source>
         <target>You must select at least one element to assign a new zone.</target>
-        <note>Line: 4256</note>
+        <note>Line: 4176</note>
       </trans-unit>
     </body>
   </file>
@@ -373,12 +378,12 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="fdc746e5693df31cf4f6ef789a8846c5">
         <source>file (%s) not writable</source>
         <target>file (%s) not writable</target>
-        <note>Line: 3035</note>
+        <note>Line: 3040</note>
       </trans-unit>
       <trans-unit id="a9de928286071f457fcbc45656353761">
         <source>directory (%s) not writable</source>
         <target>directory (%s) not writable</target>
-        <note>Line: 3111</note>
+        <note>Line: 3116</note>
       </trans-unit>
     </body>
   </file>
@@ -405,7 +410,7 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="574af21ff5cd555457e49205287f7e9b">
         <source>The object cannot be loaded.</source>
         <target>The object cannot be loaded.</target>
-        <note>Line: 611</note>
+        <note>Line: 617</note>
       </trans-unit>
     </body>
   </file>
@@ -497,12 +502,12 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="becfb58422969ec127b4bf1af46650ab">
         <source>Email is empty.</source>
         <target>Email is empty.</target>
-        <note>Line: 256</note>
+        <note>Line: 257</note>
       </trans-unit>
       <trans-unit id="e267e2be02cf3e29f4ba53b5d97cf78a">
         <source>Invalid email address.</source>
         <target>Invalid email address.</target>
-        <note>Line: 258</note>
+        <note>Line: 259</note>
       </trans-unit>
       <trans-unit id="5ee800d2d30225decb5b057d846103b7">
         <source>The password field is blank.</source>
@@ -564,11 +569,6 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
   </file>
   <file original="controllers/admin/AdminOrdersController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="0e2338b37ab3dfeed544e8233b53d4e0">
-        <source>The %1$s field is too long (%2$d chars max).</source>
-        <target>The %1$s field is too long (%2$d chars max).</target>
-        <note>Line: 594</note>
-      </trans-unit>
       <trans-unit id="055cca15dfe5fb74bde56d7331fff449">
         <source>An error occurred while saving the message.</source>
         <target>An error occurred while saving the message.</target>
@@ -675,7 +675,7 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="cbecc45ae8ccf1234657bd40ee4c55dd">
         <source>An error occurred while copying this image:</source>
         <target>An error occurred while copying this image:</target>
-        <note>Line: 2873</note>
+        <note>Line: 2884</note>
       </trans-unit>
       <trans-unit id="be694d5db9d32c43014995441a5939c4">
         <source>Invalid file name</source>
@@ -690,7 +690,7 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="dc0614532e2b908e6c2d82cc0972af9d">
         <source>An error occurred while attempting to create a new folder.</source>
         <target>An error occurred while attempting to create a new folder.</target>
-        <note>Line: 2829</note>
+        <note>Line: 2840</note>
       </trans-unit>
       <trans-unit id="6c3609de8769a4456305ec22e764573d">
         <source>An error occurred while copying this image: %s</source>
@@ -700,7 +700,7 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="211ff814e7bf91c4548a61ba1c427c15">
         <source>Error while updating the status.</source>
         <target>Error while updating the status.</target>
-        <note>Line: 2887</note>
+        <note>Line: 2898</note>
       </trans-unit>
     </body>
   </file>
@@ -865,7 +865,7 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="417d63b1effb110e438d4b4b9f0fbd95">
         <source>The voucher code is invalid.</source>
         <target>The voucher code is invalid.</target>
-        <note>Line: 200</note>
+        <note>Line: 204</note>
       </trans-unit>
     </body>
   </file>
@@ -874,7 +874,7 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="7cc92687130ea12abb80556681538001">
         <source>An error occurred during the image upload process.</source>
         <target>An error occurred during the image upload process.</target>
-        <note>Line: 484</note>
+        <note>Line: 485</note>
       </trans-unit>
     </body>
   </file>
@@ -1012,12 +1012,12 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="df3c280f0aaf0cb0d5c25ab322a8bcf9">
         <source>You do not have permission to update this.</source>
         <target>You do not have permission to update this.</target>
-        <note>Line: 331</note>
+        <note>Line: 330</note>
       </trans-unit>
       <trans-unit id="044bfaec90b16e5caf72b70a5ae4c872">
         <source>You need permission to add this.</source>
         <target>You need permission to add this.</target>
-        <note>Line: 561</note>
+        <note>Line: 560</note>
       </trans-unit>
     </body>
   </file>
@@ -1086,17 +1086,17 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="11a257a80f8c8d76132470b171de6795">
         <source>You do not have permission to delete this.</source>
         <target>You do not have permission to delete this.</target>
-        <note>Line: 356</note>
+        <note>Line: 358</note>
       </trans-unit>
       <trans-unit id="e8ae00af8575f645bf6e4358f120cba3">
         <source>An unexpected error occurred. [%type% code %code%]</source>
         <target>An unexpected error occurred. [%type% code %code%]</target>
-        <note>Line: 395</note>
+        <note>Line: 397</note>
       </trans-unit>
       <trans-unit id="5ab1978ae9ce868183a34316327be062">
         <source>An unexpected error occurred. [%type% code %code%]: %message%</source>
         <target>An unexpected error occurred. [%type% code %code%]: %message%</target>
-        <note>Line: 384</note>
+        <note>Line: 386</note>
       </trans-unit>
     </body>
   </file>
@@ -1124,17 +1124,17 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="5dcea1234ac01d22f40ffc81d0bc4c2f">
         <source>File too large (limit of %s bytes).</source>
         <target>File too large (limit of %s bytes).</target>
-        <note>Line: 591</note>
+        <note>Line: 597</note>
       </trans-unit>
       <trans-unit id="1bdd228669c9dd995eb664737e60786e">
         <source>You do not have permission to edit this.</source>
         <target>You do not have permission to edit this.</target>
-        <note>Line: 404</note>
+        <note>Line: 410</note>
       </trans-unit>
       <trans-unit id="4dedf35a15365e00b8a151fc1daed3af">
         <source>Image format not recognized, allowed format(s) is(are): .%s</source>
         <target>Image format not recognized, allowed format(s) is(are): .%s</target>
-        <note>Line: 581</note>
+        <note>Line: 587</note>
       </trans-unit>
     </body>
   </file>
@@ -1209,7 +1209,7 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="dbf373dd3565accf2d2fd19700f6a5ae">
         <source>Invalid action</source>
         <target>Invalid action</target>
-        <note>Line: 382</note>
+        <note>Line: 393</note>
       </trans-unit>
     </body>
   </file>
@@ -1245,22 +1245,27 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="efb49241363bce74c7d7899333cdebb5">
         <source>An error occurred when attempting to update the required fields.</source>
         <target>An error occurred when attempting to update the required fields.</target>
-        <note>Line: 512</note>
+        <note>Line: 638</note>
       </trans-unit>
       <trans-unit id="acdcc688155bd653f51eaf710cac8af5">
         <source>Internal error #%s</source>
         <target>Internal error #%s</target>
-        <note>Line: 497</note>
+        <note>Line: 623</note>
       </trans-unit>
       <trans-unit id="d52eaeff31af37a4a7e0550008aff5df">
         <source>An error occurred while attempting to save.</source>
         <target>An error occurred while attempting to save.</target>
-        <note>Line: 527</note>
+        <note>Line: 657</note>
       </trans-unit>
       <trans-unit id="ddb7f719baea8c9f335937b683e8f155">
         <source>Invalid data supplied.</source>
         <target>Invalid data supplied.</target>
-        <note>Line: 503</note>
+        <note>Line: 629</note>
+      </trans-unit>
+      <trans-unit id="a031742eeff8c55743063075a141da16">
+        <source>Address fields contain invalid values.</source>
+        <target>Address fields contain invalid values.</target>
+        <note>Line: 643</note>
       </trans-unit>
     </body>
   </file>
@@ -1287,12 +1292,12 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="10f97f4fea6d1ff9ffd1ed3260d6220d">
         <source>Unable to delete associated images.</source>
         <target>Unable to delete associated images.</target>
-        <note>Line: 773</note>
+        <note>Line: 779</note>
       </trans-unit>
       <trans-unit id="2b4de48b49648d3323f20b6371f7e3c1">
         <source>You cannot upload more files</source>
         <target>You cannot upload more files</target>
-        <note>Line: 802</note>
+        <note>Line: 808</note>
       </trans-unit>
     </body>
   </file>
@@ -1317,6 +1322,16 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
         <target>Image format not recognized, allowed formats are: .gif, .jpg, .png</target>
         <note>Line: 505</note>
       </trans-unit>
+      <trans-unit id="c2c0814b9cbcdf57b426000de541d20f">
+        <source>The object cannot be loaded (or found).</source>
+        <target>The object cannot be loaded (or found).</target>
+        <note>Line: 452</note>
+      </trans-unit>
+      <trans-unit id="2c576ac66b22c688a12278e88a976ab8">
+        <source>The address for this supplier has been deleted.</source>
+        <target>The address for this supplier has been deleted.</target>
+        <note>Line: 456</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1324,7 +1339,7 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="2deae2efe4b65df80c188a31fed3cc17">
         <source>The field %s is required.</source>
         <target>The field %s is required.</target>
-        <note>Line: 927</note>
+        <note>Line: 931</note>
       </trans-unit>
     </body>
   </file>
@@ -1342,7 +1357,7 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="959c96ec640d353311dd9763d57daad6">
         <source>Please fill in all the required fields.</source>
         <target>Please fill in all the required fields.</target>
-        <note>Line: 558</note>
+        <note>Line: 562</note>
       </trans-unit>
       <trans-unit id="3a092130bd08641faa55f5abc9e4a1f4">
         <source>Positive product quantity is required</source>
@@ -1367,22 +1382,27 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="c5064b408c1894a4dbd6db58f119c4a6">
         <source>Selected language cannot be used because it is disabled</source>
         <target>Selected language cannot be used because it is disabled</target>
-        <note>Line: 542</note>
+        <note>Line: 546</note>
       </trans-unit>
       <trans-unit id="ea5d4a7a4ca312b276b1d4ea1f74d724">
         <source>Selected currency cannot be used because it is deleted.</source>
         <target>Selected currency cannot be used because it is deleted.</target>
-        <note>Line: 548</note>
+        <note>Line: 552</note>
       </trans-unit>
       <trans-unit id="021361da28a3e064871e2cbbacd46757">
         <source>Selected currency cannot be used because it is disabled.</source>
         <target>Selected currency cannot be used because it is disabled.</target>
-        <note>Line: 552</note>
+        <note>Line: 556</note>
       </trans-unit>
       <trans-unit id="bc5d37ff246288c98fa45f3903172747">
         <source>Custom field text cannot be longer than %limit% characters.</source>
         <target>Custom field text cannot be longer than %limit% characters.</target>
-        <note>Line: 562</note>
+        <note>Line: 566</note>
+      </trans-unit>
+      <trans-unit id="e1f19b2938605ab0bdc64ba270815786">
+        <source>Same product quantity is already in cart</source>
+        <target>Same product quantity is already in cart</target>
+        <note>Line: 540</note>
       </trans-unit>
     </body>
   </file>
@@ -1391,27 +1411,32 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="59af32e406ca8d94850e9a2a696c9dcd">
         <source>Invalid value: the payment must be a positive amount.</source>
         <target>Invalid value: the payment must be a positive amount.</target>
-        <note>Line: 1509</note>
+        <note>Line: 1617</note>
       </trans-unit>
       <trans-unit id="546710db975c663e306008fda9fc5865">
         <source>Invalid action: this order has not been delivered.</source>
         <target>Invalid action: this order has not been delivered.</target>
-        <note>Line: 1518</note>
+        <note>Line: 1626</note>
       </trans-unit>
       <trans-unit id="b5ab864b320f4fcbcd061ee3119cf21c">
         <source>Invalid action: this order has already been delivered.</source>
         <target>Invalid action: this order has already been delivered.</target>
-        <note>Line: 1522</note>
+        <note>Line: 1630</note>
       </trans-unit>
       <trans-unit id="3e19a894b9552d54a62e99b3f7e7cf94">
         <source>Invalid action: this order has already been paid.</source>
         <target>Invalid action: this order has already been paid.</target>
-        <note>Line: 1514</note>
+        <note>Line: 1622</note>
       </trans-unit>
       <trans-unit id="7621aa68f3fb11dce889ba85f3a74758">
         <source>Invalid action: this order has not been paid.</source>
         <target>Invalid action: this order has not been paid.</target>
-        <note>Line: 1526</note>
+        <note>Line: 1634</note>
+      </trans-unit>
+      <trans-unit id="b19e2fa860ab1d9fdd60f5b7772b6a3e">
+        <source>The product customization picture could not be found.</source>
+        <target>The product customization picture could not be found.</target>
+        <note>Line: 1488</note>
       </trans-unit>
     </body>
   </file>
@@ -1550,12 +1575,12 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="b5f4891560c670dfd0ee974717d6bd7c">
         <source>Cart rule name must contain clean HTML</source>
         <target>Cart rule name must contain clean HTML</target>
-        <note>Line: 96</note>
+        <note>Line: 95</note>
       </trans-unit>
       <trans-unit id="88f07c5ea15091bd64ef2c3fa1a7dae3">
         <source>Discount value must be a number</source>
         <target>Discount value must be a number</target>
-        <note>Line: 109</note>
+        <note>Line: 108</note>
       </trans-unit>
     </body>
   </file>

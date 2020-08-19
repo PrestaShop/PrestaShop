@@ -11,10 +11,21 @@ class SeoAndUrls extends BOBasePage {
     this.addNewSeoPageLink = '#page-header-desc-configuration-add';
     this.successfulSettingsUpdateMessage = 'Update successful';
 
-    // Selectors grid panel
+    // Grid selectors
     this.gridPanel = '#meta_grid_panel';
     this.gridTable = '#meta_grid_table';
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
+
+    // Sort Selectors
+    this.tableHead = `${this.gridPanel} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+
+    // Bulk Actions
+    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
+    this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
+    this.bulkActionsDeleteButton = `${this.gridPanel} #meta_grid_bulk_action_delete_seo_urls`;
+
     // Filters
     this.filterColumn = filterBy => `${this.gridTable} #meta_${filterBy}`;
     this.filterSearchButton = `${this.gridTable} .grid-search-button`;
@@ -24,6 +35,7 @@ class SeoAndUrls extends BOBasePage {
     this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
+
     // Actions buttons in Row
     this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
     this.editRowLink = row => `${this.actionsColumn(row)} a.grid-edit-row-link`;
@@ -37,6 +49,16 @@ class SeoAndUrls extends BOBasePage {
     // Delete modal
     this.confirmDeleteModal = '#meta-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
+    // Pagination selectors
+    this.paginationLimitSelect = '#paginator_select_page_limit';
+    this.paginationLabel = `${this.gridPanel} .col-form-label`;
+    this.paginationNextLink = `${this.gridPanel} #pagination_next_url`;
+    this.paginationPreviousLink = `${this.gridPanel} [aria-label='Previous']`;
+
+    // Seo options form
+    this.switchDisplayAttributesLabel = toggle => 'label[for=\'meta_settings_form_seo_options_product'
+      + `_attributes_in_title_${toggle}']`;
+    this.saveSeoOptionsFormButton = '#main-div form:nth-child(1) div:nth-child(4) div.card-footer button';
   }
 
   /* header methods */
@@ -46,6 +68,33 @@ class SeoAndUrls extends BOBasePage {
    */
   async goToNewSeoUrlPage(page) {
     await this.clickAndWaitForNavigation(page, this.addNewSeoPageLink);
+  }
+
+  /* Bulk actions methods */
+
+  /**
+   * Delete seo pages by bulk actions
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async bulkDeleteSeoUrlPage(page) {
+    // Confirm delete in js modal
+    this.dialogListener(page, true);
+
+    // Click on Select All
+    await Promise.all([
+      page.$eval(this.selectAllRowsLabel, el => el.click()),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
+    ]);
+
+    // Click on button bulk action
+    await Promise.all([
+      page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
+    ]);
+
+    await this.clickAndWaitForNavigation(page, this.bulkActionsDeleteButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /* Column methods */
@@ -58,6 +107,22 @@ class SeoAndUrls extends BOBasePage {
    */
   async getTextColumnFromTable(page, row, column) {
     return this.getTextContent(page, this.tableColumn(row, column));
+  }
+
+  /**
+   * Get content from all rows
+   * @param page
+   * @param column
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(page, column) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable = [];
+    for (let row = 1; row <= rowsNumber; row++) {
+      const rowContent = await this.getTextColumnFromTable(page, row, column);
+      await allRowsContentTable.push(rowContent);
+    }
+    return allRowsContentTable;
   }
 
   /**
@@ -100,6 +165,25 @@ class SeoAndUrls extends BOBasePage {
    */
   async confirmDeleteSeoUrlPage(page) {
     await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+  }
+  
+  /* Sort functions */
+  /**
+   * Sort table by clicking on column name
+   * @param page
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page, sortBy, sortDirection) {
+    const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+    let i = 0;
+    while (await this.elementNotVisible(page, sortColumnDiv, 1000) && i < 2) {
+      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      i += 1;
+    }
+    await this.waitForVisibleSelector(page, sortColumnDiv);
   }
 
   /* Reset methods */
@@ -147,6 +231,48 @@ class SeoAndUrls extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
 
+  /* Pagination methods */
+  /**
+   * Get pagination label
+   * @param page
+   * @return {Promise<string>}
+   */
+  getPaginationLabel(page) {
+    return this.getTextContent(page, this.paginationLabel);
+  }
+
+  /**
+   * Select pagination limit
+   * @param page
+   * @param number
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page, number) {
+    await this.selectByVisibleText(page, this.paginationLimitSelect, number);
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on next
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on previous
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    return this.getPaginationLabel(page);
+  }
+
+  /* Form methods */
   /**
    * Enable/disable friendly url
    * @param page
@@ -168,6 +294,18 @@ class SeoAndUrls extends BOBasePage {
   async enableDisableAccentedURL(page, toEnable = true) {
     await this.waitForSelectorAndClick(page, this.switchAccentedUrlLabel(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveSeoAndUrlFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /**
+   * Enable/Disable attributes in product meta title
+   * @param page
+   * @param toEnable
+   * @return {Promise<string>}
+   */
+  async setStatusAttributesInProductMetaTitle(page, toEnable = true) {
+    await this.waitForSelectorAndClick(page, this.switchDisplayAttributesLabel(toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(page, this.saveSeoOptionsFormButton);
     return this.getTextContent(page, this.alertSuccessBlock);
   }
 }

@@ -1119,8 +1119,8 @@ abstract class PaymentModuleCore extends Module
         $computingPrecision = Context::getContext()->getComputingPrecision();
 
         // prepare cart calculator to correctly get the value of each cart rule
-        $calculator = $cart->newCalculator($order->product_list, $cart->getCartRules(), $order->id_carrier);
-        $calculator->processCalculation($computingPrecision);
+        $calculator = $cart->newCalculator($order->product_list, $cart->getCartRules(), $order->id_carrier, $computingPrecision);
+        $calculator->processCalculation();
         $cartRulesData = $calculator->getCartRulesData();
 
         $cart_rules_list = [];
