@@ -49,8 +49,6 @@ import FiltersSubmitButtonEnablerExtension
 import ShowcaseCard from '@components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
 import TextWithRecommendedLengthCounter from '@components/form/text-with-recommended-length-counter';
-import TranslatableField from '@components/translatable-field';
-import TinyMCEEditor from '@components/tinymce-editor';
 import Serp from '@app/utils/serp/index';
 
 const {$} = window;
@@ -75,8 +73,8 @@ $(() => {
   const showcaseCard = new ShowcaseCard('categoriesShowcaseCard');
   showcaseCard.addExtension(new ShowcaseCardCloseExtension());
 
-  window.prestashop.components.TranslatableField.enable();
-  window.prestashop.components.TinyMCEEditor.enable();
+  window.prestashop.components.translatableField.enable();
+  window.prestashop.components.tinyMCEEditor.enable();
   window.prestashop.components.translatableInput.enable();
   const translatorInput = window.prestashop.components.translatableInput.instance;
   new ChoiceTable();
