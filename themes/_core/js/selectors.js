@@ -28,7 +28,7 @@ import $ from 'jquery';
 prestashop.selectors = {
   quantityWanted: '#quantity_wanted',
   product: {
-    imageContainer: '.image-container',
+    imageContainer: '.quickview .images-container, .page-product:not(.modal-open) .row .images-container, .page-product:not(.modal-open) .product-container .images-container',
     container: '.product-container',
     availability: '#product-availability',
     actions: '.product-actions',
