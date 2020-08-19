@@ -968,7 +968,7 @@ class OrderController extends FrameworkBundleAdminController
         );
         $form->handleRequest($request);
 
-        if (!$form->isSubmitted() || $form->isValid()) {
+        if (!$form->isSubmitted() || !$form->isValid()) {
             // Check if the form is submit from the action bar
             $form = $formFactory->createNamed(
                 'update_order_status_action_bar',
