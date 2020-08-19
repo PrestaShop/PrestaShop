@@ -391,14 +391,22 @@ class OrderController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_orders_index');
         }
 
+        $formFactory = $this->get('form.factory');
+        $updateOrderStatusForm = $formFactory->createNamed(
+            'update_order_status',
+            UpdateOrderStatusType::class, [
+                'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
+            ]
+        );
+        $updateOrderStatusActionBarForm = $formFactory->createNamed(
+            'update_order_status_action_bar',
+            UpdateOrderStatusType::class, [
+                'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
+            ]
+        );
+
         $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class, [], [
             'order_id' => $orderId,
-        ]);
-        $updateOrderStatusForm = $this->createForm(UpdateOrderStatusType::class, [
-            'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
-        ]);
-        $updateOrderStatusActionBarForm = $this->createForm(UpdateOrderStatusType::class, [
-            'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
         ]);
         $addOrderPaymentForm = $this->createForm(OrderPaymentType::class, [
             'id_currency' => $orderForViewing->getCurrencyId(),
@@ -952,8 +960,22 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function updateStatusAction(int $orderId, Request $request): RedirectResponse
     {
-        $form = $this->createForm(UpdateOrderStatusType::class);
+        $formFactory = $this->get('form.factory');
+
+        $form = $formFactory->createNamed(
+            'update_order_status',
+            UpdateOrderStatusType::class
+        );
         $form->handleRequest($request);
+
+        if (!$form->isSubmitted() || !$form->isValid()) {
+            // Check if the form is submit from the action bar
+            $form = $formFactory->createNamed(
+                'update_order_status_action_bar',
+                UpdateOrderStatusType::class
+            );
+            $form->handleRequest($request);
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->handleOrderStatusUpdate($orderId, (int) $form->getData()['new_order_status_id']);

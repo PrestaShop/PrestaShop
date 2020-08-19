@@ -14,8 +14,8 @@ class Order extends BOBasePage {
     this.editProductButton = row => `${this.orderProductsRowTable(row)} button[data-original-title='Edit']`;
     this.productQuantitySpan = row => `${this.orderProductsRowTable(row)} td.cellProductQuantity span`;
     this.orderProductsEditRowTable = `${this.orderProductsTable} tbody tr.editProductRow`;
-    this.editProductQuantityInput = `${this.orderProductsEditRowTable} input#edit_product_row_quantity`;
-    this.UpdateProductButton = `${this.orderProductsEditRowTable} button#edit_product_row_save`;
+    this.editProductQuantityInput = `${this.orderProductsEditRowTable} input.editProductQuantity`;
+    this.UpdateProductButton = `${this.orderProductsEditRowTable} button.productEditSaveBtn`;
     this.partialRefundButton = 'button.partial-refund-display';
     // Status tab
     this.orderStatusesSelect = '#update_order_status_action_input';
