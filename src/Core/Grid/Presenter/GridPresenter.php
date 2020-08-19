@@ -86,18 +86,12 @@ final class GridPresenter implements GridPresenterInterface
             ],
             'filters' => $searchCriteria->getFilters(),
             'attributes' => [
-                'is_empty_state' => empty($filterForm->getData()) && $data->getRecords()->count() === 0,
+                'is_empty_state' => $this->isEmptyState($grid),
             ],
         ];
 
         if ($searchCriteria instanceof Filters) {
             $presentedGrid['form_prefix'] = $searchCriteria->getFilterId();
-        }
-
-        if (isset($searchCriteria->getFilters()['is_search_request'])
-            && false === $searchCriteria->getFilters()['is_search_request']
-            && 0 === $data->getRecordsTotal()) {
-            $presentedGrid['attributes']['is_empty_state'] = true;
         }
 
         $this->hookDispatcher->dispatchWithParameters('action' . Container::camelize($definition->getId()) . 'GridPresenterModifier', [
@@ -171,5 +165,27 @@ final class GridPresenter implements GridPresenterInterface
         }
 
         return $columnFiltersMapping;
+    }
+
+    /**
+     * @param GridInterface $grid
+     *
+     * @return bool
+     */
+    private function isEmptyState(GridInterface $grid)
+    {
+        $filterFormData = $grid->getFilterForm()->getData();
+        if (empty($filterFormData) && 0 === $grid->getData()->getRecordsTotal()) {
+            return true;
+        }
+
+        $definitionFiltersKeys = array_keys($grid->getDefinition()->getFilters()->all());
+        foreach ($filterFormData as $key => $value) {
+            if (in_array($key, $definitionFiltersKeys, true)) {
+                return false;
+            }
+        }
+
+        return 0 === $grid->getData()->getRecordsTotal();
     }
 }
