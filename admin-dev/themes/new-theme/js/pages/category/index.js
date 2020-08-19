@@ -33,8 +33,7 @@ import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-e
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import CategoryPositionExtension from '@components/grid/extension/column/catalog/category-position-extension';
-import AsyncToggleColumnExtension
-  from '@components/grid/extension/column/common/async-toggle-column-extension';
+import AsyncToggleColumnExtension from '@components/grid/extension/column/common/async-toggle-column-extension';
 import DeleteCategoryRowActionExtension
   from '@components/grid/extension/action/row/category/delete-category-row-action-extension';
 import DeleteCategoriesBulkActionExtension
