@@ -75,9 +75,10 @@ $(() => {
   const showcaseCard = new ShowcaseCard('categoriesShowcaseCard');
   showcaseCard.addExtension(new ShowcaseCardCloseExtension());
 
-  new TranslatableField();
-  new TinyMCEEditor();
-  const translatorInput = window.prestashop.components.enableTranslatableInput();
+  window.prestashop.components.TranslatableField.enable();
+  window.prestashop.components.TinyMCEEditor.enable();
+  window.prestashop.components.translatableInput.enable();
+  const translatorInput = window.prestashop.components.translatableInput.instance;
   new ChoiceTable();
   new TextWithRecommendedLengthCounter();
 
@@ -90,7 +91,7 @@ $(() => {
   textToLinkRewriteCopier({
     sourceElementSelector: 'input[name^="root_category[name]"]',
     /* eslint-disable-next-line max-len */
-    destinationElementSelector: `${translatorInput.localeInputSelector}:not(.d-none) input[name^="root_category[link_rewrite]"]`
+    destinationElementSelector: `${translatorInput.localeInputSelector}:not(.d-none) input[name^="root_category[link_rewrite]"]`,
   });
 
   new Serp(
