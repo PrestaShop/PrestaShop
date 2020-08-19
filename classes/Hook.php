@@ -570,30 +570,41 @@ class HookCore extends ObjectModel
 
     public static function unregisterHook($module_instance, $hook_name, $shop_list = null)
     {
-        if (is_numeric($hook_name)) {
-            // $hook_name passed it the id_hook
-            $hook_id = $hook_name;
-            $hook_name = Hook::getNameById((int) $hook_id);
+        $result = true;
+        if (is_array($hook_name)) {
+            $hook_names = $hook_name;
         } else {
-            $hook_id = Hook::getIdByName($hook_name);
+            $hook_names = [$hook_name];
         }
 
-        if (!$hook_id) {
-            return false;
+        $idShops = ($shop_list) ? ' AND `id_shop` IN(' . implode(', ', array_map('intval', $shop_list)) . ')' : '';
+
+        foreach ($hook_names as $hook_name) {
+            if (is_numeric($hook_name)) {
+                // $hook_name passed it the id_hook
+                $hook_id = $hook_name;
+                $hook_name = Hook::getNameById((int) $hook_id);
+            } else {
+                $hook_id = Hook::getIdByName($hook_name);
+            }
+
+            if (!$hook_id) {
+                return false;
+            }
+
+            Hook::exec('actionModuleUnRegisterHookBefore', ['object' => $module_instance, 'hook_name' => $hook_name]);
+
+            // Unregister module on hook by id
+            $result &= Db::getInstance()->delete(
+                'hook_module',
+                '`id_module` = ' . (int) $module_instance->id . ' AND `id_hook` = ' . (int) $hook_id . $idShops
+            );
+
+            // Clean modules position
+            $module_instance->cleanPositions($hook_id, $shop_list);
+
+            Hook::exec('actionModuleUnRegisterHookAfter', ['object' => $module_instance, 'hook_name' => $hook_name]);
         }
-
-        Hook::exec('actionModuleUnRegisterHookBefore', ['object' => $module_instance, 'hook_name' => $hook_name]);
-
-        // Unregister module on hook by id
-        $sql = 'DELETE FROM `' . _DB_PREFIX_ . 'hook_module`
-            WHERE `id_module` = ' . (int) $module_instance->id . ' AND `id_hook` = ' . (int) $hook_id
-            . (($shop_list) ? ' AND `id_shop` IN(' . implode(', ', array_map('intval', $shop_list)) . ')' : '');
-        $result = Db::getInstance()->execute($sql);
-
-        // Clean modules position
-        $module_instance->cleanPositions($hook_id, $shop_list);
-
-        Hook::exec('actionModuleUnRegisterHookAfter', ['object' => $module_instance, 'hook_name' => $hook_name]);
 
         return $result;
     }
