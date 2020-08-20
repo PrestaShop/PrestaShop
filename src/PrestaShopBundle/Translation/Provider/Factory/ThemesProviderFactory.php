@@ -31,9 +31,10 @@ namespace PrestaShopBundle\Translation\Provider\Factory;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShopBundle\Translation\Extractor\ThemeExtractorInterface;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationReader;
-use PrestaShopBundle\Translation\Provider\FrontProvider;
+use PrestaShopBundle\Translation\Provider\CoreProvider;
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
 use PrestaShopBundle\Translation\Provider\ThemeProvider;
+use PrestaShopBundle\Translation\Provider\Type\CoreFrontType;
 use PrestaShopBundle\Translation\Provider\Type\ThemesType;
 use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -98,9 +99,15 @@ class ThemesProviderFactory implements ProviderFactoryInterface
             throw new \RuntimeException(sprintf('Invalid provider type given: %s', get_class($providerType)));
         }
 
+        $frontType = new CoreFrontType();
         /* @var ThemesType $providerType */
         return new ThemeProvider(
-            new FrontProvider($this->databaseTranslationReader, $this->frontResourcesDir),
+            new CoreProvider(
+                $this->databaseTranslationReader,
+                $this->frontResourcesDir,
+                $frontType->getFilenameFilters(),
+                $frontType->getTranslationDomains()
+            ),
             $this->databaseTranslationReader,
             $this->themeExtractor,
             $this->themeRepository,

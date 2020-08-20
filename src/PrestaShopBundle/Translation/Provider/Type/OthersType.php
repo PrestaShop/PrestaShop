@@ -31,6 +31,21 @@ namespace PrestaShopBundle\Translation\Provider\Type;
 /**
  * Properties container for 'others' type of translation.
  */
-class OthersType implements TypeInterface
+class OthersType extends AbstractCoreType
 {
+    /**
+     * @return array|string[]
+     */
+    public function getFilenameFilters(): array
+    {
+        return ['#^messages*#'];
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public function getTranslationDomains(): array
+    {
+        return ['^messages*'];
+    }
 }

@@ -72,7 +72,9 @@ class ThemeManagerBuilder
             new ImageTypeRepository(
                 $this->context->shop,
                 $this->db
-            )
+            ),
+            $this->context->getTranslationService(),
+            $this->context->getTranslationProviderFactory()
         );
     }
 
