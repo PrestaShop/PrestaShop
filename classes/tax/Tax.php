@@ -290,5 +290,4 @@ class TaxCore extends ObjectModel
 
         return true;
     }
-
 }
