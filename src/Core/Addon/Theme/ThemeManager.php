@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShopBundle\Service\TranslationService;
+use PrestaShopBundle\Translation\Provider\Factory\ProviderFactory;
 use PrestaShopBundle\Translation\Provider\TranslationFinder;
 use PrestaShopBundle\Translation\Provider\Type\ThemesType;
 use PrestaShopLogger;
@@ -114,6 +115,14 @@ class ThemeManager implements AddonManagerInterface
      * @var TranslationFinder
      */
     private $translationFinder;
+    /**
+     * @var TranslationService
+     */
+    private $translationService;
+    /**
+     * @var ProviderFactory
+     */
+    private $translationProviderFactory;
 
     /**
      * @param Shop $shop
@@ -137,7 +146,9 @@ class ThemeManager implements AddonManagerInterface
         Finder $finder,
         HookConfigurator $hookConfigurator,
         ThemeRepository $themeRepository,
-        ImageTypeRepository $imageTypeRepository
+        ImageTypeRepository $imageTypeRepository,
+        TranslationService $translationService,
+        ProviderFactory $translationProviderFactory
     ) {
         $this->translationFinder = new TranslationFinder();
         $this->shop = $shop;
@@ -150,6 +161,8 @@ class ThemeManager implements AddonManagerInterface
         $this->hookConfigurator = $hookConfigurator;
         $this->themeRepository = $themeRepository;
         $this->imageTypeRepository = $imageTypeRepository;
+        $this->translationService = $translationService;
+        $this->translationProviderFactory = $translationProviderFactory;
     }
 
     /**
@@ -506,31 +519,12 @@ class ThemeManager implements AddonManagerInterface
     }
 
     /**
-     * @return \AppKernel|\Symfony\Component\HttpKernel\KernelInterface|void
-     */
-    private function getKernel()
-    {
-        global $kernel; // sf kernel
-
-        if (!(null !== $kernel && $kernel instanceof \Symfony\Component\HttpKernel\KernelInterface)) {
-            return;
-        }
-
-        return $kernel;
-    }
-
-    /**
      * Import translation from Theme to Database.
      *
      * @param Theme $theme
      */
     private function importTranslationToDatabase(Theme $theme)
     {
-        if (null === $kernel = $this->getKernel()) {
-            return null;
-        }
-
-        $translationService = $kernel->getContainer()->get('prestashop.service.translation');
         $themeName = $theme->getName();
 
         $themePath = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_') . $themeName;
@@ -542,7 +536,7 @@ class ThemeManager implements AddonManagerInterface
 
             // retrieve Lang doctrine entity
             try {
-                $lang = $translationService->findLanguageByLocale($locale);
+                $lang = $this->translationService->findLanguageByLocale($locale);
             } catch (Exception $exception) {
                 PrestaShopLogger::addLog('ThemeManager->importTranslationToDatabase() - Locale ' . $locale . ' does not exists');
 
@@ -565,7 +559,7 @@ class ThemeManager implements AddonManagerInterface
                 $allDomains = $this->getDefaultDomains($locale, $themeName);
 
                 // do the import
-                $this->handleImport($translationService, $messageCatalog, $allDomains, $lang, $locale, $themeName);
+                $this->handleImport($messageCatalog, $allDomains, $lang, $locale, $themeName);
             } catch (FileNotFoundException $e) {
                 // if the directory is there but there are no files, do nothing
             }
@@ -582,13 +576,8 @@ class ThemeManager implements AddonManagerInterface
      */
     private function getDefaultDomains($locale, $themeName)
     {
-        if (null === $kernel = $this->getKernel()) {
-            return null;
-        }
-
-        $providerFactory = $kernel->getContainer()->get('prestashop.translation.provider_factory');
         /** @var \PrestaShopBundle\Translation\Provider\ThemeProvider $themeProvider */
-        $themeProvider = $providerFactory->build(
+        $themeProvider = $this->translationProviderFactory->build(
             new ThemesType($themeName)
         );
 
@@ -618,14 +607,13 @@ class ThemeManager implements AddonManagerInterface
     }
 
     /**
-     * @param TranslationService $translationService
      * @param MessageCatalogue $messageCatalog
      * @param array $allDomains
      * @param \PrestaShopBundle\Entity\Lang $lang
      * @param string $locale
      * @param string $themeName
      */
-    private function handleImport(TranslationService $translationService, MessageCatalogue $messageCatalog, $allDomains, $lang, $locale, $themeName)
+    private function handleImport(MessageCatalogue $messageCatalog, $allDomains, $lang, $locale, $themeName)
     {
         foreach ($messageCatalog->all() as $domain => $messages) {
             $domain = str_replace('.' . $locale, '', $domain);
@@ -636,7 +624,7 @@ class ThemeManager implements AddonManagerInterface
 
             foreach ($messages as $key => $message) {
                 if ($key !== $message) {
-                    $translationService->saveTranslationMessage($lang, $domain, $key, $message, $themeName);
+                    $this->translationService->saveTranslationMessage($lang, $domain, $key, $message, $themeName);
                 }
             }
         }
