@@ -76,16 +76,16 @@
             </p>
             {% if webserviceStatus['isFunctional'] == true %}
               <p>
-                {{ "Developer documentation can be found [1]here[/1]."|trans({
+                {{ "Read the [1]developer documentation[/1] to learn more about it."|trans({
                   '[1]': '<a href="'~devdocUrl~'">', '[/1]': "</a>"
                 }, 'Admin.Advparameters.Feature')|raw }}
               </p>
             {% else %}
               <p>
-                {{ 'It seems webservice endpoint is not functional. If you are using httpd/apache2, you need to enable URL Rewriting.'|trans }}
+                {{ 'It seems that the webservice endpoint is not functional. If you are using httpd/apache2, you need to enable URL rewriting on your server.'|trans }}
               </p>
               <p>
-                {{ "Read the [1]developer documentation[/1] to find how."|trans({
+                {{ "Read the [1]developer documentation[/1] to learn more about it."|trans({
                   '[1]': '<a href="'~devdocUrl~'">', '[/1]': "</a>"
                 }, 'Admin.Advparameters.Feature')|raw }}
               </p>
