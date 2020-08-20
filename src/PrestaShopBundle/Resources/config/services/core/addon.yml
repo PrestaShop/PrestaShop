@@ -35,6 +35,7 @@ services:
         arguments:
             - '@=service("prestashop.adapter.legacy.context").getContext()'
             - '@prestashop.adapter.legacy_db'
+            - '@prestashop.service.translation'
 
     prestashop.core.addon.theme.theme_manager:
         class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager

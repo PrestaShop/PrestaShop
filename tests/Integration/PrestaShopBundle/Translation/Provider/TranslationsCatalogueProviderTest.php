@@ -265,6 +265,27 @@ class TranslationsCatalogueProviderTest extends KernelTestCase
             'Checkpayment',
             'Shop',
         ], $messages[0]['tree_domain']);
+
+        // search a word
+        $messages = $provider->getDomainCatalogue(
+            new ModulesType('checkPaymentShop'),
+            'fr-FR',
+            'ModulesCheckpaymentShop',
+            ['payment']
+        );
+        $this->assertIsArray($messages);
+
+        // Check integrity of translations
+        $this->assertCount(3, $messages);
+        $this->assertArrayHasKey('default', $messages[0]);
+        $this->assertArrayHasKey('xliff', $messages[0]);
+        $this->assertArrayHasKey('database', $messages[0]);
+        $this->assertArrayHasKey('tree_domain', $messages[0]);
+        $this->assertSame([
+            'Modules',
+            'Checkpayment',
+            'Shop',
+        ], $messages[0]['tree_domain']);
     }
 
     protected function tearDown()
