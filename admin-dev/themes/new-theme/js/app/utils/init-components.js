@@ -28,44 +28,36 @@ import TranslatableInput from '@js/components/translatable-input.js';
 import TinyMCEEditor from '@js/components/tinymce-editor.js';
 
 const initComponents = () => {
+  let translatableInput = null;
+  let tinyMCEEditor = null;
+  let translatableField = null;
   // Initialize the prestashop global object
   window.prestashop = {
     components: {
       translatableInput: {
-        enabled: false,
-        enable() {
-          // Already enabled
-          if (window.prestashop.components.translatableInput.enabled === true) {
-            return;
+        init() {
+          if (translatableInput === null) {
+            translatableInput = new TranslatableInput();
           }
-          window.prestashop.components.translatableInput.instance = new TranslatableInput();
-          window.prestashop.components.translatableInput.enabled = true;
+          return translatableInput;
         },
-        instance: null,
       },
       tinyMCEEditor: {
-        enabled: false,
-        enable() {
-          // Already enabled
-          if (window.prestashop.components.tinyMCEEditor.enabled === true) {
-            return;
+        init() {
+          if (tinyMCEEditor === null) {
+            tinyMCEEditor = new TinyMCEEditor();
           }
-          window.prestashop.components.tinyMCEEditor.instance = new TinyMCEEditor();
-          window.prestashop.components.tinyMCEEditor.enabled = true;
+          return tinyMCEEditor;
         },
-        instance: null,
+
       },
       translatableField: {
-        enabled: false,
-        enable() {
-          // Already enabled
-          if (window.prestashop.components.translatableField.enabled === true) {
-            return;
+        init() {
+          if (translatableField === null) {
+            translatableField = new TranslatableField();
           }
-          window.prestashop.components.translatableField.instance = new TranslatableField();
-          window.prestashop.components.translatableField.enabled = true;
+          return translatableField;
         },
-        instance: null,
       },
     },
   };

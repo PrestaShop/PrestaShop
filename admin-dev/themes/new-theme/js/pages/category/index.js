@@ -72,10 +72,10 @@ $(() => {
   const showcaseCard = new ShowcaseCard('categoriesShowcaseCard');
   showcaseCard.addExtension(new ShowcaseCardCloseExtension());
 
-  window.prestashop.components.translatableField.enable();
-  window.prestashop.components.tinyMCEEditor.enable();
-  window.prestashop.components.translatableInput.enable();
-  const translatorInput = window.prestashop.components.translatableInput.instance;
+  window.prestashop.components.translatableField.init();
+  window.prestashop.components.tinyMCEEditor.init();
+  const translatorInput = window.prestashop.components.translatableInput.init();
+
   new ChoiceTable();
   new TextWithRecommendedLengthCounter();
 
