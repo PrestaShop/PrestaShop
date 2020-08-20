@@ -49,7 +49,7 @@ class TreeCore
 
     /** @var TreeToolbar|ITreeToolbar */
     private $_toolbar;
-    
+
     /** @var $translator Translator */
     public $translator;
 
