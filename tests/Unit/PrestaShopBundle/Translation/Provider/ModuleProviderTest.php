@@ -31,14 +31,14 @@ namespace Tests\Unit\PrestaShopBundle\Translation\Provider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
-use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
+use PrestaShopBundle\Translation\Loader\DatabaseTranslationReader;
 use PrestaShopBundle\Translation\Provider\Catalogue\DefaultCatalogueProvider;
 use PrestaShopBundle\Translation\Provider\ModulesProvider;
 use Symfony\Component\Translation\Dumper\XliffFileDumper;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
-class ExternalModuleLegacySystemProviderTest extends TestCase
+class ModuleProviderTest extends TestCase
 {
     /**
      * @var string
@@ -70,12 +70,12 @@ class ExternalModuleLegacySystemProviderTest extends TestCase
     /**
      * @var ModulesProvider
      */
-    private $externalModuleLegacySystemProvider;
+    private $modulesProvider;
 
     public function setUp()
     {
-        /** @var MockObject|DatabaseTranslationLoader $databaseLoader */
-        $databaseLoader = $this->createMock(DatabaseTranslationLoader::class);
+        /** @var MockObject|DatabaseTranslationReader $databaseReader */
+        $databaseReader = $this->createMock(DatabaseTranslationReader::class);
         /** @var MockObject|LoaderInterface $legacyFileLoader */
         $legacyFileLoader = $this->createMock(LoaderInterface::class);
 
@@ -89,17 +89,18 @@ class ExternalModuleLegacySystemProviderTest extends TestCase
             ->method('extract')
             ->willReturn($catalogue);
 
-        self::$tempDir = implode(DIRECTORY_SEPARATOR, [sys_get_temp_dir(), 'ExternalModuleProviderProviderTest']);
+        self::$tempDir = implode(DIRECTORY_SEPARATOR, [sys_get_temp_dir(), 'ModuleProviderTest']);
         if (!is_dir(self::$tempDir)) {
             mkdir(self::$tempDir);
         }
 
-        $this->externalModuleLegacySystemProvider = (new ModulesProvider(
-            $databaseLoader,
+        $this->modulesProvider = (new ModulesProvider(
+            $databaseReader,
             self::$tempDir,
             self::$tempDir,
             $legacyFileLoader,
-            $legacyModuleExtractor
+            $legacyModuleExtractor,
+            'moduleName'
         ));
     }
 
@@ -110,7 +111,7 @@ class ExternalModuleLegacySystemProviderTest extends TestCase
             $catalogue->add($messages, $domain);
         }
 
-        self::$tempDir = implode(DIRECTORY_SEPARATOR, [sys_get_temp_dir(), 'ExternalModuleProviderProviderTest']);
+        self::$tempDir = implode(DIRECTORY_SEPARATOR, [sys_get_temp_dir(), 'ModuleProviderTest']);
         if (!is_dir(self::$tempDir)) {
             mkdir(self::$tempDir);
         }
@@ -130,24 +131,16 @@ class ExternalModuleLegacySystemProviderTest extends TestCase
 
     public function testGetDefaultCatalogue()
     {
-        $catalogue = $this->externalModuleLegacySystemProvider->getDefaultCatalogue(
-            DefaultCatalogueProvider::DEFAULT_LOCALE,
-            'moduleName'
-        );
+        $catalogue = $this->modulesProvider->getDefaultCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE);
         $this->assertSame(self::$wordings, $catalogue->all());
 
-        $catalogue = $this->externalModuleLegacySystemProvider->getDefaultCatalogue(
+        $catalogue = $this->modulesProvider->getDefaultCatalogue(
             DefaultCatalogueProvider::DEFAULT_LOCALE,
-            'moduleName',
             true
         );
         $this->assertSame(self::$wordings, $catalogue->all());
 
-        $catalogue = $this->externalModuleLegacySystemProvider->getDefaultCatalogue(
-            'fr-FR',
-            'moduleName',
-            true
-        );
+        $catalogue = $this->modulesProvider->getDefaultCatalogue('fr-FR', true);
         $catalogueFr = self::$emptyWordings;
         foreach (array_keys($catalogueFr) as $translationKey) {
             $translationKeyLocale = sprintf('%s.%s', $translationKey, DefaultCatalogueProvider::DEFAULT_LOCALE);
@@ -159,10 +152,7 @@ class ExternalModuleLegacySystemProviderTest extends TestCase
 
     public function testGetFilesystemCatalogue()
     {
-        $catalogue = $this->externalModuleLegacySystemProvider->getFileTranslatedCatalogue(
-            DefaultCatalogueProvider::DEFAULT_LOCALE,
-        'moduleName'
-        );
+        $catalogue = $this->modulesProvider->getFileTranslatedCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE);
         $this->assertSame(self::$wordings, $catalogue->all());
     }
 }

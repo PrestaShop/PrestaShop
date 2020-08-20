@@ -1,8 +1,7 @@
 <phpunit bootstrap="bootstrap.php"
          stopOnFailure="true"
-         processIsolation="false"
+         processIsolation="true"
 >
-    <!-- process isolation is required since the introduction of GenerateMailTemplatesCommandTest file -->
     <php>
       <env name="KERNEL_CLASS" value="AppKernel" />
       <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
@@ -12,4 +11,11 @@
             <directory>.</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">../../src</directory>
+            <directory suffix=".php">../../classes</directory>
+            <directory suffix=".php">../../controllers</directory>
+        </whitelist>
+    </filter>
 </phpunit>

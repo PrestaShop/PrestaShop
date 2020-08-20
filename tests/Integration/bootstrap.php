@@ -32,6 +32,7 @@ if (!defined('PS_ADMIN_DIR')) {
 }
 define('_PS_ROOT_DIR_', __DIR__ . '/../..');
 define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/tests/Resources/modules/');
+define('_PS_ALL_THEMES_DIR_', _PS_ROOT_DIR_ . '/tests/Resources/themes/');
 
 require_once __DIR__ . '/../../config/config.inc.php';
 
