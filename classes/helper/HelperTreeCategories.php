@@ -371,14 +371,14 @@ class HelperTreeCategoriesCore extends TreeCore
         }
 
         $collapse_all = new TreeToolbarLink(
-            'Collapse All',
+            $this->translator->trans('Collapse All', [], 'Admin.Actions'),
             '#',
             '$(\'#' . $this->getId() . '\').tree(\'collapseAll\');$(\'#collapse-all-' . $this->getId() . '\').hide();$(\'#expand-all-' . $this->getId() . '\').show(); return false;',
             'icon-collapse-alt'
         );
         $collapse_all->setAttribute('id', 'collapse-all-' . $this->getId());
         $expand_all = new TreeToolbarLink(
-            'Expand All',
+            $this->translator->trans('Expand All', [], 'Admin.Actions'),
             '#',
             '$(\'#' . $this->getId() . '\').tree(\'expandAll\');$(\'#collapse-all-' . $this->getId() . '\').show();$(\'#expand-all-' . $this->getId() . '\').hide(); return false;',
             'icon-expand-alt'
@@ -389,14 +389,14 @@ class HelperTreeCategoriesCore extends TreeCore
 
         if ($this->useCheckBox()) {
             $check_all = new TreeToolbarLink(
-                'Check All',
+                $this->translator->trans('Check All', [], 'Admin.Actions'),
                 '#',
                 'checkAllAssociatedCategories($(\'#' . $this->getId() . '\')); return false;',
                 'icon-check-sign'
             );
             $check_all->setAttribute('id', 'check-all-' . $this->getId());
             $uncheck_all = new TreeToolbarLink(
-                'Uncheck All',
+                $this->translator->trans('Uncheck All', [], 'Admin.Actions'),
                 '#',
                 'uncheckAllAssociatedCategories($(\'#' . $this->getId() . '\')); return false;',
                 'icon-check-empty'
