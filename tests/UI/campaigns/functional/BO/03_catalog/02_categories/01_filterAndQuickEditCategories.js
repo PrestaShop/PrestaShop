@@ -10,9 +10,8 @@ const loginCommon = require('@commonTests/loginBO');
 const {Categories} = require('@data/demo/categories');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const CategoriesPage = require('@pages/BO/catalog/categories');
+const dashboardPage = require('@pages/BO/dashboard');
+const categoriesPage = require('@pages/BO/catalog/categories');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -24,49 +23,41 @@ let browserContext;
 let page;
 let numberOfCategories = 0;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    categoriesPage: new CategoriesPage(page),
-  };
-};
-
 // Filter And Quick Edit Categories
 describe('Filter And Quick Edit Categories', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to categories page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to "Catalog>Categories" page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.catalogParentLink,
-      this.pageObjects.dashboardPage.categoriesLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.catalogParentLink,
+      dashboardPage.categoriesLink,
     );
 
-    await this.pageObjects.categoriesPage.closeSfToolBar();
+    await categoriesPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.categoriesPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.categoriesPage.pageTitle);
+    const pageTitle = await categoriesPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(categoriesPage.pageTitle);
   });
 
   it('should reset all filters and get Number of Categories in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-    numberOfCategories = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
+    numberOfCategories = await categoriesPage.resetAndGetNumberOfLines(page);
     await expect(numberOfCategories).to.be.above(0);
   });
 
@@ -125,17 +116,22 @@ describe('Filter And Quick Edit Categories', async () => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        await this.pageObjects.categoriesPage.filterCategories(
+        await categoriesPage.filterCategories(
+          page,
           test.args.filterType,
           test.args.filterBy,
           test.args.filterValue,
         );
 
-        const numberOfCategoriesAfterFilter = await this.pageObjects.categoriesPage.getNumberOfElementInGrid();
-        await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
+        // At least 1 category should be displayed after these filters
+        // Can't know most categories that can be displayed
+        // because we don't have total of categories and subcategories
+        const numberOfCategoriesAfterFilter = await categoriesPage.getNumberOfElementInGrid(page);
+        await expect(numberOfCategoriesAfterFilter).to.be.at.least(1);
 
         for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
-          const textColumn = await this.pageObjects.categoriesPage.getTextColumnFromTableCategories(
+          const textColumn = await categoriesPage.getTextColumnFromTableCategories(
+            page,
             i,
             test.args.filterBy,
           );
@@ -151,7 +147,7 @@ describe('Filter And Quick Edit Categories', async () => {
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
+        const numberOfCategoriesAfterReset = await categoriesPage.resetAndGetNumberOfLines(page);
         await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
       });
     });
@@ -163,13 +159,14 @@ describe('Filter And Quick Edit Categories', async () => {
     it('should filter by Name \'Art\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
-      await this.pageObjects.categoriesPage.filterCategories(
+      await categoriesPage.filterCategories(
+        page,
         'input',
         'name',
         Categories.art.name,
       );
 
-      const numberOfCategoriesAfterFilter = await this.pageObjects.categoriesPage.getNumberOfElementInGrid();
+      const numberOfCategoriesAfterFilter = await categoriesPage.getNumberOfElementInGrid(page);
       await expect(numberOfCategoriesAfterFilter).to.be.at.above(0);
     });
     const tests = [
@@ -181,21 +178,23 @@ describe('Filter And Quick Edit Categories', async () => {
       it(`should ${test.args.action} first Category`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Category`, baseContext);
 
-        const isActionPerformed = await this.pageObjects.categoriesPage.updateToggleColumnValue(
+        const isActionPerformed = await categoriesPage.updateToggleColumnValue(
+          page,
           1,
           'active',
           test.args.enabledValue,
         );
 
         if (isActionPerformed) {
-          const resultMessage = await this.pageObjects.categoriesPage.getTextContent(
-            this.pageObjects.categoriesPage.growlMessageBlock,
+          const resultMessage = await categoriesPage.getTextContent(
+            page,
+            categoriesPage.growlMessageBlock,
           );
 
-          await expect(resultMessage).to.contains(this.pageObjects.categoriesPage.successfulUpdateStatusMessage);
+          await expect(resultMessage).to.contains(categoriesPage.successfulUpdateStatusMessage);
         }
 
-        const categoryStatus = await this.pageObjects.categoriesPage.getToggleColumnValue(1, 'active');
+        const categoryStatus = await categoriesPage.getToggleColumnValue(page, 1, 'active');
         await expect(categoryStatus).to.be.equal(test.args.enabledValue);
       });
     });
@@ -203,7 +202,7 @@ describe('Filter And Quick Edit Categories', async () => {
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterQuickEdit', baseContext);
 
-      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
+      const numberOfCategoriesAfterReset = await categoriesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
     });
   });

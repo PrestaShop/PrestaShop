@@ -11,12 +11,11 @@ Feature: Update product tags from Back Office (BO)
     And language "language2" with locale "fr-FR" exists
     And I add product "product3" with following information:
       | name       | en-US:Mechanical watch; fr-FR:montre mécanique |
-      | is_virtual | false                                         |
-    And product "product3" should have following values:
-      | name       | en-US:Mechanical watch; fr-FR:montre mécanique |
+      | is_virtual | false                                          |
+    And product "product3" localized "name" should be "en-US:Mechanical watch; fr-FR:montre mécanique"
     And product "product3" localized "tags" should be "en-US: ;fr-FR:"
     When I update product "product3" tags with following values:
-      | tags       | en-US:mechanic,watch; fr-FR:montre,mécanique |
+      | tags       | en-US:mechanic,watch; fr-FR:montre,mécanique   |
     And product "product3" localized "tags" should be "en-US:mechanic,watch; fr-FR:montre,mécanique"
     When I update product "product3" tags with following values:
       | tags       | en-US:mechanic,watch; fr-FR: |

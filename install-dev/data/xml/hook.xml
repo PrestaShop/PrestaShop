@@ -806,30 +806,15 @@
       <title>Manage Administration Page form fields</title>
       <description>This hook adds, update or remove fields of the Administration Page form</description>
     </hook>
-    <hook id="actionAdministrationPageFormSave">
-      <name>actionAdministrationPageFormSave</name>
-      <title>Processing Administration page form</title>
-      <description>This hook is called when the Administration Page form is processed</description>
-    </hook>
     <hook id="actionPerformancePageForm">
       <name>actionPerformancePageForm</name>
       <title>Manage Performance Page form fields</title>
       <description>This hook adds, update or remove fields of the Performance Page form</description>
     </hook>
-    <hook id="actionPerformancePageFormSave">
-      <name>actionPerformancePageFormSave</name>
-      <title>Processing Performance page form</title>
-      <description>This hook is called when the Performance Page form is processed</description>
-    </hook>
     <hook id="actionMaintenancePageForm">
       <name>actionMaintenancePageForm</name>
       <title>Manage Maintenance Page form fields</title>
       <description>This hook adds, update or remove fields of the Maintenance Page form</description>
-    </hook>
-    <hook id="actionMaintenancePageFormSave">
-      <name>actionMaintenancePageFormSave</name>
-      <title>Processing Maintenance page form</title>
-      <description>This hook is called when the Maintenance Page form is processed</description>
     </hook>
     <hook id="actionWebserviceKeyGridPresenterModifier">
       <name>actionWebserviceKeyGridPresenterModifier</name>
@@ -2749,10 +2734,25 @@
       <title>On post-process in Admin Improve Shipping Preferences Controller</title>
       <description>This hook is called on Admin Improve Shipping Preferences post-process before processing any form</description>
     </hook>
+    <hook id="actionCheckoutRender">
+      <name>actionCheckoutRender</name>
+      <title>Modify checkout process</title>
+      <description>This hook is called when constructing the checkout process</description>
+    </hook>
     <hook id="actionPresentProductListing">
       <name>actionPresentProductListing</name>
       <title>Product Listing Presenter</title>
       <description>This hook is called before a product listing is presented</description>
+    </hook>
+    <hook id="actionGetProductPropertiesAfterUnitPrice">
+      <name>actionGetProductPropertiesAfterUnitPrice</name>
+      <title>Product Properties</title>
+      <description>This hook is called after defining the properties of a product</description>
+    </hook>
+    <hook id="actionOverrideEmployeeImage">
+      <name>actionOverrideEmployeeImage</name>
+      <title>Get Employee Image</title>
+      <description>This hook is used to get the employee image</description>
     </hook>
   </entities>
 </entity_hook>

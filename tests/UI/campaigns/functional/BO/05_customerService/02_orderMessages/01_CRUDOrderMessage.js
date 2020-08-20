@@ -10,10 +10,9 @@ const loginCommon = require('@commonTests/loginBO');
 const OrderMessageFaker = require('@data/faker/orderMessage');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const OrderMessagesPage = require('@pages/BO/customerService/orderMessages');
-const AddOrderMessagePage = require('@pages/BO/customerService/orderMessages/add');
+const dashboardPage = require('@pages/BO/dashboard');
+const orderMessagesPage = require('@pages/BO/customerService/orderMessages');
+const addOrderMessagePage = require('@pages/BO/customerService/orderMessages/add');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -22,19 +21,9 @@ const baseContext = 'functional_BO_customerService_orderMessages_CRUDOrderMessag
 
 let browserContext;
 let page;
-let createOrderMessageData;
-let editOrderMessageData;
+const createOrderMessageData = new OrderMessageFaker();
+const editOrderMessageData = new OrderMessageFaker();
 let numberOfOrderMessages = 0;
-
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    orderMessagesPage: new OrderMessagesPage(page),
-    addOrderMessagePage: new AddOrderMessagePage(page),
-  };
-};
 
 /*
 Create order message
@@ -46,40 +35,35 @@ describe('Create, update and delete order message', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    // Init page objects
-    this.pageObjects = await init();
-
-    // Init data
-    createOrderMessageData = await (new OrderMessageFaker());
-    editOrderMessageData = await (new OrderMessageFaker());
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to order messages page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to order messages page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrderMessagesPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.customerServiceParentLink,
-      this.pageObjects.dashboardPage.orderMessagesLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.customerServiceParentLink,
+      dashboardPage.orderMessagesLink,
     );
 
-    await this.pageObjects.orderMessagesPage.closeSfToolBar();
+    await orderMessagesPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.orderMessagesPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.orderMessagesPage.pageTitle);
+    const pageTitle = await orderMessagesPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(orderMessagesPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-    numberOfOrderMessages = await this.pageObjects.orderMessagesPage.resetAndGetNumberOfLines();
+    numberOfOrderMessages = await orderMessagesPage.resetAndGetNumberOfLines(page);
     await expect(numberOfOrderMessages).to.be.above(0);
   });
 
@@ -88,22 +72,22 @@ describe('Create, update and delete order message', async () => {
     it('should go to new order message page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewOrderMessagePage', baseContext);
 
-      await this.pageObjects.orderMessagesPage.goToAddNewOrderMessagePage();
-      const pageTitle = await this.pageObjects.addOrderMessagePage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.addOrderMessagePage.pageTitle);
+      await orderMessagesPage.goToAddNewOrderMessagePage(page);
+      const pageTitle = await addOrderMessagePage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addOrderMessagePage.pageTitle);
     });
 
     it('should create order message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createOrderMessage', baseContext);
 
-      const result = await this.pageObjects.addOrderMessagePage.addEditOrderMessage(createOrderMessageData);
-      await expect(result).to.equal(this.pageObjects.orderMessagesPage.successfulCreationMessage);
+      const result = await addOrderMessagePage.addEditOrderMessage(page, createOrderMessageData);
+      await expect(result).to.equal(orderMessagesPage.successfulCreationMessage);
     });
 
     it('should reset filters and check number of order messages', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterCreate', baseContext);
 
-      const numberOfOrderMessagesAfterReset = await this.pageObjects.orderMessagesPage.resetAndGetNumberOfLines();
+      const numberOfOrderMessagesAfterReset = await orderMessagesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfOrderMessagesAfterReset).to.be.equal(numberOfOrderMessages + 1);
     });
   });
@@ -113,34 +97,34 @@ describe('Create, update and delete order message', async () => {
     it('should filter by name of order message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
 
-      await this.pageObjects.orderMessagesPage.filterTable('name', createOrderMessageData.name);
+      await orderMessagesPage.filterTable(page, 'name', createOrderMessageData.name);
 
-      const numberOfOrderMessagesAfterFilter = await this.pageObjects.orderMessagesPage.getNumberOfElementInGrid();
+      const numberOfOrderMessagesAfterFilter = await orderMessagesPage.getNumberOfElementInGrid(page);
       await expect(numberOfOrderMessagesAfterFilter).to.be.at.most(numberOfOrderMessages + 1);
 
-      const textColumn = await this.pageObjects.orderMessagesPage.getTextColumnFromTable(1, 'name');
+      const textColumn = await orderMessagesPage.getTextColumnFromTable(page, 1, 'name');
       await expect(textColumn).to.contains(createOrderMessageData.name);
     });
 
     it('should go to edit first order message page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditPage', baseContext);
 
-      await this.pageObjects.orderMessagesPage.gotoEditOrderMessage(1);
-      const pageTitle = await this.pageObjects.addOrderMessagePage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.addOrderMessagePage.pageTitleEdit);
+      await orderMessagesPage.gotoEditOrderMessage(page, 1);
+      const pageTitle = await addOrderMessagePage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addOrderMessagePage.pageTitleEdit);
     });
 
     it('should edit order message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderMessage', baseContext);
 
-      const result = await this.pageObjects.addOrderMessagePage.addEditOrderMessage(editOrderMessageData);
-      await expect(result).to.equal(this.pageObjects.orderMessagesPage.successfulUpdateMessage);
+      const result = await addOrderMessagePage.addEditOrderMessage(page, editOrderMessageData);
+      await expect(result).to.equal(orderMessagesPage.successfulUpdateMessage);
     });
 
     it('should reset filters and check number of order messages', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterUpdate', baseContext);
 
-      const numberOfOrderMessagesAfterReset = await this.pageObjects.orderMessagesPage.resetAndGetNumberOfLines();
+      const numberOfOrderMessagesAfterReset = await orderMessagesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfOrderMessagesAfterReset).to.be.equal(numberOfOrderMessages + 1);
     });
   });
@@ -149,12 +133,12 @@ describe('Create, update and delete order message', async () => {
     it('should filter by name of order message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
-      await this.pageObjects.orderMessagesPage.filterTable('name', editOrderMessageData.name);
+      await orderMessagesPage.filterTable(page, 'name', editOrderMessageData.name);
 
-      const numberOfOrderMessagesAfterFilter = await this.pageObjects.orderMessagesPage.getNumberOfElementInGrid();
+      const numberOfOrderMessagesAfterFilter = await orderMessagesPage.getNumberOfElementInGrid(page);
       await expect(numberOfOrderMessagesAfterFilter).to.be.at.most(numberOfOrderMessages + 1);
 
-      const textColumn = await this.pageObjects.orderMessagesPage.getTextColumnFromTable(1, 'name');
+      const textColumn = await orderMessagesPage.getTextColumnFromTable(page, 1, 'name');
       await expect(textColumn).to.contains(editOrderMessageData.name);
     });
 
@@ -162,14 +146,14 @@ describe('Create, update and delete order message', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteOrderMessage', baseContext);
 
       // delete order message in first row
-      const result = await this.pageObjects.orderMessagesPage.deleteOrderMessage(1);
-      await expect(result).to.be.equal(this.pageObjects.orderMessagesPage.successfulDeleteMessage);
+      const result = await orderMessagesPage.deleteOrderMessage(page, 1);
+      await expect(result).to.be.equal(orderMessagesPage.successfulDeleteMessage);
     });
 
     it('should reset filters and check number of order messages', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
-      const numberOfOrderMessagesAfterReset = await this.pageObjects.orderMessagesPage.resetAndGetNumberOfLines();
+      const numberOfOrderMessagesAfterReset = await orderMessagesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfOrderMessagesAfterReset).to.be.equal(numberOfOrderMessages);
     });
   });

@@ -99,7 +99,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
 
         if (!Validate::isLoadedObject($this->product)) {
-            Tools::redirect('index.php?controller=404');
+            Tools::redirect('pagenotfound');
         } else {
             $this->canonicalRedirection();
             /*

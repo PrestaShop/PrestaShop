@@ -306,32 +306,31 @@ class StockManager
             '{last_qty}' => $lowStockThreshold,
             '{product}' => $productName,
         ];
-        // get emails on employees who have right to run stock page
-        $emails = [];
-        $employees = Employee::getEmployees();
-        foreach ($employees as $employeeData) {
+
+        // send email to every employee who have permission for this
+        foreach (Employee::getEmployees() as $employeeData) {
             $employee = new Employee($employeeData['id_employee']);
+
             if (Access::isGranted('ROLE_MOD_TAB_ADMINSTOCKMANAGEMENT_READ', $employee->id_profile)) {
-                $emails[] = $employee->email;
+                $templateVars['{firstname}'] = $employee->firstname;
+                $templateVars['{lastname}'] = $employee->lastname;
+
+                Mail::Send(
+                    $idLang,
+                    'productoutofstock',
+                    Mail::l('Product out of stock', $idLang),
+                    $templateVars,
+                    $employee->email,
+                    null,
+                    (string) $configuration['PS_SHOP_EMAIL'],
+                    (string) $configuration['PS_SHOP_NAME'],
+                    null,
+                    null,
+                    __DIR__ . '/mails/',
+                    false,
+                    $idShop
+                );
             }
-        }
-        // Send 1 email by merchant mail, because Mail::Send doesn't work with an array of recipients
-        foreach ($emails as $email) {
-            Mail::Send(
-                $idLang,
-                'productoutofstock',
-                Mail::l('Product out of stock', $idLang),
-                $templateVars,
-                $email,
-                null,
-                (string) $configuration['PS_SHOP_EMAIL'],
-                (string) $configuration['PS_SHOP_NAME'],
-                null,
-                null,
-                __DIR__ . '/mails/',
-                false,
-                $idShop
-            );
         }
     }
 

@@ -51,9 +51,7 @@ Feature: Cart rule (percent) calculation with multiple cart rules
     Then cart rule "cartrule2" has a contextual reduction value of 29.72
     When I use the discount "cartrule3"
     Then cart rule "cartrule3" has a contextual reduction value of 5.944
-    Then my cart total should be 33.7462 tax included
-    #known to fail on previous
-    #Then my cart total using previous calculation method should be 33.75 tax included
+    Then my cart total should be precisely 33.75 tax included
 
   @cumulative-percent-reduction
   Scenario: 3 products in cart, several quantities, 2x % global cartRules

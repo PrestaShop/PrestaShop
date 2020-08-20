@@ -407,6 +407,31 @@ class CombinationCore extends ObjectModel
     }
 
     /**
+     * For a given ean13 reference, returns the corresponding id.
+     *
+     * @param string $ean13
+     *
+     * @return int|string Product attribute identifier
+     */
+    public static function getIdByEan13($ean13)
+    {
+        if (empty($ean13)) {
+            return 0;
+        }
+
+        if (!Validate::isEan13($ean13)) {
+            return 0;
+        }
+
+        $query = new DbQuery();
+        $query->select('pa.id_product_attribute');
+        $query->from('product_attribute', 'pa');
+        $query->where('pa.ean13 = \'' . pSQL($ean13) . '\'');
+
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+    }
+
+    /**
      * For a given product_attribute reference, returns the corresponding id.
      *
      * @param int $idProduct

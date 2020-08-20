@@ -65,7 +65,17 @@ services:
   prestashop.adapter.address.command_handler.edit_order_address_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\EditOrderAddressHandler'
     arguments:
-      - '@prestashop.core.command_bus'
+      - '@prestashop.adapter.address.command_handler.edit_customer_address_handler'
+      - '@prestashop.adapter.order.command_handler.change_order_delivery_address_handler'
+      - '@prestashop.adapter.order.command_handler.change_order_invoice_address_handler'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\EditOrderAddressCommand'
+
+  prestashop.adapter.address.command_handler.edit_cart_address_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\EditCartAddressHandler'
+    arguments:
+      - '@prestashop.adapter.address.command_handler.edit_customer_address_handler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCartAddressCommand'

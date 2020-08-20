@@ -55,6 +55,7 @@ GitHub contributors:
 - Ángel Guzmán Maeso
 - Ansar Mallouli
 - Anthony Girard
+- Antoine Damiron
 - Antoine LA
 - Antoine Mille
 - Antoine Thomas
@@ -234,6 +235,7 @@ GitHub contributors:
 - Florian Bergeron
 - Florian Kwakkenbos
 - Florian Lemaitre
+- Florian Le Gars
 - Florian Nolte
 - Flowster
 - fojtcz
@@ -334,6 +336,7 @@ GitHub contributors:
 - Joan
 - Joan Juvanteny
 - Jocelyn Fournier
+- Joe Francois
 - Joe Siwiak
 - Joel Sánchez
 - joemartin247
@@ -379,6 +382,7 @@ GitHub contributors:
 - Kjeld Borch Egevang
 - Klemart3D
 - Krystian Podemski
+- ks129
 - Ladel
 - Lathanao
 - Laurynas Sedys
@@ -589,6 +593,7 @@ GitHub contributors:
 - Raphaël Droz
 - Raphael Malie
 - raphael-homann
+- Raúl Jiménez
 - Raúl Rubio
 - raulgundin
 - rav88
@@ -645,6 +650,7 @@ GitHub contributors:
 - SebSept
 - seleda
 - Serge Rivière
+- Sergio Quiñonez
 - Sergey P
 - Sergio Quiñonez
 - Serhat Durum

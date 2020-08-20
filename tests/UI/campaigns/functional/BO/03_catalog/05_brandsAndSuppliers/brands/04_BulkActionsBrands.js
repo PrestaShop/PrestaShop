@@ -11,10 +11,9 @@ const loginCommon = require('@commonTests/loginBO');
 const BrandFaker = require('@data/faker/brand');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const BrandsPage = require('@pages/BO/catalog/brands');
-const AddBrandPage = require('@pages/BO/catalog/brands/add');
+const dashboardPage = require('@pages/BO/dashboard');
+const brandsPage = require('@pages/BO/catalog/brands');
+const addBrandPage = require('@pages/BO/catalog/brands/add');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -28,24 +27,12 @@ let numberOfBrands = 0;
 const firstBrandData = new BrandFaker({name: 'BrandToDelete'});
 const secondBrandData = new BrandFaker({name: 'BrandToDelete2'});
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    brandsPage: new BrandsPage(page),
-    addBrandPage: new AddBrandPage(page),
-  };
-};
-
 // Create 2 brands, Enable, disable and delete with bulk actions
 describe('Create 2 brands, Enable, disable and delete with bulk actions', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
@@ -57,28 +44,30 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
     ]);
   });
 
-  // Login into BO and go to brands page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   // GO to Brands Page
   it('should go to brands page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.catalogParentLink,
-      this.pageObjects.dashboardPage.brandsAndSuppliersLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.catalogParentLink,
+      dashboardPage.brandsAndSuppliersLink,
     );
 
-    await this.pageObjects.brandsPage.closeSfToolBar();
+    await brandsPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.brandsPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.brandsPage.pageTitle);
+    const pageTitle = await brandsPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(brandsPage.pageTitle);
   });
 
   it('should reset all Brands filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfBrands = await this.pageObjects.brandsPage.resetAndGetNumberOfLines('manufacturer');
+    numberOfBrands = await brandsPage.resetAndGetNumberOfLines(page, 'manufacturer');
     await expect(numberOfBrands).to.be.above(0);
   });
 
@@ -90,18 +79,18 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
       it('should go to new brand page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddBrandPage${index + 1}`, baseContext);
 
-        await this.pageObjects.brandsPage.goToAddNewBrandPage();
-        const pageTitle = await this.pageObjects.addBrandPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.addBrandPage.pageTitle);
+        await brandsPage.goToAddNewBrandPage(page);
+        const pageTitle = await addBrandPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(addBrandPage.pageTitle);
       });
 
       it('should create new brand', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createBrand${index + 1}`, baseContext);
 
-        const result = await this.pageObjects.addBrandPage.createEditBrand(brandToCreate);
-        await expect(result).to.equal(this.pageObjects.brandsPage.successfulCreationMessage);
+        const result = await addBrandPage.createEditBrand(page, brandToCreate);
+        await expect(result).to.equal(brandsPage.successfulCreationMessage);
 
-        const numberOfBrandsAfterCreation = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
+        const numberOfBrandsAfterCreation = await brandsPage.getNumberOfElementInGrid(page, 'manufacturer');
         await expect(numberOfBrandsAfterCreation).to.be.equal(numberOfBrands + index + 1);
       });
     });
@@ -112,13 +101,13 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
     it('should filter Brand list by name of brand created', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkEdit', baseContext);
 
-      await this.pageObjects.brandsPage.filterBrands('input', 'name', 'BrandToDelete');
+      await brandsPage.filterBrands(page, 'input', 'name', 'BrandToDelete');
 
-      const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
+      const numberOfBrandsAfterFilter = await brandsPage.getNumberOfElementInGrid(page, 'manufacturer');
       await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
 
       for (let i = 1; i <= numberOfBrandsAfterFilter; i++) {
-        const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableBrands(i, 'name');
+        const textColumn = await brandsPage.getTextColumnFromTableBrands(page, i, 'name');
         await expect(textColumn).to.contains('BrandToDelete');
       }
     });
@@ -132,17 +121,18 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
       it(`should ${test.args.action} brands`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Brand`, baseContext);
 
-        const textResult = await this.pageObjects.brandsPage.changeBrandsEnabledColumnBulkActions(
+        const textResult = await brandsPage.changeBrandsEnabledColumnBulkActions(
+          page,
           test.args.enabledValue,
         );
 
-        await expect(textResult).to.be.equal(this.pageObjects.brandsPage.successfulUpdateStatusMessage);
+        await expect(textResult).to.be.equal(brandsPage.successfulUpdateStatusMessage);
 
-        const numberOfBrandsInGrid = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
+        const numberOfBrandsInGrid = await brandsPage.getNumberOfElementInGrid(page, 'manufacturer');
         await expect(numberOfBrandsInGrid).to.be.at.most(numberOfBrands);
 
         for (let i = 1; i <= numberOfBrandsInGrid; i++) {
-          const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableBrands(i, 'active');
+          const textColumn = await brandsPage.getTextColumnFromTableBrands(page, i, 'active');
           await expect(textColumn).to.contains(test.expected);
         }
       });
@@ -151,7 +141,7 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
     it('should reset Brand filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkEdit', baseContext);
 
-      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines('manufacturer');
+      const numberOfBrandsAfterReset = await brandsPage.resetAndGetNumberOfLines(page, 'manufacturer');
       await expect(numberOfBrandsAfterReset).to.be.equal(numberOfBrands + 2);
     });
   });
@@ -161,13 +151,13 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
     it('should filter Brand list by name of brand created', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
-      await this.pageObjects.brandsPage.filterBrands('input', 'name', 'BrandToDelete');
+      await brandsPage.filterBrands(page, 'input', 'name', 'BrandToDelete');
 
-      const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
+      const numberOfBrandsAfterFilter = await brandsPage.getNumberOfElementInGrid(page, 'manufacturer');
       await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
 
       for (let i = 1; i <= numberOfBrandsAfterFilter; i++) {
-        const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableBrands(i, 'name');
+        const textColumn = await brandsPage.getTextColumnFromTableBrands(page, i, 'name');
         await expect(textColumn).to.contains('BrandToDelete');
       }
     });
@@ -175,14 +165,14 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
     it('should delete Brands with Bulk Actions and check Result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteBrands', baseContext);
 
-      const deleteTextResult = await this.pageObjects.brandsPage.deleteWithBulkActions('manufacturer');
-      await expect(deleteTextResult).to.be.equal(this.pageObjects.brandsPage.successfulDeleteMessage);
+      const deleteTextResult = await brandsPage.deleteWithBulkActions(page, 'manufacturer');
+      await expect(deleteTextResult).to.be.equal(brandsPage.successfulDeleteMessage);
     });
 
     it('should reset Brand filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
-      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines('manufacturer');
+      const numberOfBrandsAfterReset = await brandsPage.resetAndGetNumberOfLines(page, 'manufacturer');
       await expect(numberOfBrandsAfterReset).to.be.equal(numberOfBrands);
     });
   });

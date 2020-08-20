@@ -219,6 +219,10 @@ class PrimitiveUtils
     {
         $arrayAsString = str_replace(['[', ']', ' '], ['', '', ''], $arrayAsString);
 
+        if (empty($arrayAsString)) {
+            return [];
+        }
+
         return explode(',', $arrayAsString);
     }
 
@@ -257,5 +261,17 @@ class PrimitiveUtils
             default:
                 throw new RuntimeException("Unknown string integer: $element");
         }
+    }
+
+    /**
+     * @param int $length
+     *
+     * @return string
+     *
+     * @throws Exception
+     */
+    public static function generateRandomString(int $length): string
+    {
+        return bin2hex(random_bytes(round($length / 2)));
     }
 }

@@ -391,14 +391,22 @@ class OrderController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_orders_index');
         }
 
+        $formFactory = $this->get('form.factory');
+        $updateOrderStatusForm = $formFactory->createNamed(
+            'update_order_status',
+            UpdateOrderStatusType::class, [
+                'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
+            ]
+        );
+        $updateOrderStatusActionBarForm = $formFactory->createNamed(
+            'update_order_status_action_bar',
+            UpdateOrderStatusType::class, [
+                'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
+            ]
+        );
+
         $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class, [], [
             'order_id' => $orderId,
-        ]);
-        $updateOrderStatusForm = $this->createForm(UpdateOrderStatusType::class, [
-            'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
-        ]);
-        $updateOrderStatusActionBarForm = $this->createForm(UpdateOrderStatusType::class, [
-            'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
         ]);
         $addOrderPaymentForm = $this->createForm(OrderPaymentType::class, [
             'id_currency' => $orderForViewing->getCurrencyId(),
@@ -952,8 +960,22 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function updateStatusAction(int $orderId, Request $request): RedirectResponse
     {
-        $form = $this->createForm(UpdateOrderStatusType::class);
+        $formFactory = $this->get('form.factory');
+
+        $form = $formFactory->createNamed(
+            'update_order_status',
+            UpdateOrderStatusType::class
+        );
         $form->handleRequest($request);
+
+        if (!$form->isSubmitted() || !$form->isValid()) {
+            // Check if the form is submit from the action bar
+            $form = $formFactory->createNamed(
+                'update_order_status_action_bar',
+                UpdateOrderStatusType::class
+            );
+            $form->handleRequest($request);
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->handleOrderStatusUpdate($orderId, (int) $form->getData()['new_order_status_id']);
@@ -1560,13 +1582,28 @@ class OrderController extends FrameworkBundleAdminController
                 'Only numbers and decimal points (".") are allowed in the amount fields, e.g. 10.50 or 1050.',
                 'Admin.Orderscustomers.Notification'
             ),
-            InvalidCartRuleDiscountValueException::class => sprintf(
-                '%s<ol><li>%s</li><li>%s</li><li>%s</li></ol>',
-                $this->trans('It looks like the value is invalid:', 'Admin.Orderscustomers.Notification'),
-                $this->trans('Percent or amount value must be greater than 0.', 'Admin.Orderscustomers.Notification'),
-                $this->trans('Percent value cannot exceed 100.', 'Admin.Orderscustomers.Notification'),
-                $this->trans('Discount value cannot exceed the total price of this order.', 'Admin.Orderscustomers.Notification')
-            ),
+            InvalidCartRuleDiscountValueException::class => [
+                InvalidCartRuleDiscountValueException::INVALID_MIN_PERCENT => $this->trans(
+                    'Percent value must be greater than 0.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+                InvalidCartRuleDiscountValueException::INVALID_MAX_PERCENT => $this->trans(
+                    'Percent value cannot exceed 100.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+                InvalidCartRuleDiscountValueException::INVALID_MIN_AMOUNT => $this->trans(
+                    'Amount value must be greater than 0.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+                InvalidCartRuleDiscountValueException::INVALID_MAX_AMOUNT => $this->trans(
+                    'Discount value cannot exceed the total price of this order.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+                InvalidCartRuleDiscountValueException::INVALID_FREE_SHIPPING => $this->trans(
+                    'Shipping discount value cannot exceed the total price of this order.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+            ],
             InvalidCancelProductException::class => [
                 InvalidCancelProductException::INVALID_QUANTITY => $this->trans(
                     'Positive product quantity is required.',

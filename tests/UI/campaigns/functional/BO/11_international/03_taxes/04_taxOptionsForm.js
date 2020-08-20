@@ -7,9 +7,8 @@ const loginCommon = require('@commonTests/loginBO');
 const taxOptions = require('@data/demo/taxOptions');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const TaxesPage = require('@pages/BO/international/taxes');
+const dashboardPage = require('@pages/BO/dashboard');
+const taxesPage = require('@pages/BO/international/taxes');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -19,44 +18,35 @@ const baseContext = 'functional_BO_international_localization_taxes_taxOptionsFo
 let browserContext;
 let page;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    taxesPage: new TaxesPage(page),
-  };
-};
-
 // Edit Tax options
 describe('Edit Tax options with all EcoTax values', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to taxes page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to Taxes page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.internationalParentLink,
-      this.pageObjects.dashboardPage.taxesLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.internationalParentLink,
+      dashboardPage.taxesLink,
     );
 
-    await this.pageObjects.taxesPage.closeSfToolBar();
+    await taxesPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.taxesPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.taxesPage.pageTitle);
+    const pageTitle = await taxesPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(taxesPage.pageTitle);
   });
 
   // Testing all options of EcoTax
@@ -70,7 +60,7 @@ describe('Edit Tax options with all EcoTax values', async () => {
       \tEcotax: '${taxOption.ecoTax}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `updateForm${index + 1}`, baseContext);
 
-        const textResult = await this.pageObjects.taxesPage.updateTaxOption(taxOption);
+        const textResult = await taxesPage.updateTaxOption(page, taxOption);
         await expect(textResult).to.be.equal('Update successful');
       });
     });

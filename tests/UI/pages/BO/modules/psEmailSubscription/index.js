@@ -1,12 +1,9 @@
 require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+const ModuleConfiguration = require('@pages/BO/modules/moduleConfiguration');
 
-module.exports = class PsEmailSubscription extends BOBasePage {
-  constructor(page) {
-    super(page);
-
-    // Header selectors
-    this.pageHeadSubtitle = 'h4.page-subtitle';
+class PsEmailSubscription extends ModuleConfiguration.constructor {
+  constructor() {
+    super();
 
     // Newsletter registrations table selectors
     this.newsletterTable = '#table-merged';
@@ -20,38 +17,31 @@ module.exports = class PsEmailSubscription extends BOBasePage {
   /* Methods */
 
   /**
-   * @override
-   * Get module name from page title
-   * @return {Promise<string>}
-   */
-  getPageTitle() {
-    return this.getTextContent(this.pageHeadSubtitle);
-  }
-
-  /**
    * Get number of newsletter registrations
    * @returns {Promise<number>}
    */
-  async getNumberOfNewsletterRegistration() {
-    if (await this.elementVisible(this.newsletterTableEmptyColumn, 1000)) {
+  async getNumberOfNewsletterRegistration(page) {
+    if (await this.elementVisible(page, this.newsletterTableEmptyColumn, 1000)) {
       return 0;
     }
-    return (await this.page.$$(this.newsletterTableRows)).length;
+    return (await page.$$(this.newsletterTableRows)).length;
   }
 
   /**
    * Get list of emails registered to newsletter
    * @return {Promise<[]>}
    */
-  async getListOfNewsletterRegistrationEmails() {
+  async getListOfNewsletterRegistrationEmails(page) {
     const emails = [];
-    const numberOfEmails = await this.getNumberOfNewsletterRegistration();
+    const numberOfEmails = await this.getNumberOfNewsletterRegistration(page);
 
     // Get email from each row
     for (let row = 1; row <= numberOfEmails; row++) {
-      await emails.push(await this.getTextContent(this.newsletterTableEmailColumn(row)));
+      await emails.push(await this.getTextContent(page, this.newsletterTableEmailColumn(row)));
     }
 
     return emails;
   }
-};
+}
+
+module.exports = new PsEmailSubscription();

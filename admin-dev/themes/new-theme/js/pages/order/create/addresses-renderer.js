@@ -38,8 +38,9 @@ export default class AddressesRenderer {
 
   /**
    * @param {Array} addresses
+   * @param {int} cartId
    */
-  render(addresses) {
+  render(addresses, cartId) {
     this.cleanAddresses();
     if (addresses.length === 0) {
       this.hideAddressesContent();
@@ -53,8 +54,8 @@ export default class AddressesRenderer {
     this.hideEmptyAddressesWarning();
 
     Object.values(addresses).forEach((address) => {
-      this.renderDeliveryAddress(address);
-      this.renderInvoiceAddress(address);
+      this.renderDeliveryAddress(address, cartId);
+      this.renderInvoiceAddress(address, cartId);
     });
 
     this.showAddressesBlock();
@@ -64,10 +65,11 @@ export default class AddressesRenderer {
    * Renders delivery address content
    *
    * @param address
+   * @param cartId
    *
    * @private
    */
-  renderDeliveryAddress(address) {
+  renderDeliveryAddress(address, cartId) {
     const deliveryAddressOption = {
       value: address.addressId,
       text: address.alias,
@@ -76,8 +78,10 @@ export default class AddressesRenderer {
     if (address.delivery) {
       $(createOrderMap.deliveryAddressDetails).html(address.formattedAddress);
       deliveryAddressOption.selected = 'selected';
-      $(createOrderMap.deliveryAddressEditBtn).prop('href', this.router.generate('admin_addresses_edit', {
+      $(createOrderMap.deliveryAddressEditBtn).prop('href', this.router.generate('admin_cart_addresses_edit', {
         addressId: address.addressId,
+        cartId,
+        addressType: 'delivery',
         liteDisplaying: 1,
         submitFormAjax: 1,
       }));
@@ -90,10 +94,11 @@ export default class AddressesRenderer {
    * Renders invoice address content
    *
    * @param address
+   * @param cartId
    *
    * @private
    */
-  renderInvoiceAddress(address) {
+  renderInvoiceAddress(address, cartId) {
     const invoiceAddressOption = {
       value: address.addressId,
       text: address.alias,
@@ -102,8 +107,10 @@ export default class AddressesRenderer {
     if (address.invoice) {
       $(createOrderMap.invoiceAddressDetails).html(address.formattedAddress);
       invoiceAddressOption.selected = 'selected';
-      $(createOrderMap.invoiceAddressEditBtn).prop('href', this.router.generate('admin_addresses_edit', {
+      $(createOrderMap.invoiceAddressEditBtn).prop('href', this.router.generate('admin_cart_addresses_edit', {
         addressId: address.addressId,
+        cartId,
+        addressType: 'invoice',
         liteDisplaying: 1,
         submitFormAjax: 1,
       }));

@@ -32,6 +32,19 @@ use Shop;
 class ShopFeatureContext extends AbstractPrestaShopFeatureContext
 {
     /**
+     * @Given single shop :shopReference context is loaded
+     *
+     * @param string $shopReference
+     */
+    public function loadSingleShopContext(string $shopReference)
+    {
+        /** @var Shop $shop */
+        $shop = SharedStorage::getStorage()->get($shopReference);
+
+        Shop::setContext(Shop::CONTEXT_SHOP, $shop->id);
+    }
+
+    /**
      * @Given shop :reference with name :shopName exists
      *
      * @param string $reference

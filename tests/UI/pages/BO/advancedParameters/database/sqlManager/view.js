@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class ViewSQLQuery extends BOBasePage {
-  constructor(page) {
-    super(page);
+class ViewSQLQuery extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'SQL Manager';
 
@@ -17,18 +17,22 @@ module.exports = class ViewSQLQuery extends BOBasePage {
    */
   /**
    * Get SQL query result number
+   * @param page
    * @returns {Promise<number>}
    */
-  getSQLQueryResultNumber() {
-    return this.getNumberFromText(this.sqlQueryResultTitle);
+  getSQLQueryResultNumber(page) {
+    return this.getNumberFromText(page, this.sqlQueryResultTitle);
   }
 
   /**
    * Get columns name
+   * @param page
    * @param id
    * @returns {Promise<string>}
    */
-  getColumnName(id = 1) {
-    return this.getTextContent(this.tableColumnName(id));
+  getColumnName(page, id = 1) {
+    return this.getTextContent(page, this.tableColumnName(id));
   }
-};
+}
+
+module.exports = new ViewSQLQuery();

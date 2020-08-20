@@ -102,6 +102,11 @@ class EmployeeCore extends ObjectModel
     public $reset_password_validity;
 
     /**
+     * @var bool
+     */
+    public $has_enabled_gravatar = false;
+
+    /**
      * @see ObjectModel::$definition
      */
     public static $definition = [
@@ -133,6 +138,7 @@ class EmployeeCore extends ObjectModel
             'id_last_customer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
             'reset_password_token' => ['type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 40, 'copy_post' => false],
             'reset_password_validity' => ['type' => self::TYPE_DATE, 'validate' => 'isDateOrNull', 'copy_post' => false],
+            'has_enabled_gravatar' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
         ],
     ];
 
@@ -593,14 +599,35 @@ class EmployeeCore extends ObjectModel
      */
     public function getImage()
     {
+        $default = Tools::getAdminImageUrl('prestashop-avatar.png');
+        $imageUrl = '';
+
+        // Local Image
         $imagePath = $this->image_dir . $this->id . '.jpg';
         if (file_exists($imagePath)) {
-            return Context::getContext()->link->getMediaLink(
+            $imageUrl = Context::getContext()->link->getMediaLink(
                 str_replace($this->image_dir, _THEME_EMPLOYEE_DIR_, $imagePath)
             );
         }
 
-        return Tools::getAdminImageUrl('prestashop-avatar.png');
+        // Default Image
+        $imageUrl = $imageUrl ?? $default;
+
+        // Gravatar
+        if ($this->has_enabled_gravatar) {
+            $imageUrl = 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($this->email))) . '?d=' . urlencode($default);
+        }
+
+        // Hooks
+        Hook::exec(
+            'actionOverrideEmployeeImage',
+            [
+                'employee' => $this,
+                'imageUrl' => &$imageUrl,
+            ]
+        );
+
+        return $imageUrl;
     }
 
     /**

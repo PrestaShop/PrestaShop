@@ -8,23 +8,13 @@ const testContext = require('@utils/testContext');
 const baseContext = 'sanity_ordersBO_editOrder';
 
 // importing pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const OrderPage = require('@pages/BO/orders/view');
-const OrdersPage = require('@pages/BO/orders');
+const dashboardPage = require('@pages/BO/dashboard');
+const orderPage = require('@pages/BO/orders/view');
+const ordersPage = require('@pages/BO/orders');
 const {Statuses} = require('@data/demo/orderStatuses');
 
 let browserContext;
 let page;
-// creating pages objects in a function
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    orderPage: new OrderPage(page),
-    ordersPage: new OrdersPage(page),
-  };
-};
 
 /*
   Connect to the BO
@@ -36,46 +26,53 @@ describe('Edit Order BO', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-    this.pageObjects = await init();
   });
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
+
   // Steps
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to the Orders page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.ordersParentLink,
-      this.pageObjects.dashboardPage.ordersLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.ordersParentLink,
+      dashboardPage.ordersLink,
     );
 
-    await this.pageObjects.ordersPage.closeSfToolBar();
-    const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
+    await ordersPage.closeSfToolBar(page);
+    const pageTitle = await ordersPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(ordersPage.pageTitle);
   });
 
   it('should go to the first order page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrder', baseContext);
-    await this.pageObjects.ordersPage.goToOrder('1');
-    const pageTitle = await this.pageObjects.orderPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.orderPage.pageTitle);
+
+    await ordersPage.goToOrder(page, 1);
+    const pageTitle = await orderPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(orderPage.pageTitle);
   });
 
   it('should modify the product quantity and check the validation', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'editOrderQuantity', baseContext);
-    const newQuantity = await this.pageObjects.orderPage.modifyProductQuantity(1, 5);
+
+    const newQuantity = await orderPage.modifyProductQuantity(page, 1, 5);
     await expect(newQuantity, 'Quantity was not updated').to.equal(5);
   });
 
   it('should modify the order status and check the validation', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'editOrderStatus', baseContext);
-    const orderStatus = await this.pageObjects.orderPage.modifyOrderStatus(Statuses.paymentAccepted.status);
+    const orderStatus = await orderPage.modifyOrderStatus(page, Statuses.paymentAccepted.status);
     await expect(orderStatus).to.equal(Statuses.paymentAccepted.status);
   });
 
   // Logout from BO
-  loginCommon.logoutBO();
+  it('should log out from BO', async function () {
+    await loginCommon.logoutBO(this, page);
+  });
 });

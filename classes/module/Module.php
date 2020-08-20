@@ -2367,6 +2367,20 @@ abstract class ModuleCore implements ModuleInterface
         return Cache::retrieve('Module::isEnabled' . $module_name);
     }
 
+    public static function isEnabledForMobileDevices($module_name)
+    {
+        if (!Cache::isStored('Module::isEnabledForMobileDevices' . $module_name)) {
+            $id_module = Module::getModuleIdByName($module_name);
+            $enable_device = (int) Db::getInstance()->getValue('SELECT `enable_device` FROM `' . _DB_PREFIX_ . 'module_shop` WHERE `id_module` = ' . (int) $id_module . ' AND `id_shop` = ' . (int) Context::getContext()->shop->id);
+            $is_enabled_mobile = $enable_device === 7;
+            Cache::store('Module::isEnabledForMobileDevices' . $module_name, (bool) $is_enabled_mobile);
+
+            return (bool) $is_enabled_mobile;
+        }
+
+        return Cache::retrieve('Module::isEnabledForMobileDevices' . $module_name);
+    }
+
     /**
      * Check if module is registered on hook
      *
@@ -3369,9 +3383,8 @@ abstract class ModuleCore implements ModuleInterface
         $registeredHookList = Hook::getHookModuleList();
         foreach ($hooks_list as $current_hook) {
             $hook_name = $current_hook['name'];
-            $retro_hook_name = Hook::getRetroHookName($hook_name);
 
-            if (is_callable([$this, 'hook' . ucfirst($hook_name)]) || is_callable([$this, 'hook' . ucfirst($retro_hook_name)])) {
+            if (!Hook::isAlias($hook_name) && Hook::isHookCallableOn($this, $hook_name)) {
                 $possible_hooks_list[] = [
                     'id_hook' => $current_hook['id_hook'],
                     'name' => $hook_name,

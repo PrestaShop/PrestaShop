@@ -257,7 +257,6 @@ product_tabs['Combinations'] = new function(){
 					ajax: true,
 					action: 'editProductAttribute'
 				},
-				context: document.body,
 				dataType: 'json',
 				context: this,
 				async: false,
@@ -340,7 +339,6 @@ product_tabs['Combinations'] = new function(){
 				action: 'defaultProductAttribute',
 				ajax: true
 			},
-			context: document.body,
 			dataType: 'json',
 			context: this,
 			async: false,
@@ -372,7 +370,6 @@ product_tabs['Combinations'] = new function(){
 				action: 'deleteProductAttribute',
 				ajax: true
 			},
-			context: document.body,
 			dataType: 'json',
 			context: this,
 			async: false,

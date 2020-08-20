@@ -31,6 +31,7 @@ use Cache;
 use Category;
 use Context;
 use Employee;
+use Language;
 use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
 use Pack;
 use Product;
@@ -145,5 +146,6 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         Pack::resetStaticCache();
         Category::resetStaticCache();
         Product::resetStaticCache();
+        Language::resetCache();
     }
 }

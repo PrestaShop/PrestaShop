@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class Taxes extends BOBasePage {
-  constructor(page) {
-    super(page);
+class Taxes extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Taxes •';
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
@@ -63,74 +63,80 @@ module.exports = class Taxes extends BOBasePage {
 
   /**
    * Reset Filter in table
+   * @param page
    * @returns {Promise<void>}
    */
-  async resetFilter() {
-    if (await this.elementVisible(this.resetFilterButton, 2000)) {
-      await this.clickAndWaitForNavigation(this.resetFilterButton);
+  async resetFilter(page) {
+    if (await this.elementVisible(page, this.resetFilterButton, 2000)) {
+      await this.clickAndWaitForNavigation(page, this.resetFilterButton);
     }
   }
 
   /**
    * Get number of elements in grid
+   * @param page
    * @return {Promise<number>}
    */
-  async getNumberOfElementInGrid() {
-    return this.getNumberFromText(this.gridHeaderTitle);
+  async getNumberOfElementInGrid(page) {
+    return this.getNumberFromText(page, this.gridHeaderTitle);
   }
 
   /**
    * Reset Filter And get number of elements in list
+   * @param page
    * @return {Promise<number>}
    */
-  async resetAndGetNumberOfLines() {
-    await this.resetFilter();
-    return this.getNumberOfElementInGrid();
+  async resetAndGetNumberOfLines(page) {
+    await this.resetFilter(page);
+    return this.getNumberOfElementInGrid(page);
   }
 
   /**
    * Filter list of Taxes
+   * @param page
    * @param filterType, input or select to choose method of filter
    * @param filterBy, column to filter
    * @param value, value to filter with
    * @return {Promise<void>}
    */
-  async filterTaxes(filterType, filterBy, value = '') {
+  async filterTaxes(page, filterType, filterBy, value = '') {
     switch (filterType) {
       case 'input':
-        await this.setValue(this.taxesFilterColumnInput(filterBy), value);
+        await this.setValue(page, this.taxesFilterColumnInput(filterBy), value);
         break;
       case 'select':
-        await this.selectByVisibleText(this.taxesFilterColumnInput(filterBy), value ? 'Yes' : 'No');
+        await this.selectByVisibleText(page, this.taxesFilterColumnInput(filterBy), value ? 'Yes' : 'No');
         break;
       default:
       // Do nothing
     }
     // click on search
-    await this.clickAndWaitForNavigation(this.searchFilterButton);
+    await this.clickAndWaitForNavigation(page, this.searchFilterButton);
   }
 
 
   /**
    * Get toggle column value for a row
+   * @param page
    * @param row
    * @param column
    * @return {Promise<string>}
    */
-  async getToggleColumnValue(row, column) {
-    return this.elementVisible(this.toggleColumnValidIcon(row, column), 100);
+  async getToggleColumnValue(page, row, column) {
+    return this.elementVisible(page, this.toggleColumnValidIcon(row, column), 100);
   }
 
   /**
    * Update Enable column for the value wanted
+   * @param page
    * @param row
    * @param valueWanted
    * @return {Promise<boolean>}, true if click has been performed
    */
-  async updateEnabledValue(row, valueWanted = true) {
-    await this.waitForVisibleSelector(this.taxesGridColumn(row, 'active'), 2000);
-    if (await this.getToggleColumnValue(row, 'active') !== valueWanted) {
-      await this.clickAndWaitForNavigation(this.taxesGridColumn(row, 'active'));
+  async updateEnabledValue(page, row, valueWanted = true) {
+    await this.waitForVisibleSelector(page, this.taxesGridColumn(row, 'active'), 2000);
+    if (await this.getToggleColumnValue(page, row, 'active') !== valueWanted) {
+      await this.clickAndWaitForNavigation(page, this.taxesGridColumn(row, 'active'));
       return true;
     }
     return false;
@@ -138,24 +144,26 @@ module.exports = class Taxes extends BOBasePage {
 
   /**
    * get text from a column
+   * @param page
    * @param row, row in table
    * @param column, which column
    * @returns {Promise<string>}
    */
-  async getTextColumnFromTableTaxes(row, column) {
-    return this.getTextContent(this.taxesGridColumn(row, column));
+  async getTextColumnFromTableTaxes(page, row, column) {
+    return this.getTextContent(page, this.taxesGridColumn(row, column));
   }
 
   /**
    * Get content from all rows
+   * @param page
    * @param column
    * @return {Promise<[]>}
    */
-  async getAllRowsColumnContent(column) {
-    const rowsNumber = await this.getNumberOfElementInGrid();
+  async getAllRowsColumnContent(page, column) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
     for (let i = 1; i <= rowsNumber; i++) {
-      const rowContent = await this.getTextColumnFromTableTaxes(i, column);
+      const rowContent = await this.getTextColumnFromTableTaxes(page, i, column);
       await allRowsContentTable.push(rowContent);
     }
     return allRowsContentTable;
@@ -163,188 +171,200 @@ module.exports = class Taxes extends BOBasePage {
 
   /**
    * Go to add tax Page
+   * @param page
    * @return {Promise<void>}
    */
-  async goToAddNewTaxPage() {
-    await this.clickAndWaitForNavigation(this.addNewTaxLink);
+  async goToAddNewTaxPage(page) {
+    await this.clickAndWaitForNavigation(page, this.addNewTaxLink);
   }
 
   /**
    * Go to Edit tax page
+   * @param page
    * @param row, row in table
    * @return {Promise<void>}
    */
-  async goToEditTaxPage(row) {
-    await this.clickAndWaitForNavigation(this.taxesGridColumnEditLink(row));
+  async goToEditTaxPage(page, row) {
+    await this.clickAndWaitForNavigation(page, this.taxesGridColumnEditLink(row));
   }
 
   /**
    * Delete Tax
+   * @param page
    * @param row, row in table
    * @returns {Promise<string>}
    */
-  async deleteTax(row) {
+  async deleteTax(page, row) {
     // Add listener to dialog to accept deletion
-    this.dialogListener(true);
+    this.dialogListener(page, true);
     // Click on dropDown
     await Promise.all([
-      this.page.click(this.taxesGridColumnToggleDropDown(row)),
-      this.waitForVisibleSelector(`${this.taxesGridColumnToggleDropDown(row)}[aria-expanded='true']`),
+      page.click(this.taxesGridColumnToggleDropDown(row)),
+      this.waitForVisibleSelector(page, `${this.taxesGridColumnToggleDropDown(row)}[aria-expanded='true']`),
     ]);
 
-    // Click on delete
     // Click on delete and wait for modal
     await Promise.all([
-      this.page.click(this.taxesGridDeleteLink(row)),
-      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
+      page.click(this.taxesGridDeleteLink(row)),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
-    await this.confirmDeleteTaxes();
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.confirmDeleteTaxes(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
    * Enable / disable taxes by Bulk Actions
+   * @param page
    * @param enable
    * @returns {Promise<string>}
    */
-  async changeTaxesEnabledColumnBulkActions(enable = true) {
+  async changeTaxesEnabledColumnBulkActions(page, enable = true) {
     // Click on Select All
     await Promise.all([
-      this.page.$eval(this.selectAllLabel, el => el.click()),
-      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
+      page.$eval(this.selectAllLabel, el => el.click()),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
-      this.page.click(this.bulkActionsToggleButton),
-      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
+      page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click to change status
-    await this.clickAndWaitForNavigation(enable ? this.enableSelectionButton : this.disableSelectionButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.clickAndWaitForNavigation(page, enable ? this.enableSelectionButton : this.disableSelectionButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
    * Delete all Taxes with Bulk Actions
+   * @param page
    * @returns {Promise<string>}
    */
-  async deleteTaxesBulkActions() {
+  async deleteTaxesBulkActions(page) {
     // Click on Select All
     await Promise.all([
-      this.page.$eval(this.selectAllLabel, el => el.click()),
-      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
+      page.$eval(this.selectAllLabel, el => el.click()),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
-      this.page.click(this.bulkActionsToggleButton),
-      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
+      page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      this.page.click(this.deleteSelectionButton),
-      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
+      page.click(this.deleteSelectionButton),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
-    await this.confirmDeleteTaxes();
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.confirmDeleteTaxes(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
    * Confirm delete with in modal
+   * @param page
    * @return {Promise<void>}
    */
-  async confirmDeleteTaxes() {
-    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
+  async confirmDeleteTaxes(page) {
+    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
   }
 
   /**
    * Update Tax Options
+   * @param page
    * @param taxOptionData
    * @returns {Promise<string>}
    */
-  async updateTaxOption(taxOptionData) {
+  async updateTaxOption(page, taxOptionData) {
     if (taxOptionData.enabled) {
-      await this.page.click(this.enabledTaxSwitchLabel(1));
+      await page.click(this.enabledTaxSwitchLabel(1));
       if (taxOptionData.displayInShoppingCart) {
-        await this.page.click(this.displayTaxInCartSwitchLabel(1));
+        await page.click(this.displayTaxInCartSwitchLabel(1));
       } else {
-        await this.page.click(this.displayTaxInCartSwitchLabel(0));
+        await page.click(this.displayTaxInCartSwitchLabel(0));
       }
     } else {
-      await this.page.click(this.enabledTaxSwitchLabel(0));
+      await page.click(this.enabledTaxSwitchLabel(0));
     }
-    await this.selectByVisibleText(this.taxAddressTypeSelect, taxOptionData.basedOn);
+    await this.selectByVisibleText(page, this.taxAddressTypeSelect, taxOptionData.basedOn);
     if (taxOptionData.useEcoTax) {
-      await this.page.click(this.useEcoTaxSwitchLabel(1));
+      await page.click(this.useEcoTaxSwitchLabel(1));
       if (taxOptionData.ecoTax !== undefined) {
-        await this.selectByVisibleText(this.ecoTaxSelect, taxOptionData.ecoTax);
+        await this.selectByVisibleText(page, this.ecoTaxSelect, taxOptionData.ecoTax);
       }
     } else {
-      await this.page.click(this.useEcoTaxSwitchLabel(0));
+      await page.click(this.useEcoTaxSwitchLabel(0));
     }
     // Click on save tax Option
-    await this.clickAndWaitForNavigation(this.saveTaxOptionButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.clickAndWaitForNavigation(page, this.saveTaxOptionButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
    * Go to Tax Rules page
+   * @param page
    * @return {Promise<void>}
    */
-  async goToTaxRulesPage() {
-    await this.clickAndWaitForNavigation(this.taxRulesSubTab);
+  async goToTaxRulesPage(page) {
+    await this.clickAndWaitForNavigation(page, this.taxRulesSubTab);
   }
 
   /* Sort functions */
   /**
    * Sort table by clicking on column name
+   * @param page
    * @param sortBy, column to sort with
    * @param sortDirection, asc or desc
    * @return {Promise<void>}
    */
-  async sortTable(sortBy, sortDirection = 'asc') {
+  async sortTable(page, sortBy, sortDirection = 'asc') {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
     let i = 0;
-    while (await this.elementNotVisible(sortColumnDiv, 1000) && i < 2) {
-      await this.clickAndWaitForNavigation(sortColumnSpanButton);
+    while (await this.elementNotVisible(page, sortColumnDiv, 1000) && i < 2) {
+      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
     }
-    await this.waitForVisibleSelector(sortColumnDiv);
+    await this.waitForVisibleSelector(page, sortColumnDiv);
   }
 
   /* Pagination methods */
   /**
    * Get pagination label
+   * @param page
    * @return {Promise<string>}
    */
-  getPaginationLabel() {
-    return this.getTextContent(this.paginationLabel);
+  getPaginationLabel(page) {
+    return this.getTextContent(page, this.paginationLabel);
   }
 
   /**
    * Select pagination limit
+   * @param page
    * @param number
    * @returns {Promise<string>}
    */
-  async selectPaginationLimit(number) {
-    await this.selectByVisibleText(this.paginationLimitSelect, number);
-    return this.getPaginationLabel();
+  async selectPaginationLimit(page, number) {
+    await this.selectByVisibleText(page, this.paginationLimitSelect, number);
+    return this.getPaginationLabel(page);
   }
 
   /**
    * Click on next
    * @returns {Promise<string>}
    */
-  async paginationNext() {
-    await this.clickAndWaitForNavigation(this.paginationNextLink);
-    return this.getPaginationLabel();
+  async paginationNext(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    return this.getPaginationLabel(page);
   }
 
   /**
    * Click on previous
+   * @param page
    * @returns {Promise<string>}
    */
-  async paginationPrevious() {
-    await this.clickAndWaitForNavigation(this.paginationPreviousLink);
-    return this.getPaginationLabel();
+  async paginationPrevious(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    return this.getPaginationLabel(page);
   }
-};
+}
+module.exports = new Taxes();

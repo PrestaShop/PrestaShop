@@ -2442,6 +2442,8 @@ class AdminProductsControllerCore extends AdminController
 
             $suppliers_to_associate = [];
             $new_default_supplier = 0;
+            $defaultWholeslePrice = (float) 0;
+            $defaultReference = '';
 
             if (Tools::isSubmit('default_supplier')) {
                 $new_default_supplier = (int) Tools::getValue('default_supplier');
@@ -2545,15 +2547,21 @@ class AdminProductsControllerCore extends AdminController
                             $product_supplier->update();
                         }
 
-                        if ($product->id_supplier == $supplier->id_supplier && (int) $attribute['id_product_attribute'] > 0) {
-                            $data = [
-                                'supplier_reference' => pSQL($reference),
-                                'wholesale_price' => (float) Tools::convertPrice($price, $id_currency),
-                            ];
-                            $where = '
+                        if ($new_default_supplier == $supplier->id_supplier) {
+                            if ((int) $attribute['id_product_attribute'] > 0) {
+                                $data = [
+                                    'supplier_reference' => pSQL($reference),
+                                    'wholesale_price' => (float) Tools::convertPrice($price, $id_currency),
+                                ];
+                                $where = '
                                     a.id_product = ' . (int) $product->id . '
                                     AND a.id_product_attribute = ' . (int) $attribute['id_product_attribute'];
-                            ObjectModel::updateMultishopTable('Combination', $data, $where);
+                                ObjectModel::updateMultishopTable('Combination', $data, $where);
+                            } else {
+                                // @deprecated 1.7.7.0 This condition block will be remove in the next major, use ProductSupplier instead
+                                $defaultWholeslePrice = (float) Tools::convertPrice($price, $id_currency);
+                                $defaultReference = $reference;
+                            }
                         }
                     } elseif (Tools::isSubmit('supplier_reference_' . $product->id . '_' . $attribute['id_product_attribute'] . '_' . $supplier->id_supplier)) {
                         //int attribute with default values if possible
@@ -2567,10 +2575,13 @@ class AdminProductsControllerCore extends AdminController
                     }
                 }
             }
-            // Manage defaut supplier for product
-            if ($this->object && $new_default_supplier != $product->id_supplier) {
-                $this->object->id_supplier = $new_default_supplier;
-                $this->object->update();
+
+            if ($this->object) {
+                $product->updateDefaultSupplierData(
+                    $new_default_supplier,
+                    $defaultReference,
+                    $defaultWholeslePrice
+                );
             }
         }
     }
@@ -2598,7 +2609,7 @@ class AdminProductsControllerCore extends AdminController
 
             $elements_to_manage = [];
 
-            // get form inforamtion
+            // get form information
             foreach ($attributes as $attribute) {
                 foreach ($warehouses as $warehouse) {
                     $key = $warehouse['id_warehouse'] . '_' . $product->id . '_' . $attribute['id_product_attribute'];

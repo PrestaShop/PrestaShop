@@ -22,6 +22,11 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+/**
+ * /!\ This file is deprecated, it will be deleted in next major release /!\
+ */
+
 $(document).ready(function() {
 	if ($('input[name=PS_MAIL_METHOD]:checked').val() == 2)
 		$('#mail_fieldset_smtp').show();

@@ -17,6 +17,11 @@ services:
         tags:
             - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
 
+    form.extension.hint_text:
+      class: 'PrestaShopBundle\Form\Admin\Extension\HintTextExtension'
+      tags:
+        - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
+
     form.extension.data_list:
         class: 'PrestaShopBundle\Form\Extension\DataListExtension'
         tags:
