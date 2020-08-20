@@ -31,6 +31,25 @@ namespace PrestaShopBundle\Translation\Provider\Type;
 /**
  * Properties container for 'back' type of translation.
  */
-class BackType implements TypeInterface
+class BackType extends AbstractCoreType
 {
+    /**
+     * @return array|string[]
+     */
+    public function getFilenameFilters(): array
+    {
+        return [
+            '#^Admin[A-Z]#',
+        ];
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public function getTranslationDomains(): array
+    {
+        return [
+            '^Admin[A-Z]',
+        ];
+    }
 }

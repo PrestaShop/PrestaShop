@@ -28,15 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider\Factory;
 
-use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractor;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationReader;
-use PrestaShopBundle\Translation\Loader\LegacyFileLoader;
+use PrestaShopBundle\Translation\Provider\CoreProvider;
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
-use PrestaShopBundle\Translation\Provider\SearchProvider;
-use PrestaShopBundle\Translation\Provider\Type\SearchType;
+use PrestaShopBundle\Translation\Provider\Type\AbstractCoreType;
 use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
 
-class SearchProviderFactory implements ProviderFactoryInterface
+class CoreProviderFactory implements ProviderFactoryInterface
 {
     /**
      * @var DatabaseTranslationReader
@@ -45,26 +43,12 @@ class SearchProviderFactory implements ProviderFactoryInterface
     /**
      * @var string
      */
-    private $translationsDirectory;
-    /**
-     * @var LegacyFileLoader
-     */
-    private $legacyFileLoader;
-    /**
-     * @var LegacyModuleExtractor
-     */
-    private $legacyModuleExtractor;
+    private $resourceDirectory;
 
-    public function __construct(
-        DatabaseTranslationReader $databaseTranslationReader,
-        LegacyFileLoader $legacyFileLoader,
-        LegacyModuleExtractor $legacyModuleExtractor,
-        string $translationsDirectory
-    ) {
+    public function __construct(DatabaseTranslationReader $databaseTranslationReader, string $resourceDirectory)
+    {
         $this->databaseTranslationReader = $databaseTranslationReader;
-        $this->legacyFileLoader = $legacyFileLoader;
-        $this->legacyModuleExtractor = $legacyModuleExtractor;
-        $this->translationsDirectory = $translationsDirectory;
+        $this->resourceDirectory = $resourceDirectory;
     }
 
     /**
@@ -72,7 +56,7 @@ class SearchProviderFactory implements ProviderFactoryInterface
      */
     public function implements(TypeInterface $providerType): bool
     {
-        return $providerType instanceof SearchType;
+        return $providerType instanceof AbstractCoreType;
     }
 
     /**
@@ -84,11 +68,12 @@ class SearchProviderFactory implements ProviderFactoryInterface
             throw new \RuntimeException(sprintf('Invalid provider type given: %s', get_class($providerType)));
         }
 
-        return new SearchProvider(
+        /* @var AbstractCoreType $providerType */
+        return new CoreProvider(
             $this->databaseTranslationReader,
-            $this->translationsDirectory,
-            $providerType->getDomain(),
-            $providerType->getTheme()
+            $this->resourceDirectory,
+            $providerType->getFilenameFilters(),
+            $providerType->getTranslationDomains()
         );
     }
 }

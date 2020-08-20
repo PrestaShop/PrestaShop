@@ -26,30 +26,20 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Translation\Provider;
+namespace PrestaShopBundle\Translation\Provider\Type;
 
 /**
- * Provides translation catalogues for Core frontOffice.
+ * Properties container for 'core_front' type of translation.
  */
-class CoreFrontProvider extends AbstractTranslationsProvider
+abstract class AbstractCoreType implements TypeInterface
 {
     /**
      * @return array|string[]
      */
-    protected function getFilenameFilters(): array
-    {
-        return [
-            '#^Shop*#',
-        ];
-    }
+    abstract public function getFilenameFilters(): array;
 
     /**
      * @return array|string[]
      */
-    protected function getTranslationDomains(): array
-    {
-        return [
-            '^Shop*',
-        ];
-    }
+    abstract public function getTranslationDomains(): array;
 }
