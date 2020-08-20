@@ -95,20 +95,20 @@ class HelperFormCore extends Helper
                     }
                     switch ($params['type']) {
                         case 'switch':
-                           $switch_values =  $params['values'];
+                           $switch_values = $params['values'];
                            $default_labels = [
-								'active_on' => $translator->trans('Yes', [], 'Admin.Global'),
-								'active_off' => $translator->trans('No', [], 'Admin.Global'),
+                               'active_on' => $translator->trans('Yes', [], 'Admin.Global'),
+                               'active_off' => $translator->trans('No', [], 'Admin.Global'),
                            ];
-                           
+
                             if (isset($switch_values) && !empty($switch_values)) {
-								foreach ($switch_values as $k => $value ) {
-									if (!isset($value['label'])) {
-										$defautl_label = (array_key_exists($value['id'], $default_labels)) ? $default_labels[$value['id']] : '';
-										$this->fields_form[$fieldset_key]['form']['input'][$key]['values'][$k]['label'] = $defautl_label;
-									}
-								}
-							}
+                                foreach ($switch_values as $k => $value) {
+                                    if (!isset($value['label'])) {
+                                        $defautl_label = (array_key_exists($value['id'], $default_labels)) ? $default_labels[$value['id']] : '';
+                                        $this->fields_form[$fieldset_key]['form']['input'][$key]['values'][$k]['label'] = $defautl_label;
+                                    }
+                                }
+                            }
                             break;
 
                         case 'select':
