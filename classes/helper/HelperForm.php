@@ -95,8 +95,8 @@ class HelperFormCore extends Helper
                     }
                     switch ($params['type']) {
                         case 'switch':
+                            $switch_values = $params['values'];
                             if (isset($switch_values) && !empty($switch_values)) {
-                                $switch_values = $params['values'];
                                 $default_switch_labels = [
                                     'active_on' => $translator->trans('Yes', [], 'Admin.Global'),
                                     'active_off' => $translator->trans('No', [], 'Admin.Global'),
