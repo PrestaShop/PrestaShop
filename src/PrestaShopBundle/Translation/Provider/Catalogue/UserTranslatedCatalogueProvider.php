@@ -46,26 +46,32 @@ class UserTranslatedCatalogueProvider implements TranslationCatalogueProviderInt
      * @var array
      */
     private $translationDomains;
+    /**
+     * @var string|null
+     */
+    private $themeName;
 
     /**
      * @param DatabaseTranslationReader $databaseTranslationReader
      * @param array $translationDomains
+     * @param string|null $themeName
      */
     public function __construct(
         DatabaseTranslationReader $databaseTranslationReader,
-        array $translationDomains
+        array $translationDomains,
+        ?string $themeName = null
     ) {
         $this->databaseTranslationReader = $databaseTranslationReader;
         $this->translationDomains = $translationDomains;
+        $this->themeName = $themeName;
     }
 
     /**
      * @param string $locale
-     * @param string|null $themeName
      *
      * @return MessageCatalogueInterface
      */
-    public function getCatalogue(string $locale, ?string $themeName = null): MessageCatalogueInterface
+    public function getCatalogue(string $locale): MessageCatalogueInterface
     {
         $catalogue = new MessageCatalogue($locale);
 
@@ -73,7 +79,7 @@ class UserTranslatedCatalogueProvider implements TranslationCatalogueProviderInt
             $domainCatalogue = $this->databaseTranslationReader->load(
                 $locale,
                 $translationDomain,
-                $themeName
+                $this->themeName
             );
 
             if ($domainCatalogue instanceof MessageCatalogue) {
@@ -82,16 +88,5 @@ class UserTranslatedCatalogueProvider implements TranslationCatalogueProviderInt
         }
 
         return $catalogue;
-    }
-
-    /**
-     * @param string $locale
-     * @param string|null $themeName
-     *
-     * @return MessageCatalogueInterface
-     */
-    public function getUserTranslatedCatalogue(string $locale, ?string $themeName = null): MessageCatalogueInterface
-    {
-        return $this->getCatalogue($locale, $themeName);
     }
 }

@@ -64,8 +64,8 @@ class ModulesProviderTest extends KernelTestCase
         $databaseContent = [
             [
                 'lang' => 'fr-FR',
-                'key' => 'Some text to translate',
-                'translation' => 'Traduction customisée',
+                'key' => 'Hello World',
+                'translation' => 'Bonjour le monde',
                 'domain' => 'ModulesTranslationtest',
                 'theme' => null,
             ],
@@ -101,12 +101,55 @@ class ModulesProviderTest extends KernelTestCase
     }
 
     /**
+     * Test it loads a default catalogue from the `translations` default directory
+     */
+    public function testItExtractsDefaultCatalogueFromTranslationsDefaultFiles()
+    {
+        // load catalogue from translations/default
+        $catalogue = $this->provider->getDefaultCatalogue('fr-FR', false);
+
+        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
+
+        // Check integrity of translations
+        $messages = $catalogue->all();
+        $domains = $catalogue->getDomains();
+        sort($domains);
+
+        // verify all catalogues are loaded
+        $this->assertSame([
+            'ModulesTranslationtestAdmin',
+            'ModulesTranslationtestSomefile.with-things',
+            'ModulesTranslationtestTranslationtest',
+        ], $domains);
+
+        // verify that the catalogues are complete
+        $this->assertCount(1, $messages['ModulesTranslationtestAdmin']);
+
+        // verify that wordings are NOT translated
+        $this->assertSame(
+            'Modern controller',
+            $catalogue->get('Modern controller', 'ModulesTranslationtestAdmin')
+        );
+        $this->assertSame(
+            'An error occured, please check your zip file',
+            $catalogue->get('An error occured, please check your zip file', 'ModulesTranslationtestTranslationtest')
+        );
+
+        // test it does not include translations from database loader
+        $this->assertSame('Hello World', $catalogue->get('Hello World', 'ModulesTranslationtestAdmin'));
+
+        // test get empty catalogue
+        $catalogue = $this->provider->getDefaultCatalogue('fr-FR');
+        $this->assertSame('', $catalogue->get('Modern controller', 'ModulesTranslationtestAdmin'));
+    }
+
+    /**
      * @param string $locale
      * @param array $expected
      *
      * @dataProvider provideTestCases
      */
-    public function xtestTranslationsCatalogueIsBuiltFromKeysFoundInSourceAndTranslationsInLegacyFiles(
+    public function testTranslationsCatalogueIsBuiltFromKeysFoundInSourceAndTranslationsInLegacyFiles(
         $locale,
         array $expected
     ) {
@@ -174,7 +217,7 @@ class ModulesProviderTest extends KernelTestCase
         $this->assertCount(1, $messages['ModulesTranslationtest']);
 
         // verify translations
-        $this->assertSame('Traduction customisée', $catalogue->get('Some text to translate', 'ModulesTranslationtest'));
+        $this->assertSame('Bonjour le monde', $catalogue->get('Hello World', 'ModulesTranslationtest'));
     }
 
     /**
