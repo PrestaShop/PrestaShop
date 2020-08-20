@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Context;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
@@ -36,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContext
 {
@@ -71,6 +73,47 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
         $product = reset($products);
 
         return $product->getProductId();
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     * @param array $data
+     * @param string $propertyName
+     */
+    protected function assertBoolProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
+    {
+        if (isset($data[$propertyName])) {
+            $expectedValue = PrimitiveUtils::castStringBooleanIntoBoolean($data[$propertyName]);
+            $actualValue = $this->extractValueFromProductForEditing($productForEditing, $propertyName);
+            Assert::assertEquals(
+                $expectedValue,
+                $actualValue,
+                sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
+            );
+
+            unset($data[$propertyName]);
+        }
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     * @param array $data
+     * @param string $propertyName
+     */
+    protected function assertStringProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
+    {
+        if (isset($data[$propertyName])) {
+            $expectedValue = $data[$propertyName];
+            $actualValue = $this->extractValueFromProductForEditing($productForEditing, $propertyName);
+
+            Assert::assertEquals(
+                $expectedValue,
+                $actualValue,
+                sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
+            );
+
+            unset($data[$propertyName]);
+        }
     }
 
     /**

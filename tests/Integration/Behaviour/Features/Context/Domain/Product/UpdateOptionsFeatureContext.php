@@ -29,6 +29,10 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
+use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -36,7 +40,7 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
 {
     /**
-     * @When I update product :productReference options with following values:
+     * @When I update product :productReference options with following information:
      *
      * @param string $productReference
      * @param TableNode $table
@@ -52,7 +56,30 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
             $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {
             $this->setLastException($e);
+        } catch (ManufacturerException $e) {
+            $this->setLastException($e);
         }
+    }
+
+    /**
+     * @Then I should get error that assigned manufacturer is invalid
+     */
+    public function assertInvalidManufacturerError(): void
+    {
+        $this->assertLastErrorIs(
+            ManufacturerConstraintException::class,
+            ManufacturerConstraintException::INVALID_ID
+        );
+    }
+
+    /**
+     * @Then I should get error that assigned manufacturer does not exist
+     */
+    public function assertManufacturerDoesNotExistError(): void
+    {
+        $this->assertLastErrorIs(
+            ManufacturerNotFoundException::class
+        );
     }
 
     /**
@@ -104,5 +131,76 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
         if (isset($data['mpn'])) {
             $command->setMpn($data['mpn']);
         }
+
+        if (isset($data['manufacturer'])) {
+            switch ($data['manufacturer']) {
+                case 'invalid':
+                    $manufacturerId = -1;
+                    break;
+                case 'non-existent':
+                    $manufacturerId = 42;
+                    break;
+                case '':
+                    $manufacturerId = 0;
+                    break;
+                default:
+                    $manufacturerId = $this->getSharedStorage()->get($data['manufacturer']);
+                    break;
+            }
+            $command->setManufacturerId($manufacturerId);
+        }
+    }
+
+    /**
+     * @Then product :productReference should have following options information:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function assertOptionsInformation(string $productReference, TableNode $table)
+    {
+        $productForEditing = $this->getProductForEditing($productReference);
+        $data = $table->getRowsHash();
+
+        $this->assertBoolProperty($productForEditing, $data, 'available_for_order');
+        $this->assertBoolProperty($productForEditing, $data, 'online_only');
+        $this->assertBoolProperty($productForEditing, $data, 'show_price');
+        $this->assertStringProperty($productForEditing, $data, 'visibility');
+        $this->assertStringProperty($productForEditing, $data, 'condition');
+        $this->assertStringProperty($productForEditing, $data, 'isbn');
+        $this->assertStringProperty($productForEditing, $data, 'upc');
+        $this->assertStringProperty($productForEditing, $data, 'ean13');
+        $this->assertStringProperty($productForEditing, $data, 'mpn');
+        $this->assertStringProperty($productForEditing, $data, 'reference');
+
+        // Assertions checking isset() can hide some errors if it doesn't find array key,
+        // to make sure all provided fields were checked we need to unset every asserted field
+        // and finally, if provided data is not empty, it means there are some unnasserted values left
+        Assert::assertEmpty($data, sprintf('Some provided product options fields haven\'t been asserted: %s', var_export($data, true)));
+    }
+
+    /**
+     * @Then manufacturer :manufacturerReference should be assigned to product :productReference
+     *
+     * @param string $manufacturerReference
+     * @param string $productReference
+     */
+    public function assertManufacturerId(string $manufacturerReference, string $productReference): void
+    {
+        $expectedId = $this->getSharedStorage()->get($manufacturerReference);
+        $actualId = $this->getProductForEditing($productReference)->getOptions()->getManufacturerId();
+
+        Assert::assertEquals($expectedId, $actualId, 'Unexpected product manufacturer id');
+    }
+
+    /**
+     * @Then product :productReference should have no manufacturer assigned
+     *
+     * @param string $productReference
+     */
+    public function assertProductHasNoManufacturer(string $productReference): void
+    {
+        $manufacturerId = $this->getProductForEditing($productReference)->getOptions()->getManufacturerId();
+        Assert::assertEmpty($manufacturerId, sprintf('Expected product "%s" to have no manufacturer assigned', $productReference));
     }
 }

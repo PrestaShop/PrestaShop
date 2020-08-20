@@ -259,6 +259,6 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
             unset($data['default supplier reference']);
         }
 
-        Assert::assertEmpty($data, sprintf('Some provided product supplier fields haven\'t been asserted: %s', implode(',', $data)));
+        Assert::assertEmpty($data, sprintf('Some provided product supplier fields haven\'t been asserted: %s', var_export($data, true)));
     }
 }

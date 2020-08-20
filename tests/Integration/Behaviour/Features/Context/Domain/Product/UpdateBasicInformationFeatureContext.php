@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
-use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -64,39 +63,10 @@ class UpdateBasicInformationFeatureContext extends AbstractProductFeatureContext
             $command->setLocalizedShortDescriptions($this->parseLocalizedArray($data['description_short']));
         }
 
-        if (isset($data['manufacturer'])) {
-            $command->setManufacturerId($this->getSharedStorage()->get($data['manufacturer']));
-        }
-
         try {
             $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {
             $this->setLastException($e);
         }
-    }
-
-    /**
-     * @Then manufacturer :manufacturerReference should be assigned to product :productReference
-     *
-     * @param string $manufacturerReference
-     * @param string $productReference
-     */
-    public function assertManufacturerId(string $manufacturerReference, string $productReference): void
-    {
-        $expectedId = $this->getSharedStorage()->get($manufacturerReference);
-        $actualId = $this->getProductForEditing($productReference)->getBasicInformation()->getManufacturerId();
-
-        Assert::assertEquals($expectedId, $actualId, 'Unexpected product manufacturer id');
-    }
-
-    /**
-     * @Then product :productReference should have no manufacturer assigned
-     *
-     * @param string $productReference
-     */
-    public function assertProductHasNoManufacturer(string $productReference): void
-    {
-        $manufacturerId = $this->getProductForEditing($productReference)->getBasicInformation()->getManufacturerId();
-        Assert::assertEmpty($manufacturerId, sprintf('Expected product "%s" to have no manufacturer assigned', $productReference));
     }
 }
