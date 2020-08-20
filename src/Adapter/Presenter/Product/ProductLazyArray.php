@@ -814,8 +814,15 @@ class ProductLazyArray extends AbstractLazyArray
         $this->product['show_availability'] = $show_availability;
         $product['quantity_wanted'] = $this->getQuantityWanted();
 
-        if (isset($product['available_date']) && '0000-00-00' == $product['available_date']) {
-            $product['available_date'] = null;
+        if (isset($product['available_date'])) {
+            if ('0000-00-00' == $product['available_date']) {
+                $product['available_date'] = null;
+            }
+
+            $date = new \DateTime($product['available_date']);
+            if ($date < new \DateTime()) {
+                $product['available_date'] = null;
+            }
         }
 
         if ($show_availability) {
