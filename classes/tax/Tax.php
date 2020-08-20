@@ -265,4 +265,30 @@ class TaxCore extends ObjectModel
 
         return $tax_calculator->getTotalRate();
     }
+
+    /**
+     * Determines whether a vat number should be exempted from taxes, considering the merchant's country.
+     *
+     * @param int $vat_number
+     * @param int $id_country
+     *
+     * @return bool
+     */
+    public static function vatIsTaxExemptable($vat_number, $id_country)
+    {
+        if (empty($vat_number)) {
+            return false;
+        }
+
+        if (!Configuration::get('VATNUMBER_MANAGEMENT')) {
+            return false;
+        }
+
+        if ((int) $id_country === (int) Configuration::get('VATNUMBER_COUNTRY')) {
+            return false;
+        }
+
+        return true;
+    }
+
 }

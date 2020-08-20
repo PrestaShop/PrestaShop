@@ -391,9 +391,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         $debug = Tools::getValue('debug');
 
         $address = new Address((int) $this->order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
-        $tax_exempt = Configuration::get('VATNUMBER_MANAGEMENT')
-                            && !empty($address->vat_number)
-                            && $address->id_country != Configuration::get('VATNUMBER_COUNTRY');
+        $tax_exempt = Tax::vatIsTaxExemptable($address->vat_number, $address->id_country);
         $carrier = new Carrier($this->order->id_carrier);
 
         $data = [

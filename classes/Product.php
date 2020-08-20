@@ -786,10 +786,7 @@ class ProductCore extends ObjectModel
             }
             $address_infos = Address::getCountryAndState($id_address);
 
-            if (self::$_taxCalculationMethod != PS_TAX_EXC
-                && !empty($address_infos['vat_number'])
-                && $address_infos['id_country'] != Configuration::get('VATNUMBER_COUNTRY')
-                && Configuration::get('VATNUMBER_MANAGEMENT')) {
+            if (self::$_taxCalculationMethod != PS_TAX_EXC && Tax::vatIsTaxExemptable($address_infos['vat_number'], $address_infos['id_country'])) {
                 self::$_taxCalculationMethod = PS_TAX_EXC;
             }
         } else {
@@ -3545,10 +3542,7 @@ class ProductCore extends ObjectModel
             $usetax = false;
         }
 
-        if ($usetax != false
-            && !empty($address->vat_number)
-            && $address->id_country != Configuration::get('VATNUMBER_COUNTRY')
-            && Configuration::get('VATNUMBER_MANAGEMENT')) {
+        if ($usetax != false && Tax::vatIsTaxExemptable($address->vat_number, $address->id_country)) {
             $usetax = false;
         }
 
