@@ -119,9 +119,10 @@ class SearchProvider implements ProviderInterface
 
         return (new UserTranslatedCatalogueProvider(
             $this->databaseReader,
-            $translationDomains
+            $translationDomains,
+            $this->themeName
         ))
-            ->getCatalogue($locale, $this->themeName);
+            ->getCatalogue($locale);
     }
 
     /**
