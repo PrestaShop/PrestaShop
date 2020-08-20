@@ -2,32 +2,8 @@ services:
     _defaults:
         public: true
 
-    prestashop.translation.provider.factory.back:
-        class: PrestaShopBundle\Translation\Provider\Factory\BackProviderFactory
-        arguments:
-            - "@prestashop.translation.loader.database_reader"
-            - "%translations_dir%"
-
-    prestashop.translation.provider.factory.core_front:
-        class: PrestaShopBundle\Translation\Provider\Factory\CoreFrontProviderFactory
-        arguments:
-            - "@prestashop.translation.loader.database_reader"
-            - "%translations_dir%"
-
-    prestashop.translation.provider.factory.mails_body:
-        class: PrestaShopBundle\Translation\Provider\Factory\MailsBodyProviderFactory
-        arguments:
-            - "@prestashop.translation.loader.database_reader"
-            - "%translations_dir%"
-
-    prestashop.translation.provider.factory.mails:
-        class: PrestaShopBundle\Translation\Provider\Factory\MailsProviderFactory
-        arguments:
-            - "@prestashop.translation.loader.database_reader"
-            - "%translations_dir%"
-
-    prestashop.translation.provider.factory.others:
-        class: PrestaShopBundle\Translation\Provider\Factory\OthersProviderFactory
+    prestashop.translation.provider.factory.core:
+        class: PrestaShopBundle\Translation\Provider\Factory\CoreProviderFactory
         arguments:
             - "@prestashop.translation.loader.database_reader"
             - "%translations_dir%"
@@ -40,14 +16,6 @@ services:
             - "%translations_dir%"
             - "@prestashop.translation.loader.legacy_file"
             - "@prestashop.translation.extractor.legacy_module"
-
-    prestashop.translation.provider.factory.search:
-        class: PrestaShopBundle\Translation\Provider\Factory\SearchProviderFactory
-        arguments:
-            - "@prestashop.translation.loader.database_reader"
-            - "@prestashop.translation.loader.legacy_file"
-            - "@prestashop.translation.extractor.legacy_module"
-            - "%translations_dir%"
 
     prestashop.translation.provider.factory.themes:
         class: PrestaShopBundle\Translation\Provider\Factory\ThemesProviderFactory
@@ -63,13 +31,8 @@ services:
         class: PrestaShopBundle\Translation\Provider\Factory\ProviderFactory
         arguments:
             -
-                - "@prestashop.translation.provider.factory.back"
-                - "@prestashop.translation.provider.factory.core_front"
-                - "@prestashop.translation.provider.factory.mails_body"
-                - "@prestashop.translation.provider.factory.mails"
-                - "@prestashop.translation.provider.factory.others"
+                - "@prestashop.translation.provider.factory.core"
                 - "@prestashop.translation.provider.factory.modules"
-                - "@prestashop.translation.provider.factory.search"
                 - "@prestashop.translation.provider.factory.themes"
 
     prestashop.translation.provider.translation_catalogue:
