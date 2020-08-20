@@ -32,32 +32,30 @@ const initComponents = () => {
   let tinyMCEEditor = null;
   let translatableField = null;
   // Initialize the prestashop global object
-  window.prestashop = {
-    components: {
-      translatableInput: {
-        init() {
-          if (translatableInput === null) {
-            translatableInput = new TranslatableInput();
-          }
-          return translatableInput;
-        },
+  window.prestashop.components = {
+    translatableInput: {
+      init() {
+        if (translatableInput === null) {
+          translatableInput = new TranslatableInput();
+        }
+        return translatableInput;
       },
-      tinyMCEEditor: {
-        init() {
-          if (tinyMCEEditor === null) {
-            tinyMCEEditor = new TinyMCEEditor();
-          }
-          return tinyMCEEditor;
-        },
+    },
+    tinyMCEEditor: {
+      init() {
+        if (tinyMCEEditor === null) {
+          tinyMCEEditor = new TinyMCEEditor();
+        }
+        return tinyMCEEditor;
+      },
 
-      },
-      translatableField: {
-        init() {
-          if (translatableField === null) {
-            translatableField = new TranslatableField();
-          }
-          return translatableField;
-        },
+    },
+    translatableField: {
+      init() {
+        if (translatableField === null) {
+          translatableField = new TranslatableField();
+        }
+        return translatableField;
       },
     },
   };
