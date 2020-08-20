@@ -466,7 +466,7 @@ class OrderDetailCore extends ObjectModel
 
     public function getTaxList()
     {
-        return self::getTaxList($this->id);
+        return self::getTaxListStatic($this->id);
     }
 
     public static function getTaxListStatic($id_order_detail)
