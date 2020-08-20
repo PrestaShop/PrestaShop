@@ -56,9 +56,9 @@ class SeoAndUrls extends BOBasePage {
     this.paginationPreviousLink = `${this.gridPanel} [aria-label='Previous']`;
 
     // Seo options form
-    this.switchDisplayAttributesLabel = toggle => 'label[for=\'meta_settings_form_seo_options_product'
+    this.switchDisplayAttributesLabel = toggle => 'label[for=\'meta_settings_seo_options_form_product'
       + `_attributes_in_title_${toggle}']`;
-    this.saveSeoOptionsFormButton = '#main-div form:nth-child(1) div:nth-child(4) div.card-footer button';
+    this.saveSeoOptionsFormButton = '#meta_settings_seo_options_form_save_button';
   }
 
   /* header methods */
@@ -166,7 +166,7 @@ class SeoAndUrls extends BOBasePage {
   async confirmDeleteSeoUrlPage(page) {
     await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
   }
-  
+
   /* Sort functions */
   /**
    * Sort table by clicking on column name
