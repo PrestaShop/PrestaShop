@@ -28,10 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use Manufacturer;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductBasicInformationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -94,27 +91,6 @@ final class UpdateProductBasicInformationHandler extends AbstractProductHandler 
             $this->validateLocalizedField($product, 'description_short', ProductConstraintException::INVALID_SHORT_DESCRIPTION);
             $this->setLocalizedFieldToUpdate('description_short', $localizedShortDescriptions);
         }
-
-        $manufacturerId = $command->getManufacturerId();
-        if (null !== $manufacturerId) {
-            $this->assertManufacturerExists($manufacturerId);
-            $product->id_manufacturer = $manufacturerId->getValue();
-            $this->fieldsToUpdate['id_manufacturer'] = true;
-        }
-    }
-
-    /**
-     * @param ManufacturerId $manufacturerId
-     *
-     * @throws ManufacturerNotFoundException
-     */
-    private function assertManufacturerExists(ManufacturerId $manufacturerId): void
-    {
-        if (Manufacturer::manufacturerExists($manufacturerId->getValue())) {
-            return;
-        }
-
-        throw new ManufacturerNotFoundException(sprintf('Manufacturer #%s does not exist', $manufacturerId));
     }
 
     /**

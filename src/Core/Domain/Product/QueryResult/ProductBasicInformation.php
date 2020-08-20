@@ -54,29 +54,21 @@ class ProductBasicInformation
     private $localizedShortDescriptions;
 
     /**
-     * @var int
-     */
-    private $manufacturerId;
-
-    /**
      * @param ProductType $type
      * @param string[] $localizedNames
      * @param string[] $localizedDescriptions
      * @param string[] $localizedShortDescriptions
-     * @param int $manufacturerId
      */
     public function __construct(
         ProductType $type,
         array $localizedNames,
         array $localizedDescriptions,
-        array $localizedShortDescriptions,
-        int $manufacturerId
+        array $localizedShortDescriptions
     ) {
         $this->type = $type;
         $this->localizedNames = $localizedNames;
         $this->localizedDescriptions = $localizedDescriptions;
         $this->localizedShortDescriptions = $localizedShortDescriptions;
-        $this->manufacturerId = $manufacturerId;
     }
 
     /**
@@ -109,13 +101,5 @@ class ProductBasicInformation
     public function getLocalizedShortDescriptions(): array
     {
         return $this->localizedShortDescriptions;
-    }
-
-    /**
-     * @return int
-     */
-    public function getManufacturerId(): int
-    {
-        return $this->manufacturerId;
     }
 }

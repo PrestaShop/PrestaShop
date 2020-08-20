@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
@@ -92,6 +93,11 @@ class UpdateProductOptionsCommand
      * @var Reference|null
      */
     private $reference;
+
+    /**
+     * @var ManufacturerId|null
+     */
+    private $manufacturerId;
 
     /**
      * @param int $productId
@@ -305,6 +311,26 @@ class UpdateProductOptionsCommand
     public function setReference(string $reference): UpdateProductOptionsCommand
     {
         $this->reference = new Reference($reference);
+
+        return $this;
+    }
+
+    /**
+     * @return ManufacturerId|null
+     */
+    public function getManufacturerId(): ?ManufacturerId
+    {
+        return $this->manufacturerId;
+    }
+
+    /**
+     * @param int $manufacturerId
+     *
+     * @return UpdateProductOptionsCommand
+     */
+    public function setManufacturerId(int $manufacturerId): UpdateProductOptionsCommand
+    {
+        $this->manufacturerId = new ManufacturerId($manufacturerId);
 
         return $this;
     }

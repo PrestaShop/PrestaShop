@@ -28,7 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use Manufacturer;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductOptionsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -110,5 +113,26 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
             $product->upc = $command->getUpc()->getValue();
             $this->fieldsToUpdate['upc'] = true;
         }
+
+        $manufacturerId = $command->getManufacturerId();
+        if (null !== $manufacturerId) {
+            $this->assertManufacturerExists($manufacturerId);
+            $product->id_manufacturer = $manufacturerId->getValue();
+            $this->fieldsToUpdate['id_manufacturer'] = true;
+        }
+    }
+
+    /**
+     * @param ManufacturerId $manufacturerId
+     *
+     * @throws ManufacturerNotFoundException
+     */
+    private function assertManufacturerExists(ManufacturerId $manufacturerId): void
+    {
+        if (0 === $manufacturerId->getValue() || Manufacturer::manufacturerExists($manufacturerId->getValue())) {
+            return;
+        }
+
+        throw new ManufacturerNotFoundException(sprintf('Manufacturer #%d does not exist', $manufacturerId->getValue()));
     }
 }
