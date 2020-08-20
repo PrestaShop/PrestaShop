@@ -31,6 +31,25 @@ namespace PrestaShopBundle\Translation\Provider\Type;
 /**
  * Properties container for 'core_front' type of translation.
  */
-class CoreFrontType implements TypeInterface
+class CoreFrontType extends AbstractCoreType
 {
+    /**
+     * @return array|string[]
+     */
+    public function getFilenameFilters(): array
+    {
+        return [
+            '#^Shop*#',
+        ];
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public function getTranslationDomains(): array
+    {
+        return [
+            '^Shop*',
+        ];
+    }
 }

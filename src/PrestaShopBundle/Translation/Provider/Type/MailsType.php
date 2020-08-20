@@ -31,6 +31,21 @@ namespace PrestaShopBundle\Translation\Provider\Type;
 /**
  * Properties container for 'mails' type of translation.
  */
-class MailsType implements TypeInterface
+class MailsType extends AbstractCoreType
 {
+    /**
+     * @return array|string[]
+     */
+    public function getFilenameFilters(): array
+    {
+        return ['#EmailsSubject*#'];
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public function getTranslationDomains(): array
+    {
+        return ['EmailsSubject*'];
+    }
 }
