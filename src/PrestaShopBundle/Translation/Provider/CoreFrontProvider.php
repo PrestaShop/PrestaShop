@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Translation\Provider;
 
 /**
- * Provides translation catalogues for Core frontoffice.
+ * Provides translation catalogues for Core frontOffice.
  */
 class CoreFrontProvider extends AbstractTranslationsProvider
 {
@@ -39,7 +39,7 @@ class CoreFrontProvider extends AbstractTranslationsProvider
     protected function getFilenameFilters(): array
     {
         return [
-            '#^Shop[A-Z]#',
+            '#^Shop*#',
         ];
     }
 
@@ -49,7 +49,7 @@ class CoreFrontProvider extends AbstractTranslationsProvider
     protected function getTranslationDomains(): array
     {
         return [
-            '^Shop[A-Z]',
+            '^Shop*',
         ];
     }
 }
