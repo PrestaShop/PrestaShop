@@ -26,26 +26,39 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Translation\Provider;
+namespace PrestaShopBundle\Translation\Provider\Type;
 
 /**
- * Provides translation catalogues for Mails.
+ * Properties container for 'core_front' type of translation.
  */
-class MailsProvider extends AbstractTranslationsProvider
+class CoreDomainType extends AbstractCoreType
 {
     /**
-     * @return array|string[]
+     * @var string
      */
-    protected function getFilenameFilters(): array
+    private $domain;
+
+    /**
+     * @param string $domain
+     */
+    public function __construct(string $domain)
     {
-        return ['#EmailsSubject*#'];
+        $this->domain = $domain;
     }
 
     /**
      * @return array|string[]
      */
-    protected function getTranslationDomains(): array
+    public function getFilenameFilters(): array
     {
-        return ['EmailsSubject*'];
+        return ['#^' . preg_quote($this->domain, '#') . '([A-Za-z]|\.|$)#'];
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public function getTranslationDomains(): array
+    {
+        return ['^' . preg_quote($this->domain) . '([A-Za-z]|$)'];
     }
 }

@@ -24,9 +24,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Translation\Provider;
 
-use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationReader;
 use PrestaShopBundle\Translation\Provider\Catalogue\DefaultCatalogueProvider;
 use PrestaShopBundle\Translation\Provider\Catalogue\FileTranslatedCatalogueProvider;
@@ -34,102 +35,98 @@ use PrestaShopBundle\Translation\Provider\Catalogue\UserTranslatedCatalogueProvi
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
- * Able to search translations for a specific translation domains across multiple sources
+ * Abstract class for the generic catalogue providers.
  */
-class SearchProvider implements ProviderInterface
+class CoreProvider implements ProviderInterface
 {
-    /**
-     * @var string Path where translation files are found
-     */
-    protected $resourceDirectory;
-
-    /**
-     * @var string Catalogue domain
-     */
-    protected $domain;
-
     /**
      * @var DatabaseTranslationReader
      */
     private $databaseReader;
+
     /**
-     * @var string|null
+     * @var string
      */
-    private $themeName;
+    private $resourceDirectory;
+    /**
+     * @var array
+     */
+    private $filenameFilters;
+    /**
+     * @var array
+     */
+    private $translationDomains;
 
     /**
      * @param DatabaseTranslationReader $databaseReader
      * @param string $resourceDirectory
-     * @param string $domain
-     * @param string|null $themeName
+     * @param array $filenameFilters
+     * @param array $translationDomains
      */
     public function __construct(
         DatabaseTranslationReader $databaseReader,
         string $resourceDirectory,
-        string $domain,
-        ?string $themeName = null
+        array $filenameFilters,
+        array $translationDomains
     ) {
-        $this->resourceDirectory = $resourceDirectory;
         $this->databaseReader = $databaseReader;
-        $this->domain = $domain;
-        $this->themeName = $themeName;
+        $this->resourceDirectory = $resourceDirectory;
+        $this->filenameFilters = $filenameFilters;
+        $this->translationDomains = $translationDomains;
     }
 
     /**
-     * @param string $locale
-     * @param bool $empty
-     *
-     * @return MessageCatalogueInterface|null
-     *
-     * @throws FileNotFoundException
+     * {@inheritdoc}
      */
     public function getDefaultCatalogue(string $locale, bool $empty = true): MessageCatalogueInterface
     {
-        return (new DefaultCatalogueProvider(
+        $provider = new DefaultCatalogueProvider(
             $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default',
             $this->getFilenameFilters()
-        ))
-            ->getCatalogue($locale, $empty);
+        );
+
+        return $provider->getCatalogue($locale, $empty);
     }
 
     /**
-     * @param string $locale
-     *
-     * @return MessageCatalogueInterface|null
-     *
-     * @throws FileNotFoundException
+     * {@inheritdoc}
      */
     public function getFileTranslatedCatalogue(string $locale): MessageCatalogueInterface
     {
-        return (new FileTranslatedCatalogueProvider(
+        $provider = new FileTranslatedCatalogueProvider(
             $this->resourceDirectory,
             $this->getFilenameFilters()
-        ))
-            ->getCatalogue($locale);
+        );
+
+        return $provider->getCatalogue($locale);
     }
 
     /**
-     * @param string $locale
-     *
-     * @return MessageCatalogueInterface
+     * {@inheritdoc}
      */
     public function getUserTranslatedCatalogue(string $locale): MessageCatalogueInterface
     {
-        $translationDomains = ['^' . preg_quote($this->domain) . '([A-Za-z]|$)'];
-
-        return (new UserTranslatedCatalogueProvider(
+        $provider = new UserTranslatedCatalogueProvider(
             $this->databaseReader,
-            $translationDomains,
-            $this->themeName
-        ))
-            ->getCatalogue($locale);
+            $this->getTranslationDomains()
+        );
+
+        return $provider->getCatalogue($locale);
     }
 
     /**
-     * @return string[]
+     * @return array|string[]
      */
-    private function getFilenameFilters(): array
+    protected function getFilenameFilters(): array
     {
-        return ['#^' . preg_quote($this->domain, '#') . '([A-Za-z]|\.|$)#'];
+        return $this->filenameFilters;
+    }
+
+    /**
+     * @return array|string[]
+     */
+    protected function getTranslationDomains(): array
+    {
+        return $this->translationDomains;
     }
 }
