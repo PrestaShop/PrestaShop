@@ -69,7 +69,7 @@ class ThemeProvider implements ProviderInterface
     /**
      * @var ProviderInterface
      */
-    private $frontProvider;
+    private $coreFrontProvider;
     /**
      * @var DatabaseTranslationReader
      */
@@ -84,7 +84,7 @@ class ThemeProvider implements ProviderInterface
     private $theme;
 
     /**
-     * @param ProviderInterface $frontProvider Provider for core front office translations
+     * @param ProviderInterface $coreFrontProvider Provider for core front office translations
      * @param DatabaseTranslationReader $databaseReader
      * @param ThemeExtractorInterface $themeExtractor
      * @param ThemeRepository $themeRepository
@@ -93,7 +93,7 @@ class ThemeProvider implements ProviderInterface
      * @param string $themeName
      */
     public function __construct(
-        ProviderInterface $frontProvider,
+        ProviderInterface $coreFrontProvider,
         DatabaseTranslationReader $databaseReader,
         ThemeExtractorInterface $themeExtractor,
         ThemeRepository $themeRepository,
@@ -101,7 +101,7 @@ class ThemeProvider implements ProviderInterface
         string $themeResourcesDir,
         string $themeName
     ) {
-        $this->frontProvider = $frontProvider;
+        $this->coreFrontProvider = $coreFrontProvider;
         $this->themeExtractor = $themeExtractor;
         $this->themeRepository = $themeRepository;
         $this->filesystem = $filesystem;
@@ -148,7 +148,7 @@ class ThemeProvider implements ProviderInterface
     public function getFileTranslatedCatalogue(string $locale): MessageCatalogueInterface
     {
         // load front office catalogue
-        $catalogue = $this->frontProvider->getFileTranslatedCatalogue($locale);
+        $catalogue = $this->coreFrontProvider->getFileTranslatedCatalogue($locale);
 
         try {
             $fileTranslatedCatalogue = (new FileTranslatedCatalogueProvider(
