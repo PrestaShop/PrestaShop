@@ -1,3 +1,7 @@
+// Settings
+@import "config/settings";
+@import "config/keyframes";
+
 // Tools
 @import "~prestakit/scss/application";
 @import "~dropzone/dist/min/dropzone.min.css";
@@ -13,9 +17,6 @@
 @import "mixins/cards";
 @import "mixins/hover";
 @import "mixins/stars";
-// Settings
-@import "config/settings";
-@import "config/keyframes";
 
 // Tools with vars overwritten
 @import "~bootstrap/scss/mixins/transition";
