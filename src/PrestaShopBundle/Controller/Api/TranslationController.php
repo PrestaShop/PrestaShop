@@ -33,13 +33,12 @@ use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
 use PrestaShopBundle\Translation\Provider\Type\BackType;
+use PrestaShopBundle\Translation\Provider\Type\CoreDomainType;
 use PrestaShopBundle\Translation\Provider\Type\CoreFrontType;
-use PrestaShopBundle\Translation\Provider\Type\FrontType;
 use PrestaShopBundle\Translation\Provider\Type\MailsBodyType;
 use PrestaShopBundle\Translation\Provider\Type\MailsType;
 use PrestaShopBundle\Translation\Provider\Type\ModulesType;
 use PrestaShopBundle\Translation\Provider\Type\OthersType;
-use PrestaShopBundle\Translation\Provider\Type\SearchType;
 use PrestaShopBundle\Translation\Provider\Type\ThemesType;
 use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
 use PrestaShopBundle\Translation\View\TranslationApiTreeBuilder;
@@ -56,7 +55,6 @@ class TranslationController extends ApiController
     public const TYPE_MAILS_BODY = 'mails_body';
     public const TYPE_BACK = 'back';
     public const TYPE_OTHERS = 'others';
-    public const TYPE_FRONT = 'front';
     public const TYPE_CORE_FRONT = 'core_front';
 
     public const ACCEPTED_TYPES = [
@@ -66,7 +64,6 @@ class TranslationController extends ApiController
         self::TYPE_MAILS_BODY,
         self::TYPE_BACK,
         self::TYPE_OTHERS,
-        self::TYPE_FRONT,
     ];
 
     /**
@@ -107,6 +104,9 @@ class TranslationController extends ApiController
                 throw UnsupportedLocaleException::invalidLocale($locale);
             }
             $searchedExpressions = [];
+            if (is_array($search)) {
+                $searchedExpressions = $search;
+            }
             if (!is_array($search) && !empty($search)) {
                 $searchedExpressions[] = $search;
             }
@@ -119,7 +119,7 @@ class TranslationController extends ApiController
             } elseif (!empty($theme) && $this->container->getParameter('default_theme') !== $theme) {
                 $providerType = new ThemesType($theme);
             } else {
-                $providerType = new SearchType($domain, $theme);
+                $providerType = new CoreDomainType($domain);
             }
             $catalog = $this->translationService->listDomainTranslation($providerType, $locale, $domain, $searchedExpressions);
             $info = [
@@ -194,6 +194,9 @@ class TranslationController extends ApiController
             $selectedModule = (self::TYPE_MODULES === $type) ? $selected : null;
 
             $searchedExpressions = [];
+            if (is_array($search)) {
+                $searchedExpressions = $search;
+            }
             if (!is_array($search) && !empty($search)) {
                 $searchedExpressions[] = $search;
             }
@@ -415,8 +418,6 @@ class TranslationController extends ApiController
                 return new ThemesType($theme);
             case self::TYPE_BACK:
                 return new BackType();
-            case self::TYPE_FRONT:
-                return new FrontType();
             case self::TYPE_CORE_FRONT:
                 return new CoreFrontType();
             case self::TYPE_MAILS:
