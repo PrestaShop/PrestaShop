@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Improve\International\Translations;
 
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Translation\Provider\FrontOfficeProvider;
+use PrestaShopBundle\Translation\Provider\ThemeProvider;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -126,8 +126,8 @@ class ModifyTranslationsType extends TranslatorAwareType
      */
     private function filterThemeChoices(array $themeChoices)
     {
-        if (array_key_exists(FrontOfficeProvider::DEFAULT_THEME_NAME, $themeChoices)) {
-            unset($themeChoices[FrontOfficeProvider::DEFAULT_THEME_NAME]);
+        if (array_key_exists(ThemeProvider::DEFAULT_THEME_NAME, $themeChoices)) {
+            unset($themeChoices[ThemeProvider::DEFAULT_THEME_NAME]);
         }
 
         return $themeChoices;

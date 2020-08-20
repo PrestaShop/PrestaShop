@@ -134,8 +134,6 @@ class TranslationService
      *
      * @throws Exception
      * @todo: we need to improve the Vuejs application to send the information
-     *
-     * @todo: we need module information here
      */
     public function listDomainTranslation(
         TypeInterface $providerType,
