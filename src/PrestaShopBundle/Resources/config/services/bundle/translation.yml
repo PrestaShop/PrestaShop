@@ -14,12 +14,6 @@ services:
             - "@prestashop.translation.loader.database_reader"
             - "%translations_dir%"
 
-    prestashop.translation.provider.factory.front:
-        class: PrestaShopBundle\Translation\Provider\Factory\FrontProviderFactory
-        arguments:
-            - "@prestashop.translation.loader.database_reader"
-            - "%translations_dir%"
-
     prestashop.translation.provider.factory.mails_body:
         class: PrestaShopBundle\Translation\Provider\Factory\MailsBodyProviderFactory
         arguments:
@@ -70,7 +64,6 @@ services:
         arguments:
             -
                 - "@prestashop.translation.provider.factory.back"
-                - "@prestashop.translation.provider.factory.front"
                 - "@prestashop.translation.provider.factory.core_front"
                 - "@prestashop.translation.provider.factory.mails_body"
                 - "@prestashop.translation.provider.factory.mails"
