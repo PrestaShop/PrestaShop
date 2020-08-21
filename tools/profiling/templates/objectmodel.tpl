@@ -11,7 +11,7 @@
       <th>Instances</th>
       <th>Source</th>
     </tr>
-    {foreach $objectmodel.classes as $class => $info}
+    {foreach $objectmodel as $class => $info}
       <tr>
         <td>{$class}</td>
         <td>
