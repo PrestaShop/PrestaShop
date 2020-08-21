@@ -25,10 +25,6 @@
  */
 class Profiler
 {
-    const COLOR_WARNING = '#EF8B00';
-    const COLOR_SUCCESS = 'green';
-    const COLOR_ERROR = 'red';
-
     const MIB_BYTES = 1048576;
 
     protected $hooksPerfs = [];
@@ -39,7 +35,9 @@ class Profiler
     protected $totalGlobalVarSize = 0;
     protected $totalQueryTime = 0;
     protected $totalModulesTime = 0;
-    protected $totalModulesMemory;
+    protected $totalModulesMemory = 0;
+    protected $totalHooksTime = 0;
+    protected $totalHooksMemory = 0;
     protected $startTime = 0;
 
     protected static $instance = null;
@@ -114,6 +112,8 @@ class Profiler
         $this->hooksPerfs[$hookName]['time'] += $params['time'];
         $this->hooksPerfs[$hookName]['memory'] += $params['memory'];
         $this->hooksPerfs[$hookName]['modules'][] = $params;
+        $this->totalHooksMemory += $params['memory'];
+        $this->totalHooksTime += $params['time'];
     }
 
     public function interceptModule(array $params)
@@ -221,8 +221,16 @@ class Profiler
             ],
             'hooks' => [
                 'perfs' => $this->hooksPerfs,
-                'totalModulesTime' => $this->totalModulesTime,
-                'totalModulesMemory' => $this->totalModulesMemory,
+                'totalHooksTime' => $this->totalHooksTime,
+                'totalHooksMemory' => $this->totalHooksMemory,
+            ],
+            'modules' => [
+                'perfs' => $this->modulesPerfs,
+                'totalHooksTime' => $this->totalModulesTime,
+                'totalHooksMemory' => $this->totalModulesMemory,
+            ],
+            'stopwatch' => [
+                'queries' => $this->queries
             ],
         ];
     }

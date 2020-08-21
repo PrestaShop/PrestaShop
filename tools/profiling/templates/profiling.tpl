@@ -9,5 +9,9 @@
   </div>
   <div class="row">
     {include file="./hooks.tpl" hooks=$hooks}
+    {include file="./modules.tpl" modules=$modules}
+    {include file="./links.tpl"}
   </div>
+
+  {include file="./stopwatch.tpl" stopwatch=$stopwatch}
 </div>
