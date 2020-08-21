@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{{ form_start(merchandiseReturnForm, {action: path('admin_merchandise_returns_update', {'merchandiseReturnId': editableMerchandiseReturn.merchandiseReturnId.value})}) }}
+{{ form_start(merchandiseReturnForm, {action: path('admin_merchandise_returns_update', {'merchandiseReturnId': editableMerchandiseReturn.merchandiseReturnId})}) }}
   <div class="card">
   <h3 class="card-header">
     <i class="material-icons">person</i>
@@ -38,7 +38,7 @@
         </label>
         <div class="col-sm form-control-value">
           <p>{{ editableMerchandiseReturn.customerFullName }}</p>
-          <a href="{{ path('admin_customers_view', {'customerId': editableMerchandiseReturn.customerId.value }) }}" class="btn btn-outline-secondary">
+          <a href="{{ path('admin_customers_view', {'customerId': editableMerchandiseReturn.customerId }) }}" class="btn btn-outline-secondary">
             {{ 'View details on the customer page.'|trans({}, 'Admin.Orderscustomers.Help') }}
           </a>
         </div>
@@ -49,8 +49,8 @@
           {{ 'Order'|trans({}, 'Admin.Global') }}
         </label>
         <div class="col-sm form-control-value">
-          <p>#{{ editableMerchandiseReturn.orderId.value }} from {{ editableMerchandiseReturn.orderDate.format('d/m/y') }}</p>
-          <a href="{{ path('admin_orders_view', {'orderId': editableMerchandiseReturn.orderId.value }) }}" class="btn btn-outline-secondary">
+          <p>#{{ editableMerchandiseReturn.orderId }} from {{ editableMerchandiseReturn.orderDate.format('d/m/y') }}</p>
+          <a href="{{ path('admin_orders_view', {'orderId': editableMerchandiseReturn.orderId }) }}" class="btn btn-outline-secondary">
             {{ 'View details on the order page.'|trans({}, 'Admin.Orderscustomers.Help') }}
           </a>
         </div>

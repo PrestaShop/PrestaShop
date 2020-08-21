@@ -37,12 +37,12 @@ use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 class EditableMerchandiseReturn
 {
     /**
-     * @var MerchandiseReturnId
+     * @var int
      */
     private $merchandiseReturnId;
 
     /**
-     * @var CustomerId
+     * @var int
      */
     private $customerId;
 
@@ -57,7 +57,7 @@ class EditableMerchandiseReturn
     private $customerLastName;
 
     /**
-     * @var OrderId
+     * @var int
      */
     private $orderId;
 
@@ -67,7 +67,7 @@ class EditableMerchandiseReturn
     private $orderDate;
 
     /**
-     * @var MerchandiseReturnStateId
+     * @var int
      */
     private $merchandiseReturnStateId;
 
@@ -89,13 +89,13 @@ class EditableMerchandiseReturn
      * @param string $question
      */
     public function __construct(
-        MerchandiseReturnId $merchandiseReturnId,
-        CustomerId $customerId,
+        int $merchandiseReturnId,
+        int $customerId,
         string $customerFirstName,
         string $customerLastName,
-        OrderId $orderId,
+        int $orderId,
         DateTime $orderDate,
-        MerchandiseReturnStateId $merchandiseReturnStateId,
+        int $merchandiseReturnStateId,
         string $question
     ) {
         $this->merchandiseReturnId = $merchandiseReturnId;
@@ -109,33 +109,33 @@ class EditableMerchandiseReturn
     }
 
     /**
-     * @return MerchandiseReturnId
+     * @return int
      */
-    public function getMerchandiseReturnId(): MerchandiseReturnId
+    public function getMerchandiseReturnId(): int
     {
         return $this->merchandiseReturnId;
     }
 
     /**
-     * @return CustomerId
+     * @return int
      */
-    public function getCustomerId(): CustomerId
+    public function getCustomerId(): int
     {
         return $this->customerId;
     }
 
     /**
-     * @return OrderId
+     * @return int
      */
-    public function getOrderId(): OrderId
+    public function getOrderId(): int
     {
         return $this->orderId;
     }
 
     /**
-     * @return MerchandiseReturnStateId
+     * @return int
      */
-    public function getMerchandiseReturnStateId(): MerchandiseReturnStateId
+    public function getMerchandiseReturnStateId(): int
     {
         return $this->merchandiseReturnStateId;
     }
