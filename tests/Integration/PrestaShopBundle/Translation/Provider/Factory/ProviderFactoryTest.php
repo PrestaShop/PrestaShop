@@ -28,24 +28,17 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Translation\Provider\Factory;
 
 use PrestaShopBundle\Exception\NotImplementedException;
-use PrestaShopBundle\Translation\Provider\BackProvider;
-use PrestaShopBundle\Translation\Provider\CoreFrontProvider;
+use PrestaShopBundle\Translation\Provider\CoreProvider;
 use PrestaShopBundle\Translation\Provider\Factory\ProviderFactory;
-use PrestaShopBundle\Translation\Provider\FrontProvider;
-use PrestaShopBundle\Translation\Provider\MailsBodyProvider;
-use PrestaShopBundle\Translation\Provider\MailsProvider;
 use PrestaShopBundle\Translation\Provider\ModulesProvider;
-use PrestaShopBundle\Translation\Provider\OthersProvider;
-use PrestaShopBundle\Translation\Provider\SearchProvider;
 use PrestaShopBundle\Translation\Provider\ThemeProvider;
 use PrestaShopBundle\Translation\Provider\Type\BackType;
+use PrestaShopBundle\Translation\Provider\Type\CoreDomainType;
 use PrestaShopBundle\Translation\Provider\Type\CoreFrontType;
-use PrestaShopBundle\Translation\Provider\Type\FrontType;
 use PrestaShopBundle\Translation\Provider\Type\MailsBodyType;
 use PrestaShopBundle\Translation\Provider\Type\MailsType;
 use PrestaShopBundle\Translation\Provider\Type\ModulesType;
 use PrestaShopBundle\Translation\Provider\Type\OthersType;
-use PrestaShopBundle\Translation\Provider\Type\SearchType;
 use PrestaShopBundle\Translation\Provider\Type\ThemesType;
 use PrestaShopBundle\Translation\Provider\Type\TypeInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -73,35 +66,28 @@ class ProviderFactoryTest extends KernelTestCase
     {
         $provider = $this->providerFactory->build(new BackType());
 
-        $this->assertInstanceOf(BackProvider::class, $provider);
+        $this->assertInstanceOf(CoreProvider::class, $provider);
     }
 
     public function testBuildCoreFrontProvider()
     {
         $provider = $this->providerFactory->build(new CoreFrontType());
 
-        $this->assertInstanceOf(CoreFrontProvider::class, $provider);
-    }
-
-    public function testBuildFrontProvider()
-    {
-        $provider = $this->providerFactory->build(new FrontType());
-
-        $this->assertInstanceOf(FrontProvider::class, $provider);
+        $this->assertInstanceOf(CoreProvider::class, $provider);
     }
 
     public function testBuildMailsBodyProvider()
     {
         $provider = $this->providerFactory->build(new MailsBodyType());
 
-        $this->assertInstanceOf(MailsBodyProvider::class, $provider);
+        $this->assertInstanceOf(CoreProvider::class, $provider);
     }
 
     public function testBuildMailsProvider()
     {
         $provider = $this->providerFactory->build(new MailsType());
 
-        $this->assertInstanceOf(MailsProvider::class, $provider);
+        $this->assertInstanceOf(CoreProvider::class, $provider);
     }
 
     public function testBuildModulesProvider()
@@ -115,14 +101,14 @@ class ProviderFactoryTest extends KernelTestCase
     {
         $provider = $this->providerFactory->build(new OthersType());
 
-        $this->assertInstanceOf(OthersProvider::class, $provider);
+        $this->assertInstanceOf(CoreProvider::class, $provider);
     }
 
-    public function testBuildSearchProvider()
+    public function testBuildCoreDomainProvider()
     {
-        $provider = $this->providerFactory->build(new SearchType('domainname', 'fakeThemeForTranslations'));
+        $provider = $this->providerFactory->build(new CoreDomainType('domainname'));
 
-        $this->assertInstanceOf(SearchProvider::class, $provider);
+        $this->assertInstanceOf(CoreProvider::class, $provider);
     }
 
     public function testBuildThemeProvider()
