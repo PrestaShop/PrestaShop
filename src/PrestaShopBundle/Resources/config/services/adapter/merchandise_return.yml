@@ -25,10 +25,10 @@ services:
         command: 'PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query\GetOrderDetailCustomization'
 
   prestashop.adapter.merchandise_return.command_handler.edit_merchandise_return_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\MerchandiseReturn\CommandHandler\EditMerchandiseReturnHandler'
+    class: 'PrestaShop\PrestaShop\Adapter\MerchandiseReturn\CommandHandler\UpdateMerchandiseReturnStateHandler'
     tags:
       - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\EditMerchandiseReturnCommand'
+        command: 'PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\UpdateMerchandiseReturnStateCommand'
 
   prestashop.adapter.merchandise_return.command_handler.delete_product_from_merchandise_return_handler:
     class: 'PrestaShop\PrestaShop\Adapter\MerchandiseReturn\CommandHandler\DeleteProductFromMerchandiseReturnHandler'
