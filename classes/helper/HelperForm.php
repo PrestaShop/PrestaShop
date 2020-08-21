@@ -104,7 +104,7 @@ class HelperFormCore extends Helper
 
                                 foreach ($switch_values as $k => $value) {
                                     if (!isset($value['label'])) {
-                                        $defautl_label = (array_key_exists($value['id'], $default_labels)) ? $default_switch_labels[$value['id']] : '';
+                                        $defautl_label = (array_key_exists($value['id'], $default_switch_labels)) ? $default_switch_labels[$value['id']] : '';
                                         $this->fields_form[$fieldset_key]['form']['input'][$key]['values'][$k]['label'] = $defautl_label;
                                     }
                                 }
