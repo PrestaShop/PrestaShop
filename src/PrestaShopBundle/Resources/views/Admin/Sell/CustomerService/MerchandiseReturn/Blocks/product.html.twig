@@ -23,7 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<tr id="merchandiseReturnProduct_{{ product.orderDetailId }}" class="cellProduct d-print-table-row">
+{% set rowIsDisplayed =  (productIndex is defined and paginationNum is defined and productIndex > paginationNum) %}
+
+<tr id="merchandiseReturnProduct_{{ product.orderDetailId }}" class="cellProduct{% if rowIsDisplayed %} d-none d-print-table-row{% endif %}">
   <td class="cellProductName">
     <a href="{{ path('admin_product_form', {'id': product.productId.value }) }}">
       <p class="mb-0 productName">{{ product.name }}</p>
@@ -40,4 +42,37 @@
       {{ product.quantity }}
     {% endif %}
   </td>
+  <td class="text-right cellProductActions">
+    <button
+      type="button"
+      class="btn tooltip-link js-merchandise-return-product-delete-btn"
+      data-toggle="pstooltip"
+      data-placement="top"
+      data-merchandise-return-id="{{ editableMerchandiseReturn.merchandiseReturnId.getValue }}"
+      data-merchandise-return-detail-id="{{ product.orderDetailId }}"
+      data-delete-message="{{ 'Are you sure?'|trans({}, 'Admin.Notifications.Warning') }}"
+      data-original-title="{{ 'Delete'|trans({}, 'Admin.Actions') }}">
+      <i class="material-icons">delete</i>
+    </button>
+  </td>
 </tr>
+{% if product.customizations is not null %}
+  <tr class="merchandise-return-product-customization {% if rowIsDisplayed %} d-none{% endif %}">
+    {% set colspan = 10 %}
+    <td colspan="{{ colspan }}" class="border-top-0 text-muted">
+      {% if product.customizations.fileCustomizations %}
+        <div class="d-flex flex-row flex-wrap">
+          {% for customization in product.customizations.fileCustomizations %}
+            <div class="mr-4">
+              <p><strong>{{ customization.name }}</strong></p>
+              <p><img src="{{ customization.image }}" alt="{{ customization.name }}"></p>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% for customization in product.customizations.textCustomizations %}
+        <p><strong>{{ customization.name }} :</strong> {{ customization.value }}</p>
+      {% endfor %}
+    </td>
+  </tr>
+{% endif %}
