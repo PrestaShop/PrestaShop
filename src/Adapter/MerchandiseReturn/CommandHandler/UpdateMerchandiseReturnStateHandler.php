@@ -30,16 +30,16 @@ namespace PrestaShop\PrestaShop\Adapter\MerchandiseReturn\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Entity\OrderReturn;
 use PrestaShop\PrestaShop\Adapter\MerchandiseReturn\AbstractMerchandiseReturnHandler;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\EditMerchandiseReturnCommand;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\CommandHandler\EditMerchandiseReturnHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\UpdateMerchandiseReturnStateCommand;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\CommandHandler\UpdateMerchandiseReturnStateHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnException;
 
-class EditMerchandiseReturnHandler extends AbstractMerchandiseReturnHandler implements EditMerchandiseReturnHandlerInterface
+class UpdateMerchandiseReturnStateHandler extends AbstractMerchandiseReturnHandler implements UpdateMerchandiseReturnStateHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(EditMerchandiseReturnCommand $command): void
+    public function handle(UpdateMerchandiseReturnStateCommand $command): void
     {
         $merchandiseReturnId = $command->getMerchandiseReturnId();
         $orderReturn = new OrderReturn($merchandiseReturnId->getValue());
@@ -61,11 +61,11 @@ class EditMerchandiseReturnHandler extends AbstractMerchandiseReturnHandler impl
 
     /**
      * @param OrderReturn $orderReturn
-     * @param EditMerchandiseReturnCommand $command
+     * @param UpdateMerchandiseReturnStateCommand $command
      *
      * @return OrderReturn
      */
-    private function updateOrderReturnWithCommandData(OrderReturn $orderReturn, EditMerchandiseReturnCommand $command): OrderReturn
+    private function updateOrderReturnWithCommandData(OrderReturn $orderReturn, UpdateMerchandiseReturnStateCommand $command): OrderReturn
     {
         if (null !== $command->getMerchandiseReturnStateId()->getValue()) {
             $orderReturn->state = $command->getMerchandiseReturnStateId()->getValue();

@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\EditMerchandiseReturnCommand;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\UpdateMerchandiseReturnStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnId;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnStateId;
 
@@ -58,7 +58,7 @@ final class MerchandiseReturnFormDataHandler implements FormDataHandlerInterface
     {
         $merchandiseReturnId = new MerchandiseReturnId($merchandiseReturnId);
         $merchandiseReturnStateId = new MerchandiseReturnStateId((int) $data['merchandise_return_order_state']);
-        $command = (new EditMerchandiseReturnCommand($merchandiseReturnId))
+        $command = (new UpdateMerchandiseReturnStateCommand($merchandiseReturnId))
             ->setMerchandiseReturnStateId($merchandiseReturnStateId)
             ;
 
