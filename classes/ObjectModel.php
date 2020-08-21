@@ -1521,7 +1521,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @param bool $all if true, caches required fields of all object classes
      *
      * @throws PrestaShopDatabaseException
-     *
      */
     public function cacheFieldsRequiredDatabase($all = true)
     {
@@ -1882,7 +1881,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @return bool
      *
      * @throws PrestaShopDatabaseException
-     *
      */
     public static function existsInDatabase($id_entity, $table)
     {
