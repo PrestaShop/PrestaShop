@@ -234,6 +234,9 @@ class Profiler
             'doubles' => [
                 'queries' => Db::getInstance()->uniqQueries,
             ],
+            'tableStress' => [
+                'tables' => Db::getInstance()->tables,
+            ],
         ];
     }
 }
