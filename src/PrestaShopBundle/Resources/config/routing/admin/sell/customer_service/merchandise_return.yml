@@ -35,3 +35,19 @@ admin_merchandise_returns_edit:
 #      id_order_return: merchandiseReturnId
   requirements:
     merchandiseReturnId: \d+
+
+admin_merchandise_returns_delete_product:
+  path: /{merchandiseReturnId}/products/{merchandiseReturnDetailId}/delete
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:deleteProduct
+    _legacy_controller: AdminReturn
+  #    _legacy_link: AdminReturn:deleteorder_return_detail
+  #    _legacy_parameters:
+  #      id_order_return: merchandiseReturnId
+  #      id_order_detail: merchandiseReturnDetailId
+  requirements:
+    merchandiseReturnId: \d+
+    merchandiseReturnDetailId: \d+
+  options:
+    expose: true

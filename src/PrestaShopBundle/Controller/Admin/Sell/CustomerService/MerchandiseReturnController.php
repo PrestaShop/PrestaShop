@@ -31,10 +31,12 @@ use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseRet
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query\GetMerchandiseReturnForEditing;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query\GetMerchandiseReturnProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryResult\EditableMerchandiseReturn;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\DeleteProductFromMerchandiseReturnCommand;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\MerchandiseReturnFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -139,6 +141,30 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             'editableMerchandiseReturn' => $editableMerchandiseReturn,
             'merchandiseReturnProductsForViewing' => $productsForViewing
         ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_merchandise_returns_index")
+     *
+     * @param int $merchandiseReturnId
+     * @param int $merchandiseReturnDetailId
+     *
+     * @return JsonResponse
+     */
+    public function deleteProductAction(int $merchandiseReturnId, int $merchandiseReturnDetailId): JsonResponse
+    {
+        try {
+            $this->getCommandBus()->handle(
+                new DeleteProductFromMerchandiseReturnCommand($merchandiseReturnId, $merchandiseReturnDetailId)
+            );
+
+            return $this->json(null, Response::HTTP_NO_CONTENT);
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
     }
 
     /**
