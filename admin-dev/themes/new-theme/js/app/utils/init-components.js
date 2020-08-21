@@ -26,11 +26,17 @@
 import TranslatableField from '@js/components/translatable-field.js';
 import TranslatableInput from '@js/components/translatable-input.js';
 import TinyMCEEditor from '@js/components/tinymce-editor.js';
+import TaggableField from '@js/components/taggable-field.js';
 
 const initComponents = () => {
   let translatableInput = null;
   let tinyMCEEditor = null;
   let translatableField = null;
+  let taggableField = null;
+
+  if (typeof window.prestashop === 'undefined') {
+    window.prestashop = {};
+  }
   // Initialize the prestashop global object
   window.prestashop.components = {
     translatableInput: {
@@ -40,6 +46,9 @@ const initComponents = () => {
         }
         return translatableInput;
       },
+      component(options) {
+        return new TranslatableInput(options);
+      },
     },
     tinyMCEEditor: {
       init() {
@@ -47,6 +56,9 @@ const initComponents = () => {
           tinyMCEEditor = new TinyMCEEditor();
         }
         return tinyMCEEditor;
+      },
+      component(options) {
+        return new TinyMCEEditor(options);
       },
 
     },
@@ -56,6 +68,20 @@ const initComponents = () => {
           translatableField = new TranslatableField();
         }
         return translatableField;
+      },
+      component(options) {
+        return new TranslatableField(options);
+      },
+    },
+    taggableField: {
+      init() {
+        if (taggableField === null) {
+          taggableField = new TaggableField();
+        }
+        return taggableField;
+      },
+      component(options) {
+        return new TaggableField(options);
       },
     },
   };

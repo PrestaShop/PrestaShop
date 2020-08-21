@@ -42,7 +42,6 @@ import ChoiceTable from '@components/choice-table';
 import textToLinkRewriteCopier from '@components/text-to-link-rewrite-copier';
 import ChoiceTree from '@components/form/choice-tree';
 import FormSubmitButton from '@components/form-submit-button';
-import TaggableField from '@components/taggable-field';
 import FiltersSubmitButtonEnablerExtension
   from '@components/grid/extension/filters-submit-button-enabler-extension';
 import ShowcaseCard from '@components/showcase-card/showcase-card';
@@ -107,7 +106,7 @@ $(() => {
 
   new FormSubmitButton();
 
-  new TaggableField({
+  window.prestashop.components.taggableField.component({
     tokenFieldSelector: 'input.js-taggable-field',
     options: {
       createTokensOnBlur: true,
