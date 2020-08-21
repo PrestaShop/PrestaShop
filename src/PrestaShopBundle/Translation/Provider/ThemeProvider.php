@@ -174,14 +174,9 @@ class ThemeProvider implements ProviderInterface
      */
     public function getUserTranslatedCatalogue(string $locale): MessageCatalogueInterface
     {
-        $translationDomains = ['*'];
-        if (!empty($this->domain)) {
-            $translationDomains = ['^' . $this->domain];
-        }
-
         return (new UserTranslatedCatalogueProvider(
             $this->databaseReader,
-            $translationDomains,
+            ['*'],
             $this->themeName
         ))
             ->getCatalogue($locale);

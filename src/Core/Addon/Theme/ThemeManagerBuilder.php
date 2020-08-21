@@ -30,10 +30,12 @@ use Context;
 use Db;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShop\PrestaShop\Core\Module\HookRepository;
 use Shop;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
@@ -42,12 +44,17 @@ class ThemeManagerBuilder
     private $context;
     private $db;
     private $themeValidator;
+    /**
+     * @var ContainerInterface|null
+     */
+    private $container;
 
-    public function __construct(Context $context, Db $db, ThemeValidator $themeValidator = null)
+    public function __construct(Context $context, Db $db, ThemeValidator $themeValidator = null, ?ContainerInterface $container = null)
     {
         $this->context = $context;
         $this->db = $db;
         $this->themeValidator = $themeValidator;
+        $this->container = $container ?? SymfonyContainer::getInstance();
     }
 
     public function build()
@@ -78,8 +85,8 @@ class ThemeManagerBuilder
                 $this->context->shop,
                 $this->db
             ),
-            $this->context->getTranslationService(),
-            $this->context->getTranslationProviderFactory()
+            $this->container->get('prestashop.service.translation'),
+            $this->container->get('prestashop.translation.provider_factory')
         );
     }
 
