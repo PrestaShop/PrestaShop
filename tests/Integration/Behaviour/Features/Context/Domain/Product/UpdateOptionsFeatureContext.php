@@ -33,6 +33,7 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -141,7 +142,7 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
                     $manufacturerId = 42;
                     break;
                 case '':
-                    $manufacturerId = 0;
+                    $manufacturerId = NoManufacturerId::NO_MANUFACTURER_ID;
                     break;
                 default:
                     $manufacturerId = $this->getSharedStorage()->get($data['manufacturer']);

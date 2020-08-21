@@ -24,53 +24,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
-
 /**
- * Provides manufacturer id
+ * This class is used to remove association with manufacturer
  */
-class ManufacturerId
+class NoManufacturerId extends ManufacturerId
 {
-    /**
-     * @var int
-     */
-    protected $id;
+    const NO_MANUFACTURER_ID = 0;
 
     /**
-     * @param int $id
-     *
-     * @throws ManufacturerConstraintException
+     * This class is used to remove association with manufacturer
      */
-    public function __construct($id)
+    public function __construct()
     {
-        $this->assertIsIntegerGreaterThanZero($id);
-        $this->id = $id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Validates that the value is integer and is greater than zero
-     *
-     * @param $value
-     *
-     * @throws ManufacturerConstraintException
-     */
-    private function assertIsIntegerGreaterThanZero($value)
-    {
-        if (!is_int($value) || 0 >= $value) {
-            throw new ManufacturerConstraintException(
-                sprintf('Invalid manufacturer id "%s".', var_export($value, true)),
-                ManufacturerConstraintException::INVALID_ID
-            );
-        }
+        $this->id = static::NO_MANUFACTURER_ID;
     }
 }
