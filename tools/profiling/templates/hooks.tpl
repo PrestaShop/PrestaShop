@@ -1,11 +1,14 @@
 <div class="col-4">
   <table class="table table-condensed">
-    <tr>
-      <th>Hook</th>
-      <th>Time</th>
-      <th>Memory Usage</th>
-    </tr>
+    <thead>
+      <tr>
+        <th>Hook</th>
+        <th>Time</th>
+        <th>Memory Usage</th>
+      </tr>
+    </thead>
 
+    <tbody>
     {foreach $hooks.perfs as $hook => $hooksPerfs}
       <tr>
         <td>
@@ -34,10 +37,13 @@
       {/foreach}
     {/foreach}
 
-    <tr>
-      <th><b>{$hooks.perfs|count} hook(s)</b></th>
-      <th>{load_time data=$hooks.totalHooksTime}</th>
-      <th>{memory data=$hooks.totalHooksMemory}</th>
-    </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <th><b>{$hooks.perfs|count} hook(s)</b></th>
+        <th>{load_time data=$hooks.totalHooksTime}</th>
+        <th>{memory data=$hooks.totalHooksMemory}</th>
+      </tr>
+    </tfoot>
   </table>
 </div>
