@@ -26,4 +26,4 @@
       {assign var="last" value=$row}
     {/foreach}
   </table>
-</div>';
+</div>
