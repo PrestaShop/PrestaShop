@@ -26,17 +26,18 @@
 
 namespace Tests\Integration\PrestaShopBundle\Translation\Provider;
 
-use PrestaShopBundle\Translation\Provider\SearchProvider;
+use PrestaShopBundle\Translation\Provider\CoreProvider;
+use PrestaShopBundle\Translation\Provider\Type\CoreDomainType;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
  * Tests the search translations provider
  */
-class SearchProviderTest extends KernelTestCase
+class CoreDomainProviderTest extends KernelTestCase
 {
     /**
-     * @var SearchProvider
+     * @var CoreProvider
      */
     private $provider;
 
@@ -69,10 +70,12 @@ class SearchProviderTest extends KernelTestCase
                 'theme' => 'classic',
             ],
         ];
-        $this->provider = new SearchProvider(
+        $type = new CoreDomainType('AdminActions');
+        $this->provider = new CoreProvider(
             new MockDatabaseTranslationReader($databaseContent),
             $resourcesDir,
-            'AdminActions'
+            $type->getFilenameFilters(),
+            $type->getTranslationDomains()
         );
 
         $langId = \Language::getIdByIso('fr', true);

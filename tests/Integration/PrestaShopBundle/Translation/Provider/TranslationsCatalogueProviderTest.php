@@ -29,13 +29,12 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Translation\Provider;
 
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationReader;
-use PrestaShopBundle\Translation\Provider\BackProvider;
+use PrestaShopBundle\Translation\Provider\CoreProvider;
 use PrestaShopBundle\Translation\Provider\Factory\ProviderFactory;
-use PrestaShopBundle\Translation\Provider\FrontProvider;
 use PrestaShopBundle\Translation\Provider\ModulesProvider;
 use PrestaShopBundle\Translation\Provider\TranslationsCatalogueProvider;
 use PrestaShopBundle\Translation\Provider\Type\BackType;
-use PrestaShopBundle\Translation\Provider\Type\FrontType;
+use PrestaShopBundle\Translation\Provider\Type\CoreFrontType;
 use PrestaShopBundle\Translation\Provider\Type\ModulesType;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
@@ -91,13 +90,16 @@ class TranslationsCatalogueProviderTest extends KernelTestCase
     {
         $providerFactory = $this->createMock(ProviderFactory::class);
 
+        $type = new BackType();
         $providerFactory
             ->expects($this->any())
             ->method('build')
             ->willReturn(
-                new BackProvider(
+                new CoreProvider(
                     $this->databaseReader,
-                    $this->getDefaultTranslationsDirectory()
+                    $this->getDefaultTranslationsDirectory(),
+                    $type->getFilenameFilters(),
+                    $type->getTranslationDomains()
                 )
             );
 
@@ -129,19 +131,22 @@ class TranslationsCatalogueProviderTest extends KernelTestCase
     {
         $providerFactory = $this->createMock(ProviderFactory::class);
 
+        $type = new CoreFrontType();
         $providerFactory
             ->expects($this->any())
             ->method('build')
             ->willReturn(
-                new FrontProvider(
+                new CoreProvider(
                     $this->databaseReader,
-                    $this->getDefaultTranslationsDirectory()
+                    $this->getDefaultTranslationsDirectory(),
+                    $type->getFilenameFilters(),
+                    $type->getTranslationDomains()
                 )
             );
 
         $provider = new TranslationsCatalogueProvider($providerFactory);
 
-        $messages = $provider->getCatalogue(new FrontType(), 'fr-FR');
+        $messages = $provider->getCatalogue(new CoreFrontType(), 'fr-FR');
         $this->assertIsArray($messages);
 
         // Check integrity of translations

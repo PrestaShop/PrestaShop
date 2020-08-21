@@ -34,7 +34,7 @@ namespace PrestaShopBundle\Translation\Provider\Type;
 class BackType extends AbstractCoreType
 {
     /**
-     * @return array|string[]
+     * {@inheritdoc}
      */
     public function getFilenameFilters(): array
     {
@@ -44,7 +44,7 @@ class BackType extends AbstractCoreType
     }
 
     /**
-     * @return array|string[]
+     * {@inheritdoc}
      */
     public function getTranslationDomains(): array
     {

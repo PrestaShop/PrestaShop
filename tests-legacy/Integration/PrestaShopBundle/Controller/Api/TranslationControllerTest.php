@@ -105,7 +105,18 @@ class TranslationControllerTest extends ApiTestCase
      *
      * @param $params
      */
-    public function itShouldReturnBadResponseWhenRequestingDomainCatalog($params)
+    public function itShouldReturnBadResponseWhenRequestingDomainCatalogWithBadDomain($params)
+    {
+        $this->assertBadRequest('api_translation_domains_tree', $params);
+    }
+
+    /**
+     * @dataProvider getBadThemeCatalog
+     * @test
+     *
+     * @param $params
+     */
+    public function itShouldReturnBadResponseWhenRequestingDomainCatalogWithBadTheme($params)
     {
         $this->assertBadRequest('api_translation_domains_tree', $params);
     }
@@ -137,8 +148,24 @@ class TranslationControllerTest extends ApiTestCase
             array(
                 array(
                     'lang' => 'en',
-                    'type' => 'frront', // syntax error wanted
+                    'type' => 'core_frront', // syntax error wanted
                     'selected' => 'classic',
+                ),
+            ),
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function getBadThemeCatalog()
+    {
+        return array(
+            array(
+                array(
+                    'lang' => 'en',
+                    'type' => 'themes',
+                    'selected' => 'myFakeTheme', // theme doesnt exist
                 ),
             ),
         );
@@ -160,8 +187,8 @@ class TranslationControllerTest extends ApiTestCase
             array(
                 array(
                     'lang' => 'fr',
-                    'type' => 'front',
-                    'selected' => 'classic',
+                    'type' => 'themes',
+                    'selected' => '0', // core front translations
                 ),
             ),
         );
