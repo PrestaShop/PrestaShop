@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,20 +22,12 @@
  * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+declare(strict_types=1);
 
-{% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Sell/CustomerService/MerchandiseReturn/Blocks/form.html.twig' %}
-    </div>
-  </div>
-{% endblock %}
+namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception;
 
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/merchandise_return_edit.bundle.js') }}"></script>
-{% endblock %}
+class DeleteMerchandiseReturnDetailException extends MerchandiseReturnException
+{
+}
