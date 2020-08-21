@@ -14,4 +14,5 @@
   </div>
 
   {include file="./stopwatch.tpl" stopwatch=$stopwatch}
+  {include file="./doubles.tpl" doubles=$doubles}
 </div>

@@ -130,7 +130,6 @@ class Profiler
             $this->totalFilesize += filesize($file);
         }
 
-
         foreach ($GLOBALS as $key => $value) {
             if ($key === 'GLOBALS') {
                 continue;
@@ -230,7 +229,10 @@ class Profiler
                 'totalHooksMemory' => $this->totalModulesMemory,
             ],
             'stopwatch' => [
-                'queries' => $this->queries
+                'queries' => $this->queries,
+            ],
+            'doubles' => [
+                'queries' => Db::getInstance()->uniqQueries,
             ],
         ];
     }
