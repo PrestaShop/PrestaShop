@@ -11,16 +11,19 @@
       <th>Instances</th>
       <th>Source</th>
     </tr>
-    foreach (ObjectModel::$debug_list as $class => $info) {
-    $content .= '<tr>
-      <td>' . $class . '</td>
-      <td><span ' . $this->getObjectModelColor(count($info)) . '>' . count($info) . '</span></td>
-      <td>';
-        foreach ($info as $trace) {
-        $content .= str_replace([_PS_ROOT_DIR_, '\\'], ['', '/'], $trace['file']) . ' [' . $trace['line'] . ']<br />';
-        }
-        $content .= '    </td>
-    </tr>';
-    }
+    {foreach $objectmodel.classes as $class => $info}
+      <tr>
+        <td>{$class}</td>
+        <td>
+          {objectmodel data=count($info)}
+        </td>
+        <td>
+        {foreach $info as $trace}
+          {str_replace([_PS_ROOT_DIR_, '\\'], ['', '/'], $trace['file'])} [{$trace['line']}]
+          <br />
+        {/foreach}
+        </td>
+      </tr>
+    {/foreach}
   </table>
 </div>

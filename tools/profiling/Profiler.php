@@ -237,6 +237,9 @@ class Profiler
             'tableStress' => [
                 'tables' => Db::getInstance()->tables,
             ],
+            'objectmodel' => [
+                'classes' => ObjectModel::$debug_list,
+            ],
         ];
     }
 }

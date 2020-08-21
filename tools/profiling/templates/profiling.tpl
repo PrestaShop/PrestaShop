@@ -16,4 +16,5 @@
   {include file="./stopwatch.tpl" stopwatch=$stopwatch}
   {include file="./doubles.tpl" doubles=$doubles}
   {include file="./table-stress.tpl" tableStress=$tableStress}
+  {include file="./objectmodel.tpl" objectmodel=$objectmodel}
 </div>
