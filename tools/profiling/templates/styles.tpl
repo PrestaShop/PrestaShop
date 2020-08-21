@@ -18,10 +18,38 @@
   #prestashop-profiling * {
     box-sizing:border-box;
     -moz-box-sizing:border-box;
-    color: #888;
   }
 
-  #prestashop-profiling td .pre {
+  #prestashop-profiling .table {
+    width: 100%;
+  }
+
+  #prestashop-profiling .table td,
+  #prestashop-profiling .table th {
+    padding: 6.4px;
+    padding: .4rem;
+    vertical-align: top;
+    border-top: 1px solid #bbcdd2;
+    vertical-align: middle;
+    text-align: left;
+  }
+  #prestashop-profiling .table th {
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+  }
+  #prestashop-profiling .table thead th {
+    border-bottom: .125rem solid #25b9d7;
+  }
+
+  #prestashop-profiling .table tfoot th {
+    border-top: .125rem solid #25b9d7;
+  }
+
+  #prestashop-profiling .sortable thead th {
+    cursor:pointer;
+  }
+
+  #prestashop-profiling .table td .pre {
     padding: 6px;
     margin-right: 10px;
     overflow: auto;
@@ -35,9 +63,6 @@
     border: 1px solid #cccccc;
     max-width: 960px;
   }
-  .sortable thead th {
-    cursor:pointer;
-  }
 
   #prestashop-profiling .row {
     clear: both;
@@ -49,6 +74,7 @@
     padding: 0 10px;
     width: 33%;
   }
+
   @media (max-width: 1200px) {
     #prestashop-profiling .col-4 {
       width: 50%;
@@ -59,6 +85,7 @@
       width: 100%;
     }
   }
+
   .success {
     color: green;
   }
@@ -69,4 +96,5 @@
     color: #EF8B00;
   }
 </style>
+
 <script type="text/javascript" src="https://cdn.rawgit.com/drvic10k/bootstrap-sortable/1.11.2/Scripts/bootstrap-sortable.js"></script>
