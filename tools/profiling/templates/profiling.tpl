@@ -13,8 +13,9 @@
     {include file="./links.tpl"}
   </div>
 
-  {include file="./stopwatch.tpl" stopwatch=$stopwatch}
-  {include file="./doubles.tpl" doubles=$doubles}
+  {include file="./stopwatch.tpl" stopwatchQueries=$stopwatchQueries}
+  {include file="./doubles.tpl" doublesQueries=$doublesQueries}
   {include file="./table-stress.tpl" tableStress=$tableStress}
   {include file="./objectmodel.tpl" objectmodel=$objectmodel}
+  {include file="./files.tpl" files=$files}
 </div>

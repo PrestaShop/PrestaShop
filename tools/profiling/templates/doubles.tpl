@@ -1,7 +1,7 @@
 <div class="row">
   <h2><a name="doubles">Doubles</a></h2>
 	<table class="table table-condensed">
-    {foreach $doubles.queries as $q => $nb}
+    {foreach $doublesQueries as $q => $nb}
       {if ($nb > 1)}
         <tr>
           <td>

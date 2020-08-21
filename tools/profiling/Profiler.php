@@ -228,18 +228,11 @@ class Profiler
                 'totalHooksTime' => $this->totalModulesTime,
                 'totalHooksMemory' => $this->totalModulesMemory,
             ],
-            'stopwatch' => [
-                'queries' => $this->queries,
-            ],
-            'doubles' => [
-                'queries' => Db::getInstance()->uniqQueries,
-            ],
-            'tableStress' => [
-                'tables' => Db::getInstance()->tables,
-            ],
-            'objectmodel' => [
-                'classes' => ObjectModel::$debug_list,
-            ],
+            'stopwatchQueries' => $this->queries,
+            'doublesQueries' => Db::getInstance()->uniqQueries,
+            'tableStress' => Db::getInstance()->tables,
+            'objectmodel' => ObjectModel::$debug_list,
+            'files' => get_included_files(),
         ];
     }
 }

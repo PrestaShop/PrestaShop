@@ -17,7 +17,7 @@
       </tr>
     </thead>
     <tbody>
-      {foreach $stopwatch.queries as $data}
+      {foreach $stopwatchQueries as $data}
         {$callstack = implode('<br>', $data['stack'])}
         {$callstack_md5 = md5($callstack)}
         <tr>
