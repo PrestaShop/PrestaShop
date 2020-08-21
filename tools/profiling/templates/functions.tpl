@@ -1,6 +1,7 @@
 {include file="./functions/load-time.tpl"}
 {include file="./functions/memory.tpl"}
 {include file="./functions/mysql-version.tpl"}
+{include file="./functions/objectmodel.tpl"}
 {include file="./functions/peak-memory.tpl"}
 {include file="./functions/php-version.tpl"}
 {include file="./functions/rows-browsed.tpl"}
