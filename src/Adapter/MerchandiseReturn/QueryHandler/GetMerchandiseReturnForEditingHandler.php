@@ -55,13 +55,13 @@ final class GetMerchandiseReturnForEditingHandler extends AbstractMerchandiseRet
         $order = new Order($orderReturn->id_order);
 
         return new EditableMerchandiseReturn(
-            $merchandiseReturnId,
-            new CustomerId((int) $orderReturn->id_customer),
+            $merchandiseReturnId->getValue(),
+            (int) $orderReturn->id_customer,
             $customer->firstname,
             $customer->lastname,
-            new OrderId((int) $orderReturn->id_order),
+            (int) $orderReturn->id_order,
             new DateTime($order->date_add),
-            new MerchandiseReturnStateId((int) $orderReturn->state),
+            (int) $orderReturn->state,
             $orderReturn->question
         );
     }
