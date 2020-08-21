@@ -42,9 +42,8 @@ class UpdateMerchandiseReturnStateHandler extends AbstractMerchandiseReturnHandl
     public function handle(UpdateMerchandiseReturnStateCommand $command): void
     {
         $merchandiseReturnId = $command->getMerchandiseReturnId();
-        $orderReturn = new OrderReturn($merchandiseReturnId->getValue());
 
-        $this->assertOrderReturnWasFound($merchandiseReturnId, $orderReturn);
+        $orderReturn = $this->getOrderReturn($merchandiseReturnId);
 
         $orderReturn = $this->updateOrderReturnWithCommandData($orderReturn, $command);
 
