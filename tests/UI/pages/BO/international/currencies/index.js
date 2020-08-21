@@ -40,8 +40,7 @@ class Currencies extends LocalizationBasePage {
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
 
     // Exchange rate form
-    this.exchangeRateForm = 'form[name=\'exchange_rates\']';
-    this.updateExchangeRatesButton = `${this.exchangeRateForm} .btn.btn-primary`;
+    this.updateExchangeRatesButton = '#update-exchange-rates-button';
   }
 
   /* Header Methods */
