@@ -28,14 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\EditMerchandiseReturnCommand;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\UpdateMerchandiseReturnStateCommand;
 
-interface EditMerchandiseReturnHandlerInterface
+interface UpdateMerchandiseReturnStateHandlerInterface
 {
     /**
-     * @param EditMerchandiseReturnCommand $command
+     * @param UpdateMerchandiseReturnStateCommand $command
      *
      * @return void
      */
-    public function handle(EditMerchandiseReturnCommand $command): void;
+    public function handle(UpdateMerchandiseReturnStateCommand $command): void;
 }

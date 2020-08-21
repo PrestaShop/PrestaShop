@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseR
  * Edits provided merchandise return.
  * It can edit either all or partial data.
  */
-class EditMerchandiseReturnCommand
+class UpdateMerchandiseReturnStateCommand
 {
     /**
      * @var MerchandiseReturnId
@@ -74,9 +74,9 @@ class EditMerchandiseReturnCommand
     /**
      * @param MerchandiseReturnStateId $merchandiseReturnStateId
      *
-     * @return EditMerchandiseReturnCommand
+     * @return UpdateMerchandiseReturnStateCommand
      */
-    public function setMerchandiseReturnStateId(MerchandiseReturnStateId $merchandiseReturnStateId): EditMerchandiseReturnCommand
+    public function setMerchandiseReturnStateId(MerchandiseReturnStateId $merchandiseReturnStateId): UpdateMerchandiseReturnStateCommand
     {
         $this->merchandiseReturnStateId = $merchandiseReturnStateId;
 
