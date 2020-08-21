@@ -39,7 +39,7 @@
           </td>
           <td data-value="{$data['location']}">
             <a href="javascript:void(0);" onclick="$('#callstack_{$callstack_md5}').toggle();">{$data['location']}</a>
-            <div id="callstack_' . $callstack_md5}" style="display:none">{implode('<br>', $data['stack'])}</div>
+            <div id="callstack_{$callstack_md5}" style="display:none">{implode('<br>', $data['stack'])}</div>
           </td>
         </tr>
       {/foreach}
