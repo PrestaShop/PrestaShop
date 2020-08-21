@@ -29,6 +29,7 @@ namespace Tests\Integration\PrestaShopBundle\Translation\Extractor;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShopBundle\Translation\Extractor\ThemeExtractor;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Yaml\Yaml;
 
 class ThemeExtractorTest extends KernelTestCase
@@ -48,20 +49,30 @@ class ThemeExtractorTest extends KernelTestCase
         $this->themeExtractor = $container->get('prestashop.translation.extractor.theme');
     }
 
-    protected function tearDown()
-    {
-        $this->themeExtractor = null;
-    }
-
     public function testItExtractsCatalogueFromFiles()
     {
         $catalogue = $this->themeExtractor->extract($this->getFakeTheme(), 'en-US');
+
+        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
         $this->assertNotEmpty($catalogue->all(), 'Extracted catalogue must not be empty');
 
         $this->assertTrue($catalogue->has('Show product', 'ShopThemeProduct'));
         $this->assertTrue($catalogue->has('Do something with cart', 'ShopFakethemefortranslations'));
         $this->assertSame($catalogue->get('Show another product', 'ShopThemeProduct'), 'Show another product');
+    }
+
+    public function testExtractWithLegacyFormat()
+    {
+        $catalogue = $this->themeExtractor
+            ->extract($this->getFakeTheme());
+
+        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
+    }
+
+    protected function tearDown()
+    {
+        $this->themeExtractor = null;
     }
 
     private function getFakeTheme()

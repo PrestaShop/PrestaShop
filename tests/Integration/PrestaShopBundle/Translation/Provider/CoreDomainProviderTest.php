@@ -33,7 +33,7 @@ use Symfony\Component\Translation\MessageCatalogue;
 /**
  * Tests the search translations provider
  */
-class SearchProviderTest extends KernelTestCase
+class CoreDomainProviderTest extends KernelTestCase
 {
     /**
      * @var SearchProvider
