@@ -99,14 +99,14 @@
 	</tr>
 
   {if isset($is_virtual_order) && $is_virtual_order}
-	  <tr>
-		  <td colspan="6" class="left">
+  <tr>
+    <td colspan="6" class="left">
 
-			  {$shipping_tab}
+      {$shipping_tab}
 
-		  </td>
-		  <td colspan="1">&nbsp;</td>
-	  </tr>
+    </td>
+    <td colspan="1">&nbsp;</td>
+  </tr>
   {/if}
 
 	<tr>
