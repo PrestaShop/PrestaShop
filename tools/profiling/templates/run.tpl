@@ -17,10 +17,10 @@
 
       <tr>
         <td>{$row['block']}</td>
-        <td>{load_time data=($row['time'] - $last['time'])} ms</td>
-        <td>{load_time data=($row['time'] - $run.startTime)} ms</td>
-        <td>{memory data=($row['memory_usage'] - $last['memory_usage'])} Mb</td>
-        <td>{peak_memory data=($row['peak_memory_usage'])} Mb</td>
+        <td>{load_time data=($row['time'] - $last['time'])}</td>
+        <td>{load_time data=($row['time'] - $run.startTime)}</td>
+        <td>{memory data=($row['memory_usage'] - $last['memory_usage'])}</td>
+        <td>{peak_memory data=($row['peak_memory_usage'])}</td>
       </tr>
 
       {assign var="last" value=$row}

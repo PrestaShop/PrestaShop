@@ -6,4 +6,5 @@
   {else}
     <span class="success">{round($data * 1000)}</span>
   {/if}
+  ms
 {/function}
