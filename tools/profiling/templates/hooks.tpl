@@ -12,10 +12,10 @@
           <a href="javascript:void(0);" onclick="$('.{$hook}_modules_details').toggle();">{$hook}</a>
         </td>
         <td>
-          {load_time data=$hooksPerfs['time']} ms
+          {load_time data=$hooksPerfs['time']}
         </td>
         <td>
-          {memory data=$hooksPerfs['memory']} Mb
+          {memory data=$hooksPerfs['memory']}
         </td>
       </tr>
 
@@ -25,10 +25,10 @@
             =&gt; {$perfs['module']}
           </td>
           <td>
-            {load_time data=$perfs['time']} ms
+            {load_time data=$perfs['time']}
           </td>
           <td>
-            {memory data=$perfs['memory']} Mb
+            {memory data=$perfs['memory']}
           </td>
         </tr>
       {/foreach}
@@ -36,8 +36,8 @@
 
     <tr>
       <th><b>{$hooks.perfs|count} hook(s)</b></th>
-      <th>{load_time data=$hooks.totalModulesTime} ms</th>
-      <th>{memory data=$hooks.totalModulesMemory} Mb</th>
+      <th>{load_time data=$hooks.totalModulesTime}</th>
+      <th>{memory data=$hooks.totalModulesMemory}</th>
     </tr>
   </table>
 </div>

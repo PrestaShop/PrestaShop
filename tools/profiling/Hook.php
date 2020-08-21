@@ -28,7 +28,7 @@ class Hook extends HookCore
     public static function coreCallHook($module, $method, $params)
     {
         $timeStart = microtime(true);
-        $memoryStart = memory_get_usage(true);
+        $memoryStart = memory_get_usage();
 
         $result = parent::coreCallHook($module, $method, $params);
 
@@ -38,7 +38,7 @@ class Hook extends HookCore
                 'module' => $module->name,
                 'params' => $params,
                 'time' => microtime(true) - $timeStart,
-                'memory' => memory_get_usage(true) - $memoryStart,
+                'memory' => memory_get_usage() - $memoryStart,
             ]
         );
 
