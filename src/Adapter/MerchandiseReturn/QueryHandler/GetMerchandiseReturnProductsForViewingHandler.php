@@ -35,6 +35,8 @@ use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryHandler\GetMerchand
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryResult\EditableMerchandiseReturn;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryResult\MerchandiseReturnProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryResult\MerchandiseReturnProductsForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizationForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizationsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
@@ -56,12 +58,29 @@ final class GetMerchandiseReturnProductsForViewingHandler extends AbstractMercha
         $productsForViewing = [];
 
         foreach ($products as $product) {
+            // Get total customized quantity for current product
+            $customized_product_quantity = 0;
+            $customizations = [];
+            if (is_array($product['customizedDatas'])) {
+                foreach ($product['customizedDatas'] as $customizationPerAddress) {
+                    foreach ($customizationPerAddress as $customizationId => $customization) {
+                        $customized_product_quantity += (int) $customization['quantity'];
+                        foreach ($customization['datas'] as $datas) {
+                            foreach ($datas as $data) {
+                                $customizations[] = new OrderProductCustomizationForViewing((int) $data['type'], $data['name'], $data['value']);
+                            }
+                        }
+                    }
+                }
+            }
+
             $productsForViewing[] = new MerchandiseReturnProductForViewing(
                 new ProductId((int) $product['product_id']),
                 (int) $product['id_order_detail'],
                 $product['reference'],
                 $product['product_name'],
-                (int) $product['product_quantity']
+                (int) $product['product_quantity'],
+                !empty($customizations) ? new OrderProductCustomizationsForViewing($customizations) : null
             );
         }
 

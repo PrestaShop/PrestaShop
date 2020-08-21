@@ -75,6 +75,7 @@ module.exports = {
     maintenance: './js/pages/maintenance',
     manufacturer: './js/pages/manufacturer',
     manufacturer_address_form: './js/pages/manufacturer/manufacturer_address_form.js',
+    merchandise_return_edit: './js/pages/merchandise-return/edit.js',
     merchandise_return: './js/pages/merchandise-return',
     meta: './js/pages/meta',
     module: './js/pages/module',
