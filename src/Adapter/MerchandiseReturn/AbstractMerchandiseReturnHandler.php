@@ -45,19 +45,6 @@ use PrestaShopException;
 abstract class AbstractMerchandiseReturnHandler extends AbstractObjectModelHandler
 {
     /**
-     * @param MerchandiseReturnId $merchandiseReturnId
-     * @param OrderReturn $orderReturn
-     *
-     * @throws MerchandiseReturnNotFoundException
-     */
-    protected function assertOrderReturnWasFound(MerchandiseReturnId $merchandiseReturnId, OrderReturn $orderReturn): void
-    {
-        if ($orderReturn->id !== $merchandiseReturnId->getValue()) {
-            throw new MerchandiseReturnNotFoundException($merchandiseReturnId, sprintf('Order return with id "%s" was not found.', $merchandiseReturnId->getValue()));
-        }
-    }
-
-    /**
      * Gets legacy OrderReturn
      *
      * @param MerchandiseReturnId $merchandiseReturnId
@@ -96,8 +83,7 @@ abstract class AbstractMerchandiseReturnHandler extends AbstractObjectModelHandl
         MerchandiseReturnDetailId $merchandiseReturnDetailId,
         ?CustomizationId $customizationId
     ): void {
-        $orderReturn = new OrderReturn($merchandiseReturnId->getValue());
-        $this->assertOrderReturnWasFound($merchandiseReturnId, $orderReturn);
+        $orderReturn = $this->getOrderReturn($merchandiseReturnId);
 
         if ((int) ($orderReturn->countProduct()) <= 1) {
             throw new DeleteMerchandiseReturnProductException('Can\'t delete last product from merchandise return');
