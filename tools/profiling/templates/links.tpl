@@ -9,7 +9,9 @@
     <li>
       <a href="#tables">Tables stress</a>
     </li>
-    ' . (isset(ObjectModel::$debug_list) ? '<li><a href="#objectModels">ObjectModel instances</a></li>' : '') . '
+    <li>
+      <a href="#objectModels">ObjectModel instances</a>
+    </li>
     <li>
       <a href="#includedFiles">Included Files</a>
     </li>
