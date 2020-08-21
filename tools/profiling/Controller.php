@@ -83,17 +83,21 @@ abstract class Controller extends ControllerCore
         echo $this->displayProfiling();
     }
 
-
-
     public function displayProfiling()
     {
         $content = '';
         if (!empty($this->redirect_after)) {
-
             $content .= '';
         } else {
             // Call original display method
-            $content .= $this->display();
+            ob_start();
+            $this->display();
+            $displayOutput = ob_get_clean();
+            if (empty($displayOutput) && isset($this->outPutHtml)) {
+                $displayOutput = $this->outPutHtml;
+            }
+
+            $content .= $displayOutput;
             $this->profiler->stamp('display');
         }
 
@@ -106,8 +110,18 @@ abstract class Controller extends ControllerCore
             $this->profiler->getSmartyVariables()
         );
 
-        $content .= $this->context->smarty->fetch(__DIR__ . '/templates/profiling.tpl');
+        if (strpos($content, '{$content}') === false) {
+            return str_replace(
+                '</html>',
+                $this->context->smarty->fetch(__DIR__ . '/templates/profiling.tpl') . '</html>',
+                $content
+            );
+        }
 
-        return $content;
+        $this->outPutHtml = str_replace(
+            '{$content}',
+            '{$content}' . $this->context->smarty->fetch(__DIR__ . '/templates/profiling.tpl'),
+            $content
+        );
     }
 }
