@@ -27,7 +27,7 @@
         Memory Peak Usage
       </td>
       <td>
-        {peak_memory data=$summary.peakMemoryUsage} Mb
+        {peak_memory data=$summary.peakMemoryUsage}
       </td>
     </tr>
     <tr>
@@ -35,7 +35,7 @@
         Included Files
       </td>
       <td>
-        {$summary.includedFiles} files - {memory data=$summary.totalFileSize} Mb
+        {$summary.includedFiles} files - {memory data=$summary.totalFileSize}
       </td>
     </tr>
     <tr>
@@ -43,15 +43,15 @@
         PrestaShop Cache
       </td>
       <td>
-        {memory data=$summary.totalCacheSize} Mb
+        {memory data=$summary.totalCacheSize}
       </td>
     </tr>
     <tr>
       <td>
-        <a href="javascript:void(0);" onclick="$(\'.global_vars_detail\').toggle();">Global vars</a>
+        <a href="javascript:void(0);" onclick="$('.global_vars_detail').toggle();">Global vars</a>
       </td>
       <td>
-        {memory data=$summary.totalGlobalVarSize} Mb
+        {memory data=$summary.totalGlobalVarSize}
       </td>
     </tr>
 

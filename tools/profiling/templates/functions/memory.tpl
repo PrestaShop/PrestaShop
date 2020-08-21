@@ -1,4 +1,5 @@
 {function name=memory}
+  {$data = round($data / 1048576, 2)}
   {if $data > 3}
     <span class="danger">{$data|string_format:"%0.2f"}</span>
   {elseif $data > 1}
@@ -8,4 +9,5 @@
   {else}
     <span class="success">-</span>
   {/if}
+  Mb
 {/function}

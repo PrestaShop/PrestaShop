@@ -28,7 +28,7 @@ class Module extends ModuleCore
     protected static function coreLoadModule($moduleName)
     {
         $timeStart = microtime(true);
-        $memoryStart = memory_get_usage(true);
+        $memoryStart = memory_get_usage();
 
         $result = parent::coreLoadModule($moduleName);
 
@@ -37,7 +37,7 @@ class Module extends ModuleCore
                 'module' => $moduleName,
                 'method' => '__construct',
                 'time' => microtime(true) - $timeStart,
-                'memory' => memory_get_usage(true) - $memoryStart,
+                'memory' => memory_get_usage() - $memoryStart,
             ]
         );
 
