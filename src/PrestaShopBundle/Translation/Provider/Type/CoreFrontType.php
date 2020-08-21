@@ -34,22 +34,22 @@ namespace PrestaShopBundle\Translation\Provider\Type;
 class CoreFrontType extends AbstractCoreType
 {
     /**
-     * @return array|string[]
+     * {@inheritdoc}
      */
     public function getFilenameFilters(): array
     {
         return [
-            '#^Shop*#',
+            '#^Shop[A-Z]#',
         ];
     }
 
     /**
-     * @return array|string[]
+     * {@inheritdoc}
      */
     public function getTranslationDomains(): array
     {
         return [
-            '^Shop*',
+            '^Shop[A-Z]',
         ];
     }
 }

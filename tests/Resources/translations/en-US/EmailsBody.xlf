@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="classes/PaymentModule.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="44aa13304026bb46ad79f4151f16634a">
+        <source>(waiting for validation)</source>
+        <target>(waiting for validation)</target>
+        <note>Line: 630</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/components/footer.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="96dad7f0d711c3408786ba1ee05402b3">
+        <source><![CDATA[<a href="{shop_url}">{shop_name}</a> powered by <a href="{prestashop_url}">PrestaShop™</a>]]></source>
+        <target><![CDATA[<a href="{shop_url}">{shop_name}</a> powered by <a href="{prestashop_url}">PrestaShop™</a>]]></target>
+        <note>Line: 6</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/account.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2498c963bfc06e8fca88007ec322b769">
+        <source>Your login email address on {shop_name}</source>
+        <target>Your login email address on {shop_name}</target>
+        <note>Line: 25</note>
+      </trans-unit>
+      <trans-unit id="7cfb9d536fcd7aa70c333e8e73b287e2">
+        <source>Here is your login email address:</source>
+        <target>Here is your login email address:</target>
+        <note>Line: 30</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/backoffice_order.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="bffeb374bf71938ffc4faa42afbf1679">
+        <source><![CDATA[Please go on <a href="{order_link}">{order_link}</a> to finalize the payment.]]></source>
+        <target><![CDATA[Please go on <a href="{order_link}">{order_link}</a> to finalize the payment.]]></target>
+        <note>Line: 25</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/bankwire.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9b33ea5c9409a67cb6e1f6bc3f0828f0">
+        <source>Awaiting wire payment</source>
+        <target>Awaiting wire payment</target>
+        <note>Line: 25</note>
+      </trans-unit>
+      <trans-unit id="f4a6af01d092af11dca29cb89578b124">
+        <source>You have selected to pay by wire transfer.</source>
+        <target>You have selected to pay by wire transfer.</target>
+        <note>Line: 50</note>
+      </trans-unit>
+      <trans-unit id="fc1ae3c1dd1d9d9a44da719fa9966f0e">
+        <source>Here are the bank details for your transfer:</source>
+        <target>Here are the bank details for your transfer:</target>
+        <note>Line: 53</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/cheque.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a51341e25ff7710496cf86468d797169">
+        <source><![CDATA[If you have a guest account, you can follow your order via the <a href="{guest_tracking_url}">"Guest Tracking"</a> section on our shop.]]></source>
+        <target><![CDATA[If you have a guest account, you can follow your order via the <a href="{guest_tracking_url}">"Guest Tracking"</a> section on our shop.]]></target>
+        <note>Line: 87</note>
+      </trans-unit>
+      <trans-unit id="d698e777b19f6f487ae0490950174fde">
+        <source>Awaiting check payment</source>
+        <target>Awaiting check payment</target>
+        <note>Line: 25</note>
+      </trans-unit>
+      <trans-unit id="ecf01c46965fdfd36eb98b271276c0d5">
+        <source>You have selected to pay by check.</source>
+        <target>You have selected to pay by check.</target>
+        <note>Line: 50</note>
+      </trans-unit>
+      <trans-unit id="b6592595266708e46d1d420ab7153213">
+        <source>Here are the bank details for your check:</source>
+        <target>Here are the bank details for your check:</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="ed750ed3b775eb7ed37644ceb05c713b">
+        <source>Your order with the reference [1]{order_name}[/1] has been placed successfully and will be [1]shipped as soon as we receive your payment[/1].</source>
+        <target>Your order with the reference [1]{order_name}[/1] has been placed successfully and will be [1]shipped as soon as we receive your payment[/1].</target>
+        <note>Line: 30</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/contact.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="31e15b28c2f071f74f47eb8bcd612d94">
+        <source>Customer e-mail address:</source>
+        <target>Customer e-mail address:</target>
+        <note>Line: 22</note>
+      </trans-unit>
+      <trans-unit id="83fa39a28a4d159061c408fbd6a249e7">
+        <source>Order ID:</source>
+        <target>Order ID:</target>
+        <note>Line: 24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/contact_form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1edbec13a38606f19c0bae544a7c6552">
+        <source>Your message to {shop_name} Customer Service</source>
+        <target>Your message to {shop_name} Customer Service</target>
+        <note>Line: 7</note>
+      </trans-unit>
+      <trans-unit id="e92ba0cecb0593f537515b2aa2d1c701">
+        <source>Your message has been sent successfully.</source>
+        <target>Your message has been sent successfully.</target>
+        <note>Line: 22</note>
+      </trans-unit>
+      <trans-unit id="76890cf906149b370ea6f7d1bd8eaf9a">
+        <source>We will answer as soon as possible.</source>
+        <target>We will answer as soon as possible.</target>
+        <note>Line: 41</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/credit_slip.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="72dbe899c04eb3875b29b5b274340dac">
+        <source>Credit slip created</source>
+        <target>Credit slip created</target>
+        <note>Line: 24</note>
+      </trans-unit>
+      <trans-unit id="99f89e9a116e1c07f62ba17fb0312db6">
+        <source><![CDATA[You can review this credit slip and download your invoice from the <a href="{history_url}">"My credit slips"</a> section of your account by clicking <a href="{my_account_url}">"My account"</a> on our shop.]]></source>
+        <target><![CDATA[You can review this credit slip and download your invoice from the <a href="{history_url}">"My credit slips"</a> section of your account by clicking <a href="{my_account_url}">"My account"</a> on our shop.]]></target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="4c15700279d273ce67d98810a4b87943">
+        <source>We have generated a credit slip in your name for order with the reference [1]{order_name}[/1].</source>
+        <target>We have generated a credit slip in your name for order with the reference [1]{order_name}[/1].</target>
+        <note>Line: 29</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/download_product.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5f55a607fea61a402ceac66cc99f1e9e">
+        <source><![CDATA[Thank you for your order with the reference {order_name} from <strong>{shop_name}</strong>]]></source>
+        <target><![CDATA[Thank you for your order with the reference {order_name} from <strong>{shop_name}</strong>]]></target>
+        <note>Line: 8</note>
+      </trans-unit>
+      <trans-unit id="30acb55a5efc4a32a30a0c3db85f37d1">
+        <source>Product(s) now available for download</source>
+        <target>Product(s) now available for download</target>
+        <note>Line: 25</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -34,18 +34,18 @@ namespace PrestaShopBundle\Translation\Provider\Type;
 class OthersType extends AbstractCoreType
 {
     /**
-     * @return array|string[]
+     * {@inheritdoc}
      */
     public function getFilenameFilters(): array
     {
-        return ['#^messages*#'];
+        return ['#^messages\.#'];
     }
 
     /**
-     * @return array|string[]
+     * {@inheritdoc}
      */
     public function getTranslationDomains(): array
     {
-        return ['^messages*'];
+        return ['^messages$'];
     }
 }
