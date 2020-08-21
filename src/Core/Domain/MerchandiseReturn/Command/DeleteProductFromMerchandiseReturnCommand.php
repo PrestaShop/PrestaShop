@@ -26,32 +26,44 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command;
 
-class MissingMerchandiseReturnRequiredFieldsException extends MerchandiseReturnException
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnId;
+
+/**
+ * Deletes product from given order.
+ */
+class DeleteProductFromMerchandiseReturnCommand
 {
     /**
-     * @var array
+     * @var MerchandiseReturnId
      */
-    private $missingFields;
+    private $merchandiseReturnId;
 
     /**
-     * @param array $missingFields
-     * @param string $message
-     * @param int $code
-     * @param \Exception|null $previous
+     * @var int
      */
-    public function __construct(array $missingFields, $message = '', $code = 0, $previous = null)
+    private $merchandiseReturnDetailId;
+
+    public function __construct(int $merchandiseReturnId, int $merchandiseReturnDetailId)
     {
-        parent::__construct($message, $code, $previous);
-        $this->missingFields = $missingFields;
+        $this->merchandiseReturnId = new MerchandiseReturnId($merchandiseReturnId);
+        $this->merchandiseReturnDetailId = $merchandiseReturnDetailId;
     }
 
     /**
-     * @return array
+     * @return int
      */
-    public function getMissingFields(): array
+    public function getMerchandiseReturnId(): MerchandiseReturnId
     {
-        return $this->missingFields;
+        return $this->merchandiseReturnId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMerchandiseReturnDetailId(): int
+    {
+        return $this->merchandiseReturnDetailId;
     }
 }
