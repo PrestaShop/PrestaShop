@@ -189,7 +189,5 @@ class AdminLegacyLayoutControllerCore extends AdminController
         parent::display();
         $this->outPutHtml = ob_get_contents();
         ob_end_clean();
-
-        $this->outPutHtml;
     }
 }
