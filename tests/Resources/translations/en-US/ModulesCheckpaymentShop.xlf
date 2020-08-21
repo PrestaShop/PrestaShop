@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_checkpayment/controllers/front/validation.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e2b7dec8fa4b498156dfee6e4c84b156">
+        <source>This payment method is not available.</source>
+        <target>This payment method is not available.</target>
+        <note>Line: 50</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_checkpayment/views/templates/front/payment_infos.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="84a25ff3edb86f9b9fd4f6238cd54e51">
+        <source>Please send us your check following these rules:</source>
+        <target>Please send us your check following these rules:</target>
+        <note>Line: 27</note>
+      </trans-unit>
+      <trans-unit id="b2f40690858b404ed10e62bdf422c704">
+        <source>Amount</source>
+        <target>Amount</target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="961c4d5afb146e7ad1dba22951450e3c">
+        <source>Payee</source>
+        <target>Payee</target>
+        <note>Line: 31</note>
+      </trans-unit>
+      <trans-unit id="a0335a127854df8e1138f1a42151f484">
+        <source>Send your check to this address</source>
+        <target>Send your check to this address</target>
+        <note>Line: 33</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_checkpayment/views/templates/hook/payment.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4b80fae2153218ed763bdadc418e8589">
+        <source>Pay by check</source>
+        <target>Pay by check</target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="4e1fb9f4b46556d64db55d50629ee301">
+        <source>(order processing will be longer)</source>
+        <target>(order processing will be longer)</target>
+        <note>Line: 29</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_checkpayment/views/templates/hook/payment_return.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="88526efe38fd18179a127024aba8c1d7">
+        <source>Your order on %s is complete.</source>
+        <target>Your order on %s is complete.</target>
+        <note>Line: 27</note>
+      </trans-unit>
+      <trans-unit id="61da27a5dd1f8ced46c77b0feaa9e159">
+        <source>Your check must include:</source>
+        <target>Your check must include:</target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="621455d95c5de701e05900a98aaa9c66">
+        <source>Payment amount.</source>
+        <target>Payment amount.</target>
+        <note>Line: 30</note>
+      </trans-unit>
+      <trans-unit id="9b8f932b1412d130ece5045ecafd1b42">
+        <source>Payable to the order of</source>
+        <target>Payable to the order of</target>
+        <note>Line: 31</note>
+      </trans-unit>
+      <trans-unit id="9a94f1d749a3de5d299674d6c685e416">
+        <source>Mail to</source>
+        <target>Mail to</target>
+        <note>Line: 32</note>
+      </trans-unit>
+      <trans-unit id="e1c54fdba2544646684f41ace03b5fda">
+        <source>Do not forget to insert your order number #%d.</source>
+        <target>Do not forget to insert your order number #%d.</target>
+        <note>Line: 34</note>
+      </trans-unit>
+      <trans-unit id="4761b03b53bc2b3bd948bb7443a26f31">
+        <source>Do not forget to insert your order reference %s.</source>
+        <target>Do not forget to insert your order reference %s.</target>
+        <note>Line: 36</note>
+      </trans-unit>
+      <trans-unit id="610abe74e72f00210e3dcb91a0a3f717">
+        <source>An email has been sent to you with this information.</source>
+        <target>An email has been sent to you with this information.</target>
+        <note>Line: 38</note>
+      </trans-unit>
+      <trans-unit id="ffd2478830ca2f519f7fe7ee259d4b96">
+        <source>Your order will be sent as soon as we receive your payment.</source>
+        <target>Your order will be sent as soon as we receive your payment.</target>
+        <note>Line: 39</note>
+      </trans-unit>
+      <trans-unit id="0db71da7150c27142eef9d22b843b4a9">
+        <source>For any questions or for further information, please contact our</source>
+        <target>For any questions or for further information, please contact our</target>
+        <note>Line: 40</note>
+      </trans-unit>
+      <trans-unit id="decce112a9e64363c997b04aa71b7cb8">
+        <source>customer service department.</source>
+        <target>customer service department.</target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="9bdf695c5a30784327137011da6ef568">
+        <source>We have noticed that there is a problem with your order. If you think this is an error, you can contact our</source>
+        <target>We have noticed that there is a problem with your order. If you think this is an error, you can contact our</target>
+        <note>Line: 44</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
