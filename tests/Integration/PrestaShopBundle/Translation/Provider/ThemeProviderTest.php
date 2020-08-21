@@ -33,9 +33,9 @@ use PrestaShopBundle\Translation\Extractor\ThemeExtractorCache;
 use PrestaShopBundle\Translation\Extractor\ThemeExtractorInterface;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationReader;
 use PrestaShopBundle\Translation\Provider\Catalogue\TranslationCatalogueProviderInterface;
-use PrestaShopBundle\Translation\Provider\FrontProvider;
+use PrestaShopBundle\Translation\Provider\CoreProvider;
 use PrestaShopBundle\Translation\Provider\ThemeProvider;
-use PrestaShopBundle\Translation\Provider\Type\FrontType;
+use PrestaShopBundle\Translation\Provider\Type\CoreFrontType;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -72,7 +72,7 @@ class ThemeProviderTest extends KernelTestCase
     private $filesystem;
 
     /**
-     * @var FrontProvider
+     * @var CoreProvider
      */
     private $frontProvider;
 
@@ -89,8 +89,8 @@ class ThemeProviderTest extends KernelTestCase
         $this->cacheDir = $this->container->getParameter('themes_translations_dir');
         $this->configDir = $this->container->getParameter('kernel.cache_dir') . '/themes-config/';
         $this->filesystem = $this->container->get('filesystem');
-        $this->frontProvider = $this->container->get('prestashop.translation.provider.factory.front')->build(
-            new FrontType()
+        $this->frontProvider = $this->container->get('prestashop.translation.provider.factory.core')->build(
+            new CoreFrontType()
         );
         $databaseContent = [
             [
@@ -124,7 +124,7 @@ class ThemeProviderTest extends KernelTestCase
     /**
      * Test it loads a XLIFF catalogue from the theme's `translations` directory
      */
-    public function xtestItLoadsCatalogueFromXliffFilesInThemeDirectory()
+    public function testItLoadsCatalogueFromTranslationFilesInThemeDirectory()
     {
         $provider = new ThemeProvider(
             $this->frontProvider,

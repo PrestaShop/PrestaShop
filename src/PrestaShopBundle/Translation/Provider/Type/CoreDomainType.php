@@ -47,7 +47,7 @@ class CoreDomainType extends AbstractCoreType
     }
 
     /**
-     * @return array|string[]
+     * {@inheritdoc}
      */
     public function getFilenameFilters(): array
     {
@@ -55,7 +55,7 @@ class CoreDomainType extends AbstractCoreType
     }
 
     /**
-     * @return array|string[]
+     * {@inheritdoc}
      */
     public function getTranslationDomains(): array
     {

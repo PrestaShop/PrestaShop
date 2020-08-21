@@ -330,6 +330,8 @@ class ModulesProvider implements ProviderInterface
      */
     private function getDefaultModuleDirectory()
     {
+        return $this->translationsDirectory;
+
         return implode(DIRECTORY_SEPARATOR, [
             $this->translationsDirectory,
             $this->moduleName,

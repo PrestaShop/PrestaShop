@@ -370,38 +370,6 @@ class ContextCore
     }
 
     /**
-     * Returns TranslationService instance from Symfony Container
-     *
-     * @return \PrestaShopBundle\Service\TranslationService|null
-     */
-    public function getTranslationService()
-    {
-        $sfContainer = SymfonyContainer::getInstance();
-
-        if (null === $sfContainer) {
-            return null;
-        }
-
-        return $sfContainer->get('prestashop.service.translation');
-    }
-
-    /**
-     * Returns translations ProviderFactory instance from Symfony Container
-     *
-     * @return \PrestaShopBundle\Translation\Provider\Factory\ProviderFactory|null
-     */
-    public function getTranslationProviderFactory()
-    {
-        $sfContainer = SymfonyContainer::getInstance();
-
-        if (null === $sfContainer) {
-            return null;
-        }
-
-        return $sfContainer->get('prestashop.translation.provider_factory');
-    }
-
-    /**
      * Returns a translator depending on service container availability and if the method
      * is called by the installer or not.
      *

@@ -60,8 +60,8 @@ class CoreProvider implements ProviderInterface
     /**
      * @param DatabaseTranslationReader $databaseReader
      * @param string $resourceDirectory
-     * @param array $filenameFilters
-     * @param array $translationDomains
+     * @param string[] $filenameFilters
+     * @param string[] $translationDomains
      */
     public function __construct(
         DatabaseTranslationReader $databaseReader,

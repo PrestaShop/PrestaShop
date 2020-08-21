@@ -34,18 +34,18 @@ namespace PrestaShopBundle\Translation\Provider\Type;
 class MailsBodyType extends AbstractCoreType
 {
     /**
-     * @return array|string[]
+     * {@inheritdoc}
      */
     public function getFilenameFilters(): array
     {
-        return ['#EmailsBody*#'];
+        return ['#^EmailsBody\.#'];
     }
 
     /**
-     * @return array|string[]
+     * {@inheritdoc}
      */
     public function getTranslationDomains(): array
     {
-        return ['EmailsBody*'];
+        return ['^EmailsBody$'];
     }
 }
