@@ -91,60 +91,14 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
         $customizationQuantities = Customization::countQuantityByCart($cartId);
         $orderDetails = $this->getOrderDetails($command);
 
-        // check cancel quantity for regular product is valid
-        if (!empty($orderDetails['productsOrderDetails'])) {
-            foreach ($orderDetails['productsOrderDetails'] as $orderDetail) {
-                $customizationQuantity = 0;
-                $cancelQuantity = $orderDetails['productCancelQuantity'][$orderDetail->id_order_detail];
-                if (array_key_exists($orderDetail->product_id, $customizationQuantities) && array_key_exists($orderDetail->product_attribute_id, $customizationQuantities[$orderDetail->product_id])) {
-                    $customizationQuantity = (int) $customizationQuantities[$orderDetail->product_id][$orderDetail->product_attribute_id];
-                }
-                $cancellableQuantity = $orderDetail->product_quantity - $customizationQuantity - $orderDetail->product_quantity_refunded - $orderDetail->product_quantity_return;
-                if ($cancellableQuantity < $cancelQuantity) {
-                    throw new InvalidCancelProductException(InvalidCancelProductException::QUANTITY_TOO_HIGH, $cancellableQuantity);
-                }
-            }
-        }
+        // check quantity of cancelled products versus cancellable quantities
+        $this->checkRegularProductCancelQuantity($orderDetails, $customizationQuantities);
+        $this->checkCustomizedProductsCancelQuantity($orderDetails);
 
-        // check cancel quantity for customized product is valid
-        if (!empty($orderDetails['customizedProductsOrderDetail'])) {
-            $customizationList = [];
-            foreach ($orderDetails['customizedProductsOrderDetail'] as $orderDetail) {
-                $customizationList[$orderDetail->id_customization] = $orderDetail->id_order_detail;
-            }
-            $customization_quantities = Customization::retrieveQuantitiesFromIds(array_keys($customizationList));
-            foreach ($customizationList as $id_customization => $id_order_detail) {
-                $qtyCancelProduct = abs($orderDetails['customizedCancelQuantity'][$id_customization]);
-                $customization_quantity = $customization_quantities[$id_customization];
-                if (!$qtyCancelProduct) {
-                    throw new InvalidCancelProductException(InvalidCancelProductException::INVALID_QUANTITY);
-                }
-                $cancellableQuantity = $customization_quantity['quantity'] - ($customization_quantity['quantity_refunded'] + $customization_quantity['quantity_returned']);
+        // cancel products
+        $this->cancelRegularProducts($order, $orderDetails);
+        $this->cancelCustomizedProducts($order, $orderDetails);
 
-                if ($qtyCancelProduct > $cancellableQuantity) {
-                    throw new InvalidCancelProductException(InvalidCancelProductException::QUANTITY_TOO_HIGH, $cancellableQuantity);
-                }
-            }
-        }
-
-        if (!empty($orderDetails['productsOrderDetails'])) {
-            foreach ($orderDetails['productsOrderDetails'] as $orderDetail) {
-                $qty_cancel_product = $orderDetails['productCancelQuantity'][$orderDetail->id_order_detail];
-                $newQuantity = max((int) $orderDetail->product_quantity - (int) $qty_cancel_product, 0);
-                $orderInvoice = $orderDetail->id_order_invoice != 0 ? new OrderInvoice($orderDetail->id_order_invoice) : null;
-                $this->orderProductQuantityUpdater->update($order, $orderDetail, $newQuantity, $orderInvoice);
-                Hook::exec('actionProductCancel', ['order' => $order, 'id_order_detail' => (int) $orderDetail->id_order_detail], null, false, true, false, $order->id_shop);
-            }
-        }
-        if (!empty($orderDetails['customizedProductsOrderDetail'])) {
-            foreach ($orderDetails['customizedProductsOrderDetail'] as $orderDetail) {
-                $qtyCancelProduct = abs($orderDetails['customizedCancelQuantity'][$orderDetail->id_customization]);
-                $newQuantity = max((int) $orderDetail->product_quantity - (int) $qtyCancelProduct, 0);
-                $orderInvoice = $orderDetail->id_order_invoice != 0 ? new OrderInvoice($orderDetail->id_order_invoice) : null;
-                $this->orderProductQuantityUpdater->update($order, $orderDetail, $newQuantity, $orderInvoice);
-                Hook::exec('actionProductCancel', ['order' => $order, 'id_order_detail' => (int) $orderDetail->id_order_detail], null, false, true, false, $order->id_shop);
-            }
-        }
         if (empty($order->getOrderDetailList())) {
             $this->cancelOrder($order);
         }
@@ -218,6 +172,95 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
                     'Admin.Orderscustomers.Notification'
                 )
             );
+        }
+    }
+
+    /**
+     * @param array $orderDetails
+     * @param array $customizationQuantities
+     * @throws InvalidCancelProductException
+     */
+    private function checkRegularProductCancelQuantity(array $orderDetails, array $customizationQuantities)
+    {
+        if (!empty($orderDetails['productsOrderDetails'])) {
+            foreach ($orderDetails['productsOrderDetails'] as $orderDetail) {
+                $customizationQuantity = 0;
+                $cancelQuantity = $orderDetails['productCancelQuantity'][$orderDetail->id_order_detail];
+                if (array_key_exists($orderDetail->product_id, $customizationQuantities) && array_key_exists($orderDetail->product_attribute_id, $customizationQuantities[$orderDetail->product_id])) {
+                    $customizationQuantity = (int) $customizationQuantities[$orderDetail->product_id][$orderDetail->product_attribute_id];
+                }
+                $cancellableQuantity = $orderDetail->product_quantity - $customizationQuantity - $orderDetail->product_quantity_refunded - $orderDetail->product_quantity_return;
+                if ($cancellableQuantity < $cancelQuantity) {
+                    throw new InvalidCancelProductException(InvalidCancelProductException::QUANTITY_TOO_HIGH, $cancellableQuantity);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param array $orderDetails
+     * @throws InvalidCancelProductException
+     */
+    private function checkCustomizedProductsCancelQuantity(array $orderDetails)
+    {
+        if (!empty($orderDetails['customizedProductsOrderDetail'])) {
+            $customizationList = [];
+            foreach ($orderDetails['customizedProductsOrderDetail'] as $orderDetail) {
+                $customizationList[$orderDetail->id_customization] = $orderDetail->id_order_detail;
+            }
+            $customization_quantities = Customization::retrieveQuantitiesFromIds(array_keys($customizationList));
+            foreach ($customizationList as $id_customization => $id_order_detail) {
+                $qtyCancelProduct = abs($orderDetails['customizedCancelQuantity'][$id_customization]);
+                $customization_quantity = $customization_quantities[$id_customization];
+                if (!$qtyCancelProduct) {
+                    throw new InvalidCancelProductException(InvalidCancelProductException::INVALID_QUANTITY);
+                }
+                $cancellableQuantity = $customization_quantity['quantity'] - ($customization_quantity['quantity_refunded'] + $customization_quantity['quantity_returned']);
+
+                if ($qtyCancelProduct > $cancellableQuantity) {
+                    throw new InvalidCancelProductException(InvalidCancelProductException::QUANTITY_TOO_HIGH, $cancellableQuantity);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param Order $order
+     * @param array $orderDetails
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     * @throws \PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException
+     */
+    private function cancelRegularProducts(Order $order, array $orderDetails)
+    {
+        if (!empty($orderDetails['productsOrderDetails'])) {
+            foreach ($orderDetails['productsOrderDetails'] as $orderDetail) {
+                $qty_cancel_product = $orderDetails['productCancelQuantity'][$orderDetail->id_order_detail];
+                $newQuantity = max((int) $orderDetail->product_quantity - (int) $qty_cancel_product, 0);
+                $orderInvoice = $orderDetail->id_order_invoice != 0 ? new OrderInvoice($orderDetail->id_order_invoice) : null;
+                $this->orderProductQuantityUpdater->update($order, $orderDetail, $newQuantity, $orderInvoice);
+                Hook::exec('actionProductCancel', ['order' => $order, 'id_order_detail' => (int) $orderDetail->id_order_detail], null, false, true, false, $order->id_shop);
+            }
+        }
+    }
+
+    /**
+     * @param Order $order
+     * @param array $orderDetails
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     * @throws \PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException
+     */
+    private function cancelCustomizedProducts(Order $order, array $orderDetails)
+    {
+        if (!empty($orderDetails['customizedProductsOrderDetail'])) {
+            foreach ($orderDetails['customizedProductsOrderDetail'] as $orderDetail) {
+                $qtyCancelProduct = abs($orderDetails['customizedCancelQuantity'][$orderDetail->id_customization]);
+                $newQuantity = max((int) $orderDetail->product_quantity - (int) $qtyCancelProduct, 0);
+                $orderInvoice = $orderDetail->id_order_invoice != 0 ? new OrderInvoice($orderDetail->id_order_invoice) : null;
+                $this->orderProductQuantityUpdater->update($order, $orderDetail, $newQuantity, $orderInvoice);
+                Hook::exec('actionProductCancel', ['order' => $order, 'id_order_detail' => (int) $orderDetail->id_order_detail], null, false, true, false, $order->id_shop);
+            }
         }
     }
 }
