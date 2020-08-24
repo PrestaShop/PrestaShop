@@ -172,6 +172,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
 
     /**
      * @param array $orderDetails
+     *
      * @throws InvalidCancelProductException
      */
     private function checkProductCancelQuantities(array $orderDetails, array $customizationQuantities)
@@ -215,6 +216,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
     /**
      * @param Order $order
      * @param array $orderDetails
+     *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      * @throws \PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException
