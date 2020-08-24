@@ -94,7 +94,12 @@ abstract class Controller extends ControllerCore
     {
         $content = '';
         if (!empty($this->redirect_after)) {
-            $content .= '';
+            $this->context->smarty->assign(
+                [
+                    'redirectAfter' => $this->redirect_after,
+                ]
+            );
+            $content .= $this->context->smarty->fetch(__DIR__ . '/templates/redirect.tpl');
         } else {
             // Call original display method
             ob_start();
