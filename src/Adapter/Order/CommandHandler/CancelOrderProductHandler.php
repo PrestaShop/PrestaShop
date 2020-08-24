@@ -177,6 +177,9 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
      */
     private function checkProductCancelQuantities(array $orderDetails, array $customizationQuantities)
     {
+        if (empty($orderDetails['productsOrderDetails'])) {
+            throw new InvalidCancelProductException(InvalidCancelProductException::INVALID_QUANTITY, 0);
+        }
         $customizationList = [];
         foreach ($orderDetails['productsOrderDetails'] as $orderDetail) {
             // check non customized product quantities
@@ -194,6 +197,10 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
             }
             // get list of customizations
             $customizationList[$orderDetail->id_customization] = $orderDetail->id_order_detail;
+        }
+
+        if (empty($customizationList)) {
+            return;
         }
 
         $customization_quantities = Customization::retrieveQuantitiesFromIds(array_keys($customizationList));
