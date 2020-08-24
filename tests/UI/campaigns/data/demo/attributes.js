@@ -9,6 +9,7 @@ module.exports = {
         large: 'L',
         xLarge: 'XL',
       },
+      position: 1,
     },
     color: {
       id: 2,
@@ -29,6 +30,7 @@ module.exports = {
         brown: 'Brown',
         pink: 'Pink',
       },
+      position: 2,
     },
     dimension: {
       id: 3,
@@ -38,6 +40,7 @@ module.exports = {
         second: '60*90cm',
         third: '80*120cm',
       },
+      position: 3,
     },
     paperType: {
       id: 4,
@@ -48,6 +51,7 @@ module.exports = {
         squarred: 'Squarred',
         doted: 'Doted',
       },
+      position: 4,
       displayed: true,
     },
   },
