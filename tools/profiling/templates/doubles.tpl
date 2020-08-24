@@ -5,7 +5,7 @@
 
   <table class="table table-condensed">
     {foreach $doublesQueries as $q => $nb}
-      {if ($nb > 1)}
+      {if $nb > 1}
         <tr>
           <td>
             {sql_queries data=$nb}
