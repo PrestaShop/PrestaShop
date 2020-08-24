@@ -120,7 +120,7 @@ class ModulesProvider implements ProviderInterface
     {
         try {
             $defaultCatalogue = (new DefaultCatalogueProvider(
-                $this->translationsDirectory,
+                sprintf('%s%s%s', $this->translationsDirectory, DIRECTORY_SEPARATOR, $locale),
                 $this->getFilenameFilters()
             ))
                 ->getCatalogue($locale, $empty);
@@ -200,7 +200,10 @@ class ModulesProvider implements ProviderInterface
             foreach (array_keys($items) as $translationKey) {
                 $legacyKey = md5($translationKey);
 
-                if ($catalogueFromLegacyTranslationFiles->has($legacyKey, $currentDomain)) {
+                if (
+                    null !== $catalogueFromLegacyTranslationFiles &&
+                    $catalogueFromLegacyTranslationFiles->has($legacyKey, $currentDomain)
+                ) {
                     $legacyFilesCatalogue->set(
                         $translationKey,
                         $catalogueFromLegacyTranslationFiles->get($legacyKey, $currentDomain),
@@ -303,9 +306,7 @@ class ModulesProvider implements ProviderInterface
      */
     private function getFilenameFilters(): array
     {
-        $filters = ['#^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|$)#'];
-
-        return $filters;
+        return ['#^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|$)#'];
     }
 
     /**

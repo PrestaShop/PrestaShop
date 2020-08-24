@@ -52,11 +52,11 @@ class DefaultCatalogueProviderTest extends TestCase
     ];
 
     private static $emptyWordings = [
-        'ShopSomeDomain' => [
+        'ShopSomeDomain.en-US' => [
             'Some wording' => '',
             'Some other wording' => '',
         ],
-        'ShopSomethingElse' => [
+        'ShopSomethingElse.en-US' => [
             'Foo' => '',
             'Bar' => '',
         ],
@@ -119,9 +119,9 @@ class DefaultCatalogueProviderTest extends TestCase
         $catalogue = $provider->getCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE);
 
         $messages = $catalogue->all();
-        sort($messages);
-
-        $this->assertSame(array_values(self::$wordings), $messages);
+        foreach (self::$wordings as $key => $value) {
+            $this->assertSame($value, $messages[$key]);
+        }
     }
 
     public function testGetCatalogueEmpty()
@@ -131,12 +131,12 @@ class DefaultCatalogueProviderTest extends TestCase
             ['#^Shop([A-Z]|\.|$)#']
         );
 
-        $catalogue = $provider->getCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE, true);
+        $catalogue = $provider->getCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE, false);
 
         $messages = $catalogue->all();
-        sort($messages);
-
-        $this->assertSame(array_values(self::$wordings), $messages);
+        foreach (self::$wordings as $key => $value) {
+            $this->assertSame($value, $messages[$key]);
+        }
 
         $provider = new DefaultCatalogueProvider(
             self::$tempDir,
@@ -146,8 +146,8 @@ class DefaultCatalogueProviderTest extends TestCase
         $catalogue = $provider->getCatalogue('ab-AB', true);
 
         $messages = $catalogue->all();
-        sort($messages);
+        ksort($messages);
 
-        $this->assertSame(array_values(self::$emptyWordings), $messages);
+        $this->assertSame(self::$emptyWordings, $messages);
     }
 }
