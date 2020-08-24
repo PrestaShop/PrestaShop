@@ -1,5 +1,6 @@
 <style>
   #prestashop-profiling {
+    max-width: 100%;
     padding: 20px;
   }
 
