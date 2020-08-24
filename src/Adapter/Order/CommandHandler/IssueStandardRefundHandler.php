@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Context;
+use Hook;
 use Order;
 use OrderCarrier;
 use PrestaShop\Decimal\Number;
@@ -132,6 +133,7 @@ class IssueStandardRefundHandler extends AbstractOrderCommandHandler implements 
             $orderDetail = $orderRefundSummary->getOrderDetailById($orderDetailId);
             // For standard refund the order is necessarily NOT delivered yet, so reinjection is automatic
             $this->reinjectQuantity($orderDetail, $productRefund['quantity']);
+            Hook::exec('actionProductCancel', ['order' => $order, 'id_order_detail' => (int) $orderDetailId], null, false, true, false, $order->id_shop);
         }
 
         // Update order carrier weight
