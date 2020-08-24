@@ -125,7 +125,7 @@ class ModulesProvider implements ProviderInterface
     {
         try {
             $defaultCatalogue = (new DefaultCatalogueProvider(
-                $this->translationsDirectory,
+                $this->translationsDirectory . DIRECTORY_SEPARATOR . $locale,
                 $this->getFilenameFilters()
             ))
                 ->getCatalogue($locale, $empty);
@@ -149,7 +149,7 @@ class ModulesProvider implements ProviderInterface
     {
         try {
             return (new FileTranslatedCatalogueProvider(
-                $this->getDefaultModuleDirectory(),
+                $this->translationsDirectory,
                 $this->getFilenameFilters()
             ))
                 ->getCatalogue($locale);
@@ -197,7 +197,7 @@ class ModulesProvider implements ProviderInterface
                 $locale
             );
         } catch (UnsupportedLocaleException $exception) {
-            // this happens when there no translation file is found for the desired locale
+            // this happens when there is no translation file found for the desired locale
             return $catalogueFromPhpAndSmartyFiles;
         }
 
@@ -266,7 +266,7 @@ class ModulesProvider implements ProviderInterface
         try {
             // look up files in the core translations
             $defaultCatalogue = (new DefaultCatalogueProvider(
-                $this->getDefaultModuleDirectory() . DIRECTORY_SEPARATOR . 'default',
+                $this->translationsDirectory . DIRECTORY_SEPARATOR . 'default',
                 $this->getFilenameFilters()
             ))
                 ->getCatalogue($locale);
@@ -308,9 +308,7 @@ class ModulesProvider implements ProviderInterface
      */
     private function getFilenameFilters(): array
     {
-        $filters = ['#^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|$)#'];
-
-        return $filters;
+        return ['#^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|$)#'];
     }
 
     /**
@@ -320,20 +318,6 @@ class ModulesProvider implements ProviderInterface
     {
         return implode(DIRECTORY_SEPARATOR, [
             $this->modulesDirectory,
-            $this->moduleName,
-            'translations',
-        ]) . DIRECTORY_SEPARATOR;
-    }
-
-    /**
-     * @return string
-     */
-    private function getDefaultModuleDirectory()
-    {
-        return $this->translationsDirectory;
-
-        return implode(DIRECTORY_SEPARATOR, [
-            $this->translationsDirectory,
             $this->moduleName,
             'translations',
         ]) . DIRECTORY_SEPARATOR;

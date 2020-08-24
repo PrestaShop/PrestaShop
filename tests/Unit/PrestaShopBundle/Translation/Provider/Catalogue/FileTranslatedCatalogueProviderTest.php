@@ -122,8 +122,8 @@ class FileTranslatedCatalogueProviderTest extends TestCase
         $catalogue = $provider->getCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE);
 
         $messages = $catalogue->all();
-        sort($messages);
+        ksort($messages);
 
-        $this->assertSame(array_values($expectedWordings), $messages);
+        $this->assertSame($expectedWordings, $messages);
     }
 }
