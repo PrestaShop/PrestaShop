@@ -118,9 +118,11 @@ class ModuleProviderTest extends TestCase
         if (!is_dir(self::$tempDir . DIRECTORY_SEPARATOR . DefaultCatalogueProvider::DEFAULT_LOCALE)) {
             mkdir(self::$tempDir . DIRECTORY_SEPARATOR . DefaultCatalogueProvider::DEFAULT_LOCALE);
         }
+        // default translation directory
         (new XliffFileDumper())->dump($catalogue, [
-            'path' => implode(DIRECTORY_SEPARATOR, [self::$tempDir, 'moduleName', 'translations']) . DIRECTORY_SEPARATOR,
+            'path' => implode(DIRECTORY_SEPARATOR, [self::$tempDir, DefaultCatalogueProvider::DEFAULT_LOCALE]) . DIRECTORY_SEPARATOR,
         ]);
+        // module built-in translation directory
         (new XliffFileDumper())->dump($catalogue, [
             'path' => implode(
                     DIRECTORY_SEPARATOR,
@@ -141,13 +143,7 @@ class ModuleProviderTest extends TestCase
         $this->assertSame(self::$wordings, $catalogue->all());
 
         $catalogue = $this->modulesProvider->getDefaultCatalogue('fr-FR', true);
-        $catalogueFr = self::$emptyWordings;
-        foreach (array_keys($catalogueFr) as $translationKey) {
-            $translationKeyLocale = sprintf('%s.%s', $translationKey, DefaultCatalogueProvider::DEFAULT_LOCALE);
-            $catalogueFr[$translationKeyLocale] = $catalogueFr[$translationKey];
-            unset($catalogueFr[$translationKey]);
-        }
-        $this->assertSame($catalogueFr, $catalogue->all());
+        $this->assertSame(self::$emptyWordings, $catalogue->all());
     }
 
     public function testGetFilesystemCatalogue()

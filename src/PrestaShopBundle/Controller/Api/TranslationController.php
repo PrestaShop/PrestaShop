@@ -103,13 +103,6 @@ class TranslationController extends ApiController
                 // If the locale is invalid, no need to call the translation provider.
                 throw UnsupportedLocaleException::invalidLocale($locale);
             }
-            $searchedExpressions = [];
-            if (is_array($search)) {
-                $searchedExpressions = $search;
-            }
-            if (!is_array($search) && !empty($search)) {
-                $searchedExpressions[] = $search;
-            }
 
             if ('Messages' === $domain) {
                 $domain = 'messages';
@@ -121,7 +114,12 @@ class TranslationController extends ApiController
             } else {
                 $providerType = new CoreDomainType($domain);
             }
-            $catalog = $this->translationService->listDomainTranslation($providerType, $locale, $domain, $searchedExpressions);
+            $catalog = $this->translationService->listDomainTranslation(
+                $providerType,
+                $locale,
+                $domain,
+                $this->searchExpressionToArray($search)
+            );
             $info = [
                 'Total-Pages' => ceil(count($catalog['data']) / $queryParams['page_size']),
             ];
@@ -193,16 +191,8 @@ class TranslationController extends ApiController
             $selectedTheme = (self::TYPE_THEMES === $type) ? $selected : null;
             $selectedModule = (self::TYPE_MODULES === $type) ? $selected : null;
 
-            $searchedExpressions = [];
-            if (is_array($search)) {
-                $searchedExpressions = $search;
-            }
-            if (!is_array($search) && !empty($search)) {
-                $searchedExpressions[] = $search;
-            }
-
             return $this->jsonResponse(
-                $this->getTree($lang, $type, $searchedExpressions, $selectedTheme, $selectedModule),
+                $this->getTree($lang, $type, $this->searchExpressionToArray($search), $selectedTheme, $selectedModule),
                 $request
             );
         } catch (Exception $exception) {
@@ -429,5 +419,22 @@ class TranslationController extends ApiController
             default:
                 throw new \RuntimeException("Unrecognized type: $type");
         }
+    }
+
+    /**
+     * @param $search
+     *
+     * @return array
+     */
+    private function searchExpressionToArray($search): array
+    {
+        if (is_array($search)) {
+            return $search;
+        }
+        if (!is_array($search) && !empty($search)) {
+            return [$search];
+        }
+
+        return [];
     }
 }

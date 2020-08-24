@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace Tests\Integration\PrestaShopBundle\Translation\Extractor;
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
@@ -60,14 +62,6 @@ class ThemeExtractorTest extends KernelTestCase
         $this->assertTrue($catalogue->has('Show product', 'ShopThemeProduct'));
         $this->assertTrue($catalogue->has('Do something with cart', 'ShopFakethemefortranslations'));
         $this->assertSame($catalogue->get('Show another product', 'ShopThemeProduct'), 'Show another product');
-    }
-
-    public function testExtractWithLegacyFormat()
-    {
-        $catalogue = $this->themeExtractor
-            ->extract($this->getFakeTheme());
-
-        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
     }
 
     protected function tearDown()

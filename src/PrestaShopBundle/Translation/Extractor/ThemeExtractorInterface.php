@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Translation\Extractor;
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;

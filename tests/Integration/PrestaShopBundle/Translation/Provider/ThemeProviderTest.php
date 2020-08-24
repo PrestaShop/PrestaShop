@@ -296,12 +296,4 @@ class ThemeProviderTest extends KernelTestCase
 
         return $catalogue;
     }
-
-    /**
-     * @return string
-     */
-    private function getDefaultTranslationsDirectory()
-    {
-        return __DIR__ . '/../../../../Resources/translations';
-    }
 }
