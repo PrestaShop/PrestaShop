@@ -1,28 +1,26 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-class Attributes extends BOBasePage {
+class ViewAttribute extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Attributes • ';
+    this.pageTitle = 'Attributes >';
 
-    // Header selectors
-    this.featuresSubtabLink = '#subtab-AdminFeatures';
 
     // Form selectors
-    this.gridForm = '#form-attribute_group';
+    this.gridForm = '#form-attribute_values';
     this.gridTableHeaderTitle = `${this.gridForm} .panel-heading`;
     this.gridTableNumberOfTitlesSpan = `${this.gridTableHeaderTitle} span.badge`;
 
     // Table selectors
-    this.gridTable = '#table-attribute_group';
+    this.gridTable = '#table-attribute';
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = filterBy => `${this.filterRow} [name='attribute_groupFilter_${filterBy}']`;
-    this.filterSearchButton = '#submitFilterButtonattribute_group';
-    this.filterResetButton = 'button[name=\'submitResetattribute_group\']';
+    this.filterColumn = filterBy => `${this.filterRow} [name='attribute_valuesFilter_${filterBy}']`;
+    this.filterSearchButton = '#submitFilterButtonattribute_values';
+    this.filterResetButton = 'button[name=\'submitResetattribute_values\']';
 
     // Table body selectors
     this.tableBody = `${this.gridTable} tbody`;
@@ -31,27 +29,12 @@ class Attributes extends BOBasePage {
     this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnSelectRowCheckbox = row => `${this.tableBodyColumn(row)} input[name='attribute_groupBox[]']`;
+    this.tableColumnSelectRowCheckbox = row => `${this.tableBodyColumn(row)} input[name='attribute_valuesBox[]']`;
     this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
-    this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnValues = row => `${this.tableBodyColumn(row)}:nth-child(4)`;
-    this.tableColumnPosition = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
-
-    // Row actions selectors
-    this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
-    this.tableColumnActionsViewLink = row => `${this.tableColumnActions(row)} a[title='View']`;
+    this.tableColumnValue = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
+    this.tableColumnPosition = row => `${this.tableBodyColumn(row)}:nth-child(4)`;
   }
 
-  /* Header methods */
-
-  /**
-   * Click on features subtab and go to page
-   * @param page
-   * @return {Promise<void>}
-   */
-  async goToFeaturesPage(page) {
-    await this.clickAndWaitForNavigation(page, this.featuresSubtabLink);
-  }
 
   /* Filter methods */
   /**
@@ -67,7 +50,7 @@ class Attributes extends BOBasePage {
   }
 
   /**
-   * Get Number of attributes
+   * Get Number of attribute values
    * @param page
    * @return {Promise<number>}
    */
@@ -76,7 +59,7 @@ class Attributes extends BOBasePage {
   }
 
   /**
-   * Reset and get number of attributes
+   * Reset and get number of attribute values
    * @param page
    * @return {Promise<number>}
    */
@@ -109,16 +92,12 @@ class Attributes extends BOBasePage {
     let columnSelector;
 
     switch (columnName) {
-      case 'id_attribute_group':
+      case 'id_attribute':
         columnSelector = this.tableColumnId(row);
         break;
 
       case 'b!name':
-        columnSelector = this.tableColumnName(row);
-        break;
-
-      case 'values':
-        columnSelector = this.tableColumnValues(row);
+        columnSelector = this.tableColumnValue(row);
         break;
 
       case 'a!position':
@@ -131,16 +110,6 @@ class Attributes extends BOBasePage {
 
     return this.getTextContent(page, columnSelector);
   }
-
-  /**
-   * Go to view attribute page
-   * @param page
-   * @param row
-   * @return {Promise<void>}
-   */
-  async viewAttribute(page, row) {
-    await this.clickAndWaitForNavigation(page, this.tableColumnActionsViewLink(row));
-  }
 }
 
-module.exports = new Attributes();
+module.exports = new ViewAttribute();

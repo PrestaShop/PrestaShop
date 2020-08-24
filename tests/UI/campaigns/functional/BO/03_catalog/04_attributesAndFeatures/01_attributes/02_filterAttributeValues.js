@@ -9,6 +9,7 @@ const loginCommon = require('@commonTests/loginBO');
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const attributesPage = require('@pages/BO/catalog/attributes');
+const viewAttributePage = require('@pages/BO/catalog/attributes/view');
 
 // Import data
 const {Attributes} = require('@data/demo/attributes');
@@ -16,7 +17,7 @@ const {Attributes} = require('@data/demo/attributes');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_shopParameters_catalog_attributesAndFeatures_attributes_filterAttributes';
+const baseContext = 'functional_BO_shopParameters_catalog_attributesAndFeatures_attributes_filterAttributeValues';
 
 // Import expect from chai
 const {expect} = require('chai');
@@ -68,22 +69,59 @@ describe('Filter attributes by id, name and position', async () => {
     await expect(numberOfAttributes).to.be.above(0);
   });
 
-  describe('Filter attributes', async () => {
+
+  it('should filter by name \'Size\'', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'filterAttributes', baseContext);
+
+    await attributesPage.filterTable(
+      page,
+      'b!name',
+      Attributes.size.name,
+    );
+
+    const textColumn = await attributesPage.getTextColumn(
+      page,
+      1,
+      'b!name',
+    );
+
+    await expect(textColumn).to.contains(Attributes.size.name);
+  });
+
+  it('should view attribute', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'viewAttribute', baseContext);
+
+    await attributesPage.viewAttribute(page, 1);
+
+    const pageTitle = await viewAttributePage.getPageTitle(page);
+    await expect(pageTitle).to.contains(`${viewAttributePage.pageTitle} ${Attributes.size.name}`);
+  });
+
+  describe('Filter attribute value', async () => {
     const tests = [
       {
-        args: {
-          testIdentifier: 'filterId', filterBy: 'id_attribute_group', filterValue: Attributes.size.id,
-        },
+        args:
+          {
+            testIdentifier: 'filterId',
+            filterBy: 'id_attribute',
+            filterValue: Attributes.size.values.small.id,
+          },
       },
       {
-        args: {
-          testIdentifier: 'filterName', filterBy: 'b!name', filterValue: Attributes.color.name,
-        },
+        args:
+          {
+            testIdentifier: 'filterName',
+            filterBy: 'b!name',
+            filterValue: Attributes.size.values.small.value,
+          },
       },
       {
-        args: {
-          testIdentifier: 'filterPosition', filterBy: 'a!position', filterValue: (Attributes.paperType.position - 1),
-        },
+        args:
+          {
+            testIdentifier: 'filterPosition',
+            filterBy: 'a!position',
+            filterValue: (Attributes.size.values.small.position - 1),
+          },
       },
     ];
 
@@ -91,16 +129,16 @@ describe('Filter attributes by id, name and position', async () => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        await attributesPage.filterTable(
+        await viewAttributePage.filterTable(
           page,
           test.args.filterBy,
           test.args.filterValue,
         );
 
-        const numberOfAttributesAfterFilter = await attributesPage.getNumberOfElementInGrid(page);
+        const numberOfAttributesAfterFilter = await viewAttributePage.getNumberOfElementInGrid(page);
         await expect(numberOfAttributesAfterFilter).to.be.at.most(numberOfAttributes);
 
-        const textColumn = await attributesPage.getTextColumn(
+        const textColumn = await viewAttributePage.getTextColumn(
           page,
           1,
           test.args.filterBy,
@@ -116,7 +154,7 @@ describe('Filter attributes by id, name and position', async () => {
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfAttributesAfterReset = await attributesPage.resetAndGetNumberOfLines(page);
+        const numberOfAttributesAfterReset = await viewAttributePage.resetAndGetNumberOfLines(page);
         await expect(numberOfAttributesAfterReset).to.equal(numberOfAttributes);
       });
     });

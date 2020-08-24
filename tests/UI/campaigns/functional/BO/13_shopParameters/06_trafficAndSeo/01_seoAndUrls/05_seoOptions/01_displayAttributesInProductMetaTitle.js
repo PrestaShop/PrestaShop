@@ -60,8 +60,8 @@ describe('Enable/Disable display attributes in product meta title', async () => 
       args: {
         action: 'enable',
         enable: true,
-        metaTitle: `${Products.demo_1.name} ${Attributes.size.name} ${Attributes.size.values.small}`
-          + ` ${Attributes.color.name} ${Attributes.color.values.white}`,
+        metaTitle: `${Products.demo_1.name} ${Attributes.size.name} ${Attributes.size.values.small.value}`
+          + ` ${Attributes.color.name} ${Attributes.color.values.white.value}`,
       },
     },
     {args: {action: 'disable', enable: false, metaTitle: Products.demo_1.name}},
