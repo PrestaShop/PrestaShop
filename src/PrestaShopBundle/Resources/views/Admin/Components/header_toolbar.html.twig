@@ -1,0 +1,148 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+{# TODO: 1.7.0.0: RENAME THIS FILE AT THE NEXT RETROCOMPATIBILITY BREAK #}
+
+<div class="header-toolbar d-print-none">
+  <div class="container-fluid">
+
+    {#{% block pageBreadcrumb %}
+      <nav aria-label="Breadcrumb">
+        <ol class="breadcrumb">
+          {% if breadcrumbs2.container.name != '' %}
+            <li class="breadcrumb-item">{{ breadcrumbs2.container.name }}</li>
+          {% endif %}
+
+          {% if breadcrumbs2.tab.name != '' and breadcrumbs2.container.name != breadcrumbs2.tab.name and breadcrumbs2.tab.href != '' %}
+            <li class="breadcrumb-item active">
+              <a href="{{ breadcrumbs2.tab.href }}" aria-current="page">{{ breadcrumbs2.tab.name }}</a>
+            </li>
+          {% endif %}
+        </ol>
+      </nav>
+    {% endblock %}#}
+
+    <div class="title-row">
+      {% block pageTitle %}
+          <h1 class="title">
+            {% if title is iterable %}{{ title|last }}{% else %}{{ title }}{% endif %}
+          </h1>
+      {% endblock %}
+
+      {% block toolbarBox %}
+        <div class="toolbar-icons">
+          <div class="wrapper">
+            {{ renderhook('displayDashboardToolbarTopMenu') }}
+            {% for k, btn in toolbar_btn %}
+              {% if k != 'back' and k != 'modules-list' %}
+                {# TODO: REFACTOR ALL THIS THINGS #}
+                <a
+                  class="btn btn-primary{% if btn.target%} _blank{% endif%} pointer"{% if btn.href %}
+                  id="page-header-desc-{{ table }}-{% if btn.imgclass %}{{ btn.imgclass }}{% else %}{{ k }}{% endif %}"
+                  href="{{ btn.href }}"{% endif %}
+                  title="{% if btn.help %}{{ btn.help }}{% else %}{{ btn.desc }}{% endif %}"{% if btn.js %}
+                  onclick="{{ btn.js }}"{% endif %}{% if btn.modal_target %}
+                  data-target="{{ btn.modal_target }}"
+                  data-toggle="modal"{% endif %}{% if btn.help %}
+                  data-toggle="pstooltip"
+                  data-placement="bottom"{% endif %}
+                >
+                  {% if btn.icon %}<i class="material-icons">{{ btn.icon }}</i>{% endif %}
+                  {{ btn.desc }}
+                </a>
+              {% endif %}
+            {% endfor %}
+            {#{% if toolbar_btn.modules-list  %}
+              #}{# TODO: REFACTOR ALL THIS THINGS #}{#
+              <a
+                class="btn btn-outline-secondary{% if toolbar_btn.modules-list.target %} _blank{% endif %}"
+                id="page-header-desc-{{ table }}-{% if toolbar_btn.modules-list.imgclass %}{{ toolbar_btn.modules-list.imgclass }}{% else %}modules-list{% endif %}"
+                {% if toolbar_btn.modules-list.href %}href="{{ toolbar_btn.modules-list.href }}"{% endif %}
+                title="{{ toolbar_btn.modules-list.desc }}"
+                {% if toolbar_btn.modules-list.js %}onclick="{{ toolbar_btn.modules-list.js }}"{% endif %}
+              >
+              {{ toolbar_btn.modules-list.desc }}
+              </a>
+            {% endif %}#}
+
+            {% if help_link %}
+
+              {% if enableSidebar %}
+                <a class="btn btn-outline-secondary btn-help btn-sidebar" href="#"
+                   title="{{ 'Help'|trans({}, 'Admin.Global') }}"
+                   data-toggle="sidebar"
+                   data-target="#right-sidebar"
+                   data-url="{{ help_link }}"
+                   id="product_form_open_help"
+                >
+                  {{ 'Help'|trans({}, 'Admin.Global') }}
+                </a>
+              {% else %}
+                <a class="btn btn-outline-secondary" href="{{ help_link }}" title="{{ 'Help'|trans({}, 'Admin.Global') }}">
+                  {{ 'Help'|trans({}, 'Admin.Global') }}
+                </a>
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+      {% endblock %}
+    </div>
+  </div>
+
+  {% if headerTabContent %}
+    <div class="page-head-tabs" id="head_tabs">
+      {% for tabContent in headerTabContent %}
+        {{ tabContent }}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% if current_tab_level == 3 %}
+    <div class="page-head-tabs" id="head_tabs">
+      <ul class="nav nav-pills">
+        {% for level1 in tabs %}
+          {% for level2 in level1.sub_tabs %}
+            {% for level3 in level2.sub_tabs %}
+              {% if level3.current %}
+                {% for level4 in level3.sub_tabs %}
+                  {% if level4.active %}
+        <li class="nav-item">
+          <a href="{{ level_4.href }}" id="subtab-{{ level_4.class_name }}" class="nav-link tab{% if level_4.current %} active current{% endif %}" data-submenu="{{ level_4.id_tab }}">
+            {{ level_4.name }}
+            <span class="notification-container">
+              <span class="notification-counter"></span>
+            </span>
+          </a>
+        </li>
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+  {{ renderhook('displayDashboardTop') }}
+</div>

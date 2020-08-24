@@ -1,0 +1,102 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale={% if viewport_scale %}{{ viewport_scale }}{% else %}'1'{% endif %}">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="robots" content="NOFOLLOW, NOINDEX">
+
+<link rel="icon" type="image/x-icon" href="{{ img_dir }}favicon.ico" />
+<link rel="apple-touch-icon" href="{{ img_dir }}app_icon.png" />
+
+<title>{% if meta_title %}{{ meta_title }} • {% endif %}{{ shop_name }}</title>
+
+{% if display_header_javascript %}
+<script type="text/javascript">
+  var help_class_name = {{ meta_title|json_encode|raw }};
+  var iso_user = {{ iso|json_encode|raw }};
+  var lang_is_rtl = {{ lang_is_rtl|json_encode|raw }};
+  var full_language_code = {{ full_language_code|json_encode|raw }};
+  var full_cldr_language_code = {{ full_cldr_language_code|json_encode|raw }};
+  var country_iso_code = {{ country_iso_code|json_encode|raw }};
+  var _PS_VERSION_ = {{ ps_version|json_encode|raw }};
+  var roundMode = {{ round_mode|intCast }};
+  var youEditFieldFor = "";
+  {% if shop_context is defined %}
+  {% if shop_context == constant('Shop::CONTEXT_ALL') %}
+  youEditFieldFor = {{ 'This field will be modified for all your shops.'|trans({}, 'Admin.Notifications.Info')|json_encode|raw }};
+  {% elseif shop_context == constant('Shop::CONTEXT_GROUP') %}
+  youEditFieldFor = {{ ('This field will be modified for all shops in this shop group:'|trans({}, 'Admin.Notifications.Info')~' <b>'~shop_name~'</b>')|json_encode|raw }};
+  {% else %}
+  youEditFieldFor = {{ ('This field will be modified for this shop:'|trans({}, 'Admin.Notifications.Info')~' <b>'~shop_name~'</b>')|json_encode|raw }};
+  {% endif %}
+  {% endif %}
+  var new_order_msg = {{ 'A new order has been placed on your shop.'|trans({}, 'Admin.Navigation.Header')|json_encode|raw }};
+  var order_number_msg = {{ 'Order number:'|trans({}, 'Admin.Navigation.Header')|json_encode|raw }};
+  var total_msg = {{ 'Total:'|trans({}, 'Admin.Global')|json_encode|raw }};
+  var from_msg = {{ 'From:'|trans({}, 'Admin.Global')|json_encode|raw }};
+  var see_order_msg = {{ 'View this order'|trans({}, 'Admin.Orderscustomers.Feature')|json_encode|raw }};
+  var new_customer_msg = {{ 'A new customer registered on your shop.'|trans({}, 'Admin.Navigation.Header')|json_encode|raw }};
+  var customer_name_msg = {{ 'Customer name:'|trans({}, 'Admin.Navigation.Header')|json_encode|raw }};
+  var new_msg = {{ 'A new message was posted on your shop.'|trans({}, 'Admin.Navigation.Header')|json_encode|raw }};
+  var see_msg = {{ 'Read this message'|trans({}, 'Admin.Navigation.Header')|json_encode|raw }};
+  var token = {{ token|json_encode|raw }};
+  var token_admin_orders = tokenAdminOrders = {{ getAdminToken('AdminOrders')|json_encode|raw }};
+  var token_admin_customers = {{ getAdminToken('AdminCustomers')|json_encode|raw }};
+  var token_admin_customer_threads = tokenAdminCustomerThreads = {{ getAdminToken('AdminCustomerThreads')|json_encode|raw }};
+  var employee_token = {{ getAdminToken('AdminEmployees')|json_encode|raw }};
+  var currentIndex = {{ currentIndex|json_encode|raw }};
+  var choose_language_translate = {{ 'Choose language:'|trans({}, 'Admin.Actions')|json_encode|raw }};
+  var default_language = {{ default_language|json_encode|raw }};
+  var admin_modules_link = {{ getAdminLink('AdminModulesSf', true, {'route': 'admin_module_catalog_post'})|json_encode|raw }};
+  var admin_notification_get_link = {{ getAdminLink('AdminCommon')|json_encode|raw }};
+  var admin_notification_push_link = adminNotificationPushLink = {{ getAdminLink('AdminCommon', true, {'route': 'admin_common_notifications_ack'})|json_encode|raw }};
+</script>
+{% endif %}
+{#
+{if !isset($display_header_javascript) || $display_header_javascript}
+  <script type="text/javascript">
+    var tab_modules_list = '{if isset($tab_modules_list) && $tab_modules_list}{$tab_modules_list|addslashes}{/if}';
+    var update_success_msg = '{l s='Update successful' js=1 d='Admin.Notifications.Success'}';
+    var errorLogin = '{l s='PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.' js=1 d='Admin.Notifications.Warning'}';
+    var search_product_msg = '{l s='Search for a product' js=1 d='Admin.Orderscustomers.Feature'}';
+  </script>
+{/if}
+#}
+
+{% if css_files %}
+  {% for type, file in css_files %}
+    <link href="{{ type }}" rel="stylesheet" type="text/css"/>
+  {% endfor %}
+{% endif %}
+
+{#
+{if (isset($js_def) && count($js_def) || isset($js_files) && count($js_files))}
+  {include file=$smarty.const._PS_ALL_THEMES_DIR_|cat:"javascript.tpl"}
+{/if}
+
+{if isset($displayBackOfficeHeader)}
+  {$displayBackOfficeHeader}
+{/if}
+ #}

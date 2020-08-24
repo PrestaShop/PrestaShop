@@ -1,0 +1,158 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+<!DOCTYPE html>
+<html lang="{{ iso }}">
+<head>
+  <link href="/prestashop+dev/admin-dev/themes/new-theme/public/theme.css" rel="stylesheet" type="text/css"/>
+  {% include ['@PrestaShop/Admin/header.html.twig'] %}
+  <script src="/prestashop+dev/admin-dev/themes/new-theme/public/main.bundle.js" type="application/javascript"></script>
+</head>
+
+<body
+  class="lang-{{ iso }}{% if lang_is_rtl %} lang-rtl{% endif %} {{ smarty.get.controller|escape|lower }}{% if collapse_menu %} page-sidebar-closed{% endif %}"
+  {% if js_router_metadata.base_url %}data-base-url="{{ js_router_metadata.base_url }}"{% endif %}
+  {% if js_router_metadata.token %}data-token="{{ js_router_metadata.token }}"{% endif %}
+>
+
+{% if display_header %}
+  <header id="header" class="d-print-none">
+
+    <nav id="header_infos" class="main-header">
+      <button class="btn btn-primary-reverse onclick btn-lg unbind ajax-spinner"></button>
+
+      {# Logo #}
+      <i class="material-icons js-mobile-menu">menu</i>
+      <a id="header_logo" class="logo float-left" href="{{ default_tab_link|escape }}"></a>
+      <span id="shop_version">{{ ps_version }}</span>
+
+      <div class="component" id="quick-access-container">
+        {% include ['@PrestaShop/Admin/Components/quick_access.html.twig'] %}
+      </div>
+      <div class="component" id="header-search-container">
+        {% include ['@PrestaShop/Admin/Components/search_form.html.twig'] with {'show_clear_btn': false} %}
+      </div>
+
+      {% if debug_mode %}
+        <div class="component hide-mobile-sm" id="header-debug-mode-container">
+          <a class="link shop-state"
+             id="debug-mode"
+             data-toggle="pstooltip"
+             data-placement="bottom"
+             data-html="true"
+             title="<p class='text-left'><strong>{{ 'Your shop is in debug mode.'|trans({}, 'Admin.Navigation.Notification') }}</strong></p><p class='text-left'>{{ 'All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.'|trans({'[1]': '<strong>', '[/1]': '</strong>'}, 'Admin.Navigation.Notification') }}"
+             href="{{ getAdminLink('AdminPerformance')|escape }}"
+          >
+            <i class="material-icons">bug_report</i>
+            <span>{{ 'Debug mode'|trans({}, 'Admin.Navigation.Header') }}</span>
+          </a>
+        </div>
+      {% endif %}
+
+      {% if maintenance_mode %}
+        <div class="component hide-mobile-sm" id="header-maintenance-mode-container">
+          <a class="link shop-state"
+             id="maintenance-mode"
+             data-toggle="pstooltip"
+             data-placement="bottom"
+             data-html="true"
+             title="<p class='text-left'><strong>{{ 'Your shop is in maintenance.'|trans({}, 'Admin.Navigation.Notification') }}</strong></p><p class='text-left'>{{ 'Your visitors and customers cannot access your shop while in maintenance mode.%sTo manage the maintenance settings, go to Shop Parameters > Maintenance tab.'|trans({'%s': '<br>'}, 'Admin.Navigation.Notification') }}</p>" href="{{ getAdminLink('AdminMaintenance')|escape }}"
+          >
+            <i class="material-icons">build</i>
+            <span>{{ 'Maintenance mode'|trans({}, 'Admin.Navigation.Header') }}</span>
+          </a>
+        </div>
+      {% endif %}
+
+      <div class="component" id="header-shop-list-container">
+        {% include ['@PrestaShop/Admin/Components/shop_list.html.twig'] %}
+      </div>
+
+      {% if show_new_orders or show_new_customers or show_new_messages %}
+        <div class="component header-right-component" id="header-notifications-container">
+          {% include ['@PrestaShop/Admin/Components/notifications_center.html.twig'] %}
+        </div>
+      {% endif %}
+
+      <div class="component" id="header-employee-container">
+        {% include ['@PrestaShop/Admin/Components/employee_dropdown.html.twig'] %}
+      </div>
+      {{ renderhook('displayBackOfficeTop') }}
+    </nav>
+  </header>
+
+  {% include ['@PrestaShop/Admin/Components/nav_bar.html.twig'] %}
+{% endif %}
+
+
+<div id="main-div">
+
+  {% if install_dir_exists %}
+  <div class="alert alert-warning">
+    {{ 'For security reasons, you must also delete the /install folder.'|trans({}, 'Admin.Login.Notification') }}
+  </div>
+  {% else %}
+    {% include ['@PrestaShop/Admin/Components/header_toolbar.html.twig'] %}
+    {% if modal_module_list %}{{ modal_module_list }}{% endif %}
+
+  <div class="{% if display_header %}content-div{% endif %}{% if not page_header_toolbar %} -notoolbar{% endif %}{% if current_tab_level == 3 %} with-tabs{% endif %}">
+
+    {{ renderhook('displayAdminAfterHeader') }}
+
+    {% if display_header %}
+      {% include ['@PrestaShop/Admin/Components/error_messages.html.twig'] %}
+      {% include ['@PrestaShop/Admin/Components/information_messages.html.twig'] %}
+      {% include ['@PrestaShop/Admin/Components/confirmation_messages.html.twig'] %}
+      {% include ['@PrestaShop/Admin/Components/warning_messages.html.twig'] %}
+    {% endif %}
+
+    <div class="row ">
+      <div class="col-sm-12">
+        {% block content %}{% endblock %}
+        {{ renderhook('displayAdminEndContent') }}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+{% if not lite_display %}
+  {% include ['@PrestaShop/Admin/Components/non-responsive.html.twig'] %}
+  <div class="mobile-layer"></div>
+  {% if display_footer %}
+    {% include ['@PrestaShop/Admin/footer.html.twig'] %}
+  {% endif %}
+{% endif %}
+
+{% if php_errors %}
+  {% include ['@PrestaShop/Admin/Components/error.html.twig'] %}
+{% endif %}
+
+{% if not lite_display and modals %}
+  <div class="bootstrap">{{ modals }}</div>
+{% endif %}
+
+</body>
+</html>
+

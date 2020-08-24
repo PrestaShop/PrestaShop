@@ -22,6 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
+{#
 {% extends(template_from_string(
   getLegacyLayout(
     app.request.attributes.get('_legacy_controller'),
@@ -37,6 +38,11 @@
     use_regular_h1_structure is defined ? use_regular_h1_structure : true
   )
   )) %}
+#}
+
+{% extends '@PrestaShop/Admin/base.html.twig' %}
+{#
+#}
 
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 

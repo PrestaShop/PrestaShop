@@ -27,9 +27,14 @@
 namespace PrestaShopBundle\Twig;
 
 use Exception;
+use Link;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use QuickAccess;
+use Shop;
+use Tab;
+use Tools;
 use Twig\Extension\GlobalsInterface;
 
 /**
@@ -94,12 +99,91 @@ class LayoutExtension extends \Twig_Extension implements GlobalsInterface
             $rootUrl = null;
         }
 
-        return [
+        if ((int) $this->context->getContext()->employee->id) {
+            $quick_access = QuickAccess::getQuickAccessesWithToken($this->context->getContext()->language->id, (int) $this->context->getContext()->employee->id);
+        } else {
+            $quick_access = [];
+        }
+
+        $tabs = $this->getTabs();
+        $currentTabLevel = 0;
+        foreach ($tabs as $tab) {
+            $currentTabLevel = isset($tab['current_level']) ? $tab['current_level'] : $currentTabLevel;
+        }
+
+        $variables = [
             'theme' => $this->context->getContext()->shop->theme,
             'default_currency' => $defaultCurrency,
             'root_url' => $rootUrl,
             'js_translatable' => [],
+            'iso' => $this->context->getContext()->language->iso_code,
+            'lang_is_rtl' => $this->context->getContext()->language->is_rtl,
+            'full_language_code' => $this->context->getContext()->language->language_code,
+            'country_iso_code' => $this->context->getContext()->country->iso_code,
+            'default_language' => (int) Configuration::get('PS_LANG_DEFAULT'),
+            'round_mode' => Configuration::get('PS_PRICE_ROUND_MODE'),
+            'img_dir' => _PS_IMG_,
+            'shop_name' => Configuration::get('PS_SHOP_NAME'),
+            'collapse_menu' => isset($this->context->getContext()->cookie->collapse_menu) ? (int) $this->context->getContext()->cookie->collapse_menu : 0,
+            'default_tab_link' => $this->context->getContext()->link->getAdminLink(Tab::getClassNameById((int) $this->context->getContext()->employee->default_tab)),
+            'ps_version' => _PS_VERSION_,
+            'debug_mode' => (bool) _PS_MODE_DEV_,
+            'maintenance_mode' => !(bool) Configuration::get('PS_SHOP_ENABLE'),
+            'install_dir_exists' => file_exists(_PS_ADMIN_DIR_ . '/../install'),
+            'quick_access' => $quick_access,
+            'baseAdminUrl' => __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/',
+            'bo_query' => Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query'))),
+            'search_type' => Tools::getValue('bo_search_type'),
+            'is_multishop' => Shop::isFeatureActive(),
+            'base_url' => $this->context->getContext()->shop->getBaseURL(),
+            'show_new_orders' => Configuration::get('PS_SHOW_NEW_ORDERS'),
+            'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS'),
+            'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES'),
+            'employee' => $this->context->getContext()->employee,
+            'logout_link' => $this->context->getContext()->link->getAdminLink('AdminLogin', true, [], ['logout' => 1]),
+            // to be changed
+            'viewport_scale' => '1',
+            'meta_title' => 'META_TITLE',
+            'smarty' => ['get' => ['controller' => 'CONTROLLER_NAME']],
+            'js_router_metadata' => [
+                'base_url' => '',
+                'token' => ''
+            ],
+            'display_header' => true,
+            'display_footer' => true,
+            'display_header_javascript' => true,
+            'full_cldr_language_code' => 'en-US',
+            'token' => '',
+            'currentIndex' => '',
+            'page_header_toolbar' => '',
+            'modal_module_list' => '',
+            'current_tab_level' => 0,
+            'css_files' => $this->context->getContext()->controller->css_files,
+            'quick_access_current_link_icon' => '',
+            'quick_access_current_link_name' => '',
+            'no_order_tip' => '',
+            'no_customer_tip' => '',
+            'no_customer_message_tip' => '',
+            'tabs' => $tabs,
+            'breadcrumbs2' => [],
+            'toolbar_btn' => [],
+            'title' => 'Controller Title',
+            'headerTabContent' => '',
+            'disableDefaultErrorOutPut' => false,
+            'errors' => [],
+            'informations' => [],
+            'confirmations' => [],
+            'warnings' => [],
+            'lite_display' => false,
+            'php_errors' => [],
+            'modals' => [],
         ];
+
+        if (Shop::isFeatureActive() && Shop::getTotalShops(false, null) > 1) {
+            $variables['shop_context'] = Shop::getContext();
+        }
+
+        return $variables;
     }
 
     /**
@@ -124,6 +208,9 @@ class LayoutExtension extends \Twig_Extension implements GlobalsInterface
         return [
             new \Twig_SimpleFunction('getLegacyLayout', [$this, 'getLegacyLayout']),
             new \Twig_SimpleFunction('getAdminLink', [$this, 'getAdminLink']),
+            new \Twig_SimpleFunction('getAdminToken', [$this, 'getAdminLink']),
+            new \Twig_SimpleFunction('getQuickLink', [$this, 'getQuickLink']),
+            new \Twig_SimpleFunction('matchQuickLink', [$this, 'matchQuickLink']),
             new \Twig_SimpleFunction('youtube_link', [$this, 'getYoutubeLink']),
         ];
     }
@@ -249,6 +336,36 @@ EOF;
     }
 
     /**
+     * @param $tokenName
+     *
+     * @return bool|string
+     */
+    public function getAdminToken($tokenName)
+    {
+        return Tools::getAdminToken($tokenName);
+    }
+
+    /**
+     * @param $url
+     *
+     * @return bool
+     */
+    public function matchQuickLink($url)
+    {
+        return $this->context->getContext()->link->matchQuickLink($url);
+    }
+
+    /**
+     * @param $url
+     *
+     * @return string
+     */
+    public function getQuickLink($url)
+    {
+        return Link::getQuickLink($url);
+    }
+
+    /**
      * KISS function to get an embeded iframe from Youtube.
      */
     public function getYoutubeLink($watchUrl)
@@ -267,5 +384,64 @@ EOF;
     public function getName()
     {
         return 'twig_layout_extension';
+    }
+
+    private function getTabs($parentId = 0, $level = 0)
+    {
+        $tabs = Tab::getTabs($this->context->getContext()->language->id, $parentId);
+        $current_id = Tab::getCurrentParentId('');
+
+        foreach ($tabs as $index => $tab) {
+            if (!Tab::checkTabRights($tab['id_tab'])
+                || !$tab['enabled']
+                || ($tab['class_name'] == 'AdminStock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
+                || $tab['class_name'] == 'AdminCarrierWizard') {
+                unset($tabs[$index]);
+
+                continue;
+            }
+
+            // tab[class_name] does not contains the "Controller" suffix
+            if (($tab['class_name'] . 'Controller' == get_class($this)) || ($current_id == $tab['id_tab']) || $tab['class_name'] == '') {
+                $tabs[$index]['current'] = true;
+                $tabs[$index]['current_level'] = $level;
+            } else {
+                $tabs[$index]['current'] = false;
+            }
+            $tabs[$index]['img'] = null;
+            $tabs[$index]['href'] = $this->context->getContext()->link->getTabLink($tab);
+            $tabs[$index]['sub_tabs'] = array_values($this->getTabs($tab['id_tab'], $level + 1));
+
+            $subTabHref = $this->getTabLinkFromSubTabs($tabs[$index]['sub_tabs']);
+            if (!empty($subTabHref)) {
+                $tabs[$index]['href'] = $subTabHref;
+            } elseif (0 == $tabs[$index]['id_parent'] && '' == $tabs[$index]['icon']) {
+                unset($tabs[$index]);
+            } elseif (empty($tabs[$index]['icon'])) {
+                $tabs[$index]['icon'] = 'extension';
+            }
+
+            if (array_key_exists($index, $tabs) && array_key_exists('sub_tabs', $tabs[$index])) {
+                foreach ($tabs[$index]['sub_tabs'] as $sub_tab) {
+                    if ((int) $sub_tab['current'] == true) {
+                        $tabs[$index]['current'] = true;
+                        $tabs[$index]['current_level'] = $sub_tab['current_level'];
+                    }
+                }
+            }
+        }
+
+        return $tabs;
+    }
+
+    private function getTabLinkFromSubTabs(array $subtabs)
+    {
+        foreach ($subtabs as $tab) {
+            if ($tab['active'] && $tab['enabled']) {
+                return $tab['href'];
+            }
+        }
+
+        return '';
     }
 }
