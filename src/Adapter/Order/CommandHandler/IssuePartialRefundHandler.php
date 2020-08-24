@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Context;
+use Hook;
 use Order;
 use OrderCarrier;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundCalculator;
@@ -122,6 +123,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             if ($shouldReinjectProducts) {
                 $this->reinjectQuantity($orderDetail, $productRefund['quantity']);
             }
+            Hook::exec('actionProductCancel', ['order' => $order, 'id_order_detail' => (int) $orderDetailId], null, false, true, false, $order->id_shop);
         }
 
         // Update order carrier weight
