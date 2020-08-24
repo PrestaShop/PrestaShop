@@ -25,8 +25,6 @@
  */
 class Profiler
 {
-    const MIB_BYTES = 1048576;
-
     protected $hooksPerfs = [];
     protected $modulesPerfs = [];
     protected $profiler = [];
@@ -47,6 +45,11 @@ class Profiler
         $this->startTime = microtime(true);
     }
 
+    /**
+     * Return profiler instance
+     *
+     * @return self
+     */
     public static function getInstance()
     {
         if (static::$instance === null) {
@@ -56,7 +59,15 @@ class Profiler
         return static::$instance;
     }
 
-    public function sortByQueryTime($a, $b)
+    /**
+     * Sort array by query time
+     *
+     * @param array $a
+     * @param array $b
+     *
+     * @return int
+     */
+    public function sortByQueryTime(array $a, array $b): int
     {
         if ($a['time'] == $b['time']) {
             return 0;
@@ -65,7 +76,12 @@ class Profiler
         return ($a['time'] > $b['time']) ? -1 : 1;
     }
 
-    public function stamp($block)
+    /**
+     * Stamp the profiling
+     *
+     * @param string $block
+     */
+    public function stamp(string $block)
     {
         $this->profiler[] = [
             'block' => $block,
@@ -75,6 +91,11 @@ class Profiler
         ];
     }
 
+    /**
+     * Get var size
+     *
+     * @param mixed $var
+     */
     private function getVarSize($var)
     {
         $start_memory = memory_get_usage();
@@ -90,6 +111,13 @@ class Profiler
         return $size;
     }
 
+    /**
+     * Get var data
+     *
+     * @param mixed $var
+     *
+     * @return mixed
+     */
     private function getVarData($var)
     {
         if (is_object($var)) {
@@ -99,7 +127,13 @@ class Profiler
         return (string) $var;
     }
 
-    public function interceptHook($hookName, array $params)
+    /**
+     * Intercept hook and register its data
+     *
+     * @param string $hookName
+     * @param array $params
+     */
+    public function interceptHook(string $hookName, array $params)
     {
         if (empty($this->hooksPerfs[$hookName])) {
             $this->hooksPerfs[$hookName] = [
@@ -116,6 +150,11 @@ class Profiler
         $this->totalHooksTime += $params['time'];
     }
 
+    /**
+     * Intercept module
+     *
+     * @param array $params
+     */
     public function interceptModule(array $params)
     {
         $this->modulesPerfs[] = $params;
@@ -123,6 +162,10 @@ class Profiler
         $this->totalModulesMemory += $params['memory'];
     }
 
+    /**
+     * Process all data such as Global vars and
+     * database queries
+     */
     public function processData()
     {
         // Including a lot of files uses memory
@@ -191,6 +234,11 @@ class Profiler
         uasort($this->hooksPerfs, [$this, 'sortByQueryTime']);
     }
 
+    /**
+     * Prepare and return smarty variables
+     *
+     * @return array
+     */
     public function getSmartyVariables(): array
     {
         return [
@@ -201,7 +249,7 @@ class Profiler
                 'peakMemoryUsage' => $this->profiler[count($this->profiler) - 1]['peak_memory_usage'],
                 'globalVarSize' => $this->globalVarSize,
                 'includedFiles' => count(get_included_files()),
-                'totalFileSize' => $this->totalFilesize / static::MIB_BYTES,
+                'totalFileSize' => $this->totalFilesize,
                 'totalCacheSize' => $this->totalCacheSize,
                 'totalGlobalVarSize' => $this->totalGlobalVarSize,
             ],

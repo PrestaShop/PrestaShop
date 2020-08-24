@@ -83,7 +83,14 @@ abstract class Controller extends ControllerCore
         echo $this->displayProfiling();
     }
 
-    public function displayProfiling()
+    /**
+     * Display profiling
+     * If it's a migrated page, we change the outPutHtml content, otherwise
+     * we display the profiling at the end of the page.
+     *
+     * @return string
+     */
+    public function displayProfiling(): string
     {
         $content = '';
         if (!empty($this->redirect_after)) {
@@ -123,5 +130,8 @@ abstract class Controller extends ControllerCore
             '{$content}' . $this->context->smarty->fetch(__DIR__ . '/templates/profiling.tpl'),
             $content
         );
+
+        // Return empty string since we change the outPutHtml
+        return '';
     }
 }
