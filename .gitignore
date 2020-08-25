@@ -280,6 +280,7 @@ sftp-config.json
 
 ## Directory-based project format:
 .idea/
+nbproject/
 
 ## File-based project format:
 *.ipr

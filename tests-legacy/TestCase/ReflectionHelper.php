@@ -30,7 +30,7 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
 /**
- * Class ReflexionHelper
+ * Class ReflectionHelper
  * @package LegacyTests\TestCase
  *
  * Provides utilities to access private or protected properties inside classes.
@@ -41,7 +41,7 @@ use ReflectionClass;
  *
  * In the end, this kind of features is here just for convenience to be able to test quickly dirty legacy code.
  */
-class ReflexionHelper extends TestCase
+class ReflectionHelper extends TestCase
 {
     public static function invoke($object, $method)
     {
