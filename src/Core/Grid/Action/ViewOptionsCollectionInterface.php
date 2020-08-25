@@ -23,29 +23,31 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
 use Iterator;
 
 /**
- * Interface GridActionCollectionInterface defines contract for grid action collection.
+ * Interface ViewOptionsCollectionInterface defines contract for view options collection.
  */
-interface GridActionCollectionInterface extends Iterator
+interface ViewOptionsCollectionInterface extends Iterator
 {
     /**
-     * Add grid action to collection.
+     * Add view option to collection.
      *
-     * @param GridActionInterface $action
+     * @param string $action
+     * @param mixed $value
      *
      * @return self
      */
-    public function add(GridActionInterface $action);
+    public function add(string $action, $value);
 
     /**
-     * Get grid panel actions as array.
+     * Get view options as array.
      *
      * @return array
      */
-    public function toArray();
+    public function all();
 }
