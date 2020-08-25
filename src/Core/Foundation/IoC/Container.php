@@ -116,7 +116,7 @@ class Container
         }
 
         if (count($args) > 0) {
-            return $refl->newInstanceArgs($args);
+            return PHP_MAJOR_VERSION < 8 ? $refl->newInstanceArgs($args) : $refl->newInstanceArgs(...$args);
         } else {
             // newInstanceArgs with empty array fails in PHP 5.3 when the class
             // doesn't have an explicitly defined constructor
