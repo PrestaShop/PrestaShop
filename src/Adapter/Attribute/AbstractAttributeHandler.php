@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Attribute;
 
-use Attribute;
+use AttributePs;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception\AttributeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception\AttributeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\ValueObject\AttributeId;
@@ -40,7 +40,7 @@ abstract class AbstractAttributeHandler
     /**
      * @param AttributeId $attributeId
      *
-     * @return Attribute
+     * @return AttributePs
      *
      * @throws AttributeException
      */
@@ -49,7 +49,7 @@ abstract class AbstractAttributeHandler
         $idValue = $attributeId->getValue();
 
         try {
-            $attribute = new Attribute($idValue);
+            $attribute = new AttributePs($idValue);
 
             if ($attribute->id !== $idValue) {
                 throw new AttributeNotFoundException(sprintf('Attribute with id "%s" was not found.', $idValue));
@@ -62,13 +62,13 @@ abstract class AbstractAttributeHandler
     }
 
     /**
-     * @param Attribute $attribute
+     * @param AttributePs $attribute
      *
      * @return bool
      *
      * @throws AttributeException
      */
-    protected function deleteAttribute(Attribute $attribute)
+    protected function deleteAttribute(AttributePs $attribute)
     {
         try {
             return $attribute->delete();

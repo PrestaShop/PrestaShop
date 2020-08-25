@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Attribute;
 
-use Attribute;
+use AttributePs;
 use Combination;
 use Context;
 use Db;
@@ -48,7 +48,7 @@ class AttributeDataProvider
      */
     public static function getAttributes($id_lang, $not_null = false)
     {
-        return Attribute::getAttributes($id_lang, $not_null);
+        return AttributePs::getAttributes($id_lang, $not_null);
     }
 
     /**

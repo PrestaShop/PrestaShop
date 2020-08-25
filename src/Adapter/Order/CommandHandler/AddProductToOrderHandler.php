@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Address;
-use Attribute;
+use AttributePs;
 use Carrier;
 use Cart;
 use CartRule;
@@ -376,7 +376,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         if ($result < 0) {
             // If product has attribute, minimal quantity is set with minimal quantity of attribute
             $minimalQuantity = $combination
-                ? Attribute::getAttributeMinimalQty($combination->id) :
+                ? AttributePs::getAttributeMinimalQty($combination->id) :
                 $product->minimal_quantity
             ;
 
