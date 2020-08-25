@@ -107,7 +107,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
                 'width' => 40,
             ],
             'quantity' => [
-                'width' => 8,
+                'width' => 12,
             ],
             'tax_code' => [
                 'width' => 8,
