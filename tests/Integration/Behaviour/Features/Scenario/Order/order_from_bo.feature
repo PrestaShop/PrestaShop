@@ -83,7 +83,6 @@ Feature: Order from Back Office (BO)
       | name          | Mug Today is a good day |
       | amount        | 2                       |
       | price         | 16                      |
-      | free_shipping | true                    |
     Then order "bo_order1" should contain 2 products "Mug Today is a good day"
     Then order "bo_order1" should have 0 invoices
 
@@ -109,7 +108,6 @@ Feature: Order from Back Office (BO)
       | name          | Test Product With Specific Price  |
       | amount        | 1                                 |
       | price         | 8                                 |
-      | free_shipping | true                              |
     Then I should get error that product is out of stock
     Given shop configuration for "PS_ORDER_OUT_OF_STOCK" is set to 1
     # Use different price to be sure this one will be used
@@ -117,7 +115,6 @@ Feature: Order from Back Office (BO)
       | name          | Test Product With Specific Price  |
       | amount        | 1                                 |
       | price         | 10                                |
-      | free_shipping | true                              |
     # This is to avoid regression, previously a specific price was added but not cleared and it caused an unexpected bug
     Then order "bo_order1" should have 3 products in total
     Then order "bo_order1" should have following details:
@@ -140,7 +137,6 @@ Feature: Order from Back Office (BO)
       | name          | Mug Today is a good day |
       | amount        | 2                       |
       | price         | 16                      |
-      | free_shipping | true                    |
     Then order "bo_order1" should contain 2 products "Mug Today is a good day"
     Then order "bo_order1" should have 2 invoices
 
@@ -161,13 +157,11 @@ Feature: Order from Back Office (BO)
       | name          | Mug Today is a good day |
       | amount        | 2                       |
       | price         | 16                      |
-      | free_shipping | true                    |
     Then order "bo_order1" should contain 2 products "Mug Today is a good day"
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Mug Today is a good day |
       | amount        | -1                      |
       | price         | 16                      |
-      | free_shipping | true                    |
     Then I should get error that product quantity is invalid
     Then order "bo_order1" should contain 2 products "Mug Today is a good day"
 
@@ -177,13 +171,11 @@ Feature: Order from Back Office (BO)
       | name          | Mug Today is a good day |
       | amount        | 2                       |
       | price         | 16                      |
-      | free_shipping | true                    |
     Then order "bo_order1" should contain 2 products "Mug Today is a good day"
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Mug Today is a good day |
       | amount        | -1                      |
       | price         | 16                      |
-      | free_shipping | true                    |
     Then I should get error that product quantity is invalid
     Then order "bo_order1" should contain 2 products "Mug Today is a good day"
 
@@ -193,7 +185,6 @@ Feature: Order from Back Office (BO)
       | name          | Mug Today is a good day |
       | amount        | 1500                    |
       | price         | 16                      |
-      | free_shipping | true                    |
     Then I should get error that product is out of stock
     Then order "bo_order1" should contain 0 products "Mug Today is a good day"
 
