@@ -23,9 +23,10 @@ dist: xenial
 
 php:
   - 7.1
-  - 7.2
-  - 7.3
+  #- 7.2
+  #- 7.3
   - 7.4
+  - nightly
 
 env:
   global:
@@ -82,6 +83,7 @@ before_install:
   - mysql -e 'SET @@GLOBAL.auto_increment_increment = 2, @@GLOBAL.auto_increment_offset = 2;'
 
 install:
+  - if [ "$TRAVIS_PHP_VERSION" = "nightly" ]; then composer config platform.php 7.4.999 ; fi
   - composer install --ansi --prefer-dist --no-interaction --no-progress --quiet;
   - if [ "$PRESTASHOP_TEST_TYPE" != "sanity" ]; then
       bash travis-scripts/install-prestashop;
