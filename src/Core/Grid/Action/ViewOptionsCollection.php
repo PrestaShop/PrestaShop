@@ -26,26 +26,30 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
-use Iterator;
+use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
 
 /**
- * Interface GridActionCollectionInterface defines contract for grid action collection.
+ * Class ViewOptionsCollection is responsible for holding view options.
+ *
+ * @property array $items
  */
-interface GridActionCollectionInterface extends Iterator
+final class ViewOptionsCollection extends AbstractCollection implements ViewOptionsCollectionInterface
 {
     /**
-     * Add grid action to collection.
-     *
-     * @param GridActionInterface $action
-     *
-     * @return self
+     * {@inheritdoc}
      */
-    public function add(GridActionInterface $action);
+    public function add(string $action, $value)
+    {
+        $this->items[$action] = $value;
+
+        return $this;
+    }
 
     /**
-     * Get grid panel actions as array.
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    public function toArray();
+    public function all()
+    {
+        return $this->items;
+    }
 }

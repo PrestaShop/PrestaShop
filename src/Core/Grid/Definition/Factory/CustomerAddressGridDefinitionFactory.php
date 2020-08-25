@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\ViewOptionsCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
@@ -56,7 +57,7 @@ final class CustomerAddressGridDefinitionFactory extends AbstractGridDefinitionF
      */
     protected function getName()
     {
-        return null;
+        return $this->trans('Addresses', [], 'Admin.Global');
     }
 
     /**
@@ -130,5 +131,14 @@ final class CustomerAddressGridDefinitionFactory extends AbstractGridDefinitionF
                     ),
             ])
             );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getViewOptions()
+    {
+        return (new ViewOptionsCollection())
+            ->add('display_name', false);
     }
 }
