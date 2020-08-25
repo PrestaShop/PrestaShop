@@ -253,6 +253,8 @@ admin_orders_send_process_order_email:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:sendProcessOrderEmail
     _legacy_controller: AdminOrders
+  options:
+    expose: true
 
 admin_orders_add_product:
   path: /{orderId}/products
