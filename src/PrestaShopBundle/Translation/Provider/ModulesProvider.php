@@ -192,7 +192,7 @@ class ModulesProvider implements ProviderInterface
                 $locale
             );
         } catch (UnsupportedLocaleException $exception) {
-            // this happens when there no translation file is found for the desired locale
+            // this happens when there is no translation file found for the desired locale
             return $catalogueFromPhpAndSmartyFiles;
         }
 
