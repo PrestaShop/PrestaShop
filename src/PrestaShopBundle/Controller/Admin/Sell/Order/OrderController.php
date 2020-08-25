@@ -670,8 +670,7 @@ class OrderController extends FrameworkBundleAdminController
                     (int) $request->get('combination_id'),
                     $request->get('price_tax_incl'),
                     $request->get('price_tax_excl'),
-                    (int) $request->get('quantity'),
-                    filter_var($request->get('free_shipping'), FILTER_VALIDATE_BOOLEAN)
+                    (int) $request->get('quantity')
                 );
             }
             $this->getCommandBus()->handle($addProductCommand);

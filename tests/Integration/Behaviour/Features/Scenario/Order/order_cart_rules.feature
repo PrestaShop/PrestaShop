@@ -49,7 +49,6 @@ Feature: Order from Back Office (BO)
       | name          | Test Product Cart Rule On Select Product  |
       | amount        | 1                                         |
       | price         | 15                                        |
-      | free_shipping | true                                      |
     Then order "bo_order1" should have 3 products in total
     Then order "bo_order1" should contain 1 product "Test Product Cart Rule On Select Product"
     Then order "bo_order1" should have 1 cart rule
@@ -106,7 +105,6 @@ Feature: Order from Back Office (BO)
       | name          | Test Product Cart Rule On Select Product  |
       | amount        | 1                                         |
       | price         | 15                                        |
-      | free_shipping | true                                      |
     Then order "bo_order1" should have 3 products in total
     Then order "bo_order1" should contain 1 product "Test Product Cart Rule On Select Product"
     Then order "bo_order1" should have 1 cart rule
@@ -186,7 +184,6 @@ Feature: Order from Back Office (BO)
 #      | name          | Test Product Cart Rule On Select Product  |
 #      | amount        | 1                                         |
 #      | price         | 15                                        |
-#      | free_shipping | true                                      |
 #    Then order "bo_order1" should have 3 products in total
 #    Then order "bo_order1" should contain 1 product "Test Product Cart Rule On Select Product"
 #    Then order "bo_order1" should have 1 cart rule
@@ -208,7 +205,6 @@ Feature: Order from Back Office (BO)
 #      | name          | Test Product Cart Rule On Select Product  |
 #      | amount        | 1                                         |
 #      | price         | 15                                        |
-#      | free_shipping | true                                      |
 #    Then order "bo_order1" should have 4 products in total
 #    Then order "bo_order1" should contain 2 product "Test Product Cart Rule On Select Product"
 #    Then order "bo_order1" should have 2 cart rule
@@ -250,7 +246,6 @@ Feature: Order from Back Office (BO)
       | name          | Test Product Cart Rule On Order |
       | amount        | 1                               |
       | price         | 15                              |
-      | free_shipping | true                            |
     Then order "bo_order1" should have 3 products in total
     Then order "bo_order1" should contain 1 product "Test Product Cart Rule On Order"
     Then order "bo_order1" should have 1 cart rule
@@ -307,7 +302,6 @@ Feature: Order from Back Office (BO)
       | name          | Test Product Cart Rule On Order |
       | amount        | 1                               |
       | price         | 15                              |
-      | free_shipping | true                            |
     Then order "bo_order1" should have 3 products in total
     Then order "bo_order1" should contain 1 product "Test Product Cart Rule On Order"
     Then order "bo_order1" should have 1 cart rule
@@ -380,7 +374,6 @@ Feature: Order from Back Office (BO)
       | name          | Test Product With Percent Discount |
       | amount        | 1                                  |
       | price         | 350.00                             |
-      | free_shipping | true                               |
     Then order "bo_order1" should have 3 products in total
     Then order "bo_order1" should contain 1 product "Test Product With Percent Discount"
     Then order "bo_order1" should have 1 cart rule
@@ -455,7 +448,6 @@ Feature: Order from Back Office (BO)
       | name          | Test Product With Percent Discount |
       | amount        | 1                                  |
       | price         | 350.00                             |
-      | free_shipping | true                               |
     Then order "bo_order1" should have 3 products in total
     Then order "bo_order1" should contain 1 product "Test Product With Percent Discount"
     Then order "bo_order1" should have 1 cart rule
@@ -638,7 +630,6 @@ Feature: Order from Back Office (BO)
       | name          | Test Product With Percent Discount |
       | amount        | 1                                  |
       | price         | 350.00                             |
-      | free_shipping | true                               |
     Then order "bo_order1" should have 3 products in total
     Then order "bo_order1" should contain 1 product "Test Product With Percent Discount"
     Then order "bo_order1" should have 2 cart rule
