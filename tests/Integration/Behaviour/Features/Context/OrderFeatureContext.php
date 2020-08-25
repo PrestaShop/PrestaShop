@@ -32,6 +32,7 @@ use Configuration;
 use Exception;
 use LegacyTests\Unit\Core\Cart\CartToOrder\PaymentModuleFake;
 use Order;
+use OrderCarrier;
 use OrderCartRule;
 use PHPUnit\Framework\Assert as Assert;
 use RuntimeException;
@@ -173,6 +174,30 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
                     $orderField,
                     $orderValue,
                     $order->{$orderField}
+                )
+            );
+        }
+    }
+
+    /**
+     * @Then order :reference carrier should have following details:
+     */
+    public function checkOrderCarrierDetails(string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $orderCarrierData = $table->getRowsHash();
+
+        $order = new Order($orderId);
+        $orderCarrier = new OrderCarrier($order->getIdOrderCarrier());
+        foreach ($orderCarrierData as $orderCarrierField => $orderCarrierValue) {
+            Assert::assertEquals(
+                (float) $orderCarrierValue,
+                $orderCarrier->{$orderCarrierField},
+                sprintf(
+                    'Invalid order carrier field %s, expected %s instead of %s',
+                    $orderCarrierField,
+                    $orderCarrierValue,
+                    $orderCarrier->{$orderCarrierField}
                 )
             );
         }
