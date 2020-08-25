@@ -59,6 +59,6 @@ try {
 } catch (PrestashopInstallerException $e) {
     $e->displayMessage();
 } catch (Throwable $e) {
-    echo $e->getMessage();
+    echo (string) $e;
 }
 exit(1);
