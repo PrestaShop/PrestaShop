@@ -457,30 +457,32 @@
         },
         {
             "name": "doctrine/annotations",
-            "version": "v1.8.0",
+            "version": "1.10.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/annotations.git",
-                "reference": "904dca4eb10715b92569fbcd79e201d5c349b6bc"
+                "reference": "bfe91e31984e2ba76df1c1339681770401ec262f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/annotations/zipball/904dca4eb10715b92569fbcd79e201d5c349b6bc",
-                "reference": "904dca4eb10715b92569fbcd79e201d5c349b6bc",
+                "url": "https://api.github.com/repos/doctrine/annotations/zipball/bfe91e31984e2ba76df1c1339681770401ec262f",
+                "reference": "bfe91e31984e2ba76df1c1339681770401ec262f",
                 "shasum": ""
             },
             "require": {
                 "doctrine/lexer": "1.*",
-                "php": "^7.1"
+                "ext-tokenizer": "*",
+                "php": "^7.1 || ^8.0"
             },
             "require-dev": {
                 "doctrine/cache": "1.*",
-                "phpunit/phpunit": "^7.5"
+                "phpstan/phpstan": "^0.12.20",
+                "phpunit/phpunit": "^7.5 || ^9.1.5"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.7.x-dev"
+                    "dev-master": "1.9.x-dev"
                 }
             },
             "autoload": {
@@ -521,7 +523,7 @@
                 "docblock",
                 "parser"
             ],
-            "time": "2019-10-01T18:55:10+00:00"
+            "time": "2020-08-10T19:35:50+00:00"
         },
         {
             "name": "doctrine/cache",
@@ -1908,6 +1910,7 @@
                 "Guzzle",
                 "cache"
             ],
+            "abandoned": true,
             "time": "2019-09-16T13:44:55+00:00"
         },
         {
@@ -6191,6 +6194,7 @@
                 "configuration",
                 "distribution"
             ],
+            "abandoned": true,
             "time": "2019-06-18T15:43:58+00:00"
         },
         {
@@ -9167,6 +9171,7 @@
             "keywords": [
                 "tokenizer"
             ],
+            "abandoned": true,
             "time": "2019-09-17T06:23:10+00:00"
         },
         {
