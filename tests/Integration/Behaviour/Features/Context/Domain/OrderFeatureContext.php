@@ -585,7 +585,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
 
         if ($totalQuantity !== $quantity) {
-            throw new RuntimeException(sprintf('Order should have "%d" products, but has "%d".', $totalQuantity, $quantity));
+            throw new RuntimeException(sprintf('Order should have "%d" products, but has "%d".', $quantity, $totalQuantity));
         }
     }
 
