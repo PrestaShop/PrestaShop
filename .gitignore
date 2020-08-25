@@ -156,7 +156,6 @@ php-cs-fixer
 translations/*
 mails/*
 !mails/themes/
-mails/themes/modern/
 !mails/_partials/
 themes/default-bootstrap/lang/*
 themes/default-bootstrap/modules/*/translations/*.php
