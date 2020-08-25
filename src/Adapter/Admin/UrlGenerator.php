@@ -104,9 +104,7 @@ class UrlGenerator implements UrlGeneratorInterface
                     $class = $route->getDefault('_legacy_param_mapper_class');
                     $method = $route->getDefault('_legacy_param_mapper_method');
                     $method = (new ReflectionClass('\\' . $class))->getMethod($method);
-                    $legacyParameters = PHP_MAJOR_VERSION < 8
-                        ? $method->invoke(($method->isStatic()) ? null : $method->getDeclaringClass()->newInstance(), $parameters)
-                        : $method->invoke(($method->isStatic()) ? null : $method->getDeclaringClass()->newInstance(), ...$parameters);
+                    $legacyParameters = $method->invoke(($method->isStatic()) ? null : $method->getDeclaringClass()->newInstance(), $parameters);
                 }
             }
         }
