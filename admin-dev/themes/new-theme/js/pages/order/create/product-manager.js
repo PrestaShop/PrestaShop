@@ -49,18 +49,16 @@ export default class ProductManager {
     this._initListeners();
 
     return {
-      search: searchPhrase => this._search(searchPhrase),
+      search: (searchPhrase) => this._search(searchPhrase),
 
-      addProductToCart: cartId => this.cartEditor.addProduct(cartId, this._getProductData()),
+      addProductToCart: (cartId) => this.cartEditor.addProduct(cartId, this._getProductData()),
 
-      removeProductFromCart: (cartId, product) =>
-        this.cartEditor.removeProductFromCart(cartId, product),
+      removeProductFromCart: (cartId, product) => this.cartEditor.removeProductFromCart(cartId, product),
 
       changeProductPrice: (cartId, customerId, updatedProduct) =>
         this.cartEditor.changeProductPrice(cartId, customerId, updatedProduct),
 
-      changeProductQty: (cartId, updatedProduct) =>
-        this.cartEditor.changeProductQty(cartId, updatedProduct),
+      changeProductQty: (cartId, updatedProduct) => this.cartEditor.changeProductQty(cartId, updatedProduct),
     };
   }
 
@@ -70,8 +68,8 @@ export default class ProductManager {
    * @private
    */
   _initListeners() {
-    $(createOrderMap.productSelect).on('change', e => this._initProductSelect(e));
-    $(createOrderMap.combinationsSelect).on('change', e => this._initCombinationSelect(e));
+    $(createOrderMap.productSelect).on('change', (e) => this._initProductSelect(e));
+    $(createOrderMap.combinationsSelect).on('change', (e) => this._initCombinationSelect(e));
 
     this._onProductSearch();
     this._onAddProductToCart();
@@ -201,15 +199,17 @@ export default class ProductManager {
     const $searchRequest = $.get(this.router.generate('admin_products_search'), params);
     this.activeSearchRequest = $searchRequest;
 
-    $searchRequest.then((response) => {
-      EventEmitter.emit(eventMap.productSearched, response);
-    }).catch((response) => {
-      if (response.statusText === 'abort') {
-        return;
-      }
+    $searchRequest
+      .then((response) => {
+        EventEmitter.emit(eventMap.productSearched, response);
+      })
+      .catch((response) => {
+        if (response.statusText === 'abort') {
+          return;
+        }
 
-      showErrorMessage(response.responseJSON.message);
-    });
+        showErrorMessage(response.responseJSON.message);
+      });
   }
 
   /**
