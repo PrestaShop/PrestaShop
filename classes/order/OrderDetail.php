@@ -139,13 +139,13 @@ class OrderDetailCore extends ObjectModel
     /** @var datetime */
     public $download_deadline;
 
-    /** @var string $tax_name * */
+    /** @var string */
     public $tax_name;
 
-    /** @var float $tax_rate * */
+    /** @var float */
     public $tax_rate;
 
-    /** @var float $tax_computation_method * */
+    /** @var float */
     public $tax_computation_method;
 
     /** @var int Id tax rules group */

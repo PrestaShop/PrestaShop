@@ -36,28 +36,28 @@ class CustomerMessageCore extends ObjectModel
     /** @var   */
     public $id_employee;
 
-    /** @var string $message */
+    /** @var string */
     public $message;
 
-    /** @var string $file_name */
+    /** @var string */
     public $file_name;
 
-    /** @var string $ip_address */
+    /** @var string */
     public $ip_address;
 
-    /** @var string $user_agent */
+    /** @var string */
     public $user_agent;
 
-    /** @var int $private */
+    /** @var int */
     public $private;
 
-    /** @var string $date_add */
+    /** @var string */
     public $date_add;
 
-    /** @var string $date_upd */
+    /** @var string */
     public $date_upd;
 
-    /** @var bool $read */
+    /** @var bool */
     public $read;
 
     /**
@@ -80,7 +80,7 @@ class CustomerMessageCore extends ObjectModel
         ],
     ];
 
-    /** @var array $webserviceParameters */
+    /** @var array */
     protected $webserviceParameters = [
         'fields' => [
             'id_employee' => [

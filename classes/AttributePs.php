@@ -36,9 +36,9 @@ class AttributePsCore extends ObjectModel
 
     /** @var string Name */
     public $name;
-    /** @var string $color */
+    /** @var string */
     public $color;
-    /** @var int $position */
+    /** @var int */
     public $position;
     /** @todo Find type */
     public $default;
@@ -60,10 +60,10 @@ class AttributePsCore extends ObjectModel
         ],
     ];
 
-    /** @var string $image_dir */
+    /** @var string */
     protected $image_dir = _PS_COL_IMG_DIR_;
 
-    /** @var array $webserviceParameters Web service parameters */
+    /** @var array Web service parameters */
     protected $webserviceParameters = [
         'objectsNodeName' => 'product_option_values',
         'objectNodeName' => 'product_option_value',
