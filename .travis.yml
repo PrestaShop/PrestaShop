@@ -100,6 +100,9 @@ install:
       sed -i '/public function setFetchMode(int $fetchMode, mixed ...$params)/ { n; s/{/{$arg2 = $params[0] ?? null; $arg3 = $params[1] ?? null;/; }' vendor/doctrine/dbal/lib/Doctrine/DBAL/*.php
       sed -i 's/public function setFetchMode($fetchMode, $arg2 = null, $arg3 = null)/public function setFetchMode(int $fetchMode, mixed ...$params)/' vendor/doctrine/dbal/lib/Doctrine/DBAL/*/*.php
       sed -i '/public function setFetchMode(int $fetchMode, mixed ...$params)/ { n; s/{/{$arg2 = $params[0] ?? null; $arg3 = $params[1] ?? null;/; }' vendor/doctrine/dbal/lib/Doctrine/DBAL/*/*.php
+      
+      mv tcpdf_fonts.php vendor/tecnickcom/tcpdf/include/tcpdf_fonts.php
+      mv tcpdf_static.php vendor/tecnickcom/tcpdf/include/tcpdf_static.php
     fi
   - if [ "$PRESTASHOP_TEST_TYPE" != "sanity" ]; then
       bash travis-scripts/install-prestashop;
