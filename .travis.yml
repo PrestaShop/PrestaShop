@@ -83,8 +83,24 @@ before_install:
   - mysql -e 'SET @@GLOBAL.auto_increment_increment = 2, @@GLOBAL.auto_increment_offset = 2;'
 
 install:
-  - if [ "$TRAVIS_PHP_VERSION" = "nightly" ]; then composer config platform.php 7.4.999 ; fi
   - composer install --ansi --prefer-dist --no-interaction --no-progress --quiet;
+  # fix Doctrine DBAL to be compatible with PHP8, remove once DBAL newer than 2.9 is used
+  - |
+    if [ "$TRAVIS_PHP_VERSION" = "nightly" ]; then
+      sed -i 's/public function getMessage()/public function getMessage(): string/' vendor/doctrine/dbal/lib/Doctrine/DBAL/*/*.php
+      sed -i 's/public function query()/public function query(string $statement, ?int $fetch_mode = null, mixed ...$fetch_mode_args)/' vendor/doctrine/dbal/lib/Doctrine/DBAL/*.php
+      sed -i 's/public function query()/public function query(string $statement, ?int $fetch_mode = null, mixed ...$fetch_mode_args)/' vendor/doctrine/dbal/lib/Doctrine/DBAL/*/*.php
+      
+      sed -i 's/public function fetchAll($fetchMode = null, $fetchArgument = null, $ctorArgs = null)/public function fetchAll(int $fetchMode = PDO::FETCH_BOTH, mixed ...$fetch_args)/' vendor/doctrine/dbal/lib/Doctrine/DBAL/*.php
+      sed -i '/public function fetchAll(int $fetchMode = PDO::FETCH_BOTH, mixed ...$fetch_args)/ { n; s/{/{$fetchArgument = $fetch_args[0] ?? null; $ctorArgs = $fetch_args[1] ?? null;/; }' vendor/doctrine/dbal/lib/Doctrine/DBAL/*.php
+      sed -i 's/public function fetchAll($fetchMode = null, $fetchArgument = null, $ctorArgs = null)/public function fetchAll(int $fetchMode = PDO::FETCH_BOTH, mixed ...$fetch_args)/' vendor/doctrine/dbal/lib/Doctrine/DBAL/*/*.php
+      sed -i '/public function fetchAll(int $fetchMode = PDO::FETCH_BOTH, mixed ...$fetch_args)/ { n; s/{/{$fetchArgument = $fetch_args[0] ?? null; $ctorArgs = $fetch_args[1] ?? null;/; }' vendor/doctrine/dbal/lib/Doctrine/DBAL/*/*.php
+      
+      sed -i 's/public function setFetchMode($fetchMode, $arg2 = null, $arg3 = null)/public function setFetchMode(int $fetchMode, mixed ...$params)/' vendor/doctrine/dbal/lib/Doctrine/DBAL/*.php
+      sed -i '/public function setFetchMode(int $fetchMode, mixed ...$params)/ { n; s/{/{$arg2 = $params[0] ?? null; $arg3 = $params[1] ?? null;/; }' vendor/doctrine/dbal/lib/Doctrine/DBAL/*.php
+      sed -i 's/public function setFetchMode($fetchMode, $arg2 = null, $arg3 = null)/public function setFetchMode(int $fetchMode, mixed ...$params)/' vendor/doctrine/dbal/lib/Doctrine/DBAL/*/*.php
+      sed -i '/public function setFetchMode(int $fetchMode, mixed ...$params)/ { n; s/{/{$arg2 = $params[0] ?? null; $arg3 = $params[1] ?? null;/; }' vendor/doctrine/dbal/lib/Doctrine/DBAL/*/*.php
+    fi
   - if [ "$PRESTASHOP_TEST_TYPE" != "sanity" ]; then
       bash travis-scripts/install-prestashop;
     fi
