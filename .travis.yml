@@ -100,6 +100,10 @@ install:
       sed -i '/public function setFetchMode(int $fetchMode, mixed ...$params)/ { n; s/{/{$arg2 = $params[0] ?? null; $arg3 = $params[1] ?? null;/; }' vendor/doctrine/dbal/lib/Doctrine/DBAL/*.php
       sed -i 's/public function setFetchMode($fetchMode, $arg2 = null, $arg3 = null)/public function setFetchMode(int $fetchMode, mixed ...$params)/' vendor/doctrine/dbal/lib/Doctrine/DBAL/*/*.php
       sed -i '/public function setFetchMode(int $fetchMode, mixed ...$params)/ { n; s/{/{$arg2 = $params[0] ?? null; $arg3 = $params[1] ?? null;/; }' vendor/doctrine/dbal/lib/Doctrine/DBAL/*/*.php
+      
+      # remove once symfony/symfony 3.4.44 is released
+      rm -R vendor/symfony/symfony
+      git clone --depth 1 --branch 3.4 https://github.com/symfony/symfony.git vendor/symfony/symfony
     fi
   - if [ "$PRESTASHOP_TEST_TYPE" != "sanity" ]; then
       bash travis-scripts/install-prestashop;
