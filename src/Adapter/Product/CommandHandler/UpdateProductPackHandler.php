@@ -36,7 +36,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductPackHa
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QuantifiedProduct;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShopException;
 
 final class UpdateProductPackHandler extends AbstractProductHandler implements UpdateProductPackHandlerInterface
