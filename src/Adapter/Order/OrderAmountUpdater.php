@@ -64,7 +64,6 @@ class OrderAmountUpdater
     /**
      * @param Order $order
      * @param Cart $cart
-     * @param int|null $orderInvoiceId
      *
      * @throws OrderException
      * @throws PrestaShopDatabaseException
@@ -72,14 +71,13 @@ class OrderAmountUpdater
      */
     public function update(
         Order $order,
-        Cart $cart,
-        ?int $orderInvoiceId
+        Cart $cart
     ): void {
         // @todo: use https://github.com/PrestaShop/decimal for price computations
         $computingPrecision = $this->getPrecisionFromCart($cart);
 
         // Recalculate cart rules and Fix differences between cart's cartRules and order's cartRules
-        $this->updateOrderCartRules($order, $cart, $computingPrecision, $orderInvoiceId);
+        $this->updateOrderCartRules($order, $cart, $computingPrecision);
 
         $orderProducts = $order->getCartProducts();
 
@@ -202,7 +200,6 @@ class OrderAmountUpdater
      * @param Order $order
      * @param Cart $cart
      * @param int $computingPrecision
-     * @param int|null $orderInvoiceId
      *
      * @throws OrderException
      * @throws PrestaShopDatabaseException
@@ -211,8 +208,7 @@ class OrderAmountUpdater
     private function updateOrderCartRules(
         Order $order,
         Cart $cart,
-        int $computingPrecision,
-        ?int $orderInvoiceId
+        int $computingPrecision
     ): void {
         Context::getContext()->cart = $cart;
         CartRule::resetStaticCache();
@@ -265,7 +261,7 @@ class OrderAmountUpdater
             $orderCartRule = new OrderCartRule();
             $orderCartRule->id_order = $order->id;
             $orderCartRule->id_cart_rule = $cartRule->id;
-            $orderCartRule->id_order_invoice = $orderInvoiceId ?? 0;
+            $orderCartRule->id_order_invoice = $cartRule->id_order_invoice;
             $orderCartRule->name = $cartRule->name;
             $orderCartRule->value = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxIncluded(), $computingPrecision);
             $orderCartRule->value_tax_excl = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxExcluded(), $computingPrecision);

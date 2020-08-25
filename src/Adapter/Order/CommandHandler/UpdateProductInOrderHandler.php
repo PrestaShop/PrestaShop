@@ -123,7 +123,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             );
 
             // Update quantity and amounts
-            $order = $this->orderProductQuantityUpdater->update($order, $orderDetail, $productQuantity, $orderInvoice);
+            $order = $this->orderProductQuantityUpdater->update($order, $orderDetail, $productQuantity);
 
             Hook::exec('actionOrderEdited', ['order' => $order]);
         } catch (Exception $e) {

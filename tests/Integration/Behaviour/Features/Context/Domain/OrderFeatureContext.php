@@ -72,7 +72,6 @@ use stdClass;
 use Tax;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
-use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class OrderFeatureContext extends AbstractDomainFeatureContext
 {

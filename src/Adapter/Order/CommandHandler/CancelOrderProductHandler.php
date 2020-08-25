@@ -238,8 +238,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
                     $qty_cancel_product = $orderDetails['productCancelQuantity'][$orderDetail->id_order_detail];
                 }
                 $newQuantity = max((int) $orderDetail->product_quantity - (int) $qty_cancel_product, 0);
-                $orderInvoice = $orderDetail->id_order_invoice != 0 ? new OrderInvoice($orderDetail->id_order_invoice) : null;
-                $this->orderProductQuantityUpdater->update($order, $orderDetail, $newQuantity, $orderInvoice);
+                $this->orderProductQuantityUpdater->update($order, $orderDetail, $newQuantity);
                 Hook::exec('actionProductCancel', ['order' => $order, 'id_order_detail' => (int) $orderDetail->id_order_detail, 'action' => CancellationActionType::CANCEL_PRODUCT], null, false, true, false, $order->id_shop);
             }
         }

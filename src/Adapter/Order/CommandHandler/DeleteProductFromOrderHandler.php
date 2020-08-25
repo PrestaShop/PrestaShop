@@ -33,7 +33,6 @@ use Exception;
 use Hook;
 use Order;
 use OrderDetail;
-use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
@@ -97,8 +96,7 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
             $order = $this->orderProductQuantityUpdater->update(
                 $order,
                 $orderDetail,
-                0,
-                $orderDetail->id_order_invoice != 0 ? new OrderInvoice($orderDetail->id_order_invoice) : null
+                0
             );
 
             Hook::exec('actionOrderEdited', ['order' => $order]);
