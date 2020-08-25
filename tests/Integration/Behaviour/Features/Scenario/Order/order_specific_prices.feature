@@ -57,7 +57,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
     Then product "Test Product With Specific Price" in order "bo_order1" should have no specific price
-    Given I update order "bo_order1" status to "Payment accepted"
+    When I generate invoice for "bo_order1" order
     And order "bo_order1" should have 1 invoices
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Test Product With Specific Price  |
@@ -70,12 +70,12 @@ Feature: Order from Back Office (BO)
       | total_products_wt        | 50.670 |
       | total_discounts_tax_excl | 0.0000 |
       | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 54.800 |
-      | total_paid_tax_incl      | 58.090 |
-      | total_paid               | 58.090 |
-      | total_paid_real          | 48.550 |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
+      | total_paid_tax_excl      | 61.800 |
+      | total_paid_tax_incl      | 65.510 |
+      | total_paid               | 65.510 |
+      | total_paid_real          | 0.0000 |
+      | total_shipping_tax_excl  | 14.0   |
+      | total_shipping_tax_incl  | 14.84  |
 
   Scenario: Add product with specific price, add it again with regular price The first price is updated and specific price is removed
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
@@ -111,7 +111,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
     Then product "Test Product With Specific Price" in order "bo_order1" should have specific price 12.0
-    Given I update order "bo_order1" status to "Payment accepted"
+    When I generate invoice for "bo_order1" order
     And order "bo_order1" should have 1 invoices
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Test Product With Specific Price  |
@@ -124,12 +124,12 @@ Feature: Order from Back Office (BO)
       | total_products_wt        | 57.030 |
       | total_discounts_tax_excl | 0.0000 |
       | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 60.800 |
-      | total_paid_tax_incl      | 64.450 |
-      | total_paid               | 64.450 |
-      | total_paid_real          | 45.370 |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
+      | total_paid_tax_excl      | 67.800 |
+      | total_paid_tax_incl      | 71.870 |
+      | total_paid               | 71.870 |
+      | total_paid_real          | 0.0000 |
+      | total_shipping_tax_excl  | 14.00  |
+      | total_shipping_tax_incl  | 14.84  |
 
   Scenario: Add twice products product with specific price, when one is edited the other is updated as well
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
@@ -152,7 +152,7 @@ Feature: Order from Back Office (BO)
       | name          | Test Product With Specific Price  |
       | amount        | 1                                 |
       | price         | 12                                |
-    Given I update order "bo_order1" status to "Payment accepted"
+    When I generate invoice for "bo_order1" order
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Test Product With Specific Price  |
       | amount        | 1                                 |
@@ -165,12 +165,12 @@ Feature: Order from Back Office (BO)
       | total_products_wt        | 57.030 |
       | total_discounts_tax_excl | 0.0000 |
       | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 60.800 |
-      | total_paid_tax_incl      | 64.450 |
-      | total_paid               | 64.450 |
-      | total_paid_real          | 45.370 |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
+      | total_paid_tax_excl      | 67.800 |
+      | total_paid_tax_incl      | 71.870 |
+      | total_paid               | 71.870 |
+      | total_paid_real          | 0.0000 |
+      | total_shipping_tax_excl  | 14.00  |
+      | total_shipping_tax_incl  | 14.84  |
     When I edit product "Test Product With Specific Price" to order "bo_order1" with following products details:
       | amount        | 1                     |
       | price         | 16                    |
@@ -181,12 +181,12 @@ Feature: Order from Back Office (BO)
       | total_products_wt        | 59.150 |
       | total_discounts_tax_excl | 0.0000 |
       | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 62.800 |
-      | total_paid_tax_incl      | 66.570 |
-      | total_paid               | 66.570 |
-      | total_paid_real          | 45.370 |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
+      | total_paid_tax_excl      | 69.800 |
+      | total_paid_tax_incl      | 73.990 |
+      | total_paid               | 73.990 |
+      | total_paid_real          | 0.0000 |
+      | total_shipping_tax_excl  | 14.00  |
+      | total_shipping_tax_incl  | 14.84  |
     When I edit product "Test Product With Specific Price" to order "bo_order1" with following products details:
       | amount        | 1                     |
       | price         | 15                    |
@@ -196,12 +196,12 @@ Feature: Order from Back Office (BO)
       | total_products_wt        | 57.030 |
       | total_discounts_tax_excl | 0.0000 |
       | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 60.800 |
-      | total_paid_tax_incl      | 64.450 |
-      | total_paid               | 64.450 |
-      | total_paid_real          | 45.370 |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
+      | total_paid_tax_excl      | 67.800 |
+      | total_paid_tax_incl      | 71.870 |
+      | total_paid               | 71.870 |
+      | total_paid_real          | 0.0000 |
+      | total_shipping_tax_excl  | 14.00  |
+      | total_shipping_tax_incl  | 14.84  |
 
   Scenario: Add product with specific price, add then remove it The specific price should be removed
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
@@ -293,7 +293,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
     Then product "Test Product With Specific Price" in order "bo_order1" should have specific price 12.0
-    Given I update order "bo_order1" status to "Payment accepted"
+    When I generate invoice for "bo_order1" order
     And order "bo_order1" should have 1 invoices
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Test Product With Specific Price  |
@@ -309,12 +309,12 @@ Feature: Order from Back Office (BO)
       | total_products_wt        | 99.430 |
       | total_discounts_tax_excl | 0.0    |
       | total_discounts_tax_incl | 0.0    |
-      | total_paid_tax_excl      | 100.80 |
-      | total_paid_tax_incl      | 106.85 |
-      | total_paid               | 106.85 |
-      | total_paid_real          | 70.810 |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
+      | total_paid_tax_excl      | 107.80 |
+      | total_paid_tax_incl      | 114.27 |
+      | total_paid               | 114.27 |
+      | total_paid_real          | 0.0000 |
+      | total_shipping_tax_excl  | 14.0   |
+      | total_shipping_tax_incl  | 14.84  |
     When I remove product "Test Product With Specific Price" from order "bo_order1"
     Then product "Test Product With Specific Price" in order "bo_order1" should have specific price 14.0
     And order "bo_order1" should have 4 products in total
@@ -326,12 +326,12 @@ Feature: Order from Back Office (BO)
       | total_products_wt        | 54.910 |
       | total_discounts_tax_excl | 0.0    |
       | total_discounts_tax_incl | 0.0    |
-      | total_paid_tax_excl      | 58.800 |
-      | total_paid_tax_incl      | 62.330 |
-      | total_paid               | 62.330 |
-      | total_paid_real          | 70.810 |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
+      | total_paid_tax_excl      | 65.800 |
+      | total_paid_tax_incl      | 69.750 |
+      | total_paid               | 69.750 |
+      | total_paid_real          | 0.0000 |
+      | total_shipping_tax_excl  | 14.0   |
+      | total_shipping_tax_incl  | 14.84  |
     When I remove product "Test Product With Specific Price" from order "bo_order1"
     Then product "Test Product With Specific Price" in order "bo_order1" should have no specific price
     And order "bo_order1" should have 2 products in total
@@ -346,7 +346,7 @@ Feature: Order from Back Office (BO)
       | total_paid_tax_excl      | 30.800 |
       | total_paid_tax_incl      | 32.650 |
       | total_paid               | 32.650 |
-      | total_paid_real          | 70.810 |
+      | total_paid_real          | 0.0000 |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
