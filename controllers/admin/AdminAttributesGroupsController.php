@@ -357,7 +357,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
         $this->tpl_folder = 'attributes/';
 
         // Create object Attribute
-        if (!$obj = new Attribute((int) Tools::getValue($this->identifier))) {
+        if (!$obj = new AttributePs((int) Tools::getValue($this->identifier))) {
             return;
         }
 
@@ -488,7 +488,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 }
                 $this->content .= $this->renderForm();
             } elseif ($this->display == 'editAttributes') {
-                if (!$this->object = new Attribute((int) Tools::getValue('id_attribute'))) {
+                if (!$this->object = new AttributePs((int) Tools::getValue('id_attribute'))) {
                     return;
                 }
 
@@ -634,7 +634,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                         if (Validate::isLoadedObject($obj = new AttributeGroup((int) $id))) {
                             $bread_extended[] = '<a href="' . Context::getContext()->link->getAdminLink('AdminAttributesGroups') . '&id_attribute_group=' . $id . '&viewattribute_group">' . $obj->name[$this->context->employee->id_lang] . '</a>';
                         }
-                        if (Validate::isLoadedObject($obj = new Attribute((int) $this->id_attribute))) {
+                        if (Validate::isLoadedObject($obj = new AttributePs((int) $this->id_attribute))) {
                             $bread_extended[] = $this->trans(
                                 'Edit: %value%',
                                 [
@@ -698,7 +698,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
     public function processPosition()
     {
         if (Tools::getIsset('viewattribute_group')) {
-            $object = new Attribute((int) Tools::getValue('id_attribute'));
+            $object = new AttributePs((int) Tools::getValue('id_attribute'));
             self::$currentIndex = self::$currentIndex . '&viewattribute_group';
         } else {
             $object = new AttributeGroup((int) Tools::getValue('id_attribute_group'));
@@ -760,7 +760,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 $this->errors[] = $this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error');
 
                 return;
-            } elseif (!$object = new Attribute((int) Tools::getValue($this->identifier))) {
+            } elseif (!$object = new AttributePs((int) Tools::getValue($this->identifier))) {
                 $this->errors[] = $this->trans('An error occurred while updating the status for an object.', [], 'Admin.Notifications.Error') .
                     ' <b>' . $this->table . '</b> ' .
                     $this->trans('(cannot load object)', [], 'Admin.Notifications.Error');
@@ -956,7 +956,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 $pos = explode('_', $value);
 
                 if ((isset($pos[1], $pos[2])) && (int) $pos[2] === $id_attribute) {
-                    if ($attribute = new Attribute((int) $pos[2])) {
+                    if ($attribute = new AttributePs((int) $pos[2])) {
                         if (isset($position) && $attribute->updatePosition($way, $position)) {
                             echo 'ok position ' . (int) $position . ' for attribute ' . (int) $pos[2] . '\r\n';
                         } else {

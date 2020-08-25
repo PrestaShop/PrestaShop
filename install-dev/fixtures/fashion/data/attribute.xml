@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_attribute>
-  <fields id="name" class="Attribute">
+  <fields id="name" class="AttributePs">
     <field name="id_attribute_group" relation="attribute_group"/>
     <field name="color"/>
   </fields>
