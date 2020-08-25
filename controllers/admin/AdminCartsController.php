@@ -461,7 +461,7 @@ class AdminCartsControllerCore extends AdminController
             // Don't try to use a product if not instanciated before due to errors
             if (isset($product) && $product->id) {
                 if (($id_product_attribute = Tools::getValue('id_product_attribute')) != 0) {
-                    if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty((int) $id_product_attribute, (int) $qty)) {
+                    if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !AttributePs::checkAttributeQty((int) $id_product_attribute, (int) $qty)) {
                         $errors[] = $this->trans('There are not enough products in stock.', [], 'Admin.Catalog.Notification');
                     }
                 } elseif (!$product->checkQty((int) $qty)) {
@@ -486,7 +486,7 @@ class AdminCartsControllerCore extends AdminController
                 if (!($qty_upd = $this->context->cart->updateQty($qty, $id_product, (int) $id_product_attribute, (int) $id_customization, $operator))) {
                     $errors[] = $this->trans('You already have the maximum quantity available for this product.', [], 'Admin.Catalog.Notification');
                 } elseif ($qty_upd < 0) {
-                    $minimal_qty = $id_product_attribute ? Attribute::getAttributeMinimalQty((int) $id_product_attribute) : $product->minimal_quantity;
+                    $minimal_qty = $id_product_attribute ? AttributePs::getAttributeMinimalQty((int) $id_product_attribute) : $product->minimal_quantity;
                     $errors[] = $this->trans('You must add a minimum quantity of %d', [$minimal_qty], 'Admin.Orderscustomers.Notification');
                 }
             }
