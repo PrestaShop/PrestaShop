@@ -29,6 +29,6 @@
  *
  * For BC for PHP 7.x, in PHP 8.0, "Attribute" class is used internally by PHP.
  */
-class AttributeCore extends AttributePsCore
-{
-}
+//class AttributeCore extends AttributePsCore
+//{
+//}
