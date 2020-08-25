@@ -103,6 +103,10 @@ install:
       
       mv tcpdf_fonts.php vendor/tecnickcom/tcpdf/include/tcpdf_fonts.php
       mv tcpdf_static.php vendor/tecnickcom/tcpdf/include/tcpdf_static.php
+      
+      # remove once symfony/symfony 3.4.44 is released
+      rm -R vendor/symfony/symfony
+      git clone --depth 1 --branch 3.4 https://github.com/symfony/symfony.git vendor/symfony/symfony
     fi
   - if [ "$PRESTASHOP_TEST_TYPE" != "sanity" ]; then
       bash travis-scripts/install-prestashop;
