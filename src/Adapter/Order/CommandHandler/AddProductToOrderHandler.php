@@ -32,7 +32,6 @@ use Address;
 use Attribute;
 use Carrier;
 use Cart;
-use CartRule;
 use Combination;
 use Configuration;
 use Context;
@@ -189,7 +188,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $order = $order->refreshShippingCost();
 
             // Update totals amount of order
-            $this->orderAmountUpdater->update($order, $cart, (int) $orderDetail->id_order_invoice);
+            $this->orderAmountUpdater->update($order, $cart);
             Hook::exec('actionOrderEdited', ['order' => $order]);
         } catch (Exception $e) {
             $this->contextStateManager->restoreContext();

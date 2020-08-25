@@ -49,6 +49,7 @@ class CartRuleCore extends ObjectModel
     public $id;
     public $name;
     public $id_customer;
+    public $id_order_invoice;
     public $date_from;
     public $date_to;
     public $description;
@@ -96,6 +97,7 @@ class CartRuleCore extends ObjectModel
         'multilang' => true,
         'fields' => [
             'id_customer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'id_order_invoice' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'date_from' => ['type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true],
             'date_to' => ['type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true],
             'description' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 65534],

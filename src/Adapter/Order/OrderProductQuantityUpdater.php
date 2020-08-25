@@ -40,7 +40,6 @@ use Db;
 use Language;
 use Order;
 use OrderDetail;
-use OrderInvoice;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderProductRemover;
@@ -89,7 +88,6 @@ class OrderProductQuantityUpdater
      * @param Order $order
      * @param OrderDetail $orderDetail
      * @param int $newQuantity
-     * @param OrderInvoice|null $orderInvoice
      *
      * @return Order
      *
@@ -100,8 +98,7 @@ class OrderProductQuantityUpdater
     public function update(
         Order $order,
         OrderDetail $orderDetail,
-        int $newQuantity,
-        ?OrderInvoice $orderInvoice
+        int $newQuantity
     ): Order {
         $cart = new Cart($order->id_cart);
 
@@ -143,7 +140,7 @@ class OrderProductQuantityUpdater
             $this->updateStocks($cart, $orderDetail, $oldQuantity, $newQuantity);
 
             // Update prices on the order after cart rules are recomputed
-            $this->orderAmountUpdater->update($order, $cart, null !== $orderInvoice ? (int) $orderInvoice->id : null);
+            $this->orderAmountUpdater->update($order, $cart);
         } finally {
             $this->contextStateManager->restoreContext();
         }

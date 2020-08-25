@@ -95,6 +95,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         $cartRuleObj->quantity_per_user = 1;
         $cartRuleObj->active = 0;
         $cartRuleObj->highlight = 0;
+        $cartRuleObj->id_order_invoice = null !== $orderInvoice ? (int) $orderInvoice->id : 0;
 
         if ($command->getCartRuleType() === OrderDiscountType::DISCOUNT_PERCENT) {
             $cartRuleObj->reduction_percent = (float) (string) $command->getDiscountValue();
@@ -123,7 +124,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
             throw new OrderException('An error occurred while adding CartRule to cart', 0, $e);
         }
 
-        $this->orderAmountUpdater->update($order, $cart, null !== $orderInvoice ? (int) $orderInvoice->id : null);
+        $this->orderAmountUpdater->update($order, $cart);
     }
 
     /**

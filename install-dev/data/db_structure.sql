@@ -179,6 +179,7 @@ CREATE TABLE `PREFIX_cart` (
 CREATE TABLE `PREFIX_cart_rule` (
   `id_cart_rule` int(10) unsigned NOT NULL auto_increment,
   `id_customer` int unsigned NOT NULL DEFAULT '0',
+  `id_order_invoice` int(11) unsigned NOT NULL DEFAULT '0',
   `date_from` datetime NOT NULL,
   `date_to` datetime NOT NULL,
   `description` text,

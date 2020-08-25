@@ -598,6 +598,9 @@ ALTER TABLE `PREFIX_order_cart_rule` CHANGE `value_tax_excl` `value_tax_excl` DE
 /* add deleted field */
 ALTER TABLE `PREFIX_order_cart_rule` ADD `deleted` TINYINT(1) UNSIGNED NOT NULL;
 
+/* add invoice filter field */
+ALTER TABLE `PREFIX_cart_rule` ADD `id_order_invoice` int(11) unsigned NOT NULL DEFAULT '0' AFTER `id_customer`;
+
 UPDATE
     `PREFIX_order_detail` `od`
 SET
