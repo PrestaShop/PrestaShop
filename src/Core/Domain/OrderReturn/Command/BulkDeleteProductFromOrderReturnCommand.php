@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnId;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnProduct;
 
 /**
- * Deletes products from given merchandise return.
+ * Deletes products from given order return.
  */
 class BulkDeleteProductFromOrderReturnCommand
 {
