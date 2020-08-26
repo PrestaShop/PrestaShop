@@ -1225,6 +1225,9 @@ class ValidateCore
      */
     public static function isSiret($siret)
     {
+        if (empty($siret)) {
+            return true;
+        }
         if (Tools::strlen($siret) != 14) {
             return false;
         }
