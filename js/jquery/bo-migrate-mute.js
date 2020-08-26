@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 (function(){
-  if ( typeof jQuery.migrateMute === "undefined" ) {
+  if (typeof jQuery.migrateMute === "undefined") {
     jQuery.migrateMute = !window.isDebugMode;
   }
 })();
