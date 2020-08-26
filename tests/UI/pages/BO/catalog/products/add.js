@@ -31,6 +31,7 @@ class AddProduct extends BOBasePage {
     this.productDeleteLink = '.product-footer a.delete';
     this.dangerMessageShortDescription = '#form_step1_description_short .has-danger li';
     this.packItemsInput = '#form_step1_inputPackItems';
+    this.packsearchResult = '#js_form_step1_inputPackItems .tt-selectable tr:nth-child(1) td:nth-child(1)';
     this.packQuantityInput = '#form_step1_inputPackItems-curPackItemQty';
     this.addProductToPackButton = '#form_step1_inputPackItems-curPackItemAdd';
     // Form nav
@@ -422,7 +423,7 @@ class AddProduct extends BOBasePage {
    */
   async addProductToPack(page, product, quantity) {
     await page.type(this.packItemsInput, product);
-    await this.waitForSelectorAndClick(page, '#js_form_step1_inputPackItems .tt-selectable tr:nth-child(1) td:nth-child(1)');
+    await this.waitForSelectorAndClick(page, this.packsearchResult);
     await this.setValue(page, this.packQuantityInput, quantity.toString());
     await page.click(this.addProductToPackButton);
   }

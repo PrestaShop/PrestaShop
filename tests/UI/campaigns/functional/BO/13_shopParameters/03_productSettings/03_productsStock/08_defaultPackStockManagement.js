@@ -32,7 +32,13 @@ const baseContext = 'functional_BO_shopParameters_productSettings_productsStock_
 
 let browserContext;
 let page;
-const productData = new ProductFaker({type: 'Pack of products', quantity: 15, pack: {demo_1: 10, demo_2: 20}});
+const firstProductData = new ProductFaker({type: 'Standard product', quantity: 40, reference: 'demo_test1'});
+const secondProductData = new ProductFaker({type: 'Standard product', quantity: 30, reference: 'demo_test2'});
+const productPackData = new ProductFaker({
+  type: 'Pack of products',
+  quantity: 15,
+  pack: {demo_test1: 10, demo_test2: 5}
+});
 
 describe('Default pack stock management', async () => {
   // before and after functions
@@ -49,53 +55,81 @@ describe('Default pack stock management', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  describe('Create a product', async () => {
-    it('should go to \'Catalog > Products\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+  describe('Create 3 products', async () => {
+    const tests = [
+      {args: {productToCreate: firstProductData}},
+      {args: {productToCreate: secondProductData}},
+      {args: {productToCreate: productPackData}},
+    ];
+    tests.forEach((test) => {
+      it('should go to \'Catalog > Products\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.productsLink,
-      );
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.catalogParentLink,
+          dashboardPage.productsLink,
+        );
 
-      await productsPage.closeSfToolBar(page);
+        await productsPage.closeSfToolBar(page);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
-    });
+        const pageTitle = await productsPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(productsPage.pageTitle);
+      });
 
-    it('should go to create product page and create a product', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
+      it('should go to create product page and create a product', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
-      await productsPage.goToAddProductPage(page);
-      const validationMessage = await addProductPage.createEditBasicProduct(page, productData);
+        await productsPage.goToAddProductPage(page);
+        const validationMessage = await addProductPage.createEditBasicProduct(page, test.args.productToCreate);
 
-      await expect(validationMessage).to.equal(addProductPage.settingUpdatedMessage);
+        await expect(validationMessage).to.equal(addProductPage.settingUpdatedMessage);
+      });
     });
   });
 
   describe('Default pack stock', () => {
-    it('should go to \'Shop parameters > Product Settings\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage', baseContext);
-
-      await addProductPage.goToSubMenu(
-        page,
-        addProductPage.shopParametersParentLink,
-        addProductPage.productSettingsLink,
-      );
-
-      const pageTitle = await productSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
-    });
-
     const tests = [
-      {args: {option: 'Decrement pack only.'}},
-      /*{args: {option: 'Decrement products in pack only.'}},
-      {args: {option: 'Decrement both.'}},*/
+      {
+        args: {
+          option: 'Decrement pack only.',
+          packQuantity: productPackData.quantity - 1,
+          firstProductQuantity: firstProductData.quantity,
+          secondProductQuantity: secondProductData.quantity,
+        },
+      },
+      {
+        args: {
+          option: 'Decrement products in pack only.',
+          packQuantity: productPackData.quantity - 1,
+          firstProductQuantity: firstProductData.quantity - productPackData.pack.demo_test1,
+          secondProductQuantity: secondProductData.quantity - productPackData.pack.demo_test2,
+        },
+      },
+      {
+        args: {
+          option: 'Decrement both.',
+          packQuantity: productPackData.quantity - 2,
+          firstProductQuantity: firstProductData.quantity - 2 * productPackData.pack.demo_test1,
+          secondProductQuantity: secondProductData.quantity - 2 * productPackData.pack.demo_test2,
+        },
+      },
     ];
     tests.forEach((test, index) => {
       describe(`Check the option '${test.args.option}'`, async () => {
+        it('should go to \'Shop parameters > Product Settings\' page', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage', baseContext);
+
+          await addProductPage.goToSubMenu(
+            page,
+            addProductPage.shopParametersParentLink,
+            addProductPage.productSettingsLink,
+          );
+
+          const pageTitle = await productSettingsPage.getPageTitle(page);
+          await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+        });
+
         it(`should choose the Default pack stock management '${test.args.option}'`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}StockManagement`, baseContext);
 
@@ -137,7 +171,7 @@ describe('Default pack stock management', async () => {
           await foLoginPage.goToHomePage(page);
 
           // search for the created pack and add go to product page
-          await foHomePage.searchProduct(page, productData.name);
+          await foHomePage.searchProduct(page, productPackData.name);
           await searchResultsPage.goToProductPage(page, 1);
 
           // Add the created product to the cart
@@ -179,17 +213,53 @@ describe('Default pack stock management', async () => {
           await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
         });
 
-        it('should go to the created product page and check the quantity', async function () {
+        it('should go to \'Catalog > Products\' page', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+
+          await dashboardPage.goToSubMenu(
+            page,
+            dashboardPage.catalogParentLink,
+            dashboardPage.productsLink,
+          );
+
+          const pageTitle = await productsPage.getPageTitle(page);
+          await expect(pageTitle).to.contains(productsPage.pageTitle);
+        });
+
+        it('should search for the pack of products and check the quantity', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'filterProductByName', baseContext);
 
-          await productsPage.filterProducts(page, 'name', productData.name);
-          await productsPage.goToEditProductPage(page, 1);
+          await productsPage.resetFilter(page);
+          await productsPage.filterProducts(page, 'name', productPackData.name);
+
+          const packQuantity = await productsPage.getProductQuantityFromList(page, 1);
+          await expect(packQuantity).to.equal(test.args.packQuantity);
+        });
+
+        it('should search for the first product in the pack and check the quantity', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', 'filterProductByName', baseContext);
+
+          await productsPage.resetFilter(page);
+          await productsPage.filterProducts(page, 'name', firstProductData.name);
+
+          const packQuantity = await productsPage.getProductQuantityFromList(page, 1);
+          await expect(packQuantity).to.equal(test.args.firstProductQuantity);
+        });
+
+        it('should search for the second product in the pack and check the quantity', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', 'filterProductByName', baseContext);
+
+          await productsPage.resetFilter(page);
+          await productsPage.filterProducts(page, 'name', secondProductData.name);
+
+          const packQuantity = await productsPage.getProductQuantityFromList(page, 1);
+          await expect(packQuantity).to.equal(test.args.secondProductQuantity);
         });
       });
     });
   });
 
-  /*describe('Delete the product created for test', async () => {
+  describe('Delete the 3 created products', async () => {
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToDeleteProduct', baseContext);
 
@@ -203,19 +273,20 @@ describe('Default pack stock management', async () => {
       await expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
-    it('should delete product', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
+    const tests = [
+      {args: {productToCreate: firstProductData}},
+      {args: {productToCreate: secondProductData}},
+      {args: {productToCreate: productPackData}},
+    ];
+    tests.forEach((test, index) => {
+      it(`should delete product n°${index}`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-      const deleteTextResult = await productsPage.deleteProduct(page, productData);
-      await expect(deleteTextResult).to.equal(productsPage.productDeletedSuccessfulMessage);
+        await productsPage.resetFilter(page);
+        await productsPage.filterProducts(page, 'name', test.args.productToCreate.name);
+        const deleteTextResult = await productsPage.deleteProduct(page, test.args.productToCreate);
+        await expect(deleteTextResult).to.equal(productsPage.productDeletedSuccessfulMessage);
+      });
     });
-
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
-
-      await productsPage.resetFilterCategory(page);
-      const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfProducts).to.be.above(0);
-    });
-  });*/
+  });
 });

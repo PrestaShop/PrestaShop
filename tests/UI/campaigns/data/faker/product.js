@@ -7,7 +7,7 @@ module.exports = class Product {
     this.status = productToCreate.status === undefined ? true : productToCreate.status;
     this.summary = productToCreate.summary === undefined ? faker.lorem.sentence() : productToCreate.summary;
     this.description = productToCreate.description === undefined ? faker.lorem.sentence() : productToCreate.description;
-    this.reference = faker.random.alphaNumeric(7);
+    this.reference = productToCreate.reference || faker.random.alphaNumeric(7);
     this.quantity = productToCreate.quantity === undefined
       ? faker.random.number({min: 1, max: 9})
       : productToCreate.quantity;
