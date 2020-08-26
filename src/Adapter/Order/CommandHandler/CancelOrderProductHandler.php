@@ -91,8 +91,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
         $customizationQuantities = Customization::countQuantityByCart($cartId);
         $orderDetails = $this->getOrderDetails($command);
 
-        // check quantity of cancelled products versus cancellable quantities
-        $this->checkProductCancelQuantities($orderDetails, $customizationQuantities);
+        $this->assertCancelableProductQuantities($orderDetails, $customizationQuantities);
 
         $this->cancelProducts($order, $orderDetails);
 
@@ -175,7 +174,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
      *
      * @throws InvalidCancelProductException
      */
-    private function checkProductCancelQuantities(array $orderDetails, array $customizationQuantities)
+    private function assertCancelableProductQuantities(array $orderDetails, array $customizationQuantities)
     {
         if (empty($orderDetails['productsOrderDetails'])) {
             throw new InvalidCancelProductException(InvalidCancelProductException::INVALID_QUANTITY, 0);
