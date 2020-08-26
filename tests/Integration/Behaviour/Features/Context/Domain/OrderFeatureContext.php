@@ -486,6 +486,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     private function getInvoiceFromOrder(Order $order, string $invoicePosition)
     {
         $invoicesCollection = $order->getInvoicesCollection();
+        Assert::assertGreaterThanOrEqual(1, $invoicesCollection->count());
+
         $invoiceIndexes = [
             'first' => 0,
             'second' => 1,
@@ -1003,28 +1005,29 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add discount to order :orderReference on last invoice and following details:
+     * @When I add discount to order :orderReference on :invoicePosition invoice and following details:
      *
      * @param string $orderReference
+     * @param string $invoicePosition
      * @param TableNode $table
      *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
-    public function addAmountTypeCartRuleAndUpdateSingleInvoice(string $orderReference, TableNode $table)
+    public function addAmountTypeCartRuleAndUpdateSingleInvoice(string $orderReference, string $invoicePosition, TableNode $table)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
         $data = $table->getRowsHash();
 
-        $invoices = $this->getOrderInvoices($orderId);
-        Assert::assertGreaterThanOrEqual(1, $invoices->count());
+        $order = new Order($orderId);
+        $orderInvoice = $this->getInvoiceFromOrder($order, $invoicePosition);
 
         $this->getQueryBus()->handle(new AddCartRuleToOrderCommand(
             $orderId,
             $data['name'],
             $data['type'],
             $data['value'],
-            (int) $invoices->getLast()->id
+            (int) $orderInvoice->id
         ));
     }
 
