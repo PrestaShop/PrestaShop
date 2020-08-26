@@ -1,4 +1,5 @@
-{**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,17 +22,21 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *}
+ */
 
-{extends file="helpers/list/list_footer.tpl"}
-	{block name="after"}
-		{if is_null($modules_list)}
-			<div class="panel">
-				<h3>{l s="Use one of our recommended carrier modules" d='Admin.Shipping.Feature'}</h3>
-				<p>{l s="It seems there are no recommended carriers for your country." d='Admin.Shipping.Feature'}</p>
-				<p><a href="https://www.prestashop.com/en/contact-us">{l s="Do you think there should be one? Let us know!" d='Admin.Shipping.Feature'}</a></p>
-			</div>
-		{else}
-			{$modules_list}
-		{/if}
-	{/block}
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\Carrier\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\BulkToggleCarrierStatusCommand;
+
+/**
+ * Defines contract for BulkToggleCarrierStatusHandler
+ */
+interface BulkToggleCarrierStatusHandlerInterface
+{
+    /**
+     * @param BulkToggleCarrierStatusCommand $command
+     */
+    public function handle(BulkToggleCarrierStatusCommand $command);
+}
