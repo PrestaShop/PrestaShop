@@ -147,7 +147,7 @@ export default class OrderProductAdd {
       );
     });
 
-    this.productAddActionBtn.on('click', event => this.handleAddProductWithConfirmationModal(event));
+    this.productAddActionBtn.on('click', event => this.confirmNewInvoice(event));
     this.invoiceSelect.on('change', () => this.orderProductRenderer.toggleProductAddNewInvoiceInfo());
   }
 
@@ -220,15 +220,11 @@ export default class OrderProductAdd {
     );
   }
 
-  handleAddProductWithConfirmationModal(event) {
+  confirmNewInvoice(event) {
     const invoiceId = parseInt(this.invoiceSelect.val(), 10);
     const orderId = $(event.currentTarget).data('orderId');
 
     if (invoiceId === 0) {
-      const combinationId =
-        typeof $(':selected', this.combinationsSelect).val() === 'undefined'
-          ? 0
-          : $(':selected', this.combinationsSelect).val();
       const modal = new ConfirmModal(
         {
           id: 'modal-confirm-new-invoice',
@@ -238,33 +234,42 @@ export default class OrderProductAdd {
           closeButtonLabel: this.invoiceSelect.data('modal-cancel')
         },
         () => {
-          const productPriceMatch = this.orderPricesRefresher.checkOtherProductPricesMatch(
-            this.priceTaxIncludedInput.val(),
-            this.productIdInput.val(),
-            combinationId
-          );
-          if (!productPriceMatch) {
-            const modalEditPrice = new ConfirmModal(
-              {
-                id: 'modal-confirm-new-price',
-                confirmTitle: this.invoiceSelect.data('modal-edit-price-title'),
-                confirmMessage: this.invoiceSelect.data('modal-edit-price-body'),
-                confirmButtonLabel: this.invoiceSelect.data('modal-edit-price-apply'),
-                closeButtonLabel: this.invoiceSelect.data('modal-edit-price-cancel')
-              },
-              () => {
-                this.addProduct(orderId);
-              }
-            );
-
-            modalEditPrice.show();
-          } else {
-            this.addProduct(orderId);
-          }
+          this.confirmNewPrice(orderId);
         }
       );
 
       modal.show();
+    } else {
+      this.confirmNewPrice(orderId);
+    }
+  }
+
+  confirmNewPrice(orderId) {
+    const combinationId =
+      typeof $(':selected', this.combinationsSelect).val() === 'undefined'
+        ? 0
+        : $(':selected', this.combinationsSelect).val();
+    const productPriceMatch = this.orderPricesRefresher.checkOtherProductPricesMatch(
+      this.priceTaxIncludedInput.val(),
+      this.productIdInput.val(),
+      combinationId
+    );
+
+    if (!productPriceMatch) {
+      const modalEditPrice = new ConfirmModal(
+        {
+          id: 'modal-confirm-new-price',
+          confirmTitle: this.invoiceSelect.data('modal-edit-price-title'),
+          confirmMessage: this.invoiceSelect.data('modal-edit-price-body'),
+          confirmButtonLabel: this.invoiceSelect.data('modal-edit-price-apply'),
+          closeButtonLabel: this.invoiceSelect.data('modal-edit-price-cancel')
+        },
+        () => {
+          this.addProduct(orderId);
+        }
+      );
+
+      modalEditPrice.show();
     } else {
       this.addProduct(orderId);
     }
