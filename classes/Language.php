@@ -985,7 +985,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
         $result = Db::getInstance()->executeS($sql);
         if (!is_array($result)) {
-            // executeS method can returns false
+            // executeS method can return false
             return;
         }
 
