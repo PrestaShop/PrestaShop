@@ -7365,7 +7365,7 @@ class ProductCore extends ObjectModel
             $this->unit_price = ($this->unit_price_ratio != 0 ? $this->price / $this->unit_price_ratio : 0);
         }
 
-        $success = parent::update($null_values);die(print_r($this, true));
+        $success = parent::update($null_values);
         if ($success) {
             $this->deleteFromSupplier();
             $this->addSupplierReference($this->id_supplier, 0, $this->supplier_reference, $this->wholesale_price);
