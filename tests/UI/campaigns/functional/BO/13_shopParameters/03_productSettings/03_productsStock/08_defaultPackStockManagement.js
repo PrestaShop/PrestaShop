@@ -61,9 +61,9 @@ describe('Default pack stock management', async () => {
       {args: {productToCreate: secondProductData}},
       {args: {productToCreate: productPackData}},
     ];
-    tests.forEach((test) => {
+    tests.forEach((test, index) => {
       it('should go to \'Catalog > Products\' page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `goToProductsPage${index}`, baseContext);
 
         await dashboardPage.goToSubMenu(
           page,
@@ -78,7 +78,7 @@ describe('Default pack stock management', async () => {
       });
 
       it('should go to create product page and create a product', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `createProduct${index}`, baseContext);
 
         await productsPage.goToAddProductPage(page);
         const validationMessage = await addProductPage.createEditBasicProduct(page, test.args.productToCreate);
@@ -116,9 +116,9 @@ describe('Default pack stock management', async () => {
       },
     ];
     tests.forEach((test, index) => {
-      describe(`Check the option '${test.args.option}'`, async () => {
+      describe(`Test the option '${test.args.option}'`, async () => {
         it('should go to \'Shop parameters > Product Settings\' page', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage', baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `goToProductSettingsPage${index}`, baseContext);
 
           await addProductPage.goToSubMenu(
             page,
@@ -131,7 +131,7 @@ describe('Default pack stock management', async () => {
         });
 
         it(`should choose the Default pack stock management '${test.args.option}'`, async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}StockManagement`, baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `stockManagementOption${index}`, baseContext);
 
           const result = await productSettingsPage.setDefaultPackStockManagement(page, test.args.option);
           await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
@@ -149,7 +149,7 @@ describe('Default pack stock management', async () => {
         });
 
         it('should go to login page', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `goToLoginFO${test.args.action}`, baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `goToLoginFO${index}`, baseContext);
 
           await foHomePage.goToLoginPage(page);
           const pageTitle = await foLoginPage.getPageTitle(page);
@@ -157,7 +157,7 @@ describe('Default pack stock management', async () => {
         });
 
         it('should sign in with default customer', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `sighInFO${test.args.action}`, baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `sighInFO${index}`, baseContext);
 
           await foLoginPage.customerLogin(page, DefaultAccount);
           const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
@@ -165,7 +165,7 @@ describe('Default pack stock management', async () => {
         });
 
         it('should create an order', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `createOrder${test.args.action}`, baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `createOrder${index}`, baseContext);
 
           // Go to home page
           await foLoginPage.goToHomePage(page);
@@ -197,7 +197,7 @@ describe('Default pack stock management', async () => {
         });
 
         it('should sign out from FO', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `sighOutFO${test.args.action}`, baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `sighOutFO${index}`, baseContext);
 
           await orderConfirmationPage.logout(page);
           const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
@@ -214,7 +214,7 @@ describe('Default pack stock management', async () => {
         });
 
         it('should go to \'Catalog > Products\' page', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `goToProductsPageToCheck${index}`, baseContext);
 
           await dashboardPage.goToSubMenu(
             page,
@@ -227,7 +227,7 @@ describe('Default pack stock management', async () => {
         });
 
         it('should search for the pack of products and check the quantity', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', 'filterProductByName', baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `filterPackProductByName${index}`, baseContext);
 
           await productsPage.resetFilter(page);
           await productsPage.filterProducts(page, 'name', productPackData.name);
@@ -237,7 +237,7 @@ describe('Default pack stock management', async () => {
         });
 
         it('should search for the first product in the pack and check the quantity', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', 'filterProductByName', baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `filterFirstProductByName${index}`, baseContext);
 
           await productsPage.resetFilter(page);
           await productsPage.filterProducts(page, 'name', firstProductData.name);
@@ -247,7 +247,7 @@ describe('Default pack stock management', async () => {
         });
 
         it('should search for the second product in the pack and check the quantity', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', 'filterProductByName', baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `filterSecondProductByName${index}`, baseContext);
 
           await productsPage.resetFilter(page);
           await productsPage.filterProducts(page, 'name', secondProductData.name);
@@ -280,7 +280,7 @@ describe('Default pack stock management', async () => {
     ];
     tests.forEach((test, index) => {
       it(`should delete product n°${index}`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `deleteProduct${index}`, baseContext);
 
         await productsPage.resetFilter(page);
         await productsPage.filterProducts(page, 'name', test.args.productToCreate.name);
