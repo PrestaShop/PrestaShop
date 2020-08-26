@@ -50,7 +50,6 @@ admin_merchandise_returns_edit:
   requirements:
     merchandiseReturnId: \d+
 
-# @todo wonder If I can have the same action in controller for this route or do I need to create another one to clearly separate them?
 admin_merchandise_returns_update:
   path: /{merchandiseReturnId}/update
   methods: [POST]

@@ -29,13 +29,17 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\MerchandiseReturn;
 
 use OrderReturn;
+use OrderReturnState;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\DeleteMerchandiseReturnProductException;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnException;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnOrderStateConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MissingMerchandiseReturnRequiredFieldsException;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnDetailId;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnId;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnStateId;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\ValueObject\OrderReturnStateId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
 use PrestaShopException;
 
@@ -66,6 +70,33 @@ abstract class AbstractMerchandiseReturnHandler extends AbstractObjectModelHandl
         }
 
         return $orderReturn;
+    }
+
+    /**
+     * Gets legacy OrderReturn
+     *
+     * @param OrderReturnStateId $orderReturnStateId
+     * @return OrderReturn
+     *
+     * @throws MerchandiseReturnException
+     * @throws MerchandiseReturnOrderStateConstraintException
+     */
+    protected function getOrderReturnState(MerchandiseReturnStateId $orderReturnStateId): OrderReturnState
+    {
+        try {
+            $orderReturnState = new OrderReturnState($orderReturnStateId->getValue());
+        } catch (PrestaShopException $e) {
+            throw new MerchandiseReturnException('Failed to create new order return state', 0, $e);
+        }
+
+        if ($orderReturnState->id !== $orderReturnStateId->getValue()) {
+            throw new MerchandiseReturnOrderStateConstraintException(
+                $orderReturnStateId,
+                sprintf('Merchandise return state with id "%s" was not found.', $orderReturnStateId->getValue())
+            );
+        }
+
+        return $orderReturnState;
     }
 
     /**

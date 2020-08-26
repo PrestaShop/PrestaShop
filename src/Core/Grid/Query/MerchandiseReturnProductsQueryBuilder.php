@@ -148,8 +148,8 @@ final class MerchandiseReturnProductsQueryBuilder extends AbstractDoctrineQueryB
             }
 
             if ($filterName === 'merchandise_return_id') {
-                $qb->andWhere('ord.`id_order_return` LIKE :' . $filterName);
-                $qb->setParameter($filterName, '%' . $filterValue . '%');
+                $qb->andWhere('ord.`id_order_return`  = :' . $filterName);
+                $qb->setParameter($filterName, $filterValue);
                 continue;
             }
 
