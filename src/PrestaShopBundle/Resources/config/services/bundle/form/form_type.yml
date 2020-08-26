@@ -1135,7 +1135,7 @@ services:
             - { name: form.type }
 
     form.type.order.message:
-      class: 'PrestaShopBundle\Form\Admin\Sell\CustomerService\OrderMessageType'
+        class: 'PrestaShopBundle\Form\Admin\Sell\CustomerService\OrderMessageType'
 
     form.type.merchandise.return:
         class: 'PrestaShopBundle\Form\Admin\Sell\CustomerService\MerchandiseReturn\OrderReturnType'
