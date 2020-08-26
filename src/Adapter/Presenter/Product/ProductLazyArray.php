@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 
 use Configuration;
+use DateTime;
 use Hook;
 use Language;
 use Link;
