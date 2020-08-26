@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnId;
 
 /**
- * Is thrown when merchandise return is not found in merchandise return subdomain
+ * Is thrown when order return is not found in order return subdomain
  */
 class OrderReturnNotFoundException extends OrderReturnException
 {

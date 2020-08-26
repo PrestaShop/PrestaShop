@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Base exception for merchandise return subdomain
+ * Base exception for order return subdomain
  */
 class OrderReturnException extends DomainException
 {

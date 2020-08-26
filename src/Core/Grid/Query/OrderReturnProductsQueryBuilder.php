@@ -33,7 +33,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class OrderReturnQueryBuilder builds queries for merchandise returns grid data.
+ * Class OrderReturnQueryBuilder builds queries for order returns grid data.
  */
 final class OrderReturnProductsQueryBuilder extends AbstractDoctrineQueryBuilder
 {
@@ -126,7 +126,7 @@ final class OrderReturnProductsQueryBuilder extends AbstractDoctrineQueryBuilder
     }
 
     /**
-     * Apply filters to merchandise returns query builder.
+     * Apply filters to order returns query builder.
      *
      * @param array $filters
      * @param QueryBuilder $qb

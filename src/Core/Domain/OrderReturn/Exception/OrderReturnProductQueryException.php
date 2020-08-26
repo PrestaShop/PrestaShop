@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception;
 
 /**
- * Exception for merchandise return product query
+ * Exception for order return product query
  */
 class OrderReturnProductQueryException extends OrderReturnProductException
 {
