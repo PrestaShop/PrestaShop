@@ -41,6 +41,7 @@ module.exports = {
     attribute: './js/pages/attribute',
     attribute_group: './js/pages/attribute-group',
     backup: './js/pages/backup',
+    carrier: './js/pages/carrier',
     catalog: './js/app/pages/catalog',
     catalog_product: './js/pages/catalog/product',
     cart_rule: './js/pages/cart-rule',
