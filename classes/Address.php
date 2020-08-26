@@ -307,11 +307,9 @@ class AddressCore extends ObjectModel
             return false;
         }
 
-        self::$_idZones[$id_address] = (int) (
-            !empty($result['id_zone_state'])
-            ? $result['id_zone_state']
-            : $result['id_zone']
-        );
+        self::$_idZones[$id_address] = !empty($result['id_zone_state'])
+            ? (int) $result['id_zone_state']
+            : (int) $result['id_zone'];
 
         return self::$_idZones[$id_address];
     }
