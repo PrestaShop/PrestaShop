@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Gets data for merchandise return products grid
+ * Gets data for order return products grid
  */
 class OrderReturnProductsGridDataFactory implements GridDataFactoryInterface
 {

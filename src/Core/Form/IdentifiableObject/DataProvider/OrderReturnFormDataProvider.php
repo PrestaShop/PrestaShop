@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing;
 
 /**
- * Provides data for merchandise return edit form
+ * Provides data for order return edit form
  */
 final class OrderReturnFormDataProvider implements FormDataProviderInterface
 {
