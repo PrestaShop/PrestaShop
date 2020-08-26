@@ -226,6 +226,7 @@ class CarriersController extends FrameworkBundleAdminController
      * @DemoRestricted(redirectRoute="admin_carriers_index")
      *
      * @param Request $request
+     *
      * @return RedirectResponse
      */
     public function updatePositionAction(Request $request)
