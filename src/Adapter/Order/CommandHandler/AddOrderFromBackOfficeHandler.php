@@ -77,7 +77,6 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
 
         $cart = new Cart($command->getCartId()->getValue());
 
-        $this->assertAddressesAreNotDeleted($cart);
         $this->assertAddressesAreNotDisabled($cart);
 
         //Context country, language and currency is used in PaymentModule::validateOrder (it should rely on cart address country instead)
@@ -137,25 +136,6 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
 
         if ($isInvoiceCountryDisabled) {
             throw new OrderException(sprintf('Invoice country for cart with id "%d" is disabled.', $cart->id));
-        }
-    }
-
-    /**
-     * @param Cart $cart
-     *
-     * @throws OrderException
-     */
-    private function assertAddressesAreNotDeleted(Cart $cart)
-    {
-        $invoiceAddress = new Address($cart->id_address_invoice);
-        $deliveryAddress = new Address($cart->id_address_delivery);
-
-        if ($invoiceAddress->deleted) {
-            throw new OrderException(sprintf('The invoice address with id "%s" cannot be used, because it is deleted', $invoiceAddress->id));
-        }
-
-        if ($deliveryAddress->deleted) {
-            throw new OrderException(sprintf('The delivery address with id "%s" cannot be used, because it is deleted', $deliveryAddress->id));
         }
     }
 
