@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstrain
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnId;
 
 /**
- * Gets merchandise return for editing in Back Office
+ * Gets order return for editing in Back Office
  */
 class GetOrderReturnForEditing
 {

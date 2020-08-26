@@ -47,7 +47,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Class OrderReturnGridDefinitionFactory builds grid definition for merchandise returns grid.
+ * Class OrderReturnGridDefinitionFactory builds grid definition for order returns grid.
  */
 final class OrderReturnProductsGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {

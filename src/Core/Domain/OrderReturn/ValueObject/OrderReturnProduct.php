@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstrain
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
 
 /**
- * Provides merchandise return id
+ * Provides order return id
  */
 class OrderReturnProduct
 {

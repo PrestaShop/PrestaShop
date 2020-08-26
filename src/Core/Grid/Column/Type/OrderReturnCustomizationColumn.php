@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class OrderReturnColumn defines column that renders customization data for merchandise return products
+ * Class OrderReturnColumn defines column that renders customization data for order return products
  */
 class OrderReturnCustomizationColumn extends AbstractColumn
 {

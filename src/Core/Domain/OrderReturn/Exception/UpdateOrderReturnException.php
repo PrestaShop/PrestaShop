@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception;
 
 /**
- * Is thrown when cannot update merchandise return
+ * Is thrown when cannot update order return
  */
 class UpdateOrderReturnException extends OrderReturnException
 {

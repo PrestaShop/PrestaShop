@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderReturnProductsGridDe
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
- * Provides default filters for merchandise returns grid.
+ * Provides default filters for order returns grid.
  */
 final class OrderReturnProductsFilters extends Filters
 {
