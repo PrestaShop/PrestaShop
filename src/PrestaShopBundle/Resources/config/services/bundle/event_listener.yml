@@ -94,8 +94,8 @@ services:
         tags:
             - { name: kernel.event_listener, event: prestashop.search_criteria.filter, method: onFilterSearchCriteria }
 
-    prestashop.bundle.event_listener.filter_merchandise_return_products_search_criteria:
-      class: PrestaShopBundle\EventListener\FilterMerchandiseReturnProductsSearchCriteriaListener
+    prestashop.bundle.event_listener.filter_order_return_products_search_criteria:
+      class: PrestaShopBundle\EventListener\FilterOrderReturnProductsSearchCriteriaListener
       arguments:
         - '@request_stack'
       tags:
