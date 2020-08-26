@@ -7340,8 +7340,11 @@ class ProductCore extends ObjectModel
     public function addWs($autodate = true, $null_values = false)
     {
         $success = $this->add($autodate, $null_values);
-        if ($success && Configuration::get('PS_SEARCH_INDEXATION')) {
-            Search::indexation(false, $this->id);
+        if ($success) {
+            $this->addSupplierReference($this->id_supplier, $this->id_product_attribute, $this->supplier_reference, $this->wholesale_price);
+            if (Configuration::get('PS_SEARCH_INDEXATION')) {
+                Search::indexation(false, $this->id);
+            }
         }
 
         return $success;
@@ -7362,9 +7365,13 @@ class ProductCore extends ObjectModel
             $this->unit_price = ($this->unit_price_ratio != 0 ? $this->price / $this->unit_price_ratio : 0);
         }
 
-        $success = parent::update($null_values);
-        if ($success && Configuration::get('PS_SEARCH_INDEXATION')) {
-            Search::indexation(false, $this->id);
+        $success = parent::update($null_values);die(print_r($this, true));
+        if ($success) {
+            $this->deleteFromSupplier();
+            $this->addSupplierReference($this->id_supplier, 0, $this->supplier_reference, $this->wholesale_price);
+            if (Configuration::get('PS_SEARCH_INDEXATION')) {
+                Search::indexation(false, $this->id);
+            }
         }
         Hook::exec('actionProductUpdate', ['id_product' => (int) $this->id]);
 
