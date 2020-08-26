@@ -37,7 +37,7 @@ const secondProductData = new ProductFaker({type: 'Standard product', quantity: 
 const productPackData = new ProductFaker({
   type: 'Pack of products',
   quantity: 15,
-  pack: {demo_test1: 10, demo_test2: 5}
+  pack: {demo_test1: 10, demo_test2: 5},
 });
 
 describe('Default pack stock management', async () => {
@@ -47,9 +47,9 @@ describe('Default pack stock management', async () => {
     page = await helper.newTab(browserContext);
   });
 
-  /*after(async () => {
+  after(async () => {
     await helper.closeBrowserContext(browserContext);
-  });*/
+  });
 
   it('should login in BO', async function () {
     await loginCommon.loginBO(this, page);

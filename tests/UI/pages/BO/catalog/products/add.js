@@ -30,6 +30,7 @@ class AddProduct extends BOBasePage {
     this.productTaxRuleSelect = '#step2_id_tax_rules_group_rendered';
     this.productDeleteLink = '.product-footer a.delete';
     this.dangerMessageShortDescription = '#form_step1_description_short .has-danger li';
+
     this.packItemsInput = '#form_step1_inputPackItems';
     this.packsearchResult = '#js_form_step1_inputPackItems .tt-selectable tr:nth-child(1) td:nth-child(1)';
     this.packQuantityInput = '#form_step1_inputPackItems-curPackItemQty';
