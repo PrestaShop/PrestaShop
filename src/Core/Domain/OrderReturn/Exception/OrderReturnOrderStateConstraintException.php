@@ -29,12 +29,12 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception;
 
 /**
- * Is thrown when merchandise return constraint is violated
+ * Is thrown when order return constraint is violated
  */
 class OrderReturnOrderStateConstraintException extends OrderReturnException
 {
     /**
-     * When merchandise return order state id is not valid
+     * When order return order state id is not valid
      */
     const INVALID_ID = 10;
 }
