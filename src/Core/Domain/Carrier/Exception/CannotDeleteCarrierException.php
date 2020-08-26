@@ -1,4 +1,5 @@
-{**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,21 +22,24 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *}
+ */
 
-{extends file="helpers/list/list_content.tpl"}
-			{block name="open_td"}
-				<td
-					{if isset($params.position)}
-						id="td_{if !empty($id_category)}{$id_category}{else}0{/if}_{$tr.$identifier}"
-					{/if}
-					class="{if !$no_link}pointer{/if}
-					{if isset($params.position) && $order_by == 'position'  && $order_way != 'DESC'} dragHandle{/if}
-					{if isset($params.align)} {$params.align}{/if}"
-					{if (!isset($params.position) && !$no_link && !isset($params.remove_onclick))}
-            {assign var="identifier_field" value=$identifier|escape:'html':'UTF-8'}
-						onclick="document.location = '{$link->getAdminLink('AdminCarrierWizard', true, [], [$identifier_field => $tr.$identifier|escape:'html':'UTF-8'])|escape:'html':'UTF-8'}'">
-					{else}
-						>
-					{/if}
-			{/block}
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Exception;
+
+/**
+ * Thrown when cannot delete carrier(s)
+ */
+class CannotDeleteCarrierException extends CarrierException
+{
+    /**
+     * Thrown when cannot delete single carrier.
+     */
+    const SINGLE_DELETE = 10;
+
+    /**
+     * Thrown when cannot bulk delete carriers.
+     */
+    const BULK_DELETE = 20;
+}
