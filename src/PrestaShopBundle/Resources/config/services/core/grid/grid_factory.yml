@@ -343,3 +343,11 @@ services:
           - '@prestashop.core.grid.data.factory.outstanding_decorator'
           - '@prestashop.core.grid.filter.form_factory'
           - '@prestashop.core.hook.dispatcher'
+
+    prestashop.core.grid.factory.carrier:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+        - '@prestashop.core.grid.definition.factory.carrier'
+        - '@prestashop.core.grid.data.factory.carrier_decorator'
+        - '@prestashop.core.grid.filter.form_factory'
+        - '@prestashop.core.hook.dispatcher'
