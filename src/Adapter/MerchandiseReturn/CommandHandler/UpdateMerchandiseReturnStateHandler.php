@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\MerchandiseReturn\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Entity\OrderReturn;
+use OrderReturn;
 use PrestaShop\PrestaShop\Adapter\MerchandiseReturn\AbstractMerchandiseReturnHandler;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\UpdateMerchandiseReturnStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\CommandHandler\UpdateMerchandiseReturnStateHandlerInterface;
@@ -66,9 +66,8 @@ class UpdateMerchandiseReturnStateHandler extends AbstractMerchandiseReturnHandl
      */
     private function updateOrderReturnWithCommandData(OrderReturn $orderReturn, UpdateMerchandiseReturnStateCommand $command): OrderReturn
     {
-        if (null !== $command->getMerchandiseReturnStateId()->getValue()) {
-            $orderReturn->state = $command->getMerchandiseReturnStateId()->getValue();
-        }
+        $orderReturnState = $this->getOrderReturnState($command->getMerchandiseReturnStateId());
+        $orderReturn->state = $orderReturnState->id;
 
         return $orderReturn;
     }
