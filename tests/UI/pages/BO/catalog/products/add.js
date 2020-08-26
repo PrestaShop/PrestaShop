@@ -437,9 +437,8 @@ class AddProduct extends BOBasePage {
    */
   async addPackOfProducts(page, pack) {
     const keys = Object.keys(pack);
-    /*eslint-disable*/
-    for (const key of keys) {
-      await this.addProductToPack(page, key, pack[key]);
+    for (let i = 0; i < keys.length; i += 1) {
+      await this.addProductToPack(page, keys[i], pack[keys[i]]);
     }
   }
 }
