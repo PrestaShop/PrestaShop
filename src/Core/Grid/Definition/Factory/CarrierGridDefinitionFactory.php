@@ -143,7 +143,7 @@ class CarrierGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'id_field' => 'id_carrier',
                         'position_field' => 'position',
                         'update_method' => 'POST',
-                        'update_route' => 'admin_carriers_update_position'
+                        'update_route' => 'admin_carriers_update_position',
                     ])
             )
             ->add(
