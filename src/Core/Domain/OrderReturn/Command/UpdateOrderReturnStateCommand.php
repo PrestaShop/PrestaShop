@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnId;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\ValueObject\OrderReturnStateId;
 
 /**
- * Edits provided merchandise return.
+ * Edits provided order return.
  * It can edit either all or partial data.
  */
 class UpdateOrderReturnStateCommand

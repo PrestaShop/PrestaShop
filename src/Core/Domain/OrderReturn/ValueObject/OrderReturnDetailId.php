@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstraintException;
 
 /**
- * Provides merchandise return id
+ * Provides order return id
  */
 class OrderReturnDetailId
 {
@@ -69,7 +69,7 @@ class OrderReturnDetailId
     private function assertIsIntegerGreaterThanZero(int $value): void
     {
         if (0 >= $value) {
-            throw new OrderReturnConstraintException(sprintf('Invalid merchandise return detail id "%s".', $value));
+            throw new OrderReturnConstraintException(sprintf('Invalid order return detail id "%s".', $value));
         }
     }
 }
