@@ -24,6 +24,8 @@
  */
 import jQuery from 'jquery';
 
-if ( typeof jQuery.migrateMute === "undefined" ) {
-  jQuery.migrateMute = !window.prestashop.isDebugMode;
-}
+(function(){
+  if ( typeof jQuery.migrateMute === "undefined" ) {
+    jQuery.migrateMute = !window.prestashop.isDebugMode;
+  }
+})();
