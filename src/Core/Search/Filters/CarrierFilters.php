@@ -1,4 +1,5 @@
-{**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,28 +22,36 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *}
-{extends file="helpers/form/form.tpl"}
+ */
 
-{block name=script}
-	// At the loading
-	($("input[name='is_free']:checked").val() == 0) ? $('#shipping_costs_div').show('toggle'): $('#shipping_costs_div').hide();
+declare(strict_types=1);
 
-	$(document).on('change', "input[name='is_free']", function() {ldelim}
-		($("input[name='is_free']:checked").val() == 0) ? $('#shipping_costs_div').show('toggle'): $('#shipping_costs_div').hide();
-	{rdelim});
-{/block}
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-{block name="label"}
-	{if $input.type == 'select' && $input.name == 'id_tax_rules_group'}
-		<div id="shipping_costs_div" style="display:{if isset($fields_value.is_free) && $fields_value.is_free}none{else}block{/if}">
-	{/if}
-	{$smarty.block.parent}
-{/block}
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CarrierGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
-{block name="field"}
-	{$smarty.block.parent}
-	{if $input.type == 'select' && $input.name == 'range_behavior'}
-		</div>
-	{/if}
-{/block}
+/**
+ * Defines default filter for carriers listing
+ */
+final class CarrierFilters extends Filters
+{
+    /**
+     * @var string
+     */
+    protected $filterId = CarrierGridDefinitionFactory::GRID_ID;
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaults()
+    {
+        return [
+            'limit' => 50,
+            'offset' => 0,
+            'orderBy' => 'position',
+            'sortOrder' => 'asc',
+            'filters' => [],
+        ];
+    }
+}
