@@ -43,6 +43,7 @@ class ProductSettings extends BOBasePage {
     this.oosAllowedBackordersLabel = '#form_stock_oos_allowed_backorders_1';
     this.oosAllowedBackordersLabel = idLang => `#form_stock_oos_allowed_backorders_${idLang}`;
     this.oosDeniedBackordersLabel = idLang => `#form_stock_oos_denied_backorders_${idLang}`;
+    this.defaultPackStockManagementSelect = '#form_stock_pack_stock_management';
     this.saveProductsStockForm = `${this.productsStockForm} .card-footer button`;
     // Pagination form
     this.paginationFormBlock = '#configuration_fieldset_order_by_pagination';
@@ -342,6 +343,18 @@ class ProductSettings extends BOBasePage {
     await this.changeLanguageForSelectors(page, 'fr');
     await this.setValue(page, this.oosDeniedBackordersLabel(2), label);
     await this.clickAndWaitForNavigation(page, this.savePaginationFormButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /**
+   * Set default pack stock management
+   * @param page
+   * @param option
+   * @returns {Promise<string>}
+   */
+  async setDefaultPackStockManagement(page, option) {
+    await this.selectByVisibleText(page, this.defaultPackStockManagementSelect, option);
+    await this.clickAndWaitForNavigation(page, this.saveProductsStockForm);
     return this.getTextContent(page, this.alertSuccessBlock);
   }
 }
