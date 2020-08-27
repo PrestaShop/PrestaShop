@@ -69,7 +69,10 @@ class OrderReturnDetailId
     private function assertIsIntegerGreaterThanZero(int $value): void
     {
         if (0 >= $value) {
-            throw new OrderReturnConstraintException(sprintf('Invalid order return detail id "%s".', $value));
+            throw new OrderReturnConstraintException(
+                sprintf('Invalid order return detail id "%s".', $value),
+                OrderReturnConstraintException::INVALID_ID
+            );
         }
     }
 }
