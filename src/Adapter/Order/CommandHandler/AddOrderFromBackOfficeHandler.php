@@ -37,12 +37,14 @@ use Customer;
 use Employee;
 use Exception;
 use Language;
+use Message;
 use Module;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddOrderFromBackOfficeHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use Validate;
 
 /**
  * @internal
@@ -99,6 +101,8 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
         );
 
         try {
+            $this->addOrderMessage($cart, $command->getOrderMessage());
+
             $paymentModule->validateOrder(
                 (int) $cart->id,
                 $command->getOrderStateId(),
@@ -121,6 +125,30 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
         }
 
         return new OrderId((int) $paymentModule->currentOrder);
+    }
+
+    /**
+     * Saves customer message and link it to the cart.
+     *
+     * @param Cart $cart
+     * @param string $orderMessage
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    private function addOrderMessage(Cart $cart, string $orderMessage): void
+    {
+        $messageId = null;
+        if ($oldMessage = Message::getMessageByCartId((int) $cart->id)) {
+            $messageId = $oldMessage['id_message'];
+        }
+        $message = new Message((int) $messageId);
+        if (Validate::isMessage($orderMessage)) {
+            $message->message = $orderMessage;
+            $message->id_cart = (int) $cart->id;
+            $message->id_customer = (int) $cart->id_customer;
+            $message->save();
+        }
     }
 
     /**
