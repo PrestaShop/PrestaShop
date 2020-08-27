@@ -456,7 +456,7 @@ Feature: Order from Back Office (BO)
       | weight                 | 0.000 |
       | shipping_cost_tax_excl | 14.00 |
       | shipping_cost_tax_incl | 14.84 |
-    When I edit product "Test Product B" to order "bo_order1" with following products details:
+    When I edit product "Test Product B" in second invoice from order "bo_order1" with following products details:
       | amount        | 3                       |
       | price         | 10                      |
       | invoice       | first                   |
@@ -498,3 +498,94 @@ Feature: Order from Back Office (BO)
       | weight                 | 0.000 |
       | shipping_cost_tax_excl | 14.00 |
       | shipping_cost_tax_incl | 14.84 |
+
+  Scenario: I move order detail from invoices to invoices and check that duplicate are not allowed
+    When I generate invoice for "bo_order1" order
+    Then order "bo_order1" should have 1 invoices
+    When I add products to order "bo_order1" to first invoice and the following products details:
+      | name          | Test Product A |
+      | amount        | 3              |
+      | price         | 15             |
+    And I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product A |
+      | amount        | 2              |
+      | price         | 15             |
+    And I add products to order "bo_order1" to second invoice and the following products details:
+      | name          | Test Product B |
+      | amount        | 1              |
+      | price         | 10             |
+    And I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product B |
+      | amount        | 5              |
+      | price         | 10             |
+    Then order "bo_order1" should have 3 invoices
+    And order "bo_order1" should have 13 products in total
+    And order "bo_order1" should contain 2 products "Mug The best is yet to come"
+    And order "bo_order1" should contain 5 products "Test Product A"
+    And order "bo_order1" should contain 6 products "Test Product B"
+    And the available stock for product "Test Product A" should be 95
+    And the available stock for product "Test Product B" should be 94
+    # This is the same base scenario as the first one, we don't check values here to make it shorter
+    When I edit product "Test Product A" in second invoice from order "bo_order1" with following products details:
+      | amount        | 2                       |
+      | price         | 15                      |
+      | invoice       | third                   |
+    Then first invoice from order "bo_order1" should contain 2 products "Mug The best is yet to come"
+    And first invoice from order "bo_order1" should contain 3 products "Test Product A"
+    And first invoice from order "bo_order1" should have following details:
+      | total_products          | 68.800 |
+      | total_products_wt       | 72.930 |
+      | total_discount_tax_excl | 0.0    |
+      | total_discount_tax_incl | 0.0    |
+      | total_paid_tax_excl     | 75.80  |
+      | total_paid_tax_incl     | 80.35  |
+      | total_shipping_tax_excl | 7.0    |
+      | total_shipping_tax_incl | 7.42   |
+    And second invoice from order "bo_order1" should contain 0 products "Test Product A"
+    And second invoice from order "bo_order1" should contain 1 products "Test Product B"
+    And second invoice from order "bo_order1" should have following details:
+      | total_products          | 10.000 |
+      | total_products_wt       | 10.600 |
+      | total_discount_tax_excl | 0.0    |
+      | total_discount_tax_incl | 0.0    |
+      | total_paid_tax_excl     | 17.00  |
+      | total_paid_tax_incl     | 18.02  |
+      | total_shipping_tax_excl | 7.0    |
+      | total_shipping_tax_incl | 7.42   |
+    And third invoice from order "bo_order1" should contain 2 products "Test Product A"
+    And third invoice from order "bo_order1" should contain 5 products "Test Product B"
+    And third invoice from order "bo_order1" should have following details:
+      | total_products          | 80.000 |
+      | total_products_wt       | 84.800 |
+      | total_discount_tax_excl | 0.0    |
+      | total_discount_tax_incl | 0.0    |
+      | total_paid_tax_excl     | 87.00  |
+      | total_paid_tax_incl     | 92.22  |
+      | total_shipping_tax_excl | 7.0    |
+      | total_shipping_tax_incl | 7.42   |
+    And order "bo_order1" should have following details:
+      | total_products           | 158.80 |
+      | total_products_wt        | 168.33 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 179.80 |
+      | total_paid_tax_incl      | 190.59 |
+      | total_paid               | 190.59 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 21.0   |
+      | total_shipping_tax_incl  | 22.26  |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 0.000 |
+      | shipping_cost_tax_excl | 21.00 |
+      | shipping_cost_tax_incl | 22.26 |
+    When I edit product "Test Product A" in third invoice from order "bo_order1" with following products details:
+      | amount        | 2                       |
+      | price         | 15                      |
+      | invoice       | first                   |
+    Then I should get error that adding duplicate product is forbidden
+    And first invoice from order "bo_order1" should contain 2 products "Mug The best is yet to come"
+    And first invoice from order "bo_order1" should contain 3 products "Test Product A"
+    And second invoice from order "bo_order1" should contain 0 products "Test Product A"
+    And second invoice from order "bo_order1" should contain 1 products "Test Product B"
+    And third invoice from order "bo_order1" should contain 2 products "Test Product A"
+    And third invoice from order "bo_order1" should contain 5 products "Test Product B"
