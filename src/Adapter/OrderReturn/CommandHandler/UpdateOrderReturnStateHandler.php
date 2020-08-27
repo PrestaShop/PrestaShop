@@ -69,6 +69,7 @@ class UpdateOrderReturnStateHandler extends AbstractOrderReturnHandler implement
      */
     private function updateOrderReturnWithCommandData(OrderReturn $orderReturn, UpdateOrderReturnStateCommand $command): OrderReturn
     {
+        /** getOrderReturnState will throw error in case this state does not exist */
         $orderReturnState = $this->getOrderReturnState($command->getOrderReturnStateId());
         $orderReturn->state = $orderReturnState->id;
 
