@@ -24,6 +24,6 @@
  */
 (function(){
   if (typeof jQuery.migrateMute === "undefined") {
-    jQuery.migrateMute = !window.isDebugMode;
+    jQuery.migrateMute = !window.prestashop.debug;
   }
 })();
