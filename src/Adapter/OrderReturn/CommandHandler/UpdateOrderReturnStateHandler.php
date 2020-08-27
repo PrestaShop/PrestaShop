@@ -63,6 +63,7 @@ class UpdateOrderReturnStateHandler extends AbstractOrderReturnHandler implement
      * @param UpdateOrderReturnStateCommand $command
      *
      * @return OrderReturn
+     *
      * @throws OrderReturnException
      * @throws \PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnOrderStateConstraintException
      */

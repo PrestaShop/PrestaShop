@@ -32,12 +32,9 @@ use Customer;
 use DateTime;
 use Order;
 use PrestaShop\PrestaShop\Adapter\OrderReturn\AbstractOrderReturnHandler;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryHandler\GetOrderReturnForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\EditableOrderReturn;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnStateId;
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
 /**
  * Handles query which gets merchandise return for editing
