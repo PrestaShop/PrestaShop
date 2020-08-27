@@ -461,6 +461,24 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I edit product :productName in :invoicePosition invoice from order :orderReference with following products details:
+     *
+     * @param string $productName
+     * @param string $orderReference
+     * @param TableNode $table
+     */
+    public function editProductsFromInvoiceWithFollowingDetails(string $productName, string $orderReference, string $invoicePosition, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $order = new Order($orderId);
+        $invoice = $this->getInvoiceFromOrder($order, $invoicePosition);
+        $productOrderDetail = $this->getOrderDetailFromOrder($productName, $orderReference, null, $invoice->id);
+        $data = $table->getRowsHash();
+
+        $this->updateProductInOrder($orderId, $productOrderDetail, $data);
+    }
+
+    /**
      * @When I edit combination :combinationName of product :productName to order :orderReference with following products details:
      *
      * @param string $combinationName
@@ -532,6 +550,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         } catch (InvalidProductQuantityException $e) {
             $this->lastException = $e;
         } catch (ProductOutOfStockException $e) {
+            $this->lastException = $e;
+        } catch (DuplicateProductInOrderException $e) {
             $this->lastException = $e;
         }
     }
@@ -1349,10 +1369,15 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      * @param string $productName
      * @param string $orderReference
      * @param string|null $combinationName
+     * @param int|null $orderInvoiceId
      *
      * @return array
      */
-    private function getOrderDetailFromOrder(string $productName, string $orderReference, string $combinationName = null): array
+    private function getOrderDetailFromOrder(
+        string $productName,
+        string $orderReference,
+        ?string $combinationName = null,
+        ?int $orderInvoiceId = null): array
     {
         $product = $this->getProductByName($productName);
         $productId = $product->getProductId();
@@ -1362,7 +1387,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $productOrderDetail = null;
         foreach ($orderDetails as $orderDetail) {
             if ((int) $orderDetail['product_id'] === $productId
-                && (null === $combinationId || (int) $orderDetail['product_attribute_id'] === $combinationId)) {
+                && (null === $combinationId || (int) $orderDetail['product_attribute_id'] === $combinationId)
+                && (null === $orderInvoiceId || (int) $orderDetail['id_order_invoice'] === $orderInvoiceId)) {
                 $productOrderDetail = $orderDetail;
                 break;
             }
