@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\BulkDeleteOrderRetur
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\EditableOrderReturn;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnDetailId;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnProduct;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\MerchandiseReturnFilters;
@@ -150,15 +151,13 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      * @param Request $request
      * @param int $orderReturnId
      * @param int $orderReturnDetailId
-     * @param int $customizationId
-     *
      * @return RedirectResponse
      */
-    public function deleteProductAction(Request $request, int $orderReturnId, int $orderReturnDetailId, int $customizationId): RedirectResponse
+    public function deleteProductAction(Request $request, int $orderReturnId, int $orderReturnDetailId): RedirectResponse
     {
         try {
             $this->getCommandBus()->handle(
-                new DeleteProductFromOrderReturnCommand($orderReturnId, $orderReturnDetailId, $customizationId)
+                new DeleteProductFromOrderReturnCommand($orderReturnId, $orderReturnDetailId)
             );
 
             $this->addFlash(
@@ -178,23 +177,26 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
     }
 
     /**
-     * Deletes cartRules on bulk action
+     * Deletes order return products on bulk action
      *
      * @DemoRestricted(redirectRoute="admin_merchandise_returns_index")
      *
+     * @param int $orderReturnId
      * @param Request $request
      *
      * @return RedirectResponse
+     *
+     * @throws OrderReturnConstraintException
      */
     public function bulkDeleteProductAction(int $orderReturnId, Request $request): RedirectResponse
     {
-        $orderReturnProducts = $this->getBulkOrderReturnProductsFromRequest($request);
+        $orderReturnDetails = $this->getBulkOrderReturnDetailsFromRequest($request);
 
         try {
             $this->getCommandBus()->handle(
                 new BulkDeleteProductFromOrderReturnCommand(
                     $orderReturnId,
-                    $orderReturnProducts
+                    $orderReturnDetails
                 )
             );
             $this->addFlash(
@@ -205,7 +207,12 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        return $this->redirectToRoute('admin_merchandise_returns_index');
+        return $this->redirectToRoute(
+            'admin_order_returns_edit',
+            [
+                'orderReturnId' => $orderReturnId
+            ]
+        );
     }
 
     /**
@@ -214,30 +221,26 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @return OrderReturnProduct[]
+     * @throws OrderReturnConstraintException
      */
-    private function getBulkOrderReturnProductsFromRequest(Request $request): array
+    private function getBulkOrderReturnDetailsFromRequest(Request $request): array
     {
         $orderReturnDetailIds = $request->request->get('order_return_products_order_return_bulk');
-        $orderReturnCustomizationIds = $request->request->get('order_return_products_order_return_bulk_id_customization');
         if (!is_array($orderReturnDetailIds)) {
             return [];
         }
 
-        $orderReturnProducts = [];
+        $orderReturnDetails = [];
 
         foreach ($orderReturnDetailIds as $key => $orderReturnDetailId) {
-            $orderReturnProduct = new OrderReturnProduct(
+            $orderReturnProduct = new OrderReturnDetailId(
                 (int) $orderReturnDetailId
             );
 
-            if ($orderReturnCustomizationIds[$key]) {
-                $orderReturnProduct->setCustomizationId((int) $orderReturnCustomizationIds[$key]);
-            }
-
-            $orderReturnProducts[] = $orderReturnProduct;
+            $orderReturnDetails[] = $orderReturnProduct;
         }
 
-        return $orderReturnProducts;
+        return $orderReturnDetails;
     }
 
     /**
