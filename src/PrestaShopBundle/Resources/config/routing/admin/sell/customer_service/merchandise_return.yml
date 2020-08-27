@@ -62,9 +62,8 @@ admin_order_returns_update:
   requirements:
     orderReturnId: \d+
 
-# @todo is this a good way to pass customizationId?
 admin_order_returns_delete_product:
-  path: /{orderReturnId}/products/{orderReturnDetailId}/delete/{customizationId}
+  path: /{orderReturnId}/products/{orderReturnDetailId}/delete
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:deleteProduct
@@ -76,7 +75,6 @@ admin_order_returns_delete_product:
   requirements:
     orderReturnId: \d+
     orderReturnDetailId: \d+
-    customizationId: \d+
 
 admin_order_returns_delete_product_bulk:
   path: /{orderReturnId}/products/bulk-delete

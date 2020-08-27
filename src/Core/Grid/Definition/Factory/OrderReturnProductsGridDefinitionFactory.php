@@ -148,7 +148,6 @@ final class OrderReturnProductsGridDefinitionFactory extends AbstractFilterableG
                                 'route_param_field' => 'id_order_return',
                                 'extra_route_params' => [
                                     'orderReturnDetailId' => 'id_order_detail',
-                                    'customizationId' => 'id_customization',
                                 ],
                                 'confirm_message' => $this->trans('Are you sure you want to delete the selected item(s)?', [], 'Admin.Global'),
                             ])
