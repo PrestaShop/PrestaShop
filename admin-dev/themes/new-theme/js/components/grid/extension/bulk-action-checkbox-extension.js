@@ -37,25 +37,7 @@ export default class BulkActionCheckboxExtension {
   extend(grid) {
     this.handleBulkActionCheckboxSelect(grid);
     this.handleBulkActionSelectAllCheckbox(grid);
-    this.handleBulkActionMultipleInputs(grid);
   }
-
-  /**
-   * Handles input selection when there is more then one input per checkbox
-   *
-   * @param {Grid} grid
-   *
-   * @private
-   */
-  handleBulkActionMultipleInputs(grid) {
-    grid.getContainer().on('click', '.md-checkbox-control', (e) => {
-      e.preventDefault();
-      const $checkbox = $(e.currentTarget).closest('.md-checkbox');
-      const isChecked = $checkbox.find('input').is(':checked');
-      $checkbox.find('input').prop('checked', !isChecked);
-    });
-  }
-
 
   /**
    * Handles "Select all" button in the grid
@@ -67,6 +49,7 @@ export default class BulkActionCheckboxExtension {
   handleBulkActionSelectAllCheckbox(grid) {
     grid.getContainer().on('change', '.js-bulk-action-select-all', (e) => {
       const $checkbox = $(e.currentTarget);
+
       const isChecked = $checkbox.is(':checked');
 
       if (isChecked) {
