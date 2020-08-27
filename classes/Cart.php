@@ -2228,10 +2228,10 @@ class CartCore extends ObjectModel
                 }
             }
         }
-        if (!empty($cartRules) && null !== $id_order_invoice) {
+        if (!empty($cartRules) && !empty($id_order_invoice)) {
             foreach ($cartRules as $key => $value) {
                 $cartRule = $cartRules[$key];
-                if (isset($cartRule['id_order_invoice']) && (int) $id_order_invoice !== (int) $cartRule['id_order_invoice']) {
+                if (!empty($cartRule['id_order_invoice']) && (int) $id_order_invoice !== (int) $cartRule['id_order_invoice']) {
                     unset($cartRules[$key]);
                 }
             }

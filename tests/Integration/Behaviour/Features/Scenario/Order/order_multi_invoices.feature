@@ -396,3 +396,105 @@ Feature: Order from Back Office (BO)
       | weight                 | 0.000 |
       | shipping_cost_tax_excl | 14.00 |
       | shipping_cost_tax_incl | 14.84 |
+
+  Scenario: I add products in two different invoices, a product has automatic discount when I move it to an order the discount is also moved
+    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
+    Given there is a cart rule named "CartRulePercentForSpecificProduct" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
+    And cart rule "CartRulePercentForSpecificProduct" is restricted to product "Test Product B"
+    When I generate invoice for "bo_order1" order
+    Then order "bo_order1" should have 1 invoices
+    And I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product A |
+      | amount        | 2              |
+      | price         | 15             |
+    And I add products to order "bo_order1" to second invoice and the following products details:
+      | name          | Test Product B |
+      | amount        | 3              |
+      | price         | 10             |
+    Then order "bo_order1" should have 2 invoices
+    And order "bo_order1" should have 7 products in total
+    And order "bo_order1" should contain 2 products "Mug The best is yet to come"
+    And order "bo_order1" should contain 2 products "Test Product A"
+    And order "bo_order1" should contain 3 products "Test Product B"
+    And order "bo_order1" should have 1 cart rule
+    And order "bo_order1" should have cart rule "CartRulePercentForSpecificProduct" with amount "$15.00"
+    And the available stock for product "Test Product A" should be 98
+    And the available stock for product "Test Product B" should be 97
+    And first invoice from order "bo_order1" should contain 2 products "Mug The best is yet to come"
+    And first invoice from order "bo_order1" should have following details:
+      | total_products          | 23.800 |
+      | total_products_wt       | 25.230 |
+      | total_discount_tax_excl | 0.0    |
+      | total_discount_tax_incl | 0.0    |
+      | total_paid_tax_excl     | 30.800 |
+      | total_paid_tax_incl     | 32.650 |
+      | total_shipping_tax_excl | 7.0    |
+      | total_shipping_tax_incl | 7.42   |
+    And second invoice from order "bo_order1" should contain 2 products "Test Product A"
+    And second invoice from order "bo_order1" should contain 3 products "Test Product B"
+    And second invoice from order "bo_order1" should have following details:
+      | total_products          | 60.000 |
+      | total_products_wt       | 63.600 |
+      | total_discount_tax_excl | 15.0   |
+      | total_discount_tax_incl | 15.9   |
+      | total_paid_tax_excl     | 52.00  |
+      | total_paid_tax_incl     | 55.12  |
+      | total_shipping_tax_excl | 7.0    |
+      | total_shipping_tax_incl | 7.42   |
+    And order "bo_order1" should have following details:
+      | total_products           | 83.80 |
+      | total_products_wt        | 88.83 |
+      | total_discounts_tax_excl | 15.0  |
+      | total_discounts_tax_incl | 15.9  |
+      | total_paid_tax_excl      | 82.80 |
+      | total_paid_tax_incl      | 87.77 |
+      | total_paid               | 87.77 |
+      | total_paid_real          | 0.0   |
+      | total_shipping_tax_excl  | 14.0  |
+      | total_shipping_tax_incl  | 14.84 |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 0.000 |
+      | shipping_cost_tax_excl | 14.00 |
+      | shipping_cost_tax_incl | 14.84 |
+    When I edit product "Test Product B" to order "bo_order1" with following products details:
+      | amount        | 3                       |
+      | price         | 10                      |
+      | invoice       | first                   |
+    Then the available stock for product "Test Product A" should be 98
+    And the available stock for product "Test Product B" should be 97
+    And first invoice from order "bo_order1" should contain 2 products "Mug The best is yet to come"
+    And first invoice from order "bo_order1" should contain 3 products "Test Product B"
+    And first invoice from order "bo_order1" should have following details:
+      | total_products          | 53.800 |
+      | total_products_wt       | 57.030 |
+      | total_discount_tax_excl | 15.0   |
+      | total_discount_tax_incl | 15.9   |
+      | total_paid_tax_excl     | 45.800 |
+      | total_paid_tax_incl     | 48.550 |
+      | total_shipping_tax_excl | 7.0    |
+      | total_shipping_tax_incl | 7.42   |
+    And second invoice from order "bo_order1" should contain 2 products "Test Product A"
+    And second invoice from order "bo_order1" should have following details:
+      | total_products          | 30.000 |
+      | total_products_wt       | 31.800 |
+      | total_discount_tax_excl | 0.00   |
+      | total_discount_tax_incl | 0.00   |
+      | total_paid_tax_excl     | 37.00  |
+      | total_paid_tax_incl     | 39.22  |
+      | total_shipping_tax_excl | 7.0    |
+      | total_shipping_tax_incl | 7.42   |
+    And order "bo_order1" should have following details:
+      | total_products           | 83.80 |
+      | total_products_wt        | 88.83 |
+      | total_discounts_tax_excl | 15.0  |
+      | total_discounts_tax_incl | 15.9  |
+      | total_paid_tax_excl      | 82.80 |
+      | total_paid_tax_incl      | 87.77 |
+      | total_paid               | 87.77 |
+      | total_paid_real          | 0.0   |
+      | total_shipping_tax_excl  | 14.0  |
+      | total_shipping_tax_incl  | 14.84 |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 0.000 |
+      | shipping_cost_tax_excl | 14.00 |
+      | shipping_cost_tax_incl | 14.84 |
