@@ -102,7 +102,7 @@ Feature: Order from Back Office (BO)
       | shipping_cost_tax_excl | 21.00 |
       | shipping_cost_tax_incl | 22.26 |
 
-  Scenario: I add products twice in two different invoices and apply a discount on only one
+  Scenario: I add products in two different invoices and apply a discount on only one
     When I generate invoice for "bo_order1" order
     Then order "bo_order1" should have 1 invoices
     And I add products to order "bo_order1" with new invoice and the following products details:
@@ -157,9 +157,9 @@ Feature: Order from Back Office (BO)
       | shipping_cost_tax_excl | 14.00 |
       | shipping_cost_tax_incl | 14.84 |
     When I add discount to order "bo_order1" on second invoice and following details:
-      | name      | discount fpf |
-      | type      | amount       |
-      | value     | 5.50         |
+      | name      | discount amount |
+      | type      | amount          |
+      | value     | 5.50            |
     Then first invoice from order "bo_order1" should have following details:
       | total_products          | 23.800 |
       | total_products_wt       | 25.230 |
@@ -169,7 +169,7 @@ Feature: Order from Back Office (BO)
       | total_paid_tax_incl     | 32.650 |
       | total_shipping_tax_excl | 7.0    |
       | total_shipping_tax_incl | 7.42   |
-    Then second invoice from order "bo_order1" should have following details:
+    And second invoice from order "bo_order1" should have following details:
       | total_products          | 40.000 |
       | total_products_wt       | 42.400 |
       | total_discount_tax_excl | 5.19   |
@@ -189,3 +189,118 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0   |
       | total_shipping_tax_excl  | 14.0  |
       | total_shipping_tax_incl  | 14.84 |
+
+  Scenario: I add products in two different invoices and apply percent discount on one invoice
+    When I generate invoice for "bo_order1" order
+    Then order "bo_order1" should have 1 invoices
+    And I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product A |
+      | amount        | 2              |
+      | price         | 15             |
+    And I add products to order "bo_order1" to second invoice and the following products details:
+      | name          | Test Product B |
+      | amount        | 3              |
+      | price         | 10             |
+    And I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product B |
+      | amount        | 5              |
+      | price         | 10             |
+    Then order "bo_order1" should have 3 invoices
+    And order "bo_order1" should have 12 products in total
+    And order "bo_order1" should contain 2 products "Mug The best is yet to come"
+    And order "bo_order1" should contain 2 products "Test Product A"
+    And order "bo_order1" should contain 8 products "Test Product B"
+    And the available stock for product "Test Product A" should be 98
+    And the available stock for product "Test Product B" should be 92
+    And first invoice from order "bo_order1" should contain 2 products "Mug The best is yet to come"
+    And first invoice from order "bo_order1" should have following details:
+      | total_products          | 23.800 |
+      | total_products_wt       | 25.230 |
+      | total_discount_tax_excl | 0.0    |
+      | total_discount_tax_incl | 0.0    |
+      | total_paid_tax_excl     | 30.800 |
+      | total_paid_tax_incl     | 32.650 |
+      | total_shipping_tax_excl | 7.0    |
+      | total_shipping_tax_incl | 7.42   |
+    And second invoice from order "bo_order1" should contain 2 products "Test Product A"
+    And second invoice from order "bo_order1" should contain 3 products "Test Product B"
+    And second invoice from order "bo_order1" should have following details:
+      | total_products          | 60.000 |
+      | total_products_wt       | 63.600 |
+      | total_discount_tax_excl | 0.0    |
+      | total_discount_tax_incl | 0.0    |
+      | total_paid_tax_excl     | 67.00  |
+      | total_paid_tax_incl     | 71.02  |
+      | total_shipping_tax_excl | 7.0    |
+      | total_shipping_tax_incl | 7.42   |
+    And third invoice from order "bo_order1" should contain 5 products "Test Product B"
+    And third invoice from order "bo_order1" should have following details:
+      | total_products          | 50.000 |
+      | total_products_wt       | 53.000 |
+      | total_discount_tax_excl | 0.0    |
+      | total_discount_tax_incl | 0.0    |
+      | total_paid_tax_excl     | 57.00  |
+      | total_paid_tax_incl     | 60.42  |
+      | total_shipping_tax_excl | 7.0    |
+      | total_shipping_tax_incl | 7.42   |
+    And order "bo_order1" should have following details:
+      | total_products           | 133.80 |
+      | total_products_wt        | 141.83 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 154.80 |
+      | total_paid_tax_incl      | 164.09 |
+      | total_paid               | 164.09 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 21.0   |
+      | total_shipping_tax_incl  | 22.26  |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 0.000 |
+      | shipping_cost_tax_excl | 21.00 |
+      | shipping_cost_tax_incl | 22.26 |
+    When I add discount to order "bo_order1" on third invoice and following details:
+      | name      | discount fifty-fifty |
+      | type      | percent              |
+      | value     | 50                   |
+    When I add discount to order "bo_order1" on second invoice and following details:
+      | name      | discount amount |
+      | type      | amount          |
+      | value     | 5.50            |
+    Then first invoice from order "bo_order1" should have following details:
+      | total_products          | 23.800 |
+      | total_products_wt       | 25.230 |
+      | total_discount_tax_excl | 0.0    |
+      | total_discount_tax_incl | 0.0    |
+      | total_paid_tax_excl     | 30.800 |
+      | total_paid_tax_incl     | 32.650 |
+      | total_shipping_tax_excl | 7.0    |
+      | total_shipping_tax_incl | 7.42   |
+    And second invoice from order "bo_order1" should have following details:
+      | total_products          | 60.000 |
+      | total_products_wt       | 63.600 |
+      | total_discount_tax_excl | 5.19   |
+      | total_discount_tax_incl | 5.50   |
+      | total_paid_tax_excl     | 61.81  |
+      | total_paid_tax_incl     | 65.52  |
+      | total_shipping_tax_excl | 7.0    |
+      | total_shipping_tax_incl | 7.42   |
+    And third invoice from order "bo_order1" should have following details:
+      | total_products          | 50.000 |
+      | total_products_wt       | 53.000 |
+      | total_discount_tax_excl | 25.00  |
+      | total_discount_tax_incl | 26.50  |
+      | total_paid_tax_excl     | 32.00  |
+      | total_paid_tax_incl     | 33.92  |
+      | total_shipping_tax_excl | 7.0    |
+      | total_shipping_tax_incl | 7.42   |
+    And order "bo_order1" should have following details:
+      | total_products           | 133.80 |
+      | total_products_wt        | 141.83 |
+      | total_discounts_tax_excl | 30.19  |
+      | total_discounts_tax_incl | 32.00  |
+      | total_paid_tax_excl      | 124.61 |
+      | total_paid_tax_incl      | 132.09 |
+      | total_paid               | 132.09 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 21.0   |
+      | total_shipping_tax_incl  | 22.26  |
