@@ -67,11 +67,7 @@ export function refreshCheckoutPage() {
   
   // not set : add it to the url
   queryParams['updatedTransaction'] = 1;
-  const joined = [];
-  for (let key in queryParams) {
-    let val = queryParams[key]; // gets the value by looking for the key in the object
-    joined.push(key + "=" + val);
-  }
 
-  window.location.href = window.location.pathname + "?" + joined.join("&");
+  const joined = Object.entries(queryParams).map(v => v.join('=')).join('&');
+  window.location.href = window.location.pathname + "?" + joined;
 }
