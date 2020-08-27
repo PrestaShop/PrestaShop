@@ -190,6 +190,7 @@ class StockManager
                 'id_product' => $product->id,
                 'id_product_attribute' => $id_product_attribute,
                 'quantity' => $stockAvailable->quantity,
+                'delta_quantity' => $delta_quantity,
             ]
         );
 
