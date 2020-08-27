@@ -221,7 +221,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return OrderReturnProduct[]
+     * @return OrderReturnDetailId[]
      *
      * @throws OrderReturnConstraintException
      */
@@ -232,17 +232,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             return [];
         }
 
-        $orderReturnDetails = [];
-
-        foreach ($orderReturnDetailIds as $key => $orderReturnDetailId) {
-            $orderReturnProduct = new OrderReturnDetailId(
-                (int) $orderReturnDetailId
-            );
-
-            $orderReturnDetails[] = $orderReturnProduct;
-        }
-
-        return $orderReturnDetails;
+        return $orderReturnDetailIds;
     }
 
     /**
