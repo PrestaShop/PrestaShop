@@ -26,7 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
+use Currency;
+use Customer;
+use Language;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartCarrierHandlerInterface;
 
@@ -36,17 +40,37 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartCarrierHandl
 final class UpdateCartCarrierHandler extends AbstractCartHandler implements UpdateCartCarrierHandlerInterface
 {
     /**
+     * @var ContextStateManager
+     */
+    private $contextStateManager;
+
+    /**
+     * @param ContextStateManager $contextStateManager
+     */
+    public function __construct(ContextStateManager $contextStateManager)
+    {
+        $this->contextStateManager = $contextStateManager;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(UpdateCartCarrierCommand $command)
     {
         $cart = $this->getCart($command->getCartId());
+        $this->contextStateManager
+            ->setCart($cart)
+            ->setCurrency(new Currency($cart->id_currency))
+            ->setLanguage(new Language($cart->id_lang))
+            ->setCustomer(new Customer($cart->id_customer))
+        ;
 
         $cart->setDeliveryOption([
             $cart->id_address_delivery => $this->formatLegacyDeliveryOptionFromCarrierId($command->getNewCarrierId()),
         ]);
 
         $cart->update();
+        $this->contextStateManager->restoreContext();
     }
 
     /**
