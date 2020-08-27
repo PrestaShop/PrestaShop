@@ -152,6 +152,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      * @param Request $request
      * @param int $orderReturnId
      * @param int $orderReturnDetailId
+     *
      * @return RedirectResponse
      */
     public function deleteProductAction(Request $request, int $orderReturnId, int $orderReturnDetailId): RedirectResponse
@@ -211,7 +212,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
         return $this->redirectToRoute(
             'admin_order_returns_edit',
             [
-                'orderReturnId' => $orderReturnId
+                'orderReturnId' => $orderReturnId,
             ]
         );
     }
@@ -222,6 +223,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @return OrderReturnProduct[]
+     *
      * @throws OrderReturnConstraintException
      */
     private function getBulkOrderReturnDetailsFromRequest(Request $request): array

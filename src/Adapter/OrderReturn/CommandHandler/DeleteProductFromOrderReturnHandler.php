@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\OrderReturn\AbstractOrderReturnHandler;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\DeleteProductFromOrderReturnCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\CommandHandler\DeleteProductFromOrderReturnHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\DeleteOrderReturnProductException;
 
 class DeleteProductFromOrderReturnHandler extends AbstractOrderReturnHandler implements DeleteProductFromOrderReturnHandlerInterface
 {
