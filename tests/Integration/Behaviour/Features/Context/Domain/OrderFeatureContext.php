@@ -511,6 +511,13 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      */
     private function updateProductInOrder(int $orderId, array $productOrderDetail, array $data)
     {
+        $invoiceId = null;
+        if (isset($data['invoice'])) {
+            $order = new Order($orderId);
+            $invoice = $this->getInvoiceFromOrder($order, $data['invoice']);
+            $invoiceId = $invoice->id;
+        }
+
         try {
             $this->getCommandBus()->handle(
                 new UpdateProductInOrderCommand(
@@ -518,7 +525,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                     (int) $productOrderDetail['id_order_detail'],
                     $data['price'],
                     $data['price'],
-                    (int) $data['amount']
+                    (int) $data['amount'],
+                    $invoiceId
                 )
             );
         } catch (InvalidProductQuantityException $e) {
@@ -997,7 +1005,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 $orderId,
                 $data['name'],
                 $data['type'],
-                $data['value']
+                $data['value'] ?? null
             ));
         } catch (InvalidCartRuleDiscountValueException $e) {
             $this->lastException = $e;
@@ -1026,7 +1034,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $orderId,
             $data['name'],
             $data['type'],
-            $data['value'],
+            $data['value'] ?? null,
             (int) $orderInvoice->id
         ));
     }

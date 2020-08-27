@@ -26,8 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Cart;
 
-use Cart;
-
 class CartRuleCalculator
 {
     /**
@@ -99,10 +97,7 @@ class CartRuleCalculator
 
         // Free shipping on selected carriers
         if ($cartRule->free_shipping && $withFreeShipping) {
-            $initialShippingFees = new AmountImmutable(
-                $cart->getOrderTotal(true, Cart::ONLY_SHIPPING),
-                $cart->getOrderTotal(false, Cart::ONLY_SHIPPING)
-            );
+            $initialShippingFees = $this->calculator->getFees()->getInitialShippingFees();
             $this->calculator->getFees()->subDiscountValueShipping($initialShippingFees);
             $cartRuleData->addDiscountApplied($initialShippingFees);
         }

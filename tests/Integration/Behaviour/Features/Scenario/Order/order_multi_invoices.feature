@@ -304,3 +304,95 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 21.0   |
       | total_shipping_tax_incl  | 22.26  |
+
+  Scenario: I add products in two different invoices and apply a shipping discount on only one
+    When I generate invoice for "bo_order1" order
+    Then order "bo_order1" should have 1 invoices
+    And I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product A |
+      | amount        | 2              |
+      | price         | 15             |
+    And I add products to order "bo_order1" to second invoice and the following products details:
+      | name          | Test Product B |
+      | amount        | 1              |
+      | price         | 10             |
+    Then order "bo_order1" should have 2 invoices
+    And order "bo_order1" should have 5 products in total
+    And order "bo_order1" should contain 2 products "Mug The best is yet to come"
+    And order "bo_order1" should contain 2 products "Test Product A"
+    And order "bo_order1" should contain 1 products "Test Product B"
+    And the available stock for product "Test Product A" should be 98
+    And the available stock for product "Test Product B" should be 99
+    And first invoice from order "bo_order1" should contain 2 products "Mug The best is yet to come"
+    And first invoice from order "bo_order1" should have following details:
+      | total_products          | 23.800 |
+      | total_products_wt       | 25.230 |
+      | total_discount_tax_excl | 0.0    |
+      | total_discount_tax_incl | 0.0    |
+      | total_paid_tax_excl     | 30.800 |
+      | total_paid_tax_incl     | 32.650 |
+      | total_shipping_tax_excl | 7.0    |
+      | total_shipping_tax_incl | 7.42   |
+    And second invoice from order "bo_order1" should contain 2 products "Test Product A"
+    And second invoice from order "bo_order1" should contain 1 products "Test Product B"
+    And second invoice from order "bo_order1" should have following details:
+      | total_products          | 40.000 |
+      | total_products_wt       | 42.400 |
+      | total_discount_tax_excl | 0.0    |
+      | total_discount_tax_incl | 0.0    |
+      | total_paid_tax_excl     | 47.00  |
+      | total_paid_tax_incl     | 49.82  |
+      | total_shipping_tax_excl | 7.0    |
+      | total_shipping_tax_incl | 7.42   |
+    And order "bo_order1" should have following details:
+      | total_products           | 63.80 |
+      | total_products_wt        | 67.63 |
+      | total_discounts_tax_excl | 0.0   |
+      | total_discounts_tax_incl | 0.0   |
+      | total_paid_tax_excl      | 77.80 |
+      | total_paid_tax_incl      | 82.47 |
+      | total_paid               | 82.47 |
+      | total_paid_real          | 0.0   |
+      | total_shipping_tax_excl  | 14.0  |
+      | total_shipping_tax_incl  | 14.84 |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 0.000 |
+      | shipping_cost_tax_excl | 14.00 |
+      | shipping_cost_tax_incl | 14.84 |
+    When I add discount to order "bo_order1" on second invoice and following details:
+      | name      | discount shipping |
+      | type      | free_shipping     |
+    Then first invoice from order "bo_order1" should have following details:
+      | total_products          | 23.800 |
+      | total_products_wt       | 25.230 |
+      | total_discount_tax_excl | 0.0    |
+      | total_discount_tax_incl | 0.0    |
+      | total_paid_tax_excl     | 30.800 |
+      | total_paid_tax_incl     | 32.650 |
+      | total_shipping_tax_excl | 7.0    |
+      | total_shipping_tax_incl | 7.42   |
+    And second invoice from order "bo_order1" should have following details:
+      | total_products          | 40.000 |
+      | total_products_wt       | 42.400 |
+      | total_discount_tax_excl | 7.00   |
+      | total_discount_tax_incl | 7.42   |
+      | total_paid_tax_excl     | 40.00  |
+      | total_paid_tax_incl     | 42.40  |
+      | total_shipping_tax_excl | 7.0    |
+      | total_shipping_tax_incl | 7.42   |
+    And order "bo_order1" should have following details:
+      | total_products           | 63.80 |
+      | total_products_wt        | 67.63 |
+      | total_discounts_tax_excl | 7.00  |
+      | total_discounts_tax_incl | 7.42  |
+      | total_paid_tax_excl      | 70.80 |
+      | total_paid_tax_incl      | 75.05 |
+      | total_paid               | 75.05 |
+      | total_paid_real          | 0.0   |
+      | total_shipping_tax_excl  | 14.0  |
+      | total_shipping_tax_incl  | 14.84 |
+    #todo: should the OrderCarrier values count the shipping discount and be only 7.0 ?
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 0.000 |
+      | shipping_cost_tax_excl | 14.00 |
+      | shipping_cost_tax_incl | 14.84 |

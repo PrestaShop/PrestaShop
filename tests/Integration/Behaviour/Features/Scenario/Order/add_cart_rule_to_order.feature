@@ -145,6 +145,30 @@ Feature: Add discounts to order from Back Office (BO)
       | taxes         | $1.14  |
       | total         | $18.90 |
 
+  Scenario: Add free shipping discount
+    Given order "bo_order1" does not have any invoices
+    When I add discount to order "bo_order1" with following details:
+      | name      | discount shipping |
+      | type      | free_shipping     |
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.8  |
+      | total_products_wt        | 25.23 |
+      | total_shipping           | 7.42  |
+      | total_shipping_tax_excl  | 7.0   |
+      | total_shipping_tax_incl  | 7.42  |
+      | total_discounts_tax_excl | 7.0   |
+      | total_discounts_tax_incl | 7.42  |
+      | total_paid_tax_excl      | 23.8  |
+      | total_paid_tax_incl      | 25.23 |
+      | total_paid               | 25.23 |
+      | total_paid_real          | 0     |
+    Then Order "bo_order1" should have following prices:
+      | products      | $23.80 |
+      | discounts     | $7.00  |
+      | shipping      | $7.00  |
+      | taxes         | $1.43  |
+      | total         | $23.80 |
+
   Scenario: Add amount type discount to order and update single invoice
     When I generate invoice for "bo_order1" order
     Then order "bo_order1" should have invoice
