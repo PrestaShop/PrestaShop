@@ -24,20 +24,24 @@
  *#}
 
 {{ form_start(orderReturnForm, {action: path('admin_order_returns_update', {'orderReturnId': editableOrderReturn.orderReturnId})}) }}
-  <div class="card">
+<div class="card">
   <h3 class="card-header">
     <i class="material-icons">person</i>
     {{ 'Merchandise returns'|trans({}, 'Admin.Orderscustomers.Feature') }}
   </h3>
+
   <div class="card-block row">
     <div class="card-text">
       {{ form_errors(orderReturnForm) }}
+
       <div class="form-group row">
-        <label for="order_return_order_state" class="form-control-label">
+        <label class="form-control-label">
           {{ 'Customer'|trans({}, 'Admin.Global') }}
         </label>
+
         <div class="col-sm form-control-value">
           <p>{{ editableOrderReturn.customerFullName }}</p>
+
           <a href="{{ path('admin_customers_view', {'customerId': editableOrderReturn.customerId }) }}" class="btn btn-outline-secondary">
             {{ 'View details on the customer page.'|trans({}, 'Admin.Orderscustomers.Help') }}
           </a>
@@ -45,11 +49,13 @@
       </div>
 
       <div class="form-group row">
-        <label for="order_return_state" class="form-control-label">
+        <label class="form-control-label">
           {{ 'Order'|trans({}, 'Admin.Global') }}
         </label>
+
         <div class="col-sm form-control-value">
           <p>#{{ editableOrderReturn.orderId }} from {{ editableOrderReturn.orderDate.format('d/m/y') }}</p>
+
           <a href="{{ path('admin_orders_view', {'orderId': editableOrderReturn.orderId }) }}" class="btn btn-outline-secondary">
             {{ 'View details on the order page.'|trans({}, 'Admin.Orderscustomers.Help') }}
           </a>
@@ -57,9 +63,10 @@
       </div>
 
       <div class="form-group row">
-        <label for="order_return_state" class="form-control-label">
+        <label class="form-control-label">
           {{ 'Customer explanation'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </label>
+
         <div class="col-sm form-control-value">
           <p>{{ editableOrderReturn.question }}</p>
         </div>
@@ -70,10 +77,12 @@
       {% endblock %}
     </div>
   </div>
+
   <div class="card-footer">
     <a href="{{ path('admin_merchandise_returns_index') }}" class="btn btn-outline-secondary">
       {{ 'Cancel'|trans({}, 'Admin.Actions') }}
     </a>
+
     <button class="btn btn-primary float-right">
       {{ 'Save'|trans({}, 'Admin.Actions') }}
     </button>
