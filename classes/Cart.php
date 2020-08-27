@@ -1945,17 +1945,17 @@ class CartCore extends ObjectModel
             $type = Cart::BOTH_WITHOUT_SHIPPING;
         }
 
-        // Manage order total computation (ignore if we are already computing a specific invoice)
-        if (empty($id_order_invoice)) {
-            // When cart is associated to order the computation may be different, especially for multi invoices orders
-            $orderId = Order::getIdByCartId((int) $this->id);
-            if (!empty($orderId)) {
-                $order = new Order($orderId);
-                // If cart is already assigned to an order we get product from the order as it contains more details
-                if (null === $products) {
-                    $products = $order->getCartProducts();
-                }
+        // When cart is associated to order the computation may be different, especially for multi invoices orders
+        $orderId = Order::getIdByCartId((int) $this->id);
+        if (!empty($orderId)) {
+            $order = new Order($orderId);
+            // If cart is already assigned to an order we get product from the order as it contains more details
+            if (null === $products) {
+                $products = $order->getCartProducts();
+            }
 
+            // If we are already computing an invoice total we don't check for multi invoice
+            if (empty($id_order_invoice)) {
                 $orderInvoices = $order->getInvoicesCollection();
                 // If order has multi invoices we compute each one individually and add the results
                 if ($orderInvoices->count() > 1) {
@@ -1970,9 +1970,18 @@ class CartCore extends ObjectModel
             }
         }
 
-        // filter products
+        // Get cart products as default fallback
         if (null === $products) {
             $products = $this->getProducts();
+        }
+
+        // Filter invoice products if a specific invoice is provided
+        if (!empty($id_order_invoice)) {
+            foreach ($products as $key => $product) {
+                if (!empty($product['id_order_invoice']) && (int) $product['id_order_invoice'] !== (int) $id_order_invoice) {
+                    unset($products[$key]);
+                }
+            }
         }
 
         if ($type == Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING) {
@@ -2159,6 +2168,7 @@ class CartCore extends ObjectModel
      * @param null $id_carrier
      *
      * @return float|int
+     *
      * @throws Exception
      */
     protected function getOrderInvoicesTotal(
