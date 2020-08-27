@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnId;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\ValueObject\OrderReturnStateId;
 
@@ -48,11 +49,13 @@ class UpdateOrderReturnStateCommand
     private $orderReturnStateId;
 
     /**
-     * @param OrderReturnId $orderReturnId
+     * @param int $orderReturnId
+     *
+     * @throws OrderReturnConstraintException
      */
-    public function __construct(OrderReturnId $orderReturnId)
+    public function __construct(int $orderReturnId)
     {
-        $this->orderReturnId = $orderReturnId;
+        $this->orderReturnId = new OrderReturnId($orderReturnId);
     }
 
     /**
