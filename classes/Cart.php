@@ -1945,6 +1945,31 @@ class CartCore extends ObjectModel
             $type = Cart::BOTH_WITHOUT_SHIPPING;
         }
 
+        // Manage order total computation (ignore if we are already computing a specific invoice)
+        if (empty($id_order_invoice)) {
+            // When cart is associated to order the computation may be different, especially for multi invoices orders
+            $orderId = Order::getIdByCartId((int) $this->id);
+            if (!empty($orderId)) {
+                $order = new Order($orderId);
+                // If cart is already assigned to an order we get product from the order as it contains more details
+                if (null === $products) {
+                    $products = $order->getCartProducts();
+                }
+
+                $orderInvoices = $order->getInvoicesCollection();
+                // If order has multi invoices we compute each one individually and add the results
+                if ($orderInvoices->count() > 1) {
+                    return $this->getOrderInvoicesTotal(
+                        $orderInvoices,
+                        $products,
+                        $withTaxes,
+                        $type,
+                        $id_carrier
+                    );
+                }
+            }
+        }
+
         // filter products
         if (null === $products) {
             $products = $this->getProducts();
@@ -2124,6 +2149,46 @@ class CartCore extends ObjectModel
         }
 
         return $addressDeliveryId;
+    }
+
+    /**
+     * @param PrestaShopCollection $orderInvoices
+     * @param array $products
+     * @param bool $withTaxes
+     * @param int $type
+     * @param null $id_carrier
+     *
+     * @return float|int
+     * @throws Exception
+     */
+    protected function getOrderInvoicesTotal(
+        PrestaShopCollection $orderInvoices,
+        array $products,
+        bool $withTaxes = true,
+        $type = Cart::BOTH,
+        $id_carrier = null
+    ) {
+        $invoiceProducts = [];
+        foreach ($products as $orderProduct) {
+            if (!empty($orderProduct['id_order_invoice'])) {
+                $invoiceProducts[$orderProduct['id_order_invoice']][] = $orderProduct;
+            }
+        }
+
+        $invoicesTotal = 0;
+        foreach ($orderInvoices as $invoice) {
+            $currentInvoiceProducts = isset($invoiceProducts[$invoice->id]) ? $invoiceProducts[$invoice->id] : [];
+            $invoicesTotal += $this->getOrderTotal(
+                $withTaxes,
+                $type,
+                $currentInvoiceProducts,
+                $id_carrier,
+                false,
+                $invoice->id
+            );
+        }
+
+        return $invoicesTotal;
     }
 
     /**
