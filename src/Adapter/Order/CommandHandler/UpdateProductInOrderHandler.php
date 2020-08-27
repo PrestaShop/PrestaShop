@@ -97,6 +97,10 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             $orderDetail->unit_price_tax_excl = $unitProductPriceTaxExcl;
             $orderDetail->total_price_tax_incl = Tools::ps_round($unitProductPriceTaxIncl * $productQuantity, $computingPrecision);
             $orderDetail->total_price_tax_excl = Tools::ps_round($unitProductPriceTaxExcl * $productQuantity, $computingPrecision);
+            if (null !== $orderInvoice) {
+                $orderDetail->id_order_invoice = $orderInvoice->id;
+            }
+
             if (!$orderDetail->save()) {
                 throw new OrderException('An error occurred while editing the product line.');
             }
