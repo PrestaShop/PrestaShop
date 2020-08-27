@@ -86,13 +86,15 @@ class OrderReturnProductsGridDataFactory implements GridDataFactoryInterface
      * @param array $orderReturnProducts
      *
      * @return array
+     *
+     * @throws \PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstraintException
      */
     private function applyModification(array $orderReturnProducts): array
     {
         $modifiedOrderReturnProducts = [];
         foreach ($orderReturnProducts as $orderReturnProduct) {
             $getOrderDetailCustomization = new GetOrderDetailCustomizations(
-                new OrderReturnDetailId((int) $orderReturnProduct['id_order_detail'])
+                (int) $orderReturnProduct['id_order_detail']
         );
             $orderReturnProduct['customizations'] = $this->getOrderDetailCustomizationHandler->handle($getOrderDetailCustomization);
             $modifiedOrderReturnProducts[] = $orderReturnProduct;

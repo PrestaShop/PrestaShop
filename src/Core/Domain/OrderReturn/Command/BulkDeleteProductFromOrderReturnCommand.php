@@ -71,12 +71,7 @@ class BulkDeleteProductFromOrderReturnCommand
     private function setOrderReturnDetails(array $orderReturnDetailIds): void
     {
         foreach ($orderReturnDetailIds as $orderReturnDetailId) {
-            if (!$orderReturnDetailId instanceof OrderReturnDetailId) {
-                throw new OrderReturnConstraintException(
-                    'BulkDeleteProductFromOrderReturnCommand expects an instances of OrderReturnDetailId'
-                );
-            }
-            $this->orderReturnDetailIds[] = $orderReturnDetailId;
+            $this->orderReturnDetailIds[] = new OrderReturnDetailId((int) $orderReturnDetailId);
         }
     }
 
