@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderDetailCustomization;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryHandler\GetOrderDetailCustomizationHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnDetailId;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
@@ -90,7 +91,9 @@ class OrderReturnProductsGridDataFactory implements GridDataFactoryInterface
     {
         $modifiedOrderReturnProducts = [];
         foreach ($orderReturnProducts as $orderReturnProduct) {
-            $getOrderDetailCustomization = new GetOrderDetailCustomization((int) $orderReturnProduct['id_order_detail']);
+            $getOrderDetailCustomization = new GetOrderDetailCustomization(
+                new OrderReturnDetailId((int) $orderReturnProduct['id_order_detail'])
+        );
             $orderReturnProduct['customizations'] = $this->getOrderDetailCustomizationHandler->handle($getOrderDetailCustomization);
             $modifiedOrderReturnProducts[] = $orderReturnProduct;
         }

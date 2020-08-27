@@ -28,27 +28,29 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query;
 
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnDetailId;
+
 class GetOrderDetailCustomization
 {
     /**
-     * @var int
+     * @var OrderReturnDetailId
      */
     private $orderDetailId;
 
     /**
      * GetOrderDetailCustomization constructor.
      *
-     * @param int $orderDetailId
+     * @param OrderReturnDetailId $orderDetailId
      */
-    public function __construct(int $orderDetailId)
+    public function __construct(OrderReturnDetailId $orderDetailId)
     {
         $this->orderDetailId = $orderDetailId;
     }
 
     /**
-     * @return int
+     * @return OrderReturnDetailId
      */
-    public function getOrderDetailId(): int
+    public function getOrderDetailId(): OrderReturnDetailId
     {
         return $this->orderDetailId;
     }
