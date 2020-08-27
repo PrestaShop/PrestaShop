@@ -30,13 +30,13 @@ namespace PrestaShop\PrestaShop\Adapter\OrderReturn\QueryHandler;
 
 use Order;
 use PrestaShop\PrestaShop\Adapter\Entity\OrderDetail;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderDetailCustomization;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryHandler\GetOrderDetailCustomizationHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderDetailCustomizations;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryHandler\GetOrderDetailCustomizationsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\OrderDetailCustomization;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\OrderDetailCustomizations;
 use Product;
 
-class GetOrderDetailCustomizationHandler implements GetOrderDetailCustomizationHandlerInterface
+class GetOrderDetailCustomizationsHandler implements GetOrderDetailCustomizationsHandlerInterface
 {
     /**
      * @var int
@@ -44,7 +44,7 @@ class GetOrderDetailCustomizationHandler implements GetOrderDetailCustomizationH
     private $contextLangId;
 
     /**
-     * GetOrderDetailCustomizationHandler constructor.
+     * GetOrderDetailCustomizationsHandler constructor.
      *
      * @param int $contextLangId
      */
@@ -55,14 +55,14 @@ class GetOrderDetailCustomizationHandler implements GetOrderDetailCustomizationH
     }
 
     /**
-     * @param GetOrderDetailCustomization $query
+     * @param GetOrderDetailCustomizations $query
      *
      * @return OrderDetailCustomizations|null
      *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
-    public function handle(GetOrderDetailCustomization $query): ?OrderDetailCustomizations
+    public function handle(GetOrderDetailCustomizations $query): ?OrderDetailCustomizations
     {
         $orderDetail = new OrderDetail($query->getOrderDetailId()->getValue());
         $order = new Order($orderDetail->id_order);

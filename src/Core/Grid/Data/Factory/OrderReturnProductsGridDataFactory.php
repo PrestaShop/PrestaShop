@@ -28,8 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderDetailCustomization;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryHandler\GetOrderDetailCustomizationHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderDetailCustomizations;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryHandler\GetOrderDetailCustomizationsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnDetailId;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
@@ -46,7 +46,7 @@ class OrderReturnProductsGridDataFactory implements GridDataFactoryInterface
     private $orderReturnProductsGridDataFactory;
 
     /**
-     * @var GetOrderDetailCustomizationHandlerInterface
+     * @var GetOrderDetailCustomizationsHandlerInterface
      */
     private $getOrderDetailCustomizationHandler;
 
@@ -54,11 +54,11 @@ class OrderReturnProductsGridDataFactory implements GridDataFactoryInterface
      * OrderReturnProductsGridDataFactory constructor.
      *
      * @param GridDataFactoryInterface $orderReturnProductsGridDataFactory
-     * @param GetOrderDetailCustomizationHandlerInterface $getOrderDetailCustomizationHandler
+     * @param GetOrderDetailCustomizationsHandlerInterface $getOrderDetailCustomizationHandler
      */
     public function __construct(
         GridDataFactoryInterface $orderReturnProductsGridDataFactory,
-        GetOrderDetailCustomizationHandlerInterface $getOrderDetailCustomizationHandler
+        GetOrderDetailCustomizationsHandlerInterface $getOrderDetailCustomizationHandler
     ) {
         $this->orderReturnProductsGridDataFactory = $orderReturnProductsGridDataFactory;
         $this->getOrderDetailCustomizationHandler = $getOrderDetailCustomizationHandler;
@@ -91,7 +91,7 @@ class OrderReturnProductsGridDataFactory implements GridDataFactoryInterface
     {
         $modifiedOrderReturnProducts = [];
         foreach ($orderReturnProducts as $orderReturnProduct) {
-            $getOrderDetailCustomization = new GetOrderDetailCustomization(
+            $getOrderDetailCustomization = new GetOrderDetailCustomizations(
                 new OrderReturnDetailId((int) $orderReturnProduct['id_order_detail'])
         );
             $orderReturnProduct['customizations'] = $this->getOrderDetailCustomizationHandler->handle($getOrderDetailCustomization);
