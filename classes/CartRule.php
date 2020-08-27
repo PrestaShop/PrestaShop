@@ -1395,7 +1395,7 @@ class CartRuleCore extends ObjectModel
                         || CartRule::$only_one_gift[$this->id . '-' . $this->gift_product] == 0
                         || $id_address == 0
                         || !$use_cache) {
-                        $reduction_value += ($use_tax ? $product['price_wt'] : $product['price']);
+                        $reduction_value += Tools::ps_round($use_tax ? $product['price_wt'] : $product['price'], Context::getContext()->getComputingPrecision());
                         if ($use_cache && (!isset(CartRule::$only_one_gift[$this->id . '-' . $this->gift_product]) || CartRule::$only_one_gift[$this->id . '-' . $this->gift_product] == 0)) {
                             CartRule::$only_one_gift[$this->id . '-' . $this->gift_product] = $id_address;
                         }
