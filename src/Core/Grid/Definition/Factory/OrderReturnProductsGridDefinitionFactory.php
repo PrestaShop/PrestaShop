@@ -101,9 +101,6 @@ final class OrderReturnProductsGridDefinitionFactory extends AbstractFilterableG
                 (new BulkActionColumn('order_return_bulk'))
                     ->setOptions([
                         'bulk_field' => 'id_order_detail',
-                        'extra_fields' => [
-                            'id_customization',
-                        ],
                     ])
             )
             ->add(

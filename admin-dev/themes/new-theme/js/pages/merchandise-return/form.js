@@ -25,12 +25,12 @@
 
 import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
 import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
-import Grid from '../../components/grid/grid';
-import SortingExtension from '../../components/grid/extension/sorting-extension';
-import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
-import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
-import TranslatableInput from '../../components/translatable-input';
-import ReloadListExtension from '../../components/grid/extension/reload-list-extension';
+import Grid from '@components/grid/grid';
+import SortingExtension from '@components/grid/extension/sorting-extension';
+import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
+import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
+import TranslatableInput from '@components/translatable-input';
+import ReloadListExtension from '@components/grid/extension/reload-list-extension';
 
 const {$} = window;
 
