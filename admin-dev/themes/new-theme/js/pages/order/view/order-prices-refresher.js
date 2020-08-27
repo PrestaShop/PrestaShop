@@ -64,7 +64,7 @@ export default class OrderPricesRefresher {
     });
   }
 
-  checkOtherProductPricesMatch(givenPrice, productId, combinationId, orderDetailId) {
+  checkOtherProductPricesMatch(givenPrice, productId, combinationId, invoiceId, orderDetailId) {
     const productRows = document.querySelectorAll('tr.cellProduct');
     // We convert the expected values into int/float to avoid a type mismatch that would be wrongly interpreted
     const expectedProductId = Number(productId);
@@ -81,6 +81,13 @@ export default class OrderPricesRefresher {
       }
 
       const productEditBtn = $(`#${productRowId} ${OrderViewPageMap.productEditButtons}`);
+      const currentOrderInvoiceId = Number(productEditBtn.data('order-invoice-id'));
+
+      // No need to check target invoice, only if others have matching products
+      if (invoiceId && currentOrderInvoiceId && invoiceId === currentOrderInvoiceId) {
+        return;
+      }
+
       const currentProductId = Number(productEditBtn.data('product-id'));
       const currentCombinationId = Number(productEditBtn.data('combination-id'));
 
