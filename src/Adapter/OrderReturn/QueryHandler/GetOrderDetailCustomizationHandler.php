@@ -64,7 +64,7 @@ class GetOrderDetailCustomizationHandler implements GetOrderDetailCustomizationH
      */
     public function handle(GetOrderDetailCustomization $query): ?OrderDetailCustomizations
     {
-        $orderDetail = new OrderDetail($query->getOrderDetailId());
+        $orderDetail = new OrderDetail($query->getOrderDetailId()->getValue());
         $order = new Order($orderDetail->id_order);
         $customizations = [];
         $productCustomizations = Product::getAllCustomizedDatas($order->id_cart, $this->contextLangId, true, null, $orderDetail->id_customization);
