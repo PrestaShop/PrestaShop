@@ -31,7 +31,7 @@ let page;
 let numberOfAttributes = 0;
 
 
-describe('Filter attributes by id, name and position', async () => {
+describe('Filter attribute values by id, name and position', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

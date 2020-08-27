@@ -1,25 +1,26 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-class Features extends BOBasePage {
+class ViewFeature extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Features • ';
+    this.pageTitle = 'Features >';
+
 
     // Form selectors
-    this.gridForm = '#form-feature';
+    this.gridForm = '#form-feature_value';
     this.gridTableHeaderTitle = `${this.gridForm} .panel-heading`;
     this.gridTableNumberOfTitlesSpan = `${this.gridTableHeaderTitle} span.badge`;
 
     // Table selectors
-    this.gridTable = '#table-feature';
+    this.gridTable = '#table-feature_value';
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = filterBy => `${this.filterRow} [name='featureFilter_${filterBy}']`;
-    this.filterSearchButton = '#submitFilterButtonfeature';
-    this.filterResetButton = 'button[name=\'submitResetfeature\']';
+    this.filterColumn = filterBy => `${this.filterRow} [name='feature_valueFilter_${filterBy}']`;
+    this.filterSearchButton = '#submitFilterButtonfeature_value';
+    this.filterResetButton = 'button[name=\'submitResetfeature_value\']';
 
     // Table body selectors
     this.tableBody = `${this.gridTable} tbody`;
@@ -28,16 +29,11 @@ class Features extends BOBasePage {
     this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnSelectRowCheckbox = row => `${this.tableBodyColumn(row)} input[name='featureBox[]']`;
+    this.tableColumnSelectRowCheckbox = row => `${this.tableBodyColumn(row)} input[name='feature_valueBox[]']`;
     this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
-    this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnValues = row => `${this.tableBodyColumn(row)}:nth-child(4)`;
-    this.tableColumnPosition = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
-
-    // Row actions selectors
-    this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
-    this.tableColumnActionsViewLink = row => `${this.tableColumnActions(row)} a[title='View']`;
+    this.tableColumnValue = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
   }
+
 
   /* Filter methods */
   /**
@@ -53,7 +49,7 @@ class Features extends BOBasePage {
   }
 
   /**
-   * Get Number of features
+   * Get Number of feature values
    * @param page
    * @return {Promise<number>}
    */
@@ -62,7 +58,7 @@ class Features extends BOBasePage {
   }
 
   /**
-   * Reset and get number of features
+   * Reset and get number of feature values
    * @param page
    * @return {Promise<number>}
    */
@@ -95,20 +91,12 @@ class Features extends BOBasePage {
     let columnSelector;
 
     switch (columnName) {
-      case 'id_feature':
+      case 'id_feature_value':
         columnSelector = this.tableColumnId(row);
         break;
 
-      case 'b!name':
-        columnSelector = this.tableColumnName(row);
-        break;
-
-      case 'values':
-        columnSelector = this.tableColumnValues(row);
-        break;
-
-      case 'a!position':
-        columnSelector = this.tableColumnPosition(row);
+      case 'value':
+        columnSelector = this.tableColumnValue(row);
         break;
 
       default:
@@ -117,16 +105,6 @@ class Features extends BOBasePage {
 
     return this.getTextContent(page, columnSelector);
   }
-
-  /**
-   * Go to view feature page
-   * @param page
-   * @param row
-   * @return {Promise<void>}
-   */
-  async viewFeature(page, row) {
-    await this.clickAndWaitForNavigation(page, this.tableColumnActionsViewLink(row));
-  }
 }
 
-module.exports = new Features();
+module.exports = new ViewFeature();
