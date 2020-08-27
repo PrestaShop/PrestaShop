@@ -43,15 +43,14 @@ class BulkDeleteProductFromOrderReturnHandler extends AbstractOrderReturnHandler
     {
         $errors = [];
 
-        foreach ($command->getOrderReturnProducts() as $orderReturnProduct) {
+        foreach ($command->getOrderReturnDetailIds() as $orderReturnDetailId) {
             try {
                 $this->deleteOrderReturnProduct(
                     $command->getOrderReturnId(),
-                    $orderReturnProduct->getOrderReturnDetailId(),
-                    $orderReturnProduct->getCustomizationId()
+                    $orderReturnDetailId
                 );
             } catch (OrderReturnException $e) {
-                $errors[] = $orderReturnProduct->getOrderReturnDetailId()->getValue();
+                $errors[] = $orderReturnDetailId->getValue();
             }
         }
 

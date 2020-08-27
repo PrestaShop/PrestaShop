@@ -30,8 +30,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnDetailId;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnId;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnProduct;
 
 /**
  * Deletes products from given order return.
@@ -44,48 +44,40 @@ class BulkDeleteProductFromOrderReturnCommand
     private $orderReturnId;
 
     /**
-     * @var OrderReturnProduct[]
+     * @var OrderReturnDetailId[]
      */
-    private $orderReturnProducts;
+    private $orderReturnDetailIds;
 
     /**
      * @param int $orderReturnId
-     * @param OrderReturnProduct[] $orderReturnProducts
+     * @param array $orderReturnDetailIds
      *
-     * @throws OrderReturnException
      * @throws OrderReturnConstraintException
+     * @throws OrderReturnException
      */
     public function __construct(
         int $orderReturnId,
-        array $orderReturnProducts
+        array $orderReturnDetailIds
     ) {
         $this->orderReturnId = new OrderReturnId($orderReturnId);
-        $this->setOrderReturnProducts($orderReturnProducts);
+        $this->setOrderReturnDetails($orderReturnDetailIds);
     }
 
     /**
-     * @param OrderReturnProduct[] $orderReturnProducts
+     * @param array $orderReturnDetailIds
      *
-     * @throws OrderReturnException
+     * @throws OrderReturnConstraintException
      */
-    private function setOrderReturnProducts(array $orderReturnProducts): void
+    private function setOrderReturnDetails(array $orderReturnDetailIds): void
     {
-        foreach ($orderReturnProducts as $orderReturnProduct) {
-            if (!$orderReturnProduct instanceof OrderReturnProduct) {
+        foreach ($orderReturnDetailIds as $orderReturnDetailId) {
+            if (!$orderReturnDetailId instanceof OrderReturnDetailId) {
                 throw new OrderReturnConstraintException(
-                    'BulkDeleteProductFromOrderReturnCommand expects an instances of OrderReturnProduct'
+                    'BulkDeleteProductFromOrderReturnCommand expects an instances of OrderReturnDetailId'
                 );
             }
-            $this->orderReturnProducts[] = $orderReturnProduct;
+            $this->orderReturnDetailIds[] = $orderReturnDetailId;
         }
-    }
-
-    /**
-     * @return OrderReturnProduct[]
-     */
-    public function getOrderReturnProducts(): array
-    {
-        return $this->orderReturnProducts;
     }
 
     /**
@@ -94,5 +86,13 @@ class BulkDeleteProductFromOrderReturnCommand
     public function getOrderReturnId(): OrderReturnId
     {
         return $this->orderReturnId;
+    }
+
+    /**
+     * @return OrderReturnDetailId[]
+     */
+    public function getOrderReturnDetailIds(): array
+    {
+        return $this->orderReturnDetailIds;
     }
 }

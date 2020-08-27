@@ -37,15 +37,12 @@ class DeleteProductFromOrderReturnHandler extends AbstractOrderReturnHandler imp
 {
     /**
      * {@inheritdoc}
-     *
-     * @throws DeleteOrderReturnProductException
      */
     public function handle(DeleteProductFromOrderReturnCommand $command): void
     {
         $this->deleteOrderReturnProduct(
             $command->getOrderReturnId(),
-            $command->getOrderReturnDetailId(),
-            $command->getCustomizationId()
+            $command->getOrderReturnDetailId()
         );
     }
 }
