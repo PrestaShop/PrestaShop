@@ -166,8 +166,8 @@ final class OrderReturnProductsQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ($filterName === 'quantity') {
-                $qb->andWhere('od.`product_quantity` LIKE :' . $filterName);
-                $qb->setParameter($filterName, '%' . $filterValue . '%');
+                $qb->andWhere('od.`product_quantity`  = :' . $filterName);
+                $qb->setParameter($filterName, $filterValue);
                 continue;
             }
 
