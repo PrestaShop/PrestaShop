@@ -43,7 +43,6 @@ export default class OrderProductEdit {
     this.priceTaxCalculator = new OrderPrices();
     this.productEditSaveBtn = $(OrderViewPageMap.productEditSaveBtn);
     this.quantityInput = $(OrderViewPageMap.productEditQuantityInput);
-    this.invoiceSelect = $(OrderViewPageMap.productAddInvoiceSelect);
     this.orderPricesRefresher = new OrderPricesRefresher();
   }
 
@@ -174,16 +173,15 @@ export default class OrderProductEdit {
   }
 
   handleEditProductWithConfirmationModal(event) {
-    const productId = $(`#orderProduct_${this.orderDetailId} ${OrderViewPageMap.productEditButtons}`).data(
-      'product-id'
-    );
-    const combinationId = $(`#orderProduct_${this.orderDetailId} ${OrderViewPageMap.productEditButtons}`).data(
-      'combination-id'
-    );
+    const productEditBtn = $(`#orderProduct_${this.orderDetailId} ${OrderViewPageMap.productEditButtons}`);
+    const productId = productEditBtn.data('product-id');
+    const combinationId = productEditBtn.data('combination-id');
+    const orderInvoiceId = productEditBtn.data('order-invoice-id');
     const productPriceMatch = this.orderPricesRefresher.checkOtherProductPricesMatch(
       this.priceTaxIncludedInput.val(),
       productId,
       combinationId,
+      orderInvoiceId,
       this.orderDetailId
     );
 
@@ -196,10 +194,10 @@ export default class OrderProductEdit {
     const modalEditPrice = new ConfirmModal(
       {
         id: 'modal-confirm-new-price',
-        confirmTitle: this.invoiceSelect.data('modal-edit-price-title'),
-        confirmMessage: this.invoiceSelect.data('modal-edit-price-body'),
-        confirmButtonLabel: this.invoiceSelect.data(' '),
-        closeButtonLabel: this.invoiceSelect.data('modal-edit-price-cancel')
+        confirmTitle: this.productEditInvoiceSelect.data('modal-edit-price-title'),
+        confirmMessage: this.productEditInvoiceSelect.data('modal-edit-price-body'),
+        confirmButtonLabel: this.productEditInvoiceSelect.data(' '),
+        closeButtonLabel: this.productEditInvoiceSelect.data('modal-edit-price-cancel')
       },
       () => {
         this.editProduct($(event.currentTarget).data('orderId'), this.orderDetailId);

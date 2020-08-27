@@ -224,6 +224,7 @@ export default class OrderProductAdd {
     const invoiceId = parseInt(this.invoiceSelect.val(), 10);
     const orderId = $(event.currentTarget).data('orderId');
 
+    // Explicit 0 value is used when we the user selected New Invoice
     if (invoiceId === 0) {
       const modal = new ConfirmModal(
         {
@@ -234,17 +235,20 @@ export default class OrderProductAdd {
           closeButtonLabel: this.invoiceSelect.data('modal-cancel')
         },
         () => {
-          this.confirmNewPrice(orderId);
+          this.confirmNewPrice(orderId, invoiceId);
         }
       );
-
       modal.show();
+    } else if (!isNaN(invoiceId)) {
+      // If id is not 0 nor NaN a specific invoice was selected
+      this.confirmNewPrice(orderId, invoiceId);
     } else {
-      this.confirmNewPrice(orderId);
+      // Last case is Nan, the selector is not even present, we simply add product and let the BO handle it
+      this.addProduct(orderId);
     }
   }
 
-  confirmNewPrice(orderId) {
+  confirmNewPrice(orderId, invoiceId) {
     const combinationId =
       typeof $(':selected', this.combinationsSelect).val() === 'undefined'
         ? 0
@@ -252,7 +256,8 @@ export default class OrderProductAdd {
     const productPriceMatch = this.orderPricesRefresher.checkOtherProductPricesMatch(
       this.priceTaxIncludedInput.val(),
       this.productIdInput.val(),
-      combinationId
+      combinationId,
+      invoiceId
     );
 
     if (!productPriceMatch) {
@@ -268,7 +273,6 @@ export default class OrderProductAdd {
           this.addProduct(orderId);
         }
       );
-
       modalEditPrice.show();
     } else {
       this.addProduct(orderId);
