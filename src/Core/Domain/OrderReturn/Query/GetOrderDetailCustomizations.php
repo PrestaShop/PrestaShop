@@ -26,20 +26,32 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderDetailCustomization;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\OrderDetailCustomizations;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnDetailId;
 
-/**
- * Defines contract for GetOrderReturnForEditingHandler
- */
-interface GetOrderDetailCustomizationHandlerInterface
+class GetOrderDetailCustomizations
 {
     /**
-     * @param GetOrderDetailCustomization $query
-     *
-     * @return OrderDetailCustomizations|null
+     * @var OrderReturnDetailId
      */
-    public function handle(GetOrderDetailCustomization $query): ?OrderDetailCustomizations;
+    private $orderDetailId;
+
+    /**
+     * GetOrderDetailCustomizations constructor.
+     *
+     * @param OrderReturnDetailId $orderDetailId
+     */
+    public function __construct(OrderReturnDetailId $orderDetailId)
+    {
+        $this->orderDetailId = $orderDetailId;
+    }
+
+    /**
+     * @return OrderReturnDetailId
+     */
+    public function getOrderDetailId(): OrderReturnDetailId
+    {
+        return $this->orderDetailId;
+    }
 }
