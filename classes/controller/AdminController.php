@@ -2731,7 +2731,11 @@ class AdminControllerCore extends Controller
             ]
         );
 
-        Media::addJsDef(['isDebugMode' => _PS_MODE_DEV_]);
+        Media::addJsDef([
+            'prestashop' => [
+                'debug' => _PS_MODE_DEV_,
+            ],
+        ]);
 
         // Execute Hook AdminController SetMedia
         Hook::exec('actionAdminControllerSetMedia');
