@@ -31,4 +31,18 @@ namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
  */
 class OrderConstraintException extends OrderException
 {
+    /**
+     * Used in create order from BO when the customer message is invalid.
+     */
+    const INVALID_CUSTOMER_MESSAGE = 1;
+
+    /**
+     * @param int $code
+     * @param string $message
+     * @param Throwable|null $previous
+     */
+    public function __construct($code = 0, $message = '', Throwable $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+    }
 }

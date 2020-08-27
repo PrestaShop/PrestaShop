@@ -42,6 +42,7 @@ use Module;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddOrderFromBackOfficeHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use Validate;
@@ -101,7 +102,10 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
         );
 
         try {
-            $this->addOrderMessage($cart, $command->getOrderMessage());
+            $orderMessage = $command->getOrderMessage();
+            if (!empty($orderMessage)) {
+                $this->addOrderMessage($cart, $orderMessage);
+            }
 
             $paymentModule->validateOrder(
                 (int) $cart->id,
@@ -135,6 +139,7 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
      *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
+     * @throws OrderConstraintException
      */
     private function addOrderMessage(Cart $cart, string $orderMessage): void
     {
@@ -143,12 +148,14 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
             $messageId = $oldMessage['id_message'];
         }
         $message = new Message((int) $messageId);
-        if (Validate::isMessage($orderMessage)) {
-            $message->message = $orderMessage;
-            $message->id_cart = (int) $cart->id;
-            $message->id_customer = (int) $cart->id_customer;
-            $message->save();
+        if (!Validate::isMessage($orderMessage)) {
+            throw new OrderConstraintException(OrderConstraintException::INVALID_CUSTOMER_MESSAGE);
         }
+
+        $message->message = $orderMessage;
+        $message->id_cart = (int) $cart->id;
+        $message->id_customer = (int) $cart->id_customer;
+        $message->save();
     }
 
     /**
