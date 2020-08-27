@@ -40,11 +40,13 @@ class GetOrderDetailCustomizations
     /**
      * GetOrderDetailCustomizations constructor.
      *
-     * @param OrderReturnDetailId $orderDetailId
+     * @param int $orderDetailId
+     *
+     * @throws \PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstraintException
      */
-    public function __construct(OrderReturnDetailId $orderDetailId)
+    public function __construct(int $orderDetailId)
     {
-        $this->orderDetailId = $orderDetailId;
+        $this->orderDetailId = new OrderReturnDetailId($orderDetailId);
     }
 
     /**
