@@ -27,6 +27,7 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Gherkin\Node\TableNode;
 use Cache;
 use CartRule;
 use Configuration;
@@ -399,27 +400,35 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then /^cart rule "(.+)" has a contextual reduction value of (\d+.\d+)$/
+     * @Then the current cart should have the following contextual reductions:
      *
-     * @param $cartRuleName
-     * @param $expectedValue
+     * @param TableNode $table
      */
-    public function checkCartRuleContextualValue(string $cartRuleName, float $expectedValue)
+    public function checkCartRuleContextualValue(TableNode $table)
     {
+        $contextualReductionValues = $table->getRowsHash();
         $cartRules = $this->getCurrentCart()->getCartRules();
-        $cartRuleFound = false;
+
         foreach ($cartRules as $currentCartRule) {
+            if (!isset($contextualReductionValues[$currentCartRule['description']])) {
+                throw new \RuntimeException(sprintf('Cart rule %s was not expected.', $currentCartRule['description']));
+            }
+
             // float numbers are compared as string because float numbers seemingly equals can still be unequals.
-            if ($currentCartRule['description'] === $cartRuleName && (string) $currentCartRule['value_real'] !== (string) $expectedValue) {
-                throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedValue, $currentCartRule['value_real']));
+            if ((string) $currentCartRule['value_real'] !== (string) $contextualReductionValues[$currentCartRule['description']]) {
+                throw new \RuntimeException(
+                    sprintf(
+                        'Expects %s, got %s instead',
+                        $contextualReductionValues[$currentCartRule['description']],
+                        $currentCartRule['value_real']
+                    )
+                );
             }
-            if ($currentCartRule['description'] === $cartRuleName) {
-                $cartRuleFound = true;
-            }
+            unset($contextualReductionValues[$currentCartRule['description']]);
         }
 
-        if (!$cartRuleFound) {
-            throw new \RuntimeException(sprintf('The cart rule "%s" was not found', $cartRuleName));
+        if (!empty($contextualReductionValues)) {
+            throw new \RuntimeException(sprintf('The cart rule "%s" was not found', reset($contextualReductionValues)));
         }
     }
 }
