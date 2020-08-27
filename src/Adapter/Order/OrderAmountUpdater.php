@@ -285,41 +285,41 @@ class OrderAmountUpdater
             $carrierId = $order->id_carrier;
 
             $invoice->total_paid_tax_excl = Tools::ps_round(
-                (float) $cart->getOrderTotal(false, Cart::BOTH, $currentInvoiceProducts, $carrierId),
+                (float) $cart->getOrderTotal(false, Cart::BOTH, $currentInvoiceProducts, $carrierId, false , $invoice->id),
                 $computingPrecision
             );
             $invoice->total_paid_tax_incl = Tools::ps_round(
-                (float) $cart->getOrderTotal(true, Cart::BOTH, $currentInvoiceProducts, $carrierId),
+                (float) $cart->getOrderTotal(true, Cart::BOTH, $currentInvoiceProducts, $carrierId, false , $invoice->id),
                 $computingPrecision
             );
 
             $invoice->total_products = Tools::ps_round(
-                (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $currentInvoiceProducts, $carrierId),
+                (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $currentInvoiceProducts, $carrierId, false , $invoice->id),
                 $computingPrecision
             );
             $invoice->total_products_wt = Tools::ps_round(
-                (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $currentInvoiceProducts, $carrierId),
+                (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $currentInvoiceProducts, $carrierId, false , $invoice->id),
                 $computingPrecision
             );
 
             $invoice->total_discount_tax_excl = Tools::ps_round(
-                (float) $cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $currentInvoiceProducts, $carrierId),
+                (float) $cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $currentInvoiceProducts, $carrierId, false , $invoice->id),
                 $computingPrecision
             );
             $invoice->total_discount_tax_incl = Tools::ps_round(
-                (float) $cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $currentInvoiceProducts, $carrierId),
+                (float) $cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $currentInvoiceProducts, $carrierId, false , $invoice->id),
                 $computingPrecision
             );
 
             // Update shipping costs
             $invoice->total_shipping_tax_excl = Tools::ps_round(
-                $cart->getOrderTotal(false, Cart::ONLY_SHIPPING, $currentInvoiceProducts, $carrierId),
+                $cart->getOrderTotal(false, Cart::ONLY_SHIPPING, $currentInvoiceProducts, $carrierId, false , $invoice->id),
                 $computingPrecision
             );
             $orderShippingTotalTaxExcluded += $invoice->total_shipping_tax_excl;
 
             $invoice->total_shipping_tax_incl = Tools::ps_round(
-                $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $currentInvoiceProducts, $carrierId),
+                $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $currentInvoiceProducts, $carrierId, false , $invoice->id),
                 $computingPrecision
             );
             $orderShippingTotalTaxIncluded += $invoice->total_shipping_tax_incl;

@@ -1892,6 +1892,7 @@ class CartCore extends ObjectModel
      * @param array $products
      * @param int $id_carrier
      * @param bool $use_cache @deprecated
+     * @param int|null $id_order_invoice
      *
      * @return float Order total
      *
@@ -1902,7 +1903,8 @@ class CartCore extends ObjectModel
         $type = Cart::BOTH,
         $products = null,
         $id_carrier = null,
-        $use_cache = false
+        $use_cache = false,
+        $id_order_invoice = null
     ) {
         if ((int) $id_carrier <= 0) {
             $id_carrier = null;
@@ -1964,7 +1966,7 @@ class CartCore extends ObjectModel
         // CART CALCULATION
         $cartRules = [];
         if (in_array($type, [Cart::BOTH, Cart::BOTH_WITHOUT_SHIPPING, Cart::ONLY_DISCOUNTS])) {
-            $cartRules = $this->getTotalCalculationCartRules($type, $type == Cart::BOTH);
+            $cartRules = $this->getTotalCalculationCartRules($type, $type == Cart::BOTH, $id_order_invoice);
         }
 
         $computePrecision = Context::getContext()->getComputingPrecision();
@@ -2127,10 +2129,11 @@ class CartCore extends ObjectModel
     /**
      * @param $type
      * @param $withShipping
+     * @param int|null $id_order_invoice
      *
      * @return array
      */
-    protected function getTotalCalculationCartRules($type, $withShipping)
+    protected function getTotalCalculationCartRules($type, $withShipping, $id_order_invoice = null)
     {
         if ($withShipping || $type == Cart::ONLY_DISCOUNTS) {
             $cartRules = $this->getCartRules(CartRule::FILTER_ACTION_ALL);
@@ -2147,6 +2150,14 @@ class CartCore extends ObjectModel
 
                 if (!$alreadyAddedCartRule) {
                     $cartRules[] = $cartRuleCandidate;
+                }
+            }
+        }
+        if (!empty($cartRules) && null !== $id_order_invoice) {
+            foreach ($cartRules as $key => $value) {
+                $cartRule = $cartRules[$key];
+                if (isset($cartRule['id_order_invoice']) && (int) $id_order_invoice !== (int) $cartRule['id_order_invoice']) {
+                    unset($cartRules[$key]);
                 }
             }
         }
