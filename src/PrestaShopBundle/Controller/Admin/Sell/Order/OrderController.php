@@ -53,6 +53,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductExcept
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidProductQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\NegativePaymentAmountException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailSendException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
@@ -1658,6 +1659,13 @@ class OrderController extends FrameworkBundleAdminController
                 ),
                 InvalidOrderStateException::INVALID_ID => $this->trans(
                     'You must choose an order status to create the order.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+            ],
+
+            OrderConstraintException::class => [
+                OrderConstraintException::INVALID_CUSTOMER_MESSAGE => $this->trans(
+                    'The order message given is invalid',
                     'Admin.Orderscustomers.Notification'
                 ),
             ],
