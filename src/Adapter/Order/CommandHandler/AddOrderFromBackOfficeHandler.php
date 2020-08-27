@@ -144,7 +144,7 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
     private function addOrderMessage(Cart $cart, string $orderMessage): void
     {
         if (!Validate::isMessage($orderMessage)) {
-            throw new OrderConstraintException('', OrderConstraintException::INVALID_CUSTOMER_MESSAGE);
+            throw new OrderConstraintException('The order message is invalid', OrderConstraintException::INVALID_CUSTOMER_MESSAGE);
         }
 
         $messageId = null;
