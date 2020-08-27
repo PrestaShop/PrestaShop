@@ -29,10 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult;
 
 use DateTime;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnId;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnStateId;
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
 class EditableOrderReturn
 {
@@ -79,13 +75,13 @@ class EditableOrderReturn
     /**
      * EditableOrderReturn constructor.
      *
-     * @param OrderReturnId $orderReturnId
-     * @param CustomerId $customerId
+     * @param int $orderReturnId
+     * @param int $customerId
      * @param string $customerFirstName
      * @param string $customerLastName
-     * @param OrderId $orderId
+     * @param int $orderId
      * @param DateTime $orderDate
-     * @param OrderReturnStateId $orderReturnStateId
+     * @param int $orderReturnStateId
      * @param string $question
      */
     public function __construct(
