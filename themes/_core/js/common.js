@@ -55,7 +55,7 @@ export function psGetRequestParameter(paramName) {
  * amount is correctly updated on payment modules
  */
 export function refreshCheckoutPage() {
-  let queryParams = psGetRequestParameter();
+  const queryParams = psGetRequestParameter();
   // we get the refresh flag : on payment step we need to refresh page to be sure
   // amount is correctly updated on payemnt modules
   if (queryParams['updatedTransaction']) {
