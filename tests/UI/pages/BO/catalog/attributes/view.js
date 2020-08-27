@@ -7,6 +7,10 @@ class ViewAttribute extends BOBasePage {
 
     this.pageTitle = 'Attributes >';
 
+    this.alertSuccessBlockParagraph = '.alert-success';
+
+    // Header selectors
+    this.addNewValueLink = '#page-header-desc-attribute-new_value';
 
     // Form selectors
     this.gridForm = '#form-attribute_values';
@@ -33,8 +37,31 @@ class ViewAttribute extends BOBasePage {
     this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
     this.tableColumnValue = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
     this.tableColumnPosition = row => `${this.tableBodyColumn(row)}:nth-child(4)`;
+
+    // Row actions selectors
+    this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
+    this.tableColumnActionsEditLink = row => `${this.tableColumnActions(row)} a.edit`;
+    this.tableColumnActionsToggleButton = row => `${this.tableColumnActions(row)} button.dropdown-toggle`;
+    this.tableColumnActionsDropdownMenu = row => `${this.tableColumnActions(row)} .dropdown-menu`;
+    this.tableColumnActionsDeleteLink = row => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
+
+    // Confirmation modal
+    this.deleteModalButtonYes = '#popup_ok';
+
+    // Grid footer link
+    this.backToListLink = '#desc-attribute-back';
   }
 
+  /* Header methods */
+
+  /**
+   * Go to add new value page
+   * @param page
+   * @return {Promise<void>}
+   */
+  async goToAddNewValuePage(page) {
+    await this.clickAndWaitForNavigation(page, this.addNewValueLink);
+  }
 
   /* Filter methods */
   /**
@@ -46,7 +73,7 @@ class ViewAttribute extends BOBasePage {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
-    await this.waitForVisibleSelector(page, this.filterSearchButton, 2000);
+    await this.waitForVisibleSelector(page, this.gridForm, 2000);
   }
 
   /**
@@ -109,6 +136,47 @@ class ViewAttribute extends BOBasePage {
     }
 
     return this.getTextContent(page, columnSelector);
+  }
+
+  /**
+   * Go to edit value page
+   * @param page
+   * @param row
+   * @return {Promise<void>}
+   */
+  async goToEditValuePage(page, row) {
+    await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(row));
+  }
+
+  /**
+   * Delete value
+   * @param page
+   * @param row
+   * @return {Promise<string>}
+   */
+  async deleteValue(page, row) {
+    await Promise.all([
+      page.click(this.tableColumnActionsToggleButton(row)),
+      this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(row)),
+    ]);
+
+    await page.click(this.tableColumnActionsDeleteLink(row));
+
+    // Confirm delete action
+    await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
+
+    // Get successful message
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Go back to list of attributes
+   * @param page
+   * @return {Promise<void>}
+   * @constructor
+   */
+  async backToAttributesList(page) {
+    await this.clickAndWaitForNavigation(page, this.backToListLink);
   }
 }
 

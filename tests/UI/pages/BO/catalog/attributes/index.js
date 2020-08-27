@@ -7,7 +7,10 @@ class Attributes extends BOBasePage {
 
     this.pageTitle = 'Attributes • ';
 
+    this.alertSuccessBlockParagraph = '.alert-success';
+
     // Header selectors
+    this.addNewAttributeLink = '#page-header-desc-attribute_group-new_attribute_group';
     this.featuresSubtabLink = '#subtab-AdminFeatures';
 
     // Form selectors
@@ -40,6 +43,13 @@ class Attributes extends BOBasePage {
     // Row actions selectors
     this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
     this.tableColumnActionsViewLink = row => `${this.tableColumnActions(row)} a[title='View']`;
+    this.tableColumnActionsToggleButton = row => `${this.tableColumnActions(row)} button.dropdown-toggle`;
+    this.tableColumnActionsDropdownMenu = row => `${this.tableColumnActions(row)} .dropdown-menu`;
+    this.tableColumnActionsEditLink = row => `${this.tableColumnActionsDropdownMenu(row)} a.edit`;
+    this.tableColumnActionsDeleteLink = row => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
+
+    // Confirmation modal
+    this.deleteModalButtonYes = '#popup_ok';
   }
 
   /* Header methods */
@@ -51,6 +61,15 @@ class Attributes extends BOBasePage {
    */
   async goToFeaturesPage(page) {
     await this.clickAndWaitForNavigation(page, this.featuresSubtabLink);
+  }
+
+  /**
+   * Go to add new attribute page
+   * @param page
+   * @return {Promise<void>}
+   */
+  async goToAddAttributePage(page) {
+    await this.clickAndWaitForNavigation(page, this.addNewAttributeLink);
   }
 
   /* Filter methods */
@@ -140,6 +159,49 @@ class Attributes extends BOBasePage {
    */
   async viewAttribute(page, row) {
     await this.clickAndWaitForNavigation(page, this.tableColumnActionsViewLink(row));
+  }
+
+  /**
+   * Open row actions dropdown menu
+   * @param page
+   * @param row
+   * @return {Promise<void>}
+   */
+  async openRowActionsDropdown(page, row) {
+    await Promise.all([
+      page.click(this.tableColumnActionsToggleButton(row)),
+      this.waitForVisibleSelector(page, this.tableColumnActionsEditLink(row)),
+    ]);
+  }
+
+  /**
+   * Go to edit attribute page
+   * @param page
+   * @param row
+   * @return {Promise<void>}
+   */
+  async goToEditAttributePage(page, row) {
+    await this.openRowActionsDropdown(page, row);
+
+    await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(row));
+  }
+
+  /**
+   * Delete attribute
+   * @param page
+   * @param row
+   * @return {Promise<string>}
+   */
+  async deleteAttribute(page, row) {
+    await this.openRowActionsDropdown(page, row);
+
+    await page.click(this.tableColumnActionsDeleteLink(row));
+
+    // Confirm delete action
+    await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
+
+    // Get successful message
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 }
 
