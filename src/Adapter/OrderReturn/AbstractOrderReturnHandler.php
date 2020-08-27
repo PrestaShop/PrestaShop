@@ -101,17 +101,13 @@ abstract class AbstractOrderReturnHandler extends AbstractObjectModelHandler
     /**
      * @param OrderReturnId $orderReturnId
      * @param OrderReturnDetailId $orderReturnDetailId
-     * @param CustomizationId|null $customizationId
      *
      * @throws DeleteOrderReturnProductException
-     * @throws OrderReturnNotFoundException
-     * @throws PrestaShopException
-     * @throws \PrestaShopDatabaseException
+     * @throws OrderReturnException
      */
     protected function deleteOrderReturnProduct(
         OrderReturnId $orderReturnId,
-        OrderReturnDetailId $orderReturnDetailId,
-        ?CustomizationId $customizationId
+        OrderReturnDetailId $orderReturnDetailId
     ): void {
         $orderReturn = $this->getOrderReturn($orderReturnId);
 
@@ -119,18 +115,9 @@ abstract class AbstractOrderReturnHandler extends AbstractObjectModelHandler
             throw new DeleteOrderReturnProductException('Can\'t delete last product from merchandise return');
         }
 
-        if ($customizationId !== null) {
-            $this->deleteOrderReturnDetailWithCustomization(
-                $orderReturnId,
-                $orderReturnDetailId,
-                $customizationId
-            );
-        } else {
-            $this->deleteOrderReturnDetail(
-                $orderReturnId,
-                $orderReturnDetailId
-            );
-        }
+        $this->deleteOrderReturnDetail(
+            $orderReturnDetailId
+        );
     }
 
     /**
@@ -161,12 +148,22 @@ abstract class AbstractOrderReturnHandler extends AbstractObjectModelHandler
      * @throws DeleteOrderReturnProductException
      */
     private function deleteOrderReturnDetail(
-        OrderReturnId $orderReturnId,
         OrderReturnDetailId $orderReturnDetailId
     ): void {
+        $orderReturnDetail = OrderReturn::getOrderReturnDetailByOrderDetailId($orderReturnDetailId->getValue());
+        if (!$orderReturnDetail) {
+            throw new DeleteOrderReturnProductException('Couldn\'t find order return detail');
+        }
+
+        $orderReturnDetail = $orderReturnDetail[0];
+
+        $orderReturnId = $orderReturnDetail['id_order_return'];
+        $customizationId = $orderReturnDetail['id_customization'];
+
         if (!OrderReturn::deleteOrderReturnDetail(
-            $orderReturnId->getValue(),
-            $orderReturnDetailId->getValue()
+            $orderReturnId,
+            $orderReturnDetailId->getValue(),
+            $customizationId
         )) {
             throw new DeleteOrderReturnProductException('Failed to delete merchandise return detail');
         }

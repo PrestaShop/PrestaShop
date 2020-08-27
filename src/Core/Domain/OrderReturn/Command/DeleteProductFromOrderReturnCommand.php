@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnDetailId;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
 
 /**
  * Deletes product from given order.
@@ -49,30 +48,17 @@ class DeleteProductFromOrderReturnCommand
     private $orderReturnDetailId;
 
     /**
-     * @var CustomizationId|null
-     */
-    private $customizationId;
-
-    /**
      * DeleteProductFromOrderReturnCommand constructor.
      *
      * @param int $orderReturnId
      * @param int $orderReturnDetailId
-     * @param int|null $customizationId
      *
      * @throws OrderReturnConstraintException
      */
-    public function __construct(int $orderReturnId, int $orderReturnDetailId, ?int $customizationId = null)
+    public function __construct(int $orderReturnId, int $orderReturnDetailId)
     {
         $this->orderReturnId = new OrderReturnId($orderReturnId);
         $this->orderReturnDetailId = new OrderReturnDetailId($orderReturnDetailId);
-
-        /**
-         * @param int|null $customizationId must remain null if customizationId is 0
-         */
-        if ($customizationId !== 0 && $customizationId !== null) {
-            $this->customizationId = new CustomizationId($customizationId);
-        }
     }
 
     /**
@@ -89,13 +75,5 @@ class DeleteProductFromOrderReturnCommand
     public function getOrderReturnDetailId(): OrderReturnDetailId
     {
         return $this->orderReturnDetailId;
-    }
-
-    /**
-     * @return CustomizationId|null
-     */
-    public function getCustomizationId(): ?CustomizationId
-    {
-        return $this->customizationId;
     }
 }
