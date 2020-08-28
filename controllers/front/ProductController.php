@@ -789,6 +789,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             // various assignements before Hook::exec
             $this->context->smarty->assign([
                 'category' => $this->category,
+                'subCategories' => $sub_categories,
                 'subcategories' => $sub_categories,
                 'id_category_current' => (int) $this->category->id,
                 'id_category_parent' => (int) $this->category->id_parent,
