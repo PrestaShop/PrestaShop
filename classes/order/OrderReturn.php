@@ -181,12 +181,9 @@ class OrderReturnCore extends ObjectModel
 		WHERE `id_order_return` = ' . (int) $id_order_return);
     }
 
-    /**
-     * While this function could return multiple results realistically will be only one.
-     */
     public static function getOrderReturnDetailByOrderDetailId($id_order_detail)
     {
-        return Db::getInstance()->executeS('
+        return Db::getInstance()->getRow('
 		SELECT *
 		FROM `' . _DB_PREFIX_ . 'order_return_detail`
 		WHERE `id_order_detail` = ' . (int) $id_order_detail);

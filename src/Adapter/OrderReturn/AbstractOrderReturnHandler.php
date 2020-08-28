@@ -140,8 +140,6 @@ abstract class AbstractOrderReturnHandler extends AbstractObjectModelHandler
             );
         }
 
-        $orderReturnDetail = $orderReturnDetail[0];
-
         $orderReturnId = $orderReturnDetail['id_order_return'];
         $customizationId = $orderReturnDetail['id_customization'];
 
