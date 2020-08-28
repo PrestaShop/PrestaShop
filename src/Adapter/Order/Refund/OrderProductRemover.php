@@ -37,6 +37,7 @@ use OrderHistory;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DeleteCustomizedProductFromOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DeleteProductFromOrderException;
 use Psr\Log\LoggerInterface;
+use SpecificPrice;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class OrderProductRemover
@@ -65,9 +66,8 @@ class OrderProductRemover
     /**
      * @param Order $order
      * @param OrderDetail $orderDetail
-     * @param int $quantity
      */
-    public function deleteProductFromOrder(Order $order, OrderDetail $orderDetail, int $quantity)
+    public function deleteProductFromOrder(Order $order, OrderDetail $orderDetail)
     {
         $cart = new Cart($order->id_cart);
 
@@ -79,6 +79,8 @@ class OrderProductRemover
         }
 
         $this->updateCart($cart, $orderDetail);
+
+        $this->deleteSpecificPrice($order, $orderDetail, $cart);
 
         $this->deleteOrderDetail(
             $order,
@@ -186,6 +188,43 @@ class OrderProductRemover
         foreach ($removedOrderCartRules as $removedOrderCartRuleId) {
             $orderCartRule = new OrderCartRule($removedOrderCartRuleId);
             $orderCartRule->delete();
+        }
+    }
+
+    /**
+     * @param Order $order
+     * @param OrderDetail $orderDetail
+     * @param Cart $cart
+     */
+    private function deleteSpecificPrice(
+        Order $order,
+        OrderDetail $orderDetail,
+        Cart $cart
+    ): void {
+        $productQuantity = $cart->getProductQuantity($orderDetail->product_id, $orderDetail->product_attribute_id);
+        if (!isset($productQuantity['quantity']) || (int) $productQuantity['quantity'] > 0) {
+            return;
+        }
+
+        // WARNING: DO NOT use SpecificPrice::getSpecificPrice as it filters out fields that are not in database
+        // hence it ignores the customer or cart restriction and results are biased
+        $existingSpecificPriceId = SpecificPrice::exists(
+            (int) $orderDetail->product_id,
+            (int) $orderDetail->product_attribute_id,
+            0,
+            0,
+            0,
+            $order->id_currency,
+            $order->id_customer,
+            SpecificPrice::ORDER_DEFAULT_FROM_QUANTITY,
+            SpecificPrice::ORDER_DEFAULT_DATE,
+            SpecificPrice::ORDER_DEFAULT_DATE,
+            false,
+            $order->id_cart
+        );
+        if (!empty($existingSpecificPriceId)) {
+            $specificPrice = new SpecificPrice($existingSpecificPriceId);
+            $specificPrice->delete();
         }
     }
 }

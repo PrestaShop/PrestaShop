@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockExcepti
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use Product;
 use StockAvailable;
+use Tools;
 use Validate;
 
 /**
@@ -56,8 +57,14 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
      */
     private $orderProductQuantityUpdater;
 
-    public function __construct(OrderProductQuantityUpdater $orderProductQuantityUpdater)
-    {
+    /**
+     * UpdateProductInOrderHandler constructor.
+     *
+     * @param OrderProductQuantityUpdater $orderProductQuantityUpdater
+     */
+    public function __construct(
+        OrderProductQuantityUpdater $orderProductQuantityUpdater
+    ) {
         $this->orderProductQuantityUpdater = $orderProductQuantityUpdater;
     }
 
@@ -66,12 +73,11 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
      */
     public function handle(UpdateProductInOrderCommand $command)
     {
-        // Return value
-        $res = true;
-        $temporarySpecificPrices = [];
-
         try {
             $order = $this->getOrder($command->getOrderId());
+            $cart = Cart::getCartByOrderId($order->id);
+            $computingPrecision = $this->getPrecisionFromCart($cart);
+
             $orderDetail = new OrderDetail($command->getOrderDetailId());
             $orderInvoice = null;
             if (!empty($command->getOrderInvoiceId())) {
@@ -84,47 +90,43 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             // @todo: use https://github.com/PrestaShop/decimal for price computations
             // Update OrderDetail prices
             $productQuantity = $command->getQuantity();
-            $unitProductPriceTaxIncl = (float) $command->getPriceTaxIncluded()->round(2);
-            $unitProductPriceTaxExcl = (float) $command->getPriceTaxExcluded()->round(2);
+            $unitProductPriceTaxIncl = (float) $command->getPriceTaxIncluded()->round($computingPrecision);
+            $unitProductPriceTaxExcl = (float) $command->getPriceTaxExcluded()->round($computingPrecision);
 
             $orderDetail->unit_price_tax_incl = $unitProductPriceTaxIncl;
             $orderDetail->unit_price_tax_excl = $unitProductPriceTaxExcl;
-            $orderDetail->total_price_tax_incl = $unitProductPriceTaxIncl * $productQuantity;
-            $orderDetail->total_price_tax_excl = $unitProductPriceTaxExcl * $productQuantity;
+            $orderDetail->total_price_tax_incl = Tools::ps_round($unitProductPriceTaxIncl * $productQuantity, $computingPrecision);
+            $orderDetail->total_price_tax_excl = Tools::ps_round($unitProductPriceTaxExcl * $productQuantity, $computingPrecision);
             if (!$orderDetail->save()) {
                 throw new OrderException('An error occurred while editing the product line.');
             }
 
-            $cart = Cart::getCartByOrderId($order->id);
             if (!($cart instanceof Cart)) {
                 throw new OrderException('Cart linked to the order cannot be found.');
             }
             $product = $this->getProduct(new ProductId((int) $orderDetail->product_id), (int) $order->id_lang);
             $combination = $this->getCombination((int) $orderDetail->product_attribute_id);
 
-            // Add specific price for the product being added
-            $specificPrice = $this->createSpecificPriceIfNeeded(
+            $this->updateSpecificPrice(
                 $command->getPriceTaxIncluded(),
                 $command->getPriceTaxExcluded(),
                 $order,
-                $cart,
                 $product,
                 $combination
             );
 
-            if (null !== $specificPrice) {
-                $temporarySpecificPrices[] = $specificPrice;
-            }
+            // update order details
+            $this->updateOrderDetailsWithSameProduct(
+                $order,
+                $orderDetail,
+                $computingPrecision
+            );
 
             // Update quantity and amounts
             $order = $this->orderProductQuantityUpdater->update($order, $orderDetail, $productQuantity, $orderInvoice);
 
             Hook::exec('actionOrderEdited', ['order' => $order]);
-
-            // Delete temporary specific prices
-            $this->clearTemporarySpecificPrices($temporarySpecificPrices);
         } catch (Exception $e) {
-            $this->clearTemporarySpecificPrices($temporarySpecificPrices);
             throw $e;
         }
     }

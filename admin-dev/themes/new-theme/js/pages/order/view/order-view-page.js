@@ -110,6 +110,7 @@ export default class OrderViewPage {
       );
       this.orderProductRenderer.resetEditRow(event.orderDetailId);
       this.orderPricesRefresher.refresh(event.orderId);
+      this.orderPricesRefresher.refreshProductPrices(event.orderId);
       this.orderDiscountsRefresher.refresh(event.orderId);
       this.orderInvoicesRefresher.refresh(event.orderId);
       this.orderDocumentsRefresher.refresh(event.orderId);
@@ -151,6 +152,7 @@ export default class OrderViewPage {
       }
       this.orderProductRenderer.updateNumProducts(numProducts + 1);
       this.orderProductRenderer.resetAddRow();
+      this.orderPricesRefresher.refreshProductPrices(event.orderId);
       this.orderPricesRefresher.refresh(event.orderId);
       this.orderDiscountsRefresher.refresh(event.orderId);
       this.orderInvoicesRefresher.refresh(event.orderId);
@@ -169,12 +171,12 @@ export default class OrderViewPage {
   }
 
   resetToolTips() {
-    $(OrderViewPageMap.productEditBtn).pstooltip();
+    $(OrderViewPageMap.productEditButtons).pstooltip();
     $(OrderViewPageMap.productDeleteBtn).pstooltip();
   }
 
   listenForProductEdit() {
-    $(OrderViewPageMap.productEditBtn).off('click').on('click', (event) => {
+    $(OrderViewPageMap.productEditButtons).off('click').on('click', (event) => {
       const $btn = $(event.currentTarget);
       this.orderProductRenderer.moveProductsPanelToModificationPosition();
       this.orderProductRenderer.editProductFromList(

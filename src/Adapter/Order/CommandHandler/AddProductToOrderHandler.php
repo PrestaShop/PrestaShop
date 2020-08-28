@@ -44,17 +44,16 @@ use Order;
 use OrderCarrier;
 use OrderDetail;
 use OrderInvoice;
-use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\AddProductToOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use Product;
 use Shop;
-use SpecificPrice;
 use StockAvailable;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
@@ -121,9 +120,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
         // Get context precision just in case
         $this->computingPrecision = $this->context->getComputingPrecision();
-        $temporarySpecificPrices = [];
         try {
             $this->assertOrderWasNotShipped($order);
+            $this->assertProductDuplicate($order, $command);
 
             $product = $this->getProduct($command->getProductId(), (int) $order->id_lang);
             $combination = null !== $command->getCombinationId() ? $this->getCombination($command->getCombinationId()->getValue()) : null;
@@ -138,25 +137,13 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             // Cart precision is more adapted
             $this->computingPrecision = $this->getPrecisionFromCart($cart);
 
-            // Restore any specific prices for the products in the order
-            $temporarySpecificPrices = $this->restoreOrderProductsSpecificPrices(
-                $order,
-                $cart
-            );
-
-            // Add specific price for the product being added
-            $specificPrice = $this->createSpecificPriceIfNeeded(
+            $this->updateSpecificPrice(
                 $command->getProductPriceTaxIncluded(),
                 $command->getProductPriceTaxExcluded(),
                 $order,
-                $cart,
                 $product,
                 $combination
             );
-
-            if (null !== $specificPrice) {
-                $temporarySpecificPrices[] = $specificPrice;
-            }
 
             $this->addProductToCart($cart, $product, $combination, $command->getProductQuantity());
 
@@ -178,6 +165,13 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 [$productCart]
             );
 
+            // update order details
+            $this->updateOrderDetailsWithSameProduct(
+                $order,
+                $orderDetail,
+                $this->computingPrecision
+            );
+
             StockAvailable::synchronize($product->id);
 
             // Update weight SUM
@@ -194,15 +188,10 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
             $order = $order->refreshShippingCost();
 
-            Hook::exec('actionOrderEdited', ['order' => $order]);
-
             // Update totals amount of order
             $this->orderAmountUpdater->update($order, $cart, (int) $orderDetail->id_order_invoice);
-
-            // Delete temporary specific prices
-            $this->clearTemporarySpecificPrices($temporarySpecificPrices);
+            Hook::exec('actionOrderEdited', ['order' => $order]);
         } catch (Exception $e) {
-            $this->clearTemporarySpecificPrices($temporarySpecificPrices);
             $this->contextStateManager->restoreContext();
             throw $e;
         }
@@ -245,39 +234,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         );
 
         return $orderDetail;
-    }
-
-    /**
-     * @param Order $order
-     * @param Cart $cart
-     *
-     * @return SpecificPrice[]
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
-     */
-    private function restoreOrderProductsSpecificPrices(Order $order, Cart $cart): array
-    {
-        $specificPrices = [];
-        foreach ($order->getOrderDetailList() as $row) {
-            $orderDetail = new OrderDetail($row['id_order_detail']);
-            $product = new Product((int) $orderDetail->product_id);
-
-            $specificPrice = $this->createSpecificPriceIfNeeded(
-                new Number((string) $orderDetail->unit_price_tax_incl),
-                new Number((string) $orderDetail->unit_price_tax_excl),
-                $order,
-                $cart,
-                $product,
-                new Combination($orderDetail->product_attribute_id)
-            );
-
-            if (null !== $specificPrice) {
-                $specificPrices[] = $specificPrice;
-            }
-        }
-
-        return $specificPrices;
     }
 
     /**
@@ -557,6 +513,41 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             if ($availableQuantity < $command->getProductQuantity()) {
                 throw new ProductOutOfStockException(sprintf('Product with id "%s" is out of stock, thus cannot be added to cart', $product->id));
             }
+        }
+    }
+
+    /**
+     * @param Order $order
+     * @param AddProductToOrderCommand $command
+     *
+     * @throws DuplicateProductInOrderException
+     */
+    private function assertProductDuplicate(Order $order, AddProductToOrderCommand $command): void
+    {
+        $invoicesContainingProduct = [];
+        foreach ($order->getOrderDetailList() as $orderDetail) {
+            if ($command->getProductId()->getValue() !== (int) $orderDetail['product_id']) {
+                continue;
+            }
+            if (!empty($command->getCombinationId()) && $command->getCombinationId()->getValue() !== (int) $orderDetail['product_attribute_id']) {
+                continue;
+            }
+            $invoicesContainingProduct[] = (int) $orderDetail['id_order_invoice'];
+        }
+
+        if (empty($invoicesContainingProduct)) {
+            return;
+        }
+
+        // If it's a new invoice (or no invoice), the ID is null, so we check if the Order has invoice (in which case
+        // a new one is going to be created) If it doesn't have invoices we don't allow adding duplicate OrderDetail
+        if (empty($command->getOrderInvoiceId()) && !$order->hasInvoice()) {
+            throw new DuplicateProductInOrderException('You cannot add this product in the order as it is already present');
+        }
+
+        // If we are targeting a specific invoice check that the ID has not been found in the OrderDetail list
+        if (!empty($command->getOrderInvoiceId()) && in_array((int) $command->getOrderInvoiceId(), $invoicesContainingProduct)) {
+            throw new DuplicateProductInOrderException('You cannot add this product in the order as it is already present');
         }
     }
 }

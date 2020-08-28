@@ -28,9 +28,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
-use Currency;
+use Address;
+use Configuration;
+use Order;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
+use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\SearchProductsHandlerInterface;
@@ -44,7 +47,7 @@ use Product;
 /**
  * Handles products search using legacy object model
  */
-final class SearchProductsHandler implements SearchProductsHandlerInterface
+final class SearchProductsHandler extends AbstractOrderHandler implements SearchProductsHandlerInterface
 {
     /**
      * @var int
@@ -101,8 +104,17 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
      */
     public function handle(SearchProducts $query): array
     {
-        $currencyId = Currency::getIdByIsoCode($query->getAlphaIsoCode()->getValue());
-        $this->contextStateManager->setCurrency(new Currency($currencyId));
+        $currency = $this->currencyDataProvider->getCurrencyByIsoCode($query->getAlphaIsoCode()->getValue());
+        $this->contextStateManager->setCurrency($currency);
+        $computingPrecision = new ComputingPrecision();
+        $currencyPrecision = $computingPrecision->getPrecision((int) $currency->precision);
+
+        $order = $address = null;
+        if (null !== $query->getOrderId()) {
+            $order = $this->getOrder($query->getOrderId());
+            $orderAddressId = $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)};
+            $address = new Address($orderAddressId);
+        }
 
         $products = Product::searchByName(
             $this->contextLangId,
@@ -112,10 +124,15 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
         );
 
         $foundProducts = [];
-
         if ($products) {
             foreach ($products as $product) {
-                $foundProduct = $this->createFoundProductFromLegacy(new Product($product['id_product']), $query);
+                $foundProduct = $this->createFoundProductFromLegacy(
+                    new Product($product['id_product']),
+                    $query->getAlphaIsoCode()->getValue(),
+                    $currencyPrecision,
+                    $order,
+                    $address
+                );
                 $foundProducts[] = $foundProduct;
             }
         }
@@ -127,32 +144,36 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
 
     /**
      * @param Product $product
-     * @param SearchProducts $query
+     * @param string $isoCodeCurrency
+     * @param int $computingPrecision
+     * @param Order|null $order
+     * @param Address|null $address
      *
      * @return FoundProduct
      */
-    private function createFoundProductFromLegacy(Product $product, SearchProducts $query): FoundProduct
-    {
-        $priceTaxExcluded = Product::getPriceStatic($product->id, false);
-        $priceTaxIncluded = Product::getPriceStatic($product->id, true);
-
-        $computingPrecision = new ComputingPrecision();
-        $isoCodeCurrency = $query->getAlphaIsoCode()->getValue();
-        $currency = $this->currencyDataProvider->getCurrencyByIsoCode($isoCodeCurrency);
-
+    private function createFoundProductFromLegacy(
+        Product $product,
+        string $isoCodeCurrency,
+        int $computingPrecision,
+        ?Order $order = null,
+        ?Address $address = null
+    ): FoundProduct {
+        // It's important to use null (not 0) as attribute ID so that Product::priceCalculation can fallback to default combination
+        $priceTaxExcluded = $this->getProductPriceForOrder((int) $product->id, null, false, $computingPrecision, $order);
+        $priceTaxIncluded = $this->getProductPriceForOrder((int) $product->id, null, true, $computingPrecision, $order);
         $product->loadStockData();
 
         return new FoundProduct(
             $product->id,
             $product->name[$this->contextLangId],
             $this->contextLocale->formatPrice($priceTaxExcluded, $isoCodeCurrency),
-            $this->tools->round($priceTaxIncluded, $computingPrecision->getPrecision((int) $currency->precision)),
-            $this->tools->round($priceTaxExcluded, $computingPrecision->getPrecision((int) $currency->precision)),
-            $product->getTaxesRate(),
+            $this->tools->round($priceTaxIncluded, $computingPrecision),
+            $this->tools->round($priceTaxExcluded, $computingPrecision),
+            $product->getTaxesRate($address),
             Product::getQuantity($product->id),
             $product->location,
             (bool) Product::isAvailableWhenOutOfStock($product->out_of_stock),
-            $this->getProductCombinations($product, $isoCodeCurrency),
+            $this->getProductCombinations($product, $isoCodeCurrency, $computingPrecision, $order),
             $this->getProductCustomizationFields($product)
         );
     }
@@ -187,12 +208,18 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
 
     /**
      * @param Product $product
-     * @param string $currencyCode
+     * @param string $currencyIsoCode
+     * @param int $computingPrecision
+     * @param Order|null $order
      *
-     * @return ProductCombination[]
+     * @return array
      */
-    private function getProductCombinations(Product $product, $currencyIsoCode): array
-    {
+    private function getProductCombinations(
+        Product $product,
+        string $currencyIsoCode,
+        int $computingPrecision,
+        ?Order $order = null
+    ): array {
         $productCombinations = [];
         $combinations = $product->getAttributeCombinations();
 
@@ -206,8 +233,8 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
                     $attribute = $existingAttribute . ' - ' . $attribute;
                 }
 
-                $priceTaxExcluded = Product::getPriceStatic((int) $product->id, false, $productAttributeId);
-                $priceTaxIncluded = Product::getPriceStatic((int) $product->id, true, $productAttributeId);
+                $priceTaxExcluded = $this->getProductPriceForOrder((int) $product->id, $productAttributeId, false, $computingPrecision, $order);
+                $priceTaxIncluded = $this->getProductPriceForOrder((int) $product->id, $productAttributeId, true, $computingPrecision, $order);
 
                 $productCombination = new ProductCombination(
                     $productAttributeId,
@@ -225,5 +252,41 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
         }
 
         return $productCombinations;
+    }
+
+    /**
+     * @param int $productId
+     * @param int|null $productAttributeId
+     * @param bool $withTaxes
+     * @param int $computingPrecision
+     * @param Order|null $order
+     *
+     * @return float
+     */
+    private function getProductPriceForOrder(
+        int $productId,
+        ?int $productAttributeId,
+        bool $withTaxes,
+        int $computingPrecision,
+        ?Order $order)
+    {
+        if (null === $order) {
+            return Product::getPriceStatic($productId, $withTaxes, $productAttributeId, $computingPrecision);
+        }
+
+        return Product::getPriceStatic(
+            $productId,
+            $withTaxes,
+            $productAttributeId,
+            $computingPrecision,
+            null,
+            false,
+            true,
+            1,
+            false,
+            $order->id_customer,
+            $order->id_cart,
+            $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)}
+        );
     }
 }

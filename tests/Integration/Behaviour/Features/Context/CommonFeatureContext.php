@@ -27,9 +27,14 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use AppKernel;
+use Cache;
+use Category;
 use Context;
 use Employee;
+use Language;
 use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
+use Pack;
+use Product;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class CommonFeatureContext extends AbstractPrestaShopFeatureContext
@@ -86,6 +91,32 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * Return PrestaShop Symfony services container
+     *
+     * @return ContainerInterface
+     */
+    public static function getContainer()
+    {
+        return static::$kernel->getContainer();
+    }
+
+    /**
+     * @AfterFeature @clear-cache-after-feature
+     */
+    public static function clearCacheAfterFeature()
+    {
+        self::clearCache();
+    }
+
+    /**
+     * @BeforeFeature @clear-cache-before-feature
+     */
+    public static function clearCacheBeforeFeature()
+    {
+        self::clearCache();
+    }
+
+    /**
      * This hook can be used to flag a scenario for database hard reset
      *
      * @BeforeScenario @database-scenario
@@ -107,12 +138,14 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * Return PrestaShop Symfony services container
-     *
-     * @return ContainerInterface
+     * Clears cache
      */
-    public static function getContainer()
+    private static function clearCache(): void
     {
-        return static::$kernel->getContainer();
+        Cache::clear();
+        Pack::resetStaticCache();
+        Category::resetStaticCache();
+        Product::resetStaticCache();
+        Language::resetCache();
     }
 }

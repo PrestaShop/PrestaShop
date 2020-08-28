@@ -28,8 +28,10 @@ import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 import {EventEmitter} from '@components/event-emitter';
 import OrderViewEventMap from '@pages/order/view/order-view-event-map';
 import OrderPrices from '@pages/order/view/order-prices';
+import ConfirmModal from '@components/modal';
+import OrderPricesRefresher from '@pages/order/view/order-prices-refresher';
 
-const $ = window.$;
+const {$} = window;
 
 export default class OrderProductEdit {
   constructor(orderDetailId) {
@@ -41,10 +43,11 @@ export default class OrderProductEdit {
     this.priceTaxCalculator = new OrderPrices();
     this.productEditSaveBtn = $(OrderViewPageMap.productEditSaveBtn);
     this.quantityInput = $(OrderViewPageMap.productEditQuantityInput);
+    this.orderPricesRefresher = new OrderPricesRefresher();
   }
 
   setupListener() {
-    this.quantityInput.on('change keyup', (event) => {
+    this.quantityInput.on('change keyup', event => {
       const newQuantity = Number(event.target.value);
       const availableQuantity = parseInt($(event.currentTarget).data('availableQuantity'), 10);
       const previousQuantity = parseInt(this.quantityInput.data('previousQuantity'), 10);
@@ -56,10 +59,12 @@ export default class OrderProductEdit {
       const disableEditActionBtn = newQuantity <= 0 || (remainingAvailable < 0 && !availableOutOfStock);
       this.productEditSaveBtn.prop('disabled', disableEditActionBtn);
     });
+
     this.productEditInvoiceSelect.on('change', () => {
       this.productEditSaveBtn.prop('disabled', false);
     });
-    this.priceTaxIncludedInput.on('change keyup', (event) => {
+
+    this.priceTaxIncludedInput.on('change keyup', event => {
       this.taxIncluded = parseFloat(event.target.value);
       const taxExcluded = this.priceTaxCalculator.calculateTaxExcluded(
         this.taxIncluded,
@@ -69,7 +74,8 @@ export default class OrderProductEdit {
       this.priceTaxExcludedInput.val(taxExcluded);
       this.updateTotal();
     });
-    this.priceTaxExcludedInput.on('change keyup', (event) => {
+
+    this.priceTaxExcludedInput.on('change keyup', event => {
       const taxExcluded = parseFloat(event.target.value);
       this.taxIncluded = this.priceTaxCalculator.calculateTaxIncluded(
         taxExcluded,
@@ -79,25 +85,32 @@ export default class OrderProductEdit {
       this.priceTaxIncludedInput.val(this.taxIncluded);
       this.updateTotal();
     });
-    this.productEditSaveBtn.on('click', (event) => {
+
+    this.productEditSaveBtn.on('click', event => {
       const $btn = $(event.currentTarget);
       const confirmed = window.confirm($btn.data('updateMessage'));
+
       if (!confirmed) {
         return;
       }
+
       $btn.prop('disabled', true);
-      this.editProduct(
-        $(event.currentTarget).data('orderId'),
-        this.orderDetailId
-      );
+      this.handleEditProductWithConfirmationModal(event);
     });
+
     this.productEditCancelBtn.on('click', () => {
-      EventEmitter.emit(OrderViewEventMap.productEditionCanceled, {orderDetailId: this.orderDetailId});
+      EventEmitter.emit(OrderViewEventMap.productEditionCanceled, {
+        orderDetailId: this.orderDetailId
+      });
     });
   }
 
   updateTotal() {
-    const updatedTotal = this.priceTaxCalculator.calculateTotalPrice(this.quantity, this.taxIncluded, this.currencyPrecision);
+    const updatedTotal = this.priceTaxCalculator.calculateTotalPrice(
+      this.quantity,
+      this.taxIncluded,
+      this.currencyPrecision
+    );
     this.priceTotalText.html(updatedTotal);
     this.productEditSaveBtn.prop('disabled', updatedTotal === this.initialTotal);
   }
@@ -123,20 +136,20 @@ export default class OrderProductEdit {
     this.priceTotalText = this.productRowEdit.find(OrderViewPageMap.productEditTotalPriceText);
 
     // Init input values
-    this.priceTaxExcludedInput.val(
-      window.ps_round(product.price_tax_excl, this.currencyPrecision)
-    );
-    this.priceTaxIncludedInput.val(
-      window.ps_round(product.price_tax_incl, this.currencyPrecision)
-    );
-    this.quantityInput.val(product.quantity).data('availableQuantity', product.availableQuantity).data('previousQuantity', product.quantity);
+    this.priceTaxExcludedInput.val(window.ps_round(product.price_tax_excl, this.currencyPrecision));
+
+    this.priceTaxIncludedInput.val(window.ps_round(product.price_tax_incl, this.currencyPrecision));
+
+    this.quantityInput
+      .val(product.quantity)
+      .data('availableQuantity', product.availableQuantity)
+      .data('previousQuantity', product.quantity);
     this.availableText.data('availableOutOfStock', product.availableOutOfStock);
 
     // set this product's orderInvoiceId as selected
     if (product.orderInvoiceId) {
       this.productEditInvoiceSelect.val(product.orderInvoiceId);
     }
-
 
     // Init editor data
     this.taxRate = product.tax_rate;
@@ -154,10 +167,44 @@ export default class OrderProductEdit {
     this.locationText.html(product.location);
     this.availableText.html(product.availableQuantity);
     this.priceTotalText.html(this.initialTotal);
-
     this.productRow.addClass('d-none').after(this.productRowEdit.removeClass('d-none'));
 
     this.setupListener();
+  }
+
+  handleEditProductWithConfirmationModal(event) {
+    const productEditBtn = $(`#orderProduct_${this.orderDetailId} ${OrderViewPageMap.productEditButtons}`);
+    const productId = productEditBtn.data('product-id');
+    const combinationId = productEditBtn.data('combination-id');
+    const orderInvoiceId = productEditBtn.data('order-invoice-id');
+    const productPriceMatch = this.orderPricesRefresher.checkOtherProductPricesMatch(
+      this.priceTaxIncludedInput.val(),
+      productId,
+      combinationId,
+      orderInvoiceId,
+      this.orderDetailId
+    );
+
+    if (productPriceMatch) {
+      this.editProduct($(event.currentTarget).data('orderId'), this.orderDetailId);
+
+      return;
+    }
+
+    const modalEditPrice = new ConfirmModal(
+      {
+        id: 'modal-confirm-new-price',
+        confirmTitle: this.productEditInvoiceSelect.data('modal-edit-price-title'),
+        confirmMessage: this.productEditInvoiceSelect.data('modal-edit-price-body'),
+        confirmButtonLabel: this.productEditInvoiceSelect.data(' '),
+        closeButtonLabel: this.productEditInvoiceSelect.data('modal-edit-price-cancel')
+      },
+      () => {
+        this.editProduct($(event.currentTarget).data('orderId'), this.orderDetailId);
+      }
+    );
+
+    modalEditPrice.show();
   }
 
   editProduct(orderId, orderDetailId) {
@@ -165,23 +212,29 @@ export default class OrderProductEdit {
       price_tax_incl: this.priceTaxIncludedInput.val(),
       price_tax_excl: this.priceTaxExcludedInput.val(),
       quantity: this.quantityInput.val(),
-      invoice: this.productEditInvoiceSelect.val(),
+      invoice: this.productEditInvoiceSelect.val()
     };
 
     $.ajax({
-      url: this.router.generate('admin_orders_update_product', {orderId, orderDetailId}),
-      method: 'POST',
-      data: params,
-    }).then((response) => {
-      EventEmitter.emit(OrderViewEventMap.productUpdated, {
+      url: this.router.generate('admin_orders_update_product', {
         orderId,
-        orderDetailId,
-        newRow: response
-      });
-    }, (response) => {
-      if (response.responseJSON && response.responseJSON.message) {
-        $.growl.error({message: response.responseJSON.message});
+        orderDetailId
+      }),
+      method: 'POST',
+      data: params
+    }).then(
+      response => {
+        EventEmitter.emit(OrderViewEventMap.productUpdated, {
+          orderId,
+          orderDetailId,
+          newRow: response
+        });
+      },
+      response => {
+        if (response.responseJSON && response.responseJSON.message) {
+          $.growl.error({message: response.responseJSON.message});
+        }
       }
-    });
+    );
   }
 }

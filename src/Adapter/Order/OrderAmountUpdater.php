@@ -36,13 +36,13 @@ use Currency;
 use Order;
 use OrderCarrier;
 use OrderCartRule;
-use OrderInvoice;
 use PrestaShop\PrestaShop\Core\Cart\CartRuleData;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShopDatabaseException;
 use PrestaShopException;
+use Product;
 use Tools;
 use Validate;
 
@@ -118,9 +118,8 @@ class OrderAmountUpdater
         if (!$order->update()) {
             throw new OrderException('Could not update order invoice in database.');
         }
-        if (!empty($orderInvoiceId)) {
-            $this->updateOrderInvoice($order, $cart, $orderInvoiceId, $computingPrecision);
-        }
+
+        $this->updateOrderInvoices($order, $cart, $computingPrecision);
     }
 
     /**
@@ -225,66 +224,65 @@ class OrderAmountUpdater
     /**
      * @param Order $order
      * @param Cart $cart
-     * @param int $orderInvoiceId
      * @param int $computingPrecision
      *
      * @throws OrderException
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    private function updateOrderInvoice(Order $order, Cart $cart, int $orderInvoiceId, int $computingPrecision): void
+    private function updateOrderInvoices(Order $order, Cart $cart, int $computingPrecision): void
     {
         $invoiceProducts = [];
         foreach ($order->getCartProducts() as $orderProduct) {
-            if (!empty($orderProduct['id_order_invoice']) && $orderProduct['id_order_invoice'] == $orderInvoiceId) {
-                $invoiceProducts[] = $orderProduct;
+            if (!empty($orderProduct['id_order_invoice'])) {
+                $invoiceProducts[$orderProduct['id_order_invoice']][] = $orderProduct;
             }
         }
         if (empty($invoiceProducts)) {
             return;
         }
 
-        $firstInvoice = $order->getInvoicesCollection()->getFirst();
-        $invoice = new OrderInvoice($orderInvoiceId);
+        $invoiceCollection = $order->getInvoicesCollection();
+        $firstInvoice = $invoiceCollection->getFirst();
 
-        // Shipping are computed on first invoice only
-        $carrierId = $order->id_carrier;
-        $totalMethod = ($firstInvoice === null || $firstInvoice->id == $invoice->id) ? Cart::BOTH : Cart::BOTH_WITHOUT_SHIPPING;
-        $invoice->total_paid_tax_excl = Tools::ps_round(
-            (float) $cart->getOrderTotal(false, $totalMethod, $invoiceProducts, $carrierId),
-            $computingPrecision
-        );
-        $invoice->total_paid_tax_incl = Tools::ps_round(
-            (float) $cart->getOrderTotal(true, $totalMethod, $invoiceProducts, $carrierId),
-            $computingPrecision
-        );
+        foreach ($invoiceCollection as $invoice) {
+            // If all the invoice's products have been removed the offset won't exist
+            $currentInvoiceProducts = isset($invoiceProducts[$invoice->id]) ? $invoiceProducts[$invoice->id] : [];
 
-        $invoice->total_products = (float) $cart->getOrderTotal(
-            false,
-            Cart::ONLY_PRODUCTS,
-            $invoiceProducts,
-            $carrierId
-        );
-        $invoice->total_products_wt = (float) $cart->getOrderTotal(
-            true,
-            Cart::ONLY_PRODUCTS,
-            $invoiceProducts,
-            $carrierId
-        );
+            // Shipping are computed on first invoice only
+            $carrierId = $order->id_carrier;
+            $totalMethod = ($firstInvoice === null || $firstInvoice->id == $invoice->id) ? Cart::BOTH : Cart::BOTH_WITHOUT_SHIPPING;
+            $invoice->total_paid_tax_excl = Tools::ps_round(
+                (float) $cart->getOrderTotal(false, $totalMethod, $currentInvoiceProducts, $carrierId),
+                $computingPrecision
+            );
+            $invoice->total_paid_tax_incl = Tools::ps_round(
+                (float) $cart->getOrderTotal(true, $totalMethod, $currentInvoiceProducts, $carrierId),
+                $computingPrecision
+            );
 
-        $invoice->total_discount_tax_excl = $invoice->total_discount_tax_incl = 0;
-        foreach ($order->getCartRules() as $orderCartRuleData) {
-            $orderCartRule = new OrderCartRule($orderCartRuleData['id_order_cart_rule']);
-            if ($orderCartRule->id_order_invoice == 0 || $orderCartRule->id_order_invoice == $invoice->id) {
-                $invoice->total_discount_tax_incl += $orderCartRule->value;
-                $invoice->total_discount_tax_excl += $orderCartRule->value_tax_excl;
+            $invoice->total_products = Tools::ps_round(
+                (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $currentInvoiceProducts, $carrierId),
+                $computingPrecision
+            );
+            $invoice->total_products_wt = Tools::ps_round(
+                (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $currentInvoiceProducts, $carrierId),
+                $computingPrecision
+            );
+
+            $invoice->total_discount_tax_excl = Tools::ps_round(
+                (float) $cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $currentInvoiceProducts, $carrierId),
+                $computingPrecision
+            );
+
+            $invoice->total_discount_tax_incl = Tools::ps_round(
+                (float) $cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $currentInvoiceProducts, $carrierId),
+                $computingPrecision
+            );
+
+            if (!$invoice->update()) {
+                throw new OrderException('Could not update order invoice in database.');
             }
-        }
-        $invoice->total_discount_tax_excl = Tools::ps_round($invoice->total_discount_tax_excl, $computingPrecision);
-        $invoice->total_discount_tax_incl = Tools::ps_round($invoice->total_discount_tax_incl, $computingPrecision);
-
-        if (!$invoice->update()) {
-            throw new OrderException('Could not update order invoice in database.');
         }
     }
 
