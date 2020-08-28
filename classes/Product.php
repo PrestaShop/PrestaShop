@@ -697,7 +697,7 @@ class ProductCore extends ObjectModel
     {
         $fields = parent::getFieldsShop();
         if (null === $this->update_fields || (!empty($this->update_fields['price']) && !empty($this->update_fields['unit_price']))) {
-            if ($this->unit_price != null) {
+            if ($this->unit_price !== null) {
                 $fields['unit_price_ratio'] = (float) $this->unit_price > 0 ? $this->price / $this->unit_price : 0;
             }
         }
