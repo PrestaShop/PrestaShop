@@ -35,11 +35,8 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\BulkDeleteOrderRetur
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\DeleteOrderReturnProductException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\MissingOrderReturnRequiredFieldsException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnOrderStateConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnProductException;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnProductQueryException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\UpdateOrderReturnException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\EditableOrderReturn;
@@ -273,15 +270,15 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
                 $e instanceof BulkDeleteOrderReturnProductException ? implode(', ', $e->getOrderReturnDetailIds()) : ''
             ),
             DeleteOrderReturnProductException::class => [
-                DeleteOrderReturnProductException::ORDER_RETURN_PRODUCT_NOT_FOUND =>   $this->trans(
+                DeleteOrderReturnProductException::ORDER_RETURN_PRODUCT_NOT_FOUND => $this->trans(
                     'An error occurred while deleting this product, order product not found.',
                     'Admin.Notifications.Error'
                 ),
-                DeleteOrderReturnProductException::LAST_ORDER_RETURN_PRODUCT =>   $this->trans(
+                DeleteOrderReturnProductException::LAST_ORDER_RETURN_PRODUCT => $this->trans(
                     'An error occurred while deleting this product, can\'t delete last product in order return.',
                     'Admin.Notifications.Error'
                 ),
-                DeleteOrderReturnProductException::UNEXPECTED_ERROR =>   $this->trans(
+                DeleteOrderReturnProductException::UNEXPECTED_ERROR => $this->trans(
                     'An error occurred while deleting this product.',
                     'Admin.Notifications.Error'
                 ),
@@ -306,6 +303,4 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             ),
         ];
     }
-
-
 }
