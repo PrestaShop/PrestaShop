@@ -582,7 +582,18 @@ Feature: Order from Back Office (BO)
       | amount        | 2                       |
       | price         | 15                      |
       | invoice       | first                   |
-    Then I should get error that adding duplicate product is forbidden
+    Then I should get error that adding duplicate product in invoice is forbidden
+    And first invoice from order "bo_order1" should contain 2 products "Mug The best is yet to come"
+    And first invoice from order "bo_order1" should contain 3 products "Test Product A"
+    And second invoice from order "bo_order1" should contain 0 products "Test Product A"
+    And second invoice from order "bo_order1" should contain 1 products "Test Product B"
+    And third invoice from order "bo_order1" should contain 2 products "Test Product A"
+    And third invoice from order "bo_order1" should contain 5 products "Test Product B"
+    When I add products to order "bo_order1" to third invoice and the following products details:
+      | name          | Test Product A |
+      | amount        | 1              |
+      | price         | 10             |
+    Then I should get error that adding duplicate product in invoice is forbidden
     And first invoice from order "bo_order1" should contain 2 products "Mug The best is yet to come"
     And first invoice from order "bo_order1" should contain 3 products "Test Product A"
     And second invoice from order "bo_order1" should contain 0 products "Test Product A"

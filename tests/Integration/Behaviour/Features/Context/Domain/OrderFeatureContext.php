@@ -46,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderComma
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderInvoiceException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidProductQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
@@ -576,6 +577,14 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     public function assertDuplicateProductIsForbidden()
     {
         $this->assertLastErrorIs(DuplicateProductInOrderException::class);
+    }
+
+    /**
+     * @Then I should get error that adding duplicate product in invoice is forbidden
+     */
+    public function assertDuplicateProductInInvoiceIsForbidden()
+    {
+        $this->assertLastErrorIs(DuplicateProductInOrderInvoiceException::class);
     }
 
     /**

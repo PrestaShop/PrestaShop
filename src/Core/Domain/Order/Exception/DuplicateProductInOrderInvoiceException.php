@@ -28,9 +28,35 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
 
+use Throwable;
+
 /**
- * Class DuplicateProductInOrderException thrown when we try to add a product in an order that already contains it
+ * Class DuplicateProductInOrderInvoiceException thrown when we try to add a product in an order invoice that already contains it
  */
-class DuplicateProductInOrderException extends OrderException
+class DuplicateProductInOrderInvoiceException extends DuplicateProductInOrderException
 {
+    /**
+     * @var string
+     */
+    private $orderInvoiceNumber;
+
+    /**
+     * @param string $orderInvoiceId
+     * @param string $message
+     * @param int $code
+     * @param Throwable|null $previous
+     */
+    public function __construct(string $orderInvoiceId, $message = '', $code = 0, Throwable $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+        $this->orderInvoiceNumber = $orderInvoiceId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrderInvoiceNumber(): string
+    {
+        return $this->orderInvoiceNumber;
+    }
 }
