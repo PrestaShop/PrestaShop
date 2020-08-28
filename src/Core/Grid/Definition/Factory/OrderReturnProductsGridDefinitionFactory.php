@@ -104,6 +104,13 @@ final class OrderReturnProductsGridDefinitionFactory extends AbstractFilterableG
                     ])
             )
             ->add(
+                (new DataColumn('order_detail_id'))
+                    ->setName($this->trans('Order detail ID', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'id_order_detail',
+                    ])
+            )
+            ->add(
                 (new DataColumn('product_reference'))
                     ->setName($this->trans('Reference', [], 'Admin.Global'))
                     ->setOptions([
@@ -162,6 +169,15 @@ final class OrderReturnProductsGridDefinitionFactory extends AbstractFilterableG
     protected function getFilters()
     {
         return (new FilterCollection())
+            ->add((new Filter('order_detail_id', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search order detail ID', [], 'Admin.Actions'),
+                    ],
+                ])
+                ->setAssociatedColumn('id_order_detail')
+            )
             ->add((new Filter('reference', TextType::class))
             ->setTypeOptions([
                 'required' => false,
