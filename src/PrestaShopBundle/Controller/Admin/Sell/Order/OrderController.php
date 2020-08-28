@@ -663,13 +663,18 @@ class OrderController extends FrameworkBundleAdminController
                     (int) $request->get('quantity')
                 );
             } else {
+                $withFreeShipping = null;
+                if ($request->has('free_shipping')) {
+                    $withFreeShipping = (bool) filter_var($request->get('free_shipping'), FILTER_VALIDATE_BOOLEAN);
+                }
                 $addProductCommand = AddProductToOrderCommand::withNewInvoice(
                     $orderId,
                     (int) $request->get('product_id'),
                     (int) $request->get('combination_id'),
                     $request->get('price_tax_incl'),
                     $request->get('price_tax_excl'),
-                    (int) $request->get('quantity')
+                    (int) $request->get('quantity'),
+                    $withFreeShipping
                 );
             }
             $this->getCommandBus()->handle($addProductCommand);
@@ -1604,7 +1609,7 @@ class OrderController extends FrameworkBundleAdminController
                 $this->trans(
                     'Order #%d cannot be loaded.',
                     'Admin.Orderscustomers.Notification',
-                    ['#%d' => $e->getOrderId()->getValue()]
+                    ['%d' => $e->getOrderId()->getValue()]
                 ) : '',
             OrderEmailSendException::class => $this->trans(
                 'An error occurred while sending the e-mail to the customer.',

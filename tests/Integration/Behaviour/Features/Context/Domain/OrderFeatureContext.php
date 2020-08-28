@@ -72,6 +72,7 @@ use stdClass;
 use Tax;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class OrderFeatureContext extends AbstractDomainFeatureContext
 {
@@ -181,6 +182,10 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         $this->lastException = null;
         try {
+            $withFreeShipping = null;
+            if (isset($data['free_shipping'])) {
+                $withFreeShipping = PrimitiveUtils::castStringBooleanIntoBoolean($data['free_shipping']);
+            }
             $this->getCommandBus()->handle(
                 AddProductToOrderCommand::withNewInvoice(
                     $orderId,
@@ -188,7 +193,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                     $combinationId,
                     $data['price'],
                     $data['price'],
-                    (int) $data['amount']
+                    (int) $data['amount'],
+                    $withFreeShipping
                 )
             );
         } catch (InvalidProductQuantityException $e) {

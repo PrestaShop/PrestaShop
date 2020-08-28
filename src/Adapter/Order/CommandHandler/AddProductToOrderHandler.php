@@ -32,6 +32,7 @@ use Address;
 use Attribute;
 use Carrier;
 use Cart;
+use CartRule;
 use Combination;
 use Configuration;
 use Context;
@@ -51,6 +52,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\AddProductToOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
+use PrestaShopException;
 use Product;
 use Shop;
 use StockAvailable;
@@ -264,7 +266,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             case Order::ROUND_TOTAL:
                 $productItem['total'] = $productItem['price_with_reduction_without_tax'] * $quantity;
                 $productItem['total_wt'] = $productItem['price_with_reduction'] * $quantity;
-
                 break;
             case Order::ROUND_LINE:
                 $productItem['total'] = Tools::ps_round(
@@ -275,7 +276,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                     $productItem['price_with_reduction'] * $quantity,
                     $this->computingPrecision
                 );
-
                 break;
 
             case Order::ROUND_ITEM:
@@ -288,7 +288,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                         $productItem['price_with_reduction'],
                         $this->computingPrecision
                     ) * $quantity;
-
                 break;
         }
 
@@ -360,7 +359,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         if ($order->hasInvoice()) {
             return $command->getOrderInvoiceId() ?
                 $this->updateExistingInvoice($command->getOrderInvoiceId(), $cart, $products) :
-                $this->createNewInvoice($order, $cart, $products);
+                $this->createNewInvoice($order, $cart, $products, $command->withFreeShipping());
         }
 
         return null;
@@ -370,9 +369,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      * @param Order $order
      * @param Cart $cart
      * @param array $newProducts
-     * @param
+     * @param bool|null $withFreeShipping
      */
-    private function createNewInvoice(Order $order, Cart $cart, array $newProducts)
+    private function createNewInvoice(Order $order, Cart $cart, array $newProducts, ?bool $withFreeShipping)
     {
         $invoice = new OrderInvoice();
 
@@ -412,7 +411,58 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
         $invoice->saveCarrierTaxCalculator($taxCalculator->getTaxesAmount($invoice->total_shipping_tax_excl));
 
+        if (true === $withFreeShipping) {
+            $this->addFreeShippingDiscount($order, $cart, $invoice);
+        }
+
         return $invoice;
+    }
+
+    /**
+     * @param Order $order
+     * @param Cart $cart
+     * @param OrderInvoice $orderInvoice
+     *
+     * @throws OrderException
+     */
+    private function addFreeShippingDiscount(Order $order, Cart $cart, OrderInvoice $orderInvoice): void
+    {
+        $defaultLangId = (int) Configuration::get('PS_LANG_DEFAULT');
+        $cartRuleObj = new CartRule();
+        $cartRuleObj->id_customer = $order->id_customer;
+        $cartRuleObj->date_from = date('Y-m-d H:i:s', strtotime('-1 hour', strtotime($order->date_add)));
+        $cartRuleObj->date_to = date('Y-m-d H:i:s', strtotime('+1 hour'));
+        $cartRuleObj->name = [
+            $defaultLangId => $this->translator->trans(
+                'Free Shipping discount for invoice %s',
+                ['%s' => $orderInvoice->getInvoiceNumberFormatted($defaultLangId, $order->id_shop)],
+                'Admin.Orderscustomers.Notification'
+            ),
+        ];
+        // This a one time cart rule, for a specific user that can only be used once
+        $cartRuleObj->quantity = 1;
+        $cartRuleObj->quantity_per_user = 1;
+        $cartRuleObj->active = 0;
+        $cartRuleObj->highlight = 0;
+        $cartRuleObj->id_order_invoice = $orderInvoice->id;
+        $cartRuleObj->free_shipping = 1;
+
+        try {
+            if (!$cartRuleObj->add()) {
+                throw new OrderException('An error occurred during the CartRule creation');
+            }
+        } catch (PrestaShopException $e) {
+            throw new OrderException('An error occurred during the CartRule creation', 0, $e);
+        }
+
+        try {
+            // It's important to add the cart rule to the cart Or it will be ignored when cart performs AutoRemove AddAdd
+            if (!$cart->addCartRule($cartRuleObj->id)) {
+                throw new OrderException('An error occurred while adding CartRule to cart');
+            }
+        } catch (PrestaShopException $e) {
+            throw new OrderException('An error occurred while adding CartRule to cart', 0, $e);
+        }
     }
 
     /**
