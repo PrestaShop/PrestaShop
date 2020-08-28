@@ -151,7 +151,7 @@ class UpdateLicensesCommand extends Command
                 'tests/UI/',
             ])
             ->ignoreDotFiles(false);
-        $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+        $parser = (new ParserFactory())->create(ParserFactory::ONLY_PHP7);
 
         $output->writeln('Updating license in ' . strtoupper($ext) . ' files ...');
         $progress = new ProgressBar($output, count($finder));

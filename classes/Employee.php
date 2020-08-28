@@ -735,7 +735,7 @@ class EmployeeCore extends ObjectModel
     {
         $access = Profile::getProfileAccess($this->id_profile, Tab::getIdFromClassName($tab));
 
-        return $access[$action] == '1';
+        return is_array($access) && $access[$action] == '1';
     }
 
     /**

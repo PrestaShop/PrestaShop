@@ -711,7 +711,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         $this->clearCache();
 
         // Automatically fill dates
-        if (array_key_exists('date_upd', $this)) {
+        if (property_exists($this, 'date_upd')) {
             $this->date_upd = date('Y-m-d H:i:s');
             if (isset($this->update_fields) && is_array($this->update_fields) && count($this->update_fields)) {
                 $this->update_fields['date_upd'] = true;
@@ -719,7 +719,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         // Automatically fill dates
-        if (array_key_exists('date_add', $this) && $this->date_add == null) {
+        if (property_exists($this, 'date_add') && $this->date_add == null) {
             $this->date_add = date('Y-m-d H:i:s');
             if (isset($this->update_fields) && is_array($this->update_fields) && count($this->update_fields)) {
                 $this->update_fields['date_add'] = true;
@@ -922,7 +922,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     public function toggleStatus()
     {
         // Object must have a variable called 'active'
-        if (!array_key_exists('active', $this)) {
+        if (!property_exists($this, 'active')) {
             throw new PrestaShopException('property "active" is missing in object ' . get_class($this));
         }
 
@@ -1368,10 +1368,10 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             }
             if (isset($details['validate'])) {
                 $current_field['validateMethod'] = (
-                                array_key_exists('validateMethod', $resource_parameters['fields'][$field_name]) ?
-                                array_merge($resource_parameters['fields'][$field_name]['validateMethod'], [$details['validate']]) :
-                                [$details['validate']]
-                            );
+                    array_key_exists('validateMethod', $resource_parameters['fields'][$field_name]) ?
+                    array_merge($resource_parameters['fields'][$field_name]['validateMethod'], [$details['validate']]) :
+                    [$details['validate']]
+                );
             }
             $resource_parameters['fields'][$field_name] = array_merge($resource_parameters['fields'][$field_name], $current_field);
 

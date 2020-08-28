@@ -790,6 +790,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $this->context->smarty->assign([
                 'category' => $this->category,
                 'subCategories' => $sub_categories,
+                'subcategories' => $sub_categories,
                 'id_category_current' => (int) $this->category->id,
                 'id_category_parent' => (int) $this->category->id_parent,
                 'return_category_name' => Tools::safeOutput($this->category->getFieldByLang('name')),
