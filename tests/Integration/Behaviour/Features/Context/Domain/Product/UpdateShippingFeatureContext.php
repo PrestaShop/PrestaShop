@@ -109,7 +109,11 @@ class UpdateShippingFeatureContext extends AbstractProductFeatureContext
 
         $this->assertNumberShippingFields($data, $productShippingInformation);
         $this->assertDeliveryTimeNotes($data, $productShippingInformation);
-        //@todo: check if all fields were asserted
+
+        // Assertions checking isset() can hide some errors if it doesn't find array key,
+        // to make sure all provided fields were checked we need to unset every asserted field
+        // and finally, if provided data is not empty, it means there are some unnasserted values left
+        Assert::assertEmpty($data, sprintf('Some provided product shipping fields haven\'t been asserted: %s', var_export($data, true)));
     }
 
     /**

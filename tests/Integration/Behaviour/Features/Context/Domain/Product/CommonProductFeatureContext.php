@@ -32,10 +32,8 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\CombinationDetails;
-use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tests\Integration\Behaviour\Features\Context\Util\ProductCombinationFactory;
 
 class CommonProductFeatureContext extends AbstractProductFeatureContext
@@ -121,7 +119,6 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
 
     /**
      * @Then product :productReference should have following values:
-     * @Then product :productReference has following values:
      *
      * @param string $productReference
      * @param TableNode $table
@@ -131,22 +128,12 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
         $productForEditing = $this->getProductForEditing($productReference);
         $data = $table->getRowsHash();
 
-        $this->assertBoolProperty($productForEditing, $data, 'available_for_order');
-        $this->assertBoolProperty($productForEditing, $data, 'online_only');
-        $this->assertBoolProperty($productForEditing, $data, 'show_price');
         $this->assertBoolProperty($productForEditing, $data, 'active');
-        $this->assertStringProperty($productForEditing, $data, 'visibility');
-        $this->assertStringProperty($productForEditing, $data, 'condition');
-        $this->assertStringProperty($productForEditing, $data, 'isbn');
-        $this->assertStringProperty($productForEditing, $data, 'upc');
-        $this->assertStringProperty($productForEditing, $data, 'ean13');
-        $this->assertStringProperty($productForEditing, $data, 'mpn');
-        $this->assertStringProperty($productForEditing, $data, 'reference');
 
         // Assertions checking isset() can hide some errors if it doesn't find array key,
         // to make sure all provided fields were checked we need to unset every asserted field
         // and finally, if provided data is not empty, it means there are some unnasserted values left
-        Assert::assertEmpty($data, sprintf('Some provided product fields haven\'t been asserted: %s', implode(',', $data)));
+        Assert::assertEmpty($data, sprintf('Some provided product fields haven\'t been asserted: %s', var_export($data, true)));
     }
 
     /**
@@ -198,47 +185,6 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
             ProductConstraintException::class,
             $this->getConstraintErrorCode($fieldName)
         );
-    }
-
-    /**
-     * @param ProductForEditing $productForEditing
-     * @param array $data
-     * @param string $propertyName
-     */
-    private function assertBoolProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
-    {
-        if (isset($data[$propertyName])) {
-            $expectedValue = PrimitiveUtils::castStringBooleanIntoBoolean($data[$propertyName]);
-            $actualValue = $this->extractValueFromProductForEditing($productForEditing, $propertyName);
-            Assert::assertEquals(
-                $expectedValue,
-                $actualValue,
-                sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
-            );
-
-            unset($data[$propertyName]);
-        }
-    }
-
-    /**
-     * @param ProductForEditing $productForEditing
-     * @param array $data
-     * @param string $propertyName
-     */
-    private function assertStringProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
-    {
-        if (isset($data[$propertyName])) {
-            $expectedValue = $data[$propertyName];
-            $actualValue = $this->extractValueFromProductForEditing($productForEditing, $propertyName);
-
-            Assert::assertEquals(
-                $expectedValue,
-                $actualValue,
-                sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
-            );
-
-            unset($data[$propertyName]);
-        }
     }
 
     /**

@@ -89,6 +89,11 @@ class ProductOptions
     private $reference;
 
     /**
+     * @var int
+     */
+    private $manufacturerId;
+
+    /**
      * @param string $visibility
      * @param bool $availableForOrder
      * @param bool $onlineOnly
@@ -100,6 +105,7 @@ class ProductOptions
      * @param string $ean13
      * @param string $mpn
      * @param string $reference
+     * @param int $manufacturerId
      */
     public function __construct(
         string $visibility,
@@ -112,7 +118,8 @@ class ProductOptions
         string $upc,
         string $ean13,
         string $mpn,
-        string $reference
+        string $reference,
+        int $manufacturerId
     ) {
         $this->visibility = $visibility;
         $this->availableForOrder = $availableForOrder;
@@ -125,6 +132,7 @@ class ProductOptions
         $this->ean13 = $ean13;
         $this->mpn = $mpn;
         $this->reference = $reference;
+        $this->manufacturerId = $manufacturerId;
     }
 
     /**
@@ -213,5 +221,13 @@ class ProductOptions
     public function getReference(): string
     {
         return $this->reference;
+    }
+
+    /**
+     * @return int
+     */
+    public function getManufacturerId(): int
+    {
+        return $this->manufacturerId;
     }
 }

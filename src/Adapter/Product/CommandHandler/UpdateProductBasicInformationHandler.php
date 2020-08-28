@@ -72,21 +72,20 @@ final class UpdateProductBasicInformationHandler extends AbstractProductHandler 
         }
 
         $localizedNames = $command->getLocalizedNames();
-        $localizedDescriptions = $command->getLocalizedDescriptions();
-        $localizedShortDescriptions = $command->getLocalizedShortDescriptions();
-
         if (null !== $localizedNames) {
             $product->name = $localizedNames;
             $this->validateLocalizedField($product, 'name', ProductConstraintException::INVALID_NAME);
             $this->setLocalizedFieldToUpdate('name', $localizedNames);
         }
 
+        $localizedDescriptions = $command->getLocalizedDescriptions();
         if (null !== $localizedDescriptions) {
             $product->description = $localizedDescriptions;
             $this->validateLocalizedField($product, 'description', ProductConstraintException::INVALID_DESCRIPTION);
             $this->setLocalizedFieldToUpdate('description', $localizedDescriptions);
         }
 
+        $localizedShortDescriptions = $command->getLocalizedShortDescriptions();
         if (null !== $localizedShortDescriptions) {
             $product->description_short = $localizedShortDescriptions;
             $this->validateLocalizedField($product, 'description_short', ProductConstraintException::INVALID_SHORT_DESCRIPTION);

@@ -1,5 +1,5 @@
-@reset-database-before-feature
 #./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s manufacturer
+@reset-database-before-feature
 Feature: Manufacturer management
   As an employee
   I must be able to add, edit and delete manufacturers

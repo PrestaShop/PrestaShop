@@ -124,7 +124,7 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
         $this->assertTaxRulesGroup($data, $pricesInfo);
         $this->assertNumberPriceFields($data, $pricesInfo);
 
-        Assert::assertEmpty($data, sprintf('Some provided product price fields haven\'t been asserted: %s', implode(',', $data)));
+        Assert::assertEmpty($data, sprintf('Some provided product price fields haven\'t been asserted: %s', var_export($data, true)));
     }
 
     /**

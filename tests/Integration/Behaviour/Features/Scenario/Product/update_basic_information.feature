@@ -11,11 +11,12 @@ Feature: Update product basic information from Back Office (BO)
       | is_virtual        | false                     |
     And product "product1" type should be standard
     And product "product1" localized "name" should be "en-US:funny mug"
+    And product product1 should have no manufacturer assigned
     When I update product "product1" basic information with following values:
       | name              | en-US:photo of funny mug  |
       | is_virtual        | true                      |
-      | description       | en-US:nice mug        |
-      | description_short | en-US:Just a nice mug |
+      | description       | en-US:nice mug            |
+      | description_short | en-US:Just a nice mug     |
     Then product "product1" type should be virtual
     And product "product1" localized "name" should be "en-US:photo of funny mug"
     And product "product1" localized "description" should be "en-US:nice mug"
@@ -28,12 +29,12 @@ Feature: Update product basic information from Back Office (BO)
     Then I should get error that product name is invalid
     And product "product1" localized "name" should be "en-US:photo of funny mug"
 
-  Scenario: I only change product virtual property and leave other properties unchanged
+  Scenario: Partially update product basic information
     Given product "product1" localized "name" is "en-US:photo of funny mug"
     And product "product1" localized "description" is "en-US:nice mug"
     And product "product1" localized "description_short" is "en-US:Just a nice mug"
     When I update product "product1" basic information with following values:
-      | is_virtual       | false        |
+      | is_virtual       | false         |
     Then product "product1" type should be standard
     And product "product1" localized "name" should be "en-US:photo of funny mug"
     And product "product1" localized "description" should be "en-US:nice mug"

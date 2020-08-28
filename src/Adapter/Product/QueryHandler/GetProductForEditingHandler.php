@@ -187,7 +187,8 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             $product->upc,
             $product->ean13,
             $product->mpn,
-            $product->reference
+            $product->reference,
+            (int) $product->id_manufacturer
         );
     }
 

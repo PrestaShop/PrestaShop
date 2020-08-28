@@ -24,53 +24,29 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
-
 /**
- * Provides manufacturer id
+ * Manufacturer Identifier is a ValueObject which represents a valid identifier of a manufacturer.
+ * It is being used in every class that must refer to a Manufacturer object or is linked to a Manufacturer object.
+ *
+ * However it is possible to decide to un-link the class from a Manufacturer. For example a product can be linked to a Manufacturer now and later this relationship is removed.
+ *
+ * This class NoManufacturerId carriers this intent, instead of using `null` which has another meaning (no modification).
+ *
+ * This picture might help understanding the situation: https://pbs.twimg.com/media/DusCOfyXcAA9_F7.jpg
  */
-class ManufacturerId
+class NoManufacturerId extends ManufacturerId
 {
-    /**
-     * @var int
-     */
-    protected $id;
+    const NO_MANUFACTURER_ID = 0;
 
     /**
-     * @param int $id
-     *
-     * @throws ManufacturerConstraintException
+     * This class is used to remove association with manufacturer
      */
-    public function __construct($id)
+    public function __construct()
     {
-        $this->assertIsIntegerGreaterThanZero($id);
-        $this->id = $id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Validates that the value is integer and is greater than zero
-     *
-     * @param $value
-     *
-     * @throws ManufacturerConstraintException
-     */
-    private function assertIsIntegerGreaterThanZero($value)
-    {
-        if (!is_int($value) || 0 >= $value) {
-            throw new ManufacturerConstraintException(
-                sprintf('Invalid manufacturer id "%s".', var_export($value, true)),
-                ManufacturerConstraintException::INVALID_ID
-            );
-        }
+        $this->id = static::NO_MANUFACTURER_ID;
     }
 }
