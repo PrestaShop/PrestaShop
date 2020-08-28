@@ -113,7 +113,10 @@ abstract class AbstractOrderReturnHandler extends AbstractObjectModelHandler
         $orderReturn = $this->getOrderReturn($orderReturnId);
 
         if ((int) ($orderReturn->countProduct()) <= 1) {
-            throw new DeleteOrderReturnProductException('Can\'t delete last product from merchandise return');
+            throw new DeleteOrderReturnProductException(
+                'Can\'t delete last product from merchandise return',
+                DeleteOrderReturnProductException::LAST_ORDER_RETURN_PRODUCT
+            );
         }
 
         $this->deleteOrderReturnDetail(
@@ -122,28 +125,6 @@ abstract class AbstractOrderReturnHandler extends AbstractObjectModelHandler
     }
 
     /**
-     * @param OrderReturnId $orderReturnId
-     * @param OrderReturnDetailId $orderReturnDetailId
-     * @param CustomizationId $customizationId
-     *
-     * @throws DeleteOrderReturnProductException
-     */
-    private function deleteOrderReturnDetailWithCustomization(
-        OrderReturnId $orderReturnId,
-        OrderReturnDetailId $orderReturnDetailId,
-        CustomizationId $customizationId
-    ): void {
-        if (!OrderReturn::deleteOrderReturnDetail(
-            $orderReturnId->getValue(),
-            $orderReturnDetailId->getValue(),
-            $customizationId->getValue()
-        )) {
-            throw new DeleteOrderReturnProductException('Failed to delete merchandise return detail');
-        }
-    }
-
-    /**
-     * @param OrderReturnId $orderReturnId
      * @param OrderReturnDetailId $orderReturnDetailId
      *
      * @throws DeleteOrderReturnProductException
@@ -153,7 +134,10 @@ abstract class AbstractOrderReturnHandler extends AbstractObjectModelHandler
     ): void {
         $orderReturnDetail = OrderReturn::getOrderReturnDetailByOrderDetailId($orderReturnDetailId->getValue());
         if (!$orderReturnDetail) {
-            throw new DeleteOrderReturnProductException('Couldn\'t find order return detail');
+            throw new DeleteOrderReturnProductException(
+                'Couldn\'t find merchandise return detail',
+                DeleteOrderReturnProductException::ORDER_RETURN_PRODUCT_NOT_FOUND
+            );
         }
 
         $orderReturnDetail = $orderReturnDetail[0];
@@ -166,7 +150,10 @@ abstract class AbstractOrderReturnHandler extends AbstractObjectModelHandler
             $orderReturnDetailId->getValue(),
             $customizationId
         )) {
-            throw new DeleteOrderReturnProductException('Failed to delete merchandise return detail');
+            throw new DeleteOrderReturnProductException(
+                'Failed to delete merchandise return detail',
+                DeleteOrderReturnProductException::UNEXPECTED_ERROR
+            );
         }
     }
 

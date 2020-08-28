@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\EventListener;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnProductException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnProductQueryException;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderReturnProductsFilters;
 use PrestaShopBundle\Event\FilterSearchCriteriaEvent;
@@ -78,14 +79,14 @@ class FilterOrderReturnProductsSearchCriteriaListener
             $orderReturnId = $this->requestStack->getCurrentRequest()->attributes->get('orderReturnId');
 
             if (!$orderReturnId) {
-                throw new OrderReturnProductQueryException(
+                throw new OrderReturnProductException(
                     'orderReturnId attribute is needed for merchandise return product list'
                 );
             }
 
             $filters['order_return_id'] = $orderReturnId;
         } else {
-            throw new OrderReturnProductQueryException('Request is needed for merchandise return product list');
+            throw new OrderReturnProductException('Request is needed for merchandise return product list');
         }
 
         $newSearchCriteria = new $searchCriteriaClass([
