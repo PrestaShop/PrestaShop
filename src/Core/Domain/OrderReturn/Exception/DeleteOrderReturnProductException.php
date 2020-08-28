@@ -35,5 +35,4 @@ class DeleteOrderReturnProductException extends OrderReturnProductException
     const LAST_ORDER_RETURN_PRODUCT = 20;
 
     const UNEXPECTED_ERROR = 30;
-
 }
