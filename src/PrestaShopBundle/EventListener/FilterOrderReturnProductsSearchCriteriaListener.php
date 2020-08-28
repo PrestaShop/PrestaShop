@@ -30,7 +30,6 @@ namespace PrestaShopBundle\EventListener;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnProductException;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnProductQueryException;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderReturnProductsFilters;
 use PrestaShopBundle\Event\FilterSearchCriteriaEvent;
 use Symfony\Component\HttpFoundation\RequestStack;

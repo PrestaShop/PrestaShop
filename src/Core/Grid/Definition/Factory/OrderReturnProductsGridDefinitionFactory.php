@@ -170,13 +170,13 @@ final class OrderReturnProductsGridDefinitionFactory extends AbstractFilterableG
     {
         return (new FilterCollection())
             ->add((new Filter('order_detail_id', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Search order detail ID', [], 'Admin.Actions'),
-                    ],
-                ])
-                ->setAssociatedColumn('id_order_detail')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Search order detail ID', [], 'Admin.Actions'),
+                ],
+            ])
+            ->setAssociatedColumn('id_order_detail')
             )
             ->add((new Filter('reference', TextType::class))
             ->setTypeOptions([
