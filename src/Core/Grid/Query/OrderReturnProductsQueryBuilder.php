@@ -134,6 +134,7 @@ final class OrderReturnProductsQueryBuilder extends AbstractDoctrineQueryBuilder
     private function applyFilters(array $filters, QueryBuilder $qb)
     {
         $allowedFilters = [
+            'order_detail_id',
             'product_reference',
             'product_name',
             'quantity',
@@ -144,6 +145,12 @@ final class OrderReturnProductsQueryBuilder extends AbstractDoctrineQueryBuilder
 
         foreach ($filters as $filterName => $filterValue) {
             if (!in_array($filterName, $allowedFilters)) {
+                continue;
+            }
+
+            if ($filterName === 'order_detail_id') {
+                $qb->andWhere('ord.`id_order_detail`  = :' . $filterName);
+                $qb->setParameter($filterName, $filterValue);
                 continue;
             }
 
