@@ -32,11 +32,18 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\BulkDeleteProductFromOrderReturnCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\DeleteProductFromOrderReturnCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\BulkDeleteOrderReturnProductException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\DeleteOrderReturnProductException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\MissingOrderReturnRequiredFieldsException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnOrderStateConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnProductException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnProductQueryException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\UpdateOrderReturnException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\EditableOrderReturn;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnDetailId;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnProduct;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\MerchandiseReturnFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderReturnProductsFilters;
@@ -265,6 +272,40 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
                 ),
                 $e instanceof BulkDeleteOrderReturnProductException ? implode(', ', $e->getOrderReturnDetailIds()) : ''
             ),
+            DeleteOrderReturnProductException::class => [
+                DeleteOrderReturnProductException::ORDER_RETURN_PRODUCT_NOT_FOUND =>   $this->trans(
+                    'An error occurred while deleting this product, order product not found.',
+                    'Admin.Notifications.Error'
+                ),
+                DeleteOrderReturnProductException::LAST_ORDER_RETURN_PRODUCT =>   $this->trans(
+                    'An error occurred while deleting this product, can\'t delete last product in order return.',
+                    'Admin.Notifications.Error'
+                ),
+                DeleteOrderReturnProductException::UNEXPECTED_ERROR =>   $this->trans(
+                    'An error occurred while deleting this product.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            MissingOrderReturnRequiredFieldsException::class => $this->trans(
+                'Missing required fields for merchandise return.',
+                'Admin.Notifications.Error'
+            ),
+            OrderReturnNotFoundException::class => $this->trans(
+                'Merchandise return not found.',
+                'Admin.Notifications.Error'
+            ),
+            OrderReturnOrderStateConstraintException::class => [
+                OrderReturnOrderStateConstraintException::INVALID_ID => $this->trans(
+                    'The object cannot be loaded (the identifier is missing or invalid)',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            UpdateOrderReturnException::class => $this->trans(
+                'An error occurred while trying to update merchandise return',
+                'Admin.Notifications.Error'
+            ),
         ];
     }
+
+
 }
