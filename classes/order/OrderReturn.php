@@ -189,7 +189,6 @@ class OrderReturnCore extends ObjectModel
 		WHERE `id_order_detail` = ' . (int) $id_order_detail);
     }
 
-
     /**
      * @param int $order_return_id
      * @param Order $order
