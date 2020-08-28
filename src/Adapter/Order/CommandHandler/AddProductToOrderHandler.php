@@ -152,17 +152,19 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             // Fetch Cart Product
             $productCart = $this->getCartProductData($cart, $product, $combination, $command->getProductQuantity());
 
-            $invoice = $this->createNewOrEditExistingInvoice(
-                $command,
-                $order,
-                $cart,
-                [$productCart]
-            );
+            $newInvoice = null;
+            if ($order->hasInvoice()) {
+                if (empty($command->getOrderInvoiceId())) {
+                    $newInvoice = $this->createNewInvoice($order, $cart, [$productCart], $command->withFreeShipping());
+                } else {
+                    $newInvoice = new OrderInvoice($command->getOrderInvoiceId());
+                }
+            }
 
             // Create Order detail information
             $orderDetail = $this->createOrderDetail(
                 $order,
-                $invoice,
+                $newInvoice,
                 $cart,
                 [$productCart]
             );
@@ -344,29 +346,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     }
 
     /**
-     * @param AddProductToOrderCommand $command
-     * @param Order $order
-     * @param Cart $cart
-     * @param array $products
-     *
-     * @return OrderInvoice|null
-     */
-    private function createNewOrEditExistingInvoice(
-        AddProductToOrderCommand $command,
-        Order $order,
-        Cart $cart,
-        array $products
-    ) {
-        if ($order->hasInvoice()) {
-            return $command->getOrderInvoiceId() ?
-                $this->updateExistingInvoice($command->getOrderInvoiceId(), $cart, $products) :
-                $this->createNewInvoice($order, $cart, $products, $command->withFreeShipping());
-        }
-
-        return null;
-    }
-
-    /**
      * @param Order $order
      * @param Cart $cart
      * @param array $newProducts
@@ -375,10 +354,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     private function createNewInvoice(Order $order, Cart $cart, array $newProducts, ?bool $withFreeShipping)
     {
         $invoice = new OrderInvoice();
-
-        // If we create a new invoice, we calculate shipping cost
-        $totalMethod = Cart::BOTH;
-
         $invoice->id_order = $order->id;
         if ($invoice->number) {
             Configuration::updateValue('PS_INVOICE_START_NUMBER', false, false, null, $order->id_shop);
@@ -391,23 +366,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         );
         $carrier = new Carrier((int) $order->id_carrier);
         $taxCalculator = $carrier->getTaxCalculator($invoice_address);
-
-        $invoice->total_paid_tax_excl = Tools::ps_round(
-            (float) $cart->getOrderTotal(false, $totalMethod, $newProducts, $order->id_carrier),
-            $this->computingPrecision
-        );
-        $invoice->total_paid_tax_incl = Tools::ps_round(
-            (float) $cart->getOrderTotal(true, $totalMethod, $newProducts, $order->id_carrier),
-            $this->computingPrecision
-        );
-        $invoice->total_products = (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $newProducts, $order->id_carrier);
-        $invoice->total_products_wt = (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $newProducts, $order->id_carrier);
-        $invoice->total_shipping_tax_excl = (float) $cart->getOrderTotal(false, Cart::ONLY_SHIPPING, $newProducts, $order->id_carrier);
-        $invoice->total_shipping_tax_incl = (float) $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $newProducts, $order->id_carrier);
-
-        $invoice->total_wrapping_tax_excl = abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $newProducts));
-        $invoice->total_wrapping_tax_incl = abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $newProducts));
         $invoice->shipping_tax_computation_method = (int) $taxCalculator->computation_method;
+        // We don't need to compute the invoice totals because the OrderAmountUpdater will take care of it afterwards
         $invoice->add();
 
         $invoice->saveCarrierTaxCalculator($taxCalculator->getTaxesAmount($invoice->total_shipping_tax_excl));
@@ -464,41 +424,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         } catch (PrestaShopException $e) {
             throw new OrderException('An error occurred while adding CartRule to cart', 0, $e);
         }
-    }
-
-    /**
-     * @param int $orderInvoiceId
-     * @param Cart $cart
-     * @param array $newProducts
-     *
-     * @return OrderInvoice
-     */
-    private function updateExistingInvoice($orderInvoiceId, Cart $cart, array $newProducts)
-    {
-        $invoice = new OrderInvoice($orderInvoiceId);
-
-        $invoice->total_paid_tax_excl += Tools::ps_round(
-            (float) $cart->getOrderTotal(false, Cart::BOTH_WITHOUT_SHIPPING, $newProducts),
-            $this->computingPrecision
-        );
-        $invoice->total_paid_tax_incl += Tools::ps_round(
-            (float) $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, $newProducts),
-            $this->computingPrecision
-        );
-        $invoice->total_products += (float) $cart->getOrderTotal(
-            false,
-            Cart::ONLY_PRODUCTS,
-            $newProducts
-        );
-        $invoice->total_products_wt += (float) $cart->getOrderTotal(
-            true,
-            Cart::ONLY_PRODUCTS,
-            $newProducts
-        );
-
-        $invoice->update();
-
-        return $invoice;
     }
 
     /**

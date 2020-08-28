@@ -277,8 +277,6 @@ class OrderAmountUpdater
         }
 
         $invoiceCollection = $order->getInvoicesCollection();
-
-        $orderShippingTotalTaxIncluded = $orderShippingTotalTaxExcluded = 0;
         foreach ($invoiceCollection as $invoice) {
             // If all the invoice's products have been removed the offset won't exist
             $currentInvoiceProducts = isset($invoiceProducts[$invoice->id]) ? $invoiceProducts[$invoice->id] : [];
@@ -318,20 +316,16 @@ class OrderAmountUpdater
                 $cart->getOrderTotal(false, Cart::ONLY_SHIPPING, $currentInvoiceProducts, $carrierId, false, $invoice->id),
                 $computingPrecision
             );
-            $orderShippingTotalTaxExcluded += $invoice->total_shipping_tax_excl;
 
             $invoice->total_shipping_tax_incl = Tools::ps_round(
                 $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $currentInvoiceProducts, $carrierId, false, $invoice->id),
                 $computingPrecision
             );
-            $orderShippingTotalTaxIncluded += $invoice->total_shipping_tax_incl;
 
             if (!$invoice->update()) {
                 throw new OrderException('Could not update order invoice in database.');
             }
         }
-        $order->total_shipping_tax_excl = $orderShippingTotalTaxExcluded;
-        $order->total_shipping = $order->total_shipping_tax_incl = $orderShippingTotalTaxIncluded;
     }
 
     /**
