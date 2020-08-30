@@ -1502,6 +1502,11 @@ class CarrierCore extends ObjectModel
             if (!Address::isCountryActiveById($id_address)) {
                 return [];
             }
+        } else if (isset(Context::getContext()->cookie->iso_code_country)){
+            // Use visitor's country. Needed for when Geolocation is on.
+            $country_id = Country::getByIso(Context::getContext()->cookie->iso_code_country);
+            $country = new Country($country_id);
+            $id_zone = $country->id_zone;
         } else {
             $country = new Country($ps_country_default);
             $id_zone = $country->id_zone;
