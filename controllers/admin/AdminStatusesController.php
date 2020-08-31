@@ -571,6 +571,7 @@ class AdminStatusesControllerCore extends AdminController
             $this->className = 'OrderReturnState';
             $this->table = 'order_return_state';
             $this->boxes = Tools::getValue('order_return_stateBox');
+            $this->deleted = false;
             parent::processBulkDelete();
         }
 
