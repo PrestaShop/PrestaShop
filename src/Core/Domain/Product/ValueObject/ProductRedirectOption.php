@@ -28,57 +28,15 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
 
-use LogicException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Product\ProductInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductRedirectionSettings;
+use RuntimeException;
 
 /**
  * Holds values for product redirect option.
- * todo: there are type constants declared already in @var ProductInterface. Should I reuse them? deprecate them?
  */
 class ProductRedirectOption
 {
-    /**
-     * Represents value of redirect target id when NO_REDIRECT type is provided
-     */
-    const NO_TARGET_VALUE = 0;
-
-    /**
-     * Represents value of no redirection. Page not found (404) will be displayed.
-     */
-    const TYPE_NO_REDIRECT = '404';
-
-    /**
-     * Represents value of permanent redirection to a category
-     */
-    const TYPE_CATEGORY_PERMANENT = '301-category';
-
-    /**
-     * Represents value of temporary redirection to a category
-     */
-    const TYPE_CATEGORY_TEMPORARY = '302-category';
-
-    /**
-     * Represents value of permanent redirection to another product
-     */
-    const TYPE_PRODUCT_PERMANENT = '301-product';
-
-    /**
-     * Represents value of temporary redirection to another product
-     */
-    const TYPE_PRODUCT_TEMPORARY = '302-product';
-
-    /**
-     * Available redirection types
-     */
-    const AVAILABLE_REDIRECT_TYPES = [
-        self::TYPE_NO_REDIRECT => self::TYPE_NO_REDIRECT,
-        self::TYPE_CATEGORY_PERMANENT => self::TYPE_CATEGORY_PERMANENT,
-        self::TYPE_CATEGORY_TEMPORARY => self::TYPE_CATEGORY_TEMPORARY,
-        self::TYPE_PRODUCT_PERMANENT => self::TYPE_PRODUCT_PERMANENT,
-        self::TYPE_PRODUCT_TEMPORARY => self::TYPE_PRODUCT_TEMPORARY,
-    ];
-
     /**
      * @var string
      */
@@ -92,11 +50,13 @@ class ProductRedirectOption
     /**
      * Builds self with a type of no_redirect, automatically filling the only available target id value for this type
      *
+     * @todo; separate class
+     *
      * @return static
      */
     public static function buildNoRedirect(): self
     {
-        return new self(self::TYPE_NO_REDIRECT, self::NO_TARGET_VALUE);
+        return new static(ProductRedirectionSettings::TYPE_NO_REDIRECT, ProductRedirectionSettings::NO_TARGET_VALUE);
     }
 
     /**
@@ -108,15 +68,15 @@ class ProductRedirectOption
      *
      * @return static
      *
-     * @throws LogicException
+     * @throws RuntimeException
      */
     public static function buildRedirect(string $redirectType, int $redirectTargetId): self
     {
-        if ($redirectType === self::TYPE_NO_REDIRECT) {
-            throw new LogicException(sprintf('Use "%s"::buildNoRedirect for building "no_redirect" option', self::class));
+        if ($redirectType === ProductRedirectionSettings::TYPE_NO_REDIRECT) {
+            throw new RuntimeException(sprintf('Use "%s"::buildNoRedirect for building "no_redirect" option', static::class));
         }
 
-        return new self($redirectType, $redirectTargetId);
+        return new static($redirectType, $redirectTargetId);
     }
 
     /**
@@ -158,7 +118,7 @@ class ProductRedirectOption
      */
     private function assertRedirectType(string $value): void
     {
-        if (in_array($value, self::AVAILABLE_REDIRECT_TYPES)) {
+        if (in_array($value, ProductRedirectionSettings::AVAILABLE_REDIRECT_TYPES)) {
             return;
         }
 
@@ -166,7 +126,7 @@ class ProductRedirectOption
             sprintf(
                 'Invalid product redirect type "%s". Allowed types are: "%s"',
                 $value,
-                implode(',', self::AVAILABLE_REDIRECT_TYPES)
+                implode(',', ProductRedirectionSettings::AVAILABLE_REDIRECT_TYPES)
             ),
             ProductConstraintException::INVALID_REDIRECT_TYPE
         );
@@ -180,7 +140,7 @@ class ProductRedirectOption
      */
     private function assertTypeAndIdIntegrity(string $type, int $id): void
     {
-        $isProductType = $type === self::TYPE_PRODUCT_TEMPORARY || $type === self::TYPE_PRODUCT_PERMANENT;
+        $isProductType = $type === ProductRedirectionSettings::TYPE_PRODUCT_TEMPORARY || $type === ProductRedirectionSettings::TYPE_PRODUCT_PERMANENT;
 
         if ($isProductType) {
             $this->assertProductId($id);
@@ -213,12 +173,12 @@ class ProductRedirectOption
      */
     private function assertCategoryId(int $id): void
     {
-        if ($id !== self::NO_TARGET_VALUE && $id <= 0) {
+        if ($id !== ProductRedirectionSettings::NO_TARGET_VALUE && $id <= 0) {
             throw new ProductConstraintException(
                 sprintf(
                     'Invalid product redirect target id "%s". It must be greater than zero or "%s"',
                     $id,
-                    self::NO_TARGET_VALUE
+                    ProductRedirectionSettings::NO_TARGET_VALUE
                 ),
                 ProductConstraintException::INVALID_REDIRECT_TARGET_ID
             );

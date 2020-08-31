@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductRedirectionSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductRedirectOption;
 
@@ -153,7 +154,7 @@ class UpdateProductSeoCommand
      */
     public function setRedirectOption(string $redirectType, int $redirectTargetId): self
     {
-        if ($redirectType === ProductRedirectOption::TYPE_NO_REDIRECT) {
+        if ($redirectType === ProductRedirectionSettings::TYPE_NO_REDIRECT) {
             $this->redirectOption = ProductRedirectOption::buildNoRedirect();
         } else {
             $this->redirectOption = ProductRedirectOption::buildRedirect($redirectType, $redirectTargetId);
