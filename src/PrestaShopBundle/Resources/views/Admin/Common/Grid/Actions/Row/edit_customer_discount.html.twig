@@ -23,23 +23,24 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-<div class="card customer-discounts-card">
-  <h3 class="card-header">
-    <i class="material-icons">loyalty</i>
-    {{ 'Vouchers'|trans({}, 'Admin.Orderscustomers.Feature') }}
-    <span class="badge badge-primary rounded">{{ customerInformation.discountsInformation|length }}</span>
-  </h3>
-  <div class="card-body">
-    {% if customerDiscountGrid.data.records_total > 0 %}
-      <div class="row">
-        <div class="col">
-          {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': customerDiscountGrid} %}
-        </div>
-      </div>
-    {% else %}
-      <p class="text-muted text-center mb-0">
-        {{ '%firstname% %lastname% has no discount vouchers'|trans({'%firstname%': customerInformation.personalInformation.firstName, '%lastname%': customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') }}
-      </p>
-    {% endif %}
-  </div>
-</div>
+{% set class = 'btn tooltip-link js-link-row-action' %}
+
+{% if attributes.class is defined %}
+  {% set class = class ~ ' ' ~ attributes.class %}
+{% endif %}
+
+<a class="{{ class }} grid-{{ action.name|lower|replace({' ': '-'}) }}-row-link"
+   href="{{ getAdminLink('AdminCartRules', true, {'id_cart_rule': record[action.options.id_cart_rule], 'addcart_rule': 1, 'back': app.request.uri}) }}"
+  {% if attributes.tooltip_name %}
+    data-toggle="pstooltip"
+    data-placement="top"
+    data-original-title="{{ action.name }}"
+  {% endif %}
+>
+  {% if action.icon is not empty %}
+    <i class="material-icons">{{ action.icon }}</i>
+  {% endif %}
+  {% if not attributes.tooltip_name %}
+    {{ action.name }}
+  {% endif %}
+</a>

@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,25 +22,34 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-<div class="card customer-discounts-card">
-  <h3 class="card-header">
-    <i class="material-icons">loyalty</i>
-    {{ 'Vouchers'|trans({}, 'Admin.Orderscustomers.Feature') }}
-    <span class="badge badge-primary rounded">{{ customerInformation.discountsInformation|length }}</span>
-  </h3>
-  <div class="card-body">
-    {% if customerDiscountGrid.data.records_total > 0 %}
-      <div class="row">
-        <div class="col">
-          {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': customerDiscountGrid} %}
-        </div>
-      </div>
-    {% else %}
-      <p class="text-muted text-center mb-0">
-        {{ '%firstname% %lastname% has no discount vouchers'|trans({'%firstname%': customerInformation.personalInformation.firstName, '%lastname%': customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') }}
-      </p>
-    {% endif %}
-  </div>
-</div>
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
+
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerDiscountGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Search\Filters;
+
+/**
+ * Default customer's addresses list filters
+ */
+final class CustomerDiscountFilters extends Filters
+{
+    /** @var string */
+    protected $filterId = CustomerDiscountGridDefinitionFactory::GRID_ID;
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaults(): array
+    {
+        return [
+            'limit' => 50,
+            'offset' => 0,
+            'orderBy' => 'id_cart_rule',
+            'sortOrder' => 'asc',
+            'filters' => [],
+        ];
+    }
+}
