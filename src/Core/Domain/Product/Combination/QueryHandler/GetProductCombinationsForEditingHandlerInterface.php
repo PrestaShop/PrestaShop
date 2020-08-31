@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetProductCombinationsForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\ProductCombinationsForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 
 /**
  * Defines contract to handle @see GetProductCombinationsForEditing query
@@ -37,7 +37,7 @@ interface GetProductCombinationsForEditingHandlerInterface
     /**
      * @param GetProductCombinationsForEditing $query
      *
-     * @return ProductCombinationsForEditing
+     * @return CombinationListForEditing
      */
-    public function handle(GetProductCombinationsForEditing $query): ProductCombinationsForEditing;
+    public function handle(GetProductCombinationsForEditing $query): CombinationListForEditing;
 }

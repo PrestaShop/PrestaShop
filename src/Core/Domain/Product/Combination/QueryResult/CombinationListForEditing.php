@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult;
 /**
  * Transfers product combinations data
  */
-class ProductCombinationsForEditing
+class CombinationListForEditing
 {
     /**
      * @var CombinationForEditing[]

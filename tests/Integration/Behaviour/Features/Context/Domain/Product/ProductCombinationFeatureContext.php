@@ -33,7 +33,7 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetProductCombinationsForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\ProductCombinationsForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -71,7 +71,7 @@ class ProductCombinationFeatureContext extends AbstractProductFeatureContext
         $dataRows = $table->getColumnsHash();
         $expectedCombinationsCount = count($dataRows);
 
-        /** @var ProductCombinationsForEditing $combinationsForEditing */
+        /** @var CombinationListForEditing $combinationsForEditing */
         $combinationsForEditing = $this->getQueryBus()->handle(new GetProductCombinationsForEditing(
             $this->getSharedStorage()->get($productReference),
             $this->getDefaultLangId(),
