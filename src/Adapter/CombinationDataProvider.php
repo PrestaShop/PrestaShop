@@ -210,8 +210,7 @@ class CombinationDataProvider
      */
     public function getProductCombinations(int $productId, ?int $limit = null, ?int $offset = null, array $filters = []): array
     {
-        //@todo: filters are not handled.
-        $qb = $this->getCombinationsQueryBuilder($productId)
+        $qb = $this->getCombinationsQueryBuilder($productId, $filters)
             ->select('pa.*')
             ->setParameter('productId', $productId)
         ;
@@ -229,12 +228,13 @@ class CombinationDataProvider
 
     /**
      * @param int $productId
+     * @param array $filters
      *
      * @return int
      */
-    public function getTotalCombinationsCount(int $productId): int
+    public function getTotalCombinationsCount(int $productId, array $filters = []): int
     {
-        $qb = $this->getCombinationsQueryBuilder($productId)->select('COUNT(pa.id_product_attribute) AS total_combinations');
+        $qb = $this->getCombinationsQueryBuilder($productId, $filters)->select('COUNT(pa.id_product_attribute) AS total_combinations');
 
         return (int) $qb->execute()->fetch()['total_combinations'];
     }
@@ -343,11 +343,13 @@ class CombinationDataProvider
 
     /**
      * @param int $productId
+     * @param array $filters
      *
      * @return QueryBuilder
      */
-    private function getCombinationsQueryBuilder(int $productId): QueryBuilder
+    private function getCombinationsQueryBuilder(int $productId, array $filters): QueryBuilder
     {
+        //@todo: filters are not handled.
         $qb = $this->connection->createQueryBuilder();
         $qb->from($this->dbPrefix . 'product_attribute', 'pa')
             ->where('pa.id_product = :productId')
