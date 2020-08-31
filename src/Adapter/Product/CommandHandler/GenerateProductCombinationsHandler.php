@@ -102,6 +102,8 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
     private function addCombinations(Product $product, Iterator $generatedCombinations): array
     {
         $productId = (int) $product->id;
+        $product->setAvailableDate();
+
         $addedCombinationIds = [];
         foreach ($generatedCombinations as $generatedCombination) {
             $combinationExists = $product->productAttributeExists($generatedCombination, false, null, true);
@@ -111,7 +113,6 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
             }
 
             try {
-                $product->setAvailableDate();
                 $addedCombinationIds[] = $this->addCombination($productId, $generatedCombination);
             } catch (PrestaShopException $e) {
                 throw new CombinationException(
@@ -147,16 +148,16 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
 
         $this->dbInstance->beginTransaction();
 
-        if (!$newCombination->add()) {
-            throw new CannotAddCombinationException(sprintf(
-                'Failed adding new combination for product #%d. Combination: %s',
-                $productId,
-                var_export($generatedCombination, true)
-            ));
-        }
-        $combinationId = (int) $newCombination->id;
-
         try {
+            if (!$newCombination->add()) {
+                throw new CannotAddCombinationException(sprintf(
+                    'Failed adding new combination for product #%d. Combination: %s',
+                    $productId,
+                    var_export($generatedCombination, true)
+                ));
+            }
+            $combinationId = (int) $newCombination->id;
+
             $this->saveProductAttributeAssociation($combinationId, $generatedCombination);
         } catch (Exception $e) {
             $this->dbInstance->rollback();
