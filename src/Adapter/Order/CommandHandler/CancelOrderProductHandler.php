@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductExcept
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\CancellationActionType;
 
 /**
  * @internal
@@ -239,7 +240,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
                 $newQuantity = max((int) $orderDetail->product_quantity - (int) $qty_cancel_product, 0);
                 $orderInvoice = $orderDetail->id_order_invoice != 0 ? new OrderInvoice($orderDetail->id_order_invoice) : null;
                 $this->orderProductQuantityUpdater->update($order, $orderDetail, $newQuantity, $orderInvoice);
-                Hook::exec('actionProductCancel', ['order' => $order, 'id_order_detail' => (int) $orderDetail->id_order_detail], null, false, true, false, $order->id_shop);
+                Hook::exec('actionProductCancel', ['order' => $order, 'id_order_detail' => (int) $orderDetail->id_order_detail, 'action' => CancellationActionType::CANCEL_PRODUCT], null, false, true, false, $order->id_shop);
             }
         }
     }
