@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Context;
+use Hook;
 use Order;
 use OrderCarrier;
 use PrestaShop\Decimal\Number;
@@ -127,6 +128,7 @@ class IssueReturnProductHandler extends AbstractOrderCommandHandler implements I
             if ($command->restockRefundedProducts()) {
                 $this->reinjectQuantity($orderDetail, $productRefund['quantity']);
             }
+            Hook::exec('actionProductCancel', ['order' => $order, 'id_order_detail' => (int) $orderDetailId], null, false, true, false, $order->id_shop);
         }
 
         // Update order carrier weight
