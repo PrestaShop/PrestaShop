@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetProductCombin
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetProductCombinationsForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\ProductCombinationsForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 
 /**
  * Handles @see GetProductCombinationsForEditing using legacy object model
@@ -57,7 +57,7 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
     /**
      * {@inheritdoc}
      */
-    public function handle(GetProductCombinationsForEditing $query): ProductCombinationsForEditing
+    public function handle(GetProductCombinationsForEditing $query): CombinationListForEditing
     {
         $product = $this->getProduct($query->getProductId());
         $productId = (int) $product->id;
@@ -84,13 +84,13 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
      * @param array<int, CombinationForEditing> $attributesInformationByCombinationId
      * @param int $totalCombinationsCount
      *
-     * @return ProductCombinationsForEditing
+     * @return CombinationListForEditing
      */
     private function formatCombinationsForEditing(
         array $combinations,
         array $attributesInformationByCombinationId,
         int $totalCombinationsCount
-    ): ProductCombinationsForEditing {
+    ): CombinationListForEditing {
         $combinationsForEditing = [];
 
         foreach ($combinations as $combination) {
@@ -113,7 +113,7 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
             );
         }
 
-        return new ProductCombinationsForEditing($totalCombinationsCount, $combinationsForEditing);
+        return new CombinationListForEditing($totalCombinationsCount, $combinationsForEditing);
     }
 
     /**
