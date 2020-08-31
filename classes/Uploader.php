@@ -265,7 +265,7 @@ class UploaderCore
     {
         if ($this->validate($file)) {
             if (isset($dest) && is_dir($dest)) {
-                $filePath = $dest;
+                $filePath = $dest . $file['name'];
             } else {
                 $filePath = $this->getFilePath(isset($dest) ? $dest : $file['name']);
             }
