@@ -495,6 +495,7 @@ class FrontControllerCore extends Controller
             'time' => time(),
             'static_token' => Tools::getToken(false),
             'token' => Tools::getToken(),
+            'debug' => _PS_MODE_DEV_,
         ];
 
         $modulesVariables = Hook::exec(
