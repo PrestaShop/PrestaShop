@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductRedirectionSettings;
-use RuntimeException;
 
 /**
  * Holds values for product redirect option.
@@ -40,43 +39,25 @@ class ProductRedirectOption
     /**
      * @var string
      */
-    private $redirectType;
+    protected $redirectType;
 
     /**
      * @var int
      */
-    private $redirectTargetId;
+    protected $redirectTargetId;
 
     /**
-     * Builds self with a type of no_redirect, automatically filling the only available target id value for this type
-     *
-     * @todo; separate class
-     *
-     * @return static
-     */
-    public static function buildNoRedirect(): self
-    {
-        return new static(ProductRedirectionSettings::TYPE_NO_REDIRECT, ProductRedirectionSettings::NO_TARGET_VALUE);
-    }
-
-    /**
-     * Builds self with a provided type and target id
-     *
      * @param string $redirectType
-     * @param int $redirectTargetId when redirecting to category and target id is 0, then main category will be used
-     *                              when redirecting to product, target id is mandatory and cannot be 0
+     * @param int $redirectTargetId
      *
-     * @return static
-     *
-     * @throws RuntimeException
+     * @throws ProductConstraintException
      */
-    public static function buildRedirect(string $redirectType, int $redirectTargetId): self
+    public function __construct(string $redirectType, int $redirectTargetId)
     {
-        if ($redirectType === ProductRedirectionSettings::TYPE_NO_REDIRECT) {
-            throw new RuntimeException(sprintf('Use "%s"::buildNoRedirect for building "no_redirect" option', static::class));
-        }
-
-        return new static($redirectType, $redirectTargetId);
+        $this->assertRedirectType($redirectType);
+        $this->assertTargetIdIsGreaterThanZero($redirectTargetId);
+        $this->redirectType = $redirectType;
+        $this->redirectTargetId = $redirectTargetId;
     }
 
     /**
@@ -96,27 +77,11 @@ class ProductRedirectOption
     }
 
     /**
-     * Use static factories to initiate this class
-     *
-     * @param string $redirectType
-     * @param int $redirectTargetId
-     *
-     * @throws ProductConstraintException
-     */
-    private function __construct(string $redirectType, int $redirectTargetId)
-    {
-        $this->assertRedirectType($redirectType);
-        $this->assertTypeAndIdIntegrity($redirectType, $redirectTargetId);
-        $this->redirectType = $redirectType;
-        $this->redirectTargetId = $redirectTargetId;
-    }
-
-    /**
      * @param string $value
      *
      * @throws ProductConstraintException
      */
-    private function assertRedirectType(string $value): void
+    protected function assertRedirectType(string $value): void
     {
         if (in_array($value, ProductRedirectionSettings::AVAILABLE_REDIRECT_TYPES)) {
             return;
@@ -133,53 +98,15 @@ class ProductRedirectOption
     }
 
     /**
-     * @param string $type
      * @param int $id
      *
      * @throws ProductConstraintException
      */
-    private function assertTypeAndIdIntegrity(string $type, int $id): void
-    {
-        $isProductType = $type === ProductRedirectionSettings::TYPE_PRODUCT_TEMPORARY || $type === ProductRedirectionSettings::TYPE_PRODUCT_PERMANENT;
-
-        if ($isProductType) {
-            $this->assertProductId($id);
-
-            return;
-        }
-
-        $this->assertCategoryId($id);
-    }
-
-    /**
-     * @param int $id
-     *
-     * @throws ProductConstraintException
-     */
-    private function assertProductId(int $id): void
+    private function assertTargetIdIsGreaterThanZero(int $id): void
     {
         if ($id <= 0) {
             throw new ProductConstraintException(
-                sprintf('Invalid product redirect target id "%s". It is required when redirecting to product', $id),
-                ProductConstraintException::INVALID_REDIRECT_TARGET_ID
-            );
-        }
-    }
-
-    /**
-     * @param int $id
-     *
-     * @throws ProductConstraintException
-     */
-    private function assertCategoryId(int $id): void
-    {
-        if ($id !== ProductRedirectionSettings::NO_TARGET_VALUE && $id <= 0) {
-            throw new ProductConstraintException(
-                sprintf(
-                    'Invalid product redirect target id "%s". It must be greater than zero or "%s"',
-                    $id,
-                    ProductRedirectionSettings::NO_TARGET_VALUE
-                ),
+                sprintf('Invalid redirect target id "%s". It must be greater than zero', $id),
                 ProductConstraintException::INVALID_REDIRECT_TARGET_ID
             );
         }
