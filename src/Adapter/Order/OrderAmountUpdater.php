@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Order;
 use Cache;
 use Cart;
 use CartRule;
+use Configuration;
 use Context;
 use Currency;
 use Order;
@@ -107,13 +108,29 @@ class OrderAmountUpdater
         $order->total_products = (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $orderProducts, $carrierId);
         $order->total_products_wt = (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $orderProducts, $carrierId);
 
+        $order->total_wrapping = abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $orderProducts, $carrierId));
+        $order->total_wrapping_tax_excl = abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $orderProducts, $carrierId));
+        $order->total_wrapping_tax_incl = abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $orderProducts, $carrierId));
+
+        $totalShippingTaxIncluded = $order->total_shipping_tax_incl;
+        $totalShippingTaxExcluded = $order->total_shipping_tax_excl;
+
         $order->total_shipping = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $orderProducts, $carrierId);
         $order->total_shipping_tax_excl = $cart->getOrderTotal(false, Cart::ONLY_SHIPPING, $orderProducts, $carrierId);
         $order->total_shipping_tax_incl = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $orderProducts, $carrierId);
 
-        $order->total_wrapping = abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $orderProducts, $carrierId));
-        $order->total_wrapping_tax_excl = abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $orderProducts, $carrierId));
-        $order->total_wrapping_tax_incl = abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $orderProducts, $carrierId));
+        if (!Configuration::get('PS_ORDER_RECALCULATE_SHIPPING')) {
+            $shippingDiffTaxIncluded = $order->total_shipping_tax_incl - $totalShippingTaxIncluded;
+            $shippingDiffTaxExcluded = $order->total_shipping_tax_excl - $totalShippingTaxExcluded;
+
+            $order->total_shipping = $totalShippingTaxIncluded;
+            $order->total_shipping_tax_incl = $totalShippingTaxIncluded;
+            $order->total_shipping_tax_excl = $totalShippingTaxExcluded;
+
+            $order->total_paid -= $shippingDiffTaxIncluded;
+            $order->total_paid_tax_incl -= $shippingDiffTaxIncluded;
+            $order->total_paid_tax_excl -= $shippingDiffTaxExcluded;
+        }
 
         if (!$order->update()) {
             throw new OrderException('Could not update order invoice in database.');
