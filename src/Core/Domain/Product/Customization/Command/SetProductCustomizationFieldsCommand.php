@@ -82,7 +82,7 @@ class SetProductCustomizationFieldsCommand
             throw new RuntimeException(sprintf(
                 'Empty customization fields array provided in %s. To remove customization fields use %s',
                 self::class,
-                    RemoveAllCustomizationFieldsFromProductCommand::class
+                RemoveAllCustomizationFieldsFromProductCommand::class
             ));
         }
 
