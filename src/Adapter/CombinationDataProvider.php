@@ -253,12 +253,7 @@ class CombinationDataProvider
             return $attributeByCombination['id_attribute'];
         }, $attributeCombinationAssociations));
 
-        $attributesInfo = $this->getAttributesInformation($attributeIds, $langId->getValue());
-
-        $attributesInfoByAttributeId = [];
-        foreach ($attributesInfo as $attributeInfo) {
-            $attributesInfoByAttributeId[(int) $attributeInfo['id_attribute']][] = $attributeInfo;
-        }
+        $attributesInfoByAttributeId = $this->getAttributesInformation($attributeIds, $langId->getValue());
 
         $attributesInfoByCombinationId = [];
         foreach ($attributeCombinationAssociations as $attributeCombinationAssociation) {
@@ -338,7 +333,14 @@ class CombinationDataProvider
             ->setParameter('langId', $langId)
         ;
 
-        return $qb->execute()->fetchAll();
+        $attributesInfo = $qb->execute()->fetchAll();
+
+        $attributesInfoByAttributeId = [];
+        foreach ($attributesInfo as $attributeInfo) {
+            $attributesInfoByAttributeId[(int) $attributeInfo['id_attribute']][] = $attributeInfo;
+        }
+
+        return $attributesInfoByAttributeId;
     }
 
     /**
