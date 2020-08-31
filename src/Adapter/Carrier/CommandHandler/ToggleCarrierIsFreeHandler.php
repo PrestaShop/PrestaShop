@@ -46,7 +46,7 @@ class ToggleCarrierIsFreeHandler extends AbstractCarrierHandler implements Toggl
 
         try {
             $carrier->setFieldsToUpdate(['is_free' => true]);
-            $carrier->is_free = !(int) $carrier->is_free;
+            $carrier->is_free = !(bool) $carrier->is_free;
 
             if (false === $carrier->update()) {
                 throw new CannotToggleCarrierIsFreeStatusException(sprintf('Unable to toggle is-free status of carrier with id "%s"', $command->getCarrierId()->getValue()));
