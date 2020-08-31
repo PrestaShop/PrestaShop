@@ -1398,7 +1398,7 @@ class CartCore extends ObjectModel
         /* Update quantity if product already exist */
         if (!empty($cartProductQuantity['quantity'])) {
             $productQuantity = Product::getQuantity($id_product, $id_product_attribute, null, $this);
-            $availableOutOfStock = Product::isAvailableWhenOutOfStock($product->out_of_stock);
+            $availableOutOfStock = Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($product->id));
 
             if ($operator == 'up') {
                 $updateQuantity = '+ ' . $quantity;
