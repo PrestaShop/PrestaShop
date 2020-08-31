@@ -108,7 +108,9 @@ export default class ProductRenderer {
       if (customizedData.type === createOrderMap.productCustomizationFieldTypeFile) {
         $customizationTemplate = $customizedFileTemplate.clone();
         $customizationTemplate.find(createOrderMap.listedProductCustomizationName).text(customizedData.name);
-        $customizationTemplate.find(`${createOrderMap.listedProductCustomizationValue} img`).prop('src', customizedData.value);
+        $customizationTemplate
+          .find(`${createOrderMap.listedProductCustomizationValue} img`)
+          .prop('src', customizedData.value);
       } else {
         $customizationTemplate.find(createOrderMap.listedProductCustomizationName).text(customizedData.name);
         $customizationTemplate.find(createOrderMap.listedProductCustomizationValue).text(customizedData.value);
@@ -158,7 +160,7 @@ export default class ProductRenderer {
    * @param product
    */
   renderProductMetadata(product) {
-    this.renderStock(product.stock);
+    this.renderStock(product.stock, product.stock === 0 && product.availableOutOfStock ? true : false);
     this._renderCombinations(product.combinations);
     this._renderCustomizations(product.customizationFields);
   }
@@ -168,9 +170,14 @@ export default class ProductRenderer {
    *
    * @param stock
    */
-  renderStock(stock) {
+  renderStock(stock, infinitMax) {
     $(createOrderMap.inStockCounter).text(stock);
-    $(createOrderMap.quantityInput).attr('max', stock);
+
+    if (!infinitMax) {
+      $(createOrderMap.quantityInput).attr('max', stock);
+    } else {
+      $(createOrderMap.quantityInput).removeAttr('max');
+    }
   }
 
   /**
@@ -179,10 +186,9 @@ export default class ProductRenderer {
    * @private
    */
   cloneProductTemplate(product) {
-    return product.gift === true ?
-      $($(createOrderMap.productsTableGiftRowTemplate).html()).clone() :
-      $($(createOrderMap.productsTableRowTemplate).html()).clone()
-    ;
+    return product.gift === true
+      ? $($(createOrderMap.productsTableGiftRowTemplate).html()).clone()
+      : $($(createOrderMap.productsTableRowTemplate).html()).clone();
   }
 
   /**
@@ -272,7 +278,7 @@ export default class ProductRenderer {
 
     const templateTypeMap = {
       [fieldTypeFile]: $fileInputTemplate,
-      [fieldTypeText]: $textInputTemplate
+      [fieldTypeText]: $textInputTemplate,
     };
 
     for (const key in customizationFields) {
@@ -280,12 +286,10 @@ export default class ProductRenderer {
       const $template = templateTypeMap[customField.type].clone();
 
       if (customField.type === fieldTypeFile) {
-        $template.on('change', e => {
+        $template.on('change', (e) => {
           const fileName = e.target.files[0].name;
 
-          $(e.target)
-            .next('.custom-file-label')
-            .html(fileName);
+          $(e.target).next('.custom-file-label').html(fileName);
         });
       }
 
