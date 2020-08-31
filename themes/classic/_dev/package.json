@@ -34,6 +34,7 @@
     "jquery": "^3.4.1",
     "jquery-touchswipe": "^1.6",
     "jquery.browser": "^0.1.0",
+    "manrope": "^2.0.0",
     "material-design-icons-iconfont": "^5.0.1",
     "node-sass": "^4.13.1",
     "notosans-fontface": "~1.0.1",
