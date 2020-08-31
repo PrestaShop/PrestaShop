@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\IssueReturnProductHan
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ReturnProductDisabledException;
 use Validate;
+use PrestaShop\PrestaShop\Core\Domain\Order\CancellationActionType;
 
 /**
  * @internal
@@ -128,7 +129,7 @@ class IssueReturnProductHandler extends AbstractOrderCommandHandler implements I
             if ($command->restockRefundedProducts()) {
                 $this->reinjectQuantity($orderDetail, $productRefund['quantity']);
             }
-            Hook::exec('actionProductCancel', ['order' => $order, 'id_order_detail' => (int) $orderDetailId], null, false, true, false, $order->id_shop);
+            Hook::exec('actionProductCancel', ['order' => $order, 'id_order_detail' => (int) $orderDetailId, 'action' => CancellationActionType::RETURN_PRODUCT], null, false, true, false, $order->id_shop);
         }
 
         // Update order carrier weight
