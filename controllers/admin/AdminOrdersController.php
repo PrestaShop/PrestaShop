@@ -648,6 +648,10 @@ class AdminOrdersControllerCore extends AdminController
                                 '{id_order}' => $order->id,
                                 '{order_name}' => $order->getUniqReference(),
                                 '{message}' => $message,
+                                '{link}' => Tools::url(
+                                    $this->context->link->getPageLink('contact', true, $customer_thread->id_lang, null, false, $customer_thread->id_shop),
+                                    'id_customer_thread=' . (int) $customer_thread->id . '&token=' . $customer_thread->token
+                                ),
                             );
 
                             if (
