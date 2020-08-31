@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOptions
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSuppliersForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryHandler\GetProductSupplierOptionsHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
 use Supplier;
 
 /**
@@ -77,7 +76,9 @@ final class GetProductSupplierOptionsHandler extends AbstractProductHandler impl
             $supplierOptions[] = new ProductSupplierOption(
                 Supplier::getNameById($supplierId),
                 $supplierId,
-                $this->filterProductSuppliersBySupplier($supplierId, $productSuppliersForEditing)
+                array_filter($productSuppliersForEditing, function ($value) use ($supplierId): bool {
+                    return $value->getSupplierId() === $supplierId;
+                })
             );
             $processedSuppliers[] = $supplierId;
         }
@@ -87,26 +88,5 @@ final class GetProductSupplierOptionsHandler extends AbstractProductHandler impl
             $product->supplier_reference,
             $supplierOptions
         );
-    }
-
-    /**
-     * Gets EditableProductSuppliers list for its supplier
-     *
-     * @param int $supplierId
-     * @param ProductSupplierForEditing[] $productSuppliersForEditing
-     *
-     * @return ProductSupplierForEditing[]
-     */
-    private function filterProductSuppliersBySupplier(int $supplierId, array $productSuppliersForEditing): array
-    {
-        $productSuppliersBySupplier = [];
-
-        foreach ($productSuppliersForEditing as $productSupplierForEditing) {
-            if ($productSupplierForEditing->getSupplierId() === $supplierId) {
-                $productSuppliersBySupplier[] = $productSupplierForEditing;
-            }
-        }
-
-        return $productSuppliersBySupplier;
     }
 }

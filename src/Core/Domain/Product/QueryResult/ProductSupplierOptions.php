@@ -39,7 +39,7 @@ class ProductSupplierOptions
     private $defaultSupplierId;
 
     /**
-     * @var
+     * @var string
      */
     private $defaultSupplierReference;
 
@@ -72,9 +72,9 @@ class ProductSupplierOptions
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getDefaultSupplierReference()
+    public function getDefaultSupplierReference(): string
     {
         return $this->defaultSupplierReference;
     }
