@@ -37,12 +37,12 @@ use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderSlipCreator;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\VoucherGenerator;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\CancellationActionType;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssueStandardRefundCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\IssueStandardRefundHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ReturnProductDisabledException;
 use Validate;
-use PrestaShop\PrestaShop\Core\Domain\Order\CancellationActionType;
 
 /**
  * @internal
