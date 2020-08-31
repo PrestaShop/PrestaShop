@@ -8,6 +8,7 @@ class CartRules extends BOBasePage {
     this.pageTitle = 'Cart Rules •';
 
     // Selectors
+    this.addNewCartRuleButton = '#page-header-desc-cart_rule-new_cart_rule';
     this.catalogPriceRulesTab = '#subtab-AdminSpecificPriceRule';
   }
 
@@ -20,6 +21,19 @@ class CartRules extends BOBasePage {
   async goToCatalogPriceRulesTab(page) {
     await this.clickAndWaitForNavigation(page, this.catalogPriceRulesTab);
     await this.waitForVisibleSelector(page, `${this.catalogPriceRulesTab}.current`);
+  }
+
+  /**
+   * Go to add new cart rule page
+   * @param page
+   * @returns {Promise<void>}
+   */
+  async goToAddNewCartRulesPage(page) {
+    await this.clickAndWaitForNavigation(page, this.addNewCartRuleButton);
+  }
+
+  async goToEditCartRulePage(page) {
+
   }
 }
 

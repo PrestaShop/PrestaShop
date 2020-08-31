@@ -17,6 +17,9 @@ class Cart extends FOBasePage {
     this.cartTotalTTC = '.cart-summary-totals span.value';
     this.itemsNumber = '#cart-subtotal-products span.label.js-subtotal';
     this.alertWarning = '.checkout.cart-detailed-actions.card-block div.alert.alert-warning';
+    this.promoCodeLink = '#main div.block-promo a[href=\'#promo-code\']';
+    this.promoInput = '#promo-code input.promo-input';
+    this.addPromoCodeButton = '#promo-code button.btn-primary';
   }
 
   /**
@@ -104,6 +107,12 @@ class Cart extends FOBasePage {
    */
   getAlertWarning(page) {
     return this.getTextContent(page, this.alertWarning);
+  }
+
+  async setPromoCode(page, code) {
+    await page.click(this.promoCodeLink);
+    await this.setValue(page, this.promoInput, code);
+    await page.click(this.addPromoCodeButton);
   }
 }
 
