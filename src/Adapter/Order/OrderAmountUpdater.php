@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Order;
 use Cache;
 use Cart;
 use CartRule;
-use Configuration;
 use Context;
 use Currency;
 use Order;
@@ -119,7 +118,7 @@ class OrderAmountUpdater
         $order->total_shipping_tax_excl = $cart->getOrderTotal(false, Cart::ONLY_SHIPPING, $orderProducts, $carrierId);
         $order->total_shipping_tax_incl = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $orderProducts, $carrierId);
 
-        if (!Configuration::get('PS_ORDER_RECALCULATE_SHIPPING')) {
+        if (!$this->configuration->get('PS_ORDER_RECALCULATE_SHIPPING')) {
             $shippingDiffTaxIncluded = $order->total_shipping_tax_incl - $totalShippingTaxIncluded;
             $shippingDiffTaxExcluded = $order->total_shipping_tax_excl - $totalShippingTaxExcluded;
 
