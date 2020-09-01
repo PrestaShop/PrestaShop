@@ -55,7 +55,7 @@ class HelperListCore extends Helper
     /** @var string ORDER BY clause determined by field/arrows in list header */
     public $orderBy;
 
-    /** @var string Default ORDER BY clause when orderBy is not defined */
+    /** @var string Default ORDER BY clause when `$orderBy` is not defined */
     public $_defaultOrderBy = false;
 
     /** @var array : list of vars for button delete */
