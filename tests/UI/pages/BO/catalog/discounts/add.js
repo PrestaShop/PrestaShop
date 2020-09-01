@@ -6,6 +6,7 @@ class AddCartRule extends BOBasePage {
     super();
 
     this.pageTitle = 'Cart Rules > Add new •';
+    this.editPageTitle = 'Cart Rules > Edit';
 
     // Selectors
     this.cartRuleForm = '#cart_rule_form';
@@ -24,7 +25,7 @@ class AddCartRule extends BOBasePage {
     this.freeShippingInput = TOGGLE => `${this.cartRuleForm} label[for='free_shipping_${TOGGLE}']`;
     this.applyDiscountRadioButton = TOGGLE => `${this.cartRuleForm} label[for='apply_discount_${TOGGLE}']`;
     this.reductionPercentInput = '#reduction_percent';
-    this.saveAndStayButton = '#desc-cart_rule-save-and-stay';
+    this.saveButton = '#desc-cart_rule-save';
   }
 
   /* Methods */
@@ -52,7 +53,7 @@ class AddCartRule extends BOBasePage {
     if (cartRuleData.percent) await page.click(this.applyDiscountRadioButton('percent'));
     await this.setValue(page, this.reductionPercentInput, cartRuleData.value.toString());
 
-    await this.clickAndWaitForNavigation(page, this.saveAndStayButton);
+    await this.clickAndWaitForNavigation(page, this.saveButton);
     return this.getTextContent(page, this.alertSuccessBlock);
   }
 }
