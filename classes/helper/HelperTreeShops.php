@@ -136,7 +136,7 @@ class HelperTreeShopsCore extends TreeCore
                     'icon-expand-alt'
                 ),
                 new TreeToolbarLink(
-                    $this->translator->trans('Check All', [], 'Admin.Actions'),
+                    $this->translator->trans('Check all', [], 'Admin.Actions'),
                     '#',
                     'checkAllAssociatedShops($(\'#' . $this->getId() . '\')); return false;',
                     'icon-check-sign'
