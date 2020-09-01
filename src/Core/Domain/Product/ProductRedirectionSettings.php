@@ -75,4 +75,14 @@ class ProductRedirectionSettings
         self::TYPE_PRODUCT_PERMANENT => self::TYPE_PRODUCT_PERMANENT,
         self::TYPE_PRODUCT_TEMPORARY => self::TYPE_PRODUCT_TEMPORARY,
     ];
+
+    const CATEGORY_REDIRECT_TYPES = [
+        self::TYPE_CATEGORY_PERMANENT => self::TYPE_CATEGORY_PERMANENT,
+        self::TYPE_CATEGORY_TEMPORARY => self::TYPE_CATEGORY_TEMPORARY,
+    ];
+
+    const PRODUCT_REDIRECT_TYPES = [
+        self::TYPE_PRODUCT_PERMANENT => self::TYPE_PRODUCT_PERMANENT,
+        self::TYPE_PRODUCT_TEMPORARY => self::TYPE_PRODUCT_TEMPORARY,
+    ];
 }
