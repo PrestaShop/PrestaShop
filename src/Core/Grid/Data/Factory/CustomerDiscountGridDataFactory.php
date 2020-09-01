@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
+use CartRule;
 use Customer;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
@@ -64,7 +65,7 @@ final class CustomerDiscountGridDataFactory implements GridDataFactoryInterface
      */
     public function getData(SearchCriteriaInterface $searchCriteria)
     {
-        $discounts = \CartRule::getCustomerCartRules(
+        $discounts = CartRule::getCustomerCartRules(
             $this->contextLangId,
             $this->customer->id,
             false,
