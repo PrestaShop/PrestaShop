@@ -35,6 +35,28 @@ Feature: Order from Back Office (BO)
       | payment module name | dummy_payment              |
       | status              | Awaiting bank wire payment |
 
+  Scenario: Check customer message can be null
+    When I create an empty cart "dummy_cart2" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart2"
+    And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart2"
+    And I add order "bo_order2" with the following details:
+      | cart                | dummy_cart2                 |
+      | message             |                             |
+      | payment module name | dummy_payment               |
+      | status              | Awaiting bank wire payment  |
+    Then order "bo_order2" must have no customer message
+
+  Scenario: Check customer message is saved when creating an order
+    When I create an empty cart "dummy_cart2" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart2"
+    And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart2"
+    And I add order "bo_order2" with the following details:
+      | cart                | dummy_cart2                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    Then order "bo_order2" must have customer message with content "test"
+
   Scenario: Update order status
     When I update order "bo_order1" status to "Awaiting Cash On Delivery validation"
     Then order "bo_order1" has status "Awaiting Cash On Delivery validation"
