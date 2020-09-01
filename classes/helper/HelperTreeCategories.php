@@ -389,7 +389,7 @@ class HelperTreeCategoriesCore extends TreeCore
 
         if ($this->useCheckBox()) {
             $check_all = new TreeToolbarLink(
-                $this->translator->trans('Check All', [], 'Admin.Actions'),
+                $this->translator->trans('Check all', [], 'Admin.Actions'),
                 '#',
                 'checkAllAssociatedCategories($(\'#' . $this->getId() . '\')); return false;',
                 'icon-check-sign'
