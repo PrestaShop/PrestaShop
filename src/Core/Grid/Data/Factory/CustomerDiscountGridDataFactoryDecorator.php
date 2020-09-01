@@ -29,8 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
-use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
-use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**

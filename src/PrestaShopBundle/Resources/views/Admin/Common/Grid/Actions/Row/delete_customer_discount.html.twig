@@ -31,8 +31,8 @@
 
 {% set confirmation_message = action.options.confirm_message %}
 
-<a class="{{ class }} grid-{{ action.name|lower }}-row-link"
-   href="#"
+<button class="{{ class }} grid-{{ action.name|lower }}-row-link"
+   type="button"
    data-confirm-message="{{ confirmation_message }}"
    data-url="{{ getAdminLink('AdminCartRules', true, {'id_cart_rule': record[action.options.id_cart_rule], 'deletecart_rule': 1, 'back': app.request.uri}) }}"
    data-method="{{ action.options.method }}"
@@ -53,4 +53,4 @@
   {% if not attributes.tooltip_name %}
     {{ action.name }}
   {% endif %}
-</a>
+</button>
