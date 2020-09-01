@@ -82,6 +82,11 @@ class HelperFormCore extends Helper
         $file = true;
         $translator = Context::getContext()->getTranslator();
 
+        $default_switch_labels = [
+            'active_on' => $translator->trans('Yes', [], 'Admin.Global'),
+            'active_off' => $translator->trans('No', [], 'Admin.Global'),
+        ];
+
         foreach ($this->fields_form as $fieldset_key => &$fieldset) {
             if (isset($fieldset['form']['tabs'])) {
                 $tabs[] = $fieldset['form']['tabs'];
@@ -97,11 +102,6 @@ class HelperFormCore extends Helper
                         case 'switch':
                             $switch_values = $params['values'];
                             if (!empty($params['values'])) {
-                                $default_switch_labels = [
-                                    'active_on' => $translator->trans('Yes', [], 'Admin.Global'),
-                                    'active_off' => $translator->trans('No', [], 'Admin.Global'),
-                                ];
-
                                 foreach ($switch_values as $k => $value) {
                                     if (!isset($value['label'])) {
                                         $defautl_label = $default_switch_labels[$value['id']] ?? '';
