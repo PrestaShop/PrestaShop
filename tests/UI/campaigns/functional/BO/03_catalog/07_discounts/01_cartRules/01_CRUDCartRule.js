@@ -32,7 +32,7 @@ let page;
 const newCartRuleData = new CartRuleFaker(
   {
     code: '4QABV6L3',
-    customer: 'pub@prestashop.com',
+    customer: DefaultAccount.email,
     percent: true,
     value: 20,
   },
@@ -41,7 +41,7 @@ const newCartRuleData = new CartRuleFaker(
 const editCartRuleData = new CartRuleFaker(
   {
     code: '3PAJA6B3',
-    customer: 'pub@prestashop.com',
+    customer: DefaultAccount.email,
     percent: true,
     value: 30,
   },
