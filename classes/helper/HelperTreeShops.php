@@ -142,7 +142,7 @@ class HelperTreeShopsCore extends TreeCore
                     'icon-check-sign'
                 ),
                 new TreeToolbarLink(
-                    $this->translator->trans('Uncheck All', [], 'Admin.Actions'),
+                    $this->translator->trans('Uncheck all', [], 'Admin.Actions'),
                     '#',
                     'uncheckAllAssociatedShops($(\'#' . $this->getId() . '\')); return false;',
                     'icon-check-empty'
