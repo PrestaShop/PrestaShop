@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderSlipCreator;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\VoucherGenerator;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\CancellationActionType;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssueStandardRefundCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\IssueStandardRefundHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
@@ -133,7 +134,7 @@ class IssueStandardRefundHandler extends AbstractOrderCommandHandler implements 
             $orderDetail = $orderRefundSummary->getOrderDetailById($orderDetailId);
             // For standard refund the order is necessarily NOT delivered yet, so reinjection is automatic
             $this->reinjectQuantity($orderDetail, $productRefund['quantity']);
-            Hook::exec('actionProductCancel', ['order' => $order, 'id_order_detail' => (int) $orderDetailId], null, false, true, false, $order->id_shop);
+            Hook::exec('actionProductCancel', ['order' => $order, 'id_order_detail' => (int) $orderDetailId, 'action' => CancellationActionType::STANDARD_REFUND], null, false, true, false, $order->id_shop);
         }
 
         // Update order carrier weight
