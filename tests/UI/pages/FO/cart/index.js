@@ -79,7 +79,7 @@ class Cart extends FOBasePage {
    * @returns {Promise<number>}
    */
   async getTTCPrice(page) {
-    return this.getPriceFromText(page, this.cartTotalTTC);
+    return this.getPriceFromText(page, this.cartTotalTTC, 2000);
   }
 
   /**
@@ -109,6 +109,12 @@ class Cart extends FOBasePage {
     return this.getTextContent(page, this.alertWarning);
   }
 
+  /**
+   * Set promo code
+   * @param page
+   * @param code
+   * @returns {Promise<void>}
+   */
   async setPromoCode(page, code) {
     await page.click(this.promoCodeLink);
     await this.setValue(page, this.promoInput, code);
