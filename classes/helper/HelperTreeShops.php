@@ -130,7 +130,7 @@ class HelperTreeShopsCore extends TreeCore
                     'icon-collapse-alt'
                 ),
                 new TreeToolbarLink(
-                    $this->translator->trans('Expand All', [], 'Admin.Actions'),
+                    $this->translator->trans('Expand all', [], 'Admin.Actions'),
                     '#',
                     '$(\'#' . $this->getId() . '\').tree(\'expandAll\'); return false;',
                     'icon-expand-alt'
