@@ -29,9 +29,12 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductRedirectionSettings;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\NoRedirectOption;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductNoRedirectOption;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductRedirectOption;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectToCategoryOption;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectToProductOption;
 
 /**
  * Updates Product SEO options
@@ -59,7 +62,7 @@ class UpdateProductSeoCommand
     private $localizedLinkRewrites;
 
     /**
-     * @var ProductRedirectOption|null
+     * @var NoRedirectOption|RedirectToCategoryOption|RedirectToProductOption
      */
     private $redirectOption;
 
@@ -140,7 +143,7 @@ class UpdateProductSeoCommand
     }
 
     /**
-     * @return ProductRedirectOption|null
+     * @return NoRedirectOption|RedirectToCategoryOption|RedirectToProductOption
      */
     public function getRedirectOption(): ?ProductRedirectOption
     {
