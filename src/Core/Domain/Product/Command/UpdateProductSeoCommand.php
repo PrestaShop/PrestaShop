@@ -29,9 +29,12 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductRedirectionSettings;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\NoRedirectOption;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductNoRedirectOption;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductRedirectOption;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectOption;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectToCategoryOption;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectToProductOption;
 
 /**
  * Updates Product SEO options
@@ -59,7 +62,7 @@ class UpdateProductSeoCommand
     private $localizedLinkRewrites;
 
     /**
-     * @var ProductRedirectOption|null
+     * @var RedirectOption|null
      */
     private $redirectOption;
 
@@ -140,27 +143,34 @@ class UpdateProductSeoCommand
     }
 
     /**
-     * @return ProductRedirectOption|null
+     * @return RedirectOption|null
      */
-    public function getRedirectOption(): ?ProductRedirectOption
+    public function getRedirectOption(): ?RedirectOption
     {
         return $this->redirectOption;
     }
 
     /**
      * @param string $redirectType
-     * @param int $redirectTargetId
+     * @param int|null $redirectTargetId
      *
      * @return UpdateProductSeoCommand
      */
-    public function setRedirectOption(string $redirectType, int $redirectTargetId): self
+    public function setRedirectOption(string $redirectType, ?int $redirectTargetId = null): self
     {
-        if ($redirectType === ProductRedirectionSettings::TYPE_NO_REDIRECT) {
-            $this->redirectOption = new ProductNoRedirectOption();
-        } else {
-            $this->redirectOption = new ProductRedirectOption($redirectType, $redirectTargetId);
+        switch ($redirectType) {
+            case ProductRedirectionSettings::TYPE_NO_REDIRECT:
+                $this->redirectOption = new NoRedirectOption();
+                break;
+            case in_array($redirectType, ProductRedirectionSettings::PRODUCT_REDIRECT_TYPES):
+                $this->redirectOption = new RedirectToProductOption($redirectType, $redirectTargetId);
+                break;
+            case in_array($redirectType, ProductRedirectionSettings::CATEGORY_REDIRECT_TYPES):
+                $this->redirectOption = new RedirectToCategoryOption($redirectType, $redirectTargetId);
+                break;
+            default:
+                // @todo: throw exception
         }
-        //@todo: waiting for decision if need one more object for Category type when target id is 0
 
         return $this;
     }
