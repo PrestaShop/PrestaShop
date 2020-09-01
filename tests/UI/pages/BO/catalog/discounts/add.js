@@ -39,8 +39,12 @@ class AddCartRule extends BOBasePage {
     // Fill information form
     await this.setValue(page, this.nameInput(1), cartRuleData.name);
     await this.setValue(page, this.descriptionTextArea, cartRuleData.description);
-    if (cartRuleData.code) await this.setValue(page, this.codeInput, cartRuleData.code);
-    else await page.click(this.generateButton);
+
+    if (cartRuleData.code) {
+      await this.setValue(page, this.codeInput, cartRuleData.code);
+    } else {
+      await page.click(this.generateButton);
+    }
     // Fill conditions form
     await page.click(this.conditionsTabLink);
     await this.setValue(page, this.singleCustomerInput, cartRuleData.customer);
@@ -50,7 +54,9 @@ class AddCartRule extends BOBasePage {
     await page.click(this.actionsTabLink);
     await page.click(this.freeShippingInput(cartRuleData.freeShipping));
 
-    if (cartRuleData.percent) await page.click(this.applyDiscountRadioButton('percent'));
+    if (cartRuleData.percent) {
+      await page.click(this.applyDiscountRadioButton('percent'));
+    }
     await this.setValue(page, this.reductionPercentInput, cartRuleData.value.toString());
 
     await this.clickAndWaitForNavigation(page, this.saveButton);
