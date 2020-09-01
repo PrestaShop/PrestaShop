@@ -396,7 +396,7 @@ class HelperTreeCategoriesCore extends TreeCore
             );
             $check_all->setAttribute('id', 'check-all-' . $this->getId());
             $uncheck_all = new TreeToolbarLink(
-                $this->translator->trans('Uncheck All', [], 'Admin.Actions'),
+                $this->translator->trans('Uncheck all', [], 'Admin.Actions'),
                 '#',
                 'uncheckAllAssociatedCategories($(\'#' . $this->getId() . '\')); return false;',
                 'icon-check-empty'
