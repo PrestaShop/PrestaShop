@@ -1,10 +1,11 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,15 +16,14 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Handles UI interactions of choice tree
@@ -38,13 +38,13 @@ export default class ChoiceTree {
     this.$container.on('click', '.js-input-wrapper', (event) => {
       const $inputWrapper = $(event.currentTarget);
 
-      this._toggleChildTree($inputWrapper);
+      this.toggleChildTree($inputWrapper);
     });
 
     this.$container.on('click', '.js-toggle-choice-tree-action', (event) => {
       const $action = $(event.currentTarget);
 
-      this._toggleTree($action);
+      this.toggleTree($action);
     });
 
     return {
@@ -89,7 +89,7 @@ export default class ChoiceTree {
    *
    * @private
    */
-  _toggleChildTree($inputWrapper) {
+  toggleChildTree($inputWrapper) {
     const $parentWrapper = $inputWrapper.closest('li');
 
     if ($parentWrapper.hasClass('expanded')) {
@@ -114,7 +114,7 @@ export default class ChoiceTree {
    *
    * @private
    */
-  _toggleTree($action) {
+  toggleTree($action) {
     const $parentContainer = $action.closest('.js-choice-tree-container');
     const action = $action.data('action');
 
@@ -139,15 +139,15 @@ export default class ChoiceTree {
       icon: {
         expand: 'collapsed-icon',
         collapse: 'expanded-icon',
-      }
+      },
     };
 
     $parentContainer.find('li').each((index, item) => {
       const $item = $(item);
 
       if ($item.hasClass(config.removeClass[action])) {
-          $item.removeClass(config.removeClass[action])
-            .addClass(config.addClass[action]);
+        $item.removeClass(config.removeClass[action])
+          .addClass(config.addClass[action]);
       }
     });
 

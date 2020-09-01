@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,29 +17,28 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier\QueryHandler;
 
 use Currency;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryHandler\GetSupplierForViewingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\ViewableSupplier;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShopException;
-use Supplier;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForViewing;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\ViewableSupplier;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryHandler\GetSupplierForViewingHandlerInterface;
 use Product;
+use Supplier;
 
 /**
  * Handles query which gets supplier for viewing
@@ -87,9 +87,7 @@ final class GetSupplierForViewingHandler implements GetSupplierForViewingHandler
         $supplier = new Supplier($supplierId->getValue());
 
         if ($supplier->id !== $supplierId->getValue()) {
-            throw new SupplierNotFoundException(
-                sprintf('Supplier with id "%s" was not found.', $supplierId->getValue())
-            );
+            throw new SupplierNotFoundException(sprintf('Supplier with id "%s" was not found.', $supplierId->getValue()));
         }
 
         return $supplier;
@@ -171,9 +169,7 @@ final class GetSupplierForViewingHandler implements GetSupplierForViewingHandler
                 ];
             }
         } catch (PrestaShopException $e) {
-            throw new SupplierException(
-                sprintf('Failed to get products for supplier with id "%s".', $supplier->id)
-            );
+            throw new SupplierException(sprintf('Failed to get products for supplier with id "%s".', $supplier->id));
         }
 
         return $products;

@@ -1,10 +1,11 @@
 {#**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,15 +16,14 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="card">
+<div class="card customer-discounts-card">
   <h3 class="card-header">
     <i class="material-icons">loyalty</i>
     {{ 'Vouchers'|trans({}, 'Admin.Orderscustomers.Feature') }}
@@ -46,11 +46,11 @@
         {% for discount in customerInformation.discountsInformation %}
           {% set discountEditUrl = getAdminLink('AdminCartRules', true, {'id_cart_rule': discount.discountId, 'addcart_rule': 1, 'back': app.request.uri}) %}
 
-          <tr>
-            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ discountEditUrl }}">{{ discount.discountId }}</td>
-            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ discountEditUrl }}">{{ discount.code }}</td>
-            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ discountEditUrl }}">{{ discount.name }}</td>
-            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ discountEditUrl }}">
+          <tr class="customer-discount">
+            <td class="customer-discount-id js-linkable-item cursor-pointer" data-linkable-href="{{ discountEditUrl }}">{{ discount.discountId }}</td>
+            <td class="customer-discount-code js-linkable-item cursor-pointer" data-linkable-href="{{ discountEditUrl }}">{{ discount.code }}</td>
+            <td class="customer-discount-name js-linkable-item cursor-pointer" data-linkable-href="{{ discountEditUrl }}">{{ discount.name }}</td>
+            <td class="customer-discount-status js-linkable-item cursor-pointer" data-linkable-href="{{ discountEditUrl }}">
               {% if discount.active %}
                 <i class="material-icons text-success">
                   check
@@ -61,8 +61,8 @@
                 </i>
               {% endif %}
             </td>
-            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ discountEditUrl }}">{{ discount.availableQuantity }}</td>
-            <td class="text-right">
+            <td class="customer-discount-quantity js-linkable-item cursor-pointer" data-linkable-href="{{ discountEditUrl }}">{{ discount.availableQuantity }}</td>
+            <td class="customer-discount-actions text-right">
               <div class="btn-group-action">
                 <div class="btn-group">
                   <a href="{{ getAdminLink('AdminCartRules', true, {'id_cart_rule': discount.discountId, 'addcart_rule': 1, 'back': app.request.uri}) }}"

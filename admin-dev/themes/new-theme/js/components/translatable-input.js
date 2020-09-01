@@ -1,10 +1,11 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,17 +16,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 import {EventEmitter} from './event-emitter';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * This class is used to automatically toggle translated inputs (displayed with one
@@ -34,13 +34,17 @@ const $ = window.$;
  */
 class TranslatableInput {
   constructor(options) {
-    options = options || {};
+    const opts = options || {};
 
-    this.localeItemSelector = options.localeItemSelector || '.js-locale-item';
-    this.localeButtonSelector = options.localeButtonSelector || '.js-locale-btn';
-    this.localeInputSelector = options.localeInputSelector || '.js-locale-input';
+    this.localeItemSelector = opts.localeItemSelector || '.js-locale-item';
+    this.localeButtonSelector = opts.localeButtonSelector || '.js-locale-btn';
+    this.localeInputSelector = opts.localeInputSelector || '.js-locale-input';
 
-    $('body').on('click', this.localeItemSelector, this.toggleLanguage.bind(this));
+    $('body').on(
+      'click',
+      this.localeItemSelector,
+      this.toggleLanguage.bind(this),
+    );
     EventEmitter.on('languageSelected', this.toggleInputs.bind(this));
   }
 
@@ -52,7 +56,10 @@ class TranslatableInput {
   toggleLanguage(event) {
     const localeItem = $(event.target);
     const form = localeItem.closest('form');
-    EventEmitter.emit('languageSelected', {selectedLocale: localeItem.data('locale'), form: form});
+    EventEmitter.emit('languageSelected', {
+      selectedLocale: localeItem.data('locale'),
+      form,
+    });
   }
 
   /**
@@ -61,17 +68,19 @@ class TranslatableInput {
    * @param {Event} event
    */
   toggleInputs(event) {
-    const form = event.form;
-    const selectedLocale = event.selectedLocale;
+    const {form} = event;
+    const {selectedLocale} = event;
     const localeButton = form.find(this.localeButtonSelector);
     const changeLanguageUrl = localeButton.data('change-language-url');
 
     localeButton.text(selectedLocale);
     form.find(this.localeInputSelector).addClass('d-none');
-    form.find(`${this.localeInputSelector}.js-locale-${selectedLocale}`).removeClass('d-none');
+    form
+      .find(`${this.localeInputSelector}.js-locale-${selectedLocale}`)
+      .removeClass('d-none');
 
     if (changeLanguageUrl) {
-      this._saveSelectedLanguage(changeLanguageUrl, selectedLocale);
+      this.saveSelectedLanguage(changeLanguageUrl, selectedLocale);
     }
   }
 
@@ -83,11 +92,11 @@ class TranslatableInput {
    *
    * @private
    */
-  _saveSelectedLanguage(changeLanguageUrl, selectedLocale) {
+  saveSelectedLanguage(changeLanguageUrl, selectedLocale) {
     $.post({
       url: changeLanguageUrl,
       data: {
-        language_iso_code: selectedLocale
+        language_iso_code: selectedLocale,
       },
     });
   }

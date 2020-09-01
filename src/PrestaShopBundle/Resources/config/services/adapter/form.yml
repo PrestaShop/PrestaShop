@@ -45,6 +45,8 @@ services:
 
   prestashop.adapter.form.choice_provider.order_invoice_by_id:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\OrderInvoiceByIdChoiceProvider'
+    arguments:
+      - '@prestashop.core.localization.locale.context_locale'
 
   prestashop.adapter.form.choice_provider.currency_symbol_by_id:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CurrencySymbolByIdChoiceProvider'

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,17 +17,17 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use Country;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\AddTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkDeleteTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkToggleTaxStatusCommand;
@@ -37,7 +38,10 @@ use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
 use RuntimeException;
+use State;
 use Tax;
+use TaxRule;
+use TaxRulesGroup;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
@@ -176,10 +180,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
         try {
             $this->getQueryBus()->handle(new GetTaxForEditing($taxId));
 
-            throw new NoExceptionAlthoughExpectedException(sprintf(
-                'Tax %s expected to be deleted, but it was found',
-                    $taxReference
-            ));
+            throw new NoExceptionAlthoughExpectedException(sprintf('Tax %s expected to be deleted, but it was found', $taxReference));
         } catch (TaxNotFoundException $e) {
             SharedStorage::getStorage()->clear($taxReference);
         }
@@ -194,12 +195,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
         $tax = SharedStorage::getStorage()->get($taxReference);
 
         if ($tax->name[$this->defaultLangId] !== $name) {
-            throw new RuntimeException(sprintf(
-                'Tax "%s" has "%s" name, but "%s" was expected.',
-                $taxReference,
-                $tax->name,
-                $name
-            ));
+            throw new RuntimeException(sprintf('Tax "%s" has "%s" name, but "%s" was expected.', $taxReference, $tax->name, $name));
         }
     }
 
@@ -212,12 +208,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
         $tax = SharedStorage::getStorage()->get($taxReference);
 
         if ($tax->rate !== $rate) {
-            throw new RuntimeException(sprintf(
-                'Tax "%s" has "%s" rate, but "%s" was expected.',
-                $taxReference,
-                $tax->rate,
-                $rate
-            ));
+            throw new RuntimeException(sprintf('Tax "%s" has "%s" rate, but "%s" was expected.', $taxReference, $tax->rate, $rate));
         }
     }
 
@@ -245,12 +236,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
         $actualStatus = (bool) $tax->active;
 
         if ($isEnabled !== $actualStatus) {
-            throw new RuntimeException(sprintf(
-                'Tax "%s" is %s, but it was expected to be %s',
-                $taxReference,
-                $actualStatus ? 'enabled' : 'disabled',
-                $status
-            ));
+            throw new RuntimeException(sprintf('Tax "%s" is %s, but it was expected to be %s', $taxReference, $actualStatus ? 'enabled' : 'disabled', $status));
         }
     }
 
@@ -270,5 +256,29 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
         $taxId = $this->getCommandBus()->handle($command);
 
         SharedStorage::getStorage()->set($taxReference, new Tax($taxId->getValue()));
+    }
+
+    /**
+     * @Then I add tax rule group for tax :taxReference with following conditions:
+     */
+    public function addTaxRuleGroupToTax(string $taxReference, TableNode $table)
+    {
+        $data = $table->getRowsHash();
+
+        $taxRulesGroup = new TaxRulesGroup();
+        $taxRulesGroup->name = $data['name'];
+        $taxRulesGroup->active = 1;
+        $taxRulesGroup->deleted = 0;
+        $taxRulesGroup->save();
+        SharedStorage::getStorage()->set($data['name'], $taxRulesGroup->id);
+
+        $tax = SharedStorage::getStorage()->get($taxReference);
+        $taxRule = new TaxRule();
+        $taxRule->id_tax = $tax->id;
+        $taxRule->id_tax_rules_group = $taxRulesGroup->id;
+        $taxRule->behavior = 1;
+        $taxRule->id_country = Country::getByIso($data['country']);
+        $taxRule->id_state = State::getIdByIso($data['state']);
+        $taxRule->save();
     }
 }

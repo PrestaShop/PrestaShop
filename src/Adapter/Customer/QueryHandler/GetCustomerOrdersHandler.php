@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Customer\QueryHandler;
@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerOrders;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerOrdersHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\OrderSummary;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
-use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 
 /**
  * Handles GetCustomerOrders query using legacy object models
@@ -43,15 +43,15 @@ use PrestaShop\PrestaShop\Core\Localization\Locale;
 final class GetCustomerOrdersHandler extends AbstractCustomerHandler implements GetCustomerOrdersHandlerInterface
 {
     /**
-     * @var Locale
+     * @var LocaleInterface
      */
     private $locale;
 
     /**
-     * @param Locale $locale
+     * @param LocaleInterface $locale
      */
     public function __construct(
-        Locale $locale
+        LocaleInterface $locale
     ) {
         $this->locale = $locale;
     }
@@ -81,15 +81,16 @@ final class GetCustomerOrdersHandler extends AbstractCustomerHandler implements 
     {
         $summarizedOrders = [];
 
-        foreach (Order::getCustomerOrders($customerId) as $customerOrder) {
+        $customerOrders = Order::getCustomerOrders($customerId);
+        foreach ($customerOrders as $customerOrder) {
             $currency = new Currency((int) $customerOrder['id_currency']);
 
             $summarizedOrders[] = new OrderSummary(
                 (int) $customerOrder['id_order'],
                 $customerOrder['date_add'],
                 $customerOrder['payment'],
-                $customerOrder['order_state'],
-                $customerOrder['nb_products'],
+                $customerOrder['order_state'] ?: '',
+                (int) $customerOrder['nb_products'],
                 $this->locale->formatPrice(
                     $customerOrder['total_paid_real'],
                     $currency->iso_code

@@ -1,10 +1,11 @@
 <!--**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,16 +16,18 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *-->
 
- <template>
-  <div class="ps-number" :class="{'hover-buttons': hoverButtons}">
+<template>
+  <div
+    class="ps-number"
+    :class="{'hover-buttons': hoverButtons}"
+  >
     <input
       type="number"
       class="form-control"
@@ -34,10 +37,19 @@
       @keyup="onKeyup($event)"
       @focus="focusIn"
       @blur.native="focusOut($event)"
-    />
-    <div class="ps-number-spinner d-flex" v-if="buttons">
-      <span class="ps-number-up" @click="increment"></span>
-      <span class="ps-number-down" @click="decrement"></span>
+    >
+    <div
+      class="ps-number-spinner d-flex"
+      v-if="buttons"
+    >
+      <span
+        class="ps-number-up"
+        @click="increment"
+      />
+      <span
+        class="ps-number-down"
+        @click="decrement"
+      />
     </div>
   </div>
 </template>
@@ -45,10 +57,22 @@
 <script>
   export default {
     props: {
-      value: '',
-      danger: false,
-      buttons: false,
-      hoverButtons: false,
+      value: {
+        type: Number,
+        default: 0,
+      },
+      danger: {
+        type: Boolean,
+        default: false,
+      },
+      buttons: {
+        type: Boolean,
+        default: false,
+      },
+      hoverButtons: {
+        type: Boolean,
+        default: false,
+      },
     },
     methods: {
       onKeyup($event) {
@@ -62,11 +86,11 @@
       },
       increment() {
         const value = parseInt(this.value === '' ? 0 : this.value, 10);
-        this.$emit('change', isNaN(value) ? 0 : value + 1);
+        this.$emit('change', Number.isNaN(value) ? 0 : value + 1);
       },
       decrement() {
         const value = parseInt(this.value, 10);
-        this.$emit('change', isNaN(value) ? -1 : value - 1);
+        this.$emit('change', Number.isNaN(value) ? -1 : value - 1);
       },
     },
   };

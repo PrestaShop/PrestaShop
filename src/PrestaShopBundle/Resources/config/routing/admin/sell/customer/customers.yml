@@ -10,7 +10,7 @@ admin_customers_filter:
   path: /
   methods: [POST]
   defaults:
-    _controller: PrestaShopBundle:Admin\Common:searchGrid
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:searchGrid
     _legacy_controller: AdminCustomers
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.customer
     redirectRoute: admin_customers_index
@@ -165,6 +165,14 @@ admin_customers_search:
     _legacy_link: AdminCustomers:searchCustomers
   options:
     expose: true
+
+admin_customer_for_address_information:
+  path: /customer-information
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Sell\Customer\Customer:getCustomerInformation
+    _legacy_controller: AdminAddresses
+    _legacy_link: AdminAddresses:loadNames
 
 admin_customers_carts:
   path: /{customerId}/carts

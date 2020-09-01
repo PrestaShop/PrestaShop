@@ -1,12 +1,13 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -17,12 +18,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Localization\Currency;
@@ -100,6 +100,18 @@ class CurrencyData
      */
     protected $names;
 
+    /**
+     * Currency's patterns, by locale code.
+     *
+     * eg.: $patternsUSD = [
+     *     'fr-FR' => '#,##0.00 ¤',
+     *     'en-EN' => '¤#,##0.00',
+     * ]
+     *
+     * @var string[]
+     */
+    protected $patterns;
+
     public function overrideWith(CurrencyData $currencyData)
     {
         if ($currencyData->isActive() !== null) {
@@ -119,10 +131,7 @@ class CurrencyData
         }
 
         if ($currencyData->getSymbols() !== null) {
-            if (null === $this->symbols) {
-                $this->symbols = [];
-            }
-            $this->symbols = array_merge($this->symbols, $currencyData->getSymbols());
+            $this->symbols = array_merge($this->symbols ?? [], $currencyData->getSymbols());
         }
 
         if ($currencyData->getPrecision() !== null) {
@@ -130,10 +139,11 @@ class CurrencyData
         }
 
         if ($currencyData->getNames() !== null) {
-            if (null === $this->names) {
-                $this->names = [];
-            }
-            $this->names = array_merge($this->names, $currencyData->getNames());
+            $this->names = array_merge($this->names ?? [], $currencyData->getNames());
+        }
+
+        if ($currencyData->getPatterns() !== null) {
+            $this->patterns = array_merge($this->patterns ?? [], $currencyData->getPatterns());
         }
 
         return $this;
@@ -249,5 +259,25 @@ class CurrencyData
     public function setNames($names)
     {
         $this->names = $names;
+    }
+
+    /**
+     * Currency patterns, indexed by locale code
+     *
+     * @return string[]|null
+     */
+    public function getPatterns(): ?array
+    {
+        return $this->patterns;
+    }
+
+    /**
+     * Currency patterns, indexed by locale code
+     *
+     * @param string[] $patterns
+     */
+    public function setPatterns(array $patterns)
+    {
+        $this->patterns = $patterns;
     }
 }

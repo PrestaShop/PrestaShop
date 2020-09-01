@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <localizationPack name="China" version="1.0">
 	<currencies>
-		<currency name="Yuan" iso_code="CNY" iso_code_num="156" sign="¥" blank="1" conversion_rate="9.13916" format="1" decimals="1" />
+		<currency name="Yuan" iso_code="CNY" iso_code_num="156" sign="¥" blank="1" format="1" decimals="1" />
 	</currencies>
 	<languages>
 		<language iso_code="tw" />
 		<language iso_code="zh" />
-		<language iso_code="ug" />
 	</languages>
 	<taxes>
     <tax id="1" name="增值税 CN 13%" rate="13"/>

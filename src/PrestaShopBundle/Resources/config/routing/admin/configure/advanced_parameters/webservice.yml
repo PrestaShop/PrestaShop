@@ -38,19 +38,19 @@ admin_webservice_keys_edit:
         _legacy_controller: AdminWebservice
         _legacy_link: AdminWebservice:updatewebservice_account
         _legacy_parameters:
-            id_webservice_account: webserviceAccountId
+            id_webservice_account: webserviceKeyId
     requirements:
         webserviceKeyId: \d+
 
 admin_webservice_keys_delete:
     path: /{webserviceKeyId}/delete
-    methods: DELETE
+    methods: [DELETE, POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:delete'
         _legacy_controller: AdminWebservice
         _legacy_link: AdminWebservice:deletewebservice_account
         _legacy_parameters:
-            id_webservice_account: webserviceAccountId
+            id_webservice_account: webserviceKeyId
     requirements:
       webserviceKeyId: \d+
 

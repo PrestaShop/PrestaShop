@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult;
@@ -29,14 +29,19 @@ namespace PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult;
 class ReferenceCurrency
 {
     /**
-     * @var array
+     * @var string[]
      */
     private $names;
 
     /**
-     * @var array
+     * @var string[]
      */
     private $symbols;
+
+    /**
+     * @var string[]
+     */
+    private $patterns;
 
     /**
      * @var string
@@ -55,9 +60,10 @@ class ReferenceCurrency
 
     /**
      * @param string $isoCode
-     * @param string|null $numericIsoCode
+     * @param string $numericIsoCode
      * @param array $names
      * @param array $symbols
+     * @param array $patterns
      * @param int $precision
      */
     public function __construct(
@@ -65,12 +71,14 @@ class ReferenceCurrency
         string $numericIsoCode,
         array $names,
         array $symbols,
+        array $patterns,
         int $precision
     ) {
         $this->isoCode = $isoCode;
         $this->numericIsoCode = $numericIsoCode;
         $this->names = $names;
         $this->symbols = $symbols;
+        $this->patterns = $patterns;
         $this->precision = $precision;
     }
 
@@ -87,9 +95,9 @@ class ReferenceCurrency
     /**
      * Currency numeric ISO code
      *
-     * @return string|null
+     * @return string
      */
-    public function getNumericIsoCode(): ?string
+    public function getNumericIsoCode(): string
     {
         return $this->numericIsoCode;
     }
@@ -112,6 +120,16 @@ class ReferenceCurrency
     public function getSymbols(): array
     {
         return $this->symbols;
+    }
+
+    /**
+     * Currency's patterns, indexed by language id.
+     *
+     * @return array
+     */
+    public function getPatterns(): array
+    {
+        return $this->patterns;
     }
 
     /**

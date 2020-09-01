@@ -1,10 +1,11 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,15 +16,14 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Component which allows submitting very simple forms without having to use <form> element.
@@ -36,6 +36,8 @@ const $ = window.$;
  *
  * <button class="js-form-submit-btn"
  *         data-form-submit-url="/my-custom-url"          // (required) URL to which form will be submitted
+ *         data-method="GET|POST|DELETE|PATCH"            // (optional) specify the verb to use for the request.
+ *                                                        // POST is taken by default if not value is set
  *         data-form-csrf-token="my-generated-csrf-token" // (optional) to increase security
  *         data-form-confirm-message="Are you sure?"      // (optional) to confirm action before submit
  *         type="button"                                  // make sure its simple button
@@ -56,20 +58,41 @@ export default class FormSubmitButton {
 
       const $btn = $(this);
 
-      if ($btn.data('form-confirm-message') && false === confirm($btn.data('form-confirm-message'))) {
+      if ($btn.data('form-confirm-message') && window.confirm($btn.data('form-confirm-message')) === false) {
         return;
       }
 
+      let method = 'POST';
+      let addInput = null;
+
+      if ($btn.data('method')) {
+        const btnMethod = $btn.data('method');
+        const isGetOrPostMethod = ['GET', 'POST'].includes(btnMethod);
+        method = isGetOrPostMethod ? btnMethod : 'POST';
+
+        if (!isGetOrPostMethod) {
+          addInput = $('<input>', {
+            type: '_hidden',
+            name: '_method',
+            value: method,
+          });
+        }
+      }
+
       const $form = $('<form>', {
-        'action': $btn.data('form-submit-url'),
-        'method': 'POST',
+        action: $btn.data('form-submit-url'),
+        method: 'POST',
       });
+
+      if (addInput) {
+        $form.append(addInput);
+      }
 
       if ($btn.data('form-csrf-token')) {
         $form.append($('<input>', {
-          'type': '_hidden',
-          'name': '_csrf_token',
-          'value': $btn.data('form-csrf-token')
+          type: '_hidden',
+          name: '_csrf_token',
+          value: $btn.data('form-csrf-token'),
         }));
       }
 

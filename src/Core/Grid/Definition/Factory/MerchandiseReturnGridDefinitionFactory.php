@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
@@ -40,7 +40,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 /**
  * Class MerchandiseReturnGridDefinitionFactory builds grid definition for merchandise returns grid.
  */
-final class MerchandiseReturnGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class MerchandiseReturnGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
     const GRID_ID = 'merchandise_return';
 
@@ -111,45 +111,45 @@ final class MerchandiseReturnGridDefinitionFactory extends AbstractGridDefinitio
     {
         return (new FilterCollection())
             ->add((new Filter('id_order_return', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
-                    ],
-                ])
-                ->setAssociatedColumn('id_order_return')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                ],
+            ])
+            ->setAssociatedColumn('id_order_return')
             )
             ->add((new Filter('id_order', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Search order ID', [], 'Admin.Actions'),
-                    ],
-                ])
-                ->setAssociatedColumn('id_order')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Search order ID', [], 'Admin.Actions'),
+                ],
+            ])
+            ->setAssociatedColumn('id_order')
             )
             ->add((new Filter('status', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                ])
-                ->setAssociatedColumn('status')
+            ->setTypeOptions([
+                'required' => false,
+            ])
+            ->setAssociatedColumn('status')
             )
             ->add((new Filter('date_add', DateRangeType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'date_format' => 'YYYY-MM-DD',
-                ])
-                ->setAssociatedColumn('date_add')
+            ->setTypeOptions([
+                'required' => false,
+                'date_format' => 'YYYY-MM-DD',
+            ])
+            ->setAssociatedColumn('date_add')
             )
             ->add((new Filter('actions', SearchAndResetType::class))
-                ->setTypeOptions([
-                    'reset_route' => 'admin_common_reset_search_by_filter_id',
-                    'reset_route_params' => [
-                        'filterId' => self::GRID_ID,
-                    ],
-                    'redirect_route' => 'admin_merchandise_returns_index',
-                ])
-                ->setAssociatedColumn('actions')
+            ->setTypeOptions([
+                'reset_route' => 'admin_common_reset_search_by_filter_id',
+                'reset_route_params' => [
+                    'filterId' => self::GRID_ID,
+                ],
+                'redirect_route' => 'admin_merchandise_returns_index',
+            ])
+            ->setAssociatedColumn('actions')
             )
         ;
     }

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -67,40 +67,40 @@ class ManufacturerCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'manufacturer',
         'primary' => 'id_manufacturer',
         'multilang' => true,
-        'fields' => array(
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isCatalogName', 'required' => true, 'size' => 64),
-            'active' => array('type' => self::TYPE_BOOL),
-            'date_add' => array('type' => self::TYPE_DATE),
-            'date_upd' => array('type' => self::TYPE_DATE),
+        'fields' => [
+            'name' => ['type' => self::TYPE_STRING, 'validate' => 'isCatalogName', 'required' => true, 'size' => 64],
+            'active' => ['type' => self::TYPE_BOOL],
+            'date_add' => ['type' => self::TYPE_DATE],
+            'date_upd' => ['type' => self::TYPE_DATE],
 
             /* Lang fields */
-            'description' => array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
-            'short_description' => array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
-            'meta_title' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-            'meta_description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512),
-            'meta_keywords' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName'),
-        ),
-    );
+            'description' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'],
+            'short_description' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'],
+            'meta_title' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
+            'meta_description' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512],
+            'meta_keywords' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName'],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'active' => array(),
-            'link_rewrite' => array('getter' => 'getLink', 'setter' => false),
-        ),
-        'associations' => array(
-            'addresses' => array(
+    protected $webserviceParameters = [
+        'fields' => [
+            'active' => [],
+            'link_rewrite' => ['getter' => 'getLink', 'setter' => false],
+        ],
+        'associations' => [
+            'addresses' => [
                 'resource' => 'address',
                 'setter' => false,
-                'fields' => array(
-                    'id' => array('xlink_resource' => 'addresses'),
-                ),
-            ),
-        ),
-    );
+                'fields' => [
+                    'id' => ['xlink_resource' => 'addresses'],
+                ],
+            ],
+        ],
+    ];
 
     /**
      * ManufacturerCore constructor.
@@ -233,7 +233,7 @@ class ManufacturerCore extends ObjectModel
 					GROUP BY p.`id_manufacturer`'
                 );
 
-            $counts = array();
+            $counts = [];
             foreach ($results as $result) {
                 $counts[(int) $result['id_manufacturer']] = (int) $result['nb_products'];
             }
@@ -267,25 +267,25 @@ class ManufacturerCore extends ObjectModel
     {
         $idLang = null === $idLang ? Context::getContext()->language->id : (int) $idLang;
 
-        $manufacturersList = array();
+        $manufacturersList = [];
         $manufacturers = Manufacturer::getManufacturers(false, $idLang);
         if ($manufacturers && count($manufacturers)) {
             foreach ($manufacturers as $manufacturer) {
                 if ($format === 'sitemap') {
-                    $manufacturersList[] = array(
+                    $manufacturersList[] = [
                         'id' => 'manufacturer-page-' . (int) $manufacturer['id_manufacturer'],
                         'label' => $manufacturer['name'],
                         'url' => Context::getContext()->link->getManufacturerLink($manufacturer['id_manufacturer'], $manufacturer['link_rewrite']),
-                        'children' => array(),
-                    );
+                        'children' => [],
+                    ];
                 } else {
-                    $manufacturersList[] = array(
+                    $manufacturersList[] = [
                         'id' => (int) $manufacturer['id_manufacturer'],
                         'link' => Context::getContext()->link->getManufacturerLink($manufacturer['id_manufacturer'], $manufacturer['link_rewrite']),
                         'name' => $manufacturer['name'],
                         'desc' => $manufacturer['description'],
-                        'children' => array(),
-                    );
+                        'children' => [],
+                    ];
                 }
             }
         }
@@ -300,7 +300,7 @@ class ManufacturerCore extends ObjectModel
      *
      * @return string name
      */
-    protected static $cacheName = array();
+    protected static $cacheName = [];
 
     public static function getNameById($idManufacturer)
     {
@@ -383,7 +383,7 @@ class ManufacturerCore extends ObjectModel
         }
 
         $front = true;
-        if (!in_array($context->controller->controller_type, array('front', 'modulefront'))) {
+        if (!in_array($context->controller->controller_type, ['front', 'modulefront'])) {
             $front = false;
         }
 
@@ -513,7 +513,7 @@ class ManufacturerCore extends ObjectModel
     {
         $context = Context::getContext();
         $front = true;
-        if (!in_array($context->controller->controller_type, array('front', 'modulefront'))) {
+        if (!in_array($context->controller->controller_type, ['front', 'modulefront'])) {
             $front = false;
         }
 
@@ -599,7 +599,7 @@ class ManufacturerCore extends ObjectModel
      */
     public function setWsAddresses($idAddresses)
     {
-        $ids = array();
+        $ids = [];
 
         foreach ($idAddresses as $id) {
             $ids[] = (int) $id['id'];

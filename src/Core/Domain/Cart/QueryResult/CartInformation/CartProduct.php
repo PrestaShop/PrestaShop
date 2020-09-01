@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
@@ -40,11 +40,6 @@ class CartProduct
      * @var int
      */
     private $attributeId;
-
-    /**
-     * @var int
-     */
-    private $customizationId;
 
     /**
      * @var string
@@ -81,11 +76,20 @@ class CartProduct
     private $imageLink;
 
     /**
+     * @var Customization|null
+     */
+    private $customization;
+
+    /**
+     * @var bool
+     */
+    private $isGift;
+
+    /**
      * CartProduct constructor.
      *
      * @param int $productId
      * @param int $attributeId
-     * @param int $customizationId
      * @param string $name
      * @param string $attribute
      * @param string $reference
@@ -93,22 +97,24 @@ class CartProduct
      * @param int $quantity
      * @param string $price
      * @param string $imageLink
+     * @param Customization|null $customization
+     * @param bool $isGift
      */
     public function __construct(
         int $productId,
         int $attributeId,
-        int $customizationId,
         string $name,
         string $attribute,
         string $reference,
         string $unitPrice,
         int $quantity,
         string $price,
-        string $imageLink
+        string $imageLink,
+        ?Customization $customization,
+        bool $isGift = false
     ) {
         $this->productId = $productId;
         $this->attributeId = $attributeId;
-        $this->customizationId = $customizationId;
         $this->name = $name;
         $this->attribute = $attribute;
         $this->reference = $reference;
@@ -116,6 +122,8 @@ class CartProduct
         $this->quantity = $quantity;
         $this->price = $price;
         $this->imageLink = $imageLink;
+        $this->customization = $customization;
+        $this->isGift = $isGift;
     }
 
     /**
@@ -175,14 +183,6 @@ class CartProduct
     }
 
     /**
-     * @return int
-     */
-    public function getCustomizationId(): int
-    {
-        return $this->customizationId;
-    }
-
-    /**
      * @return string
      */
     public function getName(): string
@@ -196,5 +196,21 @@ class CartProduct
     public function getAttribute(): string
     {
         return $this->attribute;
+    }
+
+    /**
+     * @return Customization|null
+     */
+    public function getCustomization(): ?Customization
+    {
+        return $this->customization;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGift(): bool
+    {
+        return $this->isGift;
     }
 }

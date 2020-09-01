@@ -48,7 +48,7 @@
             <label for="{$option.id}">
               <span>{$option.call_to_action_text}</span>
               {if $option.logo}
-                <img src="{$option.logo}">
+                <img src="{$option.logo}" loading="lazy">
               {/if}
             </label>
 
@@ -127,7 +127,7 @@
 
   <div id="payment-confirmation">
     <div class="ps-shown-by-js">
-      <button type="submit" {if !$selected_payment_option} disabled {/if} class="btn btn-primary center-block">
+      <button type="submit" class="btn btn-primary center-block{if !$selected_payment_option} disabled{/if}">
         {l s='Place order' d='Shop.Theme.Checkout'}
       </button>
       {if $show_final_summary}

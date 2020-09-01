@@ -1,10 +1,11 @@
 {#**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,18 +16,18 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="card">
+<div class="card customer-addresses-card">
   <h3 class="card-header">
     <i class="material-icons">location_on</i>
     {{ 'Addresses'|trans({}, 'Admin.Global') }}
+    <span class="badge badge-primary rounded">{{ customerInformation.addressesInformation|length }}</span>
 
     <a href="{{ getAdminLink('AdminAddresses', true, {'id_customer': customerInformation.customerId.value, 'addaddress': 1}) }}"
        class="tooltip-link float-right"
@@ -44,6 +45,7 @@
       <table class="table">
         <thead>
           <tr>
+            <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
             <th>{{ 'Company'|trans({}, 'Admin.Global') }}</th>
             <th>{{ 'Name'|trans({}, 'Admin.Global') }}</th>
             <th>{{ 'Address'|trans({}, 'Admin.Global') }}</th>
@@ -54,14 +56,15 @@
         </thead>
         <tbody>
           {% for address in customerInformation.addressesInformation %}
-            {% set addressEditUrl = getAdminLink('AdminAddresses', true, {'id_address': address.addressId, 'addaddress': 1, 'back': app.request.uri}) %}
+            {% set addressEditUrl = getAdminLink('AdminAddresses', true, {'id_address': address.addressId, 'updateaddress': 1, 'back': app.request.uri}) %}
 
-            <tr>
-              <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.company }}</td>
-              <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.fullName }}</td>
-              <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.fullAddress }}</td>
-              <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.countryName }}</td>
-              <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">
+            <tr class="customer-address">
+              <td class="customer-address-id js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.addressId }}</td>
+              <td class="customer-address-company js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.company }}</td>
+              <td class="customer-address-name js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.fullName }}</td>
+              <td class="customer-address-address js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.fullAddress }}</td>
+              <td class="customer-address-country js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.countryName }}</td>
+              <td class="customer-address-phone-number js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">
                 {% if address.phone %}
                   {{ address.phone }}
                   {% if address.phoneMobile is not empty %}
@@ -73,7 +76,7 @@
                   --
                 {% endif %}
               </td>
-              <td class="text-right">
+              <td class="customer-address-actions text-right">
                 <div class="btn-group-action">
                   <div class="btn-group">
                     <a href="{{ addressEditUrl }}"
@@ -92,12 +95,15 @@
                     ></a>
 
                     <div class="dropdown-menu dropdown-menu-right">
-                      <a class="btn tooltip-link dropdown-item"
-                         href="{{ getAdminLink('AdminAddresses', true, {'id_address': address.addressId, 'deleteaddress': 1, 'back': app.request.uri}) }}"
+                      <button type="button"
+                              class="btn tooltip-link dropdown-item js-form-submit-btn"
+                              data-form-confirm-message="{{ 'Delete selected item?'|trans({}, 'Admin.Notifications.Warning') }}"
+                              data-form-submit-url="{{ path('admin_addresses_delete', {'addressId': address.addressId, 'redirectUrl': app.request.uri }) }}"
+                              data-method="DELETE"
                       >
                         <i class="material-icons">delete</i>
                         {{ 'Delete'|trans({}, 'Admin.Actions') }}
-                      </a>
+                      </button>
 
                       {{ renderhook('displayAdminCustomersAddressesItemAction', {'id_address': address.addressId}) }}
                     </div>

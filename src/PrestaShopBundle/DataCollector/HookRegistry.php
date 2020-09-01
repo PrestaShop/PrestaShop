@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\DataCollector;
@@ -48,10 +48,10 @@ final class HookRegistry
 
     public function __construct()
     {
-        $this->hooks = array(
-            self::HOOK_CALLED => array(),
-            self::HOOK_NOT_CALLED => array(),
-        );
+        $this->hooks = [
+            self::HOOK_CALLED => [],
+            self::HOOK_NOT_CALLED => [],
+        ];
     }
 
     /**
@@ -62,13 +62,13 @@ final class HookRegistry
      */
     public function selectHook($hookName, $hookArguments, $file, $line)
     {
-        $this->currentHook = array(
+        $this->currentHook = [
             'name' => $hookName,
             'args' => $hookArguments,
             'location' => "$file:$line",
             'status' => self::HOOK_NOT_CALLED,
-            'modules' => array(),
-        );
+            'modules' => [],
+        ];
     }
 
     /**
@@ -84,10 +84,10 @@ final class HookRegistry
      */
     public function hookedByModule(ModuleInterface $module)
     {
-        $this->currentHook['modules'][$module->name] = array(
-            'callback' => array(),
-            'widget' => array(),
-        );
+        $this->currentHook['modules'][$module->name] = [
+            'callback' => [],
+            'widget' => [],
+        ];
     }
 
     /**
@@ -98,9 +98,9 @@ final class HookRegistry
      */
     public function hookedByCallback(ModuleInterface $module, $args)
     {
-        $this->currentHook['modules'][$module->name]['callback'] = array(
+        $this->currentHook['modules'][$module->name]['callback'] = [
             'args' => $args,
-        );
+        ];
     }
 
     /**
@@ -111,9 +111,9 @@ final class HookRegistry
      */
     public function hookedByWidget(ModuleInterface $module, $args)
     {
-        $this->currentHook['modules'][$module->name]['widget'] = array(
+        $this->currentHook['modules'][$module->name]['widget'] = [
             'args' => $args,
-        );
+        ];
     }
 
     /**
@@ -150,12 +150,12 @@ final class HookRegistry
         $name = $this->currentHook['name'];
         $status = $this->currentHook['status'];
 
-        $hook = array(
+        $hook = [
             'args' => $this->currentHook['args'],
             'name' => $name,
             'location' => $this->currentHook['location'],
             'modules' => $this->currentHook['modules'],
-        );
+        ];
 
         $this->hooks[$status][$name][] = $hook;
     }

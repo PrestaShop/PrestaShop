@@ -7,7 +7,6 @@
   convertWarningsToExceptions = "true"
   processIsolation            = "true"
   stopOnFailure               = "false"
-  syntaxCheck                 = "true"
   bootstrap                   =" bootstrap-controllers.php"
 >
   <php>

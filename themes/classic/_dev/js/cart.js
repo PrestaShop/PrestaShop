@@ -13,8 +13,7 @@ let errorMsg = '';
 /**
  * Attach Bootstrap TouchSpin event handlers
  */
-function createSpin()
-{
+function createSpin() {
   $.each($(spinnerSelector), function (index, spinner) {
     $(spinner).TouchSpin({
       verticalbuttons: true,
@@ -23,13 +22,12 @@ function createSpin()
       buttondown_class: 'btn btn-touchspin js-touchspin js-increase-product-quantity',
       buttonup_class: 'btn btn-touchspin js-touchspin js-decrease-product-quantity',
       min: parseInt($(spinner).attr('min'), 10),
-      max: 1000000
+      max: 1000000,
     });
   });
 
   CheckUpdateQuantityOperations.switchErrorStat();
 }
-
 
 $(document).ready(() => {
   const productLineInCartSelector = '.js-cart-line-product-quantity';
@@ -88,8 +86,8 @@ $(document).ready(() => {
     if (!isTouchSpin(namespace)) {
       return {
         url: $target.attr('href'),
-        type: camelize($target.data('link-action'))
-      }
+        type: camelize($target.data('link-action')),
+      };
     }
 
     let $input = findCartLineProductQuantityInput($target);
@@ -101,13 +99,13 @@ $(document).ready(() => {
     if (shouldIncreaseProductQuantity(namespace)) {
       cartAction = {
         url: $input.data('up-url'),
-        type: 'increaseProductQuantity'
+        type: 'increaseProductQuantity',
       };
     } else {
       cartAction = {
         url: $input.data('down-url'),
-        type: 'decreaseProductQuantity'
-      }
+        type: 'decreaseProductQuantity',
+      };
     }
 
     return cartAction;
@@ -134,7 +132,7 @@ $(document).ready(() => {
     let cartAction = parseCartAction($target, event.namespace);
     let requestData = {
       ajax: '1',
-      action: 'update'
+      action: 'update',
     };
 
     if (typeof cartAction === 'undefined') {
@@ -149,30 +147,29 @@ $(document).ready(() => {
       dataType: 'json',
       beforeSend: function (jqXHR) {
         promises.push(jqXHR);
-      }
-    }).then(function (resp) {
-      CheckUpdateQuantityOperations.checkUpdateOpertation(resp);
-      var $quantityInput = getTouchSpinInput($target);
-      $quantityInput.val(resp.quantity);
+      },
+    })
+      .then(function (resp) {
+        CheckUpdateQuantityOperations.checkUpdateOpertation(resp);
+        var $quantityInput = getTouchSpinInput($target);
+        $quantityInput.val(resp.quantity);
 
-      // Refresh cart preview
-      prestashop.emit('updateCart', {
-        reason: dataset
+        // Refresh cart preview
+        prestashop.emit('updateCart', {
+          reason: dataset,
+          resp: resp,
+        });
+      })
+      .fail((resp) => {
+        prestashop.emit('handleError', {
+          eventType: 'updateProductInCart',
+          resp: resp,
+          cartAction: cartAction.type,
+        });
       });
-    }).fail((resp) => {
-      prestashop.emit('handleError', {
-        eventType: 'updateProductInCart',
-        resp: resp,
-        cartAction: cartAction.type
-      });
-    });
   };
 
-  $body.on(
-    'click',
-    '[data-link-action="delete-from-cart"], [data-link-action="remove-voucher"]',
-    handleCartAction
-  );
+  $body.on('click', '[data-link-action="delete-from-cart"], [data-link-action="remove-voucher"]', handleCartAction);
 
   $body.on('touchspin.on.startdownspin', spinnerSelector, handleCartAction);
   $body.on('touchspin.on.startupspin', spinnerSelector, handleCartAction);
@@ -187,26 +184,31 @@ $(document).ready(() => {
       dataType: 'json',
       beforeSend: function (jqXHR) {
         promises.push(jqXHR);
-      }
-    }).then(function (resp) {
-      CheckUpdateQuantityOperations.checkUpdateOpertation(resp);
-      $target.val(resp.quantity);
+      },
+    })
+      .then(function (resp) {
+        CheckUpdateQuantityOperations.checkUpdateOpertation(resp);
+        $target.val(resp.quantity);
 
-      var dataset;
-      if ($target && $target.dataset) {
-        dataset = $target.dataset;
-      } else {
-        dataset = resp;
-      }
+        var dataset;
+        if ($target && $target.dataset) {
+          dataset = $target.dataset;
+        } else {
+          dataset = resp;
+        }
 
-
-      // Refresh cart preview
-      prestashop.emit('updateCart', {
-        reason: dataset
+        // Refresh cart preview
+        prestashop.emit('updateCart', {
+          reason: dataset,
+          resp: resp,
+        });
+      })
+      .fail((resp) => {
+        prestashop.emit('handleError', {
+          eventType: 'updateProductQuantityInCart',
+          resp: resp,
+        });
       });
-    }).fail((resp) => {
-      prestashop.emit('handleError', {eventType: 'updateProductQuantityInCart', resp: resp})
-    });
   }
 
   function getRequestData(quantity) {
@@ -214,16 +216,15 @@ $(document).ready(() => {
       ajax: '1',
       qty: Math.abs(quantity),
       action: 'update',
-      op: getQuantityChangeType(quantity)
-    }
+      op: getQuantityChangeType(quantity),
+    };
   }
 
   function getQuantityChangeType($quantity) {
-    return ($quantity > 0) ? 'up' : 'down';
+    return $quantity > 0 ? 'up' : 'down';
   }
 
-  function updateProductQuantityInCart(event)
-  {
+  function updateProductQuantityInCart(event) {
     const $target = $(event.currentTarget);
     const updateQuantityInCartUrl = $target.data('update-url');
     const baseValue = $target.attr('value');
@@ -245,81 +246,64 @@ $(document).ready(() => {
     sendUpdateQuantityInCartRequest(updateQuantityInCartUrl, getRequestData(qty), $target);
   }
 
-  $body.on(
-    'focusout keyup',
-    productLineInCartSelector,
-    (event) => {
-      if (event.type === 'keyup') {
-        if (event.keyCode === 13) {
-          updateProductQuantityInCart(event);
-        }
-        return false;
+  $body.on('focusout keyup', productLineInCartSelector, (event) => {
+    if (event.type === 'keyup') {
+      if (event.keyCode === 13) {
+        updateProductQuantityInCart(event);
       }
-
-      updateProductQuantityInCart(event);
+      return false;
     }
-  );
+
+    updateProductQuantityInCart(event);
+  });
 
   const $timeoutEffect = 400;
 
-  $body.on(
-    'hidden.bs.collapse',
-    '#promo-code',
-    () => {
-      $('.display-promo').show($timeoutEffect);
-    }
-  );
+  $body.on('hidden.bs.collapse', '#promo-code', () => {
+    $('.display-promo').show($timeoutEffect);
+  });
 
-  $body.on(
-    'click',
-    '.promo-code-button',
-    (event) => {
-      event.preventDefault();
+  $body.on('click', '.promo-code-button', (event) => {
+    event.preventDefault();
 
-      $('#promo-code').collapse('toggle');
-    }
-  );
+    $('#promo-code').collapse('toggle');
+  });
 
-  $body.on(
-    'click',
-    '.display-promo',
-    (event) => {
-      $(event.currentTarget).hide($timeoutEffect);
-    }
-  );
+  $body.on('click', '.display-promo', (event) => {
+    $(event.currentTarget).hide($timeoutEffect);
+  });
 
-  $body.on(
-    'click',
-    '.js-discount .code',
-    (event) => {
-      event.stopPropagation();
+  $body.on('click', '.js-discount .code', (event) => {
+    event.stopPropagation();
 
-      const $code = $(event.currentTarget);
-      const $discountInput = $('[name=discount_name]');
+    const $code = $(event.currentTarget);
+    const $discountInput = $('[name=discount_name]');
 
-      $discountInput.val($code.text());
-      // Show promo code field
-      $('#promo-code').collapse('show');
-      $('.display-promo').hide($timeoutEffect);
+    $discountInput.val($code.text());
+    // Show promo code field
+    $('#promo-code').collapse('show');
+    $('.display-promo').hide($timeoutEffect);
 
-      return false;
-    }
-  )
+    return false;
+  });
 });
 
 const CheckUpdateQuantityOperations = {
-  'switchErrorStat': () => {
+  switchErrorStat: () => {
     /**
      * if errorMsg is not empty or if notifications are shown, we have error to display
      * if hasError is true, quantity was not updated : we don't disable checkout button
      */
     const $checkoutBtn = $('.checkout a');
-    if ($("#notifications article.alert-danger").length || ('' !== errorMsg && !hasError)) {
+    if ($('#notifications article.alert-danger').length || ('' !== errorMsg && !hasError)) {
       $checkoutBtn.addClass('disabled');
     }
 
     if ('' !== errorMsg) {
-      let strError = ' <article class="alert alert-danger" role="alert" data-alert="danger"><ul><li>' + errorMsg + '</li></ul></article>';
+      let strError =
+        ' <article class="alert alert-danger" role="alert" data-alert="danger"><ul><li>' +
+        errorMsg +
+        '</li></ul></article>';
       $('#notifications .container').html(strError);
       errorMsg = '';
       isUpdateOperation = false;
@@ -334,20 +318,20 @@ const CheckUpdateQuantityOperations = {
       $checkoutBtn.removeClass('disabled');
     }
   },
-  'checkUpdateOpertation': (resp) => {
+  checkUpdateOpertation: (resp) => {
     /**
      * resp.hasError can be not defined but resp.errors not empty: quantity is updated but order cannot be placed
      * when resp.hasError=true, quantity is not updated
      */
     hasError = resp.hasOwnProperty('hasError');
-    let errors = resp.errors || "";
+    let errors = resp.errors || '';
     // 1.7.2.x returns errors as string, 1.7.3.x returns array
     if (errors instanceof Array) {
-      errorMsg = errors.join(" ");
+      errorMsg = errors.join(' ');
     } else {
       errorMsg = errors;
     }
 
     isUpdateOperation = true;
-  }
+  },
 };

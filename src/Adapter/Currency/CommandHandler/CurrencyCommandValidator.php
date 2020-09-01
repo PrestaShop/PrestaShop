@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
@@ -29,13 +29,13 @@ namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 use Configuration;
 use Currency;
 use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
-use Shop;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\DefaultCurrencyInMultiShopException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidUnofficialCurrencyException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
+use Shop;
 
 /**
  * Validates that modifications managed via currency commands are valid and respect this domain
@@ -87,13 +87,7 @@ final class CurrencyCommandValidator
         $locale = $this->localeRepoCLDR->getLocale('en');
         $cldrCurrency = $locale->getCurrency($isoCode);
         if (null !== $cldrCurrency) {
-            throw new InvalidUnofficialCurrencyException(
-                sprintf(
-                    'Unofficial currency with iso code "%s" is invalid because it matches a currency from CLDR database',
-                    $isoCode
-                ),
-                $isoCode
-            );
+            throw new InvalidUnofficialCurrencyException(sprintf('Unofficial currency with iso code "%s" is invalid because it matches a currency from CLDR database', $isoCode), $isoCode);
         }
     }
 
@@ -109,13 +103,7 @@ final class CurrencyCommandValidator
         $currency = $this->currencyDataProvider->getCurrencyByIsoCode($isoCode);
 
         if (null !== $currency && !$currency->deleted) {
-            throw new CurrencyConstraintException(
-                sprintf(
-                    'Currency with iso code "%s" already exists and cannot be created',
-                    $isoCode
-                ),
-                CurrencyConstraintException::CURRENCY_ALREADY_EXISTS
-            );
+            throw new CurrencyConstraintException(sprintf('Currency with iso code "%s" already exists and cannot be created', $isoCode), CurrencyConstraintException::CURRENCY_ALREADY_EXISTS);
         }
     }
 
@@ -129,12 +117,7 @@ final class CurrencyCommandValidator
     public function assertDefaultCurrencyIsNotBeingDisabled(EditCurrencyCommand $command)
     {
         if (!$command->isEnabled() && $command->getCurrencyId()->getValue() === $this->defaultCurrencyId) {
-            throw new CannotDisableDefaultCurrencyException(
-                sprintf(
-                    'Currency with id "%s" is the default currency and cannot be disabled.',
-                    $command->getCurrencyId()->getValue()
-                )
-            );
+            throw new CannotDisableDefaultCurrencyException(sprintf('Currency with id "%s" is the default currency and cannot be disabled.', $command->getCurrencyId()->getValue()));
         }
     }
 
@@ -169,30 +152,12 @@ final class CurrencyCommandValidator
 
             if (!in_array($shopId, $shopIds)) {
                 $shop = new Shop($shopId);
-                throw new DefaultCurrencyInMultiShopException(
-                    $currency->getName(),
-                    $shop->name,
-                    sprintf(
-                        'Currency with id %s cannot be unassigned from shop with id %s because its the default currency.',
-                        $currency->id,
-                        $shopId
-                    ),
-                    DefaultCurrencyInMultiShopException::CANNOT_REMOVE_CURRENCY
-                );
+                throw new DefaultCurrencyInMultiShopException($currency->getName(), $shop->name, sprintf('Currency with id %s cannot be unassigned from shop with id %s because its the default currency.', $currency->id, $shopId), DefaultCurrencyInMultiShopException::CANNOT_REMOVE_CURRENCY);
             }
 
             if (!$command->isEnabled()) {
                 $shop = new Shop($shopId);
-                throw new DefaultCurrencyInMultiShopException(
-                    $currency->getName(),
-                    $shop->name,
-                    sprintf(
-                        'Currency with id %s cannot be disabled from shop with id %s because its the default currency.',
-                        $currency->id,
-                        $shopId
-                    ),
-                    DefaultCurrencyInMultiShopException::CANNOT_DISABLE_CURRENCY
-                );
+                throw new DefaultCurrencyInMultiShopException($currency->getName(), $shop->name, sprintf('Currency with id %s cannot be disabled from shop with id %s because its the default currency.', $currency->id, $shopId), DefaultCurrencyInMultiShopException::CANNOT_DISABLE_CURRENCY);
             }
         }
     }

@@ -1,10 +1,11 @@
 <!--**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,57 +16,76 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div v-if="isReady" id="app" class="translations-app">
+  <div
+    v-if="isReady"
+    id="app"
+    class="translations-app"
+  >
     <TranslationsHeader />
     <div class="container-fluid">
       <div class="row justify-content-between align-items-center">
         <Search @search="onSearch" />
         <div class="translations-summary">
           <span>{{ totalTranslations }}</span>
-          <span v-show="totalMissingTranslations"> - <span class="missing">{{ totalMissingTranslationsString }}</span></span>
+          <span v-show="totalMissingTranslations">
+            -
+            <span class="missing">{{ totalMissingTranslationsString }}</span>
+          </span>
         </div>
       </div>
 
       <div class="row">
-        <Sidebar :modal="this.$refs.transModal" :principal="this.$refs.principal"/>
-        <Principal :modal="this.$refs.transModal" ref="principal" />
+        <Sidebar
+          :modal="this.$refs.transModal"
+          :principal="this.$refs.principal"
+        />
+        <Principal
+          :modal="this.$refs.transModal"
+          ref="principal"
+        />
       </div>
     </div>
-    <PSModal ref="transModal" :translations="translations"/>
+    <PSModal
+      ref="transModal"
+      :translations="translations"
+    />
   </div>
 </template>
 
 <script>
-  import TranslationsHeader from './header/translations-header';
-  import Search from './header/search';
-  import Sidebar from './sidebar';
-  import Principal from './principal';
-  import PSModal from 'app/widgets/ps-modal';
-  import { EventBus } from 'app/utils/event-bus';
-
+  import TranslationsHeader from '@app/pages/translations/components/header/translations-header';
+  import Search from '@app/pages/translations/components/header/search';
+  import Sidebar from '@app/pages/translations/components/sidebar';
+  import Principal from '@app/pages/translations/components/principal';
+  import PSModal from '@app/widgets/ps-modal';
 
   export default {
-    name: 'app',
+    name: 'App',
     computed: {
       isReady() {
         return this.$store.getters.isReady;
       },
       totalTranslations() {
-        return (this.$store.state.totalTranslations <= 1) ? this.trans('label_total_domain_singular').replace('%nb_translation%', this.$store.state.totalTranslations) : this.trans('label_total_domain').replace('%nb_translations%', this.$store.state.totalTranslations);
+        return this.$store.state.totalTranslations <= 1
+          ? this.trans('label_total_domain_singular')
+            .replace('%nb_translation%', this.$store.state.totalTranslations)
+          : this.trans('label_total_domain')
+            .replace('%nb_translations%', this.$store.state.totalTranslations);
       },
       totalMissingTranslations() {
         return this.$store.state.totalMissingTranslations;
       },
       totalMissingTranslationsString() {
-        return this.totalMissingTranslations === 1 ? this.trans('label_missing_singular') : this.trans('label_missing').replace('%d', this.totalMissingTranslations);
+        return this.totalMissingTranslations === 1
+          ? this.trans('label_missing_singular')
+          : this.trans('label_missing').replace('%d', this.totalMissingTranslations);
       },
       translations() {
         return {
@@ -86,24 +106,29 @@
         if (!this.destHref && this.isEdited() && !this.leave) {
           return true;
         }
+
         if (!this.leave && this.isEdited()) {
           setTimeout(() => {
             window.stop();
           }, 500);
+
           this.$refs.transModal.showModal();
           this.$refs.transModal.$once('save', () => {
             this.$refs.principal.saveTranslations();
             this.leavePage();
           });
+
           this.$refs.transModal.$once('leave', () => {
             this.leavePage();
           });
           return null;
         }
+
+        return undefined;
       };
     },
     methods: {
-      onSearch(keywords) {
+      onSearch() {
         this.$store.dispatch('getDomainsTree', {
           store: this.$store,
         });
@@ -135,7 +160,8 @@
 </script>
 
 <style lang="scss" type="text/scss">
-  @import "../../../../../scss/config/_settings.scss";
+  @import '~@scss/config/_settings.scss';
+
   // hide the layout header
   #main-div > .header-toolbar {
     height: 0;

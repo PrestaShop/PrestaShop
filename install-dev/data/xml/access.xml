@@ -465,9 +465,17 @@
     <access id="access_1_474" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMODULESNOTIFICATIONS_READ"/>
     <access id="access_1_475" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMODULESNOTIFICATIONS_UPDATE"/>
     <access id="access_1_476" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMODULESNOTIFICATIONS_DELETE"/>
-    <access id="access_1_477" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMAILTHEME_CREATE"/>
-    <access id="access_1_478" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMAILTHEME_READ"/>
-    <access id="access_1_479" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMAILTHEME_UPDATE"/>
-    <access id="access_1_480" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMAILTHEME_DELETE"/>
+    <access id="access_1_477" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTMAILTHEME_CREATE"/>
+    <access id="access_1_478" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTMAILTHEME_READ"/>
+    <access id="access_1_479" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTMAILTHEME_UPDATE"/>
+    <access id="access_1_480" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTMAILTHEME_DELETE"/>
+    <access id="access_1_481" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMAILTHEME_CREATE"/>
+    <access id="access_1_482" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMAILTHEME_READ"/>
+    <access id="access_1_483" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMAILTHEME_UPDATE"/>
+    <access id="access_1_484" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMAILTHEME_DELETE"/>
+    <access id="access_1_485" id_profile="SuperAdmin" id_authorization_role="TAB_DEFAULT_CREATE"/>
+    <access id="access_1_486" id_profile="SuperAdmin" id_authorization_role="TAB_DEFAULT_READ"/>
+    <access id="access_1_487" id_profile="SuperAdmin" id_authorization_role="TAB_DEFAULT_UPDATE"/>
+    <access id="access_1_488" id_profile="SuperAdmin" id_authorization_role="TAB_DEFAULT_DELETE"/>
   </entities>
 </entity_access>

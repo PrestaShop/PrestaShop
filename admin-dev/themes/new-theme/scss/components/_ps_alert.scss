@@ -1,8 +1,8 @@
 .ps-alert {
   .close {
     position: absolute;
-    right: 0.625rem;
-    top: 0.9375rem;
+    top: .9375rem;
+    right: .625rem;
     opacity: 1;
     .material-icons {
       font-size: 1.5rem;
@@ -10,7 +10,7 @@
         color: $primary;
       }
       .alert-warning & {
-        color: $warning
+        color: $warning;
       }
       .alert-danger & {
         color: $danger;
@@ -18,10 +18,10 @@
     }
   }
   .alert {
-    border-radius: 0;
-    border-width: 0.125rem;
     padding: 0;
     margin: 0;
+    border-width: .125rem;
+    @include border-radius(0);
     &.alert-info {
       background: $notice;
     }
@@ -32,9 +32,9 @@
       background: $danger-hover;
     }
     .alert-text {
-      padding: 0.9375rem 0 0.9375rem 0.9375rem;
+      padding: .9375rem 0 .9375rem .9375rem;
       margin-left: 3.438rem;
-      background: white;
+      background: #fff;
     }
   }
 }

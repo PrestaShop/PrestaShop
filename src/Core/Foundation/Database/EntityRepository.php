@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Foundation\Database;
@@ -67,7 +67,7 @@ class EntityRepository
         if (!$by) {
             $where = $arguments[0];
         } else {
-            $where = array();
+            $where = [];
             $by = $this->convertToDbFieldName($by);
             $where[$by] = $arguments[0];
         }
@@ -100,19 +100,9 @@ class EntityRepository
         $primary = $this->entityMetaData->getPrimaryKeyFieldnames();
 
         if (count($primary) === 0) {
-            throw new Exception(
-                sprintf(
-                    'No primary key defined in entity `%s`.',
-                    $this->entityMetaData->getEntityClassName()
-                )
-            );
+            throw new Exception(sprintf('No primary key defined in entity `%s`.', $this->entityMetaData->getEntityClassName()));
         } elseif (count($primary) > 1) {
-            throw new Exception(
-                sprintf(
-                    'Entity `%s` has a composite primary key, which is not supported by entity repositories.',
-                    $this->entityMetaData->getEntityClassName()
-                )
-            );
+            throw new Exception(sprintf('Entity `%s` has a composite primary key, which is not supported by entity repositories.', $this->entityMetaData->getEntityClassName()));
         }
 
         return $primary[0];
@@ -176,7 +166,7 @@ class EntityRepository
 
     protected function hydrateMany(array $rows)
     {
-        $entities = array();
+        $entities = [];
         foreach ($rows as $row) {
             $entity = $this->getNewEntity();
             $entity->hydrate($row);
@@ -222,7 +212,7 @@ class EntityRepository
      */
     public function findOne($id)
     {
-        $conditions = array();
+        $conditions = [];
         $conditions[$this->getIdFieldName()] = $id;
 
         return $this->doFind(true, $conditions);

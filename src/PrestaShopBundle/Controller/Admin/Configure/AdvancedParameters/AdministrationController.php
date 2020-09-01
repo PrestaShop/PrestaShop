@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,20 +17,19 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,13 +46,13 @@ class AdministrationController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
-     * @param FormInterface $form
-     *
      * @return Response
      */
-    public function indexAction(FormInterface $form = null)
+    public function indexAction()
     {
-        $form = null === $form ? $this->get('prestashop.adapter.administration.form_handler')->getForm() : $form;
+        $generalForm = $this->getGeneralFormHandler()->getForm();
+        $uploadQuotaForm = $this->getUploadQuotaFormHandler()->getForm();
+        $notificationsForm = $this->getNotificationsFormHandler()->getForm();
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/administration.html.twig', [
             'layoutHeaderToolbarBtn' => [],
@@ -63,12 +63,14 @@ class AdministrationController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink('AdminAdminPreferences'),
             'requireFilterStatus' => false,
-            'form' => $form->createView(),
+            'generalForm' => $generalForm->createView(),
+            'uploadQuotaForm' => $uploadQuotaForm->createView(),
+            'notificationsForm' => $notificationsForm->createView(),
         ]);
     }
 
     /**
-     * Process the Administration configuration form.
+     * Process the Administration general configuration form.
      *
      * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_administration")
      * @DemoRestricted(redirectRoute="admin_administration")
@@ -77,27 +79,109 @@ class AdministrationController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function processFormAction(Request $request)
+    public function processGeneralFormAction(Request $request)
     {
-        $this->dispatchHook('actionAdminAdminPreferencesControllerPostProcessBefore', array('controller' => $this));
+        return $this->processForm(
+            $request,
+            $this->getGeneralFormHandler(),
+            'General'
+        );
+    }
 
-        $form = $this->get('prestashop.adapter.administration.form_handler')->getForm();
+    /**
+     * Process the Administration upload quota configuration form.
+     *
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_administration")
+     * @DemoRestricted(redirectRoute="admin_administration")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processUploadQuotaFormAction(Request $request)
+    {
+        return $this->processForm(
+            $request,
+            $this->getUploadQuotaFormHandler(),
+            'UploadQuota'
+        );
+    }
+
+    /**
+     * Process the Administration notifications configuration form.
+     *
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_administration")
+     * @DemoRestricted(redirectRoute="admin_administration")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processNotificationsFormAction(Request $request)
+    {
+        return $this->processForm(
+            $request,
+            $this->getNotificationsFormHandler(),
+            'Notifications'
+        );
+    }
+
+    /**
+     * Process the Administration configuration form.
+     *
+     * @param Request $request
+     * @param FormHandlerInterface $formHandler
+     * @param string $hookName
+     *
+     * @return RedirectResponse
+     */
+    protected function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName)
+    {
+        $this->dispatchHook(
+            'actionAdminAdministrationControllerPostProcess' . $hookName . 'Before',
+            ['controller' => $this]
+        );
+
+        $this->dispatchHook('actionAdminAdministrationControllerPostProcessBefore', ['controller' => $this]);
+
+        $form = $formHandler->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
             $data = $form->getData();
-
-            $saveErrors = $this->get('prestashop.adapter.administration.form_handler')->save($data);
+            $saveErrors = $formHandler->save($data);
 
             if (0 === count($saveErrors)) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
-
-                return $this->redirectToRoute('admin_administration');
+            } else {
+                $this->flashErrors($saveErrors);
             }
-
-            $this->flashErrors($saveErrors);
         }
 
         return $this->redirectToRoute('admin_administration');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    protected function getGeneralFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.adapter.administration.general.form_handler');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    protected function getUploadQuotaFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.adapter.administration.upload_quota.form_handler');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    protected function getNotificationsFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.adapter.administration.notifications.form_handler');
     }
 }

@@ -7,27 +7,27 @@
   }
 
   .btn-tertiary {
-    border-radius: 2px;
-    background-color: #6c868e;
-    font-weight: 600;
     font-style: normal;
+    font-weight: 600;
     font-stretch: normal;
     line-height: normal;
-    letter-spacing: -0.2px;
+    color: #fff;
     text-align: center;
-    color: #ffffff;
+    letter-spacing: -.2px;
+    background-color: #6c868e;
+    @include border-radius(2px);
   }
 
   .btn-tertiary-outline {
-    font-weight: 600;
     font-style: normal;
+    font-weight: 600;
     font-stretch: normal;
     line-height: normal;
-    letter-spacing: -0.2px;
-    text-align: center;
     color: #363a41;
-    border: 1px solid #6C858C;
+    text-align: center;
+    letter-spacing: -.2px;
     background-color: transparent;
+    border: 1px solid #6c858c;
   }
 
   .btn-tertiary:hover {
@@ -36,38 +36,38 @@
 
   .layout-configuration {
     .inner-content {
-      padding: 0.9375rem;
+      padding: .9375rem;
       background-color: #f8f8f8;
-      border-radius: 0.25rem;
+      @include border-radius(.25rem);
 
       .title {
         font-size: 14px;
-        font-weight: 600;
         font-style: normal;
+        font-weight: 600;
         font-stretch: normal;
         line-height: normal;
-        letter-spacing: normal;
         color: #4a4a4a;
+        letter-spacing: normal;
       }
 
       .description {
         font-size: 12px;
-        font-weight: normal;
         font-style: normal;
+        font-weight: 400;
         font-stretch: normal;
         line-height: 1.33;
-        letter-spacing: normal;
         color: #6c868e;
+        letter-spacing: normal;
       }
     }
 
     .layout-logo {
-      vertical-align: text-bottom;
       padding-right: 1rem;
+      vertical-align: text-bottom;
     }
 
     .choose-layouts-button {
-      margin-right: 0.9375rem;
+      margin-right: .9375rem;
     }
   }
 }

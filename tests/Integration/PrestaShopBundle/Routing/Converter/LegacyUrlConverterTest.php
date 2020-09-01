@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Integration\PrestaShopBundle\Routing\Converter;
@@ -51,7 +51,7 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
     {
         return [
             'admin_administration' => ['/configure/advanced/administration/', 'AdminAdminPreferences'],
-            'admin_administration_save' => ['/configure/advanced/administration/', 'AdminAdminPreferences', 'update'],
+            'admin_administration_general_save' => ['/configure/advanced/administration/general', 'AdminAdminPreferences', 'update'],
 
             'admin_backups' => ['/configure/advanced/backups/', 'AdminBackup'],
             'admin_backups_save_options' => ['/configure/advanced/backups/', 'AdminBackup', 'update'],
@@ -117,13 +117,13 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             'admin_maintenance_save' => ['/configure/shop/maintenance/', 'AdminMaintenance', 'update'],
 
             'admin_order_preferences' => ['/configure/shop/order-preferences/', 'AdminOrderPreferences'],
-            'admin_order_preferences_save' => ['/configure/shop/order-preferences/', 'AdminOrderPreferences', 'update'],
+            'admin_order_preferences_general_save' => ['/configure/shop/order-preferences/general', 'AdminOrderPreferences', 'update'],
 
             'admin_product_preferences' => ['/configure/shop/product-preferences/', 'AdminPPreferences'],
-            'admin_product_preferences_process' => ['/configure/shop/product-preferences/', 'AdminPPreferences', 'update'],
+            'admin_product_preferences_general_save' => ['/configure/shop/product-preferences/general', 'AdminPPreferences', 'update'],
 
             'admin_performance' => ['/configure/advanced/performance/', 'AdminPerformance'],
-            'admin_performance_save' => ['/configure/advanced/performance/', 'AdminPerformance', 'update'],
+            'admin_performance_smarty_save' => ['/configure/advanced/performance/smarty', 'AdminPerformance', 'update'],
             'admin_clear_cache' => ['/configure/advanced/performance/clear-cache', 'AdminPerformance', 'empty_smarty_cache'],
             'admin_servers_add' => ['/configure/advanced/performance/memcache/servers', 'AdminPerformance', 'submitAddServer'],
             'admin_servers_delete' => ['/configure/advanced/performance/memcache/servers', 'AdminPerformance', 'deleteMemcachedServer'],
@@ -132,7 +132,7 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             'admin_preferences_save' => ['/configure/shop/preferences/preferences', 'AdminPreferences', 'update'],
 
             'admin_shipping_preferences' => ['/improve/shipping/preferences', 'AdminShipping'],
-            'admin_shipping_preferences_save' => ['/improve/shipping/preferences', 'AdminShipping', 'update'],
+            'admin_shipping_preferences_handling_save' => ['/improve/shipping/preferences/handling', 'AdminShipping', 'update'],
 
             'admin_stock_overview' => ['/sell/stocks/', 'AdminStockManagement'],
 
@@ -143,11 +143,11 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             'admin_payment_methods' => ['/improve/payment/payment_methods', 'AdminPayment'],
 
             'admin_localization_index' => ['/improve/international/localization/', 'AdminLocalization'],
-            'admin_localization_save_options' => ['/improve/international/localization/options', 'AdminLocalization', 'update'],
+            'admin_localization_configuration_save' => ['/improve/international/localization/configuration', 'AdminLocalization', 'update'],
             'admin_localization_import_pack' => ['/improve/international/localization/import-pack', 'AdminLocalization', 'submitLocalizationPack'],
 
             'admin_geolocation_index' => ['/improve/international/geolocation/', 'AdminGeolocation'],
-            'admin_geolocation_save_options' => ['/improve/international/geolocation/process_form', 'AdminGeolocation', 'update'],
+            'admin_geolocation_by_ip_address_save' => ['/improve/international/geolocation/by-ip-address', 'AdminGeolocation', 'update'],
 
             'admin_payment_preferences' => ['/improve/payment/preferences', 'AdminPaymentPreferences'],
             'admin_payment_preferences_process' => ['/improve/payment/preferences', 'AdminPaymentPreferences', 'update'],
@@ -170,59 +170,59 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             'admin_metas_edit' => ['/configure/shop/seo-urls/1000/edit', 'AdminMeta', 'updatemeta', ['id_meta' => 1000]],
             'admin_metas_delete' => ['/configure/shop/seo-urls/1000/delete', 'AdminMeta', 'deletemeta', ['id_meta' => 1000]],
             'admin_metas_delete_bulk' => ['/configure/shop/seo-urls/delete', 'AdminMeta', 'submitBulkdeletemeta'],
-            'admin_metas_save_options' => ['/configure/shop/seo-urls/options', 'AdminMeta', 'submitOptionsmeta'],
+            'admin_metas_set_up_urls_save' => ['/configure/shop/seo-urls/set-up-urls', 'AdminMeta', 'submitOptionsmeta'],
             'admin_metas_generate_robots_text_file' => ['/configure/shop/seo-urls/generate/robots', 'AdminMeta', 'submitRobots'],
 
             //'admin_module_configure_action' => ['/improve/modules/manage/action/configure/ps_linklist', 'AdminModules', 'configure', ['module_name' => 'ps_linklist']],
             //'admin_module_configure_action_legacy' => ['/improve/modules/manage/action/configure/ps_linklist', 'AdminModules', 'configure', ['configure' => 'ps_linklist']],
 
-            /*'admin_sql_request' => ['/configure/advanced/request-sql/', 'AdminRequestSql'],
-            'admin_sql_request_search' => ['/configure/advanced/request-sql/', 'AdminRequestSql', 'search'],
-            'admin_sql_request_process' => ['/configure/advanced/request-sql/settings', 'AdminRequestSql', 'update'],
-            'admin_sql_request_create' => ['/configure/advanced/request-sql/new', 'AdminRequestSql', 'addrequest_sql'],
-            'admin_sql_request_edit' => ['/configure/advanced/request-sql/edit/42', 'AdminRequestSql', 'updaterequest_sql', ['id_request_sql' => 42]],
-            'admin_sql_request_delete' => ['/configure/advanced/request-sql/delete/42', 'AdminRequestSql', 'deleterequest_sql', ['id_request_sql' => 42]],
-            'admin_sql_request_delete_bulk' => ['/configure/advanced/request-sql/delete/bulk', 'AdminRequestSql', 'submitBulkdeleterequest_sql'],
-            'admin_sql_request_table_columns' => ['/configure/advanced/request-sql/tables/plop/columns', 'AdminRequestSql', 'ajax', ['table' => 'plop']],
-            'admin_sql_request_view' => ['/configure/advanced/request-sql/view/42', 'AdminRequestSql', 'viewsql_request', ['id_request_sql' => 42]],
-            'admin_sql_request_export' => ['/configure/advanced/request-sql/export/42', 'AdminRequestSql', 'exportsql_request', ['id_request_sql' => 42]],*/
+            'admin_sql_request' => ['/configure/advanced/sql-requests/', 'AdminRequestSql'],
+            'admin_sql_request_search' => ['/configure/advanced/sql-requests/', 'AdminRequestSql', 'search'],
+            'admin_sql_request_process' => ['/configure/advanced/sql-requests/process-settings', 'AdminRequestSql', 'update'],
+            'admin_sql_request_create' => ['/configure/advanced/sql-requests/new', 'AdminRequestSql', 'addrequest_sql'],
+            'admin_sql_request_edit' => ['/configure/advanced/sql-requests/42/edit', 'AdminRequestSql', 'updaterequest_sql', ['id_request_sql' => 42]],
+            'admin_sql_request_delete' => ['/configure/advanced/sql-requests/42/delete', 'AdminRequestSql', 'deleterequest_sql', ['id_request_sql' => 42]],
+            'admin_sql_request_delete_bulk' => ['/configure/advanced/sql-requests/delete-bulk', 'AdminRequestSql', 'submitBulkdeleterequest_sql'],
+            'admin_sql_request_table_columns' => ['/configure/advanced/sql-requests/tables/plop/columns', 'AdminRequestSql', 'ajax', ['table' => 'plop']],
+            'admin_sql_request_view' => ['/configure/advanced/sql-requests/42/view', 'AdminRequestSql', 'viewsql_request', ['id_request_sql' => 42]],
+            'admin_sql_request_export' => ['/configure/advanced/sql-requests/42/export', 'AdminRequestSql', 'exportsql_request', ['id_request_sql' => 42]],
 
-            /*'admin_webservice' => ['/configure/advanced/webservice/', 'AdminWebservice'],
-            'admin_webservice_search' => ['/configure/advanced/webservice/', 'AdminWebservice', 'search'],
-            'admin_webservice_settings_save' => ['/configure/advanced/webservice/settings', 'AdminWebservice', 'update'],
-            'admin_webservice_list_create' => ['/configure/advanced/webservice/create', 'AdminWebservice', 'addwebservice_account'],
-            'admin_webservice_list_edit' => ['/configure/advanced/webservice/settings', 'AdminWebservice', 'update'],
-            'admin_delete_single_webservice_log' => ['/configure/advanced/webservice/delete/42', 'AdminWebservice', 'deletewebservice_account', ['id_webservice_account' => 42]],
-            'admin_delete_multiple_webservice_log' => ['/configure/advanced/webservice/delete', 'AdminWebservice', 'submitBulkdeletewebservice_account'],
-            'admin_webservice_status_toggle' => ['/configure/advanced/webservice/status/42', 'AdminWebservice', 'status', ['id_webservice_account' => 42]],
-            'admin_webservice_bulk_enable' => ['/configure/advanced/webservice/status/bulk/enable', 'AdminWebservice', 'submitBulkenableSelectionwebservice_account'],
-            'admin_webservice_bulk_disable' => ['/configure/advanced/webservice/status/bulk/disable', 'AdminWebservice', 'submitBulkdisableSelectionwebservice_account'],*/
+            'admin_webservice_keys_index' => ['/configure/advanced/webservice-keys/', 'AdminWebservice'],
+            'admin_webservice_keys_search' => ['/configure/advanced/webservice-keys/', 'AdminWebservice', 'submitFilterwebservice_account'],
+            'admin_webservice_save_settings' => ['/configure/advanced/webservice-keys/settings', 'AdminWebservice', 'submitOptionswebservice_account'],
+            'admin_webservice_keys_create' => ['/configure/advanced/webservice-keys/new', 'AdminWebservice', 'addwebservice_account'],
+            'admin_webservice_keys_edit' => ['/configure/advanced/webservice-keys/42/edit', 'AdminWebservice', 'updatewebservice_account', ['id_webservice_account' => 42]],
+            'admin_webservice_keys_delete' => ['/configure/advanced/webservice-keys/42/delete', 'AdminWebservice', 'deletewebservice_account', ['id_webservice_account' => 42]],
+            'admin_webservice_keys_bulk_delete' => ['/configure/advanced/webservice-keys/bulk-delete', 'AdminWebservice', 'submitBulkdeletewebservice_account'],
+            'admin_webservice_keys_toggle_status' => ['/configure/advanced/webservice-keys/42/toggle-status', 'AdminWebservice', 'statuswebservice_account', ['id_webservice_account' => 42]],
+            'admin_webservice_keys_bulk_enable' => ['/configure/advanced/webservice-keys/bulk-enable', 'AdminWebservice', 'submitBulkenableSelectionwebservice_account'],
+            'admin_webservice_keys_bulk_disable' => ['/configure/advanced/webservice-keys/bulk-disable', 'AdminWebservice', 'submitBulkdisableSelectionwebservice_account'],
 
             'admin_profiles_index' => ['/configure/advanced/profiles/', 'AdminProfiles'],
             'admin_profiles_search' => ['/configure/advanced/profiles/', 'AdminProfiles', 'submitFilterprofile'],
             'admin_profiles_create' => ['/configure/advanced/profiles/new', 'AdminProfiles', 'addprofile'],
-            'admin_profiles_edit' => ['/configure/advanced/profiles/1000/edit', 'AdminProfiles', 'updateprofile', ['id_profile' => 1000]],
+            'admin_profiles_edit' => ['/configure/advanced/profiles/42/edit', 'AdminProfiles', 'updateprofile', ['id_profile' => 42]],
             'admin_profiles_bulk_delete' => ['/configure/advanced/profiles/delete/bulk', 'AdminProfiles', 'submitBulkdeleteprofile'],
             'admin_profiles_delete' => ['/configure/advanced/profiles/12/delete', 'AdminProfiles', 'deleteprofile', ['id_profile' => 12]],
 
             'admin_currencies_index' => ['/improve/international/currencies/', 'AdminCurrencies'],
             'admin_currencies_search' => ['/improve/international/currencies/', 'AdminCurrencies', 'submitFiltercurrency'],
             'admin_currencies_create' => ['/improve/international/currencies/new', 'AdminCurrencies', 'addcurrency'],
-            'admin_currencies_edit' => ['/improve/international/currencies/1000/edit', 'AdminCurrencies', 'updatecurrency', ['id_currency' => 1000]],
-            'admin_currencies_delete' => ['/improve/international/currencies/1000/delete', 'AdminCurrencies', 'deletecurrency', ['id_currency' => 1000]],
-            'admin_currencies_toggle_status' => ['/improve/international/currencies/1000/toggle-status', 'AdminCurrencies', 'statuscurrency', ['id_currency' => 1000]],
+            'admin_currencies_edit' => ['/improve/international/currencies/42/edit', 'AdminCurrencies', 'updatecurrency', ['id_currency' => 42]],
+            'admin_currencies_delete' => ['/improve/international/currencies/42/delete', 'AdminCurrencies', 'deletecurrency', ['id_currency' => 42]],
+            'admin_currencies_toggle_status' => ['/improve/international/currencies/42/toggle-status', 'AdminCurrencies', 'statuscurrency', ['id_currency' => 42]],
             'admin_currencies_refresh_exchange_rates' => ['/improve/international/currencies/refresh-exchange-rates', 'AdminCurrencies', 'SubmitExchangesRates'],
 
             'admin_employees_index' => ['/configure/advanced/employees/', 'AdminEmployees'],
             'admin_employees_search' => ['/configure/advanced/employees/', 'AdminEmployees', 'submitFilteremployee'],
             'admin_employees_save_options' => ['/configure/advanced/employees/save-options', 'AdminEmployees', 'submitOptionsemployee'],
-            'admin_employees_toggle_status' => ['/configure/advanced/employees/1000/toggle-status', 'AdminEmployees', 'statusemployee', ['id_employee' => 1000]],
+            'admin_employees_toggle_status' => ['/configure/advanced/employees/42/toggle-status', 'AdminEmployees', 'statusemployee', ['id_employee' => 42]],
             'admin_employees_bulk_enable_status' => ['/configure/advanced/employees/bulk-enable-status', 'AdminEmployees', 'submitBulkenableSelectionemployee'],
             'admin_employees_bulk_disable_status' => ['/configure/advanced/employees/bulk-disable-status', 'AdminEmployees', 'submitBulkdisableSelectionemployee'],
-            'admin_employees_delete' => ['/configure/advanced/employees/1000/delete', 'AdminEmployees', 'deleteemployee', ['id_employee' => 1000]],
+            'admin_employees_delete' => ['/configure/advanced/employees/42/delete', 'AdminEmployees', 'deleteemployee', ['id_employee' => 42]],
             'admin_employees_bulk_delete' => ['/configure/advanced/employees/bulk-delete', 'AdminEmployees', 'submitBulkdeleteemployee'],
             'admin_employees_create' => ['/configure/advanced/employees/new', 'AdminEmployees', 'addemployee'],
-            'admin_employees_edit' => ['/configure/advanced/employees/1000/edit', 'AdminEmployees', 'updateemployee', ['id_employee' => 1000]],
+            'admin_employees_edit' => ['/configure/advanced/employees/42/edit', 'AdminEmployees', 'updateemployee', ['id_employee' => 42]],
 
             'admin_international_translations_export_theme' => ['/improve/international/translations/export', 'AdminTranslations', 'submitExport'],
             'admin_international_translations_add_update_language' => ['/improve/international/translations/add-update-language', 'AdminTranslations', 'submitAddLanguage'],
@@ -237,6 +237,14 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             'admin_themes_adapt_to_rtl_languages' => ['/improve/design/themes/adapt-to-rtl-languages', 'AdminThemes', 'submitGenerateRTL'],
             'admin_theme_customize_layouts' => ['/improve/design/themes/customize-layouts', 'AdminThemes', 'submitConfigureLayouts'],
             'admin_themes_reset_layouts' => ['/improve/design/themes/prestashop_theme/reset-layouts', 'AdminThemes', 'resetToDefaults', ['theme_name' => 'prestashop_theme']],
+
+            'admin_attachments_index' => ['/sell/attachments/', 'AdminAttachments'],
+            'admin_attachments_filter' => ['/sell/attachments/', 'AdminAttachments', 'submitFilterattachment'],
+            'admin_attachments_create' => ['/sell/attachments/new', 'AdminAttachments', 'addattachment'],
+            'admin_attachments_edit' => ['/sell/attachments/42/edit', 'AdminAttachments', 'updateattachment', ['id_attachment' => 42]],
+            'admin_attachments_view' => ['/sell/attachments/42/view', 'AdminAttachments', 'viewattachment', ['id_attachment' => 42]],
+            'admin_attachments_delete_bulk' => ['/sell/attachments/delete-bulk', 'AdminAttachments', 'submitBulkdeleteattachment'],
+            'admin_attachments_delete' => ['/sell/attachments/42/delete', 'AdminAttachments', 'deleteattachment', ['id_attachment' => 42]],
         ];
     }
 

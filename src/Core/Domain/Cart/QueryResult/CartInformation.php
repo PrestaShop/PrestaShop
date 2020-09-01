@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult;
@@ -30,10 +30,13 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartAddre
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartProduct;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartRule;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartShipping;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartSummary;
 
+/**
+ * Holds cart information data
+ */
 class CartInformation
 {
-    //@todo: implement DTO's instead of arrays
     /**
      * @var int
      */
@@ -70,7 +73,7 @@ class CartInformation
     private $shipping;
 
     /**
-     * @var array
+     * @var CartSummary
      */
     private $summary;
 
@@ -81,8 +84,8 @@ class CartInformation
      * @param int $langId
      * @param CartRule[] $cartRules
      * @param CartAddress[] $addresses
+     * @param CartSummary $summary
      * @param CartShipping $shipping
-     * @param array $summary
      */
     public function __construct(
         int $cartId,
@@ -91,8 +94,8 @@ class CartInformation
         int $langId,
         array $cartRules,
         array $addresses,
-        CartShipping $shipping = null,
-        array $summary = null
+        CartSummary $summary,
+        CartShipping $shipping = null
     ) {
         $this->cartId = $cartId;
         $this->products = $products;
@@ -161,9 +164,9 @@ class CartInformation
     }
 
     /**
-     * @return array
+     * @return CartSummary
      */
-    public function getSummary(): array
+    public function getSummary(): CartSummary
     {
         return $this->summary;
     }

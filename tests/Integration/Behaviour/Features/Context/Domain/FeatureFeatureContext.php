@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
@@ -62,14 +62,7 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
         $productFeature = SharedStorage::getStorage()->get($reference);
 
         if ($productFeature->name[$defaultLanguageId] !== $name) {
-            throw new RuntimeException(
-                sprintf(
-                    'Feature "%s" name was expected to be "%s" but is "%s"',
-                    $reference,
-                    $name,
-                    $productFeature->name[$defaultLanguageId]
-                )
-            );
+            throw new RuntimeException(sprintf('Feature "%s" name was expected to be "%s" but is "%s"', $reference, $name, $productFeature->name[$defaultLanguageId]));
         }
     }
 
@@ -99,7 +92,7 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
 
             $this->getCommandBus()->handle($editFeatureCommand);
         } catch (Exception $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -115,12 +108,7 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
         $featureNames = $editableFeature->getName();
 
         if ($featureNames[$defaultLanguageId] !== $featureName) {
-            throw new RuntimeException(sprintf(
-                'Product feature with id "%s" has name "%s", but "%s" was expected',
-                $featureId,
-                $featureNames[$defaultLanguageId],
-                $featureName
-            ));
+            throw new RuntimeException(sprintf('Product feature with id "%s" has name "%s", but "%s" was expected', $featureId, $featureNames[$defaultLanguageId], $featureName));
         }
     }
 
@@ -140,7 +128,7 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
         try {
             $this->createProductFeature('');
         } catch (Exception $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 

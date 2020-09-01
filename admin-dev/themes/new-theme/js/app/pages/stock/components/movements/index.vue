@@ -1,10 +1,11 @@
 <!--**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
   <section class="stock-movements">
@@ -28,61 +28,85 @@
       <thead>
         <tr>
           <th width="30%">
-            <PSSort order="product" @sort="sort" :current-sort="currentSort">
-              {{trans('title_product')}}
+            <PSSort
+              order="product"
+              @sort="sort"
+              :current-sort="currentSort"
+            >
+              {{ trans('title_product') }}
             </PSSort>
           </th>
           <th>
-            <PSSort order="reference" @sort="sort" :current-sort="currentSort">
-              {{trans('title_reference')}}
+            <PSSort
+              order="reference"
+              @sort="sort"
+              :current-sort="currentSort"
+            >
+              {{ trans('title_reference') }}
             </PSSort>
           </th>
           <th>
-            {{trans('title_movements_type')}}
+            {{ trans('title_movements_type') }}
           </th>
           <th class="text-center">
-            {{trans('title_quantity')}}
+            {{ trans('title_quantity') }}
           </th>
           <th class="text-center">
-            <PSSort order="date_add" @sort="sort" :current-sort="currentSort">
-              {{trans('title_date')}}
+            <PSSort
+              order="date_add"
+              @sort="sort"
+              :current-sort="currentSort"
+            >
+              {{ trans('title_date') }}
             </PSSort>
           </th>
           <th>
-            {{trans('title_employee')}}
+            {{ trans('title_employee') }}
           </th>
         </tr>
       </thead>
       <tbody>
         <tr v-if="this.isLoading">
           <td colspan="6">
-            <PSLoader v-for="(n, index) in 3" class="mt-1" :key="index">
-              <div class="background-masker header-top"></div>
-              <div class="background-masker header-left"></div>
-              <div class="background-masker header-bottom"></div>
-              <div class="background-masker subheader-left"></div>
-              <div class="background-masker subheader-bottom"></div>
+            <PSLoader
+              v-for="(n, index) in 3"
+              class="mt-1"
+              :key="index"
+            >
+              <div class="background-masker header-top" />
+              <div class="background-masker header-left" />
+              <div class="background-masker header-bottom" />
+              <div class="background-masker subheader-left" />
+              <div class="background-masker subheader-bottom" />
             </PSLoader>
           </td>
         </tr>
         <tr v-else-if="emptyMovements">
           <td colspan="6">
-            <PSAlert alertType="ALERT_TYPE_WARNING" :hasClose="false">
-              {{trans('no_product')}}
+            <PSAlert
+              alert-type="ALERT_TYPE_WARNING"
+              :has-close="false"
+            >
+              {{ trans('no_product') }}
             </PSAlert>
           </td>
         </tr>
-        <MovementLine v-else v-for="(product, index) in movements" key=${index} :product="product" />
+        <MovementLine
+          v-else
+          v-for="(product, index) in movements"
+          :key="index"
+          :product="product"
+        />
       </tbody>
     </PSTable>
   </section>
 </template>
 
 <script>
-  import PSTable from 'app/widgets/ps-table/ps-table';
-  import PSSort from 'app/widgets/ps-table/ps-sort';
-  import PSAlert from 'app/widgets/ps-alert';
-  import PSLoader from 'app/widgets/ps-loader';
+  import PSTable from '@app/widgets/ps-table/ps-table';
+  import PSSort from '@app/widgets/ps-table/ps-sort';
+  import PSAlert from '@app/widgets/ps-alert';
+  import PSLoader from '@app/widgets/ps-loader';
   import MovementLine from './movement-line';
 
   const DEFAULT_SORT = 'desc';

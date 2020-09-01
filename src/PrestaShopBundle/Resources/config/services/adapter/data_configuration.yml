@@ -251,3 +251,8 @@ services:
         class: 'PrestaShop\PrestaShop\Core\MerchandiseReturn\Configuration\MerchandiseReturnOptionsConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.credit_slip.credit_slip_options.configuration:
+      class: 'PrestaShop\PrestaShop\Core\CreditSlip\CreditSlipOptionsConfiguration'
+      arguments:
+        - '@prestashop.adapter.legacy.configuration'

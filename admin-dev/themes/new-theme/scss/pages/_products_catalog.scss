@@ -1,12 +1,11 @@
 .products-catalog {
-
   > .content {
-    background: #ffffff;
+    margin-bottom: 20px;
+    background: #fff;
     padding: {
       top: $grid-gutter-width / 2;
       bottom: $grid-gutter-width / 2;
     }
-    margin-bottom: 20px;
 
     .row {
       align-items: center;
@@ -27,10 +26,10 @@
   }
 
   .icon-caret {
-    font-size: 0.625rem;
-    vertical-align: 0.0625rem;
-    cursor: pointer;
     display: inline-block;
+    font-size: .625rem;
+    vertical-align: .0625rem;
+    cursor: pointer;
 
     &.-current {
       color: $primary;
@@ -40,17 +39,17 @@
   table {
     .form-control,
     .select2 {
-      font-weight: normal;
+      font-weight: 400;
     }
     .form-min-max {
       display: inline-block;
       width: 48%;
     }
     .action-enabled {
-      color: $brand-success
+      color: $brand-success;
     }
     .action-disabled {
-      color: $brand-danger
+      color: $brand-danger;
     }
   }
 
@@ -62,7 +61,7 @@
 
   .dropdown-toggle.product-edit {
     color: $gray-medium;
-    &:after {
+    &::after {
       content: "more_vert";
     }
   }
@@ -70,7 +69,7 @@
 
 .emptycatalog-icon {
   > .material-icons {
-    color: $gray-light;
     font-size: 12rem;
+    color: $gray-light;
   }
 }

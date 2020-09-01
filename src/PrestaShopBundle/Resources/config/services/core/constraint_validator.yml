@@ -29,3 +29,32 @@ services:
       - '@prestashop.core.string.character_cleaner'
     tags:
       - { name: validator.constraint_validator }
+
+  prestashop.core.constraint_validator.existing_customer_email_validator:
+    class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\ExistingCustomerEmailValidator'
+    arguments:
+      - '@prestashop.adapter.customer.customer_data_source'
+    tags:
+      - { name: validator.constraint_validator }
+
+  prestashop.core.constraint_validator.address_zip_code_validator:
+    class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\AddressZipCodeValidator'
+    arguments:
+      - '@translator'
+      - '@prestashop.adapter.country.country_zip_code_requirements_provider'
+    tags:
+      - { name: validator.constraint_validator }
+
+  prestashop.core.constraint_validator.address_country_dni_validator:
+    class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\AddressDniRequiredValidator'
+    arguments:
+      - '@prestashop.adapter.country.country_required_fields_provider'
+    tags:
+      - { name: validator.constraint_validator }
+
+  prestashop.core.constraint_validator.address_country_state_validator:
+    class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\AddressStateRequiredValidator'
+    arguments:
+      - '@prestashop.adapter.country.country_required_fields_provider'
+    tags:
+      - { name: validator.constraint_validator }

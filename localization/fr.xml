@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <localizationPack name="France" version="1.0">
   <currencies>
-    <currency name="Euro" iso_code="EUR" iso_code_num="978" sign="€" blank="1" conversion_rate="1.00" format="2" decimals="1"/>
+    <currency name="Euro" iso_code="EUR" iso_code_num="978" sign="€" blank="1" format="2" decimals="1"/>
   </currencies>
   <languages>
     <language iso_code="fr"/>
-    <language iso_code="bz"/>
   </languages>
   <accounting>
     <conf name="customer_prefix" value="411"/>
@@ -56,6 +55,7 @@
       <taxRule iso_code_country="de" id_tax="1"/>
       <taxRule iso_code_country="ee" id_tax="1"/>
       <taxRule iso_code_country="gr" id_tax="1"/>
+      <taxRule iso_code_country="hr" id_tax="1"/>
       <taxRule iso_code_country="es" id_tax="1"/>
       <taxRule iso_code_country="fr" id_tax="1"/>
       <taxRule iso_code_country="ie" id_tax="1"/>
@@ -75,7 +75,7 @@
       <taxRule iso_code_country="sk" id_tax="1"/>
       <taxRule iso_code_country="fi" id_tax="1"/>
       <taxRule iso_code_country="se" id_tax="1"/>
-      <taxRule iso_code_country="uk" id_tax="1"/>
+      <taxRule iso_code_country="gb" id_tax="1"/>
     </taxRulesGroup>
     <taxRulesGroup name="FR Taux réduit (10%)">
       <taxRule iso_code_country="be" id_tax="2"/>
@@ -85,6 +85,7 @@
       <taxRule iso_code_country="de" id_tax="2"/>
       <taxRule iso_code_country="ee" id_tax="2"/>
       <taxRule iso_code_country="gr" id_tax="2"/>
+      <taxRule iso_code_country="hr" id_tax="2"/>
       <taxRule iso_code_country="es" id_tax="2"/>
       <taxRule iso_code_country="fr" id_tax="2"/>
       <taxRule iso_code_country="ie" id_tax="2"/>
@@ -104,7 +105,7 @@
       <taxRule iso_code_country="sk" id_tax="2"/>
       <taxRule iso_code_country="fi" id_tax="2"/>
       <taxRule iso_code_country="se" id_tax="2"/>
-      <taxRule iso_code_country="uk" id_tax="2"/>
+      <taxRule iso_code_country="gb" id_tax="2"/>
     </taxRulesGroup>
     <taxRulesGroup name="FR Taux réduit (5.5%)">
       <taxRule iso_code_country="be" id_tax="3"/>
@@ -114,6 +115,7 @@
       <taxRule iso_code_country="de" id_tax="3"/>
       <taxRule iso_code_country="ee" id_tax="3"/>
       <taxRule iso_code_country="gr" id_tax="3"/>
+      <taxRule iso_code_country="hr" id_tax="3"/>
       <taxRule iso_code_country="es" id_tax="3"/>
       <taxRule iso_code_country="fr" id_tax="3"/>
       <taxRule iso_code_country="ie" id_tax="3"/>
@@ -133,7 +135,7 @@
       <taxRule iso_code_country="sk" id_tax="3"/>
       <taxRule iso_code_country="fi" id_tax="3"/>
       <taxRule iso_code_country="se" id_tax="3"/>
-      <taxRule iso_code_country="uk" id_tax="3"/>
+      <taxRule iso_code_country="gb" id_tax="3"/>
     </taxRulesGroup>
     <taxRulesGroup name="FR Taux super réduit (2.1%)">
       <taxRule iso_code_country="be" id_tax="4"/>
@@ -143,6 +145,7 @@
       <taxRule iso_code_country="de" id_tax="4"/>
       <taxRule iso_code_country="ee" id_tax="4"/>
       <taxRule iso_code_country="gr" id_tax="4"/>
+      <taxRule iso_code_country="hr" id_tax="4"/>
       <taxRule iso_code_country="es" id_tax="4"/>
       <taxRule iso_code_country="fr" id_tax="4"/>
       <taxRule iso_code_country="ie" id_tax="4"/>
@@ -162,7 +165,7 @@
       <taxRule iso_code_country="sk" id_tax="4"/>
       <taxRule iso_code_country="fi" id_tax="4"/>
       <taxRule iso_code_country="se" id_tax="4"/>
-      <taxRule iso_code_country="uk" id_tax="4"/>
+      <taxRule iso_code_country="gb" id_tax="4"/>
     </taxRulesGroup>
     <taxRulesGroup name="EU VAT For Virtual Products" auto-generated="1" eu-tax-group="virtual">
       <taxRule iso_code_country="fr" id_tax="1"/>
