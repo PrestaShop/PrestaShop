@@ -24,55 +24,23 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
-
 /**
- * Class CategoryId.
+ * Forces specific value for category id and avoids CategoryId constraints (which would be violated by this value in any other case)
  */
-class CategoryId
+class NoCategoryId extends CategoryId
 {
     /**
-     * @var int
+     * Category id value which represents "no category" in resources relation.
+     * Null is not an option, because it has another meaning
      */
-    protected $categoryId;
+    const NO_CATEGORY_ID = 0;
 
-    /**
-     * @param int $categoryId
-     */
-    public function __construct($categoryId)
+    public function __construct()
     {
-        $this->setCategoryId($categoryId);
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->categoryId;
-    }
-
-    /**
-     * @param CategoryId $categoryId
-     *
-     * @return bool
-     */
-    public function isEqual(CategoryId $categoryId)
-    {
-        return $this->getValue() === $categoryId->getValue();
-    }
-
-    /**
-     * @param int $categoryId
-     */
-    private function setCategoryId($categoryId)
-    {
-        if (!is_int($categoryId) || 0 >= $categoryId) {
-            throw new CategoryException(sprintf('Invalid Category id %s supplied', var_export($categoryId, true)));
-        }
-
-        $this->categoryId = $categoryId;
+        $this->categoryId = static::NO_CATEGORY_ID;
     }
 }
