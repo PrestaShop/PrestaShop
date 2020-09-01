@@ -59,50 +59,10 @@ final class CustomerDiscountGridDataFactoryDecorator implements GridDataFactoryI
     {
         $customerData = $this->customerDiscountDoctrineGridDataFactory->getData($searchCriteria);
 
-//        $customerRecords = $this->applyModifications($customerData->getRecords());
-
         return new GridData(
             $customerData->getRecords(),
             $customerData->getRecordsTotal(),
             $customerData->getQuery()
         );
-    }
-
-    /**
-     * @param RecordCollectionInterface $addresses
-     *
-     * @return RecordCollection
-     */
-    private function xapplyModifications(RecordCollectionInterface $addresses)
-    {
-        $modifiedDiscountes = [];
-
-        foreach ($addresses as $address) {
-            if (empty($address['company'])) {
-                $address['company'] = '--';
-            }
-
-            $address['full_name'] = sprintf('%s %s', $address['firstname'], $address['lastname']);
-
-            $address['full_address'] = sprintf(
-                '%s %s %s %s',
-                $address['address1'],
-                $address['address2'],
-                $address['postcode'],
-                $address['city']
-            );
-
-            if (!empty($address['phone'])) {
-                $address['phone_number'] = $address['phone'];
-            } elseif (!empty($address['phone_mobile'])) {
-                $address['phone_number'] = $address['phone_mobile'];
-            } else {
-                $address['phone_number'] = '--';
-            }
-
-            $modifiedDiscountes[] = $address;
-        }
-
-        return new RecordCollection($modifiedDiscountes);
     }
 }

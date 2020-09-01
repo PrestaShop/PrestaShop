@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Grid\Action\ModalOptions;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\Customer\DeleteCustomerDiscountRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\Customer\EditCustomerDiscountRowAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\ViewOptionsCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
@@ -131,14 +130,5 @@ final class CustomerDiscountGridDefinitionFactory extends AbstractGridDefinition
                     ),
             ])
             );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getViewOptions()
-    {
-        return (new ViewOptionsCollection())
-            ->add('display_name', false);
     }
 }
