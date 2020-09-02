@@ -9,6 +9,7 @@ class MyAccount extends FOBasePage {
 
     // Selectors
     this.historyLink = '#history-link';
+    this.addressesLink = '#addresses-link';
   }
 
   /*
@@ -22,6 +23,15 @@ class MyAccount extends FOBasePage {
    */
   async goToHistoryAndDetailsPage(page) {
     await this.waitForSelectorAndClick(page, this.historyLink);
+  }
+
+  /**
+   * Go to addresses page page
+   * @param page
+   * @returns {Promise<void>}
+   */
+  async goToAddressesPage(page) {
+    await this.waitForSelectorAndClick(page, this.addressesLink);
   }
 }
 

@@ -2,19 +2,21 @@ require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
-const files = require('@utils/files');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const zonesPage = require('@pages/BO/international/locations');
 const countriesPage = require('@pages/BO/international/locations/countries');
-
-const addCountryPage = require('@pages/BO/international/languages/add');
+const addCountryPage = require('@pages/BO/international/locations/countries/add');
 const foHomePage = require('@pages/FO/home');
+const foLoginPage = require('@pages/FO/login');
+const foMyAccountPage = require('@pages/FO/myAccount');
+const foAddressesPage = require('@pages/FO/myAccount/addresses');
 
 // Import data
 const CountryFaker = require('@data/faker/country');
+const {DefaultAccount} = require('@data/demo/customer');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -24,8 +26,24 @@ const baseContext = 'functional_BO_international_localization_languages_CRUDCoun
 let browserContext;
 let page;
 
-const createCountryData = new CountryFaker({isoCode: 'de'});
-const editCountryData = new CountryFaker({isoCode: 'nl', status: false});
+const createCountryData = new CountryFaker(
+  {
+    name: 'countryTest',
+    isoCode: 'CT',
+    callPrefix: '216',
+    currency: 'Euro',
+    zipCodeFormat: 'NNNN',
+    active: true,
+  });
+const editCountryData = new CountryFaker(
+  {
+    name: 'countryTestEdit',
+    isoCode: 'CT',
+    callPrefix: '333',
+    currency: 'Euro',
+    zipCodeFormat: 'NNNN',
+    active: false,
+  });
 let numberOfCountries = 0;
 
 describe('CRUD country', async () => {
@@ -43,7 +61,7 @@ describe('CRUD country', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it(`should go to 'International>Locations' page`, async function () {
+  it('should go to \'International>Locations\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocationsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -73,114 +91,208 @@ describe('CRUD country', async () => {
     await expect(numberOfCountries).to.be.above(0);
   });
 
-  /*describe('Create Language', async () => {
-    it('should go to add new language page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewLanguages', baseContext);
+  describe('Create country', async () => {
+    it('should go to add new country page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewCountryPage', baseContext);
 
-      await languagesPage.goToAddNewLanguage(page);
-      const pageTitle = await addLanguagePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addLanguagePage.pageTitle);
+      await countriesPage.goToAddNewCountryPage(page);
+
+      const pageTitle = await addCountryPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addCountryPage.pageTitleCreate);
     });
 
-    it('should create new language', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createNewLanguages', baseContext);
+    it('should create new country', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createNewCountry', baseContext);
 
-      const textResult = await addLanguagePage.createEditLanguage(page, createLanguageData);
-      await expect(textResult).to.to.contains(languagesPage.successfulCreationMessage);
+      const textResult = await addCountryPage.createEditCountry(page, createCountryData);
+      await expect(textResult).to.to.contains(countriesPage.successfulCreationMessage);
 
-      const numberOfLanguagesAfterCreation = await languagesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfLanguagesAfterCreation).to.be.equal(numberOfLanguages + 1);
+      const numberOfCountriesAfterCreation = await countriesPage.getNumberOfElementInGrid(page);
+      await expect(numberOfCountriesAfterCreation).to.be.equal(numberOfCountries + 1);
     });
 
-    it(`should go to FO and check that '${createLanguageData.name}' exist`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedLanguageFO', baseContext);
+    it('should view my shop', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop_1', baseContext);
 
       // View my shop and init pages
-      page = await languagesPage.viewMyShop(page);
+      page = await countriesPage.viewMyShop(page);
 
-      const isLanguageInFO = await foHomePage.languageExists(page, createLanguageData.isoCode);
-      await expect(isLanguageInFO, `${createLanguageData.name} was not found as a language in FO`).to.be.true;
+      await foHomePage.changeLanguage(page, 'en');
+      const isHomePage = await foHomePage.isHomePage(page);
+      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+    });
 
-      // Go back to BO
-      page = await foHomePage.closePage(browserContext, page, 0);
+    it('should go to login page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO_1', baseContext);
+
+      await foHomePage.goToLoginPage(page);
+      const pageTitle = await foLoginPage.getPageTitle(page);
+      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+    });
+
+    it('should sign in with default customer', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'sighInFO_1', baseContext);
+
+      await foLoginPage.customerLogin(page, DefaultAccount);
+      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+    });
+
+    it('should go to addresses page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage_1', baseContext);
+
+      await foMyAccountPage.goToAddressesPage(page);
+
+      const pageTitle = await foAddressesPage.getPageTitle(page);
+      await expect(pageTitle, 'Fail to open addresses page').to.contains(foAddressesPage.pageTitle);
+    });
+
+    it(`should check that the new country '${createCountryData.name}' exist`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkIsNewCountryExist', baseContext);
+
+      await foAddressesPage.openNewAddressForm(page);
+
+      const isCountryExist = await foAddressesPage.isCountryExist(page, createCountryData.name);
+      await expect(isCountryExist, 'Country does not exist').to.be.true;
+    });
+
+    it('should sign out from FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'sighOutFO_1', baseContext);
+
+      await foAddressesPage.logout(page);
+      const isCustomerConnected = await foAddressesPage.isCustomerConnected(page);
+      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
     });
   });
 
-  describe('Update Language', async () => {
-    it(`should filter language by name '${createLanguageData.name}'`, async function () {
+  describe('Update country', async () => {
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo_1', baseContext);
+
+      // Close tab and init other page objects with new current tab
+      page = await foHomePage.closePage(browserContext, page, 0);
+
+      const pageTitle = await countriesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(countriesPage.pageTitle);
+    });
+
+    it(`should filter country by name '${createCountryData.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
 
       // Filter
-      await languagesPage.filterTable(page, 'input', 'name', createLanguageData.name);
+      await countriesPage.filterTable(page, 'input', 'b!name', createCountryData.name);
 
-      // Check number of languages
-      const numberOfLanguagesAfterFilter = await languagesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
+      // Check number of countries
+      const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
+      await expect(numberOfCountriesAfterFilter).to.be.at.least(1);
 
-      const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'name');
-      await expect(textColumn).to.contains(createLanguageData.name);
+      // row = 1 (first row)
+      // column = 3 (country column)
+      const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 3);
+      await expect(textColumn).to.contains(createCountryData.name);
     });
 
-    it('should go to edit language page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToEditLanguagePage', baseContext);
+    it('should go to edit country page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEditCountryPage', baseContext);
 
-      await languagesPage.goToEditLanguage(page, 1);
-      const pageTitle = await addLanguagePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addLanguagePage.pageEditTitle);
+      await countriesPage.goToEditCountryPage(page, 1);
+      const pageTitle = await addCountryPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addCountryPage.pageTitleEdit);
     });
 
-    it('should edit language', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'editLanguage', baseContext);
+    it('should edit country', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'editCountry', baseContext);
 
-      const textResult = await addLanguagePage.createEditLanguage(page, editLanguageData);
-      await expect(textResult).to.to.contains(languagesPage.successfulUpdateMessage);
+      const textResult = await addCountryPage.createEditCountry(page, editCountryData);
+      await expect(textResult).to.to.contains(countriesPage.successfulUpdateMessage);
 
-      const numberOfLanguagesAfterReset = await languagesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfLanguagesAfterReset).to.be.equal(numberOfLanguages + 1);
+      const numberOfCountriesAfterReset = await countriesPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfCountriesAfterReset).to.be.equal(numberOfCountries + 1);
     });
 
-    it(`should go to FO and check that '${editLanguageData.name}' do not exist`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedLanguageFO', baseContext);
+    it('should view my shop', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop_2', baseContext);
 
       // View my shop and init pages
-      page = await languagesPage.viewMyShop(page);
+      page = await countriesPage.viewMyShop(page);
 
-      // Check languages if FO
-      const isLanguageInFO = await foHomePage.languageExists(page, editLanguageData.isoCode);
-      await expect(isLanguageInFO, `${editLanguageData.name} was found as a language in FO`).to.be.false;
+      await foHomePage.changeLanguage(page, 'en');
+      const isHomePage = await foHomePage.isHomePage(page);
+      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+    });
 
-      // Go back to BO
-      page = await foHomePage.closePage(browserContext, page, 0);
+    it('should go to login page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO_2', baseContext);
+
+      await foHomePage.goToLoginPage(page);
+      const pageTitle = await foLoginPage.getPageTitle(page);
+      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+    });
+
+    it('should sign in with default customer', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'sighInFO_2', baseContext);
+
+      await foLoginPage.customerLogin(page, DefaultAccount);
+      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+    });
+
+    it('should go to addresses page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage_2', baseContext);
+
+      await foMyAccountPage.goToAddressesPage(page);
+
+      const pageTitle = await foAddressesPage.getPageTitle(page);
+      await expect(pageTitle, 'Fail to open addresses page').to.contains(foAddressesPage.pageTitle);
+    });
+
+    it(`should check that the edited country '${editCountryData.name}' not exist`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkIsCountryNotExist', baseContext);
+
+      await foAddressesPage.openNewAddressForm(page);
+
+      const isCountryExist = await foAddressesPage.isCountryExist(page, editCountryData.name);
+      await expect(isCountryExist, 'Country exist').to.be.false;
     });
   });
 
-  describe('Delete Language', async () => {
-    it(`should filter language by name '${editLanguageData.name}'`, async function () {
+  describe('Delete country by bulk actions', async () => {
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo_2', baseContext);
+
+      // Close tab and init other page objects with new current tab
+      page = await foHomePage.closePage(browserContext, page, 0);
+
+      const pageTitle = await countriesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(countriesPage.pageTitle);
+    });
+
+    it(`should filter country by name '${editCountryData.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
       // Filter
-      await languagesPage.filterTable(page, 'input', 'name', editLanguageData.name);
+      await countriesPage.filterTable(page, 'input', 'b!name', editCountryData.name);
 
-      // Check number of languages
-      const numberOfLanguagesAfterFilter = await languagesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
+      // Check number of countries
+      const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
+      await expect(numberOfCountriesAfterFilter).to.be.at.least(1);
 
-      const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'name');
-      await expect(textColumn).to.contains(editLanguageData.name);
+      const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 3);
+      await expect(textColumn).to.contains(editCountryData.name);
     });
 
-    it('should delete language', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deleteLanguage', baseContext);
+    it('should delete country', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteCountry', baseContext);
 
-      const textResult = await languagesPage.deleteLanguage(page, 1);
-      await expect(textResult).to.to.contains(languagesPage.successfulDeleteMessage);
+      const textResult = await countriesPage.deleteCountryByBulkActions(page);
+      await expect(textResult).to.to.contains(countriesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
-      const numberOfLanguagesAfterReset = await languagesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfLanguagesAfterReset).to.be.equal(numberOfLanguages);
+      const numberOfCountriesAfterReset = await countriesPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfCountriesAfterReset).to.be.equal(numberOfCountries);
     });
-  });*/
+  });
 });
