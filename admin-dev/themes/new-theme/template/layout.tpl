@@ -92,9 +92,9 @@
 
       <div class="{if $display_header}content-div{/if} {if !isset($page_header_toolbar)}-notoolbar{/if} {if $current_tab_level == 3}with-tabs{/if}">
 
-        {hook h='displayAdminAfterHeader'}
-
         {if $display_header}
+          {hook h='displayAdminAfterHeader'}
+
           {include file='components/layout/error_messages.tpl'}
           {include file='components/layout/information_messages.tpl'}
           {include file='components/layout/confirmation_messages.tpl'}
