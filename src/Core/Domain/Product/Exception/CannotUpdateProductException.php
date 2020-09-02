@@ -75,4 +75,9 @@ class CannotUpdateProductException extends ProductException
      * When product default category update fails
      */
     const FAILED_UPDATE_DEFAULT_CATEGORY = 90;
+
+    /**
+     * When product attachments association update fails
+     */
+    const FAILED_UPDATE_ATTACHMENTS = 100;
 }

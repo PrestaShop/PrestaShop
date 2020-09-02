@@ -57,6 +57,22 @@ class SetAssociatedProductAttachmentsCommand
     }
 
     /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
+    }
+
+    /**
+     * @return AttachmentId[]
+     */
+    public function getAttachmentIds(): array
+    {
+        return $this->attachmentIds;
+    }
+
+    /**
      * @param array $attachmentIds
      */
     private function setAttachmentIds(array $attachmentIds): void
