@@ -400,7 +400,9 @@
       </div>
 {/if}
 
+{if $display_header}
       {hook h='displayAdminAfterHeader'}
+{/if}
 
 
 {* end display_header*}
