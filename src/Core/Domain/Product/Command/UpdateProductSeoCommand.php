@@ -30,8 +30,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectOption;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectTarget;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 
 /**
  * Updates Product SEO options
