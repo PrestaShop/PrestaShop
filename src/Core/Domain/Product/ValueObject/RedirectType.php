@@ -26,20 +26,15 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 
 /**
- * Holds product redirection settings (employee can choose where customer should be redirected if product is disabled)
+ * Holds valid value of product redirect type
  */
-class ProductRedirectionSettings
+class RedirectType
 {
-    /**
-     * Represents value of redirect target id when NO_REDIRECT type is provided
-     *
-     * @todo: new class for no target value
-     */
-    const NO_TARGET_VALUE = 0;
-
     /**
      * Represents value of no redirection. Page not found (404) will be displayed.
      */
@@ -75,4 +70,52 @@ class ProductRedirectionSettings
         self::TYPE_PRODUCT_PERMANENT => self::TYPE_PRODUCT_PERMANENT,
         self::TYPE_PRODUCT_TEMPORARY => self::TYPE_PRODUCT_TEMPORARY,
     ];
+
+    /**
+     * @var string
+     */
+    private $value;
+
+    /**
+     * @param string $type
+     *
+     * @throws ProductConstraintException
+     */
+    public function __construct(string $type)
+    {
+        $this->assertRedirectTypeIsAvailable($type);
+        $this->value = $type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValue(): string
+    {
+        return $this->value;
+    }
+
+    public function isProductType(): bool
+    {
+        return in_array($this->value, [static::TYPE_PRODUCT_PERMANENT, static::TYPE_PRODUCT_TEMPORARY]);
+    }
+
+    /**
+     * @param string $type
+     *
+     * @throws ProductConstraintException
+     */
+    private function assertRedirectTypeIsAvailable(string $type): void
+    {
+        if (!in_array($type, static::AVAILABLE_REDIRECT_TYPES)) {
+            throw new ProductConstraintException(
+                sprintf(
+                    'Invalid redirect type "%s". Available redirect types are: %s',
+                    $type,
+                    implode(', ', static::AVAILABLE_REDIRECT_TYPES)
+                ),
+                ProductConstraintException::INVALID_REDIRECT_TYPE
+            );
+        }
+    }
 }

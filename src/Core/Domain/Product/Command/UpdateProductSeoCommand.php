@@ -28,13 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\ProductRedirectionSettings;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\NoRedirectOption;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductNoRedirectOption;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductRedirectOption;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectToCategoryOption;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectToProductOption;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectOption;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectTarget;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 
 /**
  * Updates Product SEO options
@@ -62,7 +59,7 @@ class UpdateProductSeoCommand
     private $localizedLinkRewrites;
 
     /**
-     * @var NoRedirectOption|RedirectToCategoryOption|RedirectToProductOption
+     * @var RedirectOption|null
      */
     private $redirectOption;
 
@@ -95,7 +92,7 @@ class UpdateProductSeoCommand
      *
      * @return UpdateProductSeoCommand
      */
-    public function setLocalizedMetaTitles(array $localizedMetaTitles): self
+    public function setLocalizedMetaTitles(array $localizedMetaTitles): UpdateProductSeoCommand
     {
         $this->localizedMetaTitles = $localizedMetaTitles;
 
@@ -115,7 +112,7 @@ class UpdateProductSeoCommand
      *
      * @return UpdateProductSeoCommand
      */
-    public function setLocalizedMetaDescriptions(array $localizedMetaDescriptions): self
+    public function setLocalizedMetaDescriptions(array $localizedMetaDescriptions): UpdateProductSeoCommand
     {
         $this->localizedMetaDescriptions = $localizedMetaDescriptions;
 
@@ -135,7 +132,7 @@ class UpdateProductSeoCommand
      *
      * @return UpdateProductSeoCommand
      */
-    public function setLocalizedLinkRewrites(array $localizedLinkRewrites): self
+    public function setLocalizedLinkRewrites(array $localizedLinkRewrites): UpdateProductSeoCommand
     {
         $this->localizedLinkRewrites = $localizedLinkRewrites;
 
@@ -143,27 +140,22 @@ class UpdateProductSeoCommand
     }
 
     /**
-     * @return NoRedirectOption|RedirectToCategoryOption|RedirectToProductOption
+     * @return RedirectOption|null
      */
-    public function getRedirectOption(): ?ProductRedirectOption
+    public function getRedirectOption(): ?RedirectOption
     {
         return $this->redirectOption;
     }
 
     /**
      * @param string $redirectType
-     * @param int $redirectTargetId
+     * @param int $redirectTarget
      *
      * @return UpdateProductSeoCommand
      */
-    public function setRedirectOption(string $redirectType, int $redirectTargetId): self
+    public function setRedirectOption(string $redirectType, int $redirectTarget): UpdateProductSeoCommand
     {
-        if ($redirectType === ProductRedirectionSettings::TYPE_NO_REDIRECT) {
-            $this->redirectOption = new ProductNoRedirectOption();
-        } else {
-            $this->redirectOption = new ProductRedirectOption($redirectType, $redirectTargetId);
-        }
-        //@todo: waiting for decision if need one more object for Category type when target id is 0
+        $this->redirectOption = new RedirectOption($redirectType, $redirectTarget);
 
         return $this;
     }

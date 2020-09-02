@@ -28,41 +28,60 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
 
-class RedirectToProductOption
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+
+/**
+ * Represents product or category id to which customer should be redirected in case product is disabled
+ */
+class RedirectTarget
 {
-    /**
-     * @var string $type
-     */
-    private $type;
+    const NO_TARGET = 0;
 
     /**
-     * @var ProductId
+     * @var int
      */
-    private $productId;
+    private $value;
 
     /**
-     * @param string $type
-     * @param int $productId
+     * @param int $value
+     *
+     * @throws ProductConstraintException
      */
-    public function __construct(string $type, int $productId)
+    public function __construct(int $value)
     {
-        $this->type = $type;
-        $this->productId = new ProductId($productId);
+        $this->assertTargetValueIsValid($value);
+        $this->value = $value;
+    }
+
+    public function isNoTarget(): bool
+    {
+        return $this->value === static::NO_TARGET;
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getType(): string
+    public function getValue(): int
     {
-        return $this->type;
+        return $this->value;
     }
 
     /**
-     * @return ProductId
+     * @param int $value
+     *
+     * @throws ProductConstraintException
      */
-    public function getProductId(): ProductId
+    private function assertTargetValueIsValid(int $value): void
     {
-        return $this->productId;
+        if ($value === static::NO_TARGET) {
+            return;
+        }
+
+        if ($value <= 0) {
+            throw new ProductConstraintException(
+                sprintf('Invalid redirect target "%d". It cannot be less than or equal to 0', $value),
+                ProductConstraintException::INVALID_REDIRECT_TARGET
+            );
+        }
     }
 }

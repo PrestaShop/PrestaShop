@@ -32,6 +32,7 @@ define('_CUSTOMIZE_TEXTFIELD_', 1);
 
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Product\ProductInterface;
 
 class ProductCore extends ObjectModel
@@ -197,9 +198,9 @@ class ProductCore extends ObjectModel
     /**
      * @var string Redirection type
      *
-     * @see ProductInterface
+     * @see RedirectType
      */
-    public $redirect_type = ProductInterface::REDIRECT_TYPE_NOT_FOUND;
+    public $redirect_type = RedirectType::TYPE_NO_REDIRECT;
 
     /**
      * @var int Product identifier or Category identifier depends on redirect_type

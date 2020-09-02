@@ -169,7 +169,7 @@ class ProductConstraintException extends ProductException
     /**
      * When product redirect target
      */
-    const INVALID_REDIRECT_TARGET_ID = 280;
+    const INVALID_REDIRECT_TARGET = 280;
 
     /**
      * When product meta description is invalid

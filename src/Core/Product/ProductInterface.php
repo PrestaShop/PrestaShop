@@ -26,17 +26,17 @@
 
 namespace PrestaShop\PrestaShop\Core\Product;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\ProductRedirectionSettings;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 
 /**
  * @deprecated
- * @see ProductRedirectionSettings instead
+ * @see RedirectType instead
  */
 interface ProductInterface
 {
-    const REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY = ProductRedirectionSettings::TYPE_CATEGORY_PERMANENT;
-    const REDIRECT_TYPE_CATEGORY_FOUND = ProductRedirectionSettings::TYPE_CATEGORY_TEMPORARY;
-    const REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY = ProductRedirectionSettings::TYPE_PRODUCT_PERMANENT;
-    const REDIRECT_TYPE_PRODUCT_FOUND = ProductRedirectionSettings::TYPE_PRODUCT_TEMPORARY;
-    const REDIRECT_TYPE_NOT_FOUND = ProductRedirectionSettings::TYPE_NO_REDIRECT;
+    const REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY = RedirectType::TYPE_CATEGORY_PERMANENT;
+    const REDIRECT_TYPE_CATEGORY_FOUND = RedirectType::TYPE_CATEGORY_TEMPORARY;
+    const REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY = RedirectType::TYPE_PRODUCT_PERMANENT;
+    const REDIRECT_TYPE_PRODUCT_FOUND = RedirectType::TYPE_PRODUCT_TEMPORARY;
+    const REDIRECT_TYPE_NOT_FOUND = RedirectType::TYPE_NO_REDIRECT;
 }

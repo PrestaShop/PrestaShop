@@ -60,8 +60,8 @@ class UpdateProductSeoHandler extends AbstractProductHandler implements UpdatePr
         $redirectOption = $command->getRedirectOption();
 
         if (null !== $redirectOption) {
-            $product->redirect_type = $redirectOption->getRedirectType();
-            $product->id_type_redirected = $redirectOption->getRedirectTargetId();
+            $product->redirect_type = $redirectOption->getRedirectType()->getValue();
+            $product->id_type_redirected = $redirectOption->getRedirectTarget()->getValue();
             $this->fieldsToUpdate['redirect_type'] = true;
             $this->fieldsToUpdate['id_type_redirected'] = true;
         }
