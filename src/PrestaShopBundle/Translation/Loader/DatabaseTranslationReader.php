@@ -63,11 +63,6 @@ class DatabaseTranslationReader
         static $langs = [];
         $catalogue = new MessageCatalogue($locale);
 
-        // do not try and load translations for a locale that cannot be saved to DB anyway
-        if ($locale === 'default') {
-            return $catalogue;
-        }
-
         if (!array_key_exists($locale, $langs)) {
             $langs[$locale] = $this->entityManager
                 ->getRepository('PrestaShopBundle:Lang')
