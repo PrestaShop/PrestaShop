@@ -34,32 +34,32 @@ class AddAttachmentCommand
     /**
      * @var string|null
      */
-    private $pathName;
+    protected $pathName;
 
     /**
      * @var int|null
      */
-    private $fileSize;
+    protected $fileSize;
 
     /**
      * @var string[]
      */
-    private $localizedNames;
+    protected $localizedNames;
 
     /**
      * @var string[]
      */
-    private $localizedDescriptions = [];
+    protected $localizedDescriptions = [];
 
     /**
      * @var string|null
      */
-    private $mimeType;
+    protected $mimeType;
 
     /**
      * @var string|null
      */
-    private $originalName;
+    protected $originalName;
 
     /**
      * @param array $localizedNames
