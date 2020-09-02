@@ -71,10 +71,15 @@ $(() => {
   const showcaseCard = new ShowcaseCard('categoriesShowcaseCard');
   showcaseCard.addExtension(new ShowcaseCardCloseExtension());
 
-  window.prestashop.components.translatableField.init();
-  window.prestashop.components.tinyMCEEditor.init();
-  const translatorInput = window.prestashop.components.translatableInput.init();
+  window.prestashop.component.initComponents(
+    [
+      'TranslatableField',
+      'TinyMCEEditor',
+      'TranslatableInput',
+    ],
+  );
 
+  const translatorInput = window.prestashop.instance.TranslatableInput;
   new ChoiceTable();
   new TextWithRecommendedLengthCounter();
 
@@ -106,7 +111,7 @@ $(() => {
 
   new FormSubmitButton();
 
-  window.prestashop.components.taggableField.component({
+  new window.prestashop.component.TaggableField({
     tokenFieldSelector: 'input.js-taggable-field',
     options: {
       createTokensOnBlur: true,
