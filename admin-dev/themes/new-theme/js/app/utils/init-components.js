@@ -29,61 +29,25 @@ import TinyMCEEditor from '@js/components/tinymce-editor.js';
 import TaggableField from '@js/components/taggable-field.js';
 
 const initComponents = () => {
-  let translatableInput = null;
-  let tinyMCEEditor = null;
-  let translatableField = null;
-  let taggableField = null;
-
   if (typeof window.prestashop === 'undefined') {
     window.prestashop = {};
   }
-  // Initialize the prestashop global object
-  window.prestashop.components = {
-    translatableInput: {
-      init() {
-        if (translatableInput === null) {
-          translatableInput = new TranslatableInput();
-        }
-        return translatableInput;
-      },
-      component(options) {
-        return new TranslatableInput(options);
-      },
-    },
-    tinyMCEEditor: {
-      init() {
-        if (tinyMCEEditor === null) {
-          tinyMCEEditor = new TinyMCEEditor();
-        }
-        return tinyMCEEditor;
-      },
-      component(options) {
-        return new TinyMCEEditor(options);
-      },
 
-    },
-    translatableField: {
-      init() {
-        if (translatableField === null) {
-          translatableField = new TranslatableField();
+  window.prestashop.component = {
+    initComponents(components) {
+      if (typeof window.prestashop.instance === 'undefined') {
+        window.prestashop.instance = {};
+      }
+      $.each(components, (key, component) => {
+        if (typeof window.prestashop.instance[component] === 'undefined') {
+          window.prestashop.instance[component] = new window.prestashop.component[component]();
         }
-        return translatableField;
-      },
-      component(options) {
-        return new TranslatableField(options);
-      },
+      });
     },
-    taggableField: {
-      init() {
-        if (taggableField === null) {
-          taggableField = new TaggableField();
-        }
-        return taggableField;
-      },
-      component(options) {
-        return new TaggableField(options);
-      },
-    },
+    TranslatableField,
+    TinyMCEEditor,
+    TranslatableInput,
+    TaggableField,
   };
 };
 export default initComponents;
