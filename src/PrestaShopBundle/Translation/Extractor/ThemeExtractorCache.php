@@ -61,7 +61,7 @@ class ThemeExtractorCache implements ThemeExtractorInterface
      * @param ThemeExtractorInterface $extractor
      * @param string $themeCacheRootDirectory Path to /var/cache/{env}/themes/
      */
-    public function __construct(ThemeExtractorInterface $extractor, $themeCacheRootDirectory)
+    public function __construct(ThemeExtractorInterface $extractor, string $themeCacheRootDirectory)
     {
         $this->extractor = $extractor;
         $this->cacheRootDirectory = $themeCacheRootDirectory;
@@ -179,9 +179,7 @@ class ThemeExtractorCache implements ThemeExtractorInterface
             'default_locale' => $catalogue->getLocale(),
         ];
 
-        $dumper = new XliffFileDumper();
-
-        $dumper->dump($catalogue, $options);
+        (new XliffFileDumper())->dump($catalogue, $options);
     }
 
     /**
