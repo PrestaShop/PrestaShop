@@ -98,7 +98,7 @@
 		<td colspan="1">&nbsp;</td>
 	</tr>
 
-  {if isset($is_virtual_order) && $is_virtual_order}
+  {if isset($is_virtual_order) && !$is_virtual_order}
   <tr>
     <td colspan="6" class="left">
 
