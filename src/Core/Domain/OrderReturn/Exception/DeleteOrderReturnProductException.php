@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception;
 
+/**
+ * Is thrown when there is an error during order return product deletion
+ */
 class DeleteOrderReturnProductException extends OrderReturnProductException
 {
     const ORDER_RETURN_PRODUCT_NOT_FOUND = 10;

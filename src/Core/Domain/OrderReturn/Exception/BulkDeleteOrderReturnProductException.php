@@ -30,6 +30,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception;
 
 use Exception;
 
+/**
+ * Is thrown when there is an error during bulk deletion of order return productsz
+ */
 class BulkDeleteOrderReturnProductException extends OrderReturnProductException
 {
     /**

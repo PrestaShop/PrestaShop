@@ -36,7 +36,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * Class CategoryFilterFormFactory decorates original filter factory to add custom submit action.
+ * Class OrderReturnProductsFilterFormFactory decorates original filter factory to add custom create action.
  */
 final class OrderReturnProductsFilterFormFactory implements GridFilterFormFactoryInterface
 {
