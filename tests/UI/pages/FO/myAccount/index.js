@@ -26,7 +26,7 @@ class MyAccount extends FOBasePage {
   }
 
   /**
-   * Go to addresses page page
+   * Go to addresses page
    * @param page
    * @returns {Promise<void>}
    */
