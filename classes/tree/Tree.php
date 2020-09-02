@@ -50,7 +50,7 @@ class TreeCore
     /** @var TreeToolbar|ITreeToolbar */
     private $_toolbar;
 
-    /** @var $translator Translator */
+    /** @var Translator */
     public $translator;
 
     public function __construct($id, $data = null)
