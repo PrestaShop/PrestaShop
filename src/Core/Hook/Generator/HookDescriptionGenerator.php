@@ -27,9 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Hook\Generator;
 
 use PrestaShop\PrestaShop\Core\Hook\HookDescription;
-use PrestaShop\PrestaShop\Core\Util\String\StringModifier;
 use PrestaShop\PrestaShop\Core\Util\String\StringModifierInterface;
-use PrestaShop\PrestaShop\Core\Util\String\StringValidator;
 use PrestaShop\PrestaShop\Core\Util\String\StringValidatorInterface;
 
 /**
