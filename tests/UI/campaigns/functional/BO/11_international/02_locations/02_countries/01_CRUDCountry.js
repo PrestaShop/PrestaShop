@@ -21,7 +21,7 @@ const {DefaultAccount} = require('@data/demo/customer');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_international_localization_languages_CRUDCountry';
+const baseContext = 'functional_BO_international_locations_countries_CRUDCountry';
 
 let browserContext;
 let page;
