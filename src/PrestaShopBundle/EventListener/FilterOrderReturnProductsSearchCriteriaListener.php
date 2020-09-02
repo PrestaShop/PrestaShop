@@ -36,7 +36,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class FilterOrderReturnProductsSearchCriteriaListener is responsible for updating OrderReturnProducts filter with
- * merchandise return product id.
+ * order return product id.
  */
 class FilterOrderReturnProductsSearchCriteriaListener
 {
@@ -79,13 +79,13 @@ class FilterOrderReturnProductsSearchCriteriaListener
 
             if (!$orderReturnId) {
                 throw new OrderReturnProductException(
-                    'orderReturnId attribute is needed for merchandise return product list'
+                    'orderReturnId attribute is needed for order return product list'
                 );
             }
 
             $filters['order_return_id'] = $orderReturnId;
         } else {
-            throw new OrderReturnProductException('Request is needed for merchandise return product list');
+            throw new OrderReturnProductException('Request is needed for order return product list');
         }
 
         $newSearchCriteria = new $searchCriteriaClass([

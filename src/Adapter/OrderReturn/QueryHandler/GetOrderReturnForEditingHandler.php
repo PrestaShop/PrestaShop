@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryHandler\GetOrderReturnFor
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\EditableOrderReturn;
 
 /**
- * Handles query which gets merchandise return for editing
+ * Handles query which gets order return for editing
  */
 final class GetOrderReturnForEditingHandler extends AbstractOrderReturnHandler implements GetOrderReturnForEditingHandlerInterface
 {
