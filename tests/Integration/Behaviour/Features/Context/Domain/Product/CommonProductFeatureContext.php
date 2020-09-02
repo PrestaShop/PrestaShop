@@ -32,6 +32,7 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\CombinationDetails;
 use Tests\Integration\Behaviour\Features\Context\Util\ProductCombinationFactory;
@@ -114,6 +115,21 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
                     )
                 );
             }
+        }
+    }
+
+    /**
+     * @Then product :reference should not exist anymore
+     *
+     * @param string $reference
+     */
+    public function assertProductDoesNotExistAnymore(string $reference)
+    {
+        try {
+            $this->getProductForEditing($reference);
+            throw new RuntimeException(sprintf('Product "%s" was not expected to exist, but it was found', $reference));
+        } catch (ProductNotFoundException $e) {
+            // intentional. Means product is not found and test should pass
         }
     }
 
