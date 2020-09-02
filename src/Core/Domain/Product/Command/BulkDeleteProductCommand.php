@@ -46,7 +46,7 @@ class BulkDeleteProductCommand
     public function __construct(array $productIds)
     {
         foreach ($productIds as $productId) {
-            $this->productIds[] = $productId;
+            $this->productIds[] = new ProductId($productId);
         }
     }
 

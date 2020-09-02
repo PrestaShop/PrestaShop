@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
+use Behat\Gherkin\Node\TableNode;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 
@@ -44,6 +46,25 @@ class DeleteProductFeatureContext extends AbstractProductFeatureContext
             $this->getCommandBus()->handle(new DeleteProductCommand(
                 $this->getSharedStorage()->get($reference)
             ));
+        } catch (ProductException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I bulk delete following products:
+     *
+     * @param TableNode $productsList
+     */
+    public function bulkDeleteProducts(TableNode $productsList): void
+    {
+        $productIds = [];
+        foreach ($productsList->getColumnsHash() as $productInfo) {
+            $productIds[] = $this->getSharedStorage()->get($productInfo['reference']);
+        }
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteProductCommand($productIds));
         } catch (ProductException $e) {
             $this->setLastException($e);
         }
