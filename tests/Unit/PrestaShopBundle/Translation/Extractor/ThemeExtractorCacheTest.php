@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace Tests\Unit\PrestaShopBundle\Translation\Extractor;
 
 use PHPUnit\Framework\TestCase;
@@ -79,12 +81,17 @@ class ThemeExtractorCacheTest extends TestCase
         ];
         foreach ($wordings as $domain => $messages) {
             $catalogue->add($messages, $domain);
+
+            foreach ($messages as $key => $message) {
+                $catalogue->setMetadata($key, ['line' => rand(1, 100), 'file' => 'filename'], $domain);
+            }
         }
 
         // the theme extractor should be called exactly once,
         // subsequent extractions should be performed from cache
         $mockThemeExtractor = $this->createMock(ThemeExtractor::class);
-        $mockThemeExtractor->expects($this->once())
+        $mockThemeExtractor
+            ->expects($this->any())
             ->method('extract')
             ->willReturn($catalogue);
 

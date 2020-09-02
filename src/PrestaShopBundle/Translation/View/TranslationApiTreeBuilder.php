@@ -25,6 +25,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Translation\View;
 
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
