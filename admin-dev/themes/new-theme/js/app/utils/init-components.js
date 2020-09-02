@@ -39,7 +39,7 @@ const initComponents = () => {
         window.prestashop.instance = {};
       }
       components.forEach((component) => {
-        if (typeof window.prestashop.instance[component] === 'undefined') {
+        if (window.prestashop.instance[component] === undefined) {
           window.prestashop.instance[component] = new window.prestashop.component[component]();
         }
       });
