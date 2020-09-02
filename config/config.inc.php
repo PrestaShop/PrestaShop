@@ -200,10 +200,12 @@ if (defined('_PS_ADMIN_DIR_')) {
 }
 
 /* if the language stored in the cookie is not available language, use default language */
-if (isset($cookie->id_lang) && $cookie->id_lang)
-	$language = new Language($cookie->id_lang);
-if (!isset($language) || !Validate::isLoadedObject($language) || !$language->isAssociatedToShop())
-	$language = new Language(Configuration::get('PS_LANG_DEFAULT'));
+if (isset($cookie->id_lang) && $cookie->id_lang) {
+    $language = new Language($cookie->id_lang);
+}
+if (!isset($language) || !Validate::isLoadedObject($language) || !$language->isAssociatedToShop()) {
+    $language = new Language(Configuration::get('PS_LANG_DEFAULT'));
+}
 
 $context->language = $language;
 
