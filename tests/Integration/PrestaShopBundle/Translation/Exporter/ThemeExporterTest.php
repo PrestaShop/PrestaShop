@@ -164,6 +164,10 @@ class ThemeExporterTest extends TestCase
         ];
         foreach ($wordings as $domain => $messages) {
             $catalogue->add($messages, $domain);
+
+            foreach ($messages as $key => $message) {
+                $catalogue->setMetadata($key, ['line' => rand(1, 100), 'file' => 'filename'], $domain);
+            }
         }
 
         $this->extractorMock->method('extract')
