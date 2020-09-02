@@ -29,7 +29,7 @@ import TinyMCEEditor from '@js/components/tinymce-editor.js';
 import TaggableField from '@js/components/taggable-field.js';
 
 const initComponents = () => {
-  if (typeof window.prestashop === 'undefined') {
+  if (window.prestashop === undefined) {
     window.prestashop = {};
   }
 
