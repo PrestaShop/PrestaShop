@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception;
 
+/**
+ * Is thrown when some of the required fields are missing when saving order return
+ */
 class MissingOrderReturnRequiredFieldsException extends OrderReturnException
 {
     /**

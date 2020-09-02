@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
- * Provides merchandise return options form with data
+ * Provides order return options form with data
  */
 final class OrderReturnFormDataProvider implements FormDataProviderInterface
 {

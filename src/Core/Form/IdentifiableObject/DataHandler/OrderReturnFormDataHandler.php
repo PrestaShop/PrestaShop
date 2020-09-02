@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\UpdateOrderReturnState
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\ValueObject\OrderReturnStateId;
 
 /**
- * Saves or updates customer data submitted in form
+ * Saves or updates order return data submitted in form
  */
 final class OrderReturnFormDataHandler implements FormDataHandlerInterface
 {
@@ -64,7 +64,7 @@ final class OrderReturnFormDataHandler implements FormDataHandlerInterface
     }
 
     /**
-     * Merchandise Return doesn't have a create option
+     * Order Return doesn't have a create option
      *
      * @param array $data
      */
