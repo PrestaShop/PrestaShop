@@ -48,7 +48,7 @@ class OrderReturnStateChoiceProvider implements FormChoiceProviderInterface
     }
 
     /**
-     * Get choices.
+     * Get available order return states.
      *
      * @return array
      */

@@ -66,6 +66,8 @@ final class OrderReturnProductsGridDefinitionFactory extends AbstractFilterableG
      *
      * @param HookDispatcherInterface $hookDispatcher
      * @param RequestStack $requestStack
+     *
+     * @throws OrderReturnProductException
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
@@ -248,7 +250,7 @@ final class OrderReturnProductsGridDefinitionFactory extends AbstractFilterableG
     }
 
     /**
-     * Sets cms page category parent id directly from request attribute. On not found case, it assigns the default one.
+     * Sets order return id directly from request attribute. On not found case throws exception.
      *
      * @param RequestStack $requestStack
      *
