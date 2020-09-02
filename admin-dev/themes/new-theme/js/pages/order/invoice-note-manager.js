@@ -32,8 +32,6 @@ const {$} = window;
 export default class InvoiceNoteManager {
   constructor() {
     this.setupListeners();
-
-    return {};
   }
 
   setupListeners() {
