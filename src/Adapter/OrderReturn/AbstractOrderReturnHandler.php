@@ -42,7 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\ValueObject\OrderReturnSt
 use PrestaShopException;
 
 /**
- * Provides reusable methods for merchandise return command/query handlers
+ * Provides reusable methods for order return command/query handlers
  */
 abstract class AbstractOrderReturnHandler extends AbstractObjectModelHandler
 {

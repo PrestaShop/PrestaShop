@@ -96,7 +96,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
     }
 
     /**
-     * Edit existing merchandise return
+     * Edit existing order return
      *
      * @AdminSecurity(
      *     "is_granted(['update'], request.get('_legacy_controller'))",
@@ -191,7 +191,6 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      *
-     * @throws OrderReturnConstraintException
      */
     public function bulkDeleteProductAction(int $orderReturnId, Request $request): RedirectResponse
     {
@@ -221,13 +220,11 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
     }
 
     /**
-     * Provides cart rule ids from request of bulk action
+     * Provides order return ids from request of bulk action
      *
      * @param Request $request
      *
      * @return OrderReturnDetailId[]
-     *
-     * @throws OrderReturnConstraintException
      */
     private function getBulkOrderReturnDetailsFromRequest(Request $request): array
     {

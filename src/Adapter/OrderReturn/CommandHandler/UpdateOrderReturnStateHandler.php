@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Adapter\OrderReturn\AbstractOrderReturnHandler;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\UpdateOrderReturnStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\CommandHandler\UpdateOrderReturnStateHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnOrderStateConstraintException;
 
 class UpdateOrderReturnStateHandler extends AbstractOrderReturnHandler implements UpdateOrderReturnStateHandlerInterface
 {
@@ -65,11 +66,10 @@ class UpdateOrderReturnStateHandler extends AbstractOrderReturnHandler implement
      * @return OrderReturn
      *
      * @throws OrderReturnException
-     * @throws \PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnOrderStateConstraintException
+     * @throws OrderReturnOrderStateConstraintException
      */
     private function updateOrderReturnWithCommandData(OrderReturn $orderReturn, UpdateOrderReturnStateCommand $command): OrderReturn
     {
-        /** getOrderReturnState will throw error in case this state does not exist */
         $orderReturnState = $this->getOrderReturnState($command->getOrderReturnStateId());
         $orderReturn->state = $orderReturnState->id;
 

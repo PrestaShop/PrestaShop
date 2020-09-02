@@ -34,7 +34,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Form type for merchandise returns options
+ * Form type for order returns options
  */
 class OrderReturnType extends AbstractType
 {
