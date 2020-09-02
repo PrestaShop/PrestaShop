@@ -33,7 +33,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject;
  * a stand alone class though, you need to to use one of its children.
  *
  * @see ManufacturerId
- * @see NoManufacturerId
+ * @see NoManufacturer
  */
 abstract class ManufacturerRelation
 {
