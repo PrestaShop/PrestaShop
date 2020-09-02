@@ -229,7 +229,7 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
             'additional_shipping_cost' => ProductConstraintException::INVALID_ADDITIONAL_SHIPPING_COST,
             'delivery_in_stock' => ProductConstraintException::INVALID_DELIVERY_TIME_IN_STOCK_NOTES,
             'delivery_out_stock' => ProductConstraintException::INVALID_DELIVERY_TIME_OUT_OF_STOCK_NOTES,
-            'redirect_target' => ProductConstraintException::INVALID_REDIRECT_TARGET_ID,
+            'redirect_target' => ProductConstraintException::INVALID_REDIRECT_TARGET,
             'redirect_type' => ProductConstraintException::INVALID_REDIRECT_TYPE,
             'meta_title' => ProductConstraintException::INVALID_META_TITLE,
             'meta_description' => ProductConstraintException::INVALID_META_DESCRIPTION,

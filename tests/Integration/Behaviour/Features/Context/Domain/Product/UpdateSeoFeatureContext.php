@@ -32,7 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ProductRedirectionSettings;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectTarget;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -108,7 +108,7 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
         $productForEditing = $this->getProductForEditing($productReference);
 
         Assert::assertEquals(
-            ProductRedirectionSettings::NO_TARGET_VALUE,
+            RedirectTarget::NO_TARGET,
             $productForEditing->getProductSeoOptions()->getRedirectTargetId(),
             'Product "%s" expected to have no redirect target'
         );
