@@ -34,9 +34,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductAttach
 interface SetAssociatedProductAttachmentsHandlerInterface
 {
     /**
-     * @param SetAssociatedProductAttachmentsCommand $productAttachmentsCommand
+     * @param SetAssociatedProductAttachmentsCommand $command
      *
      * @return void
      */
-    public function handle(SetAssociatedProductAttachmentsCommand $productAttachmentsCommand): void;
+    public function handle(SetAssociatedProductAttachmentsCommand $command): void;
 }
