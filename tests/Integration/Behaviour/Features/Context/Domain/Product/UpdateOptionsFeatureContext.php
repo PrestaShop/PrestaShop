@@ -148,7 +148,7 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
                     $manufacturerId = $this->getSharedStorage()->get($data['manufacturer']);
                     break;
             }
-            $command->setManufacturerId($manufacturerId);
+            $command->setManufacturerRelation($manufacturerId);
         }
     }
 
