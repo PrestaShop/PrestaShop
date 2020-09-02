@@ -62,7 +62,7 @@ MySQL credentials can also be found and modified in this file if needed.
 
 **Note:**  Before auto-installing PrestaShop, this container checks the file *config/settings.inc.php* does not exist on startup.
 If you expect the container to (re)install your shop, remove this file if it exists. And make sure the container user `www-data` 
-as write access to the whole workspace.
+has write access to the whole workspace.
 
 Documentation
 --------
