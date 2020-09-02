@@ -29,24 +29,32 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject;
 
 /**
- * Manufacturer Identifier is a ValueObject which represents a valid identifier of a manufacturer.
- * It is being used in every class that must refer to a Manufacturer object or is linked to a Manufacturer object.
+ * Class ManufacturerRelation represents a relation with a Manufacturer, it is not usable as
+ * a stand alone class though, you need to to use one of its children.
  *
- * However it is possible to decide to un-link the class from a Manufacturer. For example a product can be linked to a Manufacturer now and later this relationship is removed.
- *
- * This class NoManufacturerId carriers this intent, instead of using `null` which has another meaning (no modification).
- *
- * This picture might help understanding the situation: https://pbs.twimg.com/media/DusCOfyXcAA9_F7.jpg
+ * @see ManufacturerId
+ * @see NoManufacturerId
  */
-class NoManufacturerId extends ManufacturerRelation
+abstract class ManufacturerRelation
 {
-    const NO_MANUFACTURER_ID = 0;
+    /**
+     * @var int
+     */
+    protected $id;
 
     /**
-     * This class is used to remove association with manufacturer
+     * @param int $id
      */
-    public function __construct()
+    public function __construct(int $id)
     {
-        parent::__construct(static::NO_MANUFACTURER_ID);
+        $this->id = $id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue()
+    {
+        return $this->id;
     }
 }
