@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception;
 
+/**
+ * Base exception for order return products
+ */
 class OrderReturnProductException extends OrderReturnException
 {
 }
