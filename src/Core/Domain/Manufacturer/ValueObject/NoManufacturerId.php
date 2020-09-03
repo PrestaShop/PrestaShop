@@ -43,7 +43,7 @@ class NoManufacturerId implements ManufacturerIdInterface
     const NO_MANUFACTURER_ID = 0;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getValue()
     {

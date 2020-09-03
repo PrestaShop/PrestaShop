@@ -50,7 +50,7 @@ class ManufacturerId implements ManufacturerIdInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getValue()
     {
