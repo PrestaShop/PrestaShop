@@ -584,6 +584,9 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
             $modList = scandir(_PS_MODULE_DIR_, SCANDIR_SORT_NONE);
             foreach ($modList as $mod) {
+                if (!is_dir(_PS_MODULE_DIR_ . $mod)) {
+                    continue;
+                }
                 Tools::deleteDirectory(_PS_MODULE_DIR_ . $mod . '/mails/' . $this->iso_code);
                 $files = @scandir(_PS_MODULE_DIR_ . $mod . '/mails/', SCANDIR_SORT_NONE);
                 if (is_array($files) && count($files) <= 2) {
