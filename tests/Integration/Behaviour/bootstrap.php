@@ -33,3 +33,4 @@ $rootDirectory = __DIR__ . '/../../../';
 define('_PS_IN_TEST_', true);
 require_once $rootDirectory . 'config/config.inc.php';
 require_once $rootDirectory . 'app/AppKernel.php';
+define('_PS_DUMMY_FILES_DIR', __DIR__ . '/DummyFiles');

@@ -29,33 +29,55 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use Exception;
+use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\AddAttachmentCommand;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class AttachmentFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @When I add new attachment :path with following details:
+     * @When I add new attachment :path
      *
      * @param string $path
-     * @param string $productReference
-     * @param TableNode $table
      */
-    public function addAttachment(string $path, string $productReference, TableNode $table): void
+    public function addAttachment(string $path): void
     {
-        //@todo: finish up
-        if ($this->getMinkParameter('files_path')) {
-            $fullPath = rtrim(realpath($this->getMinkParameter('files_path')), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $path;
-            if (is_file($fullPath)) {
-                $path = $fullPath;
-            }
+        $filePath = $this->getFullPathForDummyFile($path);
+        $filename = pathinfo($filePath, PATHINFO_BASENAME);
+        $mimeType = mime_content_type($filePath);
+        $size = filesize($filePath);
+        $tmp = sys_get_temp_dir() . '/' . uniqid('testimg');
+        copy($filePath, $tmp);
+        chmod($tmp, 0777);
+
+        try {
+            $command = new AddAttachmentCommand([1 => 'test1'], [1 => 'testdesc1']);
+            $command->setFileInformation(
+                $tmp,
+                $size,
+                $mimeType,
+                $filename
+            );
+
+            $this->getCommandBus()->handle($command);
+        } catch (Exception $e) {
+            dump($e);
         }
     }
 
     /**
      * @Given file :path exists
+     *
+     * @param string $path file path inside the dummyFile directory
      */
-    public function assertFileExists(): void
+    public function assertFileExists(string $path): void
     {
-        $filesPath = $this->getMinkParameter('files_path');
-        dump($filesPath);
+        $fullPath = $this->getFullPathForDummyFile($path);
+
+        Assert::assertTrue(
+            is_file($fullPath),
+            sprintf ('File "%s" does not exist.', $fullPath)
+        );
     }
 }
