@@ -32,7 +32,7 @@ use Manufacturer;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerIdInterface;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturer;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductOptionsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -130,7 +130,7 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
      */
     private function assertManufacturerExists(ManufacturerIdInterface $manufacturerId): void
     {
-        if ($manufacturerId instanceof NoManufacturer || Manufacturer::manufacturerExists($manufacturerId->getValue())) {
+        if ($manufacturerId instanceof NoManufacturerId || Manufacturer::manufacturerExists($manufacturerId->getValue())) {
             return;
         }
 

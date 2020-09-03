@@ -32,7 +32,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject;
  * ManufacturerIdInterface represents a relation with a Manufacturer.
  *
  * @see ManufacturerId
- * @see NoManufacturer
+ * @see NoManufacturerId
  */
 interface ManufacturerIdInterface
 {

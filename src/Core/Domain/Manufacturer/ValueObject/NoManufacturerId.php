@@ -38,7 +38,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject;
  *
  * This picture might help understanding the situation: https://pbs.twimg.com/media/DusCOfyXcAA9_F7.jpg
  */
-class NoManufacturer implements ManufacturerIdInterface
+class NoManufacturerId implements ManufacturerIdInterface
 {
     const NO_MANUFACTURER_ID = 0;
 
