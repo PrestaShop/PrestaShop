@@ -1250,4 +1250,17 @@ class HookCore extends ObjectModel
     {
         return 'hook' . ucfirst($hookName);
     }
+
+    /**
+     * Return an instance of the specified hook.
+     *
+     * @param string $hook_name Hook name
+     *
+     * @return Hook|false
+     */
+    public static function getInstanceByName($hook_name)
+    {
+        $hook = new Hook((int) Hook::getIdByName($hook_name));
+        return Validate::isLoadedObject($hook) ? $hook : false;
+    }
 }
