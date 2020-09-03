@@ -25,8 +25,13 @@ class Addresses extends FOBasePage {
     await this.waitForSelectorAndClick(page, this.createNewAddressLink);
   }
 
+  /**
+   * Is country exist
+   * @param page
+   * @param countryName
+   * @returns {Promise<boolean>}
+   */
   async isCountryExist(page, countryName) {
-    let found = false;
     let options = await page.$$eval(
       `${this.countrySelect} option`,
       all => all.map(
@@ -36,12 +41,7 @@ class Addresses extends FOBasePage {
         })),
     );
     options = await options.filter(option => countryName === option.textContent);
-    if (options.length !== 0) {
-      const elementValue = await options[0].value;
-      await page.selectOption(this.countrySelect, elementValue);
-      found = true;
-    }
-    return found;
+    return options.length !== 0;
   }
 }
 
