@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
+use Carrier;
 use Currency;
 use Customer;
 use Language;
@@ -33,6 +34,8 @@ use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartCarrierHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
+use Validate;
 
 /**
  * @internal
@@ -57,6 +60,8 @@ final class UpdateCartCarrierHandler extends AbstractCartHandler implements Upda
      */
     public function handle(UpdateCartCarrierCommand $command)
     {
+        $this->assertActiveCarrier($command->getNewCarrierId());
+
         $cart = $this->getCart($command->getCartId());
         $this->contextStateManager
             ->setCart($cart)
@@ -71,6 +76,27 @@ final class UpdateCartCarrierHandler extends AbstractCartHandler implements Upda
 
         $cart->update();
         $this->contextStateManager->restoreContext();
+    }
+
+    /**
+     * @param int $carrierId
+     *
+     * @throws CartConstraintException
+     */
+    private function assertActiveCarrier(int $carrierId): void
+    {
+        if (0 === $carrierId) {
+            return;
+        }
+
+        $carrier = new Carrier($carrierId);
+
+        if (!Validate::isLoadedObject($carrier) || (int) $carrier->id !== $carrierId) {
+            throw new CartConstraintException(sprintf('Carrier with id "%d" was not found', $carrierId), CartConstraintException::INVALID_CARRIER);
+        }
+        if (!$carrier->active) {
+            throw new CartConstraintException(sprintf('Carrier with id "%d" is not active', $carrierId), CartConstraintException::INVALID_CARRIER);
+        }
     }
 
     /**
