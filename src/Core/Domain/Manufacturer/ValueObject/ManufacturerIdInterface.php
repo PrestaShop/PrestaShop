@@ -29,32 +29,15 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject;
 
 /**
- * Class ManufacturerRelation represents a relation with a Manufacturer, it is not usable as
- * a stand alone class though, you need to to use one of its children.
+ * ManufacturerIdInterface represents a relation with a Manufacturer.
  *
  * @see ManufacturerId
  * @see NoManufacturer
  */
-abstract class ManufacturerRelation
+interface ManufacturerIdInterface
 {
-    /**
-     * @var int
-     */
-    protected $id;
-
-    /**
-     * @param int $id
-     */
-    public function __construct(int $id)
-    {
-        $this->id = $id;
-    }
-
     /**
      * @return int
      */
-    public function getValue()
-    {
-        return $this->id;
-    }
+    public function getValue();
 }

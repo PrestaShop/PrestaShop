@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerRelation;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturer;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
@@ -98,9 +98,9 @@ class UpdateProductOptionsCommand
     private $reference;
 
     /**
-     * @var ManufacturerRelation|null
+     * @var ManufacturerIdInterface|null
      */
-    private $manufacturerRelation;
+    private $manufacturerId;
 
     /**
      * @param int $productId
@@ -319,11 +319,11 @@ class UpdateProductOptionsCommand
     }
 
     /**
-     * @return ManufacturerRelation|null
+     * @return ManufacturerIdInterface|null
      */
-    public function getManufacturerRelation(): ?ManufacturerRelation
+    public function getManufacturerId(): ?ManufacturerIdInterface
     {
-        return $this->manufacturerRelation;
+        return $this->manufacturerId;
     }
 
     /**
@@ -333,9 +333,9 @@ class UpdateProductOptionsCommand
      *
      * @return $this
      */
-    public function setManufacturerRelation(int $manufacturerId): UpdateProductOptionsCommand
+    public function setManufacturerId(int $manufacturerId): UpdateProductOptionsCommand
     {
-        $this->manufacturerRelation = NoManufacturer::NO_MANUFACTURER_ID === $manufacturerId ?
+        $this->manufacturerId = NoManufacturer::NO_MANUFACTURER_ID === $manufacturerId ?
             new NoManufacturer() :
             new ManufacturerId($manufacturerId)
         ;

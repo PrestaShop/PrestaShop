@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 use Manufacturer;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerRelation;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturer;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductOptionsHandlerInterface;
@@ -115,25 +115,25 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
             $this->fieldsToUpdate['upc'] = true;
         }
 
-        $manufacturerRelation = $command->getManufacturerRelation();
-        if (null !== $manufacturerRelation) {
-            $this->assertManufacturerExists($manufacturerRelation);
-            $product->id_manufacturer = $manufacturerRelation->getValue();
+        $manufacturerId = $command->getManufacturerId();
+        if (null !== $manufacturerId) {
+            $this->assertManufacturerExists($manufacturerId);
+            $product->id_manufacturer = $manufacturerId->getValue();
             $this->fieldsToUpdate['id_manufacturer'] = true;
         }
     }
 
     /**
-     * @param ManufacturerRelation $manufacturerRelation
+     * @param ManufacturerIdInterface $manufacturerId
      *
      * @throws ManufacturerNotFoundException
      */
-    private function assertManufacturerExists(ManufacturerRelation $manufacturerRelation): void
+    private function assertManufacturerExists(ManufacturerIdInterface $manufacturerId): void
     {
-        if ($manufacturerRelation instanceof NoManufacturer || Manufacturer::manufacturerExists($manufacturerRelation->getValue())) {
+        if ($manufacturerId instanceof NoManufacturer || Manufacturer::manufacturerExists($manufacturerId->getValue())) {
             return;
         }
 
-        throw new ManufacturerNotFoundException(sprintf('Manufacturer #%d does not exist', $manufacturerRelation->getValue()));
+        throw new ManufacturerNotFoundException(sprintf('Manufacturer #%d does not exist', $manufacturerId->getValue()));
     }
 }

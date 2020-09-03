@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstra
 /**
  * Provides manufacturer id
  */
-class ManufacturerId extends ManufacturerRelation
+class ManufacturerId implements ManufacturerIdInterface
 {
     /**
      * @var int
@@ -46,7 +46,15 @@ class ManufacturerId extends ManufacturerRelation
     public function __construct($id)
     {
         $this->assertIsIntegerGreaterThanZero($id);
-        parent::__construct((int) $id);
+        $this->id = $id;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getValue()
+    {
+        return $this->id;
     }
 
     /**
