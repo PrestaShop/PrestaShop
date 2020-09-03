@@ -57,7 +57,6 @@ use Shop;
 use StockAvailable;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
-use Validate;
 
 /**
  * Handles adding product to an existing order using legacy object model classes.
@@ -174,19 +173,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
             StockAvailable::synchronize($product->id);
 
-            // Update weight SUM
-            $orderCarrier = new OrderCarrier((int) $order->getIdOrderCarrier());
-            if (Validate::isLoadedObject($orderCarrier)) {
-                $orderCarrier->weight = (float) $order->getTotalWeight();
-                if ($orderCarrier->update()) {
-                    $order->weight = sprintf('%.3f ' . Configuration::get('PS_WEIGHT_UNIT'), $orderCarrier->weight);
-                }
-            }
-
             // Update Tax lines
             $orderDetail->updateTaxAmount($order);
-
-            $order = $order->refreshShippingCost();
 
             // Update totals amount of order
             $this->orderAmountUpdater->update($order, $cart, (int) $orderDetail->id_order_invoice);
