@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
@@ -113,60 +113,10 @@ class OrderControllerCore extends FrontController
     protected function bootstrap()
     {
         $translator = $this->getTranslator();
-
         $session = $this->getCheckoutSession();
 
-        $this->checkoutProcess = new CheckoutProcess(
-            $this->context,
-            $session
-        );
-
-        $this->checkoutProcess
-            ->addStep(new CheckoutPersonalInformationStep(
-                $this->context,
-                $translator,
-                $this->makeLoginForm(),
-                $this->makeCustomerForm()
-            ))
-            ->addStep(new CheckoutAddressesStep(
-                $this->context,
-                $translator,
-                $this->makeAddressForm()
-            ));
-
-        if (!$this->context->cart->isVirtualCart()) {
-            $checkoutDeliveryStep = new CheckoutDeliveryStep(
-                $this->context,
-                $translator
-            );
-
-            $checkoutDeliveryStep
-                ->setRecyclablePackAllowed((bool) Configuration::get('PS_RECYCLABLE_PACK'))
-                ->setGiftAllowed((bool) Configuration::get('PS_GIFT_WRAPPING'))
-                ->setIncludeTaxes(
-                    !Product::getTaxCalculationMethod((int) $this->context->cart->id_customer)
-                    && (int) Configuration::get('PS_TAX')
-                )
-                ->setDisplayTaxesLabel((Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC')))
-                ->setGiftCost(
-                    $this->context->cart->getGiftWrappingPrice(
-                        $checkoutDeliveryStep->getIncludeTaxes()
-                    )
-                );
-
-            $this->checkoutProcess->addStep($checkoutDeliveryStep);
-        }
-
-        $this->checkoutProcess
-            ->addStep(new CheckoutPaymentStep(
-                $this->context,
-                $translator,
-                new PaymentOptionsFinder(),
-                new ConditionsToApproveFinder(
-                    $this->context,
-                    $translator
-                )
-            ));
+        $this->checkoutProcess = $this->buildCheckoutProcess($session, $translator);
+        Hook::exec('actionCheckoutRender', ['checkoutProcess' => &$this->checkoutProcess]);
     }
 
     /**
@@ -355,5 +305,68 @@ class OrderControllerCore extends FrontController
                 $templateParams
             ),
         ]));
+    }
+
+    /**
+     * @param CheckoutSession $session
+     * @param $translator
+     *
+     * @return CheckoutProcess
+     */
+    protected function buildCheckoutProcess(CheckoutSession $session, $translator)
+    {
+        $checkoutProcess = new CheckoutProcess(
+            $this->context,
+            $session
+        );
+
+        $checkoutProcess
+            ->addStep(new CheckoutPersonalInformationStep(
+                $this->context,
+                $translator,
+                $this->makeLoginForm(),
+                $this->makeCustomerForm()
+            ))
+            ->addStep(new CheckoutAddressesStep(
+                $this->context,
+                $translator,
+                $this->makeAddressForm()
+            ));
+
+        if (!$this->context->cart->isVirtualCart()) {
+            $checkoutDeliveryStep = new CheckoutDeliveryStep(
+                $this->context,
+                $translator
+            );
+
+            $checkoutDeliveryStep
+                ->setRecyclablePackAllowed((bool) Configuration::get('PS_RECYCLABLE_PACK'))
+                ->setGiftAllowed((bool) Configuration::get('PS_GIFT_WRAPPING'))
+                ->setIncludeTaxes(
+                    !Product::getTaxCalculationMethod((int) $this->context->cart->id_customer)
+                    && (int) Configuration::get('PS_TAX')
+                )
+                ->setDisplayTaxesLabel((Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC')))
+                ->setGiftCost(
+                    $this->context->cart->getGiftWrappingPrice(
+                        $checkoutDeliveryStep->getIncludeTaxes()
+                    )
+                );
+
+            $checkoutProcess->addStep($checkoutDeliveryStep);
+        }
+
+        $checkoutProcess
+            ->addStep(new CheckoutPaymentStep(
+                $this->context,
+                $translator,
+                new PaymentOptionsFinder(),
+                new ConditionsToApproveFinder(
+                    $this->context,
+                    $translator
+                )
+            ));
+
+        return $checkoutProcess;
     }
 }

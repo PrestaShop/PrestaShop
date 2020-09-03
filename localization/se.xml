@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <localizationPack name="Sweden" version="1.0">
   <currencies>
-    <currency name="Krona" iso_code="SEK" iso_code_num="752" sign="kr" blank="1" conversion_rate="9.14651" format="2" decimals="1"/>
+    <currency name="Krona" iso_code="SEK" iso_code_num="752" sign="kr" blank="1" format="2" decimals="1"/>
   </currencies>
   <languages>
     <language iso_code="sv"/>

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Product\Command;
@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidProductQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
@@ -50,7 +51,7 @@ class AddProductToOrderCommand
     private $productId;
 
     /**
-     * @var int
+     * @var CombinationId|null
      */
     private $combinationId;
 
@@ -181,7 +182,7 @@ class AddProductToOrderCommand
     ) {
         $this->orderId = new OrderId($orderId);
         $this->productId = new ProductId($productId);
-        $this->combinationId = $combinationId;
+        $this->combinationId = !empty($combinationId) ? new CombinationId($combinationId) : null;
         try {
             $this->productPriceTaxIncluded = new Number($productPriceTaxIncluded);
             $this->productPriceTaxExcluded = new Number($productPriceTaxExcluded);
@@ -194,7 +195,7 @@ class AddProductToOrderCommand
     /**
      * @return OrderId
      */
-    public function getOrderId()
+    public function getOrderId(): OrderId
     {
         return $this->orderId;
     }
@@ -202,15 +203,15 @@ class AddProductToOrderCommand
     /**
      * @return ProductId
      */
-    public function getProductId()
+    public function getProductId(): ProductId
     {
         return $this->productId;
     }
 
     /**
-     * @return int
+     * @return CombinationId|null
      */
-    public function getCombinationId()
+    public function getCombinationId(): ?CombinationId
     {
         return $this->combinationId;
     }

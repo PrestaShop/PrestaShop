@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <localizationPack name="Algeria" version="1.0">
 	<currencies>
-		<currency name="Algerian dinar" iso_code="DZD" iso_code_num="012" sign="DZD" blank="1" conversion_rate="1.0000" format="2" decimals="1" />
+		<currency name="Algerian dinar" iso_code="DZD" iso_code_num="012" sign="DZD" blank="1" format="2" decimals="1" />
 	</currencies>
 	<languages>
 		<language iso_code="ar" />

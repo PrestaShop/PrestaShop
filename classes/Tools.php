@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use Composer\CaBundle\CaBundle;
 use PHPSQLParser\PHPSQLParser;
@@ -661,20 +661,19 @@ class ToolsCore
 
     public static function getCountry($address = null)
     {
-        $id_country = (int) Tools::getValue('id_country');
-        if (!$id_country && isset($address, $address->id_country) && $address->id_country) {
-            $id_country = (int) $address->id_country;
-        } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-            preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array);
-            if (is_array($array) && isset($array[0]) && Validate::isLanguageIsoCode($array[0])) {
-                $id_country = (int) Country::getByIso($array[0], true);
-            }
-        }
-        if (!isset($id_country) || !$id_country) {
-            $id_country = (int) Configuration::get('PS_COUNTRY_DEFAULT');
+        $countryId = Tools::getValue('id_country');
+        if (Validate::isInt($countryId)
+            && (int) $countryId > 0
+            && !empty(Country::getIsoById((int) $countryId))
+        ) {
+            return (int) $countryId;
         }
 
-        return (int) $id_country;
+        if (!empty($address->id_country) && (int) $address->id_country > 0) {
+            return (int) $address->id_country;
+        }
+
+        return (int) Configuration::get('PS_COUNTRY_DEFAULT');
     }
 
     /**
@@ -1950,6 +1949,13 @@ class ToolsCore
         }
     }
 
+    /**
+     * @param $value
+     * @param $places
+     * @param int $mode
+     *
+     * @return false|float
+     */
     public static function math_round($value, $places, $mode = PS_ROUND_HALF_UP)
     {
         //If PHP_ROUND_HALF_UP exist (PHP 5.3) use it and pass correct mode value (PrestaShop define - 1)
@@ -2008,6 +2014,12 @@ class ToolsCore
         return $tmp_value;
     }
 
+    /**
+     * @param $value
+     * @param $mode
+     *
+     * @return float
+     */
     public static function round_helper($value, $mode)
     {
         if ($value >= 0.0) {
@@ -2705,7 +2717,19 @@ class ToolsCore
 		Header set Access-Control-Allow-Origin \"*\"
 	</FilesMatch>
 </IfModule>\n\n");
+        fwrite($write_fd, '<Files composer.lock>
+    # Apache 2.2
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
 
+    # Apache 2.4
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+</Files>
+');
         // Cache control
         if ($cache_control) {
             $cache_control = "<IfModule mod_expires.c>

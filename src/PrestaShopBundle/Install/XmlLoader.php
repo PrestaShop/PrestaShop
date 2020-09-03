@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Install;
@@ -264,10 +264,10 @@ class XmlLoader
         }
 
         $is_multi_lang_entity = $this->isMultilang($entity);
+        $xml_langs = $multilang_columns = [];
+        $default_lang = null;
         if ($is_multi_lang_entity) {
             $multilang_columns = $this->getColumns($entity, true);
-            $xml_langs = [];
-            $default_lang = null;
             foreach ($this->languages as $id_lang => $iso) {
                 if ($iso == $this->language->getLanguageIso()) {
                     $default_lang = $id_lang;
@@ -492,7 +492,7 @@ class XmlLoader
             if ($data_lang) {
                 $object->hydrate($data_lang);
             }
-            $object->add(true, (isset($xml->fields['null'])) ? true : false);
+            $object->add(true, isset($xml->fields['null']));
             $entity_id = $object->id;
             unset($object);
         } else {
@@ -1193,7 +1193,7 @@ class XmlLoader
         }
 
         // Get multilang columns
-        $alias_multilang = [];
+        $alias_multilang = $multilang_columns = [];
         if ($is_multilang) {
             $columns = $this->getColumns($entity);
             $multilang_columns = $this->getColumns($entity, true);

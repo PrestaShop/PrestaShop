@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Customer;
@@ -203,14 +203,24 @@ class CustomerController extends AbstractAdminController
     public function editAction($customerId, Request $request)
     {
         $this->addGroupSelectionToRequest($request);
+        /** @var ViewableCustomer $customerInformation */
+        $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int) $customerId));
+        $customerFormOptions = [
+            'is_password_required' => false,
+        ];
         try {
-            /** @var ViewableCustomer $customerInformation */
-            $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int) $customerId));
-            $customerFormOptions = [
-                'is_password_required' => false,
-            ];
             $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')
                 ->getFormFor((int) $customerId, [], $customerFormOptions);
+        } catch (Exception $exception) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages($exception))
+            );
+
+            return $this->redirectToRoute('admin_customers_index');
+        }
+
+        try {
             $customerForm->handleRequest($request);
             $customerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.customer_form_handler');
             $result = $customerFormHandler->handleFor((int) $customerId, $customerForm);
@@ -270,6 +280,10 @@ class CustomerController extends AbstractAdminController
         $privateNoteForm = $this->createForm(PrivateNoteType::class, [
             'note' => $customerInformation->getGeneralInformation()->getPrivateNote(),
         ]);
+
+        if ($request->query->has('conf')) {
+            $this->manageLegacyFlashes($request->query->get('conf'));
+        }
 
         return $this->render('@PrestaShop/Admin/Sell/Customer/view.html.twig', [
             'enableSidebar' => true,
@@ -934,5 +948,26 @@ class CustomerController extends AbstractAdminController
                 ]
             ),
         ];
+    }
+
+    /**
+     * Manage legacy flashes
+     *
+     * @todo Remove this code when legacy edit will be migrated.
+     *
+     * @param int $messageId The message id from legacy context
+     */
+    private function manageLegacyFlashes($messageId)
+    {
+        $messages = [
+            4 => $this->trans('Update successful.', 'Admin.Notifications.Success'),
+        ];
+
+        if (isset($messages[$messageId])) {
+            $this->addFlash(
+                'success',
+                $messages[$messageId]
+            );
+        }
     }
 }

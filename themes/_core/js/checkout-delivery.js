@@ -1,10 +1,11 @@
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,48 +16,51 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
-import $ from 'jquery'
-import prestashop from 'prestashop'
-import { refreshCheckoutPage } from './common';
+import $ from 'jquery';
+import prestashop from 'prestashop';
+import {refreshCheckoutPage} from './common';
 
 export default function () {
   let $body = $('body');
-  let deliveryFormSelector = '#js-delivery';
-  let summarySelector = '#js-checkout-summary';
-  let deliveryStepSelector = '#checkout-delivery-step';
-  let editDeliveryButtonSelector = '.js-edit-delivery';
+  let deliveryFormSelector = prestashop.selectors.checkout.deliveryFormSelector;
+  let summarySelector = prestashop.selectors.checkout.summarySelector;
+  let deliveryStepSelector = prestashop.selectors.checkout.deliveryStepSelector;
+  let editDeliveryButtonSelector = prestashop.selectors.checkout.editDeliveryButtonSelector;
 
   let updateDeliveryForm = (event) => {
     let $deliveryMethodForm = $(deliveryFormSelector);
     let requestData = $deliveryMethodForm.serialize();
     let $inputChecked = $(event.currentTarget);
-    let $newDeliveryOption = $inputChecked.parents(".delivery-option");
+    let $newDeliveryOption = $inputChecked.parents(prestashop.selectors.checkout.deliveryOption);
 
-    $.post($deliveryMethodForm.data('url-update'), requestData).then((resp) => {
-      $(summarySelector).replaceWith(resp.preview);
+    $.post($deliveryMethodForm.data('url-update'), requestData)
+      .then((resp) => {
+        $(summarySelector).replaceWith(resp.preview);
 
+        if ($(prestashop.selectors.checkout.cartPaymentStepRefresh).length) {
+          // we get the refresh flag : on payment step we need to refresh page to be sure
+          // amount is correctly updated on payment modules
+          refreshCheckoutPage();
+        }
 
-      if ($('.js-cart-payment-step-refresh').length) {
-        // we get the refresh flag : on payment step we need to refresh page to be sure
-        // amount is correctly updated on payment modules
-        refreshCheckoutPage();
-      }
-
-      prestashop.emit('updatedDeliveryForm', {
-        dataForm: $deliveryMethodForm.serializeArray(),
-        deliveryOption: $newDeliveryOption,
-        resp: resp
+        prestashop.emit('updatedDeliveryForm', {
+          dataForm: $deliveryMethodForm.serializeArray(),
+          deliveryOption: $newDeliveryOption,
+          resp: resp,
+        });
+      })
+      .fail((resp) => {
+        prestashop.trigger('handleError', {
+          eventType: 'updateDeliveryOptions',
+          resp: resp,
+        });
       });
-    }).fail((resp) => {
-      prestashop.trigger('handleError', {eventType: 'updateDeliveryOptions', resp: resp})
-    });
   };
 
   $body.on('change', deliveryFormSelector + ' input', updateDeliveryForm);

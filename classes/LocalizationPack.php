@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,15 +17,17 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 
 class LocalizationPackCore
@@ -326,42 +329,32 @@ class LocalizationPackCore
                     continue;
                 }
 
-                /** @var Language $defaultLang */
-                $defaultLang = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
+                $sfContainer = SymfonyContainer::getInstance();
+                $commandBus = $sfContainer->get('prestashop.core.command_bus');
 
-                $currency = new Currency();
-                $currency->name = (string) $attributes['name'];
-                $currency->iso_code = (string) $attributes['iso_code'];
-                $currency->iso_code_num = (int) $attributes['iso_code_num'];
-                $currency->numeric_iso_code = (string) $attributes['iso_code_num'];
-                $currency->blank = (int) $attributes['blank'];
-                $currency->conversion_rate = 1; // This value will be updated if the store is online
-                $currency->format = (int) $attributes['format'];
-                $currency->decimals = (int) $attributes['decimals'];
-                $currency->active = true;
-                if (!$currency->validateFields()) {
-                    $this->_errors[] = Context::getContext()->getTranslator()->trans('Invalid currency properties.', [], 'Admin.International.Notification');
+                $command = new AddCurrencyCommand(
+                    (string) $attributes['iso_code'],
+                    (float) 1,
+                    true
+                );
+
+                /* @var CurrencyId $currencyId */
+                try {
+                    $currencyId = $commandBus->handle($command);
+                } catch (CurrencyException $e) {
+                    $this->_errors[] = null;
+                    Context::getContext()->getTranslator()->trans(
+                        'An error occurred while importing the currency: %s',
+                        [(string) ($attributes['name'])],
+                        'Admin.International.Notification'
+                    );
 
                     return false;
                 }
-                if (!Currency::exists($currency->iso_code)) {
-                    if (!$currency->add()) {
-                        $this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred while importing the currency: %s', [(string) ($attributes['name'])], 'Admin.International.Notification');
 
-                        return false;
-                    }
-                    Cache::clear();
-                    // set default data from CLDR
-                    $this->setCurrencyCldrData($currency, $defaultLang);
+                Cache::clear();
 
-                    // Following is required when installing new currency on existing languages:
-                    // we want to properly update the symbol in each language
-                    $localeRepoCLDR = $this->getCldrLocaleRepository();
-                    $currency->refreshLocalizedCurrencyData(Language::getLanguages(), $localeRepoCLDR);
-                    $currency->save();
-
-                    PaymentModule::addCurrencyPermissions($currency->id);
-                }
+                PaymentModule::addCurrencyPermissions($currencyId->getValue());
             }
 
             $error = Currency::refreshCurrencies();
@@ -394,25 +387,6 @@ class LocalizationPackCore
         $localeRepoCLDR = $container->get('prestashop.core.localization.cldr.locale_repository');
 
         return $localeRepoCLDR;
-    }
-
-    /**
-     * @param Currency $currency
-     * @param Language $defaultLang
-     */
-    protected function setCurrencyCldrData(Currency $currency, Language $defaultLang)
-    {
-        $localeRepoCLDR = $this->getCldrLocaleRepository();
-        $cldrLocale = $localeRepoCLDR->getLocale($defaultLang->locale);
-        $cldrCurrency = $cldrLocale->getCurrency($currency->iso_code);
-
-        $symbol = (string) $cldrCurrency->getSymbol();
-        if (empty($symbol)) {
-            $symbol = $currency->iso_code;
-        }
-        $currency->symbol = $symbol;
-        $currency->sign = $symbol;
-        $currency->precision = (int) $cldrCurrency->getDecimalDigits();
     }
 
     /**

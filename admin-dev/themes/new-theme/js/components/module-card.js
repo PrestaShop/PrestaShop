@@ -1,10 +1,11 @@
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 const {$} = window;
@@ -100,8 +100,8 @@ export default class ModuleCard {
         }
 
         return self.dispatchPreEvent('install', this)
-            && self.confirmAction('install', this)
-            && self.requestToController('install', $(this));
+          && self.confirmAction('install', this)
+          && self.requestToController('install', $(this));
       },
     );
 
@@ -110,8 +110,8 @@ export default class ModuleCard {
       this.moduleActionMenuEnableLinkSelector,
       function () {
         return self.dispatchPreEvent('enable', this)
-            && self.confirmAction('enable', this)
-            && self.requestToController('enable', $(this));
+          && self.confirmAction('enable', this)
+          && self.requestToController('enable', $(this));
       },
     );
 
@@ -120,8 +120,8 @@ export default class ModuleCard {
       this.moduleActionMenuUninstallLinkSelector,
       function () {
         return self.dispatchPreEvent('uninstall', this)
-            && self.confirmAction('uninstall', this)
-            && self.requestToController('uninstall', $(this));
+          && self.confirmAction('uninstall', this)
+          && self.requestToController('uninstall', $(this));
       },
     );
 
@@ -130,8 +130,8 @@ export default class ModuleCard {
       this.moduleActionMenuDisableLinkSelector,
       function () {
         return self.dispatchPreEvent('disable', this)
-            && self.confirmAction('disable', this)
-            && self.requestToController('disable', $(this));
+          && self.confirmAction('disable', this)
+          && self.requestToController('disable', $(this));
       },
     );
 
@@ -140,8 +140,8 @@ export default class ModuleCard {
       this.moduleActionMenuEnableMobileLinkSelector,
       function () {
         return self.dispatchPreEvent('enable_mobile', this)
-            && self.confirmAction('enable_mobile', this)
-            && self.requestToController('enable_mobile', $(this));
+          && self.confirmAction('enable_mobile', this)
+          && self.requestToController('enable_mobile', $(this));
       },
     );
 
@@ -150,8 +150,8 @@ export default class ModuleCard {
       this.moduleActionMenuDisableMobileLinkSelector,
       function () {
         return self.dispatchPreEvent('disable_mobile', this)
-            && self.confirmAction('disable_mobile', this)
-            && self.requestToController('disable_mobile', $(this));
+          && self.confirmAction('disable_mobile', this)
+          && self.requestToController('disable_mobile', $(this));
       },
     );
 
@@ -160,8 +160,8 @@ export default class ModuleCard {
       this.moduleActionMenuResetLinkSelector,
       function () {
         return self.dispatchPreEvent('reset', this)
-            && self.confirmAction('reset', this)
-            && self.requestToController('reset', $(this));
+          && self.confirmAction('reset', this)
+          && self.requestToController('reset', $(this));
       },
     );
 
@@ -170,8 +170,8 @@ export default class ModuleCard {
       this.moduleActionMenuUpdateLinkSelector,
       function () {
         return self.dispatchPreEvent('update', this)
-            && self.confirmAction('update', this)
-            && self.requestToController('update', $(this));
+          && self.confirmAction('update', this)
+          && self.requestToController('update', $(this));
       },
     );
 
@@ -332,43 +332,50 @@ export default class ModuleCard {
     }).done((result) => {
       if (result === undefined) {
         $.growl.error({message: 'No answer received from server'});
-      } else {
-        const moduleTechName = Object.keys(result)[0];
-
-        if (result[moduleTechName].status === false) {
-          if (typeof result[moduleTechName].confirmation_subject !== 'undefined') {
-            self.confirmPrestaTrust(result[moduleTechName]);
-          }
-
-          $.growl.error({message: result[moduleTechName].msg});
-        } else {
-          $.growl.notice({message: result[moduleTechName].msg});
-
-          const alteredSelector = self.getModuleItemSelector().replace('.', '');
-          let mainElement = null;
-
-          if (action === 'uninstall') {
-            mainElement = jqElementObj.closest(`.${alteredSelector}`);
-            mainElement.remove();
-
-            BOEvent.emitEvent('Module Uninstalled', 'CustomEvent');
-          } else if (action === 'disable') {
-            mainElement = jqElementObj.closest(`.${alteredSelector}`);
-            mainElement.addClass(`${alteredSelector}-isNotActive`);
-            mainElement.attr('data-active', '0');
-
-            BOEvent.emitEvent('Module Disabled', 'CustomEvent');
-          } else if (action === 'enable') {
-            mainElement = jqElementObj.closest(`.${alteredSelector}`);
-            mainElement.removeClass(`${alteredSelector}-isNotActive`);
-            mainElement.attr('data-active', '1');
-
-            BOEvent.emitEvent('Module Enabled', 'CustomEvent');
-          }
-
-          jqElementObj.replaceWith(result[moduleTechName].action_menu_html);
-        }
+        return;
       }
+
+      if (typeof result.status !== 'undefined' && result.status === false) {
+        $.growl.error({message: result.msg});
+        return;
+      }
+
+      const moduleTechName = Object.keys(result)[0];
+
+      if (result[moduleTechName].status === false) {
+        if (typeof result[moduleTechName].confirmation_subject !== 'undefined') {
+          self.confirmPrestaTrust(result[moduleTechName]);
+        }
+
+        $.growl.error({message: result[moduleTechName].msg});
+        return;
+      }
+
+      $.growl.notice({message: result[moduleTechName].msg});
+
+      const alteredSelector = self.getModuleItemSelector().replace('.', '');
+      let mainElement = null;
+
+      if (action === 'uninstall') {
+        mainElement = jqElementObj.closest(`.${alteredSelector}`);
+        mainElement.remove();
+
+        BOEvent.emitEvent('Module Uninstalled', 'CustomEvent');
+      } else if (action === 'disable') {
+        mainElement = jqElementObj.closest(`.${alteredSelector}`);
+        mainElement.addClass(`${alteredSelector}-isNotActive`);
+        mainElement.attr('data-active', '0');
+
+        BOEvent.emitEvent('Module Disabled', 'CustomEvent');
+      } else if (action === 'enable') {
+        mainElement = jqElementObj.closest(`.${alteredSelector}`);
+        mainElement.removeClass(`${alteredSelector}-isNotActive`);
+        mainElement.attr('data-active', '1');
+
+        BOEvent.emitEvent('Module Enabled', 'CustomEvent');
+      }
+
+      jqElementObj.replaceWith(result[moduleTechName].action_menu_html);
     }).fail(() => {
       const moduleItem = jqElementObj.closest('module-item-list');
       const techName = moduleItem.data('techName');

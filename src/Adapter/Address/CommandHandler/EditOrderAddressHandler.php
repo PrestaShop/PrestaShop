@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,21 +17,20 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Address\CommandHandler;
 
 use Order;
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCustomerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditOrderAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\EditCustomerAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\EditOrderAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotUpdateOrderAddressException;
@@ -38,27 +38,46 @@ use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderDeliveryAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderInvoiceAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\ChangeOrderDeliveryAddressHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\ChangeOrderInvoiceAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderAddressType;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShopException;
 
 /**
- * EditOrderAddressCommandHandler manages an order update, it then updates order and cart
+ * EditOrderAddressCommandHandler manages an address update, it then updates order and cart
  * relation to the newly created address.
  */
 class EditOrderAddressHandler implements EditOrderAddressHandlerInterface
 {
     /**
-     * @var CommandBusInterface
+     * @var EditCustomerAddressHandlerInterface
      */
-    private $commandBus;
+    private $addressHandler;
 
     /**
-     * @param CommandBusInterface $commandBus
+     * @var ChangeOrderDeliveryAddressHandlerInterface
      */
-    public function __construct(CommandBusInterface $commandBus)
-    {
-        $this->commandBus = $commandBus;
+    private $deliveryAddressHandler;
+
+    /**
+     * @var ChangeOrderInvoiceAddressHandlerInterface
+     */
+    private $invoiceAddressHandler;
+
+    /**
+     * @param EditCustomerAddressHandlerInterface $addressHandler
+     * @param ChangeOrderDeliveryAddressHandlerInterface $deliveryAddressHandler
+     * @param ChangeOrderInvoiceAddressHandlerInterface $invoiceAddressHandler
+     */
+    public function __construct(
+        EditCustomerAddressHandlerInterface $addressHandler,
+        ChangeOrderDeliveryAddressHandlerInterface $deliveryAddressHandler,
+        ChangeOrderInvoiceAddressHandlerInterface $invoiceAddressHandler
+    ) {
+        $this->addressHandler = $addressHandler;
+        $this->deliveryAddressHandler = $deliveryAddressHandler;
+        $this->invoiceAddressHandler = $invoiceAddressHandler;
     }
 
     /**
@@ -74,16 +93,16 @@ class EditOrderAddressHandler implements EditOrderAddressHandlerInterface
         try {
             $addressCommand = $this->createEditAddressCommand($command);
             /** @var AddressId $addressId */
-            $addressId = $this->commandBus->handle($addressCommand);
+            $addressId = $this->addressHandler->handle($addressCommand);
 
             switch ($command->getAddressType()) {
                 case OrderAddressType::DELIVERY_ADDRESS_TYPE:
-                    $this->commandBus->handle(new ChangeOrderDeliveryAddressCommand(
+                    $this->deliveryAddressHandler->handle(new ChangeOrderDeliveryAddressCommand(
                         $command->getOrderId()->getValue(), $addressId->getValue()
                     ));
                     break;
                 case OrderAddressType::INVOICE_ADDRESS_TYPE:
-                    $this->commandBus->handle(new ChangeOrderInvoiceAddressCommand(
+                    $this->invoiceAddressHandler->handle(new ChangeOrderInvoiceAddressCommand(
                         $command->getOrderId()->getValue(), $addressId->getValue()
                     ));
                     break;

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 // Deprecated since 1.5.0.1 use Product::CUSTOMIZE_FILE
@@ -30,6 +30,7 @@ define('_CUSTOMIZE_FILE_', 0);
 // Deprecated since 1.5.0.1 use Product::CUSTOMIZE_TEXTFIELD
 define('_CUSTOMIZE_TEXTFIELD_', 1);
 
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Product\ProductInterface;
 
@@ -123,7 +124,11 @@ class ProductCore extends ObjectModel
     /** @var string Reference */
     public $reference;
 
-    /** @var string Supplier Reference */
+    /**
+     * @var string Supplier Reference
+     *
+     * @deprecated since 1.7.7.0
+     */
     public $supplier_reference;
 
     /** @var string Location */
@@ -329,7 +334,7 @@ class ProductCore extends ObjectModel
      *
      * Long description for delivery in-stock product information.
      *
-     * @var string
+     * @var string[]
      */
     public $delivery_in_stock;
 
@@ -338,7 +343,7 @@ class ProductCore extends ObjectModel
      *
      * Long description for delivery out-stock product information.
      *
-     * @var string
+     * @var string[]
      */
     public $delivery_out_stock;
 
@@ -642,6 +647,14 @@ class ProductCore extends ObjectModel
     public function __construct($id_product = null, $full = false, $id_lang = null, $id_shop = null, Context $context = null)
     {
         parent::__construct($id_product, $id_lang, $id_shop);
+
+        $unitPriceRatio = new Number((string) $this->unit_price_ratio);
+        $price = new Number((string) $this->price);
+
+        if ($unitPriceRatio->isGreaterThanZero()) {
+            $this->unit_price = (float) (string) $price->dividedBy($unitPriceRatio);
+        }
+
         if ($full && $this->id) {
             if (!$context) {
                 $context = Context::getContext();
@@ -4736,6 +4749,7 @@ class ProductCore extends ObjectModel
             WHERE pa.`id_product` = ' . (int) $id_product_old
         );
         $combinations = [];
+        $product_supplier_keys = [];
 
         foreach ($result as $row) {
             $id_product_attribute_old = (int) $row['id_product_attribute'];
@@ -4790,6 +4804,14 @@ class ProductCore extends ObjectModel
             AND `id_product` = ' . (int) $id_product_old);
 
             foreach ($result3 as $row3) {
+                $current_supplier_key = $id_product_new . '_' . $id_product_attribute_new . '_' . $row3['id_supplier'];
+
+                if (in_array($current_supplier_key, $product_supplier_keys)) {
+                    continue;
+                }
+
+                $product_supplier_keys[] = $current_supplier_key;
+
                 unset($row3['id_product_supplier']);
                 $row3['id_product'] = $id_product_new;
                 $row3['id_product_attribute'] = $id_product_attribute_new;
@@ -5523,6 +5545,13 @@ class ProductCore extends ObjectModel
 
         $row['ecotax_rate'] = (float) Tax::getProductEcotaxRate($context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 
+        if (!isset($row['cover_image_id'])) {
+            $cover = static::getCover($row['id_product']);
+            if (isset($cover['id_image'])) {
+                $row['cover_image_id'] = $cover['id_image'];
+            }
+        }
+
         Hook::exec('actionGetProductPropertiesAfter', [
             'id_lang' => $id_lang,
             'product' => &$row,
@@ -5536,7 +5565,17 @@ class ProductCore extends ObjectModel
             $row['unit_price_ratio'] = $row['price_tax_exc'] / $unitPrice;
         }
 
-        $row['unit_price'] = ($row['unit_price_ratio'] != 0 ? $row['price'] / $row['unit_price_ratio'] : 0);
+        if (isset($row['unit_price_ratio'])) {
+            $row['unit_price'] = ($row['unit_price_ratio'] != 0 ? $row['price'] / $row['unit_price_ratio'] : 0);
+        } else {
+            $row['unit_price'] = 0.0;
+        }
+
+        Hook::exec('actionGetProductPropertiesAfterUnitPrice', [
+            'id_lang' => $id_lang,
+            'product' => &$row,
+            'context' => $context,
+        ]);
 
         self::$productPropertiesCache[$cache_key] = $row;
 
@@ -6110,6 +6149,56 @@ class ProductCore extends ObjectModel
             SELECT `id_customization_field`, `type`, `required`
             FROM `' . _DB_PREFIX_ . 'customization_field`
             WHERE `id_product` = ' . (int) $this->id);
+    }
+
+    /**
+     * @return array
+     */
+    public function getNonDeletedCustomizationFieldIds()
+    {
+        if (!Customization::isFeatureActive()) {
+            return [];
+        }
+
+        $results = Db::getInstance()->executeS('
+            SELECT `id_customization_field`
+            FROM `' . _DB_PREFIX_ . 'customization_field`
+            WHERE `is_deleted` = 0
+            AND `id_product` = ' . (int) $this->id
+        );
+
+        return array_map(function ($result) {
+            return (int) $result['id_customization_field'];
+        }, $results);
+    }
+
+    /**
+     * @param int $fieldType |null
+     *
+     * @return int
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public function countCustomizationFields(?int $fieldType = null): int
+    {
+        $query = '
+            SELECT COUNT(`id_customization_field`) as customizations_count
+            FROM `' . _DB_PREFIX_ . 'customization_field`
+            WHERE `is_deleted` = 0
+            AND `id_product` = ' . (int) $this->id
+        ;
+
+        if (null !== $fieldType) {
+            $query .= sprintf(' AND type = %d', $fieldType);
+        }
+
+        $results = Db::getInstance()->executeS($query);
+
+        if (empty($results)) {
+            return 0;
+        }
+
+        return (int) reset($results)['customizations_count'];
     }
 
     /**
@@ -7911,5 +8000,38 @@ class ProductCore extends ObjectModel
         }
 
         return $return;
+    }
+
+    /**
+     * Update default supplier data
+     *
+     * @param int $idSupplier
+     * @param float $wholesalePrice
+     * @param string $supplierReference
+     *
+     * @return bool
+     */
+    public function updateDefaultSupplierData(int $idSupplier, string $supplierReference, float $wholesalePrice): bool
+    {
+        if (!$this->id) {
+            return false;
+        }
+
+        $sql = 'UPDATE `' . _DB_PREFIX_ . 'product` ' .
+             'SET ' .
+             'id_supplier = %d, ' .
+             'supplier_reference = "%s", ' .
+             'wholesale_price = "%s" ' .
+             'WHERE id_product = %d';
+
+        return Db::getInstance()->execute(
+            sprintf(
+                $sql,
+                $idSupplier,
+                pSQL($supplierReference),
+                $wholesalePrice,
+                $this->id
+            )
+        );
     }
 }

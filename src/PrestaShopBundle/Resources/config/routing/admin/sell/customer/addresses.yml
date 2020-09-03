@@ -44,10 +44,22 @@ admin_order_addresses_edit:
   path: /order/{orderId}/{addressType}/edit
   methods: [GET, POST]
   defaults:
-    _controller: PrestaShopBundle:Admin\Sell\Address\Address:editOrder
+    _controller: PrestaShopBundle:Admin\Sell\Address\Address:editOrderAddress
     _legacy_controller: AdminAddresses
   requirements:
     orderId: \d+
+    addressType: delivery|invoice
+  options:
+    expose: true
+
+admin_cart_addresses_edit:
+  path: /cart/{cartId}/{addressType}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Sell\Address\Address:editCartAddress
+    _legacy_controller: AdminAddresses
+  requirements:
+    cartId: \d+
     addressType: delivery|invoice
   options:
     expose: true
@@ -62,7 +74,7 @@ admin_addresses_delete_bulk:
 
 admin_addresses_delete:
   path: /{addressId}/delete
-  methods: [POST]
+  methods: [POST, DELETE]
   defaults:
     _controller: PrestaShopBundle:Admin\Sell\Address\Address:delete
     _legacy_controller: AdminAddresses

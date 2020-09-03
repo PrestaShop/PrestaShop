@@ -3,7 +3,10 @@ SET NAMES 'utf8';
 
 ALTER DATABASE `DB_NAME` CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
-INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_DISPLAY_MANUFACTURERS', '1', NOW(), NOW());
+INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES
+    ('PS_DISPLAY_MANUFACTURERS', '1', NOW(), NOW()),
+    ('PS_ORDER_PRODUCTS_NB_PER_PAGE', '8', NOW(), NOW())
+;
 
 /* Add field MPN to tables */
 ALTER TABLE `PREFIX_order_detail` ADD `product_mpn` VARCHAR(40) NULL AFTER `product_upc`;
@@ -83,7 +86,6 @@ ALTER TABLE `PREFIX_cms_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_g
 ALTER TABLE `PREFIX_cms_role` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_cms_role_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_cms_shop` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-ALTER TABLE `PREFIX_condition` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_configuration` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_configuration_kpi` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_configuration_kpi_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
@@ -104,6 +106,7 @@ ALTER TABLE `PREFIX_customer` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_g
 ALTER TABLE `PREFIX_customer_group` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_customer_message` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_customer_message_sync_imap` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+ALTER TABLE `PREFIX_customer_session` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_customer_thread` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_customization` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_customization_field` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
@@ -112,6 +115,7 @@ ALTER TABLE `PREFIX_customized_data` CONVERT TO CHARACTER SET utf8mb4 COLLATE ut
 ALTER TABLE `PREFIX_date_range` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_delivery` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_employee` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+ALTER TABLE `PREFIX_employee_session` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_employee_shop` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_feature` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_feature_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
@@ -274,10 +278,6 @@ ALTER TABLE `PREFIX_stock_mvt` CHANGE `employee_lastname` `employee_lastname` va
 ALTER TABLE `PREFIX_stock_mvt` CHANGE `employee_firstname` `employee_firstname` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL;
 ALTER TABLE `PREFIX_timezone` CHANGE `name` `name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
 ALTER TABLE `PREFIX_attribute_group` CHANGE `group_type` `group_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
-ALTER TABLE `PREFIX_condition` CHANGE `operator` `operator` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL;
-ALTER TABLE `PREFIX_condition` CHANGE `value` `value` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL;
-ALTER TABLE `PREFIX_condition` CHANGE `result` `result` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL;
-ALTER TABLE `PREFIX_condition` CHANGE `calculation_detail` `calculation_detail` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL;
 ALTER TABLE `PREFIX_search_word` CHANGE `word` `word` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
 ALTER TABLE `PREFIX_meta` CHANGE `page` `page` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
 ALTER TABLE `PREFIX_statssearch` CHANGE `keywords` `keywords` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
@@ -336,7 +336,6 @@ ALTER TABLE `PREFIX_cms_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_g
 ALTER TABLE `PREFIX_cms_role` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_cms_role_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_cms_shop` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-ALTER TABLE `PREFIX_condition` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_configuration` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_configuration_kpi` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_configuration_kpi_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
@@ -537,11 +536,12 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
   (NULL, 'displayAdminOrderMainBottom', 'Admin Order Main Column Bottom', 'This hook displays content in the order view page at the bottom of the main column', '1'),
   (NULL, 'displayAdminOrderTabLink', 'Admin Order Tab Link', 'This hook displays new tab links on the order view page', '1'),
   (NULL, 'displayAdminOrderTabContent', 'Admin Order Tab Content', 'This hook displays new tab contents on the order view page', '1'),
-  (NULL, 'actionGetAdminOrderButtons', 'Admin Order Buttons', 'This hook is used to generate the buttons collection on the order view page (see ActionsBarButtonsCollection)', '1')
+  (NULL, 'actionGetAdminOrderButtons', 'Admin Order Buttons', 'This hook is used to generate the buttons collection on the order view page (see ActionsBarButtonsCollection)', '1'),
   (NULL, 'displayFooterCategory', 'Category footer', 'This hook adds new blocks under the products listing in a category/search', '1'),
   (NULL, 'displayBackOfficeOrderActions', 'Admin Order Actions', 'This hook displays content in the order view page after action buttons (or aliased to side column in migrated page)', '1'),
   (NULL, 'actionAdminAdminPreferencesControllerPostProcessBefore', 'On post-process in Admin Preferences', 'This hook is called on Admin Preferences post-process before processing the form', '1'),
-  (NULL, 'displayAdditionalCustomerAddressFields', 'Display additional customer address fields', 'This hook allows to display extra field values added in an address form using hook ''additionalCustomerAddressFields''', '1')
+  (NULL, 'displayAdditionalCustomerAddressFields', 'Display additional customer address fields', 'This hook allows to display extra field values added in an address form using hook ''additionalCustomerAddressFields''', '1'),
+  (NULL, 'displayAdminProductsExtra', 'Admin Product Extra Module Tab', 'This hook displays extra content in the Module tab on the product edit page', '1')
 ;
 
 INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES
@@ -552,6 +552,51 @@ INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES
 /* Add refund amount on order detail, and fill new columns via data in order_slip_detail table */
 ALTER TABLE `PREFIX_order_detail` ADD `total_refunded_tax_excl` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000' AFTER `original_wholesale_price`;
 ALTER TABLE `PREFIX_order_detail` ADD `total_refunded_tax_incl` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000' AFTER `total_refunded_tax_excl`;
+
+ALTER TABLE `PREFIX_group_reduction` CHANGE `reduction` `reduction` DECIMAL(5, 4) NOT NULL DEFAULT '0.0000';
+ALTER TABLE `PREFIX_product_group_reduction_cache` CHANGE `reduction` `reduction` DECIMAL(5, 4) NOT NULL DEFAULT '0.0000';
+ALTER TABLE `PREFIX_order_slip` CHANGE `amount` `amount` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
+ALTER TABLE `PREFIX_order_slip` CHANGE `shipping_cost_amount` `shipping_cost_amount` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
+ALTER TABLE `PREFIX_order_payment` CHANGE `amount` `amount` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
+
+/* attribute_impact price */
+UPDATE `PREFIX_attribute_impact` SET `price` = RIGHT(`price`, 17) WHERE LENGTH(`price`) > 17;
+ALTER TABLE `PREFIX_attribute_impact` CHANGE `price` `price` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
+
+/* cart_rule minimum_amount & reduction_amount */
+UPDATE `PREFIX_cart_rule` SET `minimum_amount` = RIGHT(`minimum_amount`, 17) WHERE LENGTH(`minimum_amount`) > 17;
+UPDATE `PREFIX_cart_rule` SET `reduction_amount` = RIGHT(`reduction_amount`, 17) WHERE LENGTH(`reduction_amount`) > 17;
+ALTER TABLE `PREFIX_cart_rule` CHANGE `minimum_amount` `minimum_amount` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
+ALTER TABLE `PREFIX_cart_rule` CHANGE `reduction_amount` `reduction_amount` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
+
+/* group reduction */
+UPDATE `PREFIX_group` SET `reduction` = RIGHT(`reduction`, 6) WHERE LENGTH(`reduction`) > 6;
+ALTER TABLE `PREFIX_group` CHANGE `reduction` `reduction` DECIMAL(5, 2) NOT NULL DEFAULT '0.00';
+
+/* order_detail reduction_percent, group_reduction & ecotax */
+UPDATE `PREFIX_order_detail` SET `reduction_percent` = RIGHT(`reduction_percent`, 6) WHERE LENGTH(`reduction_percent`) > 6;
+UPDATE `PREFIX_order_detail` SET `group_reduction` = RIGHT(`group_reduction`, 6) WHERE LENGTH(`group_reduction`) > 6;
+UPDATE `PREFIX_order_detail` SET `ecotax` = RIGHT(`ecotax`, 18) WHERE LENGTH(`ecotax`) > 18;
+ALTER TABLE `PREFIX_order_detail` CHANGE `reduction_percent` `reduction_percent` DECIMAL(5, 2) NOT NULL DEFAULT '0.00';
+ALTER TABLE `PREFIX_order_detail` CHANGE `group_reduction` `group_reduction` DECIMAL(5, 2) NOT NULL DEFAULT '0.00';
+ALTER TABLE `PREFIX_order_detail` CHANGE `ecotax` `ecotax` DECIMAL(17, 6) NOT NULL DEFAULT '0.000000';
+
+/* product additional_shipping_cost */
+UPDATE `PREFIX_product` SET `additional_shipping_cost` = RIGHT(`additional_shipping_cost`, 17) WHERE LENGTH(`additional_shipping_cost`) > 17;
+ALTER TABLE `PREFIX_product` CHANGE `additional_shipping_cost` `additional_shipping_cost` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
+
+/* product_shop additional_shipping_cost */
+UPDATE `PREFIX_product_shop` SET `additional_shipping_cost` = RIGHT(`additional_shipping_cost`, 17) WHERE LENGTH(`additional_shipping_cost`) > 17;
+ALTER TABLE `PREFIX_product_shop` CHANGE `additional_shipping_cost` `additional_shipping_cost` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
+
+/* order_cart_rule value & value_tax_excl */
+UPDATE `PREFIX_order_cart_rule` SET `value` = RIGHT(`value`, 17) WHERE LENGTH(`value`) > 17;
+UPDATE `PREFIX_order_cart_rule` SET `value_tax_excl` = RIGHT(`value_tax_excl`, 17) WHERE LENGTH(`value_tax_excl`) > 17;
+ALTER TABLE `PREFIX_order_cart_rule` CHANGE `value` `value` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
+ALTER TABLE `PREFIX_order_cart_rule` CHANGE `value_tax_excl` `value_tax_excl` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
+
+/* add deleted field */
+ALTER TABLE `PREFIX_order_cart_rule` ADD `deleted` TINYINT(1) UNSIGNED NOT NULL;
 
 UPDATE
     `PREFIX_order_detail` `od`
@@ -798,5 +843,28 @@ VALUES (NULL, 'actionOrderMessageFormBuilderModifier', 'Modify order message ide
        (NULL, 'actionAddressGridPresenterModifier', 'Modify address grid template data',
         'This hook allows to modify data which is about to be used in template for address grid', '1'),
        (NULL, 'actionCreditSlipGridPresenterModifier', 'Modify credit slip grid template data',
-        'This hook allows to modify data which is about to be used in template for credit slip grid', '1')
+        'This hook allows to modify data which is about to be used in template for credit slip grid', '1'),
+       (NULL, 'displayAfterTitleTag', 'After title tag', 'Use this hook to add content after title tag', '1')
 ;
+
+/* Update wrong hook names */
+UPDATE `PREFIX_hook_module` AS hm
+INNER JOIN `PREFIX_hook` AS hfrom ON hm.id_hook = hfrom.id_hook AND hfrom.name = 'actionAdministrationPageFormSave'
+INNER JOIN `PREFIX_hook` AS hto ON hto.name = 'actionAdministrationPageSave'
+SET hm.id_hook = hto.id_hook;
+DELETE FROM `PREFIX_hook` WHERE name = 'actionAdministrationPageFormSave';
+
+UPDATE `PREFIX_hook_module` AS hm
+INNER JOIN `PREFIX_hook` AS hfrom ON hm.id_hook = hfrom.id_hook AND hfrom.name = 'actionMaintenancePageFormSave'
+INNER JOIN `PREFIX_hook` AS hto ON hto.name = 'actionMaintenancePageSave'
+SET hm.id_hook = hto.id_hook;
+DELETE FROM `PREFIX_hook` WHERE name = 'actionMaintenancePageFormSave';
+
+UPDATE `PREFIX_hook_module` AS hm
+INNER JOIN `PREFIX_hook` AS hfrom ON hm.id_hook = hfrom.id_hook AND hfrom.name = 'actionPerformancePageFormSave'
+INNER JOIN `PREFIX_hook` AS hto ON hto.name = 'actionPerformancePageSave'
+SET hm.id_hook = hto.id_hook;
+DELETE FROM `PREFIX_hook` WHERE name = 'actionPerformancePageFormSave';
+
+/* Update wrong hook alias */
+UPDATE `PREFIX_hook_alias` SET name = 'displayHeader', alias = 'Header' WHERE name = 'Header' AND alias = 'displayHeader';

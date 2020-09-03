@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -305,11 +305,51 @@ class TagCore extends ObjectModel
      * @param int $idProduct Product ID
      *
      * @return bool
+     *
+     * @throws PrestaShopDatabaseException
      */
     public static function deleteTagsForProduct($idProduct)
     {
-        $tagsRemoved = Db::getInstance()->executeS('SELECT id_tag FROM ' . _DB_PREFIX_ . 'product_tag WHERE id_product=' . (int) $idProduct);
-        $result = Db::getInstance()->delete('product_tag', 'id_product = ' . (int) $idProduct);
+        return self::deleteProductTags($idProduct);
+    }
+
+    /**
+     * Delete tags for product in specific language
+     *
+     * @param int $productId
+     * @param int $langId
+     *
+     * @return bool
+     */
+    public static function deleteProductTagsInLang(int $productId, int $langId)
+    {
+        return self::deleteProductTags($productId, $langId);
+    }
+
+    /**
+     * Deletes product tags.
+     *
+     * @param $idProduct
+     * @param int|null $langId if provided, only deletes tags in specific language
+     *
+     * @return bool
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    private static function deleteProductTags($idProduct, int $langId = null)
+    {
+        $removeWhere = 'id_product = ' . (int) $idProduct;
+        $selectTagsToRemove = '
+            SELECT id_tag FROM ' . _DB_PREFIX_ . 'product_tag
+            WHERE id_product=' . (int) $idProduct
+        ;
+        if ($langId) {
+            $removeWhere .= ' AND id_lang =' . (int) $langId;
+            $selectTagsToRemove .= ' AND id_lang =' . (int) $langId;
+        }
+
+        $tagsRemoved = Db::getInstance()->executeS($selectTagsToRemove);
+        $result = Db::getInstance()->delete('product_tag', $removeWhere);
         Db::getInstance()->delete('tag', 'NOT EXISTS (SELECT 1 FROM ' . _DB_PREFIX_ . 'product_tag
         												WHERE ' . _DB_PREFIX_ . 'product_tag.id_tag = ' . _DB_PREFIX_ . 'tag.id_tag)');
         $tagList = [];

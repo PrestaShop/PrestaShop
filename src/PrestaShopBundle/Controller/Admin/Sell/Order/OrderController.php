@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
@@ -68,6 +68,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizationForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
@@ -78,6 +79,7 @@ use PrestaShop\PrestaShop\Core\Order\OrderSiblingProviderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Exception\InvalidModuleException;
 use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddProductRowType;
@@ -93,6 +95,9 @@ use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -103,6 +108,16 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class OrderController extends FrameworkBundleAdminController
 {
+    /**
+     * Default number of products per page (in case invalid value is used)
+     */
+    const DEFAULT_PRODUCTS_NUMBER = 8;
+
+    /**
+     * Options used for the number of products per page
+     */
+    const PRODUCTS_PAGINATION_OPTIONS = [8, 20, 50, 100];
+
     /**
      * Shows list of orders
      *
@@ -376,14 +391,22 @@ class OrderController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_orders_index');
         }
 
+        $formFactory = $this->get('form.factory');
+        $updateOrderStatusForm = $formFactory->createNamed(
+            'update_order_status',
+            UpdateOrderStatusType::class, [
+                'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
+            ]
+        );
+        $updateOrderStatusActionBarForm = $formFactory->createNamed(
+            'update_order_status_action_bar',
+            UpdateOrderStatusType::class, [
+                'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
+            ]
+        );
+
         $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class, [], [
             'order_id' => $orderId,
-        ]);
-        $updateOrderStatusForm = $this->createForm(UpdateOrderStatusType::class, [
-            'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
-        ]);
-        $updateOrderStatusActionBarForm = $this->createForm(UpdateOrderStatusType::class, [
-            'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
         ]);
         $addOrderPaymentForm = $this->createForm(OrderPaymentType::class, [
             'id_currency' => $orderForViewing->getCurrencyId(),
@@ -457,6 +480,13 @@ class OrderController extends FrameworkBundleAdminController
         /** @var OrderSiblingProviderInterface $orderSiblingProvider */
         $orderSiblingProvider = $this->get('prestashop.adapter.order.order_sibling_provider');
 
+        $paginationNum = (int) $this->configuration->get('PS_ORDER_PRODUCTS_NB_PER_PAGE', self::DEFAULT_PRODUCTS_NUMBER);
+        $paginationNumOptions = self::PRODUCTS_PAGINATION_OPTIONS;
+        if (!in_array($paginationNum, $paginationNumOptions)) {
+            $paginationNumOptions[] = $paginationNum;
+        }
+        sort($paginationNumOptions);
+
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => true,
             'enableSidebar' => true,
@@ -482,6 +512,8 @@ class OrderController extends FrameworkBundleAdminController
             'priceSpecification' => $this->getContextLocale()->getPriceSpecification($orderCurrency->iso_code)->toArray(),
             'previousOrderId' => $orderSiblingProvider->getPreviousOrderId($orderId),
             'nextOrderId' => $orderSiblingProvider->getNextOrderId($orderId),
+            'paginationNum' => $paginationNum,
+            'paginationNumOptions' => $paginationNumOptions,
         ]);
     }
 
@@ -928,8 +960,22 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function updateStatusAction(int $orderId, Request $request): RedirectResponse
     {
-        $form = $this->createForm(UpdateOrderStatusType::class);
+        $formFactory = $this->get('form.factory');
+
+        $form = $formFactory->createNamed(
+            'update_order_status',
+            UpdateOrderStatusType::class
+        );
         $form->handleRequest($request);
+
+        if (!$form->isSubmitted() || !$form->isValid()) {
+            // Check if the form is submit from the action bar
+            $form = $formFactory->createNamed(
+                'update_order_status_action_bar',
+                UpdateOrderStatusType::class
+            );
+            $form->handleRequest($request);
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->handleOrderStatusUpdate($orderId, (int) $form->getData()['new_order_status_id']);
@@ -1323,7 +1369,7 @@ class OrderController extends FrameworkBundleAdminController
         return $this->json([
             'orderTotalFormatted' => $orderForViewingPrices->getTotalAmountFormatted(),
             'discountsAmountFormatted' => $orderForViewingPrices->getDiscountsAmountFormatted(),
-            'discountsAmountDisplayed' => $orderForViewingPrices->getDiscountsAmountRaw()->isGreaterThan(new Number('0')),
+            'discountsAmountDisplayed' => $orderForViewingPrices->getDiscountsAmountRaw()->isGreaterThanZero(),
             'productsTotalFormatted' => $orderForViewingPrices->getProductsPriceFormatted(),
             'shippingTotalFormatted' => $orderForViewingPrices->getShippingPriceFormatted(),
             'taxesTotalFormatted' => $orderForViewingPrices->getTaxesAmountFormatted(),
@@ -1415,6 +1461,73 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function configureProductPaginationAction(Request $request): JsonResponse
+    {
+        $numPerPage = (int) $request->request->get('numPerPage');
+        if ($numPerPage < 1) {
+            $numPerPage = self::DEFAULT_PRODUCTS_NUMBER;
+        }
+
+        try {
+            $this->configuration->set('PS_ORDER_PRODUCTS_NB_PER_PAGE', $numPerPage);
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        return $this->json(null, Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * Method for downloading customization picture
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param int $orderId
+     * @param int $type
+     * @param string $name
+     * @param string $value
+     *
+     * @return BinaryFileResponse|RedirectResponse
+     */
+    public function displayCustomizationImageAction(int $orderId, int $type, string $name, string $value)
+    {
+        $uploadDir = $this->get('prestashop.adapter.legacy.context')->getUploadDirectory();
+        $customizationForViewing = new OrderProductCustomizationForViewing($type, $name, $value);
+        $filePath = $uploadDir . $customizationForViewing->getValue();
+        $filesystem = new Filesystem();
+
+        try {
+            if (!$filesystem->exists($filePath)) {
+                $this->addFlash('error', $this->trans('The product customization picture could not be found.', 'Admin.Notifications.Error'));
+
+                return $this->redirectToRoute('admin_orders_view', [
+                    'orderId' => $orderId,
+                ]);
+            }
+
+            $imageFile = new File($filePath);
+            $fileName = sprintf('%s-customization-%s.%s', $orderId, $name, $imageFile->guessExtension() ?? 'jpg');
+
+            return $this->file($filePath, $fileName);
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
+    /**
      * Initializes order status update
      *
      * @param int $orderId
@@ -1469,13 +1582,28 @@ class OrderController extends FrameworkBundleAdminController
                 'Only numbers and decimal points (".") are allowed in the amount fields, e.g. 10.50 or 1050.',
                 'Admin.Orderscustomers.Notification'
             ),
-            InvalidCartRuleDiscountValueException::class => sprintf(
-                '%s<ol><li>%s</li><li>%s</li><li>%s</li></ol>',
-                $this->trans('It looks like the value is invalid:', 'Admin.Orderscustomers.Notification'),
-                $this->trans('Percent or amount value must be greater than 0.', 'Admin.Orderscustomers.Notification'),
-                $this->trans('Percent value cannot exceed 100.', 'Admin.Orderscustomers.Notification'),
-                $this->trans('Discount value cannot exceed the total price of this order.', 'Admin.Orderscustomers.Notification')
-            ),
+            InvalidCartRuleDiscountValueException::class => [
+                InvalidCartRuleDiscountValueException::INVALID_MIN_PERCENT => $this->trans(
+                    'Percent value must be greater than 0.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+                InvalidCartRuleDiscountValueException::INVALID_MAX_PERCENT => $this->trans(
+                    'Percent value cannot exceed 100.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+                InvalidCartRuleDiscountValueException::INVALID_MIN_AMOUNT => $this->trans(
+                    'Amount value must be greater than 0.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+                InvalidCartRuleDiscountValueException::INVALID_MAX_AMOUNT => $this->trans(
+                    'Discount value cannot exceed the total price of this order.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+                InvalidCartRuleDiscountValueException::INVALID_FREE_SHIPPING => $this->trans(
+                    'Shipping discount value cannot exceed the total price of this order.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+            ],
             InvalidCancelProductException::class => [
                 InvalidCancelProductException::INVALID_QUANTITY => $this->trans(
                     'Positive product quantity is required.',
@@ -1499,6 +1627,10 @@ class OrderController extends FrameworkBundleAdminController
                     'Admin.Orderscustomers.Notification'
                 ),
             ],
+            InvalidModuleException::class => $this->trans(
+                'You must choose a payment module to create the order.',
+                'Admin.Orderscustomers.Notification'
+            ),
             ProductOutOfStockException::class => $this->trans(
                 'There are not enough products in stock.',
                 'Admin.Catalog.Notification'
@@ -1523,6 +1655,10 @@ class OrderController extends FrameworkBundleAdminController
                 InvalidOrderStateException::NOT_PAID => $this->trans(
                     'Invalid action: this order has not been paid.',
                     'Admin.Notifications.Error'
+                ),
+                InvalidOrderStateException::INVALID_ID => $this->trans(
+                    'You must choose an order status to create the order.',
+                    'Admin.Orderscustomers.Notification'
                 ),
             ],
             InvalidProductQuantityException::class => $this->trans(

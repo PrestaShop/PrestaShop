@@ -2,9 +2,6 @@ services:
   _defaults:
     public: true
 
-  prestashop.adapter.admin.controller.category:
-    class: PrestaShop\PrestaShop\Adapter\Category\AdminCategoryControllerWrapper
-
   prestashop.adapter.category.category_view_data_provider:
     class: PrestaShop\PrestaShop\Adapter\Category\CategoryViewDataProvider
     arguments:

@@ -1,10 +1,11 @@
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 import Router from '@components/router';
@@ -75,18 +75,18 @@ export default class OrderProductAdd {
     });
     this.quantityInput.on('change keyup', (event) => {
       if (this.available !== null) {
-        const quantity = Number(event.target.value);
-        const available = this.available - quantity;
+        const newQuantity = Number(event.target.value);
+        const remainingAvailable = this.available - newQuantity;
         const availableOutOfStock = this.availableText.data('availableOutOfStock');
-        this.availableText.text(available);
-        this.availableText.toggleClass('text-danger font-weight-bold', available < 0);
-        const disableAddActionBtn = quantity <= 0 || (available <= 0 && !availableOutOfStock);
+        this.availableText.text(remainingAvailable);
+        this.availableText.toggleClass('text-danger font-weight-bold', remainingAvailable < 0);
+        const disableAddActionBtn = newQuantity <= 0 || (remainingAvailable < 0 && !availableOutOfStock);
         this.productAddActionBtn.prop('disabled', disableAddActionBtn);
-        this.invoiceSelect.prop('disabled', !availableOutOfStock && available < 0);
+        this.invoiceSelect.prop('disabled', !availableOutOfStock && remainingAvailable < 0);
 
         const taxIncluded = parseFloat(this.priceTaxIncludedInput.val());
         this.totalPriceText.html(
-          this.priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, this.currencyPrecision),
+          this.priceTaxCalculator.calculateTotalPrice(newQuantity, taxIncluded, this.currencyPrecision),
         );
       }
     });

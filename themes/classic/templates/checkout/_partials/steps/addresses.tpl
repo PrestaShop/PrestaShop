@@ -1,10 +1,11 @@
 {**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *}
 {extends file='checkout/_partials/steps/checkout-step.tpl'}
 
@@ -32,18 +32,16 @@
       data-refresh-url="{url entity='order' params=['ajax' => 1, 'action' => 'addressForm']}"
     >
 
-      {if !$use_same_address}
+      {if $use_same_address}
+        <p>
+          {if $cart.is_virtual}
+            {l s='The selected address will be used as your personal address (for invoice).' d='Shop.Theme.Checkout'}
+          {else}
+            {l s='The selected address will be used both as your personal address (for invoice) and as your delivery address.' d='Shop.Theme.Checkout'}
+          {/if}
+        </p>
+      {else}
         <h2 class="h4">{l s='Shipping Address' d='Shop.Theme.Checkout'}</h2>
-      {/if}
-
-      {if $use_same_address && !$cart.is_virtual}
-        <p>
-          {l s='The selected address will be used both as your personal address (for invoice) and as your delivery address.' d='Shop.Theme.Checkout'}
-        </p>
-      {elseif $use_same_address && $cart.is_virtual}
-        <p>
-          {l s='The selected address will be used as your personal address (for invoice).' d='Shop.Theme.Checkout'}
-        </p>
       {/if}
 
       {if $show_delivery_address_form}

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,16 +17,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Image;
 
+use Configuration;
 use Image;
 use ImageManager;
 use ImageType;
@@ -54,9 +55,8 @@ class ImageRetriever
      *
      * @return array
      */
-    public function getProductImages(array $product, Language $language)
+    public function getAllProductImages(array $product, Language $language)
     {
-        $productAttributeId = $product['id_product_attribute'];
         $productInstance = new Product(
             $product['id_product'],
             false,
@@ -99,6 +99,20 @@ class ImageRetriever
             return $image;
         }, $images);
 
+        return $images;
+    }
+
+    /**
+     * @param array $product
+     * @param Language $language
+     *
+     * @return array
+     */
+    public function getProductImages(array $product, Language $language)
+    {
+        $images = $this->getAllProductImages($product, $language);
+
+        $productAttributeId = $product['id_product_attribute'];
         $filteredImages = [];
 
         foreach ($images as $image) {
@@ -154,6 +168,7 @@ class ImageRetriever
             $imageFolderPath,
             $id_image . '.' . $ext,
         ]);
+        $generateHighDpiImages = (bool) Configuration::get('PS_HIGHT_DPI');
 
         foreach ($image_types as $image_type) {
             $resizedImagePath = implode(DIRECTORY_SEPARATOR, [
@@ -168,6 +183,21 @@ class ImageRetriever
                     (int) $image_type['width'],
                     (int) $image_type['height']
                 );
+            }
+
+            if ($generateHighDpiImages) {
+                $resizedImagePathHighDpi = implode(DIRECTORY_SEPARATOR, [
+                    $imageFolderPath,
+                    $id_image . '-' . $image_type['name'] . '2x.' . $ext,
+                ]);
+                if (!file_exists($resizedImagePathHighDpi)) {
+                    ImageManager::resize(
+                        $mainImagePath,
+                        $resizedImagePathHighDpi,
+                        (int) $image_type['width'] * 2,
+                        (int) $image_type['height'] * 2
+                    );
+                }
             }
 
             $url = $this->link->$getImageURL(
@@ -199,6 +229,7 @@ class ImageRetriever
             'medium' => $medium,
             'large' => $large,
             'legend' => isset($object->meta_title) ? $object->meta_title : $object->name,
+            'id_image' => $id_image,
         ];
     }
 

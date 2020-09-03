@@ -5,6 +5,7 @@
 npm-debug.log.*
 .sass-cache/
 *.swp
+*.swo
 .cache/
 
 # Cache
@@ -33,6 +34,7 @@ npm-debug.log.*
 !/img/.htaccess
 !/img/index.php
 !/img/404.gif
+!/img/app_icon.png
 !/img/bg_500.png
 !/img/bg_loader.png
 !/img/favicon.ico
@@ -53,6 +55,7 @@ npm-debug.log.*
 !/img/c/index.php
 !/img/cms/index.php
 !/img/co/index.php
+!/img/e/index.php
 !/img/jquery-ui
 !/img/l/index.php
 !/img/m/index.php
@@ -67,6 +70,7 @@ npm-debug.log.*
 
 # Upload
 /upload/*
+!/upload/index.php
 !/upload/.htaccess
 
 /vendor/*

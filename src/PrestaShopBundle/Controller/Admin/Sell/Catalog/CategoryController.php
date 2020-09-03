@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
@@ -83,14 +83,19 @@ class CategoryController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request, CategoryFilters $filters)
     {
-        $categoryGridFactory = $this->get('prestashop.core.grid.factory.category_decorator');
-        $categoryGrid = $categoryGridFactory->getGrid($filters);
-
         $categoriesKpiFactory = $this->get('prestashop.core.kpi_row.factory.categories');
 
         $currentCategoryId = $filters->getFilters()['id_category_parent'];
         $categoryViewDataProvider = $this->get('prestashop.adapter.category.category_view_data_provider');
         $categoryViewData = $categoryViewDataProvider->getViewData($currentCategoryId);
+
+        $isItASearchRequest = $this->requestHasSearchParameters($request);
+
+        $filters->addFilter(['is_home_category' => $categoryViewData['is_home_category']]);
+        $filters->addFilter(['is_search_request' => $isItASearchRequest]);
+
+        $categoryGridFactory = $this->get('prestashop.core.grid.factory.category_decorator');
+        $categoryGrid = $categoryGridFactory->getGrid($filters);
 
         $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class, ['categories_to_delete_parent' => (int) $currentCategoryId], []);
 
@@ -129,7 +134,8 @@ class CategoryController extends FrameworkBundleAdminController
             $this->get('prestashop.core.grid.definition.factory.category'),
             $request,
             CategoryGridDefinitionFactory::GRID_ID,
-            'admin_categories_index'
+            'admin_categories_index',
+            ['categoryId']
         );
     }
 
@@ -262,18 +268,24 @@ class CategoryController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_categories_index');
         }
 
+        $categoryFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.category_form_builder');
+        $categoryFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.category_form_handler');
+
+        $categoryFormOptions = [
+            'id_category' => (int) $categoryId,
+            'subcategories' => $editableCategory->getSubCategories(),
+        ];
+
         try {
-            $categoryFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.category_form_builder');
-            $categoryFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.category_form_handler');
-
-            $categoryFormOptions = [
-                'id_category' => (int) $categoryId,
-                'subcategories' => $editableCategory->getSubCategories(),
-            ];
-
             $categoryForm = $categoryFormBuilder->getFormFor((int) $categoryId, [], $categoryFormOptions);
-            $categoryForm->handleRequest($request);
+        } catch (Exception $exception) {
+            $this->addFlash('error', $this->getErrorMessageForException($exception, $this->getErrorMessages()));
 
+            return $this->redirectToRoute('admin_categories_index');
+        }
+
+        try {
+            $categoryForm->handleRequest($request);
             $handlerResult = $categoryFormHandler->handleFor((int) $categoryId, $categoryForm);
 
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
@@ -338,8 +350,14 @@ class CategoryController extends FrameworkBundleAdminController
 
         try {
             $rootCategoryForm = $rootCategoryFormBuilder->getFormFor((int) $categoryId);
-            $rootCategoryForm->handleRequest($request);
+        } catch (Exception $exception) {
+            $this->addFlash('error', $this->getErrorMessageForException($exception, $this->getErrorMessages()));
 
+            return $this->redirectToRoute('admin_categories_index');
+        }
+
+        try {
+            $rootCategoryForm->handleRequest($request);
             $handlerResult = $rootCategoryFormHandler->handleFor((int) $categoryId, $rootCategoryForm);
 
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
@@ -826,5 +844,15 @@ class CategoryController extends FrameworkBundleAdminController
         }
 
         return $categoryIds;
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return bool
+     */
+    private function requestHasSearchParameters(Request $request)
+    {
+        return !empty($request->query->get('category')['filters']);
     }
 }

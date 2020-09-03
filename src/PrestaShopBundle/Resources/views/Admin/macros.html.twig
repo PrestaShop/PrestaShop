@@ -1,10 +1,11 @@
 {#**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *#}
 {% macro form_label_tooltip(name, tooltip, placement) %}
     {{ form_label(name, null, {'label_attr': {'tooltip': tooltip, 'tooltip_placement': placement|default('top')}}) }}
@@ -292,7 +292,7 @@
   {% if form.shop_restriction_switch is defined %}
     {% set defaultLabel %}
       <strong>{{ 'Check / Uncheck all'|trans({}, 'Admin.Actions') }}</strong> <br>
-      {{ 'You are editing this page for a specific shop or group. Click "Yes" to check all fields, "No" to uncheck all.'|trans({}, 'Admin.Design.Help') }} <br>
+      {{ 'You are editing this page for a specific shop or group. Click "%yes_label%" to check all fields, "%no_label%" to uncheck all.'|trans({'%yes_label%': 'Yes'|trans({}, 'Admin.Global'), '%no_label%': 'No'|trans({}, 'Admin.Global')}, 'Admin.Design.Help') }} <br>
       {{ 'If you check a field, change its value, and save, the multistore behavior will not apply to this shop (or group), for this particular parameter.'|trans({}, 'Admin.Design.Help') }}
     {% endset %}
 
@@ -304,4 +304,54 @@
 
     {{ self.form_group_row(form.shop_restriction_switch, vars, extraVars) }}
   {% endif %}
+{% endmacro %}
+
+{% macro language_dependant_select(form, vars, extraVars) %}
+  {% import '@PrestaShop/Admin/macros.html.twig' as self %}
+
+  {% set class = extraVars.class|default('') %}
+  {% set inputType = form.vars.block_prefixes.1|default('text') %}
+  {% set rowAttributes = extraVars.row_attr|default({}) %}
+  {% set attr = form.vars.attr %}
+  {% set attr = attr|merge({class: (attr.class|default('') ~ ' language_dependant_select')|trim}) %}
+  <div class="form-group row type-{{ inputType }} {{ class }}" {% for key, rowAttr in rowAttributes %} {{ key }}="{{ rowAttr }}"{% endfor %}>
+  {% set extraVars = extraVars|default({}) %}
+
+  {# renders label above the form field if set to true #}
+  {% set labelOnTop = false %}
+
+  {% if extraVars.label_on_top is defined %}
+    {% set labelOnTop = extraVars.label_on_top %}
+  {% endif %}
+
+  {% if extraVars.label is defined %}
+    {% set isRequired = form.vars.required|default(false) %}
+
+    {% if extraVars.required is defined %}
+      {% set isRequired = extraVars.required %}
+    {% endif %}
+
+    <label for="{{ form.vars.id }}" class="form-control-label {{ labelOnTop ? 'label-on-top col-12' : '' }}">
+      {% if isRequired %}
+        <span class="text-danger">*</span>
+      {% endif %}
+      {{ extraVars.label }}
+    </label>
+  {% endif %}
+
+  <div class="{{ 'col-sm-5' }}">
+    {{ self.form_widget_with_error(form, { 'attr': attr }, extraVars) }}
+  </div>
+  {% if extraVars.languages is defined and extraVars.languages is not empty %}
+  <div class="{{ 'col-sm-3' }}">
+    <select name="{{ form.vars.id ~'_language' }}" class="custom-select language_dependant_select_language">
+    {% if extraVars.languages is iterable %}
+      {% for language in extraVars.languages %}
+        <option value="{{ language.id }}">{{ language.value|raw }}</option>
+      {% endfor %}
+    {% endif %}
+    </select>
+  </div>
+  {% endif %}
+  </div>
 {% endmacro %}

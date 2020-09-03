@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Integration\Behaviour\Features\Context;
@@ -109,8 +109,14 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $this->createCartRule($cartRuleName, 0, $amount, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser);
     }
 
-    protected function createCartRule($cartRuleName, $percent, $amount, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser)
-    {
+    protected function createCartRule(
+        $cartRuleName,
+        $percent,
+        $amount,
+        $priority,
+        $cartRuleQuantity,
+        $cartRuleQuantityPerUser
+    ) {
         $cartRule = new CartRule();
         $cartRule->reduction_percent = $percent;
         $cartRule->reduction_amount = $amount;
@@ -183,9 +189,18 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->checkCartRuleWithNameExists($cartRuleName);
         $this->productFeatureContext->checkProductWithNameExists($productName);
+
+        $restrictedProduct = $this->productFeatureContext->getProductWithName($productName);
         $this->cartRules[$cartRuleName]->product_restriction = true;
-        $this->cartRules[$cartRuleName]->reduction_product = $this->productFeatureContext->getProductWithName($productName)->id;
+        $this->cartRules[$cartRuleName]->reduction_product = $restrictedProduct->id;
         $this->cartRules[$cartRuleName]->save();
+
+        // The reduction_product is not enough, we need to define product rules for condition (this is done by the controller usually)
+        Db::getInstance()->insert('cart_rule_product_rule_group', ['id_cart_rule' => $this->cartRules[$cartRuleName]->id, 'quantity' => 1]);
+        $productRuleGroupId = Db::getInstance()->Insert_ID();
+        Db::getInstance()->insert('cart_rule_product_rule', ['id_product_rule_group' => $productRuleGroupId, 'type' => 'products']);
+        $productRuleId = Db::getInstance()->Insert_ID();
+        Db::getInstance()->insert('cart_rule_product_rule_value', ['id_product_rule' => $productRuleId, 'id_item' => $restrictedProduct->id]);
     }
 
     /**
@@ -213,6 +228,17 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkCartRuleWithNameExists($cartRuleName);
         $this->cartRules[$cartRuleName]->product_restriction = 1;
         $this->cartRules[$cartRuleName]->reduction_product = -1;
+        $this->cartRules[$cartRuleName]->save();
+    }
+
+    /**
+     * @Given /^cart rule "(.+)" is applied on every order$/
+     */
+    public function cartRuleIsRestrictedToEveryOrder($cartRuleName)
+    {
+        $this->checkCartRuleWithNameExists($cartRuleName);
+        $this->cartRules[$cartRuleName]->product_restriction = 0;
+        $this->cartRules[$cartRuleName]->reduction_product = 0;
         $this->cartRules[$cartRuleName]->save();
     }
 
@@ -369,6 +395,31 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $cartRule = new CartRule($cartRules[$position - 1]['id_cart_rule']);
         if ($expectedValue != $cartRule->reduction_amount) {
             throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedValue, $cartRule->reduction_amount));
+        }
+    }
+
+    /**
+     * @Then /^cart rule "(.+)" has a contextual reduction value of (\d+.\d+)$/
+     *
+     * @param $cartRuleName
+     * @param $expectedValue
+     */
+    public function checkCartRuleContextualValue(string $cartRuleName, float $expectedValue)
+    {
+        $cartRules = $this->getCurrentCart()->getCartRules();
+        $cartRuleFound = false;
+        foreach ($cartRules as $currentCartRule) {
+            // float numbers are compared as string because float numbers seemingly equals can still be unequals.
+            if ($currentCartRule['description'] === $cartRuleName && (string) $currentCartRule['value_real'] !== (string) $expectedValue) {
+                throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedValue, $currentCartRule['value_real']));
+            }
+            if ($currentCartRule['description'] === $cartRuleName) {
+                $cartRuleFound = true;
+            }
+        }
+
+        if (!$cartRuleFound) {
+            throw new \RuntimeException(sprintf('The cart rule "%s" was not found', $cartRuleName));
         }
     }
 }

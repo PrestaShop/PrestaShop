@@ -36,6 +36,8 @@ services:
 
   prestashop.adapter.order.command_handler.update_product_in_order_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\UpdateProductInOrderHandler
+    arguments:
+      - '@prestashop.adapter.order.product_quantity.updater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand
@@ -78,12 +80,16 @@ services:
 
   prestashop.adapter.order.command_handler.delete_cart_rule_from_order_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\DeleteCartRuleFromOrderHandler
+    arguments:
+      - '@prestashop.adapter.order.amount.updater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand
 
   prestashop.adapter.order.command_handler.add_cart_rule_to_order_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\AddCartRuleToOrderHandler
+    arguments:
+      - '@prestashop.adapter.order.amount.updater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand
@@ -159,6 +165,7 @@ services:
     arguments:
       - '@prestashop.adapter.context_state_manager'
       - '@prestashop.adapter.order.amount.updater'
+      - '@prestashop.adapter.order.product_quantity.updater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand
@@ -220,7 +227,9 @@ services:
   prestashop.adapter.order.command_handler.cancel_order_product_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\CancelOrderProductHandler
     arguments:
-      - "@prestashop.adapter.order.product.remover"
+      - '@prestashop.adapter.order.product_quantity.updater'
+      - '@logger'
+      - '@translator'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand
@@ -235,3 +244,12 @@ services:
 
   prestashop.adapter.order.amount.updater:
     class: PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+
+  prestashop.adapter.order.product_quantity.updater:
+    class: PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater
+    arguments:
+      - '@prestashop.adapter.order.amount.updater'
+      - '@prestashop.adapter.order.product.remover'
+      - '@prestashop.adapter.context_state_manager'

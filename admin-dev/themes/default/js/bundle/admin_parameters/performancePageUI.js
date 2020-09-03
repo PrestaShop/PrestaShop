@@ -1,10 +1,11 @@
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,17 +16,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 var PerformancePageUI = {
     displaySmartyCache: function() {
         var CACHE_ENABLED = '1';
-        var smartyCacheSelected = document.querySelector('input[name="form[smarty][cache]"]:checked');
+        var smartyCacheSelected = document.querySelector('input[name="smarty[cache]"]:checked');
         var smartyCacheOptions = document.querySelectorAll('.smarty-cache-option');
         if (smartyCacheSelected && smartyCacheSelected.value === CACHE_ENABLED) {
           for(var i = 0; i < smartyCacheOptions.length; i++) {
@@ -35,13 +35,13 @@ var PerformancePageUI = {
           return;
         }
 
-      for(var i = 0; i < smartyCacheOptions.length; i++) {
-        smartyCacheOptions[i].classList.add('d-none');
-      }
+        for(var i = 0; i < smartyCacheOptions.length; i++) {
+          smartyCacheOptions[i].classList.add('d-none');
+        }
     },
     displayCacheSystems: function() {
         var CACHE_ENABLED = '1';
-        var cacheEnabledInput = document.querySelector('input[name="form[caching][use_cache]"]:checked');
+        var cacheEnabledInput = document.querySelector('input[name="caching[use_cache]"]:checked');
         var cachingElements = document.getElementsByClassName('memcache');
 
         if(cacheEnabledInput.value === CACHE_ENABLED) {
@@ -57,8 +57,8 @@ var PerformancePageUI = {
     },
     displayMemcacheServers: function() {
         var CACHE_ENABLED = '1';
-        var cacheEnabledInput = document.querySelector('input[name="form[caching][use_cache]"]:checked');
-        var cacheSelected = document.querySelector('input[name="form[caching][caching_system]"]:checked');
+        var cacheEnabledInput = document.querySelector('input[name="caching[use_cache]"]:checked');
+        var cacheSelected = document.querySelector('input[name="caching[caching_system]"]:checked');
         var memcacheServersListBlock = document.getElementById('servers-list');
         var newServerBtn = document.getElementById('new-server-btn');
         var isMemcache = cacheSelected && (cacheSelected.value === "CacheMemcache" || cacheSelected.value === "CacheMemcached");
@@ -90,15 +90,14 @@ var length = cacheSystemInputs.length;
 while(length--) {
     cacheSystemInputs[length].addEventListener('change', function(e) {
         var name = e.target.getAttribute('name');
-        if ('form[caching][use_cache]' === name) {
+        if ('caching[use_cache]' === name) {
             return PerformancePageUI.displayCacheSystems();
         }
-        if ('form[smarty][cache]' === name) {
+        if ('smarty[cache]' === name) {
             return PerformancePageUI.displaySmartyCache();
         }
-        if ('form[caching][caching_system]' === name) {
+        if ('caching[caching_system]' === name) {
             return PerformancePageUI.displayMemcacheServers();
         }
     });
 }
-

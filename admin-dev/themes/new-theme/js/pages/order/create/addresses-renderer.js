@@ -1,10 +1,11 @@
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 import createOrderMap from './create-order-map';
@@ -38,8 +38,9 @@ export default class AddressesRenderer {
 
   /**
    * @param {Array} addresses
+   * @param {int} cartId
    */
-  render(addresses) {
+  render(addresses, cartId) {
     this.cleanAddresses();
     if (addresses.length === 0) {
       this.hideAddressesContent();
@@ -53,8 +54,8 @@ export default class AddressesRenderer {
     this.hideEmptyAddressesWarning();
 
     Object.values(addresses).forEach((address) => {
-      this.renderDeliveryAddress(address);
-      this.renderInvoiceAddress(address);
+      this.renderDeliveryAddress(address, cartId);
+      this.renderInvoiceAddress(address, cartId);
     });
 
     this.showAddressesBlock();
@@ -64,10 +65,11 @@ export default class AddressesRenderer {
    * Renders delivery address content
    *
    * @param address
+   * @param cartId
    *
    * @private
    */
-  renderDeliveryAddress(address) {
+  renderDeliveryAddress(address, cartId) {
     const deliveryAddressOption = {
       value: address.addressId,
       text: address.alias,
@@ -76,8 +78,10 @@ export default class AddressesRenderer {
     if (address.delivery) {
       $(createOrderMap.deliveryAddressDetails).html(address.formattedAddress);
       deliveryAddressOption.selected = 'selected';
-      $(createOrderMap.deliveryAddressEditBtn).prop('href', this.router.generate('admin_addresses_edit', {
+      $(createOrderMap.deliveryAddressEditBtn).prop('href', this.router.generate('admin_cart_addresses_edit', {
         addressId: address.addressId,
+        cartId,
+        addressType: 'delivery',
         liteDisplaying: 1,
         submitFormAjax: 1,
       }));
@@ -90,10 +94,11 @@ export default class AddressesRenderer {
    * Renders invoice address content
    *
    * @param address
+   * @param cartId
    *
    * @private
    */
-  renderInvoiceAddress(address) {
+  renderInvoiceAddress(address, cartId) {
     const invoiceAddressOption = {
       value: address.addressId,
       text: address.alias,
@@ -102,8 +107,10 @@ export default class AddressesRenderer {
     if (address.invoice) {
       $(createOrderMap.invoiceAddressDetails).html(address.formattedAddress);
       invoiceAddressOption.selected = 'selected';
-      $(createOrderMap.invoiceAddressEditBtn).prop('href', this.router.generate('admin_addresses_edit', {
+      $(createOrderMap.invoiceAddressEditBtn).prop('href', this.router.generate('admin_cart_addresses_edit', {
         addressId: address.addressId,
+        cartId,
+        addressType: 'invoice',
         liteDisplaying: 1,
         submitFormAjax: 1,
       }));

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 declare(strict_types=1);
@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformat
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductBasicInformationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShopException;
 use Product;
 
 /**
@@ -49,39 +48,59 @@ final class UpdateProductBasicInformationHandler extends AbstractProductHandler 
     public function handle(UpdateProductBasicInformationCommand $command): void
     {
         $product = $this->getProduct($command->getProductId());
+        $this->fillUpdatableFieldsWithCommandData($product, $command);
+        $product->setFieldsToUpdate($this->fieldsToUpdate);
 
+        if (empty($this->fieldsToUpdate)) {
+            return;
+        }
+
+        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_BASIC_INFO);
+    }
+
+    /**
+     * @param Product $product
+     * @param UpdateProductBasicInformationCommand $command
+     */
+    private function fillUpdatableFieldsWithCommandData(
+        Product $product,
+        UpdateProductBasicInformationCommand $command
+    ): void {
         if (null !== $command->isVirtual()) {
             $product->is_virtual = $command->isVirtual();
+            $this->fieldsToUpdate['is_virtual'] = true;
         }
 
-        if (null !== $command->getLocalizedNames()) {
-            $product->name = $command->getLocalizedNames();
+        $localizedNames = $command->getLocalizedNames();
+        if (null !== $localizedNames) {
+            $product->name = $localizedNames;
             $this->validateLocalizedField($product, 'name', ProductConstraintException::INVALID_NAME);
+            $this->setLocalizedFieldToUpdate('name', $localizedNames);
         }
 
-        if (null !== $command->getLocalizedDescriptions()) {
-            $product->description = $command->getLocalizedDescriptions();
+        $localizedDescriptions = $command->getLocalizedDescriptions();
+        if (null !== $localizedDescriptions) {
+            $product->description = $localizedDescriptions;
             $this->validateLocalizedField($product, 'description', ProductConstraintException::INVALID_DESCRIPTION);
+            $this->setLocalizedFieldToUpdate('description', $localizedDescriptions);
         }
 
-        if (null !== $command->getLocalizedShortDescriptions()) {
-            $product->description_short = $command->getLocalizedShortDescriptions();
+        $localizedShortDescriptions = $command->getLocalizedShortDescriptions();
+        if (null !== $localizedShortDescriptions) {
+            $product->description_short = $localizedShortDescriptions;
             $this->validateLocalizedField($product, 'description_short', ProductConstraintException::INVALID_SHORT_DESCRIPTION);
+            $this->setLocalizedFieldToUpdate('description_short', $localizedShortDescriptions);
         }
+    }
 
-        try {
-            if (false === $product->update()) {
-                throw new CannotUpdateProductException(
-                    sprintf('Failed to update product #%s basic information', $product->id),
-                    CannotUpdateProductException::FAILED_UPDATE_BASIC_INFO
-                );
-            }
-        } catch (PrestaShopException $e) {
-            throw new CannotUpdateProductException(
-                sprintf('Error occurred when trying to update product #%s basic information', $product->id),
-                CannotUpdateProductException::FAILED_UPDATE_BASIC_INFO,
-                $e
-            );
+    /**
+     * @param string $field
+     * @param array $localizedValues
+     */
+    private function setLocalizedFieldToUpdate(string $field, array $localizedValues): void
+    {
+        foreach ($localizedValues as $langId => $value) {
+            $this->fieldsToUpdate[$field][$langId] = true;
         }
     }
 }

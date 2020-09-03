@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,30 +17,26 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Cart;
-use CartRule;
-use Configuration;
 use Currency;
 use Customer;
 use Exception;
 use Hook;
 use Order;
-use OrderCarrier;
-use OrderCartRule;
 use OrderDetail;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
+use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand;
@@ -61,14 +58,22 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
      * @var OrderAmountUpdater
      */
     private $orderAmountUpdater;
+    /**
+     * @var OrderProductQuantityUpdater
+     */
+    private $orderProductQuantityUpdater;
 
     /**
      * @param ContextStateManager $contextStateManager
      */
-    public function __construct(ContextStateManager $contextStateManager, OrderAmountUpdater $orderAmountUpdater)
-    {
+    public function __construct(
+        ContextStateManager $contextStateManager,
+        OrderAmountUpdater $orderAmountUpdater,
+        OrderProductQuantityUpdater $orderProductQuantityUpdater
+    ) {
         $this->contextStateManager = $contextStateManager;
         $this->orderAmountUpdater = $orderAmountUpdater;
+        $this->orderProductQuantityUpdater = $orderProductQuantityUpdater;
     }
 
     /**
@@ -89,23 +94,12 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
             ->setCustomer(new Customer($order->id_customer));
 
         try {
-            $result = true;
-            $oldCartRules = $cart->getCartRules();
-            $result &= $this->updateCart($orderDetail, $cart);
-            $result &= $this->updateCartRules($order, $oldCartRules, $cart->getCartRules());
-            $result &= $this->updateOrderInvoice($orderDetail);
-
-            // Reinject quantity in stock
-            $this->reinjectQuantity($orderDetail, $orderDetail->product_quantity, true);
-
-            $result &= $this->updateOrder($order, $orderDetail, $cart);
-            $result &= $this->updateOrderWeight($order);
-
-            if (!$result) {
-                throw new OrderException('An error occurred while attempting to delete product from order.');
-            }
-
-            $order = $order->refreshShippingCost();
+            $order = $this->orderProductQuantityUpdater->update(
+                $order,
+                $orderDetail,
+                0,
+                $orderDetail->id_order_invoice != 0 ? new OrderInvoice($orderDetail->id_order_invoice) : null
+            );
 
             Hook::exec('actionOrderEdited', ['order' => $order]);
         } catch (Exception $e) {
@@ -114,118 +108,6 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
         }
 
         $this->contextStateManager->restoreContext();
-    }
-
-    /**
-     * @param OrderDetail $orderDetail
-     * @param Cart $cart
-     *
-     * @return bool
-     */
-    private function updateCart(OrderDetail $orderDetail, Cart &$cart)
-    {
-        // Update Product Quantity in the cart
-        $cart->updateQty(
-            $orderDetail->product_quantity,
-            $orderDetail->product_id,
-            $orderDetail->product_attribute_id,
-            false,
-            'down'
-        );
-        // Remove & Add CartRules applied to cart
-        CartRule::autoRemoveFromCart();
-        CartRule::autoAddToCart();
-
-        return $cart->update();
-    }
-
-    /**
-     * Remove previous cart rules applied to order
-     *
-     * @param Order $order
-     * @param array $oldCartRules
-     * @param array $newCartRules
-     *
-     * @return bool
-     */
-    private function updateCartRules(Order $order, array $oldCartRules, array $newCartRules)
-    {
-        $result = array_diff(
-            array_map('serialize', $oldCartRules),
-            array_map('serialize', $newCartRules)
-        );
-        $result = array_map('unserialize', $result);
-
-        foreach ($order->getCartRules() as $orderCartRule) {
-            foreach ($result as $itemCartRule) {
-                if ($itemCartRule['id_cart_rule'] == $orderCartRule['id_cart_rule']) {
-                    $orderCartRule = new OrderCartRule($orderCartRule['id_order_cart_rule']);
-                    if (!$orderCartRule->delete()) {
-                        return false;
-                    }
-                }
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * @param OrderDetail $orderDetail
-     *
-     * @return bool
-     */
-    private function updateOrderInvoice(OrderDetail $orderDetail)
-    {
-        if ($orderDetail->id_order_invoice != 0) {
-            $order_invoice = new OrderInvoice($orderDetail->id_order_invoice);
-            // @todo: use https://github.com/PrestaShop/decimal for price computations
-            $order_invoice->total_paid_tax_excl -= $orderDetail->total_price_tax_excl;
-            $order_invoice->total_paid_tax_incl -= $orderDetail->total_price_tax_incl;
-            $order_invoice->total_products -= $orderDetail->total_price_tax_excl;
-            $order_invoice->total_products_wt -= $orderDetail->total_price_tax_incl;
-
-            return $order_invoice->update();
-        }
-
-        return true;
-    }
-
-    /**
-     * @param Order $order
-     * @param OrderDetail $orderDetail
-     * @param Cart $cart
-     *
-     * @return bool
-     */
-    private function updateOrder(Order $order, OrderDetail $orderDetail, Cart $cart)
-    {
-        $order = $this->orderAmountUpdater->update($order, $cart, $orderDetail->id_order_invoice != 0);
-
-        return $order->update();
-    }
-
-    /**
-     * @param Order $order
-     *
-     * @return bool
-     */
-    private function updateOrderWeight(Order $order)
-    {
-        $orderCarrier = new OrderCarrier((int) $order->getIdOrderCarrier());
-
-        if (Validate::isLoadedObject($orderCarrier)) {
-            $orderCarrier->weight = (float) $order->getTotalWeight();
-            $updated = $orderCarrier->update();
-
-            if ($updated) {
-                $order->weight = sprintf('%.3f ' . Configuration::get('PS_WEIGHT_UNIT'), $orderCarrier->weight);
-            }
-
-            return $updated;
-        }
-
-        return true;
     }
 
     /**

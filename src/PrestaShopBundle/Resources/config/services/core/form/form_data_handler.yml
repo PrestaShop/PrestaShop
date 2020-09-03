@@ -84,6 +84,7 @@ services:
       - '@prestashop.adapter.employee.form_access_checker'
       - '@prestashop.adapter.employee.data_provider'
       - '@prestashop.core.crypto.hashing'
+      - '@prestashop.adapter.image.uploader.employee_image_uploader'
 
   prestashop.core.form.identifiable_object.data_handler.profile_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ProfileFormDataHandler'
@@ -155,8 +156,23 @@ services:
     arguments:
       - '@prestashop.core.command_bus'
 
+  prestashop.core.form.identifiable_object.data_handler.cart_address_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CartAddressFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+
   prestashop.core.form.identifiable_object.cancellation_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CancellationFormDataHandler'
     arguments:
       - '@prestashop.core.command_bus'
       - '@prestashop.core.query_bus'
+
+  prestashop.core.form.identifiable_object.data_handler.order_state_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\OrderStateFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+
+  prestashop.core.form.identifiable_object.data_handler.order_return_state_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\OrderReturnStateFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'

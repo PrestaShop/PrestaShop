@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 
@@ -389,6 +389,16 @@ class AdminShopControllerCore extends AdminController
             }
         }
 
+        $this->fields_form['input'][] = [
+            'type' => 'color',
+            'label' => $this->trans('Color', [], 'Admin.Catalog.Feature'),
+            'name' => 'color',
+            'desc' => [
+                $this->trans('It will only be applied to the multistore header to highlight your shop context.', [], 'Admin.Shopparameters.Feature'),
+            ],
+            'hint' => $this->trans('Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").', [], 'Admin.Catalog.Help'),
+        ];
+
         if ($display_group_list) {
             $options = [];
             foreach (ShopGroup::getShopGroups() as $group) {
@@ -612,10 +622,24 @@ class AdminShopControllerCore extends AdminController
         }
 
         $this->fields_value = [
-            'id_shop_group' => (Tools::getValue('id_shop_group') ? Tools::getValue('id_shop_group') :
-                (isset($obj->id_shop_group)) ? $obj->id_shop_group : Shop::getContextShopGroupID()),
-            'id_category' => (Tools::getValue('id_category') ? Tools::getValue('id_category') :
-                (isset($obj->id_category)) ? $obj->id_category : (int) Configuration::get('PS_HOME_CATEGORY')),
+            'id_shop_group' => (
+                Tools::getValue('id_shop_group')
+                ? Tools::getValue('id_shop_group')
+                : (
+                    isset($obj->id_shop_group)
+                    ? $obj->id_shop_group
+                    : Shop::getContextShopGroupID()
+                )
+            ),
+            'id_category' => (
+                Tools::getValue('id_category')
+                ? Tools::getValue('id_category')
+                : (
+                    isset($obj->id_category)
+                    ? $obj->id_category
+                    : (int) Configuration::get('PS_HOME_CATEGORY')
+                )
+            ),
             'theme_name' => $theme_name,
         ];
 

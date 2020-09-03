@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,18 +17,18 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
@@ -93,8 +94,7 @@ final class CatalogPriceRuleQueryBuilder extends AbstractDoctrineQueryBuilder
         );
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
-            ->applySorting($searchCriteria, $qb)
-        ;
+            ->applySorting($searchCriteria, $qb);
 
         return $qb;
     }
@@ -105,8 +105,7 @@ final class CatalogPriceRuleQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('COUNT(DISTINCT pr.`id_specific_price_rule`)')
-        ;
+            ->select('COUNT(DISTINCT pr.`id_specific_price_rule`)');
 
         return $qb;
     }
@@ -146,8 +145,7 @@ final class CatalogPriceRuleQueryBuilder extends AbstractDoctrineQueryBuilder
                 $this->dbPrefix . 'group_lang',
                 'pr_group',
                 'pr_group.`id_group` = pr.`id_group` AND pr_group.`id_lang` = :contextLangId'
-            )
-        ;
+            );
 
         $this->applyFilters($qb, $filters);
         $qb->setParameter('contextLangId', $this->contextIdLang);
@@ -176,7 +174,7 @@ final class CatalogPriceRuleQueryBuilder extends AbstractDoctrineQueryBuilder
             'group_name' => 'pr_group.name',
         ];
 
-        $exactMatchFilters = ['id_specific_price_rule', 'from_quantity', 'reduction', 'reduction_type'];
+        $exactMatchFilters = ['id_specific_price_rule', 'from_quantity', 'reduction_type'];
 
         foreach ($filters as $filterName => $value) {
             if (!array_key_exists($filterName, $allowedFiltersAliasMap)) {
@@ -203,8 +201,41 @@ final class CatalogPriceRuleQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
+            if ($filterName === 'reduction') {
+                $numberOfDecimals = $this->findNumberOfDecimals($value);
+                // using TRUNCATE in order to have smart price searches
+                // Smart price searches means:
+                // searching for "10" will return both 10.0, 10.1 and 10.2
+                // searching for "10.0" will only return 10.0
+                // searching for "10.1" will only return 10.1
+                $qb->andWhere('TRUNCATE(' . $allowedFiltersAliasMap[$filterName] . ',' . $numberOfDecimals . ') = :' . $filterName);
+                $qb->setParameter($filterName, $value);
+                continue;
+            }
+
             $qb->andWhere($allowedFiltersAliasMap[$filterName] . ' LIKE :' . $filterName);
             $qb->setParameter($filterName, "%$value%");
         }
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return int
+     */
+    private function findNumberOfDecimals($value): int
+    {
+        if (!is_string($value)) {
+            throw new InvalidArgumentException('Expected string');
+        }
+
+        $numberOfDecimals = 0;
+        $explodedValue = explode('.', $value);
+
+        if (isset($explodedValue[1])) {
+            $numberOfDecimals = strlen($explodedValue[1]);
+        }
+
+        return $numberOfDecimals;
     }
 }

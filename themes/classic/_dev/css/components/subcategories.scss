@@ -1,10 +1,10 @@
 #subcategories {
-  border-top: 1px solid $gray-light;
   margin-bottom: 20px;
+  border-top: 1px solid $gray-light;
 
   .subcategory-heading {
-    font-weight: bold;
     margin-bottom: 20px;
+    font-weight: 600;
   }
 
   ul {
@@ -14,12 +14,12 @@
 
     li {
       width: calc(100% / 4 - 20px);
+      min-width: 200px;
       margin: 10px;
       text-align: center;
-      min-width: 200px;
 
       .subcategory-image {
-        padding: 0 0 8px 0;
+        padding: 0 0 8px;
 
         a {
           display: block;
@@ -36,9 +36,9 @@
       .subcategory-name {
         text-transform: uppercase;
 
-          &:hover {
-            color: $brand-primary;
-          }
+        &:hover {
+          color: $brand-primary;
+        }
       }
 
       .cat_desc {
@@ -48,8 +48,8 @@
       &:hover {
         .subcategory-image {
           a {
-            border: 5px solid $brand-primary;
             padding: 5px;
+            border: 5px solid $brand-primary;
           }
         }
       }

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,16 +17,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Address;
 
+use Cart;
 use Exception;
 use Order;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
@@ -40,10 +41,12 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotAddAddressExceptio
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotSetRequiredFieldsForAddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotUpdateAddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\DeleteAddressException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\InvalidAddressFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\InvalidAddressRequiredFieldsException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetCustomerAddressForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetRequiredFieldsForAddress;
 use PrestaShop\PrestaShop\Core\Domain\Address\QueryResult\EditableCustomerAddress;
+use PrestaShop\PrestaShop\Core\Domain\Cart\CartAddressType;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerByEmailNotFoundException;
@@ -292,12 +295,14 @@ class AddressController extends FrameworkBundleAdminController
                     );
                 }
 
+                if ($customerId) {
+                    return $this->redirectToRoute('admin_customers_view', ['customerId' => $customerId]);
+                }
+
                 return $this->redirectToRoute('admin_addresses_index');
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-
-            return $this->redirectToRoute('admin_addresses_index');
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Address/add.html.twig', [
@@ -344,6 +349,13 @@ class AddressController extends FrameworkBundleAdminController
             }
 
             $addressForm = $addressFormBuilder->getFormFor($addressId, $formData);
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_addresses_index');
+        }
+
+        try {
             $addressForm->handleRequest($request);
             $result = $addressFormHandler->handleFor($addressId, $addressForm);
 
@@ -361,8 +373,6 @@ class AddressController extends FrameworkBundleAdminController
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-
-            return $this->redirectToRoute('admin_addresses_index');
         }
 
         $customerInfo = $editableAddress->getLastName() . ' ' .
@@ -394,22 +404,23 @@ class AddressController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function editOrderAction(int $orderId, string $addressType, Request $request): Response
+    public function editOrderAddressAction(int $orderId, string $addressType, Request $request): Response
     {
-        try {
-            $order = new Order($orderId);
-            $addressId = null;
-            switch ($addressType) {
-                case 'delivery':
-                    $addressType = OrderAddressType::DELIVERY_ADDRESS_TYPE;
-                    $addressId = $order->id_address_delivery;
-                    break;
-                case 'invoice':
-                    $addressType = OrderAddressType::INVOICE_ADDRESS_TYPE;
-                    $addressId = $order->id_address_invoice;
-                    break;
-            }
+        // @todo: don't rely on Order ObjectModel, use a Adapter DataProvider
+        $order = new Order($orderId);
+        $addressId = null;
+        switch ($addressType) {
+            case 'delivery':
+                $addressType = OrderAddressType::DELIVERY_ADDRESS_TYPE;
+                $addressId = $order->id_address_delivery;
+                break;
+            case 'invoice':
+                $addressType = OrderAddressType::INVOICE_ADDRESS_TYPE;
+                $addressId = $order->id_address_invoice;
+                break;
+        }
 
+        try {
             /** @var EditableCustomerAddress $editableAddress */
             $editableAddress = $this->getQueryBus()->handle(new GetCustomerAddressForEditing((int) $addressId));
 
@@ -431,8 +442,18 @@ class AddressController extends FrameworkBundleAdminController
                 $formData['id_country'] = $formCountryId;
             }
 
-            // Addres form is built based on address id to fill the data related to this address
+            // Address form is built based on address id to fill the data related to this address
             $addressForm = $addressFormBuilder->getFormFor($addressId, $formData);
+        } catch (Exception $e) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($e, $this->getErrorMessages($e))
+            );
+
+            return $this->redirectToRoute('admin_orders_view', ['orderId' => $orderId]);
+        }
+
+        try {
             $addressForm->handleRequest($request);
 
             // Form is handled based on Order ID because that's the order that needs update
@@ -441,12 +462,17 @@ class AddressController extends FrameworkBundleAdminController
             if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
 
+                if ($request->query->has('submitFormAjax')) {
+                    return $this->render(
+                        '@PrestaShop/Admin/Sell/Address/modal_create_success.html.twig',
+                        ['refreshCartAddresses' => 'false']
+                    );
+                }
+
                 return $this->redirectToRoute('admin_orders_view', ['orderId' => $orderId]);
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-
-            return $this->redirectToRoute('admin_orders_view', ['orderId' => $orderId]);
         }
 
         $customerInfo = $editableAddress->getLastName() . ' ' .
@@ -461,6 +487,108 @@ class AddressController extends FrameworkBundleAdminController
             'addressForm' => $addressForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'cancelPath' => $this->generateUrl('admin_orders_view', ['orderId' => $orderId]),
+            'displayInIframe' => $request->query->has('submitFormAjax'),
+        ]);
+    }
+
+    /**
+     * Handles edit form rendering and submission for cart address
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_orders_index"
+     * )
+     *
+     * @param int $cartId
+     * @param string $addressType
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function editCartAddressAction(int $cartId, string $addressType, Request $request): Response
+    {
+        // @todo: don't rely on Cart ObjectModel, use a Adapter DataProvider
+        $cart = new Cart($cartId);
+        $addressId = null;
+        switch ($addressType) {
+            case 'delivery':
+                $addressType = CartAddressType::DELIVERY_ADDRESS_TYPE;
+                $addressId = $cart->id_address_delivery;
+                break;
+            case 'invoice':
+                $addressType = CartAddressType::INVOICE_ADDRESS_TYPE;
+                $addressId = $cart->id_address_invoice;
+                break;
+        }
+
+        try {
+            /** @var EditableCustomerAddress $editableAddress */
+            $editableAddress = $this->getQueryBus()->handle(new GetCustomerAddressForEditing((int) $addressId));
+
+            $addressFormBuilder = $this->get(
+                'prestashop.core.form.identifiable_object.builder.address_form_builder'
+            );
+            // Special cart handler
+            $addressFormHandler = $this->get(
+                'prestashop.core.form.identifiable_object.handler.cart_address_form_handler'
+            );
+
+            // Address type required for EditCartAddressCommand
+            $formData = [
+                'address_type' => $addressType,
+            ];
+            // Country needs to be preset before building form type because it is used to build state field choices
+            if ($request->request->has('customer_address') && isset($request->request->get('customer_address')['id_country'])) {
+                $formCountryId = (int) $request->request->get('customer_address')['id_country'];
+                $formData['id_country'] = $formCountryId;
+            }
+
+            // Address form is built based on address id to fill the data related to this address
+            $addressForm = $addressFormBuilder->getFormFor($addressId, $formData);
+        } catch (Exception $e) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($e, $this->getErrorMessages($e))
+            );
+
+            return $this->redirectToRoute('admin_carts_view', ['cartId' => $cartId]);
+        }
+
+        try {
+            $addressForm->handleRequest($request);
+
+            // Form is handled based on Cart ID because that's the cart that needs update
+            $result = $addressFormHandler->handleFor($cartId, $addressForm);
+
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+
+                if ($request->query->has('submitFormAjax')) {
+                    return $this->render(
+                        '@PrestaShop/Admin/Sell/Address/modal_create_success.html.twig',
+                        ['refreshCartAddresses' => 'false']
+                    );
+                }
+
+                return $this->redirectToRoute('admin_carts_view', ['cartId' => $cartId]);
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        $customerInfo = $editableAddress->getLastName() . ' ' .
+            $editableAddress->getFirstName() . ' (' .
+            $editableAddress->getCustomerEmail() . ')';
+
+        return $this->render('@PrestaShop/Admin/Sell/Address/edit.html.twig', [
+            'enableSidebar' => true,
+            'customerId' => $editableAddress->getCustomerId()->getValue(),
+            'customerInformation' => $customerInfo,
+            'layoutTitle' => $this->trans('Edit', 'Admin.Actions'),
+            'addressForm' => $addressForm->createView(),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'cancelPath' => $this->generateUrl('admin_carts_view', ['cartId' => $cartId]),
+            'displayInIframe' => $request->query->has('submitFormAjax'),
         ]);
     }
 
@@ -510,11 +638,15 @@ class AddressController extends FrameworkBundleAdminController
                     'The object cannot be loaded (the identifier is missing or invalid)',
                     'Admin.Notifications.Error'
                 ),
-                AddressConstraintException::INVALID_FIELDS => $this->trans(
+                AddressConstraintException::INVALID_REQUIRED_FIELDS => $this->trans(
                     'An error occurred when attempting to update the required fields.',
                     'Admin.Notifications.Error'
                 ),
             ],
+            InvalidAddressFieldException::class => $this->trans(
+                'Address fields contain invalid values.',
+                'Admin.Notifications.Error'
+            ),
             StateConstraintException::class => [
                 StateConstraintException::INVALID_ID => $this->trans(
                     'The object cannot be loaded (the identifier is missing or invalid)',

@@ -77,7 +77,7 @@
                                       {$field.text}
                                     {/if}
                                   {elseif $field.type == 'image'}
-                                    <img src="{$field.image.small.url}">
+                                    <img src="{$field.image.small.url}" loading="lazy">
                                   {/if}
                                 </div>
                               </div>

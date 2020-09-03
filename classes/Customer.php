@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\CoreException;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
@@ -31,13 +31,13 @@ use PrestaShop\PrestaShop\Adapter\ServiceLocator;
  */
 class CustomerCore extends ObjectModel
 {
-    /** @var int $id Customer ID */
+    /** @var int Customer ID */
     public $id;
 
-    /** @var int $id_shop Shop ID */
+    /** @var int Shop ID */
     public $id_shop;
 
-    /** @var int $id_shop_group ShopGroup ID */
+    /** @var int ShopGroup ID */
     public $id_shop_group;
 
     /** @var string Secure key */
@@ -1274,7 +1274,13 @@ class CustomerCore extends ObjectModel
         }
 
         /* Customer is valid only if it can be load and if object password is the same as database one */
-        return $this->logged == 1 && $this->id && Validate::isUnsignedId($this->id) && Customer::checkPassword($this->id, $this->passwd);
+        return
+            $this->logged == 1
+            && $this->id
+            && Validate::isUnsignedId($this->id)
+            && Customer::checkPassword($this->id, $this->passwd)
+            && Context::getContext()->cookie->isSessionAlive()
+        ;
     }
 
     /**

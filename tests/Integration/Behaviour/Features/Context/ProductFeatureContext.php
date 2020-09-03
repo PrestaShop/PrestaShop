@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,17 +17,17 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Gherkin\Node\TableNode;
 use Cart;
 use Combination;
 use Configuration;
@@ -37,6 +38,9 @@ use Pack;
 use Product;
 use SpecificPrice;
 use StockAvailable;
+use TaxRulesGroup;
+use Tests\Integration\Behaviour\Features\Context\Util\CombinationDetails;
+use Tests\Integration\Behaviour\Features\Context\Util\ProductCombinationFactory;
 
 class ProductFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -147,9 +151,35 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function remainingQuantityOfProductNamedShouldBe($productName, $productQuantity)
     {
         $this->checkProductWithNameExists($productName);
+        // Be careful this counts the amount present in the cart as well event if the stock has not been updated yet
         $nbProduct = Product::getQuantity($this->products[$productName]->id, null, null, $this->getCurrentCart(), null);
         if ($productQuantity != $nbProduct) {
             throw new \RuntimeException(sprintf('Expects %s, got %s instead', $productQuantity, $nbProduct));
+        }
+    }
+
+    /**
+     * @Then /^the available stock for product "(.+)" should be ([\-\d]+)$/
+     */
+    public function actualQuantityOfProductNamedShouldBe($productName, $productQuantity)
+    {
+        $this->checkProductWithNameExists($productName);
+        $nbProduct = StockAvailable::getQuantityAvailableByProduct($this->products[$productName]->id, null);
+        if ($productQuantity != $nbProduct) {
+            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $productQuantity, $nbProduct));
+        }
+    }
+
+    /**
+     * @Then /^the available stock for combination "(.+)" of product "(.+)" should be ([\-\d]+)$/
+     */
+    public function actualQuantityOfCombinationNamedShouldBe($combinationName, $productName, $combinationQuantity)
+    {
+        $this->checkProductWithNameExists($productName);
+        $this->checkCombinationWithNameExists($productName, $combinationName);
+        $nbProduct = StockAvailable::getQuantityAvailableByProduct($this->products[$productName]->id, $this->combinations[$productName][$combinationName]->id);
+        if ($combinationQuantity != $nbProduct) {
+            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $combinationQuantity, $nbProduct));
         }
     }
 
@@ -173,7 +203,12 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $product->price = $price;
         $product->name = $productName;
         $product->quantity = $productQuantity;
-        $product->add();
+        // Use same default tax rules group as products from fixtures to have the same tax rate
+        $product->id_tax_rules_group = TaxRulesGroup::getIdByName('US-FL Rate (6%)');
+        $productAdded = $product->add();
+        if (!$productAdded) {
+            throw new \RuntimeException('Could not add product in database');
+        }
         StockAvailable::setQuantity((int) $product->id, 0, $product->quantity);
 
         $this->products[$productName] = $product;
@@ -208,6 +243,17 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->products[$productName]->save();
         StockAvailable::setQuantity($this->products[$productName]->id, 0, 0);
         StockAvailable::setProductOutOfStock((int) $this->products[$productName]->id, 0);
+    }
+
+    /**
+     * @Given /^product "(.+)" can be ordered out of stock$/
+     *
+     * @param string $productName
+     */
+    public function productWithNameCanBeOrderedOutOfStock($productName)
+    {
+        $this->checkProductWithNameExists($productName);
+        StockAvailable::setProductOutOfStock($this->products[$productName]->id, 1);
     }
 
     /**
@@ -297,6 +343,31 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $combination->add();
         StockAvailable::setQuantity((int) $this->products[$productName]->id, $combination->id, $combination->quantity);
         $this->combinations[$productName][$combinationName] = $combination;
+    }
+
+    /**
+     * @Given /^product "(.+)" has combinations with following details:$/
+     */
+    public function productWithNameHasCombinationsWithFollowingDetails($productName, TableNode $table)
+    {
+        $this->checkProductWithNameExists($productName);
+        $productId = (int) $this->products[$productName]->id;
+        $combinationsList = $table->getColumnsHash();
+
+        $combinationDetails = [];
+        foreach ($combinationsList as $combination) {
+            $combinationDetails[] = new CombinationDetails(
+                $combination['reference'],
+                (int) $combination['quantity'],
+                explode(';', $combination['attributes'])
+            );
+        }
+
+        $combinations = ProductCombinationFactory::makeCombinations($productId, $combinationDetails);
+
+        foreach ($combinations as $combination) {
+            $this->combinations[$productName][$combination->reference] = $combination;
+        }
     }
 
     /**
@@ -596,5 +667,15 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
                 throw new \RuntimeException(sprintf('Expects %s, got %s instead', $priceWithReduction, $productPrices['price_with_reduction']));
             }
         }
+    }
+
+    /**
+     * @BeforeFeature @reset-product-price-cache
+     *
+     * Clear Product prices cache at each step in order to get fresh data
+     */
+    public static function clearProductPrices()
+    {
+        Product::flushPriceCache();
     }
 }

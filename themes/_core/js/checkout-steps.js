@@ -1,10 +1,11 @@
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,21 +16,21 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 import $ from 'jquery';
+import prestashop from 'prestashop';
 
-const currentStepClass = 'js-current-step';
+const currentStepClass = prestashop.selectors.checkout.currentStep;
 const currentStepSelector = `.${currentStepClass}`;
 
 export default class Steps {
   constructor() {
-    this.$steps = $('.checkout-step');
+    this.$steps = $(prestashop.selectors.checkout.step);
     this.$steps.off('click');
 
     this.$clickableSteps = $(currentStepSelector).prevAll().andSelf();
@@ -47,7 +48,7 @@ export default class Steps {
   }
 
   static getClickedStep(event) {
-    return new Step($(event.target).closest('.checkout-step'));
+    return new Step($(event.target).closest(prestashop.selectors.checkout.step));
   }
 }
 
@@ -72,12 +73,12 @@ class Step {
   disableAllAfter() {
     const $nextSteps = this.$step.nextAll();
     $nextSteps.addClass('-unreachable').removeClass('-complete');
-    $('.step-title', $nextSteps).addClass('not-allowed');
+    $(prestashop.selectors.checkout.stepTitle, $nextSteps).addClass('not-allowed');
   }
 
   enableAllBefore() {
-    const $nextSteps = this.$step.nextAll('.checkout-step.-clickable');
+    const $nextSteps = this.$step.nextAll(prestashop.selectors.checkout.step + '.-clickable');
     $nextSteps.removeClass('-unreachable').addClass('-complete');
-    $('.step-title', $nextSteps).removeClass('not-allowed');
+    $(prestashop.selectors.checkout.stepTitle, $nextSteps).removeClass('not-allowed');
   }
 }
