@@ -49,6 +49,11 @@ class HookCore extends ObjectModel
     public $position = false;
 
     /**
+    * @var active
+    */
+    public $active = true;
+
+    /**
      * @var array List of executed hooks on this page
      */
     public static $executed_hooks = [];
@@ -66,6 +71,7 @@ class HookCore extends ObjectModel
             'title' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
             'description' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml'],
             'position' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
         ],
     ];
 
