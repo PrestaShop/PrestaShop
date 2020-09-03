@@ -771,7 +771,10 @@ class HookCore extends ObjectModel
         $id_shop = null,
         $chain = false
     ) {
-        if (defined('PS_INSTALLATION_IN_PROGRESS')) {
+        $hook = Hook::getInstanceByName($hook_name);
+        $is_actived_hook = $hook && $hook->active;
+
+        if (defined('PS_INSTALLATION_IN_PROGRESS') || !$is_actived_hook ) {
             return null;
         }
 
