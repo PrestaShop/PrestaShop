@@ -190,7 +190,6 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @return RedirectResponse
-     *
      */
     public function bulkDeleteProductAction(int $orderReturnId, Request $request): RedirectResponse
     {
