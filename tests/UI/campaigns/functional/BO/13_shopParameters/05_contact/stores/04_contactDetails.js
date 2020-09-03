@@ -41,7 +41,7 @@ const storesContactDemo = new StoreContactFaker(
     fax: ' ',
   },
 );
-const storesContactToCreate = new StoreContactFaker({registrationNumber: '142 369 758'});
+const storesContactToCreate = new StoreContactFaker();
 
 describe('Configure contact details', async () => {
   // before and after functions
