@@ -287,3 +287,106 @@ Feature: Order from Back Office (BO)
       | weight                 | 1.860 |
       | shipping_cost_tax_excl | 4.00  |
       | shipping_cost_tax_incl | 4.24  |
+
+  Scenario: When shipping recalculate is disabled the shipping is not updated
+    Given shop configuration for "PS_ORDER_RECALCULATE_SHIPPING" is set to 0
+    And I add order "bo_order1" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    And order "bo_order1" should have 2 products in total
+    And order "bo_order1" should have 0 invoices
+    And order "bo_order1" should have 0 cart rule
+    # Carrier less expensive is chosen by default
+    And order "bo_order1" should have "weight_carrier" as a carrier
+    And order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 25.800 |
+      | total_paid_tax_incl      | 27.350 |
+      | total_paid               | 27.350 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 2.0    |
+      | total_shipping_tax_incl  | 2.12   |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 0.600 |
+      | shipping_cost_tax_excl | 2.00  |
+      | shipping_cost_tax_incl | 2.12  |
+    Given there is a product in the catalog named "Shipping Product" with a price of 15.0 and 100 items in stock
+    And product "Shipping Product" weight is 0.63 kg
+    When I add products to order "bo_order1" without invoice and the following products details:
+      | name          | Shipping Product |
+      | amount        | 2                |
+      | price         | 15               |
+    Then order "bo_order1" should have 4 products in total
+    And order "bo_order1" should have following details:
+      | total_products           | 53.800 |
+      | total_products_wt        | 57.030 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 55.8   |
+      | total_paid_tax_incl      | 59.150 |
+      | total_paid               | 59.150 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 2.0    |
+      | total_shipping_tax_incl  | 2.12   |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 1.860 |
+      | shipping_cost_tax_excl | 2.00  |
+      | shipping_cost_tax_incl | 2.12  |
+    When I edit product "Shipping Product" to order "bo_order1" with following products details:
+      | amount        | 6                       |
+      | price         | 5                       |
+    Then order "bo_order1" should have 8 products in total
+    And order "bo_order1" should have following details:
+      | total_products           | 53.80  |
+      | total_products_wt        | 57.03  |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 55.80  |
+      | total_paid_tax_incl      | 59.15  |
+      | total_paid               | 59.15  |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 2.0    |
+      | total_shipping_tax_incl  | 2.12   |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 4.380 |
+      | shipping_cost_tax_excl | 2.00  |
+      | shipping_cost_tax_incl | 2.12  |
+    When I update order "bo_order1" Tracking number to "TEST1234" and Carrier to "default_carrier"
+    Then order "bo_order1" should have "default_carrier" as a carrier
+    And order "bo_order1" should have following details:
+      | total_products           | 53.80  |
+      | total_products_wt        | 57.03  |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 55.80  |
+      | total_paid_tax_incl      | 59.15  |
+      | total_paid               | 59.15  |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 2.0    |
+      | total_shipping_tax_incl  | 2.12   |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 4.380 |
+      | shipping_cost_tax_excl | 2.00  |
+      | shipping_cost_tax_incl | 2.12  |
+    When I update order "bo_order1" Tracking number to "TEST1234" and Carrier to "price_carrier"
+    Then order "bo_order1" should have "price_carrier" as a carrier
+    And order "bo_order1" should have following details:
+      | total_products           | 53.80  |
+      | total_products_wt        | 57.03  |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 55.80  |
+      | total_paid_tax_incl      | 59.15  |
+      | total_paid               | 59.15  |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 2.0    |
+      | total_shipping_tax_incl  | 2.12   |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 4.380 |
+      | shipping_cost_tax_excl | 2.00  |
+      | shipping_cost_tax_incl | 2.12  |
