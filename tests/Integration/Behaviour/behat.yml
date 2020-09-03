@@ -1,7 +1,4 @@
 default:
-    extensions:
-        Behat\MinkExtension\Extension:
-            files_path: %behat.paths.base%/DummyFiles
     suites:
         database:
             paths:
