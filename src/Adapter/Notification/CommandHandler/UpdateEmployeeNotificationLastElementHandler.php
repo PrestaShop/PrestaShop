@@ -42,6 +42,6 @@ final class UpdateEmployeeNotificationLastElementHandler implements UpdateEmploy
      */
     public function handle(UpdateEmployeeNotificationLastElementCommand $command)
     {
-        (new Notification())->updateEmployeeLastElement($command->getType());
+        (new Notification())->updateEmployeeLastElement($command->getType()->getValue());
     }
 }
