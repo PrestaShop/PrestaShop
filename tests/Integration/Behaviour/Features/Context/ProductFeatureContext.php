@@ -244,6 +244,19 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Given /^product "(.+)" weight is (\d+\.\d+) kg$/
+     *
+     * @param string $productName
+     * @param float $weight
+     */
+    public function setProductWeight(string $productName, float $weight)
+    {
+        $this->checkProductWithNameExists($productName);
+        $this->products[$productName]->weight = $weight;
+        $this->products[$productName]->save();
+    }
+
+    /**
      * @Given /^product "(.+)" can be ordered out of stock$/
      *
      * @param string $productName

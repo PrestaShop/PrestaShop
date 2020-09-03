@@ -231,6 +231,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
         $carrier->active = 1;
         $carrier->add();
         $this->carriers[$carrierName] = $carrier;
+        SharedStorage::getStorage()->set($carrierName, $carrier->id);
 
         $groups = Group::getGroups(Context::getContext()->language->id);
         $groupIds = [];

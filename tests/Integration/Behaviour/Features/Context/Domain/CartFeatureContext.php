@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveCartRuleFromCartCommand
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
@@ -271,6 +272,25 @@ class CartFeatureContext extends AbstractDomainFeatureContext
                 (int) SharedStorage::getStorage()->get($cartReference),
                 $addressId,
                 $addressId
+            )
+        );
+    }
+
+    /**
+     * @When I select carrier :carrierReference for cart :cartReference
+     *
+     * @param string $cartReference
+     * @param string $carrierReference
+     */
+    public function selectCarrierForCart(string $cartReference, string $carrierReference)
+    {
+        $cartId = (int) SharedStorage::getStorage()->get($cartReference);
+        $carrierId = (int) SharedStorage::getStorage()->get($carrierReference);
+
+        $this->getCommandBus()->handle(
+            new UpdateCartCarrierCommand(
+                $cartId,
+                $carrierId
             )
         );
     }
