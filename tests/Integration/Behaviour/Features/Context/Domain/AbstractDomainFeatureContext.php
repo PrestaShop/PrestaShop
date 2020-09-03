@@ -28,6 +28,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
+use Behat\MinkExtension\Context\RawMinkContext;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 use Behat\Testwork\Tester\Result\TestResult;
 use Configuration;
@@ -40,7 +41,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
-abstract class AbstractDomainFeatureContext implements Context
+abstract class AbstractDomainFeatureContext extends RawMinkContext implements Context
 {
     /**
      * Shared storage key for last thrown exception
