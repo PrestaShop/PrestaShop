@@ -486,7 +486,7 @@ class HookCore extends ObjectModel
         }
 
         $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-            'SELECT h.id_hook, h.name as h_name, title, description, h.position, hm.position as hm_position, m.id_module, m.name, active
+            'SELECT h.id_hook, h.name as h_name, title, description, h.position, hm.position as hm_position, m.id_module, m.name, m.active
             FROM `' . _DB_PREFIX_ . 'hook_module` hm
             STRAIGHT_JOIN `' . _DB_PREFIX_ . 'hook` h ON (h.id_hook = hm.id_hook AND hm.id_shop = ' . (int) Context::getContext()->shop->id . ')
             STRAIGHT_JOIN `' . _DB_PREFIX_ . 'module` as m ON (m.id_module = hm.id_module)
