@@ -32,6 +32,7 @@ use Configuration;
 use Exception;
 use LegacyTests\Unit\Core\Cart\CartToOrder\PaymentModuleFake;
 use Order;
+use OrderCarrier;
 use OrderCartRule;
 use PHPUnit\Framework\Assert as Assert;
 use RuntimeException;
@@ -175,6 +176,59 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
                     $order->{$orderField}
                 )
             );
+        }
+    }
+
+    /**
+     * @Then order :reference carrier should have following details:
+     */
+    public function checkOrderCarrierDetails(string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $orderCarrierData = $table->getRowsHash();
+
+        $order = new Order($orderId);
+        $orderCarrier = new OrderCarrier($order->getIdOrderCarrier());
+        foreach ($orderCarrierData as $orderCarrierField => $orderCarrierValue) {
+            Assert::assertEquals(
+                (float) $orderCarrierValue,
+                $orderCarrier->{$orderCarrierField},
+                sprintf(
+                    'Invalid order carrier field %s, expected %s instead of %s',
+                    $orderCarrierField,
+                    $orderCarrierValue,
+                    $orderCarrier->{$orderCarrierField}
+                )
+            );
+        }
+    }
+
+    /**
+     * @Then order :reference should have :carrierReference as a carrier
+     *
+     * @param string $orderReference
+     * @param string $carrierReference
+     */
+    public function checkOrderCarrier(string $orderReference, string $carrierReference)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $carrierId = (int) SharedStorage::getStorage()->get($carrierReference);
+        $order = new Order($orderId);
+
+        if ((int) $order->id_carrier === 0) {
+            throw new RuntimeException(sprintf(
+                'Order %s has no carrier defined',
+                $orderReference
+            ));
+        }
+        if ((int) $order->id_carrier !== $carrierId) {
+            throw new RuntimeException(sprintf(
+                'Order %s should have %s as a carrier, expected id_carrier to be %d but is %d instead',
+                $orderReference,
+                $carrierReference,
+                $carrierId,
+                (int) $order->id_carrier
+            ));
         }
     }
 

@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
 use Cache;
+use Carrier;
 use Cart;
 use CartRule;
 use Context;
@@ -75,13 +76,13 @@ class OrderAmountUpdater
         Cart $cart,
         ?int $orderInvoiceId
     ): void {
+        $this->cleanCaches();
+
         // @todo: use https://github.com/PrestaShop/decimal for price computations
         $computingPrecision = $this->getPrecisionFromCart($cart);
 
         // Recalculate cart rules and Fix differences between cart's cartRules and order's cartRules
         $this->updateOrderCartRules($order, $cart, $computingPrecision, $orderInvoiceId);
-        // Update carrier weight for shipping cost
-        $this->updateCarrierWeight($order);
 
         $orderProducts = $order->getCartProducts();
 
@@ -136,6 +137,27 @@ class OrderAmountUpdater
         }
 
         $this->updateOrderInvoices($order, $cart, $computingPrecision);
+
+        // Update carrier weight for shipping cost
+        $this->updateOrderCarrier($order);
+    }
+
+    /**
+     * There are many caches among legacy classes that can store previous prices
+     * we need to clean them to make sure the price is completely up to date
+     */
+    private function cleanCaches(): void
+    {
+        // For many intermediate computations
+        Cart::resetStaticCache();
+
+        // For discount computation
+        CartRule::resetStaticCache();
+        Cache::clean('getContextualValue_*');
+
+        // For shipping costs
+        Carrier::resetStaticCache();
+        Cache::clean('getPackageShippingCost_*');
     }
 
     /**
@@ -144,12 +166,14 @@ class OrderAmountUpdater
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    private function updateCarrierWeight(Order $order): void
+    private function updateOrderCarrier(Order $order): void
     {
         $orderCarrier = new OrderCarrier((int) $order->getIdOrderCarrier());
 
         if (Validate::isLoadedObject($orderCarrier)) {
             $orderCarrier->weight = (float) $order->getTotalWeight();
+            $orderCarrier->shipping_cost_tax_incl = (float) $order->total_shipping_tax_incl;
+            $orderCarrier->shipping_cost_tax_excl = (float) $order->total_shipping_tax_excl;
 
             if ($orderCarrier->update()) {
                 $order->weight = sprintf('%.3f ' . $this->configuration->get('PS_WEIGHT_UNIT'), $orderCarrier->weight);
@@ -179,13 +203,11 @@ class OrderAmountUpdater
         ?int $orderInvoiceId
     ): void {
         Context::getContext()->cart = $cart;
-        CartRule::resetStaticCache();
-        Cache::clean('getContextualValue_*');
         CartRule::autoAddToCart();
         CartRule::autoRemoveFromCart();
 
         $newCartRules = $cart->getCartRules();
-        // We need the calculator to compute the discuont on the whole products because they can interact with each
+        // We need the calculator to compute the discount on the whole products because they can interact with each
         // other so they can't be computed independently
         $calculator = $cart->newCalculator($order->getCartProducts(), $newCartRules, null, $computingPrecision);
         $calculator->processCalculation();
