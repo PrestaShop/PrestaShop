@@ -101,7 +101,7 @@ describe('Configure contact details', async () => {
   });
 
   it('should check contact details in FO', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'configureContactDetails', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'checkContactDetailsInFO', baseContext);
 
     const storeInformation = await foHomePage.getStoreInformation(page);
     await expect(storeInformation).to.contains(storesContactToCreate.name);
