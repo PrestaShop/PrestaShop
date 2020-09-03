@@ -112,7 +112,7 @@ class Countries extends BOBasePage {
         await this.selectByVisibleText(page, this.filterColumn(filterBy), value ? 'Yes' : 'No');
         break;
       default:
-      // Do nothing
+        throw new Error(`Filter ${filterBy} was not found`);
     }
     // click on search
     await this.clickAndWaitForNavigation(page, this.filterSearchButton);
