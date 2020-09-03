@@ -26,7 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cache\Clearer;
 
+use Hook;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Tools;
 
 /**
@@ -41,6 +46,25 @@ final class SymfonyCacheClearer implements CacheClearerInterface
      */
     public function clear()
     {
-        Tools::clearSf2Cache();
+        /*  @var KernelInterface */
+        global $kernel;
+
+        if (empty($kernel)) {
+            Tools::clearSf2Cache();
+
+            return;
+        }
+
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput([
+            'command' => 'cache:clear',
+            '--no-warmup',
+        ]);
+
+        $output = new NullOutput();
+        $application->run($input, $output);
+        Hook::exec('actionClearSf2Cache');
     }
 }
