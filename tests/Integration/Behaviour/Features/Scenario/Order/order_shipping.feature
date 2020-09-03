@@ -96,3 +96,113 @@ Feature: Order from Back Office (BO)
       | weight                 | 4.380 |
       | shipping_cost_tax_excl | 2.00  |
       | shipping_cost_tax_incl | 2.12  |
+    When I edit product "Shipping Product" to order "bo_order1" with following products details:
+      | amount        | 6                       |
+      | price         | 5                       |
+    Then order "bo_order1" should have 8 products in total
+    And order "bo_order1" should have following details:
+      | total_products           | 53.80  |
+      | total_products_wt        | 57.03  |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_shipping_tax_excl  | 4.0    |
+      | total_shipping_tax_incl  | 4.24   |
+      | total_paid_tax_excl      | 57.80  |
+      | total_paid_tax_incl      | 61.27  |
+      | total_paid               | 61.27  |
+      | total_paid_real          | 0.0    |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 4.380 |
+      | shipping_cost_tax_excl | 4.00  |
+      | shipping_cost_tax_incl | 4.24  |
+
+  Scenario: Use a carrier that depends on weight, add product to change order total the shipping price should update as well
+    Given I select carrier "weight_carrier" for cart "dummy_cart"
+    Then I should get error that carrier is invalid
+    Given I enable carrier "weight_carrier"
+    And I select carrier "weight_carrier" for cart "dummy_cart"
+    Then cart "dummy_cart" should have "weight_carrier" as a carrier
+    And I add order "bo_order1" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    And order "bo_order1" should have 2 products in total
+    And order "bo_order1" should have 0 invoices
+    And order "bo_order1" should have 0 cart rule
+    And order "bo_order1" should have "weight_carrier" as a carrier
+    And order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 25.800 |
+      | total_paid_tax_incl      | 27.350 |
+      | total_paid               | 27.350 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 2.0    |
+      | total_shipping_tax_incl  | 2.12   |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 0.600 |
+      | shipping_cost_tax_excl | 2.00  |
+      | shipping_cost_tax_incl | 2.12  |
+    Given there is a product in the catalog named "Shipping Product" with a price of 15.0 and 100 items in stock
+    And product "Shipping Product" weight is 0.63 kg
+    When I add products to order "bo_order1" without invoice and the following products details:
+      | name          | Shipping Product |
+      | amount        | 2                |
+      | price         | 15               |
+    Then order "bo_order1" should have 4 products in total
+    And order "bo_order1" should have following details:
+      | total_products           | 53.800 |
+      | total_products_wt        | 57.030 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 58.8   |
+      | total_paid_tax_incl      | 62.330 |
+      | total_paid               | 62.330 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 5.0    |
+      | total_shipping_tax_incl  | 5.30   |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 1.860 |
+      | shipping_cost_tax_excl | 5.00  |
+      | shipping_cost_tax_incl | 5.30  |
+    When I edit product "Shipping Product" to order "bo_order1" with following products details:
+      | amount        | 6                       |
+      | price         | 15                      |
+    Then order "bo_order1" should have 8 products in total
+    And order "bo_order1" should have following details:
+      | total_products           | 113.80 |
+      | total_products_wt        | 120.63 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_shipping_tax_excl  | 8.0    |
+      | total_shipping_tax_incl  | 8.48   |
+      | total_paid_tax_excl      | 121.80 |
+      | total_paid_tax_incl      | 129.11 |
+      | total_paid               | 129.11 |
+      | total_paid_real          | 0.0    |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 4.380 |
+      | shipping_cost_tax_excl | 8.00  |
+      | shipping_cost_tax_incl | 8.48  |
+    When I edit product "Shipping Product" to order "bo_order1" with following products details:
+      | amount        | 6                       |
+      | price         | 5                       |
+    Then order "bo_order1" should have 8 products in total
+    And order "bo_order1" should have following details:
+      | total_products           | 53.80  |
+      | total_products_wt        | 57.03  |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_shipping_tax_excl  | 8.0    |
+      | total_shipping_tax_incl  | 8.48   |
+      | total_paid_tax_excl      | 61.80  |
+      | total_paid_tax_incl      | 65.51  |
+      | total_paid               | 65.51  |
+      | total_paid_real          | 0.0    |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 4.380 |
+      | shipping_cost_tax_excl | 8.00  |
+      | shipping_cost_tax_incl | 8.48  |
