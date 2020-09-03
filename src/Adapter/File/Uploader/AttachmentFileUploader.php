@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Adapter\File\Uploader;
 
 use Attachment;
 use ErrorException;
-use Exception;
 use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\AttachmentFileUploaderInterface;
@@ -127,7 +126,7 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
         }
 
         try {
-            $result = move_uploaded_file($filePath, _PS_DOWNLOAD_DIR_ . $uniqid);
+            move_uploaded_file($filePath, _PS_DOWNLOAD_DIR_ . $uniqid);
         } catch (FileException $e) {
             throw new AttachmentUploadFailedException(sprintf('Failed to copy the file %s.', $filePath));
         }

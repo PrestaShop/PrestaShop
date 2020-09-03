@@ -6,4 +6,3 @@ Feature: Add attachments from Back Office (BO).
 
   Scenario: I add new attachment
     Given file "app_icon.png" exists
-    When I add new attachment app_icon.png

@@ -78,11 +78,6 @@ abstract class AbstractDomainFeatureContext implements Context
         $this->getSharedStorage()->set(self::LAST_EXCEPTION_STORAGE_KEY, null);
     }
 
-    protected function getFullPathForDummyFile(string $dummyPath): string
-    {
-        return _PS_DUMMY_FILES_DIR . DIRECTORY_SEPARATOR . $dummyPath;
-    }
-
     protected function setLastException(Exception $e): void
     {
         $this->getSharedStorage()->set(self::LAST_EXCEPTION_STORAGE_KEY, $e);
