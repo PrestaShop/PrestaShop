@@ -33,6 +33,7 @@ use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Validate;
 
 /**
  * Configuration modules positions "Improve > Design > Positions".
@@ -230,5 +231,36 @@ class PositionsController extends FrameworkBundleAdminController
                 $messages[$messageId]
             );
         }
+    }
+
+    /**
+     * Toggle hook status
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function toggleStatusAction(Request $request)
+    {        
+        $hookId = $request->request->get('hookId');
+        
+        $hook = new Hook($hookId);
+        $hook->active = ! (bool) $hook->active;
+        
+        if(Validate::isLoadedObject($hook) && $hook->save()){
+			$response = [
+				'status' => true,
+				'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
+			];
+		} else {
+			$response = [
+				'status' => false,
+				'message' => $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
+			];
+		}
+		
+		$response['hook_status'] = $hook->active;
+
+        return $this->json($response);
     }
 }
