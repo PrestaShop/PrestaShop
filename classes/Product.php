@@ -8036,4 +8036,28 @@ class ProductCore extends ObjectModel
             )
         );
     }
+
+    /**
+     * Get Product ecotax
+     *
+     * @param int $precision
+     * @param bool $include_tax
+     * @param bool $formated
+     *
+     * @return ecotax
+     */
+    public function getEcotax($precision = null, $include_tax = true, $formated = false)
+    {
+        $context = Context::getContext();
+        $currency = $context->currency;
+        $precision = $precision ?? $currency->precision;
+        $ecotax_rate = $include_tax ? (float) Tax::getProductEcotaxRate() : 0;
+        $ecotax = Tools::ps_round(
+            (float) $this->ecotax * (1 + $ecotax_rate / 100),
+            $precision,
+            null
+        );
+
+        return $formated ? $context->getCurrentLocale()->formatPrice($ecotax, $currency->iso_code) : $ecotax;
+    }
 }
