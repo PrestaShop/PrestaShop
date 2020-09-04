@@ -38,7 +38,7 @@ class RedirectType
     /**
      * Represents value of no redirection. Page not found (404) will be displayed.
      */
-    const TYPE_NO_REDIRECT = '404';
+    const TYPE_NOT_FOUND = '404';
 
     /**
      * Represents value of permanent redirection to a category
@@ -64,7 +64,7 @@ class RedirectType
      * Available redirection types
      */
     const AVAILABLE_REDIRECT_TYPES = [
-        self::TYPE_NO_REDIRECT => self::TYPE_NO_REDIRECT,
+        self::TYPE_NOT_FOUND => self::TYPE_NOT_FOUND,
         self::TYPE_CATEGORY_PERMANENT => self::TYPE_CATEGORY_PERMANENT,
         self::TYPE_CATEGORY_TEMPORARY => self::TYPE_CATEGORY_TEMPORARY,
         self::TYPE_PRODUCT_PERMANENT => self::TYPE_PRODUCT_PERMANENT,
@@ -106,9 +106,9 @@ class RedirectType
     /**
      * @return bool
      */
-    public function isNoRedirectType(): bool
+    public function isTypeNotFound(): bool
     {
-        return $this->getValue() === static::TYPE_NO_REDIRECT;
+        return $this->getValue() === static::TYPE_NOT_FOUND;
     }
 
     /**

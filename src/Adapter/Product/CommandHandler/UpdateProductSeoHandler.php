@@ -102,7 +102,7 @@ class UpdateProductSeoHandler extends AbstractProductHandler implements UpdatePr
 
         if ($redirectType->isProductType()) {
             $this->assertProductExists($redirectTarget->getValue());
-        } elseif (!$redirectType->isNoRedirectType() && !$redirectTarget->isNoTarget()) {
+        } elseif (!$redirectType->isTypeNotFound() && !$redirectTarget->isNoTarget()) {
             $this->assertCategoryExists($redirectTarget->getValue());
         }
 
