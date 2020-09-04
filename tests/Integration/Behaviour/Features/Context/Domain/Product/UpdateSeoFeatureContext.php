@@ -63,6 +63,37 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @Then product :productReference should have following seo options:
+     *
+     * @param string $productReference
+     * @param TableNode $tableNode
+     */
+    public function assertSeoOptions(string $productReference, TableNode $tableNode): void
+    {
+        $productSeoOptions = $this->getProductForEditing($productReference)->getProductSeoOptions();
+        $dataRows = $tableNode->getRowsHash();
+
+        if (isset($dataRows['redirect_type'])) {
+            Assert::assertEquals(
+                $dataRows['redirect_type'],
+                $productSeoOptions->getRedirectType(),
+                'Unexpected redirect_type'
+            );
+            unset($dataRows['redirect_type']);
+        }
+
+        if (isset($dataRows['redirect_target'])) {
+            $targetId = $this->getSharedStorage()->get($dataRows['redirect_target']);
+            Assert::assertEquals(
+                $targetId,
+                $productSeoOptions->getRedirectTargetId(),
+                'Unexpected redirect target'
+            );
+            unset($dataRows['redirect_target']);
+        }
+    }
+
+    /**
      * @When I update product :productReference localized SEO field :field with a value of :length symbols length
      *
      * @param string $productReference

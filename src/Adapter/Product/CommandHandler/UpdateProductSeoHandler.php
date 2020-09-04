@@ -97,14 +97,17 @@ class UpdateProductSeoHandler extends AbstractProductHandler implements UpdatePr
      */
     private function fillRedirectOptionValues(Product $product, RedirectOption $redirectOption): void
     {
-        if ($redirectOption->getRedirectType()->isProductType()) {
-            $this->assertProductExists($redirectOption->getRedirectTarget()->getValue());
-        } elseif (!$redirectOption->getRedirectType()->isNoRedirectType()) {
-            $this->assertCategoryExists($redirectOption->getRedirectTarget()->getValue());
+        $redirectType = $redirectOption->getRedirectType();
+        $redirectTarget = $redirectOption->getRedirectTarget();
+
+        if ($redirectType->isProductType()) {
+            $this->assertProductExists($redirectTarget->getValue());
+        } elseif (!$redirectType->isNoRedirectType() && !$redirectTarget->isNoTarget()) {
+            $this->assertCategoryExists($redirectTarget->getValue());
         }
 
-        $product->redirect_type = $redirectOption->getRedirectType()->getValue();
-        $product->id_type_redirected = $redirectOption->getRedirectTarget()->getValue();
+        $product->redirect_type = $redirectType->getValue();
+        $product->id_type_redirected = $redirectTarget->getValue();
         $this->fieldsToUpdate['redirect_type'] = true;
         $this->fieldsToUpdate['id_type_redirected'] = true;
     }
