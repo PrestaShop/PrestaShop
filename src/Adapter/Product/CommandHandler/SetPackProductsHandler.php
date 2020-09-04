@@ -31,19 +31,22 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPackCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductPackHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetPackProductsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\SetPackProductsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QuantifiedProduct;
 use PrestaShopException;
 
-final class UpdateProductPackHandler extends AbstractProductHandler implements UpdateProductPackHandlerInterface
+/**
+ * Handles @see SetPackProductsCommand using legacy object model
+ */
+final class SetPackProductsHandler extends AbstractProductHandler implements SetPackProductsHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(UpdateProductPackCommand $command): void
+    public function handle(SetPackProductsCommand $command): void
     {
         $productsForPacking = $command->getProducts();
         $pack = $this->getProduct($command->getPackId());
@@ -56,13 +59,13 @@ final class UpdateProductPackHandler extends AbstractProductHandler implements U
 
         if (false === Pack::deleteItems($packId)) {
             throw new ProductPackException(
-                sprintf('Failed deleting previous products from pack #%d before adding new ones', $packId),
+                sprintf('Failed to remove previous products from pack #%d before adding new ones', $packId),
                 ProductPackException::FAILED_DELETING_PRODUCTS_FROM_PACK
             );
         }
 
         //reset cache_default_attribute
-        $pack->setDefaultAttribute(0);
+        $pack->setDefaultAttribute(CombinationId::NO_COMBINATION);
 
         foreach ($productsForPacking as $productForPacking) {
             $productId = $productForPacking->getProductId()->getValue();
@@ -78,7 +81,7 @@ final class UpdateProductPackHandler extends AbstractProductHandler implements U
 
                 if (false === $packed) {
                     throw new ProductPackException(
-                        $this->appendIdsToMessage('Failed adding product to pack.', $productForPacking, $packId),
+                        $this->appendIdsToMessage('Failed to add product to pack.', $productForPacking, $packId),
                         ProductPackException::FAILED_ADDING_TO_PACK
                     );
                 }

@@ -24,17 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPackCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
 
 /**
- * Defines contract for UpdateProductPackHandler
+ * Id of product which is a pack.
  */
-interface UpdateProductPackHandlerInterface
+class PackId extends ProductId
 {
-    /**
-     * @param UpdateProductPackCommand $command
-     */
-    public function handle(UpdateProductPackCommand $command): void;
 }
