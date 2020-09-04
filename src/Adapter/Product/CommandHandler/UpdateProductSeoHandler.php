@@ -29,10 +29,15 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductSeoHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectOption;
 use Product;
 
 /**
@@ -60,10 +65,7 @@ class UpdateProductSeoHandler extends AbstractProductHandler implements UpdatePr
         $redirectOption = $command->getRedirectOption();
 
         if (null !== $redirectOption) {
-            $product->redirect_type = $redirectOption->getRedirectType()->getValue();
-            $product->id_type_redirected = $redirectOption->getRedirectTarget()->getValue();
-            $this->fieldsToUpdate['redirect_type'] = true;
-            $this->fieldsToUpdate['id_type_redirected'] = true;
+            $this->fillRedirectOptionValues($product, $redirectOption);
         }
 
         if (null !== $command->getLocalizedMetaDescriptions()) {
@@ -82,6 +84,59 @@ class UpdateProductSeoHandler extends AbstractProductHandler implements UpdatePr
             $product->link_rewrite = $command->getLocalizedLinkRewrites();
             $this->validateLocalizedField($product, 'link_rewrite', ProductConstraintException::INVALID_LINK_REWRITE);
             $this->fieldsToUpdate['link_rewrite'] = true;
+        }
+    }
+
+    /**
+     * @param Product $product
+     * @param RedirectOption $redirectOption
+     *
+     * @throws CategoryNotFoundException
+     * @throws ProductException
+     * @throws ProductNotFoundException
+     */
+    private function fillRedirectOptionValues(Product $product, RedirectOption $redirectOption): void
+    {
+        if ($redirectOption->getRedirectType()->isProductType()) {
+            $this->assertProductExists($redirectOption->getRedirectTarget()->getValue());
+        } elseif (!$redirectOption->getRedirectType()->isNoRedirectType()) {
+            $this->assertCategoryExists($redirectOption->getRedirectTarget()->getValue());
+        }
+
+        $product->redirect_type = $redirectOption->getRedirectType()->getValue();
+        $product->id_type_redirected = $redirectOption->getRedirectTarget()->getValue();
+        $this->fieldsToUpdate['redirect_type'] = true;
+        $this->fieldsToUpdate['id_type_redirected'] = true;
+    }
+
+    /**
+     * @param int $categoryId
+     *
+     * @throws CategoryNotFoundException
+     * @throws ProductException
+     */
+    private function assertCategoryExists(int $categoryId): void
+    {
+        if (!$this->entityExists('category', $categoryId)) {
+            throw new CategoryNotFoundException(
+                new CategoryId($categoryId),
+                sprintf('Category #%d does not exist', $categoryId)
+            );
+        }
+    }
+
+    /**
+     * @param int $productId
+     *
+     * @throws ProductException
+     * @throws ProductNotFoundException
+     */
+    private function assertProductExists(int $productId): void
+    {
+        if (!$this->entityExists('product', $productId)) {
+            throw new ProductNotFoundException(
+                sprintf('Product #%d does not exist', $productId)
+            );
         }
     }
 }

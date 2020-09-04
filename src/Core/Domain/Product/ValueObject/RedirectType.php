@@ -95,9 +95,20 @@ class RedirectType
         return $this->value;
     }
 
+    /**
+     * @return bool
+     */
     public function isProductType(): bool
     {
         return in_array($this->value, [static::TYPE_PRODUCT_PERMANENT, static::TYPE_PRODUCT_TEMPORARY]);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNoRedirectType(): bool
+    {
+        return $this->getValue() === static::TYPE_NO_REDIRECT;
     }
 
     /**
