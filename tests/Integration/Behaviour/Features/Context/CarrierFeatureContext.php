@@ -36,6 +36,7 @@ use Country;
 use Group;
 use RangePrice;
 use RangeWeight;
+use RuntimeException;
 use State;
 use Zone;
 
@@ -231,6 +232,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
         $carrier->active = 1;
         $carrier->add();
         $this->carriers[$carrierName] = $carrier;
+        SharedStorage::getStorage()->set($carrierName, $carrier->id);
 
         $groups = Group::getGroups(Context::getContext()->language->id);
         $groupIds = [];
@@ -370,5 +372,43 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->checkAddressWithNameExists($addresssName);
         $this->getCurrentCart()->id_address_delivery = $this->addresses[$addresssName]->id;
+    }
+
+    /**
+     * @Given a carrier :carrierReference with name :carrierName exists
+     *
+     * @param string $carrierReference
+     * @param string $carrierName
+     */
+    public function checkExistingCarrier(string $carrierReference, string $carrierName)
+    {
+        $carriers = Carrier::getCarriers((int) Configuration::get('PS_LANG_DEFAULT'));
+        foreach ($carriers as $carrier) {
+            if ($carrier['name'] === $carrierName) {
+                SharedStorage::getStorage()->set($carrierReference, (int) $carrier['id_carrier']);
+
+                return;
+            }
+        }
+
+        throw new RuntimeException(sprintf(
+            'Could not find carrier with name %s',
+            $carrierName
+        ));
+    }
+
+    /**
+     * @Given I enable carrier :carrierReference
+     *
+     * @param string $carrierReference
+     */
+    public function enableCarrier(string $carrierReference)
+    {
+        $carrierId = SharedStorage::getStorage()->get($carrierReference);
+        $carrier = new Carrier($carrierId);
+        $carrier->active = true;
+        $carrier->save();
+        // Reset cache so that the carrier becomes selectable
+        Carrier::resetStaticCache();
     }
 }

@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Order;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderDeliveryAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCommand;
@@ -43,21 +44,20 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
      *
      * @param string $orderReference
      * @param string $trackingNumber
-     * @param string $carrier
+     * @param string $carrierReference
      */
     public function updateOrderTrackingNumberToAndCarrierTo(
-        string $orderReference, string $trackingNumber, string $carrier
+        string $orderReference, string $trackingNumber, string $carrierReference
     ) {
         $orderId = SharedStorage::getStorage()->get($orderReference);
+        $order = new Order($orderId);
 
-        $oldOrderCarrierId = $this->getCarrierId($carrier);
-        $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-        $newCarrierId = $this->getCarrierId($carrier);
+        $newCarrierId = SharedStorage::getStorage()->get($carrierReference);
 
         $this->getCommandBus()->handle(
             new UpdateOrderShippingDetailsCommand(
                 $orderId,
-                $oldOrderCarrierId,
+                $order->getIdOrderCarrier(),
                 $newCarrierId,
                 $trackingNumber
             )

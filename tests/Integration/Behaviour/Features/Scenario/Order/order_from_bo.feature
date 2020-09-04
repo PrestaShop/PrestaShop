@@ -25,6 +25,7 @@ Feature: Order from Back Office (BO)
      #    todo: find a way how to get customer object/id by its properties without using legacy objects
     And there is customer "testCustomer" with email "pub@prestashop.com"
     And customer "testCustomer" has address in "US" country
+    And a carrier "default_carrier" with name "My carrier" exists
     And I create an empty cart "dummy_cart" for customer "testCustomer"
     #    todo: find a way to create country without legacy object
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
@@ -62,8 +63,9 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" has status "Awaiting Cash On Delivery validation"
 
   Scenario: Update order shipping details
-    When I update order "bo_order1" Tracking number to "TEST1234" and Carrier to "2 - My carrier (Delivery next day!)"
+    When I update order "bo_order1" Tracking number to "TEST1234" and Carrier to "default_carrier"
     Then order "bo_order1" has Tracking number "TEST1234"
+    And order "bo_order1" should have "default_carrier" as a carrier
     And order "bo_order1" has Carrier "2 - My carrier (Delivery next day!)"
 
   Scenario: pay order with negative amount and see it is not valid
