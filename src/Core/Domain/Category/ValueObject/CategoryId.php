@@ -36,7 +36,7 @@ class CategoryId
     /**
      * @var int
      */
-    protected $categoryId;
+    private $categoryId;
 
     /**
      * @param int $categoryId
