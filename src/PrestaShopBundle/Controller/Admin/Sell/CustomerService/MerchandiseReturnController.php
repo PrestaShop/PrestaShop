@@ -294,7 +294,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
                 ),
             ],
             UpdateOrderReturnException::class => $this->trans(
-                'An error occurred while trying to update merchandise return',
+                'An error occurred while trying to update merchandise return.',
                 'Admin.Notifications.Error'
             ),
         ];
