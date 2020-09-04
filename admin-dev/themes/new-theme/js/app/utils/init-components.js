@@ -30,15 +30,23 @@ import TaggableField from '@js/components/taggable-field.js';
 
 const initComponents = () => {
   window.prestashop = {...window.prestashop};
-
   window.prestashop.component = {
     initComponents(components) {
       window.prestashop.instance = {...window.prestashop.instance};
       components.forEach((component) => {
-        if (window.prestashop.instance[component] === undefined
-          && window.prestashop.component[component] !== undefined) {
-          window.prestashop.instance[component] = new window.prestashop.component[component]();
+        if (window.prestashop.component[component] === undefined) {
+          console.error(`Failed to initialize PrestaShop component "${component}". This component doesn't exist.`);
+          return;
         }
+
+        if (window.prestashop.instance[component] !== undefined) {
+          console.warn(
+            `Failed to initialize PrestaShop component "${component}". This component is already initialized.`,
+          );
+          return;
+        }
+
+        window.prestashop.instance[component] = new window.prestashop.component[component]();
       });
     },
     TranslatableField,
