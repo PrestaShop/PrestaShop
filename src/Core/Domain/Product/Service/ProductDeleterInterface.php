@@ -24,38 +24,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Service;
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
-
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkDeleteProductHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Service\ProductDeleterInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Handles @see BulkDeleteProductCommand using legacy object model
+ * Defines contract for product deleter
  */
-final class BulkDeleteProductHandler extends AbstractProductHandler implements BulkDeleteProductHandlerInterface
+interface ProductDeleterInterface
 {
     /**
-     * @var ProductDeleterInterface
+     * @param ProductId $productId
      */
-    private $productDeleter;
+    public function delete(ProductId $productId): void;
 
     /**
-     * @param ProductDeleterInterface $productDeleter
+     * @param ProductId[] $productIds
      */
-    public function __construct(ProductDeleterInterface $productDeleter)
-    {
-        $this->productDeleter = $productDeleter;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(BulkDeleteProductCommand $command): void
-    {
-        $this->productDeleter->bulkDelete($command->getProductIds());
-    }
+    public function bulkDelete(array $productIds): void;
 }

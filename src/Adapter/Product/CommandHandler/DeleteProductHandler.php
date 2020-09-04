@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\DeleteProductHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Service\ProductDeleterInterface;
 
 /**
  * Handles @see DeleteProductCommand using legacy object model
@@ -39,17 +39,23 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductExcep
 final class DeleteProductHandler extends AbstractProductHandler implements DeleteProductHandlerInterface
 {
     /**
+     * @var ProductDeleterInterface
+     */
+    private $productDeleter;
+
+    /**
+     * @param ProductDeleterInterface $productDeleter
+     */
+    public function __construct(ProductDeleterInterface $productDeleter)
+    {
+        $this->productDeleter = $productDeleter;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(DeleteProductCommand $command): void
     {
-        $product = $this->getProduct($command->getProductId());
-
-        if (!$this->deleteProduct($product)) {
-            throw new CannotDeleteProductException(
-                sprintf('Failed to delete product #%d', $product->id),
-                CannotDeleteProductException::FAILED_DELETE
-            );
-        }
+        $this->productDeleter->delete($command->getProductId());
     }
 }

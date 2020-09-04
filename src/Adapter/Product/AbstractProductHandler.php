@@ -177,24 +177,4 @@ abstract class AbstractProductHandler
             );
         }
     }
-
-    /**
-     * @param Product $product
-     *
-     * @return bool
-     *
-     * @throws ProductException
-     */
-    protected function deleteProduct(Product $product): bool
-    {
-        try {
-            return $product->delete();
-        } catch (PrestaShopException $e) {
-            throw new ProductException(
-                sprintf('Error occurred when trying to delete product #%d', $product->id),
-                0,
-                $e
-            );
-        }
-    }
 }
