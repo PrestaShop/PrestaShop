@@ -787,8 +787,8 @@ form#importDropzone {
 }
 
 .module-list-disabled {
-   @extend .module-list;
-   opacity: 0.5;
+  @extend .module-list;
+  opacity: 0.5;
 }
 
 #unhook-button-position-bottom {
