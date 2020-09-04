@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QuantifiedProduct;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\PackId;
 use RuntimeException;
 
 /**
@@ -39,7 +39,7 @@ use RuntimeException;
 class SetPackProductsCommand
 {
     /**
-     * @var ProductId
+     * @var PackId
      */
     private $packId;
 
@@ -55,14 +55,14 @@ class SetPackProductsCommand
      */
     public function __construct(int $packId, array $products)
     {
-        $this->packId = new ProductId($packId);
+        $this->packId = new PackId($packId);
         $this->setProducts($products);
     }
 
     /**
-     * @return ProductId
+     * @return PackId
      */
-    public function getPackId(): ProductId
+    public function getPackId(): PackId
     {
         return $this->packId;
     }

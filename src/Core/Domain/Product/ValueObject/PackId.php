@@ -26,33 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
-
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\PackId;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
 
 /**
- * Removes all products from provided pack
+ * Id of product which is a pack.
  */
-class RemoveAllProductsFromPackCommand
+class PackId extends ProductId
 {
-    /**
-     * @var PackId
-     */
-    private $packId;
-
-    /**
-     * @param int $packId
-     */
-    public function __construct(int $packId)
-    {
-        $this->packId = new PackId($packId);
-    }
-
-    /**
-     * @return PackId
-     */
-    public function getPackId(): PackId
-    {
-        return $this->packId;
-    }
 }
