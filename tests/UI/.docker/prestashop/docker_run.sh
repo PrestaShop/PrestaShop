@@ -80,7 +80,8 @@ if [ $PS_INSTALL_AUTO = 1 ]; then
   /usr/bin/make assets
 
   echo "\n* Install PrestaShop...";
-  php /var/www/html/$PS_FOLDER_INSTALL/index_cli.php --domain="$PS_DOMAIN" --db_server=$DB_SERVER:$DB_PORT --db_name="$DB_NAME" --db_user=$DB_USER \
+  php -d memory_limit=-1 /var/www/html/$PS_FOLDER_INSTALL/index_cli.php \
+      --domain="$PS_DOMAIN" --db_server=$DB_SERVER:$DB_PORT --db_name="$DB_NAME" --db_user=$DB_USER \
       --db_password=$DB_PASSWD --prefix="$DB_PREFIX" --firstname="John" --lastname="Doe" \
       --password=$ADMIN_PASSWD --email="$ADMIN_MAIL" --language=$PS_LANGUAGE --country=$PS_COUNTRY \
       --newsletter=0 --send_email=0
