@@ -665,6 +665,13 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.catalog.form_image:
+        class: 'PrestaShopBundle\Form\Admin\Catalog\Image\FormImageType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
     form.type.common.category_choice_tree:
         class: 'PrestaShopBundle\Form\Admin\Type\CategoryChoiceTreeType'
         arguments:

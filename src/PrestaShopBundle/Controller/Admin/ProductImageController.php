@@ -120,7 +120,6 @@ class ProductImageController extends FrameworkBundleAdminController
      */
     public function formAction($idImage, Request $request)
     {
-        $locales = $this->get('prestashop.adapter.legacy.context')->getLanguages();
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
 
@@ -130,20 +129,7 @@ class ProductImageController extends FrameworkBundleAdminController
 
         $image = $productAdapter->getImage((int) $idImage);
 
-        $form = $this->get('form.factory')->createNamedBuilder('form_image', FormType::class, $image, ['csrf_protection' => false])
-            ->add('legend', 'PrestaShopBundle\Form\Admin\Type\TranslateType', [
-                'type' => 'Symfony\Component\Form\Extension\Core\Type\TextareaType',
-                'options' => [],
-                'locales' => $locales,
-                'hideTabs' => true,
-                'label' => $this->trans('Caption', 'Admin.Catalog.Feature'),
-                'required' => false,
-            ])
-            ->add('cover', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', [
-                'label' => $this->trans('Cover image', 'Admin.Catalog.Feature'),
-                'required' => false,
-            ])
-            ->getForm();
+        $form = $this->get('prestashop.core.form.identifiable_object.builder.image_form_builder')->getFormFor($idImage, [], array('csrf_protection' => false));
 
         $form->handleRequest($request);
 

@@ -400,14 +400,11 @@
   }
 
   #product-images-form-container {
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 0;
-    float: left;
     min-height: 200px;
-    margin: 10px 0 5px 5px;
     cursor: default;
+    margin: 10px 0 10px 0px;
+    float: left;
+    z-index: 0;
     .close {
       position: absolute;
       top: 0;
@@ -416,6 +413,10 @@
     }
     .actions {
       padding-top: 15px;
+    }
+    .form-group {
+      margin-bottom: 0;
+      margin-top: 15px;
     }
   }
 

@@ -38,6 +38,7 @@
 <label class="control-label">{{ form.legend.vars.label }}</label>
 {{ form_widget(form.legend) }}
 {{ form_errors(form.legend) }}
+{{ form_rest(form) }}
 
 <div class="actions">
     <button type="button" class="btn btn-sm btn-primary pull-sm-right" onclick="formImagesProduct.send({{ image.id }})">{{ 'Save image settings'|trans({}, 'Admin.Actions') }}</button>

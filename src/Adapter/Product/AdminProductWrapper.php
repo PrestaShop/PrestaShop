@@ -41,6 +41,7 @@ use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\Entity\Customization;
 use PrestaShop\PrestaShop\Core\Foundation\Database\EntityNotFoundException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Utils\FloatParser;
 use Product;
 use ProductDownload;
@@ -84,19 +85,26 @@ class AdminProductWrapper
     private $floatParser;
 
     /**
+     * @var HookDispatcherInterface
+     */
+    private $hookDispatcher;
+
+    /**
      * Constructor : Inject Symfony\Component\Translation Translator.
      *
      * @param object $translator
      * @param array $employeeAssociatedShops
      * @param Locale $locale
      * @param FloatParser|null $floatParser
+     * @param HookDispatcher $hookDispatcher
      */
-    public function __construct($translator, array $employeeAssociatedShops, Locale $locale, FloatParser $floatParser = null)
+    public function __construct($translator, array $employeeAssociatedShops, Locale $locale, FloatParser $floatParser = null, HookDispatcherInterface $hookDispatcher)
     {
         $this->translator = $translator;
         $this->employeeAssociatedShops = $employeeAssociatedShops;
         $this->locale = $locale;
         $this->floatParser = $floatParser ?? new FloatParser();
+        $this->hookDispatcher = $hookDispatcher;
     }
 
     /**
@@ -870,6 +878,10 @@ class AdminProductWrapper
      */
     public function ajaxProcessUpdateImage($idImage, $data)
     {
+        $this->hookDispatcher->dispatchWithParameters('actionBeforeUpdateFormImageFormHandler', array(
+            'id' => (int) $idImage,
+            'form_data' => &$data
+        ));
         $img = new Image((int) $idImage);
         if ($data['cover']) {
             Image::deleteCover((int) $img->id_product);
@@ -877,6 +889,10 @@ class AdminProductWrapper
         }
         $img->legend = $data['legend'];
         $img->update();
+        $this->hookDispatcher->dispatchWithParameters('actionAfterUpdateFormImageFormHandler', array(
+            'id' => (int) $idImage,
+            'form_data' => &$data
+        ));
 
         return $img;
     }
