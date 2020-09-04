@@ -113,7 +113,7 @@
               </header>
 
               {% if hook['modules_count'] %}
-                <section class="module-list" {% if not hook['active'] %} style="opacity:50%" {% endif %}>
+                <section class="module-list{% if not hook['active'] %}-disabled{% endif %}">
                   <ul class="list-unstyled{% if hook['modules_count'] > 1 %} sortable{% endif %}">
                     {% for module in hook['modules'] if modules[module['id_module']] is defined %}
                       {% set moduleInstance = modules[module['id_module']] %}
