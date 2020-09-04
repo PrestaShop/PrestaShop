@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use ObjectModel;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
@@ -150,6 +151,27 @@ abstract class AbstractProductHandler
         } catch (PrestaShopException $e) {
             throw new ProductException(
                 sprintf('Error occurred when trying to update product #%d', $product->id),
+                0,
+                $e
+            );
+        }
+    }
+
+    /**
+     * @param string $entityName
+     * @param int $entityId
+     *
+     * @return bool
+     *
+     * @throws ProductException
+     */
+    protected function entityExists(string $entityName, int $entityId): bool
+    {
+        try {
+            return ObjectModel::existsInDatabase($entityId, $entityName);
+        } catch (PrestaShopException $e) {
+            throw new ProductException(
+                sprintf('Error occurred when trying to find %s with id %d', $entityName, $entityId),
                 0,
                 $e
             );

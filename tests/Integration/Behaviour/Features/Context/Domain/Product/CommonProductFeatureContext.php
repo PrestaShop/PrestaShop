@@ -122,6 +122,8 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
      *
      * @param string $productReference
      * @param TableNode $table
+     *
+     * @todo: method can be simplified if there is no more than single common field at the end of product migration
      */
     public function assertProductFields(string $productReference, TableNode $table)
     {
@@ -178,6 +180,8 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
 
     /**
      * @Then I should get error that product :fieldName is invalid
+     *
+     * @param string $fieldName
      */
     public function assertConstraintError(string $fieldName): void
     {
@@ -219,6 +223,11 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
             'additional_shipping_cost' => ProductConstraintException::INVALID_ADDITIONAL_SHIPPING_COST,
             'delivery_in_stock' => ProductConstraintException::INVALID_DELIVERY_TIME_IN_STOCK_NOTES,
             'delivery_out_stock' => ProductConstraintException::INVALID_DELIVERY_TIME_OUT_OF_STOCK_NOTES,
+            'redirect_target' => ProductConstraintException::INVALID_REDIRECT_TARGET,
+            'redirect_type' => ProductConstraintException::INVALID_REDIRECT_TYPE,
+            'meta_title' => ProductConstraintException::INVALID_META_TITLE,
+            'meta_description' => ProductConstraintException::INVALID_META_DESCRIPTION,
+            'link_rewrite' => ProductConstraintException::INVALID_LINK_REWRITE,
         ];
 
         if (!array_key_exists($fieldName, $constraintErrorFieldMap)) {

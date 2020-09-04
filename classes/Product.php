@@ -32,6 +32,7 @@ define('_CUSTOMIZE_TEXTFIELD_', 1);
 
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Product\ProductInterface;
 
 class ProductCore extends ObjectModel
@@ -164,7 +165,9 @@ class ProductCore extends ObjectModel
     /** @var string|array Meta description or array of meta description by id_lang */
     public $meta_description;
 
-    /** @var string|array Meta keywords or array of meta keywords by id_lang */
+    /**
+     * @deprecated
+     */
     public $meta_keywords;
 
     /** @var string|array Meta title or array of meta title by id_lang */
@@ -195,9 +198,9 @@ class ProductCore extends ObjectModel
     /**
      * @var string Redirection type
      *
-     * @see ProductInterface
+     * @see RedirectType
      */
-    public $redirect_type = '';
+    public $redirect_type = RedirectType::TYPE_NOT_FOUND;
 
     /**
      * @var int Product identifier or Category identifier depends on redirect_type
