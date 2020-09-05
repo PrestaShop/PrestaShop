@@ -142,7 +142,6 @@ class AttributeController extends FrameworkBundleAdminController
         $attributes = $product->sortCombinationByAttributePosition($newCombinationIds, $locales[0]['id_lang']);
         $this->ensureProductHasDefaultCombination($product, $attributes);
 
-        $response = new JsonResponse();
         $combinationDataProvider = $this->get('prestashop.adapter.data_provider.combination');
         $result = [
             'ids_product_attribute' => [],
