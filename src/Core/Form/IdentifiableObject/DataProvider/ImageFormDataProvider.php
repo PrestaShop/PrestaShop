@@ -51,7 +51,7 @@ final class ImageFormDataProvider implements FormDataProviderInterface
      */
     public function getData($imageId)
     {
-        return $this->productAdapter->getImage((int)$imageId);
+        return $this->productAdapter->getImage((int) $imageId);
     }
 
     /**

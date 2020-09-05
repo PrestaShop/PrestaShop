@@ -401,10 +401,10 @@
 
   #product-images-form-container {
     min-height: 200px;
-    cursor: default;
-    margin: 10px 0 10px 0px;
-    float: left;
     z-index: 0;
+    float: left;
+    margin: 10px 0 10px 0;
+    cursor: default;
     .close {
       position: absolute;
       top: 0;
@@ -415,8 +415,8 @@
       padding-top: 15px;
     }
     .form-group {
-      margin-bottom: 0;
       margin-top: 15px;
+      margin-bottom: 0;
     }
   }
 

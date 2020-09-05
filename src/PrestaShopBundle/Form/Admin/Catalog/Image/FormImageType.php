@@ -40,18 +40,18 @@ class FormImageType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('legend', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
+            ->add('legend', 'PrestaShopBundle\Form\Admin\Type\TranslateType', [
                 'type' => 'Symfony\Component\Form\Extension\Core\Type\TextareaType',
-                'options' => array(),
+                'options' => [],
                 'locales' => $this->locales,
                 'hideTabs' => true,
                 'label' => $this->trans('Caption', 'Admin.Catalog.Feature'),
                 'required' => false,
-            ))
-            ->add('cover', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
+            ])
+            ->add('cover', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', [
                 'label' => $this->trans('Cover image', 'Admin.Catalog.Feature'),
                 'required' => false,
-            ))
+            ])
         ;
     }
 }

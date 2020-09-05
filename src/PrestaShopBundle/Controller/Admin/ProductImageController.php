@@ -129,7 +129,7 @@ class ProductImageController extends FrameworkBundleAdminController
 
         $image = $productAdapter->getImage((int) $idImage);
 
-        $form = $this->get('prestashop.core.form.identifiable_object.builder.image_form_builder')->getFormFor($idImage, [], array('csrf_protection' => false));
+        $form = $this->get('prestashop.core.form.identifiable_object.builder.image_form_builder')->getFormFor($idImage, [], ['csrf_protection' => false]);
 
         $form->handleRequest($request);
 

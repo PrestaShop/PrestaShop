@@ -878,10 +878,10 @@ class AdminProductWrapper
      */
     public function ajaxProcessUpdateImage($idImage, $data)
     {
-        $this->hookDispatcher->dispatchWithParameters('actionBeforeUpdateFormImageFormHandler', array(
+        $this->hookDispatcher->dispatchWithParameters('actionBeforeUpdateFormImageFormHandler', [
             'id' => (int) $idImage,
             'form_data' => &$data
-        ));
+        ]);
         $img = new Image((int) $idImage);
         if ($data['cover']) {
             Image::deleteCover((int) $img->id_product);
@@ -889,10 +889,10 @@ class AdminProductWrapper
         }
         $img->legend = $data['legend'];
         $img->update();
-        $this->hookDispatcher->dispatchWithParameters('actionAfterUpdateFormImageFormHandler', array(
+        $this->hookDispatcher->dispatchWithParameters('actionAfterUpdateFormImageFormHandler', [
             'id' => (int) $idImage,
             'form_data' => &$data
-        ));
+        ]);
 
         return $img;
     }
