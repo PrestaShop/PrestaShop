@@ -40,8 +40,8 @@ use Language;
 use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\Entity\Customization;
 use PrestaShop\PrestaShop\Core\Foundation\Database\EntityNotFoundException;
-use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShopBundle\Utils\FloatParser;
 use Product;
 use ProductDownload;
@@ -880,7 +880,7 @@ class AdminProductWrapper
     {
         $this->hookDispatcher->dispatchWithParameters('actionBeforeUpdateFormImageFormHandler', [
             'id' => (int) $idImage,
-            'form_data' => &$data
+            'form_data' => &$data,
         ]);
         $img = new Image((int) $idImage);
         if ($data['cover']) {
@@ -891,7 +891,7 @@ class AdminProductWrapper
         $img->update();
         $this->hookDispatcher->dispatchWithParameters('actionAfterUpdateFormImageFormHandler', [
             'id' => (int) $idImage,
-            'form_data' => &$data
+            'form_data' => &$data,
         ]);
 
         return $img;
