@@ -129,14 +129,14 @@ final class CarrierQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ($filterName === 'name') {
-                $qb->andWhere('cl.name LIKE :name');
+                $qb->andWhere('c.name LIKE :name');
                 $qb->setParameter($filterName, $filterValue);
 
                 continue;
             }
 
             if ($filterName === 'delay') {
-                $qb->andWhere('c.delay LIKE :delay');
+                $qb->andWhere('cl.delay LIKE :delay');
                 $qb->setParameter($filterName, $filterValue);
 
                 continue;
