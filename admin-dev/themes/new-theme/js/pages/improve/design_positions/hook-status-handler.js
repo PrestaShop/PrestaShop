@@ -49,7 +49,7 @@ class HookStatusHandler {
       success(data) {
         if (data.status) {
           window.showSuccessMessage(data.message);
-          const $hookModulesList = $hookElement.closest('.hook-panel').find('.module-list');
+          const $hookModulesList = $hookElement.closest('.hook-panel').find('.module-list, .module-list-disabled');
           $hookModulesList.fadeTo(500, data.hook_status ? 1 : 0.5);
         } else {
           window.showErrorMessage(data.message);
