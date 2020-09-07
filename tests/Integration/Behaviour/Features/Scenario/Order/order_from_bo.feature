@@ -326,8 +326,7 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" shipping address should be "test-address"
 
   Scenario: Generate order then modify product price then add same product on another invoice and check the price
-      #Given there is a product in the catalog named "My Product" with a price of 10.00 and 200 items in stock
-      And order "bo_order1" does not have any invoices
+      Given order "bo_order1" does not have any invoices
       When I generate invoice for "bo_order1" order
     When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
       | amount         | 1                       |
