@@ -44,7 +44,7 @@ final class CarrierQueryBuilder extends AbstractDoctrineQueryBuilder
         'active',
         'is_free',
         'position',
-    ]
+    ];
 
     /**
      * @var DoctrineSearchCriteriaApplicatorInterface
