@@ -30,60 +30,39 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QuantifiedProduct;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\PackId;
+use RuntimeException;
 
 /**
- * Updates pack of products
+ * Sets products of product pack
  */
-class UpdateProductPackCommand
+class SetPackProductsCommand
 {
     /**
-     * @var ProductId
+     * @var PackId
      */
     private $packId;
 
     /**
      * @var QuantifiedProduct[]
      */
-    private $products = [];
+    private $products;
 
     /**
-     * Builds command to remove all items from the pack
-     *
-     * @param int $packId the id of product which becomes the pack after it contains packed items
-     *
-     * @return UpdateProductPackCommand
-     */
-    public static function cleanPack(int $packId): self
-    {
-        return new self($packId, []);
-    }
-
-    /**
-     * Builds command to upsert pack with new products list.
-     * Provided products will replace all previous products in the pack
-     *
-     * @param int $packId the id of product which becomes the pack after it contains packed items
+     * @param int $packId
      * @param array $products array of elements where each element contains product information
      *                        which allows building @var QuantifiedProduct
-     *
-     * @return UpdateProductPackCommand
      */
-    public static function upsertPack(int $packId, array $products): self
+    public function __construct(int $packId, array $products)
     {
-        if (empty($products)) {
-            throw new ProductPackException(
-                'Empty array of products provided. Use UpdateProductPackCommand::cleanPack to empty the pack.'
-            );
-        }
-
-        return new self($packId, $products);
+        $this->packId = new PackId($packId);
+        $this->setProducts($products);
     }
 
     /**
-     * @return ProductId
+     * @return PackId
      */
-    public function getPackId(): ProductId
+    public function getPackId(): PackId
     {
         return $this->packId;
     }
@@ -97,22 +76,18 @@ class UpdateProductPackCommand
     }
 
     /**
-     * Use static factories to build this command
-     *
-     * @param int $packId
-     * @param array $products
-     */
-    private function __construct(int $packId, array $products)
-    {
-        $this->packId = new ProductId($packId);
-        $this->setProducts($products);
-    }
-
-    /**
      * @param array $products
      */
     private function setProducts(array $products): void
     {
+        if (empty($products)) {
+            throw new RuntimeException(sprintf(
+                'Empty products array provided in %s. Use %s to remove all pack products',
+                static::class,
+                RemoveAllProductsFromPackCommand::class
+            ));
+        }
+
         foreach ($products as $product) {
             $this->assertQuantity($product['quantity']);
 

@@ -32,6 +32,7 @@ define('_CUSTOMIZE_TEXTFIELD_', 1);
 
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Product\ProductInterface;
 
 class ProductCore extends ObjectModel
@@ -164,7 +165,9 @@ class ProductCore extends ObjectModel
     /** @var string|array Meta description or array of meta description by id_lang */
     public $meta_description;
 
-    /** @var string|array Meta keywords or array of meta keywords by id_lang */
+    /**
+     * @deprecated
+     */
     public $meta_keywords;
 
     /** @var string|array Meta title or array of meta title by id_lang */
@@ -195,9 +198,9 @@ class ProductCore extends ObjectModel
     /**
      * @var string Redirection type
      *
-     * @see ProductInterface
+     * @see RedirectType
      */
-    public $redirect_type = '';
+    public $redirect_type = RedirectType::TYPE_NOT_FOUND;
 
     /**
      * @var int Product identifier or Category identifier depends on redirect_type
@@ -8035,5 +8038,29 @@ class ProductCore extends ObjectModel
                 $this->id
             )
         );
+    }
+
+    /**
+     * Get Product ecotax
+     *
+     * @param int $precision
+     * @param bool $include_tax
+     * @param bool $formated
+     *
+     * @return ecotax
+     */
+    public function getEcotax($precision = null, $include_tax = true, $formated = false)
+    {
+        $context = Context::getContext();
+        $currency = $context->currency;
+        $precision = $precision ?? $currency->precision;
+        $ecotax_rate = $include_tax ? (float) Tax::getProductEcotaxRate() : 0;
+        $ecotax = Tools::ps_round(
+            (float) $this->ecotax * (1 + $ecotax_rate / 100),
+            $precision,
+            null
+        );
+
+        return $formated ? $context->getCurrentLocale()->formatPrice($ecotax, $currency->iso_code) : $ecotax;
     }
 }

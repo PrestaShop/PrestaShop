@@ -24,19 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Product;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetPackProductsCommand;
 
 /**
- * @deprecated
- * @see RedirectType instead
+ * Defines contract to handle @see SetPackProductsCommand
  */
-interface ProductInterface
+interface SetPackProductsHandlerInterface
 {
-    const REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY = RedirectType::TYPE_CATEGORY_PERMANENT;
-    const REDIRECT_TYPE_CATEGORY_FOUND = RedirectType::TYPE_CATEGORY_TEMPORARY;
-    const REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY = RedirectType::TYPE_PRODUCT_PERMANENT;
-    const REDIRECT_TYPE_PRODUCT_FOUND = RedirectType::TYPE_PRODUCT_TEMPORARY;
-    const REDIRECT_TYPE_NOT_FOUND = RedirectType::TYPE_NOT_FOUND;
+    /**
+     * @param SetPackProductsCommand $command
+     */
+    public function handle(SetPackProductsCommand $command): void;
 }

@@ -64,6 +64,13 @@
                   {{ form_widget(generalForm.back_cookie_lifetime) }}
                 </div>
               </div>
+              <div class="form-group row">
+                {{ ps.label_with_help(('Cookie SameSite'|trans), ('Allows you to declare if your cookie should be restricted to a first-party or same-site context.'|trans({}, 'Admin.Advparameters.Help'))) }}
+                <div class="col-sm">
+                  {{ form_errors(generalForm.cookie_samesite) }}
+                  {{ form_widget(generalForm.cookie_samesite) }}
+                </div>
+              </div>
               {{ form_rest(generalForm) }}
             </div>
           </div>

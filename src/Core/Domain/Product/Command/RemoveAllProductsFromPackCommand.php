@@ -24,19 +24,35 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Product;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\PackId;
 
 /**
- * @deprecated
- * @see RedirectType instead
+ * Removes all products from provided pack
  */
-interface ProductInterface
+class RemoveAllProductsFromPackCommand
 {
-    const REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY = RedirectType::TYPE_CATEGORY_PERMANENT;
-    const REDIRECT_TYPE_CATEGORY_FOUND = RedirectType::TYPE_CATEGORY_TEMPORARY;
-    const REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY = RedirectType::TYPE_PRODUCT_PERMANENT;
-    const REDIRECT_TYPE_PRODUCT_FOUND = RedirectType::TYPE_PRODUCT_TEMPORARY;
-    const REDIRECT_TYPE_NOT_FOUND = RedirectType::TYPE_NOT_FOUND;
+    /**
+     * @var PackId
+     */
+    private $packId;
+
+    /**
+     * @param int $packId
+     */
+    public function __construct(int $packId)
+    {
+        $this->packId = new PackId($packId);
+    }
+
+    /**
+     * @return PackId
+     */
+    public function getPackId(): PackId
+    {
+        return $this->packId;
+    }
 }
