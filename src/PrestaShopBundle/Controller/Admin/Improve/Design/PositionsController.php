@@ -241,7 +241,7 @@ class PositionsController extends FrameworkBundleAdminController
      * Toggle hook status
      *
      * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller')~'_')", message="Access denied.")
-     
+     *
      * @param Request $request
      *
      * @return JsonResponse
