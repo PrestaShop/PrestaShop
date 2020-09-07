@@ -171,7 +171,7 @@ describe('CRUD attribute and values', async () => {
       });
 
       it('should view attribute', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'viewCreatedAttribute', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `viewAfterValueCreation${index}`, baseContext);
 
         await attributesPage.viewAttribute(page, 1);
 
@@ -183,7 +183,7 @@ describe('CRUD attribute and values', async () => {
 
   describe('Update attribute', async () => {
     it('should go to attributes page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToAttributesPageToDelete', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToAttributesPageToUpdate', baseContext);
 
       await viewAttributePage.backToAttributesList(page);
       const pageTitle = await attributesPage.getPageTitle(page);
