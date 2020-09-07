@@ -48,11 +48,11 @@ final class BulkDeleteZoneHandler implements BulkDeleteZoneHandlerInterface
             $zone = new Zone($zoneId->getValue());
 
             if (0 >= $zone->id) {
-                throw new ZoneNotFoundException(sprintf('Unable to find zone with id "%s" for deletion', $zoneId->getValue()));
+                throw new ZoneNotFoundException(sprintf('Unable to find zone with id "%d" for deletion', $zoneId->getValue()));
             }
 
             if (!$zone->delete()) {
-                throw new DeleteZoneException(sprintf('An error occurred when deleting zone with id "%s"', $zoneId->getValue()), DeleteZoneException::FAILED_BULK_DELETE);
+                throw new DeleteZoneException(sprintf('An error occurred when deleting zone with id "%d"', $zoneId->getValue()), DeleteZoneException::FAILED_BULK_DELETE);
             }
         }
     }
