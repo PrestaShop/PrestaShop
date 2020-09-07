@@ -938,7 +938,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     public function checkProductDetailsWithReference(string $orderReference, string $productName, TableNode $table)
     {
         $productOrderDetail = $this->getOrderDetailFromOrder($productName, $orderReference);
-        // var_dump($productName, $productOrderDetail['unit_price_tax_incl'], $productOrderDetail['unit_price_tax_excl']); exit;
         $expectedDetails = $table->getRowsHash();
         foreach ($expectedDetails as $detailName => $expectedDetailValue) {
             Assert::assertEquals(
