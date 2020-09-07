@@ -771,7 +771,6 @@ class HookCore extends ObjectModel
         $id_shop = null,
         $chain = false
     ) {
-
         if (defined('PS_INSTALLATION_IN_PROGRESS') || !Hook::getStatusByName($hook_name)) {
             return null;
         }
@@ -1264,7 +1263,7 @@ class HookCore extends ObjectModel
         return (bool) Db::getInstance()->getValue('
             SELECT `active`
             FROM `' . _DB_PREFIX_ . 'hook`
-            WHERE `name` = "' . pSQL($hook_name).'"
+            WHERE `name` = "' . pSQL($hook_name) . '"
         ');
     }
 }
