@@ -49,10 +49,10 @@ class ToggleCarrierStatusHandler extends AbstractCarrierHandler implements Toggl
 
         try {
             if (false === $carrier->toggleStatus()) {
-                throw new CannotToggleCarrierStatusException(sprintf('Unable to toggle status of carrier with id "%s"', $command->getCarrierId()->getValue()), CannotToggleCarrierStatusException::SINGLE_TOGGLE);
+                throw new CannotToggleCarrierStatusException(sprintf('Unable to toggle status of carrier with id "%d"', $command->getCarrierId()->getValue()), CannotToggleCarrierStatusException::SINGLE_TOGGLE);
             }
         } catch (PrestaShopException $e) {
-            throw new CarrierException(sprintf('An error occurred when toggling status of carrier with id "%s"', $command->getCarrierId()->getValue()), 0, $e);
+            throw new CarrierException(sprintf('An error occurred when toggling status of carrier with id "%d"', $command->getCarrierId()->getValue()), 0, $e);
         }
     }
 }
