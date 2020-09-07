@@ -49,10 +49,10 @@ class ToggleCarrierIsFreeHandler extends AbstractCarrierHandler implements Toggl
             $carrier->is_free = !(bool) $carrier->is_free;
 
             if (false === $carrier->update()) {
-                throw new CannotToggleCarrierIsFreeStatusException(sprintf('Unable to toggle is-free status of carrier with id "%s"', $command->getCarrierId()->getValue()));
+                throw new CannotToggleCarrierIsFreeStatusException(sprintf('Unable to toggle is-free status of carrier with id "%d"', $command->getCarrierId()->getValue()));
             }
         } catch (PrestaShopException $e) {
-            throw new CarrierException(sprintf('An error occurred when toggling is-free status of carrier with id "%s"', $command->getCarrierId()->getValue()), 0, $e);
+            throw new CarrierException(sprintf('An error occurred when toggling is-free status of carrier with id "%d"', $command->getCarrierId()->getValue()), 0, $e);
         }
     }
 }

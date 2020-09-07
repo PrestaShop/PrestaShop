@@ -49,10 +49,10 @@ class DeleteCarrierHandler extends AbstractCarrierHandler implements DeleteCarri
 
         try {
             if (!$carrier->delete()) {
-                throw new CannotDeleteCarrierException(sprintf('Cannot delete carrier object with id "%s"', $command->getCarrierId()->getValue()), CannotDeleteCarrierException::SINGLE_DELETE);
+                throw new CannotDeleteCarrierException(sprintf('Cannot delete carrier object with id "%d"', $command->getCarrierId()->getValue()), CannotDeleteCarrierException::SINGLE_DELETE);
             }
         } catch (PrestaShopException $e) {
-            throw new CarrierException(sprintf('An error occurred when deleting carrier with id "%s"', $command->getCarrierId()->getValue()));
+            throw new CarrierException(sprintf('An error occurred when deleting carrier with id "%d"', $command->getCarrierId()->getValue()));
         }
     }
 }
