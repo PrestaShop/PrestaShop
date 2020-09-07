@@ -48,11 +48,11 @@ final class EditZoneHandler implements EditZoneHandlerInterface
         try {
             $zone = new Zone($command->getZoneId()->getValue());
         } catch (PrestaShopException $e) {
-            throw new ZoneException(sprintf('Failed to get zone with id "%s"', $command->getZoneId()->getValue()), 0, $e);
+            throw new ZoneException(sprintf('Failed to get zone with id "%d"', $command->getZoneId()->getValue()), 0, $e);
         }
 
         if ($zone->id !== $command->getZoneId()->getValue()) {
-            throw new ZoneNotFoundException(sprintf('Zone with id "%s" was not found', $command->getZoneId()->getValue()));
+            throw new ZoneNotFoundException(sprintf('Zone with id "%d" was not found', $command->getZoneId()->getValue()));
         }
 
         if (null !== $command->getName()) {
@@ -65,10 +65,10 @@ final class EditZoneHandler implements EditZoneHandlerInterface
 
         try {
             if (!$zone->update()) {
-                throw new CannotEditZoneException(sprintf('Cannot update zone with id "%s"', $zone->id));
+                throw new CannotEditZoneException(sprintf('Cannot update zone with id "%d"', $zone->id));
             }
         } catch (PrestaShopException $e) {
-            throw new CannotEditZoneException(sprintf('Cannot update zone with id "%s"', $zone->id));
+            throw new CannotEditZoneException(sprintf('Cannot update zone with id "%d"', $zone->id));
         }
     }
 }
