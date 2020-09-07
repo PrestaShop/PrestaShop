@@ -771,10 +771,8 @@ class HookCore extends ObjectModel
         $id_shop = null,
         $chain = false
     ) {
-        $hook = Hook::getInstanceByName($hook_name);
-        $is_actived_hook = $hook && $hook->active;
 
-        if (defined('PS_INSTALLATION_IN_PROGRESS') || !$is_actived_hook) {
+        if (defined('PS_INSTALLATION_IN_PROGRESS') || !Hook::getStatusByName($hook_name)) {
             return null;
         }
 
@@ -1259,12 +1257,14 @@ class HookCore extends ObjectModel
      *
      * @param string $hook_name Hook name
      *
-     * @return Hook|false
+     * @return bool
      */
-    public static function getInstanceByName($hook_name)
+    public static function getStatusByName($hook_name)
     {
-        $hook = new Hook((int) Hook::getIdByName($hook_name));
-
-        return Validate::isLoadedObject($hook) ? $hook : false;
+        return (bool) Db::getInstance()->getValue('
+            SELECT `active`
+            FROM `' . _DB_PREFIX_ . 'hook`
+            WHERE `name` = "' . pSQL($hook_name).'"
+        ');
     }
 }
