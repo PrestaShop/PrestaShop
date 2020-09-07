@@ -59,7 +59,7 @@ admin_carriers_toggle_is_free:
         carrierId: \d+
 
 admin_carriers_update_position:
-    path: /update-positions
+    path: /update-position
     methods: POST
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Improve\Shipping\CarriersController::updatePositionAction'
