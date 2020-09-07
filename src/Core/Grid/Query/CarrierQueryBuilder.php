@@ -37,6 +37,15 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
  */
 final class CarrierQueryBuilder extends AbstractDoctrineQueryBuilder
 {
+    const ALLOWED_FILTERS = [
+        'id_carrier',
+        'name',
+        'delay',
+        'active',
+        'is_free',
+        'position',
+    ]
+
     /**
      * @var DoctrineSearchCriteriaApplicatorInterface
      */
@@ -114,17 +123,8 @@ final class CarrierQueryBuilder extends AbstractDoctrineQueryBuilder
 
     private function applyFilters(QueryBuilder $qb, array $filters)
     {
-        $allowedFilters = [
-            'id_carrier',
-            'name',
-            'delay',
-            'active',
-            'is_free',
-            'position',
-        ];
-
         foreach ($filters as $filterName => $filterValue) {
-            if (!in_array($filterName, $allowedFilters)) {
+            if (!in_array($filterName, self::ALLOWED_FILTERS)) {
                 continue;
             }
 
