@@ -439,7 +439,10 @@ class Customers extends BOBasePage {
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
-    await this.selectByVisibleText(page, this.paginationLimitSelect, number);
+    await Promise.all([
+      this.selectByVisibleText(page, this.paginationLimitSelect, number),
+      page.waitForNavigation({waitUntil: 'networkidle'}),
+    ]);
     return this.getPaginationLabel(page);
   }
 
@@ -449,6 +452,7 @@ class Customers extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
+    await this.scrollTo(page, this.paginationNextLink);
     await this.clickAndWaitForNavigation(page, this.paginationNextLink);
     return this.getPaginationLabel(page);
   }
@@ -459,6 +463,7 @@ class Customers extends BOBasePage {
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
+    await this.scrollTo(page, this.paginationPreviousLink);
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
     return this.getPaginationLabel(page);
   }
