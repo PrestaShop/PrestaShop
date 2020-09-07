@@ -63,7 +63,7 @@ class ZoneId
     private function assertIntegerIsGreaterThanZero(int $zoneId)
     {
         if (0 > $zoneId) {
-            throw new ZoneException(sprintf('Zone id %s is invalid. Zone id have to be number bigger than zero.', $zoneId));
+            throw new ZoneException(sprintf('Zone id %d is invalid. Zone id have to be number bigger than zero.', $zoneId));
         }
     }
 }
