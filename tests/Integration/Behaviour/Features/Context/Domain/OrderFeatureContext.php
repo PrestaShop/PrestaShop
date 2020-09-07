@@ -190,7 +190,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         $this->lastException = null;
 
-
         try {
             $hasFreeShipping = null;
             if (isset($data['free_shipping'])) {
@@ -1564,6 +1563,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     /**
      * @param int $orderId
      * @return TaxCalculator|null
+     *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
