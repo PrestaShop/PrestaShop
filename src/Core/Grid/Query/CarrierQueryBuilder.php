@@ -101,7 +101,7 @@ final class CarrierQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'carrier', 'c')
-            ->leftJoin('c', $this->dbPrefix . 'carrier_lang', 'cl', 'c.id_carrier = cl.id_carrier')
+            ->innerJoin('c', $this->dbPrefix . 'carrier_lang', 'cl', 'c.id_carrier = cl.id_carrier')
             ->andWhere('cl.id_lang = :contextIdLang')
             ->andWhere('cl.id_shop IN (:contextShopIds)')
             ->setParameter('contextShopIds', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
