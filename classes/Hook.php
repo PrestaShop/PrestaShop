@@ -49,8 +49,8 @@ class HookCore extends ObjectModel
     public $position = false;
 
     /**
-    * @var active
-    */
+     * @var active
+     */
     public $active = true;
 
     /**
@@ -774,7 +774,7 @@ class HookCore extends ObjectModel
         $hook = Hook::getInstanceByName($hook_name);
         $is_actived_hook = $hook && $hook->active;
 
-        if (defined('PS_INSTALLATION_IN_PROGRESS') || !$is_actived_hook ) {
+        if (defined('PS_INSTALLATION_IN_PROGRESS') || !$is_actived_hook) {
             return null;
         }
 
@@ -1264,6 +1264,7 @@ class HookCore extends ObjectModel
     public static function getInstanceByName($hook_name)
     {
         $hook = new Hook((int) Hook::getIdByName($hook_name));
+
         return Validate::isLoadedObject($hook) ? $hook : false;
     }
 }
