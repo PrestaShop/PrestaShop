@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Hook\QueryHandler;
 
-use PrestaShop\PrestaShop\Adapter\Entity\Hook;
+use Hook;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
 use PrestaShop\PrestaShop\Core\Domain\Hook\QueryHandler\GetHookStatusHandlerInterface;
