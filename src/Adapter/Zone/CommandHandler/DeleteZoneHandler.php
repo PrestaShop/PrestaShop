@@ -47,11 +47,11 @@ final class DeleteZoneHandler implements DeleteZoneHandlerInterface
         $zone = new Zone($command->getZoneId()->getValue());
 
         if (0 >= $zone->id) {
-            throw new ZoneNotFoundException(sprintf('Unable to find zone with id "%s" for deletion', $command->getZoneId()->getValue()));
+            throw new ZoneNotFoundException(sprintf('Unable to find zone with id "%d" for deletion', $command->getZoneId()->getValue()));
         }
 
         if (!$zone->delete()) {
-            throw new DeleteZoneException(sprintf('Cannot delete zone with id "%s"', $command->getZoneId()->getValue()), DeleteZoneException::FAILED_DELETE);
+            throw new DeleteZoneException(sprintf('Cannot delete zone with id "%d"', $command->getZoneId()->getValue()), DeleteZoneException::FAILED_DELETE);
         }
     }
 }
