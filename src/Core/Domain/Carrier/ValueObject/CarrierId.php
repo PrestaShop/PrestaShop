@@ -46,7 +46,7 @@ class CarrierId
     public function __construct(int $carrierId)
     {
         if (0 >= $carrierId) {
-            throw new CarrierConstraintException(sprintf('Invalid carrier id "%s"', $carrierId), CarrierConstraintException::INVALID_ID);
+            throw new CarrierConstraintException(sprintf('Invalid carrier id "%d"', $carrierId), CarrierConstraintException::INVALID_ID);
         }
         $this->carrierId = $carrierId;
     }
