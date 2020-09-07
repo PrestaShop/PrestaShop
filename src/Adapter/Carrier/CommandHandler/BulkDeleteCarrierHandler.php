@@ -50,10 +50,10 @@ class BulkDeleteCarrierHandler extends AbstractCarrierHandler implements BulkDel
 
             try {
                 if (!$carrier->delete()) {
-                    throw new CannotDeleteCarrierException(sprintf('Cannot delete carrier with id "%s"', $carrierId->getValue()), CannotDeleteCarrierException::BULK_DELETE);
+                    throw new CannotDeleteCarrierException(sprintf('Cannot delete carrier with id "%d"', $carrierId->getValue()), CannotDeleteCarrierException::BULK_DELETE);
                 }
             } catch (PrestaShopException $e) {
-                throw new CarrierException(sprintf('An error occurred when deleting carrier with id "%s"', $carrierId->getValue()));
+                throw new CarrierException(sprintf('An error occurred when deleting carrier with id "%d"', $carrierId->getValue()));
             }
         }
     }
