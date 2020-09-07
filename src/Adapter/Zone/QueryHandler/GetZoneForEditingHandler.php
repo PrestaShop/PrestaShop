@@ -50,7 +50,7 @@ final class GetZoneForEditingHandler implements GetZoneForEditingHandlerInterfac
         $zone = new Zone($zoneId->getValue());
 
         if ($zone->id !== $zoneId->getValue()) {
-            throw new ZoneNotFoundException(sprintf('Zone with id "%s" not found', $zoneId->getValue()));
+            throw new ZoneNotFoundException(sprintf('Zone with id "%d" not found', $zoneId->getValue()));
         }
 
         return new EditableZone($zoneId, (string) $zone->name, (bool) $zone->active);
