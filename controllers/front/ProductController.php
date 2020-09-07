@@ -1013,13 +1013,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
                         if (count($alternativeProductAttribute)) {
                             usort($alternativeProductAttribute, function ($a, $b) {
-                                $aValue = $a['quantity'];
-                                $bValue = $b['quantity'];
-                                if ($a == $b) {
+                                if ($a['quantity'] == $b['quantity']) {
                                     return 0;
                                 }
 
-                                return ($a > $b) ? -1 : 1;
+                                return ($a['quantity'] > $b['quantity']) ? -1 : 1;
                             });
 
                             return (int) array_shift($alternativeProductAttribute)['id_product_attribute'];
