@@ -36,6 +36,7 @@ use FrontController;
 use Order;
 use OrderState;
 use PHPUnit\Framework\Assert as Assert;
+use PrestaShop\PrestaShop\Adapter\Entity\TaxCalculator;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscountValueException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
@@ -169,9 +170,14 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
 
+        $taxCalculator = $this->getOrderTaxCalculator($orderId);
+
         $data = $table->getRowsHash();
+        $data['price_tax_incl'] = $data['price_tax_incl'] ?? (string) $taxCalculator->addTaxes($data['price']);
+
         $productName = $data['name'];
         $product = $this->getProductByName($productName);
+
         $productId = $product->getProductId();
         if (isset($data['combination'])) {
             $combinationId = $this->getProductCombinationId($product, $data['combination']);
@@ -180,13 +186,15 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
 
         $this->lastException = null;
+
+
         try {
             $this->getCommandBus()->handle(
                 AddProductToOrderCommand::withNewInvoice(
                     $orderId,
                     $productId,
                     $combinationId,
-                    $data['price'],
+                    $data['price_tax_incl'],
                     $data['price'],
                     (int) $data['amount'],
                     PrimitiveUtils::castStringBooleanIntoBoolean($data['free_shipping'] ?? false)
@@ -458,12 +466,16 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      */
     private function updateProductInOrder(int $orderId, array $productOrderDetail, array $data)
     {
+        $taxCalculator = $this->getOrderTaxCalculator($orderId);
+
+        $data['price_tax_incl'] = $data['price_tax_incl'] ?? (string) $taxCalculator->addTaxes($data['price']);
+
         try {
             $this->getCommandBus()->handle(
                 new UpdateProductInOrderCommand(
                     (int) $orderId,
                     (int) $productOrderDetail['id_order_detail'],
-                    $data['price'],
+                    $data['price_tax_incl'],
                     $data['price'],
                     (int) $data['amount']
                 )
@@ -801,6 +813,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     public function checkProductDetailsWithReference(string $orderReference, string $productName, TableNode $table)
     {
         $productOrderDetail = $this->getOrderDetailFromOrder($productName, $orderReference);
+        // var_dump($productName, $productOrderDetail['unit_price_tax_incl'], $productOrderDetail['unit_price_tax_excl']); exit;
         $expectedDetails = $table->getRowsHash();
         foreach ($expectedDetails as $detailName => $expectedDetailValue) {
             Assert::assertEquals(
@@ -1355,5 +1368,18 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
 
         return null;
+    }
+
+    private function getOrderTaxCalculator(int $orderId)
+    {
+        $order = new Order($orderId);
+        $taxes = $order->getOrderDetailTaxes();
+
+        $taxesBag = [];
+        foreach ($taxes as $tax) {
+            $taxesBag[] = new Tax($tax['id_tax']);
+        }
+
+        return !empty($taxesBag) ? new TaxCalculator($taxesBag) : null;
     }
 }

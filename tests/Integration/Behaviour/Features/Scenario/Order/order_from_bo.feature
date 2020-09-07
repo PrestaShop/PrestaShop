@@ -229,9 +229,9 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 3  |
       | product_price               | 12 |
-      | unit_price_tax_incl         | 12 |
+      | unit_price_tax_incl         | 12.72 |
       | unit_price_tax_excl         | 12 |
-      | total_price_tax_incl        | 36 |
+      | total_price_tax_incl        | 38.16 |
       | total_price_tax_excl        | 36 |
 
   Scenario: Update product in order with zero quantity is forbidden
@@ -333,3 +333,22 @@ Feature: Order from Back Office (BO)
       | Postal code      | 12345                              |
     When I change order "bo_order1" shipping address to "test-address"
     Then order "bo_order1" shipping address should be "test-address"
+
+  Scenario: Generate order then modify product price then add same product on another invoice and check the price
+      #Given there is a product in the catalog named "My Product" with a price of 10.00 and 200 items in stock
+      And order "bo_order1" does not have any invoices
+      When I generate invoice for "bo_order1" order
+    When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
+      | amount         | 1                       |
+      | price          | 94.33                   |
+      | price_tax_incl | 100                     |
+      | free_shipping  | false                   |
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name           | Mug The best is yet to come |
+      | amount         | 1                           |
+      | price          | 94.33                       |
+      | price_tax_incl | 100                         |
+      | free_shipping  | false                       |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | unit_price_tax_incl         | 100   |
+      | unit_price_tax_excl         | 94.33 |
