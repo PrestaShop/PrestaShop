@@ -10,21 +10,37 @@ class Countries extends BOBasePage {
     // Selectors
     // Header selectors
     this.addNewCountryButton = '#page-header-desc-country-new_country';
+
     // Form selectors
     this.gridForm = '#form-country';
     this.gridTableHeaderTitle = `${this.gridForm} .panel-heading`;
     this.gridTableNumberOfTitlesSpan = `${this.gridTableHeaderTitle} span.badge`;
     this.gridTable = '#table-country';
+
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
     this.filterColumn = filterBy => `${this.filterRow} [name='countryFilter_${filterBy}']`;
     this.filterSearchButton = '#submitFilterButtoncountry';
     this.filterResetButton = 'button[name=\'submitResetcountry\']';
+
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
-    this.editRowLink = row => `${this.tableRow(row)} a.edit`;
     this.tableColumn = (row, column) => `${this.tableRow(row)} td:nth-child(${column})`;
+
+    // Columns selectors
+    this.tableColumnId = row => this.tableColumn(row, 2);
+    this.tableColumnName = row => this.tableColumn(row, 3);
+    this.tableColumnIsoCode = row => this.tableColumn(row, 4);
+    this.tableColumnCallPrefix = row => this.tableColumn(row, 5);
+    this.tableColumnZone = row => this.tableColumn(row, 6);
+    this.tableColumnStatusLink = row => `${this.tableColumn(row, 7)} a`;
+    this.tableColumnStatusEnableLink = row => `${this.tableColumnStatusLink(row)}.action-enabled`;
+    this.tableColumnStatusDisableLink = row => `${this.tableColumn(row)}.action-disabled`;
+
+    // Actions selectors
+    this.editRowLink = row => `${this.tableRow(row)} a.edit`;
+
     // Bulk Actions
     this.bulkActionsToggleButton = `${this.gridForm} button.dropdown-toggle`;
     this.selectAllRowsLabel = `${this.gridForm} a[onclick*='checkDelBoxes']`;
@@ -88,11 +104,38 @@ class Countries extends BOBasePage {
    * Get text column from table
    * @param page
    * @param row
-   * @param column
+   * @param columnName
    * @returns {Promise<string>}
    */
-  async getTextColumnFromTable(page, row, column) {
-    return this.getTextContent(page, this.tableColumn(row, column));
+  async getTextColumnFromTable(page, row, columnName) {
+    let columnSelector;
+
+    switch (columnName) {
+      case 'id_country':
+        columnSelector = this.tableColumnId(row);
+        break;
+
+      case 'b!name':
+        columnSelector = this.tableColumnName(row);
+        break;
+
+      case 'iso_code':
+        columnSelector = this.tableColumnIsoCode(row);
+        break;
+
+      case 'call_prefix':
+        columnSelector = this.tableColumnCallPrefix(row);
+        break;
+
+      case 'z!id_zone':
+        columnSelector = this.tableColumnZone(row);
+        break;
+
+      default:
+        throw new Error(`Column ${columnName} was not found`);
+    }
+
+    return this.getTextContent(page, columnSelector);
   }
 
   /**
@@ -104,24 +147,57 @@ class Countries extends BOBasePage {
    * @returns {Promise<void>}
    */
   async filterTable(page, filterType, filterBy, value) {
+    let filterValue = value;
     switch (filterType) {
       case 'input':
-        await this.setValue(page, this.filterColumn(filterBy), value.toString());
+        await this.setValue(page, this.filterColumn(filterBy), filterValue.toString());
+        await this.clickAndWaitForNavigation(page, this.filterSearchButton);
         break;
+
       case 'select':
-        await this.selectByVisibleText(page, this.filterColumn(filterBy), value ? 'Yes' : 'No');
+        if (typeof value === 'boolean') {
+          filterValue = value ? 'Yes' : 'No';
+        }
+
+        await Promise.all([
+          this.selectByVisibleText(page, this.filterColumn(filterBy), filterValue),
+          page.waitForNavigation({waitUntil: 'networkidle'}),
+        ]);
+
         break;
+
       default:
         throw new Error(`Filter ${filterBy} was not found`);
     }
-    // click on search
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+  }
+
+  /**
+   * Get country status
+   * @param page
+   * @param row
+   * @return {Promise<boolean>}
+   */
+  getCountryStatus(page, row) {
+    return this.elementVisible(page, this.tableColumnStatusEnableLink(row), 1000);
+  }
+
+  /**
+   * Set country status
+   * @param page
+   * @param row
+   * @param wantedStatus
+   * @return {Promise<void>}
+   */
+  async setCountryStatus(page, row, wantedStatus) {
+    if (wantedStatus !== await this.getCountryStatus(page, row)) {
+      await this.clickAndWaitForNavigation(page, this.tableColumnStatusLink(row));
+    }
   }
 
   /**
    * Delete country
    * @param page
-   * @returns {Promise<unknown>}
+   * @returns {Promise<string>}
    */
   async deleteCountryByBulkActions(page) {
     this.dialogListener(page, true);
