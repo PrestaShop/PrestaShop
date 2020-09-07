@@ -187,7 +187,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         $this->lastException = null;
 
-
         try {
             $this->getCommandBus()->handle(
                 AddProductToOrderCommand::withNewInvoice(
@@ -1370,6 +1369,14 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         return null;
     }
 
+    /**
+     * @param int $orderId
+     *
+     * @return TaxCalculator|null
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
     private function getOrderTaxCalculator(int $orderId)
     {
         $order = new Order($orderId);
