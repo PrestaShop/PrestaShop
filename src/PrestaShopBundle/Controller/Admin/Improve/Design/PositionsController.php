@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Command\UpdateHookStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookException;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookUpdateHookException;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -246,6 +247,7 @@ class PositionsController extends FrameworkBundleAdminController
     public function toggleStatusAction(Request $request)
     {
         $hookId = (int) $request->request->get('hookId');
+        $hookStatus = false;
 
         try {
             $hookStatus = $this->getQueryBus()->handle(new GetHookStatus($hookId));
@@ -257,7 +259,7 @@ class PositionsController extends FrameworkBundleAdminController
         } catch (HookException $e) {
             $response = [
                 'status' => false,
-                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages()),
             ];
         }
 
