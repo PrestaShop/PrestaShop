@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Hook\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Entity\Hook;
+use Hook;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Command\UpdateHookStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Hook\CommandHandler\UpdateHookStatusCommandHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\CannotUpdateHookException;
