@@ -40,6 +40,8 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use PrestaShopLogger;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
@@ -181,9 +183,11 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setAssociatedColumn('employee')
             )
             ->add(
-                (new Filter('severity', TextType::class))
+                (new Filter('severity', ChoiceType::class))
                     ->setTypeOptions([
                         'required' => false,
+                        'choices' => $this->getSeveritysChoices(),
+                        'translation_domain' => false,
                     ])
                     ->setAssociatedColumn('severity')
             )
@@ -264,5 +268,15 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
                     ->setIcon('storage')
             );
+    }
+
+    private function getSeveritysChoices()
+    {
+        return [
+            $this->trans('Informative only', [], 'Admin.Advparameters.Help') => PrestaShopLogger::LOG_SEVERITY_LEVEL_INFORMATIVE,
+            $this->trans('Warning', [], 'Admin.Advparameters.Help') => PrestaShopLogger::LOG_SEVERITY_LEVEL_WARNING,
+            $this->trans('Error', [], 'Admin.Advparameters.Help') => PrestaShopLogger::LOG_SEVERITY_LEVEL_ERROR,
+            $this->trans('Major issue (crash)!', [], 'Admin.Advparameters.Help') => PrestaShopLogger::LOG_SEVERITY_LEVEL_MAJOR,
+        ];
     }
 }
