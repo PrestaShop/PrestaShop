@@ -28,12 +28,15 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use Hook;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
+use PrestaShop\PrestaShop\Core\Domain\Hook\Command\UpdateHookStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookException;
+use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Validate;
 
 /**
  * Configuration modules positions "Improve > Design > Positions".
@@ -241,26 +244,36 @@ class PositionsController extends FrameworkBundleAdminController
      * @return JsonResponse
      */
     public function toggleStatusAction(Request $request)
-    {        
-        $hookId = $request->request->get('hookId');
-        
-        $hook = new Hook($hookId);
-        $hook->active = ! (bool) $hook->active;
-        
-        if(Validate::isLoadedObject($hook) && $hook->save()){
-			$response = [
-				'status' => true,
-				'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
-			];
-		} else {
-			$response = [
-				'status' => false,
-				'message' => $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
-			];
-		}
-		
-		$response['hook_status'] = $hook->active;
+    {
+        $hookId = (int) $request->request->get('hookId');
+
+        try {
+            $hookStatus = $this->getQueryBus()->handle(new GetHookStatus($hookId));
+            $this->getCommandBus()->handle(new UpdateHookStatusCommand($hookId, (bool) $hookStatus));
+            $response = [
+                'status' => true,
+                'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
+            ];
+        } catch (HookException $e) {
+            $response = [
+                'status' => false,
+                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+            ];
+        }
+
+        $response['hook_status'] = !$hookStatus;
 
         return $this->json($response);
+    }
+
+    /**
+     * @return array
+     */
+    private function getErrorMessages(): array
+    {
+        return [
+            HookNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            HookUpdateHookException::class => $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
+        ];
     }
 }
