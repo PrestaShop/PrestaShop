@@ -44,8 +44,10 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveCartRuleFromCartCommand
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
@@ -273,6 +275,60 @@ class CartFeatureContext extends AbstractDomainFeatureContext
                 $addressId
             )
         );
+    }
+
+    /**
+     * @When I select carrier :carrierReference for cart :cartReference
+     *
+     * @param string $cartReference
+     * @param string $carrierReference
+     */
+    public function selectCarrierForCart(string $cartReference, string $carrierReference)
+    {
+        $cartId = (int) SharedStorage::getStorage()->get($cartReference);
+        $carrierId = (int) SharedStorage::getStorage()->get($carrierReference);
+
+        $this->lastException = null;
+        try {
+            $this->getCommandBus()->handle(
+                new UpdateCartCarrierCommand(
+                    $cartId,
+                    $carrierId
+                )
+            );
+        } catch (CartConstraintException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @Then cart :cartReference should have :carrierReference as a carrier
+     *
+     * @param string $cartReference
+     * @param string $carrierReference
+     */
+    public function checkCartCarrier(string $cartReference, string $carrierReference)
+    {
+        $cartId = (int) SharedStorage::getStorage()->get($cartReference);
+        $carrierId = (int) SharedStorage::getStorage()->get($carrierReference);
+
+        $cart = new Cart($cartId);
+
+        if ((int) $cart->id_carrier === 0) {
+            throw new RuntimeException(sprintf(
+                'Cart %s has no carrier defined',
+                $cartReference
+            ));
+        }
+        if ((int) $cart->id_carrier !== $carrierId) {
+            throw new RuntimeException(sprintf(
+                'Cart %s should have %s as a carrier, expected id_carrier to be %d but is %d instead',
+                $cartReference,
+                $carrierReference,
+                $carrierId,
+                (int) $cart->id_carrier
+            ));
+        }
     }
 
     /**
@@ -639,6 +695,17 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         }
 
         throw new RuntimeException(sprintf('Voucher was %s not found in cart', $voucherCode));
+    }
+
+    /**
+     * @Then I should get error that carrier is invalid
+     */
+    public function assertLastErrorIsInvalidCarrier()
+    {
+        $this->assertLastErrorIs(
+            CartConstraintException::class,
+            CartConstraintException::INVALID_CARRIER
+        );
     }
 
     /**

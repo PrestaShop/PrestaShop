@@ -476,7 +476,7 @@ class CartCore extends ObjectModel
                 ' . ($filter == CartRule::FILTER_ACTION_SHIPPING ? 'AND free_shipping = 1' : '') . '
                 ' . ($filter == CartRule::FILTER_ACTION_GIFT ? 'AND gift_product != 0' : '') . '
                 ' . ($filter == CartRule::FILTER_ACTION_REDUCTION ? 'AND (reduction_percent != 0 OR reduction_amount != 0)' : '')
-                . ' ORDER by cr.priority ASC'
+                . ' ORDER by cr.priority ASC, cr.gift_product DESC'
             );
             Cache::store($cache_key, $result);
         } else {
@@ -546,7 +546,7 @@ class CartCore extends ObjectModel
                 ' . ($filter == CartRule::FILTER_ACTION_SHIPPING ? 'AND free_shipping = 1' : '') . '
                 ' . ($filter == CartRule::FILTER_ACTION_GIFT ? 'AND gift_product != 0' : '') . '
                 ' . ($filter == CartRule::FILTER_ACTION_REDUCTION ? 'AND (reduction_percent != 0 OR reduction_amount != 0)' : '')
-                . ' ORDER BY cr.priority ASC'
+                . ' ORDER BY cr.priority ASC, cr.gift_product DESC'
             );
             Cache::store($cache_key, $result);
         } else {
@@ -1403,7 +1403,7 @@ class CartCore extends ObjectModel
         /* Update quantity if product already exist */
         if (!empty($cartProductQuantity['quantity'])) {
             $productQuantity = Product::getQuantity($id_product, $id_product_attribute, null, $this);
-            $availableOutOfStock = Product::isAvailableWhenOutOfStock($product->out_of_stock);
+            $availableOutOfStock = Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($product->id));
 
             if ($operator == 'up') {
                 $updateQuantity = '+ ' . $quantity;

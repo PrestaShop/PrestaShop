@@ -36,13 +36,14 @@ class ProductSettings extends BOBasePage {
     this.nameLangButton = '#stock_in_stock_label';
     this.nameLangSpan = lang => 'div.dropdown-menu[aria-labelledby=\'stock_in_stock_label\']'
       + ` span[data-locale='${lang}']`;
-    this.labelInStock = idLang => `#stock_in_stock_label_${idLang}`;
-    this.deliveryTimeInStockInput = '#stock_delivery_time_1';
-    this.deliveryTimeOutOfStockInput = '#stock_oos_delivery_time_1';
-    this.oosAllowedBackordersLabel = idLang => `#stock_oos_allowed_backorders_${idLang}`;
-    this.oosDeniedBackordersLabel = idLang => `#stock_oos_denied_backorders_${idLang}`;
-    this.saveProductsStockForm = '#form-stock-save-button';
-
+    this.labelInStock = idLang => `#form_stock_in_stock_label_${idLang}`;
+    this.deliveryTimeInStockInput = '#form_stock_delivery_time_1';
+    this.deliveryTimeOutOfStockInput = '#form_stock_oos_delivery_time_1';
+    this.oosAllowedBackordersLabel = '#form_stock_oos_allowed_backorders_1';
+    this.oosAllowedBackordersLabel = idLang => `#form_stock_oos_allowed_backorders_${idLang}`;
+    this.oosDeniedBackordersLabel = idLang => `#form_stock_oos_denied_backorders_${idLang}`;
+    this.defaultPackStockManagementSelect = '#form_stock_pack_stock_management';
+    this.saveProductsStockForm = `${this.productsStockForm} .card-footer button`;
     // Pagination form
     this.productsPerPageInput = '#pagination_products_per_page';
     this.productsDefaultOrderBySelect = '#pagination_default_order_by';
@@ -339,6 +340,18 @@ class ProductSettings extends BOBasePage {
     // Fill label in french
     await this.changeLanguageForSelectors(page, 'fr');
     await this.setValue(page, this.oosDeniedBackordersLabel(2), label);
+    await this.clickAndWaitForNavigation(page, this.saveProductsStockForm);
+    return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /**
+   * Set default pack stock management
+   * @param page
+   * @param option
+   * @returns {Promise<string>}
+   */
+  async setDefaultPackStockManagement(page, option) {
+    await this.selectByVisibleText(page, this.defaultPackStockManagementSelect, option);
     await this.clickAndWaitForNavigation(page, this.saveProductsStockForm);
     return this.getTextContent(page, this.alertSuccessBlock);
   }

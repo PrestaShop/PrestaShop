@@ -43,6 +43,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.categoriesLink = '#subtab-AdminCategories';
     // Monitoring
     this.monitoringLink = '#subtab-AdminTracking';
+    // Attributes and Features
+    this.attributesAndFeaturesLink = '#subtab-AdminParentAttributesGroups';
     // Brands And Suppliers
     this.brandsAndSuppliersLink = '#subtab-AdminParentManufacturers';
     // files
@@ -92,6 +94,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.taxesLink = '#subtab-AdminParentTaxes';
     // Localization
     this.localizationLink = '#subtab-AdminParentLocalization';
+    // Locations
+    this.locationsLink = '#subtab-AdminParentCountries';
     // Translations
     this.translationsLink = '#subtab-AdminTranslations';
 
