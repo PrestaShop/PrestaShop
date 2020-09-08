@@ -53,7 +53,7 @@ final class ChangeOrderDeliveryAddressHandler extends AbstractOrderHandler imple
             throw new OrderException('New delivery address is not valid');
         }
 
-        $cart->updateDeliveryAddressId($cart->id_address_delivery, $address->id);
+        $cart->updateDeliveryAddressId((int) $cart->id_address_delivery, (int) $address->id);
         $cart->setDeliveryOption([
             $cart->id_address_delivery => $this->formatLegacyDeliveryOptionFromCarrierId($order->id_carrier),
         ]);
