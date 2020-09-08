@@ -28,7 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
 
 /**
- * Thrown on failure to update order
+ * Thrown on failure to update product in an order
  */
 class CannotUpdateProductInOrderException extends OrderException
 {
