@@ -7,6 +7,8 @@ class Zones extends BOBasePage {
 
     this.pageTitle = 'Zones •';
 
+    // Header selectors
+    this.addNewZoneLink = '#page-header-desc-zone-new_zone';
     // SubTab selectors
     this.countriesSubTab = '#subtab-AdminCountries';
 
@@ -37,6 +39,15 @@ class Zones extends BOBasePage {
     this.tableColumnStatusLink = row => `${this.tableBodyColumn(row)}:nth-child(4) a`;
     this.tableColumnStatusEnableLink = row => `${this.tableColumnStatusLink(row)}.action-enabled`;
     this.tableColumnStatusDisableLink = row => `${this.tableColumnStatusLink(row)}.action-disabled`;
+
+    // Column actions selectors
+    this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
+    this.columnActionsEditLink = row => `${this.tableColumnActions(row)} a.edit`;
+    this.columnActionsDropdownButton = row => `${this.tableColumnActions(row)} button.dropdown-toggle`;
+    this.columnActionsDeleteLink = row => `${this.tableColumnActions(row)} a.delete`;
+
+    // Confirmation modal
+    this.deleteModalButtonYes = '#popup_ok';
   }
 
   /* Header methods */
@@ -47,6 +58,15 @@ class Zones extends BOBasePage {
    */
   async goToSubTabCountries(page) {
     await this.clickAndWaitForNavigation(page, this.countriesSubTab);
+  }
+
+  /**
+   * Go To add new zone page
+   * @param page
+   * @return {Promise<void>}
+   */
+  async goToAddNewZonePage(page) {
+    await this.clickAndWaitForNavigation(page, this.addNewZoneLink);
   }
 
   /* Filter Methods */
@@ -157,6 +177,36 @@ class Zones extends BOBasePage {
     if (wantedStatus !== await this.getZoneStatus(page, row)) {
       await this.clickAndWaitForNavigation(page, this.tableColumnStatusLink(row));
     }
+  }
+
+  /**
+   * Go to edit zone page
+   * @param page
+   * @param row
+   * @return {Promise<void>}
+   */
+  async goToEditZonePage(page, row) {
+    await this.clickAndWaitForNavigation(page, this.columnActionsEditLink(row));
+  }
+
+  /**
+   * Delete zone
+   * @param page
+   * @param row
+   * @return {Promise<string>}
+   */
+  async deleteZone(page, row) {
+    // Open dropdown link list
+    await page.click(this.columnActionsDropdownButton(row));
+
+    // Click on delete link
+    await page.click(this.columnActionsDeleteLink(row));
+
+    // Confirm delete in modal
+    await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
+
+    // Return successful message
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 }
 module.exports = new Zones();
