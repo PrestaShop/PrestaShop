@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Cart;
+use Configuration;
 use Exception;
 use Hook;
 use Order;
@@ -37,6 +38,7 @@ use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderInvoiceException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\UpdateProductInOrderHandlerInterface;
@@ -86,6 +88,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
 
             // Check fields validity
             $this->assertProductCanBeUpdated($command, $orderDetail, $order, $orderInvoice);
+            $this->assertProductDuplicate($order, $orderDetail, $orderInvoice);
 
             // @todo: use https://github.com/PrestaShop/decimal for price computations
             // Update OrderDetail prices
@@ -97,6 +100,9 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             $orderDetail->unit_price_tax_excl = $unitProductPriceTaxExcl;
             $orderDetail->total_price_tax_incl = Tools::ps_round($unitProductPriceTaxIncl * $productQuantity, $computingPrecision);
             $orderDetail->total_price_tax_excl = Tools::ps_round($unitProductPriceTaxExcl * $productQuantity, $computingPrecision);
+            if (null !== $orderInvoice) {
+                $orderDetail->id_order_invoice = $orderInvoice->id;
+            }
             if (!$orderDetail->save()) {
                 throw new OrderException('An error occurred while editing the product line.');
             }
@@ -197,6 +203,51 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             if ($quantityDiff > $availableQuantity) {
                 throw new ProductOutOfStockException('Not enough products in stock');
             }
+        }
+    }
+
+    /**
+     * @param Order $order
+     * @param OrderDetail $orderDetail
+     * @param OrderInvoice|null $orderInvoice
+     *
+     * @throws DuplicateProductInOrderInvoiceException
+     */
+    private function assertProductDuplicate(Order $order, OrderDetail $orderDetail, ?OrderInvoice $orderInvoice = null): void
+    {
+        // If the OrderDetail's invoice is not changed no reason to check
+        if (null === $orderInvoice || (int) $orderInvoice->id === (int) $orderDetail->id_order_invoice) {
+            return;
+        }
+
+        // If no multi invoice possible no reason to check
+        if (!$order->hasInvoice()) {
+            return;
+        }
+
+        $invoicesContainingProduct = [];
+        foreach ($order->getOrderDetailList() as $orderDetailData) {
+            if ((int) $orderDetail->id === (int) $orderDetailData['id_order_detail']) {
+                continue;
+            }
+            if ((int) $orderDetail->product_id !== (int) $orderDetailData['product_id']) {
+                continue;
+            }
+            if ((int) $orderDetail->product_attribute_id !== (int) $orderDetailData['product_attribute_id']) {
+                continue;
+            }
+            $invoicesContainingProduct[] = (int) $orderDetailData['id_order_invoice'];
+        }
+
+        // No invoices contain the product it's fine
+        if (empty($invoicesContainingProduct)) {
+            return;
+        }
+
+        // The newly assigned invoice already contains this product, this it not possible
+        if (in_array((int) $orderInvoice->id, $invoicesContainingProduct)) {
+            $invoiceNumber = $orderInvoice->getInvoiceNumberFormatted((int) Configuration::get('PS_LANG_DEFAULT'), $order->id_shop);
+            throw new DuplicateProductInOrderInvoiceException($invoiceNumber, 'You cannot add this product in this invoice as it is already present');
         }
     }
 }
