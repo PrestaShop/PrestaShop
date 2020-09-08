@@ -67,7 +67,7 @@ describe('Generate PDF file by date', async () => {
       });
 
       it('should reset all filters and get number of orders', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `resetFiltersFirst${index + 1}`, baseContext);
 
         const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
         await expect(numberOfOrders).to.be.above(0);
