@@ -53,11 +53,12 @@ final class ChangeOrderInvoiceAddressHandler extends AbstractOrderHandler implem
             throw new OrderException('New invoice address is not valid');
         }
 
-        $order->id_address_invoice = $address->id;
         $cart->id_address_invoice = $address->id;
-
-        $order->update();
-        $order->refreshShippingCost();
         $cart->update();
+
+        $order->id_address_invoice = $address->id;
+        $order->update();
+
+        $order->refreshShippingCost();
     }
 }
