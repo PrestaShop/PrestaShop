@@ -10,10 +10,6 @@ Feature: Order from Back Office (BO)
     Given email sending is disabled
     And the current currency is "USD"
     And country "US" is enabled
-    And there is a zone named "zone1"
-    And there is a zone named "zone2"
-    And there is a country named "country1" and iso code "FR" in zone "zone1"
-    And there is a country named "country2" and iso code "US" in zone "zone2"
     And the module "dummy_payment" is installed
     And I am logged in as "test@prestashop.com" employee
     And there is customer "testCustomer" with email "pub@prestashop.com"
@@ -256,7 +252,9 @@ Feature: Order from Back Office (BO)
       | shipping_cost_tax_excl | 5.00  |
       | shipping_cost_tax_incl | 5.30  |
     When I update order "bo_order1" Tracking number to "TEST1234" and Carrier to "default_carrier"
-    Then order "bo_order1" should have following details:
+    Then cart "dummy_cart" should have "default_carrier" as a carrier
+    And order "bo_order1" should have "default_carrier" as a carrier
+    And order "bo_order1" should have following details:
       | total_products           | 53.800 |
       | total_products_wt        | 57.030 |
       | total_discounts_tax_excl | 0.0000 |
@@ -272,7 +270,9 @@ Feature: Order from Back Office (BO)
       | shipping_cost_tax_excl | 7.00  |
       | shipping_cost_tax_incl | 7.42  |
     When I update order "bo_order1" Tracking number to "TEST1234" and Carrier to "price_carrier"
-    Then order "bo_order1" should have following details:
+    Then cart "dummy_cart" should have "price_carrier" as a carrier
+    And order "bo_order1" should have "price_carrier" as a carrier
+    And order "bo_order1" should have following details:
       | total_products           | 53.800 |
       | total_products_wt        | 57.030 |
       | total_discounts_tax_excl | 0.0000 |
@@ -390,3 +390,155 @@ Feature: Order from Back Office (BO)
       | weight                 | 4.380 |
       | shipping_cost_tax_excl | 2.00  |
       | shipping_cost_tax_incl | 2.12  |
+
+  Scenario: I change the customer invoice address to another zone and check that shipping fees have been updated
+    Given shop configuration for "PS_TAX_ADDRESS_TYPE" is set to id_address_invoice
+    Given I enable carrier "price_carrier"
+    And I select carrier "price_carrier" for cart "dummy_cart"
+    Then cart "dummy_cart" should have "price_carrier" as a carrier
+    And I add order "bo_order1" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    And order "bo_order1" should have 2 products in total
+    And order "bo_order1" should have 0 invoices
+    And order "bo_order1" should have 0 cart rule
+    And order "bo_order1" should have "price_carrier" as a carrier
+    And order "bo_order1" should have 2 products in total
+    And order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 29.800 |
+      | total_paid_tax_incl      | 31.590 |
+      | total_paid               | 31.590 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 6.0    |
+      | total_shipping_tax_incl  | 6.36   |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 0.600 |
+      | shipping_cost_tax_excl | 6.00  |
+      | shipping_cost_tax_incl | 6.36  |
+    When I add new address to customer "testCustomer" with following details:
+      | Address alias    | test-customer-france-address |
+      | First name       | testFirstName                |
+      | Last name        | testLastName                 |
+      | Address          | 36 Avenue des Champs Elysees |
+      | City             | Paris                        |
+      | Country          | France                       |
+      | Postal code      | 75008                        |
+    And I change order "bo_order1" shipping address to "test-customer-france-address"
+    Then order "bo_order1" shipping address should be "test-customer-france-address"
+    # Shipping cost changes because we are not in the same zone but the tax is still the one from invoice address
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 28.800 |
+      | total_paid_tax_incl      | 30.530 |
+      | total_paid               | 30.530 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 5.0    |
+      | total_shipping_tax_incl  | 5.30   |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 0.600 |
+      | shipping_cost_tax_excl | 5.00  |
+      | shipping_cost_tax_incl | 5.30  |
+    When I change order "bo_order1" invoice address to "test-customer-france-address"
+    Then order "bo_order1" invoice address should be "test-customer-france-address"
+    # Shipping fees use invoice address so the shipping fees should be reduced now
+    # (no tax applied because France tax rules are not installed)
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 28.800 |
+      | total_paid_tax_incl      | 30.230 |
+      | total_paid               | 30.230 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 5.0    |
+      | total_shipping_tax_incl  | 5.00   |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 0.600 |
+      | shipping_cost_tax_excl | 5.00  |
+      | shipping_cost_tax_incl | 5.00  |
+
+  Scenario: I change the customer delivery address to another zone and check that shipping fees have been updated
+    Given shop configuration for "PS_TAX_ADDRESS_TYPE" is set to id_address_delivery
+    Given I enable carrier "price_carrier"
+    And I select carrier "price_carrier" for cart "dummy_cart"
+    Then cart "dummy_cart" should have "price_carrier" as a carrier
+    And I add order "bo_order1" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    And order "bo_order1" should have 2 products in total
+    And order "bo_order1" should have 0 invoices
+    And order "bo_order1" should have 0 cart rule
+    And order "bo_order1" should have "price_carrier" as a carrier
+    And order "bo_order1" should have 2 products in total
+    And order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 29.800 |
+      | total_paid_tax_incl      | 31.590 |
+      | total_paid               | 31.590 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 6.0    |
+      | total_shipping_tax_incl  | 6.36   |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 0.600 |
+      | shipping_cost_tax_excl | 6.00  |
+      | shipping_cost_tax_incl | 6.36  |
+    When I add new address to customer "testCustomer" with following details:
+      | Address alias    | test-customer-france-address |
+      | First name       | testFirstName                |
+      | Last name        | testLastName                 |
+      | Address          | 36 Avenue des Champs Elysees |
+      | City             | Paris                        |
+      | Country          | France                       |
+      | Postal code      | 75008                        |
+    And I change order "bo_order1" invoice address to "test-customer-france-address"
+    Then order "bo_order1" invoice address should be "test-customer-france-address"
+    # Shipping fees use delivery address so changing the invoice address should not modify them
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 29.800 |
+      | total_paid_tax_incl      | 31.590 |
+      | total_paid               | 31.590 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 6.0    |
+      | total_shipping_tax_incl  | 6.36   |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 0.600 |
+      | shipping_cost_tax_excl | 6.00  |
+      | shipping_cost_tax_incl | 6.36  |
+    When I change order "bo_order1" shipping address to "test-customer-france-address"
+    Then order "bo_order1" shipping address should be "test-customer-france-address"
+    # Shipping fees use delivery address so the shipping fees should be reduced now, the fee and tax changes
+    # (no tax applied because France tax rules are not installed)
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 28.800 |
+      | total_paid_tax_incl      | 30.230 |
+      | total_paid               | 30.230 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 5.0    |
+      | total_shipping_tax_incl  | 5.00   |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 0.600 |
+      | shipping_cost_tax_excl | 5.00  |
+      | shipping_cost_tax_incl | 5.00  |
