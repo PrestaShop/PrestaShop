@@ -51,7 +51,7 @@ class UpdateHookStatusCommandHandler implements UpdateHookStatusCommandHandlerIn
 
         $hook->active = !$command->getStatus();
         if (!$hook->save()) {
-            throw new CannotUpdateHookException(sprintf('Cannot update status for hook with id "%s"', $hookId));
+            throw new CannotUpdateHookException(sprintf('Cannot update status for hook with id "%d"', $hookId));
         }
     }
 }
