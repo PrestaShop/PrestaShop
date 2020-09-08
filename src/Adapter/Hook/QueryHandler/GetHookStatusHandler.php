@@ -45,7 +45,7 @@ final class GetHookStatusHandler implements GetHookStatusHandlerInterface
         $hook = new Hook($hookId);
 
         if ($hook->id !== $hookId) {
-            throw new HookNotFoundException(sprintf('Hook with id "%s" was not found.', $hookId));
+            throw new HookNotFoundException(sprintf('Hook with id "%d" was not found.', $hookId));
         }
 
         return (bool) $hook->active;
