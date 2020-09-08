@@ -68,7 +68,7 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
         if ($oldCarrierId !== $carrierId) {
             $cart = Cart::getCartByOrderId($order->id);
             $cart->setDeliveryOption([
-                $cart->id_address_delivery => $this->formatLegacyDeliveryOptionFromCarrierId($carrierId),
+                (int) $cart->id_address_delivery => $this->formatLegacyDeliveryOptionFromCarrierId($carrierId),
             ]);
             $cart->save();
 
