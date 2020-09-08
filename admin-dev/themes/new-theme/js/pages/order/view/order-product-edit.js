@@ -47,7 +47,7 @@ export default class OrderProductEdit {
   }
 
   setupListener() {
-    this.quantityInput.on('change keyup', event => {
+    this.quantityInput.on('change keyup', (event) => {
       const newQuantity = Number(event.target.value);
       const availableQuantity = parseInt($(event.currentTarget).data('availableQuantity'), 10);
       const previousQuantity = parseInt(this.quantityInput.data('previousQuantity'), 10);
@@ -75,7 +75,7 @@ export default class OrderProductEdit {
       this.updateTotal();
     });
 
-    this.priceTaxExcludedInput.on('change keyup', event => {
+    this.priceTaxExcludedInput.on('change keyup', (event) => {
       const taxExcluded = parseFloat(event.target.value);
       this.taxIncluded = this.priceTaxCalculator.calculateTaxIncluded(
         taxExcluded,
@@ -100,7 +100,7 @@ export default class OrderProductEdit {
 
     this.productEditCancelBtn.on('click', () => {
       EventEmitter.emit(OrderViewEventMap.productEditionCanceled, {
-        orderDetailId: this.orderDetailId
+        orderDetailId: this.orderDetailId,
       });
     });
   }
@@ -187,7 +187,7 @@ export default class OrderProductEdit {
       productId,
       combinationId,
       orderInvoiceId,
-      this.orderDetailId
+      this.orderDetailId,
     );
 
     if (productPriceMatch) {
@@ -202,11 +202,11 @@ export default class OrderProductEdit {
         confirmTitle: this.productEditInvoiceSelect.data('modal-edit-price-title'),
         confirmMessage: this.productEditInvoiceSelect.data('modal-edit-price-body'),
         confirmButtonLabel: this.productEditInvoiceSelect.data(' '),
-        closeButtonLabel: this.productEditInvoiceSelect.data('modal-edit-price-cancel')
+        closeButtonLabel: this.productEditInvoiceSelect.data('modal-edit-price-cancel'),
       },
       () => {
         this.editProduct($(event.currentTarget).data('orderId'), this.orderDetailId);
-      }
+      },
     );
 
     modalEditPrice.show();
@@ -226,20 +226,20 @@ export default class OrderProductEdit {
         orderDetailId,
       }),
       method: 'POST',
-      data: params
+      data: params,
     }).then(
       (response) => {
         EventEmitter.emit(OrderViewEventMap.productUpdated, {
           orderId,
           orderDetailId,
-          newRow: response
+          newRow: response,
         });
       },
       (response) => {
         if (response.responseJSON && response.responseJSON.message) {
           $.growl.error({message: response.responseJSON.message});
         }
-      }
+      },
     );
   }
 }

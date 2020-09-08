@@ -94,7 +94,7 @@ export default class OrderProductAdd {
       this.orderProductRenderer.toggleColumn(OrderViewPageMap.productsCellLocation);
     });
 
-    this.quantityInput.on('change keyup', event => {
+    this.quantityInput.on('change keyup', (event) => {
       if (this.available !== null) {
         const newQuantity = Number(event.target.value);
         const remainingAvailable = this.available - newQuantity;
@@ -117,7 +117,7 @@ export default class OrderProductAdd {
       this.invoiceSelect.removeAttr('disabled');
     });
 
-    this.priceTaxIncludedInput.on('change keyup', event => {
+    this.priceTaxIncludedInput.on('change keyup', (event) => {
       const taxIncluded = parseFloat(event.target.value);
       const taxExcluded = this.priceTaxCalculator.calculateTaxExcluded(
         taxIncluded,
@@ -132,7 +132,7 @@ export default class OrderProductAdd {
       );
     });
 
-    this.priceTaxExcludedInput.on('change keyup', event => {
+    this.priceTaxExcludedInput.on('change keyup', (event) => {
       const taxExcluded = parseFloat(event.target.value);
       const taxIncluded = this.priceTaxCalculator.calculateTaxIncluded(
         taxExcluded,
@@ -194,19 +194,19 @@ export default class OrderProductAdd {
       price_tax_excl: this.priceTaxExcludedInput.val(),
       quantity: this.quantityInput.val(),
       invoice_id: this.invoiceSelect.val(),
-      free_shipping: this.freeShippingSelect.prop('checked')
+      free_shipping: this.freeShippingSelect.prop('checked'),
     };
 
     $.ajax({
       url: this.router.generate('admin_orders_add_product', {orderId}),
       method: 'POST',
-      data: params
+      data: params,
     }).then(
       (response) => {
         EventEmitter.emit(OrderViewEventMap.productAddedToOrder, {
           orderId,
           orderProductId: params.product_id,
-          newRow: response
+          newRow: response,
         });
       },
       (response) => {
@@ -217,7 +217,7 @@ export default class OrderProductAdd {
         if (response.responseJSON && response.responseJSON.message) {
           $.growl.error({message: response.responseJSON.message});
         }
-      }
+      },
     );
   }
 
@@ -233,11 +233,11 @@ export default class OrderProductAdd {
           confirmTitle: this.invoiceSelect.data('modal-title'),
           confirmMessage: this.invoiceSelect.data('modal-body'),
           confirmButtonLabel: this.invoiceSelect.data('modal-apply'),
-          closeButtonLabel: this.invoiceSelect.data('modal-cancel')
+          closeButtonLabel: this.invoiceSelect.data('modal-cancel'),
         },
         () => {
           this.confirmNewPrice(orderId, invoiceId);
-        }
+        },
       );
       modal.show();
     } else if (!isNaN(invoiceId)) {
@@ -250,15 +250,13 @@ export default class OrderProductAdd {
   }
 
   confirmNewPrice(orderId, invoiceId) {
-    const combinationId =
-      typeof $(':selected', this.combinationsSelect).val() === 'undefined'
-        ? 0
-        : $(':selected', this.combinationsSelect).val();
+    const combinationValue = $(':selected', this.combinationsSelect).val();
+    const combinationId = typeof combinationValue === 'undefined' ? 0 : combinationValue;
     const productPriceMatch = this.orderPricesRefresher.checkOtherProductPricesMatch(
       this.priceTaxIncludedInput.val(),
       this.productIdInput.val(),
       combinationId,
-      invoiceId
+      invoiceId,
     );
 
     if (!productPriceMatch) {
@@ -268,11 +266,11 @@ export default class OrderProductAdd {
           confirmTitle: this.invoiceSelect.data('modal-edit-price-title'),
           confirmMessage: this.invoiceSelect.data('modal-edit-price-body'),
           confirmButtonLabel: this.invoiceSelect.data('modal-edit-price-apply'),
-          closeButtonLabel: this.invoiceSelect.data('modal-edit-price-cancel')
+          closeButtonLabel: this.invoiceSelect.data('modal-edit-price-cancel'),
         },
         () => {
           this.addProduct(orderId);
-        }
+        },
       );
       modalEditPrice.show();
     } else {
