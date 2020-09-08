@@ -41,17 +41,11 @@ export default class OrderProductAutocomplete {
   }
 
   listenForSearch() {
-    this.input.on('click', event => {
+    this.input.on('click', (event) => {
       event.stopImmediatePropagation();
       this.updateResults(this.results);
     });
-<<<<<<< HEAD
-    this.input.on('keyup', (event) => this.search(event.currentTarget.value, $(event.currentTarget).data('currency')));
-=======
-
-    this.input.on('keyup', event => this.delaySearch(event.currentTarget));
-
->>>>>>> aaac65f4b2c362a1f22afa34eb61536363d83166
+    this.input.on('keyup', (event) => this.delaySearch(event.currentTarget));
     $(document).on('click', () => this.dropdownMenu.hide());
   }
 
@@ -70,10 +64,6 @@ export default class OrderProductAutocomplete {
       params.currency_id = currency;
     }
 
-<<<<<<< HEAD
-    $.get(this.router.generate('admin_products_search', params))
-      .then((response) => this.updateResults(response));
-=======
     if (orderId) {
       params.order_id = orderId;
     }
@@ -84,11 +74,10 @@ export default class OrderProductAutocomplete {
 
     this.activeSearchRequest = $.get(this.router.generate('admin_products_search', params));
     this.activeSearchRequest
-      .then(response => this.updateResults(response))
+      .then((response) => this.updateResults(response))
       .always(() => {
         this.activeSearchRequest = null;
       });
->>>>>>> aaac65f4b2c362a1f22afa34eb61536363d83166
   }
 
   updateResults(results) {
@@ -101,14 +90,9 @@ export default class OrderProductAutocomplete {
 
     this.results = results.products;
 
-    Object.values(this.results).forEach(val => {
+    Object.values(this.results).forEach((val) => {
       const link = $(`<a class="dropdown-item" data-id="${val.productId}" href="#">${val.name}</a>`);
-<<<<<<< HEAD
       link.on('click', (event) => {
-=======
-
-      link.on('click', event => {
->>>>>>> aaac65f4b2c362a1f22afa34eb61536363d83166
         event.preventDefault();
         this.onItemClicked($(event.target).data('id'));
       });
