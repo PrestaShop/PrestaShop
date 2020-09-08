@@ -53,11 +53,33 @@ final class ChangeOrderDeliveryAddressHandler extends AbstractOrderHandler imple
             throw new OrderException('New delivery address is not valid');
         }
 
-        $order->id_address_delivery = $address->id;
-        $cart->id_address_delivery = $address->id;
-
-        $order->update();
-        $order->refreshShippingCost();
+        $cart->updateDeliveryAddressId($cart->id_address_delivery, $address->id);
+        $cart->setDeliveryOption([
+            $cart->id_address_delivery => $this->formatLegacyDeliveryOptionFromCarrierId($order->id_carrier),
+        ]);
         $cart->update();
+
+        $order->id_address_delivery = $address->id;
+        $order->update();
+
+        $order->refreshShippingCost();
+    }
+
+    /**
+     * Delivery option consists of deliveryAddress and carrierId.
+     *
+     * Legacy multishipping feature used comma separated carriers in delivery option (e.g. {'1':'6,7'}
+     * Now that multishipping is gone - delivery option should consist of one carrier and one address.
+     *
+     * However the structure of deliveryOptions is still used with comma in legacy, so
+     * this method provides assurance for deliveryOption structure until major refactoring
+     *
+     * @param int $carrierId
+     *
+     * @return string
+     */
+    private function formatLegacyDeliveryOptionFromCarrierId(int $carrierId): string
+    {
+        return sprintf('%s,', $carrierId);
     }
 }
