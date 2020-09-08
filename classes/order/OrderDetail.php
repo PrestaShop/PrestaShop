@@ -540,6 +540,8 @@ class OrderDetailCore extends ObjectModel
             $tax_manager = TaxManagerFactory::getManager($this->vat_address, $this->id_tax_rules_group);
             $this->tax_calculator = $tax_manager->getTaxCalculator();
             $this->tax_computation_method = (int) $this->tax_calculator->computation_method;
+            $this->tax_rate = (float) $this->tax_calculator->getTotalRate();
+            $this->tax_name = $this->tax_calculator->getTaxesName();
         }
 
         $this->ecotax_tax_rate = 0;
