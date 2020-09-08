@@ -333,6 +333,36 @@ class CartCore extends ObjectModel
     }
 
     /**
+     * Update the Delivery Address ID of the Cart.
+     *
+     * @param int $id_address Current Address ID to change
+     * @param int $id_address_new New Address ID
+     */
+    public function updateDeliveryAddressId($id_address, $id_address_new)
+    {
+        $to_update = false;
+        if (!isset($this->id_address_delivery) || $this->id_address_delivery == $id_address) {
+            $to_update = true;
+            $this->id_address_delivery = $id_address_new;
+        }
+        if ($to_update) {
+            $this->update();
+        }
+
+        $sql = 'UPDATE `' . _DB_PREFIX_ . 'cart_product`
+        SET `id_address_delivery` = ' . (int) $id_address_new . '
+        WHERE  `id_cart` = ' . (int) $this->id . '
+            AND `id_address_delivery` = ' . (int) $id_address;
+        Db::getInstance()->execute($sql);
+
+        $sql = 'UPDATE `' . _DB_PREFIX_ . 'customization`
+            SET `id_address_delivery` = ' . (int) $id_address_new . '
+            WHERE  `id_cart` = ' . (int) $this->id . '
+                AND `id_address_delivery` = ' . (int) $id_address;
+        Db::getInstance()->execute($sql);
+    }
+
+    /**
      * Deletes current Cart from the database.
      *
      * @return bool True if delete was successful
