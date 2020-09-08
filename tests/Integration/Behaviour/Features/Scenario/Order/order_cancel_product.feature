@@ -244,7 +244,6 @@ Feature: Cancel Order Product from Back Office (BO)
       | name          | Test Product Cart Rule On Select Product  |
       | amount        | 1                                         |
       | price         | 15                                        |
-      | free_shipping | true                                      |
     Then order "bo_order_cancel_product" should have 11 products in total
     Then order "bo_order_cancel_product" should contain 1 product "Test Product Cart Rule On Select Product"
     Then order "bo_order_cancel_product" should have 1 cart rule
@@ -312,7 +311,6 @@ Feature: Cancel Order Product from Back Office (BO)
       | name          | Test Product Cart Rule On Order |
       | amount        | 1                               |
       | price         | 15                              |
-      | free_shipping | true                            |
     Then order "bo_order_cancel_product" should have 11 products in total
     Then order "bo_order_cancel_product" should contain 1 product "Test Product Cart Rule On Order"
     Then order "bo_order_cancel_product" should have 1 cart rule
