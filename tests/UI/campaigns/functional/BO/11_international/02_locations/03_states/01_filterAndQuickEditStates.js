@@ -9,15 +9,15 @@ const loginCommon = require('@commonTests/loginBO');
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const zonesPage = require('@pages/BO/international/locations');
-const countriesPage = require('@pages/BO/international/locations/countries');
+const statesPage = require('@pages/BO/international/locations/states');
 
 // Import data
-const {countries} = require('@data/demo/countries');
+const {states} = require('@data/demo/states');
 
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_international_locations_countries_filterAndQuickEditCountries';
+const baseContext = 'functional_BO_international_locations_states_filterAndQuickEditStates';
 
 // Import expect from chai
 const {expect} = require('chai');
@@ -27,9 +27,9 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 
-let numberOfCountries = 0;
+let numberOfStates = 0;
 
-describe('Filter and quick edit countries', async () => {
+describe('Filter and quick edit states', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -59,37 +59,37 @@ describe('Filter and quick edit countries', async () => {
     await expect(pageTitle).to.contains(zonesPage.pageTitle);
   });
 
-  it('should go to countries page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToCountriesPage', baseContext);
+  it('should go to states page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToStatesPage', baseContext);
 
-    await zonesPage.goToSubTabCountries(page);
-    const pageTitle = await countriesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(countriesPage.pageTitle);
+    await zonesPage.goToSubTabStates(page);
+    const pageTitle = await statesPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(statesPage.pageTitle);
   });
 
-  it('should reset all filters and get number of countries in BO', async function () {
+  it('should reset all filters and get number of states in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfCountries = await countriesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCountries).to.be.above(0);
+    numberOfStates = await statesPage.resetAndGetNumberOfLines(page);
+    await expect(numberOfStates).to.be.above(0);
   });
 
-  describe('Filter countries', async () => {
+  describe('Filter states', async () => {
     const tests = [
       {
         args: {
           testIdentifier: 'filterId',
           filterType: 'input',
-          filterBy: 'id_country',
-          filterValue: countries.france.id,
+          filterBy: 'id_state',
+          filterValue: states.california.id,
         },
       },
       {
         args: {
           testIdentifier: 'filterName',
           filterType: 'input',
-          filterBy: 'b!name',
-          filterValue: countries.netherlands.name,
+          filterBy: 'a!name',
+          filterValue: states.bari.name,
         },
       },
       {
@@ -97,15 +97,7 @@ describe('Filter and quick edit countries', async () => {
           testIdentifier: 'filterIsoCode',
           filterType: 'input',
           filterBy: 'iso_code',
-          filterValue: countries.netherlands.isoCode,
-        },
-      },
-      {
-        args: {
-          testIdentifier: 'filterPrefix',
-          filterType: 'input',
-          filterBy: 'call_prefix',
-          filterValue: countries.unitedKingdom.callPrefix,
+          filterValue: states.california.isoCode,
         },
       },
       {
@@ -113,7 +105,15 @@ describe('Filter and quick edit countries', async () => {
           testIdentifier: 'filterZone',
           filterType: 'select',
           filterBy: 'z!id_zone',
-          filterValue: countries.unitedKingdom.zone,
+          filterValue: states.bihar.zone,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'filterCountry',
+          filterType: 'select',
+          filterBy: 'cl!id_country',
+          filterValue: states.california.country,
         },
       },
       {
@@ -121,7 +121,7 @@ describe('Filter and quick edit countries', async () => {
           testIdentifier: 'filterStatus',
           filterType: 'select',
           filterBy: 'a!active',
-          filterValue: countries.france.status,
+          filterValue: states.bari.status,
         },
       },
     ];
@@ -130,21 +130,21 @@ describe('Filter and quick edit countries', async () => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        await countriesPage.filterTable(
+        await statesPage.filterStates(
           page,
           test.args.filterType,
           test.args.filterBy,
           test.args.filterValue,
         );
 
-        const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfCountriesAfterFilter).to.be.at.most(numberOfCountries);
+        const numberOfStatesAfterFilter = await statesPage.getNumberOfElementInGrid(page);
+        await expect(numberOfStatesAfterFilter).to.be.at.most(numberOfStates);
 
         if (test.args.filterBy === 'a!active') {
-          const countryStatus = await countriesPage.getCountryStatus(page, 1);
+          const countryStatus = await statesPage.getStateStatus(page, 1);
           await expect(countryStatus).to.equal(test.args.filterValue);
         } else {
-          const textColumn = await countriesPage.getTextColumnFromTable(
+          const textColumn = await statesPage.getTextColumn(
             page,
             1,
             test.args.filterBy,
@@ -157,28 +157,28 @@ describe('Filter and quick edit countries', async () => {
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfCountriesAfterReset = await countriesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfCountriesAfterReset).to.equal(numberOfCountries);
+        const numberOfStatesAfterReset = await statesPage.resetAndGetNumberOfLines(page);
+        await expect(numberOfStatesAfterReset).to.equal(numberOfStates);
       });
     });
   });
 
-  describe('Quick edit country', async () => {
-    it('should filter by name \'Germany\'', async function () {
+  describe('Quick edit state', async () => {
+    it('should filter by name \'California\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
-      await countriesPage.filterTable(
+      await statesPage.filterStates(
         page,
         'input',
-        'b!name',
-        countries.germany.name,
+        'a!name',
+        states.california.name,
       );
 
-      const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfCountriesAfterFilter).to.be.below(numberOfCountries);
+      const numberOfStatesAfterFilter = await statesPage.getNumberOfElementInGrid(page);
+      await expect(numberOfStatesAfterFilter).to.be.below(numberOfStates);
 
-      const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'b!name');
-      await expect(textColumn).to.contains(countries.germany.name);
+      const textColumn = await statesPage.getTextColumn(page, 1, 'a!name');
+      await expect(textColumn).to.contains(states.california.name);
     });
 
     const statuses = [
@@ -187,16 +187,16 @@ describe('Filter and quick edit countries', async () => {
     ];
 
     statuses.forEach((status) => {
-      it(`should ${status.args.status} the first country`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${status.args.status}Country`, baseContext);
+      it(`should ${status.args.status} the first state`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${status.args.status}State`, baseContext);
 
-        await countriesPage.setCountryStatus(
+        await statesPage.setStateStatus(
           page,
           1,
           status.args.enable,
         );
 
-        const currentStatus = await countriesPage.getCountryStatus(page, 1);
+        const currentStatus = await statesPage.getStateStatus(page, 1);
         await expect(currentStatus).to.be.equal(status.args.enable);
       });
     });
@@ -204,8 +204,8 @@ describe('Filter and quick edit countries', async () => {
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterQuickEdit', baseContext);
 
-      const numberOfCountriesAfterReset = await countriesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCountriesAfterReset).to.equal(numberOfCountries);
+      const numberOfStatesAfterReset = await statesPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfStatesAfterReset).to.equal(numberOfStates);
     });
   });
 });
