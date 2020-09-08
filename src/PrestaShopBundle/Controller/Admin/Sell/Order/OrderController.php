@@ -49,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderInvoiceException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
@@ -664,6 +665,10 @@ class OrderController extends FrameworkBundleAdminController
                     (int) $request->get('quantity')
                 );
             } else {
+                $withFreeShipping = null;
+                if ($request->has('free_shipping')) {
+                    $withFreeShipping = (bool) filter_var($request->get('free_shipping'), FILTER_VALIDATE_BOOLEAN);
+                }
                 $addProductCommand = AddProductToOrderCommand::withNewInvoice(
                     $orderId,
                     (int) $request->get('product_id'),
@@ -671,7 +676,7 @@ class OrderController extends FrameworkBundleAdminController
                     $request->get('price_tax_incl'),
                     $request->get('price_tax_excl'),
                     (int) $request->get('quantity'),
-                    filter_var($request->get('free_shipping'), FILTER_VALIDATE_BOOLEAN)
+                    $withFreeShipping
                 );
             }
             $this->getCommandBus()->handle($addProductCommand);
@@ -1599,6 +1604,10 @@ class OrderController extends FrameworkBundleAdminController
         if ($e instanceof InvalidCancelProductException) {
             $refundableQuantity = $e->getRefundableQuantity();
         }
+        $orderInvoiceNumber = '#unknown';
+        if ($e instanceof DuplicateProductInOrderInvoiceException) {
+            $orderInvoiceNumber = $e->getOrderInvoiceNumber();
+        }
 
         return [
             CannotEditDeliveredOrderProductException::class => $this->trans('You cannot edit the cart once the order delivered.', 'Admin.Orderscustomers.Notification'),
@@ -1713,6 +1722,11 @@ class OrderController extends FrameworkBundleAdminController
             DuplicateProductInOrderException::class => $this->trans(
                 'This product is already in your order, please edit the quantity instead.',
                 'Admin.Notifications.Error'
+            ),
+            DuplicateProductInOrderInvoiceException::class => $this->trans(
+                'This product is already in the invoice [1], please edit the quantity instead.',
+                'Admin.Notifications.Error',
+                ['[1]' => $orderInvoiceNumber]
             ),
         ];
     }
