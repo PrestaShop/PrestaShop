@@ -1241,7 +1241,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $specificPrice->price
         );
         Assert::assertEquals('amount', $specificPrice->reduction_type);
-        Assert::assertFalse((bool) $specificPrice->reduction_tax);
+        Assert::assertTrue((bool) $specificPrice->reduction_tax);
     }
 
     /**
