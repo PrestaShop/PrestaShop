@@ -1,31 +1,25 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-class Zones extends BOBasePage {
+class States extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Zones •';
-
-    // Header selectors
-    this.addNewZoneLink = '#page-header-desc-zone-new_zone';
-    // SubTab selectors
-    this.countriesSubTab = '#subtab-AdminCountries';
-    this.statesSubTab = '#subtab-AdminStates';
+    this.pageTitle = 'States •';
 
     // Form selectors
-    this.gridForm = '#form-zone';
+    this.gridForm = '#form-state';
     this.gridTableHeaderTitle = `${this.gridForm} .panel-heading`;
     this.gridTableNumberOfTitlesSpan = `${this.gridTableHeaderTitle} span.badge`;
 
     // Table selectors
-    this.gridTable = '#table-zone';
+    this.gridTable = '#table-state';
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = filterBy => `${this.filterRow} [name='zoneFilter_${filterBy}']`;
-    this.filterSearchButton = '#submitFilterButtonzone';
-    this.filterResetButton = 'button[name=\'submitResetzone\']';
+    this.filterColumn = filterBy => `${this.filterRow} [name='stateFilter_${filterBy}']`;
+    this.filterSearchButton = '#submitFilterButtonstate';
+    this.filterResetButton = 'button[name=\'submitResetstate\']';
 
     // Table body selectors
     this.tableBody = `${this.gridTable} tbody`;
@@ -34,49 +28,14 @@ class Zones extends BOBasePage {
     this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnSelectRowCheckbox = row => `${this.tableBodyColumn(row)} input[name='zoneBox[]']`;
     this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
     this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnStatusLink = row => `${this.tableBodyColumn(row)}:nth-child(4) a`;
+    this.tableColumnIsoCode = row => `${this.tableBodyColumn(row)}:nth-child(4)`;
+    this.tableColumnZone = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
+    this.tableColumnCountry = row => `${this.tableBodyColumn(row)}:nth-child(6)`;
+    this.tableColumnStatusLink = row => `${this.tableBodyColumn(row)}:nth-child(7) a`;
     this.tableColumnStatusEnableLink = row => `${this.tableColumnStatusLink(row)}.action-enabled`;
     this.tableColumnStatusDisableLink = row => `${this.tableColumnStatusLink(row)}.action-disabled`;
-
-    // Column actions selectors
-    this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
-    this.columnActionsEditLink = row => `${this.tableColumnActions(row)} a.edit`;
-    this.columnActionsDropdownButton = row => `${this.tableColumnActions(row)} button.dropdown-toggle`;
-    this.columnActionsDeleteLink = row => `${this.tableColumnActions(row)} a.delete`;
-
-    // Confirmation modal
-    this.deleteModalButtonYes = '#popup_ok';
-  }
-
-  /* Header methods */
-  /**
-   * Go to sub tab countries
-   * @param page
-   * @returns {Promise<void>}
-   */
-  async goToSubTabCountries(page) {
-    await this.clickAndWaitForNavigation(page, this.countriesSubTab);
-  }
-
-  /**
-   * Go to sub tab states
-   * @param page
-   * @return {Promise<void>}
-   */
-  async goToSubTabStates(page) {
-    await this.clickAndWaitForNavigation(page, this.statesSubTab);
-  }
-
-  /**
-   * Go To add new zone page
-   * @param page
-   * @return {Promise<void>}
-   */
-  async goToAddNewZonePage(page) {
-    await this.clickAndWaitForNavigation(page, this.addNewZoneLink);
   }
 
   /* Filter Methods */
@@ -93,7 +52,7 @@ class Zones extends BOBasePage {
   }
 
   /**
-   * Get Number of zones
+   * Get Number of states
    * @param page
    * @return {Promise<number>}
    */
@@ -102,7 +61,7 @@ class Zones extends BOBasePage {
   }
 
   /**
-   * Reset and get number of zones
+   * Reset and get number of states
    * @param page
    * @return {Promise<number>}
    */
@@ -112,25 +71,31 @@ class Zones extends BOBasePage {
   }
 
   /**
-   * Filter zones
+   * Filter states
    * @param page
    * @param filterType
    * @param filterBy
    * @param value
    * @return {Promise<void>}
    */
-  async filterZones(page, filterType, filterBy, value) {
+  async filterStates(page, filterType, filterBy, value) {
+    let filterValue = value;
     switch (filterType) {
       case 'input':
-        await this.setValue(page, this.filterColumn(filterBy), value.toString());
+        await this.setValue(page, this.filterColumn(filterBy), filterValue.toString());
         await this.clickAndWaitForNavigation(page, this.filterSearchButton);
         break;
 
       case 'select':
+        if (typeof value === 'boolean') {
+          filterValue = value ? 'Yes' : 'No';
+        }
+
         await Promise.all([
+          this.selectByVisibleText(page, this.filterColumn(filterBy), filterValue),
           page.waitForNavigation({waitUntil: 'networkidle'}),
-          this.selectByVisibleText(page, this.filterColumn(filterBy), value ? 'Yes' : 'No'),
         ]);
+
         break;
 
       default:
@@ -151,12 +116,24 @@ class Zones extends BOBasePage {
     let columnSelector;
 
     switch (columnName) {
-      case 'id_zone':
+      case 'id_state':
         columnSelector = this.tableColumnId(row);
         break;
 
-      case 'name':
+      case 'a!name':
         columnSelector = this.tableColumnName(row);
+        break;
+
+      case 'iso_code':
+        columnSelector = this.tableColumnIsoCode(row);
+        break;
+
+      case 'z!id_zone':
+        columnSelector = this.tableColumnZone(row);
+        break;
+
+      case 'cl!id_country':
+        columnSelector = this.tableColumnCountry(row);
         break;
 
       default:
@@ -167,56 +144,26 @@ class Zones extends BOBasePage {
   }
 
   /**
-   * Get zone status
+   * Get state status
    * @param page
    * @param row
    * @return {Promise<boolean>}
    */
-  getZoneStatus(page, row) {
+  getStateStatus(page, row) {
     return this.elementVisible(page, this.tableColumnStatusEnableLink(row), 1000);
   }
 
   /**
-   * Set zone status
+   * Set state status
    * @param page
    * @param row
    * @param wantedStatus
    * @return {Promise<void>}
    */
-  async setZoneStatus(page, row, wantedStatus) {
-    if (wantedStatus !== await this.getZoneStatus(page, row)) {
+  async setStateStatus(page, row, wantedStatus) {
+    if (wantedStatus !== await this.getStateStatus(page, row)) {
       await this.clickAndWaitForNavigation(page, this.tableColumnStatusLink(row));
     }
   }
-
-  /**
-   * Go to edit zone page
-   * @param page
-   * @param row
-   * @return {Promise<void>}
-   */
-  async goToEditZonePage(page, row) {
-    await this.clickAndWaitForNavigation(page, this.columnActionsEditLink(row));
-  }
-
-  /**
-   * Delete zone
-   * @param page
-   * @param row
-   * @return {Promise<string>}
-   */
-  async deleteZone(page, row) {
-    // Open dropdown link list
-    await page.click(this.columnActionsDropdownButton(row));
-
-    // Click on delete link
-    await page.click(this.columnActionsDeleteLink(row));
-
-    // Confirm delete in modal
-    await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
-
-    // Return successful message
-    return this.getTextContent(page, this.alertSuccessBlock);
-  }
 }
-module.exports = new Zones();
+module.exports = new States();
