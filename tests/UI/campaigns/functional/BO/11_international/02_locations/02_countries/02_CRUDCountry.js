@@ -35,6 +35,7 @@ const createCountryData = new CountryFaker(
     zipCodeFormat: 'NNNN',
     active: true,
   });
+
 const editCountryData = new CountryFaker(
   {
     name: 'countryTestEdit',
@@ -44,6 +45,7 @@ const editCountryData = new CountryFaker(
     zipCodeFormat: 'NNNN',
     active: false,
   });
+
 let numberOfCountries = 0;
 
 describe('CRUD country', async () => {
@@ -187,8 +189,7 @@ describe('CRUD country', async () => {
       await expect(numberOfCountriesAfterFilter).to.be.at.least(1);
 
       // row = 1 (first row)
-      // column = 3 (country column)
-      const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 3);
+      const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'b!name');
       await expect(textColumn).to.contains(createCountryData.name);
     });
 
@@ -277,7 +278,7 @@ describe('CRUD country', async () => {
       const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
       await expect(numberOfCountriesAfterFilter).to.be.at.least(1);
 
-      const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 3);
+      const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'b!name');
       await expect(textColumn).to.contains(editCountryData.name);
     });
 
