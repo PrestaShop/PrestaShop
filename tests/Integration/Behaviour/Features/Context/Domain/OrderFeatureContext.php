@@ -183,7 +183,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         $this->lastException = null;
         try {
-            $withFreeShipping = false;
+            $withFreeShipping = null;
             if (isset($data['free_shipping'])) {
                 $withFreeShipping = PrimitiveUtils::castStringBooleanIntoBoolean($data['free_shipping']);
             }
