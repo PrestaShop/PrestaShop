@@ -288,7 +288,6 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         $cartId = (int) SharedStorage::getStorage()->get($cartReference);
         $carrierId = (int) SharedStorage::getStorage()->get($carrierReference);
 
-        $this->lastException = null;
         try {
             $this->getCommandBus()->handle(
                 new UpdateCartCarrierCommand(
@@ -297,7 +296,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
                 )
             );
         } catch (CartConstraintException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 

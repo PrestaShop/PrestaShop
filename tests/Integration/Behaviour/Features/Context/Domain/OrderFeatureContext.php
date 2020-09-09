@@ -179,7 +179,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $combinationId = 0;
         }
 
-        $this->lastException = null;
         try {
             $this->getCommandBus()->handle(
                 AddProductToOrderCommand::withNewInvoice(
@@ -233,7 +232,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             );
         }
 
-        $this->lastException = null;
         try {
             $this->getCommandBus()->handle(
                 new DeleteProductFromOrderCommand($orderId, $orderDetailId)
@@ -266,7 +264,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $combinationId = 0;
         }
 
-        $this->lastException = null;
         try {
             $this->getCommandBus()->handle(
                 AddProductToOrderCommand::toExistingInvoice(
