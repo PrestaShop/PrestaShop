@@ -465,7 +465,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      */
     private function updateProductInOrder(int $orderId, array $productOrderDetail, array $data)
     {
-        // if tax included price is not give, it is calculated
+        // if tax included price is not given, it is calculated
         if (!isset($data['price_tax_incl'])) {
             $taxCalculator = $this->getOrderTaxCalculator($orderId);
             $data['price_tax_incl'] = (string) $taxCalculator->addTaxes($data['price']);
