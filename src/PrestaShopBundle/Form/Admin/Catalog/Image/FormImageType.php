@@ -42,7 +42,7 @@ class FormImageType extends TranslatorAwareType
     {
         $builder
             ->add('legend', TranslateType::class, [
-                'type' => 'Symfony\Component\Form\Extension\Core\Type\TextareaType',
+                'type' => TextareaType::class,
                 'options' => [],
                 'locales' => $this->locales,
                 'hideTabs' => true,
