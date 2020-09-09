@@ -55,7 +55,7 @@ final class ChangeOrderDeliveryAddressHandler extends AbstractOrderHandler imple
 
         $cart->updateDeliveryAddressId((int) $cart->id_address_delivery, (int) $address->id);
         $cart->setDeliveryOption([
-            $cart->id_address_delivery => $this->formatLegacyDeliveryOptionFromCarrierId($order->id_carrier),
+            (int) $cart->id_address_delivery => $this->formatLegacyDeliveryOptionFromCarrierId($order->id_carrier),
         ]);
         $cart->update();
 
