@@ -49,7 +49,7 @@ class FormImageType extends TranslatorAwareType
                 'label' => $this->trans('Caption', 'Admin.Catalog.Feature'),
                 'required' => false,
             ])
-            ->add('cover', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', [
+            ->add('cover', CheckboxType::class, [
                 'label' => $this->trans('Cover image', 'Admin.Catalog.Feature'),
                 'required' => false,
             ])
