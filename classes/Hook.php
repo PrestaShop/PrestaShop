@@ -771,7 +771,7 @@ class HookCore extends ObjectModel
         $id_shop = null,
         $chain = false
     ) {
-        if (defined('PS_INSTALLATION_IN_PROGRESS') || !Hook::getStatusByName($hook_name)) {
+        if (defined('PS_INSTALLATION_IN_PROGRESS') || !self::getHookStatusByName($hook_name)) {
             return null;
         }
 
@@ -1252,13 +1252,13 @@ class HookCore extends ObjectModel
     }
 
     /**
-     * Return an instance of the specified hook.
+     * Return status from a given hook name.
      *
      * @param string $hook_name Hook name
      *
      * @return bool
      */
-    public static function getStatusByName($hook_name): bool
+    public static function getHookStatusByName($hook_name): bool
     {
         if (empty($hook_name)) {
             return true;
