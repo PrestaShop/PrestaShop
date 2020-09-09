@@ -335,30 +335,30 @@ class CartCore extends ObjectModel
     /**
      * Update the Delivery Address ID of the Cart.
      *
-     * @param int $id_address Current Address ID to change
-     * @param int $id_address_new New Address ID
+     * @param int $currentAddressId Current Address ID to change
+     * @param int $newAddressId New Address ID
      */
-    public function updateDeliveryAddressId($id_address, $id_address_new)
+    public function updateDeliveryAddressId(int $currentAddressId, int $newAddressId)
     {
-        $to_update = false;
-        if (!isset($this->id_address_delivery) || $this->id_address_delivery == $id_address) {
-            $to_update = true;
-            $this->id_address_delivery = $id_address_new;
+        $needsUpdate = false;
+        if (!isset($this->id_address_delivery) || (int) $this->id_address_delivery === $currentAddressId) {
+            $needsUpdate = true;
+            $this->id_address_delivery = $newAddressId;
         }
-        if ($to_update) {
+        if ($needsUpdate) {
             $this->update();
         }
 
         $sql = 'UPDATE `' . _DB_PREFIX_ . 'cart_product`
-        SET `id_address_delivery` = ' . (int) $id_address_new . '
+        SET `id_address_delivery` = ' . $newAddressId . '
         WHERE  `id_cart` = ' . (int) $this->id . '
-            AND `id_address_delivery` = ' . (int) $id_address;
+            AND `id_address_delivery` = ' . $currentAddressId;
         Db::getInstance()->execute($sql);
 
         $sql = 'UPDATE `' . _DB_PREFIX_ . 'customization`
-            SET `id_address_delivery` = ' . (int) $id_address_new . '
+            SET `id_address_delivery` = ' . $newAddressId . '
             WHERE  `id_cart` = ' . (int) $this->id . '
-                AND `id_address_delivery` = ' . (int) $id_address;
+                AND `id_address_delivery` = ' . $currentAddressId;
         Db::getInstance()->execute($sql);
     }
 
