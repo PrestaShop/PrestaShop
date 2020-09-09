@@ -49,6 +49,15 @@ class Zones extends BOBasePage {
 
     // Confirmation modal
     this.deleteModalButtonYes = '#popup_ok';
+
+    // Bulk actions selectors
+    this.bulkActionBlock = 'div.bulk-actions';
+    this.bulkActionMenuButton = '#bulk_action_menu_zone';
+    this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
+    this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
+    this.bulkEnableLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
+    this.bulkDisableLink = `${this.bulkActionDropdownMenu} li:nth-child(5)`;
+    this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(7)`;
   }
 
   /* Header methods */
@@ -217,6 +226,64 @@ class Zones extends BOBasePage {
 
     // Return successful message
     return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /* Bulk actions methods */
+
+  /**
+   * Select all rows
+   * @param page
+   * @return {Promise<void>}
+   */
+  async bulkSelectRows(page) {
+    await page.click(this.bulkActionMenuButton);
+
+    await Promise.all([
+      page.click(this.selectAllLink),
+      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+    ]);
+  }
+
+  /**
+   * Bulk delete
+   * @param page
+   * @return {Promise<void>}
+   */
+  async bulkDeleteZones(page) {
+    // To confirm bulk delete action with dialog
+    this.dialogListener(page, true);
+
+    // Select all rows
+    await this.bulkSelectRows(page);
+
+    // Perform delete
+    await page.click(this.bulkActionMenuButton);
+    await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
+
+    // Return successful message
+    return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /**
+   * Bulk set status
+   * @param page
+   * @param wantedStatus
+   * @return {Promise<void>}
+   */
+  async bulkSetStatus(page, wantedStatus) {
+    // Select all rows
+    await this.bulkSelectRows(page);
+
+    // Set status
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(page, this.bulkEnableLink),
+    ]);
+
+    await this.clickAndWaitForNavigation(
+      page,
+      wantedStatus ? this.bulkEnableLink : this.bulkDisableLink,
+    );
   }
 }
 module.exports = new Zones();
