@@ -123,7 +123,7 @@ describe('CRUD zone', async () => {
     });
   });
 
-  describe('Delete zone by bulk actions', async () => {
+  describe('Delete zone', async () => {
     it(`should filter zone by name '${editZoneData.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
