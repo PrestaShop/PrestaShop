@@ -95,6 +95,10 @@ const switchEditAddressButtonColor = function switchEditAddressButtonColor(enabl
   const addressBtn = $('#id-address-' + type + '-address-' + id + ' a.edit-address');
   const classesToToggle = ['text-info', ' address-item-invalid'];
 
+  if (enabled) {
+    $('#' + type + '-addresses a.edit-address').removeClass(classesToToggle);
+  }
+
   addressBtn.toggleClass(classesToToggle, enabled);
 };
 
