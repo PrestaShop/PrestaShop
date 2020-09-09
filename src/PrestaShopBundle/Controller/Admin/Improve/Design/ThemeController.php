@@ -84,10 +84,16 @@ class ThemeController extends AbstractAdminController
     {
         $isHostMode = $this->get('prestashop.adapter.hosting_information')->isHostMode();
         $isoCode = strtoupper($this->get('prestashop.adapter.legacy.context')->getLanguage()->iso_code);
+        $languageAddons = 'en';
+        $languagesAddons = ['en','fr','es','ru','de','it','nl','pl','pt'];
+
+        if (in_array(strtolower($isoCode), $languagesAddons)) {
+            $languageAddons = strtolower($isoCode);
+        }
 
         $themeCatalogUrl = sprintf(
             '%s?%s',
-            'https://addons.prestashop.com/en/3-templates-prestashop',
+            'https://addons.prestashop.com/'.$languageAddons.'/3-templates-prestashop',
             http_build_query([
                 'utm_source' => 'back-office',
                 'utm_medium' => 'theme-button',
