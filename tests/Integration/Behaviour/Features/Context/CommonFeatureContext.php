@@ -147,5 +147,6 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         Category::resetStaticCache();
         Product::resetStaticCache();
         Language::resetCache();
+        SharedStorage::getStorage()->clean();
     }
 }
