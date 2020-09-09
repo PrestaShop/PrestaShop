@@ -407,7 +407,6 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should have 0 invoices
     And order "bo_order1" should have 0 cart rule
     And order "bo_order1" should have "price_carrier" as a carrier
-    And order "bo_order1" should have 2 products in total
     And order "bo_order1" should have following details:
       | total_products           | 23.800 |
       | total_products_wt        | 25.230 |
@@ -483,7 +482,6 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should have 0 invoices
     And order "bo_order1" should have 0 cart rule
     And order "bo_order1" should have "price_carrier" as a carrier
-    And order "bo_order1" should have 2 products in total
     And order "bo_order1" should have following details:
       | total_products           | 23.800 |
       | total_products_wt        | 25.230 |
