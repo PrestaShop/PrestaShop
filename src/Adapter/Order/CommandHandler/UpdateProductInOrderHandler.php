@@ -88,7 +88,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
 
             // Check fields validity
             $this->assertProductCanBeUpdated($command, $orderDetail, $order, $orderInvoice);
-            $this->assertProductDuplicate($order, $orderDetail, $orderInvoice);
+            $this->assertProductNotDuplicate($order, $orderDetail, $orderInvoice);
 
             // @todo: use https://github.com/PrestaShop/decimal for price computations
             // Update OrderDetail prices
@@ -213,7 +213,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
      *
      * @throws DuplicateProductInOrderInvoiceException
      */
-    private function assertProductDuplicate(Order $order, OrderDetail $orderDetail, ?OrderInvoice $orderInvoice = null): void
+    private function assertProductNotDuplicate(Order $order, OrderDetail $orderDetail, ?OrderInvoice $orderInvoice = null): void
     {
         // If the OrderDetail's invoice is not changed no reason to check
         if (null === $orderInvoice || (int) $orderInvoice->id === (int) $orderDetail->id_order_invoice) {

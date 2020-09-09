@@ -122,7 +122,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $this->computingPrecision = $this->context->getComputingPrecision();
         try {
             $this->assertOrderWasNotShipped($order);
-            $this->assertProductDuplicate($order, $command);
+            $this->assertProductNotDuplicate($order, $command);
 
             $product = $this->getProduct($command->getProductId(), (int) $order->id_lang);
             $combination = null !== $command->getCombinationId() ? $this->getCombination($command->getCombinationId()->getValue()) : null;
@@ -512,7 +512,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      * @throws DuplicateProductInOrderException
      * @throws DuplicateProductInOrderInvoiceException
      */
-    private function assertProductDuplicate(Order $order, AddProductToOrderCommand $command): void
+    private function assertProductNotDuplicate(Order $order, AddProductToOrderCommand $command): void
     {
         $invoicesContainingProduct = [];
         foreach ($order->getOrderDetailList() as $orderDetail) {
