@@ -34,7 +34,6 @@ use Configuration;
 use Context;
 use Customer;
 use Db;
-use Hook;
 use Image;
 use Language;
 use ObjectModel;
@@ -227,7 +226,7 @@ class AdminProductWrapper
     {
         // Hook triggered by legacy code below: actionUpdateQuantity('id_product', 'id_product_attribute', 'quantity')
         StockAvailable::setQuantity((int) $product->id, $forAttributeId, $quantity);
-        Hook::exec('actionProductUpdate', ['id_product' => (int) $product->id, 'product' => $product]);
+        $this->hookDispatcher->dispatchWithParameters('actionProductUpdate', ['id_product' => (int) $product->id, 'product' => $product]);
     }
 
     /**
