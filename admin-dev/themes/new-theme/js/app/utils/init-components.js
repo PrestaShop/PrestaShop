@@ -33,7 +33,7 @@ const initPrestashopComponents = () => {
   window.prestashop.instance = {...window.prestashop.instance};
 
   window.prestashop.component = {
-    initPrestashopComponents(components) {
+    initComponents(components) {
       components.forEach((component) => {
         if (window.prestashop.component[component] === undefined) {
           console.error(`Failed to initialize PrestaShop component "${component}". This component doesn't exist.`);
