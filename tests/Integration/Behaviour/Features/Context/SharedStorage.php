@@ -122,6 +122,15 @@ class SharedStorage
     }
 
     /**
+     * Clean all previously saved data
+     */
+    public function clean(): void
+    {
+        $this->storage = [];
+        $this->latestKey = null;
+    }
+
+    /**
      * Get the resource that was the latest one to be set into the storage.
      *
      * @return mixed
