@@ -550,11 +550,13 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $invoice = $this->getInvoiceFromOrder($order, $data['invoice']);
             $invoiceId = (int) $invoice->id;
         }
-
         $this->lastException = null;
-        $taxCalculator = $this->getOrderTaxCalculator($orderId);
 
-        $data['price_tax_incl'] = $data['price_tax_incl'] ?? (string) $taxCalculator->addTaxes($data['price']);
+        // if tax included price is not give, it is calculated
+        if (!isset($data['price_tax_incl'])) {
+            $taxCalculator = $this->getOrderTaxCalculator($orderId);
+            $data['price_tax_incl'] = (string) $taxCalculator->addTaxes($data['price']);
+        }
 
         try {
             $this->getCommandBus()->handle(
