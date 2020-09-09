@@ -1173,7 +1173,7 @@ class OrderCore extends ObjectModel
     {
         $id_order = (int) self::getIdByCartId((int) $id_cart);
 
-        return ($id_order > 0) ? new Order($id_order) : null;
+        return ($id_order > 0) ? new static($id_order) : null;
     }
 
     /**
