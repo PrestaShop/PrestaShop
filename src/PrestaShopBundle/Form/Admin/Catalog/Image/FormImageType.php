@@ -27,10 +27,10 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Catalog\Image;
 
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
