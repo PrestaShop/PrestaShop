@@ -267,7 +267,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         switch (Configuration::get('PS_ROUND_TYPE')) {
             case Order::ROUND_TOTAL:
                 $productItem['total'] = $productItem['price_with_reduction_without_tax'] * $quantity;
-                $productItem['total_wt'] = (float) (string) $command->getProductPriceTaxIncluded() * $quantity;
+                $productItem['total_wt'] = $productItem['price_without_reduction'] * $quantity;
 
                 break;
             case Order::ROUND_LINE:
