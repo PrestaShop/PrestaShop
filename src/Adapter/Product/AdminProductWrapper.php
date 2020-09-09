@@ -892,6 +892,7 @@ class AdminProductWrapper
         $this->hookDispatcher->dispatchWithParameters('actionAfterUpdateFormImageFormHandler', [
             'id' => (int) $idImage,
             'form_data' => &$data,
+            'img' => $img,
         ]);
 
         return $img;
