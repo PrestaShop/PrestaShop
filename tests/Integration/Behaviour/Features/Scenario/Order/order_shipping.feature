@@ -1,6 +1,7 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-shipping
 @reset-database-before-feature
 @order-shipping
+@clear-cache-before-feature
 Feature: Order from Back Office (BO)
   In order to manage orders for FO customers
   As a BO user
@@ -10,6 +11,7 @@ Feature: Order from Back Office (BO)
     Given email sending is disabled
     And the current currency is "USD"
     And country "US" is enabled
+    And country "FR" is enabled
     And the module "dummy_payment" is installed
     And I am logged in as "test@prestashop.com" employee
     And there is customer "testCustomer" with email "pub@prestashop.com"
