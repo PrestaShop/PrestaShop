@@ -115,7 +115,7 @@ class OrderCarrierCore extends ObjectModel
             } else {
                 //if there is no combination image, then get the product cover instead
                 $img = $prod_obj->getCover($prod_obj->id);
-                $img_url = $link->getImageLink($link_rewrite, $img['id_image']);
+                $img_url = !empty($img['id_image']) ? $link->getImageLink($link_rewrite, $img['id_image']) : '';
             }
             $prod_url = $prod_obj->getLink();
 
