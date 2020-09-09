@@ -78,7 +78,7 @@ class AddProductToOrderCommand
     /**
      * @var bool|null bool if product is being added using new invoice
      */
-    private $withFreeShipping;
+    private $hasFreeShipping;
 
     /**
      * Add product to an order with new invoice. It applies to orders that were already paid and waiting for payment.
@@ -89,7 +89,7 @@ class AddProductToOrderCommand
      * @param string $productPriceTaxIncluded
      * @param string $productPriceTaxExcluded
      * @param int $productQuantity
-     * @param bool|null $withFreeShipping
+     * @param bool|null $hasFreeShipping
      *
      * @return self
      *
@@ -104,7 +104,7 @@ class AddProductToOrderCommand
         string $productPriceTaxIncluded,
         string $productPriceTaxExcluded,
         int $productQuantity,
-        ?bool $withFreeShipping = null
+        ?bool $hasFreeShipping = null
     ) {
         $command = new self(
             $orderId,
@@ -115,7 +115,7 @@ class AddProductToOrderCommand
             $productQuantity
         );
 
-        $command->withFreeShipping = $withFreeShipping;
+        $command->hasFreeShipping = $hasFreeShipping;
 
         return $command;
     }
@@ -251,9 +251,9 @@ class AddProductToOrderCommand
     /**
      * @return bool|null
      */
-    public function withFreeShipping()
+    public function hasFreeShipping()
     {
-        return $this->withFreeShipping;
+        return $this->hasFreeShipping;
     }
 
     /**

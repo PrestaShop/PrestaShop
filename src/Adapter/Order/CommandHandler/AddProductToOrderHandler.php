@@ -350,7 +350,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         if ($order->hasInvoice()) {
             return $command->getOrderInvoiceId() ?
                 $this->updateExistingInvoice($command->getOrderInvoiceId(), $cart, $products) :
-                $this->createNewInvoice($order, $cart, $command->withFreeShipping(), $products);
+                $this->createNewInvoice($order, $cart, $command->hasFreeShipping(), $products);
         }
 
         return null;

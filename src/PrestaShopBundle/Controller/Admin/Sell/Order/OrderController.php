@@ -665,9 +665,9 @@ class OrderController extends FrameworkBundleAdminController
                     (int) $request->get('quantity')
                 );
             } else {
-                $withFreeShipping = null;
+                $hasFreeShipping = null;
                 if ($request->has('free_shipping')) {
-                    $withFreeShipping = (bool) filter_var($request->get('free_shipping'), FILTER_VALIDATE_BOOLEAN);
+                    $hasFreeShipping = (bool) filter_var($request->get('free_shipping'), FILTER_VALIDATE_BOOLEAN);
                 }
                 $addProductCommand = AddProductToOrderCommand::withNewInvoice(
                     $orderId,
@@ -676,7 +676,7 @@ class OrderController extends FrameworkBundleAdminController
                     $request->get('price_tax_incl'),
                     $request->get('price_tax_excl'),
                     (int) $request->get('quantity'),
-                    $withFreeShipping
+                    $hasFreeShipping
                 );
             }
             $this->getCommandBus()->handle($addProductCommand);
