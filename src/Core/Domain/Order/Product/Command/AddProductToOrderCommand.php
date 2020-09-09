@@ -219,7 +219,7 @@ class AddProductToOrderCommand
     /**
      * @return Number
      */
-    public function getProductPriceTaxIncluded()
+    public function getProductPriceTaxIncluded(): Number
     {
         return $this->productPriceTaxIncluded;
     }
@@ -227,7 +227,7 @@ class AddProductToOrderCommand
     /**
      * @return Number
      */
-    public function getProductPriceTaxExcluded()
+    public function getProductPriceTaxExcluded(): Number
     {
         return $this->productPriceTaxExcluded;
     }
@@ -235,7 +235,7 @@ class AddProductToOrderCommand
     /**
      * @return int
      */
-    public function getProductQuantity()
+    public function getProductQuantity(): int
     {
         return $this->productQuantity;
     }
@@ -243,7 +243,7 @@ class AddProductToOrderCommand
     /**
      * @return int|null
      */
-    public function getOrderInvoiceId()
+    public function getOrderInvoiceId(): ?int
     {
         return $this->orderInvoiceId;
     }
@@ -251,7 +251,7 @@ class AddProductToOrderCommand
     /**
      * @return bool|null
      */
-    public function hasFreeShipping()
+    public function hasFreeShipping(): ?bool
     {
         return $this->hasFreeShipping;
     }
