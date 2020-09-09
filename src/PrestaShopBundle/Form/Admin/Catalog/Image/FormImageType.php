@@ -41,7 +41,7 @@ class FormImageType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('legend', 'PrestaShopBundle\Form\Admin\Type\TranslateType', [
+            ->add('legend', TranslateType::class, [
                 'type' => 'Symfony\Component\Form\Extension\Core\Type\TextareaType',
                 'options' => [],
                 'locales' => $this->locales,
