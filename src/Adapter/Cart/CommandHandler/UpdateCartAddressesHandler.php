@@ -78,7 +78,7 @@ final class UpdateCartAddressesHandler extends AbstractCartHandler implements Up
         if ($command->getNewDeliveryAddressId()) {
             // updateDeliveryAddressId() will actually allow the address change to be impacted on all
             // other data linked to the cart delivery address (and it doesn't modify the invoice address)
-            $cart->updateDeliveryAddressId($cart->id_address_delivery, $command->getNewDeliveryAddressId()->getValue());
+            $cart->updateDeliveryAddressId((int) $cart->id_address_delivery, $command->getNewDeliveryAddressId()->getValue());
         }
 
         if ($command->getNewInvoiceAddressId()) {
