@@ -4,6 +4,7 @@ window.$ = $;
 window.jQuery = $;
 
 import './migrate-mute'
+import 'jquery-migrate';
 import 'jquery.browser';
 import '@prestashop-core/jquery.live-polyfill';
 import './cart';
