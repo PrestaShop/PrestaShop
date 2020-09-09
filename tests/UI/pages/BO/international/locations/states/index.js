@@ -7,6 +7,9 @@ class States extends BOBasePage {
 
     this.pageTitle = 'States •';
 
+    // Header selectors
+    this.addNewStateLink = '#page-header-desc-state-new_state';
+
     // Form selectors
     this.gridForm = '#form-state';
     this.gridTableHeaderTitle = `${this.gridForm} .panel-heading`;
@@ -36,6 +39,25 @@ class States extends BOBasePage {
     this.tableColumnStatusLink = row => `${this.tableBodyColumn(row)}:nth-child(7) a`;
     this.tableColumnStatusEnableLink = row => `${this.tableColumnStatusLink(row)}.action-enabled`;
     this.tableColumnStatusDisableLink = row => `${this.tableColumnStatusLink(row)}.action-disabled`;
+
+    // Column actions selectors
+    this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
+    this.columnActionsEditLink = row => `${this.tableColumnActions(row)} a.edit`;
+    this.columnActionsDropdownButton = row => `${this.tableColumnActions(row)} button.dropdown-toggle`;
+    this.columnActionsDeleteLink = row => `${this.tableColumnActions(row)} a.delete`;
+
+    // Confirmation modal
+    this.deleteModalButtonYes = '#popup_ok';
+  }
+
+  /* Header methods */
+  /**
+   * Go To add new state page
+   * @param page
+   * @return {Promise<void>}
+   */
+  async goToAddNewStatePage(page) {
+    await this.clickAndWaitForNavigation(page, this.addNewStateLink);
   }
 
   /* Filter Methods */
@@ -164,6 +186,37 @@ class States extends BOBasePage {
     if (wantedStatus !== await this.getStateStatus(page, row)) {
       await this.clickAndWaitForNavigation(page, this.tableColumnStatusLink(row));
     }
+  }
+
+
+  /**
+   * Go to edit state page
+   * @param page
+   * @param row
+   * @return {Promise<void>}
+   */
+  async goToEditStatePage(page, row) {
+    await this.clickAndWaitForNavigation(page, this.columnActionsEditLink(row));
+  }
+
+  /**
+   * Delete state
+   * @param page
+   * @param row
+   * @return {Promise<string>}
+   */
+  async deleteState(page, row) {
+    // Open dropdown link list
+    await page.click(this.columnActionsDropdownButton(row));
+
+    // Click on delete link
+    await page.click(this.columnActionsDeleteLink(row));
+
+    // Confirm delete in modal
+    await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
+
+    // Return successful message
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 }
 module.exports = new States();
