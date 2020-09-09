@@ -93,7 +93,7 @@ class ThemeController extends AbstractAdminController
 
         $themeCatalogUrl = sprintf(
             '%s?%s',
-            'https://addons.prestashop.com/'.$languageAddons.'/3-templates-prestashop',
+            'https://addons.prestashop.com/' . $languageAddons . '/3-templates-prestashop',
             http_build_query([
                 'utm_source' => 'back-office',
                 'utm_medium' => 'theme-button',
