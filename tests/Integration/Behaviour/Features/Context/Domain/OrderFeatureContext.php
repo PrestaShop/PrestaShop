@@ -179,7 +179,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $combinationId = 0;
         }
 
-        $this->lastException = null;
         try {
             $this->getCommandBus()->handle(
                 AddProductToOrderCommand::withNewInvoice(
