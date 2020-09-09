@@ -26,8 +26,12 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use Address;
 use AppKernel;
 use Cache;
+use Carrier;
+use Cart;
+use CartRule;
 use Category;
 use Context;
 use Employee;
@@ -142,9 +146,13 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      */
     private static function clearCache(): void
     {
+        Address::resetStaticCache();
         Cache::clear();
-        Pack::resetStaticCache();
+        Carrier::resetStaticCache();
+        Cart::resetStaticCache();
+        CartRule::resetStaticCache();
         Category::resetStaticCache();
+        Pack::resetStaticCache();
         Product::resetStaticCache();
         Language::resetCache();
     }
