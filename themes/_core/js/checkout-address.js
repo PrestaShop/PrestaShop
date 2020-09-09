@@ -92,14 +92,14 @@ $(window).on('load', () => {
  * @param {String} type
  */
 const switchEditAddressButtonColor = function switchEditAddressButtonColor(enabled, id, type) {
-  let color = '#7a7a7a';
+  const addressBtn = $('#id-address-' + type + '-address-' + id + ' a.edit-address');
+  const classesToToggle = ['text-info', ' address-item-invalid'];
 
   if (enabled) {
-    $('#' + type + '-addresses a.edit-address').prop('style', 'color: #7a7a7a !important');
-    color = '#2fb5d2';
+    addressBtn.addClass(classesToToggle);
+  } else {
+    addressBtn.removeClass(classesToToggle);
   }
-
-  $('#id-address-' + type + '-address-' + id + ' a.edit-address').prop('style', 'color: ' + color + ' !important');
 };
 
 /**
