@@ -183,9 +183,9 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         $this->lastException = null;
         try {
-            $withFreeShipping = null;
+            $hasFreeShipping = null;
             if (isset($data['free_shipping'])) {
-                $withFreeShipping = PrimitiveUtils::castStringBooleanIntoBoolean($data['free_shipping']);
+                $hasFreeShipping = PrimitiveUtils::castStringBooleanIntoBoolean($data['free_shipping']);
             }
             $this->getCommandBus()->handle(
                 AddProductToOrderCommand::withNewInvoice(
@@ -195,7 +195,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                     $data['price'],
                     $data['price'],
                     (int) $data['amount'],
-                    $withFreeShipping
+                    $hasFreeShipping
                 )
             );
         } catch (InvalidProductQuantityException $e) {
@@ -250,7 +250,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When /^I add products to order "(.+)" to (.+) invoice and the following products details:$/
+     * @When /^I add products to order "(.+)" to the (.+) invoice and the following products details:$/
      *
      * @param string $orderReference
      * @param string $invoicePosition
@@ -293,7 +293,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then :invoicePosition invoice from order :orderReference should have following details:
+     * @Then the :invoicePosition invoice from order :orderReference should have following details:
      *
      * @param string $invoicePosition
      * @param string $orderReference
@@ -433,7 +433,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then order :orderReference should have :expectedCount invoices
+     * @Then order :orderReference should have :expectedCount invoice(s)
      */
     public function checkOrderInvoicesCount(string $orderReference, int $expectedCount)
     {
@@ -521,7 +521,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             'last' => $invoicesCollection->count() - 1,
         ];
         if (!isset($invoiceIndexes[$invoicePosition])) {
-            throw new RuntimeException(sprintf('Can not interpret this invoice position %s', $invoicePosition));
+            throw new RuntimeException(sprintf('Cannot interpret this invoice position %s', $invoicePosition));
         }
 
         return $invoicesCollection->offsetGet($invoiceIndexes[$invoicePosition]);
@@ -540,7 +540,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['invoice'])) {
             $order = new Order($orderId);
             $invoice = $this->getInvoiceFromOrder($order, $data['invoice']);
-            $invoiceId = $invoice->id;
+            $invoiceId = (int) $invoice->id;
         }
 
         $this->lastException = null;
@@ -802,8 +802,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then :invoicePosition invoice from order :orderReference should contain :quantity product(s) :productName
-     * @Then :invoicePosition invoice from order :orderReference should contain :quantity combination(s) :combinationName of product :productName
+     * @Then the :invoicePosition invoice from order :orderReference should contain :quantity product(s) :productName
+     * @Then the :invoicePosition invoice from order :orderReference should contain :quantity combination(s) :combinationName of product :productName
      *
      * @param string $invoicePosition
      * @param string $orderReference
@@ -1120,7 +1120,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then last invoice for order :orderReference should have following prices:
+     * @Then the last invoice for order :orderReference should have following prices:
      */
     public function assertLastInvoicePrices(string $orderReference, TableNode $table)
     {

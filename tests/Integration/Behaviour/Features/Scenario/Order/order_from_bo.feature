@@ -155,7 +155,7 @@ Feature: Order from Back Office (BO)
 
   Scenario: Add product to an existing Order with invoice with free shipping to new invoice
     Given I update order "bo_order1" status to "Payment accepted"
-    And order "bo_order1" should have 1 invoices
+    And order "bo_order1" should have 1 invoice
     And order with reference "bo_order1" does not contain product "Mug Today is a good day"
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Mug Today is a good day |
@@ -166,14 +166,14 @@ Feature: Order from Back Office (BO)
 
   Scenario: Add product to an existing Order with invoice with free shipping to last invoice
     Given I update order "bo_order1" status to "Payment accepted"
-    And order "bo_order1" should have 1 invoices
+    And order "bo_order1" should have 1 invoice
     And order with reference "bo_order1" does not contain product "Mug Today is a good day"
-    When I add products to order "bo_order1" to last invoice and the following products details:
+    When I add products to order "bo_order1" to the last invoice and the following products details:
       | name          | Mug Today is a good day |
       | amount        | 2                       |
       | price         | 16                      |
     Then order "bo_order1" should contain 2 products "Mug Today is a good day"
-    Then order "bo_order1" should have 1 invoices
+    Then order "bo_order1" should have 1 invoice
 
   Scenario: Add product with negative quantity is forbidden
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"

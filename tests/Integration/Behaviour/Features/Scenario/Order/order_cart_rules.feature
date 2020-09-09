@@ -201,7 +201,7 @@ Feature: Order from Back Office (BO)
 #      | total_shipping_tax_excl  | 7.0    |
 #      | total_shipping_tax_incl  | 7.42   |
 #    Given I update order "bo_order1" status to "Payment accepted"
-#    And order "bo_order1" should have 1 invoices
+#    And order "bo_order1" should have 1 invoice
 #    When I add products to order "bo_order1" with new invoice and the following products details:
 #      | name          | Test Product Cart Rule On Select Product  |
 #      | amount        | 1                                         |
