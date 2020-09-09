@@ -85,7 +85,7 @@ class ThemeController extends AbstractAdminController
         $isHostMode = $this->get('prestashop.adapter.hosting_information')->isHostMode();
         $isoCode = strtoupper($this->get('prestashop.adapter.legacy.context')->getLanguage()->iso_code);
         $languageAddons = 'en';
-        $languagesAddons = ['en','fr','es','ru','de','it','nl','pl','pt'];
+        $languagesAddons = ['en', 'fr', 'es', 'ru', 'de', 'it', 'nl', 'pl', 'pt'];
 
         if (in_array(strtolower($isoCode), $languagesAddons)) {
             $languageAddons = strtolower($isoCode);
