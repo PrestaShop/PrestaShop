@@ -71,7 +71,7 @@ $(() => {
   const showcaseCard = new ShowcaseCard('categoriesShowcaseCard');
   showcaseCard.addExtension(new ShowcaseCardCloseExtension());
 
-  window.prestashop.component.initComponents(
+  window.prestashop.component.initPrestashopComponents(
     [
       'TranslatableField',
       'TinyMCEEditor',

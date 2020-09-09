@@ -52,7 +52,7 @@ import Header from '@js/header';
 import initDatePickers from '@js/app/utils/datepicker';
 import initInvalidFields from '@js/app/utils/fields';
 import initEmailFields from '@js/app/utils/email-idn';
-import initComponents from '@js/app/utils/init-components';
+import initPrestashopComponents from '@js/app/utils/init-components';
 
 const {$} = window;
 
@@ -63,7 +63,7 @@ new NavBar();
 new Header();
 
 $(() => {
-  initComponents();
+  initPrestashopComponents();
   initDatePickers();
   initInvalidFields();
   initEmailFields('input[type="email"]');

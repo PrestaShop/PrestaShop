@@ -28,31 +28,36 @@ import TranslatableInput from '@js/components/translatable-input.js';
 import TinyMCEEditor from '@js/components/tinymce-editor.js';
 import TaggableField from '@js/components/taggable-field.js';
 
-const initComponents = () => {
+const initPrestashopComponents = () => {
   window.prestashop = {...window.prestashop};
+  window.prestashop.instance = {...window.prestashop.instance};
+
   window.prestashop.component = {
-    initComponents(components) {
-      window.prestashop.instance = {...window.prestashop.instance};
+    initPrestashopComponents(components) {
       components.forEach((component) => {
         if (window.prestashop.component[component] === undefined) {
           console.error(`Failed to initialize PrestaShop component "${component}". This component doesn't exist.`);
           return;
         }
 
-        if (window.prestashop.instance[component] !== undefined) {
+        const componentInstanceName = component.charAt(0).toLowerCase() + component.slice(1);
+
+        if (window.prestashop.instance[componentInstanceName] !== undefined) {
           console.warn(
             `Failed to initialize PrestaShop component "${component}". This component is already initialized.`,
           );
           return;
         }
 
-        window.prestashop.instance[component] = new window.prestashop.component[component]();
+
+        window.prestashop.instance[componentInstanceName] = new window.prestashop.component[component]();
       });
     },
+    // @todo: add all standard components in this list
     TranslatableField,
     TinyMCEEditor,
     TranslatableInput,
     TaggableField,
   };
 };
-export default initComponents;
+export default initPrestashopComponents;
