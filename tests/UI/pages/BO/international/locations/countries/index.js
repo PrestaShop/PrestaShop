@@ -42,9 +42,13 @@ class Countries extends BOBasePage {
     this.editRowLink = row => `${this.tableRow(row)} a.edit`;
 
     // Bulk Actions
-    this.bulkActionsToggleButton = `${this.gridForm} button.dropdown-toggle`;
-    this.selectAllRowsLabel = `${this.gridForm} a[onclick*='checkDelBoxes']`;
-    this.bulkActionsDeleteButton = `${this.gridForm} a[onclick*='Delete']`;
+    this.bulkActionBlock = 'div.bulk-actions';
+    this.bulkActionMenuButton = `${this.gridForm} button.dropdown-toggle`;
+    this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
+    this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
+    this.bulkEnableLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
+    this.bulkDisableLink = `${this.bulkActionDropdownMenu} li:nth-child(5)`;
+    this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(7)`;
   }
 
   /*
@@ -194,22 +198,60 @@ class Countries extends BOBasePage {
     }
   }
 
+  /* Bulk actions methods */
+
   /**
-   * Delete country
+   * Select all rows
+   * @param page
+   * @return {Promise<void>}
+   */
+  async bulkSelectRows(page) {
+    await page.click(this.bulkActionMenuButton);
+
+    await Promise.all([
+      page.click(this.selectAllLink),
+      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+    ]);
+  }
+
+  /**
+   * Delete countries by bulk action
    * @param page
    * @returns {Promise<string>}
    */
-  async deleteCountryByBulkActions(page) {
+  async deleteCountriesByBulkActions(page) {
     this.dialogListener(page, true);
+    // Select all rows
+    await this.bulkSelectRows(page);
+
     // Click on Button Bulk actions
-    await page.click(this.bulkActionsToggleButton);
-    // Click on Select All
-    await page.click(this.selectAllRowsLabel);
-    // Click on Button Bulk actions
-    await page.click(this.bulkActionsToggleButton);
+    await page.click(this.bulkActionMenuButton);
+
     // Click on delete
-    await page.click(this.bulkActionsDeleteButton);
+    await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
     return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /**
+   * Bulk set status
+   * @param page
+   * @param wantedStatus
+   * @return {Promise<void>}
+   */
+  async bulkSetStatus(page, wantedStatus) {
+    // Select all rows
+    await this.bulkSelectRows(page);
+
+    // Set status
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(page, this.bulkEnableLink),
+    ]);
+
+    await this.clickAndWaitForNavigation(
+      page,
+      wantedStatus ? this.bulkEnableLink : this.bulkDisableLink,
+    );
   }
 }
 
