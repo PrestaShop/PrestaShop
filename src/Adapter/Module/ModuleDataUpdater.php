@@ -109,7 +109,7 @@ class ModuleDataUpdater
                 
                 if (empty($legacy_instance->getErrors()){
                     LegacyModule::upgradeModuleVersion($name, $module->version);
-                    Hook::exec('actionModuleUpgradeAfter', array('object' => $module));
+                    Hook::exec('actionModuleUpgradeAfter', array('module' => $module));
                     return true;
                 }
 
