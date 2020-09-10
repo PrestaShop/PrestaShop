@@ -1118,17 +1118,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     public function findProductCombinationById($combinationId)
     {
-        $foundCombination = null;
-        $combinations = $this->product->getAttributesGroups($this->context->language->id);
-        foreach ($combinations as $combination) {
-            if ((int) ($combination['id_product_attribute']) === $combinationId) {
-                $foundCombination = $combination;
-
-                break;
-            }
+        $combinations = $this->product->getAttributesGroups($this->context->language->id, $combinationId);
+        
+        if (empty($combinations)) {
+            return null;
         }
 
-        return $foundCombination;
+        return $combinations[0];
     }
 
     /**
