@@ -103,7 +103,7 @@ class AdminControllerCore extends Controller
     /** @var string "shop" or "group_shop" */
     public $shopLinkType;
 
-    /** @var string Default ORDER BY clause when $_orderBy is not defined */
+    /** @var string Default ORDER BY clause when `$_orderBy` is not defined */
     protected $_defaultOrderBy = false;
 
     /** @var string */
@@ -157,7 +157,7 @@ class AdminControllerCore extends Controller
     /** @var array Edit form to be generated */
     protected $fields_form;
 
-    /** @var array Override of $fields_form */
+    /** @var array Override of `$fields_form` */
     protected $fields_form_override;
 
     /** @var string Override form action */
@@ -408,6 +408,12 @@ class AdminControllerCore extends Controller
 
     /** @var int Auth cookie lifetime */
     const AUTH_COOKIE_LIFETIME = 3600;
+
+    /** @var array */
+    public $_conf;
+
+    /** @var float @var */
+    public $timer_start;
 
     public function __construct($forceControllerName = '', $default_theme_name = 'default')
     {

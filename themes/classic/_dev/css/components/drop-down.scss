@@ -1,33 +1,34 @@
-.dropdown{
-  color:$gray;
-  &:hover .expand-more{
+.dropdown {
+  color: $gray;
+  &:hover .expand-more {
     color: $brand-primary;
   }
-  .expand-more{
+
+  .expand-more {
     color: $gray-darker;
     cursor: pointer;
     user-select: none;
-
   }
 
-  .active{
+  .active {
     max-height: 200px;
     overflow-y: hidden;
     visibility: visible;
   }
 
   select {
-    -moz-appearance: none;
+    color: $gray-darker;
+    background: #fff;
     border: 0 none;
     outline: 0 none;
-    color: $gray-darker;
-    background: white;
+    // stylelint-disable-next-line
+    -moz-appearance: none;
   }
 }
 
-.dropdown-item:focus, .dropdown-item:hover {
-  background: none;
-  text-decoration: none;
+.dropdown-item:focus,
+.dropdown-item:hover {
   color: $brand-primary;
+  text-decoration: none;
+  background: none;
 }
-

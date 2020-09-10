@@ -94,12 +94,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_featuredproducts/ps_featuredproducts.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_crossselling/ps_crossselling.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="efc226b17e0532afff43be870bff0de7">
         <source>The settings have been updated.</source>
         <target>The settings have been updated.</target>
-        <note>Line: 152</note>
+        <note>Line: 99</note>
       </trans-unit>
     </body>
   </file>
@@ -108,7 +108,7 @@
       <trans-unit id="20015706a8cbd457cbb6ea3e7d5dc9b3">
         <source>Configuration updated</source>
         <target>Configuration updated</target>
-        <note>Line: 434</note>
+        <note>Line: 435</note>
       </trans-unit>
     </body>
   </file>
@@ -117,7 +117,7 @@
       <trans-unit id="7173e38e8a10ed379625687638ddfe74">
         <source>Successful deletion</source>
         <target>Successful deletion</target>
-        <note>Line: 563</note>
+        <note>Line: 565</note>
       </trans-unit>
     </body>
   </file>
@@ -188,7 +188,16 @@
       <trans-unit id="893a9104a7f0ebd94a7f4171d1996c7d">
         <source>The image was successfully deleted.</source>
         <target>The image was successfully deleted.</target>
-        <note>Line: 448</note>
+        <note>Line: 454</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="cc6450370541d1ecfdbdada739732ec1">
+        <source>Update successful.</source>
+        <target>Update successful.</target>
+        <note>Line: 953</note>
       </trans-unit>
     </body>
   </file>
@@ -197,7 +206,7 @@
       <trans-unit id="4a6c326f3ec43e638da38a44a21b5eb7">
         <source>Comment successfully added.</source>
         <target>Comment successfully added.</target>
-        <note>Line: 1101</note>
+        <note>Line: 1123</note>
       </trans-unit>
     </body>
   </file>

@@ -27,17 +27,17 @@
 namespace PrestaShop\PrestaShop\Adapter\Address\CommandHandler;
 
 use Address;
-use PrestaShop\PrestaShop\Adapter\Address\AbstractManufacturerAddressHandler;
+use Country;
+use PrestaShop\PrestaShop\Adapter\Address\AbstractAddressHandler;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditManufacturerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\EditManufacturerAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\InvalidAddressFieldException;
 use PrestaShopException;
 
 /**
  * Handles command which edits manufacturer address
  */
-final class EditManufacturerAddressHandler extends AbstractManufacturerAddressHandler implements EditManufacturerAddressHandlerInterface
+final class EditManufacturerAddressHandler extends AbstractAddressHandler implements EditManufacturerAddressHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -49,9 +49,7 @@ final class EditManufacturerAddressHandler extends AbstractManufacturerAddressHa
         $this->populateAddressWithData($address, $command);
 
         try {
-            if (false === $address->validateFields(false) || false === $address->validateFieldsLang(false)) {
-                throw new InvalidAddressFieldException('Address contains invalid field values');
-            }
+            $this->validateAddress($address);
             if (!$address->update()) {
                 throw new AddressException(sprintf('Cannot update address with id "%s"', $address->id));
             }
@@ -94,6 +92,12 @@ final class EditManufacturerAddressHandler extends AbstractManufacturerAddressHa
         }
         if (null !== $command->getStateId()) {
             $address->id_state = $command->getStateId();
+        } elseif (null !== $command->getCountryId()) {
+            // If country was changed but not state we check if state value needs to be reset
+            $country = new Country($command->getCountryId());
+            if (!$country->contains_states) {
+                $address->id_state = 0;
+            }
         }
         if (null !== $command->getHomePhone()) {
             $address->phone = $command->getHomePhone();

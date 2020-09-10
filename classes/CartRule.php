@@ -526,7 +526,7 @@ class CartRuleCore extends ObjectModel
 		SELECT id_cart_rule
 		FROM `' . _DB_PREFIX_ . 'order_cart_rule` ocr
 		LEFT JOIN `' . _DB_PREFIX_ . 'orders` o ON ocr.`id_order` = o.`id_order`
-		WHERE ocr.`id_cart_rule` = ' . (int) $this->id . '
+		WHERE ocr.`deleted` = 0 AND ocr.`id_cart_rule` = ' . (int) $this->id . '
 		AND o.`id_customer` = ' . (int) $id_customer);
     }
 
@@ -631,7 +631,7 @@ class CartRuleCore extends ObjectModel
             return false;
         }
 
-        // All these checks are necessary when you add the cart rule the first, so when it's not in cart yet
+        // All these checks are necessary when you add the cart rule the first time, so when it's not in cart yet
         // However when it's in the cart and you are checking if the cart rule is still valid (when performing auto remove)
         // these rules are outdated For example:
         //  - the cart rule can now be disabled but it was at the time it was applied, so it doesn't need to be removed
@@ -655,11 +655,12 @@ class CartRuleCore extends ObjectModel
         if ($context->cart->id_customer) {
             $quantityUsed = Db::getInstance()->getValue('
 			SELECT count(*)
-			FROM ' . _DB_PREFIX_ . 'orders o
-			LEFT JOIN ' . _DB_PREFIX_ . 'order_cart_rule od ON o.id_order = od.id_order
-			WHERE o.id_customer = ' . $context->cart->id_customer . '
-			AND od.id_cart_rule = ' . (int) $this->id . '
-			AND ' . (int) Configuration::get('PS_OS_ERROR') . ' != o.current_state
+			FROM `' . _DB_PREFIX_ . 'orders` o
+			LEFT JOIN `' . _DB_PREFIX_ . 'order_cart_rule` ocr ON o.`id_order` = ocr.`id_order`
+			WHERE o.`id_customer` = ' . $context->cart->id_customer . '
+			AND ocr.`deleted` = 0
+			AND ocr.`id_cart_rule` = ' . (int) $this->id . '
+			AND ' . (int) Configuration::get('PS_OS_ERROR') . ' != o.`current_state`
 			');
             // When checking the cart rules present in that cart the request result is accurate
             // When we check if using the cart rule one more time is valid then we increment this value
@@ -833,6 +834,18 @@ class CartRuleCore extends ObjectModel
 
         if (!$nb_products) {
             return (!$display_error) ? false : $this->trans('Cart is empty', [], 'Shop.Notifications.Error');
+        }
+
+        // Check if order cart rule was removed from back office
+        $removed_order_cartRule_id = (int) Db::getInstance()->getValue('
+			SELECT ocr.`id_order_cart_rule`
+			FROM `' . _DB_PREFIX_ . 'order_cart_rule` ocr
+			LEFT JOIN `' . _DB_PREFIX_ . 'orders` o ON ocr.`id_order` = o.`id_order`
+			WHERE ocr.`id_cart_rule` = ' . (int) $this->id . '
+			AND ocr.`deleted` = 1
+			AND o.`id_cart` = ' . $context->cart->id);
+        if ($removed_order_cartRule_id) {
+            return (!$display_error) ? false : $this->trans('You cannot use this voucher because it has manually been removed.', [], 'Shop.Notifications.Error');
         }
 
         if (!$display_error) {

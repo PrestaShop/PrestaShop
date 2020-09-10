@@ -95,8 +95,11 @@ describe('Order a product and check order confirmation', async () => {
     const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
     await expect(isCheckoutPage, 'Browser is not in checkout Page').to.be.true;
 
-    const isStepPIComplete = await checkoutPage.isStepCompleted(page, checkoutPage.personalInformationStepSection);
-    await expect(isStepPIComplete, 'Step Personal information is not complete').to.be.true;
+    const isStepPersonalInformationComplete = await checkoutPage.isStepCompleted(
+      page,
+      checkoutPage.personalInformationStepForm,
+    );
+    await expect(isStepPersonalInformationComplete, 'Step Personal information is not complete').to.be.true;
   });
 
   it('should validate Step Address and go to Delivery Step', async function () {
@@ -119,10 +122,7 @@ describe('Order a product and check order confirmation', async () => {
     const pageTitle = await orderConfirmationPage.getPageTitle(page);
     await expect(pageTitle).to.equal(orderConfirmationPage.pageTitle);
 
-    const cardTitle = await orderConfirmationPage.getTextContent(
-      page,
-      orderConfirmationPage.orderConfirmationCardTitleH3,
-    );
+    const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
     await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
   });
 });

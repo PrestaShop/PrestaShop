@@ -1,12 +1,9 @@
 require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+const ModuleConfiguration = require('@pages/BO/modules/moduleConfiguration');
 
-class PsEmailSubscription extends BOBasePage {
+class PsEmailSubscription extends ModuleConfiguration.constructor {
   constructor() {
     super();
-
-    // Header selectors
-    this.pageHeadSubtitle = 'h4.page-subtitle';
 
     // Newsletter registrations table selectors
     this.newsletterTable = '#table-merged';
@@ -18,15 +15,6 @@ class PsEmailSubscription extends BOBasePage {
   }
 
   /* Methods */
-
-  /**
-   * @override
-   * Get module name from page title
-   * @return {Promise<string>}
-   */
-  getPageTitle(page) {
-    return this.getTextContent(page, this.pageHeadSubtitle);
-  }
 
   /**
    * Get number of newsletter registrations

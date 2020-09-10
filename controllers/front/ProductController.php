@@ -99,7 +99,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
 
         if (!Validate::isLoadedObject($this->product)) {
-            Tools::redirect('index.php?controller=404');
+            Tools::redirect('pagenotfound');
         } else {
             $this->canonicalRedirection();
             /*
@@ -790,6 +790,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $this->context->smarty->assign([
                 'category' => $this->category,
                 'subCategories' => $sub_categories,
+                'subcategories' => $sub_categories,
                 'id_category_current' => (int) $this->category->id,
                 'id_category_parent' => (int) $this->category->id_parent,
                 'return_category_name' => Tools::safeOutput($this->category->getFieldByLang('name')),
@@ -1028,6 +1029,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product['quantity_wanted'] = $this->getRequiredQuantity($product);
         $product['extraContent'] = $extraContentFinder->addParams(['product' => $this->product])->present();
         $product['ecotax'] = Tools::convertPrice((float) $product['ecotax'], $this->context->currency, true, $this->context);
+        $product['ecotax_tax_inc'] = $product['ecotax_tax_inc'];
 
         $product_full = Product::getProductProperties($this->context->language->id, $product, $this->context);
 

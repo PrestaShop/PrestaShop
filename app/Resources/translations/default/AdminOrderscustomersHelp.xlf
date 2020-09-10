@@ -27,45 +27,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/_product_line.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5728ff6d5efd64ef7db72028eefc7262">
-        <source>(Max %amount_refundable% %tax_method%)</source>
-        <target>(Max %amount_refundable% %tax_method%)</target>
-        <note>Line: 192</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="28a996f23ec7c4f6cf75da6bf30670bd">
-        <source>Search for an existing customer by typing the first letters of his/her name.</source>
-        <target>Search for an existing customer by typing the first letters of his/her name.</target>
-        <note>Line: 1123</note>
-      </trans-unit>
-      <trans-unit id="73af90a8372beea9f81a3c3ca77a4aa8">
-        <source>Send an email to the customer with the link to process the payment.</source>
-        <target>Send an email to the customer with the link to process the payment.</target>
-        <note>Line: 1552</note>
-      </trans-unit>
-      <trans-unit id="9f38710d8e9ee2338dafa9ae484b0d85">
-        <source>Go on payment page to process the payment.</source>
-        <target>Go on payment page to process the payment.</target>
-        <note>Line: 1555</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="f741fe9d353085c596e3c3610101e245">
         <source>Resend this email to the customer</source>
         <target>Resend this email to the customer</target>
         <note>Line: 229</note>
-      </trans-unit>
-      <trans-unit id="f9a5775d7def0b6c57393fc86bb7a730">
-        <source>Do not forget to update your exchange rate before making this change.</source>
-        <target>Do not forget to update your exchange rate before making this change.</target>
-        <note>Line: 561</note>
       </trans-unit>
       <trans-unit id="883370e6a8360f9ffe2e658db153fd74">
         <source>This feature will generate a random password and send an email to the customer.</source>
@@ -130,7 +97,7 @@
       <trans-unit id="3c1c7064989da051f0b4b904bcb408cf">
         <source>This customer will receive your newsletter via email.</source>
         <target>This customer will receive your newsletter via email.</target>
-        <note>Line: 1347</note>
+        <note>Line: 1424</note>
       </trans-unit>
     </body>
   </file>
@@ -139,7 +106,7 @@
       <trans-unit id="f6916f4f1a268d4d0014ce47a2dfc3e4">
         <source>Password should be at least %length% characters long.</source>
         <target>Password should be at least %length% characters long.</target>
-        <note>Line: 886</note>
+        <note>Line: 890</note>
       </trans-unit>
     </body>
   </file>
@@ -351,12 +318,53 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/Create/customer.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="28a996f23ec7c4f6cf75da6bf30670bd">
+        <source>Search for an existing customer by typing the first letters of his/her name.</source>
+        <target>Search for an existing customer by typing the first letters of his/her name.</target>
+        <note>Line: 39</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/Create/summary.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="73af90a8372beea9f81a3c3ca77a4aa8">
+        <source>Send an email to the customer with the link to process the payment.</source>
+        <target>Send an email to the customer with the link to process the payment.</target>
+        <note>Line: 97</note>
+      </trans-unit>
+      <trans-unit id="9f38710d8e9ee2338dafa9ae484b0d85">
+        <source>Go on payment page to process the payment.</source>
+        <target>Go on payment page to process the payment.</target>
+        <note>Line: 100</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/Modal/add_order_discount_modal.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="4b492d24743e697b3639c862b351d1c4">
         <source>If you choose to create this discount for all invoices, only one discount will be created per order invoice.</source>
         <target>If you choose to create this discount for all invoices, only one discount will be created per order invoice.</target>
         <note>Line: 100</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/payments.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f9a5775d7def0b6c57393fc86bb7a730">
+        <source>Do not forget to update your exchange rate before making this change.</source>
+        <target>Do not forget to update your exchange rate before making this change.</target>
+        <note>Line: 168</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/product.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5728ff6d5efd64ef7db72028eefc7262">
+        <source>(Max %amount_refundable% %tax_method%)</source>
+        <target>(Max %amount_refundable% %tax_method%)</target>
+        <note>Line: 136</note>
       </trans-unit>
     </body>
   </file>

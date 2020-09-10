@@ -471,11 +471,13 @@ class CurrencyCore extends ObjectModel
     {
         if ($this->id == Configuration::get('PS_CURRENCY_DEFAULT')) {
             $result = Db::getInstance()->getRow('SELECT `id_currency` FROM ' . _DB_PREFIX_ . 'currency WHERE `id_currency` != ' . (int) $this->id . ' AND `deleted` = 0');
-            if (!$result['id_currency']) {
+            if (empty($result['id_currency'])) {
                 return false;
             }
+
             Configuration::updateValue('PS_CURRENCY_DEFAULT', $result['id_currency']);
         }
+
         $this->deleted = 1;
 
         // Remove currency restrictions
@@ -884,13 +886,17 @@ class CurrencyCore extends ObjectModel
             $query = Currency::getIdByQuery($idShop, $includeDeleted);
             $query->where('iso_code = \'' . pSQL($isoCode) . '\'');
 
-            $result = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
+            if (empty($result)) {
+                return 0;
+            }
+
             Cache::store($cacheId, $result);
 
-            return $result;
+            return (int) $result;
         }
 
-        return Cache::retrieve($cacheId);
+        return (int) Cache::retrieve($cacheId);
     }
 
     /**

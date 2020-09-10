@@ -268,38 +268,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/_discount_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a1fa27779242b4902f7ae3bdd5c6d508">
-        <source>Type</source>
-        <target>Type</target>
-        <note>Line: 38</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="da22c93ccb398c72070f4000cc7b59a1">
-        <source>Customization</source>
-        <target>Customization</target>
-        <note>Line: 659</note>
-      </trans-unit>
-      <trans-unit id="9d20a93036ba910dd75ffbcec173798e">
-        <source>Price per unit</source>
-        <target>Price per unit</target>
-        <note>Line: 1280</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ea9cf7e47ff33b2be14e6dd07cbcefc6">
-        <source>Shipping</source>
-        <target>Shipping</target>
-        <note>Line: 1101</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/default/template/controllers/return/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="df644ae155e79abf54175bd15d75f363">
@@ -516,12 +484,12 @@
       <trans-unit id="65b7eaeb9ba4e9903f82297face9f7cd">
         <source>Cart Rules</source>
         <target>Cart Rules</target>
-        <note>Line: 711</note>
+        <note>Line: 716</note>
       </trans-unit>
       <trans-unit id="a0e8e26f6f9354192425b9a23227a5ba">
         <source>Payment:</source>
         <target>Payment:</target>
-        <note>Line: 711</note>
+        <note>Line: 716</note>
       </trans-unit>
     </body>
   </file>
@@ -883,7 +851,7 @@
       <trans-unit id="4e021cd834848e751e2d1bc66cee697d">
         <source>All combinations</source>
         <target>All combinations</target>
-        <note>Line: 470</note>
+        <note>Line: 472</note>
       </trans-unit>
     </body>
   </file>
@@ -1090,12 +1058,12 @@
       <trans-unit id="5f573e91e5eaa092e00a4c4df393c0cb">
         <source>Add new root category</source>
         <target>Add new root category</target>
-        <note>Line: 746</note>
+        <note>Line: 752</note>
       </trans-unit>
       <trans-unit id="d0d4e3688fdaee5afa292083b855e143">
         <source>Add new category</source>
         <target>Add new category</target>
-        <note>Line: 758</note>
+        <note>Line: 764</note>
       </trans-unit>
     </body>
   </file>
@@ -1767,6 +1735,11 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Blocks/tabs.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="ea9cf7e47ff33b2be14e6dd07cbcefc6">
+        <source>Shipping</source>
+        <target>Shipping</target>
+        <note>Line: 33</note>
+      </trans-unit>
       <trans-unit id="93d74901738e996378295fb0a59bb977">
         <source>Basic settings</source>
         <target>Basic settings</target>
@@ -2639,6 +2612,20 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/Create/cart.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="da22c93ccb398c72070f4000cc7b59a1">
+        <source>Customization</source>
+        <target>Customization</target>
+        <note>Line: 88</note>
+      </trans-unit>
+      <trans-unit id="9d20a93036ba910dd75ffbcec173798e">
+        <source>Price per unit</source>
+        <target>Price per unit</target>
+        <note>Line: 130</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/Modal/add_order_discount_modal.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="447da4af35bd09b4d501afb8a2090909">
@@ -2653,7 +2640,7 @@
       <trans-unit id="8c1279db4db86553e4b9682f78cf500e">
         <source>Expiration date</source>
         <target>Expiration date</target>
-        <note>Line: 89</note>
+        <note>Line: 103</note>
       </trans-unit>
     </body>
   </file>
@@ -2668,6 +2655,11 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="a1fa27779242b4902f7ae3bdd5c6d508">
+        <source>Type</source>
+        <target>Type</target>
+        <note>Line: 483</note>
+      </trans-unit>
       <trans-unit id="1a6570d1068d7dd6f811ff022da8f76d">
         <source>Main category</source>
         <target>Main category</target>

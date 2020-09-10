@@ -159,67 +159,67 @@ function updateProduct(event, eventType, updateUrl) {
     updateDelay = 750;
   }
 
-  currentRequestDelayedId = setTimeout(
-    function updateProductRequest() {
-      if (formSerialized === '') {
-        return;
-      }
+  currentRequestDelayedId = setTimeout(function updateProductRequest() {
 
-      currentRequest = $.ajax({
-        url: updateUrl + (updateUrl.indexOf('?') === -1 ? '?' : '&') + formSerialized + preview,
-        method: 'POST',
-        data: {
-          ajax: 1,
-          action: 'refresh',
-          quantity_wanted:
-            eventType === 'updatedProductCombination' ? $quantityWantedInput.attr('min') : $quantityWantedInput.val(),
-        },
-        dataType: 'json',
-        beforeSend() {
-          if (currentRequest !== null) {
-            currentRequest.abort();
-          }
-        },
-        error(jqXHR, textStatus, errorThrown) {
-          if (textStatus !== 'abort' && $('section#main > .ajax-error').length === 0) {
-            showErrorNextToAddtoCartButton();
-          }
-        },
-        success(data, textStatus, errorThrown) {
-          // Avoid image to blink each time we modify the product quantity
-          // Can not compare directly cause of HTML comments in data.
-          const $newImagesContainer = $('<div>').append(data.product_cover_thumbnails);
+    if (formSerialized === '') {
+      return;
+    }
 
-          // Used to avoid image blinking if same image = epileptic friendly
-          if (
-            $(prestashop.selectors.product.imageContainer).html() !==
-            $newImagesContainer.find(prestashop.selectors.product.imageContainer).html()
-          ) {
-            $(prestashop.selectors.product.imageContainer).replaceWith(data.product_cover_thumbnails);
-          }
-          $(prestashop.selectors.product.prices).first().replaceWith(data.product_prices);
-          $(prestashop.selectors.product.customization).first().replaceWith(data.product_customization);
-          $(prestashop.selectors.product.variantsUpdate).first().replaceWith(data.product_variants);
-          $(prestashop.selectors.product.discounts).first().replaceWith(data.product_discounts);
-          $(prestashop.selectors.product.additionalInfos).first().replaceWith(data.product_additional_info);
-          $(prestashop.selectors.product.details).replaceWith(data.product_details);
-          $(prestashop.selectors.product.flags).first().replaceWith(data.product_flags);
-          replaceAddToCartSections(data);
-          const minimalProductQuantity = parseInt(data.product_minimal_quantity, 10);
+    currentRequest = $.ajax({
+      url: updateUrl + (updateUrl.indexOf('?') === -1 ? '?' : '&') + formSerialized + preview,
+      method: 'POST',
+      data: {
+        ajax: 1,
+        action: 'refresh',
+        quantity_wanted:
+          eventType === 'updatedProductCombination' ? $quantityWantedInput.attr('min') : $quantityWantedInput.val(),
+      },
+      dataType: 'json',
+      beforeSend() {
+        if (currentRequest !== null) {
+          currentRequest.abort();
+        }
+      },
+      error(jqXHR, textStatus, errorThrown) {
+        if (textStatus !== 'abort' && $('section#main > .ajax-error').length === 0) {
+          showErrorNextToAddtoCartButton();
+        }
+      },
+      success(data, textStatus, errorThrown) {
+        // Avoid image to blink each time we modify the product quantity
+        // Can not compare directly cause of HTML comments in data.
+        const $newImagesContainer = $('<div>').append(data.product_cover_thumbnails);
 
-          document.dispatchEvent(updateRatingEvent);
+        // Used to avoid image blinking if same image = epileptic friendly
+        if (
+          $(prestashop.selectors.product.imageContainer).html() !==
+          $newImagesContainer.find(prestashop.selectors.product.imageContainer).html()
+        ) {
+          $(prestashop.selectors.product.imageContainer).replaceWith(data.product_cover_thumbnails);
+        }
+        $(prestashop.selectors.product.prices).first().replaceWith(data.product_prices);
+        $(prestashop.selectors.product.customization).first().replaceWith(data.product_customization);
+        $(prestashop.selectors.product.variantsUpdate).first().replaceWith(data.product_variants);
+        $(prestashop.selectors.product.discounts).first().replaceWith(data.product_discounts);
+        $(prestashop.selectors.product.additionalInfos).first().replaceWith(data.product_additional_info);
+        $(prestashop.selectors.product.details).replaceWith(data.product_details);
+        $(prestashop.selectors.product.flags).first().replaceWith(data.product_flags);
+        replaceAddToCartSections(data);
+        const minimalProductQuantity = parseInt(data.product_minimal_quantity, 10);
 
-          // Prevent quantity input from blinking with classic theme.
-          if (!isNaN(minimalProductQuantity) && eventType !== 'updatedProductQuantity') {
-            $quantityWantedInput.attr('min', minimalProductQuantity);
-            $quantityWantedInput.val(minimalProductQuantity);
-          }
-          prestashop.emit('updatedProduct', data, $form.serializeArray());
-        },
-        complete(jqXHR, textStatus) {
-          currentRequest = null;
-          currentRequestDelayedId = null;
-        },
+        document.dispatchEvent(updateRatingEvent);
+
+        // Prevent quantity input from blinking with classic theme.
+        if (!isNaN(minimalProductQuantity) && eventType !== 'updatedProductQuantity') {
+          $quantityWantedInput.attr('min', minimalProductQuantity);
+          $quantityWantedInput.val(minimalProductQuantity);
+        }
+        prestashop.emit('updatedProduct', data, $form.serializeArray());
+      },
+      complete(jqXHR, textStatus) {
+        currentRequest = null;
+        currentRequestDelayedId = null;
+      },
       });
     }.bind(currentRequest, currentRequestDelayedId),
     updateDelay

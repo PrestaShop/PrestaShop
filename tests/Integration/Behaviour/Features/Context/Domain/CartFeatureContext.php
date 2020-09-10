@@ -356,7 +356,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
                 $productId
             ));
         } catch (CartException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 

@@ -28,12 +28,12 @@
       <trans-unit id="ffd818d6203d29bd38114292a759cb7d">
         <source>You cannot set a negative position, the minimum for a position is 0.</source>
         <target>You cannot set a negative position, the minimum for a position is 0.</target>
-        <note>Line: 6124</note>
+        <note>Line: 6142</note>
       </trans-unit>
       <trans-unit id="b945599a5e11b76711dad5f1d7eba181">
         <source>You cannot set a position greater than the total number of products in the category, minus 1 (position numbering starts at 0).</source>
         <target>You cannot set a position greater than the total number of products in the category, minus 1 (position numbering starts at 0).</target>
-        <note>Line: 6133</note>
+        <note>Line: 6151</note>
       </trans-unit>
     </body>
   </file>
@@ -66,6 +66,11 @@
         <source>This will copy the images too. If you wish to proceed, click "Yes". If not, click "No".</source>
         <target>This will copy the images too. If you wish to proceed, click "Yes". If not, click "No".</target>
         <note>Line: 429</note>
+      </trans-unit>
+      <trans-unit id="76a0433a69a82abfba836ca72dbef13f">
+        <source>This will copy the images too. If you wish to proceed, click "%yes_label%". If not, click "%no_label%".</source>
+        <target>This will copy the images too. If you wish to proceed, click "%yes_label%". If not, click "%no_label%".</target>
+        <note>Line: 431</note>
       </trans-unit>
     </body>
   </file>
@@ -456,47 +461,47 @@
       <trans-unit id="4177a725868ed37e7de5c8c65f4a8b0e">
         <source>The selected currency is not valid</source>
         <target>The selected currency is not valid</target>
-        <note>Line: 2532</note>
+        <note>Line: 2534</note>
       </trans-unit>
       <trans-unit id="48b51a11285fae0b1f416165ae8fd489">
         <source>An error occurred while copying image, the file does not exist anymore.</source>
         <target>An error occurred while copying image, the file does not exist anymore.</target>
-        <note>Line: 2839</note>
+        <note>Line: 2850</note>
       </trans-unit>
       <trans-unit id="9f26cf683839613815feebc0b1e1c6b9">
         <source>An error occurred while copying image, the file width is 0px.</source>
         <target>An error occurred while copying image, the file width is 0px.</target>
-        <note>Line: 2844</note>
+        <note>Line: 2855</note>
       </trans-unit>
       <trans-unit id="de880a806b9948f168a2e70fff130160">
         <source>An error occurred while copying image, check your memory limit.</source>
         <target>An error occurred while copying image, check your memory limit.</target>
-        <note>Line: 2849</note>
+        <note>Line: 2860</note>
       </trans-unit>
       <trans-unit id="06b778accab7c14a499bc6e7a68138ec">
         <source>An error occurred while copying the image.</source>
         <target>An error occurred while copying the image.</target>
-        <note>Line: 2854</note>
+        <note>Line: 2865</note>
       </trans-unit>
       <trans-unit id="c88e73613e3f68ead933cd57e2828323">
         <source>You can't add product packs into a pack</source>
         <target>You can't add product packs into a pack</target>
-        <note>Line: 3134</note>
+        <note>Line: 3145</note>
       </trans-unit>
       <trans-unit id="5de4038e3ea0841bf6179f99103fcccd">
         <source>An error occurred while attempting to add products to the pack.</source>
         <target>An error occurred while attempting to add products to the pack.</target>
-        <note>Line: 3136</note>
+        <note>Line: 3147</note>
       </trans-unit>
       <trans-unit id="608860b0f96a18f3737756fc6b7766f9">
         <source>Cannot add image because product creation failed.</source>
         <target>Cannot add image because product creation failed.</target>
-        <note>Line: 2793</note>
+        <note>Line: 2804</note>
       </trans-unit>
       <trans-unit id="c200140aea36e1efbf655fabf3f3b59e">
         <source>Error while creating additional image</source>
         <target>Error while creating additional image</target>
-        <note>Line: 2826</note>
+        <note>Line: 2837</note>
       </trans-unit>
     </body>
   </file>
@@ -604,32 +609,32 @@
       <trans-unit id="162c051f703406dd4fab3fde66296a6e">
         <source>Submitted reduction value (0-100) is out-of-range</source>
         <target>Submitted reduction value (0-100) is out-of-range</target>
-        <note>Line: 299</note>
+        <note>Line: 301</note>
       </trans-unit>
       <trans-unit id="9f0a59f1609218c049435abd2351bd84">
         <source>An error occurred while updating the specific price.</source>
         <target>An error occurred while updating the specific price.</target>
-        <note>Line: 351</note>
+        <note>Line: 353</note>
       </trans-unit>
       <trans-unit id="22385bf735f96dbe1a4778d0b0d5345d">
         <source>No reduction value has been submitted</source>
         <target>No reduction value has been submitted</target>
-        <note>Line: 295</note>
+        <note>Line: 297</note>
       </trans-unit>
       <trans-unit id="184a2ae304c9a05459cca0cbf8755b3a">
         <source>The specific price ID is invalid.</source>
         <target>The specific price ID is invalid.</target>
-        <note>Line: 546</note>
+        <note>Line: 548</note>
       </trans-unit>
       <trans-unit id="0f8b5843f1391991d17f744ce9771e98">
         <source>An error occurred while attempting to delete the specific price.</source>
         <target>An error occurred while attempting to delete the specific price.</target>
-        <note>Line: 550</note>
+        <note>Line: 552</note>
       </trans-unit>
       <trans-unit id="c7e56badecce297feefe2a9b50a68794">
         <source>Invalid date range</source>
         <target>Invalid date range</target>
-        <note>Line: 297</note>
+        <note>Line: 299</note>
       </trans-unit>
     </body>
   </file>
@@ -764,22 +769,22 @@
       <trans-unit id="b50f440e3c9f14988bd0086683e77095">
         <source>You cannot remove this category because one of your shops uses it as a root category.</source>
         <target>You cannot remove this category because one of your shops uses it as a root category.</target>
-        <note>Line: 784</note>
+        <note>Line: 790</note>
       </trans-unit>
       <trans-unit id="a874ef298164bbd4d00d55901225cd87">
         <source>An error occurred while uploading the image:</source>
         <target>An error occurred while uploading the image:</target>
-        <note>Line: 801</note>
+        <note>Line: 807</note>
       </trans-unit>
       <trans-unit id="3d85438a25723cc56bd4aefb9b368bc0">
         <source>An error occurred while creating the category.</source>
         <target>An error occurred while creating the category.</target>
-        <note>Line: 788</note>
+        <note>Line: 794</note>
       </trans-unit>
       <trans-unit id="175ad2b319a95a0b7c580dbc4205fdac">
         <source>An error occurred while editing the category.</source>
         <target>An error occurred while editing the category.</target>
-        <note>Line: 792</note>
+        <note>Line: 798</note>
       </trans-unit>
     </body>
   </file>
@@ -826,7 +831,7 @@
       <trans-unit id="2cb44aa56605e05e0b912131875edcb7">
         <source>There are not enough products in stock.</source>
         <target>There are not enough products in stock.</target>
-        <note>Line: 568</note>
+        <note>Line: 572</note>
       </trans-unit>
     </body>
   </file>
@@ -835,7 +840,7 @@
       <trans-unit id="4fce600d4fc0429af2f5bc5861eefb3e">
         <source>Selected products were successfully canceled.</source>
         <target>Selected products were successfully canceled.</target>
-        <note>Line: 1405</note>
+        <note>Line: 1427</note>
       </trans-unit>
     </body>
   </file>

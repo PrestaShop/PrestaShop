@@ -332,7 +332,7 @@ abstract class ModuleCore implements ModuleInterface
                     $this->id = self::$modules_cache[$this->name]['id_module'];
                 }
                 foreach (self::$modules_cache[$this->name] as $key => $value) {
-                    if (array_key_exists($key, $this)) {
+                    if (array_key_exists($key, get_object_vars($this))) {
                         $this->{$key} = $value;
                     }
                 }
@@ -1380,7 +1380,7 @@ abstract class ModuleCore implements ModuleInterface
                     $file = trim(file_get_contents(_PS_MODULE_DIR_ . $module . '/' . $module . '.php'));
 
                     try {
-                        $parser = (new PhpParser\ParserFactory())->create(PhpParser\ParserFactory::PREFER_PHP7);
+                        $parser = (new PhpParser\ParserFactory())->create(PhpParser\ParserFactory::ONLY_PHP7);
                         $parser->parse($file);
                         require_once $file_path;
                     } catch (PhpParser\Error $e) {
@@ -3383,9 +3383,8 @@ abstract class ModuleCore implements ModuleInterface
         $registeredHookList = Hook::getHookModuleList();
         foreach ($hooks_list as $current_hook) {
             $hook_name = $current_hook['name'];
-            $retro_hook_name = Hook::getRetroHookName($hook_name);
 
-            if (is_callable([$this, 'hook' . ucfirst($hook_name)]) || is_callable([$this, 'hook' . ucfirst($retro_hook_name)])) {
+            if (!Hook::isAlias($hook_name) && Hook::isHookCallableOn($this, $hook_name)) {
                 $possible_hooks_list[] = [
                     'id_hook' => $current_hook['id_hook'],
                     'name' => $hook_name,

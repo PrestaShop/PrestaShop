@@ -48,6 +48,13 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
     private $contextShopId;
 
     /**
+     * @var int|null
+     *
+     * Can be null for backward-compatibility
+     */
+    private $rootCategoryId;
+
+    /**
      * @var DoctrineSearchCriteriaApplicator
      */
     private $searchCriteriaApplicator;
@@ -70,6 +77,7 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
      * @param int $contextShopId
      * @param MultistoreContextCheckerInterface $multistoreContextChecker
      * @param FeatureInterface $multistoreFeature
+     * @param int|null $rootCategoryId
      */
     public function __construct(
         Connection $connection,
@@ -78,12 +86,14 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
         $contextLangId,
         $contextShopId,
         MultistoreContextCheckerInterface $multistoreContextChecker,
-        FeatureInterface $multistoreFeature
+        FeatureInterface $multistoreFeature,
+        $rootCategoryId = null
     ) {
         parent::__construct($connection, $dbPrefix);
 
         $this->contextLangId = $contextLangId;
         $this->contextShopId = $contextShopId;
+        $this->rootCategoryId = $rootCategoryId;
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
         $this->multistoreContextChecker = $multistoreContextChecker;
         $this->multistoreFeature = $multistoreFeature;
@@ -154,6 +164,12 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
                 $qb->setParameter($filterName, $filterValue);
 
                 continue;
+            }
+
+            // exclude root category from search results
+            if ($this->rootCategoryId !== null) {
+                $qb->andWhere('c.id_category != :root_category_id');
+                $qb->setParameter('root_category_id', $this->rootCategoryId);
             }
 
             if ('name' === $filterName) {

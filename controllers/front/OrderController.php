@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,6 +25,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
+use PrestaShop\PrestaShop\Core\Checkout\TermsAndConditions;
 use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
 
 class OrderControllerCore extends FrontController
@@ -265,6 +267,7 @@ class OrderControllerCore extends FrontController
 
         $this->context->smarty->assign([
             'display_transaction_updated_info' => Tools::getIsset('updatedTransaction'),
+            'tos_cms' => $this->getDefaultTermsAndConditions(),
         ]);
 
         parent::initContent();
@@ -305,6 +308,32 @@ class OrderControllerCore extends FrontController
                 $templateParams
             ),
         ]));
+    }
+
+    /**
+     * Return default TOS link for checkout footer
+     *
+     * @return string|bool
+     */
+    protected function getDefaultTermsAndConditions()
+    {
+        $cms = new CMS((int) Configuration::get('PS_CONDITIONS_CMS_ID'), $this->context->language->id);
+
+        if (!Validate::isLoadedObject($cms)) {
+            return false;
+        }
+
+        $link = $this->context->link->getCMSLink($cms, $cms->link_rewrite, (bool) Configuration::get('PS_SSL_ENABLED'));
+
+        $termsAndConditions = new TermsAndConditions();
+        $termsAndConditions
+            ->setText(
+                '[' . $cms->meta_title . ']',
+                $link
+            )
+            ->setIdentifier('terms-and-conditions-footer');
+
+        return $termsAndConditions->format();
     }
 
     /**

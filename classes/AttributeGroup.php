@@ -31,11 +31,11 @@ class AttributeGroupCore extends ObjectModel
 {
     /** @var string Name */
     public $name;
-    /** @var bool $is_color_group Whether the attribute group is a color group */
+    /** @var bool Whether the attribute group is a color group */
     public $is_color_group;
-    /** @var int $position Position */
+    /** @var int Position */
     public $position;
-    /** @var string $group_type Group type */
+    /** @var string Group type */
     public $group_type;
 
     /** @var string Public Name */
@@ -59,7 +59,7 @@ class AttributeGroupCore extends ObjectModel
         ],
     ];
 
-    /** @var array $webserviceParameters Web service parameters */
+    /** @var array Web service parameters */
     protected $webserviceParameters = [
         'objectsNodeName' => 'product_options',
         'objectNodeName' => 'product_option',

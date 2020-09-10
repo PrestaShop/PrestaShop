@@ -73,15 +73,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="57297718fdb439175177cf6b196172d1">
-        <source>Order status</source>
-        <target>Order status</target>
-        <note>Line: 1576</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/default/template/controllers/referrers/form_settings.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="521d4edc7c22d5f63bc5912ff2afa61a">
@@ -688,6 +679,11 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <target>Maximum approximate words allowed by fuzzy search</target>
         <note>Line: 215</note>
       </trans-unit>
+      <trans-unit id="80a087b1e6a8c144b2f7acb705bde01c">
+        <source>If your server stops before the process ends, you can resume the indexing by clicking "%add_missing_products_label%".</source>
+        <target>If your server stops before the process ends, you can resume the indexing by clicking "%add_missing_products_label%".</target>
+        <note>Line: 96</note>
+      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminSearchEnginesController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -760,6 +756,11 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
   </file>
   <file original="controllers/admin/AdminStatusesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="57297718fdb439175177cf6b196172d1">
+        <source>Order status</source>
+        <target>Order status</target>
+        <note>Line: 270</note>
+      </trans-unit>
       <trans-unit id="817434295a673aed431435658b65d9a7">
         <source>Icon</source>
         <target>Icon</target>

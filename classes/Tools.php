@@ -1949,6 +1949,13 @@ class ToolsCore
         }
     }
 
+    /**
+     * @param $value
+     * @param $places
+     * @param int $mode
+     *
+     * @return false|float
+     */
     public static function math_round($value, $places, $mode = PS_ROUND_HALF_UP)
     {
         //If PHP_ROUND_HALF_UP exist (PHP 5.3) use it and pass correct mode value (PrestaShop define - 1)
@@ -2007,6 +2014,12 @@ class ToolsCore
         return $tmp_value;
     }
 
+    /**
+     * @param $value
+     * @param $mode
+     *
+     * @return float
+     */
     public static function round_helper($value, $mode)
     {
         if ($value >= 0.0) {
@@ -4410,9 +4423,17 @@ exit;
     public static function redirectToInstall()
     {
         if (file_exists(__DIR__ . '/../install')) {
-            header('Location: install/');
+            if (defined('_PS_ADMIN_DIR_')) {
+                header('Location: ../install/');
+            } else {
+                header('Location: install/');
+            }
         } elseif (file_exists(__DIR__ . '/../install-dev')) {
-            header('Location: install-dev/');
+            if (defined('_PS_ADMIN_DIR_')) {
+                header('Location: ../install-dev/');
+            } else {
+                header('Location: install-dev/');
+            }
         } else {
             die('Error: "install" directory is missing');
         }

@@ -158,23 +158,43 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
 
         foreach ($customer->getAddresses($cart->id_lang) as $data) {
             $addressId = (int) $data['id_address'];
-            $countryIsEnabled = (bool) Address::isCountryActiveById($addressId);
+            $cartAddresses[$addressId] = $this->buildCartAddress($addressId, $cart);
+        }
 
-            // filter out disabled countries
-            if (!$countryIsEnabled) {
-                continue;
-            }
-
-            $cartAddresses[$addressId] = new CartAddress(
-                $addressId,
-                $data['alias'],
-                AddressFormat::generateAddress(new Address($addressId), [], '<br />'),
-                (int) $cart->id_address_delivery === $addressId,
-                (int) $cart->id_address_invoice === $addressId
+        // Add addresses already assigned to cart if absent (in case they are deleted)
+        if (!isset($cartAddresses[$cart->id_address_delivery])) {
+            $cartAddresses[$cart->id_address_delivery] = $this->buildCartAddress(
+                $cart->id_address_delivery,
+                $cart
+            );
+        }
+        if (!isset($cartAddresses[$cart->id_address_invoice])) {
+            $cartAddresses[$cart->id_address_invoice] = $this->buildCartAddress(
+                $cart->id_address_invoice,
+                $cart
             );
         }
 
         return array_values($cartAddresses);
+    }
+
+    /**
+     * @param int $addressId
+     * @param Cart $cart
+     *
+     * @return CartAddress
+     */
+    private function buildCartAddress(int $addressId, Cart $cart): CartAddress
+    {
+        $address = new Address($addressId);
+
+        return new CartAddress(
+            $address->id,
+            $address->alias,
+            AddressFormat::generateAddress($address, [], '<br />'),
+            (int) $cart->id_address_delivery === $address->id,
+            (int) $cart->id_address_invoice === $address->id
+        );
     }
 
     /**

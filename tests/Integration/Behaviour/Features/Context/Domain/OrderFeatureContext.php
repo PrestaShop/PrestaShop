@@ -188,9 +188,9 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 )
             );
         } catch (InvalidProductQuantityException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         } catch (ProductOutOfStockException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -231,7 +231,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 new DeleteProductFromOrderCommand($orderId, $orderDetailId)
             );
         } catch (OrderException | OrderNotFoundException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -265,7 +265,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 )
             );
         } catch (InvalidProductQuantityException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -452,9 +452,9 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 )
             );
         } catch (InvalidProductQuantityException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         } catch (ProductOutOfStockException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -736,11 +736,14 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then product :productName in order :orderReference has following details:
+     * @Then product :productReference named :productName in order :orderReference has following details:
      *
      * @param string $orderReference
      * @param string $productName
+     * @param TableNode $table
+     * @param string|null $productReference saves product reference to shared storage if provided
      */
-    public function checkProductDetailsWithReference(string $orderReference, string $productName, TableNode $table)
+    public function checkProductDetailsWithReference(string $orderReference, string $productName, TableNode $table, ?string $productReference = null)
     {
         $productOrderDetail = $this->getOrderDetailFromOrder($productName, $orderReference);
         $expectedDetails = $table->getRowsHash();
@@ -756,6 +759,10 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                     $productOrderDetail[$detailName]
                 )
             );
+        }
+
+        if ($productReference) {
+            $this->getSharedStorage()->set($productReference, $this->getProductIdByName($productName));
         }
     }
 
@@ -855,7 +862,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 $data['value']
             ));
         } catch (InvalidCartRuleDiscountValueException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 

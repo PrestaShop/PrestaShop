@@ -52,7 +52,7 @@
     {% endif %}
   </td>
   <td class="cellProductUnitPrice">{{ product.unitPrice }}</td>
-  <td class="cellProductQuantity">
+  <td class="cellProductQuantity text-center">
     {% if product.quantity > 1 %}
       <span class="badge badge-secondary rounded-circle">{{ product.quantity }}</span>
     {% else %}
@@ -69,7 +69,7 @@
       {{ product.quantityRefunded }} ({{ product.amountRefunded }} {{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }})
     {% endif %}
   </td>
-  <td class="cellProductAvailableQuantity">{{ product.availableQuantity }}</td>
+  <td class="cellProductAvailableQuantity text-center">{{ product.availableQuantity }}</td>
   <td class="cellProductTotalPrice">{{ product.totalPrice }}</td>
   {% if orderForViewing.hasInvoice() %}
     <td>{{ product.orderInvoiceNumber }}</td>

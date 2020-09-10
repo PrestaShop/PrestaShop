@@ -140,7 +140,7 @@ class CartCore extends ObjectModel
         ],
     ];
 
-    /** @var array $webserviceParameters Web service parameters */
+    /** @var array Web service parameters */
     protected $webserviceParameters = [
         'fields' => [
             'id_address_delivery' => ['xlink_resource' => 'addresses'],
@@ -1972,23 +1972,23 @@ class CartCore extends ObjectModel
             $cartRules = $this->getTotalCalculationCartRules($type, $type == Cart::BOTH);
         }
 
-        $calculator = $this->newCalculator($products, $cartRules, $id_carrier);
         $computePrecision = Context::getContext()->getComputingPrecision();
+        $calculator = $this->newCalculator($products, $cartRules, $id_carrier, $computePrecision);
         switch ($type) {
             case Cart::ONLY_SHIPPING:
                 $calculator->calculateRows();
-                $calculator->calculateFees($computePrecision);
+                $calculator->calculateFees();
                 $amount = $calculator->getFees()->getInitialShippingFees();
 
                 break;
             case Cart::ONLY_WRAPPING:
                 $calculator->calculateRows();
-                $calculator->calculateFees($computePrecision);
+                $calculator->calculateFees();
                 $amount = $calculator->getFees()->getInitialWrappingFees();
 
                 break;
             case Cart::BOTH:
-                $calculator->processCalculation($computePrecision);
+                $calculator->processCalculation();
                 $amount = $calculator->getTotal();
 
                 break;
@@ -2004,7 +2004,7 @@ class CartCore extends ObjectModel
 
                 break;
             case Cart::ONLY_DISCOUNTS:
-                $calculator->processCalculation($computePrecision);
+                $calculator->processCalculation();
                 $amount = $calculator->getDiscountTotal();
 
                 break;
@@ -2027,12 +2027,13 @@ class CartCore extends ObjectModel
      * @param array $products list of products to calculate on
      * @param array $cartRules list of cart rules to apply
      * @param int $id_carrier carrier id (fees calculation)
+     * @param int|null $computePrecision
      *
      * @return \PrestaShop\PrestaShop\Core\Cart\Calculator
      */
-    public function newCalculator($products, $cartRules, $id_carrier)
+    public function newCalculator($products, $cartRules, $id_carrier, $computePrecision = null)
     {
-        $calculator = new Calculator($this, $id_carrier);
+        $calculator = new Calculator($this, $id_carrier, $computePrecision);
 
         /** @var PriceCalculator $priceCalculator */
         $priceCalculator = ServiceLocator::get(PriceCalculator::class);
@@ -4015,6 +4016,7 @@ class CartCore extends ObjectModel
                 WHERE NOT EXISTS (SELECT 1 FROM ' . _DB_PREFIX_ . 'orders o WHERE o.`id_cart` = c.`id_cart`
                                     AND o.`id_customer` = ' . (int) $id_customer . ')
                 AND c.`id_customer` = ' . (int) $id_customer . '
+                AND c.`id_cart` = (SELECT `id_cart` FROM `' . _DB_PREFIX_ . 'cart` c2 WHERE c2.`id_customer` = ' . (int) $id_customer . ' ORDER BY `id_cart` DESC LIMIT 1) 
                 AND c.`id_guest` != 0
                     ' . Shop::addSqlRestriction(Shop::SHARE_ORDER, 'c') . '
                 ORDER BY c.`date_upd` DESC';
@@ -4330,7 +4332,7 @@ class CartCore extends ObjectModel
         $orderId = Order::getIdByCartId((int) $this->id);
         $product_gift = [];
         if ($orderId) {
-            $product_gift = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT cr.`gift_product`, cr.`gift_product_attribute` FROM `' . _DB_PREFIX_ . 'cart_rule` cr LEFT JOIN `' . _DB_PREFIX_ . 'order_cart_rule` ocr ON (ocr.`id_order` = ' . (int) $orderId . ') WHERE ocr.`id_cart_rule` = cr.`id_cart_rule`');
+            $product_gift = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT cr.`gift_product`, cr.`gift_product_attribute` FROM `' . _DB_PREFIX_ . 'cart_rule` cr LEFT JOIN `' . _DB_PREFIX_ . 'order_cart_rule` ocr ON (ocr.`id_order` = ' . (int) $orderId . ') WHERE ocr.`deleted` = 0 AND ocr.`id_cart_rule` = cr.`id_cart_rule`');
         }
 
         $id_address_delivery = Configuration::get('PS_ALLOW_MULTISHIPPING') ? $cart->id_address_delivery : 0;

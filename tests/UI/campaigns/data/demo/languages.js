@@ -29,5 +29,9 @@ module.exports = {
       isRtlLanguage: false,
       enabled: true,
     },
+    deutsch: {
+      name: 'Deutsch (German)',
+      isoCode: 'de',
+    },
   },
 };

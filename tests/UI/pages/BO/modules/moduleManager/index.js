@@ -42,7 +42,7 @@ class ModuleManager extends BOBasePage {
   async searchModule(page, moduleTag, moduleName) {
     await page.type(this.searchModuleTagInput, moduleTag);
     await page.click(this.searchModuleButton);
-    await this.waitForVisibleSelector(page, this.moduleBlock(moduleName));
+    return this.elementVisible(page, this.moduleBlock(moduleName), 10000);
   }
 
   /**

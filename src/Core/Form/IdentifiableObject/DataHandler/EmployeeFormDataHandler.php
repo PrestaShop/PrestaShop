@@ -85,6 +85,7 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
      * @param EmployeeFormAccessCheckerInterface $employeeFormAccessChecker
      * @param EmployeeDataProviderInterface $employeeDataProvider
      * @param Hashing $hashing
+     * @param ImageUploaderInterface|null $imageUploader
      */
     public function __construct(
         CommandBusInterface $bus,
@@ -124,7 +125,8 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
             $data['language'],
             $data['active'],
             $data['profile'],
-            isset($data['shop_association']) ? $data['shop_association'] : $this->defaultShopAssociation
+            isset($data['shop_association']) ? $data['shop_association'] : $this->defaultShopAssociation,
+            $data['has_enabled_gravatar']
         ));
 
         /** @var UploadedFile $uploadedAvatar */
@@ -155,6 +157,7 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
             ->setLanguageId((int) $data['language'])
             ->setActive((bool) $data['active'])
             ->setProfileId((int) $data['profile'])
+            ->setHasEnabledGravatar((bool) $data['has_enabled_gravatar'])
         ;
 
         if ($this->employeeFormAccessChecker->isRestrictedAccess((int) $id)) {

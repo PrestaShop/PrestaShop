@@ -4,7 +4,7 @@
   width: 100%;
   height: 100%;
   background-color: #000;
-  opacity: .25;
+  opacity: 0.25;
 }
 
 @mixin card-width() {
@@ -17,7 +17,7 @@
 
 @mixin card-width-and-height() {
   height: 15.125rem;
-  @include card-width ();
+  @include card-width();
 }
 
 @mixin action-button {
@@ -33,7 +33,7 @@
   line-height: normal;
   color: #363a41;
   text-align: center;
-  letter-spacing: -.01875rem;
+  letter-spacing: -0.01875rem;
 }
 
 .theme-card {
@@ -44,13 +44,13 @@
       display: block;
     }
     display: none;
-    @include theme-card-overlay ();
+    @include theme-card-overlay();
   }
 
-  @include card-width-and-height ();
+  @include card-width-and-height();
 
   overflow-y: hidden;
-  @include border-radius(.25rem);
+  @include border-radius(0.25rem);
 
   img {
     max-width: 100%;
@@ -71,14 +71,14 @@
     }
 
     .action-button {
-      @include action-button ();
+      @include action-button();
       font-style: normal;
       font-weight: 400;
       font-stretch: normal;
       line-height: normal;
       color: #363a41;
       text-align: center;
-      letter-spacing: -.0125rem;
+      letter-spacing: -0.0125rem;
 
       .icon-current-theme {
         color: #25b9d7;
@@ -88,13 +88,12 @@
     .action-button:disabled {
       i,
       span {
-        opacity: .5;
+        opacity: 0.5;
       }
-
     }
 
     .delete-button {
-      @include action-button ();
+      @include action-button();
       position: relative;
       width: 2.5rem;
       i {
@@ -108,34 +107,34 @@
     .delete-button:hover {
       color: #fff;
       background-color: #3ed1f0;
-      box-shadow: 0 0 .9375rem 0 rgba(0, 0, 0, .2);
+      box-shadow: 0 0 0.9375rem 0 rgba(0, 0, 0, 0.2);
     }
   }
 }
 
 .theme-card-description {
-  @include card-width ();
+  @include card-width();
 }
 
 .theme-name {
   font-weight: 700;
-  @include theme-name-and-version ();
+  @include theme-name-and-version();
 }
 
 .theme-version {
-  @include theme-name-and-version ();
+  @include theme-name-and-version();
 }
 
 .theme-author {
   padding-bottom: 1.6875rem;
-  font-size: .8125rem;
+  font-size: 0.8125rem;
   font-style: normal;
   font-weight: 400;
   font-stretch: normal;
   line-height: normal;
   color: #618596;
   text-align: center;
-  letter-spacing: -.01875rem;
+  letter-spacing: -0.01875rem;
 }
 
 .theme-catalog-card {
@@ -144,13 +143,12 @@
     padding-top: 3.7rem;
   }
   .catalog-description {
-    padding-top: .975rem;
+    padding-top: 0.975rem;
   }
 }
 
 // actions
 .theme-card:hover .active-card-overlay,
-.theme-card:hover .actions-container
-{
+.theme-card:hover .actions-container {
   display: block;
 }

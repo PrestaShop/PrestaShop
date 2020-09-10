@@ -150,7 +150,7 @@ Comment: Set the modules categories</note>
       <trans-unit id="c472f22a7459a000f0177a23fdc4212b">
         <source>This module is Untrusted for your country</source>
         <target>This module is Untrusted for your country</target>
-        <note>Line: 1466</note>
+        <note>Line: 1472</note>
       </trans-unit>
     </body>
   </file>
@@ -235,17 +235,17 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
       <trans-unit id="8b1a3613ac33a07ab788b2656755110c">
         <source>Enable Mobile</source>
         <target>Enable Mobile</target>
-        <note>Line: 124</note>
+        <note>Line: 125</note>
       </trans-unit>
       <trans-unit id="038bd38b5172a9ba90468070bdc4d4f3">
         <source>Disable Mobile</source>
         <target>Disable Mobile</target>
-        <note>Line: 125</note>
+        <note>Line: 126</note>
       </trans-unit>
       <trans-unit id="e699cbe9208f8353248889781f83d636">
         <source>Module manager</source>
         <target>Module manager</target>
-        <note>Line: 134</note>
+        <note>Line: 135</note>
       </trans-unit>
     </body>
   </file>

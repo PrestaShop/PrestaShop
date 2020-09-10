@@ -29,12 +29,12 @@
  */
 class CombinationCore extends ObjectModel
 {
-    /** @var int $id_product Product ID */
+    /** @var int Product ID */
     public $id_product;
 
     public $reference;
 
-    /** @var string $supplier_reference */
+    /** @var string */
     public $supplier_reference;
 
     public $location;
@@ -404,6 +404,31 @@ class CombinationCore extends ObjectModel
     public static function isCurrentlyUsed($table = null, $hasActiveColumn = false)
     {
         return parent::isCurrentlyUsed('product_attribute');
+    }
+
+    /**
+     * For a given ean13 reference, returns the corresponding id.
+     *
+     * @param string $ean13
+     *
+     * @return int|string Product attribute identifier
+     */
+    public static function getIdByEan13($ean13)
+    {
+        if (empty($ean13)) {
+            return 0;
+        }
+
+        if (!Validate::isEan13($ean13)) {
+            return 0;
+        }
+
+        $query = new DbQuery();
+        $query->select('pa.id_product_attribute');
+        $query->from('product_attribute', 'pa');
+        $query->where('pa.ean13 = \'' . pSQL($ean13) . '\'');
+
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
 
     /**

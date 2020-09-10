@@ -36,7 +36,11 @@
           <div class="col-md-5 divide-right">
             <div class="row">
               <div class="col-md-6">
-                <img class="product-image" src="{$product.cover.medium.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" itemprop="image" loading="lazy">
+                {if $product.cover}
+                  <img class="product-image" src="{$product.cover.medium.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" itemprop="image" loading="lazy">
+                {else}
+                  <img src="{$urls.no_picture_image.bySize.medium_default.url}" loading="lazy" />
+                {/if}
               </div>
               <div class="col-md-6">
                 <h6 class="h6 product-name">{$product.name}</h6>

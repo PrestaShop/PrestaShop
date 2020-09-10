@@ -611,6 +611,16 @@
         <target>In the volume discounts board, display the new price with the applied discount instead of showing the discount (ie. "-5%").</target>
         <note>Line: 85</note>
       </trans-unit>
+      <trans-unit id="572a918fa0b6c312c2c8c3447ce57421">
+        <source>Display the "%add_to_cart_label%" button when a product has attributes</source>
+        <target>Display the "%add_to_cart_label%" button when a product has attributes</target>
+        <note>Line: 63</note>
+      </trans-unit>
+      <trans-unit id="26071fff3423bbdfda80e24ef3a0d6e3">
+        <source>Display or hide the "%add_to_cart_label%" button on category pages for products that have attributes forcing customers to see product details.</source>
+        <target>Display or hide the "%add_to_cart_label%" button on category pages for products that have attributes forcing customers to see product details.</target>
+        <note>Line: 63</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/product_preferences_pagination.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -653,6 +663,11 @@
         <source>When selling packs of products, how do you want your stock to be calculated?</source>
         <target>When selling packs of products, how do you want your stock to be calculated?</target>
         <note>Line: 97</note>
+      </trans-unit>
+      <trans-unit id="b5e585ab39ea18b6354e53370bfe7472">
+        <source>By default, the "%add_to_cart_label%" button is hidden when a product is unavailable. You can choose to have it displayed in all cases.</source>
+        <target>By default, the "%add_to_cart_label%" button is hidden when a product is unavailable. You can choose to have it displayed in all cases.</target>
+        <note>Line: 38</note>
       </trans-unit>
     </body>
   </file>

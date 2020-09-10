@@ -7,6 +7,9 @@ class Order extends BOBasePage {
 
     this.pageTitle = 'Orders •';
 
+    // Header selectors
+    this.createNewOrderButton = '#page-header-desc-configuration-add';
+
     // Selectors grid panel
     this.gridPanel = '#order_grid_panel';
     this.gridTable = '#order_grid_table';
@@ -53,6 +56,16 @@ class Order extends BOBasePage {
   /*
   Methods
    */
+  /**
+   * Go to create new order page
+   * @param page
+   * @return {Promise<void>}
+   */
+  async goToCreateOrderPage(page) {
+    await this.clickAndWaitForNavigation(page, this.createNewOrderButton);
+  }
+
+
   /**
    * Click on lint to export orders to a csv file
    * @param page

@@ -139,13 +139,13 @@ class OrderDetailCore extends ObjectModel
     /** @var datetime */
     public $download_deadline;
 
-    /** @var string $tax_name * */
+    /** @var string */
     public $tax_name;
 
-    /** @var float $tax_rate * */
+    /** @var float */
     public $tax_rate;
 
-    /** @var float $tax_computation_method * */
+    /** @var float */
     public $tax_computation_method;
 
     /** @var int Id tax rules group */
@@ -466,7 +466,7 @@ class OrderDetailCore extends ObjectModel
 
     public function getTaxList()
     {
-        return self::getTaxList($this->id);
+        return self::getTaxListStatic($this->id);
     }
 
     public static function getTaxListStatic($id_order_detail)
@@ -540,6 +540,8 @@ class OrderDetailCore extends ObjectModel
             $tax_manager = TaxManagerFactory::getManager($this->vat_address, $this->id_tax_rules_group);
             $this->tax_calculator = $tax_manager->getTaxCalculator();
             $this->tax_computation_method = (int) $this->tax_calculator->computation_method;
+            $this->tax_rate = (float) $this->tax_calculator->getTotalRate();
+            $this->tax_name = $this->tax_calculator->getTaxesName();
         }
 
         $this->ecotax_tax_rate = 0;

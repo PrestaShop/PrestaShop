@@ -86,6 +86,12 @@ services:
             - "@prestashop.core.localization.locale.context_locale"
             - "@=service('prestashop.adapter.legacy.context').getContext().currency.iso_code"
 
+    prestashop.core.grid.data_provider.customer_discount:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\CustomerDiscountGridDataFactory'
+        arguments:
+            - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+            - "@=service('prestashop.adapter.legacy.context').getContext().customer"
+
     prestashop.core.grid.data.factory.language:
         class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
         arguments:
@@ -161,7 +167,7 @@ services:
             - '@prestashop.adapter.manufacturer.manufacturer_logo_thumbnail_provider'
 
     prestashop.core.grid.data.factory.manufacturer_address:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\DoctrineGridDataFactory'
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
         arguments:
             - '@prestashop.core.grid.query_builder.manufacturer_address'
             - '@prestashop.core.hook.dispatcher'

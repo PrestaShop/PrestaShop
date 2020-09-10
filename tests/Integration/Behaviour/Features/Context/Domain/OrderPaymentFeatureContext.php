@@ -142,7 +142,6 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
         $data = $table->getRowsHash();
 
         try {
-            $this->lastException = null;
             $this->getCommandBus()->handle(
                 new AddPaymentCommand(
                     $orderId,
@@ -155,7 +154,7 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
                 )
             );
         } catch (NegativePaymentAmountException $exception) {
-            $this->lastException = $exception;
+            $this->setLastException($exception);
         }
     }
 

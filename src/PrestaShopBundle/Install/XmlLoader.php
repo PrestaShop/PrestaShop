@@ -492,7 +492,7 @@ class XmlLoader
             if ($data_lang) {
                 $object->hydrate($data_lang);
             }
-            $object->add(true, (isset($xml->fields['null'])) ? true : false);
+            $object->add(true, isset($xml->fields['null']));
             $entity_id = $object->id;
             unset($object);
         } else {

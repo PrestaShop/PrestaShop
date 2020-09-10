@@ -36,7 +36,7 @@ class ManufacturerId
     /**
      * @var int
      */
-    private $id;
+    protected $id;
 
     /**
      * @param int $id
@@ -67,7 +67,10 @@ class ManufacturerId
     private function assertIsIntegerGreaterThanZero($value)
     {
         if (!is_int($value) || 0 >= $value) {
-            throw new ManufacturerConstraintException(sprintf('Invalid manufacturer id "%s".', var_export($value, true)));
+            throw new ManufacturerConstraintException(
+                sprintf('Invalid manufacturer id "%s".', var_export($value, true)),
+                ManufacturerConstraintException::INVALID_ID
+            );
         }
     }
 }

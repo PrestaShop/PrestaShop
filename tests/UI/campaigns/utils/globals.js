@@ -36,4 +36,5 @@ global.BROWSER = {
     timeout: 0,
     slowMo: parseInt(process.env.SLOWMO, 10) || 5,
   },
+  interceptErrors: JSON.parse(process.env.INTERCEPT_ERRORS || false),
 };

@@ -73,15 +73,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="9d20a93036ba910dd75ffbcec173798e">
-        <source>Price per unit</source>
-        <target>Price per unit</target>
-        <note>Line: 930</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/default/template/controllers/shop/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="99104e1966b34f0320d33c5892946a82">
@@ -458,6 +449,15 @@ Comment: voluntary do affectation here</note>
       </trans-unit>
     </body>
   </file>
+  <file original="modules/blockwishlist/src/Grid/Definition/BaseStatisticsGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c33e404a441c6ba9648f88af3c68a1ca">
+        <source>Statistics</source>
+        <target>Statistics</target>
+        <note>Line: 39</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/dashactivity/views/templates/hook/dashboard_zone_one.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="a274f4d4670213a9045ce258c6c56b80">
@@ -511,6 +511,11 @@ Comment: voluntary do affectation here</note>
         <source>Never send emails (may be useful for testing purposes)</source>
         <target>Never send emails (may be useful for testing purposes)</target>
         <note>Line: 79</note>
+      </trans-unit>
+      <trans-unit id="f2fc8e9d7dc8852da27437d55be02453">
+        <source>Use /usr/sbin/sendmail (recommended; works in most cases)</source>
+        <target>Use /usr/sbin/sendmail (recommended; works in most cases)</target>
+        <note>Line: 70</note>
       </trans-unit>
     </body>
   </file>
@@ -996,15 +1001,6 @@ Comment: voluntary do affectation here</note>
         <source>Add new profile</source>
         <target>Add new profile</target>
         <note>Line: 142</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/SqlManagerController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="26420bd9e260012164a58a0f002e4821">
-        <source>Add new SQL query</source>
-        <target>Add new SQL query</target>
-        <note>Line: 92</note>
       </trans-unit>
     </body>
   </file>
@@ -1717,6 +1713,15 @@ Comment: voluntary do affectation here</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/RequestSql/index.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="26420bd9e260012164a58a0f002e4821">
+        <source>Add new SQL query</source>
+        <target>Add new SQL query</target>
+        <note>Line: 36</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/RequestSql/view.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="526a00f8a3c4c865b9c1834f38b5e2c6">
@@ -2107,6 +2112,11 @@ Comment: voluntary do affectation here</note>
         <target>Shop path:</target>
         <note>Line: 121</note>
       </trans-unit>
+      <trans-unit id="0398efcdf22e008d4ab53cc6eeab7a71">
+        <source>You are using /usr/sbin/sendmail</source>
+        <target>You are using /usr/sbin/sendmail</target>
+        <note>Line: 140</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/MailTheme/Blocks/list_mail_theme_layouts.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -2138,6 +2148,15 @@ Comment: voluntary do affectation here</note>
         <source>Price tax included</source>
         <target>Price tax included</target>
         <note>Line: 81</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/products.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9d20a93036ba910dd75ffbcec173798e">
+        <source>Price per unit</source>
+        <target>Price per unit</target>
+        <note>Line: 62</note>
       </trans-unit>
     </body>
   </file>

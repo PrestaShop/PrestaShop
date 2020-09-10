@@ -8,21 +8,25 @@
       margin-bottom: 10rem;
     }
   }
+
   .page-not-found {
-    @include box-shadow;
-    background: white;
+    @include box-shadow();
+    max-width: 570px;
     padding: 1rem;
+    margin: 0 auto;
     font-size: $font-size-sm;
     color: $gray;
-    max-width: 570px;
-    margin: 0 auto;
+    background: #fff;
+
     h4 {
+      margin: 0.5rem 0 1rem;
       font-size: $base-font-size;
       font-weight: 700;
-      margin: 0.5rem 0 1rem;
     }
+
     .search-widget {
       float: none;
+
       input {
         width: 100%;
       }

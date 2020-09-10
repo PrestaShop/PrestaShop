@@ -1,6 +1,6 @@
 .carousel {
-  box-shadow: 1px 1px 7px 0 rgba(0, 0, 0, 0.15);
   margin-bottom: 1.5rem;
+  box-shadow: 1px 1px 7px 0 rgba(0, 0, 0, 0.15);
   .direction {
     z-index: auto;
   }
@@ -18,15 +18,15 @@
       position: absolute;
       bottom: 28px;
       left: 90px;
-      color: white;
       max-width: 340px;
+      color: #fff;
       .caption-description p {
-        color: white;
+        color: #fff;
       }
     }
     figure {
-      margin: 0;
       display: inline-block;
+      margin: 0;
     }
   }
   .carousel-control {
@@ -38,7 +38,7 @@
       }
       i {
         font-size: 3.125rem;
-        color: white;
+        color: #fff;
       }
       &:hover {
         i {
@@ -86,12 +86,12 @@
 
 @include media-breakpoint-down(md) {
   .carousel {
-    box-shadow: none;
-    width: 100vw;
-    margin-left: -50vw;
     left: 50%;
-    padding-bottom: .5rem;
+    width: 100vw;
+    padding-bottom: 0.5rem;
+    margin-left: -50vw;
     background-color: $gray-light;
+    box-shadow: none;
     .carousel-item {
       .caption {
         position: static;
@@ -99,7 +99,7 @@
         text-align: center;
         .display-1 {
           font-size: 2rem;
-          font-weight: normal;
+          font-weight: 500;
           color: $gray-darker;
         }
         .caption-description {
@@ -125,23 +125,23 @@
         }
         .icon-next {
           right: 0;
-          margin-right: .78rem;
+          margin-right: 0.78rem;
         }
         i {
-          background: rgba(122,122,122,.5);
+          background: rgba(122, 122, 122, 0.5);
         }
       }
     }
   }
   .carousel-indicators {
     li {
-      height: 8px;
       width: 8px;
+      height: 8px;
     }
     .active {
+      width: 8px;
       height: 8px;
       margin: 1px;
-      width: 8px;
     }
   }
 }
@@ -156,7 +156,8 @@
       }
     }
     .carousel-control {
-      .icon-prev, .icon-next {
+      .icon-prev,
+      .icon-next {
         i {
           font-size: 2rem;
         }

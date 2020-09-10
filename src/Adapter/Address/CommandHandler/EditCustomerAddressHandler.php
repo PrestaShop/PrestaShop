@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Address\CommandHandler;
 
 use Address;
+use Country;
 use PrestaShop\PrestaShop\Adapter\Address\AbstractAddressHandler;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCustomerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\EditCustomerAddressHandlerInterface;
@@ -55,10 +56,7 @@ final class EditCustomerAddressHandler extends AbstractAddressHandler implements
     {
         try {
             $editedAddress = $this->getAddressFromCommand($command);
-
-            if (false === $editedAddress->validateFields(false)) {
-                throw new AddressConstraintException('Address contains invalid field values');
-            }
+            $this->validateAddress($editedAddress);
 
             // The address is used by an order so it is not edited directly, instead a copy is created and
             if ($editedAddress->isUsed()) {
@@ -120,6 +118,16 @@ final class EditCustomerAddressHandler extends AbstractAddressHandler implements
             $address->id_country = $command->getCountryId()->getValue();
         }
 
+        if (null !== $command->getStateId()) {
+            $address->id_state = $command->getStateId()->getValue();
+        } elseif (null !== $command->getCountryId()) {
+            // If country was changed but not state we check if state value needs to be reset
+            $country = new Country($command->getCountryId()->getValue());
+            if (!$country->contains_states) {
+                $address->id_state = 0;
+            }
+        }
+
         if (null !== $command->getCity()) {
             $address->city = $command->getCity();
         }
@@ -142,10 +150,6 @@ final class EditCustomerAddressHandler extends AbstractAddressHandler implements
 
         if (null !== $command->getVatNumber()) {
             $address->vat_number = $command->getVatNumber();
-        }
-
-        if (null !== $command->getStateId()) {
-            $address->id_state = $command->getStateId()->getValue();
         }
 
         if (null !== $command->getHomePhone()) {

@@ -86,7 +86,7 @@ class CategoryControllerCore extends ProductListingFrontController
         );
 
         if (!Validate::isLoadedObject($this->category) || !$this->category->active) {
-            Tools::redirect('index.php?controller=404');
+            Tools::redirect('pagenotfound');
         }
 
         parent::init();

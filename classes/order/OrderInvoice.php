@@ -359,6 +359,9 @@ class OrderInvoiceCore extends ObjectModel
         if ($sum_composite_taxes) {
             $grouped_details = [];
             foreach ($details as $row) {
+                if ($this->id !== (int) $row['id_order_invoice']) {
+                    continue;
+                }
                 if (!isset($grouped_details[$row['id_order_detail']])) {
                     $grouped_details[$row['id_order_detail']] = [
                         'tax_rate' => 0,

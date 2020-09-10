@@ -303,7 +303,13 @@ class AddressCore extends ObjectModel
 			LEFT JOIN `' . _DB_PREFIX_ . 'state` s ON s.`id_state` = a.`id_state`
 			WHERE a.`id_address` = ' . (int) $id_address);
 
-        self::$_idZones[$id_address] = (int) ((int) $result['id_zone_state'] ? $result['id_zone_state'] : $result['id_zone']);
+        if (empty($result['id_zone_state']) && empty($result['id_zone'])) {
+            return false;
+        }
+
+        self::$_idZones[$id_address] = !empty($result['id_zone_state'])
+            ? (int) $result['id_zone_state']
+            : (int) $result['id_zone'];
 
         return self::$_idZones[$id_address];
     }

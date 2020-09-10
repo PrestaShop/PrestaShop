@@ -690,7 +690,7 @@ class ManufacturerController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error'
             ),
             InvalidAddressFieldException::class => $this->trans(
-                'Address contains invalid field values',
+                'Address fields contain invalid values.',
                 'Admin.Notifications.Error'
             ),
         ];

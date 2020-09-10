@@ -80,7 +80,8 @@ final class GetEmployeeForEditingHandler extends AbstractObjectModelHandler impl
             (int) $employee->id_lang,
             (bool) $employee->active,
             (int) $employee->id_profile,
-            $employee->getAssociatedShops()
+            $employee->getAssociatedShops(),
+            $employee->has_enabled_gravatar
         );
     }
 

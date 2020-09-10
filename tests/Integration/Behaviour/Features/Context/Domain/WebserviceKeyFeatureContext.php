@@ -97,7 +97,7 @@ class WebserviceKeyFeatureContext extends AbstractDomainFeatureContext
 
             SharedStorage::getStorage()->set($reference, new WebserviceKey($webserviceKeyId->getValue()));
         } catch (Exception $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
 
         SharedStorage::getStorage()->clear($propertiesKey);

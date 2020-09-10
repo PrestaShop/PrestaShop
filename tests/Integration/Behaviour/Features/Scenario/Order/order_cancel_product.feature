@@ -300,8 +300,8 @@ Feature: Cancel Order Product from Back Office (BO)
       | total_discounts_tax_excl | 55.100 |
       | total_discounts_tax_incl | 58.410 |
       | total_paid_tax_excl      | 62.100 |
-      | total_paid_tax_incl      | 65.830 |
-      | total_paid               | 65.830 |
+      | total_paid_tax_incl      | 65.820 |
+      | total_paid               | 65.820 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
