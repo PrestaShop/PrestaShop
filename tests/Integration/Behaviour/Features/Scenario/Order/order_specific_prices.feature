@@ -57,7 +57,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
     Then product "Test Product With Specific Price" in order "bo_order1" should have no specific price
-    Given I update order "bo_order1" status to "Payment accepted"
+    Given I generate invoice for "bo_order1" order
     And order "bo_order1" should have 1 invoices
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Test Product With Specific Price  |
@@ -73,7 +73,7 @@ Feature: Order from Back Office (BO)
       | total_paid_tax_excl      | 54.800 |
       | total_paid_tax_incl      | 58.090 |
       | total_paid               | 58.090 |
-      | total_paid_real          | 48.550 |
+      | total_paid_real          | 0.0000 |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
