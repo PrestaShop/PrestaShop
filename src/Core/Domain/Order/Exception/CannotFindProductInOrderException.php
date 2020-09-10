@@ -30,6 +30,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
 /**
  * Thrown on failure to update product in an order
  */
-class CannotUpdateProductInOrderException extends OrderException
+class CannotFindProductInOrderException extends OrderException
 {
 }

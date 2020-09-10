@@ -38,8 +38,8 @@ use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotFindProductInOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderInvoiceException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotUpdateProductInOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\UpdateProductInOrderHandlerInterface;
@@ -155,7 +155,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
         // assert product exists
         $product = new Product($orderDetail->product_id);
         if ($product->id !== (int) $orderDetail->product_id) {
-            throw new CannotUpdateProductInOrderException('You cannot edit the price of a product that no longer exists in your catalog.');
+            throw new CannotFindProductInOrderException('You cannot edit the price of a product that no longer exists in your catalog.');
         }
 
         if (!Validate::isLoadedObject($orderDetail)) {
