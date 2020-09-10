@@ -4385,7 +4385,7 @@ class ProductCore extends ObjectModel
                 ';
 
         if ($id_product_attribute !== null) {
-            $sql .= ' AND `product_attribute_shop.id_product_attribute` = ' . (int) $id_product_attribute . ' ';
+            $sql .= ' AND product_attribute_shop.`id_product_attribute` = ' . (int) $id_product_attribute . ' ';
         }
 
         $sql .= 'GROUP BY id_attribute_group, id_product_attribute
