@@ -47,7 +47,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\SendProcessOrderEmailCommand
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotUpdateProductInOrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotFindProductInOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderInvoiceException;
@@ -1728,7 +1728,8 @@ class OrderController extends FrameworkBundleAdminController
                 'This product is already in the invoice [1], please edit the quantity instead.',
                 'Admin.Notifications.Error',
                 ['[1]' => $orderInvoiceNumber]
-            CannotUpdateProductInOrderException::class => $this->trans(
+            ),
+            CannotFindProductInOrderException::class => $this->trans(
                 'You cannot edit the price of a product that no longer exists in your catalog.',
                 'Admin.Notifications.Error'
             ),
