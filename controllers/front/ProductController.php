@@ -1124,7 +1124,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             return null;
         }
 
-        return $combinations[0];
+        return reset($combinations);
     }
 
     /**
