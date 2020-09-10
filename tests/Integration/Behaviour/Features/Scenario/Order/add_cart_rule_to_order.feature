@@ -170,7 +170,7 @@ Feature: Add discounts to order from Back Office (BO)
       | shipping      | $7.00     |
       | taxes         | $1.54     |
       | total         | $25.61    |
-    And last invoice for order "bo_order1" should have following prices:
+    And the last invoice for order "bo_order1" should have following prices:
       | products                  | 23.80 |
       | discounts tax excluded    | 5.19  |
       | discounts tax included    | 5.50  |
@@ -204,7 +204,7 @@ Feature: Add discounts to order from Back Office (BO)
       | shipping      | $7.00  |
       | taxes         | $1.13  |
       | total         | $18.90 |
-    And last invoice for order "bo_order1" should have following prices:
+    And the last invoice for order "bo_order1" should have following prices:
       | products                  | 23.80 |
       | discounts tax excluded    | 11.90 |
       | discounts tax included    | 12.62 |

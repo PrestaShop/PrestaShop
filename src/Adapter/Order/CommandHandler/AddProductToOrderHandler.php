@@ -48,6 +48,7 @@ use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderInvoiceException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\AddProductToOrderHandlerInterface;
@@ -121,7 +122,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $this->computingPrecision = $this->context->getComputingPrecision();
         try {
             $this->assertOrderWasNotShipped($order);
-            $this->assertProductDuplicate($order, $command);
+            $this->assertProductNotDuplicate($order, $command);
 
             $product = $this->getProduct($command->getProductId(), (int) $order->id_lang);
             $combination = null !== $command->getCombinationId() ? $this->getCombination($command->getCombinationId()->getValue()) : null;
@@ -349,7 +350,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         if ($order->hasInvoice()) {
             return $command->getOrderInvoiceId() ?
                 $this->updateExistingInvoice($command->getOrderInvoiceId(), $cart, $products) :
-                $this->createNewInvoice($order, $cart, $command->isFreeShipping(), $products);
+                $this->createNewInvoice($order, $cart, $command->hasFreeShipping(), $products);
         }
 
         return null;
@@ -509,8 +510,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      * @param AddProductToOrderCommand $command
      *
      * @throws DuplicateProductInOrderException
+     * @throws DuplicateProductInOrderInvoiceException
      */
-    private function assertProductDuplicate(Order $order, AddProductToOrderCommand $command): void
+    private function assertProductNotDuplicate(Order $order, AddProductToOrderCommand $command): void
     {
         $invoicesContainingProduct = [];
         foreach ($order->getOrderDetailList() as $orderDetail) {
@@ -535,7 +537,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
         // If we are targeting a specific invoice check that the ID has not been found in the OrderDetail list
         if (!empty($command->getOrderInvoiceId()) && in_array((int) $command->getOrderInvoiceId(), $invoicesContainingProduct)) {
-            throw new DuplicateProductInOrderException('You cannot add this product in the order as it is already present');
+            $orderInvoice = new OrderInvoice($command->getOrderInvoiceId());
+            $invoiceNumber = $orderInvoice->getInvoiceNumberFormatted((int) Configuration::get('PS_LANG_DEFAULT'), $order->id_shop);
+            throw new DuplicateProductInOrderInvoiceException($invoiceNumber, 'You cannot add this product in this invoice as it is already present');
         }
     }
 }
