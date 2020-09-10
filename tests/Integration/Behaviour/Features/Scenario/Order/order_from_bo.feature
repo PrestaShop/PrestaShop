@@ -324,3 +324,12 @@ Feature: Order from Back Office (BO)
       | Postal code      | 12345                              |
     When I change order "bo_order1" shipping address to "test-address"
     Then order "bo_order1" shipping address should be "test-address"
+
+  Scenario: Edit a product that doesn't exist in catalogue anymore
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Mug Today is a good day |
+      | amount        | 1                       |
+      | price         | 10                      |
+    And I delete product "Mug Today is a good day" from catalogue
+    And I update deleted product "Mug Today is a good day" in order "bo_order1"
+    Then I should get error that the product being edited was not found
