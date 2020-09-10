@@ -106,10 +106,14 @@ class ModuleDataUpdater
             if (LegacyModule::initUpgradeModule($module)) {
                 $legacy_instance = LegacyModule::getInstanceByName($name);
                 $legacy_instance->runUpgradeModule();
+                
+                if (empty($legacy_instance->getErrors()){
+                    LegacyModule::upgradeModuleVersion($name, $module->version);
+                    Hook::exec('actionModuleUpgradeAfter', array('object' => $module));
+                    return true;
+                }
 
-                LegacyModule::upgradeModuleVersion($name, $module->version);
-
-                return !count($legacy_instance->getErrors());
+                return false;
             } elseif (LegacyModule::getUpgradeStatus($name)) {
                 return true;
             }
