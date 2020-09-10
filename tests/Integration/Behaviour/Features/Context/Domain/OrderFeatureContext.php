@@ -1540,7 +1540,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 (int) $productOrderDetail['id_order_detail'],
                 '12',
                 '10',
-                (int) 3
+                3
             );
             $this->getCommandBus()->handle($updateProductCommand);
         } catch (CannotFindProductInOrderException $e) {
