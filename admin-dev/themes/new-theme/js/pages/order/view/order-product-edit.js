@@ -109,7 +109,7 @@ export default class OrderProductEdit {
     const updatedTotal = this.priceTaxCalculator.calculateTotalPrice(
       this.quantity,
       this.taxIncluded,
-      this.currencyPrecision
+      this.currencyPrecision,
     );
     this.priceTotalText.html(updatedTotal);
     this.productEditSaveBtn.prop('disabled', updatedTotal === this.initialTotal);
