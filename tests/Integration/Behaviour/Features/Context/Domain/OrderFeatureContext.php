@@ -172,11 +172,12 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     public function addProductsToOrderWithNewInvoiceAndTheFollowingDetails(string $orderReference, TableNode $table)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
-
-        $taxCalculator = $this->getOrderTaxCalculator($orderId);
-
         $data = $table->getRowsHash();
-        $data['price_tax_incl'] = $data['price_tax_incl'] ?? (string) $taxCalculator->addTaxes($data['price']);
+
+        if (empty($data['price_tax_incl'])) {
+            $taxCalculator = $this->getOrderTaxCalculator($orderId);
+            $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
+        }
 
         $productName = $data['name'];
         $product = $this->getProductByName($productName);
@@ -555,7 +556,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         // if tax included price is not given, it is calculated
         if (!isset($data['price_tax_incl'])) {
             $taxCalculator = $this->getOrderTaxCalculator($orderId);
-            $data['price_tax_incl'] = (string) $taxCalculator->addTaxes($data['price']);
+            $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
         }
 
         try {
