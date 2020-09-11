@@ -210,7 +210,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                         $id_object = (int) $regs[5];
                     }
                     if ($id_object) {
-                        $referers = [$_SERVER['HTTP_REFERER'], urldecode($_SERVER['HTTP_REFERER'])];
+                        $referers = array_map(
+                            function ($referer) {
+                                return preg_replace('/\?.*$/', '', $referer);
+                            },
+                            [$_SERVER['HTTP_REFERER'], urldecode($_SERVER['HTTP_REFERER'])]
+                        );
+
                         if (in_array($this->context->link->getCategoryLink($id_object), $referers)) {
                             $id_category = (int) $id_object;
                         } elseif (isset($this->context->cookie->last_visited_category) && (int) $this->context->cookie->last_visited_category && in_array($this->context->link->getProductLink($id_object), $referers)) {
