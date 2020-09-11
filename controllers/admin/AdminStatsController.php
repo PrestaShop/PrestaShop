@@ -259,49 +259,78 @@ class AdminStatsControllerCore extends AdminStatsTabController
         );
     }
 
-    public static function getTotalSales($date_from, $date_to, $granularity = false)
+    /**
+     * @param string $date_from
+     * @param string $date_to
+     * @param bool $granularity
+     * @param bool $removeRefunds
+     *
+     * @return array|false|string
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public static function getTotalSales($date_from, $date_to, $granularity = false, $removeRefunds = false)
     {
+        $sqlSales = 'SELECT'
+            . (($granularity == 'day' || $granularity == 'month') ? ' LEFT(o.invoice_date, ' . ($granularity == 'day' ? 10 : 7) . ') AS date,' : '')
+            . ' SUM((o.total_paid_tax_excl - o.total_shipping_tax_excl) / o.conversion_rate) AS sales'
+            . ' FROM `' . _DB_PREFIX_ . 'orders` o'
+            . ' LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state'
+            . ' WHERE o.invoice_date BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1'
+            . Shop::addSqlRestriction(false, 'o')
+            . (($granularity == 'day' || $granularity == 'month') ? 'GROUP BY LEFT(o.invoice_date, ' . ($granularity == 'day' ? 10 : 7) . ')' : '')
+        ;
+        $sqlRefunds = 'SELECT'
+            . (($granularity == 'day' || $granularity == 'month') ? ' LEFT(o.invoice_date, ' . ($granularity == 'day' ? 10 : 7) . ') AS date,' : '')
+            . ' SUM((ps.total_products_tax_excl - ps.total_shipping_tax_excl) / ps.conversion_rate) AS orderSlips'
+            . ' FROM `' . _DB_PREFIX_ . 'orders` o'
+            . ' INNER JOIN `' . _DB_PREFIX_ . 'order_slip` ps ON o.id_order = ps.id_order'
+            . ' LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state'
+            . ' WHERE o.invoice_date BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1'
+            . Shop::addSqlRestriction(false, 'o')
+            . (($granularity == 'day' || $granularity == 'month') ? 'GROUP BY LEFT(o.invoice_date, ' . ($granularity == 'day' ? 10 : 7) . ')' : '')
+        ;
+
         if ($granularity == 'day') {
             $sales = [];
-            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-                '
-			SELECT LEFT(`invoice_date`, 10) AS date, SUM((total_paid_tax_excl - total_shipping_tax_excl) / o.conversion_rate) AS sales
-			FROM `' . _DB_PREFIX_ . 'orders` o
-			LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
-			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
-			' . Shop::addSqlRestriction(false, 'o') . '
-			GROUP BY LEFT(`invoice_date`, 10)'
-            );
+
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sqlSales);
             foreach ($result as $row) {
                 $sales[strtotime($row['date'])] = $row['sales'];
+            }
+
+            if ($removeRefunds) {
+                $result = DB::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sqlRefunds);
+                foreach ($result as $row) {
+                    $sales[strtotime($row['date'])] = $sales[strtotime($row['date'])] - $row['orderSlips'];
+                }
             }
 
             return $sales;
         } elseif ($granularity == 'month') {
             $sales = [];
-            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-                '
-			SELECT LEFT(`invoice_date`, 7) AS date, SUM((total_paid_tax_excl - total_shipping_tax_excl) / o.conversion_rate) AS sales
-			FROM `' . _DB_PREFIX_ . 'orders` o
-			LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
-			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
-			' . Shop::addSqlRestriction(false, 'o') . '
-			GROUP BY LEFT(`invoice_date`, 7)'
-            );
+
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sqlSales);
             foreach ($result as $row) {
                 $sales[strtotime($row['date'] . '-01')] = $row['sales'];
             }
 
+            if ($removeRefunds) {
+                $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sqlRefunds);
+                foreach ($result as $row) {
+                    $sales[strtotime($row['date'] . '-01')] = $sales[strtotime($row['date'] . '-01')] - $row['orderSlips'];
+                }
+            }
+
             return $sales;
         } else {
-            return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-                '
-			SELECT SUM((total_paid_tax_excl - total_shipping_tax_excl) / o.conversion_rate)
-			FROM `' . _DB_PREFIX_ . 'orders` o
-			LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
-			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
-			' . Shop::addSqlRestriction(false, 'o')
-            );
+            $sale = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sqlSales);
+
+            if ($removeRefunds) {
+                $sale -= Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sqlRefunds);
+            }
+
+            return $sale;
         }
     }
 
