@@ -1263,7 +1263,7 @@ class HookCore extends ObjectModel
         $sql = new DbQuery();
         $sql->select('active');
         $sql->from('hook', 'h');
-        $sql->where('h.name = "' . $hook_name . '"');
+        $sql->where('h.name = "' . pSQL($hook_name) . '"');
 
         return (bool) Db::getInstance()->getValue($sql);
     }
