@@ -1260,20 +1260,11 @@ class HookCore extends ObjectModel
      */
     public static function getHookStatusByName($hook_name): bool
     {
-        if (empty($hook_name)) {
-            return true;
-        }
+        $sql = new DbQuery();
+        $sql->select('active');
+        $sql->from('hook', 'h');
+        $sql->where('h.name = "' . $hook_name . '"');
 
-        $hook_datas = Db::getInstance()->getRow('
-			SELECT `active`
-			FROM `' . _DB_PREFIX_ . 'hook`
-			WHERE `name` = "' . pSQL($hook_name) . '"
-		');
-
-        if (empty($hook_datas)) {
-            return true;
-        }
-
-        return (bool) $hook_datas['active'];
+        return (bool) Db::getInstance()->getValue($sql);
     }
 }
