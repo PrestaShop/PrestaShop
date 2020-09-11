@@ -7,7 +7,7 @@ admin_zones_index:
     _legacy_link: AdminZones
 
 admin_zones_search:
-  path: /
+  path: /search
   methods: POST
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\International\Zone:search'
