@@ -27,9 +27,7 @@
 
 {% if showHeaderAlert %}
   <div class="alert alert-info">
-    <p>{{ 'Your online store needs to have a proper carrier registered in PrestaShop as soon as you start shipping your products. This means sending yours parcels using your local postal service, or having a contract with a private carrier which in turn will ship your parcels to your customers. In order to have PrestaShop suggest the most adequate carrier to your customers during their order checkout process, you need to register all the carriers with which you have chosen to work.'|trans }}</p><br>
-    <p>{{ 'PrestaShop comes with a number of carrier modules that you can activate. You can also buy carrier modules on the PrestaShop Addons marketplace. Recommended modules are listed below: install the module that matches your carrier, and configure it!'|trans }}</p><br>
-    <p>{{ 'If there is no existing module for your carrier, then you can register that carrier by hand using the information that it can provide you: shipping rates, regional zones, size and weight limits, etc. Click on the "%add_new_label%" button below to open the Carrier Wizard, which will help you register a new carrier in a few steps.'|trans({'%add_new_label%': 'Add new carrier'|trans({}, 'Admin.Shipping.Feature')}, 'Admin.Shipping.Help') }}</p><br>
-    <p>{{ 'Note: DO NOT register a new carrier if there already exists a module for it! Using a module will be much faster and more accurate!'|trans }}</p>
+    <p>{{ 'You need to register all the carriers with which you have chosen to work. PrestaShop comes with a selection of carrier modules you can install right below the page or buy on [1]Addons marketplace[/1].'|trans({'[1]': '<a href="https://addons.prestashop.com/en/520-shipping-carriers">', '[/1]': '</a>'}, 'Admin.Shipping.Help') }}</p><br>
+    <p>{{ 'If there is no existing module for your carrier, you can register it manually by clicking on "[1]" but before, please make sure you did not register a new carrier if a module already exists for it!'|trans({'[1]': 'Add new carrier'|trans({}, 'Admin.Shipping.Feature')}, 'Admin.Shipping.Help') }}</p><br>
   </div>
 {% endif %}
