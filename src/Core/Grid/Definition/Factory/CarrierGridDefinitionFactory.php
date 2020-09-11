@@ -127,7 +127,7 @@ class CarrierGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new ToggleColumn('is_free'))
-                    ->setName($this->trans('Free Shipping', [], 'Admin.Shipping.Feature'))
+                    ->setName($this->trans('Free shipping', [], 'Admin.Shipping.Feature'))
                     ->setOptions([
                         'field' => 'is_free',
                         'primary_field' => 'id_carrier',
