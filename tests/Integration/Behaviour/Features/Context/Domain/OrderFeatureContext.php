@@ -562,6 +562,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $this->lastException = $e;
         } catch (DuplicateProductInOrderInvoiceException $e) {
             $this->lastException = $e;
+        } catch (CannotFindProductInOrderException $e) {
+            $this->lastException = $e;
         }
     }
 
@@ -1533,20 +1535,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
 
         // update product price/quantity in order
-        try {
-            // prices and quantities are not important here
-            $updateProductCommand = new UpdateProductInOrderCommand(
-                (int) $orderId,
-                (int) $productOrderDetail['id_order_detail'],
-                '12',
-                '10',
-                3
-            );
-            $this->getCommandBus()->handle($updateProductCommand);
-        } catch (CannotFindProductInOrderException $e) {
-            // updating a product that was deleted from catalogue should trigger this exception
-            $this->lastException = $e;
-        }
+        $this->updateProductInOrder($orderId, $productOrderDetail, ['price' => '10', 'amount' => '3']);
     }
 
     /**
