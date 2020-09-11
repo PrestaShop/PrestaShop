@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidProductQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
@@ -61,9 +62,11 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockExcepti
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use PrestaShopCollection;
 use Product;
 use RuntimeException;
+use SpecificPrice;
 use stdClass;
 use Tax;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
@@ -157,6 +160,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @When I add products to order :orderReference with new invoice and the following products details:
+     * @When I add products to order :orderReference without invoice and the following products details:
      *
      * @param string $orderReference
      * @param TableNode $table
@@ -190,6 +194,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         } catch (InvalidProductQuantityException $e) {
             $this->setLastException($e);
         } catch (ProductOutOfStockException $e) {
+            $this->setLastException($e);
+        } catch (DuplicateProductInOrderException $e) {
             $this->setLastException($e);
         }
     }
@@ -236,35 +242,43 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add products to order :orderReference to last invoice and the following products details:
+     * @When /^I add products to order "(.+)" to (first|last) invoice and the following products details:$/
      *
      * @param string $orderReference
      * @param TableNode $table
      */
-    public function addProductsToOrderWithExistingInvoiceAndTheFollowingDetails(string $orderReference, TableNode $table)
+    public function addProductsToOrderWithExistingInvoiceAndTheFollowingDetails(string $orderReference, string $invoicePosition, TableNode $table)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
         $order = new Order($orderId);
         $invoicesCollection = $order->getInvoicesCollection();
-        $lastInvoice = $invoicesCollection->getLast();
+        $lastInvoice = 'first' === $invoicePosition ? $invoicesCollection->getFirst() : $invoicesCollection->getLast();
 
         $data = $table->getRowsHash();
         $productName = $data['name'];
-        $productId = $this->getProductIdByName($productName);
+        $product = $this->getProductByName($productName);
+
+        if (isset($data['combination'])) {
+            $combinationId = $this->getProductCombinationId($product, $data['combination']);
+        } else {
+            $combinationId = 0;
+        }
 
         try {
             $this->getCommandBus()->handle(
                 AddProductToOrderCommand::toExistingInvoice(
                     (int) $orderId,
                     (int) $lastInvoice->id,
-                    (int) $productId,
-                    0,
+                    (int) $product->getProductId(),
+                    (int) $combinationId,
                     $data['price'],
                     $data['price'],
                     (int) $data['amount']
                 )
             );
         } catch (InvalidProductQuantityException $e) {
+            $this->setLastException($e);
+        } catch (DuplicateProductInOrderException $e) {
             $this->setLastException($e);
         }
     }
@@ -467,6 +481,14 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then I should get error that adding duplicate product is forbidden
+     */
+    public function assertDuplicateProductIsForbidden()
+    {
+        $this->assertLastErrorIs(DuplicateProductInOrderException::class);
+    }
+
+    /**
      * @Then I should get error that product is out of stock
      */
     public function assertLastErrorIsProductOutOfStock()
@@ -585,7 +607,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
 
         if ($totalQuantity !== $quantity) {
-            throw new RuntimeException(sprintf('Order should have "%d" products, but has "%d".', $totalQuantity, $quantity));
+            throw new RuntimeException(sprintf('Order should have "%d" products, but has "%d".', $quantity, $totalQuantity));
         }
     }
 
@@ -709,6 +731,39 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         throw new RuntimeException(
             sprintf(
                 'Order was expected to have "%d" products "%s" in it. Instead got "%d"',
+                $quantity,
+                $productName,
+                $productQuantity
+            )
+        );
+    }
+
+    /**
+     * @Then cart of order :orderReference should contain :quantity product(s) :productName
+     *
+     * @param string $orderReference
+     * @param int $quantity
+     * @param string $productName
+     * @param string|null $combinationName
+     */
+    public function cartOrderContainsProductWithReference(string $orderReference, int $quantity, string $productName, ?string $combinationName = null)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $order = new Order($orderId);
+        $cart = new Cart($order->id_cart);
+
+        $product = $this->getProductByName($productName);
+        $productId = $product->getProductId();
+        $combinationId = null !== $combinationName ? $this->getProductCombinationId($product, $combinationName) : 0;
+
+        $cartQuantities = $cart->getProductQuantity($productId, $combinationId);
+        $productQuantity = (int) $cartQuantities['quantity'];
+        if ($productQuantity === $quantity) {
+            return;
+        }
+        throw new RuntimeException(
+            sprintf(
+                'Cart of order was expected to have "%d" products "%s" in it. Instead got "%d"',
                 $quantity,
                 $productName,
                 $productQuantity
@@ -988,6 +1043,90 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $taxName,
             $orderReference
         ));
+    }
+
+    /**
+     * @Then product :productName in order :orderReference should have no specific price
+     *
+     * @param string $productName
+     * @param string $orderReference
+     */
+    public function assertNoSpecificPrice(string $productName, string $orderReference)
+    {
+        $productId = $this->getProductIdByName($productName);
+        // @todo: maybe manage combination as well
+        $combinationId = 0;
+        $orderId = $this->getSharedStorage()->get($orderReference);
+
+        $specificPriceId = $this->getSpecificPriceId($productId, $combinationId, $orderId);
+        Assert::assertNull(
+            $specificPriceId,
+            sprintf(
+                'Product %s from order %s should have no specific price',
+                $productName,
+                $orderReference
+            )
+        );
+    }
+
+    /**
+     * @Then /^product "(.*)" in order "(.*)" should have specific price (\d+\.\d+)$/
+     *
+     * @param string $productName
+     * @param string $orderReference
+     * @param float $expectedPrice
+     */
+    public function assertSpecificPrice(string $productName, string $orderReference, float $expectedPrice)
+    {
+        $productId = $this->getProductIdByName($productName);
+        // @todo: maybe manage combination as well
+        $combinationId = 0;
+        $orderId = $this->getSharedStorage()->get($orderReference);
+
+        $specificPriceId = $this->getSpecificPriceId($productId, $combinationId, $orderId);
+        Assert::assertNotNull(
+            $specificPriceId,
+            sprintf(
+                'Product %s from order %s should have specific price',
+                $productName,
+                $orderReference
+            )
+        );
+
+        $specificPrice = new SpecificPrice($specificPriceId);
+        Assert::assertEquals(
+            $expectedPrice,
+            $specificPrice->price
+        );
+        Assert::assertEquals('amount', $specificPrice->reduction_type);
+        Assert::assertFalse((bool) $specificPrice->reduction_tax);
+    }
+
+    /**
+     * @param int $productId
+     * @param int $combinationId
+     * @param int $orderId
+     *
+     * @return int|null
+     */
+    private function getSpecificPriceId(int $productId, int $combinationId, int $orderId): ?int
+    {
+        $order = new Order($orderId);
+
+        $specificPriceId = SpecificPrice::exists(
+            $productId,
+            $combinationId,
+            0,
+            0,
+            0,
+            $order->id_currency,
+            $order->id_customer,
+            1,
+            DateTime::NULL_VALUE,
+            DateTime::NULL_VALUE
+        );
+
+        return $specificPriceId ? (int) $specificPriceId : null;
     }
 
     /**

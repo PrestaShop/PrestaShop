@@ -82,6 +82,10 @@ final class SetFreeShippingToCartHandler extends AbstractCartHandler implements 
             return;
         }
 
+        if (null === $freeShippingCartRule) {
+            return;
+        }
+
         $cart->removeCartRule((int) $freeShippingCartRule->id);
 
         try {

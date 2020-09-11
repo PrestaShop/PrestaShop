@@ -66,6 +66,12 @@ class AdminStatusesControllerCore extends AdminController
      */
     protected function initOrderStatutsList()
     {
+        $this->table = 'order_state';
+        $this->className = 'OrderState';
+        $this->_defaultOrderBy = $this->identifier = 'id_order_state';
+        $this->list_id = 'order_state';
+        $this->deleted = true;
+        $this->_orderBy = null;
         $this->fields_list = [
             'id_order_state' => [
                 'title' => $this->trans('ID', [], 'Admin.Global'),
@@ -571,6 +577,7 @@ class AdminStatusesControllerCore extends AdminController
             $this->className = 'OrderReturnState';
             $this->table = 'order_return_state';
             $this->boxes = Tools::getValue('order_return_stateBox');
+            $this->deleted = false;
             parent::processBulkDelete();
         }
 
@@ -629,7 +636,7 @@ class AdminStatusesControllerCore extends AdminController
                 return;
             }
 
-            foreach (Tools::getValue($this->table . 'Box') as $selection) {
+            foreach (Tools::getValue($this->table . 'Box', []) as $selection) {
                 $order_state = new OrderState((int) $selection, $this->context->language->id);
                 if (!$order_state->isRemovable()) {
                     $this->errors[] = $this->trans('For security reasons, you cannot delete default order statuses.', [], 'Admin.Shopparameters.Notification');

@@ -25,6 +25,7 @@ Feature: Order from Back Office (BO)
      #    todo: find a way how to get customer object/id by its properties without using legacy objects
     And there is customer "testCustomer" with email "pub@prestashop.com"
     And customer "testCustomer" has address in "US" country
+    And a carrier "default_carrier" with name "My carrier" exists
     And I create an empty cart "dummy_cart" for customer "testCustomer"
     #    todo: find a way to create country without legacy object
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
@@ -35,13 +36,36 @@ Feature: Order from Back Office (BO)
       | payment module name | dummy_payment              |
       | status              | Awaiting bank wire payment |
 
+  Scenario: Check customer message can be null
+    When I create an empty cart "dummy_cart2" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart2"
+    And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart2"
+    And I add order "bo_order2" with the following details:
+      | cart                | dummy_cart2                 |
+      | message             |                             |
+      | payment module name | dummy_payment               |
+      | status              | Awaiting bank wire payment  |
+    Then order "bo_order2" must have no customer message
+
+  Scenario: Check customer message is saved when creating an order
+    When I create an empty cart "dummy_cart2" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart2"
+    And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart2"
+    And I add order "bo_order2" with the following details:
+      | cart                | dummy_cart2                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    Then order "bo_order2" must have customer message with content "test"
+
   Scenario: Update order status
     When I update order "bo_order1" status to "Awaiting Cash On Delivery validation"
     Then order "bo_order1" has status "Awaiting Cash On Delivery validation"
 
   Scenario: Update order shipping details
-    When I update order "bo_order1" Tracking number to "TEST1234" and Carrier to "2 - My carrier (Delivery next day!)"
+    When I update order "bo_order1" Tracking number to "TEST1234" and Carrier to "default_carrier"
     Then order "bo_order1" has Tracking number "TEST1234"
+    And order "bo_order1" should have "default_carrier" as a carrier
     And order "bo_order1" has Carrier "2 - My carrier (Delivery next day!)"
 
   Scenario: pay order with negative amount and see it is not valid
@@ -86,117 +110,6 @@ Feature: Order from Back Office (BO)
       | free_shipping | true                    |
     Then order "bo_order1" should contain 2 products "Mug Today is a good day"
     Then order "bo_order1" should have 0 invoices
-    When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Mug Today is a good day |
-      | amount        | 1                       |
-      | price         | 16                      |
-      | free_shipping | true                    |
-    Then order "bo_order1" should contain 3 products "Mug Today is a good day"
-    Then order "bo_order1" should have 0 invoices
-
-  Scenario: Add product with specific price, add it again with different specific price The first price is kept
-    Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
-    Then order "bo_order1" should have 2 products in total
-    Then order "bo_order1" should have 0 invoices
-    Then order "bo_order1" should have 0 cart rule
-    Then order "bo_order1" should have following details:
-      | total_products           | 23.800 |
-      | total_products_wt        | 25.230 |
-      | total_discounts_tax_excl | 0.0    |
-      | total_discounts_tax_incl | 0.0    |
-      | total_paid_tax_excl      | 30.800 |
-      | total_paid_tax_incl      | 32.650 |
-      | total_paid               | 32.650 |
-      | total_paid_real          | 0.0    |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-    Given there is a product in the catalog named "Test Product With Specific Price" with a price of 15.0 and 100 items in stock
-    When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product With Specific Price  |
-      | amount        | 1                                 |
-      | price         | 10                                |
-      | free_shipping | true                              |
-    Then order "bo_order1" should have 3 products in total
-    Then order "bo_order1" should have following details:
-      | total_products           | 33.800 |
-      | total_products_wt        | 35.830 |
-      | total_discounts_tax_excl | 0.0000 |
-      | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 40.8   |
-      | total_paid_tax_incl      | 43.250 |
-      | total_paid               | 43.250 |
-      | total_paid_real          | 0.0    |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-    When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product With Specific Price  |
-      | amount        | 1                                 |
-      | price         | 12                                |
-      | free_shipping | true                              |
-    Then order "bo_order1" should have 4 products in total
-    Then order "bo_order1" should have following details:
-      | total_products           | 43.800 |
-      | total_products_wt        | 46.430 |
-      | total_discounts_tax_excl | 0.0000 |
-      | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 50.800 |
-      | total_paid_tax_incl      | 53.850 |
-      | total_paid               | 53.850 |
-      | total_paid_real          | 0.0    |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-
-  Scenario: Add product without specific price, add it again with different specific price The second specific price is used
-    Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
-    Then order "bo_order1" should have 2 products in total
-    Then order "bo_order1" should have 0 invoices
-    Then order "bo_order1" should have 0 cart rule
-    Then order "bo_order1" should have following details:
-      | total_products           | 23.800 |
-      | total_products_wt        | 25.230 |
-      | total_discounts_tax_excl | 0.0    |
-      | total_discounts_tax_incl | 0.0    |
-      | total_paid_tax_excl      | 30.800 |
-      | total_paid_tax_incl      | 32.650 |
-      | total_paid               | 32.650 |
-      | total_paid_real          | 0.0    |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-    Given there is a product in the catalog named "Test Product With Specific Price" with a price of 15.0 and 100 items in stock
-    When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product With Specific Price  |
-      | amount        | 1                                 |
-      | price         | 15                                |
-      | free_shipping | true                              |
-    Then order "bo_order1" should have 3 products in total
-    Then order "bo_order1" should have following details:
-      | total_products           | 38.800 |
-      | total_products_wt        | 41.130 |
-      | total_discounts_tax_excl | 0.0000 |
-      | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 45.8   |
-      | total_paid_tax_incl      | 48.550 |
-      | total_paid               | 48.550 |
-      | total_paid_real          | 0.0    |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
-    When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product With Specific Price  |
-      | amount        | 1                                 |
-      | price         | 10                                |
-      | free_shipping | true                              |
-    Then order "bo_order1" should have 4 products in total
-    Then order "bo_order1" should have following details:
-      | total_products           | 43.800 |
-      | total_products_wt        | 46.430 |
-      | total_discounts_tax_excl | 0.0000 |
-      | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 50.800 |
-      | total_paid_tax_incl      | 53.850 |
-      | total_paid               | 53.850 |
-      | total_paid_real          | 0.0    |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
 
   # This test validates the out of stock behaviour and a bug that occured when a specific price had been set
   Scenario: Add product with specific price without stock, get error, allow out of stock order and retry, it should work (no unicity error)

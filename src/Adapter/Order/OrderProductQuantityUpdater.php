@@ -119,7 +119,7 @@ class OrderProductQuantityUpdater
             // Perform deletion first, we don't want the OrderDetail to be saved with a quantity 0, this could lead to bugs
             if (0 === $newQuantity) {
                 // Product deletion
-                $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, $oldQuantity);
+                $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail);
                 $this->updateCustomizationOnProductDelete($order, $orderDetail, $oldQuantity);
             } else {
                 $this->assertValidProductQuantity($orderDetail, $newQuantity);
@@ -134,10 +134,10 @@ class OrderProductQuantityUpdater
                     $customization->quantity = $newQuantity;
                     $customization->save();
                 }
-            }
 
-            // Update quantity on the cart and stock
-            $cart = $this->updateProductQuantity($cart, $order, $orderDetail, $oldQuantity, $newQuantity);
+                // Update quantity on the cart and stock
+                $cart = $this->updateProductQuantity($cart, $order, $orderDetail, $oldQuantity, $newQuantity);
+            }
 
             // Update product stocks
             $this->updateStocks($cart, $orderDetail, $oldQuantity, $newQuantity);

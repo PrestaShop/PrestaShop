@@ -72,7 +72,7 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
             ));
             $this->getSharedStorage()->set($supplierReference, $supplierId->getValue());
         } catch (SupplierException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 

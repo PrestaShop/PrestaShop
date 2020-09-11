@@ -6,6 +6,7 @@ window.jQuery = $;
 import prestashop from 'prestashop';
 import EventEmitter from 'events';
 
+import './migrate-mute'
 import 'jquery-migrate';
 import 'jquery.browser';
 import '@prestashop-core/jquery.live-polyfill';

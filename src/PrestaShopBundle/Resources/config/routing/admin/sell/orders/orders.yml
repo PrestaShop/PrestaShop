@@ -253,6 +253,8 @@ admin_orders_send_process_order_email:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:sendProcessOrderEmail
     _legacy_controller: AdminOrders
+  options:
+    expose: true
 
 admin_orders_add_product:
   path: /{orderId}/products
@@ -352,3 +354,14 @@ admin_orders_display_customization_image:
     type: \d+
     name: \w+
     value: \w+
+
+admin_orders_product_prices:
+  path: /{orderId}/products/prices
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:getProductPrices
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true

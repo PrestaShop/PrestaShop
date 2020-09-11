@@ -1311,9 +1311,13 @@ class ProductController extends FrameworkBundleAdminController
             $currencyIsoCode = $currencyId !== null
                 ? Currency::getIsoCodeById((int) $currencyId)
                 : Currency::getIsoCodeById((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+            $orderId = null;
+            if ($request->query->has('order_id')) {
+                $orderId = (int) $request->query->get('order_id');
+            }
 
             /** @var FoundProduct[] $foundProducts */
-            $foundProducts = $this->getQueryBus()->handle(new SearchProducts($searchPhrase, 10, $currencyIsoCode));
+            $foundProducts = $this->getQueryBus()->handle(new SearchProducts($searchPhrase, 10, $currencyIsoCode, $orderId));
 
             return $this->json([
                 'products' => $foundProducts,
