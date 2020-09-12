@@ -71,7 +71,7 @@ export default function () {
 
   $('.translation-domain .go-to-pagination-bar').click((event) => {
     const paginationBar = $(event.target).parents('.translation-domain').find('.pagination')[0];
-    scrollToPreviousPaginationBar(paginationBar, event.target);
+    scrollToPreviousPaginationBar(paginationBar);
 
     return false;
   });
@@ -93,7 +93,7 @@ export default function () {
 
     $(nav).find('.page-link').click((event) => {
       const paginationBar = $(event.target).parents('.pagination')[0];
-      scrollToPreviousPaginationBar(paginationBar, event.target);
+      scrollToPreviousPaginationBar(paginationBar);
     });
 
     $(nav).find('.page-item').click((event) => {
