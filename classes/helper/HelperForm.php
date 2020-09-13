@@ -87,6 +87,19 @@ class HelperFormCore extends Helper
             'active_off' => $translator->trans('No', [], 'Admin.Global'),
         ];
 
+        $default_switch_values = [
+            [
+                'id' => 'active_on',
+                'value' => 1,
+                'label' => $default_switch_labels['active_on'],
+            ],
+            [
+                'id' => 'active_off',
+                'value' => 0,
+                'label' => $default_switch_labels['active_off'],
+            ],
+        ];
+
         foreach ($this->fields_form as $fieldset_key => &$fieldset) {
             if (isset($fieldset['form']['tabs'])) {
                 $tabs[] = $fieldset['form']['tabs'];
@@ -108,6 +121,8 @@ class HelperFormCore extends Helper
                                         $this->fields_form[$fieldset_key]['form']['input'][$key]['values'][$k]['label'] = $defautl_label;
                                     }
                                 }
+                            } else {
+                                $this->fields_form[$fieldset_key]['form']['input'][$key]['values'] = $default_switch_values;
                             }
                             break;
 
