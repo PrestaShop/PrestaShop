@@ -241,3 +241,9 @@ services:
 
     prestashop.adapter.product.customization_field_deleter:
         class: PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldDeleter
+
+    prestashop.adapter.product.product_updater:
+        class: PrestaShop\PrestaShop\Adapter\Product\ProductUpdater
+
+    prestashop.adapter.product.product_field_validator:
+        class: PrestaShop\PrestaShop\Adapter\Product\ProductFieldValidator
