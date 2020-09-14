@@ -28,8 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShopException;
 use Product;
 
@@ -38,18 +40,19 @@ use Product;
  */
 class ProductUpdater
 {
+    private $fieldsToUpdate = [];
+
     /**
      * @param Product $product
-     * @param array $fieldsToUpdate
      * @param int $errorCode
      *
      * @throws CannotUpdateProductException
      * @throws ProductException
      */
-    public function update(Product $product, array $fieldsToUpdate, int $errorCode): void
+    public function update(Product $product, int $errorCode): void
     {
         try {
-            $product->setFieldsToUpdate($fieldsToUpdate);
+            $product->setFieldsToUpdate($this->fieldsToUpdate);
 
             if (false === $product->update()) {
                 throw new CannotUpdateProductException(
@@ -63,6 +66,39 @@ class ProductUpdater
                 0,
                 $e
             );
+        }
+    }
+
+    /**
+     * @param Product $product
+     */
+    public function refreshProductCustomizabilityFields(Product $product): void
+    {
+        if ($product->hasActivatedRequiredCustomizableFields()) {
+            $product->customizable = ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION;
+        } elseif (!empty($product->getNonDeletedCustomizationFieldIds())) {
+            $product->customizable = ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION;
+        } else {
+            $product->customizable = ProductCustomizabilitySettings::NOT_CUSTOMIZABLE;
+        }
+
+        $product->text_fields = $product->countCustomizationFields(CustomizationFieldType::TYPE_TEXT);
+        $product->uploadable_files = $product->countCustomizationFields(CustomizationFieldType::TYPE_FILE);
+
+        $this->addFieldsToUpdate([
+            'customizable' => true,
+            'text_fields' => true,
+            'uploadable_files' => true,
+        ]);
+    }
+
+    /**
+     * @param array $fieldsToUpdate
+     */
+    public function addFieldsToUpdate(array $fieldsToUpdate): void
+    {
+        foreach ($fieldsToUpdate as $field => $value) {
+            $this->fieldsToUpdate[$field] = $value;
         }
     }
 }

@@ -28,25 +28,34 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\DeleteCustomizationFieldCommand;
+use PrestaShop\PrestaShop\Adapter\Product\ProductProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCustomizationFieldsFromProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\DeleteCustomizationFieldHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\RemoveAllCustomizationFieldsFromProductInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\RemoveAllCustomizationFieldsFromProductHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationFieldDeleterInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 
-final class RemoveAllCustomizationFieldsFromProductHandler extends AbstractProductHandler implements RemoveAllCustomizationFieldsFromProductInterface
+final class RemoveAllCustomizationFieldsFromProductHandler implements RemoveAllCustomizationFieldsFromProductHandlerInterface
 {
     /**
-     * @var DeleteCustomizationFieldHandlerInterface
+     * @var CustomizationFieldDeleterInterface
      */
-    private $deleteCustomizationFieldHandler;
+    private $customizationFieldDeleter;
 
     /**
-     * @param DeleteCustomizationFieldHandlerInterface $deleteCustomizationFieldHandler
+     * @var ProductProvider
      */
-    public function __construct(DeleteCustomizationFieldHandlerInterface $deleteCustomizationFieldHandler)
-    {
-        $this->deleteCustomizationFieldHandler = $deleteCustomizationFieldHandler;
+    private $productProvider;
+
+    /**
+     * @param CustomizationFieldDeleterInterface $customizationFieldDeleter
+     * @param ProductProvider $productProvider
+     */
+    public function __construct(
+        CustomizationFieldDeleterInterface $customizationFieldDeleter,
+        ProductProvider $productProvider
+    ) {
+        $this->customizationFieldDeleter = $customizationFieldDeleter;
+        $this->productProvider = $productProvider;
     }
 
     /**
@@ -54,14 +63,12 @@ final class RemoveAllCustomizationFieldsFromProductHandler extends AbstractProdu
      */
     public function handle(RemoveAllCustomizationFieldsFromProductCommand $command): void
     {
-        $product = $this->getProduct($command->getProductId());
+        $product = $this->productProvider->get($command->getProductId());
 
-        $customizationFieldIds = array_map(function ($field) {
-            return (int) $field['id_customization_field'];
+        $customizationFieldIds = array_map(function ($field): CustomizationFieldId {
+            return new CustomizationFieldId((int) $field['id_customization_field']);
         }, $product->getCustomizationFieldIds());
 
-        foreach ($customizationFieldIds as $customizationFieldId) {
-            $this->deleteCustomizationFieldHandler->handle(new DeleteCustomizationFieldCommand($customizationFieldId));
-        }
+        $this->customizationFieldDeleter->bulkDelete($customizationFieldIds);
     }
 }

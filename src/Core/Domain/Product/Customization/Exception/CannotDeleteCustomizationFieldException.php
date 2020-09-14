@@ -33,4 +33,13 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception;
  */
 class CannotDeleteCustomizationFieldException extends CustomizationFieldException
 {
+    /**
+     * When single deletion fails
+     */
+    const FAILED_DELETE = 10;
+
+    /**
+     * When deletion fails in bulk action
+     */
+    const FAILED_BULK_DELETE = 20;
 }

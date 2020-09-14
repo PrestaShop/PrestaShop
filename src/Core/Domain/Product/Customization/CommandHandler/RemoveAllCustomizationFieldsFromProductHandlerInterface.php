@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCus
 /**
  * Defines contract to handle @see RemoveAllCustomizationFieldsFromProductCommand
  */
-interface RemoveAllCustomizationFieldsFromProductInterface
+interface RemoveAllCustomizationFieldsFromProductHandlerInterface
 {
     /**
      * @param RemoveAllCustomizationFieldsFromProductCommand $command

@@ -158,7 +158,7 @@ services:
     prestashop.adapter.product.command_handler.delete_customization_field_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DeleteCustomizationFieldHandler
         arguments:
-            - '@prestashop.adapter.product.product_updater'
+            - '@prestashop.adapter.product.customization_field_deleter'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\DeleteCustomizationFieldCommand
@@ -182,7 +182,8 @@ services:
     prestashop.adapter.product.command_handler.remove_all_customization_fields_from_product_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllCustomizationFieldsFromProductHandler
         arguments:
-            - '@prestashop.adapter.product.command_handler.delete_customization_field_handler'
+            - '@prestashop.adapter.product.customization_field_deleter'
+            - '@prestashop.adapter.product.product_provider'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCustomizationFieldsFromProductCommand
@@ -243,9 +244,19 @@ services:
 
     prestashop.adapter.product.customization_field_deleter:
         class: PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldDeleter
+        arguments:
+            - '@prestashop.adapter.product.customization_field_provider'
+            - '@prestashop.adapter.product.product_provider'
+            - '@prestashop.adapter.product.product_updater'
 
     prestashop.adapter.product.product_updater:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductUpdater
 
     prestashop.adapter.product.product_field_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductFieldValidator
+
+    prestashop.adapter.product.product_provider:
+        class: PrestaShop\PrestaShop\Adapter\Product\ProductProvider
+
+    prestashop.adapter.product.customization_field_provider:
+        class: PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldProvider

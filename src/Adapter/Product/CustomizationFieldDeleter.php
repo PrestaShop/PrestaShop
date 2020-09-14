@@ -28,8 +28,16 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationFieldDeleterInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotDeleteCustomizationFieldException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShopException;
 
 /**
  * Deletes customization field/fields using legacy object models
@@ -37,11 +45,42 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\Customiz
 final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterface
 {
     /**
+     * @var CustomizationFieldProvider
+     */
+    private $customizationFieldProvider;
+
+    /**
+     * @var ProductProvider
+     */
+    private $productProvider;
+
+    /**
+     * @var ProductUpdater
+     */
+    private $productUpdater;
+
+    /**
+     * @param CustomizationFieldProvider $customizationFieldProvider
+     * @param ProductProvider $productProvider
+     * @param ProductUpdater $productUpdater
+     */
+    public function __construct(
+        CustomizationFieldProvider $customizationFieldProvider,
+        ProductProvider $productProvider,
+        ProductUpdater $productUpdater
+    ) {
+        $this->customizationFieldProvider = $customizationFieldProvider;
+        $this->productProvider = $productProvider;
+        $this->productUpdater = $productUpdater;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function delete(CustomizationFieldId $customizationFieldId): void
     {
-        // TODO: Implement bulkDelete() method.
+        $customizationField = $this->customizationFieldProvider->get($customizationFieldId);
+        $this->performDeletion($customizationField, CannotDeleteCustomizationFieldException::FAILED_DELETE);
     }
 
     /**
@@ -49,6 +88,54 @@ final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterf
      */
     public function bulkDelete(array $customizationFieldIds): void
     {
-        // TODO: Implement bulkDelete() method.
+        foreach ($customizationFieldIds as $customizationFieldId) {
+            $customizationField = $this->customizationFieldProvider->get($customizationFieldId);
+            $this->performDeletion($customizationField, CannotDeleteCustomizationFieldException::FAILED_BULK_DELETE);
+        }
+    }
+
+    /**
+     * @param CustomizationField $customizationField
+     * @param int $errorCode
+     *
+     * @return void
+     *
+     * @throws CannotDeleteCustomizationFieldException
+     * @throws CustomizationFieldException
+     * @throws ProductException
+     * @throws ProductNotFoundException
+     */
+    private function performDeletion(CustomizationField $customizationField, int $errorCode): void
+    {
+        $product = $this->productProvider->get(new ProductId((int) $customizationField->id_product));
+        $usedFieldIds = array_map('intval', $product->getUsedCustomizationFieldsIds());
+        $fieldId = (int) $customizationField->id;
+
+        try {
+            if (in_array($fieldId, $usedFieldIds)) {
+                $successfullyDeleted = $customizationField->softDelete();
+            } else {
+                $successfullyDeleted = $customizationField->delete();
+            }
+
+            if (true !== $successfullyDeleted) {
+                throw new CannotDeleteCustomizationFieldException(
+                    sprintf('Failed deleting customization field #%d', $customizationField->id),
+                    $errorCode
+                );
+            }
+
+            $this->productUpdater->refreshProductCustomizabilityFields($product);
+            $this->productUpdater->update($product, CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS);
+        } catch (PrestaShopException $e) {
+            throw new CustomizationFieldException(
+                sprintf(
+                    'Error occurred when trying to delete customization field #%d',
+                    $fieldId
+                ),
+                0,
+                $e
+            );
+        }
     }
 }
