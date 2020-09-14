@@ -1105,6 +1105,22 @@ class ProductCore extends ObjectModel
     }
 
     /**
+     * @see ObjectModel::resetStaticCache()
+     *
+     * reset static cache (eg unit testing purpose).
+     */
+    public static function resetStaticCache()
+    {
+        static::$loaded_classes = [];
+        static::$productPropertiesCache = [];
+        static::$_cacheFeatures = [];
+        static::$_frontFeaturesCache = [];
+        static::$_prices = [];
+        static::$_pricesLevel2 = [];
+        static::$_incat = [];
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function validateField($field, $value, $id_lang = null, $skip = [], $human_errors = false)

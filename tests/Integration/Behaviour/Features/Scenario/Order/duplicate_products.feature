@@ -55,8 +55,8 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should contain 30 products "Test Duplicate Product"
     And order "bo_order1" should have 0 invoices
     Given I update order "bo_order1" status to "Payment accepted"
-    And order "bo_order1" should have 1 invoices
-    When I add products to order "bo_order1" to last invoice and the following products details:
+    And order "bo_order1" should have 1 invoice
+    When I add products to order "bo_order1" to the last invoice and the following products details:
       | name          | Test Duplicate Product  |
       | amount        | 30                      |
       | price         | 15                      |
@@ -81,14 +81,14 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should contain 0 products "Test Duplicate Product 2"
     And order "bo_order1" should have 0 invoices
     Given I update order "bo_order1" status to "Payment accepted"
-    And order "bo_order1" should have 1 invoices
-    When I add products to order "bo_order1" to last invoice and the following products details:
+    And order "bo_order1" should have 1 invoice
+    When I add products to order "bo_order1" to the last invoice and the following products details:
       | name          | Test Duplicate Product 2 |
       | amount        | 30                       |
       | price         | 15                       |
     Then the available stock for product "Test Duplicate Product 2" should be 70
     And the available stock for product "Test Duplicate Product" should be 70
-    And order "bo_order1" should have 1 invoices
+    And order "bo_order1" should have 1 invoice
     And order "bo_order1" should have 62 products in total
     And order "bo_order1" should contain 30 products "Test Duplicate Product"
     And order "bo_order1" should contain 30 products "Test Duplicate Product 2"
@@ -109,7 +109,7 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should contain 0 products "Test Duplicate Product 2"
     And order "bo_order1" should have 0 invoices
     Given I update order "bo_order1" status to "Payment accepted"
-    And order "bo_order1" should have 1 invoices
+    And order "bo_order1" should have 1 invoice
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Test Duplicate Product 2 |
       | amount        | 30                       |
@@ -120,8 +120,8 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should have 62 products in total
     And order "bo_order1" should contain 30 products "Test Duplicate Product"
     And order "bo_order1" should contain 30 products "Test Duplicate Product 2"
-    # Cannot add to last invoice since it already contains the product
-    When I add products to order "bo_order1" to last invoice and the following products details:
+    # Cannot add to the last invoice since it already contains the product
+    When I add products to order "bo_order1" to the last invoice and the following products details:
       | name          | Test Duplicate Product 2 |
       | amount        | 30                       |
       | price         | 15                       |
@@ -133,7 +133,7 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should contain 30 products "Test Duplicate Product"
     And order "bo_order1" should contain 30 products "Test Duplicate Product 2"
     # But can add to the first since it does not contain it
-    When I add products to order "bo_order1" to first invoice and the following products details:
+    When I add products to order "bo_order1" to the first invoice and the following products details:
       | name          | Test Duplicate Product 2 |
       | amount        | 30                       |
       | price         | 15                       |
@@ -160,8 +160,8 @@ Feature: Order from Back Office (BO)
       Then the available stock for combination "combination1" of product "My Product" should be 70
       And the available stock for combination "combination2" of product "My Product" should be 100
       Given I update order "bo_order1" status to "Payment accepted"
-      Then order "bo_order1" should have 1 invoices
-      When I add products to order "bo_order1" to first invoice and the following products details:
+      Then order "bo_order1" should have 1 invoice
+      When I add products to order "bo_order1" to the first invoice and the following products details:
         | name          | My Product    |
         | combination   | combination2  |
         | amount        | 30            |
@@ -183,8 +183,8 @@ Feature: Order from Back Office (BO)
       | price         | 10            |
       Then the available stock for combination "combination1" of product "My Product" should be 70
     Given I update order "bo_order1" status to "Payment accepted"
-    Then order "bo_order1" should have 1 invoices
-    When I add products to order "bo_order1" to first invoice and the following products details:
+    Then order "bo_order1" should have 1 invoice
+    When I add products to order "bo_order1" to the first invoice and the following products details:
       | name          | My Product    |
       | combination   | combination1  |
       | amount        | 30            |

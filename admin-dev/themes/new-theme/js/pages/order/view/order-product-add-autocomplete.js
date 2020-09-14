@@ -93,6 +93,7 @@ export default class OrderProductAutocomplete {
 
     Object.values(this.results).forEach((val) => {
       const link = $(`<a class="dropdown-item" data-id="${val.productId}" href="#">${val.name}</a>`);
+
       link.on('click', (event) => {
         event.preventDefault();
         this.onItemClicked($(event.target).data('id'));
