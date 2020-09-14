@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkDeleteProductHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Service\ProductDeleterInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductDeleterInterface;
 
 /**
  * Handles @see BulkDeleteProductCommand using legacy object model

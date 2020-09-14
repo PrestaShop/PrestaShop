@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\DeleteProductHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Service\ProductDeleterInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductDeleterInterface;
 
 /**
  * Handles @see DeleteProductCommand using legacy object model
