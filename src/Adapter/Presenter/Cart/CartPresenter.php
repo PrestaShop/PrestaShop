@@ -95,6 +95,9 @@ class CartPresenter implements PresenterInterface
      */
     private function presentProduct(array $rawProduct)
     {
+	    $assembler = new \ProductAssembler( Context::getContext() );
+	    $rawProduct = $assembler->assembleProduct( $rawProduct );
+
         $settings = new ProductPresentationSettings();
 
         $settings->catalog_mode = Configuration::isCatalogMode();
