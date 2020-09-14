@@ -574,7 +574,7 @@ class ThemeManager implements AddonManagerInterface
      *
      * @return array
      */
-    private function getDefaultDomains($locale, $themeName)
+    private function getDefaultDomains(string $locale, string $themeName)
     {
         /** @var \PrestaShopBundle\Translation\Provider\ThemeProvider $themeProvider */
         $themeProvider = $this->translationProviderFactory->build(
