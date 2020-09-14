@@ -190,35 +190,18 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                         'message' => $this->trans('This product is not visible to your customers.', [], 'Shop.Notifications.Warning'),
                     ];
                 }
-                // Load category
-                $id_category = false;
-                if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] == Tools::secureReferrer($_SERVER['HTTP_REFERER']) // Assure us the previous page was one of the shop
-                    && preg_match('~^.*(?<!\/content)\/([0-9]+)\-(.*[^\.])|(.*)id_(category|product)=([0-9]+)(.*)$~', $_SERVER['HTTP_REFERER'], $regs)) {
-                    // If the previous page was a category and is a parent category of the product use this category as parent category
-                    $id_object = false;
-                    if (isset($regs[1]) && is_numeric($regs[1])) {
-                        $id_object = (int) $regs[1];
-                    } elseif (isset($regs[5]) && is_numeric($regs[5])) {
-                        $id_object = (int) $regs[5];
-                    }
-                    if ($id_object) {
-                        $referers = array_map(
-                            function ($referer) {
-                                return preg_replace('/\?.*$/', '', $referer);
-                            },
-                            [$_SERVER['HTTP_REFERER'], urldecode($_SERVER['HTTP_REFERER'])]
-                        );
 
-                        if (in_array($this->context->link->getCategoryLink($id_object), $referers)) {
-                            $id_category = (int) $id_object;
-                        } elseif (isset($this->context->cookie->last_visited_category) && (int) $this->context->cookie->last_visited_category && in_array($this->context->link->getProductLink($id_object), $referers)) {
-                            $id_category = (int) $this->context->cookie->last_visited_category;
-                        }
-                    }
-                }
-                if (!$id_category || !Category::inShopStatic($id_category, $this->context->shop) || !Product::idIsOnCategoryId((int) $this->product->id, ['0' => ['id_category' => $id_category]])) {
+                // Load category
+                $id_category = $this->guessCategoryFromRequest();
+
+                if (
+                    $id_category === null ||
+                    !Category::inShopStatic($id_category, $this->context->shop) ||
+                    !Product::idIsOnCategoryId((int) $this->product->id, ['0' => ['id_category' => $id_category]])
+                ) {
                     $id_category = (int) $this->product->id_category_default;
                 }
+
                 $this->category = new Category((int) $id_category, (int) $this->context->cookie->id_lang);
                 $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
                 $moduleManager = $moduleManagerBuilder->build();
@@ -1328,5 +1311,66 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
 
         return false;
+    }
+
+    /**
+     * From the current request, tries to determine the current category being browsed
+     *
+     * @return int|null
+     */
+    protected function guessCategoryIdFromRequest()
+    {
+        // Assure us the previous page was one of the shop
+        if (!isset($_SERVER['HTTP_REFERER']) || $_SERVER['HTTP_REFERER'] !== Tools::secureReferrer($_SERVER['HTTP_REFERER'])) {
+            return null;
+        }
+
+        // Check if the previous page was a category page
+        if (preg_match('~^.*(?<!\/content)\/([0-9]+)\-(.*[^\.])|(.*)id_(category|product)=([0-9]+)(.*)$~', $_SERVER['HTTP_REFERER'], $regs) !== 1) {
+            return null;
+        }
+
+        // If the previous page was a category and is a parent category of the product use this category as parent category
+        $id_object = false;
+        if (isset($regs[1]) && is_numeric($regs[1])) {
+            $id_object = (int) $regs[1];
+        } elseif (isset($regs[5]) && is_numeric($regs[5])) {
+            $id_object = (int) $regs[5];
+        }
+
+        if (!$id_object) {
+            return null;
+        }
+
+        foreach ([$_SERVER['HTTP_REFERER'], urldecode($_SERVER['HTTP_REFERER'])] as $previousPageLink) {
+            $id_category = $this->extractObjectCategoryFromLink($id_object, $previousPageLink);
+            if ($id_category !== null) {
+                return $id_category;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Given an id and a page link, extracts the category id
+     *
+     * @return int|null
+     */
+    private function extractObjectCategoryFromLink($id_object, $previousPageLink)
+    {
+        if (strncmp($this->context->link->getCategoryLink($id_object), $previousPageLink, strlen($this->context->link->getCategoryLink($id_object))) === 0) {
+            return (int) $id_object;
+        }
+
+        if (
+            isset($this->context->cookie->last_visited_category) &&
+            (int) $this->context->cookie->last_visited_category &&
+            strncmp($this->context->link->getProductLink($id_object), $previousPageLink, strlen($this->context->link->getCategoryLink($id_object))) === 0
+        ) {
+            return (int) $this->context->cookie->last_visited_category;
+        }
+
+        return null;
     }
 }
