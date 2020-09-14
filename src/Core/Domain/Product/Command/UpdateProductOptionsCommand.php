@@ -28,7 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
@@ -96,7 +98,7 @@ class UpdateProductOptionsCommand
     private $reference;
 
     /**
-     * @var ManufacturerId|null
+     * @var ManufacturerIdInterface|null
      */
     private $manufacturerId;
 
@@ -317,9 +319,9 @@ class UpdateProductOptionsCommand
     }
 
     /**
-     * @return ManufacturerId|null
+     * @return ManufacturerIdInterface|null
      */
-    public function getManufacturerId(): ?ManufacturerId
+    public function getManufacturerId(): ?ManufacturerIdInterface
     {
         return $this->manufacturerId;
     }
@@ -327,7 +329,9 @@ class UpdateProductOptionsCommand
     /**
      * @param int $manufacturerId
      *
-     * @return UpdateProductOptionsCommand
+     * @throws ManufacturerConstraintException
+     *
+     * @return $this
      */
     public function setManufacturerId(int $manufacturerId): UpdateProductOptionsCommand
     {

@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstra
 /**
  * Provides manufacturer id
  */
-class ManufacturerId
+class ManufacturerId implements ManufacturerIdInterface
 {
     /**
      * @var int
@@ -50,7 +50,7 @@ class ManufacturerId
     }
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
     public function getValue()
     {
