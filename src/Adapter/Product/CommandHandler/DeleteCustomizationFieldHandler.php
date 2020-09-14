@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractCustomizationFieldHandler;
+use PrestaShop\PrestaShop\Adapter\Product\ProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\DeleteCustomizationFieldCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\DeleteCustomizationFieldHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotDeleteCustomizationFieldException;
@@ -42,6 +43,19 @@ use PrestaShopException;
  */
 final class DeleteCustomizationFieldHandler extends AbstractCustomizationFieldHandler implements DeleteCustomizationFieldHandlerInterface
 {
+    /**
+     * @var ProductUpdater
+     */
+    private $productUpdater;
+
+    /**
+     * @param ProductUpdater $productUpdater
+     */
+    public function __construct(ProductUpdater $productUpdater)
+    {
+        $this->productUpdater = $productUpdater;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -79,6 +93,6 @@ final class DeleteCustomizationFieldHandler extends AbstractCustomizationFieldHa
 
         $this->refreshProductCustomizability($product);
         $this->refreshCustomizationFieldsCount($product);
-        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS);
+        $this->productUpdater->update($product, $this->fieldsToUpdate, CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS);
     }
 }
