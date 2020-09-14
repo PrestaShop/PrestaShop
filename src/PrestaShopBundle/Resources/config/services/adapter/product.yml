@@ -238,3 +238,6 @@ services:
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand
+
+    prestashop.adapter.product.customization_field_deleter:
+        class: PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldDeleter
