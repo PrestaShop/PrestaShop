@@ -30,10 +30,14 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use CustomizationField as CustomizationFieldEntity;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractCustomizationFieldHandler;
+use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldValidator;
+use PrestaShop\PrestaShop\Adapter\Product\ProductProvider;
+use PrestaShop\PrestaShop\Adapter\Product\ProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\AddCustomizationFieldCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\AddCustomizationFieldHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotAddCustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShopException;
@@ -44,21 +48,55 @@ use PrestaShopException;
 final class AddCustomizationFieldHandler extends AbstractCustomizationFieldHandler implements AddCustomizationFieldHandlerInterface
 {
     /**
+     * @var ProductProvider
+     */
+    private $productProvider;
+
+    /**
+     * @var ProductUpdater
+     */
+    private $productUpdater;
+
+    /**
+     * @var CustomizationFieldValidator
+     */
+    private $customizationFieldValidator;
+
+    /**
+     * @param ProductProvider $productProvider
+     * @param ProductUpdater $productUpdater
+     * @param CustomizationFieldValidator $customizationFieldValidator
+     */
+    public function __construct(
+        ProductProvider $productProvider,
+        ProductUpdater $productUpdater,
+        CustomizationFieldValidator $customizationFieldValidator
+    ) {
+        $this->productProvider = $productProvider;
+        $this->productUpdater = $productUpdater;
+        $this->customizationFieldValidator = $customizationFieldValidator;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(AddCustomizationFieldCommand $command): CustomizationFieldId
     {
-        $product = $this->getProduct($command->getProductId());
+        $product = $this->productProvider->get($command->getProductId());
 
         $customizationField = new CustomizationFieldEntity();
-
+//@todo: move to its own service. Some kind of CustomizationFieldFactory/Saver/Creator?
         $customizationField->id_product = $product->id;
         $customizationField->type = $command->getType()->getValue();
         $customizationField->required = $command->isRequired();
         $customizationField->is_module = $command->isAddedByModule();
         $customizationField->name = $command->getLocalizedNames();
 
-        $this->validateCustomizationFieldName($customizationField);
+        $this->customizationFieldValidator->validateLocalizedField(
+            $customizationField,
+            'name',
+            CustomizationFieldConstraintException::INVALID_NAME
+        );
 
         try {
             if (false === $customizationField->add()) {
@@ -74,9 +112,8 @@ final class AddCustomizationFieldHandler extends AbstractCustomizationFieldHandl
             ));
         }
 
-        $this->refreshProductCustomizability($product);
-        $this->refreshCustomizationFieldsCount($product);
-        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS);
+        $this->productUpdater->refreshProductCustomizabilityFields($product);
+        $this->productUpdater->update($product, CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS);
 
         return new CustomizationFieldId((int) $customizationField->id);
     }

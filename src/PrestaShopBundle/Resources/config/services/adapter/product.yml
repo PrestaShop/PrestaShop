@@ -145,6 +145,10 @@ services:
 
     prestashop.adapter.product.command_handler.add_customization_field_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddCustomizationFieldHandler
+        arguments:
+            - '@prestashop.adapter.product.product_provider'
+            - '@prestashop.adapter.product.product_updater'
+            - '@prestashop.adapter.product.customization_field_validator'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\AddCustomizationFieldCommand
@@ -260,3 +264,6 @@ services:
 
     prestashop.adapter.product.customization_field_provider:
         class: PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldProvider
+
+    prestashop.adapter.product.customization_field_validator:
+        class: PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldValidator
