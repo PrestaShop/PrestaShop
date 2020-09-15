@@ -111,7 +111,7 @@ class LocaleData
      *
      * @var TerritoryData[]
      */
-    protected $territories;
+    protected $territories = [];
 
     /**
      * Override this object's data with another LocaleData object.
@@ -178,9 +178,6 @@ class LocaleData
         }
 
         if (null !== $localeData->getTerritories()) {
-            if (null === $this->territories) {
-                $this->territories = [];
-            }
             $this->territories = array_merge($this->territories, $localeData->getTerritories());
         }
 
@@ -386,7 +383,7 @@ class LocaleData
     /**
      * @return TerritoryData[]
      */
-    public function getTerritories()
+    public function getTerritories(): array
     {
         return $this->territories;
     }
