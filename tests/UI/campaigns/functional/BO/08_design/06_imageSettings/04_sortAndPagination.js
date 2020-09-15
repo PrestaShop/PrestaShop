@@ -28,7 +28,7 @@ let page;
 let numberOfImageTypes = 0;
 
 /*
-Create 11 image settings
+Create 15 image settings
 Paginate between pages
 Sort image settings table
 Delete image settings with bulk actions
@@ -100,7 +100,7 @@ describe('Pagination and sort image settings', async () => {
   // 2 : Pagination
   describe('Pagination next and previous', async () => {
     it('should change the item number to 20 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
       const paginationNumber = await imageSettingsPage.selectPaginationLimit(page, '20');
       expect(paginationNumber).to.equal('1 2');
@@ -192,7 +192,7 @@ describe('Pagination and sort image settings', async () => {
   });
 
   // 4 : Delete image settings created with bulk actions
-  describe('Delete customers with Bulk Actions', async () => {
+  describe('Delete image settings with Bulk Actions', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
 
