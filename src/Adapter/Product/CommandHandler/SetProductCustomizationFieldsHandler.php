@@ -97,7 +97,7 @@ class SetProductCustomizationFieldsHandler extends AbstractCustomizationFieldHan
         $this->deleteCustomizationFields($deletableFieldIds);
         $product = $this->getProduct($command->getProductId());
 
-        return array_map(function ($customizationFieldId): CustomizationFieldId {
+        return array_map(function (int $customizationFieldId): CustomizationFieldId {
             return new CustomizationFieldId($customizationFieldId);
         }, $product->getNonDeletedCustomizationFieldIds());
     }
@@ -154,7 +154,7 @@ class SetProductCustomizationFieldsHandler extends AbstractCustomizationFieldHan
      */
     private function deleteCustomizationFields(array $fieldIdsForDeletion): void
     {
-        $customizationFieldIdsForDeletion = array_map(function ($fieldId): CustomizationFieldId {
+        $customizationFieldIdsForDeletion = array_map(function (int $fieldId): CustomizationFieldId {
             return new CustomizationFieldId($fieldId);
         }, $fieldIdsForDeletion);
 
