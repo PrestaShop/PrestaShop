@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter;
 
-use PrestaShop\PrestaShop\Adapter\Entity\ObjectModel;
+use ObjectModel;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
 

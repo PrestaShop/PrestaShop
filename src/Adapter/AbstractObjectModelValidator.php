@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter;
 
-use PrestaShop\PrestaShop\Adapter\Entity\ObjectModel;
+use ObjectModel;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
 
@@ -38,6 +38,9 @@ abstract class AbstractObjectModelValidator
      * @param ObjectModel $objectModel
      * @param string $propertyName
      * @param string $exceptionClass
+     * @param int $errorCode
+     *
+     * @throws CoreException
      */
     protected function validateObjectModelProperty(ObjectModel $objectModel, string $propertyName, string $exceptionClass, int $errorCode = 0): void
     {
