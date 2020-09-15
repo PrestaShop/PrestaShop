@@ -31,7 +31,7 @@ const {$} = window;
  */
 const init = function initDatePickers() {
   $('.colorpicker input[type="text"]').each((i, picker) => {
-    $(picker).colorpicker();
+    $(picker).colorpicker({format: 'auto', autoInputFallback: false});
   });
 };
 
