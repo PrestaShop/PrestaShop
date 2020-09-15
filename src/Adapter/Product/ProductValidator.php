@@ -36,7 +36,7 @@ use Product;
 /**
  * Validates product field using legacy object model
  */
-class ProductFieldValidator extends AbstractObjectModelValidator
+class ProductValidator extends AbstractObjectModelValidator
 {
     /**
      * Validates Product object model properties using legacy validation
