@@ -72,8 +72,10 @@ class OrderStateController extends FrameworkBundleAdminController
             $this->get('prestashop.service.multishop_context_switcher')->switchToAllShopsContext();
             $this->addFlash(
                 'info',
-                $this->trans('Note that this page is available in all shops context only, this is why your context has just switched.',
-                    'Admin.Notifications.Info')
+                $this->trans(
+                    'Note that this page is available in all shops context only, this is why your context has just switched.',
+                    'Admin.Notifications.Info'
+                )
             );
         }
 
