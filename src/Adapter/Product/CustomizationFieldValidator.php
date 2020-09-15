@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 use CustomizationField;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldConstraintException;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
  * Validates CustomizationField field using legacy object model
@@ -40,16 +41,48 @@ class CustomizationFieldValidator extends AbstractObjectModelValidator
     /**
      * @param CustomizationField $customizationField
      * @param string $propertyName
-     * @param int $errorCode
      *
-     * @throws \PrestaShop\PrestaShop\Core\Exception\CoreException
+     * @throws CoreException
      */
-    public function validateLocalizedProperty(CustomizationField $customizationField, string $propertyName, int $errorCode): void
+    public function validateProperty(CustomizationField $customizationField, string $propertyName): void
+    {
+        parent::validateObjectModelProperty(
+            $customizationField,
+            $propertyName,
+            CustomizationFieldConstraintException::class,
+            $this->getErrorCode($propertyName)
+        );
+    }
+
+    /**
+     * @param CustomizationField $customizationField
+     * @param string $propertyName
+     *
+     * @throws CoreException
+     */
+    public function validateLocalizedProperty(CustomizationField $customizationField, string $propertyName): void
     {
         $this->validateObjectModelLocalizedProperty(
             $customizationField,
             $propertyName,
-            CustomizationFieldConstraintException::class, $errorCode
+            CustomizationFieldConstraintException::class,
+            $this->getErrorCode($propertyName)
         );
+    }
+
+    /**
+     * @param string $propertyName
+     *
+     * @return int
+     */
+    private function getErrorCode(string $propertyName): int
+    {
+        $codesByName = [
+            'name' => CustomizationFieldConstraintException::INVALID_NAME,
+            'type' => CustomizationFieldConstraintException::INVALID_TYPE,
+            'id' => CustomizationFieldConstraintException::INVALID_ID,
+        ];
+
+        return $codesByName[$propertyName];
     }
 }

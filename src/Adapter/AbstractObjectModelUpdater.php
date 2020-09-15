@@ -69,4 +69,23 @@ abstract class AbstractObjectModelUpdater
             $this->propertiesToUpdate = [];
         }
     }
+
+    /**
+     * @param ObjectModel $objectModel
+     * @param array $propertiesToUpdate
+     */
+    protected function fillProperties(ObjectModel $objectModel, array $propertiesToUpdate): void
+    {
+        foreach ($propertiesToUpdate as $propertyName => $value) {
+            $objectModel->{$propertyName} = $value;
+
+            if (is_array($value)) {
+                foreach ($value as $langId => $localizedValue) {
+                    $this->propertiesToUpdate[$propertyName][$langId] = true;
+                }
+            } else {
+                $this->propertiesToUpdate[$propertyName] = true;
+            }
+        }
+    }
 }
