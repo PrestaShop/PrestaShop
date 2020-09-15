@@ -421,8 +421,10 @@ class OrderStateController extends FrameworkBundleAdminController
         if ($this->get('prestashop.adapter.multistore_feature')->isActive()) {
             $this->addFlash(
                 'info',
-                $this->trans('Note that this feature is available in all shops context only. It will be added to all your stores.',
-                    'Admin.Notifications.Info')
+                $this->trans(
+                    'Note that this feature is available in all shops context only. It will be added to all your stores.',
+                    'Admin.Notifications.Info'
+                )
             );
         }
     }
