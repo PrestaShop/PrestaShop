@@ -41,7 +41,7 @@ use Product;
 class ProductUpdater
 {
     /**
-     * @var array<string, bool|array<int, bool>>
+     * @var <array<string, bool|array<int, bool>>
      */
     private $fieldsToUpdate = [];
 
@@ -69,6 +69,8 @@ class ProductUpdater
                 0,
                 $e
             );
+        } finally {
+            $this->fieldsToUpdate = [];
         }
     }
 
@@ -96,7 +98,7 @@ class ProductUpdater
     }
 
     /**
-     * @param array $fieldsToUpdate
+     * @param array<string, bool|array<int, bool>> $fieldsToUpdate
      */
     public function addFieldsToUpdate(array $fieldsToUpdate): void
     {
