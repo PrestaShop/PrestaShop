@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShopException;
+use Product;
 
 /**
  * Deletes customization field/fields using legacy object models
@@ -58,6 +59,11 @@ final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterf
      * @var ProductUpdater
      */
     private $productUpdater;
+
+    /**
+     * @var array<int, Product>
+     */
+    private $productsById = [];
 
     /**
      * @param CustomizationFieldProvider $customizationFieldProvider
@@ -107,7 +113,7 @@ final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterf
      */
     private function performDeletion(CustomizationField $customizationField, int $errorCode): void
     {
-        $product = $this->productProvider->get(new ProductId((int) $customizationField->id_product));
+        $product = $this->getProduct((int) $customizationField->id_product);
         $usedFieldIds = array_map('intval', $product->getUsedCustomizationFieldsIds());
         $fieldId = (int) $customizationField->id;
 
@@ -137,5 +143,22 @@ final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterf
                 $e
             );
         }
+    }
+
+    /**
+     * @param int $productId
+     *
+     * @return Product
+     *
+     * @throws ProductException
+     * @throws ProductNotFoundException
+     */
+    private function getProduct(int $productId): Product
+    {
+        if (isset($this->productsById[$productId])) {
+            return $this->productsById[$productId];
+        }
+
+        return $this->productProvider->get(new ProductId($productId));
     }
 }
