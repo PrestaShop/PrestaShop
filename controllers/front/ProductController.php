@@ -192,7 +192,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 }
 
                 // Load category
-                $id_category = $this->guessCategoryFromRequest();
+                $id_category = $this->guessCategoryIdFromRequest();
 
                 if (
                     $id_category === null ||
