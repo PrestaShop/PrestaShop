@@ -85,7 +85,7 @@ final class AddCustomizationFieldHandler extends AbstractCustomizationFieldHandl
         $product = $this->productProvider->get($command->getProductId());
 
         $customizationField = new CustomizationFieldEntity();
-//@todo: move to its own service. Some kind of CustomizationFieldFactory/Saver/Creator?
+
         $customizationField->id_product = $product->id;
         $customizationField->type = $command->getType()->getValue();
         $customizationField->required = $command->isRequired();

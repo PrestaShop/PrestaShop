@@ -40,7 +40,6 @@ class CustomizationFieldValidator
 {
     /**
      * @param CustomizationField $customizationField
-     *
      * @param string $fieldName
      * @param int $errorCode
      *

@@ -56,6 +56,7 @@ final class UpdateCustomizationFieldHandler extends AbstractCustomizationFieldHa
      * @var ProductUpdater
      */
     private $productUpdater;
+
     /**
      * @var CustomizationFieldValidator
      */
@@ -89,7 +90,6 @@ final class UpdateCustomizationFieldHandler extends AbstractCustomizationFieldHa
             CustomizationFieldConstraintException::INVALID_NAME
         );
 
-        //@todo; updator service
         try {
             if (false === $customizationField->update()) {
                 throw new CannotUpdateCustomizationFieldException(sprintf(

@@ -118,7 +118,7 @@ final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterf
                 $successfullyDeleted = $customizationField->delete();
             }
 
-            if (true !== $successfullyDeleted) {
+            if (!$successfullyDeleted) {
                 throw new CannotDeleteCustomizationFieldException(
                     sprintf('Failed deleting customization field #%d', $customizationField->id),
                     $errorCode

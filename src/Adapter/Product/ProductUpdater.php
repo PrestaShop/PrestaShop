@@ -40,6 +40,9 @@ use Product;
  */
 class ProductUpdater
 {
+    /**
+     * @var array<string, bool|array<int, bool>>
+     */
     private $fieldsToUpdate = [];
 
     /**

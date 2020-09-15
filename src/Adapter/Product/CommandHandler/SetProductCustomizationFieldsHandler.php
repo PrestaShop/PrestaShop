@@ -30,14 +30,13 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractCustomizationFieldHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\AddCustomizationFieldCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\DeleteCustomizationFieldCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateCustomizationFieldCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\AddCustomizationFieldHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\DeleteCustomizationFieldHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\SetProductCustomizationFieldsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\UpdateCustomizationFieldHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationField;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationFieldDeleterInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
@@ -59,23 +58,23 @@ class SetProductCustomizationFieldsHandler extends AbstractCustomizationFieldHan
     private $updateCustomizationFieldHandler;
 
     /**
-     * @var DeleteCustomizationFieldHandlerInterface
+     * @var CustomizationFieldDeleterInterface
      */
-    private $deleteCustomizationFieldHandler;
+    private $customizationFieldDeleter;
 
     /**
      * @param AddCustomizationFieldHandlerInterface $addCustomizationFieldHandler
      * @param UpdateCustomizationFieldHandlerInterface $updateCustomizationFieldHandler
-     * @param DeleteCustomizationFieldHandlerInterface $deleteCustomizationFieldHandler
+     * @param CustomizationFieldDeleterInterface $customizationFieldDeleter
      */
     public function __construct(
         AddCustomizationFieldHandlerInterface $addCustomizationFieldHandler,
         UpdateCustomizationFieldHandlerInterface $updateCustomizationFieldHandler,
-        DeleteCustomizationFieldHandlerInterface $deleteCustomizationFieldHandler
+        CustomizationFieldDeleterInterface $customizationFieldDeleter
     ) {
         $this->addCustomizationFieldHandler = $addCustomizationFieldHandler;
         $this->updateCustomizationFieldHandler = $updateCustomizationFieldHandler;
-        $this->deleteCustomizationFieldHandler = $deleteCustomizationFieldHandler;
+        $this->customizationFieldDeleter = $customizationFieldDeleter;
     }
 
     /**
@@ -98,7 +97,7 @@ class SetProductCustomizationFieldsHandler extends AbstractCustomizationFieldHan
         $this->deleteCustomizationFields($deletableFieldIds);
         $product = $this->getProduct($command->getProductId());
 
-        return array_map(function ($customizationFieldId) {
+        return array_map(function ($customizationFieldId): CustomizationFieldId {
             return new CustomizationFieldId($customizationFieldId);
         }, $product->getNonDeletedCustomizationFieldIds());
     }
@@ -143,7 +142,7 @@ class SetProductCustomizationFieldsHandler extends AbstractCustomizationFieldHan
         $product = $this->getProduct($command->getProductId());
 
         $existingFieldIds = $product->getNonDeletedCustomizationFieldIds();
-        $providedFieldsIds = array_map(function (CustomizationField $field) {
+        $providedFieldsIds = array_map(function (CustomizationField $field): ?int {
             return $field->getCustomizationFieldId();
         }, $command->getCustomizationFields());
 
@@ -155,8 +154,10 @@ class SetProductCustomizationFieldsHandler extends AbstractCustomizationFieldHan
      */
     private function deleteCustomizationFields(array $fieldIdsForDeletion): void
     {
-        foreach ($fieldIdsForDeletion as $fieldId) {
-            $this->deleteCustomizationFieldHandler->handle(new DeleteCustomizationFieldCommand($fieldId));
-        }
+        $customizationFieldIdsForDeletion = array_map(function ($fieldId): CustomizationFieldId {
+            return new CustomizationFieldId($fieldId);
+        }, $fieldIdsForDeletion);
+
+        $this->customizationFieldDeleter->bulkDelete($customizationFieldIdsForDeletion);
     }
 }
