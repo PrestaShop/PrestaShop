@@ -108,3 +108,9 @@ services:
     prestashop.core.product.csv_exporter:
         class: PrestaShop\PrestaShop\Core\Product\ProductCsvExporter
         arguments: ['@translator', '@prestashop.core.admin.data_provider.product_interface']
+
+    prestashop.service.multishop_context_switcher:
+        class: PrestaShopBundle\Service\MultishopContextSwitcher
+        public: true
+        arguments:
+            - '@prestashop.adapter.legacy.context'
