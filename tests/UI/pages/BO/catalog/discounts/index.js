@@ -44,7 +44,7 @@ class CartRules extends BOBasePage {
 
     // Row actions selectors
     this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
-    this.tableColumnActionsEditLink = row => `${this.tableColumnActionsDropdownMenu(row)} a.edit`;
+    this.tableColumnActionsEditLink = row => `${this.tableColumnActions(row)} a.edit`;
     this.tableColumnActionsToggleButton = row => `${this.tableColumnActions(row)} button.dropdown-toggle`;
     this.tableColumnActionsDropdownMenu = row => `${this.tableColumnActions(row)} .dropdown-menu`;
     this.tableColumnActionsDeleteLink = row => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
@@ -86,10 +86,11 @@ class CartRules extends BOBasePage {
   /**
    * Go to edit cart rule page
    * @param page
+   * @param row
    * @returns {Promise<void>}
    */
-  async goToEditCartRulePage(page) {
-    await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink);
+  async goToEditCartRulePage(page, row) {
+    await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(row));
   }
 
   /**

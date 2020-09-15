@@ -186,7 +186,7 @@ describe('CRUD cart rule', async () => {
     it('should go to edit cart rule page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditCartRulePage', baseContext);
 
-      await cartRulesPage.goToEditCartRulePage(page);
+      await cartRulesPage.goToEditCartRulePage(page, 1);
 
       const pageTitle = await addCartRulePage.getPageTitle(page);
       await expect(pageTitle).to.contains(addCartRulePage.editPageTitle);
