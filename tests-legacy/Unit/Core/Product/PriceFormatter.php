@@ -24,37 +24,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace LegacyTests\Integration\classes\module;
+namespace LegacyTests\Unit\Core\Product;
 
-use Cache;
-use LegacyTests\TestCase\IntegrationTestCase;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter as BasePricePresenter;
 
-use Module;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
-
-class ModuleGetPossibleHooksListTest extends IntegrationTestCase
+class PriceFormatter extends BasePricePresenter
 {
-    /**
-     * Test if a module return the good possible hooks list.
-     * This test is done on the bankwire generic module.
-     *
-     * Note: improves module list fixtures in order to get an explicit list of hooks.
-     */
-    public function testGetRightListForModule()
+    public function convertAmount($price, $currency = null)
     {
-        ModuleManagerBuilder::getInstance()->build()->install('bankwire');
-        $module = Module::getInstanceByName('bankwire');
-        Cache::clean('hook_alias');
-        $possible_hooks_list = $module->getPossibleHooksList();
-
-        $this->assertCount(2, $possible_hooks_list);
-
-        $this->assertEquals('displayPaymentReturn', $possible_hooks_list[0]['name']);
-        $this->assertEquals('paymentOptions', $possible_hooks_list[1]['name']);
+        return $price;
     }
 
-    public static function tearDownAfterClass()
+    public function format($price, $currency = null)
     {
-        Module::getInstanceByName('bankwire')->uninstall();
+        return "#$price";
     }
 }

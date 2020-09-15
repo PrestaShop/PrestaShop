@@ -29,21 +29,7 @@ namespace LegacyTests\Unit\Core\Product;
 use Language;
 use LegacyTests\TestCase\UnitTestCase;
 use Phake;
-use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter as BasePricePresenter;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
-
-class PriceFormatter extends BasePricePresenter
-{
-    public function convertAmount($price, $currency = null)
-    {
-        return $price;
-    }
-
-    public function format($price, $currency = null)
-    {
-        return "#$price";
-    }
-}
 
 class ProductPresenterTest extends UnitTestCase
 {

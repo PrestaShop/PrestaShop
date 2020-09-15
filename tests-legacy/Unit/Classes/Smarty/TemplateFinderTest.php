@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace LegacyTests\Unit\classes\Smarty;
+namespace LegacyTests\Unit\Classes\Smarty;
 
 use PHPUnit\Framework\TestCase;
 use TemplateFinder;

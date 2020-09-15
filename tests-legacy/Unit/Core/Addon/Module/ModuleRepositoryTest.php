@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace LegacyTests\Core\Addon\Module;
+namespace LegacyTests\Unit\Core\Addon\Module;
 
 use LegacyTests\TestCase\FakeLogger;
 use LegacyTests\TestCase\UnitTestCase;
