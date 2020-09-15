@@ -29,44 +29,27 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use CustomizationField;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationException;
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldConstraintException;
-use PrestaShopException;
 
 /**
  * Validates CustomizationField field using legacy object model
  */
-class CustomizationFieldValidator
+class CustomizationFieldValidator extends AbstractObjectModelValidator
 {
     /**
      * @param CustomizationField $customizationField
-     * @param string $fieldName
+     * @param string $propertyName
      * @param int $errorCode
      *
-     * @throws CustomizationException
-     * @throws CustomizationFieldConstraintException
+     * @throws \PrestaShop\PrestaShop\Core\Exception\CoreException
      */
-    public function validateLocalizedProperty(CustomizationField $customizationField, string $fieldName, int $errorCode): void
+    public function validateLocalizedProperty(CustomizationField $customizationField, string $propertyName, int $errorCode): void
     {
-        try {
-            foreach ($customizationField->{$fieldName} as $langId => $value) {
-                if (true !== $customizationField->validateField($fieldName, $value, $langId)) {
-                    throw new CustomizationFieldConstraintException(
-                        sprintf(
-                            'Invalid localized customization field "%s" for language with id "%d"',
-                            $fieldName,
-                            $langId
-                        ),
-                        $errorCode
-                    );
-                }
-            }
-        } catch (PrestaShopException $e) {
-            throw new CustomizationException(
-                sprintf('Error occurred when trying to validate customization field "%s"', $fieldName),
-                0,
-                $e
-            );
-        }
+        $this->validateObjectModelLocalizedProperty(
+            $customizationField,
+            $propertyName,
+            CustomizationFieldConstraintException::class, $errorCode
+        );
     }
 }

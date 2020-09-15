@@ -28,15 +28,15 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShopException;
 use Product;
 
 /**
  * Validates product field using legacy object model
  */
-class ProductFieldValidator
+class ProductFieldValidator extends AbstractObjectModelValidator
 {
     /**
      * Validates Product object model properties using legacy validation
@@ -48,25 +48,8 @@ class ProductFieldValidator
      * @throws ProductConstraintException
      * @throws ProductException
      */
-    public function validate(Product $product, string $field, int $errorCode): void
+    public function validateProperty(Product $product, string $field, int $errorCode): void
     {
-        try {
-            if (true !== $product->validateField($field, $product->{$field})) {
-                throw new ProductConstraintException(
-                    sprintf(
-                        'Invalid product %s. Got "%s"',
-                        $field,
-                        $product->{$field}
-                    ),
-                    $errorCode
-                );
-            }
-        } catch (PrestaShopException $e) {
-            throw new ProductException(
-                sprintf('Error occurred when validating product field "%s"', $field),
-                0,
-                $e
-            );
-        }
+        $this->validateObjectModelProperty($product, $field, ProductConstraintException::class, $errorCode);
     }
 }
