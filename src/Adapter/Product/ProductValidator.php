@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use Product;
 
 /**
@@ -38,11 +38,6 @@ use Product;
  */
 class ProductValidator extends AbstractObjectModelValidator
 {
-    public function __construct()
-    {
-        parent::__construct(ProductConstraintException::class);
-    }
-
     /**
      * Validates Product object model properties using legacy validation
      *
@@ -50,11 +45,11 @@ class ProductValidator extends AbstractObjectModelValidator
      * @param string $field
      * @param int $errorCode
      *
-     * @throws CoreException
      * @throws ProductConstraintException
+     * @throws ProductException
      */
-    public function validateProperty(Product $product, string $field, int $errorCode = 0): void
+    public function validateProperty(Product $product, string $field, int $errorCode): void
     {
-        $this->validateObjectModelProperty($product, $field, $errorCode);
+        $this->validateObjectModelProperty($product, $field, ProductConstraintException::class, $errorCode);
     }
 }

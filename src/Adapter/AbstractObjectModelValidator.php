@@ -35,31 +35,18 @@ use PrestaShopException;
 abstract class AbstractObjectModelValidator
 {
     /**
-     * @var string
-     */
-    protected $violationExceptionClass;
-
-    /**
-     * @param string $violationExceptionClass
-     */
-    protected function __construct(
-        string $violationExceptionClass
-    ) {
-        $this->violationExceptionClass = $violationExceptionClass;
-    }
-
-    /**
      * @param ObjectModel $objectModel
      * @param string $propertyName
+     * @param string $exceptionClass
      * @param int $errorCode
      *
      * @throws CoreException
      */
-    protected function validateObjectModelProperty(ObjectModel $objectModel, string $propertyName, int $errorCode = 0): void
+    protected function validateObjectModelProperty(ObjectModel $objectModel, string $propertyName, string $exceptionClass, int $errorCode = 0): void
     {
         try {
             if (true !== $objectModel->validateField($propertyName, $objectModel->{$propertyName})) {
-                throw new $this->violationExceptionClass(
+                throw new $exceptionClass(
                     sprintf(
                         'Invalid %s %s. Got "%s"',
                         get_class($objectModel),
@@ -81,16 +68,17 @@ abstract class AbstractObjectModelValidator
     /**
      * @param ObjectModel $objectModel
      * @param string $propertyName
+     * @param string $exceptionClass
      * @param int $errorCode
      *
      * @throws CoreException
      */
-    protected function validateObjectModelLocalizedProperty(ObjectModel $objectModel, string $propertyName, int $errorCode = 0)
+    protected function validateObjectModelLocalizedProperty(ObjectModel $objectModel, string $propertyName, string $exceptionClass, int $errorCode = 0)
     {
         try {
             foreach ($objectModel->{$propertyName} as $langId => $value) {
                 if (true !== $objectModel->validateField($propertyName, $value, $langId)) {
-                    throw new $this->violationExceptionClass(
+                    throw new $exceptionClass(
                         sprintf(
                             'Invalid %s localized property "%s" for language with id "%d"',
                             get_class($objectModel),
