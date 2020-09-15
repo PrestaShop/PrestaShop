@@ -28,50 +28,28 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
-use PrestaShopException;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use Product;
 
 /**
  * Performs update of provided product fields
  */
-class ProductUpdater
+class ProductUpdater extends AbstractObjectModelUpdater
 {
-    /**
-     * @var <array<string, bool|array<int, bool>>
-     */
-    private $fieldsToUpdate = [];
-
     /**
      * @param Product $product
      * @param int $errorCode
      *
      * @throws CannotUpdateProductException
-     * @throws ProductException
+     * @throws CoreException
      */
     public function update(Product $product, int $errorCode): void
     {
-        try {
-            $product->setFieldsToUpdate($this->fieldsToUpdate);
-
-            if (false === $product->update()) {
-                throw new CannotUpdateProductException(
-                    sprintf('Failed to update product #%d', $product->id),
-                    $errorCode
-                );
-            }
-        } catch (PrestaShopException $e) {
-            throw new ProductException(
-                sprintf('Error occurred when trying to update product #%d', $product->id),
-                0,
-                $e
-            );
-        } finally {
-            $this->fieldsToUpdate = [];
-        }
+        $this->updateObjectModel($product, CannotUpdateProductException::class, $errorCode);
     }
 
     /**
@@ -90,7 +68,7 @@ class ProductUpdater
         $product->text_fields = $product->countCustomizationFields(CustomizationFieldType::TYPE_TEXT);
         $product->uploadable_files = $product->countCustomizationFields(CustomizationFieldType::TYPE_FILE);
 
-        $this->addFieldsToUpdate([
+        $this->addPropertiesToUpdate([
             'customizable' => true,
             'text_fields' => true,
             'uploadable_files' => true,
@@ -100,10 +78,10 @@ class ProductUpdater
     /**
      * @param array<string, bool|array<int, bool>> $fieldsToUpdate
      */
-    public function addFieldsToUpdate(array $fieldsToUpdate): void
+    public function addPropertiesToUpdate(array $fieldsToUpdate): void
     {
         foreach ($fieldsToUpdate as $field => $value) {
-            $this->fieldsToUpdate[$field] = $value;
+            $this->propertiesToUpdate[$field] = $value;
         }
     }
 }

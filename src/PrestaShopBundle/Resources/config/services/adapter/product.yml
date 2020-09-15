@@ -261,7 +261,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductUpdater
 
     prestashop.adapter.product.product_field_validator:
-        class: PrestaShop\PrestaShop\Adapter\Product\ProductFieldValidator
+        class: PrestaShop\PrestaShop\Adapter\Product\ProductValidator
 
     prestashop.adapter.product.product_provider:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductProvider
