@@ -16,7 +16,7 @@ const CountryFaker = require('@data/faker/country');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_international_locations_countries_bulkDeleteCountries';
+const baseContext = 'functional_BO_international_locations_countries_bulkActionsCountries';
 
 let browserContext;
 let page;
