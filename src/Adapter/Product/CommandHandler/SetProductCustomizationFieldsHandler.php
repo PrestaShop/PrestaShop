@@ -43,7 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Handles @var SetProductCustomizationFieldsCommand using legacy object model
+ * Handles @see  SetProductCustomizationFieldsCommand using legacy object model
  */
 class SetProductCustomizationFieldsHandler extends AbstractCustomizationFieldHandler implements SetProductCustomizationFieldsHandlerInterface
 {

@@ -43,7 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShopException;
 
 /**
- * Updates single customization field using legacy object model
+ * Handles @see UpdateCustomizationFieldCommand using legacy object model
  */
 final class UpdateCustomizationFieldHandler extends AbstractCustomizationFieldHandler implements UpdateCustomizationFieldHandlerInterface
 {

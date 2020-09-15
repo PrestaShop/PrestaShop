@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCu
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 
 /**
- * Defines contract to handle @var SetProductCustomizationFieldsCommand
+ * Defines contract to handle @see SetProductCustomizationFieldsCommand
  */
 interface SetProductCustomizationFieldsHandlerInterface
 {

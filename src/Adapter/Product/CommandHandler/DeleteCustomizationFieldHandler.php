@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\Delet
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationFieldDeleterInterface;
 
 /**
- * Handles @var DeleteCustomizationFieldCommand using legacy object model
+ * Handles @see DeleteCustomizationFieldCommand using legacy object model
  */
 final class DeleteCustomizationFieldHandler implements DeleteCustomizationFieldHandlerInterface
 {

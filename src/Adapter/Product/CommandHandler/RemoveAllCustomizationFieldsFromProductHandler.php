@@ -34,6 +34,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\Remov
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationFieldDeleterInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 
+/**
+ * Handles @see RemoveAllCustomizationFieldsFromProductCommand using legacy object model
+ */
 final class RemoveAllCustomizationFieldsFromProductHandler implements RemoveAllCustomizationFieldsFromProductHandlerInterface
 {
     /**

@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 
 /**
- * Defines contract for customization field deleter
+ * Defines contract for service which deletes CustomizationField(s)
  */
 interface CustomizationFieldDeleterInterface
 {

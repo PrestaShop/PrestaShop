@@ -43,7 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductExcep
 use PrestaShopException;
 
 /**
- * Handles @var AddCustomizationFieldCommand using legacy object model
+ * Handles @see AddCustomizationFieldCommand using legacy object model
  */
 final class AddCustomizationFieldHandler extends AbstractCustomizationFieldHandler implements AddCustomizationFieldHandlerInterface
 {
