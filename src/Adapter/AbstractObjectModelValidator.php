@@ -32,6 +32,9 @@ use ObjectModel;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
 
+/**
+ * Reusable methods for validating legacy object models
+ */
 abstract class AbstractObjectModelValidator
 {
     /**

@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
 
 /**
- * Provides reusable methods for providing legacy object model
+ * Reusable methods for providing legacy object model
  */
 abstract class AbstractObjectModelProvider
 {
