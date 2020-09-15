@@ -39,22 +39,21 @@ use Product;
  */
 class ProductProvider extends AbstractObjectModelProvider
 {
+    public function __construct()
+    {
+        parent::__construct(ProductNotFoundException::class);
+    }
+
     /**
      * @param ProductId $productId
      *
      * @return Product
      *
      * @throws CoreException
+     * @throws ProductNotFoundException
      */
     public function get(ProductId $productId): Product
     {
-        /** @var Product $product */
-        $product = $this->getObjectModel(
-            $productId->getValue(),
-            Product::class,
-            ProductNotFoundException::class
-        );
-
-        return $product;
+        return $this->getObjectModel(Product::class, $productId->getValue());
     }
 }

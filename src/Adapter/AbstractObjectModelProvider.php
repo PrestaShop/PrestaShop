@@ -33,26 +33,38 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
 
 /**
- * Provides reusable methods for providing legacy object model
+ * Provides reusable methods to retrieve legacy object model
  */
 abstract class AbstractObjectModelProvider
 {
     /**
-     * @param int $id
+     * @var string
+     */
+    private $notFoundObjectExceptionClass;
+
+    /**
+     * @param string $notFoundObjectExceptionClass
+     */
+    protected function __construct(string $notFoundObjectExceptionClass)
+    {
+        $this->notFoundObjectExceptionClass = $notFoundObjectExceptionClass;
+    }
+
+    /**
      * @param string $objectModelClass
-     * @param string $exceptionClass
+     * @param int $id
      *
      * @return ObjectModel
      *
      * @throws CoreException
      */
-    protected function getObjectModel(int $id, string $objectModelClass, string $exceptionClass): ObjectModel
+    protected function getObjectModel(string $objectModelClass, int $id): ObjectModel
     {
         try {
             $objectModel = new $objectModelClass($id);
 
             if ((int) $objectModel->id !== $id) {
-                throw new $exceptionClass(sprintf('%s #%d was not found', $objectModelClass, $id));
+                throw new $this->notFoundObjectExceptionClass(sprintf('%s #%d was not found', $objectModelClass, $id));
             }
         } catch (PrestaShopException $e) {
             throw new CoreException(

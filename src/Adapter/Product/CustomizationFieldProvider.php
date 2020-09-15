@@ -32,28 +32,28 @@ use CustomizationField;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
  * Provides existing CustomizationField
  */
 class CustomizationFieldProvider extends AbstractObjectModelProvider
 {
+    public function __construct()
+    {
+        parent::__construct(CustomizationFieldNotFoundException::class);
+    }
+
     /**
      * @param CustomizationFieldId $fieldId
      *
      * @return CustomizationField
      *
-     * @throws \PrestaShop\PrestaShop\Core\Exception\CoreException
+     * @throws CoreException
+     * @throws CustomizationFieldNotFoundException
      */
     public function get(CustomizationFieldId $fieldId): CustomizationField
     {
-        /** @var CustomizationField $customizationField */
-        $customizationField = $this->getObjectModel(
-            $fieldId->getValue(),
-            CustomizationField::class,
-            CustomizationFieldNotFoundException::class
-        );
-
-        return $customizationField;
+        return $this->getObjectModel(CustomizationField::class, $fieldId->getValue());
     }
 }

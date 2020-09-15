@@ -31,25 +31,28 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 use CustomizationField;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldConstraintException;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
  * Validates CustomizationField field using legacy object model
  */
 class CustomizationFieldValidator extends AbstractObjectModelValidator
 {
+    public function __construct()
+    {
+        parent::__construct(CustomizationFieldConstraintException::class);
+    }
+
     /**
      * @param CustomizationField $customizationField
      * @param string $propertyName
      * @param int $errorCode
      *
-     * @throws \PrestaShop\PrestaShop\Core\Exception\CoreException
+     * @throws CoreException
+     * @throws CustomizationFieldConstraintException
      */
-    public function validateLocalizedProperty(CustomizationField $customizationField, string $propertyName, int $errorCode): void
+    public function validateLocalizedProperty(CustomizationField $customizationField, string $propertyName, int $errorCode = 0): void
     {
-        $this->validateObjectModelLocalizedProperty(
-            $customizationField,
-            $propertyName,
-            CustomizationFieldConstraintException::class, $errorCode
-        );
+        $this->validateObjectModelLocalizedProperty($customizationField, $propertyName, $errorCode);
     }
 }
