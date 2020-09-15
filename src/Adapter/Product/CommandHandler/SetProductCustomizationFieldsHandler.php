@@ -29,18 +29,19 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractCustomizationFieldHandler;
+use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldProvider;
+use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\AddCustomizationFieldCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateCustomizationFieldCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\AddCustomizationFieldHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\SetProductCustomizationFieldsHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\UpdateCustomizationFieldHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationFieldDeleterInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
  * Handles @see  SetProductCustomizationFieldsCommand using legacy object model
@@ -53,28 +54,36 @@ class SetProductCustomizationFieldsHandler extends AbstractCustomizationFieldHan
     private $addCustomizationFieldHandler;
 
     /**
-     * @var UpdateCustomizationFieldHandlerInterface
-     */
-    private $updateCustomizationFieldHandler;
-
-    /**
      * @var CustomizationFieldDeleterInterface
      */
     private $customizationFieldDeleter;
 
     /**
+     * @var CustomizationFieldUpdater
+     */
+    private $customizationFieldUpdater;
+
+    /**
+     * @var CustomizationFieldProvider
+     */
+    private $customizationFieldProvider;
+
+    /**
      * @param AddCustomizationFieldHandlerInterface $addCustomizationFieldHandler
-     * @param UpdateCustomizationFieldHandlerInterface $updateCustomizationFieldHandler
+     * @param CustomizationFieldUpdater $customizationFieldUpdater
      * @param CustomizationFieldDeleterInterface $customizationFieldDeleter
+     * @param CustomizationFieldProvider $customizationFieldProvider
      */
     public function __construct(
         AddCustomizationFieldHandlerInterface $addCustomizationFieldHandler,
-        UpdateCustomizationFieldHandlerInterface $updateCustomizationFieldHandler,
-        CustomizationFieldDeleterInterface $customizationFieldDeleter
+        CustomizationFieldUpdater $customizationFieldUpdater,
+        CustomizationFieldDeleterInterface $customizationFieldDeleter,
+        CustomizationFieldProvider $customizationFieldProvider
     ) {
         $this->addCustomizationFieldHandler = $addCustomizationFieldHandler;
-        $this->updateCustomizationFieldHandler = $updateCustomizationFieldHandler;
         $this->customizationFieldDeleter = $customizationFieldDeleter;
+        $this->customizationFieldUpdater = $customizationFieldUpdater;
+        $this->customizationFieldProvider = $customizationFieldProvider;
     }
 
     /**
@@ -119,16 +128,25 @@ class SetProductCustomizationFieldsHandler extends AbstractCustomizationFieldHan
 
     /**
      * @param CustomizationField $customizationField
+     *
+     * @throws CoreException
      */
     private function handleUpdate(CustomizationField $customizationField): void
     {
-        $command = new UpdateCustomizationFieldCommand($customizationField->getCustomizationFieldId());
-        $command->setType($customizationField->getType());
-        $command->setRequired($customizationField->isRequired());
-        $command->setLocalizedNames($customizationField->getLocalizedNames());
-        $command->setAddedByModule($customizationField->isAddedByModule());
+        $fieldId = $customizationField->getCustomizationFieldId();
+        $customizationFieldId = new CustomizationFieldId($fieldId);
 
-        $this->updateCustomizationFieldHandler->handle($command);
+        $customizationFieldObjectModel = $this->customizationFieldProvider->get($customizationFieldId);
+
+        $this->customizationFieldUpdater->update(
+            $customizationFieldObjectModel,
+            [
+                'type' => $customizationField->getType(),
+                'required' => $customizationField->isRequired(),
+                'name' => $customizationField->getLocalizedNames(),
+                'is_module' => $customizationField->isAddedByModule(),
+            ]
+        );
     }
 
     /**
