@@ -48,7 +48,7 @@ class ProductFieldValidator
      * @throws ProductConstraintException
      * @throws ProductException
      */
-    private function validate(Product $product, string $field, int $errorCode): void
+    public function validate(Product $product, string $field, int $errorCode): void
     {
         try {
             if (true !== $product->validateField($field, $product->{$field})) {
