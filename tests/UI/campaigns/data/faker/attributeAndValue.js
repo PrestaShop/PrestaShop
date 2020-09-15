@@ -11,7 +11,7 @@ module.exports = {
     constructor(attributeToCreate = {}) {
       this.name = attributeToCreate.name || faker.lorem.word();
       this.publicName = attributeToCreate.publicName || this.name;
-      this.url = attributeToCreate.url || this.name;// .replaceAll(' ', '-').trim();
+      this.url = attributeToCreate.url || this.name.replace(/\s/gi, '-');
       this.metaTitle = attributeToCreate.metaTitle || faker.lorem.word();
       this.indexable = attributeToCreate.indexable === undefined ? true : attributeToCreate.indexable;
       this.attributeType = attributeToCreate.attributeType || faker.random.arrayElement(attributeTypes);
@@ -20,8 +20,8 @@ module.exports = {
   Value: class Value {
     constructor(valueToCreate = {}) {
       this.attributeName = valueToCreate.attributeName || faker.random.arrayElement(attributesNames);
-      this.value = valueToCreate.value || faker.commerce.productMaterial();
-      this.url = valueToCreate.url || this.value;// .replaceAll(' ', '-').trim();
+      this.value = valueToCreate.value || `${faker.lorem.word()}${faker.commerce.productMaterial()}`;
+      this.url = valueToCreate.url || this.value.replace(/\s/gi, '-');
       this.metaTitle = valueToCreate.metaTitle || faker.lorem.word();
       this.color = valueToCreate.color || faker.internet.color();
       this.textureFileName = valueToCreate.textureFileName || faker.system.commonFileName('txt');
