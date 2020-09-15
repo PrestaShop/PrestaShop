@@ -84,7 +84,7 @@ final class UpdateCustomizationFieldHandler extends AbstractCustomizationFieldHa
     {
         $customizationField = $this->getCustomizationField($command->getCustomizationFieldId());
         $this->fillEntityWithCommandData($command, $customizationField);
-        $this->customizationFieldValidator->validateLocalizedField(
+        $this->customizationFieldValidator->validateLocalizedProperty(
             $customizationField,
             'name',
             CustomizationFieldConstraintException::INVALID_NAME

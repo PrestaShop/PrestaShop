@@ -46,7 +46,7 @@ class CustomizationFieldValidator
      * @throws CustomizationException
      * @throws CustomizationFieldConstraintException
      */
-    public function validateLocalizedField(CustomizationField $customizationField, string $fieldName, int $errorCode): void
+    public function validateLocalizedProperty(CustomizationField $customizationField, string $fieldName, int $errorCode): void
     {
         try {
             foreach ($customizationField->{$fieldName} as $langId => $value) {

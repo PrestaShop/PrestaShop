@@ -26,35 +26,42 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product;
+namespace PrestaShop\PrestaShop\Adapter;
 
-use PrestaShop\PrestaShop\Adapter\AbstractObjectModelProvider;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Adapter\Entity\ObjectModel;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use Product;
+use PrestaShopException;
 
 /**
- * Provides existing Product
+ * Provides reusable methods for providing legacy object model
  */
-class ProductProvider extends AbstractObjectModelProvider
+abstract class AbstractObjectModelProvider
 {
     /**
-     * @param ProductId $productId
+     * @param int $id
+     * @param string $objectModelClass
+     * @param string $exceptionClass
      *
-     * @return Product
+     * @return ObjectModel
      *
      * @throws CoreException
      */
-    public function get(ProductId $productId): Product
+    protected function getObjectModel(int $id, string $objectModelClass, string $exceptionClass): ObjectModel
     {
-        /** @var Product $product */
-        $product = $this->getObjectModel(
-            $productId->getValue(),
-            Product::class,
-            ProductNotFoundException::class
-        );
+        try {
+            $objectModel = new $objectModelClass($id);
 
-        return $product;
+            if ((int) $objectModel->id !== $id) {
+                throw new $exceptionClass(sprintf('%s #%d was not found', $objectModelClass, $id));
+            }
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf('Error occurred when trying to get %s #%d', $objectModelClass, $id),
+                0,
+                $e
+            );
+        }
+
+        return $objectModel;
     }
 }

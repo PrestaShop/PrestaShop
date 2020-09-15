@@ -29,45 +29,31 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use CustomizationField;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldException;
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
-use PrestaShopException;
 
 /**
- * Provides existing CustomizationField using legacy object model
+ * Provides existing CustomizationField
  */
-class CustomizationFieldProvider
+class CustomizationFieldProvider extends AbstractObjectModelProvider
 {
     /**
      * @param CustomizationFieldId $fieldId
      *
      * @return CustomizationField
      *
-     * @throws CustomizationFieldException
-     * @throws CustomizationFieldNotFoundException
+     * @throws \PrestaShop\PrestaShop\Core\Exception\CoreException
      */
     public function get(CustomizationFieldId $fieldId): CustomizationField
     {
-        $fieldIdValue = $fieldId->getValue();
+        /** @var CustomizationField $customizationField */
+        $customizationField = $this->getObjectModel(
+            $fieldId->getValue(),
+            CustomizationField::class,
+            CustomizationFieldNotFoundException::class
+        );
 
-        try {
-            $field = new CustomizationField($fieldIdValue);
-
-            if ((int) $field->id !== $fieldIdValue) {
-                throw new CustomizationFieldNotFoundException(sprintf(
-                    'Customization field #%d was not found',
-                    $fieldIdValue
-                ));
-            }
-        } catch (PrestaShopException $e) {
-            throw new CustomizationFieldException(
-                sprintf('Error occurred when trying to get customization field #%d', $fieldIdValue),
-                0,
-                $e
-            );
-        }
-
-        return $field;
+        return $customizationField;
     }
 }

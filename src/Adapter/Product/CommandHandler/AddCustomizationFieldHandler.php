@@ -92,7 +92,7 @@ final class AddCustomizationFieldHandler extends AbstractCustomizationFieldHandl
         $customizationField->is_module = $command->isAddedByModule();
         $customizationField->name = $command->getLocalizedNames();
 
-        $this->customizationFieldValidator->validateLocalizedField(
+        $this->customizationFieldValidator->validateLocalizedProperty(
             $customizationField,
             'name',
             CustomizationFieldConstraintException::INVALID_NAME
