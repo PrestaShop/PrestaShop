@@ -2147,7 +2147,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @since 1.5.0.1
      *
-     * @param null|array<string, bool|array<int, bool>> $fields
+     * @param array<string, bool|array<int, bool>>|null $fields
      */
     public function setFieldsToUpdate(?array $fields)
     {
