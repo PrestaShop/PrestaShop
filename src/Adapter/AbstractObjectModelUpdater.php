@@ -39,11 +39,6 @@ use RuntimeException;
 abstract class AbstractObjectModelUpdater
 {
     /**
-     * @var <array<string, bool|array<int, bool>>
-     */
-    protected $propertiesToUpdate = [];
-
-    /**
      * @param ObjectModel $objectModel
      * @param string $exceptionClass
      * @param int $errorCode
@@ -52,7 +47,6 @@ abstract class AbstractObjectModelUpdater
      */
     protected function updateObjectModel(ObjectModel $objectModel, string $exceptionClass, int $errorCode = 0)
     {
-        $objectModel->setFieldsToUpdate($this->propertiesToUpdate);
         try {
             if (!$objectModel->update()) {
                 throw new $exceptionClass(
@@ -67,7 +61,7 @@ abstract class AbstractObjectModelUpdater
                 $e
             );
         } finally {
-            $this->propertiesToUpdate = [];
+            $objectModel->setFieldsToUpdate(null);
         }
     }
 
@@ -83,7 +77,7 @@ abstract class AbstractObjectModelUpdater
         }
 
         $objectModel->{$propertyName} = $propertiesToUpdate[$propertyName];
-        $this->propertiesToUpdate[$propertyName] = true;
+        $objectModel->addUpdateField($propertyName, true);
     }
 
     /**
@@ -105,17 +99,21 @@ abstract class AbstractObjectModelUpdater
         }
 
         $objectModel->{$propertyName} = $propertiesToUpdate[$propertyName];
-        $this->addLocalizedPropertyToUpdate($propertyName, $propertiesToUpdate[$propertyName]);
+        $this->addLocalizedPropertyToUpdate($objectModel, $propertyName, $propertiesToUpdate[$propertyName]);
     }
 
     /**
+     * @param ObjectModel $objectModel
      * @param string $propertyName
      * @param array<int, string> $values
      */
-    private function addLocalizedPropertyToUpdate(string $propertyName, array $values): void
+    private function addLocalizedPropertyToUpdate(ObjectModel $objectModel, string $propertyName, array $values): void
     {
+        $updateFieldValue = [];
         foreach ($values as $langId => $value) {
-            $this->propertiesToUpdate[$propertyName][$langId] = true;
+            $updateFieldValue[$langId] = true;
         }
+
+        $objectModel->addUpdateField($propertyName, $updateFieldValue);
     }
 }

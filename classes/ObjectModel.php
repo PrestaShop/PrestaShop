@@ -2196,4 +2196,14 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         return self::$htmlFields[$this->def['table']];
     }
+
+    /**
+     * @param string $fieldName
+     * @param $value
+     */
+    public function addUpdateField(string $fieldName, $value)
+    {
+        $this->update_fields = [];
+        $this->update_fields[$fieldName] = $value;
+    }
 }
