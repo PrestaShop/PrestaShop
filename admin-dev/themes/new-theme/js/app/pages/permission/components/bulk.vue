@@ -82,7 +82,6 @@
     },
     mounted() {
       this.refreshPermissionsCheckboxes(this.profilePermissions);
-      console.log(this.profilePermissions);
     },
     methods: {
       /**
@@ -98,7 +97,6 @@
           // eslint-disable-next-line no-restricted-syntax
           for (const perm of Object.values(permissions)) {
             if (perm[t] === '0') {
-              console.log(perm);
               isChecked = false;
               break;
             }
