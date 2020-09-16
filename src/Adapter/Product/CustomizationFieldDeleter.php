@@ -155,10 +155,10 @@ final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterf
      */
     private function getProduct(int $productId): Product
     {
-        if (isset($this->productsById[$productId])) {
-            return $this->productsById[$productId];
+        if (!isset($this->productsById[$productId])) {
+            $this->productsById[$productId] = $this->productProvider->get(new ProductId($productId));
         }
 
-        return $this->productProvider->get(new ProductId($productId));
+        return $this->productsById[$productId];
     }
 }
