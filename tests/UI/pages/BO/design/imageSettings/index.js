@@ -69,9 +69,9 @@ class ImageSettings extends BOBasePage {
     this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
 
     // Pagination selectors
-    this.paginationDropdownButton = `${this.gridForm} .pagination .dropdown-toggle`;
-    this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationLabel = `${this.gridForm} .pagination`;
+    this.paginationDropdownButton = `${this.paginationLabel} .dropdown-toggle`;
+    this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
     this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
   }
