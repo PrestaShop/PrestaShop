@@ -187,6 +187,7 @@ services:
             - '@prestashop.adapter.product.customization_field_updater'
             - '@prestashop.adapter.product.customization_field_deleter'
             - '@prestashop.adapter.product.customization_field_provider'
+            - '@prestashop.adapter.product.product_updater'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand
