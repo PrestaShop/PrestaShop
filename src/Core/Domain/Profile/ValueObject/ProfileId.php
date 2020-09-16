@@ -62,7 +62,7 @@ class ProfileId
      */
     private function assertProfileIdIsGreaterThanZero($profileId)
     {
-        if (!is_int($profileId) || 0 > $profileId) {
+        if ((!is_int($profileId) && !ctype_digit($profileId)) || 0 > $profileId) {
             throw new ProfileConstraintException(
                 sprintf('Invalid profile id %s provided', var_export($profileId, true))
             );
