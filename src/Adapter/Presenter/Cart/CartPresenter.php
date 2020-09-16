@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use Product;
+use ProductAssembler;
 use Symfony\Component\Translation\TranslatorInterface;
 use TaxConfiguration;
 use Tools;
@@ -95,7 +96,7 @@ class CartPresenter implements PresenterInterface
      */
     private function presentProduct(array $rawProduct)
     {
-        $assembler = new \ProductAssembler(Context::getContext());
+        $assembler = new ProductAssembler(Context::getContext());
         $assembledProduct = $assembler->assembleProduct($rawProduct);
         $rawProduct = array_merge($assembledProduct, $rawProduct);
 
