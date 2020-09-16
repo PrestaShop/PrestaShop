@@ -499,6 +499,9 @@ abstract class ControllerCore
             $js_path = $js_file = $js_file[0];
             if ($check_path) {
                 $js_path = Media::getJSPath($js_file);
+                if ($js_path === false) {
+                    throw new PrestaShopException(sprintf('Cannot compute the path for JS file %s', $js_uri));
+                }
             }
 
             if ($js_path && !in_array($js_path, $this->js_files)) {
