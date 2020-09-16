@@ -526,9 +526,11 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      */
     private function mapStep2FormData(Product $product)
     {
+        $ecotaxRate = $this->taxRuleDataProvider->getProductEcotaxRate();
+
         return array(
             'price' => $product->price,
-            'ecotax' => $product->ecotax,
+            'ecotax' => $ecotaxRate ? ($product->ecotax * (1 + $ecotaxRate / 100)) : $product->ecotax,
             'id_tax_rules_group' => isset($product->id_tax_rules_group)
                 ? (int) $product->id_tax_rules_group
                 : $this->taxRuleDataProvider->getIdTaxRulesGroupMostUsed(),

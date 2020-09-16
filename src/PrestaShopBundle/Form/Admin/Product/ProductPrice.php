@@ -117,7 +117,7 @@ class ProductPrice extends CommonAbstractType
                 FormType\MoneyType::class,
                 [
                     'required' => false,
-                    'label' => $this->translator->trans('Ecotax (tax incl.)', [], 'Admin.Catalog.Feature'),
+                    'label' => $this->translator->trans('Ecotax' . !$this->eco_tax_rate ?: '(tax incl.)', [], 'Admin.Catalog.Feature'),
                     'currency' => $this->currency->iso_code,
                     'constraints' => [
                         new Assert\NotBlank(),
