@@ -36,11 +36,13 @@ export default {
       return null;
     },
     combinationName() {
-      const arr = this.product.combination_name.split(',');
+      const combinations = this.product.combination_name.split(',');
+      const attributes = this.product.attribute_name.split(',');
+      const separator = ' - ';
       let attr = '';
-      arr.forEach((attribute) => {
-        const value = attribute.split(' - ');
-        attr += attr.length ? ` - ${value[1]}` : value[1];
+      combinations.forEach((attribute, index) => {
+        const value = attribute.slice(attributes[index].length + separator.length);
+        attr += attr.length ? ` - ${value}` : value;
       });
       return attr;
     },
