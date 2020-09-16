@@ -48,8 +48,11 @@ class ProductValidator extends AbstractObjectModelValidator
      * @throws ProductConstraintException
      * @throws ProductException
      */
-    public function validateProperty(Product $product, string $field, int $errorCode): void
+    public function validate(Product $product): void
     {
-        $this->validateObjectModelProperty($product, $field, ProductConstraintException::class, $errorCode);
+        $this->validateObjectModelProperty($product, 'customizable', ProductConstraintException::class);
+        $this->validateObjectModelProperty($product, 'text_fields', ProductConstraintException::class);
+        $this->validateObjectModelProperty($product, 'uploadable_files', ProductConstraintException::class);
+        //@todo; more properties when refactoring other handlers to use updater/validator
     }
 }

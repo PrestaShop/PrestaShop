@@ -260,6 +260,8 @@ services:
 
     prestashop.adapter.product.product_updater:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductUpdater
+        arguments:
+            - '@prestashop.adapter.product.product_field_validator'
 
     prestashop.adapter.product.product_field_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductValidator
