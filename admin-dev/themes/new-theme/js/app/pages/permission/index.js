@@ -25,7 +25,7 @@
 import Vue from 'vue';
 import Permission from './permission.vue';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Vue component displaying a permission tree.

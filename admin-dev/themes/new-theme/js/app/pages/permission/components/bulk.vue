@@ -24,10 +24,15 @@
      *-->
 <template>
   <div class="row bulk-row">
-    <div class="col-4"></div>
+    <div class="col-4" />
 
     <div class="col-8 row">
-      <div class="text-center" :class="getClasses(types, bulkType === 'view')" v-for="bulk, bulkType in types">
+      <div
+        class="text-center"
+        :class="getClasses(types, bulkType === 'view')"
+        v-for="(bulk, bulkType) in types"
+        :key="bulkType"
+      >
         <strong>{{ bulk.label }}</strong>
         <ps-checkbox
           v-model="status"
@@ -41,8 +46,8 @@
 </template>
 
 <script>
-  import PsCheckbox from '../../../components/checkbox.vue';
-  import ColSize from '../../../mixins/col-size.vue';
+  import PsCheckbox from '@app/components/checkbox.vue';
+  import ColSize from '@app/mixins/col-size.vue';
 
   export default {
     mixins: [
@@ -113,9 +118,9 @@
         }
 
         if (bulkType === this.TYPE_ALL) {
-          this.status = this.status.includes(bulkType) ?
-                        Object.keys(this.types) :
-                        [];
+          this.status = this.status.includes(bulkType)
+            ? Object.keys(this.types)
+            : [];
           return;
         }
 

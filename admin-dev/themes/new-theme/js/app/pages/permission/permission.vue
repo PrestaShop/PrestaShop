@@ -34,12 +34,21 @@
           :profile-permissions.sync="profileDataPermissions"
           @updateBulk="updateBulk"
         />
-        <div class="col-xs-12" v-if="permissions === null">
-          <td colspan="6">{{ emptyData }}</td>
+        <div
+          class="col-xs-12"
+          v-if="permissions === null"
+        >
+          <td colspan="6">
+            {{ emptyData }}
+          </td>
         </div>
 
-        <template v-else v-for="permission, permissionId in permissions">
+        <template
+          v-else
+          v-for="(permission, permissionId) in permissions"
+        >
           <row
+            :key="permissionId"
             :can-edit="canEdit"
             :level-depth="1"
             :max-level-depth="4"
@@ -51,8 +60,7 @@
             :parent="permission.children !== undefined"
             :types="Object.keys(types)"
             @sendRequest="sendRequest"
-          >
-          </row>
+          />
         </template>
       </div>
     </div>
@@ -63,10 +71,10 @@
   import Bulk from './components/bulk.vue';
   import Row from './components/row.vue';
 
-  const $ = window.$;
+  const {$} = window;
 
   export default {
-    name: 'permission',
+    name: 'Permission',
     components: {
       Bulk,
       Row,
