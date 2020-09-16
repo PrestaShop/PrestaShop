@@ -2198,12 +2198,16 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     }
 
     /**
-     * @param string $fieldName
-     * @param $value
+     * @param array $fields
      */
-    public function addUpdateField(string $fieldName, $value)
+    public function addFieldsToUpdate(array $fields): void
     {
-        $this->update_fields = [];
-        $this->update_fields[$fieldName] = $value;
+        if (null === $this->update_fields) {
+            $this->update_fields = [];
+        }
+
+        foreach ($fields as $fieldName => $value) {
+            $this->update_fields[$fieldName] = $value;
+        }
     }
 }

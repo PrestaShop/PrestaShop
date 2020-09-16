@@ -77,7 +77,7 @@ abstract class AbstractObjectModelUpdater
         }
 
         $objectModel->{$propertyName} = $propertiesToUpdate[$propertyName];
-        $objectModel->addUpdateField($propertyName, true);
+        $objectModel->addFieldsToUpdate([$propertyName => true]);
     }
 
     /**
@@ -114,6 +114,6 @@ abstract class AbstractObjectModelUpdater
             $updateFieldValue[$langId] = true;
         }
 
-        $objectModel->addUpdateField($propertyName, $updateFieldValue);
+        $objectModel->addFieldsToUpdate([$propertyName => $updateFieldValue]);
     }
 }
