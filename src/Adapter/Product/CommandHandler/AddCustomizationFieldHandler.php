@@ -112,7 +112,7 @@ final class AddCustomizationFieldHandler extends AbstractCustomizationFieldHandl
             ));
         }
 
-        $this->productUpdater->refreshProductCustomizabilityFields($product);
+        $this->productUpdater->refreshProductCustomizabilityProperties($product);
         $this->productUpdater->update($product, CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS);
 
         return new CustomizationFieldId((int) $customizationField->id);

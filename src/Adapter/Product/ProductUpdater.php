@@ -71,7 +71,7 @@ class ProductUpdater extends AbstractObjectModelUpdater
     /**
      * @param Product $product
      */
-    public function refreshProductCustomizabilityFields(Product $product): void
+    public function refreshProductCustomizabilityProperties(Product $product): void
     {
         if ($product->hasActivatedRequiredCustomizableFields()) {
             $product->customizable = ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION;

@@ -131,7 +131,7 @@ final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterf
                 );
             }
 
-            $this->productUpdater->refreshProductCustomizabilityFields($product);
+            $this->productUpdater->refreshProductCustomizabilityProperties($product);
             $this->productUpdater->update($product, CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS);
         } catch (PrestaShopException $e) {
             throw new CustomizationFieldException(
