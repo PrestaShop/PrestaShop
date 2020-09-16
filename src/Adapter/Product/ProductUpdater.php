@@ -74,32 +74,32 @@ class ProductUpdater extends AbstractObjectModelUpdater
     public function refreshProductCustomizabilityProperties(Product $product): void
     {
         if ($product->hasActivatedRequiredCustomizableFields()) {
-            $product->customizable = ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION;
+            $customizable = ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION;
         } elseif (!empty($product->getNonDeletedCustomizationFieldIds())) {
-            $product->customizable = ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION;
+            $customizable = ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION;
         } else {
-            $product->customizable = ProductCustomizabilitySettings::NOT_CUSTOMIZABLE;
+            $customizable = ProductCustomizabilitySettings::NOT_CUSTOMIZABLE;
         }
 
-        $product->text_fields = $product->countCustomizationFields(CustomizationFieldType::TYPE_TEXT);
-        $product->uploadable_files = $product->countCustomizationFields(CustomizationFieldType::TYPE_FILE);
-
-        $product->addFieldsToUpdate([
-            'customizable' => true,
-            'text_fields' => true,
-            'uploadable_files' => true,
-        ]);
+        $this->update(
+            $product,
+            [
+                'customizable' => $customizable,
+                'text_fields' => $product->countCustomizationFields(CustomizationFieldType::TYPE_TEXT),
+                'uploadable_files' => $product->countCustomizationFields(CustomizationFieldType::TYPE_FILE),
+            ], CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS
+        );
     }
 
     /**
-     * @param Product $customizationField
+     * @param Product $product
      * @param array $propertiesToUpdate
      */
-    private function fillProperties(Product $customizationField, array $propertiesToUpdate): void
+    private function fillProperties(Product $product, array $propertiesToUpdate): void
     {
-        $this->fillProperty($customizationField, 'customizable', $propertiesToUpdate);
-        $this->fillProperty($customizationField, 'text_fields', $propertiesToUpdate);
-        $this->fillProperty($customizationField, 'uploadable_files', $propertiesToUpdate);
+        $this->fillProperty($product, 'customizable', $propertiesToUpdate);
+        $this->fillProperty($product, 'text_fields', $propertiesToUpdate);
+        $this->fillProperty($product, 'uploadable_files', $propertiesToUpdate);
         //@todo; more properties when refactoring other handlers to use updater/validator
     }
 }

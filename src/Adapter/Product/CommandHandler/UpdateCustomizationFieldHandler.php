@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Adapter\Product\ProductProvider;
 use PrestaShop\PrestaShop\Adapter\Product\ProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateCustomizationFieldCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\UpdateCustomizationFieldHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
@@ -82,7 +81,6 @@ final class UpdateCustomizationFieldHandler extends AbstractCustomizationFieldHa
 
         $product = $this->productProvider->get(new ProductId((int) $customizationField->id_product));
         $this->productUpdater->refreshProductCustomizabilityProperties($product);
-        $this->productUpdater->update($product, CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS);
     }
 
     /**

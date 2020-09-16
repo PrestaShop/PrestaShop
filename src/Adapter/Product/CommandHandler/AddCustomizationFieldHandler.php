@@ -37,9 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\AddCustomiza
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\AddCustomizationFieldHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotAddCustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShopException;
 
 /**
@@ -92,11 +90,7 @@ final class AddCustomizationFieldHandler extends AbstractCustomizationFieldHandl
         $customizationField->is_module = $command->isAddedByModule();
         $customizationField->name = $command->getLocalizedNames();
 
-        $this->customizationFieldValidator->validateLocalizedProperty(
-            $customizationField,
-            'name',
-            CustomizationFieldConstraintException::INVALID_NAME
-        );
+        $this->customizationFieldValidator->validate($customizationField);
 
         try {
             if (false === $customizationField->add()) {
@@ -113,7 +107,6 @@ final class AddCustomizationFieldHandler extends AbstractCustomizationFieldHandl
         }
 
         $this->productUpdater->refreshProductCustomizabilityProperties($product);
-        $this->productUpdater->update($product, CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS);
 
         return new CustomizationFieldId((int) $customizationField->id);
     }

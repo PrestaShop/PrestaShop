@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationFieldDe
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotDeleteCustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -56,11 +55,6 @@ final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterf
     private $productProvider;
 
     /**
-     * @var ProductUpdater
-     */
-    private $productUpdater;
-
-    /**
      * @var array<int, Product>
      */
     private $productsById = [];
@@ -68,16 +62,13 @@ final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterf
     /**
      * @param CustomizationFieldProvider $customizationFieldProvider
      * @param ProductProvider $productProvider
-     * @param ProductUpdater $productUpdater
      */
     public function __construct(
         CustomizationFieldProvider $customizationFieldProvider,
-        ProductProvider $productProvider,
-        ProductUpdater $productUpdater
+        ProductProvider $productProvider
     ) {
         $this->customizationFieldProvider = $customizationFieldProvider;
         $this->productProvider = $productProvider;
-        $this->productUpdater = $productUpdater;
     }
 
     /**
@@ -130,9 +121,6 @@ final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterf
                     $errorCode
                 );
             }
-
-            $this->productUpdater->refreshProductCustomizabilityProperties($product);
-            $this->productUpdater->update($product, CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS);
         } catch (PrestaShopException $e) {
             throw new CustomizationFieldException(
                 sprintf(
