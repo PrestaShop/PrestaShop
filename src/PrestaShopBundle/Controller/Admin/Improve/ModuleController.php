@@ -43,6 +43,7 @@ use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Profile;
+use Symfony\Component\Form\Util\ServerParams;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -528,11 +529,26 @@ class ModuleController extends ModuleAbstractController
 
         $moduleManager = $this->get('prestashop.module.manager');
         $moduleZipManager = $this->get('prestashop.module.zip.manager');
+        $serverParams = new ServerParams();
 
         try {
+            if ($serverParams->hasPostMaxSizeBeenExceeded()) {
+                throw new Exception($this->trans(
+                    'The uploaded file exceeds the post_max_size directive in php.ini',
+                    'Admin.Notifications.Error'
+                ));
+            }
+
             $fileUploaded = $request->files->get('file_uploaded');
             $constraints = [
-                new Assert\NotNull(),
+                new Assert\NotNull(
+                    [
+                        'message' => $this->trans(
+                            'The file is missing.',
+                            'Admin.Notifications.Error'
+                        ),
+                    ]
+                ),
                 new Assert\File(
                     [
                         'maxSize' => ini_get('upload_max_filesize'),
