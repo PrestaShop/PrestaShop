@@ -410,6 +410,10 @@
     <authorization_role id="TAB_ADMINSUPPLYORDERS_READ" slug="ROLE_MOD_TAB_ADMINSUPPLYORDERS_READ"/>
     <authorization_role id="TAB_ADMINSUPPLYORDERS_UPDATE" slug="ROLE_MOD_TAB_ADMINSUPPLYORDERS_UPDATE"/>
     <authorization_role id="TAB_ADMINSUPPLYORDERS_DELETE" slug="ROLE_MOD_TAB_ADMINSUPPLYORDERS_DELETE"/>
+    <authorization_role id="TAB_ADMINTABS_CREATE" slug="ROLE_MOD_TAB_ADMINTABS_CREATE"/>
+    <authorization_role id="TAB_ADMINTABS_READ" slug="ROLE_MOD_TAB_ADMINTABS_READ"/>
+    <authorization_role id="TAB_ADMINTABS_UPDATE" slug="ROLE_MOD_TAB_ADMINTABS_UPDATE"/>
+    <authorization_role id="TAB_ADMINTABS_DELETE" slug="ROLE_MOD_TAB_ADMINTABS_DELETE"/>
     <authorization_role id="TAB_ADMINTAGS_CREATE" slug="ROLE_MOD_TAB_ADMINTAGS_CREATE"/>
     <authorization_role id="TAB_ADMINTAGS_READ" slug="ROLE_MOD_TAB_ADMINTAGS_READ"/>
     <authorization_role id="TAB_ADMINTAGS_UPDATE" slug="ROLE_MOD_TAB_ADMINTAGS_UPDATE"/>
