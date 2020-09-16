@@ -25,7 +25,7 @@
 
 import PermissionApp from '../../app/pages/permission/index';
 
-const $ = window.$;
+const {$} = window;
 
 $(document).ready(() => {
   $('.js-permissions-content').each((i, element) => {
@@ -34,7 +34,7 @@ $(document).ready(() => {
       `#profile-content-${$(element).data('profile-id')}`,
       'tab_id',
       $(element).data('profile-permissions'),
-      $(element).data('employee-permissions')
+      $(element).data('employee-permissions'),
     );
 
     new PermissionApp(
@@ -42,7 +42,7 @@ $(document).ready(() => {
       `#module-content-${$(element).data('profile-id')}`,
       'id_module',
       $(element).data('modules-permissions'),
-      $(element).data('employee-modules-permissions')
+      $(element).data('employee-modules-permissions'),
     );
   });
 });
