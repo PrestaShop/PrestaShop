@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Profile\Permission\CommandHandler;
 
 use Access;
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateTabPermissionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\CommandHandler\UpdateTabPermissionsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Exception\PermissionUpdateException;
@@ -45,13 +46,18 @@ final class UpdateTabPermissionsHandler implements UpdateTabPermissionsHandlerIn
     {
         $access = new Access();
 
-        $result = $access->updateLgcAccess(
-            $command->getProfileId()->getValue(),
-            $command->getTabId(),
-            $command->getPermission()->getValue(),
-            $command->getExpectedStatus(),
-            $command->isAddedFromParent()
-        );
+        try {
+            $result = $access->updateLgcAccess(
+                $command->getProfileId()->getValue(),
+                $command->getTabId(),
+                $command->getPermission()->getValue(),
+                $command->getExpectedStatus(),
+                $command->isAddedFromParent()
+            );
+        } catch (Exception $e) {
+            // If role slug is not found it raises an exception
+            $result = 'error';
+        }
 
         if ('error' === $result) {
             throw new PermissionUpdateException('Failed to update permissions');
