@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
-use PrestaShop\PrestaShop\Adapter\Image\Uploader\ProfileImageUploader;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Command\AddProfileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Command\EditProfileCommand;
@@ -51,14 +50,14 @@ final class ProfileFormDataHandler implements FormDataHandlerInterface
 
     /**
      * @param CommandBusInterface $bus
-     * @param ImageUploaderInterface|null $imageUploader
+     * @param ImageUploaderInterface $imageUploader
      */
     public function __construct(
         CommandBusInterface $bus,
-        ImageUploaderInterface $imageUploader = null
+        ImageUploaderInterface $imageUploader
     ) {
         $this->bus = $bus;
-        $this->imageUploader = $imageUploader ?? new ProfileImageUploader();
+        $this->imageUploader = $imageUploader;
     }
 
     /**

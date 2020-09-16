@@ -43,7 +43,7 @@
         'label': 'Avatar'|trans({}, 'Admin.Global')
       }) }}
 
-      {% if avatarUrl is not empty %}
+      {% if avatarUrl|default('') is not empty %}
       <div class="form-group row">
         <label class="form-control-label"></label>
         <div class="col-sm">
