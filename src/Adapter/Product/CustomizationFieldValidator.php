@@ -40,49 +40,16 @@ class CustomizationFieldValidator extends AbstractObjectModelValidator
 {
     /**
      * @param CustomizationField $customizationField
-     * @param string $propertyName
      *
      * @throws CoreException
      */
-    public function validateProperty(CustomizationField $customizationField, string $propertyName): void
+    public function validate(CustomizationField $customizationField): void
     {
-        parent::validateObjectModelProperty(
-            $customizationField,
-            $propertyName,
-            CustomizationFieldConstraintException::class,
-            $this->getErrorCode($propertyName)
-        );
-    }
-
-    /**
-     * @param CustomizationField $customizationField
-     * @param string $propertyName
-     *
-     * @throws CoreException
-     */
-    public function validateLocalizedProperty(CustomizationField $customizationField, string $propertyName): void
-    {
-        $this->validateObjectModelLocalizedProperty(
-            $customizationField,
-            $propertyName,
-            CustomizationFieldConstraintException::class,
-            $this->getErrorCode($propertyName)
-        );
-    }
-
-    /**
-     * @param string $propertyName
-     *
-     * @return int
-     */
-    private function getErrorCode(string $propertyName): int
-    {
-        $codesByName = [
-            'name' => CustomizationFieldConstraintException::INVALID_NAME,
-            'type' => CustomizationFieldConstraintException::INVALID_TYPE,
-            'id' => CustomizationFieldConstraintException::INVALID_ID,
-        ];
-
-        return $codesByName[$propertyName];
+        parent::validateObjectModelProperty($customizationField, 'type', CustomizationFieldConstraintException::class, CustomizationFieldConstraintException::INVALID_TYPE);
+        parent::validateObjectModelLocalizedProperty($customizationField, 'name', CustomizationFieldConstraintException::class, CustomizationFieldConstraintException::INVALID_NAME);
+        parent::validateObjectModelProperty($customizationField, 'required', CustomizationFieldConstraintException::class);
+        parent::validateObjectModelProperty($customizationField, 'is_module', CustomizationFieldConstraintException::class);
+        parent::validateObjectModelProperty($customizationField, 'is_deleted', CustomizationFieldConstraintException::class);
+        parent::validateObjectModelProperty($customizationField, 'id_product', CustomizationFieldConstraintException::class);
     }
 }

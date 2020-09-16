@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter;
 use ObjectModel;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
+use RuntimeException;
 
 /**
  * Reusable methods to add/update legacy object model
@@ -72,20 +73,49 @@ abstract class AbstractObjectModelUpdater
 
     /**
      * @param ObjectModel $objectModel
+     * @param string $propertyName
      * @param array $propertiesToUpdate
      */
-    protected function fillProperties(ObjectModel $objectModel, array $propertiesToUpdate): void
+    protected function fillProperty(ObjectModel $objectModel, string $propertyName, array $propertiesToUpdate)
     {
-        foreach ($propertiesToUpdate as $propertyName => $value) {
-            $objectModel->{$propertyName} = $value;
+        if (!array_key_exists($propertyName, $propertiesToUpdate)) {
+            return;
+        }
 
-            if (is_array($value)) {
-                foreach ($value as $langId => $localizedValue) {
-                    $this->propertiesToUpdate[$propertyName][$langId] = true;
-                }
-            } else {
-                $this->propertiesToUpdate[$propertyName] = true;
-            }
+        $objectModel->{$propertyName} = $propertiesToUpdate[$propertyName];
+        $this->propertiesToUpdate[$propertyName] = true;
+    }
+
+    /**
+     * @param ObjectModel $objectModel
+     * @param string $propertyName
+     * @param array $propertiesToUpdate
+     */
+    protected function fillLocalizedProperty(ObjectModel $objectModel, string $propertyName, array $propertiesToUpdate)
+    {
+        if (!array_key_exists($propertyName, $propertiesToUpdate)) {
+            return;
+        }
+
+        if (!is_array($propertiesToUpdate[$propertyName])) {
+            throw new RuntimeException(sprintf(
+                'Localized object model property must be an array. "%s" given',
+                var_export($propertiesToUpdate[$propertyName])
+            ));
+        }
+
+        $objectModel->{$propertyName} = $propertiesToUpdate[$propertyName];
+        $this->addLocalizedPropertyToUpdate($propertyName, $propertiesToUpdate[$propertyName]);
+    }
+
+    /**
+     * @param string $propertyName
+     * @param array<int, string> $values
+     */
+    private function addLocalizedPropertyToUpdate(string $propertyName, array $values): void
+    {
+        foreach ($values as $langId => $value) {
+            $this->propertiesToUpdate[$propertyName][$langId] = true;
         }
     }
 }

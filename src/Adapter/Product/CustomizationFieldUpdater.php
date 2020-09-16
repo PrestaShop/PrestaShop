@@ -61,24 +61,21 @@ class CustomizationFieldUpdater extends AbstractObjectModelUpdater
     public function update(CustomizationField $customizationField, array $propertiesToUpdate, int $errorCode = 0)
     {
         $this->fillProperties($customizationField, $propertiesToUpdate);
-        $this->validateProperties($customizationField, $propertiesToUpdate);
+        $this->customizationFieldValidator->validate($customizationField);
         $this->updateObjectModel($customizationField, CannotUpdateCustomizationFieldException::class, $errorCode);
     }
 
     /**
      * @param CustomizationField $customizationField
      * @param array $propertiesToUpdate
-     *
-     * @throws CoreException
      */
-    private function validateProperties(CustomizationField $customizationField, array $propertiesToUpdate)
+    private function fillProperties(CustomizationField $customizationField, array $propertiesToUpdate): void
     {
-        foreach ($propertiesToUpdate as $propertyName => $value) {
-            if (is_array($value)) {
-                $this->customizationFieldValidator->validateLocalizedProperty($customizationField, $propertyName);
-            } else {
-                $this->customizationFieldValidator->validateProperty($customizationField, $propertyName);
-            }
-        }
+        $this->fillLocalizedProperty($customizationField, 'name', $propertiesToUpdate['name']);
+        $this->fillProperty($customizationField, 'type', $propertiesToUpdate);
+        $this->fillProperty($customizationField, 'required', $propertiesToUpdate);
+        $this->fillProperty($customizationField, 'is_module', $propertiesToUpdate);
+        $this->fillProperty($customizationField, 'id_product', $propertiesToUpdate);
+        $this->fillProperty($customizationField, 'is_deleted', $propertiesToUpdate);
     }
 }
