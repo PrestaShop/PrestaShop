@@ -63,6 +63,20 @@ class ProfileCore extends ObjectModel
     }
 
     /**
+     * @return string|null
+     */
+    public function getProfileImage(): ?string
+    {
+        $path = $this->image_dir . $this->id . '.jpg';
+
+        return file_exists($path)
+            ? Context::getContext()->link->getMediaLink(
+                str_replace($this->image_dir, _THEME_PROFILE_DIR_, $path)
+            )
+            : null;
+    }
+
+    /**
      * Get all available profiles.
      *
      * @return array Profiles

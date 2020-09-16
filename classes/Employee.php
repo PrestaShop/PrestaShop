@@ -604,12 +604,7 @@ class EmployeeCore extends ObjectModel
 
         // Default from Profile
         $profile = new Profile($this->id_profile);
-        $profilePath = $profile ? ($profile->image_dir . $profile->id . '.jpg') : '';
-        $defaultProfile = file_exists($profilePath)
-            ? Context::getContext()->link->getMediaLink(
-                str_replace($profile->image_dir, _THEME_PROFILE_DIR_, $profilePath)
-            )
-            : null;
+        $defaultProfile = $profile->id == $this->id_profile ? $profile->getProfileImage() : null;
         $imageUrl = $imageUrl ?? $defaultProfile;
 
         // Gravatar
@@ -620,7 +615,7 @@ class EmployeeCore extends ObjectModel
         // Local Image
         $imagePath = $this->image_dir . $this->id . '.jpg';
         if (file_exists($imagePath)) {
-            $imageUrl = Context::getContext()->link->getMediaLink(
+            $imageUrl = $imageUrl ?? Context::getContext()->link->getMediaLink(
                 str_replace($this->image_dir, _THEME_EMPLOYEE_DIR_, $imagePath)
             );
         }
