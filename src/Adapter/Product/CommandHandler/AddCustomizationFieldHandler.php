@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use CustomizationField as CustomizationFieldEntity;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractCustomizationFieldHandler;
 use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldManager;
 use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldValidator;
@@ -88,15 +87,7 @@ final class AddCustomizationFieldHandler extends AbstractCustomizationFieldHandl
     {
         $product = $this->productProvider->get($command->getProductId());
 
-        $customizationField = new CustomizationFieldEntity();
-
-        $customizationField->id_product = $product->id;
-        $customizationField->type = $command->getType()->getValue();
-        $customizationField->required = $command->isRequired();
-        $customizationField->is_module = $command->isAddedByModule();
-        $customizationField->name = $command->getLocalizedNames();
-
-        $this->customizationFieldManager->create([
+        $customizationField = $this->customizationFieldManager->create([
             'id_product' => (int) $product->id,
             'type' => $command->getType()->getValue(),
             'required' => $command->isRequired(),
