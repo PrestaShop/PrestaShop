@@ -71,7 +71,7 @@ class CustomizationFieldUpdater extends AbstractObjectModelUpdater
      */
     private function fillProperties(CustomizationField $customizationField, array $propertiesToUpdate): void
     {
-        $this->fillLocalizedProperty($customizationField, 'name', $propertiesToUpdate['name']);
+        $this->fillLocalizedProperty($customizationField, 'name', $propertiesToUpdate);
         $this->fillProperty($customizationField, 'type', $propertiesToUpdate);
         $this->fillProperty($customizationField, 'required', $propertiesToUpdate);
         $this->fillProperty($customizationField, 'is_module', $propertiesToUpdate);

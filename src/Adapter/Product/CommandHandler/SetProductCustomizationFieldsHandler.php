@@ -145,7 +145,6 @@ class SetProductCustomizationFieldsHandler extends AbstractCustomizationFieldHan
     {
         $fieldId = $customizationField->getCustomizationFieldId();
         $customizationFieldId = new CustomizationFieldId($fieldId);
-
         $customizationFieldObjectModel = $this->customizationFieldProvider->get($customizationFieldId);
 
         $this->customizationFieldUpdater->update(
