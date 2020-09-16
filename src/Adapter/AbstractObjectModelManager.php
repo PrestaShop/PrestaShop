@@ -36,8 +36,35 @@ use RuntimeException;
 /**
  * Reusable methods to add/update legacy object model
  */
-abstract class AbstractObjectModelUpdater
+abstract class AbstractObjectModelManager
 {
+    /**
+     * @param ObjectModel $objectModel
+     * @param string $exceptionClass
+     * @param int $errorCode
+     *
+     * @return int
+     */
+    protected function addObjectModel(ObjectModel $objectModel, string $exceptionClass, int $errorCode = 0): int
+    {
+        try {
+            if (!$objectModel->add()) {
+                throw new $exceptionClass(
+                    sprintf('Failed to add %s #%d', get_class($objectModel), $objectModel->id),
+                    $errorCode
+                );
+            }
+
+            return (int) $objectModel->id;
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf('Error occurred when trying to add %s #%d', get_class($objectModel), $objectModel->id),
+                0,
+                $e
+            );
+        }
+    }
+
     /**
      * @param ObjectModel $objectModel
      * @param string $exceptionClass
@@ -68,38 +95,44 @@ abstract class AbstractObjectModelUpdater
     /**
      * @param ObjectModel $objectModel
      * @param string $propertyName
-     * @param array $propertiesToUpdate
+     * @param array $properties
      */
-    protected function fillProperty(ObjectModel $objectModel, string $propertyName, array $propertiesToUpdate)
+    protected function fillProperty(ObjectModel $objectModel, string $propertyName, array $properties)
     {
-        if (!array_key_exists($propertyName, $propertiesToUpdate)) {
+        if (!array_key_exists($propertyName, $properties)) {
             return;
         }
 
-        $objectModel->{$propertyName} = $propertiesToUpdate[$propertyName];
-        $objectModel->addFieldsToUpdate([$propertyName => true]);
+        $objectModel->{$propertyName} = $properties[$propertyName];
+
+        if ($objectModel->id) {
+            $objectModel->addFieldsToUpdate([$propertyName => true]);
+        }
     }
 
     /**
      * @param ObjectModel $objectModel
      * @param string $propertyName
-     * @param array $propertiesToUpdate
+     * @param array $properties
      */
-    protected function fillLocalizedProperty(ObjectModel $objectModel, string $propertyName, array $propertiesToUpdate)
+    protected function fillLocalizedProperty(ObjectModel $objectModel, string $propertyName, array $properties)
     {
-        if (!array_key_exists($propertyName, $propertiesToUpdate)) {
+        if (!array_key_exists($propertyName, $properties)) {
             return;
         }
 
-        if (!is_array($propertiesToUpdate[$propertyName])) {
+        if (!is_array($properties[$propertyName])) {
             throw new RuntimeException(sprintf(
                 'Localized object model property must be an array. "%s" given',
-                var_export($propertiesToUpdate[$propertyName])
+                var_export($properties[$propertyName])
             ));
         }
 
-        $objectModel->{$propertyName} = $propertiesToUpdate[$propertyName];
-        $this->addLocalizedPropertyToUpdate($objectModel, $propertyName, $propertiesToUpdate[$propertyName]);
+        $objectModel->{$propertyName} = $properties[$propertyName];
+
+        if ($objectModel->id) {
+            $this->addLocalizedPropertyToUpdate($objectModel, $propertyName, $properties[$propertyName]);
+        }
     }
 
     /**

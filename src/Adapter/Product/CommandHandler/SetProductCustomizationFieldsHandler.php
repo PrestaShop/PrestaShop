@@ -29,10 +29,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractCustomizationFieldHandler;
+use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldManager;
 use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldProvider;
-use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\ProductUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\AddCustomizationFieldCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\AddCustomizationFieldHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\SetProductCustomizationFieldsHandlerInterface;
@@ -60,9 +59,9 @@ class SetProductCustomizationFieldsHandler extends AbstractCustomizationFieldHan
     private $customizationFieldDeleter;
 
     /**
-     * @var CustomizationFieldUpdater
+     * @var CustomizationFieldManager
      */
-    private $customizationFieldUpdater;
+    private $customizationFieldManager;
 
     /**
      * @var CustomizationFieldProvider
@@ -76,21 +75,21 @@ class SetProductCustomizationFieldsHandler extends AbstractCustomizationFieldHan
 
     /**
      * @param AddCustomizationFieldHandlerInterface $addCustomizationFieldHandler
-     * @param CustomizationFieldUpdater $customizationFieldUpdater
+     * @param CustomizationFieldManager $customizationFieldManager
      * @param CustomizationFieldDeleterInterface $customizationFieldDeleter
      * @param CustomizationFieldProvider $customizationFieldProvider
      * @param ProductUpdater $productUpdater
      */
     public function __construct(
         AddCustomizationFieldHandlerInterface $addCustomizationFieldHandler,
-        CustomizationFieldUpdater $customizationFieldUpdater,
+        CustomizationFieldManager $customizationFieldManager,
         CustomizationFieldDeleterInterface $customizationFieldDeleter,
         CustomizationFieldProvider $customizationFieldProvider,
         ProductUpdater $productUpdater
     ) {
         $this->addCustomizationFieldHandler = $addCustomizationFieldHandler;
         $this->customizationFieldDeleter = $customizationFieldDeleter;
-        $this->customizationFieldUpdater = $customizationFieldUpdater;
+        $this->customizationFieldManager = $customizationFieldManager;
         $this->customizationFieldProvider = $customizationFieldProvider;
         $this->productUpdater = $productUpdater;
     }
@@ -127,13 +126,13 @@ class SetProductCustomizationFieldsHandler extends AbstractCustomizationFieldHan
      */
     public function handleCreation(ProductId $productId, CustomizationField $customizationField): void
     {
-        $this->addCustomizationFieldHandler->handle(new AddCustomizationFieldCommand(
-            $productId->getValue(),
-            $customizationField->getType(),
-            $customizationField->isRequired(),
-            $customizationField->getLocalizedNames(),
-            $customizationField->isAddedByModule()
-        ));
+        $this->customizationFieldManager->create([
+            'id_product' => $productId->getValue(),
+            'type' => $customizationField->getType(),
+            'required' => $customizationField->isRequired(),
+            'name' => $customizationField->getLocalizedNames(),
+            'is_module' => $customizationField->isAddedByModule(),
+        ]);
     }
 
     /**
@@ -147,7 +146,7 @@ class SetProductCustomizationFieldsHandler extends AbstractCustomizationFieldHan
         $customizationFieldId = new CustomizationFieldId($fieldId);
         $customizationFieldObjectModel = $this->customizationFieldProvider->get($customizationFieldId);
 
-        $this->customizationFieldUpdater->update(
+        $this->customizationFieldManager->update(
             $customizationFieldObjectModel,
             [
                 'type' => $customizationField->getType(),

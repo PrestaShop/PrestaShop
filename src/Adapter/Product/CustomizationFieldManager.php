@@ -29,14 +29,15 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use CustomizationField;
-use PrestaShop\PrestaShop\Adapter\AbstractObjectModelUpdater;
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelManager;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotAddCustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotUpdateCustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
  * Performs update of provided CustomizationField properties
  */
-class CustomizationFieldUpdater extends AbstractObjectModelUpdater
+class CustomizationFieldManager extends AbstractObjectModelManager
 {
     /**
      * @var CustomizationFieldValidator
@@ -52,13 +53,31 @@ class CustomizationFieldUpdater extends AbstractObjectModelUpdater
     }
 
     /**
+     * @param array $properties
+     * @param int $errorCode
+     *
+     * @return CustomizationField
+     *
+     * @throws CoreException
+     */
+    public function create(array $properties, int $errorCode = 0): CustomizationField
+    {
+        $customizationField = new CustomizationField();
+        $this->fillProperties($customizationField, $properties);
+        $this->customizationFieldValidator->validate($customizationField);
+        $this->addObjectModel($customizationField, CannotAddCustomizationFieldException::class, $errorCode);
+
+        return $customizationField;
+    }
+
+    /**
      * @param CustomizationField $customizationField
      * @param array<string, mixed> $propertiesToUpdate
      * @param int $errorCode
      *
      * @throws CoreException
      */
-    public function update(CustomizationField $customizationField, array $propertiesToUpdate, int $errorCode = 0)
+    public function update(CustomizationField $customizationField, array $propertiesToUpdate, int $errorCode = 0): void
     {
         $this->fillProperties($customizationField, $propertiesToUpdate);
         $this->customizationFieldValidator->validate($customizationField);
