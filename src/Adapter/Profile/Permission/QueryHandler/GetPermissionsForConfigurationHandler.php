@@ -107,6 +107,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
     {
         return [
             Tab::getIdFromClassName('AdminLogin'),
+            Tab::getIdFromClassName('AdminQuickAccesses'),
         ];
     }
 
