@@ -345,7 +345,7 @@ class ImageSettings extends BOBasePage {
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
-    return this.getTextContent(page, '.pagination.pull-right');
+    return this.getTextContent(page, 'ul.pagination.pull-right li.active a');
   }
 
   /**

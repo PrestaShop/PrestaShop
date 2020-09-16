@@ -103,21 +103,21 @@ describe('Pagination and sort image settings', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
       const paginationNumber = await imageSettingsPage.selectPaginationLimit(page, '20');
-      expect(paginationNumber).to.equal('1 2');
+      expect(paginationNumber).to.equal('1');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
       const paginationNumber = await imageSettingsPage.paginationNext(page);
-      expect(paginationNumber).to.equal('1 2');
+      expect(paginationNumber).to.equal('2');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
       const paginationNumber = await imageSettingsPage.paginationPrevious(page);
-      expect(paginationNumber).to.equal('1 2');
+      expect(paginationNumber).to.equal('1');
     });
 
     it('should change the item number to 50 per page', async function () {
@@ -136,8 +136,16 @@ describe('Pagination and sort image settings', async () => {
           testIdentifier: 'sortByIdDesc', sortBy: 'id_image_type', sortDirection: 'down', isFloat: true,
         },
       },
-      {args: {testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'up'}},
-      {args: {testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'down'}},
+      {
+        args: {
+          testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'up',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'down',
+        },
+      },
       {
         args: {
           testIdentifier: 'sortByWidthAsc', sortBy: 'width', sortDirection: 'up', isFloat: true,
