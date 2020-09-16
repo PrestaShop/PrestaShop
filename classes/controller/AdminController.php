@@ -414,7 +414,13 @@ class AdminControllerCore extends Controller
 
     /** @var float @var */
     public $timer_start;
-
+    
+    /** @var bool */
+    protected static $is_prestashop_up = true;
+    
+    /** @var array */
+    protected $translationsTab = [];
+    
     public function __construct($forceControllerName = '', $default_theme_name = 'default')
     {
         global $timer_start;
@@ -532,7 +538,6 @@ class AdminControllerCore extends Controller
             $this->shopLinkType = '';
         }
 
-        //$this->base_template_folder = _PS_BO_ALL_THEMES_DIR_.$this->bo_theme.'/template';
         $this->override_folder = Tools::toUnderscoreCase(substr($this->controller_name, 5)) . '/';
         // Get the name of the folder containing the custom tpl files
         $this->tpl_folder = Tools::toUnderscoreCase(substr($this->controller_name, 5)) . '/';
@@ -560,7 +565,7 @@ class AdminControllerCore extends Controller
             $this->context->mode = Context::MODE_STD;
         }
 
-        //* Check if logged employee has access to AdminImport controller */
+        /* Check if logged employee has access to AdminImport controller */
         $import_access = Profile::getProfileAccess($this->context->employee->id_profile, Tab::getIdFromClassName('AdminImport'));
         if (is_array($import_access) && isset($import_access['view']) && $import_access['view'] == 1) {
             $this->can_import = true;
@@ -2964,7 +2969,7 @@ class AdminControllerCore extends Controller
                 $this->errors[] = $this->trans('You do not have permission to delete this.', [], 'Admin.Notifications.Error');
             }
         } elseif ((isset($_GET['status' . $this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier)) {
-            /* Change object statuts (active, inactive) */
+            /* Change object status (active, inactive) */
             if ($this->access('edit')) {
                 $this->action = 'status';
             } else {
@@ -4287,9 +4292,6 @@ class AdminControllerCore extends Controller
         return false;
     }
 
-    /** @var bool */
-    protected static $is_prestashop_up = true;
-
     /**
      * @param string $file_to_refresh
      * @param string $external_file
@@ -4357,9 +4359,6 @@ class AdminControllerCore extends Controller
             unset($obj);
         }
     }
-
-    /** @var array */
-    protected $translationsTab = [];
 
     /**
      * Display modules list.
@@ -4731,7 +4730,7 @@ class AdminControllerCore extends Controller
     /**
      * Return the type of authorization on module page.
      *
-     * @return int(integer)
+     * @return int
      */
     public function authorizationLevel()
     {
