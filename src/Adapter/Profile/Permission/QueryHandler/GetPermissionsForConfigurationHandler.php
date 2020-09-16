@@ -55,6 +55,11 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
     private $authorizationChecker;
 
     /**
+     * @var array
+     */
+    private $whitelist = [];
+
+    /**
      * @param AuthorizationCheckerInterface $authorizationChecker
      */
     public function __construct(AuthorizationCheckerInterface $authorizationChecker)
@@ -147,10 +152,16 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
                 continue;
             }
 
+            // Don't allow permissions for undefined parents
+            if ($tab['id_parent'] === '-1') {
+                continue;
+            }
+
             if (in_array($tab['id_tab'], $nonConfigurableTabs)) {
                 continue;
             }
 
+            $this->whitelist[] = $tab['id_tab'];
             $tabs[] = [
                 'id' => $tab['id_tab'],
                 'id_parent' => $tab['id_parent'],
@@ -201,7 +212,15 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
         $permissions = [];
 
         foreach ($profiles as $profile) {
-            $permissions[$profile['id']] = Profile::getProfileAccesses($profile['id']);
+            // Allow only whitelisted elements
+            $filteredProfileAccesses = array_filter(
+                Profile::getProfileAccesses($profile['id']),
+                function ($item) {
+                    return in_array($item['id_tab'], $this->whitelist);
+                }
+            );
+
+            $permissions[$profile['id']] = $filteredProfileAccesses;
         }
 
         return $permissions;
