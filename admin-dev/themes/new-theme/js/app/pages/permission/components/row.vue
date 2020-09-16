@@ -24,12 +24,12 @@
      *-->
 <template>
   <div>
-    <div :class="{parent, 'bg-light': parent}" class="row permission-row">
+    <div
+      :class="{parent, 'bg-light': parent}"
+      class="row permission-row"
+    >
       <div class="col-4">
-        <template v-for="i in levelDepth" v-if="i > 2">
-          &nbsp;&nbsp;
-        </template>
-
+        <span v-html="displayLevelDepth" />
         &raquo;
 
         <strong v-if="parent">{{ permission.name }}</strong>
@@ -39,7 +39,12 @@
       </div>
 
       <div class="col-8 row">
-        <div class="text-center" :class="getClasses(types, index === 0)" v-for="(type, index) in types">
+        <div
+          class="text-center"
+          :class="getClasses(types, index === 0)"
+          v-for="(type, index) in types"
+          :key="index"
+        >
           <ps-checkbox
             :value="type"
             v-model="permissionValues"
@@ -52,7 +57,7 @@
 
     <div v-if="permission.children !== undefined">
       <row
-        v-for="p, pId in permission.children"
+        v-for="(p, pId) in permission.children"
         :key="p.id"
         :can-edit="canEdit"
         :permission="p"
@@ -64,18 +69,17 @@
         :types="types"
         @childUpdated="onChildUpdate"
         @sendRequest="sendRequest"
-      >
-      </row>
+      />
     </div>
   </div>
 </template>
 
 <script>
-  import PsCheckbox from '../../../components/checkbox.vue';
-  import ColSize from '../../../mixins/col-size.vue';
+  import PsCheckbox from '@app/components/checkbox.vue';
+  import ColSize from '@app/mixins/col-size.vue';
 
   export default {
-    name: 'row',
+    name: 'Row',
     mixins: [
       ColSize,
     ],
@@ -143,6 +147,15 @@
     mounted() {
       this.refreshPermissions();
     },
+    computed: {
+      displayLevelDepth() {
+        if (this.levelDepth < 2) {
+          return '';
+        }
+
+        return Array(this.levelDepth - 1).join('&nbsp;&nbsp;');
+      },
+    },
     methods: {
       canEditCheckbox(type) {
         // We don't check for employee permissions
@@ -176,9 +189,9 @@
        * Get the types length, depends if you have the TYPE_ALL or not
        */
       getTypesLength() {
-        return this.types.includes(this.TYPE_ALL) ?
-               this.types.length - 1 :
-               this.types.length;
+        return this.types.includes(this.TYPE_ALL)
+          ? this.types.length - 1
+          : this.types.length;
       },
       /**
        * Get permission from id
@@ -222,9 +235,9 @@
 
         // We click on the type all
         if (type === this.TYPE_ALL) {
-          this.permissionValues = this.permissionValues.includes(type) ?
-                                  [...this.types] :
-                                  [];
+          this.permissionValues = this.permissionValues.includes(type)
+            ? [...this.types]
+            : [];
 
           return;
         }
@@ -256,8 +269,8 @@
           };
 
           params[this.permissionKey] = this.permission[this.permissionKey] !== undefined
-                                     ? this.permission[this.permissionKey]
-                                     : this.permissionId;
+            ? this.permission[this.permissionKey]
+            : this.permissionId;
 
           this.$emit('sendRequest', params);
         }
