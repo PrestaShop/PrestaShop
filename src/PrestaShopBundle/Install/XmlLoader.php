@@ -382,8 +382,7 @@ class XmlLoader
         $langs = [];
         $languageList = LanguageList::getInstance();
         foreach ($this->languages as $id_lang => $iso) {
-            $languageList->setLanguage($iso);
-            $langs[$id_lang] = $languageList->getCountries();
+            $langs[$id_lang] = $languageList->getCountriesByLanguage($iso);
         }
 
         // Load all row for current entity and prepare data to be populated
@@ -391,13 +390,15 @@ class XmlLoader
         if ($xml->entities->country instanceof SimpleXMLElement) {
             foreach ($xml->entities->country as $node) {
                 $data = [];
-                $identifier = (string) $node['id'];
 
                 // Read attributes
+                $identifier = '';
                 foreach ($node->attributes() as $k => $v) {
-                    if ($k != 'id') {
-                        $data[$k] = (string) $v;
+                    if ($k == 'id') {
+                        $identifier = (string) $v;
+                        continue;
                     }
+                    $data[$k] = (string) $v;
                 }
 
                 // Load multilang data
