@@ -32,7 +32,7 @@
         :class="classes"
         :disabled="disabled"
         @change="change"
-      />
+      >
       <input
         v-else
         type="checkbox"
@@ -40,11 +40,11 @@
         :class="classes"
         :disabled="disabled"
         @change="$emit('input', $event.target.checked)"
-      />
+      >
 
       <slot>
         <!-- - Fallback content -->
-        <i class="md-checkbox-control"></i>
+        <i class="md-checkbox-control" />
       </slot>
     </label>
   </div>
@@ -65,6 +65,7 @@
       },
       checked: {
         required: true,
+        type: Array,
       },
       disabled: {
         type: Boolean,
@@ -73,6 +74,7 @@
       },
       value: {
         required: true,
+        type: String,
       },
     },
     methods: {
