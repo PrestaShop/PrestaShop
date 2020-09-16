@@ -382,8 +382,7 @@ class XmlLoader
         $langs = [];
         $languageList = LanguageList::getInstance();
         foreach ($this->languages as $id_lang => $iso) {
-            $languageList->setLanguage($iso);
-            $langs[$id_lang] = $languageList->getCountries();
+            $langs[$id_lang] = $languageList->getCountriesByLanguage($iso);
         }
 
         // Load all row for current entity and prepare data to be populated
