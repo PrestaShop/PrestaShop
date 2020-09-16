@@ -196,6 +196,7 @@ services:
         arguments:
             - '@prestashop.adapter.product.customization_field_deleter'
             - '@prestashop.adapter.product.product_provider'
+            - '@prestashop.adapter.product.product_updater'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCustomizationFieldsFromProductCommand

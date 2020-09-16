@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\ProductProvider;
+use PrestaShop\PrestaShop\Adapter\Product\ProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCustomizationFieldsFromProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\RemoveAllCustomizationFieldsFromProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationFieldDeleterInterface;
@@ -50,15 +51,23 @@ final class RemoveAllCustomizationFieldsFromProductHandler implements RemoveAllC
     private $productProvider;
 
     /**
+     * @var ProductUpdater
+     */
+    private $productUpdater;
+
+    /**
      * @param CustomizationFieldDeleterInterface $customizationFieldDeleter
      * @param ProductProvider $productProvider
+     * @param ProductUpdater $productUpdater
      */
     public function __construct(
         CustomizationFieldDeleterInterface $customizationFieldDeleter,
-        ProductProvider $productProvider
+        ProductProvider $productProvider,
+        ProductUpdater $productUpdater
     ) {
         $this->customizationFieldDeleter = $customizationFieldDeleter;
         $this->productProvider = $productProvider;
+        $this->productUpdater = $productUpdater;
     }
 
     /**
@@ -73,5 +82,6 @@ final class RemoveAllCustomizationFieldsFromProductHandler implements RemoveAllC
         }, $product->getCustomizationFieldIds());
 
         $this->customizationFieldDeleter->bulkDelete($customizationFieldIds);
+        $this->productUpdater->refreshProductCustomizabilityProperties($product);
     }
 }
