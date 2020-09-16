@@ -82,28 +82,30 @@
     },
     mounted() {
       this.refreshPermissionsCheckboxes(this.profilePermissions);
+      console.log(this.profilePermissions);
     },
     methods: {
       /**
        * Check if checkboxes must be checked
        */
       refreshPermissionsCheckboxes(permissions) {
-        Object.keys(this.types).forEach((type) => {
-          if (type === this.TYPE_ALL) {
+        Object.keys(this.types).forEach((t) => {
+          if (t === this.TYPE_ALL) {
             return;
           }
 
           let isChecked = true;
           // eslint-disable-next-line no-restricted-syntax
           for (const perm of Object.values(permissions)) {
-            if (perm[type] === '0') {
+            if (perm[t] === '0') {
+              console.log(perm);
               isChecked = false;
               break;
             }
           }
 
-          if (isChecked && !this.status.includes(type)) {
-            this.status.push(type);
+          if (isChecked && !this.status.includes(t)) {
+            this.status.push(t);
           }
         });
         this.checkForTypeAllCheckbox();
