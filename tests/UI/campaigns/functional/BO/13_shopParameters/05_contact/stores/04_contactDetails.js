@@ -14,6 +14,7 @@ const foHomePage = require('@pages/FO/home');
 
 // Import data
 const StoreContactFaker = require('@data/faker/storeContact');
+const {stores} = require('@data/demo/stores');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -27,20 +28,6 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 
-const storesContactDemo = new StoreContactFaker(
-  {
-    name: 'prestashop',
-    email: 'demo@prestashop.com',
-    registrationNumber: ' ',
-    address1: ' ',
-    address2: ' ',
-    postcode: ' ',
-    city: ' ',
-    country: 'France',
-    phone: ' ',
-    fax: ' ',
-  },
-);
 const storesContactToCreate = new StoreContactFaker();
 
 describe('Configure contact details', async () => {
@@ -129,7 +116,7 @@ describe('Configure contact details', async () => {
   it('should back to default contact details information', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'backToDefaultInformation', baseContext);
 
-    const textResult = await storesPage.setContactDetails(page, storesContactDemo);
+    const textResult = await storesPage.setContactDetails(page, stores.contact);
     await expect(textResult).to.contains(storesPage.successfulUpdateMessage);
   });
 });

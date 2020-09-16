@@ -26,5 +26,17 @@ module.exports = {
       fax: '',
       enabled: true,
     },
+    contact: {
+      name: 'prestashop',
+      email: 'demo@prestashop.com',
+      registrationNumber: ' ',
+      address1: ' ',
+      address2: ' ',
+      postcode: ' ',
+      city: ' ',
+      country: 'France',
+      phone: ' ',
+      fax: ' ',
+    },
   },
 };
