@@ -57,4 +57,14 @@ class ProductProvider extends AbstractObjectModelProvider
 
         return $product;
     }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @throws CoreException
+     */
+    public function assertProductExists(ProductId $productId): void
+    {
+        $this->assertObjectModelExists($productId->getValue(), 'product', ProductNotFoundException::class);
+    }
 }
