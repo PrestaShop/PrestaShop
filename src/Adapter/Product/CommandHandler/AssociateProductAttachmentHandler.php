@@ -28,9 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Attachment\AttachmentProvider;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Adapter\Product\ProductProvider;
 use PrestaShop\PrestaShop\Adapter\Product\ProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssociateProductAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AssociateProductAttachmentHandlerInterface;
@@ -41,32 +39,16 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AssociateProductAtt
 final class AssociateProductAttachmentHandler extends AbstractProductHandler implements AssociateProductAttachmentHandlerInterface
 {
     /**
-     * @var ProductProvider
-     */
-    private $productProvider;
-
-    /**
-     * @var AttachmentProvider
-     */
-    private $attachmentProvider;
-
-    /**
      * @var ProductUpdater
      */
     private $productUpdater;
 
     /**
-     * @param ProductProvider $productProvider
-     * @param AttachmentProvider $attachmentProvider
      * @param ProductUpdater $productUpdater
      */
     public function __construct(
-        ProductProvider $productProvider,
-        AttachmentProvider $attachmentProvider,
         ProductUpdater $productUpdater
     ) {
-        $this->productProvider = $productProvider;
-        $this->attachmentProvider = $attachmentProvider;
         $this->productUpdater = $productUpdater;
     }
 
