@@ -34,9 +34,9 @@ use PrestaShopException;
 use RuntimeException;
 
 /**
- * Reusable methods to add/update legacy object model
+ * Reusable methods to persist legacy object model
  */
-abstract class AbstractObjectModelManager
+abstract class AbstractObjectModelPersister
 {
     /**
      * @param ObjectModel $objectModel

@@ -28,8 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use CustomizationField;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractCustomizationFieldHandler;
-use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldManager;
+use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldPersister;
 use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldValidator;
 use PrestaShop\PrestaShop\Adapter\Product\ProductProvider;
 use PrestaShop\PrestaShop\Adapter\Product\ProductUpdater;
@@ -53,9 +54,9 @@ final class AddCustomizationFieldHandler extends AbstractCustomizationFieldHandl
     private $productUpdater;
 
     /**
-     * @var CustomizationFieldManager
+     * @var CustomizationFieldPersister
      */
-    private $customizationFieldManager;
+    private $customizationFieldPersister;
 
     /**
      * @var CustomizationFieldValidator
@@ -65,17 +66,17 @@ final class AddCustomizationFieldHandler extends AbstractCustomizationFieldHandl
     /**
      * @param ProductProvider $productProvider
      * @param ProductUpdater $productUpdater
-     * @param CustomizationFieldManager $customizationFieldManager
+     * @param CustomizationFieldPersister $customizationFieldPersister
      * @param CustomizationFieldValidator $customizationFieldValidator
      */
     public function __construct(
         ProductProvider $productProvider,
         ProductUpdater $productUpdater,
-        CustomizationFieldManager $customizationFieldManager,
+        CustomizationFieldPersister $customizationFieldPersister,
         CustomizationFieldValidator $customizationFieldValidator
     ) {
         $this->productProvider = $productProvider;
-        $this->customizationFieldManager = $customizationFieldManager;
+        $this->customizationFieldPersister = $customizationFieldPersister;
         $this->customizationFieldValidator = $customizationFieldValidator;
         $this->productUpdater = $productUpdater;
     }
@@ -86,17 +87,17 @@ final class AddCustomizationFieldHandler extends AbstractCustomizationFieldHandl
     public function handle(AddCustomizationFieldCommand $command): CustomizationFieldId
     {
         $product = $this->productProvider->get($command->getProductId());
+        $customizationField = new CustomizationField();
 
-        $customizationField = $this->customizationFieldManager->create([
-            'id_product' => (int) $product->id,
-            'type' => $command->getType()->getValue(),
-            'required' => $command->isRequired(),
-            'is_module' => $command->isAddedByModule(),
-            'name' => $command->getLocalizedNames(),
-        ]);
+        $customizationField->id_product = (int) $product->id;
+        $customizationField->type = $command->getType()->getValue();
+        $customizationField->required = $command->isRequired();
+        $customizationField->is_module = $command->isAddedByModule();
+        $customizationField->name = $command->getLocalizedNames();
 
+        $customizationFieldId = $this->customizationFieldPersister->add($customizationField);
         $this->productUpdater->refreshProductCustomizabilityProperties($product);
 
-        return new CustomizationFieldId((int) $customizationField->id);
+        return $customizationFieldId;
     }
 }

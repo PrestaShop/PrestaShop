@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractCustomizationFieldHandler;
-use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldManager;
+use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldPersister;
 use PrestaShop\PrestaShop\Adapter\Product\ProductProvider;
 use PrestaShop\PrestaShop\Adapter\Product\ProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateCustomizationFieldCommand;
@@ -52,23 +52,23 @@ final class UpdateCustomizationFieldHandler extends AbstractCustomizationFieldHa
     private $productUpdater;
 
     /**
-     * @var CustomizationFieldManager
+     * @var CustomizationFieldPersister
      */
-    private $customizationFieldManager;
+    private $customizationFieldPersister;
 
     /**
      * @param ProductProvider $productProvider
      * @param ProductUpdater $productUpdater
-     * @param CustomizationFieldManager $customizationFieldManager
+     * @param CustomizationFieldPersister $customizationFieldPersister
      */
     public function __construct(
         ProductProvider $productProvider,
         ProductUpdater $productUpdater,
-        CustomizationFieldManager $customizationFieldManager
+        CustomizationFieldPersister $customizationFieldPersister
     ) {
         $this->productProvider = $productProvider;
         $this->productUpdater = $productUpdater;
-        $this->customizationFieldManager = $customizationFieldManager;
+        $this->customizationFieldPersister = $customizationFieldPersister;
     }
 
     /**
@@ -77,7 +77,7 @@ final class UpdateCustomizationFieldHandler extends AbstractCustomizationFieldHa
     public function handle(UpdateCustomizationFieldCommand $command): void
     {
         $customizationField = $this->getCustomizationField($command->getCustomizationFieldId());
-        $this->customizationFieldManager->update($customizationField, $this->formatPropertiesForUpdate($command));
+        $this->customizationFieldPersister->update($customizationField, $this->formatPropertiesForUpdate($command));
 
         $product = $this->productProvider->get(new ProductId((int) $customizationField->id_product));
         $this->productUpdater->refreshProductCustomizabilityProperties($product);

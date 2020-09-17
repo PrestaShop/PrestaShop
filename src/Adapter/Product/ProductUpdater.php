@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
-use PrestaShop\PrestaShop\Adapter\AbstractObjectModelManager;
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelPersister;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
@@ -38,7 +38,7 @@ use Product;
 /**
  * Performs update of provided Product properties
  */
-class ProductUpdater extends AbstractObjectModelManager
+class ProductUpdater extends AbstractObjectModelPersister
 {
     /**
      * @var ProductValidator

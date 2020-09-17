@@ -29,15 +29,16 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use CustomizationField;
-use PrestaShop\PrestaShop\Adapter\AbstractObjectModelManager;
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelPersister;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotAddCustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotUpdateCustomizationFieldException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
- * Performs update of provided CustomizationField properties
+ * Persists CustomizationField
  */
-class CustomizationFieldManager extends AbstractObjectModelManager
+class CustomizationFieldPersister extends AbstractObjectModelPersister
 {
     /**
      * @var CustomizationFieldValidator
@@ -47,27 +48,26 @@ class CustomizationFieldManager extends AbstractObjectModelManager
     /**
      * @param CustomizationFieldValidator $customizationFieldValidator
      */
-    public function __construct(CustomizationFieldValidator $customizationFieldValidator)
-    {
+    public function __construct(
+        CustomizationFieldValidator $customizationFieldValidator
+    ) {
         $this->customizationFieldValidator = $customizationFieldValidator;
     }
 
     /**
-     * @param array $properties
+     * @param CustomizationField $customizationField
      * @param int $errorCode
      *
-     * @return CustomizationField
+     * @return CustomizationFieldId
      *
      * @throws CoreException
      */
-    public function create(array $properties, int $errorCode = 0): CustomizationField
+    public function add(CustomizationField $customizationField, int $errorCode = 0): CustomizationFieldId
     {
-        $customizationField = new CustomizationField();
-        $this->fillProperties($customizationField, $properties);
         $this->customizationFieldValidator->validate($customizationField);
         $this->addObjectModel($customizationField, CannotAddCustomizationFieldException::class, $errorCode);
 
-        return $customizationField;
+        return new CustomizationFieldId((int) $customizationField->id);
     }
 
     /**
