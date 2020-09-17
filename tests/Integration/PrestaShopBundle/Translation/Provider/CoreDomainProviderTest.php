@@ -47,7 +47,6 @@ class CoreDomainProviderTest extends KernelTestCase
     {
         self::bootKernel();
         $container = self::$kernel->getContainer();
-        $databaseLoader = $container->get('prestashop.translation.loader.database');
         $resourcesDir = __DIR__ . '/../../../../Resources/translations';
         $databaseContent = [
             [
