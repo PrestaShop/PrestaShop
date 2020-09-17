@@ -41,7 +41,7 @@ export default {
       const separator = ' - ';
       let attr = '';
       combinations.forEach((attribute, index) => {
-        const value = attribute.slice(attributes[index].length + separator.length);
+        const value = attribute.trim().slice(attributes[index].trim().length + separator.length);
         attr += attr.length ? ` - ${value}` : value;
       });
       return attr;
