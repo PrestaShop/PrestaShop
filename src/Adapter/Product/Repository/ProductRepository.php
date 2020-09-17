@@ -90,4 +90,12 @@ class ProductRepository extends AbstractObjectModelRepository
             $errorCode
         );
     }
+
+    /**
+     * @param ProductId $productId
+     */
+    public function assertProductExists(ProductId $productId): void
+    {
+        $this->assertObjectModelExists($productId->getValue(), 'product', ProductNotFoundException::class);
+    }
 }
