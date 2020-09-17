@@ -24,7 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryResult;
+
+use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\Permission;
 
 class ConfigurablePermissions
 {
@@ -92,8 +96,8 @@ class ConfigurablePermissions
         array $bulkConfiguration,
         array $permissions,
         array $permissionIds,
-        $employeeProfileId,
-        $hasEmployeeEditPermission
+        int $employeeProfileId,
+        bool $hasEmployeeEditPermission
     ) {
         $this->profilePermissionsForTabs = $profilePermissionsForTabs;
         $this->profiles = $profiles;
@@ -109,7 +113,7 @@ class ConfigurablePermissions
     /**
      * @return array
      */
-    public function getProfilePermissionsForTabs()
+    public function getProfilePermissionsForTabs(): array
     {
         return $this->profilePermissionsForTabs;
     }
@@ -117,7 +121,7 @@ class ConfigurablePermissions
     /**
      * @return array
      */
-    public function getProfiles()
+    public function getProfiles(): array
     {
         return $this->profiles;
     }
@@ -125,7 +129,7 @@ class ConfigurablePermissions
     /**
      * @return array
      */
-    public function getTabs()
+    public function getTabs(): array
     {
         return $this->tabs;
     }
@@ -135,9 +139,9 @@ class ConfigurablePermissions
      *
      * @return bool
      */
-    public function isBulkViewConfigurationEnabled($profileId)
+    public function isBulkViewConfigurationEnabled(int $profileId): bool
     {
-        return $this->bulkConfiguration[$profileId]['view'];
+        return $this->bulkConfiguration[$profileId][Permission::VIEW];
     }
 
     /**
@@ -145,9 +149,9 @@ class ConfigurablePermissions
      *
      * @return bool
      */
-    public function isBulkAddConfigurationEnabled($profileId)
+    public function isBulkAddConfigurationEnabled(int $profileId): bool
     {
-        return $this->bulkConfiguration[$profileId]['add'];
+        return $this->bulkConfiguration[$profileId][Permission::ADD];
     }
 
     /**
@@ -155,9 +159,9 @@ class ConfigurablePermissions
      *
      * @return bool
      */
-    public function isBulkEditConfigurationEnabled($profileId)
+    public function isBulkEditConfigurationEnabled(int $profileId): bool
     {
-        return $this->bulkConfiguration[$profileId]['edit'];
+        return $this->bulkConfiguration[$profileId][Permission::EDIT];
     }
 
     /**
@@ -165,9 +169,9 @@ class ConfigurablePermissions
      *
      * @return bool
      */
-    public function isBulkDeleteConfigurationEnabled($profileId)
+    public function isBulkDeleteConfigurationEnabled(int $profileId): bool
     {
-        return $this->bulkConfiguration[$profileId]['delete'];
+        return $this->bulkConfiguration[$profileId][Permission::DELETE];
     }
 
     /**
@@ -175,15 +179,15 @@ class ConfigurablePermissions
      *
      * @return bool
      */
-    public function isBulkAllConfigurationEnabled($profileId)
+    public function isBulkAllConfigurationEnabled(int $profileId): bool
     {
-        return $this->bulkConfiguration[$profileId]['all'];
+        return $this->bulkConfiguration[$profileId][Permission::ALL];
     }
 
     /**
      * @return array
      */
-    public function getProfilePermissionsForModules()
+    public function getProfilePermissionsForModules(): array
     {
         return $this->profilePermissionsForModules;
     }
@@ -191,7 +195,7 @@ class ConfigurablePermissions
     /**
      * @return array
      */
-    public function getPermissions()
+    public function getPermissions(): array
     {
         return $this->permissions;
     }
@@ -199,7 +203,7 @@ class ConfigurablePermissions
     /**
      * @return array
      */
-    public function getPermissionIds()
+    public function getPermissionIds(): array
     {
         return $this->permissionIds;
     }
@@ -207,7 +211,7 @@ class ConfigurablePermissions
     /**
      * @return int
      */
-    public function getEmployeeProfileId()
+    public function getEmployeeProfileId(): int
     {
         return $this->employeeProfileId;
     }
@@ -215,7 +219,7 @@ class ConfigurablePermissions
     /**
      * @return bool
      */
-    public function hasEmployeeEditPermission()
+    public function hasEmployeeEditPermission(): bool
     {
         return $this->hasEmployeeEditPermission;
     }
