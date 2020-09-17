@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject;
 
 class Permission
@@ -50,7 +52,7 @@ class Permission
     /**
      * @param string $permission
      */
-    public function __construct($permission)
+    public function __construct(string $permission)
     {
         $this->permission = $permission;
     }
@@ -58,7 +60,7 @@ class Permission
     /**
      * @return string
      */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->permission;
     }

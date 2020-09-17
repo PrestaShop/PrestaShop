@@ -116,7 +116,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
     /**
      * @return int[] IDs of non configurable tabs
      */
-    private function getNonConfigurableTabs()
+    private function getNonConfigurableTabs(): array
     {
         return [
             Tab::getIdFromClassName('AdminLogin'),
@@ -127,7 +127,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
     /**
      * @return array
      */
-    private function getProfilesForPermissionsConfiguration()
+    private function getProfilesForPermissionsConfiguration(): array
     {
         $legacyProfiles = Profile::getProfiles(Context::getContext()->language->id);
         $profiles = [];
@@ -146,7 +146,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
     /**
      * @return array
      */
-    private function getTabsForPermissionsConfiguration()
+    private function getTabsForPermissionsConfiguration(): array
     {
         $nonConfigurableTabs = $this->getNonConfigurableTabs();
         $legacyTabs = Tab::getTabs(Context::getContext()->language->id);
@@ -185,7 +185,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
      *
      * @return array
      */
-    private function buildTabsTree(array &$tabs, $parentId = 0, $nestingLevel = 0)
+    private function buildTabsTree(array &$tabs, int $parentId = 0, int $nestingLevel = 0): array
     {
         if (self::MAX_NESTING_LEVEL < $nestingLevel) {
             throw new RuntimeException(sprintf(
@@ -201,7 +201,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
 
             if ((int) $tab['id_parent'] === (int) $parentId) {
                 $children[$id] = $tab;
-                $children[$id]['children'] = $this->buildTabsTree($tabs, $id, $nestingLevel + 1);
+                $children[$id]['children'] = $this->buildTabsTree($tabs, (int) $id, $nestingLevel + 1);
             }
         }
 
@@ -213,7 +213,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
      *
      * @return array
      */
-    private function getTabPermissionsForProfiles(array $profiles)
+    private function getTabPermissionsForProfiles(array $profiles): array
     {
         $permissions = [];
 
@@ -328,7 +328,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
      *
      * @return array
      */
-    private function getModulePermissionsForProfiles(array $profiles)
+    private function getModulePermissionsForProfiles(array $profiles): array
     {
         $profilePermissionsForModules = [];
 

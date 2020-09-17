@@ -50,7 +50,7 @@ services:
     prestashop.adapter.profile.permission.query_handler.get_permissions_for_configuration_handler:
         class: 'PrestaShop\PrestaShop\Adapter\Profile\Permission\QueryHandler\GetPermissionsForConfigurationHandler'
         arguments:
-          - '@security.authorization_checker'
+            - '@security.authorization_checker'
         tags:
             - name: 'tactician.handler'
               command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration'
@@ -58,5 +58,5 @@ services:
     prestashop.adapter.profile.permission.command_handler.update_module_permissions_handler:
         class: 'PrestaShop\PrestaShop\Adapter\Profile\Permission\CommandHandler\UpdateModulePermissionsHandler'
         tags:
-          - name: tactician.handler
-            command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateModulePermissionsCommand'
+            - name: tactician.handler
+              command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateModulePermissionsCommand'
