@@ -46,13 +46,6 @@ services:
             - "@doctrine.orm.entity_manager"
 
     # TRANSLATIONS
-    prestashop.translation.loader.database:
-        class: PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader
-        arguments:
-            - "@prestashop.translation.loader.database_reader"
-        tags:
-            - {name: translation.loader, alias: db}
-
     prestashop.translation.loader.sql:
         class: PrestaShopBundle\Translation\Loader\SqlTranslationLoader
         tags:
