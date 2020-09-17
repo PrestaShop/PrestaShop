@@ -583,8 +583,10 @@ class Reader implements ReaderInterface
             $territories = [];
             foreach ($localeDisplayNamesData->territories->children() as $territoryNode) {
                 $territoryCode = (string) $territoryNode->attributes()->type;
-                $variant = (string) $territoryNode->attributes()->variant;
-                if (!empty($territories[$territoryCode]) && empty($variant)) {
+                $alt = (string) $territoryNode->attributes()->alt;
+                // Check if the territoryData is not already in array
+                // Check if it's not an alternative name
+                if (!empty($territories[$territoryCode]) || !empty($alt)) {
                     continue;
                 }
                 $territoryData = new TerritoryData();
