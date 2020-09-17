@@ -28,17 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
-use Attachment;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelPersister;
-use PrestaShop\PrestaShop\Adapter\Attachment\AttachmentProvider;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShopException;
 use Product;
 
 /**
@@ -52,28 +46,12 @@ class ProductUpdater extends AbstractObjectModelPersister
     private $productValidator;
 
     /**
-     * @var ProductProvider
-     */
-    private $productProvider;
-
-    /**
-     * @var AttachmentProvider
-     */
-    private $attachmentProvider;
-
-    /**
      * @param ProductValidator $productValidator
-     * @param ProductProvider $productProvider
-     * @param AttachmentProvider $attachmentProvider
      */
     public function __construct(
-        ProductValidator $productValidator,
-        ProductProvider $productProvider,
-        AttachmentProvider $attachmentProvider
+        ProductValidator $productValidator
     ) {
         $this->productValidator = $productValidator;
-        $this->productProvider = $productProvider;
-        $this->attachmentProvider = $attachmentProvider;
     }
 
     /**
@@ -111,75 +89,6 @@ class ProductUpdater extends AbstractObjectModelPersister
                 'uploadable_files' => $product->countCustomizationFields(CustomizationFieldType::TYPE_FILE),
             ], CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS
         );
-    }
-
-    /**
-     * @param ProductId $productId
-     * @param AttachmentId $attachmentId
-     *
-     * @throws CannotUpdateProductException
-     * @throws CoreException
-     */
-    public function associateProductAttachment(ProductId $productId, AttachmentId $attachmentId): void
-    {
-        $this->productProvider->assertProductExists($productId);
-        $this->attachmentProvider->assertAttachmentExists($attachmentId);
-
-        $productIdValue = $productId->getValue();
-        $attachmentIdValue = $attachmentId->getValue();
-
-        try {
-            if (!Attachment::associateProductAttachment($productIdValue, $attachmentIdValue)) {
-                throw new CannotUpdateProductException(
-                    sprintf('Failed to associate attachment #%d with product #%d', $attachmentIdValue, $productIdValue),
-                    CannotUpdateProductException::FAILED_UPDATE_ATTACHMENTS
-                );
-            }
-        } catch (PrestaShopException $e) {
-            throw new CoreException(
-                sprintf('Error occurred when trying to associate attachment #%d with product #%d', $attachmentIdValue, $productIdValue),
-                0,
-                $e
-            );
-        }
-    }
-
-    /**
-     * Removes previous association and sets new one with provided attachments
-     *
-     * @param ProductId $productId
-     * @param AttachmentId[] $attachmentIds
-     *
-     * @throws CannotUpdateProductException
-     * @throws ProductException
-     */
-    public function setAttachments(ProductId $productId, array $attachmentIds): void
-    {
-        $this->productProvider->assertProductExists($productId);
-        $productIdValue = $productId->getValue();
-
-        try {
-            foreach ($attachmentIds as $attachmentId) {
-                $this->attachmentProvider->assertAttachmentExists($attachmentId);
-                $attachmentIdValues[] = $attachmentId->getValue();
-            }
-
-            if (!Attachment::attachToProduct($productIdValue, $attachmentIds)) {
-                throw new CannotUpdateProductException(
-                    sprintf('Failed to set product #%d attachments', $productIdValue),
-                    CannotUpdateProductException::FAILED_UPDATE_ATTACHMENTS
-                );
-            }
-        } catch (PrestaShopException $e) {
-            throw new CoreException(
-                sprintf(
-                    'Error occurred when trying to set product #%d attachments',
-                    $productIdValue
-                ),
-                0,
-                $e
-            );
-        }
     }
 
     /**
