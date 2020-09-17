@@ -25,6 +25,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 
 /**
@@ -69,7 +71,7 @@ class TerritoryData
     /**
      * @return string
      */
-    public function getIsoCode()
+    public function getIsoCode(): string
     {
         return $this->isoCode;
     }
@@ -79,7 +81,7 @@ class TerritoryData
      *
      * @return TerritoryData
      */
-    public function setIsoCode($isoCode)
+    public function setIsoCode(string $isoCode): self
     {
         $this->isoCode = $isoCode;
 
@@ -89,7 +91,7 @@ class TerritoryData
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -99,7 +101,7 @@ class TerritoryData
      *
      * @return TerritoryData
      */
-    public function setName($name)
+    public function setName(string $name): self
     {
         $this->name = $name;
 
