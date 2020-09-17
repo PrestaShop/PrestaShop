@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
- 
+
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Profile\Permission\QueryHandler;
@@ -33,6 +33,7 @@ use Module;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryHandler\GetPermissionsForConfigurationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryResult\ConfigurablePermissions;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\Permission;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Profile;
 use RuntimeException;
@@ -76,12 +77,17 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
     {
         $profiles = $this->getProfilesForPermissionsConfiguration();
         $tabs = $this->getTabsForPermissionsConfiguration();
-        $permissions = ['view', 'add', 'edit', 'delete'];
+        $permissions = [
+            Permission::VIEW,
+            Permission::ADD,
+            Permission::EDIT,
+            Permission::DELETE,
+        ];
 
         $tabPermissionsForProfiles = $this->getTabPermissionsForProfiles($profiles);
         $modulePermissionsForProfiles = $this->getModulePermissionsForProfiles($profiles);
 
-        $permissionIds = ['view' => 0, 'add' => 1, 'edit' => 2, 'delete' => 3, 'all' => 4];
+        $permissionIds = array_flip(Permission::SUPPORTED_PERMISSIONS);
         $employeeProfileId = $query->getEmployeeProfileId()->getValue();
         $canEmployeeEditPermissions = $this->authorizationChecker->isGranted(PageVoter::UPDATE, 'AdminAccess');
 
@@ -183,7 +189,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
     {
         if (self::MAX_NESTING_LEVEL < $nestingLevel) {
             throw new RuntimeException(sprintf(
-                'Maximum nesting level of "%s" reached in "%s"', self::MAX_NESTING_LEVEL,
+                'Maximum nesting level of "%d" reached in "%s"', self::MAX_NESTING_LEVEL,
                 __METHOD__
             ));
         }
@@ -248,22 +254,22 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
 
         foreach ($profiles as $profile) {
             $bulkConfiguration[$profile['id']] = [
-                'view' => true,
-                'add' => true,
-                'edit' => true,
-                'delete' => true,
-                'all' => true,
+                Permission::VIEW => true,
+                Permission::ADD => true,
+                Permission::EDIT => true,
+                Permission::DELETE => true,
+                Permission::ALL => true,
             ];
 
             // if employee does not have "edit" permission
             // then configuration is disabled
             if (!$hasEmployeeEditPermission) {
                 $bulkConfiguration[$profile['id']] = [
-                    'view' => false,
-                    'add' => false,
-                    'edit' => false,
-                    'delete' => false,
-                    'all' => false,
+                    Permission::VIEW => false,
+                    Permission::ADD => false,
+                    Permission::EDIT => false,
+                    Permission::DELETE => false,
+                    Permission::ALL => false,
                 ];
 
                 continue;
@@ -272,8 +278,8 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
             foreach ($tabs as $tab) {
                 foreach ($permissions as $permission) {
                     if (!$profileTabPermissions[$employeeProfileId][$tab['id']][$permission]) {
-                        $bulkConfiguration[$profile['id']]['view'] = false;
-                        $bulkConfiguration[$profile['id']]['all'] = false;
+                        $bulkConfiguration[$profile['id']][Permission::VIEW] = false;
+                        $bulkConfiguration[$profile['id']][Permission::ALL] = false;
 
                         break;
                     }
@@ -282,8 +288,8 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
                 foreach ($tab['children'] as $childTab) {
                     foreach ($permissions as $permission) {
                         if (!$profileTabPermissions[$employeeProfileId][$childTab['id']][$permission]) {
-                            $bulkConfiguration[$profile['id']]['add'] = false;
-                            $bulkConfiguration[$profile['id']]['all'] = false;
+                            $bulkConfiguration[$profile['id']][Permission::ADD] = false;
+                            $bulkConfiguration[$profile['id']][Permission::ALL] = false;
 
                             break;
                         }
@@ -292,8 +298,8 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
                     foreach ($childTab['children'] as $subChild) {
                         foreach ($permissions as $permission) {
                             if (!$profileTabPermissions[$employeeProfileId][$subChild['id']][$permission]) {
-                                $bulkConfiguration[$profile['id']]['edit'] = false;
-                                $bulkConfiguration[$profile['id']]['all'] = false;
+                                $bulkConfiguration[$profile['id']][Permission::EDIT] = false;
+                                $bulkConfiguration[$profile['id']][Permission::ALL] = false;
 
                                 break;
                             }
@@ -302,8 +308,8 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
                         foreach ($subChild['children'] as $subSubChild) {
                             foreach ($permissions as $permission) {
                                 if (!$profileTabPermissions[$employeeProfileId][$subSubChild['id']][$permission]) {
-                                    $bulkConfiguration[$profile['id']]['delete'] = false;
-                                    $bulkConfiguration[$profile['id']]['all'] = false;
+                                    $bulkConfiguration[$profile['id']][Permission::DELETE] = false;
+                                    $bulkConfiguration[$profile['id']][Permission::ALL] = false;
 
                                     break;
                                 }
