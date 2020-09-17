@@ -24,47 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 
 /**
- * Product identity.
+ * Defines contract for BulkDeleteProductHandler
  */
-class ProductId
+interface BulkDeleteProductHandlerInterface
 {
     /**
-     * @var int
+     * @param BulkDeleteProductCommand $command
      */
-    private $productId;
-
-    /**
-     * @param int $productId
-     *
-     * @throws ProductConstraintException
-     */
-    public function __construct($productId)
-    {
-        $this->assertIntegerIsGreaterThanZero($productId);
-
-        $this->productId = $productId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->productId;
-    }
-
-    /**
-     * @param int $productId
-     */
-    private function assertIntegerIsGreaterThanZero($productId)
-    {
-        if (!is_int($productId) || 0 > $productId) {
-            throw new ProductConstraintException(sprintf('Product id %s is invalid. Product id must be number that is greater than zero.', var_export($productId, true)));
-        }
-    }
+    public function handle(BulkDeleteProductCommand $command);
 }

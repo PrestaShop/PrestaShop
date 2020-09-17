@@ -24,47 +24,40 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
+
+use Exception;
 
 /**
- * Product identity.
+ * Thrown on failure to delete all selected products without errors
  */
-class ProductId
+class BulkDeleteProductException extends ProductException
 {
     /**
-     * @var int
+     * @var int[]
      */
-    private $productId;
+    private $productIds;
 
     /**
-     * @param int $productId
-     *
-     * @throws ProductConstraintException
+     * @param int[] $productIds
+     * @param string $message
+     * @param int $code
+     * @param Exception $previous
      */
-    public function __construct($productId)
+    public function __construct(array $productIds, $message = '', $code = 0, Exception $previous = null)
     {
-        $this->assertIntegerIsGreaterThanZero($productId);
+        parent::__construct($message, $code, $previous);
 
-        $this->productId = $productId;
+        $this->productIds = $productIds;
     }
 
     /**
-     * @return int
+     * @return int[]
      */
-    public function getValue()
+    public function getProductIds(): array
     {
-        return $this->productId;
-    }
-
-    /**
-     * @param int $productId
-     */
-    private function assertIntegerIsGreaterThanZero($productId)
-    {
-        if (!is_int($productId) || 0 > $productId) {
-            throw new ProductConstraintException(sprintf('Product id %s is invalid. Product id must be number that is greater than zero.', var_export($productId, true)));
-        }
+        return $this->productIds;
     }
 }
