@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileException;
@@ -49,12 +51,14 @@ class PermissionController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function indexAction()
+    public function indexAction(): Response
     {
         /** @var ConfigurablePermissions $configurablePermissions */
-        $configurablePermissions = $this->getQueryBus()->handle(new GetPermissionsForConfiguration(
-            (int) $this->getContext()->employee->id_profile
-        ));
+        $configurablePermissions = $this->getQueryBus()->handle(
+            new GetPermissionsForConfiguration(
+                (int) $this->getContext()->employee->id_profile
+            )
+        );
 
         return $this->render(
             '@PrestaShop/Admin/Configure/AdvancedParameters/Permission/index.html.twig',
@@ -73,20 +77,22 @@ class PermissionController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function updateTabPermissionsAction(Request $request)
+    public function updateTabPermissionsAction(Request $request): JsonResponse
     {
         if ($this->isDemoModeEnabled()) {
             return $this->json(['success' => false]);
         }
 
         try {
-            $this->getQueryBus()->handle(new UpdateTabPermissionsCommand(
-                $request->request->getInt('profile_id'),
-                $request->request->getInt('tab_id'),
-                $request->request->get('permission'),
-                $request->request->getBoolean('expected_status'),
-                $request->request->getBoolean('from_parent')
-            ));
+            $this->getQueryBus()->handle(
+                new UpdateTabPermissionsCommand(
+                    $request->request->getInt('profile_id'),
+                    $request->request->getInt('tab_id'),
+                    $request->request->get('permission'),
+                    $request->request->getBoolean('expected_status'),
+                    $request->request->getBoolean('from_parent')
+                )
+            );
 
             $response['success'] = true;
         } catch (ProfileException $e) {
@@ -105,19 +111,21 @@ class PermissionController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function updateModulePermissionsAction(Request $request)
+    public function updateModulePermissionsAction(Request $request): JsonResponse
     {
         if ($this->isDemoModeEnabled()) {
             return $this->json(['success' => false]);
         }
 
         try {
-            $this->getQueryBus()->handle(new UpdateModulePermissionsCommand(
-                $request->request->getInt('profile_id'),
-                $request->request->getInt('id_module'),
-                $request->request->get('permission'),
-                $request->request->getBoolean('expected_status')
-            ));
+            $this->getQueryBus()->handle(
+                new UpdateModulePermissionsCommand(
+                    $request->request->getInt('profile_id'),
+                    $request->request->getInt('id_module'),
+                    $request->request->get('permission'),
+                    $request->request->getBoolean('expected_status')
+                )
+            );
 
             $response['success'] = true;
         } catch (ProfileException $e) {
