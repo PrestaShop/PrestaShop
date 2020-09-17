@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter;
 use ObjectModel;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
-use RuntimeException;
 
 /**
  * Reusable methods to persist legacy object model
@@ -122,7 +121,7 @@ abstract class AbstractObjectModelPersister
         }
 
         if (!is_array($properties[$propertyName])) {
-            throw new RuntimeException(sprintf(
+            throw new CoreException(sprintf(
                 'Localized object model property must be an array. "%s" given',
                 var_export($properties[$propertyName])
             ));
