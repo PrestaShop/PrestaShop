@@ -32,20 +32,24 @@ class ImageSettings extends BOBasePage {
     this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
     this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
 
-
     // Columns selectors
     this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
     this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
     this.tableColumnWidth = row => `${this.tableBodyColumn(row)}:nth-child(4)`;
     this.tableColumnHeight = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
     this.tableColumnStatus = (row, columnPos, status) => `${this.tableBodyColumn(row)}:nth-child(${columnPos})`
-    + ` span.action-${status}`;
+      + ` span.action-${status}`;
 
     this.tableColumnProducts = (row, status) => this.tableColumnStatus(row, 6, status);
     this.tableColumnCategories = (row, status) => this.tableColumnStatus(row, 7, status);
     this.tableColumnManufacturers = (row, status) => this.tableColumnStatus(row, 8, status);
     this.tableColumnSuppliers = (row, status) => this.tableColumnStatus(row, 9, status);
     this.tableColumnStores = (row, status) => this.tableColumnStatus(row, 10, status);
+
+    // Sort Selectors
+    this.tableHead = `${this.gridTable} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Row actions selectors
     this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
@@ -63,6 +67,13 @@ class ImageSettings extends BOBasePage {
     this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
     this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
     this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
+
+    // Pagination selectors
+    this.paginationLabel = `${this.gridForm} .pagination`;
+    this.paginationDropdownButton = `${this.paginationLabel} .dropdown-toggle`;
+    this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
+    this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
+    this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
   }
 
   /* Header methods */
@@ -168,7 +179,26 @@ class ImageSettings extends BOBasePage {
         throw new Error(`Column ${columnName} was not found`);
     }
 
+    if (columnName === 'width' || columnName === 'height') {
+      return this.getNumberFromText(page, columnSelector);
+    }
     return this.getTextContent(page, columnSelector);
+  }
+
+  /**
+   * Get content from all rows
+   * @param page
+   * @param columnName
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(page, columnName) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable = [];
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumn(page, i, columnName);
+      await allRowsContentTable.push(rowContent);
+    }
+    return allRowsContentTable;
   }
 
   /**
@@ -271,6 +301,83 @@ class ImageSettings extends BOBasePage {
 
     // Return successful message
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
+  }
+
+  /* Sort functions */
+  /**
+   * Sort table by clicking on column name
+   * @param page
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page, sortBy, sortDirection) {
+    let columnSelector;
+
+    switch (sortBy) {
+      case 'id_image_type':
+        columnSelector = this.sortColumnDiv(2);
+        break;
+
+      case 'name':
+        columnSelector = this.sortColumnDiv(3);
+        break;
+
+      case 'width':
+        columnSelector = this.sortColumnDiv(4);
+        break;
+
+      case 'height':
+        columnSelector = this.sortColumnDiv(5);
+        break;
+
+      default:
+        throw new Error(`Column ${sortBy} was not found`);
+    }
+    const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
+    await this.clickAndWaitForNavigation(page, sortColumnButton);
+  }
+
+  /* Pagination methods */
+  /**
+   * Get pagination label
+   * @param page
+   * @return {Promise<string>}
+   */
+  getPaginationLabel(page) {
+    return this.getTextContent(page, 'ul.pagination.pull-right li.active a');
+  }
+
+  /**
+   * Select pagination limit
+   * @param page
+   * @param number
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page, number) {
+    await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
+    await this.waitForSelectorAndClick(page, this.paginationItems(number));
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on next
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on previous
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+    return this.getPaginationLabel(page);
   }
 }
 
