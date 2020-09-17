@@ -28,11 +28,16 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use Attachment;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelPersister;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShopException;
 use Product;
 
 /**
@@ -92,6 +97,39 @@ class ProductUpdater extends AbstractObjectModelPersister
     }
 
     /**
+     * @param int $productId
+     * @param AttachmentId[] $attachmentIds
+     *
+     * @throws CannotUpdateProductException
+     * @throws ProductException
+     */
+    public function associateProductAttachments(int $productId, array $attachmentIds): void
+    {
+        foreach ($attachmentIds as $attachmentId) {
+            $this->assertAttachmentExists($attachmentId);
+            $attachmentIdValues[] = $attachmentId->getValue();
+        }
+
+        try {
+            if (!Attachment::attachToProduct($productId, $attachmentIds)) {
+                throw new CannotUpdateProductException(
+                    sprintf('Failed to set product #%d attachments', $productId),
+                    CannotUpdateProductException::FAILED_UPDATE_ATTACHMENTS
+                );
+            }
+        } catch (PrestaShopException $e) {
+            throw new ProductException(
+                sprintf(
+                    'Error occurred when trying to set product #%d attachments',
+                    $productId
+                ),
+                0,
+                $e
+            );
+        }
+    }
+
+    /**
      * @param Product $product
      * @param array $propertiesToUpdate
      */
@@ -101,5 +139,22 @@ class ProductUpdater extends AbstractObjectModelPersister
         $this->fillProperty($product, 'text_fields', $propertiesToUpdate);
         $this->fillProperty($product, 'uploadable_files', $propertiesToUpdate);
         //@todo; more properties when refactoring other handlers to use updater/validator
+    }
+
+    /**
+     * @param AttachmentId $attachmentId
+     *
+     * @throws AttachmentNotFoundException
+     */
+    private function assertAttachmentExists(AttachmentId $attachmentId)
+    {
+        $attachmentIdValue = $attachmentId->getValue();
+
+        if (!Attachment::existsInDatabase($attachmentId->getValue(), 'attachment')) {
+            throw new AttachmentNotFoundException(sprintf(
+                'Attachment with id %d does not exist',
+                $attachmentIdValue
+            ));
+        }
     }
 }
