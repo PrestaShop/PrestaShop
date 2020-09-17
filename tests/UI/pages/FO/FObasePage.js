@@ -30,6 +30,7 @@ module.exports = class FOBasePage extends CommonPage {
     this.wrapperTitle = position => `${this.wrapperDiv(position)} p`;
     this.wrapperSubmenu = position => `${this.wrapperDiv(position)} ul[id*='footer_sub_menu']`;
     this.wrapperSubmenuItemLink = position => `${this.wrapperSubmenu(position)} li a`;
+    this.wrapperContactBlockDiv = '#footer div.block-contact';
   }
 
   /**
@@ -160,6 +161,15 @@ module.exports = class FOBasePage extends CommonPage {
    */
   async getFooterLinksBlockTitle(page, position) {
     return this.getTextContent(page, this.wrapperTitle(position));
+  }
+
+  /**
+   * Get store information
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async getStoreInformation(page) {
+    return this.getTextContent(page, this.wrapperContactBlockDiv);
   }
 
   /**

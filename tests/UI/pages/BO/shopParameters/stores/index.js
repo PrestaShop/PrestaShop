@@ -6,6 +6,7 @@ class Stores extends BOBasePage {
     super();
 
     this.pageTitle = 'Stores •';
+    this.successfulUpdateMessage = 'The settings have been successfully updated.';
 
     this.alertSuccessBlockParagraph = '.alert-success';
 
@@ -63,6 +64,20 @@ class Stores extends BOBasePage {
     this.enableSelectionink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
     this.disableSelectionLink = `${this.bulkActionDropdownMenu} li:nth-child(5)`;
     this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(7)`;
+
+    // Contact details form
+    this.contactDetailsForm = '#store_fieldset_contact';
+    this.nameInput = `${this.contactDetailsForm} input[name='PS_SHOP_NAME']`;
+    this.emailInput = `${this.contactDetailsForm} input[name='PS_SHOP_EMAIL']`;
+    this.registrationNumberTextarea = '#conf_id_PS_SHOP_DETAILS textarea[name=\'PS_SHOP_DETAILS\']';
+    this.address1Input = `${this.contactDetailsForm} input[name='PS_SHOP_ADDR1']`;
+    this.address2Input = `${this.contactDetailsForm} input[name='PS_SHOP_ADDR2']`;
+    this.postcodeInput = `${this.contactDetailsForm} input[name='PS_SHOP_CODE']`;
+    this.cityInput = `${this.contactDetailsForm} input[name='PS_SHOP_CITY']`;
+    this.countrySelect = '#PS_SHOP_COUNTRY_ID';
+    this.phoneInput = `${this.contactDetailsForm} input[name='PS_SHOP_PHONE']`;
+    this.faxInput = `${this.contactDetailsForm} input[name='PS_SHOP_FAX']`;
+    this.saveButton = `${this.contactDetailsForm} button[name='submitOptionsstore']`;
   }
 
   /* Header methods */
@@ -310,6 +325,38 @@ class Stores extends BOBasePage {
     ]);
 
     await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
+
+    // Return successful message
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Se contact details
+   * @param page
+   * @param storeContactData
+   * @returns {Promise<unknown>}
+   */
+  async setContactDetails(page, storeContactData) {
+    // Set name
+    await this.setValue(page, this.nameInput, storeContactData.name);
+
+    // Set email and registration number inputs
+    await this.setValue(page, this.emailInput, storeContactData.email);
+    await this.setValue(page, this.registrationNumberTextarea, storeContactData.registrationNumber);
+
+    // Set address inputs
+    await this.setValue(page, this.address1Input, storeContactData.address1);
+    await this.setValue(page, this.address2Input, storeContactData.address2);
+    await this.setValue(page, this.postcodeInput, storeContactData.postcode);
+    await this.setValue(page, this.cityInput, storeContactData.city);
+    await this.selectByVisibleText(page, this.countrySelect, storeContactData.country);
+
+    // Set phone inputs
+    await this.setValue(page, this.phoneInput, storeContactData.phone);
+    await this.setValue(page, this.faxInput, storeContactData.fax);
+
+    // Save contact details
+    await this.clickAndWaitForNavigation(page, this.saveButton);
 
     // Return successful message
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
