@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+ 
+declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Profile\Permission\QueryHandler;
 
@@ -125,12 +127,10 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
         $profiles = [];
 
         foreach ($legacyProfiles as $profile) {
-            $isAdministrator = (int) $profile['id_profile'] === _PS_ADMIN_PROFILE_;
-
             $profiles[] = [
                 'id' => $profile['id_profile'],
                 'name' => $profile['name'],
-                'is_administrator' => $isAdministrator,
+                'is_administrator' => (int) $profile['id_profile'] === _PS_ADMIN_PROFILE_,
             ];
         }
 
@@ -237,8 +237,8 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
      * @return array
      */
     private function getBulkConfigurationForProfiles(
-        $employeeProfileId,
-        $hasEmployeeEditPermission,
+        int $employeeProfileId,
+        bool $hasEmployeeEditPermission,
         array $profileTabPermissions,
         array $profiles,
         array $tabs,
@@ -331,8 +331,8 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
 
             uasort($profilePermissionsForModules[$profile['id']], function ($a, $b) {
                 // For the reference https://github.com/PrestaShop/PrestaShop/pull/12428/files#r267703322
-                $a['name'] = isset($a['name']) ? $a['name'] : '';
-                $b['name'] = isset($b['name']) ? $b['name'] : '';
+                $a['name'] = $a['name'] ?? '';
+                $b['name'] = $b['name'] ?? '';
 
                 return strnatcmp($a['name'], $b['name']);
             });

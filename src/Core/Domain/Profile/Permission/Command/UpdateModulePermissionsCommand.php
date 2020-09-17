@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\Permission;
@@ -60,7 +62,7 @@ class UpdateModulePermissionsCommand
      * @param string $permission
      * @param bool $expectedStatus
      */
-    public function __construct($profileId, $moduleId, $permission, $expectedStatus)
+    public function __construct(int $profileId, int $moduleId, string $permission, bool $expectedStatus)
     {
         $this->profileId = new ProfileId($profileId);
         $this->moduleId = $moduleId;
@@ -71,7 +73,7 @@ class UpdateModulePermissionsCommand
     /**
      * @return ProfileId
      */
-    public function getProfileId()
+    public function getProfileId(): ProfileId
     {
         return $this->profileId;
     }
@@ -79,7 +81,7 @@ class UpdateModulePermissionsCommand
     /**
      * @return int
      */
-    public function getModuleId()
+    public function getModuleId(): int
     {
         return $this->moduleId;
     }
@@ -87,7 +89,7 @@ class UpdateModulePermissionsCommand
     /**
      * @return Permission
      */
-    public function getPermission()
+    public function getPermission(): Permission
     {
         return $this->permission;
     }
@@ -95,7 +97,7 @@ class UpdateModulePermissionsCommand
     /**
      * @return bool
      */
-    public function getExpectedStatus()
+    public function getExpectedStatus(): bool
     {
         return $this->expectedStatus;
     }
