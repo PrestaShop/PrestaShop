@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject\ProfileId;
@@ -41,7 +43,7 @@ class GetPermissionsForConfiguration
     /**
      * @param int $employeeProfileId Profile id of employee who configures permissions
      */
-    public function __construct($employeeProfileId)
+    public function __construct(int $employeeProfileId)
     {
         $this->employeeProfileId = new ProfileId($employeeProfileId);
     }
@@ -49,7 +51,7 @@ class GetPermissionsForConfiguration
     /**
      * @return ProfileId
      */
-    public function getEmployeeProfileId()
+    public function getEmployeeProfileId(): ProfileId
     {
         return $this->employeeProfileId;
     }
