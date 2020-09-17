@@ -2147,9 +2147,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @since 1.5.0.1
      *
-     * @param array $fields
+     * @param array<string, bool|array<int, bool>>|null $fields
      */
-    public function setFieldsToUpdate(array $fields)
+    public function setFieldsToUpdate(?array $fields)
     {
         $this->update_fields = $fields;
     }
@@ -2195,5 +2195,19 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         return self::$htmlFields[$this->def['table']];
+    }
+
+    /**
+     * @param array $fields
+     */
+    public function addFieldsToUpdate(array $fields): void
+    {
+        if (null === $this->update_fields) {
+            $this->update_fields = [];
+        }
+
+        foreach ($fields as $fieldName => $value) {
+            $this->update_fields[$fieldName] = $value;
+        }
     }
 }

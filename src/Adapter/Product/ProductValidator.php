@@ -26,20 +26,33 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception;
+namespace PrestaShop\PrestaShop\Adapter\Product;
+
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use Product;
 
 /**
- * Is thrown when customization field deletion fails
+ * Validates product field using legacy object model
  */
-class CannotDeleteCustomizationFieldException extends CustomizationFieldException
+class ProductValidator extends AbstractObjectModelValidator
 {
     /**
-     * When fails deleting single CustomizationField
+     * Validates Product object model properties using legacy validation
+     *
+     * @param Product $product
+     * @param string $field
+     * @param int $errorCode
+     *
+     * @throws ProductConstraintException
+     * @throws ProductException
      */
-    const FAILED_DELETE = 10;
-
-    /**
-     * When fails deleting multiple CustomizationFields at once
-     */
-    const FAILED_BULK_DELETE = 20;
+    public function validate(Product $product): void
+    {
+        $this->validateObjectModelProperty($product, 'customizable', ProductConstraintException::class);
+        $this->validateObjectModelProperty($product, 'text_fields', ProductConstraintException::class);
+        $this->validateObjectModelProperty($product, 'uploadable_files', ProductConstraintException::class);
+        //@todo; more properties when refactoring other handlers to use updater/validator
+    }
 }

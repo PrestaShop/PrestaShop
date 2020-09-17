@@ -26,20 +26,17 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCustomizationFieldsFromProductCommand;
 
 /**
- * Is thrown when customization field deletion fails
+ * Defines contract to handle @see RemoveAllCustomizationFieldsFromProductCommand
  */
-class CannotDeleteCustomizationFieldException extends CustomizationFieldException
+interface RemoveAllCustomizationFieldsFromProductHandlerInterface
 {
     /**
-     * When fails deleting single CustomizationField
+     * @param RemoveAllCustomizationFieldsFromProductCommand $command
      */
-    const FAILED_DELETE = 10;
-
-    /**
-     * When fails deleting multiple CustomizationFields at once
-     */
-    const FAILED_BULK_DELETE = 20;
+    public function handle(RemoveAllCustomizationFieldsFromProductCommand $command): void;
 }

@@ -26,20 +26,42 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception;
+namespace PrestaShop\PrestaShop\Adapter;
+
+use ObjectModel;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShopException;
 
 /**
- * Is thrown when customization field deletion fails
+ * Reusable methods for providing legacy object model
  */
-class CannotDeleteCustomizationFieldException extends CustomizationFieldException
+abstract class AbstractObjectModelProvider
 {
     /**
-     * When fails deleting single CustomizationField
+     * @param int $id
+     * @param string $objectModelClass
+     * @param string $exceptionClass
+     *
+     * @return ObjectModel
+     *
+     * @throws CoreException
      */
-    const FAILED_DELETE = 10;
+    protected function getObjectModel(int $id, string $objectModelClass, string $exceptionClass): ObjectModel
+    {
+        try {
+            $objectModel = new $objectModelClass($id);
 
-    /**
-     * When fails deleting multiple CustomizationFields at once
-     */
-    const FAILED_BULK_DELETE = 20;
+            if ((int) $objectModel->id !== $id) {
+                throw new $exceptionClass(sprintf('%s #%d was not found', $objectModelClass, $id));
+            }
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf('Error occurred when trying to get %s #%d', $objectModelClass, $id),
+                0,
+                $e
+            );
+        }
+
+        return $objectModel;
+    }
 }

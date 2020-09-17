@@ -28,70 +28,94 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use CustomizationField;
-use PrestaShop\PrestaShop\Adapter\Product\AbstractCustomizationFieldHandler;
+use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldPersister;
+use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldProvider;
+use PrestaShop\PrestaShop\Adapter\Product\ProductProvider;
+use PrestaShop\PrestaShop\Adapter\Product\ProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateCustomizationFieldCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\UpdateCustomizationFieldHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotUpdateCustomizationFieldException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShopException;
 
 /**
- * Updates single customization field using legacy object model
+ * Handles @see UpdateCustomizationFieldCommand using legacy object model
  */
-final class UpdateCustomizationFieldHandler extends AbstractCustomizationFieldHandler implements UpdateCustomizationFieldHandlerInterface
+final class UpdateCustomizationFieldHandler implements UpdateCustomizationFieldHandlerInterface
 {
+    /**
+     * @var ProductProvider
+     */
+    private $productProvider;
+
+    /**
+     * @var ProductUpdater
+     */
+    private $productUpdater;
+
+    /**
+     * @var CustomizationFieldPersister
+     */
+    private $customizationFieldPersister;
+
+    /**
+     * @var CustomizationFieldProvider
+     */
+    private $customizationFieldProvider;
+
+    /**
+     * @param ProductProvider $productProvider
+     * @param ProductUpdater $productUpdater
+     * @param CustomizationFieldPersister $customizationFieldPersister
+     * @param CustomizationFieldProvider $customizationFieldProvider
+     */
+    public function __construct(
+        ProductProvider $productProvider,
+        ProductUpdater $productUpdater,
+        CustomizationFieldPersister $customizationFieldPersister,
+        CustomizationFieldProvider $customizationFieldProvider
+    ) {
+        $this->productProvider = $productProvider;
+        $this->productUpdater = $productUpdater;
+        $this->customizationFieldPersister = $customizationFieldPersister;
+        $this->customizationFieldProvider = $customizationFieldProvider;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function handle(UpdateCustomizationFieldCommand $command): void
     {
-        $customizationField = $this->getCustomizationField($command->getCustomizationFieldId());
-        $this->fillEntityWithCommandData($command, $customizationField);
-        $this->validateCustomizationFieldName($customizationField);
+        $customizationField = $this->customizationFieldProvider->get($command->getCustomizationFieldId());
+        $this->customizationFieldPersister->update($customizationField, $this->formatPropertiesForUpdate($command));
 
-        try {
-            if (false === $customizationField->update()) {
-                throw new CannotUpdateCustomizationFieldException(sprintf(
-                    'Failed to update customization field #%s',
-                    $customizationField->id
-                ));
-            }
-        } catch (PrestaShopException $e) {
-            throw new CustomizationFieldException(sprintf(
-                'Error occurred when trying to update customization field #%d',
-                $customizationField->id
-            ));
-        }
-
-        $product = $this->getProduct(new ProductId((int) $customizationField->id_product));
-        $this->refreshProductCustomizability($product);
-        $this->refreshCustomizationFieldsCount($product);
-        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS);
+        $product = $this->productProvider->get(new ProductId((int) $customizationField->id_product));
+        $this->productUpdater->refreshProductCustomizabilityProperties($product);
     }
 
     /**
      * @param UpdateCustomizationFieldCommand $command
-     * @param CustomizationField $field
+     *
+     * @return array
      */
-    private function fillEntityWithCommandData(UpdateCustomizationFieldCommand $command, CustomizationField $field): void
+    private function formatPropertiesForUpdate(UpdateCustomizationFieldCommand $command): array
     {
+        $properties = [];
+
         if (null !== $command->getType()) {
-            $field->type = $command->getType()->getValue();
+            $properties['type'] = $command->getType()->getValue();
         }
 
         if (null !== $command->isAddedByModule()) {
-            $field->is_module = $command->isAddedByModule();
+            $properties['is_module'] = $command->isAddedByModule();
         }
 
         if (null !== $command->isRequired()) {
-            $field->required = $command->isRequired();
+            $properties['required'] = $command->isRequired();
         }
 
         if (null !== $command->getLocalizedNames()) {
-            $field->name = $command->getLocalizedNames();
+            $properties['name'] = $command->getLocalizedNames();
         }
+
+        return $properties;
     }
 }

@@ -26,20 +26,34 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception;
+namespace PrestaShop\PrestaShop\Adapter\Product;
+
+use CustomizationField;
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelProvider;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 
 /**
- * Is thrown when customization field deletion fails
+ * Provides existing CustomizationField
  */
-class CannotDeleteCustomizationFieldException extends CustomizationFieldException
+class CustomizationFieldProvider extends AbstractObjectModelProvider
 {
     /**
-     * When fails deleting single CustomizationField
+     * @param CustomizationFieldId $fieldId
+     *
+     * @return CustomizationField
+     *
+     * @throws \PrestaShop\PrestaShop\Core\Exception\CoreException
      */
-    const FAILED_DELETE = 10;
+    public function get(CustomizationFieldId $fieldId): CustomizationField
+    {
+        /** @var CustomizationField $customizationField */
+        $customizationField = $this->getObjectModel(
+            $fieldId->getValue(),
+            CustomizationField::class,
+            CustomizationFieldNotFoundException::class
+        );
 
-    /**
-     * When fails deleting multiple CustomizationFields at once
-     */
-    const FAILED_BULK_DELETE = 20;
+        return $customizationField;
+    }
 }

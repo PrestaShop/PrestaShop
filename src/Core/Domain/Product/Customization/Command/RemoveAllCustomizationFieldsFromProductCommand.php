@@ -26,20 +26,33 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Is thrown when customization field deletion fails
+ * Removes all customization fields from product
  */
-class CannotDeleteCustomizationFieldException extends CustomizationFieldException
+class RemoveAllCustomizationFieldsFromProductCommand
 {
     /**
-     * When fails deleting single CustomizationField
+     * @var ProductId
      */
-    const FAILED_DELETE = 10;
+    private $productId;
 
     /**
-     * When fails deleting multiple CustomizationFields at once
+     * @param int $productId
      */
-    const FAILED_BULK_DELETE = 20;
+    public function __construct(int $productId)
+    {
+        $this->productId = new ProductId($productId);
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
+    }
 }

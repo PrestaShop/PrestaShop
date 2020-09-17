@@ -24,22 +24,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 
 /**
- * Is thrown when customization field deletion fails
+ * Defines contract for service which deletes CustomizationField(s)
  */
-class CannotDeleteCustomizationFieldException extends CustomizationFieldException
+interface CustomizationFieldDeleterInterface
 {
     /**
-     * When fails deleting single CustomizationField
+     * @param CustomizationFieldId $customizationFieldId
      */
-    const FAILED_DELETE = 10;
+    public function delete(CustomizationFieldId $customizationFieldId): void;
 
     /**
-     * When fails deleting multiple CustomizationFields at once
+     * @param CustomizationFieldId[] $customizationFieldIds
      */
-    const FAILED_BULK_DELETE = 20;
+    public function bulkDelete(array $customizationFieldIds): void;
 }

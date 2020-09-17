@@ -31,7 +31,8 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use Language;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateProductCustomizationFieldsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCustomizationFieldsFromProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
@@ -110,13 +111,19 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
     }
 
     /**
-     * @When I delete all customization fields from product :productReference
+     * @When I remove all customization fields from product :productReference
      *
      * @param string $productReference
      */
     public function updateCustomizationFieldsWithEmptyArray(string $productReference)
     {
-        $this->updateProductCustomizationFields($productReference, [], []);
+        try {
+            $this->getCommandBus()->handle(new RemoveAllCustomizationFieldsFromProductCommand(
+                $this->getSharedStorage()->get($productReference)
+            ));
+        } catch (ProductException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
@@ -298,7 +305,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
     private function updateProductCustomizationFields(string $productReference, array $fieldReferences, array $fieldsForUpdate): void
     {
         try {
-            $newCustomizationFieldIds = $this->getCommandBus()->handle(new UpdateProductCustomizationFieldsCommand(
+            $newCustomizationFieldIds = $this->getCommandBus()->handle(new SetProductCustomizationFieldsCommand(
                 $this->getSharedStorage()->get($productReference),
                 $fieldsForUpdate
             ));
