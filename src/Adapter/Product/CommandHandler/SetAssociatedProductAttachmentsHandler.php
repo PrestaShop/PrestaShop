@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Adapter\Product\ProductProvider;
 use PrestaShop\PrestaShop\Adapter\Product\ProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductAttachmentsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\SetAssociatedProductAttachmentsHandlerInterface;
@@ -44,12 +45,20 @@ final class SetAssociatedProductAttachmentsHandler extends AbstractProductHandle
     private $productUpdater;
 
     /**
+     * @var ProductProvider
+     */
+    private $productProvider;
+
+    /**
      * @param ProductUpdater $productUpdater
+     * @param ProductProvider $productProvider
      */
     public function __construct(
-        ProductUpdater $productUpdater
+        ProductUpdater $productUpdater,
+        ProductProvider $productProvider
     ) {
         $this->productUpdater = $productUpdater;
+        $this->productProvider = $productProvider;
     }
 
     /**
@@ -57,8 +66,8 @@ final class SetAssociatedProductAttachmentsHandler extends AbstractProductHandle
      */
     public function handle(SetAssociatedProductAttachmentsCommand $command): void
     {
-        $product = $this->getProduct($command->getProductId());
+        $this->productProvider->assertProductExists($command->getProductId());
 
-        $this->productUpdater->associateProductAttachments((int) $product->id, $command->getAttachmentIds());
+        $this->productUpdater->associateProductAttachments($command->getProductId(), $command->getAttachmentIds());
     }
 }
