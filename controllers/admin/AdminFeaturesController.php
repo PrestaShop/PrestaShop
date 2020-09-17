@@ -460,7 +460,7 @@ class AdminFeaturesControllerCore extends AdminController
     public function initProcess()
     {
         // Are we working on feature values?
-        if (Tools::getValue('id_feature_value')
+        if (Tools::getValue('id_feature_value') && !Tools::getValue('id_feature')
             || Tools::isSubmit('deletefeature_value')
             || Tools::isSubmit('submitAddfeature_value')
             || Tools::isSubmit('addfeature_value')
