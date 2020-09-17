@@ -29,14 +29,10 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use CustomizationField;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
-use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShopException;
-use Product;
 
 abstract class AbstractCustomizationFieldHandler extends AbstractProductHandler
 {
@@ -70,52 +66,5 @@ abstract class AbstractCustomizationFieldHandler extends AbstractProductHandler
         }
 
         return $field;
-    }
-
-    /**
-     * @param Product $product
-     */
-    protected function refreshProductCustomizability(Product $product): void
-    {
-        if ($product->hasActivatedRequiredCustomizableFields()) {
-            $product->customizable = ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION;
-        } elseif (!empty($product->getNonDeletedCustomizationFieldIds())) {
-            $product->customizable = ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION;
-        } else {
-            $product->customizable = ProductCustomizabilitySettings::NOT_CUSTOMIZABLE;
-        }
-
-        $this->fieldsToUpdate['customizable'] = true;
-    }
-
-    /**
-     * @param Product $product
-     */
-    protected function refreshCustomizationFieldsCount(Product $product): void
-    {
-        $product->text_fields = $product->countCustomizationFields(CustomizationFieldType::TYPE_TEXT);
-        $product->uploadable_files = $product->countCustomizationFields(CustomizationFieldType::TYPE_FILE);
-        $this->fieldsToUpdate['text_fields'] = true;
-        $this->fieldsToUpdate['uploadable_files'] = true;
-    }
-
-    /**
-     * @param CustomizationField $customizationField
-     *
-     * @throws CustomizationFieldConstraintException
-     */
-    protected function validateCustomizationFieldName(CustomizationField $customizationField): void
-    {
-        foreach ($customizationField->name as $langId => $value) {
-            if (true !== $customizationField->validateField('name', $value, $langId)) {
-                throw new CustomizationFieldConstraintException(
-                    sprintf(
-                        'Invalid localized customization field name for language with id "%d"',
-                        $langId
-                    ),
-                    CustomizationFieldConstraintException::INVALID_NAME
-                );
-            }
-        }
     }
 }

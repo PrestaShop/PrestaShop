@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use CustomizationField;
-use PrestaShop\PrestaShop\Adapter\Product\AbstractCustomizationFieldHandler;
 use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldPersister;
 use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldProvider;
 use PrestaShop\PrestaShop\Adapter\Product\ProductProvider;
@@ -46,7 +45,7 @@ use Product;
 /**
  * Handles @see  SetProductCustomizationFieldsCommand using legacy object model
  */
-class SetProductCustomizationFieldsHandler extends AbstractCustomizationFieldHandler implements SetProductCustomizationFieldsHandlerInterface
+class SetProductCustomizationFieldsHandler implements SetProductCustomizationFieldsHandlerInterface
 {
     /**
      * @var CustomizationFieldDeleterInterface
