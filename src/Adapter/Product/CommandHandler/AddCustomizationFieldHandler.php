@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 use CustomizationField;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractCustomizationFieldHandler;
 use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldPersister;
-use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldValidator;
 use PrestaShop\PrestaShop\Adapter\Product\ProductProvider;
 use PrestaShop\PrestaShop\Adapter\Product\ProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\AddCustomizationFieldCommand;
@@ -59,25 +58,17 @@ final class AddCustomizationFieldHandler extends AbstractCustomizationFieldHandl
     private $customizationFieldPersister;
 
     /**
-     * @var CustomizationFieldValidator
-     */
-    private $customizationFieldValidator;
-
-    /**
      * @param ProductProvider $productProvider
      * @param ProductUpdater $productUpdater
      * @param CustomizationFieldPersister $customizationFieldPersister
-     * @param CustomizationFieldValidator $customizationFieldValidator
      */
     public function __construct(
         ProductProvider $productProvider,
         ProductUpdater $productUpdater,
-        CustomizationFieldPersister $customizationFieldPersister,
-        CustomizationFieldValidator $customizationFieldValidator
+        CustomizationFieldPersister $customizationFieldPersister
     ) {
         $this->productProvider = $productProvider;
         $this->customizationFieldPersister = $customizationFieldPersister;
-        $this->customizationFieldValidator = $customizationFieldValidator;
         $this->productUpdater = $productUpdater;
     }
 

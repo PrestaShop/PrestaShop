@@ -149,7 +149,6 @@ services:
             - '@prestashop.adapter.product.product_provider'
             - '@prestashop.adapter.product.product_updater'
             - '@prestashop.adapter.product.customization_field_persister'
-            - '@prestashop.adapter.product.customization_field_validator'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\AddCustomizationFieldCommand
