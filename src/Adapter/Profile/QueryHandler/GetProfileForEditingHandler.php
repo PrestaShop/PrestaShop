@@ -45,13 +45,21 @@ final class GetProfileForEditingHandler extends AbstractObjectModelHandler imple
      * @var ImageTagSourceParserInterface
      */
     private $imageTagSourceParser;
+    /**
+     * @var string
+     */
+    private $imgDir;
 
     /**
-     * @param ImageTagSourceParserInterface $imageTagSourceParser
+     * @param ImageTagSourceParserInterface|null $imageTagSourceParser
+     * @param string $imgDir
      */
-    public function __construct(ImageTagSourceParserInterface $imageTagSourceParser = null)
-    {
+    public function __construct(
+        ImageTagSourceParserInterface $imageTagSourceParser = null,
+        string $imgDir = _PS_PROFILE_IMG_DIR_
+    ) {
         $this->imageTagSourceParser = $imageTagSourceParser ?? new ImageTagSourceParser(__PS_BASE_URI__);
+        $this->imgDir = $imgDir;
     }
 
     /**
@@ -96,7 +104,7 @@ final class GetProfileForEditingHandler extends AbstractObjectModelHandler imple
      */
     private function getAvatarUrl(int $imageId): ?array
     {
-        $imagePath = _PS_PROFILE_IMG_DIR_ . $imageId . '.jpg';
+        $imagePath = $this->imgDir . $imageId . '.jpg';
         $imageTag = $this->getTmpImageTag($imagePath, $imageId, 'profile');
         $imageSize = $this->getImageSize($imagePath);
 
