@@ -24,25 +24,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace LegacyTests\Integration\classes;
+namespace LegacyTests\Unit\Core\Stock;
 
-use Configuration;
-use Context;
-use LegacyTests\TestCase\IntegrationTestCase;
-
-class ShopCoreTest extends IntegrationTestCase
+class FakeProduct4759
 {
-    protected $context;
+    private static $LAST_ID = 0;
+    public $id;
+    public $pack_stock_type;
+    public $stock_available;
 
-    protected function setUp()
+    public function __construct($stock_available, $pack_stock_type = false)
     {
-        parent::setUp();
-        $this->context = Context::getContext();
-    }
-
-    public function testGetBaseURL()
-    {
-        $domain = Configuration::get('PS_SHOP_DOMAIN');
-        $this->assertEquals('http://'.$domain.__PS_BASE_URI__, $this->context->shop->getBaseURL(true));
+        $this->id = ++static::$LAST_ID;
+        $this->pack_stock_type = $pack_stock_type ? $pack_stock_type : 0;
+        $this->stock_available = new FakeStockAvailable4759($stock_available);
     }
 }

@@ -24,37 +24,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace LegacyTests\Integration\classes\module;
+namespace LegacyTests\Unit\Core\Stock;
 
-use Cache;
-use LegacyTests\TestCase\IntegrationTestCase;
-
-use Module;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
-
-class ModuleGetPossibleHooksListTest extends IntegrationTestCase
+class FakeStockAvailable4759
 {
-    /**
-     * Test if a module return the good possible hooks list.
-     * This test is done on the bankwire generic module.
-     *
-     * Note: improves module list fixtures in order to get an explicit list of hooks.
-     */
-    public function testGetRightListForModule()
+    public $quantity = 0;
+
+    public function __construct($quantity)
     {
-        ModuleManagerBuilder::getInstance()->build()->install('bankwire');
-        $module = Module::getInstanceByName('bankwire');
-        Cache::clean('hook_alias');
-        $possible_hooks_list = $module->getPossibleHooksList();
-
-        $this->assertCount(2, $possible_hooks_list);
-
-        $this->assertEquals('displayPaymentReturn', $possible_hooks_list[0]['name']);
-        $this->assertEquals('paymentOptions', $possible_hooks_list[1]['name']);
+        $this->quantity = $quantity;
     }
 
-    public static function tearDownAfterClass()
+    public function update()
     {
-        Module::getInstanceByName('bankwire')->uninstall();
     }
 }
