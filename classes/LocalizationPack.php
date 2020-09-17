@@ -403,7 +403,7 @@ class LocalizationPackCore
                 /** @var SimpleXMLElement $data */
                 $attributes = $data->attributes();
                 $isoCode = (string) $attributes['iso_code'];
-                // if we are not in an installation context or if the pack is not available in the local directory
+                // if we are not in an installation context or if the pack is available in the local directory
                 if (Language::getIdByIso($isoCode) && !$install_mode) {
                     continue;
                 }

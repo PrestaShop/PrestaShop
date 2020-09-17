@@ -145,4 +145,11 @@ interface LocaleInterface
      * @return CurrencyData[] Data of all currencies
      */
     public function getAllCurrencies();
+
+    /**
+     * Get CLDR data of all territories.
+     *
+     * @return TerritoryData[] Data of all territories
+     */
+    public function getAllTerritories();
 }
