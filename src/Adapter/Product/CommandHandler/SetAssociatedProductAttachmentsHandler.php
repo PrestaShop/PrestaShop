@@ -28,14 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use Attachment;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
+use PrestaShop\PrestaShop\Adapter\Product\ProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductAttachmentsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\SetAssociatedProductAttachmentsHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShopException;
 
 /**
  * Handles @see SetAssociatedProductAttachmentsCommand using legacy object model
@@ -43,61 +39,26 @@ use PrestaShopException;
 final class SetAssociatedProductAttachmentsHandler extends AbstractProductHandler implements SetAssociatedProductAttachmentsHandlerInterface
 {
     /**
+     * @var ProductUpdater
+     */
+    private $productUpdater;
+
+    /**
+     * @param ProductUpdater $productUpdater
+     */
+    public function __construct(
+        ProductUpdater $productUpdater
+    ) {
+        $this->productUpdater = $productUpdater;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(SetAssociatedProductAttachmentsCommand $command): void
     {
         $product = $this->getProduct($command->getProductId());
-        $attachmentIdValues = [];
 
-        foreach ($command->getAttachmentIds() as $attachmentId) {
-            $this->assertAttachmentExists($attachmentId->getValue());
-            $attachmentIdValues[] = $attachmentId->getValue();
-        }
-
-        $this->associateProductAttachments((int) $product->id, $attachmentIdValues);
-    }
-
-    /**
-     * @param int $attachmentIdValue
-     *
-     * @throws AttachmentNotFoundException
-     */
-    private function assertAttachmentExists(int $attachmentIdValue): void
-    {
-        if (!Attachment::existsInDatabase($attachmentIdValue, 'attachment')) {
-            throw new AttachmentNotFoundException(sprintf(
-                'Attachment with id %d does not exist',
-                $attachmentIdValue
-            ));
-        }
-    }
-
-    /**
-     * @param int $productId
-     * @param array $attachmentIdValues
-     *
-     * @throws CannotUpdateProductException
-     * @throws ProductException
-     */
-    private function associateProductAttachments(int $productId, array $attachmentIdValues): void
-    {
-        try {
-            if (!Attachment::attachToProduct($productId, $attachmentIdValues)) {
-                throw new CannotUpdateProductException(
-                    sprintf('Failed to set product #%d attachments', $productId),
-                    CannotUpdateProductException::FAILED_UPDATE_ATTACHMENTS
-                );
-            }
-        } catch (PrestaShopException $e) {
-            throw new ProductException(
-                sprintf(
-                    'Error occurred when trying to set product #%d attachments',
-                    $productId
-                ),
-                0,
-                $e
-            );
-        }
+        $this->productUpdater->associateProductAttachments((int) $product->id, $command->getAttachmentIds());
     }
 }
