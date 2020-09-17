@@ -26,36 +26,38 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
 
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkDeleteProductHandlerInterface;
+use Exception;
 
 /**
- * Handles command which deletes addresses in bulk action
+ * Thrown on failure to delete all selected products without errors
  */
-final class BulkDeleteProductHandler implements BulkDeleteProductHandlerInterface
+class BulkDeleteProductException extends ProductException
 {
     /**
-     * @var ProductRepository
+     * @var int[]
      */
-    private $productRepository;
+    private $productIds;
 
     /**
-     * @param ProductRepository $productRepository
+     * @param int[] $productIds
+     * @param string $message
+     * @param int $code
+     * @param Exception $previous
      */
-    public function __construct(ProductRepository $productRepository)
+    public function __construct(array $productIds, $message = '', $code = 0, Exception $previous = null)
     {
-        $this->productRepository = $productRepository;
+        parent::__construct($message, $code, $previous);
+
+        $this->productIds = $productIds;
     }
 
     /**
-     * {@inheritdoc}
+     * @return int[]
      */
-    public function handle(BulkDeleteProductCommand $command): void
+    public function getProductIds(): array
     {
-        $this->productRepository->bulkDelete($command->getProductIds());
+        return $this->productIds;
     }
 }
