@@ -26,6 +26,7 @@
 import Grid from '@components/grid/grid';
 import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
 import SortingExtension from '@components/grid/extension/sorting-extension';
+import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
 import SubmitRowActionExtension
   from '@components/grid/extension/action/row/submit-row-action-extension';
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
@@ -40,6 +41,7 @@ import ExportToSqlManagerExtension
   from '@components/grid/extension/export-to-sql-manager-extension';
 import ShowcaseCard from '@components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
+import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
 
 const {$} = window;
 
@@ -71,6 +73,8 @@ $(() => {
     grid.addExtension(new FiltersResetExtension());
     grid.addExtension(new AsyncToggleColumnExtension());
     grid.addExtension(new SubmitRowActionExtension());
+    grid.addExtension(new BulkActionCheckboxExtension());
+    grid.addExtension(new SubmitBulkExtension());
     grid.addExtension(new LinkRowActionExtension());
     grid.addExtension(new FiltersSubmitButtonEnablerExtension());
   });

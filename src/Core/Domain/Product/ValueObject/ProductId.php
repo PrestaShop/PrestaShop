@@ -40,6 +40,8 @@ class ProductId
 
     /**
      * @param int $productId
+     *
+     * @throws ProductConstraintException
      */
     public function __construct($productId)
     {
