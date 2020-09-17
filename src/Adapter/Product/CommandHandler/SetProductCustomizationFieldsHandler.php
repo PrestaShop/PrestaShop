@@ -32,9 +32,9 @@ use CustomizationField;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractCustomizationFieldHandler;
 use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldPersister;
 use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldProvider;
+use PrestaShop\PrestaShop\Adapter\Product\ProductProvider;
 use PrestaShop\PrestaShop\Adapter\Product\ProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\AddCustomizationFieldHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\SetProductCustomizationFieldsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationField as CustomizationFieldDTO;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationFieldDeleterInterface;
@@ -49,11 +49,6 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
  */
 class SetProductCustomizationFieldsHandler extends AbstractCustomizationFieldHandler implements SetProductCustomizationFieldsHandlerInterface
 {
-    /**
-     * @var AddCustomizationFieldHandlerInterface
-     */
-    private $addCustomizationFieldHandler;
-
     /**
      * @var CustomizationFieldDeleterInterface
      */
@@ -75,24 +70,29 @@ class SetProductCustomizationFieldsHandler extends AbstractCustomizationFieldHan
     private $productUpdater;
 
     /**
-     * @param AddCustomizationFieldHandlerInterface $addCustomizationFieldHandler
+     * @var ProductProvider
+     */
+    private $productProvider;
+
+    /**
      * @param CustomizationFieldPersister $customizationFieldPersister
      * @param CustomizationFieldDeleterInterface $customizationFieldDeleter
      * @param CustomizationFieldProvider $customizationFieldProvider
      * @param ProductUpdater $productUpdater
+     * @param ProductProvider $productProvider
      */
     public function __construct(
-        AddCustomizationFieldHandlerInterface $addCustomizationFieldHandler,
         CustomizationFieldPersister $customizationFieldPersister,
         CustomizationFieldDeleterInterface $customizationFieldDeleter,
         CustomizationFieldProvider $customizationFieldProvider,
-        ProductUpdater $productUpdater
+        ProductUpdater $productUpdater,
+        ProductProvider $productProvider
     ) {
-        $this->addCustomizationFieldHandler = $addCustomizationFieldHandler;
         $this->customizationFieldDeleter = $customizationFieldDeleter;
         $this->customizationFieldPersister = $customizationFieldPersister;
         $this->customizationFieldProvider = $customizationFieldProvider;
         $this->productUpdater = $productUpdater;
+        $this->productProvider = $productProvider;
     }
 
     /**
@@ -113,7 +113,7 @@ class SetProductCustomizationFieldsHandler extends AbstractCustomizationFieldHan
         }
 
         $this->deleteCustomizationFields($deletableFieldIds);
-        $product = $this->getProduct($command->getProductId());
+        $product = $this->productProvider->get($command->getProductId());
         $this->productUpdater->refreshProductCustomizabilityProperties($product);
 
         return array_map(function (int $customizationFieldId): CustomizationFieldId {
