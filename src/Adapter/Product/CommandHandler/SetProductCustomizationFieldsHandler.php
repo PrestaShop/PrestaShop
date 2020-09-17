@@ -39,10 +39,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\SetPr
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationField as CustomizationFieldDTO;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationFieldDeleterInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use Product;
 
 /**
  * Handles @see  SetProductCustomizationFieldsCommand using legacy object model
@@ -102,18 +101,19 @@ class SetProductCustomizationFieldsHandler extends AbstractCustomizationFieldHan
      */
     public function handle(SetProductCustomizationFieldsCommand $command): array
     {
-        $deletableFieldIds = $this->getDeletableFieldIds($command);
+        $product = $this->productProvider->get($command->getProductId());
+        $providedCustomizationFields = $command->getCustomizationFields();
+        $deletableFieldIds = $this->getDeletableFieldIds($providedCustomizationFields, $product);
 
-        foreach ($command->getCustomizationFields() as $customizationFieldDTO) {
+        foreach ($providedCustomizationFields as $customizationFieldDTO) {
             if ($customizationFieldDTO->getCustomizationFieldId()) {
-                $this->handleUpdate($customizationFieldDTO);
+                $this->update($customizationFieldDTO);
             } else {
-                $this->handleCreation($command->getProductId(), $customizationFieldDTO);
+                $this->create($command->getProductId(), $customizationFieldDTO);
             }
         }
 
         $this->deleteCustomizationFields($deletableFieldIds);
-        $product = $this->productProvider->get($command->getProductId());
         $this->productUpdater->refreshProductCustomizabilityProperties($product);
 
         return array_map(function (int $customizationFieldId): CustomizationFieldId {
@@ -125,7 +125,7 @@ class SetProductCustomizationFieldsHandler extends AbstractCustomizationFieldHan
      * @param ProductId $productId
      * @param CustomizationFieldDTO $customizationFieldDTO
      */
-    public function handleCreation(ProductId $productId, CustomizationFieldDTO $customizationFieldDTO): void
+    public function create(ProductId $productId, CustomizationFieldDTO $customizationFieldDTO): void
     {
         $customizationField = new CustomizationField();
         $customizationField->id_product = $productId->getValue();
@@ -142,7 +142,7 @@ class SetProductCustomizationFieldsHandler extends AbstractCustomizationFieldHan
      *
      * @throws CoreException
      */
-    private function handleUpdate(CustomizationFieldDTO $customizationFieldDTO): void
+    private function update(CustomizationFieldDTO $customizationFieldDTO): void
     {
         $fieldId = $customizationFieldDTO->getCustomizationFieldId();
         $customizationFieldId = new CustomizationFieldId($fieldId);
@@ -159,19 +159,17 @@ class SetProductCustomizationFieldsHandler extends AbstractCustomizationFieldHan
     }
 
     /**
-     * @param SetProductCustomizationFieldsCommand $command
+     * @param array $providedCustomizationFields
+     * @param Product $product
      *
-     * @throws ProductException
-     * @throws ProductNotFoundException
+     * @return array
      */
-    private function getDeletableFieldIds(SetProductCustomizationFieldsCommand $command): array
+    private function getDeletableFieldIds(array $providedCustomizationFields, Product $product): array
     {
-        $product = $this->getProduct($command->getProductId());
-
         $existingFieldIds = $product->getNonDeletedCustomizationFieldIds();
         $providedFieldsIds = array_map(function (CustomizationFieldDTO $field): ?int {
             return $field->getCustomizationFieldId();
-        }, $command->getCustomizationFields());
+        }, $providedCustomizationFields);
 
         return array_diff($existingFieldIds, $providedFieldsIds);
     }
