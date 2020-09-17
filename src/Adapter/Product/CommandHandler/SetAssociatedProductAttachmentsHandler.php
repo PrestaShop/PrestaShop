@@ -68,6 +68,6 @@ final class SetAssociatedProductAttachmentsHandler extends AbstractProductHandle
     {
         $this->productProvider->assertProductExists($command->getProductId());
 
-        $this->productUpdater->associateProductAttachments($command->getProductId(), $command->getAttachmentIds());
+        $this->productUpdater->setAttachments($command->getProductId(), $command->getAttachmentIds());
     }
 }

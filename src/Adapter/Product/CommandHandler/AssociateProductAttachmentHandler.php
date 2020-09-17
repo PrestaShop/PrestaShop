@@ -28,15 +28,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use Attachment;
+use PrestaShop\PrestaShop\Adapter\Attachment\AttachmentProvider;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
+use PrestaShop\PrestaShop\Adapter\Product\ProductProvider;
+use PrestaShop\PrestaShop\Adapter\Product\ProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssociateProductAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AssociateProductAttachmentHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Exception\ProductException;
-use PrestaShopException;
 
 /**
  * Handles @see AssociateProductAttachmentCommand using legacy object model
@@ -44,55 +41,40 @@ use PrestaShopException;
 final class AssociateProductAttachmentHandler extends AbstractProductHandler implements AssociateProductAttachmentHandlerInterface
 {
     /**
+     * @var ProductProvider
+     */
+    private $productProvider;
+
+    /**
+     * @var AttachmentProvider
+     */
+    private $attachmentProvider;
+
+    /**
+     * @var ProductUpdater
+     */
+    private $productUpdater;
+
+    /**
+     * @param ProductProvider $productProvider
+     * @param AttachmentProvider $attachmentProvider
+     * @param ProductUpdater $productUpdater
+     */
+    public function __construct(
+        ProductProvider $productProvider,
+        AttachmentProvider $attachmentProvider,
+        ProductUpdater $productUpdater
+    ) {
+        $this->productProvider = $productProvider;
+        $this->attachmentProvider = $attachmentProvider;
+        $this->productUpdater = $productUpdater;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(AssociateProductAttachmentCommand $command): void
     {
-        $product = $this->getProduct($command->getProductId());
-        $productId = (int) $product->id;
-        $attachment = $this->getAttachment($command->getAttachmentId());
-        $attachmentId = (int) $attachment->id;
-
-        try {
-            if (!$attachment->attachProduct($productId)) {
-                throw new CannotUpdateProductException(
-                    sprintf('Failed to associate attachment #%d with product #%d', $attachmentId, $productId),
-                    CannotUpdateProductException::FAILED_UPDATE_ATTACHMENTS
-                );
-            }
-        } catch (PrestaShopException $e) {
-            throw new ProductException(
-                sprintf('Error occurred when trying to associate attachment #%d with product #%d', $attachmentId, $productId),
-                0,
-                $e
-            );
-        }
-    }
-
-    /**
-     * @param AttachmentId $attachmentId
-     *
-     * @return Attachment
-     *
-     * @throws AttachmentNotFoundException
-     */
-    private function getAttachment(AttachmentId $attachmentId): Attachment
-    {
-        $attachmentIdValue = $attachmentId->getValue();
-
-        try {
-            $attachment = new Attachment($attachmentIdValue);
-
-            if ($attachment->id !== $attachmentIdValue) {
-                throw new AttachmentNotFoundException(sprintf('Attachment with id "%s" was not found.', $attachmentIdValue));
-            }
-        } catch (PrestaShopException $e) {
-            throw new AttachmentNotFoundException(sprintf(
-                'Error occurred when trying to load attachment with id %d',
-                $attachmentIdValue
-            ));
-        }
-
-        return $attachment;
+        $this->productUpdater->associateProductAttachment($command->getProductId(), $command->getAttachmentId());
     }
 }

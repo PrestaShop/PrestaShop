@@ -57,3 +57,6 @@ services:
       - '@prestashop.adapter.attachment.uploader.attachment_file_uploader'
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Command\AddAttachmentCommand' }
+
+  prestashop.adapter.attachment.attachment_provider:
+    class: PrestaShop\PrestaShop\Adapter\Attachment\AttachmentProvider
