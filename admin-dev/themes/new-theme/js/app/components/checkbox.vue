@@ -65,7 +65,7 @@
       },
       checked: {
         required: true,
-        type: Array,
+        type: [Array, Number, String],
       },
       disabled: {
         type: Boolean,
