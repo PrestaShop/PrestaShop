@@ -30,8 +30,6 @@ namespace Tests\Unit\PrestaShopBundle\Routing\Converter;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Routing\Converter\LegacyParametersConverter;
-use Symfony\Component\HttpFoundation\ParameterBag;
-use Symfony\Component\HttpFoundation\Request;
 
 class LegacyParametersConverterTest extends TestCase
 {
@@ -46,21 +44,6 @@ class LegacyParametersConverterTest extends TestCase
     {
         $converter = new LegacyParametersConverter();
         $legacyParameters = $converter->getParameters($requestAttributes, $queryParameters);
-        $this->assertEquals($expectedLegacyParameters, $legacyParameters);
-    }
-
-    /**
-     * @dataProvider getExpectedLegacyParameters
-     *
-     * @param array $requestAttributes
-     * @param array $queryParameters
-     * @param array|null $expectedLegacyParameters
-     */
-    public function testGetParametersByRequest(array $requestAttributes, array $queryParameters, ?array $expectedLegacyParameters)
-    {
-        $converter = new LegacyParametersConverter();
-        $request = $this->buildRequestMock($requestAttributes, $queryParameters);
-        $legacyParameters = $converter->getParametersByRequest($request);
         $this->assertEquals($expectedLegacyParameters, $legacyParameters);
     }
 
@@ -115,24 +98,5 @@ class LegacyParametersConverterTest extends TestCase
                 ['controller' => 'AdminOrders', 'action' => 'vieworder', 'id_order' => 51],
             ],
         ];
-    }
-
-    /**
-     * @param array $requestAttributes
-     * @param array $queryParameters
-     *
-     * @return \PHPUnit\Framework\MockObject\MockObject|Request
-     */
-    private function buildRequestMock(array $requestAttributes, array $queryParameters)
-    {
-        $mockRequest = $this
-            ->getMockBuilder(Request::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $mockRequest->attributes = new ParameterBag($requestAttributes);
-        $mockRequest->query = new ParameterBag($queryParameters);
-
-        return $mockRequest;
     }
 }

@@ -28,21 +28,21 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Routing\Converter;
 
-use Symfony\Component\HttpFoundation\Request;
-
+/**
+ * This class converts the request information (attributes and query parameters)
+ * and returns an array of parameters adapted with their legacy names (based on
+ * the configuration from the routing).
+ */
 class LegacyParametersConverter
 {
     /**
-     * @param Request $request
+     * Use the request attributes which contain the routing configuration along with query
+     * parameters to return an array containing the equivalent with legacy parameters names.
      *
-     * @return array|null
-     */
-    public function getParametersByRequest(Request $request): ?array
-    {
-        return $this->getParameters($request->attributes->all(), $request->query->all());
-    }
-
-    /**
+     * Example with $request being a Symfony Request:
+     *
+     * $legacyParameters = $converter->getParameters($request->attributes->all(), $request->query->all());
+     *
      * @param array $requestAttributes
      * @param array $queryParameters
      *
