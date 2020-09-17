@@ -310,6 +310,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetAssociatedProductAttachmentsHandler
         arguments:
             - '@prestashop.adapter.product.product_updater'
+            - '@prestashop.adapter.product.product_provider'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductAttachmentsCommand
