@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\Customiz
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
 use Product;
@@ -97,31 +98,33 @@ class ProductUpdater extends AbstractObjectModelPersister
     }
 
     /**
-     * @param int $productId
+     * @param ProductId $productId
      * @param AttachmentId[] $attachmentIds
      *
      * @throws CannotUpdateProductException
      * @throws ProductException
      */
-    public function associateProductAttachments(int $productId, array $attachmentIds): void
+    public function associateProductAttachments(ProductId $productId, array $attachmentIds): void
     {
-        foreach ($attachmentIds as $attachmentId) {
-            $this->assertAttachmentExists($attachmentId);
-            $attachmentIdValues[] = $attachmentId->getValue();
-        }
+        $productIdValue = $productId->getValue();
 
         try {
-            if (!Attachment::attachToProduct($productId, $attachmentIds)) {
+            foreach ($attachmentIds as $attachmentId) {
+                $this->assertAttachmentExists($attachmentId);
+                $attachmentIdValues[] = $attachmentId->getValue();
+            }
+
+            if (!Attachment::attachToProduct($productIdValue, $attachmentIds)) {
                 throw new CannotUpdateProductException(
-                    sprintf('Failed to set product #%d attachments', $productId),
+                    sprintf('Failed to set product #%d attachments', $productIdValue),
                     CannotUpdateProductException::FAILED_UPDATE_ATTACHMENTS
                 );
             }
         } catch (PrestaShopException $e) {
-            throw new ProductException(
+            throw new CoreException(
                 sprintf(
                     'Error occurred when trying to set product #%d attachments',
-                    $productId
+                    $productIdValue
                 ),
                 0,
                 $e
