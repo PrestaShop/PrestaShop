@@ -99,12 +99,42 @@ class ProductUpdater extends AbstractObjectModelPersister
 
     /**
      * @param ProductId $productId
+     * @param AttachmentId $attachmentId
+     *
+     * @throws CannotUpdateProductException
+     * @throws CoreException
+     */
+    public function associateProductAttachment(ProductId $productId, AttachmentId $attachmentId): void
+    {
+        $productIdValue = $productId->getValue();
+        $attachmentIdValue = $attachmentId->getValue();
+
+        try {
+            if (!Attachment::associateProductAttachment($productIdValue, $attachmentIdValue)) {
+                throw new CannotUpdateProductException(
+                    sprintf('Failed to associate attachment #%d with product #%d', $attachmentIdValue, $productIdValue),
+                    CannotUpdateProductException::FAILED_UPDATE_ATTACHMENTS
+                );
+            }
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf('Error occurred when trying to associate attachment #%d with product #%d', $attachmentIdValue, $productIdValue),
+                0,
+                $e
+            );
+        }
+    }
+
+    /**
+     * Removes previous association and sets new one with provided attachments
+     *
+     * @param ProductId $productId
      * @param AttachmentId[] $attachmentIds
      *
      * @throws CannotUpdateProductException
      * @throws ProductException
      */
-    public function associateProductAttachments(ProductId $productId, array $attachmentIds): void
+    public function setAttachments(ProductId $productId, array $attachmentIds): void
     {
         $productIdValue = $productId->getValue();
 
