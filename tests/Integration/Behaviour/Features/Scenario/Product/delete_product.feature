@@ -31,7 +31,6 @@ Feature: Delete products from Back Office (BO)
       | reference |
       | product1  |
       | product2  |
-      | product3  |
     Then product product1 should not exist anymore
     And product product2 should not exist anymore
-    And product product3 should not exist anymore
+    And product "product3" type should be standard
