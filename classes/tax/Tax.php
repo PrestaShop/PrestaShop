@@ -250,13 +250,13 @@ class TaxCore extends ObjectModel
     }
 
     /**
-     * Returns the product tax.
+     * Returns the product tax rate.
      *
      * @param int $id_product
      * @param int $id_address
      * @param Context $context
      *
-     * @return Tax
+     * @return float $tax_rate
      */
     public static function getProductTaxRate($id_product, $id_address = null, Context $context = null)
     {
