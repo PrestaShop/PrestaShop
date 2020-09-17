@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductDeleterInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShopException;
@@ -42,11 +41,25 @@ use Product;
 final class ProductDeleter implements ProductDeleterInterface
 {
     /**
+     * @var ProductProvider
+     */
+    private $productProvider;
+
+    /**
+     * @param ProductProvider $productProvider
+     */
+    public function __construct(
+        ProductProvider $productProvider
+    ) {
+        $this->productProvider = $productProvider;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function delete(ProductId $productId): void
     {
-        $product = $this->getProduct($productId);
+        $product = $this->productProvider->get($productId);
 
         if (!$this->deleteProduct($product)) {
             throw new CannotDeleteProductException(
@@ -62,7 +75,7 @@ final class ProductDeleter implements ProductDeleterInterface
     public function bulkDelete(array $productIds): void
     {
         foreach ($productIds as $productId) {
-            $this->deleteProduct($this->getProduct($productId));
+            $this->deleteProduct($this->productProvider->get($productId));
         }
     }
 
@@ -84,39 +97,5 @@ final class ProductDeleter implements ProductDeleterInterface
                 $e
             );
         }
-    }
-
-    /**
-     * @param ProductId $productId
-     *
-     * @return Product
-     *
-     * @throws ProductException
-     * @throws ProductNotFoundException
-     *
-     * @todo: this will need to be possibly moved to some ProductProvider dedicated class
-     */
-    private function getProduct(ProductId $productId): Product
-    {
-        $productIdValue = $productId->getValue();
-
-        try {
-            $product = new Product($productIdValue);
-
-            if ((int) $product->id !== $productIdValue) {
-                throw new ProductNotFoundException(sprintf(
-                    'Product #%d was not found',
-                    $productIdValue
-                ));
-            }
-        } catch (PrestaShopException $e) {
-            throw new ProductException(
-                sprintf('Error occurred when trying to get product #%d', $productId),
-                0,
-                $e
-            );
-        }
-
-        return $product;
     }
 }
