@@ -13,7 +13,7 @@ const storesPage = require('@pages/BO/shopParameters/stores');
 const foHomePage = require('@pages/FO/home');
 
 // Import data
-const StoreContactFaker = require('@data/faker/storeContact');
+const StoreFaker = require('@data/faker/store');
 const {stores} = require('@data/demo/stores');
 
 // Import test context
@@ -28,7 +28,7 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 
-const storesContactToCreate = new StoreContactFaker();
+const storesContactToCreate = new StoreFaker();
 
 describe('Configure contact details', async () => {
   // before and after functions
@@ -73,7 +73,7 @@ describe('Configure contact details', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'configureContactDetails', baseContext);
 
     const textResult = await storesPage.setContactDetails(page, storesContactToCreate);
-    await expect(textResult).to.contains(storesPage.successfulUpdateMessage);
+    await expect(textResult).to.contains(storesPage.contactFormSuccessfulUpdateMessage);
   });
 
   it('should view my shop', async function () {
@@ -117,6 +117,6 @@ describe('Configure contact details', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'backToDefaultInformation', baseContext);
 
     const textResult = await storesPage.setContactDetails(page, stores.contact);
-    await expect(textResult).to.contains(storesPage.successfulUpdateMessage);
+    await expect(textResult).to.contains(storesPage.contactFormSuccessfulUpdateMessage);
   });
 });
