@@ -83,6 +83,7 @@ abstract class AbstractProductHandler
      * @param bool $full
      *
      * @return Product
+     *
      * @throws ProductException
      * @throws ProductNotFoundException
      */

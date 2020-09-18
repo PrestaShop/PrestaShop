@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockCommand;
 /**
  * Defines contract for UpdateProductTagsHandler
  */
-interface UpdateProductStockCommandHandlerInterface
+interface UpdateProductStockHandlerInterface
 {
     /**
      * @param UpdateProductStockCommand $command
