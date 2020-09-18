@@ -297,6 +297,9 @@ services:
     prestashop.adapter.product.product_provider:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductProvider
 
+    prestashop.adapter.product.product_supplier_provider:
+        class: PrestaShop\PrestaShop\Adapter\Product\ProductSupplierProvider
+
     prestashop.adapter.product.customization_field_provider:
         class: PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldProvider
 
