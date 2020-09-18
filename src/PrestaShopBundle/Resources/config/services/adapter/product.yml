@@ -261,9 +261,10 @@ services:
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand
 
     prestashop.adapter.product.command_handler.update_product_stock_handler:
-        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductStockCommandHandler
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductStockHandler
         arguments:
-            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.product.stock_available_provider'
+            - '@prestashop.adapter.product.product_stock_updater'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockCommand
@@ -289,6 +290,9 @@ services:
     prestashop.adapter.product.customization_field_provider:
         class: PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldProvider
 
+    prestashop.adapter.product.stock_available_provider:
+        class: PrestaShop\PrestaShop\Adapter\Product\Provider\StockAvailableProvider
+
     prestashop.adapter.product.customization_field_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldValidator
 
@@ -296,3 +300,8 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldPersister
         arguments:
             - '@prestashop.adapter.product.customization_field_validator'
+
+    prestashop.adapter.product.product_stock_updater:
+        class: PrestaShop\PrestaShop\Adapter\Product\Updater\ProductStockUpdater
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'

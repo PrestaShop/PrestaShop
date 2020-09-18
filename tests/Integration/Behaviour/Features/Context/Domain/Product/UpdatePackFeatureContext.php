@@ -33,7 +33,7 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllProductsFromPackCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetPackProductsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetPackedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\PackedProduct;
 use RuntimeException;
@@ -148,8 +148,8 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
     public function assertPackProductQuantityError()
     {
         $this->assertLastErrorIs(
-            ProductPackException::class,
-            ProductPackException::INVALID_QUANTITY
+            ProductPackConstraintException::class,
+            ProductPackConstraintException::INVALID_QUANTITY
         );
     }
 
@@ -159,8 +159,8 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
     public function assertAddingPackToPackError()
     {
         $this->assertLastErrorIs(
-            ProductPackException::class,
-            ProductPackException::CANNOT_ADD_PACK_INTO_PACK
+            ProductPackConstraintException::class,
+            ProductPackConstraintException::CANNOT_ADD_PACK_INTO_PACK
         );
     }
 }

@@ -33,7 +33,8 @@ use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllProductsFromPackCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\RemoveAllProductsFromPackHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackException;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
 
 /**
@@ -57,7 +58,7 @@ final class RemoveAllProductsFromPackHandler extends AbstractProductHandler impl
                 );
             }
         } catch (PrestaShopException $e) {
-            throw new ProductPackException(
+            throw new CoreException(
                 sprintf('Error occurred when trying to remove products from pack #%s', $pack->id),
                 0,
                 $e
