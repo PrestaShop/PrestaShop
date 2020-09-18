@@ -114,6 +114,7 @@ class WarehouseLocation
 
     /**
      * @param bool $isActive
+     *
      * @return WarehouseLocation
      */
     public function setIsActive(bool $isActive): WarehouseLocation
