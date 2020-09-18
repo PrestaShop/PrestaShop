@@ -549,7 +549,7 @@ class OrderForViewing
     /**
      * @return string
      */
-    public function getNote()
+    public function getNote(): string
     {
         return $this->note;
     }
