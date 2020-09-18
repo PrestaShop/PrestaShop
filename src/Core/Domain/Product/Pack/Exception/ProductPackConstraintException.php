@@ -34,27 +34,17 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception;
 class ProductPackConstraintException extends ProductPackException
 {
     /**
-     * When fails to add product to pack
-     */
-    const FAILED_ADDING_TO_PACK = 10;
-
-    /**
-     * When fails to delete products from a pack
-     */
-    const FAILED_DELETING_PRODUCTS_FROM_PACK = 20;
-
-    /**
      * When trying to pack a product which is already a pack itself
      */
-    const CANNOT_ADD_PACK_INTO_PACK = 30;
+    const CANNOT_ADD_PACK_INTO_PACK = 10;
 
     /**
      * When product for packing quantity is invalid
      */
-    const INVALID_QUANTITY = 40;
+    const INVALID_QUANTITY = 20;
 
     /**
      * When invalid pack stock type is used
      */
-    const INVALID_STOCK_TYPE = 50;
+    const INVALID_STOCK_TYPE = 30;
 }
