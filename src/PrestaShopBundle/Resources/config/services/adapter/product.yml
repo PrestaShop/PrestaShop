@@ -338,3 +338,9 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductSupplierPersister
         arguments:
             - '@prestashop.adapter.product.product_supplier_validator'
+
+    prestashop.adapter.product.product_supplier_deleter:
+        class: PrestaShop\PrestaShop\Adapter\Product\ProductSupplierDeleter
+        arguments:
+            - '@prestashop.adapter.product.product_supplier_provider'
+
