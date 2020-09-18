@@ -30,16 +30,14 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use Currency;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductSupplierHandler;
+use PrestaShop\PrestaShop\Adapter\Product\ProductSupplierPersister;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\AddProductSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\AddProductSupplierHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotAddProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShopException;
 use Product;
 use ProductSupplier;
 use Supplier;
@@ -50,25 +48,27 @@ use Supplier;
 final class AddProductSupplierHandler extends AbstractProductSupplierHandler implements AddProductSupplierHandlerInterface
 {
     /**
+     * @var ProductSupplierPersister
+     */
+    private $productSupplierPersister;
+
+    /**
+     * @param ProductSupplierPersister $productSupplierPersister
+     */
+    public function __construct(ProductSupplierPersister $productSupplierPersister)
+    {
+        $this->productSupplierPersister = $productSupplierPersister;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(AddProductSupplierCommand $command): ProductSupplierId
     {
         $productSupplier = new ProductSupplier();
+        $this->fillEntityWithCommandData($productSupplier, $command);
 
-        try {
-            $this->fillEntityWithCommandData($productSupplier, $command);
-            //@todo: use persister
-            $this->validateProductSupplierFields($productSupplier);
-
-            if (!$productSupplier->add()) {
-                throw new CannotAddProductSupplierException('Failed to add product supplier');
-            }
-        } catch (PrestaShopException $e) {
-            throw new CoreException('Error occurred when adding product supplier');
-        }
-
-        return new ProductSupplierId((int) $productSupplier->id);
+        return $this->productSupplierPersister->add($productSupplier);
     }
 
     /**

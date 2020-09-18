@@ -59,4 +59,20 @@ class ProductSupplierValidator extends AbstractObjectModelValidator
             );
         }
     }
+
+    public function assertRelatedEntitiesExists(ProductSupplier $productSupplier): void
+    {
+        //@todo: use provider services for asserts
+        if (!Product::existsInDatabase($productId, 'product')) {
+            throw new ProductNotFoundException(sprintf('Product #%d does not exist', $productId));
+        }
+
+        if (!Supplier::supplierExists($supplierId)) {
+            throw new SupplierNotFoundException(sprintf('Supplier #%d does not exist', $supplierId));
+        }
+
+        if (!Currency::existsInDatabase($currencyId, 'currency')) {
+            throw new CurrencyNotFoundException(sprintf('Currency #%d does not exist', $currencyId));
+        }
+    }
 }
