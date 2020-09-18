@@ -73,7 +73,7 @@ class GetOrderDetailCustomizationsHandler implements GetOrderDetailCustomization
             $customizedDatas = $productCustomizations[$orderDetail->product_id][$orderDetail->product_attribute_id];
         }
         if (!is_array($customizedDatas)) {
-          return null;
+            return null;
         }
 
         foreach ($customizedDatas as $customizationPerAddress) {
