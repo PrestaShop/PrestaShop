@@ -58,9 +58,7 @@ class OrderReturnStateChoiceProvider implements FormChoiceProviderInterface
         $orderStates = OrderReturnState::getOrderReturnStates($this->contextLangId);
 
         foreach ($orderStates as $orderState) {
-            $orderStateId = $orderState['id_order_return_state'];
-
-            $choices[$orderState['name']] = (int) $orderStateId;
+            $choices[$orderState['name']] = (int) $orderState['id_order_return_state'];
         }
 
         return $choices;
