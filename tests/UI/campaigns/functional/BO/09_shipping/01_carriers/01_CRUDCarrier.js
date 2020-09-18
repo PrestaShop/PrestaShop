@@ -37,7 +37,13 @@ let carrierID = 0;
 const createCarrierData = new CarrierFaker({freeShipping: false, zoneID: 4, allZones: false});
 const editCarrierData = new CarrierFaker({freeShipping: false, allZones: true, enable: true});
 
-
+/*
+Create new carrier
+Check the existence of the new carrier in FO
+Update the created carrier
+Check the existence of the update carrier in FO
+Delete carrier
+ */
 describe('Create, update and delete carrier in BO', async () => {
   // before and after functions
   before(async function () {
