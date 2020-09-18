@@ -31,7 +31,7 @@
     <div class="tab-pane fade js-permissions-content{% if profile.id == employeeProfileId %} active show{% endif %}"
       id="profileTabContent_{{ profile.id }}"
       data-profile-id="{{ profile.id }}"
-      data-profile-permissions="{{profileTabPermissions|json_encode}}"
+      data-profile-permissions="{{ profileTabPermissions|json_encode }}"
       data-modules-permissions="{{ profilePermissionsForModules[profile.id]|json_encode }}"
       data-employee-permissions="{{ configurablePermissions.profilePermissionsForTabs[employeeProfileId]|json_encode }}"
       data-employee-modules-permissions="{{ profilePermissionsForModules[employeeProfileId]|json_encode }}"
@@ -48,27 +48,28 @@
             </div>
           </div>
         {% else %}
-          {% set profileTypes = {
-            'view': {
-              'value': configurablePermissions.isBulkViewConfigurationEnabled(profile.id),
-              'label': ('View'|trans({}, 'Admin.Actions')),
-            },
-            'add': {
-              'value': configurablePermissions.isBulkAddConfigurationEnabled(profile.id),
-              'label': ('Add'|trans({}, 'Admin.Actions')),
-            },
-            'edit': {
-              'value': configurablePermissions.isBulkEditConfigurationEnabled(profile.id),
-              'label': ('Edit'|trans({}, 'Admin.Actions')),
-            },
-            'delete': {
-              'value': configurablePermissions.isBulkDeleteConfigurationEnabled(profile.id),
-              'label': ('Delete'|trans({}, 'Admin.Actions')),
-            },
-            'all': {
-              'value': configurablePermissions.isBulkAllConfigurationEnabled(profile.id),
-              'label': ('All'|trans({}, 'Admin.Actions')),
-            }
+          {%
+            set profileTypes = {
+              'view': {
+                'value': configurablePermissions.isBulkViewConfigurationEnabled(profile.id),
+                'label': ('View'|trans({}, 'Admin.Actions')),
+              },
+              'add': {
+                'value': configurablePermissions.isBulkAddConfigurationEnabled(profile.id),
+                'label': ('Add'|trans({}, 'Admin.Actions')),
+              },
+              'edit': {
+                'value': configurablePermissions.isBulkEditConfigurationEnabled(profile.id),
+                'label': ('Edit'|trans({}, 'Admin.Actions')),
+              },
+              'delete': {
+                'value': configurablePermissions.isBulkDeleteConfigurationEnabled(profile.id),
+                'label': ('Delete'|trans({}, 'Admin.Actions')),
+              },
+              'all': {
+                'value': configurablePermissions.isBulkAllConfigurationEnabled(profile.id),
+                'label': ('All'|trans({}, 'Admin.Actions')),
+              }
             }
           %}
           <div class="col-xl-6">
@@ -84,19 +85,20 @@
             </div>
           </div>
 
-          {% set moduleTypes = {
-            'view': {
-              'value': configurablePermissions.isBulkViewConfigurationEnabled(profile.id),
-              'label': ('View'|trans({}, 'Admin.Actions')),
-            },
-            'configure': {
-              'value': configurablePermissions.isBulkAddConfigurationEnabled(profile.id),
-              'label': ('Configure'|trans({}, 'Admin.Actions')),
-            },
-            'uninstall': {
-              'value': configurablePermissions.isBulkEditConfigurationEnabled(profile.id),
-              'label': ('Uninstall'|trans({}, 'Admin.Actions')),
-            },
+          {%
+            set moduleTypes = {
+              'view': {
+                'value': configurablePermissions.isBulkViewConfigurationEnabled(profile.id),
+                'label': ('View'|trans({}, 'Admin.Actions')),
+              },
+              'configure': {
+                'value': configurablePermissions.isBulkAddConfigurationEnabled(profile.id),
+                'label': ('Configure'|trans({}, 'Admin.Actions')),
+              },
+              'uninstall': {
+                'value': configurablePermissions.isBulkEditConfigurationEnabled(profile.id),
+                'label': ('Uninstall'|trans({}, 'Admin.Actions')),
+              }
             }
           %}
           <div class="col-xl-6">
