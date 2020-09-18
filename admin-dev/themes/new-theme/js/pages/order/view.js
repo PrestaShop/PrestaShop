@@ -132,7 +132,7 @@ $(() => {
     const $btn = $(OrderViewPageMap.orderNoteToggleBtn);
     const isNoteOpened = $btn.hasClass('is-opened');
 
-    $btn.toggleClass('is-opened', isNoteOpened);
+    $btn.toggleClass('is-opened', !isNoteOpened);
     $block.toggleClass('d-none', isNoteOpened);
 
     const $icon = $btn.find('.material-icons');
