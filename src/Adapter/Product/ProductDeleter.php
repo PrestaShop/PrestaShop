@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductDeleterInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -62,10 +63,7 @@ final class ProductDeleter implements ProductDeleterInterface
         $product = $this->productProvider->get($productId);
 
         if (!$this->deleteProduct($product)) {
-            throw new CannotDeleteProductException(
-                sprintf('Failed to delete product #%d', $product->id),
-                CannotDeleteProductException::FAILED_DELETE
-            );
+            throw new CannotDeleteProductException(sprintf('Failed to delete product #%d', $product->id));
         }
     }
 
@@ -74,14 +72,21 @@ final class ProductDeleter implements ProductDeleterInterface
      */
     public function bulkDelete(array $productIds): void
     {
+        $failedIds = [];
         foreach ($productIds as $productId) {
             if (!$this->deleteProduct($this->productProvider->get($productId))) {
-                throw new CannotDeleteProductException(
-                    sprintf('Failed to delete product #%d', $productId->getValue()),
-                    CannotDeleteProductException::FAILED_BULK_DELETE
-                );
+                $failedIds[] = $productId;
             }
         }
+
+        if (empty($failedIds)) {
+            return;
+        }
+
+        throw new CannotBulkDeleteProductException(
+            $failedIds,
+            sprintf('Failed to delete following products: "%s"', implode(', ', $failedIds))
+        );
     }
 
     /**
