@@ -28,19 +28,18 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductDeleterInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShopException;
 use Product;
 
 /**
  * Deletes products using legacy object model
  */
-final class ProductDeleter implements ProductDeleterInterface
+final class ProductDeleter extends AbstractObjectModelRepository implements ProductDeleterInterface
 {
     /**
      * @var ProductRepository
@@ -61,10 +60,7 @@ final class ProductDeleter implements ProductDeleterInterface
     public function delete(ProductId $productId): void
     {
         $product = $this->productRepository->get($productId);
-
-        if (!$this->deleteProduct($product)) {
-            throw new CannotDeleteProductException(sprintf('Failed to delete product #%d', $product->id));
-        }
+        $this->performDelete($product);
     }
 
     /**
@@ -74,7 +70,9 @@ final class ProductDeleter implements ProductDeleterInterface
     {
         $failedIds = [];
         foreach ($productIds as $productId) {
-            if (!$this->deleteProduct($this->productRepository->get($productId))) {
+            try {
+                $this->performDelete($this->productRepository->get($productId));
+            } catch (CannotDeleteProductException $e) {
                 $failedIds[] = $productId->getValue();
             }
         }
@@ -92,20 +90,10 @@ final class ProductDeleter implements ProductDeleterInterface
     /**
      * @param Product $product
      *
-     * @return bool
-     *
-     * @throws CoreException
+     * @throws CannotDeleteProductException
      */
-    private function deleteProduct(Product $product): bool
+    private function performDelete(Product $product): void
     {
-        try {
-            return $product->delete();
-        } catch (PrestaShopException $e) {
-            throw new CoreException(
-                sprintf('Error occurred when trying to delete product #%d', $product->id),
-                0,
-                $e
-            );
-        }
+        $this->deleteObjectModel($product, CannotDeleteProductException::class);
     }
 }
