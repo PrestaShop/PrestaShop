@@ -2915,23 +2915,14 @@ class CartCore extends ObjectModel
             $order_by_price = !Configuration::get('PS_CARRIER_DEFAULT_SORT');
         }
         if (null === $order_way) {
-            $order_way = Configuration::get('PS_CARRIER_DEFAULT_ORDER');
+            $order_way = Configuration::get('PS_CARRIER_DEFAULT_ORDER') ? 1 : -1;
         }
 
         if ($order_by_price) {
-            if ($order_way) {
-                return ($option1['total_price_with_tax'] < $option2['total_price_with_tax']) * 2 - 1;
-            } else {
-                // return -1 or 1
-                return ($option1['total_price_with_tax'] >= $option2['total_price_with_tax']) * 2 - 1;
-            }
-        } elseif ($order_way) {
-            // return -1 or 1
-            return ($option1['position'] < $option2['position']) * 2 - 1;
-        } else {
-            // return -1 or 1
-            return ($option1['position'] >= $option2['position']) * 2 - 1;
+            return $option1['total_price_with_tax'] < $option2['total_price_with_tax'] ? $order_way : -$order_way;
         }
+
+        return $option1['position'] < $option2['position'] ? $order_way : -$order_way;
     }
 
     /**
