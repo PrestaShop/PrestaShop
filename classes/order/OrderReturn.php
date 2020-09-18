@@ -173,6 +173,11 @@ class OrderReturnCore extends ObjectModel
         return self::getOrderReturnDetailsByOrderReturnId($id_order_return);
     }
 
+    /**
+     * @param int $id_order_return
+     *
+     * @return array
+     */
     public static function getOrderReturnDetailsByOrderReturnId($id_order_return)
     {
         return Db::getInstance()->executeS('
