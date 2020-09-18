@@ -151,7 +151,7 @@ final class SetProductSuppliersHandler implements SetProductSuppliersHandlerInte
                 $this->addProductSupplier($productId, $productSupplier);
             }
         }
-
+        //@todo: product default supplier not handled
         $this->deleteProductSuppliers($deletableProductSupplierIds);
     }
 
@@ -169,7 +169,7 @@ final class SetProductSuppliersHandler implements SetProductSuppliersHandlerInte
     {
         $productSupplier = new ProductSupplier();
         $productSupplier->id_product = $productId->getValue();
-        $productSupplier->id_supplier = $productSupplierDTO->getProductSupplierId();
+        $productSupplier->id_supplier = $productSupplierDTO->getSupplierId();
         $productSupplier->id_currency = $productSupplierDTO->getCurrencyId();
         $productSupplier->product_supplier_reference = $productSupplierDTO->getReference();
         $productSupplier->product_supplier_price_te = $productSupplierDTO->getPriceTaxExcluded();
