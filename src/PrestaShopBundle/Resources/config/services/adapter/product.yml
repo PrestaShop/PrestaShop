@@ -302,6 +302,9 @@ services:
         arguments:
             - '@prestashop.adapter.product.product_validator'
 
+    prestashop.adapter.product.product_supplier_provider:
+        class: PrestaShop\PrestaShop\Adapter\Product\ProductSupplierProvider
+
     prestashop.adapter.product.customization_field_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldValidator
 
