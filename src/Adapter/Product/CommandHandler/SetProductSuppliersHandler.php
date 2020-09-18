@@ -30,26 +30,23 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\ProductProvider;
+use PrestaShop\PrestaShop\Adapter\Product\ProductSupplierPersister;
 use PrestaShop\PrestaShop\Adapter\Product\ProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\AddProductSupplierCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\DeleteProductSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\AddProductSupplierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\DeleteProductSupplierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\SetProductSuppliersHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\UpdateProductSupplierHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotDeleteProductSupplierException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier as ProductSupplierDTO;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplierDeleterInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
-use ProductSupplier as ProductSupplierEntity;
+use ProductSupplier;
 
 /**
  * Handles @var SetProductSuppliersCommand using legacy object model
@@ -82,24 +79,40 @@ final class SetProductSuppliersHandler extends AbstractProductHandler implements
     private $productProvider;
 
     /**
+     * @var ProductSupplierDeleterInterface
+     */
+    private $productSupplierDeleter;
+
+    /**
+     * @var ProductSupplierPersister
+     */
+    private $productSupplierPersister;
+
+    /**
      * @param AddProductSupplierHandlerInterface $addProductSupplierHandler
      * @param UpdateProductSupplierHandlerInterface $updateProductSupplierHandler
      * @param DeleteProductSupplierHandlerInterface $deleteProductSupplierHandler
      * @param ProductUpdater $productUpdater
      * @param ProductProvider $productProvider
+     * @param ProductSupplierDeleterInterface $productSupplierDeleter
+     * @param ProductSupplierPersister $productSupplierPersister
      */
     public function __construct(
         AddProductSupplierHandlerInterface $addProductSupplierHandler,
         UpdateProductSupplierHandlerInterface $updateProductSupplierHandler,
         DeleteProductSupplierHandlerInterface $deleteProductSupplierHandler,
         ProductUpdater $productUpdater,
-        ProductProvider $productProvider
+        ProductProvider $productProvider,
+        ProductSupplierDeleterInterface $productSupplierDeleter,
+        ProductSupplierPersister $productSupplierPersister
     ) {
         $this->addProductSupplierHandler = $addProductSupplierHandler;
         $this->updateProductSupplierHandler = $updateProductSupplierHandler;
         $this->deleteProductSupplierHandler = $deleteProductSupplierHandler;
         $this->productUpdater = $productUpdater;
         $this->productProvider = $productProvider;
+        $this->productSupplierDeleter = $productSupplierDeleter;
+        $this->productSupplierPersister = $productSupplierPersister;
     }
 
     /**
@@ -145,13 +158,7 @@ final class SetProductSuppliersHandler extends AbstractProductHandler implements
 
     /**
      * @param ProductId $productId
-     * @param ProductSupplier[] $productSuppliers
-     *
-     * @throws CannotDeleteProductSupplierException
-     * @throws CombinationConstraintException
-     * @throws CurrencyException
-     * @throws ProductSupplierException
-     * @throws SupplierException
+     * @param ProductSupplierDTO[] $productSuppliers
      */
     private function setProductSuppliers(ProductId $productId, array $productSuppliers): void
     {
@@ -170,7 +177,7 @@ final class SetProductSuppliersHandler extends AbstractProductHandler implements
 
     /**
      * @param ProductId $productId
-     * @param ProductSupplier $productSupplier
+     * @param ProductSupplierDTO $productSupplierDTO
      *
      * @return ProductSupplierId
      *
@@ -178,39 +185,32 @@ final class SetProductSuppliersHandler extends AbstractProductHandler implements
      * @throws CombinationConstraintException
      * @throws SupplierException
      */
-    private function addProductSupplier(ProductId $productId, ProductSupplier $productSupplier): ProductSupplierId
+    private function addProductSupplier(ProductId $productId, ProductSupplierDTO $productSupplierDTO): ProductSupplierId
     {
-        $combinationId = $productSupplier->getCombinationId();
+        $productSupplier = new ProductSupplier();
+        $productSupplier->id_product = $productId->getValue();
+        $productSupplier->id_supplier = $productSupplierDTO->getProductSupplierId();
+        $productSupplier->id_currency = $productSupplierDTO->getCurrencyId();
+        $productSupplier->product_supplier_reference = $productSupplierDTO->getReference();
+        $productSupplier->product_supplier_price_te = $productSupplierDTO->getPriceTaxExcluded();
+        $productSupplier->id_product_attribute = $productSupplierDTO->getCombinationId();
 
-        if ($combinationId === CombinationId::NO_COMBINATION) {
-            $combinationId = null;
-        }
-
-        $command = new AddProductSupplierCommand(
-            $productId->getValue(),
-            $productSupplier->getSupplierId(),
-            $productSupplier->getCurrencyId(),
-            $productSupplier->getReference(),
-            $productSupplier->getPriceTaxExcluded(),
-            $combinationId
-        );
-
-        return $this->addProductSupplierHandler->handle($command);
+        return $this->productSupplierPersister->add($productSupplier);
     }
 
     /**
-     * @param ProductSupplier $productSupplier
+     * @param ProductSupplierDTO $productSupplierDTO
      */
-    private function updateProductSupplier(ProductSupplier $productSupplier): void
+    private function updateProductSupplier(ProductSupplierDTO $productSupplierDTO): void
     {
-        $command = new UpdateProductSupplierCommand($productSupplier->getProductSupplierId());
-        $command->setCurrencyId($productSupplier->getCurrencyId())
-            ->setReference($productSupplier->getReference())
-            ->setPriceTaxExcluded($productSupplier->getPriceTaxExcluded())
+        $command = new UpdateProductSupplierCommand($productSupplierDTO->getProductSupplierId());
+        $command->setCurrencyId($productSupplierDTO->getCurrencyId())
+            ->setReference($productSupplierDTO->getReference())
+            ->setPriceTaxExcluded($productSupplierDTO->getPriceTaxExcluded())
         ;
 
-        if ($productSupplier->getCombinationId()) {
-            $command->setCombinationId($productSupplier->getCombinationId());
+        if ($productSupplierDTO->getCombinationId()) {
+            $command->setCombinationId($productSupplierDTO->getCombinationId());
         }
 
         $this->updateProductSupplierHandler->handle($command);
@@ -218,39 +218,36 @@ final class SetProductSuppliersHandler extends AbstractProductHandler implements
 
     /**
      * @param ProductId $productId
-     * @param array $providedProductSuppliers
+     * @param ProductSupplierDTO[] $providedProductSuppliers
      *
-     * @return int[]
+     * @return ProductSupplierId[]
      */
     private function getDeletableProductSupplierIds(ProductId $productId, array $providedProductSuppliers): array
     {
-        $productSuppliers = ProductSupplierEntity::getSupplierCollection($productId->getValue());
-        $existingProductSupplierIds = [];
-        $providedProductSupplierIds = [];
+        $existingProductSuppliers = ProductSupplier::getSupplierCollection($productId->getValue());
+        $idsForDeletion = [];
 
-        /** @var ProductSupplierEntity $currentSupplier */
-        foreach ($productSuppliers as $currentSupplier) {
-            $existingProductSupplierIds[] = (int) $currentSupplier->id;
+        /** @var ProductSupplier $currentSupplier */
+        foreach ($existingProductSuppliers as $currentSupplier) {
+            $currentId = (int) $currentSupplier->id;
+            $idsForDeletion[$currentId] = new ProductSupplierId($currentId);
         }
 
         foreach ($providedProductSuppliers as $productSupplier) {
-            $providedProductSupplierIds[] = $productSupplier->getProductSupplierId();
+            if (isset($idsForDeletion[$productSupplier->getProductSupplierId()])) {
+                unset($idsForDeletion[$productSupplier->getProductSupplierId()]);
+            }
         }
 
-        return array_diff($existingProductSupplierIds, $providedProductSupplierIds);
+        return $idsForDeletion;
     }
 
     /**
-     * @param array $productSupplierIds
-     *
-     * @throws CannotDeleteProductSupplierException
-     * @throws ProductSupplierException
+     * @param ProductSupplierId[] $productSupplierIds
      */
     private function deleteProductSuppliers(array $productSupplierIds): void
     {
-        foreach ($productSupplierIds as $productSupplierId) {
-            $this->deleteProductSupplierHandler->handle(new DeleteProductSupplierCommand($productSupplierId));
-        }
+        $this->productSupplierDeleter->bulkDelete($productSupplierIds);
     }
 
     /**
@@ -262,8 +259,8 @@ final class SetProductSuppliersHandler extends AbstractProductHandler implements
     {
         $productSupplierIds = [];
 
-        /** @var ProductSupplierEntity $productSupplierEntity */
-        foreach (ProductSupplierEntity::getSupplierCollection($productId->getValue(), false) as $productSupplierEntity) {
+        /** @var ProductSupplier $productSupplierEntity */
+        foreach (ProductSupplier::getSupplierCollection($productId->getValue(), false) as $productSupplierEntity) {
             $productSupplierIds[] = new ProductSupplierId((int) $productSupplierEntity->id);
         }
 
