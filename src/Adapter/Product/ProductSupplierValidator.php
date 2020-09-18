@@ -29,7 +29,12 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
+use PrestaShop\PrestaShop\Adapter\Currency\CurrencyProvider;
+use PrestaShop\PrestaShop\Adapter\Supplier\SupplierProvider;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use ProductSupplier;
 
@@ -38,6 +43,36 @@ use ProductSupplier;
  */
 class ProductSupplierValidator extends AbstractObjectModelValidator
 {
+    /**
+     * @var ProductProvider
+     */
+    private $productProvider;
+
+    /**
+     * @var SupplierProvider
+     */
+    private $supplierProvider;
+
+    /**
+     * @var CurrencyProvider
+     */
+    private $currencyProvider;
+
+    /**
+     * @param ProductProvider $productProvider
+     * @param SupplierProvider $supplierProvider
+     * @param CurrencyProvider $currencyProvider
+     */
+    public function __construct(
+        ProductProvider $productProvider,
+        SupplierProvider $supplierProvider,
+        CurrencyProvider $currencyProvider
+    ) {
+        $this->productProvider = $productProvider;
+        $this->supplierProvider = $supplierProvider;
+        $this->currencyProvider = $currencyProvider;
+    }
+
     /**
      * @param ProductSupplier $productSupplier
      *
@@ -58,21 +93,17 @@ class ProductSupplierValidator extends AbstractObjectModelValidator
                 $errorCode
             );
         }
+
+        $this->assertRelatedEntitiesExists($productSupplier);
     }
 
-    public function assertRelatedEntitiesExists(ProductSupplier $productSupplier): void
+    /**
+     * @param ProductSupplier $productSupplier
+     */
+    private function assertRelatedEntitiesExists(ProductSupplier $productSupplier): void
     {
-        //@todo: use provider services for asserts
-        if (!Product::existsInDatabase($productId, 'product')) {
-            throw new ProductNotFoundException(sprintf('Product #%d does not exist', $productId));
-        }
-
-        if (!Supplier::supplierExists($supplierId)) {
-            throw new SupplierNotFoundException(sprintf('Supplier #%d does not exist', $supplierId));
-        }
-
-        if (!Currency::existsInDatabase($currencyId, 'currency')) {
-            throw new CurrencyNotFoundException(sprintf('Currency #%d does not exist', $currencyId));
-        }
+        $this->productProvider->assertProductExists(new ProductId((int) $productSupplier->id_product));
+        $this->supplierProvider->assertSupplierExists(new SupplierId((int) $productSupplier->id_supplier));
+        $this->currencyProvider->assertCurrencyExists(new CurrencyId((int) $productSupplier->id_currency));
     }
 }
