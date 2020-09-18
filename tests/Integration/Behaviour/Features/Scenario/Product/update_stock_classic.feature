@@ -13,24 +13,24 @@ Feature: Update product stock from Back Office (BO)
     Given I add product "product1" with following information:
       | name       | en-US:Presta camera |
       | is_virtual | false               |
-    And product "product1" should have following values:
+    And product "product1" should have following stock information:
       | use_advanced_stock_management | 0           |
-    When I update product "product1" stock with following values:
+    When I update product "product1" stock with following information:
       | use_advanced_stock_management | 1           |
     And I should get error that stock management is disabled
-    Then product "product1" should have following values:
+    Then product "product1" should have following stock information:
       | use_advanced_stock_management | 0           |
 
   Scenario: I update product depends on stock
     Given I add product "product1" with following information:
       | name       | en-US:Presta camera |
       | is_virtual | false               |
-    And product "product1" should have following values:
+    And product "product1" should have following stock information:
       | depends_on_stock | 0           |
-    When I update product "product1" stock with following values:
+    When I update product "product1" stock with following information:
       | depends_on_stock | 1           |
     And I should get error that stock management is disabled
-    Then product "product1" should have following values:
+    Then product "product1" should have following stock information:
       | depends_on_stock | 0           |
 
   Scenario: I update product pack stock type
@@ -47,18 +47,18 @@ Feature: Update product stock from Back Office (BO)
     Then product "productPack1" type should be pack
     And pack "productPack1" should contain products with following quantities:
       | product2        | 5                      |
-    And product "productPack1" should have following values:
+    And product "productPack1" should have following stock information:
       | pack_stock_type | stock_type_default |
-    When I update product "productPack1" stock with following values:
+    When I update product "productPack1" stock with following information:
       | pack_stock_type | stock_type_pack_only |
-    Then product "productPack1" should have following values:
+    Then product "productPack1" should have following stock information:
       | pack_stock_type | stock_type_pack_only |
-    When I update product "productPack1" stock with following values:
+    When I update product "productPack1" stock with following information:
       | pack_stock_type | stock_type_products_only |
-    Then product "productPack1" should have following values:
+    Then product "productPack1" should have following stock information:
       | pack_stock_type | stock_type_products_only |
-    When I update product "productPack1" stock with following values:
+    When I update product "productPack1" stock with following information:
       | pack_stock_type | stock_type_both |
-    Then product "productPack1" should have following values:
+    Then product "productPack1" should have following stock information:
       | pack_stock_type | stock_type_both |
 
