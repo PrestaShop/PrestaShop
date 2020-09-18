@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelPersister;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotBulkDeleteProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotDeleteProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplierDeleterInterface;
@@ -77,7 +78,21 @@ final class ProductSupplierDeleter extends AbstractObjectModelPersister implemen
      */
     public function bulkDelete(array $productSupplierIds): void
     {
-        // TODO: Implement bulkDelete() method.
+        $failedIds = [];
+        foreach ($productSupplierIds as $productSupplierId) {
+            if (!$this->deleteObjectModel($this->getProductSupplier($productSupplierId))) {
+                $failedIds[$productSupplierId]->getValue();
+            }
+        }
+
+        if (empty($failedIds)) {
+            return;
+        }
+
+        throw new CannotBulkDeleteProductSupplierException($failedIds, sprintf(
+            'Failed to delete following product suppliers: %s',
+            implode(', ', $failedIds)
+        ));
     }
 
     /**
