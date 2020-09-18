@@ -58,6 +58,7 @@ final class AddProductSupplierHandler extends AbstractProductSupplierHandler imp
 
         try {
             $this->fillEntityWithCommandData($productSupplier, $command);
+            //@todo: use persister
             $this->validateProductSupplierFields($productSupplier);
 
             if (!$productSupplier->add()) {
