@@ -35,7 +35,6 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\AddProductSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\DeleteProductSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
@@ -215,39 +214,6 @@ final class SetProductSuppliersHandler extends AbstractProductHandler implements
         }
 
         $this->updateProductSupplierHandler->handle($command);
-    }
-
-    /**
-     * @param ProductId $productId
-     * @param int $defaultSupplierId
-     *
-     * @throws CannotUpdateProductException
-     * @throws ProductException
-     */
-    private function updateProductDefaultSupplier(ProductId $productId, int $defaultSupplierId): void
-    {
-        $product = $this->getProduct($productId);
-
-        if ($product->hasCombinations() || !$defaultSupplierId) {
-            $product->supplier_reference = '';
-            $product->wholesale_price = 0;
-            $this->fieldsToUpdate['supplier_reference'] = true;
-            $this->fieldsToUpdate['wholesale_price'] = true;
-        } elseif ($defaultSupplierId && !$product->hasCombinations()) {
-            $product->supplier_reference = ProductSupplierEntity::getProductSupplierReference(
-                $product->id,
-                0,
-                $defaultSupplierId
-            );
-            $product->wholesale_price = ProductSupplierEntity::getProductSupplierPrice($product->id, 0, $defaultSupplierId);
-            $this->fieldsToUpdate['supplier_reference'] = true;
-            $this->fieldsToUpdate['wholesale_price'] = true;
-        }
-
-        $product->id_supplier = $defaultSupplierId;
-        $this->fieldsToUpdate['id_supplier'] = true;
-
-        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_DEFAULT_SUPPLIER);
     }
 
     /**
