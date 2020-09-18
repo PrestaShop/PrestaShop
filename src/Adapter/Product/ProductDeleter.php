@@ -28,18 +28,16 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelPersister;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductDeleterInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShopException;
-use Product;
 
 /**
  * Deletes products using legacy object model
  */
-final class ProductDeleter implements ProductDeleterInterface
+final class ProductDeleter extends AbstractObjectModelPersister implements ProductDeleterInterface
 {
     /**
      * @var ProductProvider
@@ -62,7 +60,7 @@ final class ProductDeleter implements ProductDeleterInterface
     {
         $product = $this->productProvider->get($productId);
 
-        if (!$this->deleteProduct($product)) {
+        if (!$this->deleteObjectModel($product)) {
             throw new CannotDeleteProductException(sprintf('Failed to delete product #%d', $product->id));
         }
     }
@@ -74,7 +72,7 @@ final class ProductDeleter implements ProductDeleterInterface
     {
         $failedIds = [];
         foreach ($productIds as $productId) {
-            if (!$this->deleteProduct($this->productProvider->get($productId))) {
+            if (!$this->deleteObjectModel($this->productProvider->get($productId))) {
                 $failedIds[] = $productId->getValue();
             }
         }
@@ -87,25 +85,5 @@ final class ProductDeleter implements ProductDeleterInterface
             $failedIds,
             sprintf('Failed to delete following products: "%s"', implode(', ', $failedIds))
         );
-    }
-
-    /**
-     * @param Product $product
-     *
-     * @return bool
-     *
-     * @throws CoreException
-     */
-    private function deleteProduct(Product $product): bool
-    {
-        try {
-            return $product->delete();
-        } catch (PrestaShopException $e) {
-            throw new CoreException(
-                sprintf('Error occurred when trying to delete product #%d', $product->id),
-                0,
-                $e
-            );
-        }
     }
 }

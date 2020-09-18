@@ -93,6 +93,31 @@ abstract class AbstractObjectModelPersister
 
     /**
      * @param ObjectModel $objectModel
+     * @param bool $soft
+     *
+     * @return bool
+     *
+     * @throws CoreException
+     */
+    protected function deleteObjectModel(ObjectModel $objectModel, bool $soft = false): bool
+    {
+        try {
+            if ($soft) {
+                return (bool) $objectModel->softDelete();
+            }
+
+            return (bool) $objectModel->delete();
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf('Error occurred when trying to delete %s #%d', get_class($objectModel), $objectModel->id),
+                0,
+                $e
+            );
+        }
+    }
+
+    /**
+     * @param ObjectModel $objectModel
      * @param string $propertyName
      * @param array $properties
      */
