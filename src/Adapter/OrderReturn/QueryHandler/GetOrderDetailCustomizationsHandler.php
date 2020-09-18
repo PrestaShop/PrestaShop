@@ -72,20 +72,20 @@ class GetOrderDetailCustomizationsHandler implements GetOrderDetailCustomization
         if (isset($productCustomizations[$orderDetail->product_id][$orderDetail->product_attribute_id])) {
             $customizedDatas = $productCustomizations[$orderDetail->product_id][$orderDetail->product_attribute_id];
         }
-        if (is_array($customizedDatas)) {
-            foreach ($customizedDatas as $customizationPerAddress) {
-                foreach ($customizationPerAddress as $customizationId => $customization) {
-                    foreach ($customization['datas'] as $datas) {
-                        foreach ($datas as $data) {
-                            $customizations[] = new OrderDetailCustomization((int) $data['type'], $data['name'], $data['value']);
-                        }
+        if (!is_array($customizedDatas)) {
+          return null;
+        }
+
+        foreach ($customizedDatas as $customizationPerAddress) {
+            foreach ($customizationPerAddress as $customizationId => $customization) {
+                foreach ($customization['datas'] as $datas) {
+                    foreach ($datas as $data) {
+                        $customizations[] = new OrderDetailCustomization((int) $data['type'], $data['name'], $data['value']);
                     }
                 }
             }
-
-            return new OrderDetailCustomizations($customizations);
         }
 
-        return null;
+        return new OrderDetailCustomizations($customizations);
     }
 }
