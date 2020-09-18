@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Order;
+use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\SetInternalOrderNoteCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\SetInternalOrderNoteHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
@@ -38,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
  *
  * @internal
  */
-final class SetInternalOrderNoteHandler implements SetInternalOrderNoteHandlerInterface
+final class SetInternalOrderNoteHandler extends AbstractOrderHandler implements SetInternalOrderNoteHandlerInterface
 {
     /**
      * @param SetInternalOrderNoteCommand $command
@@ -47,12 +48,7 @@ final class SetInternalOrderNoteHandler implements SetInternalOrderNoteHandlerIn
      */
     public function handle(SetInternalOrderNoteCommand $command)
     {
-        $orderId = $command->getOrderId();
-        $order = new Order($orderId->getValue());
-
-        if ($order->id !== $orderId->getValue()) {
-            throw new OrderNotFoundException($orderId, sprintf('Order with ID "%s" was not found.', $orderId->getValue()));
-        }
+        $order = $this->getOrder($command->getOrderId());
 
         $order->note = $command->getInternalNote();
         $order->update();
