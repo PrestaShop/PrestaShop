@@ -316,7 +316,7 @@ class ZoneController extends FrameworkBundleAdminController
             ),
             MissingZoneRequiredFieldsException::class => $this->trans(
                 'The field %s is required.',
-                'Admin.International.Notification',
+                'Admin.Notifications.Error',
                 [
                     implode(
                         ', ',
@@ -326,7 +326,7 @@ class ZoneController extends FrameworkBundleAdminController
             ),
             ZoneNotFoundException::class => $this->trans(
                 'This zone does not exist.',
-                'Admin.International.Notification'
+                'Admin.Notifications.Error'
             ),
             CannotToggleZoneStatusException::class => $this->trans(
                 'An error occurred while updating the status.',
