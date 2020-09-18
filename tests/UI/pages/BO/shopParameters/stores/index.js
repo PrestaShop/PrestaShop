@@ -21,6 +21,11 @@ class Stores extends BOBasePage {
     // Table selectors
     this.gridTable = '#table-store';
 
+    // Sort selectors
+    this.tableHead = `${this.gridTable} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
     this.filterColumn = filterBy => `${this.filterRow} [name='storeFilter_${filterBy}']`;
@@ -207,6 +212,25 @@ class Stores extends BOBasePage {
   }
 
   /**
+   * Get column content from all rows
+   * @param page
+   * @param columnName
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(page, columnName) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable = [];
+
+    // Get text column from each row
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumn(page, i, columnName);
+      await allRowsContentTable.push(rowContent);
+    }
+
+    return allRowsContentTable;
+  }
+
+  /**
    * Get Store status
    * @param page
    * @param row
@@ -330,6 +354,54 @@ class Stores extends BOBasePage {
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
+  /* Sort functions */
+  /**
+   * Sort table by clicking on column name
+   * @param page
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page, sortBy, sortDirection) {
+    let columnSelector;
+
+    switch (sortBy) {
+      case 'id_store':
+        columnSelector = this.sortColumnDiv(2);
+        break;
+
+      case 'sl!name':
+        columnSelector = this.sortColumnDiv(3);
+        break;
+
+      case 'sl!address1':
+        columnSelector = this.sortColumnDiv(4);
+        break;
+
+      case 'city':
+        columnSelector = this.sortColumnDiv(5);
+        break;
+
+      case 'postcode':
+        columnSelector = this.sortColumnDiv(6);
+        break;
+
+      case 'st!name':
+        columnSelector = this.sortColumnDiv(7);
+        break;
+
+      case 'cl!name':
+        columnSelector = this.sortColumnDiv(8);
+        break;
+
+      default:
+        throw new Error(`Column ${sortBy} was not found`);
+    }
+    const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
+    await this.clickAndWaitForNavigation(page, sortColumnButton);
+  }
+
+  /* Form functions */
   /**
    * Se contact details
    * @param page
