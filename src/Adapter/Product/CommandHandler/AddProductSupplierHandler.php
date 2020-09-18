@@ -28,24 +28,17 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use Currency;
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductSupplierHandler;
 use PrestaShop\PrestaShop\Adapter\Product\ProductSupplierPersister;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\AddProductSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\AddProductSupplierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
-use Product;
 use ProductSupplier;
-use Supplier;
 
 /**
  * Handles @var AddProductSupplierCommand using legacy object model
  */
-final class AddProductSupplierHandler extends AbstractProductSupplierHandler implements AddProductSupplierHandlerInterface
+final class AddProductSupplierHandler implements AddProductSupplierHandlerInterface
 {
     /**
      * @var ProductSupplierPersister
@@ -74,18 +67,12 @@ final class AddProductSupplierHandler extends AbstractProductSupplierHandler imp
     /**
      * @param ProductSupplier $productSupplier
      * @param AddProductSupplierCommand $command
-     *
-     * @throws CurrencyNotFoundException
-     * @throws ProductNotFoundException
-     * @throws SupplierNotFoundException
      */
     private function fillEntityWithCommandData(ProductSupplier $productSupplier, AddProductSupplierCommand $command): void
     {
         $productIdValue = $command->getProductId()->getValue();
         $supplierIdValue = $command->getSupplierId()->getValue();
         $currencyIdValue = $command->getCurrencyId()->getValue();
-
-        $this->assertRelatedEntitiesExist($productIdValue, $supplierIdValue, $currencyIdValue);
 
         $productSupplier->id_product = $productIdValue;
         $productSupplier->id_supplier = $supplierIdValue;
@@ -107,30 +94,6 @@ final class AddProductSupplierHandler extends AbstractProductSupplierHandler imp
             $productSupplier->id_product_attribute = $command->getCombinationId()->getValue();
         } else {
             $productSupplier->id_product_attribute = CombinationId::NO_COMBINATION;
-        }
-    }
-
-    /**
-     * @param int $productId
-     * @param int $supplierId
-     * @param int $currencyId
-     *
-     * @throws CurrencyNotFoundException
-     * @throws ProductNotFoundException
-     * @throws SupplierNotFoundException
-     */
-    private function assertRelatedEntitiesExist(int $productId, int $supplierId, int $currencyId): void
-    {
-        if (!Product::existsInDatabase($productId, 'product')) {
-            throw new ProductNotFoundException(sprintf('Product #%d does not exist', $productId));
-        }
-
-        if (!Supplier::supplierExists($supplierId)) {
-            throw new SupplierNotFoundException(sprintf('Supplier #%d does not exist', $supplierId));
-        }
-
-        if (!Currency::existsInDatabase($currencyId, 'currency')) {
-            throw new CurrencyNotFoundException(sprintf('Currency #%d does not exist', $currencyId));
         }
     }
 }
