@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductExcep
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use Product;
+use ProductSupplier;
 
 /**
  * Performs update of provided Product properties
@@ -89,6 +90,29 @@ class ProductUpdater extends AbstractObjectModelPersister
                 'uploadable_files' => $product->countCustomizationFields(CustomizationFieldType::TYPE_FILE),
             ], CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS
         );
+    }
+
+    /**
+     * @param Product $product
+     * @param int $defaultSupplierId
+     */
+    public function updateProductDefaultSupplier(Product $product, int $defaultSupplierId): void
+    {
+        if ($product->hasCombinations() || !$defaultSupplierId) {
+            $fieldsToUpdate['supplier_reference'] = '';
+            $fieldsToUpdate['wholesale_price'] = 0;
+        } elseif ($defaultSupplierId && !$product->hasCombinations()) {
+            $fieldsToUpdate['supplier_reference'] = ProductSupplier::getProductSupplierReference(
+                $product->id,
+                0,
+                $defaultSupplierId
+            );
+            $fieldsToUpdate['wholesale_price'] = ProductSupplier::getProductSupplierPrice($product->id, 0, $defaultSupplierId);
+        }
+
+        $fieldsToUpdate['id_supplier'] = $defaultSupplierId;
+
+        $this->update($product, $fieldsToUpdate, CannotUpdateProductException::FAILED_UPDATE_DEFAULT_SUPPLIER);
     }
 
     /**

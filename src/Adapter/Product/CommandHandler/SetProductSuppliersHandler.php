@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Adapter\Product\ProductProvider;
+use PrestaShop\PrestaShop\Adapter\Product\ProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
@@ -71,18 +73,34 @@ final class SetProductSuppliersHandler extends AbstractProductHandler implements
     private $deleteProductSupplierHandler;
 
     /**
+     * @var ProductUpdater
+     */
+    private $productUpdater;
+
+    /**
+     * @var ProductProvider
+     */
+    private $productProvider;
+
+    /**
      * @param AddProductSupplierHandlerInterface $addProductSupplierHandler
      * @param UpdateProductSupplierHandlerInterface $updateProductSupplierHandler
      * @param DeleteProductSupplierHandlerInterface $deleteProductSupplierHandler
+     * @param ProductUpdater $productUpdater
+     * @param ProductProvider $productProvider
      */
     public function __construct(
         AddProductSupplierHandlerInterface $addProductSupplierHandler,
         UpdateProductSupplierHandlerInterface $updateProductSupplierHandler,
-        DeleteProductSupplierHandlerInterface $deleteProductSupplierHandler
+        DeleteProductSupplierHandlerInterface $deleteProductSupplierHandler,
+        ProductUpdater $productUpdater,
+        ProductProvider $productProvider
     ) {
         $this->addProductSupplierHandler = $addProductSupplierHandler;
         $this->updateProductSupplierHandler = $updateProductSupplierHandler;
         $this->deleteProductSupplierHandler = $deleteProductSupplierHandler;
+        $this->productUpdater = $productUpdater;
+        $this->productProvider = $productProvider;
     }
 
     /**
@@ -91,11 +109,12 @@ final class SetProductSuppliersHandler extends AbstractProductHandler implements
     public function handle(SetProductSuppliersCommand $command): array
     {
         $productId = $command->getProductId();
+        $product = $this->productProvider->get($productId);
         $defaultSupplierIdValue = $command->getDefaultSupplierId()->getValue();
         $this->assertDefaultSupplierIsOneOfProvidedSuppliers($command);
 
         $this->setProductSuppliers($productId, $command->getProductSuppliers());
-        $this->updateProductDefaultSupplier($productId, $defaultSupplierIdValue);
+        $this->productUpdater->updateProductDefaultSupplier($product, $defaultSupplierIdValue);
 
         return $this->getProductSupplierIds($productId);
     }
