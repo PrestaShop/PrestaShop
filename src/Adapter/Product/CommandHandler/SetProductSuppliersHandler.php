@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\ProductProvider;
 use PrestaShop\PrestaShop\Adapter\Product\ProductSupplierPersister;
 use PrestaShop\PrestaShop\Adapter\Product\ProductSupplierProvider;
@@ -37,10 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\AddProductSupplierHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\DeleteProductSupplierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\SetProductSuppliersHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\UpdateProductSupplierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier as ProductSupplierDTO;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplierDeleterInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
@@ -51,23 +47,8 @@ use ProductSupplier;
 /**
  * Handles @var SetProductSuppliersCommand using legacy object model
  */
-final class SetProductSuppliersHandler extends AbstractProductHandler implements SetProductSuppliersHandlerInterface
+final class SetProductSuppliersHandler implements SetProductSuppliersHandlerInterface
 {
-    /**
-     * @var AddProductSupplierHandlerInterface
-     */
-    private $addProductSupplierHandler;
-
-    /**
-     * @var UpdateProductSupplierHandlerInterface
-     */
-    private $updateProductSupplierHandler;
-
-    /**
-     * @var DeleteProductSupplierHandler
-     */
-    private $deleteProductSupplierHandler;
-
     /**
      * @var ProductUpdater
      */
@@ -94,9 +75,6 @@ final class SetProductSuppliersHandler extends AbstractProductHandler implements
     private $productSupplierProvider;
 
     /**
-     * @param AddProductSupplierHandlerInterface $addProductSupplierHandler
-     * @param UpdateProductSupplierHandlerInterface $updateProductSupplierHandler
-     * @param DeleteProductSupplierHandlerInterface $deleteProductSupplierHandler
      * @param ProductUpdater $productUpdater
      * @param ProductProvider $productProvider
      * @param ProductSupplierDeleterInterface $productSupplierDeleter
@@ -104,18 +82,12 @@ final class SetProductSuppliersHandler extends AbstractProductHandler implements
      * @param ProductSupplierProvider $productSupplierProvider
      */
     public function __construct(
-        AddProductSupplierHandlerInterface $addProductSupplierHandler,
-        UpdateProductSupplierHandlerInterface $updateProductSupplierHandler,
-        DeleteProductSupplierHandlerInterface $deleteProductSupplierHandler,
         ProductUpdater $productUpdater,
         ProductProvider $productProvider,
         ProductSupplierDeleterInterface $productSupplierDeleter,
         ProductSupplierPersister $productSupplierPersister,
         ProductSupplierProvider $productSupplierProvider
     ) {
-        $this->addProductSupplierHandler = $addProductSupplierHandler;
-        $this->updateProductSupplierHandler = $updateProductSupplierHandler;
-        $this->deleteProductSupplierHandler = $deleteProductSupplierHandler;
         $this->productUpdater = $productUpdater;
         $this->productProvider = $productProvider;
         $this->productSupplierDeleter = $productSupplierDeleter;
