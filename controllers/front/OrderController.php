@@ -53,6 +53,13 @@ class OrderControllerCore extends FrontController
     protected $automaticallyAllocateInvoiceAddress = false;
 
     /**
+     * Overrides the same parameter in FrontController
+     *
+     * @var bool
+     */
+    protected $automaticallyAllocateDeliveryAddress = false;
+
+    /**
      * Initialize order controller.
      *
      * @see FrontController::init()
