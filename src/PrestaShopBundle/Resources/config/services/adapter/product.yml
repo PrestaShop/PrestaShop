@@ -337,3 +337,11 @@ services:
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AssociateProductAttachmentCommand
+
+    prestashop.adapter.product.product_supplier_validator:
+        class: PrestaShop\PrestaShop\Adapter\Product\ProductSupplierValidator
+
+    prestashop.adapter.product.product_supplier_persister:
+        class: PrestaShop\PrestaShop\Adapter\Product\ProductSupplierPersister
+        arguments:
+            - '@prestashop.adapter.product.product_supplier_validator'
