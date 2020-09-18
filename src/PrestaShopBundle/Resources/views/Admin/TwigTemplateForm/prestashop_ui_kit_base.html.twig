@@ -95,7 +95,6 @@
 
 {#--deleted {%- block form_row -%}
   {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
-
   {{- ps.form_group_row(form, { attr: form.vars.attr }, {
     'label': form.vars.label
   }) -}}
@@ -552,36 +551,68 @@
 
 {% block form_errors -%}
   {% if errors|length > 0 -%}
-    <div class="invalid-feedback-container">
+    {# If we got more then one error then we need to display popover instead of errors list #}
+    {%- if errors|length > 1 -%}
+
+      {% set popoverContainer = 'popover-error-container-'~form.vars.id %}
+      <div class="{{ popoverContainer }}"></div>
+
+      {% set popoverErrorContent %}
+        <div class="popover-error-list">
+          <ul>
+            {%- for error in errors -%}
+              <li class="text-danger"> {{
+                error.messagePluralization is null
+                ? error.messageTemplate|trans(error.messageParameters, 'form_error')
+                : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
+                }}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endset %}
+
+      <template class="js-popover-error-content" data-id="{{ form.vars.id }}">
+        {{ popoverErrorContent }}
+      </template>
+
+      {% set errorPopover %}
+        <span
+          data-toggle="form-popover-error"
+          data-id="{{ form.vars.id }}"
+          data-placement="bottom"
+          data-template='<div class="popover form-popover-error" role="tooltip"><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
+          data-trigger="hover"
+          data-container=".{{ popoverContainer }}"
+        >
+          <i class="material-icons form-error-icon">error_outline</i> <u> {{ '%count% errors'|transchoice(errors|length, {}, 'Admin.Global') }}</u>
+        </span>
+      {% endset %}
+
+      <div class="invalid-feedback-container">
+        <div class="text-danger">
+          {{ errorPopover }}
+        </div>
+      </div>
+
+      {# If there is only one error then display it without popover #}
+    {%- else -%}
       <div class="d-inline-block text-danger align-top">
         <i class="material-icons form-error-icon">error_outline</i>
       </div>
       <div class="d-inline-block">
-      {%- if errors|length > 1 -%}
-        <ul class="text-danger">
-          {%- for error in errors -%}
-            <li> {{
-              error.messagePluralization is null
-              ? error.messageTemplate|trans(error.messageParameters, 'form_error')
-              : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
-              }}
-            </li>
-          {%- endfor -%}
-        </ul>
-      {%- else -%}
-        <div class="text-danger">
-          {%- for error in errors -%}
+        {% for error in errors %}
+          <div class="text-danger">
             <p> {{
               error.messagePluralization is null
               ? error.messageTemplate|trans(error.messageParameters, 'form_error')
               : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
               }}
             </p>
-          {%- endfor -%}
-        </div>
-      {%- endif -%}
+          </div>
+        {%- endfor -%}
       </div>
-    </div>
+    {%- endif -%}
   {%- endif %}
 {%- endblock form_errors %}
 
@@ -671,7 +702,36 @@
   {% endspaceless %}
 {% endblock material_multiple_choice_table_widget %}
 
+{# Copied translatablefields_widget made to be compatible with TranslatableType.php and to be used in translatable widget#}
+{% block translatable_formatted_fields %}
+  <div class="translations tabbable" id="{{ form.vars.id }}">
+    {% if hide_locales == false and form|length > 1 %}
+      <ul class="translationsLocales nav nav-pills">
+        {% for translationsFields in form %}
+          <li class="nav-item">
+            <a href="#" data-locale="{{ translationsFields.vars.label }}" class="{% if default_locale.id_lang == translationsFields.vars.name %}active{% endif %} nav-link" data-toggle="tab" data-target=".translationsFields-{{ translationsFields.vars.id }}">
+              {{ translationsFields.vars.label|capitalize }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <div class="translationsFields tab-content">
+      {% for translationsFields in form %}
+        <div data-locale="{{ translationsFields.vars.label }}" class="translationsFields-{{ translationsFields.vars.id }} tab-pane translation-field {% if hide_locales == false and form|length > 1 %}panel panel-default{% endif %} {% if default_locale.id_lang == translationsFields.vars.name %}show active{% endif %} {% if not form.vars.valid %}field-error{% endif %} translation-label-{{ translationsFields.vars.label }}">
+          {{ form_widget(translationsFields) }}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}
+
+
 {% block translatable_widget -%}
+  {% if formatted_text_area %}
+    {{ block('translatable_formatted_fields') }}
+  {% else %}
   <div class="input-group locale-input-group js-locale-input-group d-flex">
     {% for translateField in form %}
       {% set classes = translateField.vars.attr.class|default('') ~ ' js-locale-input'%}
@@ -705,6 +765,7 @@
       </div>
     {% endif %}
   </div>
+  {% endif %}
   {{ block('form_help') }}
 {%- endblock translatable_widget %}
 
