@@ -117,6 +117,23 @@ class ProductUpdater extends AbstractObjectModelPersister
 
     /**
      * @param Product $product
+     *
+     * @throws CoreException
+     */
+    public function resetProductDefaultSupplier(Product $product): void
+    {
+        $this->update(
+            $product,
+            [
+                'id_supplier' => 0,
+                'supplier_reference' => '',
+                'wholesale_price' => 0,
+            ],
+            CannotUpdateProductException::FAILED_UPDATE_DEFAULT_SUPPLIER);
+    }
+
+    /**
+     * @param Product $product
      * @param array $propertiesToUpdate
      */
     private function fillProperties(Product $product, array $propertiesToUpdate): void
