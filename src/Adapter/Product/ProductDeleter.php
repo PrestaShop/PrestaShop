@@ -75,7 +75,7 @@ final class ProductDeleter implements ProductDeleterInterface
         $failedIds = [];
         foreach ($productIds as $productId) {
             if (!$this->deleteProduct($this->productProvider->get($productId))) {
-                $failedIds[] = $productId;
+                $failedIds[] = $productId->getValue();
             }
         }
 

@@ -97,7 +97,7 @@ final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterf
             $customizationField = $this->customizationFieldProvider->get($customizationFieldId);
 
             if (!$this->performDeletion($customizationField)) {
-                $failedIds[] = $customizationFieldId;
+                $failedIds[] = $customizationFieldId->getValue();
             }
         }
 
