@@ -90,7 +90,16 @@ class ProductSupplierPersister extends AbstractObjectModelPersister
      */
     private function fillProperties(ProductSupplier $productSupplier, array $propertiesToUpdate): void
     {
-        foreach ($propertiesToUpdate as $propertyName => $property) {
+        $existingProperties = [
+            'product_supplier_reference',
+            'id_product',
+            'id_product_attribute',
+            'id_supplier',
+            'product_supplier_price_te',
+            'id_currency',
+        ];
+
+        foreach ($existingProperties as $propertyName => $property) {
             $this->fillProperty($productSupplier, $propertyName, $propertiesToUpdate);
         }
     }

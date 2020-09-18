@@ -31,12 +31,12 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\ProductProvider;
 use PrestaShop\PrestaShop\Adapter\Product\ProductSupplierPersister;
+use PrestaShop\PrestaShop\Adapter\Product\ProductSupplierProvider;
 use PrestaShop\PrestaShop\Adapter\Product\ProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\AddProductSupplierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\DeleteProductSupplierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\SetProductSuppliersHandlerInterface;
@@ -89,6 +89,11 @@ final class SetProductSuppliersHandler extends AbstractProductHandler implements
     private $productSupplierPersister;
 
     /**
+     * @var ProductSupplierProvider
+     */
+    private $productSupplierProvider;
+
+    /**
      * @param AddProductSupplierHandlerInterface $addProductSupplierHandler
      * @param UpdateProductSupplierHandlerInterface $updateProductSupplierHandler
      * @param DeleteProductSupplierHandlerInterface $deleteProductSupplierHandler
@@ -96,6 +101,7 @@ final class SetProductSuppliersHandler extends AbstractProductHandler implements
      * @param ProductProvider $productProvider
      * @param ProductSupplierDeleterInterface $productSupplierDeleter
      * @param ProductSupplierPersister $productSupplierPersister
+     * @param ProductSupplierProvider $productSupplierProvider
      */
     public function __construct(
         AddProductSupplierHandlerInterface $addProductSupplierHandler,
@@ -104,7 +110,8 @@ final class SetProductSuppliersHandler extends AbstractProductHandler implements
         ProductUpdater $productUpdater,
         ProductProvider $productProvider,
         ProductSupplierDeleterInterface $productSupplierDeleter,
-        ProductSupplierPersister $productSupplierPersister
+        ProductSupplierPersister $productSupplierPersister,
+        ProductSupplierProvider $productSupplierProvider
     ) {
         $this->addProductSupplierHandler = $addProductSupplierHandler;
         $this->updateProductSupplierHandler = $updateProductSupplierHandler;
@@ -113,6 +120,7 @@ final class SetProductSuppliersHandler extends AbstractProductHandler implements
         $this->productProvider = $productProvider;
         $this->productSupplierDeleter = $productSupplierDeleter;
         $this->productSupplierPersister = $productSupplierPersister;
+        $this->productSupplierProvider = $productSupplierProvider;
     }
 
     /**
@@ -203,17 +211,24 @@ final class SetProductSuppliersHandler extends AbstractProductHandler implements
      */
     private function updateProductSupplier(ProductSupplierDTO $productSupplierDTO): void
     {
-        $command = new UpdateProductSupplierCommand($productSupplierDTO->getProductSupplierId());
-        $command->setCurrencyId($productSupplierDTO->getCurrencyId())
-            ->setReference($productSupplierDTO->getReference())
-            ->setPriceTaxExcluded($productSupplierDTO->getPriceTaxExcluded())
-        ;
+        $productSupplier = $this->productSupplierProvider->get(new ProductSupplierId($productSupplierDTO->getProductSupplierId()));
+        $this->productSupplierPersister->update($productSupplier, $this->formatUpdatableProperties($productSupplierDTO));
+    }
 
-        if ($productSupplierDTO->getCombinationId()) {
-            $command->setCombinationId($productSupplierDTO->getCombinationId());
-        }
-
-        $this->updateProductSupplierHandler->handle($command);
+    /**
+     * @param ProductSupplierDTO $productSupplierDTO
+     *
+     * @return array<string, mixed>
+     */
+    private function formatUpdatableProperties(ProductSupplierDTO $productSupplierDTO): array
+    {
+        return [
+            'id_currency' => $productSupplierDTO->getCurrencyId(),
+            'product_supplier_reference' => $productSupplierDTO->getReference(),
+            'id_product_attribute' => $productSupplierDTO->getCombinationId(),
+            'id_supplier' => $productSupplierDTO->getSupplierId(),
+            'product_supplier_price_te' => $productSupplierDTO->getPriceTaxExcluded(),
+        ];
     }
 
     /**
