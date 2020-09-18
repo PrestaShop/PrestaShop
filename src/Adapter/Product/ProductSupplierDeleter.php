@@ -31,22 +31,14 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelPersister;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotBulkDeleteProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotDeleteProductSupplierException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplierDeleterInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use ProductSupplier;
 
 /**
  * Deletes Product using legacy object model
  */
 final class ProductSupplierDeleter extends AbstractObjectModelPersister implements ProductSupplierDeleterInterface
 {
-    /**
-     * @var ProductSupplier[]
-     */
-    private $cachedProductSuppliers;
-
     /**
      * @var ProductSupplierProvider
      */
@@ -66,7 +58,7 @@ final class ProductSupplierDeleter extends AbstractObjectModelPersister implemen
      */
     public function delete(ProductSupplierId $productSupplierId): void
     {
-        if (!$this->deleteObjectModel($this->getProductSupplier($productSupplierId))) {
+        if (!$this->deleteObjectModel($this->productSupplierProvider->get($productSupplierId))) {
             throw new CannotDeleteProductSupplierException(
                 sprintf('Failed to delete product supplier #%d', $productSupplierId->getValue())
             );
@@ -80,7 +72,7 @@ final class ProductSupplierDeleter extends AbstractObjectModelPersister implemen
     {
         $failedIds = [];
         foreach ($productSupplierIds as $productSupplierId) {
-            if (!$this->deleteObjectModel($this->getProductSupplier($productSupplierId))) {
+            if (!$this->deleteObjectModel($this->productSupplierProvider->get($productSupplierId))) {
                 $failedIds[$productSupplierId]->getValue();
             }
         }
@@ -93,24 +85,5 @@ final class ProductSupplierDeleter extends AbstractObjectModelPersister implemen
             'Failed to delete following product suppliers: %s',
             implode(', ', $failedIds)
         ));
-    }
-
-    /**
-     * @param ProductSupplierId $productSupplierId
-     *
-     * @return ProductSupplier
-     *
-     * @throws ProductSupplierNotFoundException
-     * @throws CoreException
-     */
-    private function getProductSupplier(ProductSupplierId $productSupplierId): ProductSupplier
-    {
-        $productSupplierIdValue = $productSupplierId->getValue();
-
-        if (!isset($this->cachedProductSuppliers[$productSupplierIdValue])) {
-            $this->cachedProductSuppliers[$productSupplierIdValue] = $this->productSupplierProvider->get($productSupplierId);
-        }
-
-        return $this->cachedProductSuppliers[$productSupplierIdValue];
     }
 }
