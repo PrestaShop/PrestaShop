@@ -179,9 +179,6 @@ class ImageSettings extends BOBasePage {
         throw new Error(`Column ${columnName} was not found`);
     }
 
-    if (columnName === 'width' || columnName === 'height') {
-      return this.getNumberFromText(page, columnSelector);
-    }
     return this.getTextContent(page, columnSelector);
   }
 

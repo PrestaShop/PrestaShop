@@ -6,7 +6,7 @@ class Stores extends BOBasePage {
     super();
 
     this.pageTitle = 'Stores •';
-    this.successfulUpdateMessage = 'The settings have been successfully updated.';
+    this.contactFormSuccessfulUpdateMessage = 'The settings have been successfully updated.';
 
     this.alertSuccessBlockParagraph = '.alert-success';
 

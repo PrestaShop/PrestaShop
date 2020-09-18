@@ -15,6 +15,7 @@ module.exports = class Store {
     this.phone = storeToCreate.phone || faker.phone.phoneNumber('01########');
     this.fax = storeToCreate.fax || faker.phone.phoneNumber('01########');
 
+    this.registrationNumber = storeToCreate.registrationNumber || faker.finance.account();
     this.email = storeToCreate.email || faker.internet.email();
     this.note = storeToCreate.note || faker.lorem.sentence();
 
