@@ -340,6 +340,10 @@ services:
 
     prestashop.adapter.product.product_supplier_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductSupplierValidator
+        arguments:
+            - '@prestashop.adapter.product.product_provider'
+            - '@prestashop.adapter.supplier.supplier_provider'
+            - '@prestashop.adapter.currency.currency_provider'
 
     prestashop.adapter.product.product_supplier_persister:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductSupplierPersister
