@@ -29,16 +29,13 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductSupplierHandler;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Adapter\Product\ProductProvider;
+use PrestaShop\PrestaShop\Adapter\Product\ProductSupplierProvider;
+use PrestaShop\PrestaShop\Adapter\Product\ProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\DeleteProductSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\DeleteProductSupplierHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotDeleteProductSupplierException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplierDeleterInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShopException;
-use ProductSupplier;
 
 /**
  * Handles @var DeleteProductSupplierCommand using legacy object model
@@ -46,53 +43,55 @@ use ProductSupplier;
 final class DeleteProductSupplierHandler extends AbstractProductSupplierHandler implements DeleteProductSupplierHandlerInterface
 {
     /**
+     * @var ProductSupplierDeleterInterface
+     */
+    private $productSupplierDeleter;
+
+    /**
+     * @var ProductProvider
+     */
+    private $productProvider;
+
+    /**
+     * @var ProductSupplierProvider
+     */
+    private $productSupplierProvider;
+
+    /**
+     * @var ProductUpdater
+     */
+    private $productUpdater;
+
+    /**
+     * @param ProductSupplierDeleterInterface $productSupplierDeleter
+     * @param ProductProvider $productProvider
+     * @param ProductSupplierProvider $productSupplierProvider
+     * @param ProductUpdater $productUpdater
+     */
+    public function __construct(
+        ProductSupplierDeleterInterface $productSupplierDeleter,
+        ProductProvider $productProvider,
+        ProductSupplierProvider $productSupplierProvider,
+        ProductUpdater $productUpdater
+    ) {
+        $this->productSupplierDeleter = $productSupplierDeleter;
+        $this->productProvider = $productProvider;
+        $this->productSupplierProvider = $productSupplierProvider;
+        $this->productUpdater = $productUpdater;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(DeleteProductSupplierCommand $command): void
     {
-        $productSupplier = $this->getProductSupplier($command->getProductSupplierId());
+        $this->productSupplierDeleter->delete($command->getProductSupplierId());
+        $productSupplier = $this->productSupplierProvider->get($command->getProductSupplierId());
+        $product = $this->productProvider->get(new ProductId((int) $productSupplier->id_product));
 
-        try {
-            if (!$productSupplier->delete()) {
-                throw new CannotDeleteProductSupplierException(sprintf(
-                    'Failed deleting product supplier #%d',
-                    $productSupplier->id
-                ));
-            }
-            $this->refreshProductDefaultSupplier($productSupplier);
-        } catch (PrestaShopException $e) {
-            throw new ProductSupplierException(
-                sprintf('Error occurred when deleting product supplier #%d', $productSupplier->id),
-                0,
-                $e
-            );
+        // reset product default supplier if product default supplier was deleted
+        if ((int) $product->id_supplier === (int) $productSupplier->id_supplier) {
+            $this->productUpdater->resetProductDefaultSupplier($product);
         }
-    }
-
-    /**
-     * @param ProductSupplier $productSupplier
-     *
-     * @throws CannotUpdateProductException
-     * @throws ProductException
-     * @throws ProductNotFoundException
-     */
-    private function refreshProductDefaultSupplier(ProductSupplier $productSupplier): void
-    {
-        $productId = (int) $productSupplier->id_product;
-        $product = $this->getProduct(new ProductId($productId));
-
-        // check if default supplier was deleted with this command
-        if ((int) $product->id_supplier !== (int) $productSupplier->id_supplier) {
-            return;
-        }
-
-        $product->id_supplier = 0;
-        $product->supplier_reference = '';
-        $product->wholesale_price = 0;
-        $this->fieldsToUpdate['id_supplier'] = true;
-        $this->fieldsToUpdate['supplier_reference'] = true;
-        $this->fieldsToUpdate['wholesale_price'] = true;
-
-        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_DEFAULT_SUPPLIER);
     }
 }
