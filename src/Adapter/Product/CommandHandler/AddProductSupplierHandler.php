@@ -35,9 +35,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\AddProductSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\AddProductSupplierHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotAddProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
 use Product;
 use ProductSupplier;
@@ -60,10 +61,10 @@ final class AddProductSupplierHandler extends AbstractProductSupplierHandler imp
             $this->validateProductSupplierFields($productSupplier);
 
             if (!$productSupplier->add()) {
-                throw new ProductSupplierException('Failed to add product supplier');
+                throw new CannotAddProductSupplierException('Failed to add product supplier');
             }
         } catch (PrestaShopException $e) {
-            throw new ProductSupplierException('Error occurred when adding product supplier');
+            throw new CoreException('Error occurred when adding product supplier');
         }
 
         return new ProductSupplierId((int) $productSupplier->id);
