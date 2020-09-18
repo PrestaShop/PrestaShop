@@ -32,4 +32,13 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 
 class ProductPackException extends ProductException
 {
+    /**
+     * When fails to add product to pack
+     */
+    const FAILED_ADDING_TO_PACK = 10;
+
+    /**
+     * When fails to delete products from a pack
+     */
+    const FAILED_DELETING_PRODUCTS_FROM_PACK = 20;
 }

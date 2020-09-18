@@ -330,9 +330,10 @@ services:
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductAttachmentsCommand
 
     prestashop.adapter.product.command_handler.update_product_stock_handler:
-        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductStockCommandHandler
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductStockHandler
         arguments:
-            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.product.stock_available_provider'
+            - '@prestashop.adapter.product.product_stock_updater'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockCommand
@@ -415,3 +416,11 @@ services:
             - '@prestashop.adapter.shop.context'
             - '@translator'
             - '@prestashop.core.util.string.string_modifier'
+
+    prestashop.adapter.product.stock_available_provider:
+        class: PrestaShop\PrestaShop\Adapter\Product\Provider\StockAvailableProvider
+
+    prestashop.adapter.product.product_stock_updater:
+        class: PrestaShop\PrestaShop\Adapter\Product\Updater\ProductStockUpdater
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'

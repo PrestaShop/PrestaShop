@@ -161,6 +161,9 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             'link_rewrite' => 'productSeoOptions.localizedLinkRewrites',
             'redirect_type' => 'productSeoOptions.redirectType',
             'redirect_target' => 'productSeoOptions.redirectTarget',
+            'use_advanced_stock_management' => 'stock.useAdvancedStockManagement',
+            'depends_on_stock' => 'stock.dependsOnStock',
+            'pack_stock_type' => 'stock.packStockType',
         ];
 
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
