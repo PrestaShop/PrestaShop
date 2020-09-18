@@ -40,6 +40,20 @@ use ProductSupplier;
 class ProductSupplierPersister extends AbstractObjectModelPersister
 {
     /**
+     * @var ProductSupplierValidator
+     */
+    private $productSupplierValidator;
+
+    /**
+     * @param ProductSupplierValidator $productSupplierValidator
+     */
+    public function __construct(
+        ProductSupplierValidator $productSupplierValidator
+    ) {
+        $this->productSupplierValidator = $productSupplierValidator;
+    }
+
+    /**
      * @param ProductSupplier $productSupplier
      * @param int $errorCode
      *
@@ -49,6 +63,7 @@ class ProductSupplierPersister extends AbstractObjectModelPersister
      */
     public function add(ProductSupplier $productSupplier, int $errorCode = 0): ProductSupplierId
     {
+        $this->productSupplierValidator->validate($productSupplier);
         $id = $this->addObjectModel($productSupplier, CannotAddProductSupplierException::class, $errorCode);
 
         return new ProductSupplierId($id);
