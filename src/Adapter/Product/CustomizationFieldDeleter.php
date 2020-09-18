@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationFieldDeleterInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotBulkDeleteCustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotDeleteCustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
@@ -77,7 +78,13 @@ final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterf
     public function delete(CustomizationFieldId $customizationFieldId): void
     {
         $customizationField = $this->customizationFieldProvider->get($customizationFieldId);
-        $this->performDeletion($customizationField, CannotDeleteCustomizationFieldException::FAILED_DELETE);
+
+        if (!$this->performDeletion($customizationField)) {
+            throw new CannotDeleteCustomizationFieldException(sprintf(
+                'Failed deleting customization field #%d',
+                $customizationField->id
+            ));
+        }
     }
 
     /**
@@ -85,10 +92,23 @@ final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterf
      */
     public function bulkDelete(array $customizationFieldIds): void
     {
+        $failedIds = [];
         foreach ($customizationFieldIds as $customizationFieldId) {
             $customizationField = $this->customizationFieldProvider->get($customizationFieldId);
-            $this->performDeletion($customizationField, CannotDeleteCustomizationFieldException::FAILED_BULK_DELETE);
+
+            if (!$this->performDeletion($customizationField)) {
+                $failedIds[] = $customizationFieldId;
+            }
         }
+
+        if (empty($failedIds)) {
+            return;
+        }
+
+        throw new CannotBulkDeleteCustomizationFieldException(
+            $failedIds,
+            sprintf('Failed deleting following customization fields: "%s"', implode(', ', $failedIds))
+        );
     }
 
     /**
@@ -102,7 +122,7 @@ final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterf
      * @throws ProductException
      * @throws ProductNotFoundException
      */
-    private function performDeletion(CustomizationField $customizationField, int $errorCode): void
+    private function performDeletion(CustomizationField $customizationField): bool
     {
         $product = $this->getProduct((int) $customizationField->id_product);
         $usedFieldIds = array_map('intval', $product->getUsedCustomizationFieldsIds());
@@ -115,12 +135,7 @@ final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterf
                 $successfullyDeleted = $customizationField->delete();
             }
 
-            if (!$successfullyDeleted) {
-                throw new CannotDeleteCustomizationFieldException(
-                    sprintf('Failed deleting customization field #%d', $customizationField->id),
-                    $errorCode
-                );
-            }
+            return (bool) $successfullyDeleted;
         } catch (PrestaShopException $e) {
             throw new CustomizationFieldException(
                 sprintf(
