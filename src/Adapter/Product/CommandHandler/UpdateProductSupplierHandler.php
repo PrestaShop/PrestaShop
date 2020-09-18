@@ -28,15 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use Currency;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductSupplierHandler;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
+use PrestaShop\PrestaShop\Adapter\Product\ProductSupplierPersister;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\UpdateProductSupplierHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotUpdateProductSupplierException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierException;
-use PrestaShopException;
-use ProductSupplier;
 
 /**
  * Handles @var UpdateProductSupplierCommand using legacy object model
@@ -44,66 +39,50 @@ use ProductSupplier;
 final class UpdateProductSupplierHandler extends AbstractProductSupplierHandler implements UpdateProductSupplierHandlerInterface
 {
     /**
+     * @var ProductSupplierPersister
+     */
+    private $productSupplierPersister;
+
+    /**
+     * @param ProductSupplierPersister $productSupplierPersister
+     */
+    public function __construct(
+        ProductSupplierPersister $productSupplierPersister
+    ) {
+        $this->productSupplierPersister = $productSupplierPersister;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(UpdateProductSupplierCommand $command): void
     {
         $productSupplier = $this->getProductSupplier($command->getProductSupplierId());
-        $this->fillEntityWithCommandData($productSupplier, $command);
-
-        try {
-            $this->validateProductSupplierFields($productSupplier);
-            if (!$productSupplier->update()) {
-                throw new CannotUpdateProductSupplierException(sprintf(
-                    'Failed updating product supplier #%d',
-                    $productSupplier->id
-                ));
-            }
-        } catch (PrestaShopException $e) {
-            throw new ProductSupplierException(
-                sprintf('Error occurred when updating product supplier #%d', $productSupplier->id),
-                0,
-                $e
-            );
-        }
+        $this->productSupplierPersister->update($productSupplier, $this->formatPropertiesToUpdate($command));
     }
 
     /**
-     * @param ProductSupplier $productSupplier
      * @param UpdateProductSupplierCommand $command
      */
-    private function fillEntityWithCommandData(
-        ProductSupplier $productSupplier,
-        UpdateProductSupplierCommand $command
-    ): void {
+    private function formatPropertiesToUpdate(UpdateProductSupplierCommand $command): array
+    {
+        $propertiesToUpdate = [];
         if (null !== $command->getCurrencyId()) {
-            $currencyIdValue = $command->getCurrencyId()->getValue();
-            $this->assertCurrencyExists($currencyIdValue);
-            $productSupplier->id_currency = $currencyIdValue;
+            $propertiesToUpdate['id_currency'] = $command->getCurrencyId()->getValue();
         }
 
         if (null !== $command->getReference()) {
-            $productSupplier->product_supplier_reference = $command->getReference();
+            $propertiesToUpdate['product_supplier_reference'] = $command->getReference();
         }
 
         if (null !== $command->getPriceTaxExcluded()) {
-            $productSupplier->product_supplier_price_te = (string) $command->getPriceTaxExcluded();
+            $propertiesToUpdate['product_supplier_price_te'] = (string) $command->getPriceTaxExcluded();
         }
 
         if (null !== $command->getCombinationId()) {
-            $productSupplier->id_product_attribute = $command->getCombinationId()->getValue();
+            $propertiesToUpdate['id_product_attribute'] = $command->getCombinationId()->getValue();
         }
-    }
 
-    /**
-     * @param int $currencyId
-     *
-     * @throws CurrencyNotFoundException
-     */
-    private function assertCurrencyExists(int $currencyId): void
-    {
-        if (!Currency::existsInDatabase($currencyId, 'currency')) {
-            throw new CurrencyNotFoundException(sprintf('Currency #%d does not exist', $currencyId));
-        }
+        return $propertiesToUpdate;
     }
 }
