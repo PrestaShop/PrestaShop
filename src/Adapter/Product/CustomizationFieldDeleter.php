@@ -113,11 +113,9 @@ final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterf
 
     /**
      * @param CustomizationField $customizationField
-     * @param int $errorCode
      *
-     * @return void
+     * @return bool
      *
-     * @throws CannotDeleteCustomizationFieldException
      * @throws CustomizationFieldException
      * @throws ProductException
      * @throws ProductNotFoundException
