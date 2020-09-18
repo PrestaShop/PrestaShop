@@ -39,5 +39,5 @@ class OrderConstraintException extends OrderException
     /**
      * @var int Is used when invalid (not string) internal note provided
      */
-    const INVALID_INTERNAL_NOTE = 1;
+    const INVALID_INTERNAL_NOTE = 2;
 }
