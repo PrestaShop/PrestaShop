@@ -175,7 +175,8 @@ final class GridPresenter implements GridPresenterInterface
     private function isEmptyState(GridInterface $grid)
     {
         $filterFormData = $grid->getFilterForm()->getData();
-        if (empty($filterFormData) && 0 === $grid->getData()->getRecordsTotal()) {
+        $dataRecordsTotal = $grid->getData()->getRecordsTotal();
+        if (empty($filterFormData) && 0 === $dataRecordsTotal) {
             return true;
         }
 
@@ -186,6 +187,6 @@ final class GridPresenter implements GridPresenterInterface
             }
         }
 
-        return 0 === $grid->getData()->getRecordsTotal();
+        return 0 === $dataRecordsTotal;
     }
 }
