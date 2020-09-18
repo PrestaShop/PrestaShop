@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelPersister;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotAddProductSupplierException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotUpdateProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use ProductSupplier;
@@ -67,5 +68,30 @@ class ProductSupplierPersister extends AbstractObjectModelPersister
         $id = $this->addObjectModel($productSupplier, CannotAddProductSupplierException::class, $errorCode);
 
         return new ProductSupplierId($id);
+    }
+
+    /**
+     * @param ProductSupplier $productSupplier
+     * @param array $propertiesToUpdate
+     * @param int $errorCode
+     *
+     * @throws CoreException
+     */
+    public function update(ProductSupplier $productSupplier, array $propertiesToUpdate, int $errorCode = 0): void
+    {
+        $this->fillProperties($productSupplier, $propertiesToUpdate);
+        $this->productSupplierValidator->validate($productSupplier);
+        $this->updateObjectModel($productSupplier, CannotUpdateProductSupplierException::class, $errorCode);
+    }
+
+    /**
+     * @param ProductSupplier $productSupplier
+     * @param array $propertiesToUpdate
+     */
+    private function fillProperties(ProductSupplier $productSupplier, array $propertiesToUpdate): void
+    {
+        foreach ($propertiesToUpdate as $propertyName => $property) {
+            $this->fillProperty($productSupplier, $propertyName, $propertiesToUpdate);
+        }
     }
 }
