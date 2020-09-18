@@ -78,7 +78,7 @@ describe('Pagination and sort image settings', async () => {
       const createImageTypeData = new ImageTypeFaker({name: `todelete${index}`});
 
       it('should go to add new image type page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToAddImageTypePage', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `goToAddImageTypePage${index}`, baseContext);
 
         await imageSettingsPage.goToNewImageTypePage(page);
         const pageTitle = await addImageTypePage.getPageTitle(page);
@@ -86,7 +86,7 @@ describe('Pagination and sort image settings', async () => {
       });
 
       it('should create image type and check result', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'createImageType', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `createImageType${index}`, baseContext);
 
         const textResult = await addImageTypePage.createEditImageType(page, createImageTypeData);
         await expect(textResult).to.contains(imageSettingsPage.successfulCreationMessage);
