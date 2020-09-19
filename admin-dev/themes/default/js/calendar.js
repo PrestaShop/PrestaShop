@@ -71,7 +71,7 @@ Date.parseDate = function(date, format) {
 		date.setSeconds(0);
 		date.setMilliseconds(0);
 
-		for (var i=0; i<=formatParts.length; i++) {
+		for (var i=0; i<formatParts.length; i++) {
 			switch(formatParts[i]) {
 				case 'dd':
 				case 'd':
@@ -142,7 +142,7 @@ Date.prototype.format = function(format) {
 	var formatParts     = format.split(/\W+/);
 	var result          = '';
 
-	for (var i=0; i<=formatParts.length; i++) {
+	for (var i=0; i<formatParts.length; i++) {
 		switch(formatParts[i]) {
 			case 'd':
 			case 'j':
