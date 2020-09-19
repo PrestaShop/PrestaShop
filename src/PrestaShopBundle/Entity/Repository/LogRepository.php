@@ -28,34 +28,24 @@ namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
-use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
-use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicatorInterface;
-use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Repository\RepositoryInterface;
 
 /**
  * Retrieve Logs data from database.
  */
-class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterface
+class LogRepository implements RepositoryInterface
 {
     private $connection;
     private $databasePrefix;
     private $logTable;
 
-    /**
-     * @var DoctrineSearchCriteriaApplicatorInterface
-     */
-    private $searchCriteriaApplicator;
-
     public function __construct(
         Connection $connection,
-        $databasePrefix,
-        DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
+        $databasePrefix
     ) {
         $this->connection = $connection;
         $this->databasePrefix = $databasePrefix;
         $this->logTable = $this->databasePrefix . 'log';
-        $this->searchCriteriaApplicator = $searchCriteriaApplicator;
     }
 
     /**
@@ -167,106 +157,5 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
         $platform = $this->connection->getDatabasePlatform();
 
         return $this->connection->executeUpdate($platform->getTruncateTableSQL($this->logTable, true));
-    }
-
-    /**
-     * Get query that searches grid rows.
-     *
-     * @param SearchCriteriaInterface|null $searchCriteria
-     *
-     * @return QueryBuilder
-     */
-    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
-    {
-        $qb = $this->buildGridQuery($searchCriteria);
-        $qb->select('l.*', 'e.email', 'CONCAT(e.firstname, \' \', e.lastname) as employee');
-
-        $this->searchCriteriaApplicator
-            ->applyPagination($searchCriteria, $qb)
-            ->applySorting($searchCriteria, $qb);
-
-        return $qb;
-    }
-
-    /**
-     * Get query that counts grid rows.
-     *
-     * @param SearchCriteriaInterface|null $searchCriteria
-     *
-     * @return QueryBuilder
-     */
-    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
-    {
-        $qb = $this->buildGridQuery($searchCriteria);
-        $qb->select('COUNT(*)');
-
-        return $qb;
-    }
-
-    /**
-     * Build query body without select, sorting & limiting.
-     *
-     * @param SearchCriteriaInterface|null $searchCriteria
-     *
-     * @return QueryBuilder
-     */
-    private function buildGridQuery(SearchCriteriaInterface $searchCriteria)
-    {
-        $allowedFilters = [
-            'id_log',
-            'firstname',
-            'lastname',
-            'severity',
-            'message',
-            'object_type',
-            'object_id',
-            'error_code',
-            'date_add',
-        ];
-
-        $employeeTable = $this->databasePrefix . 'employee';
-
-        $qb = $this->connection
-            ->createQueryBuilder()
-            ->from($this->logTable, 'l')
-            ->leftJoin('l', $employeeTable, 'e', 'l.id_employee = e.id_employee');
-
-        if (null === $searchCriteria) {
-            return $qb;
-        }
-
-        $filters = $searchCriteria->getFilters();
-        foreach ($filters as $filterName => $filterValue) {
-            if (empty($filterValue)) {
-                continue;
-            }
-            if (!in_array($filterName, $allowedFilters)) {
-                continue;
-            }
-
-            if ('employee' == $filterName) {
-                $qb->andWhere('e.lastname LIKE :employee OR e.firstname LIKE :employee');
-                $qb->setParameter('employee', '%' . $filterValue . '%');
-
-                continue;
-            }
-
-            if ('date_add' == $filterName) {
-                if (!empty($filterValue['from']) &&
-                    !empty($filterValue['to'])
-                ) {
-                    $qb->andWhere('l.date_add >= :date_from AND l.date_add <= :date_to');
-                    $qb->setParameter('date_from', sprintf('%s 0:0:0', $filterValue['from']));
-                    $qb->setParameter('date_to', sprintf('%s 23:59:59', $filterValue['to']));
-                }
-
-                continue;
-            }
-
-            $qb->andWhere("$filterName LIKE :$filterName");
-            $qb->setParameter($filterName, '%' . $filterValue . '%');
-        }
-
-        return $qb;
     }
 }
