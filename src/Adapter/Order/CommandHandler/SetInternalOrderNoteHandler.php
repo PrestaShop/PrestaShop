@@ -32,6 +32,8 @@ use Order;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\SetInternalOrderNoteCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\SetInternalOrderNoteHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 
 /**
@@ -51,6 +53,13 @@ final class SetInternalOrderNoteHandler extends AbstractOrderHandler implements 
         $order = $this->getOrder($command->getOrderId());
 
         $order->note = $command->getInternalNote();
-        $order->update();
+
+        if (false === $order->validateFields(false)) {
+            throw new OrderConstraintException(sprintf('Invalid note "%s" provided for order with id "%d".', $command->getInternalNote(), $command->getOrderId()->getValue()), OrderConstraintException::INVALID_INTERNAL_NOTE);
+        }
+
+        if (false === $order->update()) {
+            throw new OrderException(sprintf('An error occurred when setting note for order with id "%d".', $command->getOrderId()->getValue()));
+        }
     }
 }
