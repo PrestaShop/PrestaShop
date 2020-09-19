@@ -58,6 +58,11 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
      * @var string the URL for redirection
      */
     private $redirectionUrl;
+    
+    /**
+     * @var bool
+     */
+    private $isMultistoreFeatureEnabled;
 
     /**
      * LogGridDefinitionFactory constructor.
@@ -69,11 +74,13 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
         $resetActionUrl,
-        $redirectionUrl
+        $redirectionUrl,
+        $isMultistoreFeatureEnabled
     ) {
         parent::__construct($hookDispatcher);
         $this->resetActionUrl = $resetActionUrl;
         $this->redirectionUrl = $redirectionUrl;
+        $this->isMultistoreFeatureEnabled = $isMultistoreFeatureEnabled;
     }
 
     /**
@@ -97,7 +104,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getColumns()
     {
-        return (new ColumnCollection())
+        $columns = (new ColumnCollection())
             ->add(
                 (new DataColumn('id_log'))
                     ->setName($this->trans('ID', [], 'Admin.Global'))
@@ -160,6 +167,23 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new ActionColumn('actions'))
                     ->setName($this->trans('Actions', [], 'Admin.Global'))
             );
+        
+        if ($this->isMultistoreFeatureEnabled) {
+            $columns
+				->addAfter('object_id',
+					(new DataColumn('shop_name'))
+						->setName($this->trans('Shop', [], 'Admin.Global'))
+						->setOptions(['field' => 'shop_name'])
+				)
+				->addAfter('shop_name',
+					(new DataColumn('language'))
+						->setName($this->trans('Language', [], 'Admin.Global'))
+						->setOptions(['field' => 'language'])
+				);	
+				
+        }
+        
+        return $columns;
     }
 
     /**
