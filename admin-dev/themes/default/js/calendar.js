@@ -437,27 +437,27 @@ $( document ).ready(function() {
 	});
 
 	$('.submitDateDay').on('click',function(e){
-		e.preventDefault;
+		e.preventDefault();
 		setDayPeriod();
 	});
 	$('.submitDateMonth').on('click',function(e){
-		e.preventDefault;
+		e.preventDefault();
 		setMonthPeriod()
 	});
 	$('.submitDateYear').on('click',function(e){
-		e.preventDefault;
+		e.preventDefault();
 		setYearPeriod();
 	});
 	$('.submitDateDayPrev').on('click',function(e){
-		e.preventDefault;
+		e.preventDefault();
 		setPreviousDayPeriod();
 	});
 	$('.submitDateMonthPrev').on('click',function(e){
-		e.preventDefault;
+		e.preventDefault();
 		setPreviousMonthPeriod();
 	});
 	$('.submitDateYearPrev').on('click',function(e){
-		e.preventDefault;
+		e.preventDefault();
 		setPreviousYearPeriod();
 	});
 });
