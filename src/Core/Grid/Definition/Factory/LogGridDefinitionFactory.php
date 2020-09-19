@@ -172,7 +172,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
             $columns
                 ->addAfter('object_id',
                     (new DataColumn('shop_name'))
-                        ->setName($this->trans('Shop', [], 'Admin.Global'))
+                        ->setName($this->trans('Shop context', [], 'Admin.Global'))
                         ->setOptions(['field' => 'shop_name'])
                 )
                 ->addAfter('shop_name',
