@@ -63,6 +63,18 @@ class PrestaShopLoggerCore extends ObjectModel
 
     /** @var string Object last modification date */
     public $date_upd;
+    
+    /** @var int Shop ID */
+    public $id_shop;
+
+    /** @var int Shop group ID */
+    public $id_shop_group;
+
+    /** @var int Language ID */
+    public $id_lang;
+
+    /** @var bool In all shop */
+    public $in_all_shop;
 
     /**
      * @see ObjectModel::$definition
@@ -75,6 +87,10 @@ class PrestaShopLoggerCore extends ObjectModel
             'error_code' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
             'message' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true],
             'object_id' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'id_shop' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'id_shop_group' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'id_lang' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'in_all_shop' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
             'object_type' => ['type' => self::TYPE_STRING, 'validate' => 'isName'],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
@@ -129,9 +145,11 @@ class PrestaShopLoggerCore extends ObjectModel
         $log->message = pSQL($message);
         $log->date_add = date('Y-m-d H:i:s');
         $log->date_upd = date('Y-m-d H:i:s');
+        
+        $context = Context::getContext();
 
-        if ($idEmployee === null && isset(Context::getContext()->employee) && Validate::isLoadedObject(Context::getContext()->employee)) {
-            $idEmployee = Context::getContext()->employee->id;
+        if ($idEmployee === null && isset($context->employee) && Validate::isLoadedObject($context->employee)) {
+            $idEmployee = $context->employee->id;
         }
 
         if ($idEmployee !== null) {
@@ -142,6 +160,11 @@ class PrestaShopLoggerCore extends ObjectModel
             $log->object_type = pSQL($objectType);
             $log->object_id = (int) $objectId;
         }
+        
+        $log->id_lang = (int) $context->language->id ?? null;
+		$log->in_all_shop = (Shop::getContext() == Shop::CONTEXT_ALL) ?? false;
+        $log->id_shop = (Shop::getContext() == Shop::CONTEXT_SHOP) ? (int) $context->shop->getContextualShopId() : null;
+        $log->id_shop_group = (Shop::getContext() == Shop::CONTEXT_GROUP) ? (int) $context->shop->getContextShopGroupID() : null;
 
         if ($objectType != 'Swift_Message') {
             PrestaShopLogger::sendByMail($log);
@@ -160,14 +183,23 @@ class PrestaShopLoggerCore extends ObjectModel
     }
 
     /**
-     * this function md5($this->message.$this->severity.$this->error_code.$this->object_type.$this->object_id).
      *
      * @return string hash
      */
     public function getHash()
     {
         if (empty($this->hash)) {
-            $this->hash = md5($this->message . $this->severity . $this->error_code . $this->object_type . $this->object_id);
+            $this->hash = md5(
+				$this->message . 
+				$this->severity . 
+				$this->error_code . 
+				$this->object_type . 
+				$this->object_id .
+				$this->id_shop .
+				$this->id_shop_group .
+				$this->id_lang .
+				$this->in_all_shop
+			);
         }
 
         return $this->hash;
@@ -196,15 +228,20 @@ class PrestaShopLoggerCore extends ObjectModel
     protected function isPresent()
     {
         if (!isset(self::$is_present[md5($this->message)])) {
-            self::$is_present[$this->getHash()] = Db::getInstance()->getValue('SELECT COUNT(*)
-				FROM `' . _DB_PREFIX_ . 'log`
-				WHERE
-					`message` = \'' . $this->message . '\'
-					AND `severity` = \'' . $this->severity . '\'
-					AND `error_code` = \'' . $this->error_code . '\'
-					AND `object_type` = \'' . $this->object_type . '\'
-					AND `object_id` = \'' . $this->object_id . '\'
-				');
+            self::$is_present[$this->getHash()] = Db::getInstance()->getValue(
+				( new DbQuery())
+					->select('COUNT(*)')
+					->from('log', 'l')
+					->where('message ="'.pSQL($this->message).'"')
+					->where('severity = '. (int)$this->severity)
+					->where('error_code = '.(int) $this->error_code)
+					->where('object_type ="'.pSQL($this->object_type).'"')
+					->where('object_id = '.(int) $this->object_id)
+					->where('id_shop = '.(int) $this->id_shop)
+					->where('id_shop_group = '.(int) $this->id_shop_group)
+					->where('id_lang = '.(int) $this->id_lang)
+					->where('in_all_shop = '. (int)$this->in_all_shop)
+            );
         }
 
         return self::$is_present[$this->getHash()];
