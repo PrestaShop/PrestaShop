@@ -58,7 +58,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
      * @var string the URL for redirection
      */
     private $redirectionUrl;
-    
+
     /**
      * @var bool
      */
@@ -167,22 +167,21 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new ActionColumn('actions'))
                     ->setName($this->trans('Actions', [], 'Admin.Global'))
             );
-        
+
         if ($this->isMultistoreFeatureEnabled) {
             $columns
-				->addAfter('object_id',
-					(new DataColumn('shop_name'))
-						->setName($this->trans('Shop', [], 'Admin.Global'))
-						->setOptions(['field' => 'shop_name'])
-				)
-				->addAfter('shop_name',
-					(new DataColumn('language'))
-						->setName($this->trans('Language', [], 'Admin.Global'))
-						->setOptions(['field' => 'language'])
-				);	
-				
+                ->addAfter('object_id',
+                    (new DataColumn('shop_name'))
+                        ->setName($this->trans('Shop', [], 'Admin.Global'))
+                        ->setOptions(['field' => 'shop_name'])
+                )
+                ->addAfter('shop_name',
+                    (new DataColumn('language'))
+                        ->setName($this->trans('Language', [], 'Admin.Global'))
+                        ->setOptions(['field' => 'language'])
+                );
         }
-        
+
         return $columns;
     }
 

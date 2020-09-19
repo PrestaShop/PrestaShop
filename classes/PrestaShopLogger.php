@@ -63,7 +63,7 @@ class PrestaShopLoggerCore extends ObjectModel
 
     /** @var string Object last modification date */
     public $date_upd;
-    
+
     /** @var int Shop ID */
     public $id_shop;
 
@@ -145,7 +145,7 @@ class PrestaShopLoggerCore extends ObjectModel
         $log->message = pSQL($message);
         $log->date_add = date('Y-m-d H:i:s');
         $log->date_upd = date('Y-m-d H:i:s');
-        
+
         $context = Context::getContext();
 
         if ($idEmployee === null && isset($context->employee) && Validate::isLoadedObject($context->employee)) {
@@ -160,9 +160,9 @@ class PrestaShopLoggerCore extends ObjectModel
             $log->object_type = pSQL($objectType);
             $log->object_id = (int) $objectId;
         }
-        
+
         $log->id_lang = (int) $context->language->id ?? null;
-		$log->in_all_shop = (Shop::getContext() == Shop::CONTEXT_ALL) ?? false;
+        $log->in_all_shop = (Shop::getContext() == Shop::CONTEXT_ALL) ?? false;
         $log->id_shop = (Shop::getContext() == Shop::CONTEXT_SHOP) ? (int) $context->shop->getContextualShopId() : null;
         $log->id_shop_group = (Shop::getContext() == Shop::CONTEXT_GROUP) ? (int) $context->shop->getContextShopGroupID() : null;
 
@@ -183,23 +183,22 @@ class PrestaShopLoggerCore extends ObjectModel
     }
 
     /**
-     *
      * @return string hash
      */
     public function getHash()
     {
         if (empty($this->hash)) {
             $this->hash = md5(
-				$this->message . 
-				$this->severity . 
-				$this->error_code . 
-				$this->object_type . 
-				$this->object_id .
-				$this->id_shop .
-				$this->id_shop_group .
-				$this->id_lang .
-				$this->in_all_shop
-			);
+                $this->message .
+                $this->severity .
+                $this->error_code .
+                $this->object_type .
+                $this->object_id .
+                $this->id_shop .
+                $this->id_shop_group .
+                $this->id_lang .
+                $this->in_all_shop
+            );
         }
 
         return $this->hash;
@@ -229,18 +228,18 @@ class PrestaShopLoggerCore extends ObjectModel
     {
         if (!isset(self::$is_present[md5($this->message)])) {
             self::$is_present[$this->getHash()] = Db::getInstance()->getValue(
-				( new DbQuery())
-					->select('COUNT(*)')
-					->from('log', 'l')
-					->where('message ="'.pSQL($this->message).'"')
-					->where('severity = '. (int)$this->severity)
-					->where('error_code = '.(int) $this->error_code)
-					->where('object_type ="'.pSQL($this->object_type).'"')
-					->where('object_id = '.(int) $this->object_id)
-					->where('id_shop = '.(int) $this->id_shop)
-					->where('id_shop_group = '.(int) $this->id_shop_group)
-					->where('id_lang = '.(int) $this->id_lang)
-					->where('in_all_shop = '. (int)$this->in_all_shop)
+                ( new DbQuery())
+                    ->select('COUNT(*)')
+                    ->from('log', 'l')
+                    ->where('message ="' . pSQL($this->message) . '"')
+                    ->where('severity = ' . (int) $this->severity)
+                    ->where('error_code = ' . (int) $this->error_code)
+                    ->where('object_type ="' . pSQL($this->object_type) . '"')
+                    ->where('object_id = ' . (int) $this->object_id)
+                    ->where('id_shop = ' . (int) $this->id_shop)
+                    ->where('id_shop_group = ' . (int) $this->id_shop_group)
+                    ->where('id_lang = ' . (int) $this->id_lang)
+                    ->where('in_all_shop = ' . (int) $this->in_all_shop)
             );
         }
 

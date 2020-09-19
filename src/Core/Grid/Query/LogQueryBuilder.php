@@ -60,15 +60,15 @@ final class LogQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria) : QueryBuilder
+    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $queryBuilder = $this->getQueryBuilder()
-			->select('lg.*')
-			->from($this->dbPrefix . 'log', 'lg');
-			
+            ->select('lg.*')
+            ->from($this->dbPrefix . 'log', 'lg');
+
         $this->applyAssociatedQueries($queryBuilder);
-		$this->applyFilters($searchCriteria->getFilters(), $queryBuilder);
-		
+        $this->applyFilters($searchCriteria->getFilters(), $queryBuilder);
+
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $queryBuilder)
             ->applySorting($searchCriteria, $queryBuilder);
@@ -79,39 +79,39 @@ final class LogQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria) : QueryBuilder
+    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         return $this
-			->getQueryBuilder()
-			->select('COUNT(*)')
-			->from($this->dbPrefix . 'log', 'lg')
-		;
+            ->getQueryBuilder()
+            ->select('COUNT(*)')
+            ->from($this->dbPrefix . 'log', 'lg')
+        ;
     }
-    
-    private function applyAssociatedQueries(QueryBuilder $queryBuilder) : void
+
+    private function applyAssociatedQueries(QueryBuilder $queryBuilder): void
     {
-		$this->appendEmployeQuery($queryBuilder);        
+        $this->appendEmployeQuery($queryBuilder);
         $this->appendShopQuery($queryBuilder);
         $this->appendLangQuery($queryBuilder);
         $this->appendShopGroupQuery($queryBuilder);
-	}
+    }
 
     /**
      * Get generic query builder.
      *
      * @return QueryBuilder
      */
-    private function getQueryBuilder() : QueryBuilder
+    private function getQueryBuilder(): QueryBuilder
     {
         return $this->connection->createQueryBuilder();
     }
-    
+
     /**
      * Append "Shop" column to logs query builder.
      *
      * @param QueryBuilder $queryBuilder
      */
-    private function appendShopQuery(QueryBuilder $queryBuilder) : void
+    private function appendShopQuery(QueryBuilder $queryBuilder): void
     {
         $shopQueryBuilder = $this->connection->createQueryBuilder()
             ->select('s.name')
@@ -121,13 +121,13 @@ final class LogQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $queryBuilder->addSelect('(' . $shopQueryBuilder->getSQL() . ') as shop_name');
     }
-    
+
     /**
      * Append "Shop group" column to logs query builder.
      *
      * @param QueryBuilder $queryBuilder
      */
-    private function appendShopGroupQuery(QueryBuilder $queryBuilder) : void
+    private function appendShopGroupQuery(QueryBuilder $queryBuilder): void
     {
         $shopQueryBuilder = $this->connection->createQueryBuilder()
             ->select('sg.name')
@@ -137,13 +137,13 @@ final class LogQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $queryBuilder->addSelect('(' . $shopQueryBuilder->getSQL() . ') as shop_group_name');
     }
-    
+
     /**
      * Append "Lang" column to logs query builder.
      *
      * @param QueryBuilder $queryBuilder
      */
-    private function appendLangQuery(QueryBuilder $queryBuilder) : void
+    private function appendLangQuery(QueryBuilder $queryBuilder): void
     {
         $shopQueryBuilder = $this->connection->createQueryBuilder()
             ->select('lng.name')
@@ -153,20 +153,20 @@ final class LogQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $queryBuilder->addSelect('(' . $shopQueryBuilder->getSQL() . ') as language');
     }
-    
+
     /**
      * Append "Employee" column to logs query builder.
      *
      * @param QueryBuilder $queryBuilder
      */
-    private function appendEmployeQuery(QueryBuilder $queryBuilder) : void
+    private function appendEmployeQuery(QueryBuilder $queryBuilder): void
     {
         $queryBuilder
-			->addSelect($this->getEmployeField(false).' as employee, e.email')
-			->leftJoin('lg', $this->dbPrefix . 'employee', 'e','e.id_employee = lg.id_employee')
-		;
+            ->addSelect($this->getEmployeField(false) . ' as employee, e.email')
+            ->leftJoin('lg', $this->dbPrefix . 'employee', 'e', 'e.id_employee = lg.id_employee')
+        ;
     }
-    
+
     /**
      * Apply filters to log query builder.
      *
@@ -204,7 +204,7 @@ final class LogQueryBuilder extends AbstractDoctrineQueryBuilder
 
                 continue;
             }
-            
+
             if ('employee' === $filterName) {
                 $alias = $this->getEmployeField(true);
 
@@ -218,16 +218,16 @@ final class LogQueryBuilder extends AbstractDoctrineQueryBuilder
             $qb->setParameter($filterName, '%' . $filterValue . '%');
         }
     }
-    
+
     /**
      * @return string
      */
-    private function getEmployeField(bool $full = true) : string 
+    private function getEmployeField(bool $full = true): string
     {
         if (!$full) {
-			return 'CONCAT(LEFT(e.`firstname`, 1), \'. \', e.`lastname`)';
-		} else {
-			return 'CONCAT(e.`firstname`, \' \', e.`lastname`)';
-		}
+            return 'CONCAT(LEFT(e.`firstname`, 1), \'. \', e.`lastname`)';
+        } else {
+            return 'CONCAT(e.`firstname`, \' \', e.`lastname`)';
+        }
     }
 }

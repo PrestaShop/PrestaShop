@@ -42,7 +42,7 @@ final class LogDataFactory implements GridDataFactoryInterface
      * @var GridDataFactoryInterface
      */
     private $dataFactory;
-    
+
     /**
      * @var TranslatorInterface
      */
@@ -52,9 +52,9 @@ final class LogDataFactory implements GridDataFactoryInterface
      * @param GridDataFactoryInterface $dataFactory
      */
     public function __construct(
-		GridDataFactoryInterface $dataFactory,
-		TranslatorInterface $translator
-    ){
+        GridDataFactoryInterface $dataFactory,
+        TranslatorInterface $translator
+    ) {
         $this->dataFactory = $dataFactory;
         $this->translator = $translator;
     }
@@ -62,7 +62,7 @@ final class LogDataFactory implements GridDataFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function getData(SearchCriteriaInterface $searchCriteria) : GridData
+    public function getData(SearchCriteriaInterface $searchCriteria): GridData
     {
         $data = $this->dataFactory->getData($searchCriteria);
 
@@ -82,34 +82,34 @@ final class LogDataFactory implements GridDataFactoryInterface
      *
      * @return array
      */
-    private function modifyRecords(array $records) : array
+    private function modifyRecords(array $records): array
     {
-        foreach ($records as $key => $record) {				
-				$records[$key]['shop_name'] = $this->ShopContextFormated($record);
-				$records[$key]['language'] = $records[$key]['language'] ?? '---';
+        foreach ($records as $key => $record) {
+            $records[$key]['shop_name'] = $this->ShopContextFormated($record);
+            $records[$key]['language'] = $records[$key]['language'] ?? '---';
         }
 
         return $records;
     }
-    
-    private function ShopContextFormated(array $record) : string
+
+    private function ShopContextFormated(array $record): string
     {
-		$shop_name = '--';
-		
-		if ($record['in_all_shop']) {
-			$shop_name = $this->translator->trans('All shops', [], 'Admin.Global');
-		}
-		
-		if ($record['id_shop'] && !$record['id_shop_group']) {
-			$shop_name = $this->translator->trans('Shop', [], 'Admin.Global');
-			$shop_name .= ' '.$record['shop_name'].'(id : '.$record['id_shop'].')';
-		}
-		
-		if (!$record['id_shop'] && $record['id_shop_group']) {
-			$shop_name = $this->translator->trans('Shop group', [], 'Admin.Global');
-			$shop_name .= ' '.$record['shop_group_name'].'(id : '.$record['id_shop_group'].')';
-		}
-		
-		return $shop_name;	
-	}
+        $shop_name = '--';
+
+        if ($record['in_all_shop']) {
+            $shop_name = $this->translator->trans('All shops', [], 'Admin.Global');
+        }
+
+        if ($record['id_shop'] && !$record['id_shop_group']) {
+            $shop_name = $this->translator->trans('Shop', [], 'Admin.Global');
+            $shop_name .= ' ' . $record['shop_name'] . '(id : ' . $record['id_shop'] . ')';
+        }
+
+        if (!$record['id_shop'] && $record['id_shop_group']) {
+            $shop_name = $this->translator->trans('Shop group', [], 'Admin.Global');
+            $shop_name .= ' ' . $record['shop_group_name'] . '(id : ' . $record['id_shop_group'] . ')';
+        }
+
+        return $shop_name;
+    }
 }
