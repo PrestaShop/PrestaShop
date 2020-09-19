@@ -176,7 +176,7 @@ class OrderCore extends ObjectModel
     /**
      * @var string internal order note, what is only available in BO
      */
-    public $note;
+    public $note = '';
 
     /**
      * @see ObjectModel::$definition
