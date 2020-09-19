@@ -20,3 +20,10 @@ ALTER TABLE `PREFIX_employee` ADD `has_enabled_gravatar` TINYINT UNSIGNED DEFAUL
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES
     ('PS_COOKIE_SAMESITE', 'Lax', NOW(), NOW())
 ;
+
+ALTER TABLE `PREFIX_log`
+  ADD `id_shop` INT(10) NULL DEFAULT NULL after `object_id`,
+  ADD `id_shop_group` INT(10) NULL DEFAULT NULL after `id_shop`,
+  ADD `id_lang` INT(10) NULL DEFAULT NULL after `id_shop_group`,
+  ADD `in_all_shop` tinyint(1) unsigned NOT NULL DEFAULT '0'
+;
