@@ -75,7 +75,7 @@ final class LogsByEmailType extends CommonAbstractType
      */
     private function getSeveritysChoices()
     {
-        return (SymfonyContainer::getInstance())
+        return SymfonyContainer::getInstance()
             ->get('prestashop.core.form.choice_provider.log_severity')
             ->getChoices();
     }
