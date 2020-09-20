@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SubmitGridAction;
@@ -40,7 +41,6 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
-use PrestaShopLogger;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -293,13 +293,15 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
             );
     }
 
+    /**
+     * Get log severity choices for form.
+     *
+     * @return array
+     */
     private function getSeveritysChoices()
     {
-        return [
-            $this->trans('Informative only', [], 'Admin.Advparameters.Help') => PrestaShopLogger::LOG_SEVERITY_LEVEL_INFORMATIVE,
-            $this->trans('Warning', [], 'Admin.Advparameters.Help') => PrestaShopLogger::LOG_SEVERITY_LEVEL_WARNING,
-            $this->trans('Error', [], 'Admin.Advparameters.Help') => PrestaShopLogger::LOG_SEVERITY_LEVEL_ERROR,
-            $this->trans('Major issue (crash)!', [], 'Admin.Advparameters.Help') => PrestaShopLogger::LOG_SEVERITY_LEVEL_MAJOR,
-        ];
+        return (SymfonyContainer::getInstance())
+            ->get('prestashop.core.form.choice_provider.log_severity')
+            ->getChoices();
     }
 }
