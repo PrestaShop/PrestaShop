@@ -24,44 +24,44 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs;
+namespace PrestaShopBundle\Form\Admin\Type;
 
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
-use PrestaShopBundle\Form\Admin\Type\LogSeverityChoiceType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShopLogger;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This form class generates the "Logs by email" form in Logs page.
+ * Class LogSeverityChoiceType.
  */
-final class LogsByEmailType extends CommonAbstractType
+class LogSeverityChoiceType extends TranslatorAwareType
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('logs_by_email', LogSeverityChoiceType::class, [
-                'label' => false,
-            ]);
-    }
-
     /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'Admin.Advparameters.Feature',
+            'choices' => $this->getSeveritysChoices(),
+            'required' => false,
+            'choice_translation_domain' => false,
         ]);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getParent()
     {
-        return 'logs_by_email_block';
+        return ChoiceType::class;
+    }
+    
+    private function getSeveritysChoices()
+    {
+        return [
+            $this->trans('Informative only', 'Admin.Advparameters.Help') => PrestaShopLogger::LOG_SEVERITY_LEVEL_INFORMATIVE,
+            $this->trans('Warning', 'Admin.Advparameters.Help') => PrestaShopLogger::LOG_SEVERITY_LEVEL_WARNING,
+            $this->trans('Error', 'Admin.Advparameters.Help') => PrestaShopLogger::LOG_SEVERITY_LEVEL_ERROR,
+            $this->trans('Major issue (crash)!', 'Admin.Advparameters.Help') => PrestaShopLogger::LOG_SEVERITY_LEVEL_MAJOR,
+        ];
     }
 }

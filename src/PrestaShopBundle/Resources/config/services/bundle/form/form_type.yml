@@ -1180,3 +1180,10 @@ services:
       public: true
       tags:
         - { name: form.type }
+
+    from.type.log_severity_choice_type:
+        class: 'PrestaShopBundle\Form\Admin\Type\LogSeverityChoiceType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
