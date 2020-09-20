@@ -54,7 +54,7 @@ class LogSeverityChoiceType extends TranslatorAwareType
     {
         return ChoiceType::class;
     }
-    
+
     private function getSeveritysChoices()
     {
         return [
