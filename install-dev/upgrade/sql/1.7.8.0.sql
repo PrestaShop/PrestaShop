@@ -21,6 +21,8 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VAL
     ('PS_COOKIE_SAMESITE', 'Lax', NOW(), NOW())
 ;
 
+UPDATE `PREFIX_configuration` SET `value` = '4' WHERE `name` = 'PS_LOGS_BY_EMAIL' AND `value` = '5';
+
 ALTER TABLE `PREFIX_log`
   ADD `id_shop` INT(10) NULL DEFAULT NULL after `object_id`,
   ADD `id_shop_group` INT(10) NULL DEFAULT NULL after `id_shop`,
