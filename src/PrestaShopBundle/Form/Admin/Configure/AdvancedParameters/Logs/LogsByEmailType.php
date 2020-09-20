@@ -26,8 +26,9 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs;
 
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -42,8 +43,9 @@ final class LogsByEmailType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('logs_by_email', TextType::class, [
-                'required' => true,
+            ->add('logs_by_email', ChoiceType::class, [
+                'required' => false,
+                'choices' => $this->getSeveritysChoices(),
                 'label' => false,
             ]);
     }
@@ -64,5 +66,17 @@ final class LogsByEmailType extends CommonAbstractType
     public function getBlockPrefix()
     {
         return 'logs_by_email_block';
+    }
+
+    /**
+     * Get log severity choices for form.
+     *
+     * @return array
+     */
+    private function getSeveritysChoices()
+    {
+        return (SymfonyContainer::getInstance())
+            ->get('prestashop.core.form.choice_provider.log_severity')
+            ->getChoices();
     }
 }
