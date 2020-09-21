@@ -544,3 +544,13 @@ services:
             - '@prestashop.admin.sell.order.credit_slip.credit_slip_options_form_data_provider'
             - 'PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\CreditSlipOptionsType'
             - 'CreditSlip'
+
+    prestashop.adapter.security.general.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.adapter.security.general.form_provider'
+            - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security\GeneralType'
+            - 'SecurityPageGeneral'
+            - 'general'

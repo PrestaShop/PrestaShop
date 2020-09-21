@@ -87,6 +87,7 @@
     <tab id="Payment_preferences" name="Preferences" />
     <tab id="Payment" name="Payment" />
     <tab id="Performance" name="Performance" />
+    <tab id="Security" name="Security" />
     <tab id="Permissions" name="Permissions" />
     <tab id="Positions" name="Positions" />
     <tab id="Preferences_1" name="Preferences" />
@@ -133,4 +134,7 @@
     <tab id="Zones" name="Zones" />
     <tab id="Marketing_tools" name="Module Selections" />
     <tab id="Tabs" name="Menu" />
+    <tab id="Security_1" name="Configuration" />
+    <tab id="EmployeesSessions" name="Employees Sessions" />
+    <tab id="CustomersSessions" name="Customers Sessions" />
 </entity_tab>

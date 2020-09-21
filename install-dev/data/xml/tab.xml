@@ -439,6 +439,18 @@
                 <tab id="Multistore" id_parent="Advanced_Parameters" active="0" enabled="1" hide_host_mode="0" icon="">
                     <class_name>AdminShopUrl</class_name>
                 </tab>
+                <tab id="Security" id_parent="Advanced_Parameters" active="1" enabled="1" hide_host_mode="0" icon="">
+                    <class_name>AdminParentSecurity</class_name>
+                </tab>
+                    <tab id="Security_1" id_parent="Security" active="1" enabled="1" hide_host_mode="0" icon="">
+                        <class_name>AdminSecurity</class_name>
+                    </tab>
+                    <tab id="EmployeesSessions" id_parent="Security" active="1" enabled="1" hide_host_mode="0" icon="">
+                        <class_name>AdminSecuritySessionsEmployees</class_name>
+                    </tab>
+                    <tab id="CustomersSessions" id_parent="Security" active="1" enabled="1" hide_host_mode="0" icon="">
+                        <class_name>AdminSecuritySessionsCustomers</class_name>
+                    </tab>
 
       <!--QUICK ACCESS-->
       <tab id="Quick_Access" id_parent="-1" active="1" enabled="1" hide_host_mode="0" icon="">
