@@ -45,13 +45,20 @@ class AttachmentFeatureContext extends AbstractDomainFeatureContext
     public function addAttachment(string $reference, TableNode $tableNode): void
     {
         $data = $tableNode->getRowsHash();
-        $destination = _PS_DOWNLOAD_DIR_ . 'app_icon.png';
-        copy(_PS_ROOT_DIR_ . '/tests/Integration/Behaviour/DummyFiles/app_icon.png', $destination);
+        $fileName = $data['file_name'];
+        $source = _PS_ROOT_DIR_ . '/tests/Integration/Behaviour/DummyFiles/' . $fileName;
+
+        if (!is_file($source)) {
+            throw new RuntimeException('%s is not a file', $source);
+        }
+
+        $destination = _PS_DOWNLOAD_DIR_ . $fileName;
+        copy($source, $destination);
 
         $attachment = new Attachment();
         $attachment->description = $this->parseLocalizedArray($data['description']);
         $attachment->name = $this->parseLocalizedArray($data['name']);
-        $attachment->file_name = $data['file_name'];
+        $attachment->file_name = $fileName;
         $attachment->mime = mime_content_type($destination);
         $attachment->file = pathinfo($destination, PATHINFO_BASENAME);
 
