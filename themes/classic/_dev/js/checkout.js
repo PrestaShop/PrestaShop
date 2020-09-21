@@ -44,16 +44,16 @@ function setUpCheckout() {
     $(prestashop.themeSelectors.modal).modal('show');
   });
 
-  $(prestashop.themeSelectors.checkout.giftCheckbox).on('click', (event) => {
+  $(prestashop.themeSelectors.checkout.giftCheckbox).on('click', () => {
     $('#gift').collapse('toggle');
   });
 }
 
 function toggleImage() {
   // Arrow show/hide details Checkout page
-  $(prestashop.themeSelectors.checkout.imagesLink).on('click', function (icon) {
-    icon = $(this).find('i.material-icons');
-    if (icon.text() == 'expand_more') {
+  $(prestashop.themeSelectors.checkout.imagesLink).on('click', function () {
+    const icon = $(this).find('i.material-icons');
+    if (icon.text() === 'expand_more') {
       icon.text('expand_less');
     } else {
       icon.text('expand_more');
@@ -68,7 +68,7 @@ $(document).ready(() => {
   }
 
   prestashop.on('updatedDeliveryForm', (params) => {
-    if (typeof params.deliveryOption === 'undefined' || 0 === params.deliveryOption.length) {
+    if (typeof params.deliveryOption === 'undefined' || params.deliveryOption.length === 0) {
       return;
     }
     // Hide all carrier extra content ...
