@@ -45,14 +45,21 @@ class ProductStock
      */
     private $packStockType;
 
+    /**
+     * @var string
+     */
+    private $outOfStockType;
+
     public function __construct(
         bool $useAdvancedStockManagement,
         bool $dependsOnStock,
-        string $packStockType
+        string $packStockType,
+        string $outOfStockType
     ) {
         $this->useAdvancedStockManagement = $useAdvancedStockManagement;
         $this->dependsOnStock = $dependsOnStock;
         $this->packStockType = $packStockType;
+        $this->outOfStockType = $outOfStockType;
     }
 
     /**
@@ -77,5 +84,13 @@ class ProductStock
     public function getPackStockType(): string
     {
         return $this->packStockType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOutOfStockType(): string
+    {
+        return $this->outOfStockType;
     }
 }
