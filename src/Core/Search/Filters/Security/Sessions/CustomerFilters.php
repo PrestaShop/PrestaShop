@@ -24,23 +24,26 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Feature;
+namespace PrestaShop\PrestaShop\Core\Search\Filters\Security\Sessions;
 
-use Configuration;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
- * Defines if token in urls are disabled.
+ * Class CustomerFilters is responsible for providing default filter values for Customers grid.
  */
-final class TokenInUrls
+final class CustomerFilters extends Filters
 {
-    public const DISABLED = 'disabled';
-    public const ENV_VAR = '_TOKEN_';
-
     /**
-     * @return bool
+     * {@inheritdoc}
      */
-    public static function isDisabled()
+    public static function getDefaults()
     {
-        return (bool) Configuration::get('PS_SECURITY_TOKEN') === false || getenv(self::ENV_VAR) === self::DISABLED;
+        return [
+            'limit' => 10,
+            'offset' => 0,
+            'orderBy' => 'id_customer_session',
+            'sortOrder' => 'asc',
+            'filters' => [],
+        ];
     }
 }
