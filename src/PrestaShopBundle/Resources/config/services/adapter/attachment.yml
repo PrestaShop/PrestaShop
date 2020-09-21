@@ -60,3 +60,9 @@ services:
 
   prestashop.adapter.attachment.attachment_provider:
     class: PrestaShop\PrestaShop\Adapter\Attachment\AttachmentProvider
+
+  prestashop.adapter.attachment.query_handler.get_attachment_information_list_handler:
+    arguments:
+      - '@prestashop.adapter.data_provider.attachment'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformationList' }
