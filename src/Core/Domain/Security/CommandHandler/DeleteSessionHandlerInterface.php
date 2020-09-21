@@ -24,23 +24,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Feature;
+namespace PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler;
 
-use Configuration;
+use PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteSessionCommand;
 
 /**
- * Defines if token in urls are disabled.
+ * Interface DeleteSessionHandlerInterface defines session deletion handler.
  */
-final class TokenInUrls
+interface DeleteSessionHandlerInterface
 {
-    public const DISABLED = 'disabled';
-    public const ENV_VAR = '_TOKEN_';
-
     /**
-     * @return bool
+     * Delete session.
+     *
+     * @param DeleteSessionCommand $command
      */
-    public static function isDisabled()
-    {
-        return (bool) Configuration::get('PS_SECURITY_TOKEN') === false || getenv(self::ENV_VAR) === self::DISABLED;
-    }
+    public function handle(DeleteSessionCommand $command);
 }
