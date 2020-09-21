@@ -271,35 +271,10 @@ class SecurityController extends FrameworkBundleAdminController
     protected function getErrorMessages()
     {
         return [
-            SessionConstraintException::class => [
-                SessionConstraintException::INVALID_NAME => $this->trans(
-                    'This field cannot be longer than %limit% characters (incl. HTML tags)',
-                    'Admin.Notifications.Error',
-                    ['%limit%' => SessionSettings::NAME_MAX_LENGTH]
-                ),
-            ],
             SessionNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found)',
                 'Admin.Notifications.Error'
             ),
-            CannotDeleteSuperAdminSessionException::class => $this->trans(
-                'For security reasons, you cannot delete the Administrator\'s profile.',
-                'Admin.Advparameters.Notification'
-            ),
-            FailedToDeleteSessionException::class => [
-                FailedToDeleteSessionException::UNEXPECTED_ERROR => $this->trans(
-                    'An error occurred while deleting the object.',
-                    'Admin.Notifications.Error'
-                ),
-                FailedToDeleteSessionException::PROFILE_IS_ASSIGNED_TO_EMPLOYEE => $this->trans(
-                    'Session(s) assigned to employee cannot be deleted',
-                    'Admin.Notifications.Error'
-                ),
-                FailedToDeleteSessionException::PROFILE_IS_ASSIGNED_TO_CONTEXT_EMPLOYEE => $this->trans(
-                    'You cannot delete your own profile',
-                    'Admin.Notifications.Error'
-                ),
-            ],
         ];
     }
 
