@@ -44,7 +44,7 @@ class SetAssociatedProductAttachmentsCommand
     /**
      * @var AttachmentId[]
      */
-    private $attachmentIds;
+    private $attachmentIds = [];
 
     /**
      * @param int $productId
