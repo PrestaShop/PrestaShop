@@ -190,6 +190,12 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\SupplierFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+        attachment:
+            paths:
+                features: Features/Scenario/Attachment
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\AttachmentFeatureContext
         product:
             paths:
                 features: Features/Scenario/Product
@@ -217,9 +223,5 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\DeleteProductFeatureContext
-        attachment:
-            paths:
-                features: Features/Scenario/Attachment
-            contexts:
-                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateAttachmentFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\AttachmentFeatureContext
