@@ -28,7 +28,9 @@ import $ from 'jquery';
 prestashop.selectors = {
   quantityWanted: '#quantity_wanted',
   product: {
-    imageContainer: '.quickview .images-container, .page-product:not(.modal-open) .row .images-container, .page-product:not(.modal-open) .product-container .images-container',
+    imageContainer:
+      // eslint-disable-next-line
+      '.quickview .images-container, .page-product:not(.modal-open) .row .images-container, .page-product:not(.modal-open) .product-container .images-container',
     container: '.product-container',
     availability: '#product-availability',
     actions: '.product-actions',
@@ -36,7 +38,9 @@ prestashop.selectors = {
     refresh: '.product-refresh',
     miniature: '.js-product-miniature',
     minimalQuantity: '.product-minimal-quantity',
-    addToCart: '.quickview .product-add-to-cart, .page-product:not(.modal-open) .row .product-add-to-cart, .page-product:not(.modal-open) .product-container .product-add-to-cart',
+    /* eslint-disable */
+    addToCart:
+      '.quickview .product-add-to-cart, .page-product:not(.modal-open) .row .product-add-to-cart, .page-product:not(.modal-open) .product-container .product-add-to-cart',
     prices:
       '.quickview .product-prices, .page-product:not(.modal-open) .row .product-prices, .page-product:not(.modal-open) .product-container .product-prices',
     customization:
@@ -50,6 +54,7 @@ prestashop.selectors = {
     details: '.quickview #product-details, #product-details',
     flags:
       '.quickview .product-flags, .page-product:not(.modal-open) .row .product-flags, .page-product:not(.modal-open) .product-container .product-flags',
+    /* eslint-enable */
   },
   listing: {
     quickview: '.quick-view',

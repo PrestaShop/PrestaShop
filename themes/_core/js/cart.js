@@ -59,7 +59,7 @@ $(document).ready(() => {
         $(prestashop.selectors.cart.productCustomizationId).val(0);
 
         $(prestashop.selectors.cart.lineProductQuantity).each((index, input) => {
-          let $input = $(input);
+          const $input = $(input);
           $input.attr('value', $input.val());
         });
 

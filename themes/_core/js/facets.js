@@ -34,7 +34,7 @@ function updateResults(data) {
 
 function handleError(xhr, textStatus) {
   if (textStatus === 'abort') {
-    return;
+    console.warn('Request aborted');
   }
   // TODO: feedback
 }
@@ -57,7 +57,7 @@ function makeQuery(url) {
   // returns JSON) and the non-AJAX request (that returns
   // HTML) and you just get a mess of JSON on the duplicated tab.
   const separator = url.indexOf('?') >= 0 ? '&' : '?';
-  const slightlyDifferentURL = url + separator + 'from-xhr';
+  const slightlyDifferentURL = `${url + separator}from-xhr`;
 
   currentRequest = $.ajax({
     url: slightlyDifferentURL,
@@ -68,7 +68,7 @@ function makeQuery(url) {
   });
 }
 
-$(document).ready(function () {
+$(document).ready(() => {
   prestashop.on('updateFacets', (param) => {
     makeQuery(param);
   });
