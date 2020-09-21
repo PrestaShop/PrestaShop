@@ -1,4 +1,4 @@
-name: JavaScript tests
+name: JavaScript FO tests
 on: [push, pull_request]
 jobs:
   eslint:
