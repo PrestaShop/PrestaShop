@@ -101,6 +101,18 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @AfterFeature @clear-downloads-after-feature
+     */
+    public static function clearDownloads(): void
+    {
+        foreach (glob(_PS_DOWNLOAD_DIR_ . '*') as $file) {
+            if (is_file($file) && $file !== _PS_DOWNLOAD_DIR_ . 'index.php') {
+                unlink($file);
+            }
+        }
+    }
+
+    /**
      * @AfterFeature @clear-cache-after-feature
      */
     public static function clearCacheAfterFeature()
