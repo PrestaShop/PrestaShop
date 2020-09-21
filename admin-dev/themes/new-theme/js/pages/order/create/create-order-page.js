@@ -240,7 +240,7 @@ export default class CreateOrderPage {
 
     this.$container.on('change', createOrderMap.listedProductUnitPriceInput, (e) => this.initProductChangePrice(e));
     this.$container.on('change', createOrderMap.listedProductQtyInput, (e) => this.initProductChangeQty(e));
-    this.$container.on('change', createOrderMap.addressSelect, () => this.nchangeCartAddresses());
+    this.$container.on('change', createOrderMap.addressSelect, () => this.changeCartAddresses());
     this.$container.on('click', createOrderMap.productRemoveBtn, (e) => this.initProductRemoveFromCart(e));
   }
 
