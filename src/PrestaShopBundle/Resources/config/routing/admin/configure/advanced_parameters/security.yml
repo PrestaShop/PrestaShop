@@ -49,3 +49,19 @@ admin_security_sessions_employees_delete:
         _legacy_link: AdminSecuritySessionsEmployees
     requirements:
         sessionId: \d+
+
+admin_security_sessions_employees_bulk_delete:
+    path: /sessions/employees/delete/bulk
+    methods: [DELETE]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:bulkDeleteEmployeesSessions'
+        _legacy_controller: AdminSecuritySessionsEmployees
+        _legacy_link: AdminSecuritySessionsEmployees:submitBulkdeleteemployees
+
+admin_security_sessions_customers_bulk_delete:
+    path: /sessions/customers/delete/bulk
+    methods: [DELETE]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:bulkDeleteCustomersSessions'
+        _legacy_controller: AdminSecuritySessionsCustomers
+        _legacy_link: AdminSecuritySessionsCustomers:submitBulkdeleteemployees
