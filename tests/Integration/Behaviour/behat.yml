@@ -192,7 +192,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
         product:
             paths:
-                features: Features/Scenario
+                features: Features/Scenario/Product
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
