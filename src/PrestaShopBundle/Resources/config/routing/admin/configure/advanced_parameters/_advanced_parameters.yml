@@ -45,3 +45,7 @@ _employee:
 _profiles:
     resource: "profiles.yml"
     prefix: /profiles
+
+_security:
+    resource: "security.yml"
+    prefix: /security
