@@ -111,8 +111,6 @@ describe('Sort stores by id, name, address, city, postal code, state and country
           testIdentifier: 'sortByCityDesc', sortBy: 'city', sortDirection: 'down',
         },
       },
-
-      /* Sort by post code not working, skipping it
       {
         args: {
           testIdentifier: 'sortByPostCodeAsc', sortBy: 'postcode', sortDirection: 'up', isFloat: true,
@@ -123,8 +121,6 @@ describe('Sort stores by id, name, address, city, postal code, state and country
           testIdentifier: 'sortByPostCodeDesc', sortBy: 'postcode', sortDirection: 'down', isFloat: true,
         },
       },
-       */
-
       {
         args: {
           testIdentifier: 'sortByStateAsc', sortBy: 'st!name', sortDirection: 'up',
