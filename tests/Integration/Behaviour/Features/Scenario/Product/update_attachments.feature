@@ -23,3 +23,4 @@ Feature: Update product attachments from Back Office (BO).
       | mime        | image/png              |
       | size        | 19187                  |
     When I associate attachment "att1" with product product1
+    Then product product1 should have following attachments associated: "att1"
