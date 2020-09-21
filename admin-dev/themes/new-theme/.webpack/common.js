@@ -112,6 +112,7 @@ module.exports = {
     search_engine: './js/pages/search-engine',
     shipping_preferences: './js/pages/shipping-preferences',
     specific_price_form: './js/pages/specific-price/form',
+    security: './js/pages/security',
     sql_manager: './js/pages/sql-manager',
     stock: './js/app/pages/stock',
     stock_page: './scss/pages/stock/stock_page.scss',
