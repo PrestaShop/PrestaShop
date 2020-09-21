@@ -24,23 +24,41 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Feature;
+namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security;
 
-use Configuration;
+use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
- * Defines if token in urls are disabled.
+ * This class is responsible of managing the data manipulated using forms
+ * in "Configure > Advanced Parameters > Administration" page.
  */
-final class TokenInUrls
+final class FormDataProvider implements FormDataProviderInterface
 {
-    public const DISABLED = 'disabled';
-    public const ENV_VAR = '_TOKEN_';
+    /**
+     * @var DataConfigurationInterface
+     */
+    private $dataConfiguration;
+
+    public function __construct(
+        DataConfigurationInterface $dataConfiguration
+    ) {
+        $this->dataConfiguration = $dataConfiguration;
+    }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
-    public static function isDisabled()
+    public function getData()
     {
-        return (bool) Configuration::get('PS_SECURITY_TOKEN') === false || getenv(self::ENV_VAR) === self::DISABLED;
+        return $this->dataConfiguration->getConfiguration();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setData(array $data)
+    {
+        return $this->dataConfiguration->updateConfiguration($data);
     }
 }

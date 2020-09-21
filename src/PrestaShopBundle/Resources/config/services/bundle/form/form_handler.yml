@@ -539,3 +539,13 @@ services:
       - '@prestashop.admin.configure.advanced_parameters.feature_flags_form_data_provider'
       - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagsType'
       - 'FeatureFlag'
+
+  prestashop.adapter.security.general.form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+    arguments:
+      - '@form.factory'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.adapter.security.general.form_provider'
+      - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security\GeneralType'
+      - 'SecurityPageGeneral'
+      - 'general'

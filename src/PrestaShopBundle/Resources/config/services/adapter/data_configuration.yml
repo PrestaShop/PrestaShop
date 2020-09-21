@@ -272,3 +272,8 @@ services:
     arguments:
       - '@doctrine.orm.entity_manager'
       - '@translator'
+
+  prestashop.adapter.security.general.configuration:
+    class: 'PrestaShop\PrestaShop\Core\Security\GeneralConfiguration'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
