@@ -10,7 +10,7 @@ Feature: Update product attachments from Back Office (BO).
       | name       | en-US:mug with photo |
       | is_virtual | false                |
     Then product "product1" should have following values:
-      | active           | false          |
+      | active | false |
     And product "product1" type should be standard
     Given I add new attachment "att1" with following properties:
       | description | en-US:puffin photo nr1 |
@@ -22,5 +22,20 @@ Feature: Update product attachments from Back Office (BO).
       | file_name   | app_icon.png           |
       | mime        | image/png              |
       | size        | 19187                  |
+    Given I add new attachment "att2" with following properties:
+      | description | en-US:my shop logo |
+      | name        | en-US:myShop       |
+      | file_name   | logo.jpg           |
+    Then attachment "att2" should have following properties:
+      | description | en-US:my shop logo |
+      | name        | en-US:myShop       |
+      | mime        | image/jpeg         |
+      | file_name   | logo.jpg           |
+      | size        | 2758               |
     When I associate attachment "att1" with product product1
-    Then product product1 should have following attachments associated: "att1"
+    Then product product1 should have following attachments associated: "[att1]"
+
+  Scenario: I set new association of product attachments
+    Given product product1 should have following attachments associated: "[att1]"
+    When I associate product product1 with following attachments: "[att1,att2]"
+    Then product product1 should have following attachments associated: "[att1,att2]"

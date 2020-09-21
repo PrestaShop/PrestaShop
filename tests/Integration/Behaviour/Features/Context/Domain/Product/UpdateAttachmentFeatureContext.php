@@ -29,7 +29,9 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssociateProductAttachmentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductAttachmentsCommand;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class UpdateAttachmentFeatureContext extends AbstractDomainFeatureContext
 {
@@ -44,6 +46,26 @@ class UpdateAttachmentFeatureContext extends AbstractDomainFeatureContext
         $this->getCommandBus()->handle(new AssociateProductAttachmentCommand(
             $this->getSharedStorage()->get($productReference),
             $this->getSharedStorage()->get($attachmentReference)
+        ));
+    }
+
+    /**
+     * @When I associate product :productReference with following attachments: :attachmentReferences
+     *
+     * @param string $productReference
+     * @param string $attachmentReferences
+     */
+    public function setAssociatedProductAttachments(string $productReference, string $attachmentReferences): void
+    {
+        $attachmentIds = [];
+
+        foreach (PrimitiveUtils::castStringArrayIntoArray($attachmentReferences) as $attachmentReference) {
+            $attachmentIds[] = $this->getSharedStorage()->get($attachmentReference);
+        }
+
+        $this->getCommandBus()->handle(new SetAssociatedProductAttachmentsCommand(
+            $this->getSharedStorage()->get($productReference),
+            $attachmentIds
         ));
     }
 }
