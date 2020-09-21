@@ -29,8 +29,9 @@ namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 use Customization;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Adapter\Product\Converter\PackStockTypeConverter;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Pack\PackSettings;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductForEditingHandlerInterface;
@@ -285,27 +286,7 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
         return new ProductStock(
             $product->advanced_stock_management,
             $product->depends_on_stock,
-            $this->getPackStockType((int) $product->pack_stock_type)
+            PackStockTypeConverter::convertToValueObject((int) $product->pack_stock_type)
         );
-    }
-
-    /**
-     * @param int $packStockType
-     *
-     * @return string
-     */
-    private function getPackStockType(int $packStockType): string
-    {
-        switch ($packStockType) {
-            case Pack::STOCK_TYPE_PACK_ONLY:
-                return PackSettings::STOCK_TYPE_PACK_ONLY;
-            case Pack::STOCK_TYPE_PRODUCTS_ONLY:
-                return PackSettings::STOCK_TYPE_PRODUCTS_ONLY;
-            case Pack::STOCK_TYPE_PACK_BOTH:
-                return PackSettings::STOCK_TYPE_BOTH;
-            case Pack::STOCK_TYPE_DEFAULT:
-            default:
-                return PackSettings::STOCK_TYPE_DEFAULT;
-        }
     }
 }

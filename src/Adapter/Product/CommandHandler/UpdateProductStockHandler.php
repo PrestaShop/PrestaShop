@@ -30,11 +30,11 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Adapter\Product\Converter\PackStockTypeConverter;
 use PrestaShop\PrestaShop\Adapter\Product\Provider\StockAvailableProvider;
 use PrestaShop\PrestaShop\Adapter\Product\Updater\ProductStockUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductStockHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Pack\PackSettings;
 
 /**
  * @internal
@@ -108,7 +108,7 @@ class UpdateProductStockHandler extends AbstractProductHandler implements Update
             $formattedCommand['out_of_stock'] = $command->getOutOfStockType();
         }
         if (null !== $command->getPackStockType()) {
-            $formattedCommand['pack_stock_type'] = $this->getLegacyPackStockType($command->getPackStockType()->getValue());
+            $formattedCommand['pack_stock_type'] = PackStockTypeConverter::convertToLegacy($command->getPackStockType()->getValue());
         }
         if (null !== $command->getQuantity()) {
             $formattedCommand['quantity'] = $command->getQuantity();
@@ -121,25 +121,5 @@ class UpdateProductStockHandler extends AbstractProductHandler implements Update
         }
 
         return $formattedCommand;
-    }
-
-    /**
-     * @param string $stockType
-     *
-     * @return int
-     */
-    private function getLegacyPackStockType(string $stockType): int
-    {
-        switch ($stockType) {
-            case PackSettings::STOCK_TYPE_PACK_ONLY:
-                return Pack::STOCK_TYPE_PACK_ONLY;
-            case PackSettings::STOCK_TYPE_PRODUCTS_ONLY:
-                return Pack::STOCK_TYPE_PRODUCTS_ONLY;
-            case PackSettings::STOCK_TYPE_BOTH:
-                return Pack::STOCK_TYPE_PACK_BOTH;
-            case PackSettings::STOCK_TYPE_DEFAULT:
-            default:
-                return Pack::STOCK_TYPE_DEFAULT;
-        }
     }
 }
