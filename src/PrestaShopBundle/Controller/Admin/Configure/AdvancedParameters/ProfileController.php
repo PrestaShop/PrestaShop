@@ -46,7 +46,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class ProfilesController is responsible for displaying the
+ * Class ProfileController is responsible for displaying the
  * "Configure > Advanced parameters > Team > Profiles" page.
  */
 class ProfileController extends FrameworkBundleAdminController
