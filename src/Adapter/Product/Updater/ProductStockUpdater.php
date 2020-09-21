@@ -97,10 +97,8 @@ class ProductStockUpdater extends AbstractObjectModelPersister
 
         $propertiesToUpdate['depends_on_stock'] = false;
         $propertiesToUpdate['advanced_stock_management'] = false;
-        $this->fillProperty($product, 'depends_on_stock', $propertiesToUpdate);
-        $this->fillProperty($product, 'advanced_stock_management', $propertiesToUpdate);
-        $this->fillProperty($product, 'pack_stock_type', $propertiesToUpdate);
-        $this->fillProperty($stockAvailable, 'depends_on_stock', $propertiesToUpdate);
+
+        $this->fillProperties($product, $stockAvailable, $propertiesToUpdate);
 
         $this->updateObjectModel($product, CannotUpdateProductException::class, CannotUpdateProductException::FAILED_UPDATE_STOCK);
         $this->updateObjectModel($stockAvailable, ProductStockException::class, ProductStockException::CANNOT_SAVE_STOCK_AVAILABLE);
@@ -135,9 +133,7 @@ class ProductStockUpdater extends AbstractObjectModelPersister
             $this->checkPackStockType($product, $propertiesToUpdate);
         }
 
-        $this->fillProperty($stockAvailable, 'depends_on_stock', $propertiesToUpdate);
-        $this->fillProperty($product, 'advanced_stock_management', $propertiesToUpdate);
-        $this->fillProperty($product, 'pack_stock_type', $propertiesToUpdate);
+        $this->fillProperties($product, $stockAvailable, $propertiesToUpdate);
 
         $this->updateObjectModel($product, CannotUpdateProductException::class, CannotUpdateProductException::FAILED_UPDATE_STOCK);
         $this->updateObjectModel($stockAvailable, ProductStockException::class, ProductStockException::CANNOT_SAVE_STOCK_AVAILABLE);
@@ -145,6 +141,23 @@ class ProductStockUpdater extends AbstractObjectModelPersister
         if (isset($propertiesToUpdate['depends_on_stock']) && $propertiesToUpdate['depends_on_stock']) {
             StockAvailable::synchronize($product->id);
         }
+    }
+
+    /**
+     * Filling the object is the same for classic and advanced use cases
+     *
+     * @param Product $product
+     * @param StockAvailable $stockAvailable
+     * @param array $propertiesToUpdate
+     */
+    private function fillProperties(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate): void
+    {
+        $this->fillProperty($product, 'depends_on_stock', $propertiesToUpdate);
+        $this->fillProperty($product, 'advanced_stock_management', $propertiesToUpdate);
+        $this->fillProperty($product, 'pack_stock_type', $propertiesToUpdate);
+        $this->fillProperty($product, 'out_of_stock', $propertiesToUpdate);
+        $this->fillProperty($stockAvailable, 'depends_on_stock', $propertiesToUpdate);
+        $this->fillProperty($stockAvailable, 'out_of_stock', $propertiesToUpdate);
     }
 
     /**

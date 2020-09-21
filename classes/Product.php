@@ -37,6 +37,10 @@ use PrestaShop\PrestaShop\Core\Product\ProductInterface;
 
 class ProductCore extends ObjectModel
 {
+    const NOT_AVAILABLE_OUT_OF_STOCK_TYPE = 0;
+    const AVAILABLE_OUT_OF_STOCK_TYPE = 1;
+    const DEFAULT_OUT_OF_STOCK_TYPE = 2;
+
     /**
      * @var string Tax name
      *
@@ -273,7 +277,7 @@ class ProductCore extends ObjectModel
      *          - 1 Allow orders
      *          - 2 Use global setting
      */
-    public $out_of_stock;
+    public $out_of_stock = self::DEFAULT_OUT_OF_STOCK_TYPE;
 
     /**
      * @var bool
@@ -721,7 +725,7 @@ class ProductCore extends ObjectModel
         $id_shop_list = Shop::getContextListShopID();
         if ($this->getType() == Product::PTYPE_VIRTUAL) {
             foreach ($id_shop_list as $value) {
-                StockAvailable::setProductOutOfStock((int) $this->id, 1, $value);
+                StockAvailable::setProductOutOfStock((int) $this->id, self::AVAILABLE_OUT_OF_STOCK_TYPE, $value);
             }
 
             if ($this->active && !Configuration::get('PS_VIRTUAL_PROD_FEATURE_ACTIVE')) {
@@ -729,7 +733,7 @@ class ProductCore extends ObjectModel
             }
         } else {
             foreach ($id_shop_list as $value) {
-                StockAvailable::setProductOutOfStock((int) $this->id, 2, $value);
+                StockAvailable::setProductOutOfStock((int) $this->id, self::DEFAULT_OUT_OF_STOCK_TYPE, $value);
             }
         }
 
@@ -4229,7 +4233,7 @@ class ProductCore extends ObjectModel
 
         $ps_order_out_of_stock = Configuration::get('PS_ORDER_OUT_OF_STOCK');
 
-        return (int) $out_of_stock == 2 ? (int) $ps_order_out_of_stock : (int) $out_of_stock;
+        return (int) $out_of_stock == static::DEFAULT_OUT_OF_STOCK_TYPE ? (int) $ps_order_out_of_stock : (int) $out_of_stock;
     }
 
     /**
