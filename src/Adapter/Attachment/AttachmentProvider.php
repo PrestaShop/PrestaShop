@@ -41,11 +41,10 @@ class AttachmentProvider extends AbstractObjectModelProvider
 {
     /**
      * @param AttachmentId $attachmentId
-     * @param string $exceptionClass
-     *
      * @return Attachment
      *
      * @throws CoreException
+     * @throws AttachmentNotFoundException
      */
     public function get(AttachmentId $attachmentId): Attachment
     {
