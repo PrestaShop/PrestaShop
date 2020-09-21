@@ -151,7 +151,7 @@ final class SetProductSuppliersHandler implements SetProductSuppliersHandlerInte
                 $this->addProductSupplier($productId, $productSupplier);
             }
         }
-        //@todo: product default supplier not handled
+
         $this->deleteProductSuppliers($deletableProductSupplierIds);
     }
 

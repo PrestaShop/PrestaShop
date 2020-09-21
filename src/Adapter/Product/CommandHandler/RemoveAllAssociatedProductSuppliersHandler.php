@@ -29,10 +29,11 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductSupplierHandler;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\DeleteProductSupplierCommand;
+use PrestaShop\PrestaShop\Adapter\Product\ProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\DeleteProductSupplierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\RemoveAllAssociatedProductSuppliersHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplierDeleterInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use ProductSupplier;
 
 /**
@@ -41,17 +42,25 @@ use ProductSupplier;
 final class RemoveAllAssociatedProductSuppliersHandler extends AbstractProductSupplierHandler implements RemoveAllAssociatedProductSuppliersHandlerInterface
 {
     /**
-     * @var DeleteProductSupplierHandlerInterface
+     * @var ProductSupplierDeleterInterface
      */
-    private $deleteProductSupplierHandler;
+    private $productSupplierDeleter;
 
     /**
-     * @param DeleteProductSupplierHandlerInterface $deleteProductSupplierHandler
+     * @var ProductUpdater
+     */
+    private $productUpdater;
+
+    /**
+     * @param ProductSupplierDeleterInterface $productSupplierDeleter
+     * @param ProductUpdater $productUpdater
      */
     public function __construct(
-        DeleteProductSupplierHandlerInterface $deleteProductSupplierHandler
+        ProductSupplierDeleterInterface $productSupplierDeleter,
+        ProductUpdater $productUpdater
     ) {
-        $this->deleteProductSupplierHandler = $deleteProductSupplierHandler;
+        $this->productSupplierDeleter = $productSupplierDeleter;
+        $this->productUpdater = $productUpdater;
     }
 
     /**
@@ -61,8 +70,12 @@ final class RemoveAllAssociatedProductSuppliersHandler extends AbstractProductSu
     {
         $product = $this->getProduct($command->getProductId());
 
+        $productSupplierIds = [];
         foreach (ProductSupplier::getSupplierCollection($product->id) as $productSupplier) {
-            $this->deleteProductSupplierHandler->handle(new DeleteProductSupplierCommand((int) $productSupplier->id));
+            $productSupplierIds[] = new ProductSupplierId((int) $productSupplier->id);
         }
+
+        $this->productSupplierDeleter->bulkDelete($productSupplierIds);
+        $this->productUpdater->updateProductDefaultSupplier($product, 0);
     }
 }
