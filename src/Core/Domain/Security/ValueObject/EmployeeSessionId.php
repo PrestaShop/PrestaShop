@@ -24,23 +24,35 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Feature;
+namespace PrestaShop\PrestaShop\Core\Domain\Security\ValueObject;
 
-use Configuration;
+use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionException;
 
 /**
- * Defines if token in urls are disabled.
+ * Class SessionId
  */
-final class TokenInUrls
+class SessionId
 {
-    public const DISABLED = 'disabled';
-    public const ENV_VAR = '_TOKEN_';
+    /**
+     * @var int
+     */
+    private $sessionId;
 
     /**
-     * @return bool
+     * @param int $sessionId
+     *
+     * @throws SessionException
      */
-    public static function isDisabled()
+    public function __construct(int $sessionId)
     {
-        return (bool) Configuration::get('PS_SECURITY_TOKEN') === false || getenv(self::ENV_VAR) === self::DISABLED;
+        $this->sessionId = (int) $sessionId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue()
+    {
+        return $this->sessionId;
     }
 }
