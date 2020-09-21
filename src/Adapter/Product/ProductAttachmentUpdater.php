@@ -107,6 +107,7 @@ class ProductAttachmentUpdater
     {
         $this->productProvider->assertProductExists($productId);
         $productIdValue = $productId->getValue();
+        $attachmentIdValues = [];
 
         try {
             foreach ($attachmentIds as $attachmentId) {
@@ -114,7 +115,7 @@ class ProductAttachmentUpdater
                 $attachmentIdValues[] = $attachmentId->getValue();
             }
 
-            if (!Attachment::attachToProduct($productIdValue, $attachmentIds)) {
+            if (!Attachment::attachToProduct($productIdValue, $attachmentIdValues)) {
                 throw new CannotUpdateProductException(
                     sprintf('Failed to set product #%d attachments', $productIdValue),
                     CannotUpdateProductException::FAILED_UPDATE_ATTACHMENTS
