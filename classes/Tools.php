@@ -49,6 +49,7 @@ class ToolsCore
     protected static $request;
     protected static $cldr_cache = [];
     protected static $colorBrightnessCalculator;
+    protected static $fallbackParameters = [];
 
     public static $round_mode = null;
 
@@ -512,8 +513,14 @@ class ToolsCore
 
         if (getenv('kernel.environment') === 'test' && self::$request instanceof Request) {
             $value = self::$request->request->get($key, self::$request->query->get($key, $default_value));
-        } else {
-            $value = (isset($_POST[$key]) ? $_POST[$key] : (isset($_GET[$key]) ? $_GET[$key] : $default_value));
+        } elseif (isset($_POST[$key]) || isset($_GET[$key])) {
+            $value = isset($_POST[$key]) ? $_POST[$key] : $_GET[$key];
+        } elseif (isset(static::$fallbackParameters[$key])) {
+            $value = static::$fallbackParameters[$key];
+        }
+
+        if (!isset($value)) {
+            $value = $default_value;
         }
 
         if (is_string($value)) {
@@ -4331,6 +4338,14 @@ exit;
             die('Error: "install" directory is missing');
         }
         exit;
+    }
+
+    /**
+     * @param array $fallbackParameters
+     */
+    public static function setFallbackParameters(array $fallbackParameters): void
+    {
+        static::$fallbackParameters = $fallbackParameters;
     }
 }
 
