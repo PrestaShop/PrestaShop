@@ -38,7 +38,7 @@ $(document).ready(() => {
     if (event && event.product_minimal_quantity) {
       const minimalProductQuantity = parseInt(event.product_minimal_quantity, 10);
       const quantityInputSelector = prestashop.selectors.quantityWanted;
-      let quantityInput = $(quantityInputSelector);
+      const quantityInput = $(quantityInputSelector);
 
       // @see http://www.virtuosoft.eu/code/bootstrap-touchspin/ about Bootstrap TouchSpin
       quantityInput.trigger('touchspin.updatesettings', {
@@ -71,10 +71,10 @@ $(document).ready(() => {
         distance: 113,
         autoPlay: false,
       });
-      $('.scroll-box-arrows .left').click(function () {
+      $('.scroll-box-arrows .left').click(() => {
         $('#main .js-qv-mask').trigger('backward');
       });
-      $('.scroll-box-arrows .right').click(function () {
+      $('.scroll-box-arrows .right').click(() => {
         $('#main .js-qv-mask').trigger('forward');
       });
     } else {
@@ -85,7 +85,8 @@ $(document).ready(() => {
 
   function createInputFile() {
     $(prestashop.themeSelectors.fileInput).on('change', (event) => {
-      let target, file;
+      let target; let
+        file;
 
       // eslint-disable-next-line
       if ((target = $(event.currentTarget)[0]) && (file = target.files[0])) {
