@@ -395,7 +395,7 @@ class LinkCore
     {
         if (!is_object($category)) {
             if (is_array($category) && isset($category['id_category'])) {
-                $category = new Category($category, $idLang);
+                $category = new Category($category['id_category'], $idLang);
             } elseif ((int) $category) {
                 $category = new Category((int) $category, $idLang);
             } else {
