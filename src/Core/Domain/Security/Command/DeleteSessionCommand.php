@@ -24,23 +24,47 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Feature;
+namespace PrestaShop\PrestaShop\Core\Domain\Security\Command;
 
-use Configuration;
+use PrestaShop\PrestaShop\Core\Domain\Security\ValueObject\SessionId;
 
 /**
- * Defines if token in urls are disabled.
+ * Class DeleteSessionCommand is a command to delete profile by given id.
  */
-final class TokenInUrls
+class DeleteSessionCommand
 {
-    public const DISABLED = 'disabled';
-    public const ENV_VAR = '_TOKEN_';
+    /**
+     * @var SessionId
+     */
+    private $sessionId;
 
     /**
-     * @return bool
+     * @var string
      */
-    public static function isDisabled()
+    private $type;
+
+    /**
+     * @param int $sessionId
+     */
+    public function __construct(int $sessionId, string $type)
     {
-        return (bool) Configuration::get('PS_SECURITY_TOKEN') === false || getenv(self::ENV_VAR) === self::DISABLED;
+        $this->sessionId = new SessionId($sessionId);
+        $this->type = $type;
+    }
+
+    /**
+     * @return SessionId
+     */
+    public function getSessionId()
+    {
+        return $this->sessionId;
+    }
+
+    /**
+     * @return SessionId
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 }

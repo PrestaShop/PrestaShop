@@ -24,16 +24,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Query;
+namespace PrestaShop\PrestaShop\Core\Grid\Query\Security\Sessions;
 
+use PrestaShop\PrestaShop\Core\Grid\Query\AbstractDoctrineQueryBuilder;
+use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicatorInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class ProfileQueryBuilder is responsible for building queries for profiles grid data.
+ * Class EmployeeQueryBuilder is responsible for building queries for profiles grid data.
  */
-final class ProfileQueryBuilder extends AbstractDoctrineQueryBuilder
+final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
      * @var DoctrineSearchCriteriaApplicatorInterface
@@ -41,26 +43,18 @@ final class ProfileQueryBuilder extends AbstractDoctrineQueryBuilder
     private $searchCriteriaApplicator;
 
     /**
-     * @var int
-     */
-    private $languageId;
-
-    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
-     * @param int $contextLanguageId
      */
     public function __construct(
         Connection $connection,
         $dbPrefix,
-        DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
-        $contextLanguageId
+        DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
     ) {
         parent::__construct($connection, $dbPrefix);
 
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
-        $this->languageId = $contextLanguageId;
     }
 
     /**
@@ -69,7 +63,7 @@ final class ProfileQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('p.id_profile, pl.name')
+            ->select('es.id_employee_session, e.id_employee, e.firstname, e.lastname, e.email')
         ;
 
         $this->searchCriteriaApplicator
@@ -85,7 +79,7 @@ final class ProfileQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('COUNT(p.id_profile)')
+            ->select('COUNT(es.id_employee_session)')
         ;
 
         return $qb;
@@ -102,15 +96,16 @@ final class ProfileQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->connection
             ->createQueryBuilder()
-            ->from($this->dbPrefix . 'profile', 'p')
-            ->innerJoin('p', $this->dbPrefix . 'profile_lang', 'pl', 'p.id_profile = pl.id_profile')
-            ->andWhere('pl.id_lang = :language')
-            ->setParameter('language', $this->languageId)
+            ->from($this->dbPrefix . 'employee_session', 'es')
+            ->join('es', $this->dbPrefix . 'employee', 'e', 'e.id_employee = es.id_employee')
         ;
 
         $allowedFilters = [
-            'id_profile',
-            'name',
+            'id_employee_session',
+            'id_employee',
+            'firstname',
+            'lastname',
+            'email',
         ];
 
         foreach ($filters as $name => $value) {
@@ -118,14 +113,27 @@ final class ProfileQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            if ('id_profile' === $name) {
-                $qb->andWhere("p.id_profile = :$name");
+            if ('id_employee_session' === $name) {
+                $qb->andWhere('es.id_employee_session = :' . $name);
                 $qb->setParameter($name, $value);
 
                 continue;
             }
 
-            $qb->andWhere("$name LIKE :$name");
+            if ('id_employee' === $name) {
+                $qb->andWhere('e.id_employee = :' . $name);
+                $qb->setParameter($name, $value);
+
+                continue;
+            }
+
+            $qb->andWhere(
+                sprintf(
+                    'e.%s LIKE %s',
+                    $name,
+                    $name
+                )
+            );
             $qb->setParameter($name, '%' . $value . '%');
         }
 
