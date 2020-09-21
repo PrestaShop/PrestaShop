@@ -59,7 +59,7 @@ $(document).ready(() => {
         $(prestashop.selectors.cart.productCustomizationId).val(0);
 
         $(prestashop.selectors.cart.lineProductQuantity).each((index, input) => {
-          let $input = $(input);
+          const $input = $(input);
           $input.attr('value', $input.val());
         });
 
@@ -81,8 +81,8 @@ $(document).ready(() => {
   $body.on('click', '[data-button-action="add-to-cart"]', (event) => {
     event.preventDefault();
     if (
-      $(prestashop.selectors.quantityWanted).val() > $('[data-stock]').data('stock') &&
-      $('[data-allow-oosp]').data('allow-oosp').length === 0
+      $(prestashop.selectors.quantityWanted).val() > $('[data-stock]').data('stock')
+      && $('[data-allow-oosp]').data('allow-oosp').length === 0
     ) {
       $('[data-button-action="add-to-cart"]').attr('disabled', 'disabled');
     } else {
