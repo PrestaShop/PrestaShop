@@ -331,12 +331,12 @@ class Order extends BOBasePage {
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
 
     let i = 0;
-    while (await this.elementNotVisible(page, sortColumnDiv, 1000) && i < 2) {
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
     }
 
-    await this.waitForVisibleSelector(page, sortColumnDiv);
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
   }
 }
 
