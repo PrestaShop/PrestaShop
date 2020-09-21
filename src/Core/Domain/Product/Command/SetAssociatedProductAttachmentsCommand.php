@@ -73,7 +73,7 @@ class SetAssociatedProductAttachmentsCommand
     }
 
     /**
-     * @param array $attachmentIds
+     * @param int[] $attachmentIds
      */
     private function setAttachmentIds(array $attachmentIds): void
     {
