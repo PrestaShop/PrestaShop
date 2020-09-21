@@ -14,4 +14,4 @@ jobs:
         with:
           node-version: '10.x'
 
-      - run: cd ./themes/ && npm install && npm run lint && cd ./themes/classic/_dev && npm install && npm run lint
+      - run: cd ./themes/ && npm install && npm run lint && cd ./classic/_dev && npm install && npm run lint
