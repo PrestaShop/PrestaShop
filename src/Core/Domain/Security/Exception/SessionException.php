@@ -24,23 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Feature;
+namespace PrestaShop\PrestaShop\Core\Domain\Security\Exception;
 
-use Configuration;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Defines if token in urls are disabled.
+ * Class SessionException is a base exception for profiles context.
  */
-final class TokenInUrls
+class SessionException extends DomainException
 {
-    public const DISABLED = 'disabled';
-    public const ENV_VAR = '_TOKEN_';
-
-    /**
-     * @return bool
-     */
-    public static function isDisabled()
-    {
-        return (bool) Configuration::get('PS_SECURITY_TOKEN') === false || getenv(self::ENV_VAR) === self::DISABLED;
-    }
 }
