@@ -83,7 +83,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'security_sessions_employee';
+        return 'security_sessions_customer';
     }
 
     /**
@@ -103,21 +103,21 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 (new BulkActionColumn('bulk'))
                 ->setOptions([
-                    'bulk_field' => 'id_employee_session',
+                    'bulk_field' => 'id_customer_session',
                 ])
             )
             ->add(
-                (new DataColumn('id_employee_session'))
+                (new DataColumn('id_customer_session'))
                 ->setName($this->trans('ID', [], 'Admin.Global'))
                 ->setOptions([
-                    'field' => 'id_employee_session',
+                    'field' => 'id_customer_session',
                 ])
             )
             ->add(
-                (new DataColumn('id_employee'))
+                (new DataColumn('id_customer'))
                 ->setName($this->trans('Customer ID', [], 'Admin.Global'))
                 ->setOptions([
-                    'field' => 'id_employee',
+                    'field' => 'id_customer',
                 ])
             )
             ->add(
@@ -147,9 +147,9 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'actions' => (new RowActionCollection())
                     ->add(
                         $this->buildDeleteAction(
-                            'admin_security_sessions_employees_delete',
+                            'admin_security_sessions_customers_delete',
                             'sessionId',
-                            'id_employee_session',
+                            'id_customer_session',
                             'DELETE'
                         )
                     ),
@@ -185,47 +185,73 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getFilters()
     {
         return (new FilterCollection())
-            ->add((new Filter('id_profile', TextType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'size' => 'small',
-                'attr' => [
-                    'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
-                ],
-            ])
-            ->setAssociatedColumn('id_profile')
+            ->add((new Filter('id_customer_session', TextType::class))
+                  ->setTypeOptions([
+                      'required' => false,
+                      'size' => 'small',
+                      'attr' => [
+                          'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                      ],
+                  ])
+                  ->setAssociatedColumn('id_customer_session')
             )
-            ->add((new Filter('name', TextType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
-                ],
-            ])
-            ->setAssociatedColumn('name')
+            ->add((new Filter('id_customer', TextType::class))
+                  ->setTypeOptions([
+                      'required' => false,
+                      'size' => 'small',
+                      'attr' => [
+                          'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                      ],
+                  ])
+                  ->setAssociatedColumn('id_customer')
+            )
+            ->add((new Filter('firstname', TextType::class))
+                  ->setTypeOptions([
+                      'required' => false,
+                      'attr' => [
+                          'placeholder' => $this->trans('Firstname', [], 'Admin.Actions'),
+                      ],
+                  ])
+                  ->setAssociatedColumn('firstname')
+            )
+            ->add((new Filter('lastname', TextType::class))
+                  ->setTypeOptions([
+                      'required' => false,
+                      'attr' => [
+                          'placeholder' => $this->trans('Lastname', [], 'Admin.Actions'),
+                      ],
+                  ])
+                  ->setAssociatedColumn('lastname')
+            )
+            ->add((new Filter('email', TextType::class))
+                  ->setTypeOptions([
+                      'required' => false,
+                      'attr' => [
+                          'placeholder' => $this->trans('Email', [], 'Admin.Actions'),
+                      ],
+                  ])
+                  ->setAssociatedColumn('email')
             )
             ->add((new Filter('actions', SearchAndResetType::class))
-            ->setTypeOptions([
-                'attr' => [
-                    'data-url' => $this->resetActionUrl,
-                    'data-redirect' => $this->redirectionUrl,
-                ],
-            ])
-            ->setAssociatedColumn('actions')
-            )
-        ;
+                  ->setTypeOptions([
+                      'attr' => [
+                          'data-url' => $this->resetActionUrl,
+                          'data-redirect' => $this->redirectionUrl,
+                      ],
+                  ])
+                  ->setAssociatedColumn('actions')
+            );
     }
-
     /**
      * {@inheritdoc}
      */
     protected function getBulkActions()
     {
         return (new BulkActionCollection())
-            ->add((new SubmitBulkAction('bulk_delete_profiles'))
+            ->add((new SubmitBulkAction('bulk_delete_sessions_customers'))
             ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
             ->setOptions([
-                'submit_route' => 'admin_profiles_bulk_delete',
+                'submit_route' => 'admin_security_sessions_customers_bulk_delete',
                 'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
             ])
             )
