@@ -1,0 +1,51 @@
+admin_security:
+    path: /
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:index'
+        _legacy_controller: AdminSecurity
+        _legacy_link: AdminSecurity
+
+admin_security_general_save:
+    path: /general
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:processGeneralForm'
+        _legacy_controller: AdminSecurity
+        _legacy_link: AdminSecurity
+
+admin_security_sessions_customers:
+    path: /sessions/customers
+    methods: [GET, POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:customersSessions'
+        _legacy_controller: AdminSecuritySessionsCustomers
+        _legacy_link: AdminSecuritySessionsCustomers
+
+admin_security_sessions_customers_delete:
+    path: /sessions/customers/{sessionId}
+    methods: [DELETE]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:deleteCustomerSession'
+        _legacy_controller: AdminSecuritySessionsCustomers
+        _legacy_link: AdminSecuritySessionsCustomers
+    requirements:
+        sessionId: \d+
+
+admin_security_sessions_employees:
+    path: /sessions/employees
+    methods: [GET, POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:employeesSessions'
+        _legacy_controller: AdminSecuritySessionsEmployees
+        _legacy_link: AdminSecuritySessionsEmployees
+
+admin_security_sessions_employees_delete:
+    path: /sessions/employees/{sessionId}
+    methods: [DELETE]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:deleteEmployeeSession'
+        _legacy_controller: AdminSecuritySessionsEmployees
+        _legacy_link: AdminSecuritySessionsEmployees
+    requirements:
+        sessionId: \d+
