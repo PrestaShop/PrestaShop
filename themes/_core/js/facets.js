@@ -34,9 +34,10 @@ function updateResults(data) {
 
 function handleError(xhr, textStatus) {
   if (textStatus === 'abort') {
-    console.warn('Request aborted');
+    return false;
   }
   // TODO: feedback
+  return true;
 }
 
 function cleanRequest(xhr) {
