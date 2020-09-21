@@ -28,12 +28,13 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssociateProductAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductAttachmentsCommand;
-use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
+use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
-class UpdateAttachmentFeatureContext extends AbstractDomainFeatureContext
+class UpdateAttachmentFeatureContext extends AbstractProductFeatureContext
 {
     /**
      * @When I associate attachment :attachmentReference with product :productReference
@@ -47,6 +48,32 @@ class UpdateAttachmentFeatureContext extends AbstractDomainFeatureContext
             $this->getSharedStorage()->get($productReference),
             $this->getSharedStorage()->get($attachmentReference)
         ));
+    }
+
+    /**
+     * @Then product :productReference should have following attachments associated: :attachmentReferences
+     *
+     * @param string $productReference
+     * @param string $attachmentReferences
+     */
+    public function assertProductAttachments(string $productReference, string $attachmentReferences): void
+    {
+        $attachmentIds = $this->getProductForEditing($productReference)->getAssociatedAttachmentIds();
+        $expectedReferences = PrimitiveUtils::castStringArrayIntoArray($attachmentReferences);
+
+        Assert::assertEquals(
+            count($attachmentIds),
+            count($expectedReferences),
+            'Unexpected associated product attachments count'
+        );
+
+        foreach ($expectedReferences as $key => $expectedReference) {
+            if ($attachmentIds[$key] === $this->getSharedStorage()->get($expectedReference)) {
+                continue;
+            }
+
+            throw new RuntimeException(sprintf('Unexpected associated product attachments'));
+        }
     }
 
     /**

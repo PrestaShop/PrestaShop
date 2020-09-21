@@ -29,10 +29,8 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
-use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class AddProductFeatureContext extends AbstractProductFeatureContext
@@ -56,32 +54,6 @@ class AddProductFeatureContext extends AbstractProductFeatureContext
             $this->getSharedStorage()->set($productReference, $productId->getValue());
         } catch (ProductException $e) {
             $this->setLastException($e);
-        }
-    }
-
-    /**
-     * @Then product :productReference should have following attachments associated: :attachmentReferences
-     *
-     * @param string $productReference
-     * @param string $attachmentReferences
-     */
-    public function assertProductAttachments(string $productReference, string $attachmentReferences): void
-    {
-        $attachmentIds = $this->getProductForEditing($productReference)->getAssociatedAttachmentIds();
-        $expectedReferences = PrimitiveUtils::castStringArrayIntoArray($attachmentReferences);
-
-        Assert::assertEquals(
-            count($attachmentIds),
-            count($expectedReferences),
-            'Unexpected associated product attachments count'
-        );
-
-        foreach ($expectedReferences as $key => $expectedReference) {
-            if ($attachmentIds[$key] === $this->getSharedStorage()->get($expectedReference)) {
-                continue;
-            }
-
-            throw new RuntimeException(sprintf('Unexpected associated product attachments'));
         }
     }
 }
