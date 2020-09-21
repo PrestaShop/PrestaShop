@@ -29,10 +29,36 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Pack\PackSettings;
 
 class PackStockType
 {
+    /**
+     * Stock type: only based on pack quantity
+     */
+    const STOCK_TYPE_PACK_ONLY = 'stock_type_pack_only';
+
+    /**
+     * Stock type: only based on products quantity
+     */
+    const STOCK_TYPE_PRODUCTS_ONLY = 'stock_type_products_only';
+
+    /**
+     * Stock type: based on products and pack quantity
+     */
+    const STOCK_TYPE_BOTH = 'stock_type_both';
+
+    /**
+     * Stock type: based on configuration default value
+     */
+    const STOCK_TYPE_DEFAULT = 'stock_type_default';
+
+    const ALLOWED_PACK_STOCK_TYPES = [
+        self::STOCK_TYPE_PACK_ONLY,
+        self::STOCK_TYPE_PRODUCTS_ONLY,
+        self::STOCK_TYPE_BOTH,
+        self::STOCK_TYPE_DEFAULT,
+    ];
+
     /**
      * @var string
      */
@@ -63,12 +89,12 @@ class PackStockType
      */
     private function setStockType(string $stockType): void
     {
-        if (!in_array($stockType, PackSettings::ALLOWED_PACK_STOCK_TYPES)) {
+        if (!in_array($stockType, self::ALLOWED_PACK_STOCK_TYPES)) {
             throw new ProductPackConstraintException(
                 sprintf(
                     'Cannot use product pack stock type %s, allowed values are: %s',
                     $stockType,
-                    implode(', ', PackSettings::ALLOWED_PACK_STOCK_TYPES)
+                    implode(', ', self::ALLOWED_PACK_STOCK_TYPES)
                 ),
                 ProductPackConstraintException::INVALID_STOCK_TYPE
             );
