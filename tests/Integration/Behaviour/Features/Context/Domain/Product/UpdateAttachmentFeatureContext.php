@@ -77,6 +77,19 @@ class UpdateAttachmentFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @Then product :productReference should have no attachments associated
+     *
+     * @param string $productReference
+     */
+    public function assertProductHasNoAttachmentsAssociated(string $productReference)
+    {
+        Assert::assertEmpty(
+            $this->getProductForEditing($productReference)->getAssociatedAttachmentIds(),
+            'Product "%s" expected to have no attachments associated'
+        );
+    }
+
+    /**
      * @When I associate product :productReference with following attachments: :attachmentReferences
      *
      * @param string $productReference
@@ -90,8 +103,27 @@ class UpdateAttachmentFeatureContext extends AbstractProductFeatureContext
             $attachmentIds[] = $this->getSharedStorage()->get($attachmentReference);
         }
 
+        $this->setProductAttachments($this->getSharedStorage()->get($productReference), $attachmentIds);
+    }
+
+    /**
+     * @When I remove product :productReference attachments association
+     *
+     * @param string $productReference
+     */
+    public function removeProductAttachmentsAssociation(string $productReference)
+    {
+        $this->setProductAttachments($this->getSharedStorage()->get($productReference), []);
+    }
+
+    /**
+     * @param int $productId
+     * @param array $attachmentIds
+     */
+    private function setProductAttachments(int $productId, array $attachmentIds): void
+    {
         $this->getCommandBus()->handle(new SetAssociatedProductAttachmentsCommand(
-            $this->getSharedStorage()->get($productReference),
+            $productId,
             $attachmentIds
         ));
     }

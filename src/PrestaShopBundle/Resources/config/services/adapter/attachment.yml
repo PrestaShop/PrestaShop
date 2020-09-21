@@ -66,4 +66,5 @@ services:
     arguments:
       - '@prestashop.adapter.data_provider.attachment'
     tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformationList' }
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformationList'
