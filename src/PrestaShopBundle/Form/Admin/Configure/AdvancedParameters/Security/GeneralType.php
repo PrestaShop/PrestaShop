@@ -24,23 +24,44 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Feature;
+namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security;
 
-use Configuration;
+use Cookie;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * Defines if token in urls are disabled.
- */
-final class TokenInUrls
+class GeneralType extends TranslatorAwareType
 {
-    public const DISABLED = 'disabled';
-    public const ENV_VAR = '_TOKEN_';
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('token', SwitchType::class, [
+                'required' => true,
+            ]);
+    }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
-    public static function isDisabled()
+    public function configureOptions(OptionsResolver $resolver)
     {
-        return (bool) Configuration::get('PS_SECURITY_TOKEN') === false || getenv(self::ENV_VAR) === self::DISABLED;
+        $resolver->setDefaults([
+            'translation_domain' => 'Admin.Advparameters.Feature',
+        ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'security_general_block';
     }
 }
