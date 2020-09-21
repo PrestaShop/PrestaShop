@@ -29,9 +29,11 @@ namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 use Customization;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Adapter\Product\Converter\OutOfStockTypeConverter;
 use PrestaShop\PrestaShop\Adapter\Product\Converter\PackStockTypeConverter;
+use PrestaShop\PrestaShop\Adapter\Product\Provider\StockAvailableProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductForEditingHandlerInterface;
@@ -46,6 +48,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStock;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractorException;
 use Product;
@@ -62,12 +65,20 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
     private $numberExtractor;
 
     /**
+     * @var StockAvailableProvider
+     */
+    private $stockAvailableProvider;
+
+    /**
      * @param NumberExtractor $numberExtractor
+     * @param StockAvailableProvider $stockAvailableProvider
      */
     public function __construct(
-        NumberExtractor $numberExtractor
+        NumberExtractor $numberExtractor,
+        StockAvailableProvider $stockAvailableProvider
     ) {
         $this->numberExtractor = $numberExtractor;
+        $this->stockAvailableProvider = $stockAvailableProvider;
     }
 
     /**
@@ -283,10 +294,25 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
      */
     private function getProductStock(Product $product): ProductStock
     {
-        return new ProductStock(
-            $product->advanced_stock_management,
-            $product->depends_on_stock,
-            PackStockTypeConverter::convertToValueObject((int) $product->pack_stock_type)
-        );
+        try {
+            // Theoretically StockAvailable is created for each product when Product::add is called
+            $stockAvailable = $this->stockAvailableProvider->get(new ProductId($product->id));
+
+            return new ProductStock(
+                $product->advanced_stock_management,
+                $stockAvailable->depends_on_stock,
+                PackStockTypeConverter::convertToValueObject((int) $product->pack_stock_type),
+                OutOfStockTypeConverter::convertToValueObject((int) $stockAvailable->out_of_stock)
+            );
+        } catch (ProductStockException $e) {
+            // In case StockAvailable does not exist we can still use the Product fields
+
+            return new ProductStock(
+                $product->advanced_stock_management,
+                $product->depends_on_stock,
+                PackStockTypeConverter::convertToValueObject((int) $product->pack_stock_type),
+                OutOfStockTypeConverter::convertToValueObject((int) $product->out_of_stock)
+            );
+        }
     }
 }

@@ -43,13 +43,47 @@ class StockAvailableProvider extends AbstractObjectModelProvider
      *
      * @throws CoreException
      */
-    public function get(ProductId $productId): StockAvailable
+    public function getOrCreate(ProductId $productId): StockAvailable
     {
         $stockAvailableId = StockAvailable::getStockAvailableIdByProductId($productId->getValue());
         if ($stockAvailableId <= 0) {
             return $this->createStockAvailable($productId);
         }
 
+        return $this->getStockAvailable($stockAvailableId);
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return StockAvailable
+     *
+     * @throws CoreException
+     */
+    public function get(ProductId $productId): StockAvailable
+    {
+        $stockAvailableId = StockAvailable::getStockAvailableIdByProductId($productId->getValue());
+        if ($stockAvailableId <= 0) {
+            throw new ProductStockException(sprintf(
+                    'Cannot find StockAvailable for product %d',
+                    $productId->getValue()
+                ),
+                ProductStockException::NOT_FOUND
+            );
+        }
+
+        return $this->getStockAvailable($stockAvailableId);
+    }
+
+    /**
+     * @param int $stockAvailableId
+     *
+     * @return StockAvailable
+     *
+     * @throws CoreException
+     */
+    private function getStockAvailable(int $stockAvailableId): StockAvailable
+    {
         /** @var StockAvailable $product */
         $stockAvailable = $this->getObjectModel(
             $stockAvailableId,

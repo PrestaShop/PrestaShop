@@ -150,6 +150,7 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             'use_advanced_stock_management' => 'stock.useAdvancedStockManagement',
             'depends_on_stock' => 'stock.dependsOnStock',
             'pack_stock_type' => 'stock.packStockType',
+            'out_of_stock_type' => 'stock.outOfStockType',
         ];
 
         $propertyAccessor = PropertyAccess::createPropertyAccessor();

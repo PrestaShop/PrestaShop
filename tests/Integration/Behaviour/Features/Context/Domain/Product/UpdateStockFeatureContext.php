@@ -30,6 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use Pack;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductStockException;
@@ -49,7 +50,11 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
 
         try {
             $command = new UpdateProductStockCommand($productId);
-            $this->setUpdateStockCommandData($data, $command);
+            $unhandledData = $this->setUpdateStockCommandData($data, $command);
+            Assert::assertEmpty(
+                $unhandledData,
+                sprintf('Not all provided data was handled in scenario. Unhandled: %s', var_export($unhandledData, true))
+            );
             $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {
             $this->setLastException($e);
@@ -70,6 +75,12 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         $this->assertBoolProperty($productForEditing, $data, 'use_advanced_stock_management');
         $this->assertBoolProperty($productForEditing, $data, 'depends_on_stock');
         $this->assertStringProperty($productForEditing, $data, 'pack_stock_type');
+        $this->assertStringProperty($productForEditing, $data, 'out_of_stock_type');
+
+        // Assertions checking isset() can hide some errors if it doesn't find array key,
+        // to make sure all provided fields were checked we need to unset every asserted field
+        // and finally, if provided data is not empty, it means there are some unnasserted values left
+        Assert::assertEmpty($data, sprintf('Some provided product stock fields haven\'t been asserted: %s', var_export($data, true)));
     }
 
     /**
@@ -106,23 +117,44 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @Then I should get error that out of stock type is invalid
+     */
+    public function assertInvalidOUtOfStockType(): void
+    {
+        $this->assertLastErrorIs(
+            ProductStockException::class,
+            ProductStockException::INVALID_OUT_OF_STOCK_TYPE
+        );
+    }
+
+    /**
      * @param array $data
      * @param UpdateProductStockCommand $command
      */
-    private function setUpdateStockCommandData(array $data, UpdateProductStockCommand $command): void
+    private function setUpdateStockCommandData(array $data, UpdateProductStockCommand $command): array
     {
         if (isset($data['use_advanced_stock_management'])) {
             $command->setUseAdvancedStockManagement((bool) $data['use_advanced_stock_management']);
+            unset($data['use_advanced_stock_management']);
         }
 
         if (isset($data['depends_on_stock'])) {
             $command->setDependsOnStock((bool) $data['depends_on_stock']);
+            unset($data['depends_on_stock']);
         }
 
         if (isset($data['pack_stock_type'])) {
             // If pack is involved we clear the cache because its products settings might have changed
             Pack::resetStaticCache();
             $command->setPackStockType($data['pack_stock_type']);
+            unset($data['pack_stock_type']);
         }
+
+        if (isset($data['out_of_stock_type'])) {
+            $command->setOutOfStockType($data['out_of_stock_type']);
+            unset($data['out_of_stock_type']);
+        }
+
+        return $data;
     }
 }
