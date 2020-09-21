@@ -5,7 +5,12 @@ Feature: Manage attachment from Back Office (BO)
 
   Scenario: I add new attachment
     When I add new attachment "att1" with following properties:
-      | description      | puffin photo nr1 |
-      | name             | puffin           |
-      | file_name        | puffin.jpg       |
-      | mime             | image/jpeg       |
+      | description | en-US:puffin photo nr1 |
+      | name        | en-US:puffin           |
+      | file_name   | app_icon.png           |
+    Then attachment "att1" should have following properties:
+      | description | en-US:puffin photo nr1 |
+      | name        | en-US:puffin           |
+      | file_name   | app_icon.png           |
+      | mime        | image/png              |
+      | size        | 19187                  |

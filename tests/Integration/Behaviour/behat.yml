@@ -192,7 +192,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
         product:
             paths:
-                features: Features/Scenario/Product
+                features: Features/Scenario
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
@@ -217,3 +217,9 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\DeleteProductFeatureContext
+        attachment:
+            paths:
+                features: Features/Scenario/Attachment
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\AttachmentFeatureContext

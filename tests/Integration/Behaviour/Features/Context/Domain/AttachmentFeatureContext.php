@@ -30,6 +30,9 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Attachment;
 use Behat\Gherkin\Node\TableNode;
+use PHPUnit\Framework\Assert;
+use PrestaShopException;
+use RuntimeException;
 
 class AttachmentFeatureContext extends AbstractDomainFeatureContext
 {
@@ -39,19 +42,58 @@ class AttachmentFeatureContext extends AbstractDomainFeatureContext
      * @param string $reference
      * @param TableNode $tableNode
      */
-    public function addAttachment(string $reference, TableNode $tableNode)
+    public function addAttachment(string $reference, TableNode $tableNode): void
     {
         $data = $tableNode->getRowsHash();
+        $destination = _PS_DOWNLOAD_DIR_ . 'app_icon.png';
+        copy(_PS_ROOT_DIR_ . '/tests/Integration/Behaviour/DummyFiles/app_icon.png', $destination);
 
         $attachment = new Attachment();
         $attachment->description = $this->parseLocalizedArray($data['description']);
         $attachment->name = $this->parseLocalizedArray($data['name']);
         $attachment->file_name = $data['file_name'];
-        $attachment->mime = $data['mime'];
-        $attachment->file = sha1(uniqid());
+        $attachment->mime = mime_content_type($destination);
+        $attachment->file = pathinfo($destination, PATHINFO_BASENAME);
 
         $attachment->add();
 
         $this->getSharedStorage()->set($reference, (int) $attachment->id);
+    }
+
+    /**
+     * @Then attachment :reference should have following properties:
+     *
+     * @param string $reference
+     * @param TableNode $tableNode
+     */
+    public function assertAttachmentProperties(string $reference, TableNode $tableNode): void
+    {
+        $attachment = $this->getAttachment($reference);
+        $data = $tableNode->getRowsHash();
+
+        Assert::assertEquals($this->parseLocalizedArray($data['description']), $attachment->description);
+        Assert::assertEquals($this->parseLocalizedArray($data['name']), $attachment->name);
+        Assert::assertEquals($data['file_name'], $attachment->file_name);
+        Assert::assertEquals($data['mime'], $attachment->mime);
+        Assert::assertEquals($data['size'], $attachment->file_size);
+    }
+
+    /**
+     * @param string $reference
+     *
+     * @return Attachment
+     *
+     * @throws PrestaShopException
+     */
+    private function getAttachment(string $reference): Attachment
+    {
+        $id = $this->getSharedStorage()->get($reference);
+        $attachment = new Attachment($id);
+
+        if (!$attachment->id) {
+            throw new RuntimeException(sprintf('Failed to load attachment with id %d', $id));
+        }
+
+        return $attachment;
     }
 }
