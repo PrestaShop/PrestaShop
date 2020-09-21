@@ -407,3 +407,19 @@ services:
         - '@prestashop.core.hook.dispatcher'
         - '@prestashop.core.grid.query.doctrine_query_parser'
         - 'order_return_states'
+
+    prestashop.core.grid.data_factory.security.sessions.employees:
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+        arguments:
+            - '@prestashop.core.grid.query_builder.security.sessions.employees'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
+            - 'security_sessions_employees'
+
+    prestashop.core.grid.data_factory.security.sessions.customers:
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+        arguments:
+            - '@prestashop.core.grid.query_builder.security.sessions.customers'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
+            - 'security_sessions_employees'

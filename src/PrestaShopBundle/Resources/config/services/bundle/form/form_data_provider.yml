@@ -277,3 +277,8 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\CreditSlipOptionsFormDataProvider'
         arguments:
             - '@prestashop.core.credit_slip.credit_slip_options.configuration'
+
+    prestashop.adapter.security.general.form_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security\FormDataProvider'
+        arguments:
+            - '@prestashop.adapter.security.general.configuration'
