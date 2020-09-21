@@ -99,7 +99,7 @@ class ProductSupplierPersister extends AbstractObjectModelPersister
             'id_currency',
         ];
 
-        foreach ($existingProperties as $propertyName => $property) {
+        foreach ($existingProperties as $propertyName) {
             $this->fillProperty($productSupplier, $propertyName, $propertiesToUpdate);
         }
     }

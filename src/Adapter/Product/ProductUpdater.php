@@ -117,30 +117,33 @@ class ProductUpdater extends AbstractObjectModelPersister
 
     /**
      * @param Product $product
-     *
-     * @throws CoreException
-     */
-    public function resetProductDefaultSupplier(Product $product): void
-    {
-        $this->update(
-            $product,
-            [
-                'id_supplier' => 0,
-                'supplier_reference' => '',
-                'wholesale_price' => 0,
-            ],
-            CannotUpdateProductException::FAILED_UPDATE_DEFAULT_SUPPLIER);
-    }
-
-    /**
-     * @param Product $product
      * @param array $propertiesToUpdate
      */
     private function fillProperties(Product $product, array $propertiesToUpdate): void
     {
+        $this->fillCustomizabilityProperties($product, $propertiesToUpdate);
+        $this->fillSupplierProperties($product, $propertiesToUpdate);
+    }
+
+    /**
+     * @param Product $product
+     * @param array<string, mixed> $propertiesToUpdate
+     */
+    private function fillCustomizabilityProperties(Product $product, array $propertiesToUpdate): void
+    {
         $this->fillProperty($product, 'customizable', $propertiesToUpdate);
         $this->fillProperty($product, 'text_fields', $propertiesToUpdate);
         $this->fillProperty($product, 'uploadable_files', $propertiesToUpdate);
-        //@todo; more properties when refactoring other handlers to use updater/validator
+    }
+
+    /**
+     * @param Product $product
+     * @param array<string, mixed> $propertiesToUpdate
+     */
+    private function fillSupplierProperties(Product $product, array $propertiesToUpdate): void
+    {
+        $this->fillProperty($product, 'supplier_reference', $propertiesToUpdate);
+        $this->fillProperty($product, 'id_supplier', $propertiesToUpdate);
+        $this->fillProperty($product, 'wholesale_price', $propertiesToUpdate);
     }
 }
