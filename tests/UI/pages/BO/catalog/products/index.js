@@ -488,14 +488,15 @@ class Product extends BOBasePage {
   async sortTable(page, sortBy, sortDirection = 'asc') {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
-    let i = 0;
 
-    while (await this.elementNotVisible(page, sortColumnDiv, 500) && i < 2) {
+    let i = 0;
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await page.hover(this.sortColumnDiv(sortBy));
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
     }
-    await this.waitForVisibleSelector(page, sortColumnDiv);
+
+    await this.waitForVisibleSelector(page, sortColumnDiv, 2000);
   }
 
   /* Pagination methods */
