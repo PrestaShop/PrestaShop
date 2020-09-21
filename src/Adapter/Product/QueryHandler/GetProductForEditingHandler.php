@@ -83,7 +83,8 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             $this->getPricesInformation($product),
             $this->getOptions($product),
             $this->getShippingInformation($product),
-            $this->getSeoOptions($product)
+            $this->getSeoOptions($product),
+            $product->getAssociatedAttachmentIds()
         );
     }
 

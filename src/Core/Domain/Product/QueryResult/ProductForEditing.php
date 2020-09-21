@@ -79,6 +79,11 @@ class ProductForEditing
     private $productSeoOptions;
 
     /**
+     * @var int[]
+     */
+    private $associatedAttachmentIds;
+
+    /**
      * @param int $productId
      * @param bool $active
      * @param ProductCustomizationOptions $customizationOptions
@@ -88,6 +93,7 @@ class ProductForEditing
      * @param ProductOptions $options
      * @param ProductShippingInformation $shippingInformation
      * @param ProductSeoOptions $productSeoOptions
+     * @param array $associatedAttachmentIds
      */
     public function __construct(
         int $productId,
@@ -98,7 +104,8 @@ class ProductForEditing
         ProductPricesInformation $pricesInformation,
         ProductOptions $options,
         ProductShippingInformation $shippingInformation,
-        ProductSeoOptions $productSeoOptions
+        ProductSeoOptions $productSeoOptions,
+        array $associatedAttachmentIds
     ) {
         $this->productId = $productId;
         $this->active = $active;
@@ -109,6 +116,7 @@ class ProductForEditing
         $this->options = $options;
         $this->shippingInformation = $shippingInformation;
         $this->productSeoOptions = $productSeoOptions;
+        $this->associatedAttachmentIds = $associatedAttachmentIds;
     }
 
     /**
@@ -181,5 +189,13 @@ class ProductForEditing
     public function getProductSeoOptions(): ProductSeoOptions
     {
         return $this->productSeoOptions;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getAssociatedAttachmentIds(): array
+    {
+        return $this->associatedAttachmentIds;
     }
 }
