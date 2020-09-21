@@ -5709,6 +5709,28 @@ class ProductCore extends ObjectModel
     }
 
     /**
+     * @return int[]
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public function getAssociatedAttachmentIds(): array
+    {
+        $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+            SELECT id_attachment
+            FROM ' . _DB_PREFIX_ . 'product_attachment
+            WHERE id_product = ' . (int) $this->id
+        );
+
+        if (!$results) {
+            return [];
+        }
+
+        return array_map(function (array $result): int {
+            return (int) $result['id_attachment'];
+        }, $results);
+    }
+
+    /**
      * @param int $id_lang Language identifier
      *
      * @return array
