@@ -216,14 +216,14 @@ $(document).ready(() => {
   const MAX_MOBILE_WIDTH = 1023;
 
   if ($(window).width() <= MAX_MOBILE_WIDTH) {
-    mobileNav(MAX_MOBILE_WIDTH);
+    mobileNav();
   }
 
   $(window).on('resize', () => {
     if ($('body').hasClass('mobile') && $(window).width() > MAX_MOBILE_WIDTH) {
       unbuildMobileMenu();
     } else if (!$('body').hasClass('mobile') && $(window).width() <= MAX_MOBILE_WIDTH) {
-      mobileNav(MAX_MOBILE_WIDTH);
+      mobileNav();
     }
   });
 
