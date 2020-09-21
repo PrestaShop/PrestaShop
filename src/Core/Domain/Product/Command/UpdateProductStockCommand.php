@@ -29,7 +29,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use DateTime;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
@@ -64,7 +66,7 @@ class UpdateProductStockCommand
     private $quantity;
 
     /**
-     * @var int|null
+     * @var OutOfStockType|null
      */
     private $outOfStockType;
 
@@ -202,21 +204,23 @@ class UpdateProductStockCommand
     }
 
     /**
-     * @return int|null
+     * @return OutOfStockType|null
      */
-    public function getOutOfStockType(): ?int
+    public function getOutOfStockType(): ?OutOfStockType
     {
         return $this->outOfStockType;
     }
 
     /**
-     * @param int $outOfStockType
+     * @param string $outOfStockType
      *
-     * @return UpdateProductStockCommand
+     * @return $this
+     *
+     * @throws ProductStockException
      */
-    public function setOutOfStockType(int $outOfStockType): UpdateProductStockCommand
+    public function setOutOfStockType(string $outOfStockType): UpdateProductStockCommand
     {
-        $this->outOfStockType = $outOfStockType;
+        $this->outOfStockType = new OutOfStockType($outOfStockType);
 
         return $this;
     }

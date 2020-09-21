@@ -57,4 +57,9 @@ class ProductStockException extends ProductException
      * Code is sent when the StockAvailable object cannot be saved
      */
     const CANNOT_SAVE_STOCK_AVAILABLE = 50;
+
+    /**
+     * Code is sent when invalid out of stock type is used
+     */
+    const INVALID_OUT_OF_STOCK_TYPE = 60;
 }

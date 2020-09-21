@@ -28,8 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Adapter\Product\Converter\OutOfStockTypeConverter;
 use PrestaShop\PrestaShop\Adapter\Product\Converter\PackStockTypeConverter;
 use PrestaShop\PrestaShop\Adapter\Product\Provider\StockAvailableProvider;
 use PrestaShop\PrestaShop\Adapter\Product\Updater\ProductStockUpdater;
@@ -69,7 +69,7 @@ class UpdateProductStockHandler extends AbstractProductHandler implements Update
     public function handle(UpdateProductStockCommand $command): void
     {
         $product = $this->getFullProduct($command->getProductId());
-        $stockAvailable = $this->stockAvailableProvider->get($command->getProductId());
+        $stockAvailable = $this->stockAvailableProvider->getOrCreate($command->getProductId());
 
         $this->productStockUpdater->update($product, $stockAvailable, $this->formatCommandToArray($command));
     }
@@ -105,7 +105,7 @@ class UpdateProductStockHandler extends AbstractProductHandler implements Update
             $formattedCommand['minimal_quantity'] = $command->getMinimalQuantity();
         }
         if (null !== $command->getOutOfStockType()) {
-            $formattedCommand['out_of_stock'] = $command->getOutOfStockType();
+            $formattedCommand['out_of_stock'] = OutOfStockTypeConverter::convertToLegacy($command->getOutOfStockType()->getValue());
         }
         if (null !== $command->getPackStockType()) {
             $formattedCommand['pack_stock_type'] = PackStockTypeConverter::convertToLegacy($command->getPackStockType()->getValue());

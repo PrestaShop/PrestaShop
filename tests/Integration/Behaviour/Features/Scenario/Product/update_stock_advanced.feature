@@ -143,3 +143,32 @@ Feature: Update product stock from Back Office (BO)
       | pack_stock_type               | stock_type_default |
     Then product "productPack1" should have following stock information:
       | pack_stock_type | stock_type_default |
+
+  Scenario: I update product out of stock
+    Given I add product "product1" with following information:
+      | name       | en-US:Presta camera |
+      | is_virtual | false               |
+    And product "product1" should have following stock information:
+      | out_of_stock_type | out_of_stock_default |
+    When I update product "product1" stock with following information:
+      | out_of_stock_type | out_of_stock_available |
+    Then product "product1" should have following stock information:
+      | out_of_stock_type | out_of_stock_available |
+    When I update product "product1" stock with following information:
+      | out_of_stock_type | out_of_stock_not_available |
+    Then product "product1" should have following stock information:
+      | out_of_stock_type | out_of_stock_not_available |
+    When I update product "product1" stock with following information:
+      | out_of_stock_type | out_of_stock_default |
+    Then product "product1" should have following stock information:
+      | out_of_stock_type | out_of_stock_default |
+    When I update product "product1" stock with following information:
+      | out_of_stock_type | invalid |
+    Then I should get error that out of stock type is invalid
+
+  Scenario: Virtual product is available out of stock by default
+    Given I add product "product1" with following information:
+      | name       | en-US:eBook |
+      | is_virtual | true        |
+    Then product "product1" should have following stock information:
+      | out_of_stock_type | out_of_stock_available |
