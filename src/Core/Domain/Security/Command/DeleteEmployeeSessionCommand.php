@@ -26,45 +26,31 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Security\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Security\ValueObject\SessionId;
+use PrestaShop\PrestaShop\Core\Domain\Security\ValueObject\EmployeeSessionId;
 
 /**
- * Class DeleteSessionCommand is a command to delete profile by given id.
+ * Class DeleteEmployeeSessionCommand is a command to delete employee session by given id.
  */
-class DeleteSessionCommand
+class DeleteEmployeeSessionCommand
 {
     /**
-     * @var SessionId
+     * @var EmployeeSessionId
      */
     private $sessionId;
 
     /**
-     * @var string
-     */
-    private $type;
-
-    /**
      * @param int $sessionId
      */
-    public function __construct(int $sessionId, string $type)
+    public function __construct(int $sessionId)
     {
-        $this->sessionId = new SessionId($sessionId);
-        $this->type = $type;
+        $this->sessionId = new EmployeeSessionId($sessionId);
     }
 
     /**
-     * @return SessionId
+     * @return EmployeeSessionId
      */
-    public function getSessionId()
+    public function getEmployeeSessionId()
     {
         return $this->sessionId;
-    }
-
-    /**
-     * @return SessionId
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 }
