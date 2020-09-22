@@ -52,7 +52,7 @@ class CurrencyProvider extends AbstractObjectModelProvider
         /** @var Currency $currency */
         $currency = $this->getObjectModel(
             $currencyId->getValue(),
-            'currency',
+            Currency::class,
             CurrencyNotFoundException::class
         );
 
