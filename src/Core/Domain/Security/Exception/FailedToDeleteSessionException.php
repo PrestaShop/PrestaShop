@@ -29,8 +29,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\Security\Exception;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Class SessionException is a base exception for security sessions context.
+ * Class FailedToDeleteSessionException is a base exception for security sessions context.
  */
-class SessionException extends DomainException
+class FailedToDeleteSessionException extends DomainException
 {
 }
