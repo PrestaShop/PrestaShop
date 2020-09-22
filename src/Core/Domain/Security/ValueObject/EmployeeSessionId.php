@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Security\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionException;
 
 /**
- * Class SessionId
+ * Class EmployeeSessionId
  */
-class SessionId
+class EmployeeSessionId
 {
     /**
      * @var int
