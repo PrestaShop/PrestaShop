@@ -106,7 +106,7 @@ final class SetProductSuppliersHandler implements SetProductSuppliersHandlerInte
         $this->assertDefaultSupplierIsOneOfProvidedSuppliers($command);
 
         $this->setProductSuppliers($productId, $command->getProductSuppliers());
-        $this->productUpdater->updateProductDefaultSupplier($product, $defaultSupplierIdValue);
+        $this->productUpdater->updateDefaultSupplier($product, $defaultSupplierIdValue);
 
         return $this->getProductSupplierIds($productId);
     }
