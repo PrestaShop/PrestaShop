@@ -222,14 +222,6 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions
 
-    prestashop.adapter.product.command_handler.add_product_supplier_handler:
-        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddProductSupplierHandler
-        arguments:
-            - '@prestashop.adapter.product.product_supplier_persister'
-        tags:
-            - name: tactician.handler
-              command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\AddProductSupplierCommand
-
     prestashop.adapter.product.command_handler.update_product_supplier_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductSupplierHandler
         arguments:
