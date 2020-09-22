@@ -115,6 +115,26 @@ abstract class QueryParamsCollection
     }
 
     /**
+     * @param array $queryParams
+     * @param array $allParams
+     *
+     * @return $this
+     */
+    public function fromArray(array $queryParams, array $allParams = []): QueryParamsCollection
+    {
+        $queryParams = $this->excludeUnknownParams($queryParams);
+        $queryParams = $this->parsePaginationParams($queryParams);
+        $queryParams = $this->parseOrderParams($queryParams);
+
+        if (empty($allParams)) {
+            $allParams = $queryParams;
+        }
+        $this->queryParams = $this->parseFilterParamsArray($queryParams, $allParams);
+
+        return $this;
+    }
+
+    /**
      * @param $queryParams
      *
      * @return mixed
@@ -150,6 +170,17 @@ abstract class QueryParamsCollection
             $request->query->all()
         );
 
+        return $this->parseFilterParamsArray($queryParams, $allParameters);
+    }
+
+    /**
+     * @param array $queryParams
+     * @param array $allParameters
+     *
+     * @return array
+     */
+    protected function parseFilterParamsArray(array $queryParams, array $allParameters): array
+    {
         $filters = array_filter(array_keys($allParameters), function ($filter) {
             return in_array($filter, $this->getValidFilterParams());
         });
@@ -477,7 +508,7 @@ abstract class QueryParamsCollection
      */
     protected function appendSqlCategoryFilter(array $filters)
     {
-        $filters[] = 'AND EXISTS(SELECT 1 FROM {table_prefix}category_product cp 
+        $filters[] = 'AND EXISTS(SELECT 1 FROM {table_prefix}category_product cp
         WHERE cp.id_product=p.id_product AND FIND_IN_SET(cp.id_category, :categories_ids))';
 
         return $filters;
@@ -595,8 +626,8 @@ abstract class QueryParamsCollection
                     FROM {table_prefix}product_attribute_combination pac
                         LEFT JOIN {table_prefix}attribute a ON (
                             pac.id_attribute = a.id_attribute
-                        )                   
-                    WHERE pac.id_product_attribute=pa.id_product_attribute 
+                        )
+                    WHERE pac.id_product_attribute=pa.id_product_attribute
                     AND a.id_attribute=:attribute_id_%d
                     AND a.id_attribute_group=:attribute_group_id_%d)', $key, $key);
         });
@@ -653,7 +684,7 @@ abstract class QueryParamsCollection
                             fp.id_feature_value = fv.id_feature_value
                         )
                     WHERE fv.custom = 0 AND fp.id_product=p.id_product
-                    AND fp.id_feature=:feature_id_%d 
+                    AND fp.id_feature=:feature_id_%d
                     AND fp.id_feature_value=:feature_value_id_%d)', $key, $key);
         });
 

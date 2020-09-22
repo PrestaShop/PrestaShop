@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductStockException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Stock\StockManager;
 use Product;
 use StockAvailable;
 
@@ -45,28 +46,37 @@ class ProductStockUpdater extends AbstractObjectModelPersister
     private $configuration;
 
     /**
+     * @var StockManager
+     */
+    private $stockManager;
+
+    /**
      * @param ConfigurationInterface $configuration
      */
-    public function __construct(ConfigurationInterface $configuration)
-    {
+    public function __construct(
+        ConfigurationInterface $configuration,
+        StockManager $stockManager
+    ) {
         $this->configuration = $configuration;
+        $this->stockManager = $stockManager;
     }
 
     /**
      * @param Product $product
      * @param StockAvailable $stockAvailable
      * @param array $propertiesToUpdate
+     * @param bool $addMovement
      *
      * @throws CoreException
      * @throws ProductStockException
      */
-    public function update(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate): void
+    public function update(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate, bool $addMovement = true): void
     {
         $advancedStockEnabled = (bool) $this->configuration->get('PS_ADVANCED_STOCK_MANAGEMENT');
         if ($advancedStockEnabled) {
-            $this->updateAdvancedStock($product, $stockAvailable, $propertiesToUpdate);
+            $this->updateAdvancedStock($product, $stockAvailable, $propertiesToUpdate, $addMovement);
         } else {
-            $this->updateClassicStock($product, $stockAvailable, $propertiesToUpdate);
+            $this->updateClassicStock($product, $stockAvailable, $propertiesToUpdate, $addMovement);
         }
     }
 
@@ -74,11 +84,12 @@ class ProductStockUpdater extends AbstractObjectModelPersister
      * @param Product $product
      * @param StockAvailable $stockAvailable
      * @param array $propertiesToUpdate
+     * @param bool $addMovement
      *
      * @throws CoreException
      * @throws ProductStockException
      */
-    private function updateClassicStock(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate): void
+    private function updateClassicStock(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate, bool $addMovement): void
     {
         // Depends on stock is only available in advanced mode
         if (isset($propertiesToUpdate['depends_on_stock']) && $propertiesToUpdate['depends_on_stock']) {
@@ -98,7 +109,7 @@ class ProductStockUpdater extends AbstractObjectModelPersister
         $propertiesToUpdate['depends_on_stock'] = false;
         $propertiesToUpdate['advanced_stock_management'] = false;
 
-        $this->fillProperties($product, $stockAvailable, $propertiesToUpdate);
+        $this->fillProperties($product, $stockAvailable, $propertiesToUpdate, $addMovement);
 
         $this->updateObjectModel($product, CannotUpdateProductException::class, CannotUpdateProductException::FAILED_UPDATE_STOCK);
         $this->updateObjectModel($stockAvailable, ProductStockException::class, ProductStockException::CANNOT_SAVE_STOCK_AVAILABLE);
@@ -108,11 +119,12 @@ class ProductStockUpdater extends AbstractObjectModelPersister
      * @param Product $product
      * @param StockAvailable $stockAvailable
      * @param array $propertiesToUpdate
+     * @param bool $addMovement
      *
      * @throws CoreException
      * @throws ProductStockException
      */
-    private function updateAdvancedStock(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate): void
+    private function updateAdvancedStock(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate, bool $addMovement): void
     {
         $productHasAdvancedStock = isset($propertiesToUpdate['advanced_stock_management']) ? $propertiesToUpdate['advanced_stock_management'] : $product->advanced_stock_management;
 
@@ -133,7 +145,7 @@ class ProductStockUpdater extends AbstractObjectModelPersister
             $this->checkPackStockType($product, $propertiesToUpdate);
         }
 
-        $this->fillProperties($product, $stockAvailable, $propertiesToUpdate);
+        $this->fillProperties($product, $stockAvailable, $propertiesToUpdate, $addMovement);
 
         $this->updateObjectModel($product, CannotUpdateProductException::class, CannotUpdateProductException::FAILED_UPDATE_STOCK);
         $this->updateObjectModel($stockAvailable, ProductStockException::class, ProductStockException::CANNOT_SAVE_STOCK_AVAILABLE);
@@ -149,8 +161,9 @@ class ProductStockUpdater extends AbstractObjectModelPersister
      * @param Product $product
      * @param StockAvailable $stockAvailable
      * @param array $propertiesToUpdate
+     * @param bool $addMovement
      */
-    private function fillProperties(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate): void
+    private function fillProperties(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate, bool $addMovement): void
     {
         $this->fillProperty($product, 'depends_on_stock', $propertiesToUpdate);
         $this->fillProperty($product, 'advanced_stock_management', $propertiesToUpdate);
@@ -158,6 +171,31 @@ class ProductStockUpdater extends AbstractObjectModelPersister
         $this->fillProperty($product, 'out_of_stock', $propertiesToUpdate);
         $this->fillProperty($stockAvailable, 'depends_on_stock', $propertiesToUpdate);
         $this->fillProperty($stockAvailable, 'out_of_stock', $propertiesToUpdate);
+
+        // Quantity is handled separately as it is also related to Stock movements
+        $this->updateQuantity($product, $stockAvailable, $propertiesToUpdate, $addMovement);
+    }
+
+    /**
+     * @param Product $product
+     * @param StockAvailable $stockAvailable
+     * @param array $propertiesToUpdate
+     * @param bool $addMovement
+     */
+    private function updateQuantity(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate, bool $addMovement): void
+    {
+        if (!isset($propertiesToUpdate['quantity'])) {
+            return;
+        }
+
+        $deltaQuantity = (int) $propertiesToUpdate['quantity'] - $stockAvailable->quantity;
+
+        $this->fillProperty($product, 'quantity', $propertiesToUpdate);
+        $this->fillProperty($stockAvailable, 'quantity', $propertiesToUpdate);
+
+        if ($addMovement && 0 !== $deltaQuantity) {
+            $this->stockManager->saveMovement($stockAvailable->id_product, $stockAvailable->id_product_attribute, $deltaQuantity);
+        }
     }
 
     /**
