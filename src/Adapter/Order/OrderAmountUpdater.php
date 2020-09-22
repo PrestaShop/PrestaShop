@@ -74,7 +74,7 @@ class OrderAmountUpdater
     public function update(
         Order $order,
         Cart $cart,
-        ?int $orderInvoiceId
+        ?int $orderInvoiceId = null
     ): void {
         $this->cleanCaches();
 
