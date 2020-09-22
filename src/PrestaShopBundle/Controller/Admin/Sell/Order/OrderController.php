@@ -1769,6 +1769,10 @@ class OrderController extends FrameworkBundleAdminController
                     'The order message given is invalid',
                     'Admin.Orderscustomers.Notification'
                 ),
+                OrderConstraintException::INVALID_INTERNAL_NOTE => $this->trans(
+                    'The order note given is invalid',
+                    'Admin.Orderscustomers.Notification'
+                ),
             ],
             InvalidProductQuantityException::class => $this->trans(
                 'Positive product quantity is required.',
