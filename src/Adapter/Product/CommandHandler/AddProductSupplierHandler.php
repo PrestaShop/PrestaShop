@@ -70,13 +70,9 @@ final class AddProductSupplierHandler implements AddProductSupplierHandlerInterf
      */
     private function fillEntityWithCommandData(ProductSupplier $productSupplier, AddProductSupplierCommand $command): void
     {
-        $productIdValue = $command->getProductId()->getValue();
-        $supplierIdValue = $command->getSupplierId()->getValue();
-        $currencyIdValue = $command->getCurrencyId()->getValue();
-
-        $productSupplier->id_product = $productIdValue;
-        $productSupplier->id_supplier = $supplierIdValue;
-        $productSupplier->id_currency = $currencyIdValue;
+        $productSupplier->id_product = $command->getProductId()->getValue();
+        $productSupplier->id_supplier = $command->getSupplierId()->getValue();
+        $productSupplier->id_currency = $command->getCurrencyId()->getValue();
 
         if (null !== $command->getReference()) {
             $productSupplier->product_supplier_reference = $command->getReference();
