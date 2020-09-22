@@ -41,6 +41,7 @@ class AttachmentProvider extends AbstractObjectModelProvider
 {
     /**
      * @param AttachmentId $attachmentId
+     *
      * @return Attachment
      *
      * @throws CoreException
