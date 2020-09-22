@@ -27,19 +27,16 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteSessionCommand;
+use PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteCustomerSessionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteEmployeeSessionCommand;
-use PrestaShop\PrestaShop\Core\Domain\Session\Exception\CannotDeleteSuperAdminSessionException;
-use PrestaShop\PrestaShop\Core\Domain\Session\Exception\FailedToDeleteSessionException;
-use PrestaShop\PrestaShop\Core\Domain\Session\Exception\SessionConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteEmployeesSessionsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteCustomersSessionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Session\Exception\SessionException;
 use PrestaShop\PrestaShop\Core\Domain\Session\Exception\SessionNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Session\SessionSettings;
-use PrestaShop\PrestaShop\Core\Domain\Session\Query\GetSessionForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Session\QueryResult\EditableSession;
-use PrestaShop\PrestaShop\Core\Search\Filters\Security\Sessions\EmployeeFilters;
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\Security\Sessions\CustomerFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\Security\Sessions\EmployeeFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -206,7 +203,7 @@ class SecurityController extends FrameworkBundleAdminController
     }
 
     /**
-     * Delete a session.
+     * Delete an employee session.
      *
      * @AdminSecurity(
      *     "is_granted('delete', request.get('_legacy_controller')~'_')",
@@ -221,7 +218,7 @@ class SecurityController extends FrameworkBundleAdminController
     public function deleteEmployeeSessionAction(int $sessionId)
     {
         try {
-            $deleteSessionCommand = new DeleteEmployeeSessionCommand($sessionId, $type);
+            $deleteSessionCommand = new DeleteEmployeeSessionCommand($sessionId);
 
             $this->getCommandBus()->handle($deleteSessionCommand);
 
@@ -230,11 +227,39 @@ class SecurityController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_security_sessions_employee');
+        return $this->redirectToRoute('admin_security_sessions_employees');
     }
 
     /**
-     * Bulk delete sessions.
+     * Delete a customer session.
+     *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller')~'_')",
+     *     message="You do not have permission to edit this."
+     * )
+     * @DemoRestricted(redirectRoute="admin_sessions_index")
+     *
+     * @param int $sessionId
+     *
+     * @return RedirectResponse
+     */
+    public function deleteCustomerSessionAction(int $sessionId)
+    {
+        try {
+            $deleteSessionCommand = new DeleteCustomerSessionCommand($sessionId);
+
+            $this->getCommandBus()->handle($deleteSessionCommand);
+
+            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+        } catch (SessionException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_security_sessions_customers');
+    }
+
+    /**
+     * Bulk delete customers sessions.
      *
      * @AdminSecurity(
      *     "is_granted('delete', request.get('_legacy_controller')~'_')",
@@ -246,12 +271,12 @@ class SecurityController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function bulkDeleteAction(Request $request)
+    public function bulkDeleteCustomersSessionsAction(Request $request)
     {
-        $profileIds = $request->request->get('profile_bulk');
+        $sessionIds = $request->request->get('security_sessions_customers_bulk');
 
         try {
-            $deleteSessionsCommand = new BulkDeleteSessionCommand($profileIds);
+            $deleteSessionsCommand = new BulkDeleteCustomersSessionsCommand($sessionIds);
 
             $this->getCommandBus()->handle($deleteSessionsCommand);
 
@@ -260,7 +285,7 @@ class SecurityController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_sessions_index');
+        return $this->redirectToRoute('admin_security_sessions_customers');
     }
 
     /**
