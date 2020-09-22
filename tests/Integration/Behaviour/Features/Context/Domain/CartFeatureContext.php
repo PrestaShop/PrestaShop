@@ -106,6 +106,8 @@ class CartFeatureContext extends AbstractDomainFeatureContext
                 (int) $customerId
             )
         );
+        // Reset context's cart to avoid one from former tests to be used with invalid values (like non existent addresses)
+        Context::getContext()->cart = new Cart($cartIdObject->getValue());
 
         SharedStorage::getStorage()->set($cartReference, $cartIdObject->getValue());
     }
