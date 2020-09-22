@@ -28,7 +28,7 @@ class Profiles extends BOBasePage {
     // Bulk Actions
     this.selectAllRowsLabel = `${this.profilesListForm} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.profilesListForm} button.dropdown-toggle`;
-    this.bulkActionsDeleteButton = `${this.profilesListForm} #profile_grid_bulk_action_bulk_delete_profiles`;
+    this.bulkActionsDeleteButton = `${this.profilesListForm} #profile_grid_bulk_action_delete_selection`;
     // Delete modal
     this.confirmDeleteModal = '#profile-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
@@ -161,7 +161,6 @@ class Profiles extends BOBasePage {
    * @returns {Promise<string>}
    */
   async deleteBulkActions(page) {
-    this.dialogListener(page);
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsLabel, el => el.click()),
@@ -170,10 +169,16 @@ class Profiles extends BOBasePage {
     // Click on Button Bulk actions
     await Promise.all([
       page.click(this.bulkActionsToggleButton),
-      this.waitForVisibleSelector(page, this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(page, this.bulkActionsDeleteButton),
     ]);
+
     // Click on delete and wait for modal
-    await this.clickAndWaitForNavigation(page, this.bulkActionsDeleteButton);
+    await Promise.all([
+      page.click(this.bulkActionsDeleteButton),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+
+    await this.confirmDeleteProfiles(page);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
