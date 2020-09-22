@@ -658,7 +658,7 @@ class OrderDetailCore extends ObjectModel
         if ($quantity_discount) {
             $this->product_quantity_discount = $unit_price;
             if (Product::getTaxCalculationMethod((int) $order->id_customer) == PS_TAX_EXC) {
-                $this->product_quantity_discount = Tools::ps_round($unit_price, 2);
+                $this->product_quantity_discount = Tools::ps_round($unit_price, Context::getContext()->getComputingPrecision());
             }
 
             if (isset($this->tax_calculator)) {
@@ -786,7 +786,7 @@ class OrderDetailCore extends ObjectModel
 
         $this->total_shipping_price_tax_excl = (float) $product['additional_shipping_cost'];
         $this->total_shipping_price_tax_incl = (float) ($this->total_shipping_price_tax_excl * (1 + ($tax_rate / 100)));
-        $this->total_shipping_price_tax_incl = Tools::ps_round($this->total_shipping_price_tax_incl, 2);
+        $this->total_shipping_price_tax_incl = Tools::ps_round($this->total_shipping_price_tax_incl, Context::getContext()->getComputingPrecision());
     }
 
     public function getWsTaxes()
