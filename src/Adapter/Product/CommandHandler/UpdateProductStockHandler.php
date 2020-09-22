@@ -71,7 +71,7 @@ class UpdateProductStockHandler extends AbstractProductHandler implements Update
         $product = $this->getFullProduct($command->getProductId());
         $stockAvailable = $this->stockAvailableProvider->getOrCreate($command->getProductId());
 
-        $this->productStockUpdater->update($product, $stockAvailable, $this->formatCommandToArray($command));
+        $this->productStockUpdater->update($product, $stockAvailable, $this->formatCommandToArray($command), $command->addMovement());
     }
 
     /**
