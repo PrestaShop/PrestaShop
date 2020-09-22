@@ -29,9 +29,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelPersister;
+use PrestaShop\PrestaShop\Adapter\Supplier\SupplierProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use Product;
 use ProductSupplier;
@@ -47,12 +52,28 @@ class ProductUpdater extends AbstractObjectModelPersister
     private $productValidator;
 
     /**
+     * @var SupplierProvider
+     */
+    private $supplierProvider;
+
+    /**
+     * @var ProductSupplierProvider
+     */
+    private $productSupplierProvider;
+
+    /**
      * @param ProductValidator $productValidator
+     * @param SupplierProvider $supplierProvider
+     * @param ProductSupplierProvider $productSupplierProvider
      */
     public function __construct(
-        ProductValidator $productValidator
+        ProductValidator $productValidator,
+        SupplierProvider $supplierProvider,
+        ProductSupplierProvider $productSupplierProvider
     ) {
         $this->productValidator = $productValidator;
+        $this->supplierProvider = $supplierProvider;
+        $this->productSupplierProvider = $productSupplierProvider;
     }
 
     /**
@@ -94,25 +115,61 @@ class ProductUpdater extends AbstractObjectModelPersister
 
     /**
      * @param Product $product
+     *
+     * @throws CoreException
+     */
+    public function resetDefaultSupplier(Product $product): void
+    {
+        $this->update($product, [
+            'supplier_reference' => '',
+            'wholesale_price' => 0,
+            'id_supplier' => 0,
+        ], CannotUpdateProductException::FAILED_UPDATE_DEFAULT_SUPPLIER);
+    }
+
+    /**
+     * @param Product $product
      * @param int $defaultSupplierId
      */
-    public function updateProductDefaultSupplier(Product $product, int $defaultSupplierId): void
+    public function updateDefaultSupplier(Product $product, int $defaultSupplierId): void
     {
-        if ($product->hasCombinations() || !$defaultSupplierId) {
-            $fieldsToUpdate['supplier_reference'] = '';
-            $fieldsToUpdate['wholesale_price'] = 0;
-        } elseif ($defaultSupplierId && !$product->hasCombinations()) {
-            $fieldsToUpdate['supplier_reference'] = ProductSupplier::getProductSupplierReference(
-                $product->id,
-                0,
-                $defaultSupplierId
-            );
-            $fieldsToUpdate['wholesale_price'] = ProductSupplier::getProductSupplierPrice($product->id, 0, $defaultSupplierId);
+        if ($defaultSupplierId && !$product->hasCombinations()) {
+            $this->resetDefaultSupplierIfNotExists($product, new SupplierId($defaultSupplierId));
+            $this->update($product, [
+                'supplier_reference' => ProductSupplier::getProductSupplierReference($product->id, 0, $defaultSupplierId),
+                'wholesale_price' => ProductSupplier::getProductSupplierPrice($product->id, 0, $defaultSupplierId),
+                'id_supplier' => $defaultSupplierId,
+            ], CannotUpdateProductException::FAILED_UPDATE_DEFAULT_SUPPLIER);
+
+            return;
         }
 
-        $fieldsToUpdate['id_supplier'] = $defaultSupplierId;
+        $this->resetDefaultSupplier($product);
+    }
 
-        $this->update($product, $fieldsToUpdate, CannotUpdateProductException::FAILED_UPDATE_DEFAULT_SUPPLIER);
+    /**
+     * @param Product $product
+     * @param SupplierId $supplierId
+     *
+     * @throws CoreException
+     * @throws ProductSupplierNotFoundException
+     * @throws SupplierNotFoundException
+     */
+    private function resetDefaultSupplierIfNotExists(Product $product, SupplierId $supplierId): void
+    {
+        try {
+            $this->supplierProvider->assertSupplierExists($supplierId);
+            $this->productSupplierProvider->assertProductSupplierExists(new ProductSupplierId(
+                (int) ProductSupplier::getIdByProductAndSupplier(
+                    $product->id,
+                    0,
+                    $supplierId->getValue())
+            ));
+        } catch (SupplierNotFoundException | ProductSupplierNotFoundException $e) {
+            $this->resetDefaultSupplier($product);
+
+            throw $e;
+        }
     }
 
     /**

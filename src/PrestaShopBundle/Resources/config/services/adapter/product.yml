@@ -269,6 +269,8 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductUpdater
         arguments:
             - '@prestashop.adapter.product.product_validator'
+            - '@prestashop.adapter.supplier.supplier_provider'
+            - '@prestashop.adapter.product.product_supplier_provider'
 
     prestashop.adapter.product.product_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductValidator

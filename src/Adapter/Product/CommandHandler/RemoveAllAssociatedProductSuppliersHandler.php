@@ -76,6 +76,6 @@ final class RemoveAllAssociatedProductSuppliersHandler extends AbstractProductSu
         }
 
         $this->productSupplierDeleter->bulkDelete($productSupplierIds);
-        $this->productUpdater->updateProductDefaultSupplier($product, 0);
+        $this->productUpdater->resetDefaultSupplier($product);
     }
 }
