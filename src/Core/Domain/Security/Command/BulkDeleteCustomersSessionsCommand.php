@@ -24,13 +24,43 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Security\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Security\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\Security\ValueObject\CustomerSessionId;
 
 /**
- * Class SessionException is a base exception for security sessions context.
+ * Deletes customers sessions in bulk action
  */
-class SessionException extends DomainException
+class BulkDeleteCustomersSessionsCommand
 {
+    /**
+     * @var CustomerSessionId[]
+     */
+    private $sessionIds;
+
+    /**
+     * @param int[] $sessionIds
+     */
+    public function __construct(array $sessionIds)
+    {
+        $this->setCustomerSessionIds($sessionIds);
+    }
+
+    /**
+     * @return CustomerSessionId[]
+     */
+    public function getCustomerSessionIds()
+    {
+        return $this->sessionIds;
+    }
+
+    /**
+     * @param int[] $sessionIds
+     */
+    private function setCustomerSessionIds(array $sessionIds)
+    {
+        foreach ($sessionIds as $sessionId) {
+            $this->sessionIds[] = new CustomerSessionId($sessionId);
+        }
+    }
 }
