@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
-use PrestaShop\PrestaShop\Adapter\AbstractObjectModelPersister;
 use PrestaShop\PrestaShop\Adapter\Supplier\SupplierProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -44,17 +43,12 @@ use ProductSupplier;
 /**
  * Performs update of provided Product properties
  */
-class ProductUpdater extends AbstractObjectModelPersister
+class ProductUpdater
 {
     /**
-     * @var ProductValidator
+     * @var ProductPersister
      */
-    private $productValidator;
-
-    /**
-     * @var SupplierProvider
-     */
-    private $supplierProvider;
+    private $productPersister;
 
     /**
      * @var ProductSupplierProvider
@@ -62,32 +56,23 @@ class ProductUpdater extends AbstractObjectModelPersister
     private $productSupplierProvider;
 
     /**
-     * @param ProductValidator $productValidator
-     * @param SupplierProvider $supplierProvider
-     * @param ProductSupplierProvider $productSupplierProvider
+     * @var SupplierProvider
      */
-    public function __construct(
-        ProductValidator $productValidator,
-        SupplierProvider $supplierProvider,
-        ProductSupplierProvider $productSupplierProvider
-    ) {
-        $this->productValidator = $productValidator;
-        $this->supplierProvider = $supplierProvider;
-        $this->productSupplierProvider = $productSupplierProvider;
-    }
+    private $supplierProvider;
 
     /**
-     * @param Product $product
-     * @param array $propertiesToUpdate
-     * @param int $errorCode
-     *
-     * @throws CoreException
+     * @param SupplierProvider $supplierProvider
+     * @param ProductSupplierProvider $productSupplierProvider
+     * @param ProductPersister $productPersister
      */
-    public function update(Product $product, array $propertiesToUpdate, int $errorCode): void
-    {
-        $this->fillProperties($product, $propertiesToUpdate);
-        $this->productValidator->validate($product);
-        $this->updateObjectModel($product, CannotUpdateProductException::class, $errorCode);
+    public function __construct(
+        ProductPersister $productPersister,
+        ProductSupplierProvider $productSupplierProvider,
+        SupplierProvider $supplierProvider
+    ) {
+        $this->productPersister = $productPersister;
+        $this->productSupplierProvider = $productSupplierProvider;
+        $this->supplierProvider = $supplierProvider;
     }
 
     /**
@@ -103,7 +88,7 @@ class ProductUpdater extends AbstractObjectModelPersister
             $customizable = ProductCustomizabilitySettings::NOT_CUSTOMIZABLE;
         }
 
-        $this->update(
+        $this->productPersister->update(
             $product,
             [
                 'customizable' => $customizable,
@@ -120,7 +105,7 @@ class ProductUpdater extends AbstractObjectModelPersister
      */
     public function resetDefaultSupplier(Product $product): void
     {
-        $this->update($product, [
+        $this->productPersister->update($product, [
             'supplier_reference' => '',
             'wholesale_price' => 0,
             'id_supplier' => 0,
@@ -135,7 +120,7 @@ class ProductUpdater extends AbstractObjectModelPersister
     {
         if ($defaultSupplierId && !$product->hasCombinations()) {
             $this->resetDefaultSupplierIfNotExists($product, new SupplierId($defaultSupplierId));
-            $this->update($product, [
+            $this->productPersister->update($product, [
                 'supplier_reference' => ProductSupplier::getProductSupplierReference($product->id, 0, $defaultSupplierId),
                 'wholesale_price' => ProductSupplier::getProductSupplierPrice($product->id, 0, $defaultSupplierId),
                 'id_supplier' => $defaultSupplierId,
@@ -170,37 +155,5 @@ class ProductUpdater extends AbstractObjectModelPersister
 
             throw $e;
         }
-    }
-
-    /**
-     * @param Product $product
-     * @param array $propertiesToUpdate
-     */
-    private function fillProperties(Product $product, array $propertiesToUpdate): void
-    {
-        $this->fillCustomizabilityProperties($product, $propertiesToUpdate);
-        $this->fillSupplierProperties($product, $propertiesToUpdate);
-    }
-
-    /**
-     * @param Product $product
-     * @param array<string, mixed> $propertiesToUpdate
-     */
-    private function fillCustomizabilityProperties(Product $product, array $propertiesToUpdate): void
-    {
-        $this->fillProperty($product, 'customizable', $propertiesToUpdate);
-        $this->fillProperty($product, 'text_fields', $propertiesToUpdate);
-        $this->fillProperty($product, 'uploadable_files', $propertiesToUpdate);
-    }
-
-    /**
-     * @param Product $product
-     * @param array<string, mixed> $propertiesToUpdate
-     */
-    private function fillSupplierProperties(Product $product, array $propertiesToUpdate): void
-    {
-        $this->fillProperty($product, 'supplier_reference', $propertiesToUpdate);
-        $this->fillProperty($product, 'id_supplier', $propertiesToUpdate);
-        $this->fillProperty($product, 'wholesale_price', $propertiesToUpdate);
     }
 }
