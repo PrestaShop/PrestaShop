@@ -24,47 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Security\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Security\ValueObject\SessionId;
+use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteCustomersSessionsCommand;
 
 /**
- * Class DeleteSessionCommand is a command to delete profile by given id.
+ * Defines interface for customer bulk delete command handler.
  */
-class DeleteSessionCommand
+interface BulkDeleteCustomerSessionHandlerInterface
 {
     /**
-     * @var SessionId
+     * @param BulkDeleteCustomersSessionsCommand $command
      */
-    private $sessionId;
-
-    /**
-     * @var string
-     */
-    private $type;
-
-    /**
-     * @param int $sessionId
-     */
-    public function __construct(int $sessionId, string $type)
-    {
-        $this->sessionId = new SessionId($sessionId);
-        $this->type = $type;
-    }
-
-    /**
-     * @return SessionId
-     */
-    public function getSessionId()
-    {
-        return $this->sessionId;
-    }
-
-    /**
-     * @return SessionId
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
+    public function handle(BulkDeleteCustomersSessionsCommand $command);
 }
