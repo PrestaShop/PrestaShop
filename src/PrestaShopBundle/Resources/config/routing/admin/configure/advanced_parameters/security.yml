@@ -52,7 +52,7 @@ admin_security_sessions_employees_delete:
 
 admin_security_sessions_employees_bulk_delete:
     path: /sessions/employees/delete/bulk
-    methods: [DELETE]
+    methods: [POST,DELETE]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:bulkDeleteEmployeesSessions'
         _legacy_controller: AdminSecuritySessionsEmployees
@@ -60,7 +60,7 @@ admin_security_sessions_employees_bulk_delete:
 
 admin_security_sessions_customers_bulk_delete:
     path: /sessions/customers/delete/bulk
-    methods: [DELETE]
+    methods: [POST,DELETE]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:bulkDeleteCustomersSessions'
         _legacy_controller: AdminSecuritySessionsCustomers
