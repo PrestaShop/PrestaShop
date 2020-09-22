@@ -85,8 +85,8 @@ $(document).ready(() => {
 
   function createInputFile() {
     $(prestashop.themeSelectors.fileInput).on('change', (event) => {
-      let target; let
-        file;
+      let target;
+      let file;
 
       // eslint-disable-next-line
       if ((target = $(event.currentTarget)[0]) && (file = target.files[0])) {
