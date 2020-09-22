@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
@@ -66,6 +67,7 @@ class SetProductSuppliersCommand
         $this->setProductSuppliers($productSuppliers);
         $this->productId = new ProductId($productId);
         $this->defaultSupplierId = new SupplierId($defaultSupplierId);
+        $this->assertDefaultSupplierIsOneOfProvidedSuppliers();
     }
 
     /**
@@ -115,5 +117,21 @@ class SetProductSuppliersCommand
                 $productSupplier['product_supplier_id'] ?? null
             );
         }
+    }
+
+    /**
+     * @throws ProductSupplierException
+     */
+    private function assertDefaultSupplierIsOneOfProvidedSuppliers(): void
+    {
+        $defaultSupplierId = $this->getDefaultSupplierId()->getValue();
+
+        foreach ($this->productSuppliers as $productSupplier) {
+            if ($productSupplier->getSupplierId() === $defaultSupplierId) {
+                return;
+            }
+        }
+
+        throw new ProductSupplierException('Default supplier must be one of provided suppliers');
     }
 }
