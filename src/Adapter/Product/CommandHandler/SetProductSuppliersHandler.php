@@ -28,13 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\ProductProvider;
 use PrestaShop\PrestaShop\Adapter\Product\ProductSupplierPersister;
 use PrestaShop\PrestaShop\Adapter\Product\ProductSupplierProvider;
-use PrestaShop\PrestaShop\Adapter\Product\ProductUpdater;
+use PrestaShop\PrestaShop\Adapter\Product\ProductSupplierUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\SetProductSuppliersHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier as ProductSupplierDTO;
@@ -49,16 +47,6 @@ use ProductSupplier;
  */
 final class SetProductSuppliersHandler implements SetProductSuppliersHandlerInterface
 {
-    /**
-     * @var ProductUpdater
-     */
-    private $productUpdater;
-
-    /**
-     * @var ProductProvider
-     */
-    private $productProvider;
-
     /**
      * @var ProductSupplierDeleterInterface
      */
@@ -75,24 +63,26 @@ final class SetProductSuppliersHandler implements SetProductSuppliersHandlerInte
     private $productSupplierProvider;
 
     /**
-     * @param ProductUpdater $productUpdater
-     * @param ProductProvider $productProvider
+     * @var ProductSupplierUpdater
+     */
+    private $productSupplierUpdater;
+
+    /**
      * @param ProductSupplierDeleterInterface $productSupplierDeleter
      * @param ProductSupplierPersister $productSupplierPersister
      * @param ProductSupplierProvider $productSupplierProvider
+     * @param ProductSupplierUpdater $productSupplierUpdater
      */
     public function __construct(
-        ProductUpdater $productUpdater,
-        ProductProvider $productProvider,
         ProductSupplierDeleterInterface $productSupplierDeleter,
         ProductSupplierPersister $productSupplierPersister,
-        ProductSupplierProvider $productSupplierProvider
+        ProductSupplierProvider $productSupplierProvider,
+        ProductSupplierUpdater $productSupplierUpdater
     ) {
-        $this->productUpdater = $productUpdater;
-        $this->productProvider = $productProvider;
         $this->productSupplierDeleter = $productSupplierDeleter;
         $this->productSupplierPersister = $productSupplierPersister;
         $this->productSupplierProvider = $productSupplierProvider;
+        $this->productSupplierUpdater = $productSupplierUpdater;
     }
 
     /**
@@ -101,39 +91,11 @@ final class SetProductSuppliersHandler implements SetProductSuppliersHandlerInte
     public function handle(SetProductSuppliersCommand $command): array
     {
         $productId = $command->getProductId();
-        $product = $this->productProvider->get($productId);
-        $defaultSupplierIdValue = $command->getDefaultSupplierId()->getValue();
-        $this->assertDefaultSupplierIsOneOfProvidedSuppliers($command);
 
         $this->setProductSuppliers($productId, $command->getProductSuppliers());
-        $this->productUpdater->updateDefaultSupplier($product, $defaultSupplierIdValue);
+        $this->productSupplierUpdater->updateDefaultSupplier($productId, $command->getDefaultSupplierId());
 
         return $this->getProductSupplierIds($productId);
-    }
-
-    /**
-     * @param SetProductSuppliersCommand $command
-     *
-     * @throws CannotUpdateProductException
-     */
-    private function assertDefaultSupplierIsOneOfProvidedSuppliers(SetProductSuppliersCommand $command): void
-    {
-        $defaultSupplierId = $command->getDefaultSupplierId()->getValue();
-
-        foreach ($command->getProductSuppliers() as $productSupplier) {
-            if ($productSupplier->getSupplierId() === $defaultSupplierId) {
-                return;
-            }
-        }
-
-        throw new CannotUpdateProductException(
-            sprintf(
-                'Cannot update product #%s default supplier #%s, it is not one of provided product suppliers',
-                $command->getProductId()->getValue(),
-                $defaultSupplierId
-            ),
-            CannotUpdateProductException::FAILED_UPDATE_DEFAULT_SUPPLIER
-        );
     }
 
     /**

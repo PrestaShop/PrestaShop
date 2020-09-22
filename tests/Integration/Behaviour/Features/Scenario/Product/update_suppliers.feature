@@ -80,7 +80,7 @@ Feature: Update product suppliers from Back Office (BO)
     When I set product product1 default supplier to supplier2 and following suppliers:
       | reference           | supplier reference    | product supplier reference      | currency      | price tax excluded |
       | product1supplier1-1 | supplier1             | my first supplier for product1  | USD           | 10                 |
-    Then I should get error that I cannot update default supplier
+    Then I should get error that supplier is not associated with product
     And product product1 should not have any suppliers assigned
     And product product1 should not have a default supplier
     And product product1 default supplier reference should be empty

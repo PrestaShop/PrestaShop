@@ -33,10 +33,10 @@ use Currency;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
@@ -185,14 +185,11 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then I should get error that I cannot update default supplier
+     * @Then I should get error that supplier is not associated with product
      */
     public function assertFailedUpdateDefaultSupplierWhichIsNotAssigned()
     {
-        $this->assertLastErrorIs(
-            CannotUpdateProductException::class,
-            CannotUpdateProductException::FAILED_UPDATE_DEFAULT_SUPPLIER
-        );
+        $this->assertLastErrorIs(ProductSupplierNotFoundException::class);
     }
 
     /**

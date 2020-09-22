@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductSupplierHandler;
-use PrestaShop\PrestaShop\Adapter\Product\ProductUpdater;
+use PrestaShop\PrestaShop\Adapter\Product\ProductSupplierUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\RemoveAllAssociatedProductSuppliersHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplierDeleterInterface;
@@ -47,20 +47,20 @@ final class RemoveAllAssociatedProductSuppliersHandler extends AbstractProductSu
     private $productSupplierDeleter;
 
     /**
-     * @var ProductUpdater
+     * @var ProductSupplierUpdater
      */
-    private $productUpdater;
+    private $productSupplierUpdater;
 
     /**
      * @param ProductSupplierDeleterInterface $productSupplierDeleter
-     * @param ProductUpdater $productUpdater
+     * @param ProductSupplierUpdater $productSupplierUpdater
      */
     public function __construct(
         ProductSupplierDeleterInterface $productSupplierDeleter,
-        ProductUpdater $productUpdater
+        ProductSupplierUpdater $productSupplierUpdater
     ) {
         $this->productSupplierDeleter = $productSupplierDeleter;
-        $this->productUpdater = $productUpdater;
+        $this->productSupplierUpdater = $productSupplierUpdater;
     }
 
     /**
@@ -76,6 +76,6 @@ final class RemoveAllAssociatedProductSuppliersHandler extends AbstractProductSu
         }
 
         $this->productSupplierDeleter->bulkDelete($productSupplierIds);
-        $this->productUpdater->resetDefaultSupplier($product);
+        $this->productSupplierUpdater->resetDefaultSupplier($product);
     }
 }
