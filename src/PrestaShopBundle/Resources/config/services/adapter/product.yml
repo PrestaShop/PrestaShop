@@ -456,3 +456,4 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\Updater\ProductStockUpdater
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.core.stock.stock_manager'

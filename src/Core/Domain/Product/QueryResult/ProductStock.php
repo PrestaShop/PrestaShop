@@ -50,16 +50,23 @@ class ProductStock
      */
     private $outOfStockType;
 
+    /**
+     * @var int
+     */
+    private $quantity;
+
     public function __construct(
         bool $useAdvancedStockManagement,
         bool $dependsOnStock,
         string $packStockType,
-        string $outOfStockType
+        string $outOfStockType,
+        int $quantity
     ) {
         $this->useAdvancedStockManagement = $useAdvancedStockManagement;
         $this->dependsOnStock = $dependsOnStock;
         $this->packStockType = $packStockType;
         $this->outOfStockType = $outOfStockType;
+        $this->quantity = $quantity;
     }
 
     /**
@@ -92,5 +99,13 @@ class ProductStock
     public function getOutOfStockType(): string
     {
         return $this->outOfStockType;
+    }
+
+    /**
+     * @return int
+     */
+    public function getQuantity(): int
+    {
+        return $this->quantity;
     }
 }
