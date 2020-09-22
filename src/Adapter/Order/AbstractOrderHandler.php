@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
+use Address;
 use Cart;
 use Combination;
 use Configuration;
@@ -41,9 +42,11 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
+use PrestaShopDatabaseException;
 use PrestaShopException;
 use Product;
 use SpecificPrice;
+use TaxManagerFactory;
 use Tools;
 use Validate;
 
@@ -193,7 +196,7 @@ abstract class AbstractOrderHandler
      * @param Combination|null $combination
      *
      * @throws PrestaShopException
-     * @throws \PrestaShopDatabaseException
+     * @throws PrestaShopDatabaseException
      */
     protected function updateSpecificPrice(
         Number $priceTaxIncluded,
@@ -314,10 +317,10 @@ abstract class AbstractOrderHandler
      *
      * @param Order $order
      * @param OrderDetail $updatedOrderDetail
-     * @param int $productQuantity
+     * @param int $computingPrecision
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     protected function updateOrderDetailsWithSameProduct(
         Order $order,
@@ -340,6 +343,42 @@ abstract class AbstractOrderHandler
             $orderDetail->total_price_tax_excl = Tools::ps_round((float) $updatedOrderDetail->unit_price_tax_excl * $orderDetail->product_quantity, $computingPrecision);
             $orderDetail->total_price_tax_incl = Tools::ps_round((float) $updatedOrderDetail->unit_price_tax_incl * $orderDetail->product_quantity, $computingPrecision);
 
+            $orderDetail->update();
+        }
+    }
+
+    /**
+     * @param Order $order
+     * @param Cart $cart
+     *
+     * @throws PrestaShopException
+     * @throws PrestaShopDatabaseException
+     */
+    protected function updateOrderDetailsTax(Order $order, Cart $cart): void
+    {
+        // Fields that are updated (refunds are not modified, even though the tax changed we need to keep track
+        // of the actual refunded amount).
+        $updatedFields = [
+            'unit_price_tax',
+            'total_price_tax',
+            'total_shipping_price_tax',
+        ];
+        $taxAddressId = $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)};
+        $taxAddress = new Address($taxAddressId);
+        $computingPrecision = $this->getPrecisionFromCart($cart);
+
+        foreach ($order->getOrderDetailList() as $row) {
+            $orderDetail = new OrderDetail($row['id_order_detail']);
+            $orderDetail->id_tax_rules_group = (int) Product::getIdTaxRulesGroupByIdProduct($orderDetail->product_id, Context::getContext());
+            $taxManager = TaxManagerFactory::getManager($taxAddress, $orderDetail->id_tax_rules_group);
+            $taxCalculator = $taxManager->getTaxCalculator();
+
+            foreach ($updatedFields as $updatedField) {
+                $orderDetail->{$updatedField . '_incl'} = Tools::ps_round($taxCalculator->addTaxes($orderDetail->{$updatedField . '_excl'}), $computingPrecision);
+            }
+
+            $orderDetail->tax_rate = $taxCalculator->getTotalRate();
+            $orderDetail->tax_name = $taxCalculator->getTaxesName();
             $orderDetail->update();
         }
     }
