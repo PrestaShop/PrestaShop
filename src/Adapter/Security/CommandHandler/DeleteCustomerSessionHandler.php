@@ -26,30 +26,30 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Security\CommandHandler;
 
-use EmployeeSession;
-use PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteEmployeeSessionCommand;
-use PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler\DeleteEmployeeSessionHandlerInterface;
+use CustomerSession;
+use PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteCustomerSessionCommand;
+use PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler\DeleteCustomerSessionHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Security\Exception\FailedToDeleteSessionException;
 use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionException;
 use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionNotFoundException;
 use PrestaShopException;
 
 /**
- * Class DeleteEmployeeSessionHandler
+ * Class DeleteCustomerSessionHandler
  *
  * @internal
  */
-final class DeleteEmployeeSessionHandler implements DeleteEmployeeSessionHandlerInterface
+final class DeleteCustomerSessionHandler implements DeleteCustomerSessionHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(DeleteEmployeeSessionCommand $command)
+    public function handle(DeleteCustomerSessionCommand $command)
     {
-        $sessionId = $command->getEmployeeSessionId()->getValue();
+        $sessionId = $command->getCustomerSessionId()->getValue();
 
         try {
-            $entity = new EmployeeSession($sessionId);
+            $entity = new CustomerSession($sessionId);
 
             if ($entity->id != $sessionId) {
                 throw new SessionNotFoundException(sprintf('Session with id %s cannot be found.', var_export($sessionId, true)));
