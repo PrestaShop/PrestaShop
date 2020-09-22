@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 use Address;
 use Cart;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderInvoiceAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\ChangeOrderInvoiceAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -39,6 +40,19 @@ use Validate;
  */
 final class ChangeOrderInvoiceAddressHandler extends AbstractOrderHandler implements ChangeOrderInvoiceAddressHandlerInterface
 {
+    /**
+     * @var OrderAmountUpdater
+     */
+    private $orderAmountUpdater;
+
+    /**
+     * @param OrderAmountUpdater $orderAmountUpdater
+     */
+    public function __construct(OrderAmountUpdater $orderAmountUpdater)
+    {
+        $this->orderAmountUpdater = $orderAmountUpdater;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -57,8 +71,6 @@ final class ChangeOrderInvoiceAddressHandler extends AbstractOrderHandler implem
         $cart->update();
 
         $order->id_address_invoice = $address->id;
-        $order->update();
-
-        $order->refreshShippingCost();
+        $this->orderAmountUpdater->update($order, $cart);
     }
 }

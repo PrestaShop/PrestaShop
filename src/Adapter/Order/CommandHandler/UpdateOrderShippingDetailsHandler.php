@@ -32,6 +32,7 @@ use Customer;
 use Hook;
 use OrderCarrier;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\UpdateOrderShippingDetailsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -43,6 +44,19 @@ use Validate;
  */
 final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler implements UpdateOrderShippingDetailsHandlerInterface
 {
+    /**
+     * @var OrderAmountUpdater
+     */
+    private $orderAmountUpdater;
+
+    /**
+     * @param OrderAmountUpdater $orderAmountUpdater
+     */
+    public function __construct(OrderAmountUpdater $orderAmountUpdater)
+    {
+        $this->orderAmountUpdater = $orderAmountUpdater;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -76,7 +90,7 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
             $orderCarrier->update();
 
             $order->id_carrier = $carrierId;
-            $order->refreshShippingCost();
+            $this->orderAmountUpdater->update($order, $cart);
         }
 
         //load fresh order carrier because updated just before
