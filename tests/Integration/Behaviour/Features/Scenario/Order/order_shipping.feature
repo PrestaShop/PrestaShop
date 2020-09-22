@@ -403,18 +403,22 @@ Feature: Order from Back Office (BO)
       | message             | test                       |
       | payment module name | dummy_payment              |
       | status              | Awaiting bank wire payment |
+    And I add discount to order "bo_order1" with following details:
+      | name      | FreeShippingDiscount |
+      | type      | free_shipping        |
     And order "bo_order1" should have 2 products in total
     And order "bo_order1" should have 0 invoices
-    And order "bo_order1" should have 0 cart rule
+    And order "bo_order1" should have 1 cart rule
+    Then order "bo_order1" should have cart rule "FreeShippingDiscount" with amount "$6.00"
     And order "bo_order1" should have "price_carrier" as a carrier
     And order "bo_order1" should have following details:
       | total_products           | 23.800 |
       | total_products_wt        | 25.230 |
-      | total_discounts_tax_excl | 0.0    |
-      | total_discounts_tax_incl | 0.0    |
-      | total_paid_tax_excl      | 29.800 |
-      | total_paid_tax_incl      | 31.590 |
-      | total_paid               | 31.590 |
+      | total_discounts_tax_excl | 6.0    |
+      | total_discounts_tax_incl | 6.36   |
+      | total_paid_tax_excl      | 23.800 |
+      | total_paid_tax_incl      | 25.230 |
+      | total_paid               | 25.230 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 6.0    |
       | total_shipping_tax_incl  | 6.36   |
@@ -436,11 +440,11 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should have following details:
       | total_products           | 23.800 |
       | total_products_wt        | 25.230 |
-      | total_discounts_tax_excl | 0.0    |
-      | total_discounts_tax_incl | 0.0    |
-      | total_paid_tax_excl      | 28.800 |
-      | total_paid_tax_incl      | 30.530 |
-      | total_paid               | 30.530 |
+      | total_discounts_tax_excl | 5.0    |
+      | total_discounts_tax_incl | 5.30   |
+      | total_paid_tax_excl      | 23.800 |
+      | total_paid_tax_incl      | 25.230 |
+      | total_paid               | 25.230 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 5.0    |
       | total_shipping_tax_incl  | 5.30   |
@@ -448,18 +452,19 @@ Feature: Order from Back Office (BO)
       | weight                 | 0.600 |
       | shipping_cost_tax_excl | 5.00  |
       | shipping_cost_tax_incl | 5.30  |
+    And order "bo_order1" should have cart rule "FreeShippingDiscount" with amount "$5.00"
     When I change order "bo_order1" invoice address to "test-customer-france-address"
     Then order "bo_order1" invoice address should be "test-customer-france-address"
     # Shipping fees use invoice address so the shipping fees should be reduced now
     # (no tax applied because France tax rules are not installed)
     Then order "bo_order1" should have following details:
       | total_products           | 23.800 |
-      | total_products_wt        | 25.230 |
-      | total_discounts_tax_excl | 0.0    |
-      | total_discounts_tax_incl | 0.0    |
-      | total_paid_tax_excl      | 28.800 |
-      | total_paid_tax_incl      | 30.230 |
-      | total_paid               | 30.230 |
+      | total_products_wt        | 23.800 |
+      | total_discounts_tax_excl | 5.0    |
+      | total_discounts_tax_incl | 5.0    |
+      | total_paid_tax_excl      | 23.800 |
+      | total_paid_tax_incl      | 23.800 |
+      | total_paid               | 23.800 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 5.0    |
       | total_shipping_tax_incl  | 5.00   |
@@ -467,6 +472,7 @@ Feature: Order from Back Office (BO)
       | weight                 | 0.600 |
       | shipping_cost_tax_excl | 5.00  |
       | shipping_cost_tax_incl | 5.00  |
+    And order "bo_order1" should have cart rule "FreeShippingDiscount" with amount "$5.00"
 
   Scenario: I change the customer delivery address to another zone and check that shipping fees have been updated
     Given shop configuration for "PS_TAX_ADDRESS_TYPE" is set to id_address_delivery
@@ -478,18 +484,22 @@ Feature: Order from Back Office (BO)
       | message             | test                       |
       | payment module name | dummy_payment              |
       | status              | Awaiting bank wire payment |
+    And I add discount to order "bo_order1" with following details:
+      | name      | FreeShippingDiscount |
+      | type      | free_shipping        |
     And order "bo_order1" should have 2 products in total
     And order "bo_order1" should have 0 invoices
-    And order "bo_order1" should have 0 cart rule
+    And order "bo_order1" should have 1 cart rule
+    And order "bo_order1" should have cart rule "FreeShippingDiscount" with amount "$6.00"
     And order "bo_order1" should have "price_carrier" as a carrier
     And order "bo_order1" should have following details:
       | total_products           | 23.800 |
       | total_products_wt        | 25.230 |
-      | total_discounts_tax_excl | 0.0    |
-      | total_discounts_tax_incl | 0.0    |
-      | total_paid_tax_excl      | 29.800 |
-      | total_paid_tax_incl      | 31.590 |
-      | total_paid               | 31.590 |
+      | total_discounts_tax_excl | 6.0    |
+      | total_discounts_tax_incl | 6.36   |
+      | total_paid_tax_excl      | 23.800 |
+      | total_paid_tax_incl      | 25.230 |
+      | total_paid               | 25.230 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 6.0    |
       | total_shipping_tax_incl  | 6.36   |
@@ -507,15 +517,15 @@ Feature: Order from Back Office (BO)
       | Postal code      | 75008                        |
     And I change order "bo_order1" invoice address to "test-customer-france-address"
     Then order "bo_order1" invoice address should be "test-customer-france-address"
-    # Shipping fees use delivery address so changing the invoice address should not modify them
+    # Shipping fees use delivery address so changing the invoice address should not modify them nor the taxes
     Then order "bo_order1" should have following details:
       | total_products           | 23.800 |
       | total_products_wt        | 25.230 |
-      | total_discounts_tax_excl | 0.0    |
-      | total_discounts_tax_incl | 0.0    |
-      | total_paid_tax_excl      | 29.800 |
-      | total_paid_tax_incl      | 31.590 |
-      | total_paid               | 31.590 |
+      | total_discounts_tax_excl | 6.0    |
+      | total_discounts_tax_incl | 6.36   |
+      | total_paid_tax_excl      | 23.800 |
+      | total_paid_tax_incl      | 25.230 |
+      | total_paid               | 25.230 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 6.0    |
       | total_shipping_tax_incl  | 6.36   |
@@ -523,18 +533,19 @@ Feature: Order from Back Office (BO)
       | weight                 | 0.600 |
       | shipping_cost_tax_excl | 6.00  |
       | shipping_cost_tax_incl | 6.36  |
+    And order "bo_order1" should have cart rule "FreeShippingDiscount" with amount "$6.00"
     When I change order "bo_order1" shipping address to "test-customer-france-address"
     Then order "bo_order1" shipping address should be "test-customer-france-address"
     # Shipping fees use delivery address so the shipping fees should be reduced now, the fee and tax changes
     # (no tax applied because France tax rules are not installed)
     Then order "bo_order1" should have following details:
       | total_products           | 23.800 |
-      | total_products_wt        | 25.230 |
-      | total_discounts_tax_excl | 0.0    |
-      | total_discounts_tax_incl | 0.0    |
-      | total_paid_tax_excl      | 28.800 |
-      | total_paid_tax_incl      | 30.230 |
-      | total_paid               | 30.230 |
+      | total_products_wt        | 23.800 |
+      | total_discounts_tax_excl | 5.0    |
+      | total_discounts_tax_incl | 5.0    |
+      | total_paid_tax_excl      | 23.800 |
+      | total_paid_tax_incl      | 23.800 |
+      | total_paid               | 23.800 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 5.0    |
       | total_shipping_tax_incl  | 5.00   |
@@ -542,3 +553,4 @@ Feature: Order from Back Office (BO)
       | weight                 | 0.600 |
       | shipping_cost_tax_excl | 5.00  |
       | shipping_cost_tax_incl | 5.00  |
+    And order "bo_order1" should have cart rule "FreeShippingDiscount" with amount "$5.00"
