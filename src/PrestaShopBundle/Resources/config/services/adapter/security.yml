@@ -1,0 +1,27 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.security.command_handler.delete_customer_session_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Security\CommandHandler\DeleteCustomerSessionHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteCustomerSessionCommand'
+
+  prestashop.adapter.security.command_handler.delete_employee_session_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Security\CommandHandler\DeleteEmployeeSessionHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteEmployeeSessionCommand'
+
+  prestashop.adapter.security.command_handler.bulk_delete_employees_sessions_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Security\CommandHandler\BulkDeleteEmployeesSessionsSecurityHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteEmployeesSessionsCommand'
+
+  prestashop.adapter.security.command_handler.bulk_delete_customers_sessions_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Security\CommandHandler\BulkDeleteCustomersSessionsHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteCustomersSessionsCommand'
