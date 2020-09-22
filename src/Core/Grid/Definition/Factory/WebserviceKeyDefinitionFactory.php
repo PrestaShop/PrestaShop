@@ -49,6 +49,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
     use DeleteActionTrait;
 
     /**
@@ -257,12 +258,7 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
-                (new SubmitBulkAction('delete_webservice'))
-                    ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                    ->setOptions([
-                        'submit_route' => 'admin_webservice_keys_bulk_delete',
-                        'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                    ])
+                $this->buildBulkDeleteAction('admin_webservice_keys_bulk_delete')
             );
     }
 }
