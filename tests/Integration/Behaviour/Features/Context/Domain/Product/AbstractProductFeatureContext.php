@@ -32,6 +32,7 @@ use Context;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
@@ -131,6 +132,26 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
     }
 
     /**
+     * @param ProductForEditing $productForEditing
+     * @param array $data
+     * @param string $propertyName
+     */
+    protected function assertNumberProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
+    {
+        if (isset($data[$propertyName])) {
+            $expectedValue = new Number((string) $data[$propertyName]);
+            $actualValue = new Number((string) $this->extractValueFromProductForEditing($productForEditing, $propertyName));
+
+            Assert::assertTrue(
+                $expectedValue->equals($actualValue),
+                sprintf('Expected %s %s. Got %s.', $propertyName, (string) $expectedValue, (string) $actualValue)
+            );
+
+            unset($data[$propertyName]);
+        }
+    }
+
+    /**
      * Extracts corresponding field value from ProductForEditing DTO
      *
      * @param ProductForEditing $productForEditing
@@ -165,6 +186,7 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             'depends_on_stock' => 'stock.dependsOnStock',
             'pack_stock_type' => 'stock.packStockType',
             'out_of_stock_type' => 'stock.outOfStockType',
+            'quantity' => 'stock.quantity',
         ];
 
         $propertyAccessor = PropertyAccess::createPropertyAccessor();

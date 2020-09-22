@@ -106,6 +106,11 @@ class UpdateProductStockCommand
     private $availableDate;
 
     /**
+     * @var bool
+     */
+    private $addMovement = true;
+
+    /**
      * @param int $productId
      */
     public function __construct(int $productId)
@@ -361,6 +366,26 @@ class UpdateProductStockCommand
     public function setAvailableDate(DateTime $availableDate): UpdateProductStockCommand
     {
         $this->availableDate = $availableDate;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function addMovement(): bool
+    {
+        return $this->addMovement;
+    }
+
+    /**
+     * @param bool $addMovement
+     *
+     * @return UpdateProductStockCommand
+     */
+    public function setAddMovement(bool $addMovement): UpdateProductStockCommand
+    {
+        $this->addMovement = $addMovement;
 
         return $this;
     }
