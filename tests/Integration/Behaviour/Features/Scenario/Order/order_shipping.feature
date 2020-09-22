@@ -426,6 +426,13 @@ Feature: Order from Back Office (BO)
       | weight                 | 0.600 |
       | shipping_cost_tax_excl | 6.00  |
       | shipping_cost_tax_incl | 6.36  |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2      |
+      | product_price               | 11.900 |
+      | unit_price_tax_incl         | 12.614 |
+      | unit_price_tax_excl         | 11.900 |
+      | total_price_tax_incl        | 25.230 |
+      | total_price_tax_excl        | 23.800 |
     When I add new address to customer "testCustomer" with following details:
       | Address alias    | test-customer-france-address |
       | First name       | testFirstName                |
@@ -452,6 +459,13 @@ Feature: Order from Back Office (BO)
       | weight                 | 0.600 |
       | shipping_cost_tax_excl | 5.00  |
       | shipping_cost_tax_incl | 5.30  |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2      |
+      | product_price               | 11.900 |
+      | unit_price_tax_incl         | 12.614 |
+      | unit_price_tax_excl         | 11.900 |
+      | total_price_tax_incl        | 25.230 |
+      | total_price_tax_excl        | 23.800 |
     And order "bo_order1" should have cart rule "FreeShippingDiscount" with amount "$5.00"
     When I change order "bo_order1" invoice address to "test-customer-france-address"
     Then order "bo_order1" invoice address should be "test-customer-france-address"
@@ -473,6 +487,13 @@ Feature: Order from Back Office (BO)
       | shipping_cost_tax_excl | 5.00  |
       | shipping_cost_tax_incl | 5.00  |
     And order "bo_order1" should have cart rule "FreeShippingDiscount" with amount "$5.00"
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2      |
+      | product_price               | 11.900 |
+      | unit_price_tax_incl         | 11.900 |
+      | unit_price_tax_excl         | 11.900 |
+      | total_price_tax_incl        | 23.800 |
+      | total_price_tax_excl        | 23.800 |
 
   Scenario: I change the customer delivery address to another zone and check that shipping fees have been updated
     Given shop configuration for "PS_TAX_ADDRESS_TYPE" is set to id_address_delivery
@@ -507,6 +528,13 @@ Feature: Order from Back Office (BO)
       | weight                 | 0.600 |
       | shipping_cost_tax_excl | 6.00  |
       | shipping_cost_tax_incl | 6.36  |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2      |
+      | product_price               | 11.900 |
+      | unit_price_tax_incl         | 12.614 |
+      | unit_price_tax_excl         | 11.900 |
+      | total_price_tax_incl        | 25.230 |
+      | total_price_tax_excl        | 23.800 |
     When I add new address to customer "testCustomer" with following details:
       | Address alias    | test-customer-france-address |
       | First name       | testFirstName                |
@@ -533,6 +561,13 @@ Feature: Order from Back Office (BO)
       | weight                 | 0.600 |
       | shipping_cost_tax_excl | 6.00  |
       | shipping_cost_tax_incl | 6.36  |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2      |
+      | product_price               | 11.900 |
+      | unit_price_tax_incl         | 12.614 |
+      | unit_price_tax_excl         | 11.900 |
+      | total_price_tax_incl        | 25.230 |
+      | total_price_tax_excl        | 23.800 |
     And order "bo_order1" should have cart rule "FreeShippingDiscount" with amount "$6.00"
     When I change order "bo_order1" shipping address to "test-customer-france-address"
     Then order "bo_order1" shipping address should be "test-customer-france-address"
@@ -553,4 +588,11 @@ Feature: Order from Back Office (BO)
       | weight                 | 0.600 |
       | shipping_cost_tax_excl | 5.00  |
       | shipping_cost_tax_incl | 5.00  |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2      |
+      | product_price               | 11.900 |
+      | unit_price_tax_incl         | 11.900 |
+      | unit_price_tax_excl         | 11.900 |
+      | total_price_tax_incl        | 23.800 |
+      | total_price_tax_excl        | 23.800 |
     And order "bo_order1" should have cart rule "FreeShippingDiscount" with amount "$5.00"
