@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotFindProductInOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderInvoiceException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidProductQuantityException;
@@ -557,6 +558,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         } catch (ProductOutOfStockException $e) {
             $this->setLastException($e);
         } catch (DuplicateProductInOrderInvoiceException $e) {
+            $this->setLastException($e);
+        } catch (CannotFindProductInOrderException $e) {
             $this->setLastException($e);
         }
     }
@@ -1497,5 +1500,55 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
 
         return null;
+    }
+
+    /**
+     * @When I delete product :productReference from catalogue
+     *
+     * @param string $productReference
+     */
+    public function removeProductFromCatalogue(string $productReference)
+    {
+        $foundProduct = $this->getProductByName($productReference);
+        $product = new Product($foundProduct->getProductId());
+        $product->delete();
+    }
+
+    /**
+     * @When I update deleted product :productReference in order :orderReference
+     *
+     * @param string $productReference
+     * @param string $orderReference
+     */
+    public function tryUpdatingProductDeletedFromCatalogue(string $productReference, string $orderReference)
+    {
+        // get order detail
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $order = new Order($orderId);
+        $orderDetailList = $order->getOrderDetailList();
+
+        foreach ($orderDetailList as $orderDetail) {
+            if ($orderDetail['product_name'] === $productReference) {
+                $productOrderDetail = $orderDetail;
+                break;
+            }
+        }
+
+        if (!isset($productOrderDetail)) {
+            throw new RuntimeException(sprintf('Product %s has not been found in order %s', $productReference, $orderReference));
+        }
+
+        // update product price/quantity in order
+        $this->updateProductInOrder($orderId, $productOrderDetail, ['price' => '10', 'amount' => '3']);
+    }
+
+    /**
+     * @Then I should get error that the product being edited was not found
+     */
+    public function assertLastErrorIsRefundQuantityTooHigh()
+    {
+        $this->assertLastErrorIs(
+            CannotFindProductInOrderException::class
+        );
     }
 }
