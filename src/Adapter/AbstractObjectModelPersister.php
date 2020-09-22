@@ -102,11 +102,7 @@ abstract class AbstractObjectModelPersister
     protected function deleteObjectModel(ObjectModel $objectModel, bool $soft = false): bool
     {
         try {
-            if ($soft) {
-                return (bool) $objectModel->softDelete();
-            }
-
-            return (bool) $objectModel->delete();
+            return (bool) ($soft ? $objectModel->softDelete() : $objectModel->delete());
         } catch (PrestaShopException $e) {
             throw new CoreException(
                 sprintf('Error occurred when trying to delete %s #%d', get_class($objectModel), $objectModel->id),
