@@ -34,6 +34,9 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductStockException;
+use PrestaShopBundle\Api\QueryStockMovementParamsCollection;
+use PrestaShopBundle\Entity\Repository\StockMovementRepository;
+use RuntimeException;
 
 class UpdateStockFeatureContext extends AbstractProductFeatureContext
 {
@@ -76,11 +79,46 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         $this->assertBoolProperty($productForEditing, $data, 'depends_on_stock');
         $this->assertStringProperty($productForEditing, $data, 'pack_stock_type');
         $this->assertStringProperty($productForEditing, $data, 'out_of_stock_type');
+        $this->assertNumberProperty($productForEditing, $data, 'quantity');
 
         // Assertions checking isset() can hide some errors if it doesn't find array key,
         // to make sure all provided fields were checked we need to unset every asserted field
         // and finally, if provided data is not empty, it means there are some unnasserted values left
         Assert::assertEmpty($data, sprintf('Some provided product stock fields haven\'t been asserted: %s', var_export($data, true)));
+    }
+
+    /**
+     * @Then product :productReference last stock movement has following details:
+     */
+    public function assertProductLastStockMovement(string $productReference, TableNode $table)
+    {
+        $movementData = $table->getRowsHash();
+        $productId = $this->getSharedStorage()->get($productReference);
+
+        /** @var StockMovementRepository $stockMovementRepository */
+        $stockMovementRepository = $this->getContainer()->get('prestashop.core.api.stock_movement.repository');
+        $params = new QueryStockMovementParamsCollection();
+        $params->fromArray([
+            'productId' => $productId,
+        ]);
+        $movements = $stockMovementRepository->getData($params);
+        if (count($movements) <= 0) {
+            throw new RuntimeException(sprintf('No stock movement found for product %s', $productReference));
+        }
+
+        $lastMovement = $movements[0];
+        foreach ($movementData as $movementField => $movementValue) {
+            Assert::assertEquals(
+                $movementValue,
+                $lastMovement[$movementField],
+                sprintf(
+                    'Invalid stock movement field %s, expected %s instead of %s',
+                    $movementField,
+                    $movementValue,
+                    $lastMovement[$movementField]
+                )
+            );
+        }
     }
 
     /**
@@ -153,6 +191,11 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         if (isset($data['out_of_stock_type'])) {
             $command->setOutOfStockType($data['out_of_stock_type']);
             unset($data['out_of_stock_type']);
+        }
+
+        if (isset($data['quantity'])) {
+            $command->setQuantity((int) $data['quantity']);
+            unset($data['quantity']);
         }
 
         return $data;
