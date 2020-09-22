@@ -67,21 +67,21 @@ abstract class AbstractObjectModelProvider
 
     /**
      * @param int $id
-     * @param string $objectModelName
+     * @param string $objectTableName
      * @param string $exceptionClass
      * @param int $errorCode
      *
      * @throws CoreException
      */
-    protected function assertObjectModelExists(int $id, string $objectModelName, string $exceptionClass, int $errorCode = 0): void
+    protected function assertObjectModelExists(int $id, string $objectTableName, string $exceptionClass, int $errorCode = 0): void
     {
         try {
-            if (!ObjectModel::existsInDatabase($id, $objectModelName)) {
-                throw new $exceptionClass(sprintf('%s #%d does not exist', $objectModelName, $id), $errorCode);
+            if (!ObjectModel::existsInDatabase($id, $objectTableName)) {
+                throw new $exceptionClass(sprintf('%s #%d does not exist', $objectTableName, $id), $errorCode);
             }
         } catch (PrestaShopException $e) {
             throw new CoreException(
-                sprintf('Error occurred when trying to check if %s #%d exists', $objectModelName, $id),
+                sprintf('Error occurred when trying to check if %s #%d exists', $objectTableName, $id),
                 0,
                 $e
             );
