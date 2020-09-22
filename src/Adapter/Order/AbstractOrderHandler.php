@@ -35,6 +35,7 @@ use Currency;
 use Customer;
 use Group;
 use Order;
+use OrderDetail;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Number\RoundModeConverter;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -47,6 +48,7 @@ use PrestaShopException;
 use Product;
 use SpecificPrice;
 use TaxManagerFactory;
+use Tools;
 use Validate;
 
 /**
@@ -346,5 +348,41 @@ abstract class AbstractOrderHandler
     protected function getNumberRoundMode(): string
     {
         return RoundModeConverter::getNumberRoundMode((int) Configuration::get('PS_PRICE_ROUND_MODE'));
+    }
+
+    /**
+     * @param Order $order
+     * @param Cart $cart
+     *
+     * @throws PrestaShopException
+     * @throws PrestaShopDatabaseException
+     */
+    protected function updateOrderDetailsTax(Order $order, Cart $cart): void
+    {
+        // Fields that are updated (refunds are not modified, even though the tax changed we need to keep track
+        // of the actual refunded amount).
+        $updatedFields = [
+            'unit_price_tax',
+            'total_price_tax',
+            'total_shipping_price_tax',
+        ];
+        $taxAddressId = $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)};
+        $taxAddress = new Address($taxAddressId);
+        $computingPrecision = $this->getPrecisionFromCart($cart);
+
+        foreach ($order->getOrderDetailList() as $row) {
+            $orderDetail = new OrderDetail($row['id_order_detail']);
+            $orderDetail->id_tax_rules_group = (int) Product::getIdTaxRulesGroupByIdProduct($orderDetail->product_id, Context::getContext());
+            $taxManager = TaxManagerFactory::getManager($taxAddress, $orderDetail->id_tax_rules_group);
+            $taxCalculator = $taxManager->getTaxCalculator();
+
+            foreach ($updatedFields as $updatedField) {
+                $orderDetail->{$updatedField . '_incl'} = Tools::ps_round($taxCalculator->addTaxes($orderDetail->{$updatedField . '_excl'}), $computingPrecision);
+            }
+
+            $orderDetail->tax_rate = $taxCalculator->getTotalRate();
+            $orderDetail->tax_name = $taxCalculator->getTaxesName();
+            $orderDetail->update();
+        }
     }
 }

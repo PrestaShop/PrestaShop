@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Address;
 use Cart;
+use Configuration;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderInvoiceAddressCommand;
@@ -72,5 +73,10 @@ final class ChangeOrderInvoiceAddressHandler extends AbstractOrderHandler implem
 
         $order->id_address_invoice = $address->id;
         $this->orderAmountUpdater->update($order, $cart);
+
+        // Update OrderDetails tax if the address is the delivery address
+        if (Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop) === 'id_address_invoice') {
+            $this->updateOrderDetailsTax($order, $cart);
+        }
     }
 }
