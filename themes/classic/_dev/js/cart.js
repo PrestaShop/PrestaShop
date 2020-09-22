@@ -19,10 +19,8 @@ function createSpin() {
       verticalbuttons: true,
       verticalupclass: 'material-icons touchspin-up',
       verticaldownclass: 'material-icons touchspin-down',
-      buttondown_class:
-        'btn btn-touchspin js-touchspin js-increase-product-quantity',
-      buttonup_class:
-        'btn btn-touchspin js-touchspin js-decrease-product-quantity',
+      buttondown_class: 'btn btn-touchspin js-touchspin js-increase-product-quantity',
+      buttonup_class: 'btn btn-touchspin js-touchspin js-decrease-product-quantity',
       min: parseInt($(spinner).attr('min'), 10),
       max: 1000000,
     });
@@ -56,9 +54,7 @@ $(document).ready(() => {
   }
 
   function findCartLineProductQuantityInput($target) {
-    const $input = $target
-      .parents('.bootstrap-touchspin')
-      .find(productLineInCartSelector);
+    const $input = $target.parents('.bootstrap-touchspin').find(productLineInCartSelector);
 
     if ($input.is(':focus')) {
       return null;
@@ -170,20 +166,12 @@ $(document).ready(() => {
       });
   };
 
-  $body.on(
-    'click',
-    '[data-link-action="delete-from-cart"], [data-link-action="remove-voucher"]',
-    handleCartAction,
-  );
+  $body.on('click', '[data-link-action="delete-from-cart"], [data-link-action="remove-voucher"]', handleCartAction);
 
   $body.on('touchspin.on.startdownspin', spinnerSelector, handleCartAction);
   $body.on('touchspin.on.startupspin', spinnerSelector, handleCartAction);
 
-  function sendUpdateQuantityInCartRequest(
-    updateQuantityInCartUrl,
-    requestData,
-    $target,
-  ) {
+  function sendUpdateQuantityInCartRequest(updateQuantityInCartUrl, requestData, $target) {
     abortPreviousRequests();
 
     return $.ajax({
@@ -241,15 +229,12 @@ $(document).ready(() => {
 
     // There should be a valid product quantity in cart
     const targetValue = $target.val();
-    // eslint-disable-next-line
-    if (
-      targetValue !== parseInt(targetValue, 10)
-      || targetValue < 0
-      || isNaN(targetValue)
-    ) {
+    /* eslint-disable */
+    if (targetValue != parseInt(targetValue, 10) || targetValue < 0 || isNaN(targetValue)) {
       $target.val(baseValue);
       return;
     }
+    /* eslint-enable */
     // There should be a new product quantity in cart
     const qty = targetValue - baseValue;
     if (qty === 0) {
@@ -257,11 +242,7 @@ $(document).ready(() => {
     }
 
     $target.attr('value', targetValue);
-    sendUpdateQuantityInCartRequest(
-      updateQuantityInCartUrl,
-      getRequestData(qty),
-      $target,
-    );
+    sendUpdateQuantityInCartRequest(updateQuantityInCartUrl, getRequestData(qty), $target);
   }
 
   $body.on('focusout keyup', productLineInCartSelector, (event) => {
@@ -315,10 +296,7 @@ const CheckUpdateQuantityOperations = {
      * if hasError is true, quantity was not updated : we don't disable checkout button
      */
     const $checkoutBtn = $('.checkout a');
-    if (
-      $('#notifications article.alert-danger').length
-      || (errorMsg !== '' && !hasError)
-    ) {
+    if ($('#notifications article.alert-danger').length || (errorMsg !== '' && !hasError)) {
       $checkoutBtn.addClass('disabled');
     }
 
@@ -345,7 +323,7 @@ const CheckUpdateQuantityOperations = {
      * when resp.hasError=true, quantity is not updated
      */
     // eslint-disable-next-line
-    hasError = resp.hasOwnProperty("hasError");
+    hasError = resp.hasOwnProperty('hasError');
     const errors = resp.errors || '';
     // 1.7.2.x returns errors as string, 1.7.3.x returns array
     if (errors instanceof Array) {
