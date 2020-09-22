@@ -24,13 +24,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Security\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteCustomerSessionCommand;
 
 /**
- * Class SessionException is a base exception for security sessions context.
+ * Interface DeleteCustomerSessionHandlerInterface defines session deletion handler.
  */
-class SessionException extends DomainException
+interface DeleteCustomerSessionHandlerInterface
 {
+    /**
+     * Delete session.
+     *
+     * @param DeleteCustomerSessionCommand $command
+     */
+    public function handle(DeleteCustomerSessionCommand $command);
 }

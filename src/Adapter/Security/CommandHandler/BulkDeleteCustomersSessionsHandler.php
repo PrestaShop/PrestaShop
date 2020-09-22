@@ -24,35 +24,36 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Security\ValueObject;
+namespace PrestaShop\PrestaShop\Adapter\Security\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionException;
+use CustomerSession;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\SessionNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteCustomersSessionsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler\BulkDeleteCustomerSessionHandlerInterface;
 
 /**
- * Class CustomerSessionId
+ * Handles command that deletes customers in bulk action.
+ *
+ * @internal
  */
-class CustomerSessionId
+final class BulkDeleteCustomersSessionsHandler implements BulkDeleteCustomerSessionHandlerInterface
 {
     /**
-     * @var int
+     * {@inheritdoc}
      */
-    private $sessionId;
-
-    /**
-     * @param int $sessionId
-     *
-     * @throws SessionException
-     */
-    public function __construct(int $sessionId)
+    public function handle(BulkDeleteCustomersSessionsCommand $command)
     {
-        $this->sessionId = (int) $sessionId;
-    }
+        foreach ($command->getCustomerSessionIds() as $sessionId) {
+            $session = new CustomerSession($sessionId->getValue());
 
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->sessionId;
+            if ($session->id !== $sessionId->getValue()) {
+                throw new SessionNotFoundException(
+                    $sessionId,
+                    sprintf('Session with id "%d" was not found.', $sessionId->getValue())
+                );
+            }
+
+            $session->delete();
+        }
     }
 }

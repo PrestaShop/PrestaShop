@@ -34,8 +34,6 @@ import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-e
 import SubmitGridExtension from '@components/grid/extension/submit-grid-action-extension';
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
-import LinkableItem from '@components/linkable-item';
-import ChoiceTable from '@components/choice-table';
 import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
 import FiltersSubmitButtonEnablerExtension
   from '@components/grid/extension/filters-submit-button-enabler-extension';
@@ -43,19 +41,33 @@ import FiltersSubmitButtonEnablerExtension
 const {$} = window;
 
 $(() => {
-  const sessionsGrid = new Grid('security_sessions_employee');
+  const employeesSessionsGrid = new Grid('security_sessions_employees');
 
-  sessionsGrid.addExtension(new ReloadListActionExtension());
-  sessionsGrid.addExtension(new ExportToSqlManagerExtension());
-  sessionsGrid.addExtension(new FiltersResetExtension());
-  sessionsGrid.addExtension(new SortingExtension());
-  sessionsGrid.addExtension(new BulkActionCheckboxExtension());
-  sessionsGrid.addExtension(new SubmitBulkExtension());
-  sessionsGrid.addExtension(new SubmitGridExtension());
-  sessionsGrid.addExtension(new SubmitRowActionExtension());
-  sessionsGrid.addExtension(new LinkRowActionExtension());
-  sessionsGrid.addExtension(new ColumnTogglingExtension());
-  sessionsGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+  employeesSessionsGrid.addExtension(new ReloadListActionExtension());
+  employeesSessionsGrid.addExtension(new ExportToSqlManagerExtension());
+  employeesSessionsGrid.addExtension(new FiltersResetExtension());
+  employeesSessionsGrid.addExtension(new SortingExtension());
+  employeesSessionsGrid.addExtension(new BulkActionCheckboxExtension());
+  employeesSessionsGrid.addExtension(new SubmitBulkExtension());
+  employeesSessionsGrid.addExtension(new SubmitGridExtension());
+  employeesSessionsGrid.addExtension(new SubmitRowActionExtension());
+  employeesSessionsGrid.addExtension(new LinkRowActionExtension());
+  employeesSessionsGrid.addExtension(new ColumnTogglingExtension());
+  employeesSessionsGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+
+  const customersSessionsGrid = new Grid('security_sessions_customers');
+
+  customersSessionsGrid.addExtension(new ReloadListActionExtension());
+  customersSessionsGrid.addExtension(new ExportToSqlManagerExtension());
+  customersSessionsGrid.addExtension(new FiltersResetExtension());
+  customersSessionsGrid.addExtension(new SortingExtension());
+  customersSessionsGrid.addExtension(new BulkActionCheckboxExtension());
+  customersSessionsGrid.addExtension(new SubmitBulkExtension());
+  customersSessionsGrid.addExtension(new SubmitGridExtension());
+  customersSessionsGrid.addExtension(new SubmitRowActionExtension());
+  customersSessionsGrid.addExtension(new LinkRowActionExtension());
+  customersSessionsGrid.addExtension(new ColumnTogglingExtension());
+  customersSessionsGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
 
   new FormSubmitButton();
 });
