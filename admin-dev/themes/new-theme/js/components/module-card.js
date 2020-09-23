@@ -351,7 +351,7 @@ export default class ModuleCard {
         return;
       }
 
-      $.growl.notice({message: result[moduleTechName].msg, duration: 15000});
+      $.growl.notice({message: result[moduleTechName].msg, duration: 6000});
 
       const alteredSelector = self.getModuleItemSelector().replace('.', '');
       let mainElement = null;
