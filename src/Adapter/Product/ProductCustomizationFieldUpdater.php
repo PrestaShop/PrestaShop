@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationFieldDeleterInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use Product;
 
@@ -98,18 +99,30 @@ class ProductCustomizationFieldUpdater
     }
 
     /**
+     * Checks provided customization fields against existing ones to determine which ones to delete
+     *
      * @param CustomizationField[] $providedCustomizationFields
      * @param Product $product
      *
-     * @return array
+     * @return CustomizationFieldId[] ids of customization fields which should be deleted
      */
     private function getDeletableFieldIds(array $providedCustomizationFields, Product $product): array
     {
         $existingFieldIds = $product->getNonDeletedCustomizationFieldIds();
-        $providedFieldsIds = array_map(function (CustomizationField $field): int {
-            return (int) $field->id;
-        }, $providedCustomizationFields);
+        $deletableIds = [];
 
-        return array_diff($existingFieldIds, $providedFieldsIds);
+        foreach ($existingFieldIds as $existingFieldId) {
+            $deletableIds[$existingFieldId] = new CustomizationFieldId($existingFieldId);
+        }
+
+        foreach ($providedCustomizationFields as $providedCustomizationField) {
+            $providedId = (int) $providedCustomizationField->id;
+
+            if (isset($deletableIds[$providedId])) {
+                unset($deletableIds[$providedId]);
+            }
+        }
+
+        return $deletableIds;
     }
 }
