@@ -37,10 +37,9 @@ jobs:
       - name: Install dependencies in UI tests directory
         run: npm install
 
-      - name: Checking doubles in steps identifiers
+      - name: Generate mocha reports with failed steps
         run: GENERATE_FAILED_STEPS=true npm run functional-tests
+        continue-on-error: true
 
       - name: Checking doubles in steps identifiers
-        - run: GENERATE_FAILED_STEPS=true npm run functional-tests
-        if: ${{ failure() || success() }}
-        - run: npm run step-idenfiers-checker
+        run: npm run step-idenfiers-checker
