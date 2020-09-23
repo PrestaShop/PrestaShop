@@ -145,7 +145,7 @@ class InvoiceOptionsType extends TranslatorAwareType
             ->add('use_disk_cache', SwitchType::class, [
                 'required' => false,
                 'label' => $this->trans('Use the disk as cache for PDF invoices', 'Admin.Orderscustomers.Feature'),
-                'help' => $this->trans('Saves memory but slows down the PDF generation.', 'Admin.Orderscustomers.Help'),
+                'help' => $this->trans('Note that it saves memory but slows down the PDF generation.', 'Admin.Orderscustomers.Help'),
             ]);
     }
 
