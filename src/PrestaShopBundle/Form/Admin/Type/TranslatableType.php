@@ -146,7 +146,6 @@ class TranslatableType extends TranslatorAwareType
         }
 
         $varsForm = $view->vars['errors']->getForm();
-        $view->vars['formatted_text_area'] = ($options['type'] === FormattedTextareaType::class);
         $view->vars['errors'] = new FormErrorIterator($varsForm, $errors);
         $view->vars['locales'] = $options['locales'];
         $view->vars['default_locale'] = $this->getDefaultLocale($options['locales']);
