@@ -32,7 +32,7 @@
                 <span class="col-lg-12"><strong>{{ customization.name }}</strong></span>
                 <div class="col-lg-12">
                   {% if customization.image is not null %}
-                    <img class="img-thumbnail" src="{{ customization.image }}">
+                    <img class="img-thumbnail" src="{{ customization.image }}" alt="{{ customization.value }}">
                   {% else %}
                     {{ customization.value }}
                   {% endif %}
