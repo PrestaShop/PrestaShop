@@ -50,8 +50,8 @@ class ProductSupplierOptions
 
     /**
      * @param int $defaultSupplierId
-     * @param ProductSupplierOption[] $optionsBySupplier
      * @param string $defaultSupplierReference
+     * @param ProductSupplierOption[] $optionsBySupplier
      */
     public function __construct(
         int $defaultSupplierId,
@@ -72,18 +72,18 @@ class ProductSupplierOptions
     }
 
     /**
-     * @return ProductSupplierOption[]
-     */
-    public function getOptionsBySupplier(): array
-    {
-        return $this->optionsBySupplier;
-    }
-
-    /**
      * @return string
      */
     public function getDefaultSupplierReference(): string
     {
         return $this->defaultSupplierReference;
+    }
+
+    /**
+     * @return ProductSupplierOption[]
+     */
+    public function getOptionsBySupplier(): array
+    {
+        return $this->optionsBySupplier;
     }
 }
