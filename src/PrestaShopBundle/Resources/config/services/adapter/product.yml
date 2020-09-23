@@ -225,9 +225,6 @@ services:
     prestashop.adapter.product.command_handler.set_product_suppliers_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetProductSuppliersHandler
         arguments:
-            - '@prestashop.adapter.product.product_supplier_deleter'
-            - '@prestashop.adapter.product.product_supplier_persister'
-            - '@prestashop.adapter.product.product_supplier_provider'
             - '@prestashop.adapter.product.product_supplier_updater'
         tags:
             - name: tactician.handler
@@ -341,6 +338,8 @@ services:
             - '@prestashop.adapter.product.product_provider'
             - '@prestashop.adapter.product.product_persister'
             - '@prestashop.adapter.supplier.supplier_provider'
+            - '@prestashop.adapter.product.product_supplier_persister'
+            - '@prestashop.adapter.product.product_supplier_deleter'
 
     prestashop.adapter.product.product_supplier_deleter:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductSupplierDeleter

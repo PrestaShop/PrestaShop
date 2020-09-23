@@ -30,11 +30,13 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShop\PrestaShop\Adapter\Supplier\SupplierProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotUpdateProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplierDeleterInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use Product;
 use ProductSupplier;
 
@@ -65,6 +67,13 @@ class ProductSupplierUpdater
      */
     private $productSupplierDeleter;
 
+    /**
+     * @param ProductProvider $productProvider
+     * @param ProductPersister $productPersister
+     * @param SupplierProvider $supplierProvider
+     * @param ProductSupplierPersister $productSupplierPersister
+     * @param ProductSupplierDeleterInterface $productSupplierDeleter
+     */
     public function __construct(
         ProductProvider $productProvider,
         ProductPersister $productPersister,
@@ -80,12 +89,17 @@ class ProductSupplierUpdater
     }
 
     /**
-     * @param int $productId
+     * @param ProductId $productId
+     * @param SupplierId $defaultSupplierId
      * @param ProductSupplier[] $productSuppliers
+     *
+     * @throws CannotUpdateProductSupplierException
+     * @throws CoreException
+     * @throws ProductSupplierNotFoundException
      */
-    public function setProductSuppliers(int $productId, array $productSuppliers): void
+    public function setProductSuppliers(ProductId $productId, SupplierId $defaultSupplierId, array $productSuppliers): void
     {
-        $deletableProductSupplierIds = $this->getDeletableProductSupplierIds($productId, $productSuppliers);
+        $deletableProductSupplierIds = $this->getDeletableProductSupplierIds($productId->getValue(), $productSuppliers);
 
         foreach ($productSuppliers as $productSupplier) {
             if ($productSupplier->id) {
@@ -96,6 +110,7 @@ class ProductSupplierUpdater
         }
 
         $this->productSupplierDeleter->bulkDelete($deletableProductSupplierIds);
+        $this->updateDefaultSupplier($productId, $defaultSupplierId);
     }
 
     /**
