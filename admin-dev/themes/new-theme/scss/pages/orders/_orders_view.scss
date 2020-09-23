@@ -1,4 +1,5 @@
-@import "partials/order-navigation";
+// stylelint-disable-next-line
+@import "@scss/pages/partials/_order-navigation";
 
 #order-view-page {
   #historyTabContent {
