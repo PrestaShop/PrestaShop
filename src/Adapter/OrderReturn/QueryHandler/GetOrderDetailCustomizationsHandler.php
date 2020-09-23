@@ -68,10 +68,7 @@ class GetOrderDetailCustomizationsHandler implements GetOrderDetailCustomization
         $order = new Order($orderDetail->id_order);
         $customizations = [];
         $productCustomizations = Product::getAllCustomizedDatas($order->id_cart, $this->contextLangId, true, null, $orderDetail->id_customization);
-        $customizedDatas = null;
-        if (isset($productCustomizations[$orderDetail->product_id][$orderDetail->product_attribute_id])) {
-            $customizedDatas = $productCustomizations[$orderDetail->product_id][$orderDetail->product_attribute_id];
-        }
+        $customizedDatas = $productCustomizations[$orderDetail->product_id][$orderDetail->product_attribute_id] ?? null;
         if (!is_array($customizedDatas)) {
             return null;
         }
