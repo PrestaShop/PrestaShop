@@ -188,7 +188,7 @@ class OrderPricesForViewing
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getProductsPriceRaw(): Number
     {
@@ -196,7 +196,7 @@ class OrderPricesForViewing
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getDiscountsAmountRaw(): Number
     {
@@ -204,7 +204,7 @@ class OrderPricesForViewing
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getWrappingPriceRaw(): Number
     {
@@ -212,7 +212,7 @@ class OrderPricesForViewing
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getShippingPriceRaw(): Number
     {
@@ -220,7 +220,7 @@ class OrderPricesForViewing
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getShippingRefundableAmountRaw(): Number
     {
@@ -228,7 +228,7 @@ class OrderPricesForViewing
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getTaxesAmountRaw(): Number
     {
@@ -236,7 +236,7 @@ class OrderPricesForViewing
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getTotalAmountRaw(): Number
     {

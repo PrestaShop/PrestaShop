@@ -90,7 +90,7 @@ class Reduction
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getValue(): Number
     {

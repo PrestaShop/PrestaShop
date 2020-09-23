@@ -1586,7 +1586,7 @@ class OrderController extends FrameworkBundleAdminController
      *     redirectRoute="admin_orders_index"
      * )
      *
-     * @param $orderId
+     * @param mixed $orderId
      * @param Request $request
      *
      * @return Response

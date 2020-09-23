@@ -71,8 +71,6 @@ abstract class AbstractProductSupplierHandler extends AbstractProductHandler
 
     /**
      * @param ProductSupplier $productSupplier
-     * @param string $field
-     * @param int $errorCode
      */
     protected function validateProductSupplierFields(ProductSupplier $productSupplier): void
     {

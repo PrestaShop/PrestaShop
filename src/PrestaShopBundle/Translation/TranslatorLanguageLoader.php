@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShopBundle\Translation\Loader\SqlTranslationLoader;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
+use Symfony\Component\Translation\Translator as BaseTranslatorComponent;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class TranslatorLanguageLoader
@@ -67,7 +68,7 @@ class TranslatorLanguageLoader
         if ($translator->isLanguageLoaded($locale)) {
             return;
         }
-        if (!$translator instanceof Translator) {
+        if (!($translator instanceof BaseTranslatorComponent)) {
             return;
         }
         $translator->addLoader('xlf', new XliffFileLoader());

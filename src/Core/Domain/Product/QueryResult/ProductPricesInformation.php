@@ -76,14 +76,14 @@ class ProductPricesInformation
     private $unitPriceRatio;
 
     /**
-     * @param Number $price
-     * @param Number $ecotax
+     * @param \PrestaShop\Decimal\Number $price
+     * @param \PrestaShop\Decimal\Number $ecotax
      * @param int $taxRulesGroupId
      * @param bool $onSale
-     * @param Number $wholesalePrice
-     * @param Number $unitPrice
+     * @param \PrestaShop\Decimal\Number $wholesalePrice
+     * @param \PrestaShop\Decimal\Number $unitPrice
      * @param string $unity
-     * @param Number $unitPriceRatio
+     * @param \PrestaShop\Decimal\Number $unitPriceRatio
      */
     public function __construct(
         Number $price,
@@ -106,7 +106,7 @@ class ProductPricesInformation
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getPrice(): Number
     {
@@ -114,7 +114,7 @@ class ProductPricesInformation
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getEcotax(): Number
     {
@@ -138,7 +138,7 @@ class ProductPricesInformation
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getWholesalePrice(): Number
     {
@@ -146,7 +146,7 @@ class ProductPricesInformation
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getUnitPrice(): Number
     {
@@ -162,7 +162,7 @@ class ProductPricesInformation
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getUnitPriceRatio(): Number
     {

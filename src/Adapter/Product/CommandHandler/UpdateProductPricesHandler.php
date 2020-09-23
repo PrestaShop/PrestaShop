@@ -200,8 +200,8 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
 
     /**
      * @param Product $product
-     * @param Number $unitPrice
-     * @param Number $price
+     * @param \PrestaShop\Decimal\Number $unitPrice
+     * @param \PrestaShop\Decimal\Number $price
      *
      * @throws ProductConstraintException
      */
@@ -231,7 +231,7 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
     /**
      * Unit price validation is not involved in legacy validation, so it is checked manually to have unsigned int value
      *
-     * @param Number $unitPrice
+     * @param \PrestaShop\Decimal\Number $unitPrice
      *
      * @throws ProductConstraintException
      */

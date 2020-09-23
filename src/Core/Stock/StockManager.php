@@ -352,7 +352,7 @@ class StockManager
         }
 
         $stockMvt = $this->prepareMovement($productId, $productAttributeId, $deltaQuantity, $params);
-        if ($stockMvt) {
+        if (!$stockMvt) {
             return false;
         }
 
