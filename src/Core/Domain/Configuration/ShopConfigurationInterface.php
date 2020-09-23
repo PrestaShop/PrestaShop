@@ -24,49 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
+namespace PrestaShop\PrestaShop\Core\Domain\Configuration;
 
-/**
- * Shop identity
- */
-class ShopId
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+
+interface ShopConfigurationInterface
 {
-    /**
-     * @var int
-     */
-    private $shopId;
+    public function getForShop(string $key, ShopConstraint $shopConstraint);
 
-    /**
-     * @param int $shopId
-     *
-     * @throws ShopException
-     */
-    public function __construct(int $shopId)
-    {
-        $this->assertIsGreaterThanZero($shopId);
+    public function setForShop(string $key, $value, ShopConstraint $shopConstraint): void;
 
-        $this->shopId = $shopId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->shopId;
-    }
-
-    /**
-     * @param int $shopId
-     *
-     * @throws ShopException
-     */
-    private function assertIsGreaterThanZero(int $shopId)
-    {
-        if (0 >= $shopId) {
-            throw new ShopException(sprintf('Shop id %s is invalid. Shop id must be number that is greater than zero.', var_export($shopId, true)));
-        }
-    }
+    public function hasForShop(string $key, ShopConstraint $shopConstraint): bool;
 }

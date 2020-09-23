@@ -31,6 +31,9 @@ use Configuration as ConfigurationLegacy;
 use Feature;
 use Language;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShopBundle\Exception\NotImplementedException;
 use Shop;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -38,7 +41,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 /**
  * Adapter of Configuration ObjectModel.
  */
-class Configuration extends ParameterBag implements ConfigurationInterface
+class Configuration extends ParameterBag implements ConfigurationInterface, ShopConfigurationInterface
 {
     /**
      * @var Shop
@@ -102,6 +105,30 @@ class Configuration extends ParameterBag implements ConfigurationInterface
             return constant($key);
         }
 
+        return $this->doGet($key, $default);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getForShop(string $key, ShopConstraint $shopConstraint)
+    {
+        $shopId = null !== $shopConstraint->getShopId() ? $shopConstraint->getShopId()->getValue() : null;
+        $shopGroupId = null !== $shopConstraint->getShopGroupId() ? $shopConstraint->getShopGroupId()->getValue() : null;
+
+        return $this->doGet($key, null, $shopId, $shopGroupId);
+    }
+
+    /**
+     * @param $key
+     * @param null $default
+     * @param int|null $shopId
+     * @param int|null $shopGroupId
+     *
+     * @return array|false|mixed|string|null
+     */
+    private function doGet($key, $default = null, ?int $shopId = null, ?int $shopGroupId = null)
+    {
         //If configuration has never been accessed it is still empty and hasKey/isLangKey will always return false
         if (!ConfigurationLegacy::configurationIsLoaded()) {
             ConfigurationLegacy::loadConfiguration();
@@ -109,11 +136,11 @@ class Configuration extends ParameterBag implements ConfigurationInterface
 
         // if the key is multi lang related, we return an array with the value per language.
         if (ConfigurationLegacy::isLangKey($key)) {
-            return $this->getLocalized($key);
+            return $this->getLocalized($key, $shopId, $shopGroupId);
         }
 
-        if (ConfigurationLegacy::hasKey($key)) {
-            return ConfigurationLegacy::get($key);
+        if (ConfigurationLegacy::hasKey($key, null, $shopGroupId, $shopId)) {
+            return ConfigurationLegacy::get($key, null, $shopGroupId, $shopId);
         }
 
         return $default;
@@ -161,10 +188,44 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
+    public function setForShop(string $key, $value, ShopConstraint $shopConstraint): void
+    {
+        $shopId = null !== $shopConstraint->getShopId() ? $shopConstraint->getShopId()->getValue() : null;
+        $shopGroupId = null !== $shopConstraint->getShopGroupId() ? $shopConstraint->getShopGroupId()->getValue() : null;
+
+        $success = ConfigurationLegacy::updateValue(
+            $key,
+            $value,
+            false,
+            $shopGroupId,
+            $shopId
+        );
+
+        if (!$success) {
+            throw new \Exception('Could not update configuration');
+        }
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
     public function has($key)
     {
         return ConfigurationLegacy::hasKey($key);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasForShop(string $key, ShopConstraint $shopConstraint): bool
+    {
+        $shopId = null !== $shopConstraint->getShopId() ? $shopConstraint->getShopId()->getValue() : null;
+        $shopGroupId = null !== $shopConstraint->getShopGroupId() ? $shopConstraint->getShopGroupId()->getValue() : null;
+
+        return ConfigurationLegacy::hasKey($key, null, $shopGroupId, $shopId);
+    }
+
 
     /**
      * Removes a configuration key.
@@ -252,15 +313,17 @@ class Configuration extends ParameterBag implements ConfigurationInterface
      * Get localized configuration in all languages
      *
      * @param string $key
+     * @param int|null $shopId
+     * @param int|null $shopGroupId
      *
      * @return array Array of langId => localizedConfiguration
      */
-    private function getLocalized($key)
+    private function getLocalized($key, ?int $shopId = null, ?int $shopGroupId = null)
     {
         $configuration = [];
 
-        foreach (Language::getIDs(false) as $langId) {
-            $configuration[$langId] = ConfigurationLegacy::get($key, $langId);
+        foreach (Language::getIDs(false, $shopId ?: false) as $langId) {
+            $configuration[$langId] = ConfigurationLegacy::get($key, $langId, $shopGroupId, $shopId);
         }
 
         return $configuration;
