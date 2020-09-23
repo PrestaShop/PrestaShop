@@ -42,5 +42,5 @@ jobs:
 
       - name: Checking doubles in steps identifiers
         - run: GENERATE_FAILED_STEPS=true npm run functional-tests
-        if: succeeded() || failed()
+        if: ${{ failure() || success() }}
         - run: npm run step-idenfiers-checker
