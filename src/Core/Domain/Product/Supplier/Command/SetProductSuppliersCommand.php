@@ -56,11 +56,10 @@ class SetProductSuppliersCommand
 
     /**
      * @param int $productId
-     * @param array $productSuppliers
+     * @param array<string, mixed> $productSuppliers
+     * @param int $defaultSupplierId
      *
      * @see SetProductSuppliersCommand::setProductSuppliers() for $productSuppliers structure
-     *
-     * @param int $defaultSupplierId
      */
     public function __construct(int $productId, array $productSuppliers, int $defaultSupplierId)
     {
