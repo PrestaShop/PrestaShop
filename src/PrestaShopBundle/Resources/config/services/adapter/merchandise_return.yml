@@ -3,7 +3,6 @@ services:
         public: true
 
     # Command handlers
-
     prestashop.adapter.order_return.query_handler.get_order_return_for_editing:
         class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\QueryHandler\GetOrderReturnForEditingHandler'
         tags:
