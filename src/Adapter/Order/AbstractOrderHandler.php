@@ -370,9 +370,10 @@ abstract class AbstractOrderHandler
         $taxAddress = new Address($taxAddressId);
         $computingPrecision = $this->getPrecisionFromCart($cart);
 
+        $context = Context::getContext();
         foreach ($order->getOrderDetailList() as $row) {
             $orderDetail = new OrderDetail($row['id_order_detail']);
-            $orderDetail->id_tax_rules_group = (int) Product::getIdTaxRulesGroupByIdProduct($orderDetail->product_id, Context::getContext());
+            $orderDetail->id_tax_rules_group = (int) Product::getIdTaxRulesGroupByIdProduct($orderDetail->product_id, $context);
             $taxManager = TaxManagerFactory::getManager($taxAddress, $orderDetail->id_tax_rules_group);
             $taxCalculator = $taxManager->getTaxCalculator();
 
