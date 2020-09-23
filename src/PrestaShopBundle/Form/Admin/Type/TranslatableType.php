@@ -257,12 +257,6 @@ class TranslatableType extends TranslatorAwareType
         $iteration = 0;
 
         foreach ($form as $formItem) {
-            if (0 === $iteration) {
-                ++$iteration;
-
-                continue;
-            }
-
             if ($this->doesErrorFormAndCurrentFormMatches($formError->getOrigin(), $formItem)) {
                 $nonDefaultLanguageFormKey = $iteration;
 
