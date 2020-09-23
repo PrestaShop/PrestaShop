@@ -12,3 +12,7 @@ services:
             - "@prestashop.security.admin.provider"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    prestashop.adapter.context_load_helper:
+        class: 'PrestaShop\PrestaShop\Adapter\ContextLoadHelper'
+        arguments: ["@prestashop.adapter.legacy.context"]
