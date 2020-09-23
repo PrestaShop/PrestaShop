@@ -58,25 +58,25 @@ class ProductCustomizationFieldUpdater
     private $productProvider;
 
     /**
-     * @var ProductUpdater
+     * @var ProductPersister
      */
-    private $productUpdater;
+    private $productPersister;
 
     /**
      * @param CustomizationFieldPersister $customizationFieldPersister
      * @param CustomizationFieldDeleterInterface $customizationFieldDeleter
      * @param ProductProvider $productProvider
-     * @param ProductUpdater $productUpdater
+     * @param ProductPersister $productPersister
      */
     public function __construct(
         CustomizationFieldPersister $customizationFieldPersister,
         CustomizationFieldDeleterInterface $customizationFieldDeleter,
         ProductProvider $productProvider,
-        ProductUpdater $productUpdater
+        ProductPersister $productPersister
     ) {
         $this->customizationFieldPersister = $customizationFieldPersister;
         $this->customizationFieldDeleter = $customizationFieldDeleter;
-        $this->productUpdater = $productUpdater;
+        $this->productPersister = $productPersister;
         $this->productProvider = $productProvider;
     }
 
@@ -114,7 +114,7 @@ class ProductCustomizationFieldUpdater
             $customizable = ProductCustomizabilitySettings::NOT_CUSTOMIZABLE;
         }
 
-        $this->productUpdater->update(
+        $this->productPersister->update(
             $product,
             [
                 'customizable' => $customizable,
