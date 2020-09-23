@@ -52,15 +52,16 @@ class ShopConstraint
 
     /**
      * @param int $shopId
-     */
-    /**
-     * @param int $shopId
+     *
+     * @return $this
      *
      * @throws ShopException
      */
-    public function setShopId(int $shopId): void
+    public function setShopId(int $shopId): self
     {
         $this->shopId = new ShopId($shopId);
+
+        return $this;
     }
 
     /**
@@ -74,10 +75,14 @@ class ShopConstraint
     /**
      * @param int $shopGroupId
      *
+     * @return $this
+     *
      * @throws ShopException
      */
-    public function setShopGroupId(int $shopGroupId): void
+    public function setShopGroupId(int $shopGroupId): self
     {
         $this->shopGroupId = new ShopGroupId($shopGroupId);
+
+        return $this;
     }
 }

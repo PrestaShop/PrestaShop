@@ -206,7 +206,6 @@ class Configuration extends ParameterBag implements ConfigurationInterface, Shop
         }
     }
 
-
     /**
      * {@inheritdoc}
      */
@@ -225,7 +224,6 @@ class Configuration extends ParameterBag implements ConfigurationInterface, Shop
 
         return ConfigurationLegacy::hasKey($key, null, $shopGroupId, $shopId);
     }
-
 
     /**
      * Removes a configuration key.
