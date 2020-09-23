@@ -49,12 +49,14 @@ class UpdateOrderReturnStateCommand
 
     /**
      * @param int $orderReturnId
+     * @param int $orderReturnStateId
      *
      * @throws OrderReturnConstraintException
      */
-    public function __construct(int $orderReturnId)
+    public function __construct(int $orderReturnId, int $orderReturnStateId)
     {
         $this->orderReturnId = new OrderReturnId($orderReturnId);
+        $this->orderReturnStateId = new OrderReturnStateId($orderReturnStateId);
     }
 
     /**
@@ -71,17 +73,5 @@ class UpdateOrderReturnStateCommand
     public function getOrderReturnStateId(): OrderReturnStateId
     {
         return $this->orderReturnStateId;
-    }
-
-    /**
-     * @param OrderReturnStateId $orderReturnStateId
-     *
-     * @return UpdateOrderReturnStateCommand
-     */
-    public function setOrderReturnStateId(OrderReturnStateId $orderReturnStateId): UpdateOrderReturnStateCommand
-    {
-        $this->orderReturnStateId = $orderReturnStateId;
-
-        return $this;
     }
 }
