@@ -174,10 +174,10 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute(
-                'admin_order_returns_edit',
-                [
-                    'orderReturnId' => $orderReturnId,
-                ]
+            'admin_order_returns_edit',
+            [
+                'orderReturnId' => $orderReturnId,
+            ]
         );
     }
 
