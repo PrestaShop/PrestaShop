@@ -73,6 +73,10 @@ abstract class AbstractObjectModelPersister
      */
     protected function updateObjectModel(ObjectModel $objectModel, string $exceptionClass, int $errorCode = 0)
     {
+        if (!$objectModel->id) {
+            throw new CoreException('Cannot update object model without id');
+        }
+
         try {
             if (!$objectModel->update()) {
                 throw new $exceptionClass(
