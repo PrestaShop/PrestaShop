@@ -347,7 +347,7 @@ export default class ModuleCard {
           self.confirmPrestaTrust(result[moduleTechName]);
         }
 
-        $.growl.error({message: result[moduleTechName].msg});
+        $.growl.error({message: result[moduleTechName].msg, fixed: true});
         return;
       }
 
