@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteCustomersSessionsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteEmployeesSessionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteCustomerSessionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteEmployeeSessionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Session\Exception\SessionException;
@@ -245,6 +246,35 @@ class SecurityController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_security_sessions_customers');
+    }
+
+    /**
+     * Bulk delete employees sessions.
+     *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller')~'_')",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkDeleteEmployeesSessionsAction(Request $request)
+    {
+        $sessionIds = $request->request->get('security_sessions_employees_bulk');
+
+        try {
+            $deleteSessionsCommand = new BulkDeleteEmployeesSessionsCommand($sessionIds);
+
+            $this->getCommandBus()->handle($deleteSessionsCommand);
+
+            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+        } catch (SessionException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_security_sessions_employees');
     }
 
     /**
