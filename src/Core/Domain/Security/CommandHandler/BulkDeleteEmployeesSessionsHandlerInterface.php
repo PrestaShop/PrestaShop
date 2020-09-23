@@ -24,36 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Security\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler;
 
-use CustomerSession;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\SessionNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteCustomersSessionsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler\BulkDeleteCustomersSessionsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteEmployeesSessionsCommand;
 
 /**
- * Handles command that deletes customers sessions in bulk action.
- *
- * @internal
+ * Defines interface for employee bulk delete command handler.
  */
-final class BulkDeleteCustomersSessionsHandler implements BulkDeleteCustomersSessionsHandlerInterface
+interface BulkDeleteEmployeesSessionsHandlerInterface
 {
     /**
-     * {@inheritdoc}
+     * @param BulkDeleteEmployeesSessionsCommand $command
      */
-    public function handle(BulkDeleteCustomersSessionsCommand $command)
-    {
-        foreach ($command->getCustomerSessionIds() as $sessionId) {
-            $session = new CustomerSession($sessionId->getValue());
-
-            if ($session->id !== $sessionId->getValue()) {
-                throw new SessionNotFoundException(
-                    $sessionId,
-                    sprintf('Session with id "%d" was not found.', $sessionId->getValue())
-                );
-            }
-
-            $session->delete();
-        }
-    }
+    public function handle(BulkDeleteEmployeesSessionsCommand $command);
 }

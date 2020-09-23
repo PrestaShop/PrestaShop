@@ -15,7 +15,7 @@ services:
         command: 'PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteEmployeeSessionCommand'
 
   prestashop.adapter.security.command_handler.bulk_delete_employees_sessions_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\Security\CommandHandler\BulkDeleteEmployeesSessionsSecurityHandler'
+    class: 'PrestaShop\PrestaShop\Adapter\Security\CommandHandler\BulkDeleteEmployeesSessionsHandler'
     tags:
       - name: 'tactician.handler'
         command: 'PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteEmployeesSessionsCommand'
