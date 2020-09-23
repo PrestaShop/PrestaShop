@@ -40,7 +40,7 @@ const checkDoubles = (jsonFile) => {
   const contextDoubles = duplicates(count(reportContexts));
 
   if (contextDoubles.length !== 0) {
-    throw new Error('Some test identifiers must be fixed:\n' + contextDoubles);
+    throw new Error(`Some test identifiers must be fixed:\n${contextDoubles}`);
   } else {
     console.log('All good, no changes are required');
   }
