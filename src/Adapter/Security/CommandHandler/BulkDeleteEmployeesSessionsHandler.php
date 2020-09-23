@@ -26,25 +26,25 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Security\CommandHandler;
 
-use CustomerSession;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\SessionNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteCustomersSessionsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler\BulkDeleteCustomersSessionsHandlerInterface;
+use EmployeeSession;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\SessionNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteEmployeesSessionsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler\BulkDeleteEmployeesSessionsHandlerInterface;
 
 /**
- * Handles command that deletes customers sessions in bulk action.
+ * Handles command that deletes employees sessions in bulk action.
  *
  * @internal
  */
-final class BulkDeleteCustomersSessionsHandler implements BulkDeleteCustomersSessionsHandlerInterface
+final class BulkDeleteEmployeesSessionsHandler implements BulkDeleteEmployeesSessionsHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(BulkDeleteCustomersSessionsCommand $command)
+    public function handle(BulkDeleteEmployeesSessionsCommand $command)
     {
-        foreach ($command->getCustomerSessionIds() as $sessionId) {
-            $session = new CustomerSession($sessionId->getValue());
+        foreach ($command->getEmployeeSessionIds() as $sessionId) {
+            $session = new EmployeeSession($sessionId->getValue());
 
             if ($session->id !== $sessionId->getValue()) {
                 throw new SessionNotFoundException(
