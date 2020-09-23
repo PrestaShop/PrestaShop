@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use Product;
 
 /**
- * Performs update of provided Product properties
+ * Persists product in database
  */
 class ProductPersister extends AbstractObjectModelPersister
 {
