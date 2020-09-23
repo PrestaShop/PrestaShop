@@ -72,29 +72,12 @@ class CustomizationFieldPersister extends AbstractObjectModelPersister
 
     /**
      * @param CustomizationField $customizationField
-     * @param array<string, mixed> $propertiesToUpdate
-     * @param int $errorCode
      *
-     * @throws CoreException
+     * @throws CannotUpdateCustomizationFieldException
      */
-    public function update(CustomizationField $customizationField, array $propertiesToUpdate, int $errorCode = 0): void
+    public function update(CustomizationField $customizationField): void
     {
-        $this->fillProperties($customizationField, $propertiesToUpdate);
         $this->customizationFieldValidator->validate($customizationField);
-        $this->updateObjectModel($customizationField, CannotUpdateCustomizationFieldException::class, $errorCode);
-    }
-
-    /**
-     * @param CustomizationField $customizationField
-     * @param array $propertiesToUpdate
-     */
-    private function fillProperties(CustomizationField $customizationField, array $propertiesToUpdate): void
-    {
-        $this->fillLocalizedProperty($customizationField, 'name', $propertiesToUpdate);
-        $this->fillProperty($customizationField, 'type', $propertiesToUpdate);
-        $this->fillProperty($customizationField, 'required', $propertiesToUpdate);
-        $this->fillProperty($customizationField, 'is_module', $propertiesToUpdate);
-        $this->fillProperty($customizationField, 'id_product', $propertiesToUpdate);
-        $this->fillProperty($customizationField, 'is_deleted', $propertiesToUpdate);
+        $this->updateObjectModel($customizationField, CannotUpdateCustomizationFieldException::class);
     }
 }
