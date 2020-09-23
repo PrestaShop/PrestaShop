@@ -285,15 +285,14 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Security\Sessions\EmployeeGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
-            - "@=service('router').generate('admin_common_reset_search', {'controller': 'profile', 'action': 'index'})"
-            - "@=service('router').generate('admin_security_sessions_employees')"
-            - '@prestashop.core.grid.action.row.accessibility_checker.delete_profile'
+            - "@=service('router').generate('admin_common_reset_search', {'controller': 'security', 'action': 'employeesSessions'})"
+            - "@=service('router').generate('admin_security_sessions_employees_search')"
         public: true
 
     prestashop.core.grid.definition.factory.security.sessions.customers:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Security\Sessions\CustomerGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
-            - "@=service('router').generate('admin_common_reset_search', {'controller': 'security', 'action': 'index'})"
-            - "@=service('router').generate('admin_security_sessions_customers')"
+            - "@=service('router').generate('admin_common_reset_search', {'controller': 'security', 'action': 'customersSessions'})"
+            - "@=service('router').generate('admin_security_sessions_customers_search')"
         public: true
