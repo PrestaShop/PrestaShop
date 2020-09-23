@@ -111,7 +111,7 @@ class AddCartRuleToOrderCommand
     }
 
     /**
-     * @return Number|null
+     * @return \PrestaShop\Decimal\Number|null
      */
     public function getDiscountValue(): ?Number
     {

@@ -36,7 +36,6 @@ use ReflectionClass;
 use ReflectionObject;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -58,7 +57,7 @@ class ModuleActivatedListener
     private $translator;
 
     /**
-     * @var SessionInterface
+     * @var Session
      */
     private $session;
 
@@ -75,14 +74,14 @@ class ModuleActivatedListener
     /**
      * @param RouterInterface $router
      * @param TranslatorInterface $translator
-     * @param SessionInterface $session
+     * @param Session $session
      * @param Reader $annotationReader
      * @param ModuleRepository $moduleRepository
      */
     public function __construct(
         RouterInterface $router,
         TranslatorInterface $translator,
-        SessionInterface $session,
+        Session $session,
         Reader $annotationReader,
         ModuleRepository $moduleRepository
     ) {
@@ -141,9 +140,6 @@ class ModuleActivatedListener
      */
     private function showNotificationMessage(ModuleActivated $moduleActivated)
     {
-        if (!($this->session instanceof Session)) {
-            return;
-        }
         $this->session->getFlashBag()->add(
             'error',
             $this->translator->trans(

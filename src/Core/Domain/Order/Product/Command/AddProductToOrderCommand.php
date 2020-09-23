@@ -217,7 +217,7 @@ class AddProductToOrderCommand
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getProductPriceTaxIncluded(): Number
     {
@@ -225,7 +225,7 @@ class AddProductToOrderCommand
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getProductPriceTaxExcluded(): Number
     {

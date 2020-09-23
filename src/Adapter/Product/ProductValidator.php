@@ -42,8 +42,6 @@ class ProductValidator extends AbstractObjectModelValidator
      * Validates Product object model properties using legacy validation
      *
      * @param Product $product
-     * @param string $field
-     * @param int $errorCode
      *
      * @throws ProductConstraintException
      * @throws ProductException

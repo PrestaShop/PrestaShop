@@ -133,7 +133,7 @@ class AddProductSupplierCommand
     }
 
     /**
-     * @return Number|null
+     * @return \PrestaShop\Decimal\Number|null
      */
     public function getPriceTaxExcluded(): ?Number
     {

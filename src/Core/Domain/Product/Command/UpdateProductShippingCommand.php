@@ -104,7 +104,7 @@ class UpdateProductShippingCommand
     }
 
     /**
-     * @return Number|null
+     * @return \PrestaShop\Decimal\Number|null
      */
     public function getWidth(): ?Number
     {
@@ -124,7 +124,7 @@ class UpdateProductShippingCommand
     }
 
     /**
-     * @return Number|null
+     * @return \PrestaShop\Decimal\Number|null
      */
     public function getHeight(): ?Number
     {
@@ -144,7 +144,7 @@ class UpdateProductShippingCommand
     }
 
     /**
-     * @return Number|null
+     * @return \PrestaShop\Decimal\Number|null
      */
     public function getDepth(): ?Number
     {
@@ -164,7 +164,7 @@ class UpdateProductShippingCommand
     }
 
     /**
-     * @return Number|null
+     * @return \PrestaShop\Decimal\Number|null
      */
     public function getWeight(): ?Number
     {
@@ -184,7 +184,7 @@ class UpdateProductShippingCommand
     }
 
     /**
-     * @return Number|null
+     * @return \PrestaShop\Decimal\Number|null
      */
     public function getAdditionalShippingCost(): ?Number
     {

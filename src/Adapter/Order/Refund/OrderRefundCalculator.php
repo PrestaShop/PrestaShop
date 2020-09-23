@@ -54,9 +54,9 @@ class OrderRefundCalculator
     /**
      * @param Order $order
      * @param array $orderDetailRefunds
-     * @param Number $shippingRefund
+     * @param \PrestaShop\Decimal\Number $shippingRefund
      * @param int $voucherRefundType
-     * @param Number|null $chosenVoucherAmount
+     * @param \PrestaShop\Decimal\Number|null $chosenVoucherAmount
      *
      * @return OrderRefundSummary
      *

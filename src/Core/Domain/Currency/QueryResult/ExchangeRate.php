@@ -39,7 +39,7 @@ class ExchangeRate
     private $exchangeRate;
 
     /**
-     * @param Number $exchangeRate
+     * @param \PrestaShop\Decimal\Number $exchangeRate
      */
     public function __construct(Number $exchangeRate)
     {
@@ -47,7 +47,7 @@ class ExchangeRate
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getValue(): Number
     {

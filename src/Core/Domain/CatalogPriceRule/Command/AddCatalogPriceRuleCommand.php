@@ -187,7 +187,7 @@ class AddCatalogPriceRuleCommand
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getPrice(): Number
     {
