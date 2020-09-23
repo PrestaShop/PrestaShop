@@ -51,6 +51,8 @@ abstract class AbstractProductHandler
     protected $fieldsToUpdate = [];
 
     /**
+     * @todo: to be removed when all usecases are replaced by ObjectModelProvider
+     *
      * @param ProductId $productId
      *
      * @return Product
@@ -84,7 +86,7 @@ abstract class AbstractProductHandler
 
     /**
      * @todo: product name is not required. Fix that? issue: #19441 for discussion
-     *
+     * @todo: to be removed when all usecases are replaced by ObjectModelPersister & validator
      * Validates Product object model multilingual property using legacy validation
      *
      * @param Product $product
@@ -110,6 +112,7 @@ abstract class AbstractProductHandler
     }
 
     /**
+     * @todo: to be removed when all usecases are replaced by ObjectModelPersister & validator
      * Validates Product object model property using legacy validation
      *
      * @param Product $product
@@ -133,6 +136,8 @@ abstract class AbstractProductHandler
     }
 
     /**
+     * @todo: to be removed when all usecases are replaced by ObjectModelPersister & validator
+     *
      * @param Product $product
      * @param int $errorCode
      *
@@ -158,6 +163,8 @@ abstract class AbstractProductHandler
     }
 
     /**
+     * @todo: to be removes when all usecases are replaced by ObjectModelProvider->assertExists()
+     *
      * @param string $entityName
      * @param int $entityId
      *
