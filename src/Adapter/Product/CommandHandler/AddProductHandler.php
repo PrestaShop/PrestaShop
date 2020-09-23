@@ -39,7 +39,7 @@ use PrestaShopException;
 use Product;
 
 /**
- * Handles AddProductCommand using legacy object model
+ * Handles @AddProductCommand using legacy object model
  */
 final class AddProductHandler extends AbstractProductHandler implements AddProductHandlerInterface
 {
@@ -94,7 +94,6 @@ final class AddProductHandler extends AbstractProductHandler implements AddProdu
 
         $product->name = $command->getLocalizedNames();
         $product->active = false;
-        $product->category = Category::getLinkRewrite($this->defaultCategoryId, $this->defaultLangId);
         $product->id_category_default = $this->defaultCategoryId;
         $product->is_virtual = $command->isVirtual();
 
