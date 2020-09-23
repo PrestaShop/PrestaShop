@@ -99,7 +99,9 @@ services:
       arguments:
         - '@request_stack'
       tags:
-        - { name: kernel.event_listener, event: prestashop.search_criteria.filter, method: onFilterSearchCriteria }
+        - name: kernel.event_listener
+          event: prestashop.search_criteria.filter
+          method: onFilterSearchCriteria
 
     prestashop.bundle.event_listener.back_url_redirect_response_listener:
         class: PrestaShopBundle\EventListener\BackUrlRedirectResponseListener
