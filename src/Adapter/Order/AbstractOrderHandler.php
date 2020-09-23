@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShopDatabaseException;
 use PrestaShopException;
@@ -352,12 +353,29 @@ abstract class AbstractOrderHandler
 
     /**
      * @param Order $order
-     * @param Cart $cart
      *
-     * @throws PrestaShopException
-     * @throws PrestaShopDatabaseException
+     * @return ShopConstraint
      */
-    protected function updateOrderDetailsTax(Order $order, Cart $cart): void
+    protected function getOrderShopConstraint(Order $order): ShopConstraint
+    {
+        $constraint = new ShopConstraint();
+        $constraint
+            ->setShopId($order->id_shop)
+            ->setShopGroupId($order->id_shop_group)
+        ;
+
+        return $constraint;
+    }
+
+    /**
+     * @param Order $order
+     * @param Cart $cart
+     * @param Address $taxAddress
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    protected function updateOrderDetailsTax(Order $order, Cart $cart, Address $taxAddress): void
     {
         // Fields that are updated (refunds are not modified, even though the tax changed we need to keep track
         // of the actual refunded amount).
@@ -366,8 +384,6 @@ abstract class AbstractOrderHandler
             'total_price_tax',
             'total_shipping_price_tax',
         ];
-        $taxAddressId = $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)};
-        $taxAddress = new Address($taxAddressId);
         $computingPrecision = $this->getPrecisionFromCart($cart);
 
         $context = Context::getContext();
