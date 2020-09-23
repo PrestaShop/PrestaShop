@@ -94,7 +94,7 @@ class OrderReturnProductsGridDataFactory implements GridDataFactoryInterface
         foreach ($orderReturnProducts as $orderReturnProduct) {
             $getOrderDetailCustomization = new GetOrderDetailCustomizations(
                 (int) $orderReturnProduct['id_order_detail']
-        );
+            );
             $orderReturnProduct['customizations'] = $this->getOrderDetailCustomizationHandler->handle($getOrderDetailCustomization);
             $modifiedOrderReturnProducts[] = $orderReturnProduct;
         }
