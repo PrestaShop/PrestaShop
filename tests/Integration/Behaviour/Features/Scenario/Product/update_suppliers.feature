@@ -74,7 +74,7 @@ Feature: Update product suppliers from Back Office (BO)
     And product product1 should not have a default supplier
     And product product1 default supplier reference should be empty
 
-  Scenario: Update product default supplier when it is not assigned to product
+  Scenario: Update product default supplier when it is not associated with product
     Given product product1 should not have any suppliers assigned
     And product product1 should not have a default supplier
     When I set product product1 default supplier to supplier2 and following suppliers:
