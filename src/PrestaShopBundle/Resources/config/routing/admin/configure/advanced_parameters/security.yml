@@ -16,7 +16,7 @@ admin_security_general_save:
 
 admin_security_sessions_customers:
     path: /sessions/customers
-    methods: [GET, POST]
+    methods: [GET]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:customersSessions'
         _legacy_controller: AdminSecuritySessionsCustomers
@@ -34,7 +34,7 @@ admin_security_sessions_customers_delete:
 
 admin_security_sessions_employees:
     path: /sessions/employees
-    methods: [GET, POST]
+    methods: [GET]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:employeesSessions'
         _legacy_controller: AdminSecuritySessionsEmployees
@@ -65,3 +65,21 @@ admin_security_sessions_customers_bulk_delete:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Security:bulkDeleteCustomersSessions'
         _legacy_controller: AdminSecuritySessionsCustomers
         _legacy_link: AdminSecuritySessionsCustomers:submitBulkdeleteemployees
+
+admin_security_sessions_customers_search:
+  path: /sessions/customers
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Common:searchGrid'
+    _legacy_controller: AdminSecuritySessionsCustomers
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.security.sessions.customers
+    redirectRoute: admin_security_sessions_customers
+
+admin_security_sessions_employees_search:
+  path: /sessions/employees
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Common:searchGrid'
+    _legacy_controller: AdminSecuritySessionsEmployees
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.security.sessions.employees
+    redirectRoute: admin_security_sessions_employees

@@ -27,11 +27,9 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteSessionCommand;
+use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteCustomersSessionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteCustomerSessionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteEmployeeSessionCommand;
-use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteEmployeesSessionsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteCustomersSessionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Session\Exception\SessionException;
 use PrestaShop\PrestaShop\Core\Domain\Session\Exception\SessionNotFoundException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
@@ -39,7 +37,6 @@ use PrestaShop\PrestaShop\Core\Search\Filters\Security\Sessions\CustomerFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\Security\Sessions\EmployeeFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,22 +52,15 @@ class SecurityController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @param EmployeeFilters $filters
-     *
      * @return Response
      */
-    public function indexAction(EmployeeFilters $filters)
+    public function indexAction()
     {
         $generalForm = $this->getGeneralFormHandler()->getForm();
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Security/index.html.twig', [
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('Security', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
-            'requireBulkActions' => false,
-            'showContentHeader' => true,
-            'enableSidebar' => true,
-            'requireFilterStatus' => false,
             'generalForm' => $generalForm->createView(),
         ]);
     }
@@ -78,8 +68,7 @@ class SecurityController extends FrameworkBundleAdminController
     /**
      * Process the Security general configuration form.
      *
-     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_administration")
-     * @DemoRestricted(redirectRoute="admin_administration")
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -176,40 +165,12 @@ class SecurityController extends FrameworkBundleAdminController
     }
 
     /**
-     * Used for applying filtering actions.
-     *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function searchAction(Request $request)
-    {
-        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.profile');
-        $definitionFactory = $definitionFactory->getDefinition();
-
-        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
-        $searchParametersForm = $gridFilterFormFactory->create($definitionFactory);
-        $searchParametersForm->handleRequest($request);
-
-        $filters = [];
-
-        if ($searchParametersForm->isSubmitted()) {
-            $filters = $searchParametersForm->getData();
-        }
-
-        return $this->redirectToRoute('admin_sessions_index', ['filters' => $filters]);
-    }
-
-    /**
      * Delete an employee session.
      *
      * @AdminSecurity(
      *     "is_granted('delete', request.get('_legacy_controller')~'_')",
      *     message="You do not have permission to edit this."
      * )
-     * @DemoRestricted(redirectRoute="admin_sessions_index")
      *
      * @param int $sessionId
      *
@@ -237,7 +198,6 @@ class SecurityController extends FrameworkBundleAdminController
      *     "is_granted('delete', request.get('_legacy_controller')~'_')",
      *     message="You do not have permission to edit this."
      * )
-     * @DemoRestricted(redirectRoute="admin_sessions_index")
      *
      * @param int $sessionId
      *
@@ -265,7 +225,6 @@ class SecurityController extends FrameworkBundleAdminController
      *     "is_granted('delete', request.get('_legacy_controller')~'_')",
      *     message="You do not have permission to edit this."
      * )
-     * @DemoRestricted(redirectRoute="admin_sessions_index")
      *
      * @param Request $request
      *
