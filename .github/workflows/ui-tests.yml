@@ -1,0 +1,40 @@
+name: UI tests
+
+on:
+  pull_request:
+      types: [opened,edited,reopened,synchronize,labeled]
+
+jobs:
+
+  linter:
+    runs-on: ubuntu-latest
+    name: UI tests - Linter
+    if: contains(github.event.pull_request.labels.*.name, 'TE')
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: Install dependencies in UI tests directory
+        run: cd tests && npm install
+
+      - name: Check eslint errors
+        run: npm run lint-no-fix
+
+  Steps-identifiers:
+    runs-on: ubuntu-latest
+    name: UI tests - Checking doubles in steps identifiers
+    if: contains(github.event.pull_request.labels.*.name, 'TE')
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: Install dependencies in UI tests directory
+        run: cd tests && npm install
+
+      - name: Generate mocha reports with failed steps
+        run: GENERATE_FAILED_STEPS=true npm run functional-tests
+
+      - name: Checking doubles in steps identifiers
+        run: npm run step-idenfiers-checker
