@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use Product;
 
 /**
- * Basic methods for persisting Product
+ * Persists Product in database
  */
 class ProductPersister extends AbstractObjectModelPersister
 {
@@ -63,6 +63,7 @@ class ProductPersister extends AbstractObjectModelPersister
     {
         $this->productValidator->validate($product);
         $id = $this->addObjectModel($product, CannotAddProductException::class);
+        $product->addToCategories([$product->id_category_default]);
 
         return new ProductId($id);
     }
