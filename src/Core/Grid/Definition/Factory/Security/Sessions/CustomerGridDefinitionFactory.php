@@ -140,21 +140,21 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'field' => 'email',
                     ])
             )
-            ->add((new ActionColumn('actions'))
-            ->setName($this->trans('Actions', [], 'Admin.Global'))
-            ->setOptions([
-                'actions' => (new RowActionCollection())
-                    ->add(
-                        $this->buildDeleteAction(
-                            'admin_security_sessions_customers_delete',
-                            'sessionId',
-                            'id_customer_session',
-                            'DELETE'
-                        )
-                    ),
-            ])
-            )
-        ;
+            ->add(
+                (new ActionColumn('actions'))
+                    ->setName($this->trans('Actions', [], 'Admin.Global'))
+                    ->setOptions([
+                        'actions' => (new RowActionCollection())
+                            ->add(
+                            $this->buildDeleteAction(
+                                'admin_security_sessions_customers_delete',
+                                'sessionId',
+                                'id_customer_session',
+                                'DELETE'
+                            )
+                        ),
+                    ])
+            );
     }
 
     /**
@@ -163,19 +163,21 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getGridActions()
     {
         return (new GridActionCollection())
-            ->add((new SimpleGridAction('common_refresh_list'))
-            ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
-            ->setIcon('refresh')
+            ->add(
+                (new SimpleGridAction('common_refresh_list'))
+                    ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
+                    ->setIcon('refresh')
             )
-            ->add((new SimpleGridAction('common_show_query'))
-            ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
-            ->setIcon('code')
+            ->add(
+                (new SimpleGridAction('common_show_query'))
+                    ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
+                    ->setIcon('code')
             )
-            ->add((new SimpleGridAction('common_export_sql_manager'))
-            ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
-            ->setIcon('storage')
-            )
-        ;
+            ->add(
+                (new SimpleGridAction('common_export_sql_manager'))
+                    ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
+                    ->setIcon('storage')
+            );
     }
 
     /**
@@ -184,61 +186,67 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getFilters()
     {
         return (new FilterCollection())
-            ->add((new Filter('id_customer_session', TextType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'size' => 'small',
-                'attr' => [
-                    'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
-                ],
-            ])
-            ->setAssociatedColumn('id_customer_session')
+            ->add(
+                (new Filter('id_customer_session', TextType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'size' => 'small',
+                        'attr' => [
+                            'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('id_customer_session')
             )
-            ->add((new Filter('id_customer', TextType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'size' => 'small',
-                'attr' => [
-                    'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
-                ],
-            ])
-            ->setAssociatedColumn('id_customer')
+            ->add(
+                (new Filter('id_customer', TextType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'size' => 'small',
+                        'attr' => [
+                            'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('id_customer')
             )
-            ->add((new Filter('firstname', TextType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('Firstname', [], 'Admin.Actions'),
-                ],
-            ])
-            ->setAssociatedColumn('firstname')
+            ->add(
+                (new Filter('firstname', TextType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->trans('Firstname', [], 'Admin.Actions'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('firstname')
             )
-            ->add((new Filter('lastname', TextType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('Lastname', [], 'Admin.Actions'),
-                ],
-            ])
-            ->setAssociatedColumn('lastname')
+            ->add(
+                (new Filter('lastname', TextType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->trans('Lastname', [], 'Admin.Actions'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('lastname')
             )
-            ->add((new Filter('email', TextType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('Email', [], 'Admin.Actions'),
-                ],
-            ])
-            ->setAssociatedColumn('email')
+            ->add(
+                (new Filter('email', TextType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->trans('Email', [], 'Admin.Actions'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('email')
             )
-            ->add((new Filter('actions', SearchAndResetType::class))
-            ->setTypeOptions([
-                'attr' => [
-                    'data-url' => $this->resetActionUrl,
-                    'data-redirect' => $this->redirectionUrl,
-                ],
-            ])
-            ->setAssociatedColumn('actions')
+            ->add(
+                (new Filter('actions', SearchAndResetType::class))
+                    ->setTypeOptions([
+                        'attr' => [
+                            'data-url' => $this->resetActionUrl,
+                            'data-redirect' => $this->redirectionUrl,
+                        ],
+                    ])
+                    ->setAssociatedColumn('actions')
             );
     }
 
