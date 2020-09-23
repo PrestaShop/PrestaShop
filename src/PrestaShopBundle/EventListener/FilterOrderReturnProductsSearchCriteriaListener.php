@@ -66,9 +66,9 @@ class FilterOrderReturnProductsSearchCriteriaListener
             return;
         }
 
-        $searchCriteriaClass = get_class($event->getSearchCriteria());
-
         $searchCriteria = $event->getSearchCriteria();
+
+        $searchCriteriaClass = get_class($searchCriteria);
 
         $filters = $searchCriteria->getFilters();
 
