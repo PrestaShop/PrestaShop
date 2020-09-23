@@ -28,14 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use Category;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Adapter\Product\ProductPersister;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AddProductHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShopException;
 use Product;
 
 /**
@@ -54,13 +51,23 @@ final class AddProductHandler extends AbstractProductHandler implements AddProdu
     private $defaultCategoryId;
 
     /**
+     * @var ProductPersister
+     */
+    private $productPersister;
+
+    /**
      * @param int $defaultLangId
      * @param int $defaultCategoryId
+     * @param ProductPersister $productPersister
      */
-    public function __construct(int $defaultLangId, int $defaultCategoryId)
-    {
+    public function __construct(
+        int $defaultLangId,
+        int $defaultCategoryId,
+        ProductPersister $productPersister
+    ) {
         $this->defaultLangId = $defaultLangId;
         $this->defaultCategoryId = $defaultCategoryId;
+        $this->productPersister = $productPersister;
     }
 
     /**
@@ -68,28 +75,6 @@ final class AddProductHandler extends AbstractProductHandler implements AddProdu
      */
     public function handle(AddProductCommand $command): ProductId
     {
-        $product = $this->createProduct($command);
-
-        try {
-            if (!$product->add()) {
-                throw new ProductException('Failed to add new basic product');
-            }
-            $product->addToCategories([$this->defaultCategoryId]);
-        } catch (PrestaShopException $e) {
-            throw new ProductException('Error occurred when trying to add new basic product.', 0, $e);
-        }
-
-        return new ProductId((int) $product->id);
-    }
-
-    /**
-     * @param AddProductCommand $command
-     *
-     * @return Product
-     */
-    private function createProduct(AddProductCommand $command): Product
-    {
-        //@todo: multistore?
         $product = new Product();
 
         $product->name = $command->getLocalizedNames();
@@ -97,8 +82,8 @@ final class AddProductHandler extends AbstractProductHandler implements AddProdu
         $product->id_category_default = $this->defaultCategoryId;
         $product->is_virtual = $command->isVirtual();
 
-        $this->validateLocalizedField($product, 'name', ProductConstraintException::INVALID_NAME);
+        $this->productPersister->add($product);
 
-        return $product;
+        return new ProductId((int) $product->id);
     }
 }

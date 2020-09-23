@@ -87,6 +87,7 @@ services:
         arguments:
             - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
             - '@=service("prestashop.adapter.legacy.context").getContext().shop.id_category'
+            - '@prestashop.adapter.product.product_persister'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand
