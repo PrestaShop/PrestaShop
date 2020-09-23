@@ -4,11 +4,15 @@ on:
   pull_request:
       types: [opened,edited,reopened,synchronize,labeled]
 
+defaults:
+  run:
+      working-directory: ./tests/UI/
+
 jobs:
 
   linter:
     runs-on: ubuntu-latest
-    name: UI tests - Linter
+    name: Linter
     if: contains(github.event.pull_request.labels.*.name, 'TE')
 
     steps:
@@ -16,14 +20,14 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install dependencies in UI tests directory
-        run: cd tests/UI/ && npm install
+        run: npm install
 
       - name: Check eslint errors
         run: npm run lint-no-fix
 
   Steps-identifiers:
     runs-on: ubuntu-latest
-    name: UI tests - Checking doubles in steps identifiers
+    name: Checking doubles in steps identifiers
     if: contains(github.event.pull_request.labels.*.name, 'TE')
 
     steps:
@@ -31,7 +35,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install dependencies in UI tests directory
-        run: cd tests/UI/ && npm install
+        run: npm install
 
       - name: Generate mocha reports with failed steps
         run: GENERATE_FAILED_STEPS=true npm run functional-tests
