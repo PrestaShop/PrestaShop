@@ -39,5 +39,8 @@ Feature: Update product attachments from Back Office (BO).
     Given product product1 should have following attachments associated: "[att1]"
     When I associate product product1 with following attachments: "[att1,att2]"
     Then product product1 should have following attachments associated: "[att1,att2]"
+
+  Scenario: Remove association of product attachments
+    Given product product1 should have following attachments associated: "[att1,att2]"
     When I remove product product1 attachments association
     Then product product1 should have no attachments associated
