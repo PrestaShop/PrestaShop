@@ -72,35 +72,12 @@ class ProductSupplierPersister extends AbstractObjectModelPersister
 
     /**
      * @param ProductSupplier $productSupplier
-     * @param array $propertiesToUpdate
-     * @param int $errorCode
      *
-     * @throws CoreException
+     * @throws CannotUpdateProductSupplierException
      */
-    public function update(ProductSupplier $productSupplier, array $propertiesToUpdate, int $errorCode = 0): void
+    public function update(ProductSupplier $productSupplier): void
     {
-        $this->fillProperties($productSupplier, $propertiesToUpdate);
         $this->productSupplierValidator->validate($productSupplier);
-        $this->updateObjectModel($productSupplier, CannotUpdateProductSupplierException::class, $errorCode);
-    }
-
-    /**
-     * @param ProductSupplier $productSupplier
-     * @param array $propertiesToUpdate
-     */
-    private function fillProperties(ProductSupplier $productSupplier, array $propertiesToUpdate): void
-    {
-        $existingProperties = [
-            'product_supplier_reference',
-            'id_product',
-            'id_product_attribute',
-            'id_supplier',
-            'product_supplier_price_te',
-            'id_currency',
-        ];
-
-        foreach ($existingProperties as $propertyName) {
-            $this->fillProperty($productSupplier, $propertyName, $propertiesToUpdate);
-        }
+        $this->updateObjectModel($productSupplier, CannotUpdateProductSupplierException::class);
     }
 }

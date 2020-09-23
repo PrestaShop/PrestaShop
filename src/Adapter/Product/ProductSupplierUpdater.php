@@ -31,6 +31,8 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 use PrestaShop\PrestaShop\Adapter\Supplier\SupplierProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplierDeleterInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use Product;
@@ -53,14 +55,47 @@ class ProductSupplierUpdater
      */
     private $supplierProvider;
 
+    /**
+     * @var ProductSupplierPersister
+     */
+    private $productSupplierPersister;
+
+    /**
+     * @var ProductSupplierDeleterInterface
+     */
+    private $productSupplierDeleter;
+
     public function __construct(
         ProductProvider $productProvider,
         ProductPersister $productPersister,
-        SupplierProvider $supplierProvider
+        SupplierProvider $supplierProvider,
+        ProductSupplierPersister $productSupplierPersister,
+        ProductSupplierDeleterInterface $productSupplierDeleter
     ) {
         $this->productProvider = $productProvider;
         $this->productPersister = $productPersister;
         $this->supplierProvider = $supplierProvider;
+        $this->productSupplierPersister = $productSupplierPersister;
+        $this->productSupplierDeleter = $productSupplierDeleter;
+    }
+
+    /**
+     * @param int $productId
+     * @param ProductSupplier[] $productSuppliers
+     */
+    public function setProductSuppliers(int $productId, array $productSuppliers): void
+    {
+        $deletableProductSupplierIds = $this->getDeletableProductSupplierIds($productId, $productSuppliers);
+
+        foreach ($productSuppliers as $productSupplier) {
+            if ($productSupplier->id) {
+                $this->productSupplierPersister->update($productSupplier);
+            } else {
+                $this->productSupplierPersister->add($productSupplier);
+            }
+        }
+
+        $this->productSupplierDeleter->bulkDelete($deletableProductSupplierIds);
     }
 
     /**
@@ -109,5 +144,33 @@ class ProductSupplierUpdater
             'wholesale_price' => ProductSupplier::getProductSupplierPrice($productIdValue, 0, $supplierIdValue),
             'id_supplier' => $supplierIdValue,
         ], CannotUpdateProductException::FAILED_UPDATE_DEFAULT_SUPPLIER);
+    }
+
+    /**
+     * @param int $productId
+     * @param ProductSupplier[] $providedProductSuppliers
+     *
+     * @return ProductSupplierId[]
+     */
+    private function getDeletableProductSupplierIds(int $productId, array $providedProductSuppliers): array
+    {
+        $existingProductSuppliers = ProductSupplier::getSupplierCollection($productId);
+        $idsForDeletion = [];
+
+        /** @var ProductSupplier $currentSupplier */
+        foreach ($existingProductSuppliers as $currentSupplier) {
+            $currentId = (int) $currentSupplier->id;
+            $idsForDeletion[$currentId] = $currentId;
+        }
+
+        foreach ($providedProductSuppliers as $productSupplier) {
+            $productSupplierId = (int) $productSupplier->id;
+
+            if (isset($idsForDeletion[$productSupplierId])) {
+                unset($idsForDeletion[$productSupplierId]);
+            }
+        }
+
+        return $idsForDeletion;
     }
 }
