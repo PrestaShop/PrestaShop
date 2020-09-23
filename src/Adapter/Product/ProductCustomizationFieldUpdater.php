@@ -114,7 +114,7 @@ class ProductCustomizationFieldUpdater
             $customizable = ProductCustomizabilitySettings::NOT_CUSTOMIZABLE;
         }
 
-        $this->productPersister->update(
+        $this->productPersister->partialUpdate(
             $product,
             [
                 'customizable' => $customizable,

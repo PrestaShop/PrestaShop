@@ -62,7 +62,7 @@ class ProductPersister extends AbstractObjectModelPersister
      *
      * @throws CoreException
      */
-    public function update(Product $product, array $propertiesToUpdate, int $errorCode): void
+    public function partialUpdate(Product $product, array $propertiesToUpdate, int $errorCode): void
     {
         $this->fillProperties($product, $propertiesToUpdate);
         $this->productValidator->validate($product);
