@@ -139,7 +139,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface, Shop
             return $this->getLocalized($key, $shopId, $shopGroupId);
         }
 
-        // Since has key doesn't check manage the fallback shop > shop group > global, we handle it manually
+        // Since hasKey doesn't check manage the fallback shop > shop group > global, we handle it manually
         if (ConfigurationLegacy::hasKey($key, null, null, $shopId)) {
             return ConfigurationLegacy::get($key, null, null, $shopId);
         }
@@ -231,7 +231,11 @@ class Configuration extends ParameterBag implements ConfigurationInterface, Shop
         $shopId = null !== $shopConstraint->getShopId() ? $shopConstraint->getShopId()->getValue() : null;
         $shopGroupId = null !== $shopConstraint->getShopGroupId() ? $shopConstraint->getShopGroupId()->getValue() : null;
 
-        return ConfigurationLegacy::hasKey($key, null, $shopGroupId, $shopId);
+        return
+            ConfigurationLegacy::hasKey($key, null, null, $shopId)
+            || ConfigurationLegacy::hasKey($key, null, $shopGroupId)
+            || ConfigurationLegacy::hasKey($key)
+        ;
     }
 
     /**
