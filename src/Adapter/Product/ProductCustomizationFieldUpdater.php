@@ -31,6 +31,9 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 use CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationFieldDeleterInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use Product;
 
@@ -95,7 +98,30 @@ class ProductCustomizationFieldUpdater
         }
 
         $this->customizationFieldDeleter->bulkDelete($deletableFieldIds);
-        $this->productUpdater->refreshProductCustomizabilityProperties($product);
+        $this->refreshProductCustomizability($product);
+    }
+
+    /**
+     * @param Product $product
+     */
+    public function refreshProductCustomizability(Product $product): void
+    {
+        if ($product->hasActivatedRequiredCustomizableFields()) {
+            $customizable = ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION;
+        } elseif (!empty($product->getNonDeletedCustomizationFieldIds())) {
+            $customizable = ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION;
+        } else {
+            $customizable = ProductCustomizabilitySettings::NOT_CUSTOMIZABLE;
+        }
+
+        $this->productUpdater->update(
+            $product,
+            [
+                'customizable' => $customizable,
+                'text_fields' => $product->countCustomizationFields(CustomizationFieldType::TYPE_TEXT),
+                'uploadable_files' => $product->countCustomizationFields(CustomizationFieldType::TYPE_FILE),
+            ], CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS
+        );
     }
 
     /**

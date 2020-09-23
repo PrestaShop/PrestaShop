@@ -28,10 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use CustomizationField;
 use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldPersister;
 use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldProvider;
+use PrestaShop\PrestaShop\Adapter\Product\ProductCustomizationFieldUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\ProductProvider;
-use PrestaShop\PrestaShop\Adapter\Product\ProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateCustomizationFieldCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\UpdateCustomizationFieldHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -47,9 +48,9 @@ final class UpdateCustomizationFieldHandler implements UpdateCustomizationFieldH
     private $productProvider;
 
     /**
-     * @var ProductUpdater
+     * @var ProductCustomizationFieldUpdater
      */
-    private $productUpdater;
+    private $productCustomizationFieldUpdater;
 
     /**
      * @var CustomizationFieldPersister
@@ -63,18 +64,18 @@ final class UpdateCustomizationFieldHandler implements UpdateCustomizationFieldH
 
     /**
      * @param ProductProvider $productProvider
-     * @param ProductUpdater $productUpdater
+     * @param ProductCustomizationFieldUpdater $productCustomizationFieldUpdater
      * @param CustomizationFieldPersister $customizationFieldPersister
      * @param CustomizationFieldProvider $customizationFieldProvider
      */
     public function __construct(
         ProductProvider $productProvider,
-        ProductUpdater $productUpdater,
+        ProductCustomizationFieldUpdater $productCustomizationFieldUpdater,
         CustomizationFieldPersister $customizationFieldPersister,
         CustomizationFieldProvider $customizationFieldProvider
     ) {
         $this->productProvider = $productProvider;
-        $this->productUpdater = $productUpdater;
+        $this->productCustomizationFieldUpdater = $productCustomizationFieldUpdater;
         $this->customizationFieldPersister = $customizationFieldPersister;
         $this->customizationFieldProvider = $customizationFieldProvider;
     }
@@ -85,37 +86,38 @@ final class UpdateCustomizationFieldHandler implements UpdateCustomizationFieldH
     public function handle(UpdateCustomizationFieldCommand $command): void
     {
         $customizationField = $this->customizationFieldProvider->get($command->getCustomizationFieldId());
-        $this->customizationFieldPersister->update($customizationField, $this->formatPropertiesForUpdate($command));
+        $this->fillEntityWithCommandData($customizationField, $command);
+
+        $this->customizationFieldPersister->update($customizationField);
 
         $product = $this->productProvider->get(new ProductId((int) $customizationField->id_product));
-        $this->productUpdater->refreshProductCustomizabilityProperties($product);
+        $this->productCustomizationFieldUpdater->refreshProductCustomizability($product);
     }
 
     /**
+     * @param CustomizationField $customizationField
      * @param UpdateCustomizationFieldCommand $command
      *
-     * @return array
+     * @return CustomizationField
      */
-    private function formatPropertiesForUpdate(UpdateCustomizationFieldCommand $command): array
+    private function fillEntityWithCommandData(Customizationfield $customizationField, UpdateCustomizationFieldCommand $command): CustomizationField
     {
-        $properties = [];
-
         if (null !== $command->getType()) {
-            $properties['type'] = $command->getType()->getValue();
+            $customizationField->type = $command->getType()->getValue();
         }
 
         if (null !== $command->isAddedByModule()) {
-            $properties['is_module'] = $command->isAddedByModule();
+            $customizationField->is_module = $command->isAddedByModule();
         }
 
         if (null !== $command->isRequired()) {
-            $properties['required'] = $command->isRequired();
+            $customizationField->required = $command->isRequired();
         }
 
         if (null !== $command->getLocalizedNames()) {
-            $properties['name'] = $command->getLocalizedNames();
+            $customizationField->name = $command->getLocalizedNames();
         }
 
-        return $properties;
+        return $customizationField;
     }
 }

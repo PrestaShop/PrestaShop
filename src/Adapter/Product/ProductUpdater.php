@@ -29,9 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelPersister;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use Product;
 
@@ -66,29 +64,6 @@ class ProductUpdater extends AbstractObjectModelPersister
         $this->fillProperties($product, $propertiesToUpdate);
         $this->productValidator->validate($product);
         $this->updateObjectModel($product, CannotUpdateProductException::class, $errorCode);
-    }
-
-    /**
-     * @param Product $product
-     */
-    public function refreshProductCustomizabilityProperties(Product $product): void
-    {
-        if ($product->hasActivatedRequiredCustomizableFields()) {
-            $customizable = ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION;
-        } elseif (!empty($product->getNonDeletedCustomizationFieldIds())) {
-            $customizable = ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION;
-        } else {
-            $customizable = ProductCustomizabilitySettings::NOT_CUSTOMIZABLE;
-        }
-
-        $this->update(
-            $product,
-            [
-                'customizable' => $customizable,
-                'text_fields' => $product->countCustomizationFields(CustomizationFieldType::TYPE_TEXT),
-                'uploadable_files' => $product->countCustomizationFields(CustomizationFieldType::TYPE_FILE),
-            ], CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS
-        );
     }
 
     /**
