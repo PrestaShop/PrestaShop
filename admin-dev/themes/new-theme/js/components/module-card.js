@@ -331,12 +331,12 @@ export default class ModuleCard {
       },
     }).done((result) => {
       if (result === undefined) {
-        $.growl.error({message: 'No answer received from server'});
+        $.growl.error({message: 'No answer received from server', fixed: true});
         return;
       }
 
       if (typeof result.status !== 'undefined' && result.status === false) {
-        $.growl.error({message: result.msg});
+        $.growl.error({message: result.msg, fixed: true});
         return;
       }
 
@@ -351,7 +351,7 @@ export default class ModuleCard {
         return;
       }
 
-      $.growl.notice({message: result[moduleTechName].msg});
+      $.growl.notice({message: result[moduleTechName].msg, duration: 15000});
 
       const alteredSelector = self.getModuleItemSelector().replace('.', '');
       let mainElement = null;
@@ -379,7 +379,7 @@ export default class ModuleCard {
     }).fail(() => {
       const moduleItem = jqElementObj.closest('module-item-list');
       const techName = moduleItem.data('techName');
-      $.growl.error({message: `Could not perform action ${action} for module ${techName}`});
+      $.growl.error({message: `Could not perform action ${action} for module ${techName}`, fixed: true});
     }).always(() => {
       jqElementObj.fadeIn();
       spinnerObj.remove();
