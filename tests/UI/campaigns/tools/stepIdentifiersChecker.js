@@ -41,6 +41,7 @@ const checkDoubles = (jsonFile) => {
 
   if (contextDoubles.length !== 0) {
     console.error('Some test identifiers must be fixed:\n', contextDoubles);
+    throw new Error();
   } else {
     console.log('All good, no changes are required');
   }
