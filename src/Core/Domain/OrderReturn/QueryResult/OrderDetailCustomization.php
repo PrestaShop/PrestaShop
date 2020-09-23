@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Product;
 
 /**
  * @todo duplicate of PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizationForViewing
- * May be merged latter but need to be sure that OrderReturnOrderDetail and OrderDetail are the same thing
+ * May be merged later but need to be sure that OrderReturnOrderDetail and OrderDetail are the same thing
  */
 class OrderDetailCustomization
 {
