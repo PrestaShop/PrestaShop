@@ -108,7 +108,9 @@ class PrestaShopLoggerCore extends ObjectModel
      */
     public static function sendByMail($log)
     {
-        if ((int) Configuration::get('PS_LOGS_BY_EMAIL') <= (int) $log->severity) {
+        $config_severity = (int) Configuration::get('PS_LOGS_BY_EMAIL');
+        if ($config_severity <= (int) $log->severity && !empty($config_severity)) {
+			$to = array_map('trim', explode(',', Configuration::get('PS_LOGS_EMAIL_RECEIVERS')));
             $language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
             Mail::Send(
                 (int) Configuration::get('PS_LANG_DEFAULT'),
@@ -120,7 +122,7 @@ class PrestaShopLoggerCore extends ObjectModel
                     $language->locale
                 ),
                 [],
-                Configuration::get('PS_SHOP_EMAIL')
+                $to
             );
         }
     }
