@@ -43,6 +43,18 @@ class ShopConstraint
     private $shopGroupId;
 
     /**
+     * @param int|null $shopId
+     * @param int|null $shopGroupId
+     *
+     * @throws ShopException
+     */
+    public function __construct(?int $shopId, ?int $shopGroupId)
+    {
+        $this->shopId = null !== $shopId ? new ShopId($shopId) : null;
+        $this->shopGroupId = null !== $shopGroupId ? new ShopGroupId($shopGroupId) : null;
+    }
+
+    /**
      * @return ShopId|null
      */
     public function getShopId(): ?ShopId
@@ -51,38 +63,10 @@ class ShopConstraint
     }
 
     /**
-     * @param int $shopId
-     *
-     * @return $this
-     *
-     * @throws ShopException
-     */
-    public function setShopId(int $shopId): self
-    {
-        $this->shopId = new ShopId($shopId);
-
-        return $this;
-    }
-
-    /**
      * @return ShopGroupId|null
      */
     public function getShopGroupId(): ?ShopGroupId
     {
         return $this->shopGroupId;
-    }
-
-    /**
-     * @param int $shopGroupId
-     *
-     * @return $this
-     *
-     * @throws ShopException
-     */
-    public function setShopGroupId(int $shopGroupId): self
-    {
-        $this->shopGroupId = new ShopGroupId($shopGroupId);
-
-        return $this;
     }
 }
