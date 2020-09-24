@@ -24,7 +24,7 @@ class SeoAndUrls extends BOBasePage {
     // Bulk Actions
     this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
-    this.bulkActionsDeleteButton = `${this.gridPanel} #meta_grid_bulk_action_delete_seo_urls`;
+    this.bulkActionsDeleteButton = `${this.gridPanel} #meta_grid_bulk_action_delete_selection`;
 
     // Filters
     this.filterColumn = filterBy => `${this.gridTable} #meta_${filterBy}`;
@@ -78,9 +78,6 @@ class SeoAndUrls extends BOBasePage {
    * @returns {Promise<string>}
    */
   async bulkDeleteSeoUrlPage(page) {
-    // Confirm delete in js modal
-    this.dialogListener(page, true);
-
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsLabel, el => el.click()),
@@ -93,7 +90,13 @@ class SeoAndUrls extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
 
-    await this.clickAndWaitForNavigation(page, this.bulkActionsDeleteButton);
+    // Click on delete and wait for modal
+    await Promise.all([
+      page.click(this.bulkActionsDeleteButton),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+
+    await this.confirmDeleteSeoUrlPage(page);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
@@ -178,12 +181,14 @@ class SeoAndUrls extends BOBasePage {
   async sortTable(page, sortBy, sortDirection) {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+
     let i = 0;
-    while (await this.elementNotVisible(page, sortColumnDiv, 1000) && i < 2) {
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
     }
-    await this.waitForVisibleSelector(page, sortColumnDiv);
+
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
   }
 
   /* Reset methods */

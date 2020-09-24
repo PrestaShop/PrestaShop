@@ -986,6 +986,7 @@ CREATE TABLE `PREFIX_hook` (
   `name` varchar(191) NOT NULL,
   `title` varchar(255) NOT NULL,
   `description` text,
+  `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `position` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_hook`),
   UNIQUE KEY `hook_name` (`name`)

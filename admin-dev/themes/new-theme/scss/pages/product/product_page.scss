@@ -1,3 +1,18 @@
+// Config
+// Tools
+@import "~bootstrap/scss/mixins/breakpoints";
+// Settings
+/* stylelint-disable */
+@import "@scss/config/_settings";
+@import "@scss/config/_keyframes";
+
+@import "@scss/config/_bootstrap";
+/* stylelint-enable */
+
+// Tools with vars overwritten
+@import "~bootstrap/scss/mixins/transition";
+@import "~bootstrap/scss/mixins/border-radius";
+
 .product-page {
   padding-bottom: 80px;
 
@@ -307,6 +322,7 @@
           height: 100%;
           line-height: 130px;
           @include border-radius(0);
+
           &.bg {
             background-repeat: no-repeat;
             background-position: center center;

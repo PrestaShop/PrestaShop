@@ -71,7 +71,7 @@ Date.parseDate = function(date, format) {
 		date.setSeconds(0);
 		date.setMilliseconds(0);
 
-		for (var i=0; i<=formatParts.length; i++) {
+		for (var i=0; i<formatParts.length; i++) {
 			switch(formatParts[i]) {
 				case 'dd':
 				case 'd':
@@ -142,7 +142,7 @@ Date.prototype.format = function(format) {
 	var formatParts     = format.split(/\W+/);
 	var result          = '';
 
-	for (var i=0; i<=formatParts.length; i++) {
+	for (var i=0; i<formatParts.length; i++) {
 		switch(formatParts[i]) {
 			case 'd':
 			case 'j':
@@ -203,7 +203,7 @@ function updatePickerFromInput() {
 }
 
 function setDayPeriod() {
-	date = new Date();
+	const date = new Date();
 	$("#date-start").val(date.format($("#date-start").data('date-format')));
 	$("#date-end").val(date.format($("#date-end").data('date-format')));
 	$('#date-start').trigger('change');
@@ -216,7 +216,7 @@ function setDayPeriod() {
 }
 
 function setPreviousDayPeriod() {
-	date = new Date();
+	let date = new Date();
 	date = date.subDays(1);
 	$("#date-start").val(date.format($("#date-start").data('date-format')));
 	$("#date-end").val(date.format($("#date-end").data('date-format')));
@@ -230,7 +230,7 @@ function setPreviousDayPeriod() {
 }
 
 function setMonthPeriod() {
-	date = new Date();
+	let date = new Date();
 	$("#date-end").val(date.format($("#date-end").data('date-format')));
 	date = new Date(date.setDate(1));
 	$("#date-start").val(date.format($("#date-start").data('date-format')));
@@ -244,7 +244,7 @@ function setMonthPeriod() {
 }
 
 function setPreviousMonthPeriod() {
-	date = new Date();
+	let date = new Date();
 	date = new Date(date.getFullYear(), date.getMonth(), 0);
 	$("#date-end").val(date.format($("#date-end").data('date-format')));
 	date = new Date(date.setDate(1));
@@ -259,7 +259,7 @@ function setPreviousMonthPeriod() {
 }
 
 function setYearPeriod() {
-	date = new Date();
+	let date = new Date();
 	$("#date-end").val(date.format($("#date-end").data('date-format')));
 	date = new Date(date.getFullYear(), 0, 1);
 	$("#date-start").val(date.format($("#date-start").data('date-format')));	
@@ -273,7 +273,7 @@ function setYearPeriod() {
 }
 
 function setPreviousYearPeriod() {
-	date = new Date();
+	let date = new Date();
 	date = new Date(date.getFullYear(), 11, 31);
 	date = date.subYears(1);
 	$("#date-end").val(date.format($("#date-end").data('date-format')));
@@ -290,19 +290,19 @@ function setPreviousYearPeriod() {
 
 
 function setPreviousPeriod() {
-	startDate = Date.parseDate($("#date-start").val(), $("#date-start").data('date-format')).subDays(1);
-	endDate = Date.parseDate($("#date-end").val(), $("#date-end").data('date-format')).subDays(1);
+	const startDate = Date.parseDate($("#date-start").val(), $("#date-start").data('date-format')).subDays(1);
+	const endDate = Date.parseDate($("#date-end").val(), $("#date-end").data('date-format')).subDays(1);
 
-	diff = endDate - startDate;
-	startDateCompare = new Date(startDate-diff);
+	const diff = endDate - startDate;
+	const startDateCompare = new Date(startDate-diff);
 
 	$("#date-end-compare").val(startDate.format($("#date-end-compare").data('date-format')));
 	$("#date-start-compare").val(startDateCompare.format($("#date-start-compare").data('date-format')));
 }
 
 function setPreviousYear() {
-	startDate = Date.parseDate($("#date-start").val(), $("#date-start").data('date-format')).subYears(1);
-	endDate = Date.parseDate($("#date-end").val(), $("#date-end").data('date-format')).subYears(1);
+	const startDate = Date.parseDate($("#date-start").val(), $("#date-start").data('date-format')).subYears(1);
+	const endDate = Date.parseDate($("#date-end").val(), $("#date-end").data('date-format')).subYears(1);
 	$("#date-start-compare").val(startDate.format($("#date-start").data('date-format')));
 	$("#date-end-compare").val(endDate.format($("#date-start").data('date-format')));
 }
@@ -310,7 +310,7 @@ function setPreviousYear() {
 
 $( document ).ready(function() {
 	//Instanciate datepickers
-	datepickerStart = $('.datepicker1').daterangepicker({
+	const datepickerStart = $('.datepicker1').daterangepicker({
 		"dates": translated_dates,
 		"weekStart": 1,
 		"start": $("#date-start").val(),
@@ -321,7 +321,7 @@ $( document ).ready(function() {
 		}
 	}).data('daterangepicker');
 
-	datepickerEnd = $('.datepicker2').daterangepicker({
+	const datepickerEnd = $('.datepicker2').daterangepicker({
 		"dates": translated_dates,
 		"weekStart": 1,
 		"start": $("#date-start").val(),
@@ -333,8 +333,8 @@ $( document ).ready(function() {
 	}).data('daterangepicker');
 
 	//Set first date picker to month -1 if same month
-	startDate = Date.parseDate($("#date-start").val(), $("#date-start").data('date-format'));
-	endDate = Date.parseDate($("#date-end").val(), $("#date-end").data('date-format'));
+	const startDate = Date.parseDate($("#date-start").val(), $("#date-start").data('date-format'));
+	const endDate = Date.parseDate($("#date-end").val(), $("#date-end").data('date-format'));
 
 	if (startDate.getFullYear() == endDate.getFullYear() && startDate.getMonth() == endDate.getMonth())
 		datepickerStart.setValue(startDate.subMonths(1));
@@ -437,27 +437,27 @@ $( document ).ready(function() {
 	});
 
 	$('.submitDateDay').on('click',function(e){
-		e.preventDefault;
+		e.preventDefault();
 		setDayPeriod();
 	});
 	$('.submitDateMonth').on('click',function(e){
-		e.preventDefault;
+		e.preventDefault();
 		setMonthPeriod()
 	});
 	$('.submitDateYear').on('click',function(e){
-		e.preventDefault;
+		e.preventDefault();
 		setYearPeriod();
 	});
 	$('.submitDateDayPrev').on('click',function(e){
-		e.preventDefault;
+		e.preventDefault();
 		setPreviousDayPeriod();
 	});
 	$('.submitDateMonthPrev').on('click',function(e){
-		e.preventDefault;
+		e.preventDefault();
 		setPreviousMonthPeriod();
 	});
 	$('.submitDateYearPrev').on('click',function(e){
-		e.preventDefault;
+		e.preventDefault();
 		setPreviousYearPeriod();
 	});
 });

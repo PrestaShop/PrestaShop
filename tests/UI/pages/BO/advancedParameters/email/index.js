@@ -29,7 +29,7 @@ class Email extends BOBasePage {
     // Bulk Actions
     this.selectAllRowsLabel = `${this.emailGridPanel} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.emailGridPanel} button.js-bulk-actions-btn`;
-    this.bulkActionsDeleteButton = '#email_logs_grid_bulk_action_delete_email_logs';
+    this.bulkActionsDeleteButton = '#email_logs_grid_bulk_action_delete_selection';
     // Email form
     this.logEmailsLabel = toggle => `label[for='form_log_emails_${toggle}']`;
     this.saveEmailFormButton = '#form-log-email-save-button';
@@ -155,7 +155,6 @@ class Email extends BOBasePage {
    * @returns {Promise<string>}
    */
   async deleteEmailLogsBulkActions(page) {
-    this.dialogListener(page, true);
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsLabel, el => el.click()),
@@ -166,8 +165,13 @@ class Email extends BOBasePage {
       page.click(this.bulkActionsToggleButton),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
-    // Click on delete
-    await this.clickAndWaitForNavigation(page, this.bulkActionsDeleteButton);
+
+    // Bulk delete email logs
+    await Promise.all([
+      this.waitForSelectorAndClick(page, this.bulkActionsDeleteButton),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 

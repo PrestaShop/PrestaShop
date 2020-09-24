@@ -102,7 +102,11 @@ module.exports = {
     translation_settings: './js/pages/translation-settings',
     translations: './js/app/pages/translations',
     webservice: './js/pages/webservice',
-    theme: ['./scss/theme.scss'],
+    theme: './scss/theme.scss',
+    orders: './scss/pages/orders/orders.scss',
+    product: './scss/pages/product/product_page.scss',
+    product_catalog: './scss/pages/product/products_catalog.scss',
+    stock_page: './scss/pages/stock/stock_page.scss',
   },
   output: {
     path: path.resolve(__dirname, '../public'),

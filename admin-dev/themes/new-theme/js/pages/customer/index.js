@@ -67,6 +67,9 @@ $(() => {
   const customerDiscountsGrid = new Grid('customer_discount');
   customerDiscountsGrid.addExtension(new SubmitRowActionExtension());
 
+  const customerAddressesGrid = new Grid('customer_address');
+  customerAddressesGrid.addExtension(new SubmitRowActionExtension());
+
   const showcaseCard = new ShowcaseCard('customersShowcaseCard');
   showcaseCard.addExtension(new ShowcaseCardCloseExtension());
 
