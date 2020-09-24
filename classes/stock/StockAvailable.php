@@ -395,17 +395,17 @@ class StockAvailableCore extends ObjectModel
         if ($existing_id > 0) {
             Db::getInstance()->update(
                 'stock_available',
-                array('location' => $location),
-                'id_product = ' . $id_product .
-                (($id_product_attribute) ? ' AND id_product_attribute = ' . $id_product_attribute : '') .
+                ['location' => pSQL($location)],
+                'id_product = ' . (int) $id_product .
+                (($id_product_attribute) ? ' AND id_product_attribute = ' . (int) $id_product_attribute : '') .
                 StockAvailable::addSqlShopRestriction(null, $id_shop)
             );
         } else {
-            $params = array(
-                'location' => $location,
-                'id_product' => $id_product,
-                'id_product_attribute' => $id_product_attribute,
-            );
+            $params = [
+                'location' => pSQL($location),
+                'id_product' => (int) $id_product,
+                'id_product_attribute' => (int) $id_product_attribute,
+            ];
 
             StockAvailable::addSqlShopParams($params, $id_shop);
             Db::getInstance()->insert('stock_available', $params, false, true, Db::ON_DUPLICATE_KEY);
