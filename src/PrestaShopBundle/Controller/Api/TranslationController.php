@@ -431,10 +431,7 @@ class TranslationController extends ApiController
         if (is_array($search)) {
             return $search;
         }
-        if (!is_array($search) && !empty($search)) {
-            return [$search];
-        }
 
-        return [];
+        return empty($search) ? [] : [$search];
     }
 }
