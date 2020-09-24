@@ -41,7 +41,7 @@ class LoadLegacyClassesinCommandTest extends KernelTestCase
     {
         parent::setUp();
         self::bootKernel();
-        $this->previousErrorReportingLevel = error_reporting(2);
+        $this->previousErrorReportingLevel = error_reporting(E_WARNING);
     }
 
     public function testLoadLegacyCommandWithoutContextFails()
