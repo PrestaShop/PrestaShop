@@ -23,7 +23,7 @@ jobs:
         run: npm install
 
       - name: Check eslint errors
-        run: npm run lint-dry-run
+        run: npm run lint
 
   Steps-identifiers:
     runs-on: ubuntu-latest
