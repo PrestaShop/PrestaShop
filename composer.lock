@@ -59,7 +59,7 @@
             "time": "2019-03-05T22:41:22+00:00"
         },
         {
-            "name": "beberlei/DoctrineExtensions",
+            "name": "beberlei/doctrineextensions",
             "version": "v1.1.9",
             "source": {
                 "type": "git",
@@ -3168,16 +3168,16 @@
         },
         {
             "name": "prestashop/contactform",
-            "version": "v4.2.0",
+            "version": "v4.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/contactform.git",
-                "reference": "4826b7903b6066f4e1a4c0963c68108aa0c546e1"
+                "reference": "849aae54ec564aca94877b9bee50e71bb0468edb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/contactform/zipball/4826b7903b6066f4e1a4c0963c68108aa0c546e1",
-                "reference": "4826b7903b6066f4e1a4c0963c68108aa0c546e1",
+                "url": "https://api.github.com/repos/PrestaShop/contactform/zipball/849aae54ec564aca94877b9bee50e71bb0468edb",
+                "reference": "849aae54ec564aca94877b9bee50e71bb0468edb",
                 "shasum": ""
             },
             "require": {
@@ -3197,7 +3197,7 @@
             ],
             "description": "PrestaShop module contactform",
             "homepage": "https://github.com/PrestaShop/contactform",
-            "time": "2020-06-01T09:46:43+00:00"
+            "time": "2020-09-15T09:37:15+00:00"
         },
         {
             "name": "prestashop/dashactivity",
@@ -5431,6 +5431,7 @@
                 "configuration",
                 "distribution"
             ],
+            "abandoned": true,
             "time": "2018-12-14T17:36:15+00:00"
         },
         {
@@ -5911,7 +5912,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "backendtea@gmail.com"
+                    "email": "BackEndTea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -7113,7 +7114,7 @@
             "time": "2017-03-25T17:14:26+00:00"
         },
         {
-            "name": "mikey179/vfsStream",
+            "name": "mikey179/vfsstream",
             "version": "v1.6.5",
             "source": {
                 "type": "git",
@@ -7768,6 +7769,7 @@
             "keywords": [
                 "tokenizer"
             ],
+            "abandoned": true,
             "time": "2017-12-04T08:55:13+00:00"
         },
         {
