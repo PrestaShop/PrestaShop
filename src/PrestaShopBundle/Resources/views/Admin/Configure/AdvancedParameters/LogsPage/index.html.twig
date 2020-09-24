@@ -52,12 +52,19 @@
           <div class="card-block row">
             <div class="card-text">
               <div class="form-group row">
-                {% set helptip = 'Enter "5" if you do not want to receive any emails.'|trans({}, 'Admin.Advparameters.Help') ~ ' ' ~ 'Emails will be sent to the shop owner.'|trans({}, 'Admin.Advparameters.Help') %}
-                {{ ps.label_with_help(('Minimum severity level'|trans), helptip, 'col-sm-2') }}
-                <div class="col-sm">
-                  {{ form_errors(logsByEmailForm) }}
-                  {{ form_widget(logsByEmailForm) }}
-                </div>
+				  {% set helptip_severity = 'Leave empty if you do not want to receive any emails.'|trans({}, 'Admin.Advparameters.Help') ~ ' ' ~ 'Put in the following fields the recipients of these emails.'|trans({}, 'Admin.Advparameters.Help') %}
+                  {{ ps.label_with_help(('Minimum severity level'|trans), helptip_severity, 'form-control-label') }}
+				  <div class="col-sm">
+				    {{ form_errors(logsByEmailForm.logs_by_email) }}
+					{{ form_widget(logsByEmailForm.logs_by_email) }}
+				  </div>
+              </div>
+              <div class="form-group row">
+				  {% set helptip_receivers = 'These emails will receive the log alerts.Please use a comma to separate them (e.g. pub@prestashop.com, anonymous@psgdpr.com).'|trans({}, 'Admin.Advparameters.Help') %}
+                  {{ ps.label_with_help(('Send emails to'|trans), helptip_receivers, 'form-control-label') }}
+				  <div class="col-sm">
+					{{ form_widget(logsByEmailForm.logs_email_receivers) }}
+				  </div>
               </div>
 
               {% block logs_by_email_form_rest %}
