@@ -358,13 +358,10 @@ abstract class AbstractOrderHandler
      */
     protected function getOrderShopConstraint(Order $order): ShopConstraint
     {
-        $constraint = new ShopConstraint();
-        $constraint
-            ->setShopId($order->id_shop)
-            ->setShopGroupId($order->id_shop_group)
-        ;
-
-        return $constraint;
+        return new ShopConstraint(
+            (int) $order->id_shop,
+            (int) $order->id_shop_group
+        );
     }
 
     /**
