@@ -35,7 +35,10 @@ class Carriers extends BOBasePage {
     // Columns selectors
     this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
     this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnDelay = row => `${this.tableBodyColumn(row)}:nth-child(4)`;
+    this.tableColumnDelay = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
+    this.tableColumnActive = row => `${this.tableBodyColumn(row)}:nth-child(6) a`;
+    this.tableColumnIsFree = row => `${this.tableBodyColumn(row)}:nth-child(7) a`;
+    this.tableColumnPosition = row => `${this.tableBodyColumn(row)}:nth-child(8)`;
 
     // Row actions selectors
     this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
@@ -143,7 +146,7 @@ class Carriers extends BOBasePage {
     let columnSelector;
 
     switch (columnName) {
-      case 'id':
+      case 'id_carrier':
         columnSelector = this.tableColumnId(row);
         break;
 
@@ -155,10 +158,25 @@ class Carriers extends BOBasePage {
         columnSelector = this.tableColumnDelay(row);
         break;
 
+      case 'active':
+        columnSelector = this.tableColumnActive(row);
+        break;
+
+      case 'is_free':
+        columnSelector = this.tableColumnIsFree(row);
+        break;
+
+      case 'a!position':
+        columnSelector = this.tableColumnPosition(row);
+        break;
+
       default:
         throw new Error(`Column ${columnName} was not found`);
     }
 
+    if ((columnName === 'active') || (columnName === 'is_free')) {
+      return this.getAttributeContent(page, columnSelector, 'title');
+    }
     return this.getTextContent(page, columnSelector);
   }
 

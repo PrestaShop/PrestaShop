@@ -117,7 +117,7 @@ describe('Create, update and delete carrier in BO', async () => {
         createCarrierData.name,
       );
 
-      carrierID = await carriersPage.getTextColumn(page, 1, 'id');
+      carrierID = await carriersPage.getTextColumn(page, 1, 'id_carrier');
 
       const name = await carriersPage.getTextColumn(page, 1, 'name');
       await expect(name).to.contains(createCarrierData.name);
@@ -250,7 +250,7 @@ describe('Create, update and delete carrier in BO', async () => {
         editCarrierData.name,
       );
 
-      carrierID = await carriersPage.getTextColumn(page, 1, 'id');
+      carrierID = await carriersPage.getTextColumn(page, 1, 'id_carrier');
 
       const name = await carriersPage.getTextColumn(page, 1, 'name');
       await expect(name).to.contains(editCarrierData.name);
