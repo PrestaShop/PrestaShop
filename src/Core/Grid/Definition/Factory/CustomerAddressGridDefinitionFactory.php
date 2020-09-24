@@ -28,21 +28,21 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\ModalOptions;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\Customer\DeleteCustomerDiscountRowAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\Customer\EditCustomerDiscountRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\ViewOptionsCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 
 /**
- * Class CustomerDiscountGridDefinitionFactory defines customer's discounts grid structure.
+ * Class CustomerAddressGridDefinitionFactory defines customer's addresses grid structure.
  */
-final class CustomerDiscountGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class CustomerAddressGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    const GRID_ID = 'customer_discount';
+    use DeleteActionTrait;
+
+    const GRID_ID = 'customer_address';
 
     /**
      * {@inheritdoc}
@@ -57,7 +57,7 @@ final class CustomerDiscountGridDefinitionFactory extends AbstractGridDefinition
      */
     protected function getName()
     {
-        return $this->trans('Vouchers', [], 'Admin.Orderscustomers.Feature');
+        return $this->trans('Addresses', [], 'Admin.Global');
     }
 
     /**
@@ -67,38 +67,45 @@ final class CustomerDiscountGridDefinitionFactory extends AbstractGridDefinition
     {
         return (new ColumnCollection())
             ->add(
-                (new DataColumn('id_cart_rule'))
+                (new DataColumn('id_address'))
                     ->setName($this->trans('ID', [], 'Admin.Global'))
                     ->setOptions([
-                        'field' => 'id_cart_rule',
+                        'field' => 'id_address',
                     ])
             )
             ->add(
-                (new DataColumn('code'))
-                    ->setName($this->trans('Code', [], 'Admin.Global'))
+                (new DataColumn('company'))
+                    ->setName($this->trans('Company', [], 'Admin.Global'))
                     ->setOptions([
-                        'field' => 'code',
+                        'field' => 'company',
                     ])
             )
             ->add(
-                (new DataColumn('name'))
+                (new DataColumn('full_name'))
                     ->setName($this->trans('Name', [], 'Admin.Global'))
                     ->setOptions([
-                        'field' => 'name',
+                        'field' => 'full_name',
                     ])
             )
             ->add(
-                (new DataColumn('active'))
-                    ->setName($this->trans('Status', [], 'Admin.Global'))
+                (new DataColumn('full_address'))
+                    ->setName($this->trans('Address', [], 'Admin.Global'))
                     ->setOptions([
-                        'field' => 'active',
+                        'field' => 'full_address',
                     ])
             )
             ->add(
-                (new DataColumn('quantity'))
-                    ->setName($this->trans('Qty available', [], 'Admin.Orderscustomers.Feature'))
+                (new DataColumn('country_name'))
+                    ->setName($this->trans('Country', [], 'Admin.Global'))
                     ->setOptions([
-                        'field' => 'quantity',
+                        'field' => 'country_name',
+                    ])
+            )
+            ->add(
+                (new DataColumn('phone_number'))
+                    ->setName($this->trans('Phone number(s)', [], 'Admin.Orderscustomers.Feature'))
+                    ->setOptions([
+                        'field' => 'phone_number',
                     ])
             )
             ->add((new ActionColumn('actions'))
@@ -106,28 +113,21 @@ final class CustomerDiscountGridDefinitionFactory extends AbstractGridDefinition
             ->setOptions([
                 'actions' => (new RowActionCollection())
                     ->add(
-                        (new EditCustomerDiscountRowAction('edit'))
+                        (new LinkRowAction('edit'))
                             ->setName($this->trans('Edit', [], 'Admin.Actions'))
                             ->setIcon('edit')
                             ->setOptions([
-                                'id_cart_rule' => 'id_cart_rule',
+                                'route' => 'admin_addresses_edit',
+                                'route_param_name' => 'addressId',
+                                'route_param_field' => 'id_address',
                             ])
                     )
                     ->add(
-                        (new DeleteCustomerDiscountRowAction('delete'))
-                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                            ->setIcon('delete')
-                            ->setOptions([
-                                'id_cart_rule' => 'id_cart_rule',
-                                'confirm_message' => $this->trans('Are you sure you want to delete the selected item(s)?', [], 'Admin.Global'),
-                                'method' => 'POST',
-                                'modal_options' => new ModalOptions([
-                                    'title' => $this->trans('Delete selection', [], 'Admin.Actions'),
-                                    'confirm_button_label' => $this->trans('Delete', [], 'Admin.Actions'),
-                                    'close_button_label' => $this->trans('Cancel', [], 'Admin.Actions'),
-                                    'confirm_button_class' => 'btn-danger',
-                                ]),
-                            ])
+                        $this->buildDeleteAction(
+                            'admin_addresses_delete',
+                            'addressId',
+                            'id_address'
+                        )
                     ),
             ])
             );

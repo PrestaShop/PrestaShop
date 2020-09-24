@@ -88,6 +88,7 @@ final class GridPresenter implements GridPresenterInterface
             'attributes' => [
                 'is_empty_state' => $this->isEmptyState($grid),
             ],
+            'view_options' => $definition->getViewOptions()->all(),
         ];
 
         if ($searchCriteria instanceof Filters) {

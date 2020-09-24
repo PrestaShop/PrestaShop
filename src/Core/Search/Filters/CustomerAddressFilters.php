@@ -24,28 +24,32 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Action;
+declare(strict_types=1);
 
-use Iterator;
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
+
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerAddressGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
- * Interface GridActionCollectionInterface defines contract for grid action collection.
+ * Default customer's addresses list filters
  */
-interface GridActionCollectionInterface extends Iterator
+final class CustomerAddressFilters extends Filters
 {
-    /**
-     * Add grid action to collection.
-     *
-     * @param GridActionInterface $action
-     *
-     * @return self
-     */
-    public function add(GridActionInterface $action);
+    /** @var string */
+    protected $filterId = CustomerAddressGridDefinitionFactory::GRID_ID;
 
     /**
-     * Get grid panel actions as array.
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    public function toArray();
+    public static function getDefaults(): array
+    {
+        return [
+            'limit' => 50,
+            'offset' => 0,
+            'orderBy' => 'id_address',
+            'sortOrder' => 'asc',
+            'filters' => [],
+        ];
+    }
 }
