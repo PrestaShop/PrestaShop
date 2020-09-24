@@ -1,7 +1,8 @@
 require('module-alias/register');
 
-// Helpers to open and close browser
+// Import utils
 const helper = require('@utils/helpers');
+const files = require('@utils/files');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
@@ -29,8 +30,6 @@ let page;
 
 let numberOfCarriers = 0;
 
-const createCarrierData = new CarrierFaker({freeShipping: false, zoneID: 4, allZones: false});
-
 describe('Filter, sort and pagination carriers', async () => {
   // before and after functions
   before(async function () {
@@ -40,6 +39,11 @@ describe('Filter, sort and pagination carriers', async () => {
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
+
+    /* Delete the generated images */
+    for (let i = 0; i <= 17; i++) {
+      await files.deleteFile(`todelete${i}.jpg`);
+    }
   });
 
   it('should login in BO', async function () {
@@ -220,6 +224,104 @@ describe('Filter, sort and pagination carriers', async () => {
           await expect(sortedTable).to.deep.equal(expectedResult.reverse());
         }
       });
+    });
+  });
+
+  // 3 - Create 16 carriers
+  const creationTests = new Array(17).fill(0, 0, 17);
+
+  creationTests.forEach((test, index) => {
+    describe(`Create carrier n°${index + 1} in BO`, async () => {
+      const carrierData = new CarrierFaker({name: `todelete${index}`});
+
+      it('should go to add new carrier page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToAddCarrierPage${index}`, baseContext);
+
+        await carriersPage.goToAddNewCarrierPage(page);
+        const pageTitle = await addCarrierPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(addCarrierPage.pageTitleCreate);
+      });
+
+      it('should create carrier and check result', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `createCarrier${index}`, baseContext);
+
+        const textResult = await addCarrierPage.createEditCarrier(page, carrierData);
+        await expect(textResult).to.contains(carriersPage.successfulCreationMessage);
+
+        const numberOfCarriersAfterCreation = await carriersPage.getNumberOfElementInGrid(page);
+        await expect(numberOfCarriersAfterCreation).to.be.equal(numberOfCarriers + 1 + index);
+      });
+    });
+  });
+
+  // 4 - Pagination
+  describe('Pagination next and previous', async () => {
+    it('should change the item number to 20 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
+
+      const paginationNumber = await carriersPage.selectPaginationLimit(page, '20');
+      expect(paginationNumber).to.equal('1');
+    });
+
+    it('should click on next', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
+
+      const paginationNumber = await carriersPage.paginationNext(page);
+      expect(paginationNumber).to.equal('2');
+    });
+
+    it('should click on previous', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
+
+      const paginationNumber = await carriersPage.paginationPrevious(page);
+      expect(paginationNumber).to.equal('1');
+    });
+
+    it('should change the item number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+
+      const paginationNumber = await carriersPage.selectPaginationLimit(page, '50');
+      expect(paginationNumber).to.equal('1');
+    });
+  });
+
+  // 5 : Delete carriers created with bulk actions
+  describe('Delete carriers with Bulk Actions', async () => {
+    it('should filter list by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
+
+      await carriersPage.filterTable(
+        page,
+        'input',
+        'name',
+        'todelete',
+      );
+
+      const numberOfCarriersAfterFilter = await carriersPage.getNumberOfElementInGrid(page);
+
+      for (let i = 1; i <= numberOfCarriersAfterFilter; i++) {
+        const textColumn = await carriersPage.getTextColumn(
+          page,
+          i,
+          'name',
+        );
+
+        await expect(textColumn).to.contains('todelete');
+      }
+    });
+
+    it('should delete carriers with Bulk Actions and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCarriers', baseContext);
+
+      const deleteTextResult = await carriersPage.bulkDeleteCarriers(page);
+      await expect(deleteTextResult).to.be.contains(carriersPage.successfulMultiDeleteMessage);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
+
+      const numberOfCarriersAfterReset = await carriersPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfCarriersAfterReset).to.be.equal(numberOfCarriers);
     });
   });
 });
