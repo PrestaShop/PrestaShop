@@ -723,7 +723,7 @@ class OrderDetailCore extends ObjectModel
         $this->id_customization = $product['id_customization'] ? (int) $product['id_customization'] : 0;
         $this->product_name = $product['name'] .
             ((isset($product['attributes']) && $product['attributes'] != null) ?
-                ' - ' . $product['attributes'] : '');
+                ' (' . $product['attributes'] . ')' : '');
 
         $this->product_quantity = (int) $product['cart_quantity'];
         $this->product_ean13 = empty($product['ean13']) ? null : pSQL($product['ean13']);

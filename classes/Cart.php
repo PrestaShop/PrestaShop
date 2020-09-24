@@ -1092,9 +1092,11 @@ class CartCore extends ObjectModel
             ORDER BY ag.`position` ASC, a.`position` ASC'
         );
 
+        $colon = Context::getContext()->getTranslator()->trans(':', [], 'Admin.Global');
         foreach ($result as $row) {
-            self::$_attributesLists[$row['id_product_attribute'] . '-' . $id_lang]['attributes'] .= $row['public_group_name'] . ' : ' . $row['attribute_name'] . $separator . ' ';
-            self::$_attributesLists[$row['id_product_attribute'] . '-' . $id_lang]['attributes_small'] .= $row['attribute_name'] . $separator . ' ';
+            $key = $row['id_product_attribute'] . '-' . $id_lang;
+            self::$_attributesLists[$key]['attributes'] .= $row['public_group_name'] . $colon . $row['attribute_name'] . $separator . ' ';
+            self::$_attributesLists[$key]['attributes_small'] .= $row['attribute_name'] . $separator . ' ';
         }
 
         foreach ($pa_implode as $id_product_attribute) {
@@ -4033,7 +4035,7 @@ class CartCore extends ObjectModel
                 WHERE NOT EXISTS (SELECT 1 FROM ' . _DB_PREFIX_ . 'orders o WHERE o.`id_cart` = c.`id_cart`
                                     AND o.`id_customer` = ' . (int) $id_customer . ')
                 AND c.`id_customer` = ' . (int) $id_customer . '
-                AND c.`id_cart` = (SELECT `id_cart` FROM `' . _DB_PREFIX_ . 'cart` c2 WHERE c2.`id_customer` = ' . (int) $id_customer . ' ORDER BY `id_cart` DESC LIMIT 1) 
+                AND c.`id_cart` = (SELECT `id_cart` FROM `' . _DB_PREFIX_ . 'cart` c2 WHERE c2.`id_customer` = ' . (int) $id_customer . ' ORDER BY `id_cart` DESC LIMIT 1)
                 AND c.`id_guest` != 0
                     ' . Shop::addSqlRestriction(Shop::SHARE_ORDER, 'c') . '
                 ORDER BY c.`date_upd` DESC';
