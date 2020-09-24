@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\LogSeverityChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -43,7 +44,11 @@ final class LogsByEmailType extends CommonAbstractType
     {
         $builder
             ->add('logs_by_email', LogSeverityChoiceType::class, [
-                'label' => false,
+                'label' => true,
+                'placeholder' => '---',
+            ])
+            ->add('logs_email_receivers', TextType::class, [
+                'label' => true,
             ]);
     }
 
