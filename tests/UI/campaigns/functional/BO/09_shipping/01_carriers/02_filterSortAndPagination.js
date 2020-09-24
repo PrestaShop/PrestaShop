@@ -66,6 +66,7 @@ describe('Filter, sort and pagination carriers', async () => {
     await expect(numberOfCarriers).to.be.above(0);
   });
 
+  // 1 - Filter carriers
   describe('Filter carriers', async () => {
     const tests = [
       {
@@ -155,6 +156,69 @@ describe('Filter, sort and pagination carriers', async () => {
 
         const numberOfCarriersAfterReset = await carriersPage.resetAndGetNumberOfLines(page);
         await expect(numberOfCarriersAfterReset).to.equal(numberOfCarriers);
+      });
+    });
+  });
+
+  // 2 - Sort carriers table
+  describe('Sort carriers table', async () => {
+    const sortTests = [
+      {
+        args: {
+          testIdentifier: 'sortByIdDesc', sortBy: 'id_carrier', sortDirection: 'down', isFloat: true,
+        },
+      },
+      /* Sort by name not working, skipping it
+      {
+        args: {
+          testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'down',
+        },
+      },
+
+      {
+        args: {
+          testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'up',
+        },
+      }, */
+      {
+        args: {
+          testIdentifier: 'sortByPositionAsc', sortBy: 'a!position', sortDirection: 'up', isFloat: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByPositionDesc', sortBy: 'a!position', sortDirection: 'down', isFloat: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByIdAsc', sortBy: 'id_carrier', sortDirection: 'up', isFloat: true,
+        },
+      },
+    ];
+
+    sortTests.forEach((test) => {
+      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
+        let nonSortedTable = await carriersPage.getAllRowsColumnContent(page, test.args.sortBy);
+
+        await carriersPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+
+        let sortedTable = await carriersPage.getAllRowsColumnContent(page, test.args.sortBy);
+
+        if (test.args.isFloat) {
+          nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
+          sortedTable = await sortedTable.map(text => parseFloat(text));
+        }
+
+        const expectedResult = await carriersPage.sortArray(nonSortedTable, test.args.isFloat);
+
+        if (test.args.sortDirection === 'up') {
+          await expect(sortedTable).to.deep.equal(expectedResult);
+        } else {
+          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+        }
       });
     });
   });

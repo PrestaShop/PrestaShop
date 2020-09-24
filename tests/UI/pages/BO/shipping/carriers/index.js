@@ -47,6 +47,11 @@ class Carriers extends BOBasePage {
     this.tableColumnActionsDropdownMenu = row => `${this.tableColumnActions(row)} .dropdown-menu`;
     this.tableColumnActionsDeleteLink = row => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
 
+    // Sort Selectors
+    this.tableHead = `${this.gridTable} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+
     // Confirmation modal
     this.deleteModalButtonYes = '#popup_ok';
   }
@@ -199,6 +204,53 @@ class Carriers extends BOBasePage {
 
     // Get successful message
     return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  // Sort methods
+  /**
+   * Get content from all rows
+   * @param page
+   * @param columnName
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(page, columnName) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable = [];
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumn(page, i, columnName);
+      await allRowsContentTable.push(rowContent);
+    }
+    return allRowsContentTable;
+  }
+
+  /**
+   * Sort table by clicking on column name
+   * @param page
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page, sortBy, sortDirection) {
+    let columnSelector;
+
+    switch (sortBy) {
+      case 'id_carrier':
+        columnSelector = this.sortColumnDiv(2);
+        break;
+
+      case 'name':
+        columnSelector = this.sortColumnDiv(3);
+        break;
+
+      case 'a!position':
+        columnSelector = this.sortColumnDiv(8);
+        break;
+
+      default:
+        throw new Error(`Column ${sortBy} was not found`);
+    }
+    const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
+    await this.clickAndWaitForNavigation(page, sortColumnButton);
   }
 }
 
