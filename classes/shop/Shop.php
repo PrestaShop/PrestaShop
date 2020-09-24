@@ -23,7 +23,10 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 
 /**
  * @since 1.5.0
@@ -486,9 +489,13 @@ class ShopCore extends ObjectModel
      */
     public function setTheme()
     {
-        $context = Context::getContext();
-        $db = Db::getInstance();
-        $themeRepository = (new PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder($context, $db))->buildRepository($this);
+        $container = SymfonyContainer::getInstance();
+        if (null !== $container) {
+            $themeManagerBuilder = $container->get('prestashop.core.addon.theme.theme_manager_builder');
+        } else {
+            $themeManagerBuilder = new ThemeManagerBuilder(Context::getContext(), Db::getInstance());
+        }
+        $themeRepository = $themeManagerBuilder->buildRepository($this);
         if (empty($this->theme_name)) {
             $this->theme_name = 'classic';
         }

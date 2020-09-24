@@ -23,6 +23,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 
 class AdminShopControllerCore extends AdminController
@@ -506,9 +508,14 @@ class AdminShopControllerCore extends AdminController
             'desc' => $this->trans('By selecting associated categories, you are choosing to share the categories between shops. Once associated between shops, any alteration of this category will impact every shop.', [], 'Admin.Shopparameters.Help'),
         ];
 
-        $themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
-            ->buildRepository()
-            ->getList();
+        $container = SymfonyContainer::getInstance();
+        if (null !== $container) {
+            $themeManagerBuilder = $container->get('prestashop.core.addon.theme.theme_manager_builder');
+        } else {
+            $themeManagerBuilder = new ThemeManagerBuilder($this->context, Db::getInstance());
+        }
+
+        $themes = $themeManagerBuilder->buildRepository()->getList();
 
         $this->fields_form['input'][] = [
             'type' => 'theme',
@@ -594,9 +601,13 @@ class AdminShopControllerCore extends AdminController
         }
 
         if (!$obj->theme_name) {
-            $themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
-                ->buildRepository()
-                ->getList();
+            $container = SymfonyContainer::getInstance();
+            if (null !== $container) {
+                $themeManagerBuilder = $container->get('prestashop.core.addon.theme.theme_manager_builder');
+            } else {
+                $themeManagerBuilder = new ThemeManagerBuilder($this->context, Db::getInstance());
+            }
+            $themes = $themeManagerBuilder->buildRepository()->getList();
             $theme = array_pop($themes);
             $theme_name = $theme->getName();
         } else {

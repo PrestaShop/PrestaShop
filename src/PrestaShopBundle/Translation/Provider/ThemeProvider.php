@@ -35,6 +35,7 @@ use PrestaShopBundle\Translation\Extractor\ThemeExtractorInterface;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationReader;
 use PrestaShopBundle\Translation\Provider\Catalogue\FileTranslatedCatalogueProvider;
 use PrestaShopBundle\Translation\Provider\Catalogue\UserTranslatedCatalogueProvider;
+use PrestaShopException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
@@ -187,10 +188,10 @@ class ThemeProvider implements ProviderInterface
      */
     private function validateTheme()
     {
-        $this->theme = $this->themeRepository->getInstanceByName($this->themeName);
-
-        if (!($this->theme instanceof Theme)) {
-            throw new \RuntimeException(sprintf('The theme "%s" doesn\'t exist', $this->themeName));
+        try {
+            $this->theme = $this->themeRepository->getInstanceByName($this->themeName);
+        } catch (PrestaShopException $e) {
+            throw new \RuntimeException(sprintf('The theme "%s" doesn\'t exist', $this->themeName), 0, $e);
         }
     }
 

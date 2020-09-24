@@ -348,7 +348,14 @@ namespace PrestaShopBundle\Install {
             $context = Context::getContext();
             $context->employee = new Employee((int) $idEmployee);
 
-            return (new ThemeManagerBuilder($context, Db::getInstance()))->build();
+            $container = SymfonyContainer::getInstance();
+            if (null !== $container) {
+                $themeManagerBuilder = $container->get('prestashop.core.addon.theme.theme_manager_builder');
+            } else {
+                $themeManagerBuilder = new ThemeManagerBuilder($context, Db::getInstance());
+            }
+
+            return $themeManagerBuilder->build();
         }
 
         private function checkVersion()

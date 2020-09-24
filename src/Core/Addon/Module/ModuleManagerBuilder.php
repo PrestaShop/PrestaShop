@@ -28,7 +28,6 @@
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Context;
-use Db;
 use Doctrine\Common\Cache\FilesystemCache;
 use GuzzleHttp\Client;
 use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
@@ -200,7 +199,11 @@ class ModuleManagerBuilder
 
         self::$cacheProvider = new FilesystemCache(self::$addonsDataProvider->cacheDir . '/doctrine');
 
-        $themeManagerBuilder = new ThemeManagerBuilder(Context::getContext(), Db::getInstance());
+        if (null !== $sfContainer) {
+            $themeManagerBuilder = $sfContainer->get('prestashop.core.addon.theme.theme_manager_builder');
+        } else {
+            $themeManagerBuilder = new ThemeManagerBuilder(Context::getContext(), Db::getInstance());
+        }
         $themeName = Context::getContext()->shop->theme_name;
         $themeModules = $themeName ?
                         $themeManagerBuilder->buildRepository()->getInstanceByName($themeName)->getModulesToEnable() :
