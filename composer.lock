@@ -1908,6 +1908,7 @@
                 "Guzzle",
                 "cache"
             ],
+            "abandoned": true,
             "time": "2019-09-16T13:44:55+00:00"
         },
         {
@@ -6188,6 +6189,7 @@
                 "configuration",
                 "distribution"
             ],
+            "abandoned": true,
             "time": "2019-06-18T15:43:58+00:00"
         },
         {
@@ -9121,6 +9123,7 @@
             "keywords": [
                 "tokenizer"
             ],
+            "abandoned": true,
             "time": "2019-09-17T06:23:10+00:00"
         },
         {
