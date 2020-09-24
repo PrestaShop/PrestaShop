@@ -51,9 +51,9 @@ class LogsConfiguration implements DataConfigurationInterface
     public function getConfiguration()
     {
         return [
-			'logs_by_email' => $this->configuration->get('PS_LOGS_BY_EMAIL'),
-			'logs_email_receivers' => $this->configuration->get('PS_LOGS_EMAIL_RECEIVERS')
-		];
+            'logs_by_email' => $this->configuration->get('PS_LOGS_BY_EMAIL'),
+            'logs_email_receivers' => $this->configuration->get('PS_LOGS_EMAIL_RECEIVERS'),
+        ];
     }
 
     /**
