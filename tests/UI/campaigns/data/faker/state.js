@@ -6,9 +6,9 @@ const countriesWithState = [
   'Argentina', 'Australia', 'Canada', 'India', 'Indonesia', 'Italy', 'Japan', 'Mexico', 'United States',
 ];
 
-module.exports = class Country {
+module.exports = class State {
   constructor(stateToCreate = {}) {
-    this.name = stateToCreate.name || faker.address.state();
+    this.name = stateToCreate.name || `test ${faker.address.state()}`;
     this.isoCode = stateToCreate.isoCode || faker.address.countryCode();
     this.country = stateToCreate.country || faker.random.arrayElement(countriesWithState);
     this.zone = stateToCreate.zone || faker.random.arrayElement(zones);
