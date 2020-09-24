@@ -23,6 +23,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
@@ -85,9 +87,13 @@ class AdminTranslationsControllerCore extends AdminController
 
         $this->link_lang_pack = str_replace('%ps_version%', _PS_VERSION_, $this->link_lang_pack);
 
-        $this->themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
-            ->buildRepository()
-            ->getList();
+        $container = SymfonyContainer::getInstance();
+        if (null !== $container) {
+            $themeManagerBuilder = $container->get('prestashop.core.addon.theme.theme_manager_builder');
+        } else {
+            $themeManagerBuilder = new ThemeManagerBuilder($this->context, Db::getInstance());
+        }
+        $this->themes = $themeManagerBuilder->buildRepository()->getList();
     }
 
     /*
