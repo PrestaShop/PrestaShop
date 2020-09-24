@@ -102,6 +102,16 @@ class Checkout extends FOBasePage {
   }
 
   /**
+   * Is shipping method exist
+   * @param page
+   * @param shippingMethod
+   * @returns {Promise<boolean>}
+   */
+  isShippingMethodVisible(page, shippingMethod) {
+    return this.elementVisible(page, this.deliveryOptionLabel(shippingMethod), 2000);
+  }
+
+  /**
    * Go to Payment Step and check that delivery step is complete
    * @param page
    * @return {Promise<boolean>}
