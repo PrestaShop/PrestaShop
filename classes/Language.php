@@ -170,10 +170,13 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             }
         }
 
-        $themes = (new ThemeManagerBuilder(Context::getContext(), Db::getInstance()))
-            ->buildRepository()
-            ->getList();
-        foreach ($themes as $theme) {
+        $container = SymfonyContainer::getInstance();
+        if (null !== $container) {
+            $themeManagerBuilder = $container->get('prestashop.core.addon.theme.theme_manager_builder');
+        } else {
+            $themeManagerBuilder = new ThemeManagerBuilder(Context::getContext(), Db::getInstance());
+        }
+        foreach ($themeManagerBuilder->buildRepository()->getList() as $theme) {
             /** @var Theme $theme */
             $theme_dir = $theme->getDirectory();
             if (file_exists(_PS_ALL_THEMES_DIR_ . $theme_dir . '/lang/' . $this->iso_code . '.php')) {
