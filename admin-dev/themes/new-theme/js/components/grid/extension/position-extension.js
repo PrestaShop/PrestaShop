@@ -188,55 +188,14 @@ export default class PositionExtension {
    */
   computeMappingBetweenOldAndNewPositions(rowsData) {
     const regex = /^row_(\d+)_(\d+)$/;
+    const mapping = Array(rowsData.length).fill().map(Object);
 
-    const rowsNb = rowsData.length;
-    const positionsBeforeDragAndDrop = {};
-    const positionsAfterDragAndDrop = {};
-    const mapping = [];
-
-    let rowDataMarker;
-    let rowDataParsedData;
-    let i;
-    let rowID;
-    let rowOldPosition;
-    let rowOldOffset;
-    let rowNewOffset;
-
-    // first, compute for each position,
-    // where they were before the drag-and-drop
-    // and where they are after the drag-and-drop
-    for (i = 0; i < rowsNb; i += 1) {
-      rowDataMarker = rowsData[i].rowMarker;
-      rowDataParsedData = regex.exec(rowDataMarker);
-
-      rowID = rowDataParsedData[1];
-      rowOldPosition = parseInt(rowDataParsedData[2], 10);
-      rowOldOffset = rowsData[i].offset;
-      rowNewOffset = i;
-
-      positionsBeforeDragAndDrop[rowOldOffset] = rowOldPosition;
-      positionsAfterDragAndDrop[rowNewOffset] = rowOldPosition;
-    }
-
-    let previousRowPositionWithThisOffset;
-
-    // for each row in table, we look at before the drag-and-drop
-    // and find what other row was there, this is the new position
-    // of current row
-    for (i = 0; i < rowsNb; i += 1) {
-      rowDataMarker = rowsData[i].rowMarker;
-      rowDataParsedData = regex.exec(rowDataMarker);
-      rowID = rowDataParsedData[1];
-      rowOldPosition = parseInt(rowDataParsedData[2], 10);
-
-      rowNewOffset = i;
-      previousRowPositionWithThisOffset = positionsBeforeDragAndDrop[rowNewOffset];
-
-      mapping.push({
-        rowId: rowID,
-        oldPosition: rowOldPosition,
-        newPosition: previousRowPositionWithThisOffset,
-      });
+    for (let i = 0; i < rowsData.length; i += 1) {
+      const [, rowId, oldPosition] = regex.exec(rowsData[i].rowMarker);
+      mapping[i].rowId = rowId;
+      mapping[i].oldPosition = parseInt(oldPosition, 10);
+      // This row will have as a new position the old position of the current one
+      mapping[rowsData[i].offset].newPosition = mapping[i].oldPosition;
     }
 
     return mapping;
