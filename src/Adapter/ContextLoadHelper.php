@@ -93,37 +93,21 @@ class ContextLoadHelper
 
     public function loadCurrencyContext(?int $currencyId = null)
     {
+        $currency = new Currency($currencyId);
         if (null === $currencyId) {
-            $currency = new Currency();
             $currency->precision = 2;
-            $this->context->currency = $currency;
-
-            return;
         }
 
-        $this->context->currency = new Currency($currencyId);
+        $this->context->currency = $currency;
     }
 
     public function loadEmployeeContext(?int $employeeId = null)
     {
-        if (null === $employeeId) {
-            $this->context->employee = new Employee();
-
-            return;
-        }
-
         $this->context->employee = new Employee($employeeId);
     }
 
-    public function loadShopContext(?int $shopId = null)
+    public function loadShopContext(int $shopId = 1)
     {
-        if (null === $shopId) {
-            $this->context->shop = new Shop();
-            Shop::setContext(Shop::CONTEXT_SHOP, 1);
-
-            return;
-        }
-
         $this->context->shop = new Shop($shopId);
         Shop::setContext(Shop::CONTEXT_SHOP, $shopId);
     }
