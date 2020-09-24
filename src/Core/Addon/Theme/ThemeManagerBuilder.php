@@ -34,8 +34,9 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShop\PrestaShop\Core\Module\HookRepository;
+use PrestaShopBundle\Service\TranslationService;
+use PrestaShopBundle\Translation\Provider\Factory\ProviderFactory;
 use Shop;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
@@ -43,18 +44,43 @@ class ThemeManagerBuilder
 {
     private $context;
     private $db;
+    /**
+     * @var ThemeValidator|null
+     */
     private $themeValidator;
     /**
-     * @var ContainerInterface|null
+     * @var TranslationService|null
      */
-    private $container;
+    private $translationService;
+    /**
+     * @var ProviderFactory|null
+     */
+    private $providerFactory;
 
-    public function __construct(Context $context, Db $db, ThemeValidator $themeValidator = null, ?ContainerInterface $container = null)
-    {
+    public function __construct(
+        Context $context,
+        Db $db,
+        TranslationService $translationService = null,
+        ProviderFactory $providerFactory = null,
+        ThemeValidator $themeValidator = null
+    ) {
         $this->context = $context;
         $this->db = $db;
         $this->themeValidator = $themeValidator;
-        $this->container = $container ?? SymfonyContainer::getInstance();
+        if (null === $translationService) {
+            $container = SymfonyContainer::getInstance();
+            if (null !== $container) {
+                $translationService = $container->get('prestashop.service.translation');
+            }
+        }
+        if (null === $providerFactory) {
+            $container = SymfonyContainer::getInstance();
+            if (null !== $container) {
+                $providerFactory = $container->get('prestashop.translation.provider_factory');
+            }
+        }
+        $this->translationService = $translationService;
+        $this->providerFactory = $providerFactory;
     }
 
     public function build()
@@ -85,8 +111,8 @@ class ThemeManagerBuilder
                 $this->context->shop,
                 $this->db
             ),
-            $this->container->get('prestashop.service.translation'),
-            $this->container->get('prestashop.translation.provider_factory')
+            $this->translationService,
+            $this->providerFactory
         );
     }
 

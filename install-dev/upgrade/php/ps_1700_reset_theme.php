@@ -24,11 +24,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 
 function ps_1700_reset_theme()
 {
-    $theme = (new ThemeManagerBuilder(Context::getContext(), Db::getInstance()))->build();
+    $container = SymfonyContainer::getInstance();
+    if (null !== $container) {
+        $themeManagerBuilder = $container->get('prestashop.core.addon.theme.theme_manager_builder');
+    } else {
+        $themeManagerBuilder = new ThemeManagerBuilder(Context::getContext(), Db::getInstance());
+    }
+    $theme = $themeManagerBuilder->build();
     $theme->reset('classic');
 
     return true;

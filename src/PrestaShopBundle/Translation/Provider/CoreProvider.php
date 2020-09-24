@@ -49,11 +49,11 @@ class CoreProvider implements ProviderInterface
      */
     private $resourceDirectory;
     /**
-     * @var array
+     * @var string[]
      */
     private $filenameFilters;
     /**
-     * @var array
+     * @var string[]
      */
     private $translationDomains;
 
@@ -115,7 +115,7 @@ class CoreProvider implements ProviderInterface
     }
 
     /**
-     * @return array|string[]
+     * @return string[]
      */
     protected function getFilenameFilters(): array
     {
@@ -123,7 +123,7 @@ class CoreProvider implements ProviderInterface
     }
 
     /**
-     * @return array|string[]
+     * @return string[]
      */
     protected function getTranslationDomains(): array
     {
