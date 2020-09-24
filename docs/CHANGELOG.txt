@@ -23,6 +23,16 @@ International Registered Trademark & Property of PrestaShop SA
 
 Release Notes for PrestaShop 1.7
 --------------------------------
+####################################
+#   v1.7.6.8 - (2020-09-24)
+####################################
+- Core:
+  - Improvement:
+    - #21124:  Bump version to 1.7.6.8, bump contactform version (by @PierreRambaud)
+  - Bug fix:
+    - #GHSA-rc8c-v7rq-q392: Stored XSS in upload files (by @PierreRambaud)
+    - #GHSA-5cp2-r794-w37w: Potential XSS injection with contact form (by @PierreRambaud)
+    - #GHSA-fghq-8h87-826g: Blind SQLi in Catalog Product edition (by @PierreRambaud)
 
 ####################################
 #   v1.7.6.7 - (2020-07-03)
