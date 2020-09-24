@@ -638,7 +638,7 @@ class AdminOrdersControllerCore extends AdminController
                         } else {
                             $message = $customer_message->message;
                             if (Configuration::get('PS_MAIL_TYPE', null, null, $order->id_shop) != Mail::TYPE_TEXT) {
-                                $message = Tools::nl2br($customer_message->message);
+                                $message = Tools::nl2br(Tools::htmlentitiesUTF8($customer_message->message));
                             }
 
                             $orderLanguage = new Language((int) $order->id_lang);

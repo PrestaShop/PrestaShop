@@ -361,13 +361,13 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 if (($error = $cm->validateField('message', $message, null, array(), true)) !== true) {
                     $this->errors[] = $error;
                 } elseif ($id_employee && $employee && Validate::isLoadedObject($employee)) {
-                    $params = array(
-                        '{messages}' => stripslashes($output),
+                    $params = [
+                        '{messages}' => Tools::stripslashes($output),
                         '{employee}' => $current_employee->firstname . ' ' . $current_employee->lastname,
-                        '{comment}' => stripslashes(Tools::nl2br($_POST['message_forward'])),
+                        '{comment}' => Tools::stripslashes(Tools::nl2br($_POST['message_forward'])),
                         '{firstname}' => $employee->firstname,
                         '{lastname}' => $employee->lastname,
-                    );
+                    ];
 
                     if (Mail::Send(
                         $this->context->language->id,
@@ -393,13 +393,13 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         $cm->add();
                     }
                 } elseif ($email && Validate::isEmail($email)) {
-                    $params = array(
-                        '{messages}' => Tools::nl2br(stripslashes($output)),
+                    $params = [
+                        '{messages}' => Tools::nl2br(Tools::stripslashes($output)),
                         '{employee}' => $current_employee->firstname . ' ' . $current_employee->lastname,
-                        '{comment}' => stripslashes($_POST['message_forward']),
+                        '{comment}' => Tools::stripslashes($_POST['message_forward']),
                         '{firstname}' => '',
                         '{lastname}' => '',
-                    );
+                    ];
 
                     if (Mail::Send(
                         $this->context->language->id,
@@ -449,15 +449,16 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         $file_attachment['mime'] = $_FILES['joinFile']['type'];
                     }
                     $customer = new Customer($ct->id_customer);
-                    $params = array(
-                        '{reply}' => Tools::nl2br(Tools::getValue('reply_message')),
+
+                    $params = [
+                        '{reply}' => Tools::nl2br(Tools::htmlentitiesUTF8(Tools::getValue('reply_message'))),
                         '{link}' => Tools::url(
                             $this->context->link->getPageLink('contact', true, null, null, false, $ct->id_shop),
                             'id_customer_thread=' . (int) $ct->id . '&token=' . $ct->token
                         ),
                         '{firstname}' => $customer->firstname,
                         '{lastname}' => $customer->lastname,
-                    );
+                    ];
                     //#ct == id_customer_thread    #tc == token of thread   <== used in the synchronization imap
                     $contact = new Contact((int) $ct->id_contact, (int) $ct->id_lang);
 
@@ -892,32 +893,6 @@ class AdminCustomerThreadsControllerCore extends AdminController
         }
 
         return parent::renderOptions();
-    }
-
-    /**
-     * AdminController::getList() override.
-     *
-     * @see AdminController::getList()
-     *
-     * @param int $id_lang
-     * @param string|null $order_by
-     * @param string|null $order_way
-     * @param int $start
-     * @param int|null $limit
-     * @param int|bool $id_lang_shop
-     *
-     * @throws PrestaShopException
-     */
-    public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
-    {
-        parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
-
-        $nb_items = count($this->_list);
-        for ($i = 0; $i < $nb_items; ++$i) {
-            if (isset($this->_list[$i]['messages'])) {
-                $this->_list[$i]['messages'] = Tools::htmlentitiesDecodeUTF8($this->_list[$i]['messages']);
-            }
-        }
     }
 
     public function updateOptionPsSavImapOpt($value)
