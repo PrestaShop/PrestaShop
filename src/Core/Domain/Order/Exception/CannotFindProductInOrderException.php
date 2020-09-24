@@ -23,16 +23,13 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-/*
- * This is the bootstrap file to setup required dependencies for Behat tests
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
+
+/**
+ * Thrown on failure to update product in an order
  */
-
-$rootDirectory = __DIR__ . '/../../../';
-
-define('_PS_IN_TEST_', true);
-if (!defined('_PS_ADMIN_DIR_')) {
-    define('_PS_ADMIN_DIR_', __DIR__);
+class CannotFindProductInOrderException extends OrderException
+{
 }
-require_once $rootDirectory . 'config/config.inc.php';
-require_once $rootDirectory . 'app/AppKernel.php';

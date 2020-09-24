@@ -506,7 +506,7 @@ class AdminCarriersControllerCore extends AdminController
                 // Delete from the reference_id and not from the carrier id
                 $carrier = new Carrier((int) $id);
                 Warehouse::removeCarrier($carrier->id_reference);
-            } elseif (Tools::isSubmit($this->table . 'Box') && count(Tools::isSubmit($this->table . 'Box')) > 0) {
+            } elseif (Tools::isSubmit($this->table . 'Box') && count(Tools::getValue($this->table . 'Box', [])) > 0) {
                 $ids = Tools::getValue($this->table . 'Box');
                 array_walk($ids, 'intval');
                 foreach ($ids as $id) {
