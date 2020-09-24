@@ -54,6 +54,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\ShopGroup;
 use PrestaShop\PrestaShop\Adapter\Entity\ShopUrl;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShop\PrestaShop\Adapter\Entity\Validate;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShopBundle\Cache\LocalizationWarmer;
@@ -1179,9 +1180,12 @@ class Install extends AbstractInstall
     public function installTheme($themeName = null)
     {
         $themeName = $themeName ?: _THEME_NAME_;
+        $container = SymfonyContainer::getInstance();
         $builder = new ThemeManagerBuilder(
             Context::getContext(),
-            Db::getInstance()
+            Db::getInstance(),
+            $container->get('prestashop.service.translation'),
+            $container->get('prestashop.translation.provider_factory')
         );
 
         $theme_manager = $builder->build();

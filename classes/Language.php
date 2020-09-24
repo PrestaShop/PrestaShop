@@ -169,7 +169,13 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             }
         }
 
-        $themes = (new ThemeManagerBuilder(Context::getContext(), Db::getInstance()))
+        $container = SymfonyContainer::getInstance();
+        $themes = (new ThemeManagerBuilder(
+            Context::getContext(),
+            Db::getInstance(),
+            $container->get('prestashop.service.translation'),
+            $container->get('prestashop.translation.provider_factory')
+        ))
             ->buildRepository()
             ->getList();
         foreach ($themes as $theme) {

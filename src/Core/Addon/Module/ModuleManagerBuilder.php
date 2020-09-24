@@ -194,7 +194,12 @@ class ModuleManagerBuilder
 
         self::$cacheProvider = new FilesystemCache(self::$addonsDataProvider->cacheDir . '/doctrine');
 
-        $themeManagerBuilder = new ThemeManagerBuilder(Context::getContext(), Db::getInstance());
+        $themeManagerBuilder = new ThemeManagerBuilder(
+            Context::getContext(),
+            Db::getInstance(),
+            $sfContainer->get('prestashop.service.translation'),
+            $sfContainer->get('prestashop.translation.provider_factory')
+        );
         $themeName = Context::getContext()->shop->theme_name;
         $themeModules = $themeName ?
                         $themeManagerBuilder->buildRepository()->getInstanceByName($themeName)->getModulesToEnable() :

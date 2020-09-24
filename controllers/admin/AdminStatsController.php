@@ -23,6 +23,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
@@ -877,7 +879,13 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 break;
 
             case 'frontoffice_translations':
-                $themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
+                $container = SymfonyContainer::getInstance();
+                $themes = (new ThemeManagerBuilder(
+                    $this->context,
+                    Db::getInstance(),
+                    $container->get('prestashop.service.translation'),
+                    $container->get('prestashop.translation.provider_factory')
+                ))
                     ->buildRepository()
                     ->getList();
                 $languages = Language::getLanguages();

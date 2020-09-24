@@ -63,6 +63,13 @@ class ThemeRepository implements AddonRepositoryInterface
         $this->shop = $shop;
     }
 
+    /**
+     * @param string $name
+     *
+     * @return \PrestaShop\PrestaShop\Core\Addon\AddonInterface|Theme
+     *
+     * @throws PrestaShopException
+     */
     public function getInstanceByName($name)
     {
         $dir = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_') . $name;

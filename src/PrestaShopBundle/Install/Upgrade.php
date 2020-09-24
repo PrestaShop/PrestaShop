@@ -352,7 +352,14 @@ namespace PrestaShopBundle\Install {
             $context = Context::getContext();
             $context->employee = new Employee((int) $idEmployee);
 
-            return (new ThemeManagerBuilder($context, Db::getInstance()))->build();
+            $container = SymfonyContainer::getInstance();
+
+            return (new ThemeManagerBuilder(
+                $context,
+                Db::getInstance(),
+                $container->get('prestashop.service.translation'),
+                $container->get('prestashop.translation.provider_factory')
+            ))->build();
         }
 
         private function checkVersion()
