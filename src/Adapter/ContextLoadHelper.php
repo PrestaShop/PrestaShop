@@ -35,7 +35,7 @@ use Employee;
 use Shop;
 
 /**
- * Helps loading specific context
+ * Helps loading specific context, for example in CLI context
  */
 class ContextLoadHelper
 {
@@ -52,13 +52,20 @@ class ContextLoadHelper
         $this->context = $context->getContext();
     }
 
+    /**
+     * @param string|null $controllerClassName
+     * @param int|null $currencyId
+     * @param int|null $employeeId
+     * @param int|null $shopId
+     * @param int|null $shopGroupId
+     */
     public function loadGenericContext(
         ?string $controllerClassName = null,
         ?int $currencyId = null,
         ?int $employeeId = null,
         ?int $shopId = null,
-        ?int $shopGroupId = null)
-    {
+        ?int $shopGroupId = null
+    ) {
         $this->loadCurrencyContext($currencyId);
         $this->loadControllerContext($controllerClassName);
         $this->loadEmployeeContext($employeeId);
@@ -71,6 +78,9 @@ class ContextLoadHelper
         }
     }
 
+    /**
+     * @param string|null $controllerClassName
+     */
     public function loadControllerContext(?string $controllerClassName = null)
     {
         if (null === $controllerClassName) {
@@ -91,6 +101,9 @@ class ContextLoadHelper
         $this->context->controller = new $controllerClassName();
     }
 
+    /**
+     * @param int|null $currencyId
+     */
     public function loadCurrencyContext(?int $currencyId = null)
     {
         $currency = new Currency($currencyId);
@@ -101,24 +114,28 @@ class ContextLoadHelper
         $this->context->currency = $currency;
     }
 
+    /**
+     * @param int|null $employeeId
+     */
     public function loadEmployeeContext(?int $employeeId = null)
     {
         $this->context->employee = new Employee($employeeId);
     }
 
+    /**
+     * @param int $shopId
+     */
     public function loadShopContext(int $shopId = 1)
     {
         $this->context->shop = new Shop($shopId);
         Shop::setContext(Shop::CONTEXT_SHOP, $shopId);
     }
 
+    /**
+     * @param int $shopGroupId
+     */
     public function loadShopGroupId(int $shopGroupId)
     {
         Shop::setContext(Shop::CONTEXT_GROUP, $shopGroupId);
-    }
-
-    public function loadAdminDirectoryContext(string $directory)
-    {
-        define('_PS_ADMIN_DIR_', $directory);
     }
 }
