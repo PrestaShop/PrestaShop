@@ -1318,7 +1318,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      *
      * @return int|null
      */
-    protected function guessCategoryIdFromRequest()
+    protected function guessCategoryIdFromRequest(): ?int
     {
         // Assure us the previous page was one of the shop
         if (!isset($_SERVER['HTTP_REFERER']) || $_SERVER['HTTP_REFERER'] !== Tools::secureReferrer($_SERVER['HTTP_REFERER'])) {
@@ -1357,7 +1357,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      *
      * @return int|null
      */
-    private function extractObjectCategoryFromLink($id_object, $previousPageLink)
+    private function extractObjectCategoryFromLink($id_object, $previousPageLink): ?int
     {
         if (strncmp($this->context->link->getCategoryLink($id_object), $previousPageLink, strlen($this->context->link->getCategoryLink($id_object))) === 0) {
             return (int) $id_object;
