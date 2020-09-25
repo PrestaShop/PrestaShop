@@ -24,10 +24,6 @@
  *}
 {extends file=$layout}
 
-{block name='head_seo' prepend}
-  <link rel="canonical" href="{$product.canonical_url}">
-{/block}
-
 {block name='head' append}
   <meta property="og:type" content="product">
   <meta property="og:url" content="{$urls.current_url}">
