@@ -101,77 +101,77 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory 
         return (new ColumnCollection())
             ->add(
                 (new BulkActionColumn('bulk'))
-                ->setOptions([
-                    'bulk_field' => 'id_cart_rule',
-                ])
+                    ->setOptions([
+                        'bulk_field' => 'id_cart_rule',
+                    ])
             )
             ->add(
                 (new DataColumn('id_cart_rule'))
-                ->setName($this->trans('ID', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'id_cart_rule',
-                ])
+                    ->setName($this->trans('ID', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'id_cart_rule',
+                    ])
             )
             ->add(
                 (new DataColumn('name'))
-                ->setName($this->trans('Name', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'name',
-                ])
+                    ->setName($this->trans('Name', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'name',
+                    ])
             )
             ->add(
                 (new DataColumn('priority'))
-                ->setName($this->trans('Priority', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'priority',
-                ])
+                    ->setName($this->trans('Priority', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'priority',
+                    ])
             )
             ->add(
                 (new DataColumn('code'))
-                ->setName($this->trans('Code', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'code',
-                ])
+                    ->setName($this->trans('Code', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'code',
+                    ])
             )
             ->add(
                 (new DataColumn('quantity'))
-                ->setName($this->trans('Quantity', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'quantity',
-                ])
+                    ->setName($this->trans('Quantity', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'quantity',
+                    ])
             )
             ->add(
                 (new DateTimeColumn('date_to'))
-                ->setName($this->trans('Expiration date', [], 'Admin.Catalog.Feature'))
-                ->setOptions([
-                    'format' => $this->contextDateFormat,
-                    'field' => 'date_to',
-                ])
+                    ->setName($this->trans('Expiration date', [], 'Admin.Catalog.Feature'))
+                    ->setOptions([
+                        'format' => $this->contextDateFormat,
+                        'field' => 'date_to',
+                    ])
             )
             ->add(
                 (new ToggleColumn('active'))
-                ->setName($this->trans('Status', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'active',
-                    'primary_field' => 'id_cart_rule',
-                    'route' => 'admin_cart_rule_toggle_status',
-                    'route_param_name' => 'cartRuleId',
-                ])
+                    ->setName($this->trans('Status', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'active',
+                        'primary_field' => 'id_cart_rule',
+                        'route' => 'admin_cart_rule_toggle_status',
+                        'route_param_name' => 'cartRuleId',
+                    ])
             )
             ->add(
                 (new ActionColumn('actions'))
-                ->setName($this->trans('Actions', [], 'Admin.Global'))
-                ->setOptions([
-                    'actions' => (new RowActionCollection())
-                        ->add(
-                            $this->buildDeleteAction(
-                                'admin_cart_rules_delete',
-                                'cartRuleId',
-                                'id_cart_rule',
-                                Request::METHOD_DELETE
-                            )
-                        ),
-                ])
+                    ->setName($this->trans('Actions', [], 'Admin.Global'))
+                    ->setOptions([
+                        'actions' => (new RowActionCollection())
+                            ->add(
+                                $this->buildDeleteAction(
+                                    'admin_cart_rules_delete',
+                                    'cartRuleId',
+                                    'id_cart_rule',
+                                    Request::METHOD_DELETE
+                                )
+                            ),
+                    ])
             );
     }
 
@@ -183,80 +183,80 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory 
         return (new FilterCollection())
             ->add(
                 (new Filter('id_cart_rule', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('ID', [], 'Admin.Global'),
-                    ],
-                ])
-                ->setAssociatedColumn('id_cart_rule')
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->trans('ID', [], 'Admin.Global'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('id_cart_rule')
             )
             ->add(
                 (new Filter('name', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Name', [], 'Admin.Global'),
-                    ],
-                ])
-                ->setAssociatedColumn('name')
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->trans('Name', [], 'Admin.Global'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('name')
             )
             ->add(
                 (new Filter('priority', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Priority', [], 'Admin.Global'),
-                    ],
-                ])
-                ->setAssociatedColumn('priority')
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->trans('Priority', [], 'Admin.Global'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('priority')
             )
             ->add(
                 (new Filter('code', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Code', [], 'Admin.Global'),
-                    ],
-                ])
-                ->setAssociatedColumn('code')
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->trans('Code', [], 'Admin.Global'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('code')
             )
             ->add(
                 (new Filter('quantity', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Quantity', [], 'Admin.Global'),
-                    ],
-                ])
-                ->setAssociatedColumn('quantity')
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->trans('Quantity', [], 'Admin.Global'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('quantity')
             )
             ->add(
                 (new Filter('date_to', DateRangeType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Expiration date', [], 'Admin.Catalog.Feature'),
-                    ],
-                    'date_format' => 'YYYY/MM/DD',
-                ])
-                ->setAssociatedColumn('date_to')
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->trans('Expiration date', [], 'Admin.Catalog.Feature'),
+                        ],
+                        'date_format' => 'YYYY/MM/DD',
+                    ])
+                    ->setAssociatedColumn('date_to')
             )
             ->add(
                 (new Filter('active', YesAndNoChoiceType::class))
-                ->setAssociatedColumn('active')
+                    ->setAssociatedColumn('active')
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
-                ->setAssociatedColumn('actions')
-                ->setTypeOptions([
-                    'reset_route' => 'admin_common_reset_search_by_filter_id',
-                    'reset_route_params' => [
-                        'filterId' => self::GRID_ID,
-                    ],
-                    'redirect_route' => 'admin_cart_rules_index',
-                ])
-                ->setAssociatedColumn('actions')
+                    ->setAssociatedColumn('actions')
+                    ->setTypeOptions([
+                        'reset_route' => 'admin_common_reset_search_by_filter_id',
+                        'reset_route_params' => [
+                            'filterId' => self::GRID_ID,
+                        ],
+                        'redirect_route' => 'admin_cart_rules_index',
+                    ])
+                    ->setAssociatedColumn('actions')
             );
     }
 
@@ -268,17 +268,17 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory 
         return (new BulkActionCollection())
             ->add(
                 (new SubmitBulkAction('enable_selection'))
-                ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
-                ->setOptions([
-                    'submit_route' => 'admin_cart_rules_bulk_enable_status',
-                ])
+                    ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
+                    ->setOptions([
+                        'submit_route' => 'admin_cart_rules_bulk_enable_status',
+                    ])
             )
             ->add(
                 (new SubmitBulkAction('disable_selection'))
-                ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
-                ->setOptions([
-                    'submit_route' => 'admin_cart_rules_bulk_disable_status',
-                ])
+                    ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
+                    ->setOptions([
+                        'submit_route' => 'admin_cart_rules_bulk_disable_status',
+                    ])
             )
             ->add(
                 $this->buildBulkDeleteAction('admin_cart_rules_bulk_delete')
