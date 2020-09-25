@@ -21,6 +21,7 @@ npm install
 | LOGIN               | LOGIN of your PrestaShop website (default to **`demo@prestashop.com`**) |
 | PASSWD              | PASSWD of your PrestaShop website (default to **`prestashop_demo`**) |
 | SHOPNAME            | Shop Name of tour PrestaShop (default to **`Prestashop`**) |
+| DB_SERVER           | The Database server address (default to **`127.0.0.1`**) |
 | DB_USER             | Login user of your MySql (default to **`root`**) |
 | DB_PASSWD           | Password for your MySql (default to **`empty`**) |
 | HEADLESS            | Boolean to run tests in headless or not (default to **`true`**) |

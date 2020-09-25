@@ -212,7 +212,7 @@ module.exports = class BOBasePage extends CommonPage {
    * @returns {Promise<void>}
    */
   async closeOnboardingModal(page) {
-    if (await this.elementVisible(page, this.onboardingCloseButton, 1000)) {
+    if (await this.elementVisible(page, this.onboardingCloseButton, 3000)) {
       await page.click(this.onboardingCloseButton);
       await this.waitForVisibleSelector(page, this.onboardingStopButton);
       await page.click(this.onboardingStopButton);
