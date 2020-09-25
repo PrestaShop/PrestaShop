@@ -177,7 +177,7 @@ abstract class HTMLTemplateCore
         $hook_name = 'displayPDF' . $template;
 
         $this->smarty->assign([
-            'HOOK_DISPLAY_PDF' => Hook::exec($hook_name, ['object' => $object]),
+            'HOOK_DISPLAY_PDF' => Hook::exec($hook_name, ['object' => $object, 'smarty' => $this->smarty]),
         ]);
     }
 
