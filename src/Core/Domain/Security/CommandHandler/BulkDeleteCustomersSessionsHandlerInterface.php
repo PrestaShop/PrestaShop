@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteCustomersSessio
 /**
  * Defines interface for customer bulk delete command handler.
  */
-interface BulkDeleteCustomerSessionHandlerInterface
+interface BulkDeleteCustomersSessionsHandlerInterface
 {
     /**
      * @param BulkDeleteCustomersSessionsCommand $command
