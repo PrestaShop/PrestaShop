@@ -18,7 +18,7 @@ const {DefaultAccount} = require('@data/demo/customer');
 // import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_shopParameters_productSettings_CRUDCartRule';
+const baseContext = 'functional_BO_catalog_discounts_cartRules_sortAndPaginationCartRule';
 
 let browserContext;
 let page;
