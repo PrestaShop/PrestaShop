@@ -31,8 +31,8 @@ use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteCustomersSessio
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteEmployeesSessionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteCustomerSessionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteEmployeeSessionCommand;
-use PrestaShop\PrestaShop\Core\Domain\Session\Exception\SessionException;
-use PrestaShop\PrestaShop\Core\Domain\Session\Exception\SessionNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionException;
+use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionNotFoundException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\Security\Sessions\CustomerFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\Security\Sessions\EmployeeFilters;
