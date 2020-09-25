@@ -108,11 +108,11 @@
 				</label>
 				<div class="col-lg-9">
 					<span class="switch prestashop-switch fixed-width-lg">
-						<input type="radio" name="erase" id="erase_on" value="1" checked="checked">
+						<input type="radio" name="erase" id="erase_on" value="1">
 						<label for="erase_on" class="radioCheck">
 							{l s='Yes' d='Admin.Global'}
 						</label>
-						<input type="radio" name="erase" id="erase_off" value="0">
+						<input type="radio" name="erase" id="erase_off" value="0" checked="checked">
 						<label for="erase_off" class="radioCheck">
 							{l s='No' d='Admin.Global'}
 						</label>
