@@ -24,20 +24,31 @@
  *}
 <table class="product" width="100%" cellpadding="4" cellspacing="0">
 
+  {assign var='widthColProduct' value=$layout.product.width}
+  {if !$isTaxEnabled}
+    {assign var='widthColProduct' value=$widthColProduct+$layout.tax_code.width}
+  {/if}
 	<thead>
-	<tr>
-		<th class="product header small" width="{$layout.reference.width}%">{l s='Reference' d='Shop.Pdf' pdf='true'}</th>
-		<th class="product header small" width="{$layout.product.width}%">{l s='Product' d='Shop.Pdf' pdf='true'}</th>
-		<th class="product header small" width="{$layout.tax_code.width}%">{l s='Tax Rate' d='Shop.Pdf' pdf='true'}</th>
+    <tr>
+      <th class="product header small" width="{$layout.reference.width}%">{l s='Reference' d='Shop.Pdf' pdf='true'}</th>
+      <th class="product header small" width="{$widthColProduct}%">{l s='Product' d='Shop.Pdf' pdf='true'}</th>
+      {if $isTaxEnabled}
+      <th class="product header small" width="{$layout.tax_code.width}%">{l s='Tax Rate' d='Shop.Pdf' pdf='true'}</th>
+      {/if}
+      {if isset($layout.before_discount)}
+        <th class="product header small" width="{$layout.unit_price_tax_excl.width}%">
+          {l s='Base price' d='Shop.Pdf' pdf='true'}{if $isTaxEnabled}<br /> {l s='(Tax excl.)' d='Shop.Pdf' pdf='true'}{/if}
+        </th>
+      {/if}
 
-		{if isset($layout.before_discount)}
-			<th class="product header small" width="{$layout.unit_price_tax_excl.width}%">{l s='Base price' d='Shop.Pdf' pdf='true'} <br /> {l s='(Tax excl.)' d='Shop.Pdf' pdf='true'}</th>
-		{/if}
-
-		<th class="product header-right small" width="{$layout.unit_price_tax_excl.width}%">{l s='Unit Price' d='Shop.Pdf' pdf='true'} <br /> {l s='(Tax excl.)' d='Shop.Pdf' pdf='true'}</th>
-		<th class="product header small" width="{$layout.quantity.width}%">{l s='Qty' d='Shop.Pdf' pdf='true'}</th>
-		<th class="product header-right small" width="{$layout.total_tax_excl.width}%">{l s='Total' d='Shop.Pdf' pdf='true'} <br /> {l s='(Tax excl.)' d='Shop.Pdf' pdf='true'}</th>
-	</tr>
+      <th class="product header-right small" width="{$layout.unit_price_tax_excl.width}%">
+        {l s='Unit Price' d='Shop.Pdf' pdf='true'}{if $isTaxEnabled}<br /> {l s='(Tax excl.)' d='Shop.Pdf' pdf='true'}{/if}
+      </th>
+      <th class="product header small" width="{$layout.quantity.width}%">{l s='Qty' d='Shop.Pdf' pdf='true'}</th>
+      <th class="product header-right small" width="{$layout.total_tax_excl.width}%">
+        {l s='Total' d='Shop.Pdf' pdf='true'}{if $isTaxEnabled}<br /> {l s='(Tax excl.)' d='Shop.Pdf' pdf='true'}{/if}
+      </th>
+    </tr>
 	</thead>
 
 	<tbody>
@@ -70,9 +81,11 @@
 				{/if}
 
 			</td>
+      {if $isTaxEnabled}
 			<td class="product center">
 				{$order_detail.order_detail_tax_label}
 			</td>
+      {/if}
 
 			{if isset($layout.before_discount)}
 				<td class="product center">
