@@ -39,7 +39,9 @@
   {if $page.meta.robots !== 'index'}
     <meta name="robots" content="{$page.meta.robots}">
   {/if}
-  {if $page.canonical}
+  {if $page.page_name == 'product'}
+    <link rel="canonical" href="{$product.canonical_url}">
+  {elseif $page.canonical}
     <link rel="canonical" href="{$page.canonical}">
   {/if}
   {block name='head_hreflang'}
