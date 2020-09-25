@@ -228,7 +228,7 @@ final class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHan
         $message = $command->getMessage();
 
         if (Configuration::get('PS_MAIL_TYPE', null, null, $order->id_shop) != Mail::TYPE_TEXT) {
-            $message = Tools::nl2br($command->getMessage());
+            $message = Tools::nl2br(Tools::htmlentitiesUTF8($command->getMessage()));
         }
 
         $orderLanguage = new Language((int) $order->id_lang);
