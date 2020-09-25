@@ -38,10 +38,14 @@ class GeneralType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('token', SwitchType::class, [
+        $builder->add(
+            'token',
+            SwitchType::class,
+            [
                 'required' => true,
-            ]);
+                'label' => 'Use token in URLs',
+            ]
+        );
     }
 
     /**
