@@ -159,8 +159,7 @@ final class OrderReturnProductsGridDefinitionFactory extends AbstractFilterableG
                             ])
                             ),
                     ])
-            )
-        ;
+            );
 
         return $columns;
     }
@@ -171,57 +170,61 @@ final class OrderReturnProductsGridDefinitionFactory extends AbstractFilterableG
     protected function getFilters()
     {
         return (new FilterCollection())
-            ->add((new Filter('order_detail_id', TextType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('Search order detail ID', [], 'Admin.Actions'),
-                ],
-            ])
-            ->setAssociatedColumn('id_order_detail')
+            ->add(
+                (new Filter('order_detail_id', TextType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->trans('Search order detail ID', [], 'Admin.Actions'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('id_order_detail')
             )
-            ->add((new Filter('reference', TextType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('Search reference', [], 'Admin.Actions'),
-                ],
-            ])
-            ->setAssociatedColumn('product_reference')
+            ->add(
+                (new Filter('reference', TextType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->trans('Search reference', [], 'Admin.Actions'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('product_reference')
             )
-            ->add((new Filter('product_name', TextType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
-                ],
-            ])
-            ->setAssociatedColumn('product_name')
+            ->add(
+                (new Filter('product_name', TextType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('product_name')
             )
-            ->add((new Filter('quantity', TextType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'placeholder' => $this->trans('Search quantity', [], 'Admin.Actions'),
-                ],
-            ])
-            ->setAssociatedColumn('quantity')
+            ->add(
+                (new Filter('quantity', TextType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->trans('Search quantity', [], 'Admin.Actions'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('quantity')
             )
-            ->add((new Filter('actions', SearchAndResetType::class))
-            ->setTypeOptions([
-                'reset_route' => 'admin_common_reset_search_by_filter_id',
-                'reset_route_params' => [
-                    'filterId' => self::GRID_ID,
-                    'orderReturnId' => $this->orderReturnId,
-                ],
-                'redirect_route' => 'admin_order_returns_edit',
-                'redirect_route_params' => [
-                    'orderReturnId' => $this->orderReturnId,
-                ],
-            ])
-            ->setAssociatedColumn('actions')
-            )
-        ;
+            ->add(
+                (new Filter('actions', SearchAndResetType::class))
+                    ->setTypeOptions([
+                        'reset_route' => 'admin_common_reset_search_by_filter_id',
+                        'reset_route_params' => [
+                            'filterId' => self::GRID_ID,
+                            'orderReturnId' => $this->orderReturnId,
+                        ],
+                        'redirect_route' => 'admin_order_returns_edit',
+                        'redirect_route_params' => [
+                            'orderReturnId' => $this->orderReturnId,
+                        ],
+                    ])
+                    ->setAssociatedColumn('actions')
+            );
     }
 
     /**
@@ -245,8 +248,7 @@ final class OrderReturnProductsGridDefinitionFactory extends AbstractFilterableG
                             'confirm_button_class' => 'btn-danger',
                         ]),
                     ])
-            )
-            ;
+            );
     }
 
     /**
