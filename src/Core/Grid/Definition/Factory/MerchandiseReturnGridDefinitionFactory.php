@@ -104,14 +104,15 @@ final class MerchandiseReturnGridDefinitionFactory extends AbstractFilterableGri
                     ->setName($this->trans('Actions', [], 'Admin.Global'))
                     ->setOptions([
                         'actions' => (new RowActionCollection())
-                            ->add((new LinkRowAction('edit'))
-                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
-                            ->setIcon('edit')
-                            ->setOptions([
-                                'route' => 'admin_order_returns_edit',
-                                'route_param_name' => 'orderReturnId',
-                                'route_param_field' => 'id_order_return',
-                            ])
+                            ->add(
+                                (new LinkRowAction('edit'))
+                                    ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                                    ->setIcon('edit')
+                                    ->setOptions([
+                                        'route' => 'admin_order_returns_edit',
+                                        'route_param_name' => 'orderReturnId',
+                                        'route_param_field' => 'id_order_return',
+                                    ])
                             ),
                     ])
             )
