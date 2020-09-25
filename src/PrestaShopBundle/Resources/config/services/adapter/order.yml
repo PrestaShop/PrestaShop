@@ -22,6 +22,8 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\AddProductToOrderHandler
     arguments:
       - '@translator'
+      - '@prestashop.adapter.context_state_manager'
+      - '@prestashop.adapter.order.amount.updater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand
@@ -34,6 +36,8 @@ services:
 
   prestashop.adapter.order.command_handler.update_product_in_order_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\UpdateProductInOrderHandler
+    arguments:
+      - '@prestashop.adapter.order.product_quantity.updater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand
@@ -76,12 +80,16 @@ services:
 
   prestashop.adapter.order.command_handler.delete_cart_rule_from_order_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\DeleteCartRuleFromOrderHandler
+    arguments:
+      - '@prestashop.adapter.order.amount.updater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand
 
   prestashop.adapter.order.command_handler.add_cart_rule_to_order_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\AddCartRuleToOrderHandler
+    arguments:
+      - '@prestashop.adapter.order.amount.updater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand
@@ -99,9 +107,34 @@ services:
       - '@prestashop.adapter.order.refund.order_refund_calculator'
       - '@prestashop.adapter.order.refund.order_slip_creator'
       - '@prestashop.adapter.order.refund.voucher_generator'
+      - '@prestashop.adapter.order.refund.updater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand
+
+  prestashop.adapter.order.command_handler.issue_standard_refund_handler:
+    class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\IssueStandardRefundHandler
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.order.refund.order_refund_calculator'
+      - '@prestashop.adapter.order.refund.order_slip_creator'
+      - '@prestashop.adapter.order.refund.voucher_generator'
+      - '@prestashop.adapter.order.refund.updater'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\IssueStandardRefundCommand
+
+  prestashop.adapter.order.command_handler.issue_return_product_handler:
+    class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\IssueReturnProductHandler
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.order.refund.order_refund_calculator'
+      - '@prestashop.adapter.order.refund.order_slip_creator'
+      - '@prestashop.adapter.order.refund.voucher_generator'
+      - '@prestashop.adapter.order.refund.updater'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\IssueReturnProductCommand
 
   prestashop.adapter.order.refund.order_refund_calculator:
     class: PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundCalculator
@@ -118,8 +151,21 @@ services:
       - '@prestashop.core.localization.locale.context_locale'
       - '@translator'
 
+  prestashop.adapter.order.refund.updater:
+    class: PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundUpdater
+
+  prestashop.adapter.order.product.remover:
+    class: PrestaShop\PrestaShop\Adapter\Order\Refund\OrderProductRemover
+    arguments:
+      - "@logger"
+      - "@translator"
+
   prestashop.adapter.order.command_handler.delete_product_from_order_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\DeleteProductFromOrderHandler
+    arguments:
+      - '@prestashop.adapter.context_state_manager'
+      - '@prestashop.adapter.order.amount.updater'
+      - '@prestashop.adapter.order.product_quantity.updater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand
@@ -133,15 +179,26 @@ services:
   prestashop.adapter.order.query_handler.get_order_for_viewing_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\QueryHandler\GetOrderForViewingHandler
     arguments:
-      - '@prestashop.core.image.parser.image_tag_source_parser'
       - '@translator'
       - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
       - "@prestashop.core.localization.locale.context_locale"
       - '@=service("prestashop.adapter.legacy.context").getContext()'
       - '@prestashop.adapter.data_provider.customer'
+      - '@prestashop.adapter.order.query_handler.get_order_products_for_viewing_handler'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing
+
+  prestashop.adapter.order.query_handler.get_order_products_for_viewing_handler:
+    class: PrestaShop\PrestaShop\Adapter\Order\QueryHandler\GetOrderProductsForViewingHandler
+    arguments:
+      - '@prestashop.core.image.parser.image_tag_source_parser'
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      - "@prestashop.core.localization.locale.context_locale"
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderProductsForViewing
+
 
   prestashop.adapter.order.command_handler.resend_order_email_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\ResendOrderEmailHandler
@@ -166,3 +223,33 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\SendProcessOrderEmailCommand
+
+  prestashop.adapter.order.command_handler.cancel_order_product_handler:
+    class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\CancelOrderProductHandler
+    arguments:
+      - '@prestashop.adapter.order.product_quantity.updater'
+      - '@logger'
+      - '@translator'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand
+
+  prestashop.adapter.presenter.order_link_presenter:
+    class: PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderLinkPresenter
+    arguments:
+      - '@router.default'
+
+  prestashop.adapter.order.order_sibling_provider:
+    class: PrestaShop\PrestaShop\Adapter\Order\OrderSiblingProvider
+
+  prestashop.adapter.order.amount.updater:
+    class: PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+
+  prestashop.adapter.order.product_quantity.updater:
+    class: PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater
+    arguments:
+      - '@prestashop.adapter.order.amount.updater'
+      - '@prestashop.adapter.order.product.remover'
+      - '@prestashop.adapter.context_state_manager'

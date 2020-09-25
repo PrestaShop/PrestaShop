@@ -1,4 +1,4 @@
-admin_monitoring_index:
+admin_monitorings_index:
   path: /
   methods: GET
   defaults:
@@ -6,7 +6,7 @@ admin_monitoring_index:
     _legacy_controller: AdminTracking
     _legacy_link: AdminTracking
 
-admin_monitoring_search:
+admin_monitorings_search:
   path: /
   methods: POST
   defaults:

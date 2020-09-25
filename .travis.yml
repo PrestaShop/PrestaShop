@@ -19,12 +19,13 @@ cache:
     - $HOME/.composer/cache
 
 os: linux
-dist: trusty
+dist: xenial
 
 php:
   - 7.1
   - 7.2
   - 7.3
+  - 7.4
 
 env:
   global:
@@ -72,13 +73,20 @@ before_install:
   # Apache & php-fpm configuration
   - bash travis-scripts/setup-php-fpm.sh
   - bash travis-scripts/setup-apache.sh
+  - bash travis-scripts/setup-node-js.sh
 
   # PrestaShop configuration
   - cp tests-legacy/parameters.yml.travis app/config/parameters.yml
 
+  # Always test with non-unity MySQL autoincrement
+  - mysql -e 'SET @@GLOBAL.auto_increment_increment = 2, @@GLOBAL.auto_increment_offset = 2;'
+
 install:
-  - composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet;
-  - make assets
+  - composer install --ansi --prefer-dist --no-interaction --no-progress --quiet;
+  - if [ "$PRESTASHOP_TEST_TYPE" = "integration" ] || [ "$PRESTASHOP_TEST_TYPE" = "sanity" ]; then
+        make assets;
+    fi
+
   - if [ "$PRESTASHOP_TEST_TYPE" != "sanity" ]; then
       bash travis-scripts/install-prestashop;
     fi
@@ -86,6 +94,9 @@ install:
 script:
   - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
         bash tests/check_file_syntax.sh;
+    fi
+
+  - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
         bash tests-legacy/check_phpunit.sh;
     fi
 
@@ -133,7 +144,7 @@ after_deploy:
       gcloud compute instances stop --zone $GC_ZONE "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}";
       gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata=NIGHTLY_TOKEN=$NIGHTLY_TOKEN && \
       gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata=TRAVIS_BRANCH=$TRAVIS_BRANCH && \
-      gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata-from-file startup-tests-script=tests/puppeteer/scripts/run-nightly-tests.sh && \
-      gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata-from-file startup-reports-script=tests/puppeteer/scripts/run-nightly-reports.sh && \
+      gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata-from-file startup-tests-script=tests/UI/scripts/run-nightly-tests.sh && \
+      gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata-from-file startup-reports-script=tests/UI/scripts/run-nightly-reports.sh && \
       gcloud compute instances start --zone $GC_ZONE "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}"
     fi

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -492,6 +492,12 @@ class AdminCarriersControllerCore extends AdminController
             }
             parent::postProcess();
         } elseif (isset($_GET['isFree' . $this->table])) {
+            if (!$this->access('edit')) {
+                $this->errors[] = $this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error');
+
+                return;
+            }
+
             $this->processIsFree();
         } else {
             // if deletion : removes the carrier from the warehouse/carrier association
@@ -500,7 +506,7 @@ class AdminCarriersControllerCore extends AdminController
                 // Delete from the reference_id and not from the carrier id
                 $carrier = new Carrier((int) $id);
                 Warehouse::removeCarrier($carrier->id_reference);
-            } elseif (Tools::isSubmit($this->table . 'Box') && count(Tools::isSubmit($this->table . 'Box')) > 0) {
+            } elseif (Tools::isSubmit($this->table . 'Box') && count(Tools::getValue($this->table . 'Box', [])) > 0) {
                 $ids = Tools::getValue($this->table . 'Box');
                 array_walk($ids, 'intval');
                 foreach ($ids as $id) {

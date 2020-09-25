@@ -25,6 +25,7 @@ services:
             - "@translator"
             - "@=service('prestashop.adapter.legacy.context').getContext().employee.getAssociatedShops()"
             - "@prestashop.core.localization.locale.context_locale"
+            - "@prestashop.utils.float_parser"
 
     prestashop.adapter.admin.controller.attribute_generator:
         class: PrestaShop\PrestaShop\Adapter\Attribute\AdminAttributeGeneratorControllerWrapper
@@ -44,8 +45,8 @@ services:
     prestashop.adapter.product.command_handler.update_product_status_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductStatusCommandHandler
         tags:
-          - name: tactician.handler
-            command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand
 
     prestashop.adapter.product.query_handler.search_products:
         class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\SearchProductsHandler
@@ -64,3 +65,247 @@ services:
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled
+
+    prestashop.adapter.product.command_handler.get_product_for_editing_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductForEditingHandler
+        arguments:
+            - '@prestashop.core.util.number.number_extractor'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing
+
+    prestashop.adapter.product.command_handler.get_packed_products_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetPackedProductsHandler
+        arguments:
+            - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetPackedProducts
+
+    prestashop.adapter.product.command_handler.add_product_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddProductHandler
+        arguments:
+            - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
+            - '@=service("prestashop.adapter.legacy.context").getContext().shop.id_category'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand
+
+    prestashop.adapter.product.command_handler.update_product_basic_information_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductBasicInformationHandler
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand
+
+    prestashop.adapter.product.command_handler.update_product_prices_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductPricesHandler
+        arguments:
+            - '@prestashop.core.util.number.number_extractor'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand
+
+    prestashop.adapter.product.command_handler.update_product_tags_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductTagsHandler
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTagsCommand
+
+    prestashop.adapter.product.command_handler.update_product_options_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductOptionsHandler
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand
+
+    prestashop.adapter.product.command_handler.set_pack_products_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetPackProductsHandler
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetPackProductsCommand
+
+    prestashop.adapter.product.command_handler.remove_all_products_from_pack_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllProductsFromPackHandler
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllProductsFromPackCommand
+
+    prestashop.adapter.product.command_handler.set_associated_product_categories_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetAssociatedProductCategoriesHandler
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductCategoriesCommand
+
+    prestashop.adapter.product.command_handler.remove_all_associated_product_categories_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllAssociatedProductCategoriesHandler
+        arguments:
+            - '@=service("prestashop.adapter.legacy.configuration").getInt("PS_HOME_CATEGORY")'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductCategoriesCommand
+
+    prestashop.adapter.product.command_handler.add_customization_field_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddCustomizationFieldHandler
+        arguments:
+            - '@prestashop.adapter.product.product_provider'
+            - '@prestashop.adapter.product.product_updater'
+            - '@prestashop.adapter.product.customization_field_persister'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\AddCustomizationFieldCommand
+
+    prestashop.adapter.product.command_handler.update_customization_field_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateCustomizationFieldHandler
+        arguments:
+            - '@prestashop.adapter.product.product_provider'
+            - '@prestashop.adapter.product.product_updater'
+            - '@prestashop.adapter.product.customization_field_persister'
+            - '@prestashop.adapter.product.customization_field_provider'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateCustomizationFieldCommand
+
+    prestashop.adapter.product.command_handler.delete_customization_field_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DeleteCustomizationFieldHandler
+        arguments:
+            - '@prestashop.adapter.product.customization_field_deleter'
+            - '@prestashop.adapter.product.customization_field_provider'
+            - '@prestashop.adapter.product.product_provider'
+            - '@prestashop.adapter.product.product_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\DeleteCustomizationFieldCommand
+
+    prestashop.adapter.product.query_handler.get_product_customization_fields_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductCustomizationFieldsHandler
+        arguments:
+            - '@prestashop.adapter.product.customization_field_provider'
+            - '@prestashop.adapter.product.product_provider'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields
+
+    prestashop.adapter.product.command_handler.set_product_customization_fields_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetProductCustomizationFieldsHandler
+        arguments:
+            - '@prestashop.adapter.product.customization_field_persister'
+            - '@prestashop.adapter.product.customization_field_deleter'
+            - '@prestashop.adapter.product.customization_field_provider'
+            - '@prestashop.adapter.product.product_updater'
+            - '@prestashop.adapter.product.product_provider'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand
+
+    prestashop.adapter.product.command_handler.remove_all_customization_fields_from_product_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllCustomizationFieldsFromProductHandler
+        arguments:
+            - '@prestashop.adapter.product.customization_field_deleter'
+            - '@prestashop.adapter.product.product_provider'
+            - '@prestashop.adapter.product.product_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCustomizationFieldsFromProductCommand
+
+    prestashop.adapter.product.command_handler.update_product_shipping_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductShippingHandler
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductShippingCommand
+
+    prestashop.adapter.product.query_handler.get_product_suppliers_for_editing_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductSuppliersForEditingHandler
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSuppliersForEditing
+
+    prestashop.adapter.product.query_handler.get_product_supplier_options_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductSupplierOptionsHandler
+        arguments:
+            - '@prestashop.adapter.product.query_handler.get_product_suppliers_for_editing_handler'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions
+
+    prestashop.adapter.product.command_handler.add_product_supplier_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddProductSupplierHandler
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\AddProductSupplierCommand
+
+    prestashop.adapter.product.command_handler.update_product_supplier_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductSupplierHandler
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSupplierCommand
+
+    prestashop.adapter.product.command_handler.delete_product_supplier_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DeleteProductSupplierHandler
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\DeleteProductSupplierCommand
+
+    prestashop.adapter.product.command_handler.update_product_suppliers_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductSuppliersHandler
+        arguments:
+            - '@prestashop.adapter.product.command_handler.add_product_supplier_handler'
+            - '@prestashop.adapter.product.command_handler.update_product_supplier_handler'
+            - '@prestashop.adapter.product.command_handler.delete_product_supplier_handler'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand
+
+    prestashop.adapter.product.command_handler.update_product_seo_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductSeoHandler
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand
+
+    prestashop.adapter.product.customization_field_deleter:
+        class: PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldDeleter
+        arguments:
+            - '@prestashop.adapter.product.customization_field_provider'
+            - '@prestashop.adapter.product.product_provider'
+            - '@prestashop.adapter.product.product_updater'
+
+    prestashop.adapter.product.product_deleter:
+        class: PrestaShop\PrestaShop\Adapter\Product\ProductDeleter
+        arguments:
+            - '@prestashop.adapter.product.product_provider'
+
+    prestashop.adapter.product.product_updater:
+        class: PrestaShop\PrestaShop\Adapter\Product\ProductUpdater
+        arguments:
+            - '@prestashop.adapter.product.product_validator'
+
+    prestashop.adapter.product.product_validator:
+        class: PrestaShop\PrestaShop\Adapter\Product\ProductValidator
+
+    prestashop.adapter.product.product_provider:
+        class: PrestaShop\PrestaShop\Adapter\Product\ProductProvider
+
+    prestashop.adapter.product.customization_field_provider:
+        class: PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldProvider
+
+    prestashop.adapter.product.customization_field_validator:
+        class: PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldValidator
+
+    prestashop.adapter.product.customization_field_persister:
+        class: PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldPersister
+        arguments:
+            - '@prestashop.adapter.product.customization_field_validator'
+
+    prestashop.adapter.product.command_handler.delete_product_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DeleteProductHandler
+        arguments:
+            - '@prestashop.adapter.product.product_deleter'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand
+
+    prestashop.adapter.product.command_handler.bulk_delete_product_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\BulkDeleteProductHandler
+        arguments:
+            - '@prestashop.adapter.product.product_deleter'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand

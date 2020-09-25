@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -29,17 +29,29 @@
  */
 class HTMLTemplateInvoiceCore extends HTMLTemplate
 {
+    /**
+     * @var Order
+     */
     public $order;
+
+    /**
+     * @var OrderInvoice
+     */
     public $order_invoice;
+
+    /**
+     * @var bool
+     */
     public $available_in_your_account = false;
 
     /**
      * @param OrderInvoice $order_invoice
-     * @param $smarty
+     * @param Smarty $smarty
+     * @param bool $bulk_mode
      *
      * @throws PrestaShopException
      */
-    public function __construct(OrderInvoice $order_invoice, $smarty, $bulk_mode = false)
+    public function __construct(OrderInvoice $order_invoice, Smarty $smarty, $bulk_mode = false)
     {
         $this->order_invoice = $order_invoice;
         $this->order = new Order((int) $this->order_invoice->id_order);
@@ -59,7 +71,8 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         $this->date = Tools::displayDate($order_invoice->date_add);
 
         $id_lang = Context::getContext()->language->id;
-        $this->title = $order_invoice->getInvoiceNumberFormatted($id_lang);
+        $id_shop = Context::getContext()->shop->id;
+        $this->title = $order_invoice->getInvoiceNumberFormatted($id_lang, $id_shop);
 
         $this->shop = new Shop((int) $this->order->id_shop);
     }
@@ -80,11 +93,11 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     /**
      * Compute layout elements size.
      *
-     * @param $params Array Layout elements
+     * @param array $params Layout elements
      *
      * @return array Layout elements columns size
      */
-    protected function computeLayout($params)
+    protected function computeLayout(array $params)
     {
         $layout = [
             'reference' => [
@@ -94,7 +107,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
                 'width' => 40,
             ],
             'quantity' => [
-                'width' => 8,
+                'width' => 12,
             ],
             'tax_code' => [
                 'width' => 8,
@@ -371,7 +384,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     /**
      * Returns the tax tab content.
      *
-     * @return string Tax tab html content
+     * @return string|array Tax tab html content (Returns an array if debug params used in request)
      */
     public function getTaxTabContent()
     {
@@ -383,8 +396,6 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
                             && $address->id_country != Configuration::get('VATNUMBER_COUNTRY');
         $carrier = new Carrier($this->order->id_carrier);
 
-        $tax_breakdowns = $this->getTaxBreakdown();
-
         $data = [
             'tax_exempt' => $tax_exempt,
             'use_one_after_another_method' => $this->order_invoice->useOneAfterAnotherTaxComputationMethod(),
@@ -393,7 +404,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'shipping_tax_breakdown' => $this->order_invoice->getShippingTaxesBreakdown($this->order),
             'ecotax_tax_breakdown' => $this->order_invoice->getEcoTaxTaxesBreakdown(),
             'wrapping_tax_breakdown' => $this->order_invoice->getWrappingTaxesBreakdown(),
-            'tax_breakdowns' => $tax_breakdowns,
+            'tax_breakdowns' => $this->getTaxBreakdown(),
             'order' => $debug ? null : $this->order,
             'order_invoice' => $debug ? null : $this->order_invoice,
             'carrier' => $debug ? null : $carrier,
@@ -448,32 +459,12 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         return $breakdowns;
     }
 
-    /*
-    protected function getTaxLabel($tax_breakdowns)
-    {
-        $tax_label = '';
-        $all_taxes = array();
-
-        foreach ($tax_breakdowns as $type => $bd)
-            foreach ($bd as $line)
-                if(isset($line['id_tax']))
-                    $all_taxes[] = $line['id_tax'];
-
-        $taxes = array_unique($all_taxes);
-
-        foreach ($taxes as $id_tax) {
-            $tax = new Tax($id_tax);
-            $tax_label .= $tax->id.': '.$tax->name[$this->order->id_lang].' ('.$tax->rate.'%) ';
-        }
-
-        return $tax_label;
-    }
-    */
-
     /**
      * Returns the invoice template associated to the country iso_code.
      *
      * @param string $iso_country
+     *
+     * @return string
      */
     protected function getTemplateByCountry($iso_country)
     {

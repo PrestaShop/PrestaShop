@@ -2,3 +2,5 @@
 /public/
 /bundle.js
 /tests/
+!.eslintrc.js
+!.webpack

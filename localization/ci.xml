@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <localizationPack name="Ivory Coast" version="1.0">
 	<currencies>
-		<currency name="Franc CFA" iso_code="XOF" iso_code_num="952" sign="FCFA" blank="1" conversion_rate="655.957" format="2" decimals="0" />
+		<currency name="Franc CFA" iso_code="XOF" iso_code_num="952" sign="FCFA" blank="1" format="2" decimals="0" />
 	</currencies>
 	<languages>
 		<language iso_code="fr" />
@@ -9,7 +9,7 @@
 	<taxes>
 		<tax id="1" name="TVA CI 18%" rate="18" />
 		<tax id="2" name="TVA CI 10%" rate="10" />
-		
+
 		<taxRulesGroup name="CI Standard Rate (18%)">
 			<taxRule iso_code_country="ci" id_tax="1" />
 		</taxRulesGroup>

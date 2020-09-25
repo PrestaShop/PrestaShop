@@ -39,15 +39,11 @@
     if ($('#css_disabled_color_picker').length < 1) $('head').prepend('<style id="css_disabled_color_picker" type="text/css">.mColorPicker[disabled] + span, .mColorPicker[disabled="disabled"] + span, .mColorPicker[disabled="true"] + span {filter:alpha(opacity=50);-moz-opacity:0.5;-webkit-opacity:0.5;-khtml-opacity: 0.5;opacity: 0.5;}</style>');
 
     $(document).on('keyup', '.mColorPicker', function () {
-
-      try {
-
-        $(this).css({
-          'background-color': $(this).val()
-        }).css({
-          'color': $.fn.mColorPicker.textColor($(this).css('background-color'))
-        }).trigger('change');
-      } catch (r) {}
+     $.fn.mColorPicker.setTextColor($(this));
+    });
+    
+    $(document).ready(function() {
+      $.fn.mColorPicker.setTextColor($('.mColorPicker'));
     });
 
     $(document).on('click', '.mColorPickerTrigger', function () {
@@ -61,6 +57,16 @@
     });
 
     return this;
+  };
+
+  $.fn.mColorPicker.setTextColor = function(element) {
+    try {
+      element.css({
+        'background-color': element.val()
+      }).css({
+        'color': $.fn.mColorPicker.textColor(element.css('background-color'))
+      }).trigger('change');
+    } catch (r) {}
   };
 
   $.fn.mColorPicker.currentColor = false;

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Cart;
@@ -30,6 +30,7 @@ use Cart;
 use CartRule;
 use Configuration;
 use Context;
+use Country;
 use Hook;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
@@ -447,14 +448,15 @@ class CartPresenter implements PresenterInterface
         $discounts = array_filter($discounts, function ($discount) use ($cartRulesIds, $cart) {
             $voucherCustomerId = (int) $discount['id_customer'];
             $voucherIsRestrictedToASingleCustomer = ($voucherCustomerId !== 0);
-            if ($voucherIsRestrictedToASingleCustomer && $cart->id_customer !== $voucherCustomerId) {
+            $voucherIsEmptyCode = empty($discount['code']);
+            if ($voucherIsRestrictedToASingleCustomer && $cart->id_customer !== $voucherCustomerId && $voucherIsEmptyCode) {
                 return false;
             }
 
             return !array_key_exists($discount['id_cart_rule'], $cartRulesIds);
         });
 
-        return [
+        $result = [
             'products' => $products,
             'totals' => $totals,
             'subtotals' => $subtotals,
@@ -478,6 +480,12 @@ class CartPresenter implements PresenterInterface
                 ) :
                 '',
         ];
+
+        Hook::exec('actionPresentCart',
+            ['presentedCart' => &$result]
+        );
+
+        return $result;
     }
 
     /**
@@ -494,6 +502,13 @@ class CartPresenter implements PresenterInterface
     {
         $shippingDisplayValue = '';
 
+        // if one of the applied cart rules have free shipping, then the shipping display value is 'Free'
+        foreach ($cart->getCartRules() as $rule) {
+            if ($rule['free_shipping'] && !$rule['carrier_restriction']) {
+                return $this->translator->trans('Free', [], 'Shop.Theme.Checkout');
+            }
+        }
+
         if ($shippingCost != 0) {
             $shippingDisplayValue = $this->priceFormatter->format($shippingCost);
         } else {
@@ -505,7 +520,7 @@ class CartPresenter implements PresenterInterface
 
             $deliveryOptionList = $cart->getDeliveryOptionList($defaultCountry);
 
-            if (isset($deliveryOptionList) && count($deliveryOptionList) > 0) {
+            if (count($deliveryOptionList) > 0) {
                 foreach ($deliveryOptionList as $option) {
                     foreach ($option as $currentCarrier) {
                         if (isset($currentCarrier['is_free']) && $currentCarrier['is_free'] > 0) {
@@ -533,6 +548,7 @@ class CartPresenter implements PresenterInterface
             $vouchers[$cartVoucher['id_cart_rule']]['code'] = $cartVoucher['code'];
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_percent'] = $cartVoucher['reduction_percent'];
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_currency'] = $cartVoucher['reduction_currency'];
+            $vouchers[$cartVoucher['id_cart_rule']]['free_shipping'] = (bool) $cartVoucher['free_shipping'];
 
             // Voucher reduction depending of the cart tax rule
             // if $cartHasTax & voucher is tax excluded, set amount voucher to tax included
@@ -542,41 +558,27 @@ class CartPresenter implements PresenterInterface
 
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_amount'] = $cartVoucher['reduction_amount'];
 
-            if (array_key_exists('gift_product', $cartVoucher) && $cartVoucher['gift_product']) {
+            if ($this->cartVoucherHasGiftProductReduction($cartVoucher)) {
                 $cartVoucher['reduction_amount'] = $cartVoucher['value_real'];
             }
 
-            $shippingReduction = $amountReduction = $percentageReduction = 0;
-            $freeShippingOnly = false;
+            $totalCartVoucherReduction = 0;
 
-            if ($this->cartVoucherHasFreeShipping($cartVoucher)) {
-                if (!$freeShippingAlreadySet) {
-                    $shippingReduction = $cart->getTotalShippingCost(null, $this->includeTaxes());
+            if (!$this->cartVoucherHasPercentReduction($cartVoucher)
+                && !$this->cartVoucherHasAmountReduction($cartVoucher)
+                && !$this->cartVoucherHasGiftProductReduction($cartVoucher)) {
+                $freeShippingOnly = true;
+                if ($freeShippingAlreadySet) {
+                    unset($vouchers[$cartVoucher['id_cart_rule']]);
+                    continue;
+                } else {
                     $freeShippingAlreadySet = true;
                 }
-                $freeShippingOnly = true;
-            }
-            if ($this->cartVoucherHasPercentReduction($cartVoucher)) {
-                $productsTotalExcludingTax = $cart->getOrderTotal($this->includeTaxes(), Cart::ONLY_PRODUCTS);
-                $percentageReduction = ($productsTotalExcludingTax / 100) * $cartVoucher['reduction_percent'];
+            } else {
                 $freeShippingOnly = false;
-            } elseif ($this->cartVoucherHasAmountReduction($cartVoucher)) {
-                $amountReduction = $this->includeTaxes() ? $cartVoucher['reduction_amount'] : $cartVoucher['value_tax_exc'];
-                $currencyFrom = new \Currency($cartVoucher['reduction_currency']);
-                $currencyTo = new \Currency($cart->id_currency);
-                if ($currencyFrom->conversion_rate == 0) {
-                    $amountReduction = 0;
-                } else {
-                    // convert to default currency
-                    $defaultCurrencyId = (int) Configuration::get('PS_CURRENCY_DEFAULT');
-                    $amountReduction /= $currencyFrom->conversion_rate;
-                    if ($defaultCurrencyId == $currencyTo->id) {
-                        // convert to destination currency
-                        $amountReduction *= $currencyTo->conversion_rate;
-                    }
-                }
-                $freeShippingOnly = false;
+                $totalCartVoucherReduction = $this->includeTaxes() ? $cartVoucher['value_real'] : $cartVoucher['value_tax_exc'];
             }
+
             // when a voucher has only a shipping reduction, the value displayed must be "Free Shipping"
             if ($freeShippingOnly) {
                 $cartVoucher['reduction_formatted'] = $this->translator->trans(
@@ -585,11 +587,8 @@ class CartPresenter implements PresenterInterface
                     'Admin.Shipping.Feature'
                 );
             } else {
-                // In all other cases, the value displayed should be the total of applied reductions for the current voucher
-                $totalCartVoucherReduction = $shippingReduction + $amountReduction + $percentageReduction;
-                $cartVoucher['reduction_formatted'] = '-' . $this->priceFormatter->convertAndFormat($totalCartVoucherReduction);
+                $cartVoucher['reduction_formatted'] = '-' . $this->priceFormatter->format($totalCartVoucherReduction);
             }
-
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = $cartVoucher['reduction_formatted'];
             $vouchers[$cartVoucher['id_cart_rule']]['delete_url'] = $this->link->getPageLink(
                 'cart',
@@ -638,6 +637,16 @@ class CartPresenter implements PresenterInterface
     private function cartVoucherHasAmountReduction($cartVoucher)
     {
         return isset($cartVoucher['reduction_amount']) && $cartVoucher['reduction_amount'] > 0;
+    }
+
+    /**
+     * @param array $cartVoucher
+     *
+     * @return bool
+     */
+    private function cartVoucherHasGiftProductReduction($cartVoucher)
+    {
+        return !empty($cartVoucher['gift_product']);
     }
 
     /**

@@ -1,10 +1,11 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 import 'tablednd/dist/jquery.tablednd.min';
@@ -71,8 +71,7 @@ export default class PositionExtension {
     const $rowPositionContainer = $(row).find(`.js-${this.grid.getId()}-position:first`);
     const updateUrl = $rowPositionContainer.data('update-url');
     const method = $rowPositionContainer.data('update-method');
-    const paginationOffset = parseInt($rowPositionContainer.data('pagination-offset'), 10);
-    const positions = this.getRowsPositions(paginationOffset);
+    const positions = this.getRowsPositions();
     const params = {positions};
 
     this.updatePosition(updateUrl, params, method);
@@ -83,25 +82,26 @@ export default class PositionExtension {
    * @returns {Array}
    * @private
    */
-  getRowsPositions(paginationOffset) {
+  getRowsPositions() {
     const tableData = JSON.parse($.tableDnD.jsonize());
     const rowsData = tableData[`${this.grid.getId()}_grid_table`];
-    const regex = /^row_(\d+)_(\d+)$/;
+    const completeRowsData = [];
 
-    const rowsNb = rowsData.length;
-    const positions = [];
-    let rowData; let
-      i;
-    for (i = 0; i < rowsNb; i += 1) {
-      rowData = regex.exec(rowsData[i]);
-      positions.push({
-        rowId: rowData[1],
-        newPosition: paginationOffset + i,
-        oldPosition: parseInt(rowData[2], 10),
+    let trData;
+
+    // retrieve dragAndDropOffset offset to have all needed data
+    // for positions mapping evolution over time
+    for (let i = 0; i < rowsData.length; i += 1) {
+      trData = this.grid.getContainer()
+        .find(`#${rowsData[i]}`);
+
+      completeRowsData.push({
+        rowMarker: rowsData[i],
+        offset: trData.data('dragAndDropOffset'),
       });
     }
 
-    return positions;
+    return this.computeMappingBetweenOldAndNewPositions(completeRowsData);
   }
 
   /**
@@ -110,6 +110,8 @@ export default class PositionExtension {
    * @private
    */
   addIdsToGridTableRows() {
+    let counter = 0;
+
     this.grid.getContainer()
       .find(`.js-grid-table .js-${this.grid.getId()}-position`)
       .each((index, positionWrapper) => {
@@ -119,6 +121,9 @@ export default class PositionExtension {
         const id = `row_${rowId}_${position}`;
         $positionWrapper.closest('tr').attr('id', id);
         $positionWrapper.closest('td').addClass('js-drag-handle');
+        $positionWrapper.closest('tr').data('dragAndDropOffset', counter);
+
+        counter += 1;
       });
   }
 
@@ -172,5 +177,27 @@ export default class PositionExtension {
     }
 
     $form.submit();
+  }
+
+  /**
+   * Rows have been reordered. This function
+   * finds, for each row ID: the old position, the new position
+   *
+   * @returns {Array}
+   * @private
+   */
+  computeMappingBetweenOldAndNewPositions(rowsData) {
+    const regex = /^row_(\d+)_(\d+)$/;
+    const mapping = Array(rowsData.length).fill().map(Object);
+
+    for (let i = 0; i < rowsData.length; i += 1) {
+      const [, rowId, oldPosition] = regex.exec(rowsData[i].rowMarker);
+      mapping[i].rowId = rowId;
+      mapping[i].oldPosition = parseInt(oldPosition, 10);
+      // This row will have as a new position the old position of the current one
+      mapping[rowsData[i].offset].newPosition = mapping[i].oldPosition;
+    }
+
+    return mapping;
   }
 }

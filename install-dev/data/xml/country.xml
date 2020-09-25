@@ -82,8 +82,8 @@
     <country id="CL" id_zone="South_America" iso_code="CL" call_prefix="56" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="NNN-NNNN" display_tax_label="1"/>
     <country id="CO" id_zone="South_America" iso_code="CO" call_prefix="57" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="NNNNNN" display_tax_label="1"/>
     <country id="KM" id_zone="Africa" iso_code="KM" call_prefix="269" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="" display_tax_label="1"/>
-    <country id="CD" id_zone="Africa" iso_code="CD" call_prefix="242" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="" display_tax_label="1"/>
-    <country id="CG" id_zone="Africa" iso_code="CG" call_prefix="243" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="" display_tax_label="1"/>
+    <country id="CD" id_zone="Africa" iso_code="CD" call_prefix="243" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="" display_tax_label="1"/>
+    <country id="CG" id_zone="Africa" iso_code="CG" call_prefix="242" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="" display_tax_label="1"/>
     <country id="CR" id_zone="Central_America_Antilla" iso_code="CR" call_prefix="506" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="NNNNN" display_tax_label="1"/>
     <country id="HR" id_zone="Europe" iso_code="HR" call_prefix="385" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="NNNNN" display_tax_label="1"/>
     <country id="CU" id_zone="Central_America_Antilla" iso_code="CU" call_prefix="53" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="" display_tax_label="1"/>

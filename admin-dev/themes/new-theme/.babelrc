@@ -1,4 +1,13 @@
 {
   "presets": ["env"],
-  "plugins": ["transform-object-rest-spread"]
+  "plugins": [
+    "transform-object-rest-spread"
+  ],
+  "env": {
+    "test": {
+      "plugins": [
+        ["babel-plugin-webpack-aliases", { "config": "./webpack.config.js" }]
+      ]
+    }
+  }
 }

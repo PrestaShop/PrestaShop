@@ -5,17 +5,17 @@
   a:not([data-depth="0"]) {
     display: block;
     padding: 0.625rem;
-    color: $gray;
     font-weight: 400;
+    color: $gray;
   }
   a.dropdown-submenu {
+    font-weight: 600;
     color: $gray-darker;
     text-transform: uppercase;
-    font-weight: 600;
   }
   a[data-depth="0"] {
-    font-weight: 600;
     padding: 0.1875rem $small-space 0.375rem;
+    font-weight: 600;
     &:hover {
       #header & {
         color: $brand-primary;
@@ -32,23 +32,24 @@
   }
   .sub-menu {
     &.collapse {
-      opacity: 0;
       visibility: hidden;
+      opacity: 0;
 
       &.in {
-        opacity: 1;
         visibility: visible;
+        opacity: 1;
       }
     }
-    box-shadow: 2px 1px 11px 2px rgba(0, 0, 0, 0.1);
-    border: none;
-    margin-left: 0.9375rem;
+    z-index: 18;
     width: calc(100% - 30px);
     min-width: calc(100% - 30px);
-    z-index: 18;
-    opacity: 0;
+    margin-left: 0.9375rem;
     visibility: hidden;
-    transition: opacity .5s ease, visibility .5s ease;
+    border: none;
+    box-shadow: 2px 1px 11px 2px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+
     ul[data-depth="1"] > li {
       float: left;
       margin: 0 1.25rem;
@@ -72,8 +73,8 @@
       li {
         &:hover {
           .sub-menu {
-            opacity: 1;
             visibility: visible;
+            opacity: 1;
           }
         }
       }
@@ -83,7 +84,7 @@
 
 #mobile_top_menu_wrapper {
   padding: 15px;
-  background: white;
+  background: #fff;
   #top-menu {
     margin-bottom: 0.625rem;
   }
@@ -121,15 +122,15 @@
           display: block;
         }
       }
-      box-shadow: none;
+      position: static;
       z-index: inherit;
       display: block;
-      position: static;
-      overflow: hidden;
-      margin-left: 0;
       width: 100%;
       min-width: 100%;
-      background: white;
+      margin-left: 0;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: none;
       ul[data-depth="0"] > li {
         border-bottom: 1px solid $gray;
       }
@@ -148,8 +149,8 @@
       }
       li > a {
         padding: 0.625rem;
-        border-bottom: 1px solid white;
-        font-weight: bold;
+        font-weight: 600;
+        border-bottom: 1px solid #fff;
       }
       ul[data-depth="2"] li a {
         padding-left: 1.25rem;
@@ -181,10 +182,20 @@
     .user-info {
       padding: 0 0.625rem;
       a {
-        padding: 0.625rem 0;
         display: block;
         width: 100%;
+        padding: 0.625rem 0;
       }
+    }
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .top-menu {
+    .sub-menu {
+      visibility: visible;
+      opacity: 1;
+      transition: 0.5s ease-out;
     }
   }
 }

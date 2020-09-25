@@ -4,9 +4,9 @@ admin_carts_view:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Cart:view
     _legacy_controller: AdminCarts
-#    _legacy_link: AdminCarts:viewcart
-#    _legacy_parameters:
-#      id_cart: cartId
+    _legacy_link: AdminCarts:viewcart
+    _legacy_parameters:
+      id_cart: cartId
   requirements:
     cartId: \d+
   options:

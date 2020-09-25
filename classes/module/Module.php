@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,21 +17,25 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Adapter\Container\LegacyContainerInterface;
+use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 abstract class ModuleCore implements ModuleInterface
 {
@@ -327,7 +332,7 @@ abstract class ModuleCore implements ModuleInterface
                     $this->id = self::$modules_cache[$this->name]['id_module'];
                 }
                 foreach (self::$modules_cache[$this->name] as $key => $value) {
-                    if (array_key_exists($key, $this)) {
+                    if (array_key_exists($key, get_object_vars($this))) {
                         $this->{$key} = $value;
                     }
                 }
@@ -688,6 +693,8 @@ abstract class ModuleCore implements ModuleInterface
      */
     public function uninstall()
     {
+        Hook::exec('actionModuleUninstallBefore', ['object' => $this]);
+
         // Check module installation id validation
         if (!Validate::isUnsignedId($this->id)) {
             $this->_errors[] = Context::getContext()->getTranslator()->trans('The module is not installed.', [], 'Admin.Modules.Notification');
@@ -741,6 +748,8 @@ abstract class ModuleCore implements ModuleInterface
         if (Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module` WHERE `id_module` = ' . (int) $this->id)) {
             Cache::clean('Module::isInstalled' . $this->name);
             Cache::clean('Module::getModuleIdByName_' . pSQL($this->name));
+
+            Hook::exec('actionModuleUninstallAfter', ['object' => $this]);
 
             return true;
         }
@@ -1371,7 +1380,7 @@ abstract class ModuleCore implements ModuleInterface
                     $file = trim(file_get_contents(_PS_MODULE_DIR_ . $module . '/' . $module . '.php'));
 
                     try {
-                        $parser = (new PhpParser\ParserFactory())->create(PhpParser\ParserFactory::PREFER_PHP7);
+                        $parser = (new PhpParser\ParserFactory())->create(PhpParser\ParserFactory::ONLY_PHP7);
                         $parser->parse($file);
                         require_once $file_path;
                     } catch (PhpParser\Error $e) {
@@ -1603,17 +1612,37 @@ abstract class ModuleCore implements ModuleInterface
         return $module_list;
     }
 
+    /**
+     * @param \StdClass $modaddons Addons Module object, provided by XML stream
+     *
+     * @return string|null
+     */
     public static function copyModAddonsImg($modaddons)
     {
         if (!Validate::isLoadedObject($modaddons)) {
-            return;
+            return null;
         }
-        if (!file_exists(_PS_TMP_IMG_DIR_ . md5((int) $modaddons->id . '-' . $modaddons->name) . '.jpg') &&
-        !file_put_contents(_PS_TMP_IMG_DIR_ . md5((int) $modaddons->id . '-' . $modaddons->name) . '.jpg', Tools::file_get_contents($modaddons->img))) {
-            copy(_PS_IMG_DIR_ . '404.gif', _PS_TMP_IMG_DIR_ . md5((int) $modaddons->id . '-' . $modaddons->name) . '.jpg');
+
+        $filename = md5((int) $modaddons->id . '-' . $modaddons->name) . '.jpg';
+        $filepath = _PS_TMP_IMG_DIR_ . $filename;
+        $fileExist = file_exists($filepath);
+
+        if (!$fileExist) {
+            $remoteDownloadWasASuccess = false;
+            try {
+                $remoteImage = Tools::file_get_contents($modaddons->img);
+                $remoteDownloadWasASuccess = true;
+            } catch (Exception $e) {
+                copy(_PS_IMG_DIR_ . '404.gif', $filepath);
+            }
+
+            if ($remoteDownloadWasASuccess && !file_put_contents($filepath, $remoteImage)) {
+                copy(_PS_IMG_DIR_ . '404.gif', $filepath);
+            }
         }
-        if (file_exists(_PS_TMP_IMG_DIR_ . md5((int) $modaddons->id . '-' . $modaddons->name) . '.jpg')) {
-            return '../img/tmp/' . md5((int) $modaddons->id . '-' . $modaddons->name) . '.jpg';
+
+        if (file_exists($filepath)) {
+            return '../img/tmp/' . $filename;
         }
     }
 
@@ -2336,6 +2365,20 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         return Cache::retrieve('Module::isEnabled' . $module_name);
+    }
+
+    public static function isEnabledForMobileDevices($module_name)
+    {
+        if (!Cache::isStored('Module::isEnabledForMobileDevices' . $module_name)) {
+            $id_module = Module::getModuleIdByName($module_name);
+            $enable_device = (int) Db::getInstance()->getValue('SELECT `enable_device` FROM `' . _DB_PREFIX_ . 'module_shop` WHERE `id_module` = ' . (int) $id_module . ' AND `id_shop` = ' . (int) Context::getContext()->shop->id);
+            $is_enabled_mobile = $enable_device === 7;
+            Cache::store('Module::isEnabledForMobileDevices' . $module_name, (bool) $is_enabled_mobile);
+
+            return (bool) $is_enabled_mobile;
+        }
+
+        return Cache::retrieve('Module::isEnabledForMobileDevices' . $module_name);
     }
 
     /**
@@ -3338,11 +3381,10 @@ abstract class ModuleCore implements ModuleInterface
         $hooks_list = Hook::getHooks();
         $possible_hooks_list = [];
         $registeredHookList = Hook::getHookModuleList();
-        foreach ($hooks_list as &$current_hook) {
+        foreach ($hooks_list as $current_hook) {
             $hook_name = $current_hook['name'];
-            $retro_hook_name = Hook::getRetroHookName($hook_name);
 
-            if (is_callable([$this, 'hook' . ucfirst($hook_name)]) || is_callable([$this, 'hook' . ucfirst($retro_hook_name)])) {
+            if (!Hook::isAlias($hook_name) && Hook::isHookCallableOn($this, $hook_name)) {
                 $possible_hooks_list[] = [
                     'id_hook' => $current_hook['id_hook'],
                     'name' => $hook_name,
@@ -3436,28 +3478,71 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * Access the Symfony Container if we are in Symfony Context.
-     * Note: in this case, we must get a container from SymfonyContainer class.
-     * Note: if not in Symfony context, fallback to legacy Container for FO/BO.
+     * Access a service from the container (found from the controller or the context
+     * depending on cases). It uses ContainerFinder to find the appropriate container.
      *
      * @param string $serviceName
      *
-     * @return object|false if a container is not available, it returns false
+     * @return object|false If a container is not available it returns false
+     *
+     * @throws ServiceCircularReferenceException When a circular reference is detected
+     * @throws ServiceNotFoundException When the service is not defined
+     * @throws \Exception
      */
     public function get($serviceName)
     {
-        if ($this->isSymfonyContext()) {
-            if (null === $this->container) {
-                $this->container = SymfonyContainer::getInstance();
-            }
-
-            return $this->container->get($serviceName);
+        try {
+            $container = $this->getContainer();
+        } catch (ContainerNotFoundException $e) {
+            return false;
         }
 
-        if ($this->context->controller instanceof Controller) {
-            return $this->context->controller->get($serviceName);
+        return $container->get($serviceName);
+    }
+
+    /**
+     * Returns the container depending on the environment:
+     *  - Legacy: light container with few services specifically defined for legacy front/admin controllers
+     *  - Symfony: symfony container with all the migrated services (CQRS, ...)
+     *
+     * If you need to detect which kind of container you are using you can check if it is an instance of LegacyContainerInterface,
+     * which means it's a legacy/light container.
+     *
+     * @return ContainerInterface
+     *
+     * @throws ContainerNotFoundException
+     */
+    public function getContainer(): ContainerInterface
+    {
+        if (null === $this->container) {
+            $finder = new ContainerFinder($this->context);
+            $this->container = $finder->getContainer();
         }
 
+        return $this->container;
+    }
+
+    /**
+     * Save dashboard configuration
+     *
+     * @param array $config
+     *
+     * @return array Array of errors
+     */
+    public function validateDashConfig(array $config)
+    {
+        return [];
+    }
+
+    /**
+     * Save dashboard configuration
+     *
+     * @param array $config
+     *
+     * @return bool Determines if the save returns an error
+     */
+    public function saveDashConfig(array $config)
+    {
         return false;
     }
 }

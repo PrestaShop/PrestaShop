@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 use PrestaShopBundle\Install\Install;
@@ -91,8 +91,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
                 $this->processInstallDefaultData();
             } elseif (Tools::getValue('populateDatabase') && !empty($this->session->process_validated['installDatabase'])) {
                 $this->processPopulateDatabase();
-                // download and install language pack
-                Language::downloadAndInstallLanguagePack($this->session->lang);
             } elseif (Tools::getValue('configureShop') && !empty($this->session->process_validated['populateDatabase'])) {
                 Language::getRtlStylesheetProcessor()
                     ->setIsInstall(true)
@@ -200,17 +198,17 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         $this->initializeContext();
 
         $success = $this->model_install->configureShop(array(
-            'shop_name' =>                $this->session->shop_name,
-            'shop_activity' =>            $this->session->shop_activity,
-            'shop_country' =>            $this->session->shop_country,
-            'shop_timezone' =>            $this->session->shop_timezone,
+            'shop_name' =>              $this->session->shop_name,
+            'shop_activity' =>          $this->session->shop_activity,
+            'shop_country' =>           $this->session->shop_country,
+            'shop_timezone' =>          $this->session->shop_timezone,
             'admin_firstname' =>        $this->session->admin_firstname,
-            'admin_lastname' =>            $this->session->admin_lastname,
-            'admin_password' =>            $this->session->admin_password,
+            'admin_lastname' =>         $this->session->admin_lastname,
+            'admin_password' =>         $this->session->admin_password,
             'admin_email' =>            $this->session->admin_email,
-            'send_informations' =>        $this->session->send_informations,
-            'configuration_agrement' =>    $this->session->configuration_agrement,
-            'rewrite_engine' =>            $this->session->rewrite_engine,
+            'configuration_agrement' => $this->session->configuration_agrement,
+            'enable_ssl' =>             $this->session->enable_ssl,
+            'rewrite_engine' =>         $this->session->rewrite_engine,
         ));
 
         if (!$success || $this->model_install->getErrors()) {
@@ -229,7 +227,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     {
         $this->initializeContext();
 
-        $result = $this->model_install->installModules(Tools::getValue('module'));
+        $result = $this->model_install->installModules(Tools::getValue('module', null));
         if (!$result || $this->model_install->getErrors()) {
             $this->ajaxJsonAnswer(false, $this->model_install->getErrors());
         }

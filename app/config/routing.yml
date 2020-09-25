@@ -7,4 +7,3 @@ app_modules:
     # v1: only YAML format is supported for now.
     resource: .
     type: module
-    prefix: /modules

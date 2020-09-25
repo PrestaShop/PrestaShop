@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
 use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\IpUtils;
 
 class FrontControllerCore extends Controller
 {
@@ -118,7 +119,7 @@ class FrontControllerCore extends Controller
     /** @var bool If true, forces display to maintenance page. */
     protected $maintenance = false;
 
-    /** @var string[] Adds excluded $_GET keys for redirection */
+    /** @var string[] Adds excluded `$_GET` keys for redirection */
     protected $redirectionExtraExcludedKeys = [];
 
     /**
@@ -329,8 +330,15 @@ class FrontControllerCore extends Controller
             }
 
             if ((!$has_currency || $has_country) && !$has_address_type) {
-                $id_country = $has_country && !Validate::isLanguageIsoCode($this->context->cookie->iso_code_country) ?
-                    (int) Country::getByIso(strtoupper($this->context->cookie->iso_code_country)) : (int) Tools::getCountry();
+                if ($has_country && Validate::isLanguageIsoCode($this->context->cookie->iso_code_country)) {
+                    $id_country = (int) Country::getByIso(strtoupper($this->context->cookie->iso_code_country));
+                } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])
+                        && preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array)
+                        && Validate::isLanguageIsoCode($array[0])) {
+                    $id_country = (int) Country::getByIso($array[0], true);
+                } else {
+                    $id_country = Tools::getCountry();
+                }
 
                 $country = new Country($id_country, (int) $this->context->cookie->id_lang);
 
@@ -434,14 +442,10 @@ class FrontControllerCore extends Controller
 
         Product::initPricesComputation();
 
-        $display_tax_label = $this->context->country->display_tax_label;
         if (isset($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) && $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) {
             $infos = Address::getCountryAndState((int) $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
             $country = new Country((int) $infos['id_country']);
             $this->context->country = $country;
-            if (Validate::isLoadedObject($country)) {
-                $display_tax_label = $country->display_tax_label;
-            }
         }
 
         /*
@@ -495,6 +499,7 @@ class FrontControllerCore extends Controller
             'time' => time(),
             'static_token' => Tools::getToken(false),
             'token' => Tools::getToken(),
+            'debug' => _PS_MODE_DEV_,
         ];
 
         $modulesVariables = Hook::exec(
@@ -721,7 +726,8 @@ class FrontControllerCore extends Controller
     {
         if ($this->maintenance == true || !(int) Configuration::get('PS_SHOP_ENABLE')) {
             $this->maintenance = true;
-            if (!in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP')))) {
+            $allowed_ips = array_map('trim', explode(',', Configuration::get('PS_MAINTENANCE_IP')));
+            if (!IpUtils::checkIp(Tools::getRemoteAddr(), $allowed_ips)) {
                 header('HTTP/1.1 503 Service Unavailable');
                 header('Retry-After: 3600');
 
@@ -792,29 +798,7 @@ class FrontControllerCore extends Controller
 
         $match_url = rawurldecode(Tools::getCurrentUrlProtocolPrefix() . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
         if (!preg_match('/^' . Tools::pRegexp(rawurldecode($canonical_url), '/') . '([&?].*)?$/', $match_url)) {
-            $params = [];
-            $url_details = parse_url($canonical_url);
-
-            if (!empty($url_details['query'])) {
-                parse_str($url_details['query'], $query);
-                foreach ($query as $key => $value) {
-                    $params[Tools::safeOutput($key)] = Tools::safeOutput($value);
-                }
-            }
-            $excluded_key = ['isolang', 'id_lang', 'controller', 'fc', 'id_product', 'id_category', 'id_manufacturer', 'id_supplier', 'id_cms'];
-            $excluded_key = array_merge($excluded_key, $this->redirectionExtraExcludedKeys);
-            foreach ($_GET as $key => $value) {
-                if (!in_array($key, $excluded_key) && Validate::isUrl($key) && Validate::isUrl($value)) {
-                    $params[Tools::safeOutput($key)] = Tools::safeOutput($value);
-                }
-            }
-
-            $str_params = http_build_query($params, '', '&');
-            if (!empty($str_params)) {
-                $final_url = preg_replace('/^([^?]*)?.*$/', '$1', $canonical_url) . '?' . $str_params;
-            } else {
-                $final_url = preg_replace('/^([^?]*)?.*$/', '$1', $canonical_url);
-            }
+            $final_url = $this->sanitizeUrl($canonical_url);
 
             // Don't send any cookie
             Context::getContext()->cookie->disallowWriting();
@@ -838,7 +822,7 @@ class FrontControllerCore extends Controller
      */
     protected function geolocationManagement($defaultCountry)
     {
-        if (!in_array(Tools::getRemoteAddr(), ['localhost', '127.0.0.1', '::1'])) {
+        if (!in_array(Tools::getRemoteAddr(), ['127.0.0.1', '::1'])) {
             /* Check if Maxmind Database exists */
             if (@filemtime(_PS_GEOIP_DIR_ . _PS_GEOIP_CITY_FILE_)) {
                 if (!isset($this->context->cookie->iso_code_country) || (isset($this->context->cookie->iso_code_country) && !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))))) {
@@ -1414,13 +1398,11 @@ class FrontControllerCore extends Controller
         }
 
         $products_need_cache = [];
-        foreach ($products as &$product) {
+        foreach ($products as $product) {
             if (!$this->isCached(_PS_THEME_DIR_ . 'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']))) {
                 $products_need_cache[] = (int) $product['id_product'];
             }
         }
-
-        unset($product);
 
         $colors = false;
         if (count($products_need_cache)) {
@@ -1981,9 +1963,67 @@ class FrontControllerCore extends Controller
         }
 
         foreach ($languages as $lang) {
-            $alternativeLangs[$lang['language_code']] = $this->context->link->getLanguageLink($lang['id_lang']);
+            $langUrl = $this->context->link->getLanguageLink($lang['id_lang']);
+            $alternativeLangs[$lang['language_code']] = $this->sanitizeUrl($langUrl);
         }
 
         return $alternativeLangs;
+    }
+
+    /**
+     * Sanitize / Clean params of an URL
+     *
+     * @param string $url URL to clean
+     *
+     * @return string cleaned URL
+     */
+    protected function sanitizeUrl(string $url): string
+    {
+        $params = [];
+        $url_details = parse_url($url);
+
+        if (!empty($url_details['query'])) {
+            parse_str($url_details['query'], $query);
+            foreach ($query as $key => $value) {
+                $params[Tools::safeOutput($key)] = Tools::safeOutput($value);
+            }
+        }
+
+        $excluded_key = ['isolang', 'id_lang', 'controller', 'fc', 'id_product', 'id_category', 'id_manufacturer', 'id_supplier', 'id_cms'];
+        $excluded_key = array_merge($excluded_key, $this->redirectionExtraExcludedKeys);
+        foreach ($_GET as $key => $value) {
+            if (in_array($key, $excluded_key)
+                || !Validate::isUrl($key)
+                || !$this->validateInputAsUrl($value)
+            ) {
+                continue;
+            }
+
+            $params[Tools::safeOutput($key)] = is_array($value) ? array_walk_recursive($value, 'Tools::safeOutput') : Tools::safeOutput($value);
+        }
+
+        $str_params = http_build_query($params, '', '&');
+        $sanitizedUrl = preg_replace('/^([^?]*)?.*$/', '$1', $url) . (!empty($str_params) ? '?' . $str_params : '');
+
+        return $sanitizedUrl;
+    }
+
+    /**
+     * Validate data recursively to be sure it's URL compliant
+     *
+     * @return bool
+     */
+    protected function validateInputAsUrl($data): bool
+    {
+        if (is_array($data)) {
+            $returnStatement = true;
+            foreach ($data as $value) {
+                $returnStatement = $returnStatement && $this->validateInputAsUrl($value);
+            }
+
+            return $returnStatement;
+        }
+
+        return Validate::isUrl($data);
     }
 }

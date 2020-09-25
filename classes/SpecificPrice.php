@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,15 +17,17 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 class SpecificPriceCore extends ObjectModel
 {
+    const ORDER_DEFAULT_FROM_QUANTITY = 1;
+    const ORDER_DEFAULT_DATE = '0000-00-00 00:00:00';
+
     public $id_product;
     public $id_specific_price_rule = 0;
     public $id_cart = 0;
@@ -188,14 +191,15 @@ class SpecificPriceCore extends ObjectModel
         return false;
     }
 
-    public static function getByProductId($id_product, $id_product_attribute = false, $id_cart = false)
+    public static function getByProductId($id_product, $id_product_attribute = false, $id_cart = false, $id_price_rule = null)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT *
 			FROM `' . _DB_PREFIX_ . 'specific_price`
 			WHERE `id_product` = ' . (int) $id_product .
             ($id_product_attribute ? ' AND id_product_attribute = ' . (int) $id_product_attribute : '') . '
-			AND id_cart = ' . (int) $id_cart);
+			AND id_cart = ' . (int) $id_cart .
+            ($id_price_rule !== null ? ' AND id_specific_price_rule = ' . (int) $id_price_rule : ''));
     }
 
     public static function deleteByIdCart($id_cart, $id_product = false, $id_product_attribute = false)
@@ -750,13 +754,7 @@ class SpecificPriceCore extends ObjectModel
      */
     public static function isFeatureActive()
     {
-        static $feature_active = null;
-
-        if ($feature_active === null) {
-            $feature_active = Configuration::get('PS_SPECIFIC_PRICE_FEATURE_ACTIVE');
-        }
-
-        return $feature_active;
+        return (bool) Configuration::get('PS_SPECIFIC_PRICE_FEATURE_ACTIVE');
     }
 
     /**
@@ -773,12 +771,16 @@ class SpecificPriceCore extends ObjectModel
      * @param string $from Date from which the specific price start. 0000-00-00 00:00:00 if no starting date
      * @param string $to Date from which the specific price end. 0000-00-00 00:00:00 if no ending date
      * @param bool $rule if a specific price rule (from specific_price_rule) was set or not
+     * @param int|null $id_cart if a specific cart was set or not (default: null no additional check is performed)
      *
      * @return int The specific rule id, 0 if no corresponding rule found
      */
-    public static function exists($id_product, $id_product_attribute, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, $rule = false)
+    public static function exists($id_product, $id_product_attribute, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, $rule = false, $id_cart = null)
     {
         $rule = ' AND `id_specific_price_rule`' . (!$rule ? '=0' : '!=0');
+        if (null !== $id_cart) {
+            $rule .= ' AND id_cart = ' . (int) $id_cart;
+        }
 
         return (int) Db::getInstance()->getValue('SELECT `id_specific_price`
 												FROM ' . _DB_PREFIX_ . 'specific_price

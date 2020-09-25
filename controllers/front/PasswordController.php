@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,18 +17,30 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
+
 class PasswordControllerCore extends FrontController
 {
     public $php_self = 'password';
     public $auth = false;
     public $ssl = true;
+
+    /**
+     * @var InternationalizedDomainNameConverter
+     */
+    private $IDNConverter;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->IDNConverter = new InternationalizedDomainNameConverter();
+    }
 
     /**
      * Start forms process.
@@ -49,7 +62,7 @@ class PasswordControllerCore extends FrontController
 
     protected function sendRenewPasswordLink()
     {
-        if (!($email = trim(Tools::getValue('email'))) || !Validate::isEmail($email)) {
+        if (!($email = $this->IDNConverter->emailToUtf8(trim(Tools::getValue('email')))) || !Validate::isEmail($email)) {
             $this->errors[] = $this->trans('Invalid email address.', [], 'Shop.Notifications.Error');
         } else {
             $customer = new Customer();
@@ -262,5 +275,17 @@ class PasswordControllerCore extends FrontController
         }
 
         return $successes;
+    }
+
+    public function getBreadcrumbLinks()
+    {
+        $breadcrumb = parent::getBreadcrumbLinks();
+
+        $breadcrumb['links'][] = [
+            'title' => $this->trans('Reset your password', [], 'Shop.Theme.Customeraccount'),
+            'url' => $this->context->link->getPageLink('password'),
+        ];
+
+        return $breadcrumb;
     }
 }

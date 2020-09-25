@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <localizationPack name="Panama">
   <currencies>
-    <currency name="Dollar" iso_code="USD" iso_code_num="840" sign="$" blank="0" conversion_rate="1.000000" format="1" decimals="1"/>
+    <currency name="Dollar" iso_code="USD" iso_code_num="840" sign="$" blank="0" format="1" decimals="1"/>
   </currencies>
   <languages>
     <language iso_code="es"/>

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,15 +17,22 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
+use Symfony\Component\HttpFoundation\IpUtils;
+
 class AdminLoginControllerCore extends AdminController
 {
+    /**
+     * @var InternationalizedDomainNameConverter
+     */
+    private $IDNConverter;
+
     public function __construct()
     {
         $this->bootstrap = true;
@@ -39,6 +47,7 @@ class AdminLoginControllerCore extends AdminController
         if (!headers_sent()) {
             header('Login: true');
         }
+        $this->IDNConverter = new InternationalizedDomainNameConverter();
     }
 
     public function setMedia($isNewTheme = false)
@@ -66,7 +75,7 @@ class AdminLoginControllerCore extends AdminController
             // header('HTTP/1.1 301 Moved Permanently');
             // header('Location: '.Tools::getShopDomainSsl(true).$_SERVER['REQUEST_URI']);
             // exit();
-            $clientIsMaintenanceOrLocal = in_array(Tools::getRemoteAddr(), array_merge(['127.0.0.1'], explode(',', Configuration::get('PS_MAINTENANCE_IP'))));
+            $clientIsMaintenanceOrLocal = IpUtils::checkIp(Tools::getRemoteAddr(), array_merge(['127.0.0.1'], explode(',', Configuration::get('PS_MAINTENANCE_IP'))));
             // If ssl is enabled, https protocol is required. Exception for maintenance and local (127.0.0.1) IP
             if ($clientIsMaintenanceOrLocal) {
                 $warningSslMessage = $this->trans('SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.', [], 'Admin.Login.Notification');
@@ -178,7 +187,7 @@ class AdminLoginControllerCore extends AdminController
     {
         /* Check fields validity */
         $passwd = trim(Tools::getValue('passwd'));
-        $email = trim(Tools::getValue('email'));
+        $email = $this->IDNConverter->emailToUtf8(trim(Tools::getValue('email')));
         if (empty($email)) {
             $this->errors[] = $this->trans('Email is empty.', [], 'Admin.Notifications.Error');
         } elseif (!Validate::isEmail($email)) {
@@ -213,6 +222,7 @@ class AdminLoginControllerCore extends AdminController
                 $cookie->profile = $this->context->employee->id_profile;
                 $cookie->passwd = $this->context->employee->passwd;
                 $cookie->remote_addr = $this->context->employee->remote_addr;
+                $cookie->registerSession(new EmployeeSession());
 
                 if (!Tools::getValue('stay_logged_in')) {
                     $cookie->last_activity = time();
@@ -244,7 +254,7 @@ class AdminLoginControllerCore extends AdminController
     {
         if (_PS_MODE_DEMO_) {
             $this->errors[] = $this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error');
-        } elseif (!($email = trim(Tools::getValue('email_forgot')))) {
+        } elseif (!($email = $this->IDNConverter->emailToUtf8(trim(Tools::getValue('email_forgot'))))) {
             $this->errors[] = $this->trans('Email is empty.', [], 'Admin.Notifications.Error');
         } elseif (!Validate::isEmail($email)) {
             $this->errors[] = $this->trans('Invalid email address.', [], 'Admin.Notifications.Error');
@@ -314,7 +324,7 @@ class AdminLoginControllerCore extends AdminController
             $this->errors[] = $this->trans('Some identification information is missing.', [], 'Admin.Login.Notification');
         } elseif (!($id_employee = trim(Tools::getValue('id_employee')))) {
             $this->errors[] = $this->trans('Some identification information is missing.', [], 'Admin.Login.Notification');
-        } elseif (!($reset_email = trim(Tools::getValue('reset_email')))) {
+        } elseif (!($reset_email = $this->IDNConverter->emailToUtf8(trim(Tools::getValue('reset_email'))))) {
             $this->errors[] = $this->trans('Some identification information is missing.', [], 'Admin.Login.Notification');
         } elseif (!($reset_password = trim(Tools::getValue('reset_passwd')))) {
             // password (twice)

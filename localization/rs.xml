@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <localizationPack name="Serbia">
   <currencies>
-    <currency name="Dinar" iso_code="RSD" iso_code_num="941" sign="RSD" blank="1" conversion_rate="115.680000" format="2" decimals="1"/>
+    <currency name="Dinar" iso_code="RSD" iso_code_num="941" sign="RSD" blank="1" format="2" decimals="1"/>
   </currencies>
   <languages>
     <language iso_code="sr"/>

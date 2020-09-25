@@ -55,27 +55,27 @@
       <trans-unit id="2a266db001f17e9fdcbc17ac7f169922">
         <source>The discount value is incorrect (must be a percentage).</source>
         <target>The discount value is incorrect (must be a percentage).</target>
-        <note>Line: 525</note>
+        <note>Line: 529</note>
       </trans-unit>
       <trans-unit id="5f455758d7337262fdeedba6d54ec89f">
         <source>Wrong category ID.</source>
         <target>Wrong category ID.</target>
-        <note>Line: 522</note>
+        <note>Line: 526</note>
       </trans-unit>
       <trans-unit id="14d9080664b90f7ff1bcd739aa34f5d0">
         <source>The discount value is incorrect.</source>
         <target>The discount value is incorrect.</target>
-        <note>Line: 576</note>
+        <note>Line: 580</note>
       </trans-unit>
       <trans-unit id="5d4aa63b116fb3fe40589e20c1574661">
         <source>You cannot save group reductions.</source>
         <target>You cannot save group reductions.</target>
-        <note>Line: 585</note>
+        <note>Line: 589</note>
       </trans-unit>
       <trans-unit id="a5ee25b466967f2e940d8c7f973a6906">
         <source>An error occurred while updating this group.</source>
         <target>An error occurred while updating this group.</target>
-        <note>Line: 603</note>
+        <note>Line: 607</note>
       </trans-unit>
     </body>
   </file>
@@ -98,22 +98,27 @@
       <trans-unit id="d2317f906b956432eebb5c8814bfb65e">
         <source>Aliases and results are both required.</source>
         <target>Aliases and results are both required.</target>
-        <note>Line: 391</note>
+        <note>Line: 456</note>
       </trans-unit>
       <trans-unit id="a43994b123cc1e321a83cd6d10edb6a5">
         <source>Is not a valid result</source>
         <target>Is not a valid result</target>
-        <note>Line: 394</note>
+        <note>Line: 459</note>
       </trans-unit>
       <trans-unit id="3b50177d99c96fbf78912e239d59804a">
         <source>Is not a valid alias</source>
         <target>Is not a valid alias</target>
-        <note>Line: 398</note>
+        <note>Line: 463</note>
       </trans-unit>
       <trans-unit id="84b4d8c8cdd02488c0f868e97b22a3c2">
         <source>Creation successful</source>
         <target>Creation successful</target>
-        <note>Line: 410</note>
+        <note>Line: 475</note>
+      </trans-unit>
+      <trans-unit id="a7c14cc18f4351bf0a0353f3c3e76e62">
+        <source>We are thrilled to introduce you to the fuzzy search, one of the new features from 1.7.7! Please note that it is still in beta version, so feel free to share improvement ideas on GitHub to have it enhanced.</source>
+        <target>We are thrilled to introduce you to the fuzzy search, one of the new features from 1.7.7! Please note that it is still in beta version, so feel free to share improvement ideas on GitHub to have it enhanced.</target>
+        <note>Line: 128</note>
       </trans-unit>
     </body>
   </file>
@@ -122,7 +127,7 @@
       <trans-unit id="ef553500695e07c58644bbdd166581be">
         <source>This is not a valid IP address:</source>
         <target>This is not a valid IP address:</target>
-        <note>Line: 191</note>
+        <note>Line: 192</note>
       </trans-unit>
     </body>
   </file>
@@ -160,7 +165,7 @@
       <trans-unit id="510f6a8fda6eb21f9ff01954e034a29a">
         <source>For security reasons, you cannot delete default order statuses.</source>
         <target>For security reasons, you cannot delete default order statuses.</target>
-        <note>Line: 611</note>
+        <note>Line: 635</note>
       </trans-unit>
     </body>
   </file>

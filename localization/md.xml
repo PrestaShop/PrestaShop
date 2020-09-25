@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <localizationPack name="Moldova" version="1.0">
 	<currencies>
-		<currency name="Lei" iso_code="MDL" iso_code_num="498" sign="MDL" blank="1" conversion_rate="16.1774" format="2" decimals="1" />
+		<currency name="Lei" iso_code="MDL" iso_code_num="498" sign="MDL" blank="1" format="2" decimals="1" />
 	</currencies>
 	<languages>
 		<language iso_code="ro" />

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,24 +17,25 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Behat\Context\Context;
+use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
+use Behat\Testwork\Tester\Result\TestResult;
+use Configuration;
 use Exception;
 use Language;
 use ObjectModel;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use RuntimeException;
-use Shop;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -41,14 +43,9 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 abstract class AbstractDomainFeatureContext implements Context
 {
     /**
-     * @var Exception|null
+     * Shared storage key for last thrown exception
      */
-    protected $lastException;
-
-    /**
-     * @var int
-     */
-    protected $lastErrorCode;
+    const LAST_EXCEPTION_STORAGE_KEY = 'LAST_EXCEPTION';
 
     /**
      * @BeforeSuite
@@ -59,6 +56,44 @@ abstract class AbstractDomainFeatureContext implements Context
     {
         // Disable legacy object model cache to prevent conflicts between scenarios.
         ObjectModel::disableCache();
+    }
+
+    /**
+     * @AfterScenario
+     */
+    public function checkLastException(AfterScenarioScope $scope)
+    {
+        $e = $this->getLastException();
+
+        if (TestResult::FAILED === $scope->getTestResult()->getResultCode() && null !== $e) {
+            throw new RuntimeException(sprintf('Might be related to the last exception: %s %s', get_class($e), $e->getTraceAsString()));
+        }
+    }
+
+    /**
+     * @BeforeScenario
+     */
+    public function cleanLastException()
+    {
+        $this->getSharedStorage()->set(self::LAST_EXCEPTION_STORAGE_KEY, null);
+    }
+
+    protected function setLastException(Exception $e): void
+    {
+        $this->getSharedStorage()->set(self::LAST_EXCEPTION_STORAGE_KEY, $e);
+    }
+
+    protected function getLastException(): ?Exception
+    {
+        if (!$this->getSharedStorage()->exists(self::LAST_EXCEPTION_STORAGE_KEY)) {
+            return null;
+        }
+
+        if (!$e = $this->getSharedStorage()->get(self::LAST_EXCEPTION_STORAGE_KEY)) {
+            return null;
+        }
+
+        return $e;
     }
 
     /**
@@ -92,8 +127,10 @@ abstract class AbstractDomainFeatureContext implements Context
 
     protected function assertLastErrorIsNull()
     {
-        if (null !== $this->lastException) {
-            throw new RuntimeException(sprintf('An unexpected exception was thrown %s: %s', get_class($this->lastException), $this->lastException->getMessage()), 0, $this->lastException);
+        $e = $this->getLastException();
+
+        if (null !== $e) {
+            throw new RuntimeException(sprintf('An unexpected exception was thrown %s: %s', get_class($e), $e->getMessage()), 0, $e);
         }
     }
 
@@ -103,11 +140,13 @@ abstract class AbstractDomainFeatureContext implements Context
      */
     protected function assertLastErrorIs($expectedError, $errorCode = null)
     {
-        if (!$this->lastException instanceof $expectedError) {
-            throw new RuntimeException(sprintf('Last error should be "%s", but got "%s"', $expectedError, $this->lastException ? get_class($this->lastException) : 'null'), 0, $this->lastException);
+        $e = $this->getLastException();
+
+        if (!$e instanceof $expectedError) {
+            throw new RuntimeException(sprintf('Last error should be "%s", but got "%s"', $expectedError, $e ? get_class($e) : 'null'), 0, $e);
         }
-        if (null !== $errorCode && $this->lastException->getCode() !== $errorCode) {
-            throw new RuntimeException(sprintf('Last error should have code "%s", but has "%s"', $errorCode, $this->lastException ? $this->lastException->getCode() : 'null'), 0, $this->lastException);
+        if (null !== $errorCode && $e->getCode() !== $errorCode) {
+            throw new RuntimeException(sprintf('Last error should have code "%s", but has "%s"', $errorCode, $e ? $e->getCode() : 'null'), 0, $e);
         }
     }
 
@@ -123,7 +162,7 @@ abstract class AbstractDomainFeatureContext implements Context
      */
     protected function parseLocalizedArray(string $parsedArray): array
     {
-        $arrayValues = explode(';', $parsedArray);
+        $arrayValues = array_map('trim', explode(';', $parsedArray));
         $localizedArray = [];
         foreach ($arrayValues as $arrayValue) {
             $data = explode(':', $arrayValue);
@@ -140,18 +179,10 @@ abstract class AbstractDomainFeatureContext implements Context
     }
 
     /**
-     * @Given single shop context is loaded
+     * @return int
      */
-    protected function singleShopContextIsLoaded()
+    protected function getDefaultLangId(): int
     {
-        Shop::setContext(Shop::CONTEXT_SHOP);
-    }
-
-    /**
-     * @Given multiple shop context is loaded
-     */
-    protected function multipleShopContextIsLoaded()
-    {
-        Shop::setContext(Shop::CONTEXT_ALL);
+        return (int) Configuration::get('PS_LANG_DEFAULT');
     }
 }

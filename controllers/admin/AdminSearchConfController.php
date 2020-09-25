@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -93,7 +93,7 @@ class AdminSearchConfControllerCore extends AdminController
 					</p>
 					<p>
 						' . $this->trans('Building the product index may take a few minutes.', [], 'Admin.Shopparameters.Feature') . '
-						' . $this->trans('If your server stops before the process ends, you can resume the indexing by clicking "Add missing products to the index".', [], 'Admin.Shopparameters.Feature') . '
+						' . $this->trans('If your server stops before the process ends, you can resume the indexing by clicking "%add_missing_products_label%".', ['%add_missing_products_label%' => $this->trans('Add missing products to the index', [], 'Admin.Shopparameters.Feature')], 'Admin.Shopparameters.Feature') . '
 					</p>
 					<a href="' . Context::getContext()->link->getAdminLink('AdminSearch', false) . '&action=searchCron&ajax=1&token=' . $this->getTokenForCron() . '&amp;redirect=1' . (Shop::getContext() == Shop::CONTEXT_SHOP ? '&id_shop=' . (int) Context::getContext()->shop->id : '') . '" class="btn-link">
 						<i class="icon-external-link-sign"></i>
@@ -127,7 +127,7 @@ class AdminSearchConfControllerCore extends AdminController
                 'info' => '<div class="alert alert-info">' .
                     $this->trans('We are thrilled to introduce you to the fuzzy search, one of the new features from 1.7.7! Please note that it is still in beta version, so feel free to share improvement ideas on GitHub to have it enhanced.',
                         [],
-                        'Admin.Shopparameters.Help') .
+                        'Admin.Shopparameters.Notification') .
                     '</div>' . '<p><a href="https://github.com/PrestaShop/PrestaShop/issues/new?template=bug_report.md" target="_blank" class="btn-link"><i class="icon-external-link-sign"></i> Signaler un problème sur GitHub</a><br>'
                     . '<a href="https://github.com/PrestaShop/PrestaShop/issues/new?template=feature_request.md" target="_blank"><i class="icon-external-link-sign"></i> Proposer une idée d\'amélioration sur GitHub</a>',
                 'fields' => [
@@ -198,7 +198,7 @@ class AdminSearchConfControllerCore extends AdminController
                                 'Admin.Shopparameters.Help'
                             ) . '<br/>' .
                             $this->trans(
-                                'Disabling this option will require exact spelling for the search to match result.',
+                                'Disabling this option will require exact spelling for the search to match results.',
                                 [],
                                 'Admin.Shopparameters.Help'
                             ),
@@ -212,7 +212,7 @@ class AdminSearchConfControllerCore extends AdminController
                     ],
                     'PS_SEARCH_FUZZY_MAX_LOOP' => [
                         'title' => $this->trans(
-                            'Maximum approximate strings allowed by fuzzy search',
+                            'Maximum approximate words allowed by fuzzy search',
                             [],
                             'Admin.Shopparameters.Feature'
                         ),
@@ -232,12 +232,12 @@ class AdminSearchConfControllerCore extends AdminController
                             'Admin.Shopparameters.Feature'
                         ),
                         'hint' => $this->trans(
-                            'Only words this maximum size or smaller will be used during the search.',
+                            'Only words fewer or equal to this maximum length will be searched.',
                             [],
                             'Admin.Shopparameters.Help'
                         ),
                         'desc' => $this->trans(
-                            'This parameter will only be used if fuzzy search is activated, the lower the value, the more tolerant your research will be.',
+                            'This parameter will only be used if the fuzzy search is activated: the lower the value, the more tolerant your search will be.',
                             [],
                             'Admin.Shopparameters.Help'
                         ),
@@ -456,11 +456,11 @@ class AdminSearchConfControllerCore extends AdminController
             $this->errors[] = $this->trans('Aliases and results are both required.', [], 'Admin.Shopparameters.Notification');
         }
         if (!Validate::isValidSearch($search)) {
-            $this->errors[] = $search . ' ' . $this->trans('Is not a valid result', [], 'Admin.Shopparameters.Notification');
+            $this->errors[] = Tools::safeOutput($search) . ' ' . $this->trans('Is not a valid result', [], 'Admin.Shopparameters.Notification');
         }
         foreach ($aliases as $alias) {
             if (!Validate::isValidSearch($alias)) {
-                $this->errors[] = $alias . ' ' . $this->trans('Is not a valid alias', [], 'Admin.Shopparameters.Notification');
+                $this->errors[] = Tools::safeOutput($alias) . ' ' . $this->trans('Is not a valid alias', [], 'Admin.Shopparameters.Notification');
             }
         }
 

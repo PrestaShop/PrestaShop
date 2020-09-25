@@ -53,10 +53,9 @@ Feature: Category Management
       | Displayed            | true             |
       | Parent category      | Home Accessories |
       | Friendly URL         | pc-parts2        |
-    And I update category "category2" position with following details:
+    And I update category "category2" with generated position and following details:
       | Parent category | Home Accessories    |
       | Way             | Up                  |
-      | Positions       | tr_8_15_1,tr_8_13_0 |
       | Found first     | false               |
 
   Scenario: Edit root category

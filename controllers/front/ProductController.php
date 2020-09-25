@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
@@ -55,18 +55,17 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     public function canonicalRedirection($canonical_url = '')
     {
         if (Validate::isLoadedObject($this->product)) {
-            if (!$this->product->hasCombinations() ||
-                !$this->isValidCombination(Tools::getValue('id_product_attribute'), $this->product->id)) {
+            $idProductAttribute = Tools::getValue('id_product_attribute', null);
+            if (!$this->product->hasCombinations() || !$this->isValidCombination($idProductAttribute, $this->product->id)) {
                 //Invalid combination we redirect to the canonical url (without attribute id)
                 unset($_GET['id_product_attribute']);
-            } else {
-                //Only redirect to canonical (parent product without combination) when the requested combination is not valid
-                //In this case we are in a valid combination url and we must display it without redirection for SEO purpose
-                return;
+                $idProductAttribute = null;
             }
 
-            //Note: we NEED these 6 arguments to have $ipa=null or else a parameter will be added
-            //id_product_attribute=0 and force the redirection
+            // If the attribute id is present in the url we use it to perform the redirection, this will fix any domain
+            // or rewriting error and redirect to the appropriate url
+            // If the attribute is not present or invalid, we set it to null so that the request is redirected to the
+            // real canonical url (without any attribute)
             parent::canonicalRedirection($this->context->link->getProductLink(
                 $this->product,
                 null,
@@ -74,7 +73,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 null,
                 null,
                 null,
-                null
+                $idProductAttribute
             ));
         }
     }
@@ -100,7 +99,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
 
         if (!Validate::isLoadedObject($this->product)) {
-            Tools::redirect('index.php?controller=404');
+            Tools::redirect('pagenotfound');
         } else {
             $this->canonicalRedirection();
             /*
@@ -178,6 +177,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $this->errors[] = $this->trans('You do not have access to this product.', [], 'Shop.Notifications.Error');
                 $this->setTemplate('errors/forbidden');
             } else {
+                if (!$isAssociatedToProduct && $isPreview) {
+                    header('HTTP/1.1 403 Forbidden');
+                    header('Status: 403 Forbidden');
+                    $this->errors[] = $this->trans('You do not have access to this product.', [], 'Shop.Notifications.Error');
+                    $this->setTemplate('errors/forbidden');
+                }
+
                 if ($isAssociatedToProduct && $isPreview) {
                     $this->adminNotifications['inactive_product'] = [
                         'type' => 'warning',
@@ -513,8 +519,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $quantity_discount['reduction'] = Tools::convertPriceFull($quantity_discount['reduction'], null, Context::getContext()->currency);
             }
         }
+        unset($quantity_discount);
 
-        $product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, $id_product_attribute);
+        $product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, $id_product_attribute, 6, null, false, false);
 
         $this->quantity_discounts = $this->formatQuantityDiscounts($quantity_discounts, $product_price, (float) $tax, $this->product->ecotax);
 
@@ -705,7 +712,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             // wash attributes list (if some attributes are unavailables and if allowed to wash it)
             if (!Product::isAvailableWhenOutOfStock($this->product->out_of_stock) && Configuration::get('PS_DISP_UNAVAILABLE_ATTR') == 0) {
                 foreach ($groups as &$group) {
-                    foreach ($group['attributes_quantity'] as $key => &$quantity) {
+                    foreach ($group['attributes_quantity'] as $key => $quantity) {
                         if ($quantity <= 0) {
                             unset($group['attributes'][$key]);
                         }
@@ -726,6 +733,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $attribute_list = rtrim($attribute_list, ',');
                 $this->combinations[$id_product_attribute]['list'] = $attribute_list;
             }
+            unset($group);
 
             $this->context->smarty->assign([
                 'groups' => $groups,
@@ -782,6 +790,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $this->context->smarty->assign([
                 'category' => $this->category,
                 'subCategories' => $sub_categories,
+                'subcategories' => $sub_categories,
                 'id_category_current' => (int) $this->category->id,
                 'id_category_parent' => (int) $this->category->id_parent,
                 'return_category_name' => Tools::safeOutput($this->category->getFieldByLang('name')),
@@ -1020,6 +1029,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product['quantity_wanted'] = $this->getRequiredQuantity($product);
         $product['extraContent'] = $extraContentFinder->addParams(['product' => $this->product])->present();
         $product['ecotax'] = Tools::convertPrice((float) $product['ecotax'], $this->context->currency, true, $this->context);
+        $product['ecotax_tax_inc'] = $product['ecotax_tax_inc'];
 
         $product_full = Product::getProductProperties($this->context->language->id, $product, $this->context);
 

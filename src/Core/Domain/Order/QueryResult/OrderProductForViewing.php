@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
@@ -38,6 +38,11 @@ class OrderProductForViewing implements JsonSerializable
      * @var int
      */
     private $id;
+
+    /**
+     * @var int
+     */
+    private $combinationId;
 
     /**
      * @var string
@@ -95,17 +100,17 @@ class OrderProductForViewing implements JsonSerializable
     private $imagePath;
 
     /**
-     * @var float
+     * @var string
      */
     private $unitPriceTaxExclRaw;
 
     /**
-     * @var float
+     * @var string
      */
     private $unitPriceTaxInclRaw;
 
     /**
-     * @var float
+     * @var string
      */
     private $taxRate;
 
@@ -130,6 +135,11 @@ class OrderProductForViewing implements JsonSerializable
     private $amountRefundable;
 
     /**
+     * @var string
+     */
+    private $amountRefundableRaw;
+
+    /**
      * @var int
      */
     private $orderInvoiceId;
@@ -139,9 +149,47 @@ class OrderProductForViewing implements JsonSerializable
      */
     private $orderInvoiceNumber;
 
+    /**
+     * @var bool
+     */
+    private $availableOutOfStock;
+
+    /**
+     * @var OrderProductCustomizationsForViewing
+     */
+    private $customizations;
+
+    /**
+     * @param int $orderDetailId
+     * @param int $id
+     * @param int $combinationId
+     * @param string $name
+     * @param string $reference
+     * @param string $supplierReference
+     * @param int $quantity
+     * @param string $unitPrice
+     * @param string $totalPrice
+     * @param int $availableQuantity
+     * @param string|null $imagePath
+     * @param string $unitPriceTaxExclRaw
+     * @param string $unitPriceTaxInclRaw
+     * @param string $taxRate
+     * @param string $amountRefunded
+     * @param int $quantityRefunded
+     * @param string $amountRefundable
+     * @param string $amountRefundableRaw
+     * @param string $location
+     * @param int|null $orderInvoiceId
+     * @param string $orderInvoiceNumber
+     * @param string $type
+     * @param bool $availableOutOfStock
+     * @param array $packItems
+     * @param OrderProductCustomizationsForViewing|null $customizations
+     */
     public function __construct(
         ?int $orderDetailId,
         int $id,
+        int $combinationId,
         string $name,
         string $reference,
         string $supplierReference,
@@ -150,19 +198,23 @@ class OrderProductForViewing implements JsonSerializable
         string $totalPrice,
         int $availableQuantity,
         ?string $imagePath,
-        float $unitPriceTaxExclRaw,
-        float $unitPriceTaxInclRaw,
-        float $taxRate,
+        string $unitPriceTaxExclRaw,
+        string $unitPriceTaxInclRaw,
+        string $taxRate,
         string $amountRefunded,
         int $quantityRefunded,
         string $amountRefundable,
+        string $amountRefundableRaw,
         string $location,
         ?int $orderInvoiceId,
         string $orderInvoiceNumber,
         string $type,
-        array $packItems = []
+        bool $availableOutOfStock,
+        array $packItems = [],
+        ?OrderProductCustomizationsForViewing $customizations = null
     ) {
         $this->id = $id;
+        $this->combinationId = $combinationId;
         $this->name = $name;
         $this->reference = $reference;
         $this->supplierReference = $supplierReference;
@@ -178,11 +230,14 @@ class OrderProductForViewing implements JsonSerializable
         $this->amountRefunded = $amountRefunded;
         $this->quantityRefunded = $quantityRefunded;
         $this->amountRefundable = $amountRefundable;
+        $this->amountRefundableRaw = $amountRefundableRaw;
         $this->location = $location;
         $this->orderInvoiceId = $orderInvoiceId;
         $this->orderInvoiceNumber = $orderInvoiceNumber;
         $this->type = $type;
+        $this->availableOutOfStock = $availableOutOfStock;
         $this->packItems = $packItems;
+        $this->customizations = $customizations;
     }
 
     /**
@@ -203,6 +258,14 @@ class OrderProductForViewing implements JsonSerializable
     public function getId(): int
     {
         return $this->id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCombinationId(): int
+    {
+        return $this->combinationId;
     }
 
     /**
@@ -246,9 +309,9 @@ class OrderProductForViewing implements JsonSerializable
     /**
      * get tax rate to be applied on this product
      *
-     * @return float
+     * @return string
      */
-    public function getTaxRate(): float
+    public function getTaxRate(): string
     {
         return $this->taxRate;
     }
@@ -322,21 +385,21 @@ class OrderProductForViewing implements JsonSerializable
     }
 
     /**
-     * Get unit price without taxes, as a float value
+     * Get unit price without taxes
      *
-     * @return float
+     * @return string
      */
-    public function getUnitPriceTaxExclRaw(): float
+    public function getUnitPriceTaxExclRaw(): string
     {
         return $this->unitPriceTaxExclRaw;
     }
 
     /**
-     * Get unit price including taxes, as a float value
+     * Get unit price including taxes
      *
-     * @return float
+     * @return string
      */
-    public function getUnitPriceTaxInclRaw(): float
+    public function getUnitPriceTaxInclRaw(): string
     {
         return $this->unitPriceTaxInclRaw;
     }
@@ -362,13 +425,23 @@ class OrderProductForViewing implements JsonSerializable
     }
 
     /**
-     * How much (money) can be refunded for this product
+     * How much (money) can be refunded for this product (formatted for display)
      *
      * @return string
      */
     public function getAmountRefundable(): string
     {
         return $this->amountRefundable;
+    }
+
+    /**
+     * How much (money) can be refunded for this product
+     *
+     * @return string
+     */
+    public function getAmountRefundableRaw(): string
+    {
+        return $this->amountRefundableRaw;
     }
 
     /**
@@ -416,9 +489,27 @@ class OrderProductForViewing implements JsonSerializable
     }
 
     /**
+     * Get customizations of this product
+     *
+     * @return OrderProductCustomizationsForViewing|null
+     */
+    public function getCustomizations(): ?OrderProductCustomizationsForViewing
+    {
+        return $this->customizations;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAvailableOutOfStock(): bool
+    {
+        return $this->availableOutOfStock;
+    }
+
+    /**
      * @return array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'id' => $this->getId(),

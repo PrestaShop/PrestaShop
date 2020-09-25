@@ -1,10 +1,11 @@
 {#**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *#}
 
 <div class="card mt-2" id="view_order_payments_block">
@@ -38,6 +38,20 @@
           <strong>{{ orderForViewing.payments.paidAmount }}</strong>
           {{ 'paid instead of'|trans({}, 'Admin.Orderscustomers.Notification') }}
           <strong>{{ orderForViewing.payments.amountToPay }}</strong>
+
+          {% if orderForViewing.linkedOrders.linkedOrders is not empty %}
+            {% if orderForViewing.linkedOrders.linkedOrders|length == 1 %}
+              <br/>{{ 'This warning also concerns order:'|trans({}, 'Admin.Orderscustomers.Notification') }}
+            {% else %}
+              <br/>{{ 'This warning also concerns the following orders:'|trans({}, 'Admin.Orderscustomers.Notification') }}
+            {% endif %}
+
+            {% for linkedOrder in orderForViewing.linkedOrders.linkedOrders %}
+              <a target="_blank" rel="noopener noreferrer" href="{{ path('admin_orders_view', {'orderId': linkedOrder.orderId}) }}">
+                #{{ linkedOrder.orderId }}
+              </a>
+            {% endfor %}
+          {% endif %}
         </p>
       </div>
     {% endif %}
@@ -45,18 +59,18 @@
     <table class="table">
       <thead>
         <tr>
-          <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
-          <th>{{ 'Payment method'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
-          <th>{{ 'Transaction ID'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
-          <th>{{ 'Amount'|trans({}, 'Admin.Global') }}</th>
-          <th>{{ 'Invoice'|trans({}, 'Admin.Global') }}</th>
+          <th class="table-head-date">{{ 'Date'|trans({}, 'Admin.Global') }}</th>
+          <th class="table-head-payment">{{ 'Payment method'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
+          <th class="table-head-transaction">{{ 'Transaction ID'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
+          <th class="table-head-amount">{{ 'Amount'|trans({}, 'Admin.Global') }}</th>
+          <th class="table-head-invoice">{{ 'Invoice'|trans({}, 'Admin.Global') }}</th>
           <th></th>
         </tr>
       </thead>
       <tbody>
       {% for payment in orderForViewing.payments.payments %}
         <tr>
-          <td>{{ payment.date|date('Y-m-d H:i:s') }}</td>
+          <td>{{ payment.date|date_format_full }}</td>
           <td>{{ payment.paymentMethod }}</td>
           <td>{{ payment.transactionId }}</td>
           <td>{{ payment.amount }}</td>
@@ -70,7 +84,7 @@
         <tr class="d-none">
           <td colspan="6">
             <p class="mb-0">
-              <strong>{{ 'Card number'|trans({}, 'Admin.Global') }}</strong>
+              <strong>{{ 'Card number'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
               {% if payment.cardNumber %}
                 {{ payment.cardNumber }}
               {% else %}
@@ -104,7 +118,7 @@
           </td>
         </tr>
       {% endfor %}
-      <tr>
+      <tr class="d-print-none">
         {{ form_start(addOrderPaymentForm, {'action': path('admin_orders_add_payment', {'orderId': orderForViewing.id})}) }}
           <td>
             {{ form_widget(addOrderPaymentForm.date) }}
@@ -136,7 +150,7 @@
 
     {% if not orderForViewing.valid and changeOrderCurrencyForm.new_currency_id.vars.choices|length %}
       {{ form_start(changeOrderCurrencyForm, {'action': path('admin_orders_change_currency', {'orderId': orderForViewing.id})}) }}
-        <div class="form-group row">
+        <div class="form-group row d-print-none">
           <label class="form-control-label">{{ 'Change currency'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
           <div class="col-sm">
             <div class="input-group">

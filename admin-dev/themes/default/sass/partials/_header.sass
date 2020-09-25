@@ -196,11 +196,9 @@ $search-border-color: #bbcdd2
 		padding: 0
 		margin-right: 0
 		margin-bottom: 0
+		margin-left: 0
 		display: flex
 		align-items: center
-
-		.mobile &
-			display: none
 
 		#employee_infos
 			list-style-type: none
@@ -219,24 +217,17 @@ $search-border-color: #bbcdd2
 						width: 3.8rem
 						height: 3.8rem
 
-				@media (max-width: $screen-sm)
-					li
-						color: white
-						font-size: 1.2em
-						text-transform: uppercase
-						i
-							font-size: 1.3em
-							color: $brand-primary
 				.employee-wrapper
 					&-avatar
 						float: left
 						margin: 0 20px	
 
 					&-profile
-						max-width: 130px
-						text-align: right
-						display: inline-block
-						margin: 0 0 20px
+						text-align: center
+						display: block
+						margin: 2px 0 20px
+						> .admin-link
+							display: inline-block
 
 			.employee_name
 				text-align: center

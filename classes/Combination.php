@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -29,12 +29,12 @@
  */
 class CombinationCore extends ObjectModel
 {
-    /** @var int $id_product Product ID */
+    /** @var int Product ID */
     public $id_product;
 
     public $reference;
 
-    /** @var string $supplier_reference */
+    /** @var string */
     public $supplier_reference;
 
     public $location;
@@ -404,6 +404,31 @@ class CombinationCore extends ObjectModel
     public static function isCurrentlyUsed($table = null, $hasActiveColumn = false)
     {
         return parent::isCurrentlyUsed('product_attribute');
+    }
+
+    /**
+     * For a given ean13 reference, returns the corresponding id.
+     *
+     * @param string $ean13
+     *
+     * @return int|string Product attribute identifier
+     */
+    public static function getIdByEan13($ean13)
+    {
+        if (empty($ean13)) {
+            return 0;
+        }
+
+        if (!Validate::isEan13($ean13)) {
+            return 0;
+        }
+
+        $query = new DbQuery();
+        $query->select('pa.id_product_attribute');
+        $query->from('product_attribute', 'pa');
+        $query->where('pa.ean13 = \'' . pSQL($ean13) . '\'');
+
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
 
     /**

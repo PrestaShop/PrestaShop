@@ -1,10 +1,11 @@
 {**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,21 +16,20 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *}
 <div class="product-line-grid">
   <!--  product line left content: image-->
   <div class="product-line-grid-left col-md-3 col-xs-4">
     <span class="product-image media-middle">
       {if $product.cover}
-        <img src="{$product.cover.bySize.cart_default.url}" alt="{$product.name|escape:'quotes'}">
+        <img src="{$product.cover.bySize.cart_default.url}" alt="{$product.name|escape:'quotes'}" loading="lazy">
       {else}
-        <img src="{$urls.no_picture_image.bySize.cart_default.url}" />
+        <img src="{$urls.no_picture_image.bySize.cart_default.url}" loading="lazy" />
       {/if}
     </span>
   </div>
@@ -61,6 +61,7 @@
           <div class="unit-price-cart">{$product.unit_price_full}</div>
         {/if}
       </div>
+      {hook h='displayProductPriceBlock' product=$product type="unit_price"}
     </div>
 
     <br/>
@@ -100,7 +101,7 @@
                             {$field.text}
                           {/if}
                         {elseif $field.type == 'image'}
-                          <img src="{$field.image.small.url}">
+                          <img src="{$field.image.small.url}" loading="lazy">
                         {/if}
                       </div>
                     </div>
@@ -121,7 +122,7 @@
       <div class="col-md-10 col-xs-6">
         <div class="row">
           <div class="col-md-6 col-xs-6 qty">
-            {if isset($product.is_gift) && $product.is_gift}
+            {if !empty($product.is_gift)}
               <span class="gift-quantity">{$product.quantity}</span>
             {else}
               <input
@@ -139,7 +140,7 @@
           <div class="col-md-6 col-xs-2 price">
             <span class="product-price">
               <strong>
-                {if isset($product.is_gift) && $product.is_gift}
+                {if !empty($product.is_gift)}
                   <span class="gift">{l s='Gift' d='Shop.Theme.Checkout'}</span>
                 {else}
                   {$product.total}
@@ -160,8 +161,8 @@
               data-id-product-attribute   = "{$product.id_product_attribute|escape:'javascript'}"
               data-id-customization   	  = "{$product.id_customization|escape:'javascript'}"
           >
-            {if !isset($product.is_gift) || !$product.is_gift}
-            <i class="material-icons float-xs-left">delete</i>
+            {if empty($product.is_gift)}
+              <i class="material-icons float-xs-left">delete</i>
             {/if}
           </a>
 

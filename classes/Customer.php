@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\CoreException;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
@@ -31,13 +31,13 @@ use PrestaShop\PrestaShop\Adapter\ServiceLocator;
  */
 class CustomerCore extends ObjectModel
 {
-    /** @var int $id Customer ID */
+    /** @var int Customer ID */
     public $id;
 
-    /** @var int $id_shop Shop ID */
+    /** @var int Shop ID */
     public $id_shop;
 
-    /** @var int $id_shop_group ShopGroup ID */
+    /** @var int ShopGroup ID */
     public $id_shop_group;
 
     /** @var string Secure key */
@@ -103,7 +103,7 @@ class CustomerCore extends ObjectModel
     /** @var int Max payment day */
     public $max_payment_days = 0;
 
-    /** @var int Password */
+    /** @var string Password */
     public $passwd;
 
     /** @var string Datetime Password */
@@ -438,11 +438,21 @@ class CustomerCore extends ObjectModel
      * @param bool $ignoreGuest
      *
      * @return bool|Customer|CustomerCore Customer instance
+     *
+     * @throws \InvalidArgumentException if given input is not valid
      */
     public function getByEmail($email, $plaintextPassword = null, $ignoreGuest = true)
     {
-        if (!Validate::isEmail($email) || ($plaintextPassword && !Validate::isPasswd($plaintextPassword))) {
-            die(Tools::displayError());
+        if (!Validate::isEmail($email)) {
+            throw new \InvalidArgumentException(sprintf(
+                'Cannot get customer by email as %s is not a valid email',
+                $email
+            ));
+        }
+        if (($plaintextPassword && !Validate::isPlaintextPassword($plaintextPassword))) {
+            throw new \InvalidArgumentException(
+                'Cannot get customer by email as given password is not a valid password'
+            );
         }
 
         $shopGroup = Shop::getGroupFromShop(Shop::getContextShopID(), false);
@@ -1184,11 +1194,23 @@ class CustomerCore extends ObjectModel
         $this->cleanGroups();
         $this->addGroups([Configuration::get('PS_CUSTOMER_GROUP')]);
         $this->id_default_group = Configuration::get('PS_CUSTOMER_GROUP');
+        $this->stampResetPasswordToken();
         if ($this->update()) {
             $vars = [
                 '{firstname}' => $this->firstname,
                 '{lastname}' => $this->lastname,
                 '{email}' => $this->email,
+                '{url}' => Context::getContext()->link->getPageLink(
+                    'password',
+                    true,
+                    null,
+                    sprintf(
+                        'token=%s&id_customer=%s&reset_token=%s',
+                        $this->secure_key,
+                        (int) $this->id,
+                        $this->reset_password_token
+                    )
+                ),
             ];
             Mail::Send(
                 (int) $idLang,
@@ -1252,7 +1274,13 @@ class CustomerCore extends ObjectModel
         }
 
         /* Customer is valid only if it can be load and if object password is the same as database one */
-        return $this->logged == 1 && $this->id && Validate::isUnsignedId($this->id) && Customer::checkPassword($this->id, $this->passwd);
+        return
+            $this->logged == 1
+            && $this->id
+            && Validate::isUnsignedId($this->id)
+            && Customer::checkPassword($this->id, $this->passwd)
+            && Context::getContext()->cookie->isSessionAlive()
+        ;
     }
 
     /**

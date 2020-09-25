@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -303,7 +303,13 @@ class AddressCore extends ObjectModel
 			LEFT JOIN `' . _DB_PREFIX_ . 'state` s ON s.`id_state` = a.`id_state`
 			WHERE a.`id_address` = ' . (int) $id_address);
 
-        self::$_idZones[$id_address] = (int) ((int) $result['id_zone_state'] ? $result['id_zone_state'] : $result['id_zone']);
+        if (empty($result['id_zone_state']) && empty($result['id_zone'])) {
+            return false;
+        }
+
+        self::$_idZones[$id_address] = !empty($result['id_zone_state'])
+            ? (int) $result['id_zone_state']
+            : (int) $result['id_zone'];
 
         return self::$_idZones[$id_address];
     }
@@ -347,7 +353,7 @@ class AddressCore extends ObjectModel
         }
 
         // Special validation for dni, check if the country needs it
-        if (static::dniRequired((int) $this->id_country) && Tools::isEmpty($value)) {
+        if (!$this->deleted && static::dniRequired((int) $this->id_country) && Tools::isEmpty($value)) {
             if ($human_errors) {
                 return $this->trans(
                     'The %s field is required.',

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 class OrderDetailCore extends ObjectModel
 {
@@ -139,13 +139,13 @@ class OrderDetailCore extends ObjectModel
     /** @var datetime */
     public $download_deadline;
 
-    /** @var string $tax_name * */
+    /** @var string */
     public $tax_name;
 
-    /** @var float $tax_rate * */
+    /** @var float */
     public $tax_rate;
 
-    /** @var float $tax_computation_method * */
+    /** @var float */
     public $tax_computation_method;
 
     /** @var int Id tax rules group */
@@ -165,6 +165,12 @@ class OrderDetailCore extends ObjectModel
 
     /** @var float */
     public $original_wholesale_price;
+
+    /** @var float */
+    public $total_refunded_tax_excl;
+
+    /** @var float */
+    public $total_refunded_tax_incl;
 
     /**
      * @see ObjectModel::$definition
@@ -219,6 +225,8 @@ class OrderDetailCore extends ObjectModel
             'purchase_supplier_price' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
             'original_product_price' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
             'original_wholesale_price' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'total_refunded_tax_excl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'total_refunded_tax_incl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
         ],
     ];
 
@@ -458,7 +466,7 @@ class OrderDetailCore extends ObjectModel
 
     public function getTaxList()
     {
-        return self::getTaxList($this->id);
+        return self::getTaxListStatic($this->id);
     }
 
     public static function getTaxListStatic($id_order_detail)
@@ -532,6 +540,8 @@ class OrderDetailCore extends ObjectModel
             $tax_manager = TaxManagerFactory::getManager($this->vat_address, $this->id_tax_rules_group);
             $this->tax_calculator = $tax_manager->getTaxCalculator();
             $this->tax_computation_method = (int) $this->tax_calculator->computation_method;
+            $this->tax_rate = (float) $this->tax_calculator->getTotalRate();
+            $this->tax_name = $this->tax_calculator->getTaxesName();
         }
 
         $this->ecotax_tax_rate = 0;
@@ -747,7 +757,7 @@ class OrderDetailCore extends ObjectModel
 
         unset(
             $this->vat_address,
-            $products, $this->customer
+            $this->customer
         );
     }
 

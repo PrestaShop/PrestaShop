@@ -383,6 +383,9 @@
                 <class_name>AdminAdvancedParameters</class_name>
             </tab>
 
+                <tab id="Tabs" id_parent="Advanced_Parameters" active="1" enabled="1"  hide_host_mode="0" icon="">
+                    <class_name>AdminTabs</class_name>
+                </tab>
                 <tab id="Information" id_parent="Advanced_Parameters" active="1" enabled="1" hide_host_mode="0" icon="">
                     <class_name>AdminInformation</class_name>
                 </tab>

@@ -1,10 +1,11 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 import Router from '@components/router';
@@ -34,12 +34,72 @@ export default class OrderPricesRefresher {
   }
 
   refresh(orderId) {
-    $.ajax(this.router.generate('admin_orders_get_prices', {orderId}))
-      .then((response) => {
-        $(OrderViewPageMap.orderTotal).text(response.orderTotalFormatted);
-        $(OrderViewPageMap.orderProductsTotal).text(response.productsTotalFormatted);
-        $(OrderViewPageMap.orderShippingTotal).text(response.shippingTotalFormatted);
-        $(OrderViewPageMap.orderTaxesTotal).text(response.taxesTotalFormatted);
+    $.ajax(this.router.generate('admin_orders_get_prices', {orderId})).then((response) => {
+      $(OrderViewPageMap.orderTotal).text(response.orderTotalFormatted);
+      $(OrderViewPageMap.orderDiscountsTotal).text(`-${response.discountsAmountFormatted}`);
+      $(OrderViewPageMap.orderDiscountsTotalContainer).toggleClass('d-none', !response.discountsAmountDisplayed);
+      $(OrderViewPageMap.orderProductsTotal).text(response.productsTotalFormatted);
+      $(OrderViewPageMap.orderShippingTotal).text(response.shippingTotalFormatted);
+      $(OrderViewPageMap.orderTaxesTotal).text(response.taxesTotalFormatted);
+    });
+  }
+
+  refreshProductPrices(orderId) {
+    $.ajax(this.router.generate('admin_orders_product_prices', {orderId})).then((productPricesList) => {
+      productPricesList.forEach((productPrices) => {
+        const orderProductTrId = OrderViewPageMap.productsTableRow(productPrices.orderDetailId);
+
+        $(`${orderProductTrId} ${OrderViewPageMap.productEditUnitPrice}`).text(productPrices.unitPrice);
+        $(`${orderProductTrId} ${OrderViewPageMap.productEditQuantity}`).text(productPrices.quantity);
+        $(`${orderProductTrId} ${OrderViewPageMap.productEditAvailableQuantity}`).text(productPrices.availableQuantity);
+        $(`${orderProductTrId} ${OrderViewPageMap.productEditTotalPrice}`).text(productPrices.totalPrice);
+
+        // update order row price values
+        const productEditButton = $(OrderViewPageMap.productEditBtn(productPrices.orderDetailId));
+
+        productEditButton.data('product-price-tax-incl', productPrices.unitPriceTaxInclRaw);
+        productEditButton.data('product-price-tax-excl', productPrices.unitPriceTaxExclRaw);
+        productEditButton.data('product-quantity', productPrices.quantity);
       });
+    });
+  }
+
+  checkOtherProductPricesMatch(givenPrice, productId, combinationId, invoiceId, orderDetailId) {
+    const productRows = document.querySelectorAll('tr.cellProduct');
+    // We convert the expected values into int/float to avoid a type mismatch that would be wrongly interpreted
+    const expectedProductId = Number(productId);
+    const expectedCombinationId = Number(combinationId);
+    const expectedGivenPrice = Number(givenPrice);
+    let unmatchingPriceExists = false;
+
+    productRows.forEach((productRow) => {
+      const productRowId = $(productRow).attr('id');
+
+      // No need to check edited row (especially if it's the only one for this product)
+      if (orderDetailId && productRowId === `orderProduct_${orderDetailId}`) {
+        return;
+      }
+
+      const productEditBtn = $(`#${productRowId} ${OrderViewPageMap.productEditButtons}`);
+      const currentOrderInvoiceId = Number(productEditBtn.data('order-invoice-id'));
+
+      // No need to check target invoice, only if others have matching products
+      if (invoiceId && currentOrderInvoiceId && invoiceId === currentOrderInvoiceId) {
+        return;
+      }
+
+      const currentProductId = Number(productEditBtn.data('product-id'));
+      const currentCombinationId = Number(productEditBtn.data('combination-id'));
+
+      if (currentProductId !== expectedProductId || currentCombinationId !== expectedCombinationId) {
+        return;
+      }
+
+      if (expectedGivenPrice !== Number(productEditBtn.data('product-price-tax-incl'))) {
+        unmatchingPriceExists = true;
+      }
+    });
+
+    return !unmatchingPriceExists;
   }
 }

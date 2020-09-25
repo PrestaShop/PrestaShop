@@ -86,7 +86,7 @@ CREATE TABLE `PREFIX_attribute_impact` (
   `id_product` int(11) unsigned NOT NULL,
   `id_attribute` int(11) unsigned NOT NULL,
   `weight` DECIMAL(20, 6) NOT NULL,
-  `price` decimal(17, 2) NOT NULL,
+  `price` DECIMAL(20, 6) NOT NULL,
   PRIMARY KEY (`id_attribute_impact`),
   UNIQUE KEY `id_product` (`id_product`, `id_attribute`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
@@ -187,7 +187,7 @@ CREATE TABLE `PREFIX_cart_rule` (
   `priority` int(10) unsigned NOT NULL DEFAULT 1,
   `partial_use` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `code` varchar(254) NOT NULL,
-  `minimum_amount` decimal(17, 2) NOT NULL DEFAULT '0',
+  `minimum_amount` decimal(20, 6) NOT NULL DEFAULT '0.000000',
   `minimum_amount_tax` tinyint(1) NOT NULL DEFAULT '0',
   `minimum_amount_currency` int unsigned NOT NULL DEFAULT '0',
   `minimum_amount_shipping` tinyint(1) NOT NULL DEFAULT '0',
@@ -198,8 +198,8 @@ CREATE TABLE `PREFIX_cart_rule` (
   `product_restriction` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `shop_restriction` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `free_shipping` tinyint(1) NOT NULL DEFAULT '0',
-  `reduction_percent` decimal(5, 2) NOT NULL DEFAULT '0',
-  `reduction_amount` decimal(17, 2) NOT NULL DEFAULT '0',
+  `reduction_percent` decimal(5, 2) NOT NULL DEFAULT '0.00',
+  `reduction_amount` decimal(20, 6) NOT NULL DEFAULT '0.000000',
   `reduction_tax` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `reduction_currency` int(10) unsigned NOT NULL DEFAULT '0',
   `reduction_product` int(10) NOT NULL DEFAULT '0',
@@ -832,6 +832,7 @@ CREATE TABLE `PREFIX_employee` (
   `last_connection_date` date DEFAULT NULL,
   `reset_password_token` varchar(40) DEFAULT NULL,
   `reset_password_validity` datetime DEFAULT NULL,
+  `has_enabled_gravatar` TINYINT UNSIGNED DEFAULT 0 NOT NULL,
   PRIMARY KEY (`id_employee`),
   KEY `employee_login` (`email`, `passwd`),
   KEY `id_employee_passwd` (`id_employee`, `passwd`),
@@ -910,7 +911,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_gender_lang` (
 /* Group special price rules */
 CREATE TABLE `PREFIX_group` (
   `id_group` int(10) unsigned NOT NULL auto_increment,
-  `reduction` decimal(17, 2) NOT NULL DEFAULT '0.00',
+  `reduction` decimal(5, 2) NOT NULL DEFAULT '0.00',
   `price_display_method` TINYINT NOT NULL DEFAULT '0',
   `show_prices` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `date_add` datetime NOT NULL,
@@ -931,7 +932,7 @@ CREATE TABLE `PREFIX_group_reduction` (
   `id_group_reduction` MEDIUMINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `id_group` INT(10) UNSIGNED NOT NULL,
   `id_category` INT(10) UNSIGNED NOT NULL,
-  `reduction` DECIMAL(4, 3) NOT NULL,
+  `reduction` DECIMAL(5, 4) NOT NULL,
   PRIMARY KEY (`id_group_reduction`),
   UNIQUE KEY(`id_group`, `id_category`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
@@ -940,7 +941,7 @@ CREATE TABLE `PREFIX_group_reduction` (
 CREATE TABLE `PREFIX_product_group_reduction_cache` (
   `id_product` INT UNSIGNED NOT NULL,
   `id_group` INT UNSIGNED NOT NULL,
-  `reduction` DECIMAL(4, 3) NOT NULL,
+  `reduction` DECIMAL(5, 4) NOT NULL,
   PRIMARY KEY (`id_product`, `id_group`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
@@ -985,6 +986,7 @@ CREATE TABLE `PREFIX_hook` (
   `name` varchar(191) NOT NULL,
   `title` varchar(255) NOT NULL,
   `description` text,
+  `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `position` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_hook`),
   UNIQUE KEY `hook_name` (`name`)
@@ -1343,11 +1345,11 @@ CREATE TABLE `PREFIX_order_detail` (
   `product_quantity_return` int(10) unsigned NOT NULL DEFAULT '0',
   `product_quantity_reinjected` int(10) unsigned NOT NULL DEFAULT '0',
   `product_price` decimal(20, 6) NOT NULL DEFAULT '0.000000',
-  `reduction_percent` DECIMAL(10, 2) NOT NULL DEFAULT '0.00',
+  `reduction_percent` DECIMAL(5, 2) NOT NULL DEFAULT '0.00',
   `reduction_amount` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
   `reduction_amount_tax_incl` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
   `reduction_amount_tax_excl` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
-  `group_reduction` DECIMAL(10, 2) NOT NULL DEFAULT '0.000000',
+  `group_reduction` DECIMAL(5, 2) NOT NULL DEFAULT '0.00',
   `product_quantity_discount` decimal(20, 6) NOT NULL DEFAULT '0.000000',
   `product_ean13` varchar(13) DEFAULT NULL,
   `product_isbn` varchar(32) DEFAULT NULL,
@@ -1360,7 +1362,7 @@ CREATE TABLE `PREFIX_order_detail` (
   `tax_computation_method` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `tax_name` varchar(16) NOT NULL,
   `tax_rate` DECIMAL(10, 3) NOT NULL DEFAULT '0.000',
-  `ecotax` decimal(21, 6) NOT NULL DEFAULT '0.00',
+  `ecotax` decimal(17, 6) NOT NULL DEFAULT '0.000000',
   `ecotax_tax_rate` DECIMAL(5, 3) NOT NULL DEFAULT '0.000',
   `discount_quantity_applied` TINYINT(1) NOT NULL DEFAULT '0',
   `download_hash` varchar(255) DEFAULT NULL,
@@ -1375,6 +1377,8 @@ CREATE TABLE `PREFIX_order_detail` (
   `purchase_supplier_price` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
   `original_product_price` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
   `original_wholesale_price` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
+  `total_refunded_tax_excl` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
+  `total_refunded_tax_incl` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
   PRIMARY KEY (`id_order_detail`),
   KEY `order_detail_order` (`id_order`),
   KEY `product_id` (
@@ -1392,9 +1396,10 @@ CREATE TABLE `PREFIX_order_cart_rule` (
   `id_cart_rule` int(10) unsigned NOT NULL,
   `id_order_invoice` int(10) unsigned DEFAULT '0',
   `name` varchar(254) NOT NULL,
-  `value` decimal(17, 2) NOT NULL DEFAULT '0.00',
-  `value_tax_excl` decimal(17, 2) NOT NULL DEFAULT '0.00',
+  `value` decimal(20, 6) NOT NULL DEFAULT '0.000000',
+  `value_tax_excl` decimal(20, 6) NOT NULL DEFAULT '0.000000',
   `free_shipping` tinyint(1) NOT NULL DEFAULT '0',
+  `deleted` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_order_cart_rule`),
   KEY `id_order` (`id_order`),
   KEY `id_cart_rule` (`id_cart_rule`)
@@ -1483,8 +1488,8 @@ CREATE TABLE `PREFIX_order_slip` (
   `total_shipping_tax_excl` DECIMAL(20, 6) NULL,
   `total_shipping_tax_incl` DECIMAL(20, 6) NULL,
   `shipping_cost` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `amount` DECIMAL(10, 2) NOT NULL,
-  `shipping_cost_amount` DECIMAL(10, 2) NOT NULL,
+  `amount` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
+  `shipping_cost_amount` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
   `partial` TINYINT(1) NOT NULL,
   `order_slip_type` TINYINT(1) unsigned NOT NULL DEFAULT '0',
   `date_add` datetime NOT NULL,
@@ -1589,7 +1594,7 @@ CREATE TABLE `PREFIX_order_payment` (
   `id_order_payment` INT NOT NULL auto_increment,
   `order_reference` VARCHAR(9),
   `id_currency` INT UNSIGNED NOT NULL,
-  `amount` DECIMAL(10, 2) NOT NULL,
+  `amount` DECIMAL(20, 6) NOT NULL,
   `payment_method` varchar(255) NOT NULL,
   `conversion_rate` decimal(13, 6) NOT NULL DEFAULT 1,
   `transaction_id` VARCHAR(254) NULL,
@@ -1625,7 +1630,7 @@ CREATE TABLE `PREFIX_product` (
   `wholesale_price` decimal(20, 6) NOT NULL DEFAULT '0.000000',
   `unity` varchar(255) DEFAULT NULL,
   `unit_price_ratio` decimal(20, 6) NOT NULL DEFAULT '0.000000',
-  `additional_shipping_cost` decimal(20, 2) NOT NULL DEFAULT '0.00',
+  `additional_shipping_cost` decimal(20, 6) NOT NULL DEFAULT '0.000000',
   `reference` varchar(64) DEFAULT NULL,
   `supplier_reference` varchar(64) DEFAULT NULL,
   `location` varchar(64) DEFAULT NULL,
@@ -1664,6 +1669,8 @@ CREATE TABLE `PREFIX_product` (
   `pack_stock_type` int(11) unsigned DEFAULT '3' NOT NULL,
   `state` int(11) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_product`),
+  INDEX reference_idx(`reference`),
+  INDEX supplier_reference_idx(`supplier_reference`),
   KEY `product_supplier` (`id_supplier`),
   KEY `product_manufacturer` (`id_manufacturer`, `id_product`),
   KEY `id_category_default` (`id_category_default`),
@@ -1688,7 +1695,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `wholesale_price` decimal(20, 6) NOT NULL DEFAULT '0.000000',
   `unity` varchar(255) DEFAULT NULL,
   `unit_price_ratio` decimal(20, 6) NOT NULL DEFAULT '0.000000',
-  `additional_shipping_cost` decimal(20, 2) NOT NULL DEFAULT '0.00',
+  `additional_shipping_cost` decimal(20, 6) NOT NULL DEFAULT '0.000000',
   `customizable` tinyint(2) NOT NULL DEFAULT '0',
   `uploadable_files` tinyint(4) NOT NULL DEFAULT '0',
   `text_fields` tinyint(4) NOT NULL DEFAULT '0',
@@ -2837,3 +2844,17 @@ CREATE TABLE IF NOT EXISTS `PREFIX_cms_role_lang` (
     `id_cms_role`, `id_lang`, id_shop
   )
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `PREFIX_employee_session` (
+  `id_employee_session` int(11) unsigned NOT NULL auto_increment,
+  `id_employee` int(10) unsigned DEFAULT NULL,
+  `token` varchar(40) DEFAULT NULL,
+  PRIMARY KEY `id_employee_session` (`id_employee_session`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
+CREATE TABLE `PREFIX_customer_session` (
+  `id_customer_session` int(11) unsigned NOT NULL auto_increment,
+  `id_customer` int(10) unsigned DEFAULT NULL,
+  `token` varchar(40) DEFAULT NULL,
+  PRIMARY KEY `id_customer_session` (`id_customer_session`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;

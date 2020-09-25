@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -29,16 +29,26 @@
  */
 class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 {
+    /**
+     * @var Order
+     */
     public $order;
+
+    /**
+     * @var OrderSlip
+     */
     public $order_slip;
+
+    /** @var int Cart id */
+    public $id_cart;
 
     /**
      * @param OrderSlip $order_slip
-     * @param $smarty
+     * @param Smarty $smarty
      *
      * @throws PrestaShopException
      */
-    public function __construct(OrderSlip $order_slip, $smarty)
+    public function __construct(OrderSlip $order_slip, Smarty $smarty)
     {
         $this->order_slip = $order_slip;
         $this->order = new Order((int) $order_slip->id_order);
@@ -114,11 +124,10 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
                 $this->order->total_paid_tax_excl = $this->order->total_products;
                 $this->order->total_paid_tax_incl = $this->order->total_products_wt;
             }
+            unset($product);
         } else {
             $this->order->products = null;
         }
-
-        unset($product); // remove reference
 
         if ($this->order_slip->shipping_cost == 0) {
             $this->order->total_shipping_tax_incl = $this->order->total_shipping_tax_excl = 0;
@@ -137,7 +146,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
         $this->order->total_paid_tax_excl += $this->order->total_shipping_tax_excl;
 
         $total_cart_rule = 0;
-        if ($this->order_slip->order_slip_type == 1 && is_array($cart_rules = $this->order->getCartRules($this->order_invoice->id))) {
+        if ($this->order_slip->order_slip_type == 1 && is_array($cart_rules = $this->order->getCartRules())) {
             foreach ($cart_rules as $cart_rule) {
                 if ($tax_excluded_display) {
                     $total_cart_rule += $cart_rule['value_tax_excl'];
@@ -151,7 +160,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
             'order' => $this->order,
             'order_slip' => $this->order_slip,
             'order_details' => $this->order->products,
-            'cart_rules' => $this->order_slip->order_slip_type == 1 ? $this->order->getCartRules($this->order_invoice->id) : false,
+            'cart_rules' => $this->order_slip->order_slip_type == 1 ? $this->order->getCartRules() : false,
             'amount_choosen' => $this->order_slip->order_slip_type == 2 ? true : false,
             'delivery_address' => $formatted_delivery_address,
             'invoice_address' => $formatted_invoice_address,
@@ -259,6 +268,9 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
         return $breakdowns;
     }
 
+    /**
+     * @return array
+     */
     public function getProductTaxesBreakdown()
     {
         // $breakdown will be an array with tax rates as keys and at least the columns:

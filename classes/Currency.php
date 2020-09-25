@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 
@@ -197,8 +197,11 @@ class CurrencyCore extends ObjectModel
     protected $webserviceParameters = [
         'objectsNodeName' => 'currencies',
         'fields' => [
+            'names' => [
+                'getter' => 'getLocalizedNames',
+                'i18n' => true,
+            ],
             'name' => [
-                'setter' => false,
                 'getter' => 'getName',
                 'modifier' => [
                     'http_method' => WebserviceRequest::HTTP_POST | WebserviceRequest::HTTP_PUT,
@@ -206,11 +209,12 @@ class CurrencyCore extends ObjectModel
                 ],
             ],
             'symbol' => [
-                'setter' => false,
-                'getter' => 'getSymbol',
+                'getter' => 'getLocalizedSymbols',
+            ],
+            'iso_code' => [
                 'modifier' => [
                     'http_method' => WebserviceRequest::HTTP_POST | WebserviceRequest::HTTP_PUT,
-                    'modifier' => 'setSymbolForWebservice',
+                    'modifier' => 'setIsoCodeForWebService',
                 ],
             ],
         ],
@@ -234,7 +238,7 @@ class CurrencyCore extends ObjectModel
      * CurrencyCore constructor.
      *
      * @param int|null $id
-     * @param false|null $idLang if null or false, default language will be used
+     * @param int|false|null $idLang if null or false, default language will be used
      * @param int|null $idShop
      */
     public function __construct($id = null, $idLang = null, $idShop = null)
@@ -289,27 +293,82 @@ class CurrencyCore extends ObjectModel
         }
     }
 
+    /**
+     * @param string|null $ws_params_attribute_name
+     *
+     * @return array
+     */
     public function getWebserviceParameters($ws_params_attribute_name = null)
     {
         $parameters = parent::getWebserviceParameters($ws_params_attribute_name);
-        // name & symbol are i18n fields but casted to single string in the constructor
-        // so we need to force the webservice to consider those fields as non-i18n fields.
-        // Also, in 1.7.5 the field symbol didn't exists and name wasn't an i18n field so in order
-        // to keep 1.7.6 backward compatible we need to make those fields non-i18n.
+        // name is an i18n field but is casted to single string in the constructor
+        // so we need to force the webservice to consider this field as non-i18n.
         $parameters['fields']['name']['i18n'] = false;
-        $parameters['fields']['symbol']['i18n'] = false;
+        $parameters['fields']['name']['required'] = true;
 
         return $parameters;
     }
 
+    /**
+     * If the field 'names' (localized names) is sent,
+     * it should be use instead of the field 'name' (non-localized).
+     * LocalizedNames is also updated to reflect the new information.
+     */
     public function setNameForWebservice()
     {
-        $this->name = $this->localizedNames;
+        if (!empty($this->names)) {
+            $this->name = $this->names;
+            if (is_array($this->names)) {
+                $this->localizedNames = $this->names;
+            } else {
+                foreach ($this->localizedNames as $lang => $name) {
+                    $this->localizedNames[$lang] = $this->names;
+                }
+            }
+        } else {
+            foreach ($this->localizedNames as $lang => $localizedName) {
+                $this->localizedNames[$lang] = $this->name;
+            }
+        }
     }
 
-    public function setSymbolForWebservice()
+    /**
+     * In 1.7.6, new fields have been introduced. To keep it backward compatible,
+     * we need to populate those fields with default values and they are all available
+     * using the ISO code through CLDR data.
+     */
+    public function setIsoCodeForWebService()
     {
-        $this->symbol = $this->localizedSymbols;
+        $container = Context::getContext()->container;
+        /** @var LocaleRepository $localeCldr */
+        $localeCldr = $container->get('prestashop.core.localization.cldr.locale_repository');
+        /** @var Configuration $configuration */
+        $configuration = $container->get('prestashop.adapter.legacy.configuration');
+        $languages = Language::getIDs();
+        $defaultLanguage = new Language($configuration->get('PS_LANG_DEFAULT'));
+        $locale = $localeCldr->getLocale($defaultLanguage->getLocale());
+        $currency = $locale->getCurrency($this->iso_code);
+        if (!empty($currency)) {
+            if (empty($this->numeric_iso_code)) {
+                $this->numeric_iso_code = $currency->getNumericIsoCode();
+                $this->iso_code_num = $this->numeric_iso_code;
+            }
+            if (empty($this->precision)) {
+                $this->precision = (int) $currency->getDecimalDigits();
+            }
+        }
+        if (empty($this->symbol)) {
+            $name = $this->name;
+            $this->refreshLocalizedCurrencyData($languages, $localeCldr);
+            $this->name = $name;
+        }
+        if (is_array($this->symbol)) {
+            $this->localizedSymbols = $this->symbol;
+        } else {
+            foreach ($this->localizedSymbols as $lang => $symbol) {
+                $this->localizedSymbols[$lang] = $this->symbol;
+            }
+        }
     }
 
     /**
@@ -412,11 +471,13 @@ class CurrencyCore extends ObjectModel
     {
         if ($this->id == Configuration::get('PS_CURRENCY_DEFAULT')) {
             $result = Db::getInstance()->getRow('SELECT `id_currency` FROM ' . _DB_PREFIX_ . 'currency WHERE `id_currency` != ' . (int) $this->id . ' AND `deleted` = 0');
-            if (!$result['id_currency']) {
+            if (empty($result['id_currency'])) {
                 return false;
             }
+
             Configuration::updateValue('PS_CURRENCY_DEFAULT', $result['id_currency']);
         }
+
         $this->deleted = 1;
 
         // Remove currency restrictions
@@ -486,6 +547,9 @@ class CurrencyCore extends ObjectModel
         return Tools::ucfirst($this->name[$id_lang]);
     }
 
+    /**
+     * @return string
+     */
     public function getSymbol()
     {
         if (is_string($this->symbol)) {
@@ -644,6 +708,11 @@ class CurrencyCore extends ObjectModel
         return $currencies;
     }
 
+    /**
+     * @param int|null $shopId
+     *
+     * @return array
+     */
     public function getInstalledCurrencies($shopId = null)
     {
         $shopId = $shopId ?: Context::getContext()->shop->id;
@@ -683,6 +752,8 @@ class CurrencyCore extends ObjectModel
      *
      * @param $currencies mixed object|array
      * @param $isObject bool
+     *
+     * @return mixed object|array
      */
     protected static function addCldrDatasToCurrency($currencies, $isObject = false)
     {
@@ -705,6 +776,12 @@ class CurrencyCore extends ObjectModel
         return $currencies;
     }
 
+    /**
+     * @param int $idModule
+     * @param int|null $idShop
+     *
+     * @return array
+     */
     public static function getPaymentCurrenciesSpecial($idModule, $idShop = null)
     {
         if (null === $idShop) {
@@ -723,7 +800,7 @@ class CurrencyCore extends ObjectModel
      * Get payment Currencies.
      *
      * @param int $idModule Module ID
-     * @param null $idShop Shop ID
+     * @param int|null $idShop Shop ID
      *
      * @return array|false|mysqli_result|PDOStatement|resource|null
      */
@@ -749,7 +826,7 @@ class CurrencyCore extends ObjectModel
      * Check payment Currencies.
      *
      * @param int $idModule Module ID
-     * @param null $idShop Shop ID
+     * @param int|null $idShop Shop ID
      *
      * @return array|PDOStatement|resource|null
      */
@@ -809,13 +886,17 @@ class CurrencyCore extends ObjectModel
             $query = Currency::getIdByQuery($idShop, $includeDeleted);
             $query->where('iso_code = \'' . pSQL($isoCode) . '\'');
 
-            $result = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
+            if (empty($result)) {
+                return 0;
+            }
+
             Cache::store($cacheId, $result);
 
-            return $result;
+            return (int) $result;
         }
 
-        return Cache::retrieve($cacheId);
+        return (int) Cache::retrieve($cacheId);
     }
 
     /**

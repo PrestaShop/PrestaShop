@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace LegacyTests\Unit\Classes;
@@ -243,7 +243,12 @@ class ValidateCoreTest extends TestCase
             array(true, 'john#doe@prestashop.com'),
             array(false, ''),
             array(false, 'john.doe@prestashop,com'),
-            array(false, 'john.doe@prestashop'),
+            array(true, 'john.doe@prestashop'),
+            array(true, 'john.doe@сайт.рф'),
+            array(true, 'john.doe@xn--80aswg.xn--p1ai'),
+            array(false, 'иван@prestashop.com'), // rfc6531 valid but not swift mailer compatible
+            array(true, 'xn--80adrw@prestashop.com'),
+            array(true, 'xn--80adrw@xn--80aswg.xn--p1ai'),
             array(false, 123456789),
             array(false, false),
         );
@@ -258,6 +263,8 @@ class ValidateCoreTest extends TestCase
             array(false, '3000-03-19'),
             array(false, '1991-03-33'),
             array(false, '1991-15-19'),
+            array(false, '1801-01-01'),
+            array(false, '0085-02-25'),
             array(true, date('Y-m-d', strtotime('now'))),
             array(true, date('Y-m-d', strtotime('-1 day'))),
             array(false, date('Y-m-d', strtotime('+1 day'))),
@@ -285,6 +292,7 @@ class ValidateCoreTest extends TestCase
             array(false, date('Y-m-d', strtotime('+1 year +1 month'))),
             array(false, date('Y-m-d', strtotime('+1 year +1 month -1 day'))),
             array(false, date('Y-m-d', strtotime('+1 year +1 month +1 day'))),
+            array(false, date('Y-m-d', strtotime('-201 year'))),
         );
     }
 

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,15 +17,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
+
+use PrestaShop\Decimal\Number;
 
 class OrderPricesForViewing
 {
@@ -64,47 +66,47 @@ class OrderPricesForViewing
     private $totalAmountFormatted;
 
     /**
-     * @var float
+     * @var Number
      */
     private $productsPriceRaw;
 
     /**
-     * @var float
+     * @var Number
      */
     private $discountsAmountRaw;
     /**
-     * @var float
+     * @var Number
      */
     private $wrappingPriceRaw;
 
     /**
-     * @var float
+     * @var Number
      */
     private $shippingPriceRaw;
 
     /**
-     * @var float
+     * @var Number
      */
     private $shippingRefundableAmountRaw;
 
     /**
-     * @var float
+     * @var Number
      */
     private $taxesAmountRaw;
 
     /**
-     * @var float
+     * @var Number
      */
     private $totalAmountRaw;
 
     public function __construct(
-        float $productsPriceRaw,
-        float $discountsAmountRaw,
-        float $wrappingPriceRaw,
-        float $shippingPriceRaw,
-        float $shippingRefundableAmountRaw,
-        float $taxesAmountRaw,
-        float $totalAmountRaw,
+        Number $productsPriceRaw,
+        Number $discountsAmountRaw,
+        Number $wrappingPriceRaw,
+        Number $shippingPriceRaw,
+        Number $shippingRefundableAmountRaw,
+        Number $taxesAmountRaw,
+        Number $totalAmountRaw,
         string $productsPrice,
         string $discountsAmount,
         string $wrappingPrice,
@@ -186,57 +188,57 @@ class OrderPricesForViewing
     }
 
     /**
-     * @return float
+     * @return Number
      */
-    public function getProductsPriceRaw(): float
+    public function getProductsPriceRaw(): Number
     {
         return $this->productsPriceRaw;
     }
 
     /**
-     * @return float
+     * @return Number
      */
-    public function getDiscountsAmountRaw(): float
+    public function getDiscountsAmountRaw(): Number
     {
         return $this->discountsAmountRaw;
     }
 
     /**
-     * @return float
+     * @return Number
      */
-    public function getWrappingPriceRaw(): float
+    public function getWrappingPriceRaw(): Number
     {
         return $this->wrappingPriceRaw;
     }
 
     /**
-     * @return float
+     * @return Number
      */
-    public function getShippingPriceRaw(): float
+    public function getShippingPriceRaw(): Number
     {
         return $this->shippingPriceRaw;
     }
 
     /**
-     * @return float
+     * @return Number
      */
-    public function getShippingRefundableAmountRaw(): float
+    public function getShippingRefundableAmountRaw(): Number
     {
         return $this->shippingRefundableAmountRaw;
     }
 
     /**
-     * @return float
+     * @return Number
      */
-    public function getTaxesAmountRaw(): float
+    public function getTaxesAmountRaw(): Number
     {
         return $this->taxesAmountRaw;
     }
 
     /**
-     * @return float
+     * @return Number
      */
-    public function getTotalAmountRaw(): float
+    public function getTotalAmountRaw(): Number
     {
         return $this->totalAmountRaw;
     }

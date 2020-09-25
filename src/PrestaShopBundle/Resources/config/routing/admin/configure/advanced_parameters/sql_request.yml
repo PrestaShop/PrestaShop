@@ -44,7 +44,7 @@ admin_sql_requests_edit:
 
 admin_sql_requests_delete:
     path: /{sqlRequestId}/delete
-    methods: [GET]
+    methods: [GET, DELETE]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:delete'
         _legacy_controller: AdminRequestSql

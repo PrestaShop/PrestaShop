@@ -1,10 +1,11 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,22 +16,21 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 import CartEditor from '@pages/order/create/cart-editor';
 import CartRulesRenderer from '@pages/order/create/cart-rules-renderer';
-import createOrderMap from '@pages/order/create/create-order-map';
 import {EventEmitter} from '@components/event-emitter';
 import eventMap from '@pages/order/create/event-map';
 import Router from '@components/router';
 import SummaryRenderer from '@pages/order/create/summary-renderer';
 import ShippingRenderer from '@pages/order/create/shipping-renderer';
+import ProductRenderer from '@pages/order/create/product-renderer';
 
 const {$} = window;
 
@@ -42,11 +42,11 @@ export default class CartRuleManager {
     this.activeSearchRequest = null;
 
     this.router = new Router();
-    this.$searchInput = $(createOrderMap.cartRuleSearchInput);
     this.cartRulesRenderer = new CartRulesRenderer();
     this.cartEditor = new CartEditor();
     this.summaryRenderer = new SummaryRenderer();
     this.shippingRenderer = new ShippingRenderer();
+    this.productRenderer = new ProductRenderer();
 
     this.initListeners();
 
@@ -90,6 +90,7 @@ export default class CartRuleManager {
     EventEmitter.on(eventMap.cartRuleAdded, (cartInfo) => {
       const cartIsEmpty = cartInfo.products.length === 0;
       this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartIsEmpty);
+      this.productRenderer.renderList(cartInfo.products);
       this.shippingRenderer.render(cartInfo.shipping, cartIsEmpty);
       this.summaryRenderer.render(cartInfo);
     });
@@ -117,6 +118,7 @@ export default class CartRuleManager {
       this.shippingRenderer.render(cartInfo.shipping, cartIsEmpty);
       this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartIsEmpty);
       this.summaryRenderer.render(cartInfo);
+      this.productRenderer.renderList(cartInfo.products);
     });
   }
 

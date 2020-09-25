@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Install;
@@ -179,8 +179,7 @@ class XmlLoader
         // Browse all XML files from data/xml directory
         $entities = [];
         $dependencies = [];
-        $fd = opendir($this->data_path);
-        while ($file = readdir($fd)) {
+        foreach (scandir($this->data_path) as $file) {
             if (preg_match('#^(.+)\.xml$#', $file, $m)) {
                 $entity = $m[1];
                 $xml = $this->loadEntity($entity);
@@ -199,7 +198,6 @@ class XmlLoader
                 $entities[] = $entity;
             }
         }
-        closedir($fd);
 
         // Sort entities to populate database in good order (E.g. zones before countries)
         do {
@@ -266,10 +264,10 @@ class XmlLoader
         }
 
         $is_multi_lang_entity = $this->isMultilang($entity);
+        $xml_langs = $multilang_columns = [];
+        $default_lang = null;
         if ($is_multi_lang_entity) {
             $multilang_columns = $this->getColumns($entity, true);
-            $xml_langs = [];
-            $default_lang = null;
             foreach ($this->languages as $id_lang => $iso) {
                 if ($iso == $this->language->getLanguageIso()) {
                     $default_lang = $id_lang;
@@ -406,7 +404,8 @@ class XmlLoader
     /**
      * Load an entity XML file.
      *
-     * @param string $entity
+     * @param string $entity Name of the entity to load (eg. 'tab')
+     * @param string|null $iso Language in which to load said entity. If not found, will fall back to default language.
      *
      * @return \SimpleXMLElement
      */
@@ -493,7 +492,7 @@ class XmlLoader
             if ($data_lang) {
                 $object->hydrate($data_lang);
             }
-            $object->add(true, (isset($xml->fields['null'])) ? true : false);
+            $object->add(true, isset($xml->fields['null']));
             $entity_id = $object->id;
             unset($object);
         } else {
@@ -594,6 +593,15 @@ class XmlLoader
         $stock_available->updateQuantity($data['id_product'], $data['id_product_attribute'], $data['quantity'], $data['id_shop']);
     }
 
+    /**
+     * Called from self::populateEntity
+     *
+     * @param string $identifier Tab id
+     * @param array $data Attributes + children of tab element
+     * @param array $data_lang Translated attributes
+     *
+     * @throws PrestashopInstallerException
+     */
     public function createEntityTab($identifier, array $data, array $data_lang)
     {
         static $position = [];
@@ -1185,7 +1193,7 @@ class XmlLoader
         }
 
         // Get multilang columns
-        $alias_multilang = [];
+        $alias_multilang = $multilang_columns = [];
         if ($is_multilang) {
             $columns = $this->getColumns($entity);
             $multilang_columns = $this->getColumns($entity, true);

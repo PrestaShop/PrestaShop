@@ -5,57 +5,57 @@
       <trans-unit id="d67b7992a94709663ce72ce9c1606597">
         <source>Faceted search</source>
         <target>Faceted search</target>
-        <note>Line: 101</note>
+        <note>Line: 108</note>
       </trans-unit>
       <trans-unit id="0b3be13d3fe8cfc942ae7e8a64f3718b">
         <source>Displays a block allowing multiple filters.</source>
         <target>Displays a block allowing multiple filters.</target>
-        <note>Line: 102</note>
+        <note>Line: 109</note>
       </trans-unit>
       <trans-unit id="b3786b970611c1a3809dd51b630812a7">
         <source>"%s" is not a valid url</source>
         <target>"%s" is not a valid url</target>
-        <note>Line: 1195</note>
+        <note>Line: 1210</note>
       </trans-unit>
       <trans-unit id="ccc12c5568381293a27db0232877937b">
         <source>Filter template name required (cannot be empty)</source>
         <target>Filter template name required (cannot be empty)</target>
-        <note>Line: 579</note>
+        <note>Line: 590</note>
       </trans-unit>
       <trans-unit id="8c97e587c1b4e519bec26f3903561da3">
         <source>You must select at least one category.</source>
         <target>You must select at least one category.</target>
-        <note>Line: 581</note>
+        <note>Line: 592</note>
       </trans-unit>
       <trans-unit id="817c37b9c1f5cd4a450dad384e63e6c7">
         <source>Your filter</source>
         <target>Your filter</target>
-        <note>Line: 670</note>
+        <note>Line: 681</note>
       </trans-unit>
       <trans-unit id="3185cefd67b575e582063148e4f15860">
         <source>was updated successfully.</source>
         <target>was updated successfully.</target>
-        <note>Line: 674</note>
+        <note>Line: 685</note>
       </trans-unit>
       <trans-unit id="7ccab4d8de5d6b9bb61e99c7bba343ab">
         <source>was added successfully.</source>
         <target>was added successfully.</target>
-        <note>Line: 675</note>
+        <note>Line: 686</note>
       </trans-unit>
       <trans-unit id="fe016d3b990c2a9dd72ab6b45892f2ae">
         <source>Settings saved successfully</source>
         <target>Settings saved successfully</target>
-        <note>Line: 689</note>
+        <note>Line: 702</note>
       </trans-unit>
       <trans-unit id="0d07af70081a2421e2b2972609d699db">
         <source>Filter template deleted, categories updated (reverted to default Filter template).</source>
         <target>Filter template deleted, categories updated (reverted to default Filter template).</target>
-        <note>Line: 704</note>
+        <note>Line: 717</note>
       </trans-unit>
       <trans-unit id="491f46aa6101560e9f1e0d55a063231b">
         <source>Filter template not found</source>
         <target>Filter template not found</target>
-        <note>Line: 706</note>
+        <note>Line: 719</note>
       </trans-unit>
       <trans-unit id="fa03eb688ad8aa1db593d33dabd89bad">
         <source>Root</source>
@@ -65,12 +65,21 @@
       <trans-unit id="a3868119dc6858db57127fd26e6f9656">
         <source>My template - %s</source>
         <target>My template - %s</target>
-        <note>Line: 754</note>
+        <note>Line: 767</note>
       </trans-unit>
       <trans-unit id="32d2e6cd4bb1719c572ef470a3a525b6">
         <source>My template %s</source>
         <target>My template %s</target>
-        <note>Line: 1072</note>
+        <note>Line: 1087</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_facetedsearch/src/Form/Feature/FormModifier.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9e11e4b371570340ca07913bc4783a7a">
+        <source>Meta title</source>
+        <target>Meta title</target>
+        <note>Line: 103</note>
       </trans-unit>
     </body>
   </file>
@@ -292,77 +301,92 @@
       <trans-unit id="a19399fa42f1ab059401a14b9f13eba1">
         <source>Category filter depth (0 for no limits, 1 by default)</source>
         <target>Category filter depth (0 for no limits, 1 by default)</target>
-        <note>Line: 150</note>
+        <note>Line: 171</note>
       </trans-unit>
       <trans-unit id="3e652bd299bb3ee3d458c0dcc7fd706e">
         <source>Use tax to filter price</source>
         <target>Use tax to filter price</target>
-        <note>Line: 156</note>
+        <note>Line: 177</note>
       </trans-unit>
       <trans-unit id="30b1f6f4369e3d0f7a0d50b5cb96aabd">
         <source>Use rounding to filter price</source>
         <target>Use rounding to filter price</target>
-        <note>Line: 172</note>
+        <note>Line: 193</note>
       </trans-unit>
       <trans-unit id="56fc8142961f1f3e9f9ec0c178881b69">
         <source>(in progress)</source>
         <target>(in progress)</target>
-        <note>Line: 200</note>
+        <note>Line: 237</note>
       </trans-unit>
       <trans-unit id="8c83a87ac8ee57d9bcd79d1aa9243bc0">
         <source>URL indexing finished</source>
         <target>URL indexing finished</target>
-        <note>Line: 201</note>
+        <note>Line: 238</note>
       </trans-unit>
       <trans-unit id="49afa0d9ad5c1f8bf5413b9dc8a252c9">
         <source>Attribute indexing finished</source>
         <target>Attribute indexing finished</target>
-        <note>Line: 202</note>
+        <note>Line: 239</note>
       </trans-unit>
       <trans-unit id="9ea5bab5df9a3f3abaa64951daf07e9b">
         <source>URL indexing failed</source>
         <target>URL indexing failed</target>
-        <note>Line: 203</note>
+        <note>Line: 240</note>
       </trans-unit>
       <trans-unit id="414301b329318b3e916c5b91b0ca9126">
         <source>Attribute indexing failed</source>
         <target>Attribute indexing failed</target>
-        <note>Line: 204</note>
+        <note>Line: 241</note>
       </trans-unit>
       <trans-unit id="fa059e7a64ab37fe21b01a220b6c073f">
         <source>Price indexing finished</source>
         <target>Price indexing finished</target>
-        <note>Line: 205</note>
+        <note>Line: 242</note>
       </trans-unit>
       <trans-unit id="b55143bb1f46af4207ea4b5eb8e844ed">
         <source>Price indexing failed</source>
         <target>Price indexing failed</target>
-        <note>Line: 206</note>
+        <note>Line: 243</note>
       </trans-unit>
       <trans-unit id="7cf7d150dd287df0a8e17eeb4cf2161d">
         <source>(in progress, %s products price to index)</source>
         <target>(in progress, %s products price to index)</target>
-        <note>Line: 207</note>
+        <note>Line: 244</note>
       </trans-unit>
       <trans-unit id="8524de963f07201e5c086830d370797f">
         <source>Loading...</source>
         <target>Loading...</target>
-        <note>Line: 208</note>
+        <note>Line: 245</note>
       </trans-unit>
       <trans-unit id="eb9c805f7590679f0742ba0ea0a3e77f">
         <source>You selected -All categories-: all existing filter templates will be deleted. Is it OK?</source>
         <target>You selected -All categories-: all existing filter templates will be deleted. Is it OK?</target>
-        <note>Line: 209</note>
+        <note>Line: 246</note>
       </trans-unit>
       <trans-unit id="18c6120643596bd2626f3b0720b1df3a">
         <source>You must select at least one category</source>
         <target>You must select at least one category</target>
-        <note>Line: 210</note>
+        <note>Line: 247</note>
       </trans-unit>
       <trans-unit id="fc11f4442332d8b86f01335df9d28444">
         <source>Build attributes and features indexes</source>
         <target>Build attributes and features indexes</target>
         <note>Line: 36</note>
+      </trans-unit>
+      <trans-unit id="dea2248d77db1c9f755f80ca9f874be8">
+        <source>Show products only from default category</source>
+        <target>Show products only from default category</target>
+        <note>Line: 150</note>
+      </trans-unit>
+      <trans-unit id="75c30ac5e33d08c8cc95c5933c2cf543">
+        <source>Works only if "Show products from subcategories" is off.</source>
+        <target>Works only if "Show products from subcategories" is off.</target>
+        <note>Line: 166</note>
+      </trans-unit>
+      <trans-unit id="459ae4ae4d73f1ed176e5fc8aa3af312">
+        <source>Show unavailable, out of stock last</source>
+        <target>Show unavailable, out of stock last</target>
+        <note>Line: 209</note>
       </trans-unit>
     </body>
   </file>

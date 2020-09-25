@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
@@ -29,7 +29,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use Configuration;
 use Currency;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddOfficialCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddUnofficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
@@ -73,7 +73,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
                 (bool) $data['is_enabled']
             );
         } else {
-            $command = new AddOfficialCurrencyCommand(
+            $command = new AddCurrencyCommand(
                 $data['iso_code'],
                 (float) $data['exchange_rate'],
                 (bool) $data['is_enabled']
@@ -101,13 +101,12 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         ]);
 
         try {
-            $this->lastException = null;
             /** @var CurrencyId $currencyId */
             $currencyId = $this->getCommandBus()->handle($command);
 
             SharedStorage::getStorage()->set($reference, new Currency($currencyId->getValue()));
         } catch (CoreException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -160,12 +159,11 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         }
 
         try {
-            $this->lastException = null;
             $this->getCommandBus()->handle($command);
 
             SharedStorage::getStorage()->set($reference, new Currency($currency->id));
         } catch (CoreException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -178,10 +176,9 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         $currency = SharedStorage::getStorage()->get($reference);
 
         try {
-            $this->lastException = null;
             $this->getCommandBus()->handle(new ToggleCurrencyStatusCommand((int) $currency->id));
         } catch (CannotDisableDefaultCurrencyException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -194,10 +191,9 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         $currency = SharedStorage::getStorage()->get($reference);
 
         try {
-            $this->lastException = null;
             $this->getCommandBus()->handle(new DeleteCurrencyCommand((int) $currency->id));
         } catch (CannotDeleteDefaultCurrencyException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -207,10 +203,9 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     public function getCurrencyReferenceData($currencyIsoCode)
     {
         try {
-            $this->lastException = null;
             $this->currencyData = $this->getCommandBus()->handle(new GetReferenceCurrency($currencyIsoCode));
         } catch (CurrencyException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -273,14 +268,6 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     public function assertLastErrorIsCurrencyAlreadyExists()
     {
         $this->assertLastErrorIs(CurrencyConstraintException::class, CurrencyConstraintException::CURRENCY_ALREADY_EXISTS);
-    }
-
-    /**
-     * @Then I should get error that currency iso codes don't match
-     */
-    public function assertLastErrorIsMismatchingIsoCodes()
-    {
-        $this->assertLastErrorIs(CurrencyConstraintException::class, CurrencyConstraintException::ISO_CODES_MISMATCH);
     }
 
     /**

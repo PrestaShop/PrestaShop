@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
@@ -130,12 +130,22 @@ class OrderForViewing
     /**
      * @var bool
      */
+    private $hasBeenPaid;
+
+    /**
+     * @var bool
+     */
     private $hasInvoice;
 
     /**
      * @var OrderDiscountsForViewing
      */
     private $discounts;
+
+    /**
+     * @var LinkedOrdersForViewing
+     */
+    private $linkedOrders;
 
     /**
      * @var DateTimeImmutable
@@ -167,6 +177,43 @@ class OrderForViewing
      */
     private $invoiceManagementIsEnabled;
 
+    /**
+     * @var OrderSourcesForViewing
+     */
+    private $sources;
+
+    /**
+     * @param int $orderId
+     * @param int $currencyId
+     * @param int $carrierId
+     * @param string $carrierName
+     * @param int $shopId
+     * @param string $reference
+     * @param bool $isVirtual
+     * @param string $taxMethod
+     * @param bool $isTaxIncluded
+     * @param bool $isValid
+     * @param bool $hasBeenPaid
+     * @param bool $hasInvoice
+     * @param bool $isDelivered
+     * @param bool $isShipped
+     * @param bool $invoiceManagementIsEnabled
+     * @param DateTimeImmutable $createdAt
+     * @param OrderCustomerForViewing|null $customer
+     * @param OrderShippingAddressForViewing $shippingAddress
+     * @param OrderInvoiceAddressForViewing $invoiceAddress
+     * @param OrderProductsForViewing $products
+     * @param OrderHistoryForViewing $history
+     * @param OrderDocumentsForViewing $documents
+     * @param OrderShippingForViewing $shipping
+     * @param OrderReturnsForViewing $returns
+     * @param OrderPaymentsForViewing $payments
+     * @param OrderMessagesForViewing $messages
+     * @param OrderPricesForViewing $prices
+     * @param OrderDiscountsForViewing $discounts
+     * @param OrderSourcesForViewing $sources
+     * @param LinkedOrdersForViewing $linkedOrders
+     */
     public function __construct(
         int $orderId,
         int $currencyId,
@@ -178,12 +225,13 @@ class OrderForViewing
         string $taxMethod,
         bool $isTaxIncluded,
         bool $isValid,
+        bool $hasBeenPaid,
         bool $hasInvoice,
         bool $isDelivered,
         bool $isShipped,
         bool $invoiceManagementIsEnabled,
         DateTimeImmutable $createdAt,
-        OrderCustomerForViewing $customer,
+        ?OrderCustomerForViewing $customer,
         OrderShippingAddressForViewing $shippingAddress,
         OrderInvoiceAddressForViewing $invoiceAddress,
         OrderProductsForViewing $products,
@@ -194,7 +242,9 @@ class OrderForViewing
         OrderPaymentsForViewing $payments,
         OrderMessagesForViewing $messages,
         OrderPricesForViewing $prices,
-        OrderDiscountsForViewing $discounts
+        OrderDiscountsForViewing $discounts,
+        OrderSourcesForViewing $sources,
+        LinkedOrdersForViewing $linkedOrders
     ) {
         $this->reference = $reference;
         $this->customer = $customer;
@@ -215,6 +265,7 @@ class OrderForViewing
         $this->isShipped = $isShipped;
         $this->prices = $prices;
         $this->isTaxIncluded = $isTaxIncluded;
+        $this->hasBeenPaid = $hasBeenPaid;
         $this->hasInvoice = $hasInvoice;
         $this->discounts = $discounts;
         $this->createdAt = $createdAt;
@@ -223,6 +274,8 @@ class OrderForViewing
         $this->carrierName = $carrierName;
         $this->shopId = $shopId;
         $this->invoiceManagementIsEnabled = $invoiceManagementIsEnabled;
+        $this->sources = $sources;
+        $this->linkedOrders = $linkedOrders;
     }
 
     /**
@@ -279,9 +332,9 @@ class OrderForViewing
     }
 
     /**
-     * @return OrderCustomerForViewing
+     * @return OrderCustomerForViewing|null
      */
-    public function getCustomer(): OrderCustomerForViewing
+    public function getCustomer(): ?OrderCustomerForViewing
     {
         return $this->customer;
     }
@@ -359,6 +412,14 @@ class OrderForViewing
     }
 
     /**
+     * @return bool
+     */
+    public function hasPayments(): bool
+    {
+        return count($this->payments->getPayments()) > 0;
+    }
+
+    /**
      * @return OrderMessagesForViewing
      */
     public function getMessages(): OrderMessagesForViewing
@@ -401,6 +462,14 @@ class OrderForViewing
     /**
      * @return bool
      */
+    public function hasBeenPaid(): bool
+    {
+        return $this->hasBeenPaid;
+    }
+
+    /**
+     * @return bool
+     */
     public function hasInvoice(): bool
     {
         return $this->hasInvoice;
@@ -412,6 +481,14 @@ class OrderForViewing
     public function getDiscounts(): OrderDiscountsForViewing
     {
         return $this->discounts;
+    }
+
+    /**
+     * @return LinkedOrdersForViewing
+     */
+    public function getLinkedOrders(): LinkedOrdersForViewing
+    {
+        return $this->linkedOrders;
     }
 
     /**
@@ -436,5 +513,28 @@ class OrderForViewing
     public function isInvoiceManagementIsEnabled(): bool
     {
         return $this->invoiceManagementIsEnabled;
+    }
+
+    /**
+     * @return OrderSourcesForViewing
+     */
+    public function getSources(): OrderSourcesForViewing
+    {
+        return $this->sources;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRefundable(): bool
+    {
+        /** @var OrderProductForViewing $product */
+        foreach ($this->products->getProducts() as $product) {
+            if ($product->getQuantity() > $product->getQuantityRefunded()) {
+                return true;
+            }
+        }
+
+        return $this->prices->getShippingRefundableAmountRaw()->isGreaterThanZero();
     }
 }

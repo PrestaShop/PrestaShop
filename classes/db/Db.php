@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 /**
  * Class DbCore.
@@ -686,7 +686,7 @@ abstract class DbCore
      * @param string|DbQuery $sql
      * @param bool $use_cache
      *
-     * @return string|false|null
+     * @return string|false Returns false if no results
      */
     public function getValue($sql, $use_cache = true)
     {
@@ -783,10 +783,6 @@ abstract class DbCore
      */
     public function escape($string, $html_ok = false, $bq_sql = false)
     {
-        if (_PS_MAGIC_QUOTES_GPC_) {
-            $string = stripslashes($string);
-        }
-
         if (!is_numeric($string)) {
             $string = $this->_escape($string);
 
@@ -868,17 +864,20 @@ abstract class DbCore
     }
 
     /**
-     * Checks if auto increment value and offset is 1.
+     * Tries to connect to the database and select content (checking select privileges).
      *
      * @param string $server
      * @param string $user
      * @param string $pwd
+     * @param string $db
+     * @param string $prefix
+     * @param string|null $engine Table engine
      *
-     * @return bool
+     * @return bool|string True, false or error
      */
-    public static function checkAutoIncrement($server, $user, $pwd)
+    public static function checkSelectPrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
     {
-        return call_user_func_array([Db::getClass(), 'checkAutoIncrement'], [$server, $user, $pwd]);
+        return call_user_func_array([Db::getClass(), 'checkSelectPrivilege'], [$server, $user, $pwd, $db, $prefix, $engine]);
     }
 
     /**

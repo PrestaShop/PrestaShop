@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,19 +17,25 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
+use Carrier;
+use Currency;
+use Customer;
+use Language;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartCarrierHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
+use Validate;
 
 /**
  * @internal
@@ -36,17 +43,60 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartCarrierHandl
 final class UpdateCartCarrierHandler extends AbstractCartHandler implements UpdateCartCarrierHandlerInterface
 {
     /**
+     * @var ContextStateManager
+     */
+    private $contextStateManager;
+
+    /**
+     * @param ContextStateManager $contextStateManager
+     */
+    public function __construct(ContextStateManager $contextStateManager)
+    {
+        $this->contextStateManager = $contextStateManager;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(UpdateCartCarrierCommand $command)
     {
+        $this->assertActiveCarrier($command->getNewCarrierId());
+
         $cart = $this->getCart($command->getCartId());
+        $this->contextStateManager
+            ->setCart($cart)
+            ->setCurrency(new Currency($cart->id_currency))
+            ->setLanguage(new Language($cart->id_lang))
+            ->setCustomer(new Customer($cart->id_customer))
+        ;
 
         $cart->setDeliveryOption([
             $cart->id_address_delivery => $this->formatLegacyDeliveryOptionFromCarrierId($command->getNewCarrierId()),
         ]);
 
         $cart->update();
+        $this->contextStateManager->restoreContext();
+    }
+
+    /**
+     * @param int $carrierId
+     *
+     * @throws CartConstraintException
+     */
+    private function assertActiveCarrier(int $carrierId): void
+    {
+        if (0 === $carrierId) {
+            return;
+        }
+
+        $carrier = new Carrier($carrierId);
+
+        if (!Validate::isLoadedObject($carrier) || (int) $carrier->id !== $carrierId) {
+            throw new CartConstraintException(sprintf('Carrier with id "%d" was not found', $carrierId), CartConstraintException::INVALID_CARRIER);
+        }
+        if (!$carrier->active) {
+            throw new CartConstraintException(sprintf('Carrier with id "%d" is not active', $carrierId), CartConstraintException::INVALID_CARRIER);
+        }
     }
 
     /**

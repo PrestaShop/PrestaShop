@@ -1,10 +1,11 @@
 {#**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *#}
 {% use 'bootstrap_4_layout.html.twig' %}
 {% use '@PrestaShop/Admin/TwigTemplateForm/typeahead.html.twig' %}
@@ -71,7 +71,11 @@
         {% set label = name|humanize %}
       {%- endif -%}
     {%- endif -%}
-    <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ translation_domain is same as(false) ? label|raw : label|raw }}
+    <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+    {% if required %}
+      <span class="text-danger">*</span>
+    {% endif %}
+    {{ translation_domain is same as(false) ? label|raw : label|raw }}
     {% if label_attr['tooltip'] is defined %}
       {% set placement = label_attr['tooltip_placement'] is defined ? label_attr['tooltip_placement'] : 'top' %}
       <i class="icon-question" data-toggle="pstooltip" data-placement="{{ placement }}"
@@ -80,8 +84,7 @@
 
     {% if label_attr['popover'] is defined %}
       {% set placement = label_attr['popover_placement'] is defined ? label_attr['popover_placement'] : 'top' %}
-      <span class="help-box" data-toggle="popover" data-placement="{{ placement }}"
-            data-content="{{ label_attr['popover'] }}"></span>
+      {% include '@Common/HelpBox/helpbox.html.twig' with { "placement" : placement, "content": label_attr['popover'] } %}
     {% endif %}
     </label>
 
@@ -418,6 +421,7 @@
         </div>
       </div>
     </div>
+    {{ block('form_help') }}
   {% endspaceless %}
 {% endblock date_picker_widget %}
 
@@ -548,9 +552,13 @@
 
 {% block form_errors -%}
   {% if errors|length > 0 -%}
-    <div class="alert alert-danger">
+    <div class="invalid-feedback-container">
+      <div class="d-inline-block text-danger align-top">
+        <i class="material-icons form-error-icon">error_outline</i>
+      </div>
+      <div class="d-inline-block">
       {%- if errors|length > 1 -%}
-        <ul class="alert-text">
+        <ul class="text-danger">
           {%- for error in errors -%}
             <li> {{
               error.messagePluralization is null
@@ -561,7 +569,7 @@
           {%- endfor -%}
         </ul>
       {%- else -%}
-        <div class="alert-text">
+        <div class="text-danger">
           {%- for error in errors -%}
             <p> {{
               error.messagePluralization is null
@@ -572,6 +580,7 @@
           {%- endfor -%}
         </div>
       {%- endif -%}
+      </div>
     </div>
   {%- endif %}
 {%- endblock form_errors %}
@@ -696,6 +705,7 @@
       </div>
     {% endif %}
   </div>
+  {{ block('form_help') }}
 {%- endblock translatable_widget %}
 
 {% block birthday_widget %}

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Order\Refund;
@@ -68,6 +68,21 @@ class OrderRefundSummary
      */
     private $isTaxIncluded;
 
+    /**
+     * @var int
+     */
+    private $precision;
+
+    /**
+     * @param array $orderDetails
+     * @param array $productRefunds
+     * @param float $refundedAmount
+     * @param float $refundedShipping
+     * @param float $voucherAmount
+     * @param bool $voucherChosen
+     * @param bool $isTaxIncluded
+     * @param int $precision
+     */
     public function __construct(
         array $orderDetails,
         array $productRefunds,
@@ -75,7 +90,8 @@ class OrderRefundSummary
         float $refundedShipping,
         float $voucherAmount,
         bool $voucherChosen,
-        bool $isTaxIncluded
+        bool $isTaxIncluded,
+        int $precision
     ) {
         $this->orderDetails = $orderDetails;
         $this->productRefunds = $productRefunds;
@@ -84,6 +100,7 @@ class OrderRefundSummary
         $this->voucherAmount = $voucherAmount;
         $this->voucherChosen = $voucherChosen;
         $this->isTaxIncluded = $isTaxIncluded;
+        $this->precision = $precision;
     }
 
     /**
@@ -140,6 +157,14 @@ class OrderRefundSummary
     public function isTaxIncluded(): bool
     {
         return $this->isTaxIncluded;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPrecision(): int
+    {
+        return $this->precision;
     }
 
     /**

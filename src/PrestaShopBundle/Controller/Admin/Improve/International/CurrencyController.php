@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,21 +17,24 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\BulkDeleteCurrenciesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\BulkToggleCurrenciesStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\RefreshExchangeRatesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\AutomateExchangeRatesUpdateException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\BulkDeleteCurrenciesException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\BulkToggleCurrenciesException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotRefreshExchangeRatesException;
@@ -307,13 +311,13 @@ class CurrencyController extends FrameworkBundleAdminController
         }
 
         return new JsonResponse([
-                'isoCode' => $referenceCurrency->getIsoCode(),
-                'numericIsoCode' => $referenceCurrency->getNumericIsoCode(),
-                'precision' => $referenceCurrency->getPrecision(),
-                'names' => $referenceCurrency->getNames(),
-                'symbols' => $referenceCurrency->getSymbols(),
-                'patterns' => $referenceCurrency->getPatterns(),
-                'exchangeRate' => $exchangeRateValue,
+            'isoCode' => $referenceCurrency->getIsoCode(),
+            'numericIsoCode' => $referenceCurrency->getNumericIsoCode(),
+            'precision' => $referenceCurrency->getPrecision(),
+            'names' => $referenceCurrency->getNames(),
+            'symbols' => $referenceCurrency->getSymbols(),
+            'patterns' => $referenceCurrency->getPatterns(),
+            'exchangeRate' => $exchangeRateValue,
         ]);
     }
 
@@ -385,9 +389,9 @@ class CurrencyController extends FrameworkBundleAdminController
     {
         if ($this->isDemoModeEnabled()) {
             return $this->json([
-                    'status' => false,
-                    'message' => $this->getDemoModeErrorMessage(),
-                ],
+                'status' => false,
+                'message' => $this->getDemoModeErrorMessage(),
+            ],
                 Response::HTTP_UNAUTHORIZED
             );
         }
@@ -396,12 +400,12 @@ class CurrencyController extends FrameworkBundleAdminController
 
         if (!in_array($authLevel, [PageVoter::LEVEL_UPDATE, PageVoter::LEVEL_DELETE])) {
             return $this->json([
-                    'status' => false,
-                    'message' => $this->trans(
-                        'You need permission to edit this.',
-                        'Admin.Notifications.Error'
-                    ),
-                ],
+                'status' => false,
+                'message' => $this->trans(
+                    'You need permission to edit this.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
                 Response::HTTP_UNAUTHORIZED
             );
         }
@@ -463,6 +467,67 @@ class CurrencyController extends FrameworkBundleAdminController
     }
 
     /**
+     * Toggles currencies status in bulk action
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_currencies_index")
+     * @DemoRestricted(redirectRoute="admin_currencies_index")
+     *
+     * @param Request $request
+     * @param string $status
+     *
+     * @return RedirectResponse
+     */
+    public function bulkToggleStatusAction(Request $request, $status)
+    {
+        $currenciesIds = $this->getBulkCurrenciesFromRequest($request);
+        $expectedStatus = 'enable' === $status;
+
+        try {
+            $this->getCommandBus()->handle(new BulkToggleCurrenciesStatusCommand(
+                $currenciesIds,
+                $expectedStatus
+            ));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (CurrencyException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_currencies_index');
+    }
+
+    /**
+     * Deletes currencies in bulk action
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_currencies_index")
+     * @DemoRestricted(redirectRoute="admin_currencies_index")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkDeleteAction(Request $request)
+    {
+        $currenciesIds = $this->getBulkCurrenciesFromRequest($request);
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteCurrenciesCommand($currenciesIds));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+            );
+        } catch (CurrencyException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_currencies_index');
+    }
+
+    /**
      * Gets an error by exception class and its code.
      *
      * @param Exception $e
@@ -500,9 +565,13 @@ class CurrencyController extends FrameworkBundleAdminController
                     'This currency already exists.',
                     'Admin.International.Notification'
                 ),
-                CurrencyConstraintException::ISO_CODES_MISMATCH => $this->trans(
-                    'Cannot find a real currency matching this couple of ISO code and numeric ISO code',
-                    'Admin.International.Notification'
+                CurrencyConstraintException::EMPTY_BULK_TOGGLE => $this->trans(
+                    'You must select at least one element to perform a bulk action.',
+                    'Admin.Notifications.Error'
+                ),
+                CurrencyConstraintException::EMPTY_BULK_DELETE => $this->trans(
+                    'You must select at least one element to perform a bulk action.',
+                    'Admin.Notifications.Error'
                 ),
             ],
             AutomateExchangeRatesUpdateException::class => [
@@ -549,10 +618,54 @@ class CurrencyController extends FrameworkBundleAdminController
                 'Admin.International.Notification'
             ),
             InvalidUnofficialCurrencyException::class => $this->trans(
-                'Oops... it looks like this ISO code already exists. If you are: <ul><li>trying to create an alternative currency, you must type a different ISO code</li><li>trying to modify the currency with ISO code %isoCode%, make sure you did not check the creation box</li></ul>',
+                'Oops... it looks like this ISO code already exists. If you are: [1][2]trying to create an alternative currency, you must type a different ISO code[/2][2]trying to modify the currency with ISO code %isoCode%, make sure you did not check the creation box[/2][/1]',
                 'Admin.International.Notification',
-                ['%isoCode%' => $isoCode]
+                [
+                    '%isoCode%' => $isoCode,
+                    '[1]' => '<ul>',
+                    '[/1]' => '</ul>',
+                    '[2]' => '<li>',
+                    '[/2]' => '</li>',
+                ]
+            ),
+            BulkDeleteCurrenciesException::class => sprintf(
+                '%s: %s',
+                $this->trans(
+                    'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+                ),
+                $e instanceof BulkDeleteCurrenciesException ? implode(', ', $e->getCurrenciesNames()) : ''
+            ),
+            BulkToggleCurrenciesException::class => sprintf(
+                '%s: %s',
+                $this->trans(
+                    'An error occurred while updating the status.',
+                    'Admin.Notifications.Error'
+                ),
+                $e instanceof BulkToggleCurrenciesException ? implode(', ', $e->getCurrenciesNames()) : ''
             ),
         ];
+    }
+
+    /**
+     * Get currencies ids from request for bulk action
+     *
+     * @param Request $request
+     *
+     * @return int[]
+     */
+    private function getBulkCurrenciesFromRequest(Request $request)
+    {
+        $currenciesIds = $request->request->get('currency_currency_bulk');
+
+        if (!is_array($currenciesIds)) {
+            return [];
+        }
+
+        foreach ($currenciesIds as $i => $currencyId) {
+            $currenciesIds[$i] = (int) $currencyId;
+        }
+
+        return $currenciesIds;
     }
 }

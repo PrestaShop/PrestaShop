@@ -160,7 +160,7 @@ var combinations = (function() {
             }
           });
 
-          $('.attribute_default_checkbox').removeAttr('checked');
+          $('.attribute_default_checkbox').prop('checked', false);
           getCombinationForm(attributeId)
             .find('input[id^="combination"][id$="_attribute_default"]')
             .prop("checked", true);
@@ -182,7 +182,7 @@ var combinations = (function() {
                 onContinue: function() {
                   $.ajax({
                     type: 'GET',
-                    url: $('#accordion_combinations').attr('data-action-delete-all').replace(/\/\d+(?=\?.*)/, '/' + $('#form_id_product').val()),
+                    url: $('#accordion_combinations').attr('data-action-delete-all').replace(/\/\d+(?=\?.*)?/, '/' + $('#form_id_product').val()),
                     success: function(response) {
                       combinationsList.remove();
                       displayFieldsManager.refresh();

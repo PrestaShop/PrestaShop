@@ -1,10 +1,11 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
@@ -50,6 +50,8 @@ $(() => {
   orderViewPage.listenForProductEdit();
   orderViewPage.listenForProductAdd();
   orderViewPage.listenForProductPagination();
+  orderViewPage.listenForRefund();
+  orderViewPage.listenForCancelProduct();
 
   orderAddAutocomplete.listenForSearch();
   orderAddAutocomplete.onItemClickedCallback = (product) => orderAdd.setProduct(product);
@@ -67,17 +69,28 @@ $(() => {
     togglePrivateNoteBlock();
   });
 
+  $(OrderViewPageMap.printOrderViewPageButton).on('click', () => {
+    const tempTitle = document.title;
+    document.title = $(OrderViewPageMap.mainDiv).data('orderTitle');
+    window.print();
+    document.title = tempTitle;
+  });
+
   initAddCartRuleFormHandler();
   initChangeAddressFormHandler();
   initHookTabs();
 
   function initHookTabs() {
-    $(OrderViewPageMap.orderHookTabsContainer).find('.nav-tabs li:first-child a').tab('show');
+    $(OrderViewPageMap.orderHookTabsContainer)
+      .find('.nav-tabs li:first-child a')
+      .tab('show');
   }
 
   function handlePaymentDetailsToggle() {
     $(OrderViewPageMap.orderPaymentDetailsBtn).on('click', (event) => {
-      const $paymentDetailRow = $(event.currentTarget).closest('tr').next(':first');
+      const $paymentDetailRow = $(event.currentTarget)
+        .closest('tr')
+        .next(':first');
 
       $paymentDetailRow.toggleClass('d-none');
     });
@@ -103,17 +116,16 @@ $(() => {
   function handlePrivateNoteChange() {
     const $submitBtn = $(OrderViewPageMap.privateNoteSubmitBtn);
 
-    $(OrderViewPageMap.privateNoteInput).on('input', (event) => {
-      const note = $(event.currentTarget).val();
-      $submitBtn.prop('disabled', !note);
+    $(OrderViewPageMap.privateNoteInput).on('input', () => {
+      $submitBtn.prop('disabled', false);
     });
   }
 
   function initAddCartRuleFormHandler() {
     const $modal = $(OrderViewPageMap.addCartRuleModal);
     const $form = $modal.find('form');
-    const $valueHelp = $modal.find(OrderViewPageMap.cartRuleHelpText);
     const $invoiceSelect = $modal.find(OrderViewPageMap.addCartRuleInvoiceIdSelect);
+    const $valueHelp = $modal.find(OrderViewPageMap.cartRuleHelpText);
     const $valueInput = $form.find(OrderViewPageMap.addCartRuleValueInput);
     const $valueFormGroup = $valueInput.closest('.form-group');
 
@@ -150,9 +162,15 @@ $(() => {
 
   function handleUpdateOrderStatusButton() {
     const $btn = $(OrderViewPageMap.updateOrderStatusActionBtn);
+    const $wrapper = $(OrderViewPageMap.updateOrderStatusActionInputWrapper);
 
     $(OrderViewPageMap.updateOrderStatusActionInput).on('change', (event) => {
-      const selectedOrderStatusId = $(event.currentTarget).val();
+      const $element = $(event.currentTarget);
+      const $option = $('option:selected', $element);
+      const selectedOrderStatusId = $element.val();
+
+      $wrapper.css('background-color', $option.data('background-color'));
+      $wrapper.toggleClass('is-bright', $option.data('is-bright') !== undefined);
 
       $btn.prop('disabled', parseInt(selectedOrderStatusId, 10) === $btn.data('orderStatusId'));
     });
@@ -160,10 +178,9 @@ $(() => {
 
   function initChangeAddressFormHandler() {
     const $modal = $(OrderViewPageMap.updateCustomerAddressModal);
-    const $btn = $(OrderViewPageMap.updateOrderStatusActionBtn);
 
-    $(OrderViewPageMap.openOrderAddressUpdateModalBtn).on('click', () => {
-      $modal.find(OrderViewPageMap.updateOrderAddressTypeInput).val($btn.data('address-type'));
+    $(OrderViewPageMap.openOrderAddressUpdateModalBtn).on('click', (event) => {
+      $modal.find(OrderViewPageMap.updateOrderAddressTypeInput).val($(event.currentTarget).data('addressType'));
     });
   }
 });

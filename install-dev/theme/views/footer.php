@@ -22,7 +22,7 @@
 
 <ul id="footer">
 	<li><a href="<?php echo $this->getForumLink() ?>" title="<?php echo $this->translator->trans('Official forum', array(), 'Install'); ?>" target="_blank"><?php echo $this->translator->trans('Official forum', array(), 'Install'); ?></a> | </li>
-	<li><a href="http://www.prestashop.com" title="PrestaShop.com" target="_blank">PrestaShop.com</a> | </li>
+	<li><a href="https://www.prestashop.com" title="PrestaShop.com" target="_blank">PrestaShop.com</a> | </li>
 	<li><a href="<?php echo $this->getSupportLink() ?>" title="<?php echo $this->translator->trans('Support', array(), 'Install'); ?>" target="_blank"><?php echo $this->translator->trans('Support', array(), 'Install'); ?></a> | </li>
 	<li><a href="<?php echo $this->getDocumentationLink() ?>" title="<?php echo $this->translator->trans('Documentation', array(), 'Install'); ?>" target="_blank"><?php echo $this->translator->trans('Documentation', array(), 'Install'); ?></a> | </li>
 	<li><a href="https://www.prestashop.com/<?php echo $this->language->getLanguageIso() ?>/contact-us" title="<?php echo $this->translator->trans('Contact us', array(), 'Install'); ?>" target="_blank"><?php echo $this->translator->trans('Contact us', array(), 'Install'); ?></a> | </li>
