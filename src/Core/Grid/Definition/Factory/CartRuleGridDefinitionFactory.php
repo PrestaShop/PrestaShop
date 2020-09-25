@@ -99,49 +99,57 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory 
     protected function getColumns(): ColumnCollection
     {
         return (new ColumnCollection())
-            ->add((new BulkActionColumn('bulk'))
+            ->add(
+                (new BulkActionColumn('bulk'))
                 ->setOptions([
                     'bulk_field' => 'id_cart_rule',
                 ])
             )
-            ->add((new DataColumn('id_cart_rule'))
+            ->add(
+                (new DataColumn('id_cart_rule'))
                 ->setName($this->trans('ID', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'id_cart_rule',
                 ])
             )
-            ->add((new DataColumn('name'))
+            ->add(
+                (new DataColumn('name'))
                 ->setName($this->trans('Name', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'name',
                 ])
             )
-            ->add((new DataColumn('priority'))
+            ->add(
+                (new DataColumn('priority'))
                 ->setName($this->trans('Priority', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'priority',
                 ])
             )
-            ->add((new DataColumn('code'))
+            ->add(
+                (new DataColumn('code'))
                 ->setName($this->trans('Code', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'code',
                 ])
             )
-            ->add((new DataColumn('quantity'))
+            ->add(
+                (new DataColumn('quantity'))
                 ->setName($this->trans('Quantity', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'quantity',
                 ])
             )
-            ->add((new DateTimeColumn('date_to'))
+            ->add(
+                (new DateTimeColumn('date_to'))
                 ->setName($this->trans('Expiration date', [], 'Admin.Catalog.Feature'))
                 ->setOptions([
                     'format' => $this->contextDateFormat,
                     'field' => 'date_to',
                 ])
             )
-            ->add((new ToggleColumn('active'))
+            ->add(
+                (new ToggleColumn('active'))
                 ->setName($this->trans('Status', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'active',
@@ -150,7 +158,8 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory 
                     'route_param_name' => 'cartRuleId',
                 ])
             )
-            ->add((new ActionColumn('actions'))
+            ->add(
+                (new ActionColumn('actions'))
                 ->setName($this->trans('Actions', [], 'Admin.Global'))
                 ->setOptions([
                     'actions' => (new RowActionCollection())
@@ -172,7 +181,8 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory 
     protected function getFilters(): FilterCollection
     {
         return (new FilterCollection())
-            ->add((new Filter('id_cart_rule', TextType::class))
+            ->add(
+                (new Filter('id_cart_rule', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => [
@@ -181,7 +191,8 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory 
                 ])
                 ->setAssociatedColumn('id_cart_rule')
             )
-            ->add((new Filter('name', TextType::class))
+            ->add(
+                (new Filter('name', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => [
@@ -190,7 +201,8 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory 
                 ])
                 ->setAssociatedColumn('name')
             )
-            ->add((new Filter('priority', TextType::class))
+            ->add(
+                (new Filter('priority', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => [
@@ -199,7 +211,8 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory 
                 ])
                 ->setAssociatedColumn('priority')
             )
-            ->add((new Filter('code', TextType::class))
+            ->add(
+                (new Filter('code', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => [
@@ -208,7 +221,8 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory 
                 ])
                 ->setAssociatedColumn('code')
             )
-            ->add((new Filter('quantity', TextType::class))
+            ->add(
+                (new Filter('quantity', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => [
@@ -217,7 +231,8 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory 
                 ])
                 ->setAssociatedColumn('quantity')
             )
-            ->add((new Filter('date_to', DateRangeType::class))
+            ->add(
+                (new Filter('date_to', DateRangeType::class))
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => [
@@ -227,10 +242,12 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory 
                 ])
                 ->setAssociatedColumn('date_to')
             )
-            ->add((new Filter('active', YesAndNoChoiceType::class))
-            ->setAssociatedColumn('active')
+            ->add(
+                (new Filter('active', YesAndNoChoiceType::class))
+                ->setAssociatedColumn('active')
             )
-            ->add((new Filter('actions', SearchAndResetType::class))
+            ->add(
+                (new Filter('actions', SearchAndResetType::class))
                 ->setAssociatedColumn('actions')
                 ->setTypeOptions([
                     'reset_route' => 'admin_common_reset_search_by_filter_id',
@@ -249,13 +266,15 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory 
     protected function getBulkActions(): BulkActionCollection
     {
         return (new BulkActionCollection())
-            ->add((new SubmitBulkAction('enable_selection'))
+            ->add(
+                (new SubmitBulkAction('enable_selection'))
                 ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
                 ->setOptions([
                     'submit_route' => 'admin_cart_rules_bulk_enable_status',
                 ])
             )
-            ->add((new SubmitBulkAction('disable_selection'))
+            ->add(
+                (new SubmitBulkAction('disable_selection'))
                 ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
                 ->setOptions([
                     'submit_route' => 'admin_cart_rules_bulk_disable_status',
