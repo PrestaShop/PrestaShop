@@ -71,9 +71,8 @@
                 </a>
             {/if}
         </div>
-        <div class="col-md-10 col-sm-12 position-static">
+        <div class="header-top-right col-md-10 col-sm-12 position-static">
           {hook h='displayTop'}
-          <div class="clearfix"></div>
         </div>
       </div>
       <div id="mobile_top_menu_wrapper" class="row hidden-md-up" style="display:none;">

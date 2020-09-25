@@ -1,6 +1,13 @@
+.menu {
+  margin-bottom: 0;
+}
+
 .top-menu {
   &[data-depth="1"] {
     margin: 0.625rem;
+  }
+  &[data-depth="0"] {
+    margin-bottom: 0;
   }
   a:not([data-depth="0"]) {
     display: block;
@@ -13,8 +20,9 @@
     color: $gray-darker;
     text-transform: uppercase;
   }
+
   a[data-depth="0"] {
-    padding: 0.1875rem $small-space 0.375rem;
+    padding: $small-space;
     font-weight: 600;
     &:hover {
       #header & {

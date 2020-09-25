@@ -11,6 +11,12 @@
         color: $gray-second;
         background: $gray-lighter;
       }
+
+      button[type="submit"] {
+        top: 50%;
+        transform: translateY(-50%);
+        bottom: inherit;
+      }
     }
   }
 }
