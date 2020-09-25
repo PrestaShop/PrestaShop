@@ -145,18 +145,19 @@ final class OrderReturnProductsGridDefinitionFactory extends AbstractFilterableG
                     ->setName($this->trans('Actions', [], 'Admin.Global'))
                     ->setOptions([
                         'actions' => (new RowActionCollection())
-                            ->add((new SubmitRowAction('delete'))
-                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                            ->setIcon('delete')
-                            ->setOptions([
-                                'route' => 'admin_order_returns_delete_product',
-                                'route_param_name' => 'orderReturnId',
-                                'route_param_field' => 'id_order_return',
-                                'extra_route_params' => [
-                                    'orderReturnDetailId' => 'id_order_detail',
-                                ],
-                                'confirm_message' => $this->trans('Are you sure you want to delete the selected item(s)?', [], 'Admin.Global'),
-                            ])
+                            ->add(
+                                (new SubmitRowAction('delete'))
+                                    ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                                    ->setIcon('delete')
+                                    ->setOptions([
+                                        'route' => 'admin_order_returns_delete_product',
+                                        'route_param_name' => 'orderReturnId',
+                                        'route_param_field' => 'id_order_return',
+                                        'extra_route_params' => [
+                                            'orderReturnDetailId' => 'id_order_detail',
+                                        ],
+                                        'confirm_message' => $this->trans('Are you sure you want to delete the selected item(s)?', [], 'Admin.Global'),
+                                    ])
                             ),
                     ])
             );
