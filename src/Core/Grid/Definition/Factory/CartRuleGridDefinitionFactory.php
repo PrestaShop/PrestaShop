@@ -100,69 +100,69 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory 
     {
         return (new ColumnCollection())
             ->add((new BulkActionColumn('bulk'))
-            ->setOptions([
-                'bulk_field' => 'id_cart_rule',
-            ])
+                ->setOptions([
+                    'bulk_field' => 'id_cart_rule',
+                ])
             )
             ->add((new DataColumn('id_cart_rule'))
-            ->setName($this->trans('ID', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'id_cart_rule',
-            ])
+                ->setName($this->trans('ID', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'id_cart_rule',
+                ])
             )
             ->add((new DataColumn('name'))
-            ->setName($this->trans('Name', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'name',
-            ])
+                ->setName($this->trans('Name', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'name',
+                ])
             )
             ->add((new DataColumn('priority'))
-            ->setName($this->trans('Priority', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'priority',
-            ])
+                ->setName($this->trans('Priority', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'priority',
+                ])
             )
             ->add((new DataColumn('code'))
-            ->setName($this->trans('Code', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'code',
-            ])
+                ->setName($this->trans('Code', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'code',
+                ])
             )
             ->add((new DataColumn('quantity'))
-            ->setName($this->trans('Quantity', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'quantity',
-            ])
+                ->setName($this->trans('Quantity', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'quantity',
+                ])
             )
             ->add((new DateTimeColumn('date_to'))
-            ->setName($this->trans('Expiration date', [], 'Admin.Catalog.Feature'))
-            ->setOptions([
-                'format' => $this->contextDateFormat,
-                'field' => 'date_to',
-            ])
+                ->setName($this->trans('Expiration date', [], 'Admin.Catalog.Feature'))
+                ->setOptions([
+                    'format' => $this->contextDateFormat,
+                    'field' => 'date_to',
+                ])
             )
             ->add((new ToggleColumn('active'))
-            ->setName($this->trans('Status', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'active',
-                'primary_field' => 'id_cart_rule',
-                'route' => 'admin_cart_rule_toggle_status',
-                'route_param_name' => 'cartRuleId',
-            ])
+                ->setName($this->trans('Status', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'active',
+                    'primary_field' => 'id_cart_rule',
+                    'route' => 'admin_cart_rule_toggle_status',
+                    'route_param_name' => 'cartRuleId',
+                ])
             )
             ->add((new ActionColumn('actions'))
-            ->setName($this->trans('Actions', [], 'Admin.Global'))
-            ->setOptions([
-                'actions' => (new RowActionCollection())
-                    ->add(
-                        $this->buildDeleteAction(
-                            'admin_cart_rules_delete',
-                            'cartRuleId',
-                            'id_cart_rule',
-                            Request::METHOD_DELETE
-                        )
-                    ),
-            ])
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
+                ->setOptions([
+                    'actions' => (new RowActionCollection())
+                        ->add(
+                            $this->buildDeleteAction(
+                                'admin_cart_rules_delete',
+                                'cartRuleId',
+                                'id_cart_rule',
+                                Request::METHOD_DELETE
+                            )
+                        ),
+                ])
             );
     }
 
