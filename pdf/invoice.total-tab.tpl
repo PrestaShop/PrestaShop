@@ -71,28 +71,34 @@
 
 	<tr class="bold">
 		<td class="grey">
-			{l s='Total (Tax excl.)' d='Shop.Pdf' pdf='true'}
+      {if $isTaxEnabled}
+			  {l s='Total (Tax excl.)' d='Shop.Pdf' pdf='true'}
+      {else}
+        {l s='Total' d='Shop.Pdf' pdf='true'}
+      {/if}
 		</td>
 		<td class="white">
 			{displayPrice currency=$order->id_currency price=$footer.total_paid_tax_excl}
 		</td>
 	</tr>
-	{if $footer.total_taxes > 0}
-	<tr class="bold">
-		<td class="grey">
-			{l s='Total Tax' d='Shop.Pdf' pdf='true'}
-		</td>
-		<td class="white">
-			{displayPrice currency=$order->id_currency price=$footer.total_taxes}
-		</td>
-	</tr>
-	{/if}
-	<tr class="bold big">
-		<td class="grey">
-			{l s='Total' d='Shop.Pdf' pdf='true'}
-		</td>
-		<td class="white">
-			{displayPrice currency=$order->id_currency price=$footer.total_paid_tax_incl}
-		</td>
-	</tr>
+  {if $isTaxEnabled}
+    {if $footer.total_taxes > 0}
+      <tr class="bold">
+        <td class="grey">
+          {l s='Total Tax' d='Shop.Pdf' pdf='true'}
+        </td>
+        <td class="white">
+          {displayPrice currency=$order->id_currency price=$footer.total_taxes}
+        </td>
+      </tr>
+    {/if}
+    <tr class="bold big">
+      <td class="grey">
+        {l s='Total' d='Shop.Pdf' pdf='true'}
+      </td>
+      <td class="white">
+        {displayPrice currency=$order->id_currency price=$footer.total_paid_tax_incl}
+      </td>
+    </tr>
+  {/if}
 </table>
