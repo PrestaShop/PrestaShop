@@ -117,4 +117,127 @@ describe('Sort and pagination cart rules', async () => {
       expect(paginationNumber).to.equal('1');
     });
   });
+
+  // 3 - Sort table
+  describe('Sort cart rules table', async () => {
+    const sortTests = [
+      {
+        args: {
+          testIdentifier: 'sortByIdDesc', sortBy: 'id_cart_rule', sortDirection: 'down', isFloat: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'up',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'down',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByPriorityAsc', sortBy: 'priority', sortDirection: 'up', isFloat: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByPriorityDesc', sortBy: 'priority', sortDirection: 'down', isFloat: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByCodeAsc', sortBy: 'code', sortDirection: 'up',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByCodeDesc', sortBy: 'code', sortDirection: 'down',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByQuantityAsc', sortBy: 'quantity', sortDirection: 'up', isFloat: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByQuantityDesc', sortBy: 'quantity', sortDirection: 'down', isFloat: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByDateAsc', sortBy: 'date', sortDirection: 'up',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByDateDesc', sortBy: 'date', sortDirection: 'down',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByIdAsc', sortBy: 'id_cart_rule', sortDirection: 'up', isFloat: true,
+        },
+      },
+    ];
+    sortTests.forEach((test) => {
+      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
+        let nonSortedTable = await cartRulesPage.getAllRowsColumnContent(page, test.args.sortBy);
+
+        await cartRulesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+
+        let sortedTable = await cartRulesPage.getAllRowsColumnContent(page, test.args.sortBy);
+
+        if (test.args.isFloat) {
+          nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
+          sortedTable = await sortedTable.map(text => parseFloat(text));
+        }
+
+        const expectedResult = await cartRulesPage.sortArray(nonSortedTable, test.args.isFloat);
+
+        if (test.args.sortDirection === 'up') {
+          await expect(sortedTable).to.deep.equal(expectedResult);
+        } else {
+          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+        }
+      });
+    });
+  });
+
+  // 4 : Delete with bulk actions
+  describe('Delete carriers with Bulk Actions', async () => {
+    it('should filter list by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
+
+      await cartRulesPage.filterCartRules(
+        page,
+        'input',
+        'name',
+        'todelete',
+      );
+
+      const numberOfCartRulesAfterFilter = await cartRulesPage.getNumberOfElementInGrid(page);
+
+      for (let i = 1; i <= numberOfCartRulesAfterFilter; i++) {
+        const textColumn = await cartRulesPage.getTextColumn(
+          page,
+          i,
+          'name',
+        );
+
+        await expect(textColumn).to.contains('todelete');
+      }
+    });
+
+    it('should delete cart rules with Bulk Actions and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCartRules', baseContext);
+
+      const deleteTextResult = await cartRulesPage.bulkDeleteCartRules(page);
+      await expect(deleteTextResult).to.be.contains(cartRulesPage.successfulMultiDeleteMessage);
+    });
+  });
 });
