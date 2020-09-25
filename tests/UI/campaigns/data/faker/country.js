@@ -7,7 +7,7 @@ const currencies = Object.values(Currencies).map(currency => currency.name);
 
 module.exports = class Country {
   constructor(countryToCreate = {}) {
-    this.name = countryToCreate.name || faker.address.country();
+    this.name = countryToCreate.name || `test${faker.address.country()}`;
     this.isoCode = countryToCreate.isoCode || faker.address.countryCode();
     this.callPrefix = countryToCreate.callPrefix;
     this.currency = countryToCreate.currency || faker.random.arrayElement(currencies);

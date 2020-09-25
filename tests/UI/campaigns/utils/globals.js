@@ -38,3 +38,5 @@ global.BROWSER = {
   },
   interceptErrors: JSON.parse(process.env.INTERCEPT_ERRORS || false),
 };
+
+global.GENERATE_FAILED_STEPS = process.env.GENERATE_FAILED_STEPS || false;

@@ -285,7 +285,7 @@ describe('CRUD country', async () => {
     it('should delete country', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCountry', baseContext);
 
-      const textResult = await countriesPage.deleteCountryByBulkActions(page);
+      const textResult = await countriesPage.deleteCountriesByBulkActions(page);
       await expect(textResult).to.to.contains(countriesPage.successfulMultiDeleteMessage);
     });
 

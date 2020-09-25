@@ -83,6 +83,10 @@ module.exports = class BOBasePage extends CommonPage {
     // Link widget
     this.linkWidgetLink = '#subtab-AdminLinkWidget';
 
+    // Shipping
+    this.shippingLink = '#subtab-AdminParentShipping';
+    this.carriersLink = '#subtab-AdminCarriers';
+
     // Payment
     this.paymentParentLink = '#subtab-AdminParentPayment';
     // Preferences
