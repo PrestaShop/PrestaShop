@@ -24,7 +24,7 @@ const {Products} = require('@data/demo/products');
 // import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_shopParameters_productSettings_CRUDCartRule';
+const baseContext = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule';
 
 let browserContext;
 let page;
