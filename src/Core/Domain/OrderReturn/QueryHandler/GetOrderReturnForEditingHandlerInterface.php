@@ -24,8 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-declare(strict_types=1);
-
 namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing;
