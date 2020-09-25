@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Security\CommandHandler;
 
 use CustomerSession;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\SessionNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteCustomersSessionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler\BulkDeleteCustomersSessionsHandlerInterface;
 
