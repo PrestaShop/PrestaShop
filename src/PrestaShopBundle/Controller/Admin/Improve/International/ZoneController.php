@@ -353,11 +353,7 @@ class ZoneController extends FrameworkBundleAdminController
             return [];
         }
 
-        foreach ($zoneIds as $i => $zoneId) {
-            $zoneIds[$i] = (int) $zoneId;
-        }
-
-        return $zoneIds;
+        return array_map('intval', $zoneIds);
     }
 
     /**
