@@ -204,7 +204,7 @@
 										</div>
 									{elseif $field['type'] == 'textarea'}
 										<div class="col-lg-9">
-											<textarea class="{if isset($field['autoload_rte']) && $field['autoload_rte']}rte autoload_rte{else}textarea-autosize{/if}" name={$key}{if isset({$field['cols']})} cols="{$field['cols']}"{/if}{if isset({$field['rows']})} rows="{$field['rows']}"{/if}">{$field['value']|escape:'html':'UTF-8'}</textarea>
+											<textarea class="{if isset($field['autoload_rte']) && $field['autoload_rte']}rte autoload_rte{else}textarea-autosize{/if}" name="{$key}" {if isset($field['cols'])} cols="{$field['cols']}"{/if} {if isset($field['rows'])} rows="{$field['rows']}"{/if}>{$field['value']|escape:'html':'UTF-8'}</textarea>
 										</div>
 									{elseif $field['type'] == 'file'}
 										<div class="col-lg-9">{$field['file']}</div>
