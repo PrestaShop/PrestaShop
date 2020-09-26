@@ -246,7 +246,7 @@ function replaceAddToCartSections(data) {
   if ($productAddToCart === null) {
     showErrorNextToAddtoCartButton();
   }
-  const $addProductToCart = $('.product-add-to-cart');
+  const $addProductToCart = $(prestashop.selectors.product.addToCart);
   const productAvailabilitySelector = '.add';
   const productAvailabilityMessageSelector = '#product-availability';
   const productMinimalQuantitySelector = '.product-minimal-quantity';
