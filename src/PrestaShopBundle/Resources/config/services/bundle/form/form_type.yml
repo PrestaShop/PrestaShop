@@ -1287,4 +1287,4 @@ services:
       arguments:
         - '@translator'
       tags:
-        - { name: form.type }
+        - name: form.type
