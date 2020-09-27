@@ -31,3 +31,6 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler\BulkToggleCarrierStatusHandler'
         tags:
             - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Carrier\Command\BulkToggleCarrierStatusCommand }
+
+    prestashop.adapter.carrier.carrier_module_advice_alert_checker:
+        class: 'PrestaShop\PrestaShop\Adapter\Carrier\CarrierModuleAdviceAlertChecker'

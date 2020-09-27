@@ -72,8 +72,7 @@ class CarriersController extends FrameworkBundleAdminController
         $carrierGridFactory = $this->get('prestashop.core.grid.factory.carrier');
         $carrierGrid = $carrierGridFactory->getGrid($filters);
 
-        $sql = 'SELECT COUNT(1) FROM `' . _DB_PREFIX_ . 'carrier` WHERE deleted = 0 AND id_reference > 2';
-        $showHeaderAlert = (Db::getInstance()->executeS($sql, false)->fetchColumn(0) == 0);
+        $showHeaderAlert = $this->get('prestashop.adapter.carrier.carrier_module_advice_alert_checker')->showAlert();
 
         $showcaseCardIsClose = $this->getQueryBus()->handle(
             new GetShowcaseCardIsClosed((int) $this->getContext()->employee->id, ShowcaseCard::CARRIERS_CARD)
