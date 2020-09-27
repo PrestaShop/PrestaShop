@@ -114,6 +114,7 @@ class ControllerTest extends TestCase
     public function getControllersClasses()
     {
         return array(
+            array('AdminCarriersController'),
             array('AdminStatusesController'),
             array('AdminZonesController'),
             array('AdminLoginController'),
