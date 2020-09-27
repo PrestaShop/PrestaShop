@@ -27,7 +27,7 @@
 
 {% if showHeaderAlert %}
   <div class="alert alert-info">
-    <p>{{ 'You need to register all the carriers with which you have chosen to work. PrestaShop comes with a selection of carrier modules you can install right below the page or buy on [1]Addons marketplace[/1].'|trans({'[1]': '<a href="https://addons.prestashop.com/en/520-shipping-carriers">', '[/1]': '</a>'}, 'Admin.Shipping.Help') }}</p><br>
-    <p>{{ 'If there is no existing module for your carrier, you can register it manually by clicking on "[1]" but before, please make sure you did not register a new carrier if a module already exists for it!'|trans({'[1]': 'Add new carrier'|trans({}, 'Admin.Shipping.Feature')}, 'Admin.Shipping.Help') }}</p><br>
+    <p>{{ 'You need to register all the carriers with which you have chosen to work. PrestaShop comes with a selection of carrier modules you can install right below the page or buy on [1]Addons marketplace[/1].'|trans({'[1]': '<a href="https://addons.prestashop.com/en/520-shipping-carriers">', '[/1]': '</a>'}, 'Admin.Shipping.Help')|raw }}</p><br>
+    <p>{{ 'If there is no existing module for your carrier, you can register it manually by clicking on "[1]" but before, please make sure you did not register a new carrier if a module already exists for it!'|trans({'[1]': 'Add new carrier'|trans({}, 'Admin.Shipping.Feature')}, 'Admin.Shipping.Help') }}</p>
   </div>
 {% endif %}
