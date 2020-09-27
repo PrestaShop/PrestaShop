@@ -285,13 +285,13 @@ class AdminCarrierWizardControllerCore extends AdminController
                         'values' => [
                             [
                                 'id' => 'is_free_on',
-                                'value' => 0,
-                                'label' => $this->trans('No', [], 'Admin.Global'),
+                                'value' => 1,
+                                'label' => $this->trans('Yes', [], 'Admin.Global'),
                             ],
                             [
                                 'id' => 'is_free_off',
-                                'value' => 1,
-                                'label' => $this->trans('Yes', [], 'Admin.Global'),
+                                'value' => 0,
+                                'label' => $this->trans('No', [], 'Admin.Global'),
                             ],
                         ],
                     ],
