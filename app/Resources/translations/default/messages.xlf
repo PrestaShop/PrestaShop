@@ -2559,7 +2559,7 @@
       <trans-unit id="a333339eb21abf3d5a04f5ede8f73ae9">
         <source>%s deletion</source>
         <target>%s deletion</target>
-        <note>Line: 4059</note>
+        <note>Line: 4066</note>
       </trans-unit>
       <trans-unit id="6ca3b11e4d89a7649d10c2d70d98612f">
         <source>%s addition</source>
@@ -2594,22 +2594,22 @@
       <trans-unit id="431accab7897f05b0424e002ca30391d">
         <source>Operational</source>
         <target>Operational</target>
-        <note>Line: 2685</note>
+        <note>Line: 2686</note>
       </trans-unit>
       <trans-unit id="fb381d41e52b0dc68e684c01decfe2ec">
         <source>Degraded Performance</source>
         <target>Degraded Performance</target>
-        <note>Line: 2686</note>
+        <note>Line: 2687</note>
       </trans-unit>
       <trans-unit id="7c30b2ec6e5e59c7c327f7098fe36f36">
         <source>Partial Outage</source>
         <target>Partial Outage</target>
-        <note>Line: 2687</note>
+        <note>Line: 2688</note>
       </trans-unit>
       <trans-unit id="b101c07e257875658c454fe5caef1db0">
         <source>Major Outage</source>
         <target>Major Outage</target>
-        <note>Line: 2688</note>
+        <note>Line: 2689</note>
       </trans-unit>
       <trans-unit id="ea4788705e6873b424c65e91c2846b19">
         <source>Cancel</source>
@@ -2624,72 +2624,72 @@
       <trans-unit id="b9804794cbfeea33c6d9b2ce85100b48">
         <source>Do you really want to uninstall this module?</source>
         <target>Do you really want to uninstall this module?</target>
-        <note>Line: 4368</note>
+        <note>Line: 4375</note>
       </trans-unit>
       <trans-unit id="b2f31ef3065bf40b2da9fa8525c6adb9">
         <source>Disable this module</source>
         <target>Disable this module</target>
-        <note>Line: 4370</note>
+        <note>Line: 4377</note>
       </trans-unit>
       <trans-unit id="668c99c1164d5348f99c0878770b53a8">
         <source>Enable this module for all shops</source>
         <target>Enable this module for all shops</target>
-        <note>Line: 4371</note>
+        <note>Line: 4378</note>
       </trans-unit>
       <trans-unit id="bcfaccebf745acfd5e75351095a5394a">
         <source>Disable</source>
         <target>Disable</target>
-        <note>Line: 4372</note>
+        <note>Line: 4379</note>
       </trans-unit>
       <trans-unit id="2faec1f9f8cc7f8f40d521c4dd574f49">
         <source>Enable</source>
         <target>Enable</target>
-        <note>Line: 4373</note>
+        <note>Line: 4380</note>
       </trans-unit>
       <trans-unit id="112b842b7d5dda8d3fed05c0e5aaf983">
         <source>Disable on mobiles</source>
         <target>Disable on mobiles</target>
-        <note>Line: 4374</note>
+        <note>Line: 4381</note>
       </trans-unit>
       <trans-unit id="2ef92962bd1ac0c81675f10568ad5cca">
         <source>Disable on tablets</source>
         <target>Disable on tablets</target>
-        <note>Line: 4375</note>
+        <note>Line: 4382</note>
       </trans-unit>
       <trans-unit id="5e3ffb3123b3f23a33804d41e38745a0">
         <source>Disable on computers</source>
         <target>Disable on computers</target>
-        <note>Line: 4376</note>
+        <note>Line: 4383</note>
       </trans-unit>
       <trans-unit id="862e2caedb77ba14d86f180ca7fa90a8">
         <source>Display on mobiles</source>
         <target>Display on mobiles</target>
-        <note>Line: 4377</note>
+        <note>Line: 4384</note>
       </trans-unit>
       <trans-unit id="732ebdb0f33a8153b51ac58cac8f3563">
         <source>Display on tablets</source>
         <target>Display on tablets</target>
-        <note>Line: 4378</note>
+        <note>Line: 4385</note>
       </trans-unit>
       <trans-unit id="7f0f7c79f1d7b01b1d8a89f392e93d36">
         <source>Display on computers</source>
         <target>Display on computers</target>
-        <note>Line: 4379</note>
+        <note>Line: 4386</note>
       </trans-unit>
       <trans-unit id="f1206f9fadc5ce41694f69129aecac26">
         <source>Configure</source>
         <target>Configure</target>
-        <note>Line: 4381</note>
+        <note>Line: 4388</note>
       </trans-unit>
       <trans-unit id="f2a6c498fb90ee345d997f888fce3b18">
         <source>Delete</source>
         <target>Delete</target>
-        <note>Line: 4382</note>
+        <note>Line: 4389</note>
       </trans-unit>
       <trans-unit id="85687c63fd82afbc21632f288e53a6e4">
         <source>This action will permanently remove the module from the server. Are you sure you want to do this?</source>
         <target>This action will permanently remove the module from the server. Are you sure you want to do this?</target>
-        <note>Line: 4386</note>
+        <note>Line: 4393</note>
       </trans-unit>
       <trans-unit id="630f6dc397fe74e52d5189e2c80f282b">
         <source>Back to list</source>
@@ -2699,12 +2699,12 @@
       <trans-unit id="ede4759c9afae620fd586628789fa304">
         <source>Enable selection</source>
         <target>Enable selection</target>
-        <note>Line: 3045</note>
+        <note>Line: 3052</note>
       </trans-unit>
       <trans-unit id="ab7fd6e250b64a46027a996088fdff74">
         <source>Disable selection</source>
         <target>Disable selection</target>
-        <note>Line: 3049</note>
+        <note>Line: 3056</note>
       </trans-unit>
     </body>
   </file>

@@ -237,7 +237,7 @@
       <trans-unit id="355f26b47eff3302c93a1c49676f078e">
         <source>Fatal error</source>
         <target>Fatal error</target>
-        <note>Line: 1158</note>
+        <note>Line: 1165</note>
       </trans-unit>
     </body>
   </file>
@@ -330,27 +330,27 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="2782e6f430c2658c79aecfcecdc0d0e8">
         <source>The field %field_name% is required at least in %lang%.</source>
         <target>The field %field_name% is required at least in %lang%.</target>
-        <note>Line: 3681</note>
+        <note>Line: 3688</note>
       </trans-unit>
       <trans-unit id="114eadc70de249729e9287a6b450c6e0">
         <source>The %field_name% field (%lang%) is invalid.</source>
         <target>The %field_name% field (%lang%) is invalid.</target>
-        <note>Line: 3716</note>
+        <note>Line: 3723</note>
       </trans-unit>
       <trans-unit id="b4186b9ed7c957a1cd9f4e7ce916e603">
         <source>%s: Incorrect value</source>
         <target>%s: Incorrect value</target>
-        <note>Line: 3922</note>
+        <note>Line: 3929</note>
       </trans-unit>
       <trans-unit id="c87956ad745e55231c633c03fe0f0d5b">
         <source>An error occurred while assigning a zone to the selection.</source>
         <target>An error occurred while assigning a zone to the selection.</target>
-        <note>Line: 4174</note>
+        <note>Line: 4181</note>
       </trans-unit>
       <trans-unit id="93463ceee9a3d376b18ee618bc2fffe4">
         <source>You must select at least one element to assign a new zone.</source>
         <target>You must select at least one element to assign a new zone.</target>
-        <note>Line: 4176</note>
+        <note>Line: 4183</note>
       </trans-unit>
     </body>
   </file>
@@ -851,12 +851,12 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="abb1f006957d2d4002cc1d49c63a0fad">
         <source>Please fill out all fields.</source>
         <target>Please fill out all fields.</target>
-        <note>Line: 151</note>
+        <note>Line: 150</note>
       </trans-unit>
       <trans-unit id="3fa720301fb9c9badc23c00c1e88b4f7">
         <source>An error occurred on saving.</source>
         <target>An error occurred on saving.</target>
-        <note>Line: 157</note>
+        <note>Line: 156</note>
       </trans-unit>
     </body>
   </file>
@@ -1245,27 +1245,27 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="efb49241363bce74c7d7899333cdebb5">
         <source>An error occurred when attempting to update the required fields.</source>
         <target>An error occurred when attempting to update the required fields.</target>
-        <note>Line: 638</note>
+        <note>Line: 639</note>
       </trans-unit>
       <trans-unit id="acdcc688155bd653f51eaf710cac8af5">
         <source>Internal error #%s</source>
         <target>Internal error #%s</target>
-        <note>Line: 623</note>
+        <note>Line: 624</note>
       </trans-unit>
       <trans-unit id="d52eaeff31af37a4a7e0550008aff5df">
         <source>An error occurred while attempting to save.</source>
         <target>An error occurred while attempting to save.</target>
-        <note>Line: 657</note>
+        <note>Line: 658</note>
       </trans-unit>
       <trans-unit id="ddb7f719baea8c9f335937b683e8f155">
         <source>Invalid data supplied.</source>
         <target>Invalid data supplied.</target>
-        <note>Line: 629</note>
+        <note>Line: 630</note>
       </trans-unit>
       <trans-unit id="a031742eeff8c55743063075a141da16">
         <source>Address fields contain invalid values.</source>
         <target>Address fields contain invalid values.</target>
-        <note>Line: 643</note>
+        <note>Line: 644</note>
       </trans-unit>
     </body>
   </file>
@@ -1411,32 +1411,47 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="59af32e406ca8d94850e9a2a696c9dcd">
         <source>Invalid value: the payment must be a positive amount.</source>
         <target>Invalid value: the payment must be a positive amount.</target>
-        <note>Line: 1617</note>
+        <note>Line: 1687</note>
       </trans-unit>
       <trans-unit id="546710db975c663e306008fda9fc5865">
         <source>Invalid action: this order has not been delivered.</source>
         <target>Invalid action: this order has not been delivered.</target>
-        <note>Line: 1626</note>
+        <note>Line: 1696</note>
       </trans-unit>
       <trans-unit id="b5ab864b320f4fcbcd061ee3119cf21c">
         <source>Invalid action: this order has already been delivered.</source>
         <target>Invalid action: this order has already been delivered.</target>
-        <note>Line: 1630</note>
+        <note>Line: 1700</note>
       </trans-unit>
       <trans-unit id="3e19a894b9552d54a62e99b3f7e7cf94">
         <source>Invalid action: this order has already been paid.</source>
         <target>Invalid action: this order has already been paid.</target>
-        <note>Line: 1622</note>
+        <note>Line: 1692</note>
       </trans-unit>
       <trans-unit id="7621aa68f3fb11dce889ba85f3a74758">
         <source>Invalid action: this order has not been paid.</source>
         <target>Invalid action: this order has not been paid.</target>
-        <note>Line: 1634</note>
+        <note>Line: 1704</note>
       </trans-unit>
       <trans-unit id="b19e2fa860ab1d9fdd60f5b7772b6a3e">
         <source>The product customization picture could not be found.</source>
         <target>The product customization picture could not be found.</target>
-        <note>Line: 1488</note>
+        <note>Line: 1554</note>
+      </trans-unit>
+      <trans-unit id="074ed474a7e0b671a07422f3014dadfb">
+        <source>This product is already in your order, please edit the quantity instead.</source>
+        <target>This product is already in your order, please edit the quantity instead.</target>
+        <note>Line: 1724</note>
+      </trans-unit>
+      <trans-unit id="5b5d79a83148583db9a987bc0dbb6265">
+        <source>This product is already in the invoice [1], please edit the quantity instead.</source>
+        <target>This product is already in the invoice [1], please edit the quantity instead.</target>
+        <note>Line: 1728</note>
+      </trans-unit>
+      <trans-unit id="963830daedc95e3bd008090ae4c7d1d9">
+        <source>You cannot edit the price of a product that no longer exists in your catalog.</source>
+        <target>You cannot edit the price of a product that no longer exists in your catalog.</target>
+        <note>Line: 1733</note>
       </trans-unit>
     </body>
   </file>

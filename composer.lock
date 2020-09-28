@@ -3910,16 +3910,16 @@
         },
         {
             "name": "prestashop/dashproducts",
-            "version": "v2.1.0",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/dashproducts.git",
-                "reference": "ad716b965b9dc851d7b0e489e7c3122c5f9360d5"
+                "reference": "22652ff141bfc3d5563918210f9b58305c80f4d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/dashproducts/zipball/ad716b965b9dc851d7b0e489e7c3122c5f9360d5",
-                "reference": "ad716b965b9dc851d7b0e489e7c3122c5f9360d5",
+                "url": "https://api.github.com/repos/PrestaShop/dashproducts/zipball/22652ff141bfc3d5563918210f9b58305c80f4d7",
+                "reference": "22652ff141bfc3d5563918210f9b58305c80f4d7",
                 "shasum": ""
             },
             "require": {
@@ -3938,7 +3938,7 @@
             ],
             "description": "PrestaShop module dashproducts",
             "homepage": "https://github.com/PrestaShop/dashproducts",
-            "time": "2020-07-09T11:40:45+00:00"
+            "time": "2020-09-28T11:23:29+00:00"
         },
         {
             "name": "prestashop/dashtrends",
