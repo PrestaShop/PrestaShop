@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyProvider;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Supplier\SupplierProvider;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierConstraintException;
@@ -44,9 +45,9 @@ use ProductSupplier;
 class ProductSupplierValidator extends AbstractObjectModelValidator
 {
     /**
-     * @var ProductProvider
+     * @var ProductRepository
      */
-    private $productProvider;
+    private $productRepository;
 
     /**
      * @var SupplierProvider
@@ -59,16 +60,16 @@ class ProductSupplierValidator extends AbstractObjectModelValidator
     private $currencyProvider;
 
     /**
-     * @param ProductProvider $productProvider
+     * @param ProductRepository $productRepository
      * @param SupplierProvider $supplierProvider
      * @param CurrencyProvider $currencyProvider
      */
     public function __construct(
-        ProductProvider $productProvider,
+        ProductRepository $productRepository,
         SupplierProvider $supplierProvider,
         CurrencyProvider $currencyProvider
     ) {
-        $this->productProvider = $productProvider;
+        $this->productRepository = $productRepository;
         $this->supplierProvider = $supplierProvider;
         $this->currencyProvider = $currencyProvider;
     }
@@ -102,7 +103,7 @@ class ProductSupplierValidator extends AbstractObjectModelValidator
      */
     private function assertRelatedEntitiesExists(ProductSupplier $productSupplier): void
     {
-        $this->productProvider->assertProductExists(new ProductId((int) $productSupplier->id_product));
+        $this->productRepository->assertProductExists(new ProductId((int) $productSupplier->id_product));
         $this->supplierProvider->assertSupplierExists(new SupplierId((int) $productSupplier->id_supplier));
         $this->currencyProvider->assertCurrencyExists(new CurrencyId((int) $productSupplier->id_currency));
     }
