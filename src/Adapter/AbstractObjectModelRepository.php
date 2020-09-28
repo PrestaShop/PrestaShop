@@ -36,6 +36,29 @@ abstract class AbstractObjectModelRepository
 {
     /**
      * @param int $id
+     * @param string $objectModelName
+     * @param string $exceptionClass
+     * @param int $errorCode
+     *
+     * @throws CoreException
+     */
+    protected function assertObjectModelExists(int $id, string $objectModelName, string $exceptionClass, int $errorCode = 0): void
+    {
+        try {
+            if (!ObjectModel::existsInDatabase($id, $objectModelName)) {
+                throw new $exceptionClass(sprintf('%s #%d does not exist', $objectModelName, $id), $errorCode);
+            }
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf('Error occurred when trying to check if %s #%d exists', $objectModelName, $id),
+                0,
+                $e
+            );
+        }
+    }
+
+    /**
+     * @param int $id
      * @param string $objectModelClass
      * @param string $exceptionClass
      *
