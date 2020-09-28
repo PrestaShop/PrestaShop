@@ -759,107 +759,107 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
       <trans-unit id="57297718fdb439175177cf6b196172d1">
         <source>Order status</source>
         <target>Order status</target>
-        <note>Line: 270</note>
+        <note>Line: 276</note>
       </trans-unit>
       <trans-unit id="817434295a673aed431435658b65d9a7">
         <source>Icon</source>
         <target>Icon</target>
-        <note>Line: 287</note>
+        <note>Line: 293</note>
       </trans-unit>
       <trans-unit id="c9f59be398981c130408612e51464e14">
         <source>Send email to customer</source>
         <target>Send email to customer</target>
-        <note>Line: 89</note>
+        <note>Line: 95</note>
       </trans-unit>
       <trans-unit id="13a44cb3c08c1c40a3c5b62152538ee8">
         <source>Email template</source>
         <target>Email template</target>
-        <note>Line: 116</note>
+        <note>Line: 122</note>
       </trans-unit>
       <trans-unit id="8b79d8d9315e50cd01d3ce641cdc61bc">
         <source>Edit return status</source>
         <target>Edit return status</target>
-        <note>Line: 184</note>
+        <note>Line: 190</note>
       </trans-unit>
       <trans-unit id="60fd39d495f2a8d0674c236c004e8f21">
         <source>Add new order status</source>
         <target>Add new order status</target>
-        <note>Line: 194</note>
+        <note>Line: 200</note>
       </trans-unit>
       <trans-unit id="f08b529034b579d49fa94abec7f93af0">
         <source>Add new order return status</source>
         <target>Add new order return status</target>
-        <note>Line: 199</note>
+        <note>Line: 205</note>
       </trans-unit>
       <trans-unit id="34499467057e6ded44fd7861eee1893b">
         <source>Return statuses</source>
         <target>Return statuses</target>
-        <note>Line: 235</note>
+        <note>Line: 241</note>
       </trans-unit>
       <trans-unit id="69a31da4cb502aa192d07ae4a8f48613">
         <source>Status name</source>
         <target>Status name</target>
-        <note>Line: 478</note>
+        <note>Line: 484</note>
       </trans-unit>
       <trans-unit id="cb5feb1b7314637725a2e73bdc9f7295">
         <source>Color</source>
         <target>Color</target>
-        <note>Line: 489</note>
+        <note>Line: 495</note>
       </trans-unit>
       <trans-unit id="192b587e5fc71cd5f25a6089c03bff87">
         <source>Consider the associated order as validated.</source>
         <target>Consider the associated order as validated.</target>
-        <note>Line: 302</note>
+        <note>Line: 308</note>
       </trans-unit>
       <trans-unit id="6d6c83be0e74d3b3d041cd61fa607ede">
         <source>Allow a customer to download and view PDF versions of his/her invoices.</source>
         <target>Allow a customer to download and view PDF versions of his/her invoices.</target>
-        <note>Line: 313</note>
+        <note>Line: 319</note>
       </trans-unit>
       <trans-unit id="9529bbf156fbe6c23b5fbd8b32900f68">
         <source>Hide this status in all customer orders.</source>
         <target>Hide this status in all customer orders.</target>
-        <note>Line: 324</note>
+        <note>Line: 330</note>
       </trans-unit>
       <trans-unit id="a8f92721e361eceb4489636d29f56c21">
         <source>Send an email to the customer when his/her order status has changed.</source>
         <target>Send an email to the customer when his/her order status has changed.</target>
-        <note>Line: 335</note>
+        <note>Line: 341</note>
       </trans-unit>
       <trans-unit id="05ffab376e5c4a64caa28a1c4bd9fc0d">
         <source>Attach invoice PDF to email.</source>
         <target>Attach invoice PDF to email.</target>
-        <note>Line: 346</note>
+        <note>Line: 352</note>
       </trans-unit>
       <trans-unit id="53343ccca7ba90caa497d4c4b40f3ec7">
         <source>Attach delivery slip PDF to email.</source>
         <target>Attach delivery slip PDF to email.</target>
-        <note>Line: 357</note>
+        <note>Line: 363</note>
       </trans-unit>
       <trans-unit id="5fe3d2e4d87dccabf5c9c1d81baf995c">
         <source>Set the order as shipped.</source>
         <target>Set the order as shipped.</target>
-        <note>Line: 368</note>
+        <note>Line: 374</note>
       </trans-unit>
       <trans-unit id="67a8390e9643cecbac9d149da4242bf5">
         <source>Set the order as paid.</source>
         <target>Set the order as paid.</target>
-        <note>Line: 379</note>
+        <note>Line: 385</note>
       </trans-unit>
       <trans-unit id="a886c3a69907e954c771aae074f24040">
         <source>Show delivery PDF.</source>
         <target>Show delivery PDF.</target>
-        <note>Line: 390</note>
+        <note>Line: 396</note>
       </trans-unit>
       <trans-unit id="278c491bdd8a53618c149c4ac790da34">
         <source>Template</source>
         <target>Template</target>
-        <note>Line: 398</note>
+        <note>Line: 404</note>
       </trans-unit>
       <trans-unit id="dc4e76994fd27117c21f83d09faa0649">
         <source>Return status</source>
         <target>Return status</target>
-        <note>Line: 472</note>
+        <note>Line: 478</note>
       </trans-unit>
     </body>
   </file>
