@@ -71,18 +71,20 @@ final class CustomizationFieldDeleter
         $this->productRepository = $productRepository;
     }
 
+    /**
+     * @param CustomizationFieldId $customizationFieldId
+     */
     public function delete(CustomizationFieldId $customizationFieldId): void
     {
         $customizationField = $this->customizationFieldRepository->get($customizationFieldId);
-
-        if (!$this->performDeletion($customizationField)) {
-            throw new CannotDeleteCustomizationFieldException(sprintf(
-                'Failed deleting customization field #%d',
-                $customizationField->id
-            ));
-        }
+        $this->performDeletion($customizationField);
     }
 
+    /**
+     * @param array $customizationFieldIds
+     *
+     * @throws CannotBulkDeleteCustomizationFieldException
+     */
     public function bulkDelete(array $customizationFieldIds): void
     {
         $failedIds = [];
@@ -108,8 +110,6 @@ final class CustomizationFieldDeleter
 
     /**
      * @param CustomizationField $customizationField
-     *
-     * @return bool
      */
     private function performDeletion(CustomizationField $customizationField): void
     {
