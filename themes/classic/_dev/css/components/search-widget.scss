@@ -10,6 +10,10 @@
         min-width: inherit;
         color: $gray-second;
         background: $gray-lighter;
+
+        &:focus {
+          background: $white;
+        }
       }
 
       button[type="submit"] {

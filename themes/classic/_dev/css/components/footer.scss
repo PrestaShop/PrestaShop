@@ -1,5 +1,6 @@
 .block-contact {
   color: $gray;
+  font-size: 0.875rem;
 
   .block-contact-title {
     color: $gray-darker;
@@ -167,10 +168,16 @@
 }
 
 .footer-container {
-  padding-top: $medium-space;
+  padding-top: $extra-large-space;
   margin-top: $medium-space;
   overflow: hidden;
   box-shadow: 2px 2px 11px 0 rgba(0, 0, 0, 0.3);
+
+  .h3,
+  .h4 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
 
   li {
     margin-bottom: 0.3125rem;

@@ -74,8 +74,9 @@ $product-description-height: 70px;
     }
   }
   .products-section-title {
-    margin-bottom: 1.5rem;
+    margin: 2.5rem 0;
     text-align: center;
+    font-weight: 500;
   }
 
   .product-title {
@@ -177,7 +178,7 @@ $product-description-height: 70px;
     margin-top: 1.5rem;
     margin-bottom: 1.5rem;
     clear: both;
-    font-weight: 700;
+    font-weight: 500;
     color: $gray;
   }
 }
