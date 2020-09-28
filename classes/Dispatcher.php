@@ -1215,7 +1215,7 @@ class DispatcherCore
      *
      * @return array
      */
-    public static function getControllersPhpselfList($dirs, $base_name_otherwise = true)
+    public static function getControllersPhpselfList(string $dirs, bool $base_name_otherwise = true)
     {
         $controllers = Dispatcher::getControllers($dirs);
 
