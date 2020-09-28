@@ -286,9 +286,6 @@ services:
     prestashop.adapter.product.product_provider:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductProvider
 
-    prestashop.adapter.product.customization_field_provider:
-        class: PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldProvider
-
     prestashop.adapter.product.customization_field_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldValidator
 
