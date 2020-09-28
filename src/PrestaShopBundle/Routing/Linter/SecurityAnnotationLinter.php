@@ -73,7 +73,7 @@ final class SecurityAnnotationLinter implements RouteLinterInterface
         $controllerAndMethod = $this->extractControllerAndMethodNamesFromRoute($route);
 
         if ($controllerAndMethod === null) {
-            throw new LinterException(sprintf('"%s" does not cannot be parsed', $route->getDefault('_controller')));
+            throw new LinterException(sprintf('"%s" cannot be parsed', $route->getDefault('_controller')));
         }
 
         $reflection = new ReflectionMethod(
