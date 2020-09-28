@@ -1195,7 +1195,7 @@ class DispatcherCore
      *
      * @return string|null
      */
-    public static function getControllerPhpself($controller)
+    public static function getControllerPhpself(string $controller)
     {
         if (!class_exists($controller)) {
             return;
