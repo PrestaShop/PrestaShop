@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use CustomizationField;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\CustomizationFieldRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -42,9 +43,9 @@ use Product;
 class ProductCustomizationFieldUpdater
 {
     /**
-     * @var CustomizationFieldPersister
+     * @var CustomizationFieldRepository
      */
-    private $customizationFieldPersister;
+    private $customizationFieldRepository;
 
     /**
      * @var CustomizationFieldDeleter
@@ -62,18 +63,18 @@ class ProductCustomizationFieldUpdater
     private $productPersister;
 
     /**
-     * @param CustomizationFieldPersister $customizationFieldPersister
+     * @param CustomizationFieldPersister $customizationFieldRepository
      * @param CustomizationFieldDeleter $customizationFieldDeleter
      * @param ProductProvider $productProvider
      * @param ProductPersister $productPersister
      */
     public function __construct(
-        CustomizationFieldPersister $customizationFieldPersister,
+        CustomizationFieldRepository $customizationFieldRepository,
         CustomizationFieldDeleter $customizationFieldDeleter,
         ProductProvider $productProvider,
         ProductPersister $productPersister
     ) {
-        $this->customizationFieldPersister = $customizationFieldPersister;
+        $this->customizationFieldRepository = $customizationFieldRepository;
         $this->customizationFieldDeleter = $customizationFieldDeleter;
         $this->productPersister = $productPersister;
         $this->productProvider = $productProvider;
@@ -90,9 +91,9 @@ class ProductCustomizationFieldUpdater
 
         foreach ($customizationFields as $customizationField) {
             if ($customizationField->id) {
-                $this->customizationFieldPersister->update($customizationField);
+                $this->customizationFieldRepository->update($customizationField);
             } else {
-                $this->customizationFieldPersister->add($customizationField);
+                $this->customizationFieldRepository->add($customizationField);
             }
         }
 
