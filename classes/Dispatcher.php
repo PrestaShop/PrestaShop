@@ -1204,7 +1204,7 @@ class DispatcherCore
         $reflectionClass = new ReflectionClass($controller);
         $controllerDefaultProperties = $reflectionClass->getDefaultProperties();
 
-        return isset($controllerDefaultProperties['php_self']) ? $controllerDefaultProperties['php_self'] : null;
+        return $controllerDefaultProperties['php_self'] ?? null;
     }
 
     /**
