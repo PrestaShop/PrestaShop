@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use CustomizationField;
-use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldProvider;
 use PrestaShop\PrestaShop\Adapter\Product\ProductCustomizationFieldUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\ProductProvider;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\CustomizationFieldRepository;
@@ -58,26 +57,18 @@ final class UpdateCustomizationFieldHandler implements UpdateCustomizationFieldH
     private $customizationFieldRepository;
 
     /**
-     * @var CustomizationFieldProvider
-     */
-    private $customizationFieldProvider;
-
-    /**
      * @param ProductProvider $productProvider
      * @param ProductCustomizationFieldUpdater $productCustomizationFieldUpdater
      * @param CustomizationFieldRepository $customizationFieldRepository
-     * @param CustomizationFieldProvider $customizationFieldProvider
      */
     public function __construct(
         ProductProvider $productProvider,
         ProductCustomizationFieldUpdater $productCustomizationFieldUpdater,
-        CustomizationFieldRepository $customizationFieldRepository,
-        CustomizationFieldProvider $customizationFieldProvider
+        CustomizationFieldRepository $customizationFieldRepository
     ) {
         $this->productProvider = $productProvider;
         $this->productCustomizationFieldUpdater = $productCustomizationFieldUpdater;
         $this->customizationFieldRepository = $customizationFieldRepository;
-        $this->customizationFieldProvider = $customizationFieldProvider;
     }
 
     /**
@@ -85,7 +76,7 @@ final class UpdateCustomizationFieldHandler implements UpdateCustomizationFieldH
      */
     public function handle(UpdateCustomizationFieldCommand $command): void
     {
-        $customizationField = $this->customizationFieldProvider->get($command->getCustomizationFieldId());
+        $customizationField = $this->customizationFieldRepository->get($command->getCustomizationFieldId());
         $this->fillEntityWithCommandData($customizationField, $command);
 
         $this->customizationFieldRepository->update($customizationField);

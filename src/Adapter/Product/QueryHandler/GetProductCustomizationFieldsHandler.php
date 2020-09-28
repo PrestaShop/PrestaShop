@@ -28,8 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldProvider;
 use PrestaShop\PrestaShop\Adapter\Product\ProductProvider;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\CustomizationFieldRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryHandler\GetProductCustomizationFieldsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
@@ -41,9 +41,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\Customiz
 final class GetProductCustomizationFieldsHandler implements GetProductCustomizationFieldsHandlerInterface
 {
     /**
-     * @var CustomizationFieldProvider
+     * @var CustomizationFieldRepository
      */
-    private $customizationFieldProvider;
+    private $customizationFieldRepository;
 
     /**
      * @var ProductProvider
@@ -51,14 +51,14 @@ final class GetProductCustomizationFieldsHandler implements GetProductCustomizat
     private $productProvider;
 
     /**
-     * @param CustomizationFieldProvider $customizationFieldProvider
+     * @param CustomizationFieldRepository $customizationFieldRepository
      * @param ProductProvider $productProvider
      */
     public function __construct(
-        CustomizationFieldProvider $customizationFieldProvider,
+        CustomizationFieldRepository $customizationFieldRepository,
         ProductProvider $productProvider
     ) {
-        $this->customizationFieldProvider = $customizationFieldProvider;
+        $this->customizationFieldRepository = $customizationFieldRepository;
         $this->productProvider = $productProvider;
     }
 
@@ -87,7 +87,7 @@ final class GetProductCustomizationFieldsHandler implements GetProductCustomizat
      */
     private function buildCustomizationField(int $fieldId): CustomizationField
     {
-        $fieldEntity = $this->customizationFieldProvider->get(new CustomizationFieldId($fieldId));
+        $fieldEntity = $this->customizationFieldRepository->get(new CustomizationFieldId($fieldId));
 
         return new CustomizationField(
             $fieldId,
