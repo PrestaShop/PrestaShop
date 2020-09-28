@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use CustomizationField;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\CustomizationFieldRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationFieldDeleterInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotBulkDeleteCustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotDeleteCustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
@@ -42,7 +41,7 @@ use Product;
 /**
  * Deletes customization field/fields using legacy object models
  */
-final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterface
+final class CustomizationFieldDeleter
 {
     /**
      * @var CustomizationFieldRepository
@@ -71,9 +70,6 @@ final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterf
         $this->productProvider = $productProvider;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function delete(CustomizationFieldId $customizationFieldId): void
     {
         $customizationField = $this->customizationFieldRepository->get($customizationFieldId);
@@ -86,9 +82,6 @@ final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterf
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function bulkDelete(array $customizationFieldIds): void
     {
         $failedIds = [];

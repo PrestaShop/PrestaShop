@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use CustomizationField;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationFieldDeleterInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -48,7 +47,7 @@ class ProductCustomizationFieldUpdater
     private $customizationFieldPersister;
 
     /**
-     * @var CustomizationFieldDeleterInterface
+     * @var CustomizationFieldDeleter
      */
     private $customizationFieldDeleter;
 
@@ -64,13 +63,13 @@ class ProductCustomizationFieldUpdater
 
     /**
      * @param CustomizationFieldPersister $customizationFieldPersister
-     * @param CustomizationFieldDeleterInterface $customizationFieldDeleter
+     * @param CustomizationFieldDeleter $customizationFieldDeleter
      * @param ProductProvider $productProvider
      * @param ProductPersister $productPersister
      */
     public function __construct(
         CustomizationFieldPersister $customizationFieldPersister,
-        CustomizationFieldDeleterInterface $customizationFieldDeleter,
+        CustomizationFieldDeleter $customizationFieldDeleter,
         ProductProvider $productProvider,
         ProductPersister $productPersister
     ) {
