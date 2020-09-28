@@ -29,18 +29,13 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use CustomizationField;
-use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldPersister;
-use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldProvider;
-use PrestaShop\PrestaShop\Adapter\Product\ProductProvider;
-use PrestaShop\PrestaShop\Adapter\Product\ProductUpdater;
+use PrestaShop\PrestaShop\Adapter\Product\ProductCustomizationFieldUpdater;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\SetProductCustomizationFieldsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationField as CustomizationFieldDTO;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationFieldDeleterInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use Product;
 
 /**
  * Handles @see  SetProductCustomizationFieldsCommand using legacy object model
@@ -48,49 +43,25 @@ use Product;
 class SetProductCustomizationFieldsHandler implements SetProductCustomizationFieldsHandlerInterface
 {
     /**
-     * @var CustomizationFieldDeleterInterface
+     * @var ProductRepository
      */
-    private $customizationFieldDeleter;
+    private $productRepository;
 
     /**
-     * @var CustomizationFieldPersister
+     * @var ProductCustomizationFieldUpdater
      */
-    private $customizationFieldPersister;
+    private $productCustomizationFieldUpdater;
 
     /**
-     * @var CustomizationFieldProvider
-     */
-    private $customizationFieldProvider;
-
-    /**
-     * @var ProductUpdater
-     */
-    private $productUpdater;
-
-    /**
-     * @var ProductProvider
-     */
-    private $productProvider;
-
-    /**
-     * @param CustomizationFieldPersister $customizationFieldPersister
-     * @param CustomizationFieldDeleterInterface $customizationFieldDeleter
-     * @param CustomizationFieldProvider $customizationFieldProvider
-     * @param ProductUpdater $productUpdater
-     * @param ProductProvider $productProvider
+     * @param ProductRepository $productRepository
+     * @param ProductCustomizationFieldUpdater $productCustomizationFieldUpdater
      */
     public function __construct(
-        CustomizationFieldPersister $customizationFieldPersister,
-        CustomizationFieldDeleterInterface $customizationFieldDeleter,
-        CustomizationFieldProvider $customizationFieldProvider,
-        ProductUpdater $productUpdater,
-        ProductProvider $productProvider
+        ProductRepository $productRepository,
+        ProductCustomizationFieldUpdater $productCustomizationFieldUpdater
     ) {
-        $this->customizationFieldDeleter = $customizationFieldDeleter;
-        $this->customizationFieldPersister = $customizationFieldPersister;
-        $this->customizationFieldProvider = $customizationFieldProvider;
-        $this->productUpdater = $productUpdater;
-        $this->productProvider = $productProvider;
+        $this->productRepository = $productRepository;
+        $this->productCustomizationFieldUpdater = $productCustomizationFieldUpdater;
     }
 
     /**
@@ -100,20 +71,15 @@ class SetProductCustomizationFieldsHandler implements SetProductCustomizationFie
      */
     public function handle(SetProductCustomizationFieldsCommand $command): array
     {
-        $product = $this->productProvider->get($command->getProductId());
-        $providedCustomizationFields = $command->getCustomizationFields();
-        $deletableFieldIds = $this->getDeletableFieldIds($providedCustomizationFields, $product);
+        $productId = $command->getProductId();
+        $product = $this->productRepository->get($productId);
+        $customizationFields = [];
 
-        foreach ($providedCustomizationFields as $customizationFieldDTO) {
-            if ($customizationFieldDTO->getCustomizationFieldId()) {
-                $this->update($customizationFieldDTO);
-            } else {
-                $this->create($command->getProductId(), $customizationFieldDTO);
-            }
+        foreach ($command->getCustomizationFields() as $providedCustomizationField) {
+            $customizationFields[] = $this->buildEntityFromDTO($productId, $providedCustomizationField);
         }
 
-        $this->deleteCustomizationFields($deletableFieldIds);
-        $this->productUpdater->refreshProductCustomizabilityProperties($product);
+        $this->productCustomizationFieldUpdater->setProductCustomizationFields($productId, $customizationFields);
 
         return array_map(function (int $customizationFieldId): CustomizationFieldId {
             return new CustomizationFieldId($customizationFieldId);
@@ -123,65 +89,19 @@ class SetProductCustomizationFieldsHandler implements SetProductCustomizationFie
     /**
      * @param ProductId $productId
      * @param CustomizationFieldDTO $customizationFieldDTO
+     *
+     * @return CustomizationField
      */
-    public function create(ProductId $productId, CustomizationFieldDTO $customizationFieldDTO): void
+    private function buildEntityFromDTO(ProductId $productId, CustomizationFieldDTO $customizationFieldDTO): CustomizationField
     {
         $customizationField = new CustomizationField();
+        $customizationField->id = $customizationFieldDTO->getCustomizationFieldId();
         $customizationField->id_product = $productId->getValue();
         $customizationField->type = $customizationFieldDTO->getType();
         $customizationField->required = $customizationFieldDTO->isRequired();
         $customizationField->name = $customizationFieldDTO->getLocalizedNames();
         $customizationField->is_module = $customizationFieldDTO->isAddedByModule();
 
-        $this->customizationFieldPersister->add($customizationField);
-    }
-
-    /**
-     * @param CustomizationFieldDTO $customizationFieldDTO
-     *
-     * @throws CoreException
-     */
-    private function update(CustomizationFieldDTO $customizationFieldDTO): void
-    {
-        $fieldId = $customizationFieldDTO->getCustomizationFieldId();
-        $customizationFieldId = new CustomizationFieldId($fieldId);
-
-        $this->customizationFieldPersister->update(
-            $this->customizationFieldProvider->get($customizationFieldId),
-            [
-                'type' => $customizationFieldDTO->getType(),
-                'required' => $customizationFieldDTO->isRequired(),
-                'name' => $customizationFieldDTO->getLocalizedNames(),
-                'is_module' => $customizationFieldDTO->isAddedByModule(),
-            ]
-        );
-    }
-
-    /**
-     * @param array $providedCustomizationFields
-     * @param Product $product
-     *
-     * @return array
-     */
-    private function getDeletableFieldIds(array $providedCustomizationFields, Product $product): array
-    {
-        $existingFieldIds = $product->getNonDeletedCustomizationFieldIds();
-        $providedFieldsIds = array_map(function (CustomizationFieldDTO $field): ?int {
-            return $field->getCustomizationFieldId();
-        }, $providedCustomizationFields);
-
-        return array_diff($existingFieldIds, $providedFieldsIds);
-    }
-
-    /**
-     * @param int[] $fieldIdsForDeletion
-     */
-    private function deleteCustomizationFields(array $fieldIdsForDeletion): void
-    {
-        $customizationFieldIdsForDeletion = array_map(function (int $fieldId): CustomizationFieldId {
-            return new CustomizationFieldId($fieldId);
-        }, $fieldIdsForDeletion);
-
-        $this->customizationFieldDeleter->bulkDelete($customizationFieldIdsForDeletion);
+        return $customizationField;
     }
 }

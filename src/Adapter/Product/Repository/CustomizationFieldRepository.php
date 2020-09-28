@@ -26,19 +26,22 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product;
+namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
 use CustomizationField;
-use PrestaShop\PrestaShop\Adapter\AbstractObjectModelPersister;
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotAddCustomizationFieldException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotDeleteCustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotUpdateCustomizationFieldException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
- * Persists CustomizationField
+ * Methods to access data storage for CustomizationField
  */
-class CustomizationFieldPersister extends AbstractObjectModelPersister
+class CustomizationFieldRepository extends AbstractObjectModelRepository
 {
     /**
      * @var CustomizationFieldValidator
@@ -52,6 +55,25 @@ class CustomizationFieldPersister extends AbstractObjectModelPersister
         CustomizationFieldValidator $customizationFieldValidator
     ) {
         $this->customizationFieldValidator = $customizationFieldValidator;
+    }
+
+    /**
+     * @param CustomizationFieldId $fieldId
+     *
+     * @return CustomizationField
+     *
+     * @throws CoreException
+     */
+    public function get(CustomizationFieldId $fieldId): CustomizationField
+    {
+        /** @var CustomizationField $customizationField */
+        $customizationField = $this->getObjectModel(
+            $fieldId->getValue(),
+            CustomizationField::class,
+            CustomizationFieldNotFoundException::class
+        );
+
+        return $customizationField;
     }
 
     /**
@@ -72,29 +94,28 @@ class CustomizationFieldPersister extends AbstractObjectModelPersister
 
     /**
      * @param CustomizationField $customizationField
-     * @param array<string, mixed> $propertiesToUpdate
-     * @param int $errorCode
      *
-     * @throws CoreException
+     * @throws CannotUpdateCustomizationFieldException
      */
-    public function update(CustomizationField $customizationField, array $propertiesToUpdate, int $errorCode = 0): void
+    public function update(CustomizationField $customizationField): void
     {
-        $this->fillProperties($customizationField, $propertiesToUpdate);
         $this->customizationFieldValidator->validate($customizationField);
-        $this->updateObjectModel($customizationField, CannotUpdateCustomizationFieldException::class, $errorCode);
+        $this->updateObjectModel($customizationField, CannotUpdateCustomizationFieldException::class);
     }
 
     /**
      * @param CustomizationField $customizationField
-     * @param array $propertiesToUpdate
      */
-    private function fillProperties(CustomizationField $customizationField, array $propertiesToUpdate): void
+    public function delete(CustomizationField $customizationField): void
     {
-        $this->fillLocalizedProperty($customizationField, 'name', $propertiesToUpdate);
-        $this->fillProperty($customizationField, 'type', $propertiesToUpdate);
-        $this->fillProperty($customizationField, 'required', $propertiesToUpdate);
-        $this->fillProperty($customizationField, 'is_module', $propertiesToUpdate);
-        $this->fillProperty($customizationField, 'id_product', $propertiesToUpdate);
-        $this->fillProperty($customizationField, 'is_deleted', $propertiesToUpdate);
+        $this->deleteObjectModel($customizationField, CannotDeleteCustomizationFieldException::class);
+    }
+
+    /**
+     * @param CustomizationField $customizationField
+     */
+    public function softDelete(CustomizationField $customizationField): void
+    {
+        $this->softDeleteObjectModel($customizationField, CannotDeleteCustomizationFieldException::class);
     }
 }

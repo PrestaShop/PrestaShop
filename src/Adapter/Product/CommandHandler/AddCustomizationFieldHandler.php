@@ -29,9 +29,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use CustomizationField;
-use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldPersister;
-use PrestaShop\PrestaShop\Adapter\Product\ProductProvider;
-use PrestaShop\PrestaShop\Adapter\Product\ProductUpdater;
+use PrestaShop\PrestaShop\Adapter\Product\ProductCustomizationFieldUpdater;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\CustomizationFieldRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\AddCustomizationFieldCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\AddCustomizationFieldHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
@@ -42,33 +42,33 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\Customiz
 final class AddCustomizationFieldHandler implements AddCustomizationFieldHandlerInterface
 {
     /**
-     * @var ProductProvider
+     * @var ProductRepository
      */
-    private $productProvider;
+    private $productRepository;
 
     /**
-     * @var ProductUpdater
+     * @var ProductCustomizationFieldUpdater
      */
-    private $productUpdater;
+    private $productCustomizationFieldUpdater;
 
     /**
-     * @var CustomizationFieldPersister
+     * @var CustomizationFieldRepository
      */
-    private $customizationFieldPersister;
+    private $customizationFieldRepository;
 
     /**
-     * @param ProductProvider $productProvider
-     * @param ProductUpdater $productUpdater
-     * @param CustomizationFieldPersister $customizationFieldPersister
+     * @param ProductRepository $productRepository
+     * @param ProductCustomizationFieldUpdater $productCustomizationFieldUpdater
+     * @param CustomizationFieldRepository $customizationFieldRepository
      */
     public function __construct(
-        ProductProvider $productProvider,
-        ProductUpdater $productUpdater,
-        CustomizationFieldPersister $customizationFieldPersister
+        ProductRepository $productRepository,
+        ProductCustomizationFieldUpdater $productCustomizationFieldUpdater,
+        CustomizationFieldRepository $customizationFieldRepository
     ) {
-        $this->productProvider = $productProvider;
-        $this->customizationFieldPersister = $customizationFieldPersister;
-        $this->productUpdater = $productUpdater;
+        $this->productRepository = $productRepository;
+        $this->customizationFieldRepository = $customizationFieldRepository;
+        $this->productCustomizationFieldUpdater = $productCustomizationFieldUpdater;
     }
 
     /**
@@ -76,7 +76,7 @@ final class AddCustomizationFieldHandler implements AddCustomizationFieldHandler
      */
     public function handle(AddCustomizationFieldCommand $command): CustomizationFieldId
     {
-        $product = $this->productProvider->get($command->getProductId());
+        $product = $this->productRepository->get($command->getProductId());
         $customizationField = new CustomizationField();
 
         $customizationField->id_product = (int) $product->id;
@@ -85,8 +85,8 @@ final class AddCustomizationFieldHandler implements AddCustomizationFieldHandler
         $customizationField->is_module = $command->isAddedByModule();
         $customizationField->name = $command->getLocalizedNames();
 
-        $customizationFieldId = $this->customizationFieldPersister->add($customizationField);
-        $this->productUpdater->refreshProductCustomizabilityProperties($product);
+        $customizationFieldId = $this->customizationFieldRepository->add($customizationField);
+        $this->productCustomizationFieldUpdater->refreshProductCustomizability($product);
 
         return $customizationFieldId;
     }

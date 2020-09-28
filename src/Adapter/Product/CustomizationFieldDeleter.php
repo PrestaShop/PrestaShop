@@ -29,31 +29,30 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use CustomizationField;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationFieldDeleterInterface;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\CustomizationFieldRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotBulkDeleteCustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotDeleteCustomizationFieldException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShopException;
 use Product;
 
 /**
  * Deletes customization field/fields using legacy object models
  */
-final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterface
+final class CustomizationFieldDeleter
 {
     /**
-     * @var CustomizationFieldProvider
+     * @var CustomizationFieldRepository
      */
-    private $customizationFieldProvider;
+    private $customizationFieldRepository;
 
     /**
-     * @var ProductProvider
+     * @var ProductRepository
      */
-    private $productProvider;
+    private $productRepository;
 
     /**
      * @var array<int, Product>
@@ -61,42 +60,40 @@ final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterf
     private $productsById = [];
 
     /**
-     * @param CustomizationFieldProvider $customizationFieldProvider
-     * @param ProductProvider $productProvider
+     * @param CustomizationFieldRepository $customizationFieldRepository
+     * @param ProductRepository $productRepository
      */
     public function __construct(
-        CustomizationFieldProvider $customizationFieldProvider,
-        ProductProvider $productProvider
+        CustomizationFieldRepository $customizationFieldRepository,
+        ProductRepository $productRepository
     ) {
-        $this->customizationFieldProvider = $customizationFieldProvider;
-        $this->productProvider = $productProvider;
+        $this->customizationFieldRepository = $customizationFieldRepository;
+        $this->productRepository = $productRepository;
     }
 
     /**
-     * {@inheritdoc}
+     * @param CustomizationFieldId $customizationFieldId
      */
     public function delete(CustomizationFieldId $customizationFieldId): void
     {
-        $customizationField = $this->customizationFieldProvider->get($customizationFieldId);
-
-        if (!$this->performDeletion($customizationField)) {
-            throw new CannotDeleteCustomizationFieldException(sprintf(
-                'Failed deleting customization field #%d',
-                $customizationField->id
-            ));
-        }
+        $customizationField = $this->customizationFieldRepository->get($customizationFieldId);
+        $this->performDeletion($customizationField);
     }
 
     /**
-     * {@inheritdoc}
+     * @param array $customizationFieldIds
+     *
+     * @throws CannotBulkDeleteCustomizationFieldException
      */
     public function bulkDelete(array $customizationFieldIds): void
     {
         $failedIds = [];
         foreach ($customizationFieldIds as $customizationFieldId) {
-            $customizationField = $this->customizationFieldProvider->get($customizationFieldId);
+            $customizationField = $this->customizationFieldRepository->get($customizationFieldId);
 
-            if (!$this->performDeletion($customizationField)) {
+            try {
+                $this->performDeletion($customizationField);
+            } catch (CannotDeleteCustomizationFieldException $e) {
                 $failedIds[] = $customizationFieldId->getValue();
             }
         }
@@ -113,36 +110,17 @@ final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterf
 
     /**
      * @param CustomizationField $customizationField
-     *
-     * @return bool
-     *
-     * @throws CustomizationFieldException
-     * @throws ProductException
-     * @throws ProductNotFoundException
      */
-    private function performDeletion(CustomizationField $customizationField): bool
+    private function performDeletion(CustomizationField $customizationField): void
     {
         $product = $this->getProduct((int) $customizationField->id_product);
         $usedFieldIds = array_map('intval', $product->getUsedCustomizationFieldsIds());
         $fieldId = (int) $customizationField->id;
 
-        try {
-            if (in_array($fieldId, $usedFieldIds)) {
-                $successfullyDeleted = $customizationField->softDelete();
-            } else {
-                $successfullyDeleted = $customizationField->delete();
-            }
-
-            return (bool) $successfullyDeleted;
-        } catch (PrestaShopException $e) {
-            throw new CustomizationFieldException(
-                sprintf(
-                    'Error occurred when trying to delete customization field #%d',
-                    $fieldId
-                ),
-                0,
-                $e
-            );
+        if (in_array($fieldId, $usedFieldIds)) {
+            $this->customizationFieldRepository->softDelete($customizationField);
+        } else {
+            $this->customizationFieldRepository->delete($customizationField);
         }
     }
 
@@ -157,7 +135,7 @@ final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterf
     private function getProduct(int $productId): Product
     {
         if (!isset($this->productsById[$productId])) {
-            $this->productsById[$productId] = $this->productProvider->get(new ProductId($productId));
+            $this->productsById[$productId] = $this->productRepository->get(new ProductId($productId));
         }
 
         return $this->productsById[$productId];

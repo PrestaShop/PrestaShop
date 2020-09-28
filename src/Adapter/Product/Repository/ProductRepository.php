@@ -26,19 +26,34 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product;
+namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
-use PrestaShop\PrestaShop\Adapter\AbstractObjectModelProvider;
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Adapter\Product\ProductValidator;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use Product;
 
 /**
- * Provides existing Product
+ * Methods to access data storage for Product
  */
-class ProductProvider extends AbstractObjectModelProvider
+class ProductRepository extends AbstractObjectModelRepository
 {
+    /**
+     * @var ProductValidator
+     */
+    private $productValidator;
+
+    /**
+     * @param ProductValidator $productValidator
+     */
+    public function __construct(ProductValidator $productValidator)
+    {
+        $this->productValidator = $productValidator;
+    }
+
     /**
      * @param ProductId $productId
      *
@@ -56,5 +71,23 @@ class ProductProvider extends AbstractObjectModelProvider
         );
 
         return $product;
+    }
+
+    /**
+     * @param Product $product
+     * @param array $propertiesToUpdate
+     * @param int $errorCode
+     *
+     * @throws CoreException
+     */
+    public function partialUpdate(Product $product, array $propertiesToUpdate, int $errorCode): void
+    {
+        $this->productValidator->validate($product);
+        $this->partiallyUpdateObjectModel(
+            $product,
+            $propertiesToUpdate,
+            CannotUpdateProductException::class,
+            $errorCode
+        );
     }
 }

@@ -32,11 +32,36 @@ use ObjectModel;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
 
-/**
- * Reusable methods to persist legacy object model
- */
-abstract class AbstractObjectModelPersister
+abstract class AbstractObjectModelRepository
 {
+    /**
+     * @param int $id
+     * @param string $objectModelClass
+     * @param string $exceptionClass
+     *
+     * @return ObjectModel
+     *
+     * @throws CoreException
+     */
+    protected function getObjectModel(int $id, string $objectModelClass, string $exceptionClass): ObjectModel
+    {
+        try {
+            $objectModel = new $objectModelClass($id);
+
+            if ((int) $objectModel->id !== $id) {
+                throw new $exceptionClass(sprintf('%s #%d was not found', $objectModelClass, $id));
+            }
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf('Error occurred when trying to get %s #%d', $objectModelClass, $id),
+                0,
+                $e
+            );
+        }
+
+        return $objectModel;
+    }
+
     /**
      * @param ObjectModel $objectModel
      * @param string $exceptionClass
@@ -71,7 +96,7 @@ abstract class AbstractObjectModelPersister
      *
      * @throws CoreException
      */
-    protected function updateObjectModel(ObjectModel $objectModel, string $exceptionClass, int $errorCode = 0)
+    protected function updateObjectModel(ObjectModel $objectModel, string $exceptionClass, int $errorCode = 0): void
     {
         if (!$objectModel->id) {
             throw new CoreException('Cannot update object model without id');
@@ -97,59 +122,69 @@ abstract class AbstractObjectModelPersister
 
     /**
      * @param ObjectModel $objectModel
-     * @param string $propertyName
-     * @param array $properties
+     * @param array $propertiesToUpdate
+     * @param string $exceptionClass
+     * @param int $errorCode
+     *
+     * @throws CoreException
      */
-    protected function fillProperty(ObjectModel $objectModel, string $propertyName, array $properties)
+    protected function partiallyUpdateObjectModel(
+        ObjectModel $objectModel,
+        array $propertiesToUpdate,
+        string $exceptionClass,
+        int $errorCode = 0
+    ): void {
+        $objectModel->addFieldsToUpdate($propertiesToUpdate);
+        $this->updateObjectModel($objectModel, $exceptionClass, $errorCode);
+    }
+
+    /**
+     * @param ObjectModel $objectModel
+     * @param string $exceptionClass
+     * @param int $errorCode
+     *
+     * @throws CoreException
+     */
+    protected function deleteObjectModel(ObjectModel $objectModel, string $exceptionClass, int $errorCode = 0): void
     {
-        if (!array_key_exists($propertyName, $properties)) {
-            return;
-        }
-
-        $objectModel->{$propertyName} = $properties[$propertyName];
-
-        if ($objectModel->id) {
-            $objectModel->addFieldsToUpdate([$propertyName => true]);
+        try {
+            if (!$objectModel->delete()) {
+                throw new $exceptionClass(
+                    sprintf('Failed to delete %s #%d', get_class($objectModel), $objectModel->id),
+                    $errorCode
+                );
+            }
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf('Error occurred when trying to delete %s #%d', get_class($objectModel), $objectModel->id),
+                0,
+                $e
+            );
         }
     }
 
     /**
      * @param ObjectModel $objectModel
-     * @param string $propertyName
-     * @param array $properties
+     * @param string $exceptionClass
+     * @param int $errorCode
+     *
+     * @throws CoreException
      */
-    protected function fillLocalizedProperty(ObjectModel $objectModel, string $propertyName, array $properties)
+    protected function softDeleteObjectModel(ObjectModel $objectModel, string $exceptionClass, int $errorCode = 0): void
     {
-        if (!array_key_exists($propertyName, $properties)) {
-            return;
+        try {
+            if (!$objectModel->softDelete()) {
+                throw new $exceptionClass(
+                    sprintf('Failed to soft delete %s #%d', get_class($objectModel), $objectModel->id),
+                    $errorCode
+                );
+            }
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf('Error occurred when trying to soft delete %s #%d', get_class($objectModel), $objectModel->id),
+                0,
+                $e
+            );
         }
-
-        if (!is_array($properties[$propertyName])) {
-            throw new CoreException(sprintf(
-                'Localized object model property must be an array. "%s" given',
-                var_export($properties[$propertyName])
-            ));
-        }
-
-        $objectModel->{$propertyName} = $properties[$propertyName];
-
-        if ($objectModel->id) {
-            $this->addLocalizedPropertyToUpdate($objectModel, $propertyName, $properties[$propertyName]);
-        }
-    }
-
-    /**
-     * @param ObjectModel $objectModel
-     * @param string $propertyName
-     * @param array<int, string> $values
-     */
-    private function addLocalizedPropertyToUpdate(ObjectModel $objectModel, string $propertyName, array $values): void
-    {
-        $updateFieldValue = [];
-        foreach ($values as $langId => $value) {
-            $updateFieldValue[$langId] = true;
-        }
-
-        $objectModel->addFieldsToUpdate([$propertyName => $updateFieldValue]);
     }
 }

@@ -28,12 +28,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldProvider;
-use PrestaShop\PrestaShop\Adapter\Product\ProductProvider;
-use PrestaShop\PrestaShop\Adapter\Product\ProductUpdater;
+use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldDeleter;
+use PrestaShop\PrestaShop\Adapter\Product\ProductCustomizationFieldUpdater;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\CustomizationFieldRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\DeleteCustomizationFieldCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\DeleteCustomizationFieldHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationFieldDeleterInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
@@ -42,41 +42,41 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 final class DeleteCustomizationFieldHandler implements DeleteCustomizationFieldHandlerInterface
 {
     /**
-     * @var CustomizationFieldDeleterInterface
+     * @var CustomizationFieldDeleter
      */
     private $customizationFieldDeleter;
 
     /**
-     * @var CustomizationFieldProvider
+     * @var CustomizationFieldRepository
      */
-    private $customizationFieldProvider;
+    private $customizationFieldRepository;
 
     /**
-     * @var ProductProvider
+     * @var ProductRepository
      */
-    private $productProvider;
+    private $productRepository;
 
     /**
-     * @var ProductUpdater
+     * @var ProductCustomizationFieldUpdater
      */
-    private $productUpdater;
+    private $productCustomizationFieldUpdater;
 
     /**
-     * @param CustomizationFieldDeleterInterface $customizationFieldDeleter
-     * @param CustomizationFieldProvider $customizationFieldProvider
-     * @param ProductProvider $productProvider
-     * @param ProductUpdater $productUpdater
+     * @param CustomizationFieldDeleter $customizationFieldDeleter
+     * @param CustomizationFieldRepository $customizationFieldRepository
+     * @param ProductRepository $productRepository
+     * @param ProductCustomizationFieldUpdater $productCustomizationFieldUpdater
      */
     public function __construct(
-        CustomizationFieldDeleterInterface $customizationFieldDeleter,
-        CustomizationFieldProvider $customizationFieldProvider,
-        ProductProvider $productProvider,
-        ProductUpdater $productUpdater
+        CustomizationFieldDeleter $customizationFieldDeleter,
+        CustomizationFieldRepository $customizationFieldRepository,
+        ProductRepository $productRepository,
+        ProductCustomizationFieldUpdater $productCustomizationFieldUpdater
     ) {
         $this->customizationFieldDeleter = $customizationFieldDeleter;
-        $this->productUpdater = $productUpdater;
-        $this->productProvider = $productProvider;
-        $this->customizationFieldProvider = $customizationFieldProvider;
+        $this->productCustomizationFieldUpdater = $productCustomizationFieldUpdater;
+        $this->productRepository = $productRepository;
+        $this->customizationFieldRepository = $customizationFieldRepository;
     }
 
     /**
@@ -84,10 +84,10 @@ final class DeleteCustomizationFieldHandler implements DeleteCustomizationFieldH
      */
     public function handle(DeleteCustomizationFieldCommand $command): void
     {
-        $customizationField = $this->customizationFieldProvider->get($command->getCustomizationFieldId());
+        $customizationField = $this->customizationFieldRepository->get($command->getCustomizationFieldId());
         $this->customizationFieldDeleter->delete($command->getCustomizationFieldId());
 
-        $product = $this->productProvider->get(new ProductId($customizationField->id_product));
-        $this->productUpdater->refreshProductCustomizabilityProperties($product);
+        $product = $this->productRepository->get(new ProductId($customizationField->id_product));
+        $this->productCustomizationFieldUpdater->refreshProductCustomizability($product);
     }
 }
