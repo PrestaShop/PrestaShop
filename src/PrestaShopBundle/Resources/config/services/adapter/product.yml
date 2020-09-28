@@ -293,11 +293,6 @@ services:
     prestashop.adapter.product.customization_field_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldValidator
 
-    prestashop.adapter.product.customization_field_persister:
-        class: PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldPersister
-        arguments:
-            - '@prestashop.adapter.product.customization_field_validator'
-
     prestashop.adapter.product.customization_field_repository:
         class: PrestaShop\PrestaShop\Adapter\Product\Repository\CustomizationFieldRepository
         arguments:

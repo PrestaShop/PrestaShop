@@ -63,7 +63,7 @@ class ProductCustomizationFieldUpdater
     private $productPersister;
 
     /**
-     * @param CustomizationFieldPersister $customizationFieldRepository
+     * @param CustomizationFieldRepository $customizationFieldRepository
      * @param CustomizationFieldDeleter $customizationFieldDeleter
      * @param ProductProvider $productProvider
      * @param ProductPersister $productPersister
