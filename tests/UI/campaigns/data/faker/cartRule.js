@@ -32,7 +32,7 @@ module.exports = class CartRule {
 
     this.discountType = cartRuleToCreate.discountType || 'None';
     if (this.discountType === 'Percent') {
-      this.discountPercent = cartRuleToCreate.discountPercent || faker.random.number({min: 1, max: 99});
+      this.discountPercent = cartRuleToCreate.discountPercent || faker.random.number({min: 10, max: 80});
     } else if (this.discountPercent === 'Amount') {
       this.discountAmount = {
         value: cartRuleToCreate.discountAmount === undefined ? 0 : cartRuleToCreate.discountAmount.value,
@@ -41,6 +41,8 @@ module.exports = class CartRule {
       };
     }
 
+    this.excludeDiscountProducts = cartRuleToCreate.excludeDiscountProducts === undefined
+      ? false : cartRuleToCreate.excludeDiscountProducts;
     this.freeGift = cartRuleToCreate.freeGift === undefined ? false : cartRuleToCreate.freeGift;
   }
 };

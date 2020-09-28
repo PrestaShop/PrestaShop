@@ -51,7 +51,7 @@ class AddCartRule extends BOBasePage {
 
     // Actions tab
     this.actionsTabLink = '#cart_rule_link_actions';
-    this.freeShippingInput = toggle => `${this.cartRuleForm} label[for='free_shipping_${toggle}']`;
+    this.freeShippingToggle = toggle => `${this.cartRuleForm} label[for='free_shipping_${toggle}']`;
 
     // Discount percent selectors
     this.applyDiscountRadioButton = toggle => `${this.cartRuleForm} label[for='apply_discount_${toggle}']`;
@@ -66,6 +66,11 @@ class AddCartRule extends BOBasePage {
 
     // Discount others selectors
     this.discountOffRadioButton = this.applyDiscountRadioButton('off');
+
+    // Exclude discount products and free gift selectors
+    this.excludeDiscountProductsToggle = toggle => `${this.cartRuleForm} label`
+      + `[for='reduction_exclude_special_${toggle}']`;
+    this.sendFreeGifToggle = toggle => `${this.cartRuleForm} label[for='free_gift_${toggle}']`;
 
     // Form footer selectors
     this.saveButton = '#desc-cart_rule-save';
@@ -155,12 +160,13 @@ class AddCartRule extends BOBasePage {
     await page.click(this.actionsTabLink);
 
     // Set free shipping toggle
-    await page.click(this.freeShippingInput(cartRuleData.freeShipping));
+    await page.click(this.freeShippingToggle(cartRuleData.freeShipping ? 'on' : 'off'));
 
     switch (cartRuleData.discountType) {
       case 'Percent':
         await page.click(this.discountPercentRadioButton);
         await this.setValue(page, this.discountPercentInput, cartRuleData.discountPercent.toString());
+        await page.click(this.excludeDiscountProductsToggle(cartRuleData.excludeDiscountProducts ? 'on' : 'off'));
         break;
       case 'Amount':
         await page.click(this.discountAmountRadioButton);
@@ -170,12 +176,15 @@ class AddCartRule extends BOBasePage {
         break;
       case 'None':
         await page.click(this.discountOffRadioButton);
+        await page.click(this.excludeDiscountProductsToggle(cartRuleData.excludeDiscountProducts ? 'on' : 'off'));
         break;
       default:
         // Do nothing for this option
+        throw new Error(`${cartRuleData.discountType} was not found as a discount option`);
     }
 
     // Set free gift toggle
+    await page.click(this.sendFreeGifToggle(cartRuleData.freeGift ? 'on' : 'off'));
   }
 
 
