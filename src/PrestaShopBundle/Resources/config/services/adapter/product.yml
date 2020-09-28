@@ -274,11 +274,6 @@ services:
         arguments:
             - '@prestashop.adapter.product.product_provider'
 
-    prestashop.adapter.product.product_persister:
-        class: PrestaShop\PrestaShop\Adapter\Product\ProductPersister
-        arguments:
-            - '@prestashop.adapter.product.product_validator'
-
     prestashop.adapter.product.product_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductValidator
 
