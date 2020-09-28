@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Supplier\SupplierProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotUpdateProductSupplierException;
@@ -43,14 +44,9 @@ use ProductSupplier;
 class ProductSupplierUpdater
 {
     /**
-     * @var ProductProvider
+     * @var ProductRepository
      */
-    private $productProvider;
-
-    /**
-     * @var ProductPersister
-     */
-    private $productPersister;
+    private $productRepository;
 
     /**
      * @var SupplierProvider
@@ -68,21 +64,18 @@ class ProductSupplierUpdater
     private $productSupplierDeleter;
 
     /**
-     * @param ProductProvider $productProvider
-     * @param ProductPersister $productPersister
+     * @param ProductRepository $productRepository
      * @param SupplierProvider $supplierProvider
      * @param ProductSupplierPersister $productSupplierPersister
      * @param ProductSupplierDeleterInterface $productSupplierDeleter
      */
     public function __construct(
-        ProductProvider $productProvider,
-        ProductPersister $productPersister,
+        ProductRepository $productRepository,
         SupplierProvider $supplierProvider,
         ProductSupplierPersister $productSupplierPersister,
         ProductSupplierDeleterInterface $productSupplierDeleter
     ) {
-        $this->productProvider = $productProvider;
-        $this->productPersister = $productPersister;
+        $this->productRepository = $productRepository;
         $this->supplierProvider = $supplierProvider;
         $this->productSupplierPersister = $productSupplierPersister;
         $this->productSupplierDeleter = $productSupplierDeleter;
@@ -118,11 +111,15 @@ class ProductSupplierUpdater
      */
     public function resetDefaultSupplier(Product $product): void
     {
-        $this->productPersister->update($product, [
-            'supplier_reference' => '',
-            'wholesale_price' => 0,
-            'id_supplier' => 0,
-        ], CannotUpdateProductException::FAILED_UPDATE_DEFAULT_SUPPLIER);
+        $product->supplier_reference = '';
+        $product->wholesale_price = 0;
+        $product->id_supplier = 0;
+
+        $this->productRepository->partialUpdate(
+            $product,
+            ['supplier_reference' => true, 'wholesale_price' => true, 'id_supplier' => true],
+            CannotUpdateProductException::FAILED_UPDATE_DEFAULT_SUPPLIER
+        );
     }
 
     /**
@@ -131,7 +128,7 @@ class ProductSupplierUpdater
      */
     public function updateDefaultSupplier(ProductId $productId, SupplierId $supplierId): void
     {
-        $product = $this->productProvider->get($productId);
+        $product = $this->productRepository->get($productId);
         $supplierIdValue = $supplierId->getValue();
         $productIdValue = (int) $product->id;
 
@@ -154,11 +151,15 @@ class ProductSupplierUpdater
             ));
         }
 
-        $this->productPersister->update($product, [
-            'supplier_reference' => ProductSupplier::getProductSupplierReference($productIdValue, 0, $supplierIdValue),
-            'wholesale_price' => ProductSupplier::getProductSupplierPrice($productIdValue, 0, $supplierIdValue),
-            'id_supplier' => $supplierIdValue,
-        ], CannotUpdateProductException::FAILED_UPDATE_DEFAULT_SUPPLIER);
+        $product->supplier_reference = ProductSupplier::getProductSupplierReference($productIdValue, 0, $supplierIdValue);
+        $product->wholesale_price = ProductSupplier::getProductSupplierPrice($productIdValue, 0, $supplierIdValue);
+        $product->id_supplier = $supplierIdValue;
+
+        $this->productRepository->partialUpdate(
+            $product,
+            ['supplier_reference' => true, 'wholesale_price' => true, 'id_supplier' => true],
+            CannotUpdateProductException::FAILED_UPDATE_DEFAULT_SUPPLIER
+        );
     }
 
     /**

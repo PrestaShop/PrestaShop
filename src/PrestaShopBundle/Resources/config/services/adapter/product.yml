@@ -323,7 +323,7 @@ services:
     prestashop.adapter.product.product_supplier_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductSupplierValidator
         arguments:
-            - '@prestashop.adapter.product.product_provider'
+            - '@prestashop.adapter.product.product_repository'
             - '@prestashop.adapter.supplier.supplier_provider'
             - '@prestashop.adapter.currency.currency_provider'
 
@@ -335,8 +335,7 @@ services:
     prestashop.adapter.product.product_supplier_updater:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductSupplierUpdater
         arguments:
-            - '@prestashop.adapter.product.product_provider'
-            - '@prestashop.adapter.product.product_persister'
+            - '@prestashop.adapter.product.product_repository'
             - '@prestashop.adapter.supplier.supplier_provider'
             - '@prestashop.adapter.product.product_supplier_persister'
             - '@prestashop.adapter.product.product_supplier_deleter'
