@@ -559,11 +559,12 @@ class OrderController extends FrameworkBundleAdminController
         ]);
     }
 
-    /***
+    /**
      * @AdminSecurity("is_granted(['update', 'delete'], request.get('_legacy_controller'))")
      *
      * @param int $orderId
      * @param Request $request
+     *
      * @return RedirectResponse
      */
     public function standardRefundAction(int $orderId, Request $request)
@@ -591,11 +592,12 @@ class OrderController extends FrameworkBundleAdminController
         ]);
     }
 
-    /***
+    /**
      * @AdminSecurity("is_granted(['update', 'delete'], request.get('_legacy_controller'))")
      *
      * @param int $orderId
      * @param Request $request
+     *
      * @return RedirectResponse
      */
     public function returnProductAction(int $orderId, Request $request)
@@ -1421,6 +1423,8 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
      * Generates invoice for given order
      *
      * @param int $orderId

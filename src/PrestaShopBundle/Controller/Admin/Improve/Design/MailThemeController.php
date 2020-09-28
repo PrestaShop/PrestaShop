@@ -358,6 +358,8 @@ class MailThemeController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
