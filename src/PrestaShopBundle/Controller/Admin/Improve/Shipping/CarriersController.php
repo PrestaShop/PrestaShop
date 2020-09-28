@@ -71,7 +71,7 @@ class CarriersController extends FrameworkBundleAdminController
         $carrierGridFactory = $this->get('prestashop.core.grid.factory.carrier');
         $carrierGrid = $carrierGridFactory->getGrid($filters);
 
-        $showHeaderAlert = $this->get('prestashop.adapter.carrier.carrier_module_advice_alert_checker')->showAlert();
+        $showHeaderAlert = $this->get('prestashop.adapter.carrier.carrier_module_advice_alert_checker')->isAlertDisplayed();
 
         $showcaseCardIsClose = $this->getQueryBus()->handle(
             new GetShowcaseCardIsClosed((int) $this->getContext()->employee->id, ShowcaseCard::CARRIERS_CARD)
