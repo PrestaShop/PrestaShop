@@ -298,6 +298,11 @@ services:
         arguments:
             - '@prestashop.adapter.product.customization_field_validator'
 
+    prestashop.adapter.product.customization_field_repository:
+        class: PrestaShop\PrestaShop\Adapter\Product\Repository\CustomizationFieldRepository
+        arguments:
+            - '@prestashop.adapter.product.customization_field_validator'
+
     prestashop.adapter.product.command_handler.delete_product_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DeleteProductHandler
         arguments:
