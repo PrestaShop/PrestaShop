@@ -260,7 +260,7 @@ services:
     prestashop.adapter.product.customization_field_deleter:
         class: PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldDeleter
         arguments:
-            - '@prestashop.adapter.product.customization_field_provider'
+            - '@prestashop.adapter.product.customization_field_repository'
             - '@prestashop.adapter.product.product_provider'
 
     prestashop.adapter.product.product_customization_field_updater:

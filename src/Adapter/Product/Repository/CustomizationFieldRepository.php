@@ -110,4 +110,12 @@ class CustomizationFieldRepository extends AbstractObjectModelRepository
     {
         $this->deleteObjectModel($customizationField, CannotDeleteCustomizationFieldException::class);
     }
+
+    /**
+     * @param CustomizationField $customizationField
+     */
+    public function softDelete(CustomizationField $customizationField): void
+    {
+        $this->softDeleteObjectModel($customizationField, CannotDeleteCustomizationFieldException::class);
+    }
 }

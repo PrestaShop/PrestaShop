@@ -29,15 +29,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use CustomizationField;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\CustomizationFieldRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationFieldDeleterInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotBulkDeleteCustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotDeleteCustomizationFieldException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShopException;
 use Product;
 
 /**
@@ -46,9 +45,9 @@ use Product;
 final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterface
 {
     /**
-     * @var CustomizationFieldProvider
+     * @var CustomizationFieldRepository
      */
-    private $customizationFieldProvider;
+    private $customizationFieldRepository;
 
     /**
      * @var ProductProvider
@@ -61,14 +60,14 @@ final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterf
     private $productsById = [];
 
     /**
-     * @param CustomizationFieldProvider $customizationFieldProvider
+     * @param CustomizationFieldRepository $customizationFieldRepository
      * @param ProductProvider $productProvider
      */
     public function __construct(
-        CustomizationFieldProvider $customizationFieldProvider,
+        CustomizationFieldRepository $customizationFieldRepository,
         ProductProvider $productProvider
     ) {
-        $this->customizationFieldProvider = $customizationFieldProvider;
+        $this->customizationFieldRepository = $customizationFieldRepository;
         $this->productProvider = $productProvider;
     }
 
@@ -77,7 +76,7 @@ final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterf
      */
     public function delete(CustomizationFieldId $customizationFieldId): void
     {
-        $customizationField = $this->customizationFieldProvider->get($customizationFieldId);
+        $customizationField = $this->customizationFieldRepository->get($customizationFieldId);
 
         if (!$this->performDeletion($customizationField)) {
             throw new CannotDeleteCustomizationFieldException(sprintf(
@@ -94,9 +93,11 @@ final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterf
     {
         $failedIds = [];
         foreach ($customizationFieldIds as $customizationFieldId) {
-            $customizationField = $this->customizationFieldProvider->get($customizationFieldId);
+            $customizationField = $this->customizationFieldRepository->get($customizationFieldId);
 
-            if (!$this->performDeletion($customizationField)) {
+            try {
+                $this->performDeletion($customizationField);
+            } catch (CannotDeleteCustomizationFieldException $e) {
                 $failedIds[] = $customizationFieldId->getValue();
             }
         }
@@ -115,34 +116,17 @@ final class CustomizationFieldDeleter implements CustomizationFieldDeleterInterf
      * @param CustomizationField $customizationField
      *
      * @return bool
-     *
-     * @throws CustomizationFieldException
-     * @throws ProductException
-     * @throws ProductNotFoundException
      */
-    private function performDeletion(CustomizationField $customizationField): bool
+    private function performDeletion(CustomizationField $customizationField): void
     {
         $product = $this->getProduct((int) $customizationField->id_product);
         $usedFieldIds = array_map('intval', $product->getUsedCustomizationFieldsIds());
         $fieldId = (int) $customizationField->id;
 
-        try {
-            if (in_array($fieldId, $usedFieldIds)) {
-                $successfullyDeleted = $customizationField->softDelete();
-            } else {
-                $successfullyDeleted = $customizationField->delete();
-            }
-
-            return (bool) $successfullyDeleted;
-        } catch (PrestaShopException $e) {
-            throw new CustomizationFieldException(
-                sprintf(
-                    'Error occurred when trying to delete customization field #%d',
-                    $fieldId
-                ),
-                0,
-                $e
-            );
+        if (in_array($fieldId, $usedFieldIds)) {
+            $this->customizationFieldRepository->softDelete($customizationField);
+        } else {
+            $this->customizationFieldRepository->delete($customizationField);
         }
     }
 
