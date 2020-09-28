@@ -1225,7 +1225,7 @@ class DispatcherCore
             $controllerPhpself = Dispatcher::getControllerPhpself($controllerClassName);
 
             if ($base_name_otherwise) {
-                $controllerPhpself = $controllerPhpself ? $controllerPhpself : $controllerBaseName;
+                $controllerPhpself = $controllerPhpself ?? $controllerBaseName;
             }
 
             if ($controllerPhpself) {
