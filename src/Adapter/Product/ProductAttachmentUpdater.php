@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use Attachment;
-use PrestaShop\PrestaShop\Adapter\Attachment\AttachmentProvider;
+use PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -47,20 +47,20 @@ class ProductAttachmentUpdater
     private $productProvider;
 
     /**
-     * @var AttachmentProvider
+     * @var AttachmentRepository
      */
-    private $attachmentProvider;
+    private $attachmentRepository;
 
     /**
      * @param ProductProvider $productProvider
-     * @param AttachmentProvider $attachmentProvider
+     * @param AttachmentRepository $attachmentRepository
      */
     public function __construct(
         ProductProvider $productProvider,
-        AttachmentProvider $attachmentProvider
+        AttachmentRepository $attachmentRepository
     ) {
         $this->productProvider = $productProvider;
-        $this->attachmentProvider = $attachmentProvider;
+        $this->attachmentRepository = $attachmentRepository;
     }
 
     /**
@@ -73,7 +73,7 @@ class ProductAttachmentUpdater
     public function associateProductAttachment(ProductId $productId, AttachmentId $attachmentId): void
     {
         $this->productProvider->assertProductExists($productId);
-        $this->attachmentProvider->assertAttachmentExists($attachmentId);
+        $this->attachmentRepository->assertAttachmentExists($attachmentId);
 
         $productIdValue = $productId->getValue();
         $attachmentIdValue = $attachmentId->getValue();
@@ -111,7 +111,7 @@ class ProductAttachmentUpdater
 
         try {
             foreach ($attachmentIds as $attachmentId) {
-                $this->attachmentProvider->assertAttachmentExists($attachmentId);
+                $this->attachmentRepository->assertAttachmentExists($attachmentId);
                 $attachmentIdValues[] = $attachmentId->getValue();
             }
 
