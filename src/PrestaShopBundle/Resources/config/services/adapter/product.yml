@@ -267,8 +267,7 @@ services:
         arguments:
             - '@prestashop.adapter.product.customization_field_repository'
             - '@prestashop.adapter.product.customization_field_deleter'
-            - '@prestashop.adapter.product.product_provider'
-            - '@prestashop.adapter.product.product_persister'
+            - '@prestashop.adapter.product.product_repository'
 
     prestashop.adapter.product.product_deleter:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductDeleter
@@ -285,6 +284,11 @@ services:
 
     prestashop.adapter.product.product_provider:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductProvider
+
+    prestashop.adapter.product.product_repository:
+        class: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository
+        arguments:
+            - '@prestashop.adapter.product.product_validator'
 
     prestashop.adapter.product.customization_field_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldValidator

@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use CustomizationField;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\CustomizationFieldRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -53,31 +54,23 @@ class ProductCustomizationFieldUpdater
     private $customizationFieldDeleter;
 
     /**
-     * @var ProductProvider
+     * @var ProductRepository
      */
-    private $productProvider;
-
-    /**
-     * @var ProductPersister
-     */
-    private $productPersister;
+    private $productRepository;
 
     /**
      * @param CustomizationFieldRepository $customizationFieldRepository
      * @param CustomizationFieldDeleter $customizationFieldDeleter
-     * @param ProductProvider $productProvider
-     * @param ProductPersister $productPersister
+     * @param ProductRepository $productRepository
      */
     public function __construct(
         CustomizationFieldRepository $customizationFieldRepository,
         CustomizationFieldDeleter $customizationFieldDeleter,
-        ProductProvider $productProvider,
-        ProductPersister $productPersister
+        ProductRepository $productRepository
     ) {
         $this->customizationFieldRepository = $customizationFieldRepository;
         $this->customizationFieldDeleter = $customizationFieldDeleter;
-        $this->productPersister = $productPersister;
-        $this->productProvider = $productProvider;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -86,7 +79,7 @@ class ProductCustomizationFieldUpdater
      */
     public function setProductCustomizationFields(ProductId $productId, array $customizationFields): void
     {
-        $product = $this->productProvider->get($productId);
+        $product = $this->productRepository->get($productId);
         $deletableFieldIds = $this->getDeletableFieldIds($customizationFields, $product);
 
         foreach ($customizationFields as $customizationField) {
@@ -107,20 +100,20 @@ class ProductCustomizationFieldUpdater
     public function refreshProductCustomizability(Product $product): void
     {
         if ($product->hasActivatedRequiredCustomizableFields()) {
-            $customizable = ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION;
+            $product->customizable = ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION;
         } elseif (!empty($product->getNonDeletedCustomizationFieldIds())) {
-            $customizable = ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION;
+            $product->customizable = ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION;
         } else {
-            $customizable = ProductCustomizabilitySettings::NOT_CUSTOMIZABLE;
+            $product->customizable = ProductCustomizabilitySettings::NOT_CUSTOMIZABLE;
         }
 
-        $this->productPersister->partialUpdate(
+        $product->text_fields = $product->countCustomizationFields(CustomizationFieldType::TYPE_TEXT);
+        $product->uploadable_files = $product->countCustomizationFields(CustomizationFieldType::TYPE_FILE);
+
+        $this->productRepository->partialUpdate(
             $product,
-            [
-                'customizable' => $customizable,
-                'text_fields' => $product->countCustomizationFields(CustomizationFieldType::TYPE_TEXT),
-                'uploadable_files' => $product->countCustomizationFields(CustomizationFieldType::TYPE_FILE),
-            ], CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS
+            ['customizable' => true, 'text_fields' => true, 'uploadable_files' => true],
+            CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS
         );
     }
 
