@@ -196,7 +196,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $this->getOrderPrices($order),
             $this->getOrderDiscounts($order),
             $this->getOrderSources($order),
-            $this->getLinkedOrders($order)
+            $this->getLinkedOrders($order),
+            (string) $order->note
         );
     }
 

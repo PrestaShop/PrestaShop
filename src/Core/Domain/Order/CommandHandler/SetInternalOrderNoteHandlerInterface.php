@@ -24,20 +24,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\SetInternalOrderNoteCommand;
 
 /**
- * Exception thrown when constraint is violated in Order subdomain.
+ * Defines interface for service that handles command which sets internal order note
  */
-class OrderConstraintException extends OrderException
+interface SetInternalOrderNoteHandlerInterface
 {
     /**
-     * Used in create order from BO when the customer message is invalid.
+     * @param SetInternalOrderNoteCommand $command
      */
-    const INVALID_CUSTOMER_MESSAGE = 1;
-
-    /**
-     * @var int Is used when invalid (not string) internal note provided
-     */
-    const INVALID_INTERNAL_NOTE = 2;
+    public function handle(SetInternalOrderNoteCommand $command);
 }

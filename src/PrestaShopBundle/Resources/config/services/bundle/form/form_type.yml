@@ -972,6 +972,13 @@ services:
       tags:
           - { name: form.type }
 
+    form.type.sell.order.internal_note:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Order\InternalNoteType'
+      arguments:
+        - "@translator"
+      tags:
+        - { name: form.type }
+
     form.type.order.add_order_cart_rule:
       class: 'PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType'
       arguments:
