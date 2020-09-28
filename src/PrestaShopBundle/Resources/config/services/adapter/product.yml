@@ -146,7 +146,7 @@ services:
     prestashop.adapter.product.command_handler.add_customization_field_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddCustomizationFieldHandler
         arguments:
-            - '@prestashop.adapter.product.product_provider'
+            - '@prestashop.adapter.product.product_repository'
             - '@prestashop.adapter.product.product_customization_field_updater'
             - '@prestashop.adapter.product.customization_field_repository'
         tags:
@@ -156,7 +156,7 @@ services:
     prestashop.adapter.product.command_handler.update_customization_field_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateCustomizationFieldHandler
         arguments:
-            - '@prestashop.adapter.product.product_provider'
+            - '@prestashop.adapter.product.product_repository'
             - '@prestashop.adapter.product.product_customization_field_updater'
             - '@prestashop.adapter.product.customization_field_repository'
         tags:
@@ -168,7 +168,7 @@ services:
         arguments:
             - '@prestashop.adapter.product.customization_field_deleter'
             - '@prestashop.adapter.product.customization_field_repository'
-            - '@prestashop.adapter.product.product_provider'
+            - '@prestashop.adapter.product.product_repository'
             - '@prestashop.adapter.product.product_customization_field_updater'
         tags:
             - name: tactician.handler
@@ -178,7 +178,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductCustomizationFieldsHandler
         arguments:
             - '@prestashop.adapter.product.customization_field_repository'
-            - '@prestashop.adapter.product.product_provider'
+            - '@prestashop.adapter.product.product_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields
@@ -186,7 +186,7 @@ services:
     prestashop.adapter.product.command_handler.set_product_customization_fields_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetProductCustomizationFieldsHandler
         arguments:
-            - '@prestashop.adapter.product.product_provider'
+            - '@prestashop.adapter.product.product_repository'
             - '@prestashop.adapter.product.product_customization_field_updater'
         tags:
             - name: tactician.handler
@@ -196,7 +196,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllCustomizationFieldsFromProductHandler
         arguments:
             - '@prestashop.adapter.product.customization_field_deleter'
-            - '@prestashop.adapter.product.product_provider'
+            - '@prestashop.adapter.product.product_repository'
             - '@prestashop.adapter.product.product_customization_field_updater'
         tags:
             - name: tactician.handler
@@ -260,7 +260,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldDeleter
         arguments:
             - '@prestashop.adapter.product.customization_field_repository'
-            - '@prestashop.adapter.product.product_provider'
+            - '@prestashop.adapter.product.product_repository'
 
     prestashop.adapter.product.product_customization_field_updater:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductCustomizationFieldUpdater
@@ -272,7 +272,7 @@ services:
     prestashop.adapter.product.product_deleter:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductDeleter
         arguments:
-            - '@prestashop.adapter.product.product_provider'
+            - '@prestashop.adapter.product.product_repository'
 
     prestashop.adapter.product.product_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductValidator

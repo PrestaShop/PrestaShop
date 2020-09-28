@@ -30,8 +30,8 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use CustomizationField;
 use PrestaShop\PrestaShop\Adapter\Product\ProductCustomizationFieldUpdater;
-use PrestaShop\PrestaShop\Adapter\Product\ProductProvider;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\CustomizationFieldRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\AddCustomizationFieldCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\AddCustomizationFieldHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
@@ -42,9 +42,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\Customiz
 final class AddCustomizationFieldHandler implements AddCustomizationFieldHandlerInterface
 {
     /**
-     * @var ProductProvider
+     * @var ProductRepository
      */
-    private $productProvider;
+    private $productRepository;
 
     /**
      * @var ProductCustomizationFieldUpdater
@@ -57,16 +57,16 @@ final class AddCustomizationFieldHandler implements AddCustomizationFieldHandler
     private $customizationFieldRepository;
 
     /**
-     * @param ProductProvider $productProvider
+     * @param ProductRepository $productRepository
      * @param ProductCustomizationFieldUpdater $productCustomizationFieldUpdater
      * @param CustomizationFieldRepository $customizationFieldRepository
      */
     public function __construct(
-        ProductProvider $productProvider,
+        ProductRepository $productRepository,
         ProductCustomizationFieldUpdater $productCustomizationFieldUpdater,
         CustomizationFieldRepository $customizationFieldRepository
     ) {
-        $this->productProvider = $productProvider;
+        $this->productRepository = $productRepository;
         $this->customizationFieldRepository = $customizationFieldRepository;
         $this->productCustomizationFieldUpdater = $productCustomizationFieldUpdater;
     }
@@ -76,7 +76,7 @@ final class AddCustomizationFieldHandler implements AddCustomizationFieldHandler
      */
     public function handle(AddCustomizationFieldCommand $command): CustomizationFieldId
     {
-        $product = $this->productProvider->get($command->getProductId());
+        $product = $this->productRepository->get($command->getProductId());
         $customizationField = new CustomizationField();
 
         $customizationField->id_product = (int) $product->id;

@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductDeleterInterface;
@@ -42,17 +43,16 @@ use Product;
 final class ProductDeleter implements ProductDeleterInterface
 {
     /**
-     * @var ProductProvider
+     * @var ProductRepository
      */
-    private $productProvider;
+    private $productRepository;
 
     /**
-     * @param ProductProvider $productProvider
+     * @param ProductRepository $productRepository
      */
-    public function __construct(
-        ProductProvider $productProvider
-    ) {
-        $this->productProvider = $productProvider;
+    public function __construct(ProductRepository $productRepository)
+    {
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -60,7 +60,7 @@ final class ProductDeleter implements ProductDeleterInterface
      */
     public function delete(ProductId $productId): void
     {
-        $product = $this->productProvider->get($productId);
+        $product = $this->productRepository->get($productId);
 
         if (!$this->deleteProduct($product)) {
             throw new CannotDeleteProductException(sprintf('Failed to delete product #%d', $product->id));
@@ -74,7 +74,7 @@ final class ProductDeleter implements ProductDeleterInterface
     {
         $failedIds = [];
         foreach ($productIds as $productId) {
-            if (!$this->deleteProduct($this->productProvider->get($productId))) {
+            if (!$this->deleteProduct($this->productRepository->get($productId))) {
                 $failedIds[] = $productId->getValue();
             }
         }

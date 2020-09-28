@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use CustomizationField;
 use PrestaShop\PrestaShop\Adapter\Product\ProductCustomizationFieldUpdater;
-use PrestaShop\PrestaShop\Adapter\Product\ProductProvider;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\SetProductCustomizationFieldsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationField as CustomizationFieldDTO;
@@ -43,9 +43,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 class SetProductCustomizationFieldsHandler implements SetProductCustomizationFieldsHandlerInterface
 {
     /**
-     * @var ProductProvider
+     * @var ProductRepository
      */
-    private $productProvider;
+    private $productRepository;
 
     /**
      * @var ProductCustomizationFieldUpdater
@@ -53,14 +53,14 @@ class SetProductCustomizationFieldsHandler implements SetProductCustomizationFie
     private $productCustomizationFieldUpdater;
 
     /**
-     * @param ProductProvider $productProvider
+     * @param ProductRepository $productRepository
      * @param ProductCustomizationFieldUpdater $productCustomizationFieldUpdater
      */
     public function __construct(
-        ProductProvider $productProvider,
+        ProductRepository $productRepository,
         ProductCustomizationFieldUpdater $productCustomizationFieldUpdater
     ) {
-        $this->productProvider = $productProvider;
+        $this->productRepository = $productRepository;
         $this->productCustomizationFieldUpdater = $productCustomizationFieldUpdater;
     }
 
@@ -72,7 +72,7 @@ class SetProductCustomizationFieldsHandler implements SetProductCustomizationFie
     public function handle(SetProductCustomizationFieldsCommand $command): array
     {
         $productId = $command->getProductId();
-        $product = $this->productProvider->get($productId);
+        $product = $this->productRepository->get($productId);
         $customizationFields = [];
 
         foreach ($command->getCustomizationFields() as $providedCustomizationField) {
