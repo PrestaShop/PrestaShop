@@ -1301,7 +1301,7 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity(
      *     "is_granted(['read'], request.get('_legacy_controller')) || is_granted(['create', 'update'], 'AdminOrders')",
-     *     message="You do not have permission to update this."
+     *     message="You do not have permission to perform this search."
      * )
      *
      * @param Request $request
