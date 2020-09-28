@@ -1712,7 +1712,7 @@ class OrderController extends FrameworkBundleAdminController
 
             OrderConstraintException::class => [
                 OrderConstraintException::INVALID_CUSTOMER_MESSAGE => $this->trans(
-                    'The order message given is invalid',
+                    'The order message given is invalid.',
                     'Admin.Orderscustomers.Notification'
                 ),
             ],
