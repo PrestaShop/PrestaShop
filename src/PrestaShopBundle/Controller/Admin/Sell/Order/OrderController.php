@@ -559,7 +559,7 @@ class OrderController extends FrameworkBundleAdminController
         ]);
     }
 
-    /***
+    /**
      * @AdminSecurity("is_granted(['update', 'delete'], request.get('_legacy_controller'))")
      *
      * @param int $orderId
@@ -591,7 +591,7 @@ class OrderController extends FrameworkBundleAdminController
         ]);
     }
 
-    /***
+    /**
      * @AdminSecurity("is_granted(['update', 'delete'], request.get('_legacy_controller'))")
      *
      * @param int $orderId
@@ -1421,6 +1421,8 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
      * Generates invoice for given order
      *
      * @param int $orderId
