@@ -14,7 +14,7 @@ const addCartRulePage = require('@pages/BO/catalog/discounts/add');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_shopParameters_productSettings_filterQuickEditAndBulkActionsCartRules';
+const baseContext = 'functional_BO_catalog_discounts_cartRules_filterQuickEditAndBulkActionsCartRules';
 
 // Import expect from chai
 const {expect} = require('chai');
