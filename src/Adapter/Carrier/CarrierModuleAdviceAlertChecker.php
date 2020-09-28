@@ -40,7 +40,7 @@ class CarrierModuleAdviceAlertChecker
      *
      * @return bool
      */
-    public function showAlert(): bool
+    public function isAlertDisplayed(): bool
     {
         $sql = 'SELECT COUNT(1) FROM `' . _DB_PREFIX_ . 'carrier` WHERE deleted = 0 AND id_reference > 2';
 
