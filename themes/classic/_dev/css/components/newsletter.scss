@@ -37,6 +37,7 @@
     input[type="email"] {
       width: 100%;
       padding: 11px;
+      border: 1px solid $border-gray;
       &:focus {
         padding: 8px 8px 9px;
         border: 3px $brand-primary solid;
