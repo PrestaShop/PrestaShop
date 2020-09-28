@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use Attachment;
-use PrestaShop\PrestaShop\Adapter\Attachment\AttachmentProvider;
+use PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -48,20 +48,20 @@ class ProductAttachmentUpdater
     private $productRepository;
 
     /**
-     * @var AttachmentProvider
+     * @var AttachmentRepository
      */
-    private $attachmentProvider;
+    private $attachmentRepository;
 
     /**
      * @param ProductRepository $productRepository
-     * @param AttachmentProvider $attachmentProvider
+     * @param AttachmentRepository $attachmentRepository
      */
     public function __construct(
         ProductRepository $productRepository,
-        AttachmentProvider $attachmentProvider
+        AttachmentRepository $attachmentRepository
     ) {
         $this->productRepository = $productRepository;
-        $this->attachmentProvider = $attachmentProvider;
+        $this->attachmentRepository = $attachmentRepository;
     }
 
     /**
@@ -74,7 +74,7 @@ class ProductAttachmentUpdater
     public function associateProductAttachment(ProductId $productId, AttachmentId $attachmentId): void
     {
         $this->productRepository->assertProductExists($productId);
-        $this->attachmentProvider->assertAttachmentExists($attachmentId);
+        $this->attachmentRepository->assertAttachmentExists($attachmentId);
 
         $productIdValue = $productId->getValue();
         $attachmentIdValue = $attachmentId->getValue();
@@ -112,7 +112,7 @@ class ProductAttachmentUpdater
 
         try {
             foreach ($attachmentIds as $attachmentId) {
-                $this->attachmentProvider->assertAttachmentExists($attachmentId);
+                $this->attachmentRepository->assertAttachmentExists($attachmentId);
                 $attachmentIdValues[] = $attachmentId->getValue();
             }
 

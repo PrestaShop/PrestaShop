@@ -278,7 +278,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductAttachmentUpdater
         arguments:
             - '@prestashop.adapter.product.product_repository'
-            - '@prestashop.adapter.attachment.attachment_provider'
+            - '@prestashop.adapter.attachment.attachment_repository'
 
     prestashop.adapter.product.product_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductValidator

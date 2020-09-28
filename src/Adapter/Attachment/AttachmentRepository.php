@@ -29,15 +29,15 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Attachment;
 
 use Attachment;
-use PrestaShop\PrestaShop\Adapter\AbstractObjectModelProvider;
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
- * Reusable methods to get Attachment object model
+ * Methods to access Attachment data source
  */
-class AttachmentProvider extends AbstractObjectModelProvider
+class AttachmentRepository extends AbstractObjectModelRepository
 {
     /**
      * @param AttachmentId $attachmentId
