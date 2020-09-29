@@ -29,16 +29,27 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Currency;
 
 use Currency;
-use PrestaShop\PrestaShop\Adapter\AbstractObjectModelProvider;
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
- * Provides existing Currency
+ * Methods to access data source of Currency
  */
-class CurrencyProvider extends AbstractObjectModelProvider
+class CurrencyRepository extends AbstractObjectModelRepository
 {
+    /**
+     * @param CurrencyId $currencyId
+     *
+     * @throws CoreException
+     * @throws CurrencyNotFoundException
+     */
+    public function assertCurrencyExists(CurrencyId $currencyId): void
+    {
+        $this->assertObjectModelExists($currencyId->getValue(), 'currency', CurrencyNotFoundException::class);
+    }
+
     /**
      * @param CurrencyId $currencyId
      *
@@ -57,16 +68,5 @@ class CurrencyProvider extends AbstractObjectModelProvider
         );
 
         return $currency;
-    }
-
-    /**
-     * @param CurrencyId $currencyId
-     *
-     * @throws CoreException
-     * @throws CurrencyNotFoundException
-     */
-    public function assertCurrencyExists(CurrencyId $currencyId): void
-    {
-        $this->assertObjectModelExists($currencyId->getValue(), 'currency', CurrencyNotFoundException::class);
     }
 }

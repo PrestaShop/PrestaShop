@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
-use PrestaShop\PrestaShop\Adapter\Currency\CurrencyProvider;
+use PrestaShop\PrestaShop\Adapter\Currency\CurrencyRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Supplier\SupplierRepository;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
@@ -55,23 +55,23 @@ class ProductSupplierValidator extends AbstractObjectModelValidator
     private $supplierRepository;
 
     /**
-     * @var CurrencyProvider
+     * @var CurrencyRepository
      */
-    private $currencyProvider;
+    private $currencyRepository;
 
     /**
      * @param ProductRepository $productRepository
      * @param SupplierRepository $supplierProvider
-     * @param CurrencyProvider $currencyProvider
+     * @param CurrencyRepository $currencyRepository
      */
     public function __construct(
         ProductRepository $productRepository,
         SupplierRepository $supplierProvider,
-        CurrencyProvider $currencyProvider
+        CurrencyRepository $currencyRepository
     ) {
         $this->productRepository = $productRepository;
         $this->supplierRepository = $supplierProvider;
-        $this->currencyProvider = $currencyProvider;
+        $this->currencyRepository = $currencyRepository;
     }
 
     /**
@@ -105,6 +105,6 @@ class ProductSupplierValidator extends AbstractObjectModelValidator
     {
         $this->productRepository->assertProductExists(new ProductId((int) $productSupplier->id_product));
         $this->supplierRepository->assertSupplierExists(new SupplierId((int) $productSupplier->id_supplier));
-        $this->currencyProvider->assertCurrencyExists(new CurrencyId((int) $productSupplier->id_currency));
+        $this->currencyRepository->assertCurrencyExists(new CurrencyId((int) $productSupplier->id_currency));
     }
 }

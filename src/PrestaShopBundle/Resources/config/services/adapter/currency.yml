@@ -122,5 +122,5 @@ services:
       tags:
         - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetReferenceCurrency' }
 
-    prestashop.adapter.currency.currency_provider:
-        class: 'PrestaShop\PrestaShop\Adapter\Currency\CurrencyProvider'
+    prestashop.adapter.currency.currency_repository:
+        class: 'PrestaShop\PrestaShop\Adapter\Currency\CurrencyRepository'
