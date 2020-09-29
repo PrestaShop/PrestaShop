@@ -28,23 +28,38 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
-use PrestaShop\PrestaShop\Adapter\AbstractObjectModelProvider;
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotAddProductSupplierException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotUpdateProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use ProductSupplier;
 
 /**
- * Provides existing ProductSupplier
+ * Methods for accessing ProductSupplier data source
  */
-class ProductSupplierProvider extends AbstractObjectModelProvider
+class ProductSupplierRepository extends AbstractObjectModelRepository
 {
+    /**
+     * @var ProductSupplierValidator
+     */
+    private $productSupplierValidator;
+
+    /**
+     * @param ProductSupplierValidator $productSupplierValidator
+     */
+    public function __construct(
+        ProductSupplierValidator $productSupplierValidator
+    ) {
+        $this->productSupplierValidator = $productSupplierValidator;
+    }
+
     /**
      * @param ProductSupplierId $productSupplierId
      *
      * @return ProductSupplier
      *
-     * @throws CoreException
      * @throws ProductSupplierNotFoundException
      */
     public function get(ProductSupplierId $productSupplierId): ProductSupplier
@@ -60,13 +75,29 @@ class ProductSupplierProvider extends AbstractObjectModelProvider
     }
 
     /**
-     * @param ProductSupplierId $productSupplierId
+     * @param ProductSupplier $productSupplier
+     * @param int $errorCode
+     *
+     * @return ProductSupplierId
      *
      * @throws CoreException
-     * @throws ProductSupplierNotFoundException
      */
-    public function assertProductSupplierExists(ProductSupplierId $productSupplierId): void
+    public function add(ProductSupplier $productSupplier, int $errorCode = 0): ProductSupplierId
     {
-        $this->assertObjectModelExists($productSupplierId->getValue(), 'product_supplier', ProductSupplierNotFoundException::class);
+        $this->productSupplierValidator->validate($productSupplier);
+        $id = $this->addObjectModel($productSupplier, CannotAddProductSupplierException::class, $errorCode);
+
+        return new ProductSupplierId($id);
+    }
+
+    /**
+     * @param ProductSupplier $productSupplier
+     *
+     * @throws CannotUpdateProductSupplierException
+     */
+    public function update(ProductSupplier $productSupplier): void
+    {
+        $this->productSupplierValidator->validate($productSupplier);
+        $this->updateObjectModel($productSupplier, CannotUpdateProductSupplierException::class);
     }
 }

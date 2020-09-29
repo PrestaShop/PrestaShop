@@ -277,9 +277,6 @@ services:
         arguments:
             - '@prestashop.adapter.product.product_validator'
 
-    prestashop.adapter.product.product_supplier_provider:
-        class: PrestaShop\PrestaShop\Adapter\Product\ProductSupplierProvider
-
     prestashop.adapter.product.customization_field_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldValidator
 
@@ -327,8 +324,8 @@ services:
             - '@prestashop.adapter.supplier.supplier_provider'
             - '@prestashop.adapter.currency.currency_provider'
 
-    prestashop.adapter.product.product_supplier_persister:
-        class: PrestaShop\PrestaShop\Adapter\Product\ProductSupplierPersister
+    prestashop.adapter.product.product_supplier_repository:
+        class: PrestaShop\PrestaShop\Adapter\Product\ProductSupplierRepository
         arguments:
             - '@prestashop.adapter.product.product_supplier_validator'
 
@@ -337,11 +334,11 @@ services:
         arguments:
             - '@prestashop.adapter.product.product_repository'
             - '@prestashop.adapter.supplier.supplier_provider'
-            - '@prestashop.adapter.product.product_supplier_persister'
+            - '@prestashop.adapter.product.product_supplier_repository'
             - '@prestashop.adapter.product.product_supplier_deleter'
 
     prestashop.adapter.product.product_supplier_deleter:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductSupplierDeleter
         arguments:
-            - '@prestashop.adapter.product.product_supplier_provider'
+            - '@prestashop.adapter.product.product_supplier_repository'
 

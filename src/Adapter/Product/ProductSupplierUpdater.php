@@ -41,6 +41,9 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use Product;
 use ProductSupplier;
 
+/**
+ * Updates product supplier relation
+ */
 class ProductSupplierUpdater
 {
     /**
@@ -54,9 +57,9 @@ class ProductSupplierUpdater
     private $supplierProvider;
 
     /**
-     * @var ProductSupplierPersister
+     * @var ProductSupplierRepository
      */
-    private $productSupplierPersister;
+    private $productSupplierRepository;
 
     /**
      * @var ProductSupplierDeleterInterface
@@ -66,18 +69,18 @@ class ProductSupplierUpdater
     /**
      * @param ProductRepository $productRepository
      * @param SupplierProvider $supplierProvider
-     * @param ProductSupplierPersister $productSupplierPersister
+     * @param ProductSupplierRepository $productSupplierRepository
      * @param ProductSupplierDeleterInterface $productSupplierDeleter
      */
     public function __construct(
         ProductRepository $productRepository,
         SupplierProvider $supplierProvider,
-        ProductSupplierPersister $productSupplierPersister,
+        ProductSupplierRepository $productSupplierRepository,
         ProductSupplierDeleterInterface $productSupplierDeleter
     ) {
         $this->productRepository = $productRepository;
         $this->supplierProvider = $supplierProvider;
-        $this->productSupplierPersister = $productSupplierPersister;
+        $this->productSupplierRepository = $productSupplierRepository;
         $this->productSupplierDeleter = $productSupplierDeleter;
     }
 
@@ -96,9 +99,9 @@ class ProductSupplierUpdater
 
         foreach ($productSuppliers as $productSupplier) {
             if ($productSupplier->id) {
-                $this->productSupplierPersister->update($productSupplier);
+                $this->productSupplierRepository->update($productSupplier);
             } else {
-                $this->productSupplierPersister->add($productSupplier);
+                $this->productSupplierRepository->add($productSupplier);
             }
         }
 

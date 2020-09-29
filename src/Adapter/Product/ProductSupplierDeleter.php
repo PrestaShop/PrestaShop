@@ -41,19 +41,17 @@ use ProductSupplier;
 final class ProductSupplierDeleter extends AbstractObjectModelRepository implements ProductSupplierDeleterInterface
 {
     /**
-     * @todo: ProductSupplierRepository
-     *
-     * @var ProductSupplierProvider
+     * @var ProductSupplierRepository
      */
-    private $productSupplierProvider;
+    private $productSupplierRepository;
 
     /**
-     * @param ProductSupplierProvider $productSupplierProvider
+     * @param ProductSupplierRepository $productSupplierRepository
      */
     public function __construct(
-        ProductSupplierProvider $productSupplierProvider
+        ProductSupplierRepository $productSupplierRepository
     ) {
-        $this->productSupplierProvider = $productSupplierProvider;
+        $this->productSupplierRepository = $productSupplierRepository;
     }
 
     /**
@@ -61,7 +59,7 @@ final class ProductSupplierDeleter extends AbstractObjectModelRepository impleme
      */
     public function delete(ProductSupplierId $productSupplierId): void
     {
-        $this->performDelete($this->productSupplierProvider->get($productSupplierId));
+        $this->performDelete($this->productSupplierRepository->get($productSupplierId));
     }
 
     /**
@@ -72,7 +70,7 @@ final class ProductSupplierDeleter extends AbstractObjectModelRepository impleme
         $failedIds = [];
         foreach ($productSupplierIds as $productSupplierId) {
             try {
-                $this->performDelete($this->productSupplierProvider->get($productSupplierId));
+                $this->performDelete($this->productSupplierRepository->get($productSupplierId));
             } catch (CannotDeleteProductSupplierException $e) {
                 $failedIds[] = $productSupplierId->getValue();
             }
