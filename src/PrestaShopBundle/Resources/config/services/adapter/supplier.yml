@@ -88,5 +88,5 @@ services:
       - name: 'tactician.handler'
         command: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Command\EditSupplierCommand'
 
-  prestashop.adapter.supplier.supplier_provider:
-      class: 'PrestaShop\PrestaShop\Adapter\Supplier\SupplierProvider'
+  prestashop.adapter.supplier.supplier_repository:
+      class: 'PrestaShop\PrestaShop\Adapter\Supplier\SupplierRepository'

@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use ProductSupplier;
 
 /**
- * Handles @var SetProductSuppliersCommand using legacy object model
+ * Handles @see SetProductSuppliersCommand using legacy object model
  */
 final class SetProductSuppliersHandler implements SetProductSuppliersHandlerInterface
 {

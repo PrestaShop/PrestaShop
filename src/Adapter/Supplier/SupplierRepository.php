@@ -28,23 +28,31 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier;
 
-use PrestaShop\PrestaShop\Adapter\AbstractObjectModelProvider;
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use Supplier;
 
 /**
  * Provides existing Supplier
  */
-class SupplierProvider extends AbstractObjectModelProvider
+class SupplierRepository extends AbstractObjectModelRepository
 {
+    /**
+     * @param SupplierId $supplierId
+     *
+     * @throws SupplierNotFoundException
+     */
+    public function assertSupplierExists(SupplierId $supplierId): void
+    {
+        $this->assertObjectModelExists($supplierId->getValue(), 'supplier', SupplierNotFoundException::class);
+    }
+
     /**
      * @param SupplierId $supplierId
      *
      * @return Supplier
      *
-     * @throws CoreException
      * @throws SupplierNotFoundException
      */
     public function get(SupplierId $supplierId): Supplier
@@ -57,16 +65,5 @@ class SupplierProvider extends AbstractObjectModelProvider
         );
 
         return $supplier;
-    }
-
-    /**
-     * @param SupplierId $supplierId
-     *
-     * @throws CoreException
-     * @throws SupplierNotFoundException
-     */
-    public function assertSupplierExists(SupplierId $supplierId): void
-    {
-        $this->assertObjectModelExists($supplierId->getValue(), 'supplier', SupplierNotFoundException::class);
     }
 }

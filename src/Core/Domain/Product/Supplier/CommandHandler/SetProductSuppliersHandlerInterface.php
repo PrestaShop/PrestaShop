@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSupplie
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 
 /**
- * Defines contract to handle @var SetProductSuppliersCommand
+ * Defines contract to handle @see SetProductSuppliersCommand
  */
 interface SetProductSuppliersHandlerInterface
 {

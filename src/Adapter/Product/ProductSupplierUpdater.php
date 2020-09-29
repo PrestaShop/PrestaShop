@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Adapter\Supplier\SupplierProvider;
+use PrestaShop\PrestaShop\Adapter\Supplier\SupplierRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotUpdateProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
@@ -51,9 +51,9 @@ class ProductSupplierUpdater
     private $productRepository;
 
     /**
-     * @var SupplierProvider
+     * @var SupplierRepository
      */
-    private $supplierProvider;
+    private $supplierRepository;
 
     /**
      * @var ProductSupplierRepository
@@ -67,18 +67,18 @@ class ProductSupplierUpdater
 
     /**
      * @param ProductRepository $productRepository
-     * @param SupplierProvider $supplierProvider
+     * @param SupplierRepository $supplierRepository
      * @param ProductSupplierRepository $productSupplierRepository
      * @param ProductSupplierDeleter $productSupplierDeleter
      */
     public function __construct(
         ProductRepository $productRepository,
-        SupplierProvider $supplierProvider,
+        SupplierRepository $supplierRepository,
         ProductSupplierRepository $productSupplierRepository,
         ProductSupplierDeleter $productSupplierDeleter
     ) {
         $this->productRepository = $productRepository;
-        $this->supplierProvider = $supplierProvider;
+        $this->supplierRepository = $supplierRepository;
         $this->productSupplierRepository = $productSupplierRepository;
         $this->productSupplierDeleter = $productSupplierDeleter;
     }
@@ -144,7 +144,7 @@ class ProductSupplierUpdater
             return;
         }
 
-        $this->supplierProvider->assertSupplierExists($supplierId);
+        $this->supplierRepository->assertSupplierExists($supplierId);
         $productSupplierId = (int) ProductSupplier::getIdByProductAndSupplier($productIdValue, 0, $supplierIdValue);
 
         if (!$productSupplierId) {
