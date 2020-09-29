@@ -72,8 +72,8 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
      *
      * @param HookDispatcherInterface $hookDispatcher
      * @param array $statusChoices
-     * @param $resetActionUrl
-     * @param $redirectionUrl
+     * @param string $resetActionUrl
+     * @param string $redirectionUrl
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,

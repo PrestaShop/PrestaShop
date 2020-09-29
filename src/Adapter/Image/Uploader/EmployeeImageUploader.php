@@ -74,7 +74,7 @@ final class EmployeeImageUploader extends AbstractImageUploader
     /**
      * Deletes old image
      *
-     * @param $id
+     * @param int $id
      */
     private function deleteOldImage($id)
     {

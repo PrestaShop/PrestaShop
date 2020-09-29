@@ -180,10 +180,14 @@ final class ToggleExchangeRateAutomatizationHandler implements ToggleExchangeRat
      */
     private function createCronJob($cronUrl)
     {
-        /** @var CronJobs $cronJobsModule */
         $cronJobsModule = Module::getInstanceByName('cronjobs');
+        /** @var CronJobs $cronJobsModule */
+        if (empty($cronJobsModule)) {
+            return false;
+        }
 
-        $isCronAdded = $cronJobsModule->addOneShotTask(
+        /* @phpstan-ignore-next-line */
+        $isCronAdded = $cronJobsModule::addOneShotTask(
             $cronUrl,
             $this->translator->trans(
                 'Live exchange Rate for %shop_name%',

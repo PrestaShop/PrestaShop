@@ -90,7 +90,7 @@ class Reduction
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getValue(): Number
     {
@@ -110,8 +110,8 @@ class Reduction
     }
 
     /**
-     * @param $type
-     * @param $value
+     * @param string $type
+     * @param float $value
      *
      * @throws DomainConstraintException
      */

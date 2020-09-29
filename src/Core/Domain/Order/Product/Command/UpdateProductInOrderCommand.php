@@ -112,7 +112,7 @@ class UpdateProductInOrderCommand
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getPriceTaxIncluded()
     {
@@ -120,7 +120,7 @@ class UpdateProductInOrderCommand
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getPriceTaxExcluded()
     {

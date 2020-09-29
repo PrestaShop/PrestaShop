@@ -39,7 +39,7 @@ class ExchangeRate
     /**
      * Get the default exchange rate as a Number
      *
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public static function getDefaultExchangeRate(): Number
     {

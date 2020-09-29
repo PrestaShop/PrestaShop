@@ -47,7 +47,7 @@ class HookManager
      *
      * @throws \PrestaShopException
      *
-     * @return string/array modules output
+     * @return string|array|void modules output
      */
     public function exec(
         $hook_name,

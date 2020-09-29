@@ -87,7 +87,7 @@ class OrderDiscountForViewing
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getAmountRaw(): Number
     {

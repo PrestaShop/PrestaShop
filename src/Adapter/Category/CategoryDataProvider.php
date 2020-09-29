@@ -42,7 +42,9 @@ class CategoryDataProvider
      */
     private $languageId;
 
-    /** @var array the list of existing active categories until root */
+    /**
+     * @var array the list of existing active categories until root
+     */
     private $categoryList;
 
     public function __construct(LegacyContext $context)
@@ -110,7 +112,7 @@ class CategoryDataProvider
      * @param int|null $root_category
      * @param bool|int $id_lang
      * @param bool $active return only active categories
-     * @param $groups
+     * @param array|null $groups
      * @param bool $use_shop_restriction
      * @param string $sql_filter
      * @param string $sql_sort
@@ -213,8 +215,8 @@ class CategoryDataProvider
     /**
      * Get Categories formatted like ajax_product_file.php using Category::getNestedCategories.
      *
-     * @param $query
-     * @param $limit
+     * @param string $query
+     * @param int $limit
      * @param bool $nameAsBreadCrumb
      *
      * @return array

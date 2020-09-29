@@ -42,7 +42,7 @@ class SqlRequestSettings
     private $fileEncoding;
 
     /**
-     * @param $fileEncoding
+     * @param string $fileEncoding
      */
     public function __construct($fileEncoding)
     {

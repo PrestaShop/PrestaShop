@@ -638,7 +638,7 @@ final class ProductImportHandler extends AbstractImportHandler
      * Load category data into product object.
      *
      * @param Product $product
-     * @param $validateOnly
+     * @param bool $validateOnly
      */
     private function loadCategory(Product $product, $validateOnly)
     {
@@ -932,12 +932,12 @@ final class ProductImportHandler extends AbstractImportHandler
      * Save specific price for a product.
      *
      * @param Product $product
-     * @param $reductionPrice
-     * @param $reductionPercent
-     * @param $reductionFrom
-     * @param $reductionTo
-     * @param $validateOnly
-     * @param $productName
+     * @param string $reductionPrice
+     * @param string $reductionPercent
+     * @param string $reductionFrom
+     * @param string $reductionTo
+     * @param bool $validateOnly
+     * @param string $productName
      */
     private function saveSpecificPrice(
         Product $product,
@@ -1323,7 +1323,7 @@ final class ProductImportHandler extends AbstractImportHandler
                 if ($product->depends_on_stock == 1) {
                     $stockManager = StockManagerFactory::getManager();
                     $price = str_replace(',', '.', $product->wholesale_price);
-                    if ($price == 0) {
+                    if (!is_array($price) && $price == 0) {
                         $price = 0.000001;
                     }
                     $price = round(floatval($price), 6);

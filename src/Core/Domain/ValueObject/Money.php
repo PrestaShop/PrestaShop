@@ -46,7 +46,7 @@ class Money
     private $currencyId;
 
     /**
-     * @param Number $amount
+     * @param \PrestaShop\Decimal\Number $amount
      * @param CurrencyId $currencyId
      *
      * @throws DomainConstraintException
@@ -62,7 +62,7 @@ class Money
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getAmount(): Number
     {

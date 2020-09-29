@@ -88,8 +88,8 @@ class ModuleZipManager
     {
         $this->initSource($source);
 
-        if ($this->getSource($source)->getName($source) !== null) {
-            return $this->getSource($source)->getName($source);
+        if ($this->getSource($source)->getName() !== null) {
+            return $this->getSource($source)->getName();
         }
 
         if (!file_exists($source)) {
@@ -172,7 +172,7 @@ class ModuleZipManager
     }
 
     /**
-     * @param $source
+     * @param string $source
      *
      * @return string|null
      */

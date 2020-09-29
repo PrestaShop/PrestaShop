@@ -81,11 +81,11 @@ class ProductShippingInformation
     private $localizedDeliveryTimeOutOfStockNotes;
 
     /**
-     * @param Number $width
-     * @param Number $height
-     * @param Number $depth
-     * @param Number $weight
-     * @param Number $additionalShippingCost
+     * @param \PrestaShop\Decimal\Number $width
+     * @param \PrestaShop\Decimal\Number $height
+     * @param \PrestaShop\Decimal\Number $depth
+     * @param \PrestaShop\Decimal\Number $weight
+     * @param \PrestaShop\Decimal\Number $additionalShippingCost
      * @param int[] $carrierReferences
      * @param int $deliveryTimeNotesType
      * @param string[] $localizedDeliveryTimeInStockNotes
@@ -114,7 +114,7 @@ class ProductShippingInformation
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getWidth(): Number
     {
@@ -122,7 +122,7 @@ class ProductShippingInformation
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getHeight(): Number
     {
@@ -130,7 +130,7 @@ class ProductShippingInformation
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getDepth(): Number
     {
@@ -138,7 +138,7 @@ class ProductShippingInformation
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getWeight(): Number
     {
@@ -146,7 +146,7 @@ class ProductShippingInformation
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getAdditionalShippingCost(): Number
     {

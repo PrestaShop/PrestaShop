@@ -80,7 +80,7 @@ final class ManufacturerFormDataHandler implements FormDataHandlerInterface
             $data['shop_association']
         ));
 
-        /** @var UploadedFile $uploadedFlagImage */
+        /** @var UploadedFile $uploadedLogo */
         $uploadedLogo = $data['logo'];
 
         if ($uploadedLogo instanceof UploadedFile) {
@@ -95,7 +95,7 @@ final class ManufacturerFormDataHandler implements FormDataHandlerInterface
      */
     public function update($manufacturerId, array $data)
     {
-        /** @var UploadedFile $uploadedFlagImage */
+        /** @var UploadedFile $uploadedLogo */
         $uploadedLogo = $data['logo'];
         $logo = null;
 

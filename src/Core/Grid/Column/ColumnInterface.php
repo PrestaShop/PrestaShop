@@ -35,7 +35,6 @@ interface ColumnInterface
      * Get unique column id.
      *
      * @return string
-     * @return self
      */
     public function getId();
 

@@ -93,7 +93,7 @@ class IssuePartialRefundCommand extends AbstractRefundCommand
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getShippingCostRefundAmount(): Number
     {

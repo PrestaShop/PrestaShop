@@ -60,7 +60,7 @@ class ManufacturerId implements ManufacturerIdInterface
     /**
      * Validates that the value is integer and is greater than zero
      *
-     * @param $value
+     * @param int $value
      *
      * @throws ManufacturerConstraintException
      */

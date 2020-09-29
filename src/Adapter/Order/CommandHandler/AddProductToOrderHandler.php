@@ -361,7 +361,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      * @param Cart $cart
      * @param bool $isFreeShipping
      * @param array $newProducts
-     * @param
      */
     private function createNewInvoice(Order $order, Cart $cart, $isFreeShipping, array $newProducts)
     {

@@ -104,7 +104,7 @@ class EditableCatalogPriceRule
      * @param int $countryId
      * @param int $groupId
      * @param int $fromQuantity
-     * @param Number $price
+     * @param \PrestaShop\Decimal\Number $price
      * @param Reduction $reduction
      * @param bool $includeTax
      * @param DateTime|null $from
@@ -195,7 +195,7 @@ class EditableCatalogPriceRule
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getPrice(): Number
     {

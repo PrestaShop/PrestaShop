@@ -93,7 +93,7 @@ class UpdateProductPricesCommand
     }
 
     /**
-     * @return Number|null
+     * @return \PrestaShop\Decimal\Number|null
      */
     public function getPrice(): ?Number
     {
@@ -113,7 +113,7 @@ class UpdateProductPricesCommand
     }
 
     /**
-     * @return Number|null
+     * @return \PrestaShop\Decimal\Number|null
      */
     public function getEcotax(): ?Number
     {
@@ -173,7 +173,7 @@ class UpdateProductPricesCommand
     }
 
     /**
-     * @return Number|null
+     * @return \PrestaShop\Decimal\Number|null
      */
     public function getWholesalePrice(): ?Number
     {
@@ -193,7 +193,7 @@ class UpdateProductPricesCommand
     }
 
     /**
-     * @return Number|null
+     * @return \PrestaShop\Decimal\Number|null
      */
     public function getUnitPrice(): ?Number
     {

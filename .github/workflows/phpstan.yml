@@ -16,15 +16,5 @@ jobs:
           fetch-depth: 0
       - run: composer install --prefer-dist
 
-      - name: "Create cache directory for phpstan/phpstan"
-        run: "mkdir -p .build/phpstan"
-
-      - name: "Cache cache directory for phpstan/phpstan"
-        uses: "actions/cache@v2"
-        with:
-          path: ".build/phpstan"
-          key: "php-7.3-phpstan-${{ github.sha }}"
-          restore-keys: "php-7.3-phpstan-"
-
       - name: Run phpstan
-        run: phpstan analyse -c phpstan.neon.dist --error-format github
+        run: ./vendor/bin/phpstan analyse -c phpstan.neon.dist --error-format github

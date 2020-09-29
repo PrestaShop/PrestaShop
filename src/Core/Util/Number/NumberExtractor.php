@@ -73,7 +73,7 @@ class NumberExtractor
      * @param array|object $resource
      * @param string $propertyPath
      *
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      *
      * @throws NumberExtractorException
      */
@@ -118,10 +118,10 @@ class NumberExtractor
     /**
      * Check if object contains provided public property and extract it as a Number, else return null
      *
-     * @param $resource
+     * @param string|object $resource
      * @param string $property
      *
-     * @return Number|null
+     * @return \PrestaShop\Decimal\Number|null
      *
      * @throws ReflectionException
      */
@@ -141,9 +141,9 @@ class NumberExtractor
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      *
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      *
      * @throws NumberExtractorException
      */

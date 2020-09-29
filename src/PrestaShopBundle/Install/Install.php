@@ -220,7 +220,7 @@ class Install extends AbstractInstall
     /**
      * Replace "parameters.yml" with "parameters.php" in "app/config".
      *
-     * @param $parameters
+     * @param array $parameters
      *
      * @return bool|int
      */
@@ -859,6 +859,7 @@ class Install extends AbstractInstall
             Configuration::updateGlobalValue('PS_SHOP_EMAIL', $data['admin_email']);
 
             $contacts = new PrestaShopCollection('Contact');
+            /** @var \Contact $contact */
             foreach ($contacts as $contact) {
                 $contact->email = $data['admin_email'];
                 $contact->update();

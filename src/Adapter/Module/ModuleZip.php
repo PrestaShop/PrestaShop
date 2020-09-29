@@ -79,7 +79,7 @@ class ModuleZip
     }
 
     /**
-     * @param $name
+     * @param string|null $name
      *
      * @return $this
      */
@@ -91,7 +91,7 @@ class ModuleZip
     }
 
     /**
-     * @param $sandboxPath
+     * @param string|null $sandboxPath
      *
      * @return $this
      */

@@ -93,7 +93,7 @@ class OrderDetailRefund
     /**
      * @param int $orderDetailId
      * @param int $productQuantity
-     * @param Number|null $refundedAmount
+     * @param \PrestaShop\Decimal\Number|null $refundedAmount
      *
      * @throws OrderException
      */
@@ -125,7 +125,7 @@ class OrderDetailRefund
     }
 
     /**
-     * @return Number|null
+     * @return \PrestaShop\Decimal\Number|null
      */
     public function getRefundedAmount(): ?Number
     {

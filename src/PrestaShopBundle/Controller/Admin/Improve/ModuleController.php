@@ -88,8 +88,6 @@ class ModuleController extends ModuleAbstractController
      *
      * @AdminSecurity("is_granted(['read'], 'ADMINMODULESSF_')")
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function manageAction()
@@ -262,7 +260,7 @@ class ModuleController extends ModuleAbstractController
     /**
      * @AdminSecurity("is_granted(['read'], 'ADMINMODULESSF_')")
      *
-     * @param Request $request
+     * @param int $moduleId
      *
      * @return Response
      */
@@ -791,7 +789,7 @@ class ModuleController extends ModuleAbstractController
     /**
      * @param string $pageVoter
      *
-     * @return JsonResponse
+     * @return JsonResponse|void
      */
     private function checkPermission($pageVoter)
     {
