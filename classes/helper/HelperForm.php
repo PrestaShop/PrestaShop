@@ -89,14 +89,14 @@ class HelperFormCore extends Helper
 
         $default_switch_values = [
             [
-                'id' => 'active_on',
-                'value' => 1,
-                'label' => $default_switch_labels['active_on'],
-            ],
-            [
                 'id' => 'active_off',
                 'value' => 0,
                 'label' => $default_switch_labels['active_off'],
+            ],
+            [
+                'id' => 'active_on',
+                'value' => 1,
+                'label' => $default_switch_labels['active_on'],
             ],
         ];
 
@@ -117,7 +117,8 @@ class HelperFormCore extends Helper
                             if (!empty($params['values'])) {
                                 foreach ($switch_values as $k => $value) {
                                     if (!isset($value['label'])) {
-                                        $defautl_label = $default_switch_labels[$value['id']] ?? '';
+                                        $default_key = (int) $value['value'] ? 1 : 0;
+                                        $defautl_label = $default_switch_labels[$value['id']] ?? $default_switch_values[$default_key]['label'];
                                         $this->fields_form[$fieldset_key]['form']['input'][$key]['values'][$k]['label'] = $defautl_label;
                                     }
                                 }
