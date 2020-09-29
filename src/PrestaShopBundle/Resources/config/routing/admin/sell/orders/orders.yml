@@ -195,6 +195,7 @@ admin_orders_generate_invoice:
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:generateInvoice
+    _legacy_controller: AdminOrders
   requirements:
     orderId: \d+
 

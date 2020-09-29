@@ -96,6 +96,7 @@ admin_products_search:
   methods: [GET]
   defaults:
     _controller: PrestaShopBundle:Admin/Product:searchProducts
+    _legacy_controller: AdminProducts
   options:
     expose: true
 
