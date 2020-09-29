@@ -89,7 +89,7 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
      */
     protected function getColumns()
     {
-        return (new ColumnCollection())
+        $columns = (new ColumnCollection())
             ->add(
                 (new DataColumn('id_invoice'))
                     ->setName($this->trans('ID', [], 'Admin.Global'))
@@ -145,9 +145,22 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
                 (new ActionColumn('actions'))
                     ->setName($this->trans('Actions', [], 'Admin.Global'))
                     ->setOptions([
-                        'actions' => $this->getRowActions(),
+                        'actions' => $this->getViewRowAction(),
                     ])
             );
+
+        if ($this->configuration->get('PS_INVOICE')) {
+            $columns->addBefore(
+                'actions',
+                (new ActionColumn('invoice'))
+                    ->setName($this->trans('Invoice', [], 'Admin.Global'))
+                    ->setOptions([
+                        'actions' => $this->getInvoiceRowAction(),
+                    ])
+            );
+        }
+
+        return $columns;
     }
 
     protected function getFilters()
@@ -231,12 +244,10 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
             );
     }
 
-    private function getRowActions()
+    private function getInvoiceRowAction()
     {
-        $collection = new RowActionCollection();
-
-        if ($this->configuration->get('PS_INVOICE')) {
-            $collection->add(
+        return (new RowActionCollection())
+            ->add(
                 (new LinkRowAction('print_invoice'))
                     ->setName($this->trans('View invoice', [], 'Admin.Orderscustomers.Feature'))
                     ->setIcon('receipt')
@@ -247,21 +258,22 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
                         'use_inline_display' => true,
                     ])
             );
-        }
+    }
 
-        $collection->add(
-            (new LinkRowAction('view'))
-                ->setName($this->trans('View', [], 'Admin.Actions'))
-                ->setIcon('zoom_in')
-                ->setOptions([
-                    'route' => 'admin_orders_view',
-                    'route_param_name' => 'orderId',
-                    'route_param_field' => 'id_order',
-                    'use_inline_display' => true,
-                    'clickable_row' => true,
-                ])
-        );
-
-        return $collection;
+    private function getViewRowAction()
+    {
+        return (new RowActionCollection())
+            ->add(
+                (new LinkRowAction('view'))
+                    ->setName($this->trans('View', [], 'Admin.Actions'))
+                    ->setIcon('zoom_in')
+                    ->setOptions([
+                        'route' => 'admin_orders_view',
+                        'route_param_name' => 'orderId',
+                        'route_param_field' => 'id_order',
+                        'use_inline_display' => true,
+                        'clickable_row' => true,
+                    ])
+            );
     }
 }
