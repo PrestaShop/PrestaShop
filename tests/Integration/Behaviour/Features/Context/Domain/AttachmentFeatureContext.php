@@ -113,7 +113,7 @@ class AttachmentFeatureContext extends AbstractDomainFeatureContext
 
         $destination = _PS_DOWNLOAD_DIR_ . $fileName;
         copy($source, $destination);
-        chmod($destination, 7550);
+        chmod($destination, 6440);
 
         return $destination;
     }
