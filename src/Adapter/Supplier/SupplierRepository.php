@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use Supplier;
 
 /**
- * Provides existing Supplier
+ * Methods to access Supplier data source
  */
 class SupplierRepository extends AbstractObjectModelRepository
 {
