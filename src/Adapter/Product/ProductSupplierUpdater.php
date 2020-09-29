@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Adapter\Supplier\SupplierProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotUpdateProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplierDeleterInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
@@ -62,7 +61,7 @@ class ProductSupplierUpdater
     private $productSupplierRepository;
 
     /**
-     * @var ProductSupplierDeleterInterface
+     * @var ProductSupplierDeleter
      */
     private $productSupplierDeleter;
 
@@ -70,13 +69,13 @@ class ProductSupplierUpdater
      * @param ProductRepository $productRepository
      * @param SupplierProvider $supplierProvider
      * @param ProductSupplierRepository $productSupplierRepository
-     * @param ProductSupplierDeleterInterface $productSupplierDeleter
+     * @param ProductSupplierDeleter $productSupplierDeleter
      */
     public function __construct(
         ProductRepository $productRepository,
         SupplierProvider $supplierProvider,
         ProductSupplierRepository $productSupplierRepository,
-        ProductSupplierDeleterInterface $productSupplierDeleter
+        ProductSupplierDeleter $productSupplierDeleter
     ) {
         $this->productRepository = $productRepository;
         $this->supplierProvider = $supplierProvider;

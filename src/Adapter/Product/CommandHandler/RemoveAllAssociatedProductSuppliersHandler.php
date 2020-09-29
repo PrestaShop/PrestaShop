@@ -29,10 +29,10 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductSupplierHandler;
+use PrestaShop\PrestaShop\Adapter\Product\ProductSupplierDeleter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductSupplierUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\RemoveAllAssociatedProductSuppliersHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplierDeleterInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use ProductSupplier;
 
@@ -42,7 +42,7 @@ use ProductSupplier;
 final class RemoveAllAssociatedProductSuppliersHandler extends AbstractProductSupplierHandler implements RemoveAllAssociatedProductSuppliersHandlerInterface
 {
     /**
-     * @var ProductSupplierDeleterInterface
+     * @var ProductSupplierDeleter
      */
     private $productSupplierDeleter;
 
@@ -52,11 +52,11 @@ final class RemoveAllAssociatedProductSuppliersHandler extends AbstractProductSu
     private $productSupplierUpdater;
 
     /**
-     * @param ProductSupplierDeleterInterface $productSupplierDeleter
+     * @param ProductSupplierDeleter $productSupplierDeleter
      * @param ProductSupplierUpdater $productSupplierUpdater
      */
     public function __construct(
-        ProductSupplierDeleterInterface $productSupplierDeleter,
+        ProductSupplierDeleter $productSupplierDeleter,
         ProductSupplierUpdater $productSupplierUpdater
     ) {
         $this->productSupplierDeleter = $productSupplierDeleter;

@@ -31,14 +31,13 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotBulkDeleteProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotDeleteProductSupplierException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplierDeleterInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use ProductSupplier;
 
 /**
  * Deletes Product using legacy object model
  */
-final class ProductSupplierDeleter extends AbstractObjectModelRepository implements ProductSupplierDeleterInterface
+final class ProductSupplierDeleter extends AbstractObjectModelRepository
 {
     /**
      * @var ProductSupplierRepository
