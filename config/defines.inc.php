@@ -101,7 +101,8 @@ define('_PS_CONFIG_DIR_', _PS_CORE_DIR_.'/config/');
 define('_PS_CUSTOM_CONFIG_FILE_', _PS_CONFIG_DIR_.'settings_custom.inc.php');
 define('_PS_CLASS_DIR_', _PS_CORE_DIR_.'/classes/');
 if (!defined('_PS_DOWNLOAD_DIR_')) {
-    define('_PS_DOWNLOAD_DIR_', _PS_ROOT_DIR_.'/download/');
+    $dir = _PS_IN_TEST_ ? '/tests/Resources/download/' : '/download/';
+    define('_PS_DOWNLOAD_DIR_', _PS_ROOT_DIR_.$dir);
 }
 define('_PS_MAIL_DIR_', _PS_CORE_DIR_.'/mails/');
 if (!defined('_PS_MODULE_DIR_')) {

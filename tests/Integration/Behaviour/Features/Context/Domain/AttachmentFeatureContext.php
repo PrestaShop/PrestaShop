@@ -46,7 +46,7 @@ class AttachmentFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $tableNode->getRowsHash();
         $fileName = $data['file_name'];
-        $source = _PS_ROOT_DIR_ . '/tests/Integration/Behaviour/DummyFiles/' . $fileName;
+        $source = _PS_ROOT_DIR_ . '/tests/Resources/dummyFile/' . $fileName;
 
         if (!is_file($source)) {
             throw new RuntimeException('%s is not a file', $source);

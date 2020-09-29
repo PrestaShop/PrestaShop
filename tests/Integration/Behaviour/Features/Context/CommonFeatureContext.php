@@ -105,8 +105,13 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public static function clearDownloads(): void
     {
+        $filesToSkip = [
+            _PS_DOWNLOAD_DIR_ . 'index.php',
+            _PS_DOWNLOAD_DIR_ . '.htaccess',
+        ];
+
         foreach (glob(_PS_DOWNLOAD_DIR_ . '*') as $file) {
-            if (is_file($file) && $file !== _PS_DOWNLOAD_DIR_ . 'index.php') {
+            if (is_file($file) && !in_array($file, $filesToSkip)) {
                 unlink($file);
             }
         }
