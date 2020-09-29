@@ -46,15 +46,8 @@ class AttachmentFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $tableNode->getRowsHash();
         $fileName = $data['file_name'];
-        $source = _PS_ROOT_DIR_ . '/tests/Resources/dummyFile/' . $fileName;
 
-        if (!is_file($source)) {
-            throw new RuntimeException('%s is not a file', $source);
-        }
-
-        $destination = _PS_DOWNLOAD_DIR_ . $fileName;
-        copy($source, $destination);
-        chmod($destination, 7550);
+        $destination = $this->uploadDummyFile($fileName);
 
         $attachment = new Attachment();
         $attachment->description = $this->parseLocalizedArray($data['description']);
@@ -103,5 +96,25 @@ class AttachmentFeatureContext extends AbstractDomainFeatureContext
         }
 
         return $attachment;
+    }
+
+    /**
+     * @param string $fileName
+     *
+     * @return string uploaded file destination path including the file name
+     */
+    private function uploadDummyFile(string $fileName): string
+    {
+        $source = _PS_ROOT_DIR_ . '/tests/Resources/dummyFile/' . $fileName;
+
+        if (!is_file($source)) {
+            throw new RuntimeException('%s is not a file', $source);
+        }
+
+        $destination = _PS_DOWNLOAD_DIR_ . $fileName;
+        copy($source, $destination);
+        chmod($destination, 7550);
+
+        return $destination;
     }
 }
