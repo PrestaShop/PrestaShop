@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductSupplierHandler;
-use PrestaShop\PrestaShop\Adapter\Product\ProductSupplierDeleter;
+use PrestaShop\PrestaShop\Adapter\Product\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Product\ProductSupplierUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\RemoveAllAssociatedProductSuppliersHandlerInterface;
@@ -42,9 +42,9 @@ use ProductSupplier;
 final class RemoveAllAssociatedProductSuppliersHandler extends AbstractProductSupplierHandler implements RemoveAllAssociatedProductSuppliersHandlerInterface
 {
     /**
-     * @var ProductSupplierDeleter
+     * @var ProductSupplierRepository
      */
-    private $productSupplierDeleter;
+    private $productSupplierRepository;
 
     /**
      * @var ProductSupplierUpdater
@@ -52,14 +52,14 @@ final class RemoveAllAssociatedProductSuppliersHandler extends AbstractProductSu
     private $productSupplierUpdater;
 
     /**
-     * @param ProductSupplierDeleter $productSupplierDeleter
+     * @param ProductSupplierRepository $productSupplierRepository
      * @param ProductSupplierUpdater $productSupplierUpdater
      */
     public function __construct(
-        ProductSupplierDeleter $productSupplierDeleter,
+        ProductSupplierRepository $productSupplierRepository,
         ProductSupplierUpdater $productSupplierUpdater
     ) {
-        $this->productSupplierDeleter = $productSupplierDeleter;
+        $this->productSupplierRepository = $productSupplierRepository;
         $this->productSupplierUpdater = $productSupplierUpdater;
     }
 
@@ -75,7 +75,7 @@ final class RemoveAllAssociatedProductSuppliersHandler extends AbstractProductSu
             $productSupplierIds[] = new ProductSupplierId((int) $productSupplier->id);
         }
 
-        $this->productSupplierDeleter->bulkDelete($productSupplierIds);
+        $this->productSupplierRepository->bulkDelete($productSupplierIds);
         $this->productSupplierUpdater->resetDefaultSupplier($product);
     }
 }

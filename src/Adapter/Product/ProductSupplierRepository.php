@@ -30,6 +30,8 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotAddProductSupplierException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotBulkDeleteProductSupplierException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotDeleteProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotUpdateProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
@@ -99,5 +101,37 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
     {
         $this->productSupplierValidator->validate($productSupplier);
         $this->updateObjectModel($productSupplier, CannotUpdateProductSupplierException::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function delete(ProductSupplierId $productSupplierId): void
+    {
+        $this->deleteObjectModel($this->get($productSupplierId), CannotDeleteProductSupplierException::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function bulkDelete(array $productSupplierIds): void
+    {
+        $failedIds = [];
+        foreach ($productSupplierIds as $productSupplierId) {
+            try {
+                $this->delete($productSupplierId);
+            } catch (CannotDeleteProductSupplierException $e) {
+                $failedIds[] = $productSupplierId->getValue();
+            }
+        }
+
+        if (empty($failedIds)) {
+            return;
+        }
+
+        throw new CannotBulkDeleteProductSupplierException($failedIds, sprintf(
+            'Failed to delete following product suppliers: %s',
+            implode(', ', $failedIds)
+        ));
     }
 }

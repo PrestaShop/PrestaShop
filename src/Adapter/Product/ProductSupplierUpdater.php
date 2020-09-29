@@ -61,26 +61,18 @@ class ProductSupplierUpdater
     private $productSupplierRepository;
 
     /**
-     * @var ProductSupplierDeleter
-     */
-    private $productSupplierDeleter;
-
-    /**
      * @param ProductRepository $productRepository
      * @param SupplierRepository $supplierRepository
      * @param ProductSupplierRepository $productSupplierRepository
-     * @param ProductSupplierDeleter $productSupplierDeleter
      */
     public function __construct(
         ProductRepository $productRepository,
         SupplierRepository $supplierRepository,
-        ProductSupplierRepository $productSupplierRepository,
-        ProductSupplierDeleter $productSupplierDeleter
+        ProductSupplierRepository $productSupplierRepository
     ) {
         $this->productRepository = $productRepository;
         $this->supplierRepository = $supplierRepository;
         $this->productSupplierRepository = $productSupplierRepository;
-        $this->productSupplierDeleter = $productSupplierDeleter;
     }
 
     /**
@@ -104,7 +96,7 @@ class ProductSupplierUpdater
             }
         }
 
-        $this->productSupplierDeleter->bulkDelete($deletableProductSupplierIds);
+        $this->productSupplierRepository->bulkDelete($deletableProductSupplierIds);
         $this->updateDefaultSupplier($productId, $defaultSupplierId);
     }
 

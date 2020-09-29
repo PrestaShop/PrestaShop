@@ -233,7 +233,7 @@ services:
     prestashop.adapter.product.command_handler.remove_all_associated_product_suppliers_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllAssociatedProductSuppliersHandler
         arguments:
-            - '@prestashop.adapter.product.product_supplier_deleter'
+            - '@prestashop.adapter.product.product_supplier_repository'
             - '@prestashop.adapter.product.product_supplier_updater'
         tags:
             - name: tactician.handler
@@ -335,10 +335,3 @@ services:
             - '@prestashop.adapter.product.product_repository'
             - '@prestashop.adapter.supplier.supplier_repository'
             - '@prestashop.adapter.product.product_supplier_repository'
-            - '@prestashop.adapter.product.product_supplier_deleter'
-
-    prestashop.adapter.product.product_supplier_deleter:
-        class: PrestaShop\PrestaShop\Adapter\Product\ProductSupplierDeleter
-        arguments:
-            - '@prestashop.adapter.product.product_supplier_repository'
-
