@@ -69,7 +69,7 @@ jobs:
 before_install:
   # Skip Travis CI build in some cases
   - |
-      if ! git diff --name-only $TRAVIS_COMMIT_RANGE | grep -qvE '(.gitignore)|(.md)|^(docs)|(.png)|(.jpg)|(.gif)|(.pdf)|(.html)|^(LICENSE)'
+      if ! git diff --name-only $TRAVIS_COMMIT_RANGE | grep -qvE '(.gitignore)|(.md)|^(docs)|(.tpl)|(.twig)|(.png)|(.jpg)|(.gif)|(.pdf)|(.html)|^(LICENSE)'
       then
         echo "Modified files do not require Travis CI to run"
         exit
