@@ -130,7 +130,7 @@ class TranslatableType extends TranslatorAwareType
 
         $errorsByLocale = $this->getErrorsByLocale($view, $form, $options['locales']);
 
-        if (!empty($errorsByLocale)) {
+        if ($errorsByLocale !== null) {
             foreach ($errorsByLocale as $errorByLocale) {
                 /** Needs to be translated */
                 $modifiedErrorMessage = $this->trans(
