@@ -26,42 +26,49 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
-use ObjectModel;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShopException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Reusable methods for providing legacy object model
+ * Associates product with attachment
  */
-abstract class AbstractObjectModelProvider
+class AssociateProductAttachmentCommand
 {
     /**
-     * @param int $id
-     * @param string $objectModelClass
-     * @param string $exceptionClass
-     *
-     * @return ObjectModel
-     *
-     * @throws CoreException
+     * @var ProductId
      */
-    protected function getObjectModel(int $id, string $objectModelClass, string $exceptionClass): ObjectModel
+    private $productId;
+
+    /**
+     * @var AttachmentId
+     */
+    private $attachmentId;
+
+    /**
+     * @param int $productId
+     * @param int $attachmentId
+     */
+    public function __construct(int $productId, int $attachmentId)
     {
-        try {
-            $objectModel = new $objectModelClass($id);
+        $this->productId = new ProductId($productId);
+        $this->attachmentId = new AttachmentId($attachmentId);
+    }
 
-            if ((int) $objectModel->id !== $id) {
-                throw new $exceptionClass(sprintf('%s #%d was not found', $objectModelClass, $id));
-            }
-        } catch (PrestaShopException $e) {
-            throw new CoreException(
-                sprintf('Error occurred when trying to get %s #%d', $objectModelClass, $id),
-                0,
-                $e
-            );
-        }
+    /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
+    }
 
-        return $objectModel;
+    /**
+     * @return AttachmentId
+     */
+    public function getAttachmentId(): AttachmentId
+    {
+        return $this->attachmentId;
     }
 }

@@ -274,6 +274,12 @@ services:
         arguments:
             - '@prestashop.adapter.product.product_repository'
 
+    prestashop.adapter.product.product_attachment_updater:
+        class: PrestaShop\PrestaShop\Adapter\Product\ProductAttachmentUpdater
+        arguments:
+            - '@prestashop.adapter.product.product_repository'
+            - '@prestashop.adapter.attachment.attachment_repository'
+
     prestashop.adapter.product.product_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductValidator
 
@@ -305,3 +311,19 @@ services:
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand
+
+    prestashop.adapter.product.command_handler.set_associated_product_attachments_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetAssociatedProductAttachmentsHandler
+        arguments:
+            - '@prestashop.adapter.product.product_attachment_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductAttachmentsCommand
+
+    prestashop.adapter.product.command_handler.associate_product_attachment_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AssociateProductAttachmentHandler
+        arguments:
+            - '@prestashop.adapter.product.product_attachment_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AssociateProductAttachmentCommand

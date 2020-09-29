@@ -174,12 +174,23 @@ class AttachmentCore extends ObjectModel
      */
     public function attachProduct($idProduct)
     {
+        return static::associateProductAttachment((int) $idProduct, (int) $this->id);
+    }
+
+    /**
+     * @param int $productId
+     * @param int $attachmentId
+     *
+     * @return bool true if success
+     */
+    public static function associateProductAttachment(int $productId, int $attachmentId): bool
+    {
         $res = Db::getInstance()->execute('
 			INSERT INTO ' . _DB_PREFIX_ . 'product_attachment
 				(id_attachment, id_product) VALUES
-				(' . (int) $this->id . ', ' . (int) $idProduct . ')');
+				(' . $attachmentId . ', ' . $productId . ')');
 
-        Product::updateCacheAttachment((int) $idProduct);
+        Product::updateCacheAttachment($productId);
 
         return $res;
     }
