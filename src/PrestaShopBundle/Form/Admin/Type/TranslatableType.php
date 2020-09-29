@@ -122,11 +122,7 @@ class TranslatableType extends TranslatorAwareType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $errors = [];
-
-        foreach ($view->vars['errors'] as $existingError) {
-            $errors[] = $existingError;
-        }
+        $errors = iterator_to_array($view->vars['errors']);
 
         $errorsByLocale = $this->getErrorsByLocale($view, $form, $options['locales']);
 
