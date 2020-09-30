@@ -82,6 +82,7 @@
       </div>
     {% endif %}
   </div>
+  {{ block('form_help') }}
 {% endblock text_with_unit_widget %}
 
 {% block ip_address_text_widget %}
@@ -91,7 +92,6 @@
       <i class="material-icons">add_circle</i> {{ 'Add my IP'|trans({}, 'Admin.Actions') }}
     </button>
   </div>
-
 {% endblock ip_address_text_widget %}
 
 {% block switch_widget %}
