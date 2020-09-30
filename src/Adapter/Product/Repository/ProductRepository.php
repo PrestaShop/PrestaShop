@@ -174,6 +174,7 @@ class ProductRepository extends AbstractObjectModelRepository
     public function add(Product $product): ProductId
     {
         $id = $this->addObjectModel($product, CannotAddProductException::class);
+        $product->addToCategories([$product->id_category_default]);
 
         return new ProductId($id);
     }
