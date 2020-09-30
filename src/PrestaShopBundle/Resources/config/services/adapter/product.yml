@@ -166,7 +166,7 @@ services:
     prestashop.adapter.product.command_handler.delete_customization_field_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DeleteCustomizationFieldHandler
         arguments:
-            - '@prestashop.adapter.product.customization_field_deleter'
+            - '@prestashop.adapter.product.update.customization_field_deleter'
             - '@prestashop.adapter.product.customization_field_repository'
             - '@prestashop.adapter.product.product_repository'
             - '@prestashop.adapter.product.update.product_customization_field_updater'
@@ -195,7 +195,7 @@ services:
     prestashop.adapter.product.command_handler.remove_all_customization_fields_from_product_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllCustomizationFieldsFromProductHandler
         arguments:
-            - '@prestashop.adapter.product.customization_field_deleter'
+            - '@prestashop.adapter.product.update.customization_field_deleter'
             - '@prestashop.adapter.product.product_repository'
             - '@prestashop.adapter.product.update.product_customization_field_updater'
         tags:
@@ -245,8 +245,8 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand
 
-    prestashop.adapter.product.customization_field_deleter:
-        class: PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldDeleter
+    prestashop.adapter.product.update.customization_field_deleter:
+        class: PrestaShop\PrestaShop\Adapter\Product\Update\CustomizationFieldDeleter
         arguments:
             - '@prestashop.adapter.product.customization_field_repository'
             - '@prestashop.adapter.product.product_repository'
@@ -255,7 +255,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductCustomizationFieldUpdater
         arguments:
             - '@prestashop.adapter.product.customization_field_repository'
-            - '@prestashop.adapter.product.customization_field_deleter'
+            - '@prestashop.adapter.product.update.customization_field_deleter'
             - '@prestashop.adapter.product.product_repository'
 
     prestashop.adapter.product.update.product_attachment_updater:

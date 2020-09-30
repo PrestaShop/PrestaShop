@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldDeleter;
+use PrestaShop\PrestaShop\Adapter\Product\Update\CustomizationFieldDeleter;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductCustomizationFieldUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\CustomizationFieldRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
