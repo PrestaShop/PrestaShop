@@ -45,7 +45,7 @@ class ModuleRepositoryFactory
     private static $instance;
 
     /**
-     * @var string
+     * @var array|null
      */
     private $parameters;
 

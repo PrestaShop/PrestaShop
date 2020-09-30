@@ -44,10 +44,10 @@ class ProductDownloadCore extends ObjectModel
     /** @var string DateExpiration deadline of the file */
     public $date_expiration;
 
-    /** @var string NbDaysAccessible how many days the customer can access to file */
+    /** @var int NbDaysAccessible how many days the customer can access to file */
     public $nb_days_accessible;
 
-    /** @var string NbDownloadable how many time the customer can download the file */
+    /** @var int NbDownloadable how many time the customer can download the file */
     public $nb_downloadable;
 
     /** @var bool Active if file is accessible or not */

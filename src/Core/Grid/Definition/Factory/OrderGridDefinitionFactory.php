@@ -463,8 +463,8 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
      */
     private function getRowActions(): RowActionCollection
     {
-        return (new RowActionCollection())
-            ->add(
+        $rowActionCollection = new RowActionCollection();
+        $rowActionCollection->add(
                 (new LinkRowAction('print_invoice'))
                     ->setName($this->trans('View invoice', [], 'Admin.Orderscustomers.Feature'))
                     ->setIcon('receipt')
@@ -501,5 +501,7 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
                     ])
             )
         ;
+
+        return $rowActionCollection;
     }
 }

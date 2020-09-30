@@ -35,7 +35,7 @@ interface LanguageInterface
     /**
      * Database id
      *
-     * @return string
+     * @return int
      */
     public function getId();
 

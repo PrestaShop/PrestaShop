@@ -147,7 +147,7 @@ class TypedRegexValidator extends ConstraintValidator
      * @param string $type
      * @param string $value
      *
-     * @return false|int
+     * @return bool|int
      */
     private function match($pattern, $type, $value)
     {

@@ -36,7 +36,7 @@ interface EmailConfigurationTesterInterface
      *
      * @param array $config
      *
-     * @return bool
+     * @return array<int, string>
      */
     public function testConfiguration(array $config);
 }

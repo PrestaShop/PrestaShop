@@ -52,7 +52,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
     private $renderingContent = [];
 
     /**
-     * @var bool
+     * @var bool|callable
      */
     private $propagationStoppedCalledBy = false;
 
@@ -188,7 +188,10 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
         $event = new RenderingHookEvent();
         $event->setHookParameters($parameters);
 
-        return $this->dispatch($eventName, $event);
+        /** @var RenderingHookEvent $eventDispatched */
+        $eventDispatched = $this->dispatch($eventName, $event);
+
+        return $eventDispatched;
     }
 
     /**

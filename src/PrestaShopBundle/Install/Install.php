@@ -841,8 +841,8 @@ class Install extends AbstractInstall
             $employee->default_tab = 1;
             $employee->active = true;
             $employee->id_profile = 1;
-            $employee->id_lang = Configuration::get('PS_LANG_DEFAULT');
-            $employee->bo_menu = 1;
+            $employee->id_lang = (int) Configuration::get('PS_LANG_DEFAULT');
+            $employee->bo_menu = true;
             if (!$employee->add()) {
                 $this->setError($this->translator->trans('Cannot create admin account', [], 'Install'));
 

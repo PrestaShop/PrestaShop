@@ -85,6 +85,7 @@ class LayoutExtension extends \Twig_Extension implements GlobalsInterface
 
         try {
             $defaultCurrency = $this->context->getEmployeeCurrency() ?: $this->currencyDataProvider->getDefaultCurrency();
+            $defaultCurrency = $defaultCurrency->getSymbol();
         } catch (\Exception $e) {
             $defaultCurrency = null;
         }

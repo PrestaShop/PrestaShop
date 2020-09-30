@@ -53,7 +53,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
     /** @var HookDispatcherInterface */
     private $hookDispatcher;
 
-    /** @var TransformationInterface[] */
+    /** @var TransformationCollection */
     private $transformations;
 
     /**

@@ -141,7 +141,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
     /**
      * @param CategoryId $categoryId
      *
-     * @return array
+     * @return array|null
      */
     private function getThumbnailImage(CategoryId $categoryId)
     {

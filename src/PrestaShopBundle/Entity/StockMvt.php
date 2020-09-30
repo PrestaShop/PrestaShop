@@ -114,7 +114,7 @@ class StockMvt
      *
      * @ORM\Column(name="sign", type="smallint", nullable=false, options={"default":1})
      */
-    private $sign = '1';
+    private $sign = 1;
 
     /**
      * @var string

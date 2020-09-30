@@ -58,7 +58,7 @@ class PositionsController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return Response
+     * @return array<string, mixed>
      */
     public function indexAction(Request $request)
     {
