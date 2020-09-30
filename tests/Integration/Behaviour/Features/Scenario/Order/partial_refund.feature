@@ -834,11 +834,11 @@ Feature: Refund Order from Back Office (BO)
       | name         | State tax |
       | rate         | 10        |
       | is_enabled   | true      |
-    And I add tax rule group for tax "state-tax" with following conditions:
+    And I add tax rule group "state-tax-group" for tax "state-tax" with following conditions:
       | name         | US-FL Rate (10%) |
       | country      | US               |
       | state        | FL               |
-    And I set tax rule group "US-FL Rate (10%)" to product "Mug The best is yet to come"
+    And I set tax rule group "state-tax-group" to product "Mug The best is yet to come"
     When I issue a partial refund on "bo_order_refund" without restock with credit slip without voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug The best is yet to come | 1                        | 11.9   |

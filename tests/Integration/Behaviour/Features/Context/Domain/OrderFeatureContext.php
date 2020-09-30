@@ -958,6 +958,35 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then product :productName in :invoicePosition invoice from order :orderReference should have following details:
+     *
+     * @param string $orderReference
+     * @param string $productName
+     */
+    public function checkProductDetailsInInvoiceWithReference(string $productName, string $invoicePosition, string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $order = new Order($orderId);
+        $orderInvoice = $this->getInvoiceFromOrder($order, $invoicePosition);
+
+        $productOrderDetail = $this->getOrderDetailFromOrder($productName, $orderReference, null, $orderInvoice->id);
+        $expectedDetails = $table->getRowsHash();
+        foreach ($expectedDetails as $detailName => $expectedDetailValue) {
+            Assert::assertEquals(
+                (float) $expectedDetailValue,
+                $productOrderDetail[$detailName],
+                sprintf(
+                    'Invalid product detail field %s for product %s, expected %s instead of %s',
+                    $detailName,
+                    $productName,
+                    $expectedDetailValue,
+                    $productOrderDetail[$detailName]
+                )
+            );
+        }
+    }
+
+    /**
      * @Then /^I watch the stock of product "(.+)"$/
      *
      * This statement must be called to store an initial stock for a product which then
