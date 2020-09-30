@@ -91,11 +91,11 @@ class AttributeGroupController extends FrameworkBundleAdminController
      *     message="You do not have permission to update this."
      * )
      *
-     * @param $attributeGroupId
+     * @param int $attributeGroupId
      *
      * @return RedirectResponse
      */
-    public function editAction($attributeGroupId)
+    public function editAction(int $attributeGroupId)
     {
         //@todo: implement in antoher pr
         return $this->redirectToRoute('admin_attribute_groups_index');
@@ -108,11 +108,11 @@ class AttributeGroupController extends FrameworkBundleAdminController
      * )
 
      *
-     * @param $attributeGroupId
+     * @param int $attributeGroupId
      *
      * @return RedirectResponse
      */
-    public function exportAction($attributeGroupId)
+    public function exportAction(int $attributeGroupId)
     {
         //@todo: implement in antoher pr
         return $this->redirectToRoute('admin_attribute_groups_index');

@@ -87,10 +87,11 @@ class AttributeController extends FrameworkBundleAdminController
      * )
      *
      * @param Request $request
+     * @param int $attributeGroupId
      *
      * @return RedirectResponse
      */
-    public function updatePositionAction(Request $request, $attributeGroupId)
+    public function updatePositionAction(Request $request, int $attributeGroupId)
     {
         $positionsData = [
             'positions' => $request->request->get('positions'),
@@ -123,11 +124,11 @@ class AttributeController extends FrameworkBundleAdminController
      *     message="You do not have permission to create this."
      * )
      *
-     * @param $attributeGroupId
+     * @param int $attributeGroupId
      *
      * @return RedirectResponse
      */
-    public function createAction($attributeGroupId)
+    public function createAction(int $attributeGroupId)
     {
         // @todo: implement in another pr
         return $this->redirectToRoute('admin_attributes_index', [
@@ -141,11 +142,12 @@ class AttributeController extends FrameworkBundleAdminController
      *     message="You do not have permission to update this."
      * )
      *
-     * @param $attributeGroupId
+     * @param int $attributeId
+     * @param int $attributeGroupId
      *
      * @return RedirectResponse
      */
-    public function editAction($attributeId, $attributeGroupId)
+    public function editAction(int $attributeId, int $attributeGroupId)
     {
         // @todo: implement in another pr
         return $this->redirectToRoute('admin_attributes_index', [
@@ -166,7 +168,7 @@ class AttributeController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function deleteAction($attributeGroupId, $attributeId)
+    public function deleteAction(int $attributeGroupId, int $attributeId)
     {
         try {
             $this->getCommandBus()->handle(new DeleteAttributeCommand((int) $attributeId));
@@ -196,7 +198,7 @@ class AttributeController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function bulkDeleteAction($attributeGroupId, Request $request)
+    public function bulkDeleteAction(int $attributeGroupId, Request $request)
     {
         try {
             $this->getCommandBus()->handle(new BulkDeleteAttributeCommand(
