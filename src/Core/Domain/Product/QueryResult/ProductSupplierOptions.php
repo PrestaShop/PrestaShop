@@ -59,8 +59,8 @@ class ProductSupplierOptions
         array $optionsBySupplier
     ) {
         $this->defaultSupplierId = $defaultSupplierId;
-        $this->optionsBySupplier = $optionsBySupplier;
         $this->defaultSupplierReference = $defaultSupplierReference;
+        $this->optionsBySupplier = $optionsBySupplier;
     }
 
     /**

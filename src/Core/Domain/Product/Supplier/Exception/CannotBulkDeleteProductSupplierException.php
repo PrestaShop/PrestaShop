@@ -24,20 +24,39 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception;
+
+use Throwable;
 
 /**
- * Defines contract to handle @var UpdateProductSuppliersCommand
+ * Thrown when bulk deleting product suppliers fails
  */
-interface UpdateProductSuppliersHandlerInterface
+class CannotBulkDeleteProductSupplierException extends ProductSupplierException
 {
     /**
-     * @param UpdateProductSuppliersCommand $command
-     *
-     * @return ProductSupplierId[] new product suppliers list
+     * @var int[]
      */
-    public function handle(UpdateProductSuppliersCommand $command): array;
+    private $productSupplierIds;
+
+    /**
+     * @param int[] $productSupplierIds ids of product supplier which cannot be deleted
+     * @param string $message
+     * @param int $code
+     * @param Throwable|null $previous
+     */
+    public function __construct(array $productSupplierIds, $message = '', $code = 0, Throwable $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+        $this->productSupplierIds = $productSupplierIds;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getProductSupplierIds(): array
+    {
+        return $this->productSupplierIds;
+    }
 }

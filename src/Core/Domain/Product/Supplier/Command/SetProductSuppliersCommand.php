@@ -28,15 +28,16 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
+use RuntimeException;
 
 /**
  * Updates product suppliers
  */
-class UpdateProductSuppliersCommand
+class SetProductSuppliersCommand
 {
     /**
      * @var ProductId
@@ -44,21 +45,28 @@ class UpdateProductSuppliersCommand
     private $productId;
 
     /**
-     * @var ProductSupplier[]|null
+     * @var ProductSupplier[]
      */
     private $productSuppliers;
 
     /**
-     * @var SupplierId|null
+     * @var SupplierId
      */
     private $defaultSupplierId;
 
     /**
      * @param int $productId
+     * @param array<string, mixed> $productSuppliers
+     * @param int $defaultSupplierId
+     *
+     * @see SetProductSuppliersCommand::setProductSuppliers() for $productSuppliers structure
      */
-    public function __construct(int $productId)
+    public function __construct(int $productId, array $productSuppliers, int $defaultSupplierId)
     {
+        $this->setProductSuppliers($productSuppliers);
         $this->productId = new ProductId($productId);
+        $this->defaultSupplierId = new SupplierId($defaultSupplierId);
+        $this->assertDefaultSupplierIsOneOfProvidedSuppliers();
     }
 
     /**
@@ -70,43 +78,32 @@ class UpdateProductSuppliersCommand
     }
 
     /**
-     * @return ProductSupplier[]|null
+     * @return ProductSupplier[]
      */
-    public function getProductSuppliers(): ?array
+    public function getProductSuppliers(): array
     {
         return $this->productSuppliers;
     }
 
     /**
-     * @return SupplierId|null
+     * @return SupplierId
      */
-    public function getDefaultSupplierId(): ?SupplierId
+    public function getDefaultSupplierId(): SupplierId
     {
         return $this->defaultSupplierId;
     }
 
     /**
-     * @param int $supplierId
-     *
-     * @throws SupplierException
-     */
-    public function setDefaultSupplierId(int $supplierId): self
-    {
-        $this->defaultSupplierId = new SupplierId($supplierId);
-
-        return $this;
-    }
-
-    /**
      * @param array[] $productSuppliers
      */
-    public function setProductSuppliers(array $productSuppliers): void
+    private function setProductSuppliers(array $productSuppliers): void
     {
-        // empty array is handled differently than null.
         if (empty($productSuppliers)) {
-            $this->productSuppliers = [];
-
-            return;
+            throw new RuntimeException(sprintf(
+                'Empty array of product suppliers provided in %s. To remove all product suppliers use %s.',
+                self::class,
+                RemoveAllAssociatedProductSuppliersCommand::class
+            ));
         }
 
         foreach ($productSuppliers as $productSupplier) {
@@ -119,5 +116,21 @@ class UpdateProductSuppliersCommand
                 $productSupplier['product_supplier_id'] ?? null
             );
         }
+    }
+
+    /**
+     * @throws ProductSupplierException
+     */
+    private function assertDefaultSupplierIsOneOfProvidedSuppliers(): void
+    {
+        $defaultSupplierId = $this->getDefaultSupplierId()->getValue();
+
+        foreach ($this->productSuppliers as $productSupplier) {
+            if ($productSupplier->getSupplierId() === $defaultSupplierId) {
+                return;
+            }
+        }
+
+        throw new ProductSupplierException('Default supplier must be one of provided suppliers');
     }
 }

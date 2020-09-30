@@ -222,33 +222,22 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions
 
-    prestashop.adapter.product.command_handler.add_product_supplier_handler:
-        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddProductSupplierHandler
-        tags:
-            - name: tactician.handler
-              command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\AddProductSupplierCommand
-
-    prestashop.adapter.product.command_handler.update_product_supplier_handler:
-        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductSupplierHandler
-        tags:
-            - name: tactician.handler
-              command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSupplierCommand
-
-    prestashop.adapter.product.command_handler.delete_product_supplier_handler:
-        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DeleteProductSupplierHandler
-        tags:
-            - name: tactician.handler
-              command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\DeleteProductSupplierCommand
-
-    prestashop.adapter.product.command_handler.update_product_suppliers_handler:
-        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductSuppliersHandler
+    prestashop.adapter.product.command_handler.set_product_suppliers_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetProductSuppliersHandler
         arguments:
-            - '@prestashop.adapter.product.command_handler.add_product_supplier_handler'
-            - '@prestashop.adapter.product.command_handler.update_product_supplier_handler'
-            - '@prestashop.adapter.product.command_handler.delete_product_supplier_handler'
+            - '@prestashop.adapter.product.product_supplier_updater'
         tags:
             - name: tactician.handler
-              command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand
+
+    prestashop.adapter.product.command_handler.remove_all_associated_product_suppliers_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllAssociatedProductSuppliersHandler
+        arguments:
+            - '@prestashop.adapter.product.product_supplier_repository'
+            - '@prestashop.adapter.product.product_supplier_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand
 
     prestashop.adapter.product.command_handler.update_product_seo_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductSeoHandler
@@ -267,11 +256,6 @@ services:
         arguments:
             - '@prestashop.adapter.product.customization_field_repository'
             - '@prestashop.adapter.product.customization_field_deleter'
-            - '@prestashop.adapter.product.product_repository'
-
-    prestashop.adapter.product.product_deleter:
-        class: PrestaShop\PrestaShop\Adapter\Product\ProductDeleter
-        arguments:
             - '@prestashop.adapter.product.product_repository'
 
     prestashop.adapter.product.product_attachment_updater:
@@ -299,7 +283,7 @@ services:
     prestashop.adapter.product.command_handler.delete_product_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DeleteProductHandler
         arguments:
-            - '@prestashop.adapter.product.product_deleter'
+            - '@prestashop.adapter.product.product_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand
@@ -307,7 +291,7 @@ services:
     prestashop.adapter.product.command_handler.bulk_delete_product_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\BulkDeleteProductHandler
         arguments:
-            - '@prestashop.adapter.product.product_deleter'
+            - '@prestashop.adapter.product.product_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand
@@ -327,3 +311,22 @@ services:
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AssociateProductAttachmentCommand
+
+    prestashop.adapter.product.product_supplier_validator:
+        class: PrestaShop\PrestaShop\Adapter\Product\ProductSupplierValidator
+        arguments:
+            - '@prestashop.adapter.product.product_repository'
+            - '@prestashop.adapter.supplier.supplier_repository'
+            - '@prestashop.adapter.currency.currency_repository'
+
+    prestashop.adapter.product.product_supplier_repository:
+        class: PrestaShop\PrestaShop\Adapter\Product\ProductSupplierRepository
+        arguments:
+            - '@prestashop.adapter.product.product_supplier_validator'
+
+    prestashop.adapter.product.product_supplier_updater:
+        class: PrestaShop\PrestaShop\Adapter\Product\ProductSupplierUpdater
+        arguments:
+            - '@prestashop.adapter.product.product_repository'
+            - '@prestashop.adapter.supplier.supplier_repository'
+            - '@prestashop.adapter.product.product_supplier_repository'

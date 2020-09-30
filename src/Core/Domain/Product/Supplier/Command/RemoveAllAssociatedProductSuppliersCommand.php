@@ -24,20 +24,35 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\AddProductSupplierCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Defines contract to handle @var AddProductSupplierCommand
+ * Removes all product suppliers for provided product
  */
-interface AddProductSupplierHandlerInterface
+class RemoveAllAssociatedProductSuppliersCommand
 {
     /**
-     * @param AddProductSupplierCommand $command
-     *
-     * @return ProductSupplierId
+     * @var ProductId
      */
-    public function handle(AddProductSupplierCommand $command): ProductSupplierId;
+    private $productId;
+
+    /**
+     * @param int $productId
+     */
+    public function __construct(int $productId)
+    {
+        $this->productId = new ProductId($productId);
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
+    }
 }

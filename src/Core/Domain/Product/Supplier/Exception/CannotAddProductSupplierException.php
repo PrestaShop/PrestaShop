@@ -24,17 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSupplierCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception;
 
 /**
- * Defines contract to handle @var UpdateProductSupplierCommand
+ * Thrown when adding product supplier fails
  */
-interface UpdateProductSupplierHandlerInterface
+class CannotAddProductSupplierException extends ProductSupplierException
 {
-    /**
-     * @param UpdateProductSupplierCommand $command
-     */
-    public function handle(UpdateProductSupplierCommand $command): void;
 }

@@ -26,33 +26,44 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command;
+namespace PrestaShop\PrestaShop\Adapter\Supplier;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
+use Supplier;
 
 /**
- * Deletes product supplier
+ * Methods to access Supplier data source
  */
-class DeleteProductSupplierCommand
+class SupplierRepository extends AbstractObjectModelRepository
 {
     /**
-     * @var ProductSupplierId
+     * @param SupplierId $supplierId
+     *
+     * @throws SupplierNotFoundException
      */
-    private $productSupplierId;
-
-    /**
-     * @param int $productSupplierId
-     */
-    public function __construct(int $productSupplierId)
+    public function assertSupplierExists(SupplierId $supplierId): void
     {
-        $this->productSupplierId = new ProductSupplierId($productSupplierId);
+        $this->assertObjectModelExists($supplierId->getValue(), 'supplier', SupplierNotFoundException::class);
     }
 
     /**
-     * @return ProductSupplierId
+     * @param SupplierId $supplierId
+     *
+     * @return Supplier
+     *
+     * @throws SupplierNotFoundException
      */
-    public function getProductSupplierId(): ProductSupplierId
+    public function get(SupplierId $supplierId): Supplier
     {
-        return $this->productSupplierId;
+        /** @var Supplier $supplier */
+        $supplier = $this->getObjectModel(
+            $supplierId->getValue(),
+            Supplier::class,
+            SupplierNotFoundException::class
+        );
+
+        return $supplier;
     }
 }

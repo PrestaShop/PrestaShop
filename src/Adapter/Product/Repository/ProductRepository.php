@@ -30,6 +30,8 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Product\ProductValidator;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -52,6 +54,14 @@ class ProductRepository extends AbstractObjectModelRepository
     public function __construct(ProductValidator $productValidator)
     {
         $this->productValidator = $productValidator;
+    }
+
+    /**
+     * @param ProductId $productId
+     */
+    public function assertProductExists(ProductId $productId): void
+    {
+        $this->assertObjectModelExists($productId->getValue(), 'product', ProductNotFoundException::class);
     }
 
     /**
@@ -93,9 +103,37 @@ class ProductRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
+     *
+     * @throws CoreException
      */
-    public function assertProductExists(ProductId $productId): void
+    public function delete(ProductId $productId): void
     {
-        $this->assertObjectModelExists($productId->getValue(), 'product', ProductNotFoundException::class);
+        $this->deleteObjectModel($this->get($productId), CannotDeleteProductException::class);
+    }
+
+    /**
+     * @param array $productIds
+     *
+     * @throws CannotBulkDeleteProductException
+     */
+    public function bulkDelete(array $productIds): void
+    {
+        $failedIds = [];
+        foreach ($productIds as $productId) {
+            try {
+                $this->delete($productId);
+            } catch (CannotDeleteProductException $e) {
+                $failedIds[] = $productId->getValue();
+            }
+        }
+
+        if (empty($failedIds)) {
+            return;
+        }
+
+        throw new CannotBulkDeleteProductException(
+            $failedIds,
+            sprintf('Failed to delete following products: "%s"', implode(', ', $failedIds))
+        );
     }
 }

@@ -24,22 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
 
 /**
- * Defines contract for product deleter
+ * Defines contract to handle @see RemoveAllAssociatedProductSuppliersCommand
  */
-interface ProductDeleterInterface
+interface RemoveAllAssociatedProductSuppliersHandlerInterface
 {
     /**
-     * @param ProductId $productId
+     * @param RemoveAllAssociatedProductSuppliersCommand $command
      */
-    public function delete(ProductId $productId): void;
-
-    /**
-     * @param ProductId[] $productIds
-     */
-    public function bulkDelete(array $productIds): void;
+    public function handle(RemoveAllAssociatedProductSuppliersCommand $command): void;
 }
