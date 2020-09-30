@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product;
+namespace PrestaShop\PrestaShop\Adapter\Product\Validate;
 
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository;
@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use ProductSupplier;
 
 /**
- * Vvalidates ProductSupplier legacy object model
+ * Validates ProductSupplier legacy object model
  */
 class ProductSupplierValidator extends AbstractObjectModelValidator
 {

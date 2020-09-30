@@ -264,13 +264,13 @@ services:
             - '@prestashop.adapter.product.product_repository'
             - '@prestashop.adapter.attachment.attachment_repository'
 
-    prestashop.adapter.product.product_validator:
-        class: PrestaShop\PrestaShop\Adapter\Product\ProductValidator
+    prestashop.adapter.product.validate.product_validator:
+        class: PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator
 
     prestashop.adapter.product.product_repository:
         class: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository
         arguments:
-            - '@prestashop.adapter.product.product_validator'
+            - '@prestashop.adapter.product.validate.product_validator'
 
     prestashop.adapter.product.customization_field_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldValidator
@@ -312,8 +312,8 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AssociateProductAttachmentCommand
 
-    prestashop.adapter.product.product_supplier_validator:
-        class: PrestaShop\PrestaShop\Adapter\Product\ProductSupplierValidator
+    prestashop.adapter.product.validate.product_supplier_validator:
+        class: PrestaShop\PrestaShop\Adapter\Product\Validate\ProductSupplierValidator
         arguments:
             - '@prestashop.adapter.product.product_repository'
             - '@prestashop.adapter.supplier.repository.supplier_repository'
@@ -322,7 +322,7 @@ services:
     prestashop.adapter.product.repository.product_supplier_repository:
         class: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository
         arguments:
-            - '@prestashop.adapter.product.product_supplier_validator'
+            - '@prestashop.adapter.product.validate.product_supplier_validator'
 
     prestashop.adapter.product.update.product_supplier_updater:
         class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater
