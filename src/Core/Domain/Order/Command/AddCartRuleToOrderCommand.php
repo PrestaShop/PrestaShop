@@ -48,17 +48,17 @@ class AddCartRuleToOrderCommand
     private $cartRuleName;
 
     /**
-     * @var int
+     * @var string
      */
     private $cartRuleType;
 
     /**
-     * @var float
+     * @var \PrestaShop\Decimal\Number|null
      */
     private $value;
 
     /**
-     * @var int|null
+     * @var OrderInvoiceId|null
      */
     private $orderInvoiceId;
 

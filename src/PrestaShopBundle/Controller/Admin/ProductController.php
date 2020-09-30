@@ -411,7 +411,7 @@ class ProductController extends FrameworkBundleAdminController
         /** @var TaxRuleDataProvider $taxRuleDataProvider */
         $taxRuleDataProvider = $this->get('prestashop.adapter.data_provider.tax');
         $product->id_tax_rules_group = $taxRuleDataProvider->getIdTaxRulesGroupMostUsed();
-        $product->active = $productProvider->isNewProductDefaultActivated() ? 1 : 0;
+        $product->active = $productProvider->isNewProductDefaultActivated();
         $product->state = Product::STATE_TEMP;
 
         //set name and link_rewrite in each lang

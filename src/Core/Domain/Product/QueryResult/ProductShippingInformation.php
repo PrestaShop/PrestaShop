@@ -36,27 +36,27 @@ use PrestaShop\Decimal\Number;
 class ProductShippingInformation
 {
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $width;
 
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $height;
 
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $depth;
 
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $weight;
 
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $additionalShippingCost;
 

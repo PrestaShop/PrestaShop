@@ -48,12 +48,12 @@ class UpdateProductInOrderCommand
     private $orderDetailId;
 
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $priceTaxIncluded;
 
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $priceTaxExcluded;
 

@@ -39,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailRefund;
 class IssuePartialRefundCommand extends AbstractRefundCommand
 {
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $shippingCostRefundAmount;
 

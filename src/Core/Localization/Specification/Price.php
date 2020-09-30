@@ -166,7 +166,7 @@ class Price extends NumberSpecification
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return array_merge(
             [

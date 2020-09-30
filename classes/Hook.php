@@ -49,7 +49,7 @@ class HookCore extends ObjectModel
     public $position = false;
 
     /**
-     * @var active
+     * @var bool
      */
     public $active = true;
 

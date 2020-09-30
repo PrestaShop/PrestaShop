@@ -46,7 +46,7 @@ class EditOrderStateCommand
     private $orderStateId;
 
     /**
-     * @var Name|null
+     * @var array<string>|null
      */
     private $name;
 
@@ -122,7 +122,7 @@ class EditOrderStateCommand
     }
 
     /**
-     * @return Name|null
+     * @return array<string>|null
      */
     public function getName()
     {
@@ -130,7 +130,7 @@ class EditOrderStateCommand
     }
 
     /**
-     * @param string $name
+     * @param array<string> $name
      *
      * @return self
      */

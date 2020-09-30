@@ -34,7 +34,7 @@ use PrestaShop\Decimal\Number;
 class ExchangeRate
 {
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $exchangeRate;
 

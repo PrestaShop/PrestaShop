@@ -388,7 +388,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $freeShippingCartRule->minimum_amount_currency = $order->id_currency;
             $freeShippingCartRule->reduction_currency = $order->id_currency;
             $freeShippingCartRule->free_shipping = true;
-            $freeShippingCartRule->active = 1;
+            $freeShippingCartRule->active = true;
             $freeShippingCartRule->add();
 
             // Add cart rule to cart and in order

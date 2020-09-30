@@ -1,4 +1,4 @@
-name: PHP tests
+name: PHP Code Style
 on: [push, pull_request]
 jobs:
   php-cs-fixer:

@@ -48,7 +48,7 @@ class OrderDetailRefund
     private $productQuantity;
 
     /**
-     * @var float|null
+     * @var \PrestaShop\Decimal\Number|null
      */
     private $refundedAmount;
 

@@ -95,7 +95,7 @@ class ExchangeRateProvider
     /**
      * @param string $currencyIsoCode
      *
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      *
      * @throws CurrencyFeedException
      */

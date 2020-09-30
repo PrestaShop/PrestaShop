@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
@@ -177,7 +178,7 @@ abstract class AbstractProductGridDefinitionFactory extends AbstractGridDefiniti
     }
 
     /**
-     * @return RowActionCollection
+     * @return RowActionCollectionInterface
      */
     protected function getRowActions()
     {

@@ -272,6 +272,8 @@ class AddressController extends FrameworkBundleAdminController
         if (!empty($formData['id_customer'])) {
             /** @var CustomerDataProvider $customerDataProvider */
             $customerDataProvider = $this->get('prestashop.adapter.data_provider.customer');
+            /** @todo To Remove when PHPStan is fixed https://github.com/phpstan/phpstan/issues/3700 */
+            /** @phpstan-ignore-next-line */
             $customerId = $formData['id_customer'];
             $customer = $customerDataProvider->getCustomer($customerId);
             $formData['first_name'] = $customer->firstname;

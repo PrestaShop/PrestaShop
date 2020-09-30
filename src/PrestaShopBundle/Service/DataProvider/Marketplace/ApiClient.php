@@ -235,7 +235,7 @@ class ApiClient
             return $responseDecoded->themes;
         }
 
-        return [];
+        return new \stdClass();
     }
 
     public function getResponse()

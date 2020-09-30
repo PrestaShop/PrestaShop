@@ -79,7 +79,7 @@ class AddCatalogPriceRuleCommand
     private $includeTax;
 
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $price;
 

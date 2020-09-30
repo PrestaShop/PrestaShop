@@ -72,7 +72,7 @@ class EditableCatalogPriceRule
     private $fromQuantity;
 
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $price;
 

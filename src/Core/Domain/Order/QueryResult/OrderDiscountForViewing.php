@@ -46,7 +46,7 @@ class OrderDiscountForViewing
     private $amountFormatted;
 
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $amountRaw;
 

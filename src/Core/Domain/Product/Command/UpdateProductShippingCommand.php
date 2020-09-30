@@ -43,27 +43,27 @@ class UpdateProductShippingCommand
     private $productId;
 
     /**
-     * @var Number|null
+     * @var \PrestaShop\Decimal\Number|null
      */
     private $width;
 
     /**
-     * @var Number|null
+     * @var \PrestaShop\Decimal\Number|null
      */
     private $height;
 
     /**
-     * @var Number|null
+     * @var \PrestaShop\Decimal\Number|null
      */
     private $depth;
 
     /**
-     * @var Number|null
+     * @var \PrestaShop\Decimal\Number|null
      */
     private $weight;
 
     /**
-     * @var Number|null
+     * @var \PrestaShop\Decimal\Number|null
      */
     private $additionalShippingCost;
 

@@ -1393,7 +1393,7 @@ class OrderController extends FrameworkBundleAdminController
      *
      * @param int $orderId
      *
-     * @return JsonResponse
+     * @return Response
      */
     public function getDiscountsAction(int $orderId): Response
     {

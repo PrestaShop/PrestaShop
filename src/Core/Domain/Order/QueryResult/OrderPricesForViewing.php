@@ -66,36 +66,36 @@ class OrderPricesForViewing
     private $totalAmountFormatted;
 
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $productsPriceRaw;
 
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $discountsAmountRaw;
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $wrappingPriceRaw;
 
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $shippingPriceRaw;
 
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $shippingRefundableAmountRaw;
 
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $taxesAmountRaw;
 
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $totalAmountRaw;
 

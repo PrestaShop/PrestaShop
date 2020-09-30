@@ -53,7 +53,7 @@ final class BulkDeleteCustomerHandler extends AbstractCustomerHandler implements
                 continue;
             }
 
-            $customer->deleted = 1;
+            $customer->deleted = true;
             $customer->update();
         }
     }
