@@ -28,10 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Update\CustomizationFieldDeleter;
-use PrestaShop\PrestaShop\Adapter\Product\Update\ProductCustomizationFieldUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\CustomizationFieldRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Update\CustomizationFieldDeleter;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductCustomizationFieldUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\DeleteCustomizationFieldCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\DeleteCustomizationFieldHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
