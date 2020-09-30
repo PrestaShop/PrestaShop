@@ -35,7 +35,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotDeletePro
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotUpdateProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use ProductSupplier;
 
 /**
@@ -82,7 +81,7 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
      *
      * @return ProductSupplierId
      *
-     * @throws CoreException
+     * @throws CannotAddProductSupplierException
      */
     public function add(ProductSupplier $productSupplier, int $errorCode = 0): ProductSupplierId
     {
@@ -104,7 +103,9 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * {@inheritdoc}
+     * @param ProductSupplierId $productSupplierId
+     *
+     * @throws ProductSupplierNotFoundException
      */
     public function delete(ProductSupplierId $productSupplierId): void
     {
