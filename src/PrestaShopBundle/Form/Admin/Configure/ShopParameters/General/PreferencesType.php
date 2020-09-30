@@ -159,6 +159,7 @@ class PreferencesType extends TranslatorAwareType
             ])
             ->add(
                 'price_round_mode',ChoiceType::class, [
+                'placeholder' => false,
                 'required' => false,
                 'choices_as_values' => true,
                 'choices' => [
@@ -176,6 +177,7 @@ class PreferencesType extends TranslatorAwareType
                 )
             ])
             ->add('price_round_type', ChoiceType::class, [
+                'placeholder' => false,
                 'required' => false,
                 'choices_as_values' => true,
                 'choices' => [
@@ -226,6 +228,7 @@ class PreferencesType extends TranslatorAwareType
                 )
             ])
             ->add('shop_activity', ChoiceType::class, [
+                'placeholder' => false,
                 'required' => false,
                 'choices_as_values' => true,
                 'placeholder' => $this->trans('-- Please choose your main activity --', 'Install'),
