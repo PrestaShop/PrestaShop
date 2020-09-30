@@ -112,7 +112,7 @@ class ProductCustomizationFieldUpdater
 
         $this->productRepository->partialUpdate(
             $product,
-            ['customizable' => true, 'text_fields' => true, 'uploadable_files' => true],
+            ['customizable', 'text_fields', 'uploadable_files'],
             CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS
         );
     }
