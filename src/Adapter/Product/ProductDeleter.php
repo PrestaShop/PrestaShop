@@ -32,14 +32,13 @@ use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ProductDeleterInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use Product;
 
 /**
  * Deletes products using legacy object model
  */
-final class ProductDeleter extends AbstractObjectModelRepository implements ProductDeleterInterface
+final class ProductDeleter extends AbstractObjectModelRepository
 {
     /**
      * @var ProductRepository

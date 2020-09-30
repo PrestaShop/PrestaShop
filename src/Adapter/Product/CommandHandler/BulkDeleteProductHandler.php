@@ -29,9 +29,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Adapter\Product\ProductDeleter;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkDeleteProductHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\ProductDeleterInterface;
 
 /**
  * Handles @see BulkDeleteProductCommand using legacy object model
@@ -39,14 +39,14 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ProductDeleterInterface;
 final class BulkDeleteProductHandler extends AbstractProductHandler implements BulkDeleteProductHandlerInterface
 {
     /**
-     * @var ProductDeleterInterface
+     * @var ProductDeleter
      */
     private $productDeleter;
 
     /**
-     * @param ProductDeleterInterface $productDeleter
+     * @param ProductDeleter $productDeleter
      */
-    public function __construct(ProductDeleterInterface $productDeleter)
+    public function __construct(ProductDeleter $productDeleter)
     {
         $this->productDeleter = $productDeleter;
     }
