@@ -343,6 +343,40 @@ textarea {
   }
 }
 
+.radio-inline {
+  .custom-radio {
+    margin-right: 0.5rem;
+  }
+
+  &:first-of-type {
+    margin-right: 1rem;
+  }
+}
+
+form {
+  section {
+    .form-informations {
+      margin-top: 0.25rem;
+      color: $gray-darker;
+      margin-bottom: 1rem;
+      display: inline-block;
+
+      &-title,
+      &-option {
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+        display: inline-block;
+      }
+    }
+  }
+
+  .form-control-label {
+    font-weight: 700;
+    color: $gray-darker;
+    font-size: 0.875rem;
+  }
+}
+
 .custom-radio {
   position: relative;
   display: inline-block;
@@ -389,10 +423,10 @@ textarea {
       display: inline-block;
       width: 0.9375rem;
       height: 0.9375rem;
-      margin-right: 3px;
+      margin-right: 0.5rem;
       vertical-align: middle;
       cursor: pointer;
-      border: 2px $gray-darker solid;
+      border: 1px $border-gray solid;
 
       .checkbox-checked {
         display: none;
