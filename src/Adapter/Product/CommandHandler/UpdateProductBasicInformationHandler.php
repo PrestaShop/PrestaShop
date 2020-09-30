@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductBasicInformationHandlerInterface;
@@ -38,7 +37,7 @@ use Product;
 /**
  * Handles command for product basic information update using legacy object model
  */
-final class UpdateProductBasicInformationHandler extends AbstractProductHandler implements UpdateProductBasicInformationHandlerInterface
+final class UpdateProductBasicInformationHandler implements UpdateProductBasicInformationHandlerInterface
 {
     /**
      * @var ProductRepository
@@ -61,7 +60,7 @@ final class UpdateProductBasicInformationHandler extends AbstractProductHandler 
      */
     public function handle(UpdateProductBasicInformationCommand $command): void
     {
-        $product = $this->getProduct($command->getProductId());
+        $product = $this->productRepository->get($command->getProductId());
         $updatableProperties = $this->fillUpdatableProperties($product, $command);
 
         if (empty($updatableProperties)) {
