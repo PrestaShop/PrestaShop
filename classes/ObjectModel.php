@@ -1877,31 +1877,30 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @return bool
      */
     public static function existsInDatabase($id_entity, $table = null)
-	{
-		  $primary = 'id_' . bqSQL($table);
-		  
-		  if ($table === null) {
-			 
-			 $object_def = static::$definition;
-			 
-			 if (!array_key_exists('table', $object_def) || !array_key_exists('primary', $object_def)) {
-				return false;
-			 }
-			 
-			 $table = $object_def['table'];
-			 $primary = $object_def['primary'];
-		  }
+    {
+        $primary = 'id_' . bqSQL($table);
 
-		  $row = Db::getInstance()->getRow(
-				(new DbQuery())
-					->select('`' . $primary . '` as id')
-					->from($table, 'e')
-					->where('e.`'.$primary.'` = ' . (int) $id_entity), 
-				true
-			);
+        if ($table === null) {
+            $object_def = static::$definition;
 
-			return isset($row['id']);
-	 }
+            if (!array_key_exists('table', $object_def) || !array_key_exists('primary', $object_def)) {
+                return false;
+            }
+
+            $table = $object_def['table'];
+            $primary = $object_def['primary'];
+        }
+
+        $row = Db::getInstance()->getRow(
+                (new DbQuery())
+                    ->select('e.`' . $primary . '` as id')
+                    ->from($table, 'e')
+                    ->where('e.`' . $primary . '` = ' . (int) $id_entity),
+                true
+            );
+
+        return isset($row['id']);
+    }
 
     /**
      * Checks if an object type exists in the database.
