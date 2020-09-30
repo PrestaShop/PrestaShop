@@ -29,10 +29,10 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductBasicInformationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use Product;
 
 /**
@@ -41,6 +41,20 @@ use Product;
 final class UpdateProductBasicInformationHandler extends AbstractProductHandler implements UpdateProductBasicInformationHandlerInterface
 {
     /**
+     * @var ProductRepository
+     */
+    private $productRepository;
+
+    /**
+     * @param ProductRepository $productRepository
+     */
+    public function __construct(
+        ProductRepository $productRepository
+    ) {
+        $this->productRepository = $productRepository;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * Null values are not updated, because are considered unchanged
@@ -48,59 +62,68 @@ final class UpdateProductBasicInformationHandler extends AbstractProductHandler 
     public function handle(UpdateProductBasicInformationCommand $command): void
     {
         $product = $this->getProduct($command->getProductId());
-        $this->fillUpdatableFieldsWithCommandData($product, $command);
-        $product->setFieldsToUpdate($this->fieldsToUpdate);
+        $updatableProperties = $this->fillUpdatableProperties($product, $command);
 
-        if (empty($this->fieldsToUpdate)) {
+        if (empty($updatableProperties)) {
             return;
         }
 
-        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_BASIC_INFO);
+        $this->productRepository->partialUpdate($product, $updatableProperties, CannotUpdateProductException::FAILED_UPDATE_BASIC_INFO);
     }
 
     /**
      * @param Product $product
      * @param UpdateProductBasicInformationCommand $command
+     *
+     * @return array<string, mixed>
      */
-    private function fillUpdatableFieldsWithCommandData(
+    private function fillUpdatableProperties(
         Product $product,
         UpdateProductBasicInformationCommand $command
-    ): void {
+    ): array {
+        $updatableProperties = [];
+
         if (null !== $command->isVirtual()) {
             $product->is_virtual = $command->isVirtual();
-            $this->fieldsToUpdate['is_virtual'] = true;
+            $updatableProperties[] = 'is_virtual';
         }
 
         $localizedNames = $command->getLocalizedNames();
         if (null !== $localizedNames) {
             $product->name = $localizedNames;
-            $this->validateLocalizedField($product, 'name', ProductConstraintException::INVALID_NAME);
-            $this->setLocalizedFieldToUpdate('name', $localizedNames);
+            $updatableProperties['name'] = $this->getUpdatableLangs($localizedNames);
         }
 
         $localizedDescriptions = $command->getLocalizedDescriptions();
         if (null !== $localizedDescriptions) {
             $product->description = $localizedDescriptions;
-            $this->validateLocalizedField($product, 'description', ProductConstraintException::INVALID_DESCRIPTION);
-            $this->setLocalizedFieldToUpdate('description', $localizedDescriptions);
+            $updatableProperties['description'] = $this->getUpdatableLangs($localizedDescriptions);
         }
 
         $localizedShortDescriptions = $command->getLocalizedShortDescriptions();
         if (null !== $localizedShortDescriptions) {
             $product->description_short = $localizedShortDescriptions;
-            $this->validateLocalizedField($product, 'description_short', ProductConstraintException::INVALID_SHORT_DESCRIPTION);
-            $this->setLocalizedFieldToUpdate('description_short', $localizedShortDescriptions);
+            $updatableProperties['description_short'] = $this->getUpdatableLangs($localizedShortDescriptions);
         }
+
+        return $updatableProperties;
     }
 
     /**
-     * @param string $field
-     * @param array $localizedValues
+     * @param array $property
+     *
+     * @return int[]
      */
-    private function setLocalizedFieldToUpdate(string $field, array $localizedValues): void
+    private function getUpdatableLangs(array $property): array
     {
-        foreach ($localizedValues as $langId => $value) {
-            $this->fieldsToUpdate[$field][$langId] = true;
+        $updatableLangs = [];
+        foreach ($property as $langId => $value) {
+            if (null === $value) {
+                continue;
+            }
+            $updatableLangs[] = $langId;
         }
+
+        return $updatableLangs;
     }
 }
