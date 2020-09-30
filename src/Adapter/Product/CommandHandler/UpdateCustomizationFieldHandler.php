@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use CustomizationField;
-use PrestaShop\PrestaShop\Adapter\Product\ProductCustomizationFieldUpdater;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductCustomizationFieldUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\CustomizationFieldRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateCustomizationFieldCommand;

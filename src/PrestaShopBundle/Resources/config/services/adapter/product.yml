@@ -147,7 +147,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddCustomizationFieldHandler
         arguments:
             - '@prestashop.adapter.product.product_repository'
-            - '@prestashop.adapter.product.product_customization_field_updater'
+            - '@prestashop.adapter.product.update.product_customization_field_updater'
             - '@prestashop.adapter.product.customization_field_repository'
         tags:
             - name: tactician.handler
@@ -157,7 +157,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateCustomizationFieldHandler
         arguments:
             - '@prestashop.adapter.product.product_repository'
-            - '@prestashop.adapter.product.product_customization_field_updater'
+            - '@prestashop.adapter.product.update.product_customization_field_updater'
             - '@prestashop.adapter.product.customization_field_repository'
         tags:
             - name: tactician.handler
@@ -169,7 +169,7 @@ services:
             - '@prestashop.adapter.product.customization_field_deleter'
             - '@prestashop.adapter.product.customization_field_repository'
             - '@prestashop.adapter.product.product_repository'
-            - '@prestashop.adapter.product.product_customization_field_updater'
+            - '@prestashop.adapter.product.update.product_customization_field_updater'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\DeleteCustomizationFieldCommand
@@ -187,7 +187,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetProductCustomizationFieldsHandler
         arguments:
             - '@prestashop.adapter.product.product_repository'
-            - '@prestashop.adapter.product.product_customization_field_updater'
+            - '@prestashop.adapter.product.update.product_customization_field_updater'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand
@@ -197,7 +197,7 @@ services:
         arguments:
             - '@prestashop.adapter.product.customization_field_deleter'
             - '@prestashop.adapter.product.product_repository'
-            - '@prestashop.adapter.product.product_customization_field_updater'
+            - '@prestashop.adapter.product.update.product_customization_field_updater'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCustomizationFieldsFromProductCommand
@@ -251,8 +251,8 @@ services:
             - '@prestashop.adapter.product.customization_field_repository'
             - '@prestashop.adapter.product.product_repository'
 
-    prestashop.adapter.product.product_customization_field_updater:
-        class: PrestaShop\PrestaShop\Adapter\Product\ProductCustomizationFieldUpdater
+    prestashop.adapter.product.update.product_customization_field_updater:
+        class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductCustomizationFieldUpdater
         arguments:
             - '@prestashop.adapter.product.customization_field_repository'
             - '@prestashop.adapter.product.customization_field_deleter'
