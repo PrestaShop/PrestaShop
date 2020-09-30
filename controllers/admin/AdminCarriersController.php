@@ -734,10 +734,4 @@ class AdminCarriersControllerCore extends AdminController
             return;
         }
     }
-
-    protected function initTabModuleList()
-    {
-        parent::initTabModuleList();
-        $this->filter_modules_list = $this->tab_modules_list['default_list'] = $this->tab_modules_list['slider_list'];
-    }
 }
