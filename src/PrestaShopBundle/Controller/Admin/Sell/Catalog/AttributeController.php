@@ -87,10 +87,11 @@ class AttributeController extends FrameworkBundleAdminController
      * )
      *
      * @param Request $request
+     * @param int $attributeGroupId
      *
      * @return RedirectResponse
      */
-    public function updatePositionAction(Request $request, $attributeGroupId)
+    public function updatePositionAction(Request $request, int $attributeGroupId)
     {
         $positionsData = [
             'positions' => $request->request->get('positions'),
@@ -117,7 +118,17 @@ class AttributeController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function createAction($attributeGroupId)
+    /**
+     * @AdminSecurity(
+     *     "is_granted(['create'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to create this."
+     * )
+     *
+     * @param int $attributeGroupId
+     *
+     * @return RedirectResponse
+     */
+    public function createAction(int $attributeGroupId)
     {
         // @todo: implement in another pr
         return $this->redirectToRoute('admin_attributes_index', [
@@ -125,7 +136,18 @@ class AttributeController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function editAction($attributeId, $attributeGroupId)
+    /**
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to update this."
+     * )
+     *
+     * @param int $attributeId
+     * @param int $attributeGroupId
+     *
+     * @return RedirectResponse
+     */
+    public function editAction(int $attributeId, int $attributeGroupId)
     {
         // @todo: implement in another pr
         return $this->redirectToRoute('admin_attributes_index', [
@@ -146,7 +168,7 @@ class AttributeController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function deleteAction($attributeGroupId, $attributeId)
+    public function deleteAction(int $attributeGroupId, int $attributeId)
     {
         try {
             $this->getCommandBus()->handle(new DeleteAttributeCommand((int) $attributeId));
@@ -176,7 +198,7 @@ class AttributeController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function bulkDeleteAction($attributeGroupId, Request $request)
+    public function bulkDeleteAction(int $attributeGroupId, Request $request)
     {
         try {
             $this->getCommandBus()->handle(new BulkDeleteAttributeCommand(

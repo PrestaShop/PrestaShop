@@ -71,19 +71,48 @@ class AttributeGroupController extends FrameworkBundleAdminController
         ]);
     }
 
+    /**
+     * @AdminSecurity(
+     *     "is_granted(['create'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to create this."
+     * )
+     *
+     * @return RedirectResponse
+     */
     public function createAction()
     {
         //@todo: implement in antoher pr
         return $this->redirectToRoute('admin_attribute_groups_index');
     }
 
-    public function editAction($attributeGroupId)
+    /**
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to update this."
+     * )
+     *
+     * @param int $attributeGroupId
+     *
+     * @return RedirectResponse
+     */
+    public function editAction(int $attributeGroupId)
     {
         //@todo: implement in antoher pr
         return $this->redirectToRoute('admin_attribute_groups_index');
     }
 
-    public function exportAction($attributeGroupId)
+    /**
+     * @AdminSecurity(
+     *     "is_granted(['read'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to export this."
+     * )
+
+     *
+     * @param int $attributeGroupId
+     *
+     * @return RedirectResponse
+     */
+    public function exportAction(int $attributeGroupId)
     {
         //@todo: implement in antoher pr
         return $this->redirectToRoute('admin_attribute_groups_index');

@@ -632,22 +632,22 @@
       <trans-unit id="0134539df13231b95613415c0a75af42">
         <source>Pending Discussion Threads</source>
         <target>Pending Discussion Threads</target>
-        <note>Line: 572</note>
+        <note>Line: 573</note>
       </trans-unit>
       <trans-unit id="c61b4a4520f875b20f7ff3e6ff502ebe">
         <source>Average Response Time</source>
         <target>Average Response Time</target>
-        <note>Line: 584</note>
+        <note>Line: 585</note>
       </trans-unit>
       <trans-unit id="6092e157634b78d790fc607b587d1274">
         <source>Messages per Thread</source>
         <target>Messages per Thread</target>
-        <note>Line: 597</note>
+        <note>Line: 598</note>
       </trans-unit>
       <trans-unit id="dab57a3f740e26922519aebc7e3d602a">
         <source>Reply to the next unanswered message in this thread</source>
         <target>Reply to the next unanswered message in this thread</target>
-        <note>Line: 657</note>
+        <note>Line: 658</note>
       </trans-unit>
     </body>
   </file>
