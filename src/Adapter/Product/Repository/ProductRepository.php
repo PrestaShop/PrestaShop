@@ -173,6 +173,7 @@ class ProductRepository extends AbstractObjectModelRepository
      */
     public function add(Product $product): ProductId
     {
+        $this->productValidator->validate($product);
         $id = $this->addObjectModel($product, CannotAddProductException::class);
         $product->addToCategories([$product->id_category_default]);
 
