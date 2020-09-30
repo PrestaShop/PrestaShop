@@ -37,7 +37,22 @@
             </h3>
             <div class="card-block row">
               <div class="card-text">
-               {{ form_widget(generalForm) }}
+                  {% if not app.request.isSecure() %}
+                    <div class="form-group row">
+                      {{ form_label(generalForm.enable_ssl) }}
+                          <div class="col-sm">
+                            <div class="input-group">
+                              <div class="form-control-plaintext">
+                                <a class="d-block" href="{{ sslUri }}">
+                                  {{ 'Please click here to check if your shop supports HTTPS.'|trans({}, 'Admin.Shopparameters.Feature') }}
+                                </a>
+                              </div>
+                            </div>
+                            {{ form_widget(generalForm.enable_ssl) }}
+                          </div>
+                    </div>
+                  {% endif %}
+                {{ form_widget(generalForm) }}
               </div>
             </div>
           </div>

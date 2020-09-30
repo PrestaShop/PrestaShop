@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Order;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -94,9 +95,18 @@ class PreferencesType extends TranslatorAwareType
                     'required' => false,
                     'label' => $this->trans('Enable SSL', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(
-                        'If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.',
+                        'If you own an SSL certificate for your shop\'s domain name, you can activate SSL encryption (https://) for customer account identification and order processing.',
                         'Admin.Shopparameters.Help'
-                    ),
+                    )
+            ]);
+        } else {
+            $builder->add('enable_ssl', FormType::class, [
+                'required' => false,
+                'label' => $this->trans('Enable SSL', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans(
+                    'If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.',
+                    'Admin.Shopparameters.Help'
+                )
             ]);
         }
 
@@ -105,7 +115,7 @@ class PreferencesType extends TranslatorAwareType
                 'required' => false,
                 'disabled' => !$isSslEnabled,
                 'label' => $this->trans(
-                    'When enabled, all the pages of your shop will be SSL-secured. SSL',
+                    'Enable SSL on all pages',
                     'Admin.Shopparameters.Help'
                 ),
                 'help' => $this->trans(
