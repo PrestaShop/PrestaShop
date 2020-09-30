@@ -37,7 +37,7 @@ const month = (`0${today.getMonth() + 1}`).slice(-2);
 // Current year
 const year = today.getFullYear();
 
-// Date today format (yyy/mm/dd)
+// Date today format (dd/mm/yyyy)
 const todayDate = `${day}/${month}/${year}`;
 
 /*
