@@ -9,9 +9,6 @@ class ShoppingCarts extends BOBasePage {
 
     this.alertSuccessBlockParagraph = '.alert-success';
 
-    // Header selectors
-    this.newImageTypeLink = '#page-header-desc-image_type-new_image_type';
-
     // Form selectors
     this.gridForm = '#form-cart';
     this.gridTableHeaderTitle = `${this.gridForm} .panel-heading`;
@@ -46,7 +43,7 @@ class ShoppingCarts extends BOBasePage {
   /* Filter methods */
 
   /**
-   * Get Number of image types
+   * Get Number of shopping carts
    * @param page
    * @return {Promise<number>}
    */
@@ -67,7 +64,7 @@ class ShoppingCarts extends BOBasePage {
   }
 
   /**
-   * Reset and get number of image types
+   * Reset and get number of shopping carts
    * @param page
    * @return {Promise<number>}
    */
@@ -77,7 +74,7 @@ class ShoppingCarts extends BOBasePage {
   }
 
   /**
-   * Filter image types
+   * Filter shopping carts
    * @param page
    * @param filterType
    * @param filterBy
