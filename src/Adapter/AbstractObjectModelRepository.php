@@ -219,14 +219,14 @@ abstract class AbstractObjectModelRepository
     private function formatPropertiesToUpdate(array $propertiesToUpdate): array
     {
         $formattedPropertiesToUpdate = [];
-        foreach ($propertiesToUpdate as $property) {
+        foreach ($propertiesToUpdate as $propertyName => $property) {
             if (!is_array($property)) {
                 $formattedPropertiesToUpdate[$property] = true;
 
                 continue;
             }
 
-            foreach ($property as $propertyName => $langId) {
+            foreach ($property as $langId) {
                 $formattedPropertiesToUpdate[$propertyName][$langId] = true;
             }
         }
