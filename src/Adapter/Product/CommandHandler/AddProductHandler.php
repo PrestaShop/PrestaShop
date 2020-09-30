@@ -29,14 +29,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Adapter\Product\ProductPersister;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AddProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use Product;
 
 /**
- * Handles @AddProductCommand using legacy object model
+ * Handles @see AddProductCommand using legacy object model
  */
 final class AddProductHandler extends AbstractProductHandler implements AddProductHandlerInterface
 {
@@ -51,23 +51,23 @@ final class AddProductHandler extends AbstractProductHandler implements AddProdu
     private $defaultCategoryId;
 
     /**
-     * @var ProductPersister
+     * @var ProductRepository
      */
-    private $productPersister;
+    private $productRepository;
 
     /**
      * @param int $defaultLangId
      * @param int $defaultCategoryId
-     * @param ProductPersister $productPersister
+     * @param ProductRepository $productRepository
      */
     public function __construct(
         int $defaultLangId,
         int $defaultCategoryId,
-        ProductPersister $productPersister
+        ProductRepository $productRepository
     ) {
         $this->defaultLangId = $defaultLangId;
         $this->defaultCategoryId = $defaultCategoryId;
-        $this->productPersister = $productPersister;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -82,7 +82,7 @@ final class AddProductHandler extends AbstractProductHandler implements AddProdu
         $product->id_category_default = $this->defaultCategoryId;
         $product->is_virtual = $command->isVirtual();
 
-        $this->productPersister->add($product);
+        $this->productRepository->add($product);
 
         return new ProductId((int) $product->id);
     }
