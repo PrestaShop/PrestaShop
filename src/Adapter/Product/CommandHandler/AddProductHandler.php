@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AddProductHandlerInterface;
@@ -38,7 +37,7 @@ use Product;
 /**
  * Handles @see AddProductCommand using legacy object model
  */
-final class AddProductHandler extends AbstractProductHandler implements AddProductHandlerInterface
+final class AddProductHandler implements AddProductHandlerInterface
 {
     /**
      * @var int
