@@ -1,17 +1,25 @@
 require('module-alias/register');
-// Using chai
-const {expect} = require('chai');
+
+// Helpers to open and close browser
 const helper = require('@utils/helpers');
+
+// Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
+
+// Import pages
+const dashboardPage = require('@pages/BO/dashboard');
+const shoppingCartsPage = require('@pages/BO/orders/shoppingCarts');
+
+// Import data
+const {ShoppingCarts} = require('@data/demo/shoppingCarts');
+
+// Import test context
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_shoppingCarts_filterShoppingCarts';
 
-// importing pages
-const dashboardPage = require('@pages/BO/dashboard');
-const shoppingCartsPage = require('@pages/BO/orders/shoppingCarts');
-
-const {ShoppingCarts} = require('@data/demo/shoppingCarts');
+// Import expect from chai
+const {expect} = require('chai');
 
 let numberOfShoppingCarts;
 let browserContext;
