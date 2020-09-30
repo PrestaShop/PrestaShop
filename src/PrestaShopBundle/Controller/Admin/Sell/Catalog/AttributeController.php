@@ -117,6 +117,16 @@ class AttributeController extends FrameworkBundleAdminController
         ]);
     }
 
+    /**
+     * @AdminSecurity(
+     *     "is_granted(['create'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to create this."
+     * )
+     *
+     * @param $attributeGroupId
+     *
+     * @return RedirectResponse
+     */
     public function createAction($attributeGroupId)
     {
         // @todo: implement in another pr
@@ -125,6 +135,16 @@ class AttributeController extends FrameworkBundleAdminController
         ]);
     }
 
+    /**
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to update this."
+     * )
+     *
+     * @param $attributeGroupId
+     *
+     * @return RedirectResponse
+     */
     public function editAction($attributeId, $attributeGroupId)
     {
         // @todo: implement in another pr

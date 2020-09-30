@@ -376,37 +376,37 @@
       <trans-unit id="83b262520a65657b95fd686817c56a09">
         <source>Order status (e.g. 'Pending').</source>
         <target>Order status (e.g. 'Pending').</target>
-        <note>Line: 281</note>
+        <note>Line: 287</note>
       </trans-unit>
       <trans-unit id="a4bb440d400f4dc30f148b44d08680b4">
         <source>Invalid characters: numbers and</source>
         <target>Invalid characters: numbers and</target>
-        <note>Line: 484</note>
+        <note>Line: 490</note>
       </trans-unit>
       <trans-unit id="a9c2e14555131d68a4ac37b604ee52a8">
         <source>Upload an icon from your computer (File type: .gif, suggested size: 16x16).</source>
         <target>Upload an icon from your computer (File type: .gif, suggested size: 16x16).</target>
-        <note>Line: 289</note>
+        <note>Line: 295</note>
       </trans-unit>
       <trans-unit id="00b963b1cb1aad2142ae67ce65329944">
         <source>Status will be highlighted in this color. HTML colors only.</source>
         <target>Status will be highlighted in this color. HTML colors only.</target>
-        <note>Line: 491</note>
+        <note>Line: 497</note>
       </trans-unit>
       <trans-unit id="f0fe1aebeace842330fb048126151e06">
         <source>Only letters, numbers and underscores ("_") are allowed.</source>
         <target>Only letters, numbers and underscores ("_") are allowed.</target>
-        <note>Line: 408</note>
+        <note>Line: 414</note>
       </trans-unit>
       <trans-unit id="3d034f43e44ee495a11005507185a0a0">
         <source>Email template for both .html and .txt.</source>
         <target>Email template for both .html and .txt.</target>
-        <note>Line: 409</note>
+        <note>Line: 415</note>
       </trans-unit>
       <trans-unit id="43f4ac702eaf88267f6946aeb559b251">
         <source>Order's return status name.</source>
         <target>Order's return status name.</target>
-        <note>Line: 483</note>
+        <note>Line: 489</note>
       </trans-unit>
     </body>
   </file>

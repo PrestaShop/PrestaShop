@@ -566,11 +566,12 @@ class OrderController extends FrameworkBundleAdminController
         ]);
     }
 
-    /***
+    /**
      * @AdminSecurity("is_granted(['update', 'delete'], request.get('_legacy_controller'))")
      *
      * @param int $orderId
      * @param Request $request
+     *
      * @return RedirectResponse
      */
     public function standardRefundAction(int $orderId, Request $request)
@@ -598,11 +599,12 @@ class OrderController extends FrameworkBundleAdminController
         ]);
     }
 
-    /***
+    /**
      * @AdminSecurity("is_granted(['update', 'delete'], request.get('_legacy_controller'))")
      *
      * @param int $orderId
      * @param Request $request
+     *
      * @return RedirectResponse
      */
     public function returnProductAction(int $orderId, Request $request)
@@ -1428,6 +1430,11 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     message="You do not have permission to generate this."
+     * )
+     *
      * Generates invoice for given order
      *
      * @param int $orderId
@@ -1767,7 +1774,7 @@ class OrderController extends FrameworkBundleAdminController
 
             OrderConstraintException::class => [
                 OrderConstraintException::INVALID_CUSTOMER_MESSAGE => $this->trans(
-                    'The order message given is invalid',
+                    'The order message given is invalid.',
                     'Admin.Orderscustomers.Notification'
                 ),
             ],

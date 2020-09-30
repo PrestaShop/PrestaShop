@@ -28,12 +28,12 @@
       <trans-unit id="ffd818d6203d29bd38114292a759cb7d">
         <source>You cannot set a negative position, the minimum for a position is 0.</source>
         <target>You cannot set a negative position, the minimum for a position is 0.</target>
-        <note>Line: 6142</note>
+        <note>Line: 6158</note>
       </trans-unit>
       <trans-unit id="b945599a5e11b76711dad5f1d7eba181">
         <source>You cannot set a position greater than the total number of products in the category, minus 1 (position numbering starts at 0).</source>
         <target>You cannot set a position greater than the total number of products in the category, minus 1 (position numbering starts at 0).</target>
-        <note>Line: 6151</note>
+        <note>Line: 6167</note>
       </trans-unit>
     </body>
   </file>
@@ -533,7 +533,7 @@
       <trans-unit id="15d30198621ad33274fc94b08cff5009">
         <source>Could not delete #%i</source>
         <target>Could not delete #%i</target>
-        <note>Line: 176</note>
+        <note>Line: 170</note>
       </trans-unit>
     </body>
   </file>
@@ -542,17 +542,17 @@
       <trans-unit id="3535b3934d0e2d6e7759649d78c7da58">
         <source>Missing id_hook</source>
         <target>Missing id_hook</target>
-        <note>Line: 206</note>
+        <note>Line: 200</note>
       </trans-unit>
       <trans-unit id="36ccadce9e530e36cf265145bdba5c1c">
         <source>Missing block_name</source>
         <target>Missing block_name</target>
-        <note>Line: 214</note>
+        <note>Line: 208</note>
       </trans-unit>
       <trans-unit id="12f4f6b7d1d17838950e3c6107144f2a">
         <source>Missing block_name value for language %s</source>
         <target>Missing block_name value for language %s</target>
-        <note>Line: 241</note>
+        <note>Line: 235</note>
       </trans-unit>
       <trans-unit id="ba88eb1dd9466f0be32b7dc7a82297ad">
         <source>Missing %s value in custom [%s] for language %s</source>
@@ -562,7 +562,7 @@
       <trans-unit id="504ca7ea96dde692360e88a97e98fc91">
         <source>Missing %s value in custom[%s] for language %s</source>
         <target>Missing %s value in custom[%s] for language %s</target>
-        <note>Line: 251</note>
+        <note>Line: 245</note>
       </trans-unit>
     </body>
   </file>
@@ -840,7 +840,7 @@
       <trans-unit id="4fce600d4fc0429af2f5bc5861eefb3e">
         <source>Selected products were successfully canceled.</source>
         <target>Selected products were successfully canceled.</target>
-        <note>Line: 1427</note>
+        <note>Line: 1493</note>
       </trans-unit>
     </body>
   </file>
