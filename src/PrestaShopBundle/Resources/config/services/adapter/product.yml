@@ -317,7 +317,7 @@ services:
         arguments:
             - '@prestashop.adapter.product.product_repository'
             - '@prestashop.adapter.supplier.supplier_repository'
-            - '@prestashop.adapter.currency.currency_repository'
+            - '@prestashop.adapter.currency.repository.currency_repository'
 
     prestashop.adapter.product.repository.product_supplier_repository:
         class: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository
