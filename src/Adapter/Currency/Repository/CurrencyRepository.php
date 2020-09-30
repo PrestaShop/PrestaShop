@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Currency;
+namespace PrestaShop\PrestaShop\Adapter\Currency\Repository;
 
 use Currency;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;

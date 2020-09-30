@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
 use CustomizationField;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
-use PrestaShop\PrestaShop\Adapter\Product\CustomizationFieldValidator;
+use PrestaShop\PrestaShop\Adapter\Product\Validate\CustomizationFieldValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotAddCustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotDeleteCustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotUpdateCustomizationFieldException;
