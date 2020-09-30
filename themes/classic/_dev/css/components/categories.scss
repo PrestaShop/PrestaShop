@@ -76,6 +76,11 @@
     .sort-by,
     .select-title {
       font-size: 0.875rem;
+
+      i {
+        height: inherit;
+        line-height: inherit;
+      }
     }
   }
   .filter-button {
@@ -290,7 +295,8 @@
   }
 
   .category-sub-menu {
-    margin-top: $small-space;
+    margin-top: 1rem;
+
     .category-sub-link {
       font-size: $font-size-sm;
     }
@@ -306,7 +312,6 @@
       padding-bottom: 0.1875rem;
       margin: 0.3125rem 0 0;
       font-weight: 600;
-      border-bottom: rgba(0, 0, 0, 0.25) 1px solid;
     }
     li:not([data-depth="0"]):not([data-depth="1"]) {
       padding-left: 0.3125rem;
