@@ -63,7 +63,7 @@ class Reduction
     private $type;
 
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $value;
 

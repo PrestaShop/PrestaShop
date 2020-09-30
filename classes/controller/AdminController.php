@@ -1123,7 +1123,7 @@ class AdminControllerCore extends Controller
                         $this->errors[] = $this->trans('Unable to delete associated images.', [], 'Admin.Notifications.Error');
                     }
 
-                    $object->deleted = 1;
+                    $object->deleted = true;
                     if ($res = $object->update()) {
                         $this->redirect_after = self::$currentIndex . '&conf=1&token=' . $this->token;
                     }
@@ -1255,7 +1255,7 @@ class AdminControllerCore extends Controller
                         $object_new = $object->duplicateObject();
                         if (Validate::isLoadedObject($object_new)) {
                             // Update old object to deleted
-                            $object->deleted = 1;
+                            $object->deleted = true;
                             $object->update();
 
                             // Update new object with post values
@@ -4061,7 +4061,7 @@ class AdminControllerCore extends Controller
                     $to_delete = new $this->className((int) $id);
                     $delete_ok = true;
                     if ($this->deleted) {
-                        $to_delete->deleted = 1;
+                        $to_delete->deleted = true;
                         if (!$to_delete->update()) {
                             $result = false;
                             $delete_ok = false;

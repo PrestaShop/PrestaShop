@@ -253,7 +253,7 @@ class ModuleManager implements AddonManagerInterface
     /**
      * @param Module $installedProduct
      *
-     * @return array
+     * @return string|array
      */
     protected function getModuleInstallationWarnings(Module $installedProduct)
     {

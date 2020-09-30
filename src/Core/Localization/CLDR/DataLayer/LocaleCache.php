@@ -51,6 +51,13 @@ class LocaleCache extends AbstractDataLayer implements CldrLocaleDataLayerInterf
      */
     protected $cache;
 
+    /**
+     * The lower data layer to communicate with (read/write).
+     *
+     * @var CldrLocaleDataLayerInterface|null
+     */
+    protected $lowerDataLayer;
+
     public function __construct(AdapterInterface $cache)
     {
         $this->cache = $cache;

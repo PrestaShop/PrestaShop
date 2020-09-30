@@ -98,10 +98,10 @@ class ProductCore extends ObjectModel
     /** @var array|int|null Will be filled by reference by priceCalculation() */
     public $specificPrice = 0;
 
-    /** @var float Additional shipping cost */
+    /** @var string Additional shipping cost */
     public $additional_shipping_cost = 0;
 
-    /** @var float Wholesale Price in euros */
+    /** @var string Wholesale Price in euros */
     public $wholesale_price = 0;
 
     /** @var bool on_sale */
@@ -311,7 +311,7 @@ class ProductCore extends ObjectModel
     public $cache_default_attribute;
 
     /**
-     * @var string If product is populated, this property contain the rewrite link of the default category
+     * @var string|string[] If product is populated, this property contain the rewrite link of the default category
      */
     public $category;
 

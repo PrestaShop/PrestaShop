@@ -69,7 +69,7 @@ abstract class AbstractRefundCommand
     protected $voucherRefundType;
 
     /**
-     * @var Number|null
+     * @var \PrestaShop\Decimal\Number|null
      */
     protected $voucherRefundAmount;
 

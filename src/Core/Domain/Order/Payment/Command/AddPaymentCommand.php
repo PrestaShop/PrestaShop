@@ -54,7 +54,7 @@ class AddPaymentCommand
     private $paymentMethod;
 
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $paymentAmount;
 
@@ -129,7 +129,7 @@ class AddPaymentCommand
     }
 
     /**
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     public function getPaymentAmount()
     {

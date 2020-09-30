@@ -36,12 +36,12 @@ use PrestaShop\Decimal\Number;
 class ProductPricesInformation
 {
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $price;
 
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $ecotax;
 
@@ -56,12 +56,12 @@ class ProductPricesInformation
     private $onSale;
 
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $wholesalePrice;
 
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $unitPrice;
 
@@ -71,7 +71,7 @@ class ProductPricesInformation
     private $unity;
 
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $unitPriceRatio;
 

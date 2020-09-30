@@ -476,7 +476,7 @@ class Module implements ModuleInterface
      *
      * @param int $moduleId Module id
      *
-     * @return Module instance
+     * @return Module|false
      */
     public function getInstanceById($moduleId)
     {

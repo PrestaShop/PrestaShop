@@ -41,6 +41,13 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\ReaderInterface;
 class LocaleReference extends AbstractDataLayer implements CldrLocaleDataLayerInterface
 {
     /**
+     * The lower data layer to communicate with (read/write).
+     *
+     * @var CldrLocaleDataLayerInterface|null
+     */
+    protected $lowerDataLayer;
+
+    /**
      * CLDR files reader.
      *
      * Provides LocaleData objects

@@ -265,12 +265,11 @@ abstract class AbstractDataLayer
      *
      * Might be a file access, cache read, DB select...
      *
-     * @param string $id The data object identifier
+     * @param mixed $id The data object identifier
      *
      * @return mixed|null The wanted data object (null if not found)
      *
-     * @throws DataLayerException
-     *                            When read fails
+     * @throws DataLayerException When read fails
      */
     abstract protected function doRead($id);
 

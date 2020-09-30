@@ -56,12 +56,12 @@ class AddProductToOrderCommand
     private $combinationId;
 
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $productPriceTaxIncluded;
 
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $productPriceTaxExcluded;
 

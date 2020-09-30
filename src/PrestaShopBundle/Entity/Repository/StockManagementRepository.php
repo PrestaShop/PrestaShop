@@ -229,7 +229,7 @@ abstract class StockManagementRepository
     /**
      * @param QueryParamsCollection $queryParams
      *
-     * @return bool|string
+     * @return int
      */
     public function countPages(QueryParamsCollection $queryParams)
     {

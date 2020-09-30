@@ -254,7 +254,7 @@ class ThemeManager implements AddonManagerInterface
 
         $this->saveTheme($theme);
 
-        return $this;
+        return true;
     }
 
     /**

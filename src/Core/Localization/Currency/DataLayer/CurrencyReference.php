@@ -52,6 +52,13 @@ class CurrencyReference extends AbstractDataLayer implements CurrencyDataLayerIn
      */
     protected $cldrLocaleRepository;
 
+    /**
+     * The lower data layer to communicate with (read/write).
+     *
+     * @var CurrencyDataLayerInterface|null
+     */
+    protected $lowerDataLayer;
+
     public function __construct(CldrLocaleRepository $cldrLocaleRepository)
     {
         $this->cldrLocaleRepository = $cldrLocaleRepository;

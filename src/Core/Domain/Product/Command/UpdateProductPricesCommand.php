@@ -42,12 +42,12 @@ class UpdateProductPricesCommand
     private $productId;
 
     /**
-     * @var Number|null
+     * @var \PrestaShop\Decimal\Number|null
      */
     private $price;
 
     /**
-     * @var Number|null
+     * @var \PrestaShop\Decimal\Number|null
      */
     private $ecotax;
 
@@ -62,12 +62,12 @@ class UpdateProductPricesCommand
     private $onSale;
 
     /**
-     * @var Number|null
+     * @var \PrestaShop\Decimal\Number|null
      */
     private $wholesalePrice;
 
     /**
-     * @var Number|null
+     * @var \PrestaShop\Decimal\Number|null
      */
     private $unitPrice;
 

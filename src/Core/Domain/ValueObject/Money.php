@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 class Money
 {
     /**
-     * @var Number
+     * @var \PrestaShop\Decimal\Number
      */
     private $amount;
 

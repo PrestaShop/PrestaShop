@@ -68,6 +68,6 @@ class ListCommandsAndQueriesCommand extends ContainerAwareCommand
             $output->writeln('');
         }
 
-        return;
+        return 0;
     }
 }

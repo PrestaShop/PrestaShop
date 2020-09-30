@@ -84,15 +84,15 @@ class ImageTagSourceParserTest extends TestCase
             ],
             [
                 '<img class="test">',
-                null,
+                '',
             ],
             [
                 'random string',
-                null,
+                '',
             ],
             [
                 '<img class="">',
-                null,
+                '',
             ],
         ];
     }

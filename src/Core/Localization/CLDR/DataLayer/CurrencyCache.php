@@ -52,6 +52,13 @@ final class CurrencyCache extends AbstractDataLayer implements CurrencyDataLayer
      */
     protected $cache;
 
+    /**
+     * The lower data layer to communicate with (read/write).
+     *
+     * @var CurrencyDataLayerInterface|null
+     */
+    protected $lowerDataLayer;
+
     public function __construct(AdapterInterface $cache)
     {
         $this->cache = $cache;

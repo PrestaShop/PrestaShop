@@ -82,7 +82,7 @@ class Context implements MultistoreContextCheckerInterface, ShopContextInterface
     {
         $groupSettings = Shop::getGroupFromShop(Shop::getContextShopID(), false);
 
-        if ($groupSettings['share_customer']) {
+        if (is_array($groupSettings) && $groupSettings['share_customer']) {
             return Shop::getContextListShopID(Shop::SHARE_CUSTOMER);
         } else {
             return Shop::getContextListShopID();

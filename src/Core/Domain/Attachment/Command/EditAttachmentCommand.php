@@ -64,7 +64,7 @@ class EditAttachmentCommand
     private $localizedDescriptions;
 
     /**
-     * @var string|null
+     * @var int|null
      */
     private $fileSize;
 

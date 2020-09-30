@@ -44,7 +44,7 @@ use Tab;
  */
 class LegacyContext
 {
-    /** @var Currency */
+    /** @var string */
     private $employeeCurrency;
 
     /** @var string Contains the base uri for mail themes (by default https://domain.com/mails/themes/). Used for mails assets. */
@@ -249,7 +249,7 @@ class LegacyContext
      * @param int|bool $id_shop Shop ID
      * @param bool $ids_only If true, returns an array of language IDs
      *
-     * @return array<int|Language> Languages
+     * @return array<int|array> Languages
      */
     public function getLanguages($active = true, $id_shop = false, $ids_only = false)
     {
@@ -282,7 +282,7 @@ class LegacyContext
     /**
      * Returns Currency set for the current employee.
      *
-     * @return Currency
+     * @return string
      */
     public function getEmployeeCurrency()
     {

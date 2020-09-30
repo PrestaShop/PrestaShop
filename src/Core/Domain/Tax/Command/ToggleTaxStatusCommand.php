@@ -46,8 +46,8 @@ class ToggleTaxStatusCommand
     private $taxId;
 
     /**
-     * @param string $expectedStatus
      * @param int $taxId
+     * @param bool $expectedStatus
      *
      * @throws TaxException
      */

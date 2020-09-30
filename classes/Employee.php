@@ -35,10 +35,10 @@ class EmployeeCore extends ObjectModel
     /** @var int Employee ID */
     public $id;
 
-    /** @var string Determine employee profile */
+    /** @var int Employee profile */
     public $id_profile;
 
-    /** @var string employee language */
+    /** @var int Employee language */
     public $id_lang;
 
     /** @var string Lastname */
@@ -53,7 +53,7 @@ class EmployeeCore extends ObjectModel
     /** @var string Password */
     public $passwd;
 
-    /** @var datetime Password */
+    /** @var string Password */
     public $last_passwd_gen;
 
     public $stats_date_from;
@@ -79,7 +79,7 @@ class EmployeeCore extends ObjectModel
     /** @var int employee desired screen width */
     public $bo_width;
 
-    /** @var bool, false */
+    /** @var bool */
     public $bo_menu = 1;
 
     /* Deprecated */

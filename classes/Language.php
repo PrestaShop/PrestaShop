@@ -45,6 +45,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     const PACK_DOWNLOAD_TIMEOUT = 20;
 
+    /** @var int */
     public $id;
 
     /** @var string Name */
@@ -646,7 +647,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * @param int|false $id_shop Shop ID
      * @param bool $ids_only If true, returns an array of language IDs
      *
-     * @return array<int|Language> Language information
+     * @return array<int|array> Language information
      */
     public static function getLanguages($active = true, $id_shop = false, $ids_only = false)
     {
