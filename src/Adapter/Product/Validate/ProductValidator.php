@@ -54,11 +54,11 @@ class ProductValidator extends AbstractObjectModelValidator
     }
 
     /**
-     * @param $product
+     * @param Product $product
      *
      * @throws ProductConstraintException
      */
-    private function validateCustomizability($product): void
+    private function validateCustomizability(Product $product): void
     {
         $this->validateObjectModelProperty($product, 'customizable', ProductConstraintException::class);
         $this->validateObjectModelProperty($product, 'text_fields', ProductConstraintException::class);
