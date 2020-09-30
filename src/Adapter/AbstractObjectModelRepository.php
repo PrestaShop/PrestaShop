@@ -157,7 +157,7 @@ abstract class AbstractObjectModelRepository
         string $exceptionClass,
         int $errorCode = 0
     ): void {
-        $objectModel->addFieldsToUpdate($propertiesToUpdate);
+        $objectModel->setFieldsToUpdate($this->formatPropertiesToUpdate($propertiesToUpdate));
         $this->updateObjectModel($objectModel, $exceptionClass, $errorCode);
     }
 
@@ -209,5 +209,28 @@ abstract class AbstractObjectModelRepository
                 $e
             );
         }
+    }
+
+    /**
+     * @param array $propertiesToUpdate
+     *
+     * @return array<string, mixed>
+     */
+    private function formatPropertiesToUpdate(array $propertiesToUpdate): array
+    {
+        $formattedPropertiesToUpdate = [];
+        foreach ($propertiesToUpdate as $property) {
+            if (!is_array($property)) {
+                $formattedPropertiesToUpdate[$property] = true;
+
+                continue;
+            }
+
+            foreach ($property as $propertyName => $langId) {
+                $formattedPropertiesToUpdate[$propertyName][$langId] = true;
+            }
+        }
+
+        return $formattedPropertiesToUpdate;
     }
 }
