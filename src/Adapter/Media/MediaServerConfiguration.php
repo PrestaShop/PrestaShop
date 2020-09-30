@@ -85,7 +85,9 @@ class MediaServerConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param array $configuration
+     *
+     * @return array<int, array<string, array|string>>|bool
      */
     public function validateConfiguration(array $configuration)
     {

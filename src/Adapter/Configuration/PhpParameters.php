@@ -39,7 +39,7 @@ class PhpParameters
     /**
      * @var ArrayFinder the current configuration
      */
-    private $configuration = [];
+    private $configuration;
 
     /**
      * @var string the PHP filename

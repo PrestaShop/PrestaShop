@@ -87,7 +87,7 @@ class AttributeDataProvider
      *
      * @param int $idProduct
      *
-     * @return array Combinations
+     * @return array|bool
      */
     public function getProductCombinations($idProduct)
     {

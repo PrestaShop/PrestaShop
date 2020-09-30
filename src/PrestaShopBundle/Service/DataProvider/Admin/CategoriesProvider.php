@@ -52,7 +52,7 @@ class CategoriesProvider
     private $categories;
 
     /**
-     * @var array
+     * @var object
      */
     private $categoriesFromSource;
 
@@ -96,9 +96,9 @@ class CategoriesProvider
      * Initialize categories from API or if this one is empty,
      * use theme and my modules categories.
      *
-     * @param array|stdClass $categoriesListing Category listing
+     * @param object $categoriesListing Category listing
      *
-     * @return array
+     * @return array<string, stdClass>
      */
     private function initializeCategories($categoriesListing)
     {
@@ -220,9 +220,7 @@ class CategoriesProvider
         );
 
         // Convert array to object to be consistent with current API call
-        $categories = json_decode(json_encode($categories));
-
-        return $categories;
+        return json_decode(json_encode($categories));
     }
 
     /**

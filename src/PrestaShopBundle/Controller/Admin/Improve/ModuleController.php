@@ -812,8 +812,9 @@ class ModuleController extends ModuleAbstractController
      */
     private function getCategories(AdminModuleDataProvider $modulesProvider, array $modules)
     {
-        /** @var CategoriesProvider */
-        $categories = $this->get('prestashop.categories_provider')->getCategoriesMenu($modules);
+        /** @var CategoriesProvider $categoriesProvider */
+        $categoriesProvider = $this->get('prestashop.categories_provider');
+        $categories = $categoriesProvider->getCategoriesMenu($modules);
 
         foreach ($categories['categories']->subMenu as $category) {
             $collection = AddonsCollection::createFrom($category->modules);

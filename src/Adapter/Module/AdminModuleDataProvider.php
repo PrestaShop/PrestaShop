@@ -30,7 +30,6 @@ use Context;
 use Doctrine\Common\Cache\CacheProvider;
 use Employee;
 use Module as LegacyModule;
-use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
@@ -89,7 +88,7 @@ class AdminModuleDataProvider implements ModuleInterface
     private $router = null;
 
     /**
-     * @var AddonsDataProvider
+     * @var AddonsInterface
      */
     private $addonsDataProvider;
 

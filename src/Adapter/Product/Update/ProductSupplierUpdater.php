@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotUpdateProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -107,7 +106,7 @@ class ProductSupplierUpdater
     public function resetDefaultSupplier(Product $product): void
     {
         $product->supplier_reference = '';
-        $product->wholesale_price = 0;
+        $product->wholesale_price = '0';
         $product->id_supplier = 0;
 
         $this->productRepository->partialUpdate(
@@ -147,7 +146,7 @@ class ProductSupplierUpdater
         }
 
         $product->supplier_reference = ProductSupplier::getProductSupplierReference($productIdValue, 0, $supplierIdValue);
-        $product->wholesale_price = ProductSupplier::getProductSupplierPrice($productIdValue, 0, $supplierIdValue);
+        $product->wholesale_price = (string) ProductSupplier::getProductSupplierPrice($productIdValue, 0, $supplierIdValue);
         $product->id_supplier = $supplierIdValue;
 
         $this->productRepository->partialUpdate(
@@ -161,7 +160,7 @@ class ProductSupplierUpdater
      * @param int $productId
      * @param ProductSupplier[] $providedProductSuppliers
      *
-     * @return ProductSupplierId[]
+     * @return array<int, int>
      */
     private function getDeletableProductSupplierIds(int $productId, array $providedProductSuppliers): array
     {

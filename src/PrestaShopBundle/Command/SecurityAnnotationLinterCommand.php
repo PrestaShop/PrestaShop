@@ -121,7 +121,7 @@ final class SecurityAnnotationLinterCommand extends ContainerAwareCommand
                 throw new \RuntimeException(sprintf('Unknown action %s', $actionToPerform));
         }
 
-        return;
+        return 0;
     }
 
     /**

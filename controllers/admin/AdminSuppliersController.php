@@ -541,7 +541,7 @@ class AdminSuppliersControllerCore extends AdminController
                 $id_address = Address::getAddressIdBySupplierId($obj->id);
                 $address = new Address($id_address);
                 if (Validate::isLoadedObject($address)) {
-                    $address->deleted = 1;
+                    $address->deleted = true;
                     $address->save();
                 }
 

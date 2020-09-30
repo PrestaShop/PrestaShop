@@ -79,11 +79,11 @@ final class NamingConventionLinterCommand extends ContainerAwareCommand
             ));
             $io->table($ioTableheaders, $ioTableRows);
 
-            return 1;
+            return 0;
         }
 
         $io->success('Admin routes and controllers follow naming conventions.');
 
-        return 0;
+        return 1;
     }
 }

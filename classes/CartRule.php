@@ -55,32 +55,73 @@ class CartRuleCore extends ObjectModel
     public $quantity = 1;
     public $quantity_per_user = 1;
     public $priority = 1;
+    /**
+     * @var bool
+     */
     public $partial_use = 1;
     public $code;
     public $minimum_amount;
+    /**
+     * @var bool
+     */
     public $minimum_amount_tax;
     public $minimum_amount_currency;
+    /**
+     * @var bool
+     */
     public $minimum_amount_shipping;
+    /**
+     * @var bool
+     */
     public $country_restriction;
+    /**
+     * @var bool
+     */
     public $carrier_restriction;
+    /**
+     * @var bool
+     */
     public $group_restriction;
+    /**
+     * @var bool
+     */
     public $cart_rule_restriction;
+    /**
+     * @var bool
+     */
     public $product_restriction;
+    /**
+     * @var bool
+     */
     public $shop_restriction;
+    /**
+     * @var bool
+     */
     public $free_shipping;
     public $reduction_percent;
     public $reduction_amount;
-
     /**
      * @var bool is this voucher value tax included (false = tax excluded value)
      */
     public $reduction_tax;
+    /**
+     * @var int
+     */
     public $reduction_currency;
     public $reduction_product;
+    /**
+     * @var bool
+     */
     public $reduction_exclude_special;
     public $gift_product;
     public $gift_product_attribute;
+    /**
+     * @var bool
+     */
     public $highlight;
+    /**
+     * @var bool
+     */
     public $active = 1;
     public $date_add;
     public $date_upd;
