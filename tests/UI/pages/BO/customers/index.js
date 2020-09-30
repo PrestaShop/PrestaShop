@@ -157,7 +157,10 @@ class Customers extends BOBasePage {
    */
   async updateToggleColumnValue(page, row, column, valueWanted = true) {
     if (await this.getToggleColumnValue(page, row, column) !== valueWanted) {
-      await this.clickAndWaitForNavigation(page, `${this.customersListTableColumn(row, column)} i`);
+      await Promise.all([
+        page.$eval(`${this.customersListTableColumn(row, column)} i`, el => el.click()),
+        page.waitForNavigation({waitUntil: 'networkidle'}),
+      ]);
       return true;
     }
     return false;
