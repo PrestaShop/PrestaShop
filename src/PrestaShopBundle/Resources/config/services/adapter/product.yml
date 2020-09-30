@@ -258,8 +258,8 @@ services:
             - '@prestashop.adapter.product.customization_field_deleter'
             - '@prestashop.adapter.product.product_repository'
 
-    prestashop.adapter.product.product_attachment_updater:
-        class: PrestaShop\PrestaShop\Adapter\Product\ProductAttachmentUpdater
+    prestashop.adapter.product.update.product_attachment_updater:
+        class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductAttachmentUpdater
         arguments:
             - '@prestashop.adapter.product.product_repository'
             - '@prestashop.adapter.attachment.attachment_repository'
@@ -299,7 +299,7 @@ services:
     prestashop.adapter.product.command_handler.set_associated_product_attachments_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetAssociatedProductAttachmentsHandler
         arguments:
-            - '@prestashop.adapter.product.product_attachment_updater'
+            - '@prestashop.adapter.product.update.product_attachment_updater'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductAttachmentsCommand
@@ -307,7 +307,7 @@ services:
     prestashop.adapter.product.command_handler.associate_product_attachment_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AssociateProductAttachmentHandler
         arguments:
-            - '@prestashop.adapter.product.product_attachment_updater'
+            - '@prestashop.adapter.product.update.product_attachment_updater'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AssociateProductAttachmentCommand
