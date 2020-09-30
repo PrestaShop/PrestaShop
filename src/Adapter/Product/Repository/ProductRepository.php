@@ -32,6 +32,7 @@ use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotAddProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -161,6 +162,20 @@ class ProductRepository extends AbstractObjectModelRepository
         );
 
         return $product;
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return ProductId
+     *
+     * @throws CannotAddProductException
+     */
+    public function add(Product $product): ProductId
+    {
+        $id = $this->addObjectModel($product, CannotAddProductException::class);
+
+        return new ProductId($id);
     }
 
     /**
