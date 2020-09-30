@@ -1878,12 +1878,12 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      */
     public static function existsInDatabase($id_entity, $table = null)
     {
-        $primary = 'id_' . bqSQL($table);
-
-        if ($table === null) {
+        if ($table !== null) {
+            $primary = 'id_' . bqSQL($table);
+        } else {
             $object_def = static::$definition;
 
-            if (!array_key_exists('table', $object_def) || !array_key_exists('primary', $object_def)) {
+            if (!isset($object_ref['table']) || !isset($object_ref['primary'])) {
                 return false;
             }
 
