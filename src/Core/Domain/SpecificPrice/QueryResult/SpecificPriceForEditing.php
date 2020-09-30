@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\QueryResult;
 
+use DateTimeInterface;
+use PrestaShop\Decimal\Number;
+
 /**
  * Transfers data for editing SpecificPrice
  */
@@ -44,7 +47,7 @@ class SpecificPriceForEditing
     private $reductionType;
 
     /**
-     * @var string
+     * @var Number
      */
     private $reductionValue;
 
@@ -121,40 +124,40 @@ class SpecificPriceForEditing
     /**
      * @param int $productId
      * @param string $reductionType
-     * @param string $reductionValue
+     * @param Number $reductionValue
      * @param bool $includeTax
-     * @param string $price
+     * @param Number $price
      * @param int $fromQuantity
-     * @param int|null $shopGroupId
-     * @param int|null $shopId
-     * @param int|null $cartId
-     * @param int|null $productAttributeId
-     * @param int|null $currencyId
-     * @param int|null $cartRuleId
-     * @param int|null $countryId
-     * @param int|null $groupId
-     * @param int|null $customerId
-     * @param string|null $dateTimeFrom
-     * @param string|null $dateTimeTo
+     * @param int $shopGroupId
+     * @param int $shopId
+     * @param int $cartId
+     * @param int $productAttributeId
+     * @param int $currencyId
+     * @param int $cartRuleId
+     * @param int $countryId
+     * @param int $groupId
+     * @param int $customerId
+     * @param DateTimeInterface $dateTimeFrom
+     * @param DateTimeInterface $dateTimeTo
      */
     public function __construct(
         int $productId,
         string $reductionType,
-        string $reductionValue,
+        Number $reductionValue,
         bool $includeTax,
-        string $price,
+        Number $price,
         int $fromQuantity,
-        ?int $shopGroupId,
-        ?int $shopId,
-        ?int $cartId,
-        ?int $productAttributeId,
-        ?int $currencyId,
-        ?int $cartRuleId,
-        ?int $countryId,
-        ?int $groupId,
-        ?int $customerId,
-        ?string $dateTimeFrom,
-        ?string $dateTimeTo
+        int $shopGroupId,
+        int $shopId,
+        int $cartId,
+        int $productAttributeId,
+        int $currencyId,
+        int $cartRuleId,
+        int $countryId,
+        int $groupId,
+        int $customerId,
+        DateTimeInterface $dateTimeFrom,
+        DateTimeInterface $dateTimeTo
     ) {
         $this->productId = $productId;
         $this->reductionType = $reductionType;
@@ -192,9 +195,9 @@ class SpecificPriceForEditing
     }
 
     /**
-     * @return string
+     * @return Number
      */
-    public function getReductionValue(): string
+    public function getReductionValue(): Number
     {
         return $this->reductionValue;
     }
