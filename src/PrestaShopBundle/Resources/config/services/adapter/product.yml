@@ -258,11 +258,6 @@ services:
             - '@prestashop.adapter.product.customization_field_deleter'
             - '@prestashop.adapter.product.product_repository'
 
-    prestashop.adapter.product.product_deleter:
-        class: PrestaShop\PrestaShop\Adapter\Product\ProductDeleter
-        arguments:
-            - '@prestashop.adapter.product.product_repository'
-
     prestashop.adapter.product.product_attachment_updater:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductAttachmentUpdater
         arguments:
@@ -288,7 +283,7 @@ services:
     prestashop.adapter.product.command_handler.delete_product_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DeleteProductHandler
         arguments:
-            - '@prestashop.adapter.product.product_deleter'
+            - '@prestashop.adapter.product.product_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand
@@ -296,7 +291,7 @@ services:
     prestashop.adapter.product.command_handler.bulk_delete_product_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\BulkDeleteProductHandler
         arguments:
-            - '@prestashop.adapter.product.product_deleter'
+            - '@prestashop.adapter.product.product_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand

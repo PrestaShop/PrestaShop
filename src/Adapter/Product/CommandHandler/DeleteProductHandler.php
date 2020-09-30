@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Adapter\Product\ProductDeleter;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\DeleteProductHandlerInterface;
 
@@ -39,16 +39,16 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\DeleteProductHandle
 final class DeleteProductHandler extends AbstractProductHandler implements DeleteProductHandlerInterface
 {
     /**
-     * @var ProductDeleter
+     * @var ProductRepository
      */
-    private $productDeleter;
+    private $productRepository;
 
     /**
-     * @param ProductDeleter $productDeleter
+     * @param ProductRepository $productRepository
      */
-    public function __construct(ProductDeleter $productDeleter)
+    public function __construct(ProductRepository $productRepository)
     {
-        $this->productDeleter = $productDeleter;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -56,6 +56,6 @@ final class DeleteProductHandler extends AbstractProductHandler implements Delet
      */
     public function handle(DeleteProductCommand $command): void
     {
-        $this->productDeleter->delete($command->getProductId());
+        $this->productRepository->delete($command->getProductId());
     }
 }

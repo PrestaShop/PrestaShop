@@ -112,7 +112,9 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * {@inheritdoc}
+     * @param array $productSupplierIds
+     *
+     * @throws CannotBulkDeleteProductSupplierException
      */
     public function bulkDelete(array $productSupplierIds): void
     {
