@@ -36,21 +36,41 @@ body#checkout {
     min-height: 100%;
   }
   section.checkout-step {
-    @include box-shadow();
-    padding: 0.9375rem;
+    padding: 0.625rem;
     background-color: #fff;
-    border-bottom: 1px rgba(0, 0, 0, 0.25) solid;
+
     &:last-child {
       border: 0;
     }
+
     .step-title {
       margin-bottom: 0;
       text-transform: uppercase;
       cursor: pointer;
+      font-size: 1.5rem;
+      font-weight: 500;
+      border-bottom: 1px solid $border-gray;
+      padding-bottom: 1.25rem;
     }
+
+    &.-current + .checkout-step {
+      .step-title {
+        border-top: 1px solid $border-gray;
+        padding-top: 1.25rem;
+      }
+    }
+
+    &.-complete:first-of-type {
+      .step-title {
+        padding-top: 0.625rem;
+      }
+    }
+
     .content {
       padding: 0 2.313rem;
+      padding-top: 1rem;
     }
+
     .step-edit {
       font-weight: 500;
       text-transform: lowercase;
@@ -87,12 +107,30 @@ body#checkout {
         display: none;
       }
       .step-number {
-        display: inline-block;
+        display: inline-flex;
       }
       .content {
         display: block;
       }
     }
+
+    &.-reachable.-current {
+      .step-number {
+        background-color: $current-step-color;
+        height: 33px;
+        width: 33px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-size: 1rem;
+        color: $white;
+        vertical-align: middle;
+        margin-right: 0.65rem;
+        border: none;
+      }
+    }
+
     &.-reachable.-complete {
       h1 {
         .done {
@@ -157,9 +195,20 @@ body#checkout {
       }
     }
     .step-number {
-      display: inline-block;
-      padding: 0.625rem;
+      width: 33px;
+      height: 33px;
+      border: 1px solid $gray-darker;
+      display: inline-flex;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-size: 1rem;
+      vertical-align: middle;
+      margin-right: 1rem;
+      margin-left: 0.5rem;
     }
+
     .address-selector {
       display: flex;
       flex-wrap: wrap;
