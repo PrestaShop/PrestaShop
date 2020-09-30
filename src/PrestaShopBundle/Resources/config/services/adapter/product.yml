@@ -225,7 +225,7 @@ services:
     prestashop.adapter.product.command_handler.set_product_suppliers_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetProductSuppliersHandler
         arguments:
-            - '@prestashop.adapter.product.product_supplier_updater'
+            - '@prestashop.adapter.product.update.product_supplier_updater'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand
@@ -234,7 +234,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllAssociatedProductSuppliersHandler
         arguments:
             - '@prestashop.adapter.product.repository.product_supplier_repository'
-            - '@prestashop.adapter.product.product_supplier_updater'
+            - '@prestashop.adapter.product.update.product_supplier_updater'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand
@@ -324,8 +324,8 @@ services:
         arguments:
             - '@prestashop.adapter.product.product_supplier_validator'
 
-    prestashop.adapter.product.product_supplier_updater:
-        class: PrestaShop\PrestaShop\Adapter\Product\ProductSupplierUpdater
+    prestashop.adapter.product.update.product_supplier_updater:
+        class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater
         arguments:
             - '@prestashop.adapter.product.product_repository'
             - '@prestashop.adapter.supplier.supplier_repository'
