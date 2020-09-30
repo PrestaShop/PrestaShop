@@ -99,15 +99,6 @@ class PreferencesType extends TranslatorAwareType
                     'Admin.Shopparameters.Help'
                 ),
             ]);
-        } else {
-            $builder->add('enable_ssl', FormType::class, [
-                'required' => false,
-                'label' => $this->trans('Enable SSL', 'Admin.Shopparameters.Feature'),
-                'help' => $this->trans(
-                    'If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.',
-                    'Admin.Shopparsrameters.Help'
-                ),
-            ]);
         }
 
         $builder
@@ -228,7 +219,6 @@ class PreferencesType extends TranslatorAwareType
                 ),
             ])
             ->add('shop_activity', ChoiceType::class, [
-                'placeholder' => false,
                 'required' => false,
                 'choices_as_values' => true,
                 'placeholder' => $this->trans('-- Please choose your main activity --', 'Install'),

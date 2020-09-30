@@ -39,7 +39,9 @@
               <div class="card-text">
                   {% if not app.request.isSecure() %}
                     <div class="form-group row">
-                      {{ form_label(generalForm.enable_ssl) }}
+                        <label class="form-control-label ">
+                          {{ 'Enable SSL'|trans({}, 'Admin.Shopparameters.Feature') }}
+                        </label>
                       <div class="col-sm">
                         <div class="input-group">
                           <div class="form-control-plaintext">
@@ -47,8 +49,10 @@
                               {{ 'Please click here to check if your shop supports HTTPS.'|trans({}, 'Admin.Shopparameters.Feature') }}
                             </a>
                           </div>
+                          <small class="form-text">
+                            {{ 'If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.'|trans({}, 'Admin.Shopparameters.Feature') }}
+                          </small>
                         </div>
-                        {{ form_widget(generalForm.enable_ssl) }}
                       </div>
                     </div>
                   {% endif %}
