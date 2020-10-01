@@ -120,16 +120,16 @@ export default function () {
               url: deletionURL,
               beforeSend() {
                 $('#create-combinations, #apply-on-combinations, #submit, .btn-submit').attr('disabled', 'disabled');
-            },
-            success(response) {
-              window.showSuccessMessage(response.message);
-              window.refreshTotalCombinations(-1, combinationsIds.length);
-              $('span.js-bulk-combinations').text('0');
-              combinationsIds.forEach((combinationId) => {
-                const combination = new Combination(combinationId);
-                combination.removeFromDOM();
-              });
-              window.displayFieldsManager.refresh();
+              },
+              success(response) {
+                window.showSuccessMessage(response.message);
+                window.refreshTotalCombinations(-1, combinationsIds.length);
+                $('span.js-bulk-combinations').text('0');
+                combinationsIds.forEach((combinationId) => {
+                  const combination = new Combination(combinationId);
+                  combination.removeFromDOM();
+                });
+                window.displayFieldsManager.refresh();
             },
             error(response) {
               window.showErrorMessage(jQuery.parseJSON(response.responseText).message);
