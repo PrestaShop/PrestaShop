@@ -45,61 +45,135 @@ Feature: Order from Back Office (BO)
       | unit_price_tax_excl         | 11.90 |
       | total_price_tax_incl        | 28.56 |
       | total_price_tax_excl        | 23.80 |
+    # Edit with two values that match (with computed tax values)
     When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
-      | amount         | 1                       |
+      | amount         | 2                       |
       | price          | 83.33                   |
-      | price_tax_incl | 100                     |
+      | price_tax_incl | 99.996                  |
+    Then product "Mug The best is yet to come" in order "bo_order1" should have specific price 83.33
     When I generate invoice for "bo_order1" order
     Then product "Mug The best is yet to come" in first invoice from order "bo_order1" should have following details:
-      | product_quantity            | 1     |
-      | product_price               | 83.33 |
-      | original_product_price      | 11.90 |
-      | unit_price_tax_incl         | 100   |
-      | unit_price_tax_excl         | 83.33 |
-      | total_price_tax_incl        | 100   |
-      | total_price_tax_excl        | 83.33 |
-    And order "bo_order1" should have 1 products in total
-    And order "bo_order1" should have following details:
-      | total_products           | 83.33  |
-      | total_products_wt        | 100.00 |
-      | total_discounts_tax_excl | 0.0000 |
-      | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 85.33  |
-      | total_paid_tax_incl      | 102.40 |
-      | total_paid               | 102.40 |
-      | total_paid_real          | 0.0    |
-      | total_shipping_tax_excl  | 2.0    |
-      | total_shipping_tax_incl  | 2.40   |
-    When I add products to order "bo_order1" with new invoice and the following products details:
-      | name           | Mug The best is yet to come |
-      | amount         | 1                           |
-      | price          | 83.33                       |
-      | price_tax_incl | 100                         |
-    Then product "Mug The best is yet to come" in first invoice from order "bo_order1" should have following details:
-      | product_quantity            | 1     |
-      | product_price               | 83.33 |
-      | original_product_price      | 11.90 |
-      | unit_price_tax_incl         | 100   |
-      | unit_price_tax_excl         | 83.33 |
-      | total_price_tax_incl        | 100   |
-      | total_price_tax_excl        | 83.33 |
-    And product "Mug The best is yet to come" in second invoice from order "bo_order1" should have following details:
-      | product_quantity            | 1     |
-      | product_price               | 83.33 |
-      | original_product_price      | 11.90 |
-      | unit_price_tax_incl         | 100   |
-      | unit_price_tax_excl         | 83.33 |
-      | total_price_tax_incl        | 100   |
-      | total_price_tax_excl        | 83.33 |
+      | product_quantity            | 2      |
+      | product_price               | 83.33  |
+      | original_product_price      | 11.90  |
+      | unit_price_tax_incl         | 99.996 |
+      | unit_price_tax_excl         | 83.33  |
+      | total_price_tax_incl        | 199.99 |
+      | total_price_tax_excl        | 166.66 |
     And order "bo_order1" should have 2 products in total
     And order "bo_order1" should have following details:
       | total_products           | 166.66 |
-      | total_products_wt        | 200.00 |
+      | total_products_wt        | 199.99 |
       | total_discounts_tax_excl | 0.0000 |
       | total_discounts_tax_incl | 0.0000 |
       | total_paid_tax_excl      | 168.66 |
+      | total_paid_tax_incl      | 202.39 |
+      | total_paid               | 202.39 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 2.0    |
+      | total_shipping_tax_incl  | 2.40   |
+    # Edit with values that are not strictly equals, then the specific price is recomputed with additional precision
+    When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
+      | amount         | 2                       |
+      | price          | 83.33                   |
+      | price_tax_incl | 100.00                  |
+    Then product "Mug The best is yet to come" in order "bo_order1" should have specific price 83.333333
+    # product_price is computed for backward compatibility which is why it is rounded
+    And product "Mug The best is yet to come" in first invoice from order "bo_order1" should have following details:
+      | product_quantity            | 2         |
+      | product_price               | 83.33     |
+      | original_product_price      | 11.90     |
+      | unit_price_tax_incl         | 100       |
+      | unit_price_tax_excl         | 83.333333 |
+      | total_price_tax_incl        | 200       |
+      | total_price_tax_excl        | 166.67    |
+    And order "bo_order1" should have 2 products in total
+    And order "bo_order1" should have following details:
+      | total_products           | 166.67 |
+      | total_products_wt        | 200.00 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 168.67 |
       | total_paid_tax_incl      | 202.40 |
       | total_paid               | 202.40 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 2.0    |
+      | total_shipping_tax_incl  | 2.40   |
+    # Now same thing with add product (with matching prices)
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name           | Mug The best is yet to come |
+      | amount         | 2                           |
+      | price          | 83.33                       |
+      | price_tax_incl | 99.996                      |
+    Then product "Mug The best is yet to come" in order "bo_order1" should have specific price 83.33
+    Then product "Mug The best is yet to come" in first invoice from order "bo_order1" should have following details:
+      | product_quantity            | 2      |
+      | product_price               | 83.33  |
+      | original_product_price      | 11.90  |
+      | unit_price_tax_incl         | 99.996 |
+      | unit_price_tax_excl         | 83.33  |
+      | total_price_tax_incl        | 199.99 |
+      | total_price_tax_excl        | 166.66 |
+    And product "Mug The best is yet to come" in second invoice from order "bo_order1" should have following details:
+      | product_quantity            | 2      |
+      | product_price               | 83.33  |
+      | original_product_price      | 11.90  |
+      | unit_price_tax_incl         | 99.996 |
+      | unit_price_tax_excl         | 83.33  |
+      | total_price_tax_incl        | 199.99 |
+      | total_price_tax_excl        | 166.66 |
+    And order "bo_order1" should have 4 products in total
+    And order "bo_order1" should have following details:
+      | total_products           | 333.32 |
+      | total_products_wt        | 399.98 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 335.32 |
+      | total_paid_tax_incl      | 402.38 |
+      | total_paid               | 402.38 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 2.0    |
+      | total_shipping_tax_incl  | 2.40   |
+    # Now again with add product (but prices don't match) We use 4 as quantity to avoid a round total with 6 or 7 products
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name           | Mug The best is yet to come |
+      | amount         | 4                           |
+      | price          | 83.33                       |
+      | price_tax_incl | 100.00                      |
+    Then product "Mug The best is yet to come" in order "bo_order1" should have specific price 83.333333
+    And product "Mug The best is yet to come" in first invoice from order "bo_order1" should have following details:
+      | product_quantity            | 2         |
+      | product_price               | 83.33     |
+      | original_product_price      | 11.90     |
+      | unit_price_tax_incl         | 100       |
+      | unit_price_tax_excl         | 83.333333 |
+      | total_price_tax_incl        | 200       |
+      | total_price_tax_excl        | 166.67    |
+    And product "Mug The best is yet to come" in second invoice from order "bo_order1" should have following details:
+      | product_quantity            | 2         |
+      | product_price               | 83.33     |
+      | original_product_price      | 11.90     |
+      | unit_price_tax_incl         | 100       |
+      | unit_price_tax_excl         | 83.333333 |
+      | total_price_tax_incl        | 200       |
+      | total_price_tax_excl        | 166.67    |
+    And product "Mug The best is yet to come" in third invoice from order "bo_order1" should have following details:
+      | product_quantity            | 4         |
+      | product_price               | 83.33     |
+      | original_product_price      | 11.90     |
+      | unit_price_tax_incl         | 100       |
+      | unit_price_tax_excl         | 83.333333 |
+      | total_price_tax_incl        | 400.00    |
+      | total_price_tax_excl        | 333.33    |
+    And order "bo_order1" should have 8 products in total
+    And order "bo_order1" should have following details:
+      | total_products           | 666.67 |
+      | total_products_wt        | 800.00 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 668.67 |
+      | total_paid_tax_incl      | 802.40 |
+      | total_paid               | 802.40 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 2.0    |
       | total_shipping_tax_incl  | 2.40   |
