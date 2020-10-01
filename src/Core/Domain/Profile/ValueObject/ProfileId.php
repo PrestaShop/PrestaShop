@@ -38,7 +38,7 @@ class ProfileId
     /**
      * @param int $profileId
      *
-     * @throws ProfileException
+     * @throws ProfileConstraintException
      */
     public function __construct($profileId)
     {
@@ -58,7 +58,7 @@ class ProfileId
     /**
      * @param mixed $profileId
      *
-     * @throws ProfileException
+     * @throws ProfileConstraintException
      */
     private function assertProfileIdIsGreaterThanZero($profileId)
     {
