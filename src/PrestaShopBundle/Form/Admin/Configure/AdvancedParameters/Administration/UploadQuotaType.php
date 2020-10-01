@@ -53,7 +53,7 @@ class UploadQuotaType extends TranslatorAwareType
                         'Set the maximum size allowed for attachment files (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).',
                         'Admin.Advparameters.Help',
                         [
-                            '%size%' => $configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE')
+                            '%size%' => $configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE'),
                         ]
                     ),
                     'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
@@ -72,7 +72,7 @@ class UploadQuotaType extends TranslatorAwareType
                         'Define the upload limit for a downloadable product (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).',
                         'Admin.Advparameters.Help',
                         [
-                            '%size%' => $configuration->get('PS_LIMIT_UPLOAD_FILE_VALUE')
+                            '%size%' => $configuration->get('PS_LIMIT_UPLOAD_FILE_VALUE'),
                         ]
                     ),
                     'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
@@ -91,7 +91,7 @@ class UploadQuotaType extends TranslatorAwareType
                         'Define the upload limit for an image (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).',
                         'Admin.Advparameters.Help',
                         [
-                            '%size%' => $configuration->get('PS_LIMIT_UPLOAD_IMAGE_VALUE')
+                            '%size%' => $configuration->get('PS_LIMIT_UPLOAD_IMAGE_VALUE'),
                         ]
                     ),
                     'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
