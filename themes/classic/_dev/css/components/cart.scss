@@ -72,14 +72,14 @@
 
   .label {
     padding-left: 0;
+    font-weight: 400;
     color: $gray-dark;
     white-space: inherit;
-    font-weight: 400;
   }
   .value {
     float: right;
-    color: $gray-darker;
     font-weight: 600;
+    color: $gray-darker;
   }
   &.cart-summary-subtotals {
     .label,
@@ -105,8 +105,8 @@
     padding: 1rem;
     h1 {
       margin-bottom: 0;
-      font-weight: 400;
       font-size: 1.5rem;
+      font-weight: 400;
     }
   }
   .cart-overview {
@@ -258,10 +258,10 @@
   > .product-line-info {
     > .label {
       padding: 0;
+      font-weight: 600;
       line-height: inherit;
       text-align: left;
       white-space: inherit;
-      font-weight: 600;
     }
     > .out-of-stock {
       color: #f00;
