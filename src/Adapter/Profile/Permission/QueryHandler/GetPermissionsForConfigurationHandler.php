@@ -73,7 +73,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
     /**
      * {@inheritdoc}
      */
-    public function handle(GetPermissionsForConfiguration $query)
+    public function handle(GetPermissionsForConfiguration $query): ConfigurablePermissions
     {
         $profiles = $this->getProfilesForPermissionsConfiguration();
         $tabs = $this->getTabsForPermissionsConfiguration();
@@ -249,7 +249,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
         array $profiles,
         array $tabs,
         array $permissions
-    ) {
+    ): array {
         $bulkConfiguration = [];
 
         foreach ($profiles as $profile) {
