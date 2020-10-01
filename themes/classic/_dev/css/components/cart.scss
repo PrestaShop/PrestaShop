@@ -16,11 +16,18 @@
   &.checkout {
     padding-top: 0;
     padding-bottom: 1.75rem;
-    margin-top: 1rem;
+
+    .btn-primary {
+      width: 100%;
+    }
+  }
+
+  &.cart-detailed-subtotals + .cart-summary-totals .cart-total {
+    border-top: 1px solid $border-gray;
   }
 
   &.cart-summary-totals {
-    padding: 0 1.25rem 0.5rem;
+    padding: 0 1.25rem 0.825rem;
 
     .cart-summary-line {
       padding: 0.5rem 0.2rem 0;
@@ -29,8 +36,7 @@
         margin-bottom: 0;
       }
       &.cart-total {
-        padding: 0.5rem 0;
-        background-color: $gray-light;
+        padding: 1rem 0;
 
         .label,
         .value {
@@ -43,6 +49,7 @@
           font-size: 1rem;
         }
       }
+
       span {
         &.sub {
           float: none;
@@ -58,21 +65,32 @@
   @include clearfix();
   margin-bottom: 0.315rem;
   clear: both;
+
+  &:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+
   .label {
     padding-left: 0;
-    font-weight: 500;
     color: $gray-dark;
     white-space: inherit;
+    font-weight: 400;
   }
   .value {
     float: right;
     color: $gray-darker;
+    font-weight: 600;
   }
   &.cart-summary-subtotals {
     .label,
     .value {
       font-weight: 500;
     }
+  }
+
+  .label,
+  .value {
+    font-size: 1rem;
   }
 }
 
@@ -87,6 +105,8 @@
     padding: 1rem;
     h1 {
       margin-bottom: 0;
+      font-weight: 400;
+      font-size: 1.5rem;
     }
   }
   .cart-overview {
@@ -241,6 +261,7 @@
       line-height: inherit;
       text-align: left;
       white-space: inherit;
+      font-weight: 600;
     }
     > .out-of-stock {
       color: #f00;
