@@ -130,16 +130,16 @@ export default function () {
                   combination.removeFromDOM();
                 });
                 window.displayFieldsManager.refresh();
-            },
-            error(response) {
-              window.showErrorMessage(jQuery.parseJSON(response.responseText).message);
-            },
-            complete() {
-              $('#create-combinations, #apply-on-combinations, #submit, .btn-submit').removeAttr('disabled');
-            },
-          });
-        },
-      }).show();
+              },
+              error(response) {
+                window.showErrorMessage(jQuery.parseJSON(response.responseText).message);
+              },
+              complete() {
+                $('#create-combinations, #apply-on-combinations, #submit, .btn-submit').removeAttr('disabled');
+              },
+            });
+          },
+        }).show();
     },
     getFormValues: function getFormValues() {
       const values = [];
