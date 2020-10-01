@@ -20,7 +20,8 @@
   }
 
   &.cart-summary-totals {
-    padding: 0 1rem 1rem;
+    padding: 0 1.25rem 0.5rem;
+
     .cart-summary-line {
       padding: 0.5rem 0.2rem 0;
 
@@ -28,8 +29,9 @@
         margin-bottom: 0;
       }
       &.cart-total {
-        padding: 0.5rem;
+        padding: 0.5rem 0;
         background-color: $gray-light;
+
         .label,
         .value {
           font-weight: 600;
@@ -38,7 +40,7 @@
           font-size: 1rem;
         }
         .value {
-          font-size: 1.125rem;
+          font-size: 1rem;
         }
       }
       span {

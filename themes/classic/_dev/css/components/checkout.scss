@@ -2,22 +2,61 @@ $carrier-selector: "carrier";
 
 body#checkout {
   color: $gray-darker;
+
   #header .header-nav {
     max-height: none;
     padding: 0.9375rem 0;
     margin-bottom: 0;
     border: none;
     @include box-shadow();
+
     .logo {
       width: auto;
       max-height: 4.375rem;
     }
+
     #_desktop_contact_link {
       #contact-link {
         margin-top: 0;
       }
     }
   }
+
+  .cart-grid-right {
+    .card {
+      box-shadow: none;
+      border: 0;
+
+      .cart-total {
+        background-color: inherit;
+      }
+
+      .cart-summary-subtotals-container {
+        padding: 1rem 0;
+        border-top: 1px solid $border-gray;
+        border-bottom: 1px solid $border-gray;
+
+        .cart-summary-line {
+          margin-bottom: 0;
+
+          .label {
+            font-size: 1rem;
+            font-weight: 400;
+          }
+
+          .value {
+            font-size: 1rem;
+            font-weight: 600;
+          }
+
+          &:not(:last-child) {
+            margin-bottom: 0.825rem;
+          }
+        }
+      }
+    }
+  }
+
   .custom-checkbox {
     display: flex;
 
