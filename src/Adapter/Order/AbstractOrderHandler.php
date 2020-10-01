@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
+use Address;
 use Cart;
 use Combination;
 use Configuration;
@@ -34,17 +35,18 @@ use Currency;
 use Customer;
 use Group;
 use Order;
-use OrderDetail;
 use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Adapter\Number\RoundModeConverter;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
+use PrestaShopDatabaseException;
 use PrestaShopException;
 use Product;
 use SpecificPrice;
-use Tools;
+use TaxManagerFactory;
 use Validate;
 
 /**
@@ -193,7 +195,7 @@ abstract class AbstractOrderHandler
      * @param Combination|null $combination
      *
      * @throws PrestaShopException
-     * @throws \PrestaShopDatabaseException
+     * @throws PrestaShopDatabaseException
      */
     protected function updateSpecificPrice(
         Number $priceTaxIncluded,
@@ -205,9 +207,9 @@ abstract class AbstractOrderHandler
         $productSpecificPrice = $this->getProductSpecificPriceInOrder($product, $order, $combination);
 
         $productOriginalPrice = $this->getProductRegularPrice($product, $order, $combination);
-        $roundedPrice = new Number($priceTaxExcluded->round(self::COMPARISON_PRECISION));
+        $priceTaxExcluded = $this->getPrecisePriceTaxExcluded($priceTaxIncluded, $priceTaxExcluded, $order, $product);
 
-        if ($productOriginalPrice->equals($roundedPrice)) {
+        if ($productOriginalPrice->equals($priceTaxExcluded)) {
             // Product specific price is not useful any more we can delete it
             if (null !== $productSpecificPrice) {
                 $productSpecificPrice->delete();
@@ -217,7 +219,7 @@ abstract class AbstractOrderHandler
         }
 
         if (null !== $productSpecificPrice) {
-            $productSpecificPrice->price = $priceTaxExcluded;
+            $productSpecificPrice->price = (float) (string) $priceTaxExcluded;
             $productSpecificPrice->update();
 
             return;
@@ -241,6 +243,35 @@ abstract class AbstractOrderHandler
         $specificPrice->from = SpecificPrice::ORDER_DEFAULT_DATE;
         $specificPrice->to = SpecificPrice::ORDER_DEFAULT_DATE;
         $specificPrice->add();
+    }
+
+    /**
+     * @param Number $priceTaxIncluded
+     * @param Number $priceTaxExcluded
+     * @param Order $order
+     * @param Product $product
+     *
+     * @return Number
+     */
+    private function getPrecisePriceTaxExcluded(
+        Number $priceTaxIncluded,
+        Number $priceTaxExcluded,
+        Order $order,
+        Product $product
+    ): Number {
+        $taxAddress = new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
+        $taxManager = TaxManagerFactory::getManager($taxAddress, Product::getIdTaxRulesGroupByIdProduct((int) $product->id, Context::getContext()));
+        $productTaxCalculator = $taxManager->getTaxCalculator();
+        $taxFactor = new Number((string) (1 + ($productTaxCalculator->getTotalRate() / 100)));
+
+        $computedPriceTaxIncluded = $priceTaxExcluded->times($taxFactor);
+        if ($computedPriceTaxIncluded->equals($priceTaxIncluded)) {
+            return $priceTaxExcluded;
+        }
+
+        // When price tax included is computed based on price tax excluded there is a difference
+        // so we recompute the price tax excluded based on the tax rate to have more precision
+        return $priceTaxIncluded->dividedBy($taxFactor);
     }
 
     /**
@@ -310,37 +341,10 @@ abstract class AbstractOrderHandler
     }
 
     /**
-     * Update order details after a specific price has been created or updated
-     *
-     * @param Order $order
-     * @param OrderDetail $updatedOrderDetail
-     * @param int $productQuantity
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @return string
      */
-    protected function updateOrderDetailsWithSameProduct(
-        Order $order,
-        OrderDetail $updatedOrderDetail,
-        int $computingPrecision
-    ): void {
-        foreach ($order->getOrderDetailList() as $row) {
-            $orderDetail = new OrderDetail($row['id_order_detail']);
-            if ((int) $orderDetail->product_id !== (int) $updatedOrderDetail->product_id) {
-                continue;
-            }
-            if (!empty($updatedOrderDetail->product_attribute_id) && (int) $updatedOrderDetail->product_attribute_id !== (int) $orderDetail->product_attribute_id) {
-                continue;
-            }
-            if ($updatedOrderDetail->id == $orderDetail->id) {
-                continue;
-            }
-            $orderDetail->unit_price_tax_excl = (float) $updatedOrderDetail->unit_price_tax_excl;
-            $orderDetail->unit_price_tax_incl = (float) $updatedOrderDetail->unit_price_tax_incl;
-            $orderDetail->total_price_tax_excl = Tools::ps_round((float) $updatedOrderDetail->unit_price_tax_excl * $orderDetail->product_quantity, $computingPrecision);
-            $orderDetail->total_price_tax_incl = Tools::ps_round((float) $updatedOrderDetail->unit_price_tax_incl * $orderDetail->product_quantity, $computingPrecision);
-
-            $orderDetail->update();
-        }
+    protected function getNumberRoundMode(): string
+    {
+        return RoundModeConverter::getNumberRoundMode((int) Configuration::get('PS_PRICE_ROUND_MODE'));
     }
 }
