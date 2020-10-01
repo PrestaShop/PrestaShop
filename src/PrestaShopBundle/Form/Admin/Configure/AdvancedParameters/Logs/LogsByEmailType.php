@@ -43,7 +43,7 @@ final class LogsByEmailType extends TranslatorAwareType
     {
         $builder
             ->add('logs_by_email', TextType::class, [
-                'required' => false,
+                'required' => true,
                 'label' => $this->trans(
                     'Minimum severity level',
                     'Admin.Shopparameters.Feature'
