@@ -68,7 +68,7 @@ describe('sort and pagination shopping carts', async () => {
       const customerData = new CustomerFaker({lastName: 'todelete', password: ''});
 
       it('should add product to cart and go to checkout page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `addProductToCart${index}`, baseContext);
 
         await foHomePage.goToHomePage(page);
 
@@ -87,21 +87,21 @@ describe('sort and pagination shopping carts', async () => {
       });
 
       it('should fill personal information as a guest', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'setPersonalInformation', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `setPersonalInformation${index}`, baseContext);
 
         const isStepPersonalInfoCompleted = await foCheckoutPage.setGuestPersonalInformation(page, customerData);
         await expect(isStepPersonalInfoCompleted, 'Step personal information is not completed').to.be.true;
       });
 
       it('should fill address form and go to delivery step', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'setAddressStep', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `setAddressStep${index}`, baseContext);
 
         const isStepAddressComplete = await foCheckoutPage.setAddress(page, addressData);
         await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
       });
 
       it('should validate the order', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'validateOrder', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `validateOrder${index}`, baseContext);
 
         // Delivery step - Go to payment step
         const isStepDeliveryComplete = await foCheckoutPage.goToPaymentStep(page);
