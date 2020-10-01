@@ -101,7 +101,7 @@ describe('Filter the Shopping carts table', async () => {
     {
       args:
         {
-          testIdentifier: 'filterCarrier',
+          testIdentifier: 'filterCustomer',
           filterType: 'input',
           filterBy: 'c!lastname',
           filterValue: ShoppingCarts[3].customer,
@@ -110,7 +110,7 @@ describe('Filter the Shopping carts table', async () => {
     {
       args:
         {
-          testIdentifier: 'filterDate',
+          testIdentifier: 'filterCarrier',
           filterType: 'input',
           filterBy: 'ca!name',
           filterValue: ShoppingCarts[0].carrier,
