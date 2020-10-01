@@ -11,7 +11,7 @@ var combinations = (function() {
   function remove(elem) {
     var combinationElem = $('#attribute_' + elem.attr('data'));
 
-    modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+    modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
       onContinue: function() {
 
         var attributeId = elem.attr('data');

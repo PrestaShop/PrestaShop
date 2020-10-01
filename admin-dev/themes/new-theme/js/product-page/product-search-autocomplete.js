@@ -48,7 +48,7 @@ export default function () {
     $(document).on('click', formId, (e) => {
       e.preventDefault();
 
-      window.modalConfirmation.create(window.translate_javascripts['Are you sure to delete this?'], null, {
+      window.modalConfirmation.create(window.translate_javascripts['Are you sure you want to delete this item?'], null, {
         onContinue: () => {
           $(e.target).parents('.media').remove();
 
