@@ -110,16 +110,16 @@ export default function () {
         window.translate_javascripts['Are you sure you want to delete the selected item(s)?'],
         null,
         {
-        onContinue() {
-          const deletionURL = $(deleteCombinationsBtn).attr('data');
-          $.ajax({
-            type: 'DELETE',
-            data: {
-              'attribute-ids': combinationsIds,
-            },
-            url: deletionURL,
-            beforeSend() {
-              $('#create-combinations, #apply-on-combinations, #submit, .btn-submit').attr('disabled', 'disabled');
+          onContinue() {
+            const deletionURL = $(deleteCombinationsBtn).attr('data');
+            $.ajax({
+              type: 'DELETE',
+              data: {
+                'attribute-ids': combinationsIds,
+              },
+              url: deletionURL,
+              beforeSend() {
+                $('#create-combinations, #apply-on-combinations, #submit, .btn-submit').attr('disabled', 'disabled');
             },
             success(response) {
               window.showSuccessMessage(response.message);
