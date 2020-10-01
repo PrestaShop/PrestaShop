@@ -990,7 +990,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             );
 
             if (empty($availableProductAttribute) && count($availableProductAttributes)) {
+                // if selected combination is NOT available ($availableProductAttribute) but they are other alternatives ($availableProductAttributes), then we'll try to get the closest.
                 if (!Product::isAvailableWhenOutOfStock($this->product->out_of_stock)) {
+                    // first lets get information of the selected combination.
                     $checkProductAttribute = array_filter(
                         $productCombinations,
                         function ($elem) use ($checkedIdProductAttribute) {
@@ -998,6 +1000,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                         }
                     );
                     if (count($checkProductAttribute)) {
+                        // now lets find other combinations for the selected attributes.
                         $alternativeProductAttribute = [];
                         foreach ($checkProductAttribute as $key => $attribute) {
                             $alternativeAttribute = array_filter(
@@ -1012,6 +1015,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                         }
 
                         if (count($alternativeProductAttribute)) {
+                            // if alternative combination is found, order the list by quantity to use the one with more stock.
                             usort($alternativeProductAttribute, function ($a, $b) {
                                 if ($a['quantity'] == $b['quantity']) {
                                     return 0;
