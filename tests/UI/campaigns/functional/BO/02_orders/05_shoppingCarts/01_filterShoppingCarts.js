@@ -178,9 +178,9 @@ describe('Filter the Shopping carts table', async () => {
       const textColumn = await shoppingCartsPage.getTextColumn(
         page,
         row,
-        test.args.filterBy,
+        'date',
       );
-      await expect(textColumn).to.contains(today);
+      await expect(textColumn).to.contains(todayDate);
     }
   });
 
