@@ -45,22 +45,22 @@ class GeneralType extends TranslatorAwareType
             ->add('check_modules_update', SwitchType::class, [
                 'required' => true,
                 'label' => $this->trans('Automatically check for module updates', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('New modules and updates are displayed on the modules page.', 'Admin.Advparameters.Help')
+                'help' => $this->trans('New modules and updates are displayed on the modules page.', 'Admin.Advparameters.Help'),
             ])
             ->add('check_ip_address', SwitchType::class, [
                 'required' => true,
                 'label' => $this->trans('Check the cookie\'s IP address', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('Check the IP address of the cookie in order to prevent your cookie from being stolen.', 'Admin.Advparameters.Help')
+                'help' => $this->trans('Check the IP address of the cookie in order to prevent your cookie from being stolen.', 'Admin.Advparameters.Help'),
             ])
             ->add('front_cookie_lifetime', TextType::class, [
                 'required' => true,
                 'label' => $this->trans('Lifetime of front office cookies', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('Set the amount of hours during which the front office cookies are valid. After that amount of time, the customer will have to log in again.', 'Admin.Advparameters.Help')
+                'help' => $this->trans('Set the amount of hours during which the front office cookies are valid. After that amount of time, the customer will have to log in again.', 'Admin.Advparameters.Help'),
             ])
             ->add('back_cookie_lifetime', TextType::class, [
                 'required' => true,
                 'label' => $this->trans('Lifetime of back office cookies', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('When you access your back office and decide to stay logged in, your cookies lifetime defines your browser session. Set here the number of hours during which you want them valid before logging in again.', 'Admin.Advparameters.Help')
+                'help' => $this->trans('When you access your back office and decide to stay logged in, your cookies lifetime defines your browser session. Set here the number of hours during which you want them valid before logging in again.', 'Admin.Advparameters.Help'),
             ])
             ->add('cookie_samesite', ChoiceType::class, [
                 'required' => true,
