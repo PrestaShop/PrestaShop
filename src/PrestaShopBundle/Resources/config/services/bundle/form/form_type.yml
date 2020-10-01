@@ -291,6 +291,13 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.logs_by_email:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\LogsByEmailType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
     form.type.performance.smarty:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\SmartyType'
         parent: 'form.type.translatable.aware'

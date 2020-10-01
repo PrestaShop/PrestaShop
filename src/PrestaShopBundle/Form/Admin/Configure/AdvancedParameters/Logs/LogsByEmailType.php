@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs;
 
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -34,7 +34,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * This form class generates the "Logs by email" form in Logs page.
  */
-final class LogsByEmailType extends CommonAbstractType
+final class LogsByEmailType extends TranslatorAwareType
 {
     /**
      * {@inheritdoc}
@@ -43,8 +43,15 @@ final class LogsByEmailType extends CommonAbstractType
     {
         $builder
             ->add('logs_by_email', TextType::class, [
-                'required' => true,
-                'label' => false,
+                'required' => false,
+                'label' => $this->trans(
+                    'Minimum severity level',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->trans(
+                    'Enter "5" if you do not want to receive any emails.',
+                    'Admin.Shopparameters.Help'
+                ),
             ]);
     }
 
