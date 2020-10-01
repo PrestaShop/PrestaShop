@@ -71,16 +71,28 @@ class HandlingType extends TranslatorAwareType
                 'suffix' => $this->trans('(tax excl.)', 'Admin.Global'),
                 'required' => false,
                 'empty_data' => '0',
+                'label' => $this->trans(
+                    'Handling charges',
+                    'Admin.Shipping.Feature'
+                ),
             ])
             ->add('free_shipping_price', MoneyType::class, [
                 'currency' => $defaultCurrency->iso_code,
                 'required' => false,
                 'empty_data' => '0',
+                'label' => $this->trans(
+                    'Free shipping starts at',
+                    'Admin.Shipping.Feature'
+                ),
             ])
             ->add('free_shipping_weight', TextWithUnitType::class, [
                 'unit' => $weightUnit,
                 'required' => false,
                 'empty_data' => '0',
+                'label' => $this->trans(
+                    'Free shipping starts at',
+                    'Admin.Shipping.Feature'
+                ),
             ]);
     }
 
