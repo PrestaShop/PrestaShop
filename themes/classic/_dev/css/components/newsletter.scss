@@ -1,17 +1,17 @@
 .block_newsletter {
   @include search-box();
-  margin-bottom: 0.625rem;
-  font-size: $font-size-sm;
-  background: #fff;
+  float: inherit;
   width: 100%;
   max-width: 50rem;
   margin: auto;
-  float: inherit;
+  margin-bottom: 0.625rem;
+  font-size: $font-size-sm;
+  background: #fff;
 
   #block-newsletter-label {
     font-size: 1.3125rem;
-    color: $gray-darker;
     line-height: 1.75rem;
+    color: $gray-darker;
   }
 
   form {
@@ -22,8 +22,8 @@
     .row {
       .col-xs-12:last-of-type {
         p {
-          color: $gray;
           font-size: 0.75rem;
+          color: $gray;
         }
       }
 

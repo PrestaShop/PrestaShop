@@ -24,8 +24,8 @@ body#checkout {
 
   .cart-grid-right {
     .card {
-      box-shadow: none;
       border: 0;
+      box-shadow: none;
 
       .cart-total {
         background-color: inherit;
@@ -83,19 +83,19 @@ body#checkout {
     }
 
     .step-title {
+      padding-bottom: 1.25rem;
       margin-bottom: 0;
-      text-transform: uppercase;
-      cursor: pointer;
       font-size: 1.5rem;
       font-weight: 500;
+      text-transform: uppercase;
+      cursor: pointer;
       border-bottom: 1px solid $border-gray;
-      padding-bottom: 1.25rem;
     }
 
     &.-current + .checkout-step {
       .step-title {
-        border-top: 1px solid $border-gray;
         padding-top: 1.25rem;
+        border-top: 1px solid $border-gray;
       }
     }
 
@@ -155,18 +155,18 @@ body#checkout {
 
     &.-reachable.-current {
       .step-number {
-        background-color: $current-step-color;
-        height: 33px;
-        width: 33px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        border-radius: 50%;
+        width: 33px;
+        height: 33px;
+        margin-right: 0.65rem;
         font-size: 1rem;
         color: $white;
         vertical-align: middle;
-        margin-right: 0.65rem;
+        background-color: $current-step-color;
         border: none;
+        border-radius: 50%;
       }
     }
 
@@ -234,18 +234,17 @@ body#checkout {
       }
     }
     .step-number {
-      width: 33px;
-      height: 33px;
-      border: 1px solid $gray-darker;
-      display: inline-flex;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border-radius: 50%;
-      font-size: 1rem;
-      vertical-align: middle;
+      width: 33px;
+      height: 33px;
       margin-right: 1rem;
       margin-left: 0.5rem;
+      font-size: 1rem;
+      vertical-align: middle;
+      border: 1px solid $gray-darker;
+      border-radius: 50%;
     }
 
     .address-selector {
