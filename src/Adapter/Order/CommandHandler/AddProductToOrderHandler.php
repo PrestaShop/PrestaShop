@@ -170,13 +170,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 [$productCart]
             );
 
-            // update order details
-            $this->updateOrderDetailsWithSameProduct(
-                $order,
-                $orderDetail,
-                $this->computingPrecision
-            );
-
             StockAvailable::synchronize($product->id);
 
             // Update Tax lines
@@ -237,7 +230,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      * @param Cart $cart
      * @param Product $product
      * @param Combination|null $combination
-     * @param int $quantity
+     * @param AddProductToOrderCommand $command
      *
      * @return array
      */
@@ -247,8 +240,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         ?Combination $combination,
         AddProductToOrderCommand $command
     ): array {
-        $quantity = $command->getProductQuantity();
-        $productItem = array_reduce($cart->getProducts(), function ($carry, $item) use ($product, $combination) {
+        $productItem = array_reduce($cart->getProducts(true), function ($carry, $item) use ($product, $combination) {
             if (null !== $carry) {
                 return $carry;
             }
@@ -258,43 +250,10 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
             return $productMatch && $combinationMatch ? $item : null;
         });
-        $productItem['cart_quantity'] = $quantity;
 
-        $productItem['price_with_reduction'] = (float) (string) $command->getProductPriceTaxIncluded();
-        $productItem['price_without_reduction'] = (float) (string) $command->getProductPriceTaxIncluded();
-        $productItem['price_wt'] = (float) (string) $command->getProductPriceTaxIncluded();
-
-        switch (Configuration::get('PS_ROUND_TYPE')) {
-            case Order::ROUND_TOTAL:
-                $productItem['total'] = $productItem['price_with_reduction_without_tax'] * $quantity;
-                $productItem['total_wt'] = $productItem['price_without_reduction'] * $quantity;
-
-                break;
-            case Order::ROUND_LINE:
-                $productItem['total'] = Tools::ps_round(
-                    $productItem['price_with_reduction_without_tax'] * $quantity,
-                    $this->computingPrecision
-                );
-                $productItem['total_wt'] = Tools::ps_round(
-                    (float) (string) $command->getProductPriceTaxIncluded() * $quantity,
-                    $this->computingPrecision
-                );
-
-                break;
-
-            case Order::ROUND_ITEM:
-            default:
-                $productItem['total'] = Tools::ps_round(
-                        $productItem['price_with_reduction_without_tax'],
-                        $this->computingPrecision
-                    ) * $quantity;
-                $productItem['total_wt'] = Tools::ps_round(
-                        (float) (string) $command->getProductPriceTaxIncluded(),
-                        $this->computingPrecision
-                    ) * $quantity;
-
-                break;
-        }
+        // We just override the quantity field so that it's correctly injected into new OrderDetail
+        // the unit and total prices will be recomputed by OrderAmountUpdater
+        $productItem['cart_quantity'] = $command->getProductQuantity();
 
         return $productItem;
     }
@@ -375,7 +334,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      * @param Cart $cart
      * @param bool $isFreeShipping
      * @param array $newProducts
-     * @param
      */
     private function createNewInvoice(Order $order, Cart $cart, $isFreeShipping, array $newProducts)
     {
