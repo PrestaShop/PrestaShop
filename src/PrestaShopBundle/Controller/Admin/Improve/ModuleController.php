@@ -383,10 +383,6 @@ class ModuleController extends ModuleAbstractController
         $moduleManager->setActionParams($request->request->get('actionParams', []));
         $moduleRepository = $this->container->get('prestashop.core.admin.module.repository');
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-        // Get accessed module object
-        $moduleAccessed = $moduleRepository->getModule($module);
-        // Get accessed module DB Id
-        $moduleAccessedId = (int) $moduleAccessed->database->get('id');
         $response = [$module => []];
 
         if (!method_exists($moduleManager, $action)) {
@@ -476,6 +472,10 @@ class ModuleController extends ModuleAbstractController
                 ]
             );
 
+            // Get accessed module object
+            $moduleAccessed = $moduleRepository->getModule($module);
+            // Get accessed module DB Id
+            $moduleAccessedId = (int) $moduleAccessed->database->get('id');
             $logger = $this->container->get('logger');
             $logger->error($response[$module]['msg'], ['object_type' => 'Module', 'object_id' => $moduleAccessedId]);
         }
