@@ -39,5 +39,5 @@ interface GetPermissionsForConfigurationHandlerInterface
      *
      * @return ConfigurablePermissions
      */
-    public function handle(GetPermissionsForConfiguration $query);
+    public function handle(GetPermissionsForConfiguration $query): ConfigurablePermissions;
 }

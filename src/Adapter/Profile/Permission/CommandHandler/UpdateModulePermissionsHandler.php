@@ -42,12 +42,12 @@ final class UpdateModulePermissionsHandler implements UpdateModulePermissionsHan
 {
     /**
      * @param UpdateModulePermissionsCommand $command
+     *
+     * @throws PermissionUpdateException
      */
     public function handle(UpdateModulePermissionsCommand $command)
     {
-        $access = new Access();
-
-        $result = $access->updateLgcModuleAccess(
+        $result = (new Access())->updateLgcModuleAccess(
             $command->getProfileId()->getValue(),
             $command->getModuleId(),
             $command->getPermission()->getValue(),
