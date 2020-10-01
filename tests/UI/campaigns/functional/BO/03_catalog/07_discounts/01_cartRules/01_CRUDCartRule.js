@@ -33,17 +33,16 @@ const newCartRuleData = new CartRuleFaker(
   {
     code: '4QABV6L3',
     customer: DefaultAccount.email,
-    percent: true,
-    value: 20,
+    discountType: 'Percent',
+    discountPercent: 20,
   },
 );
 
 const editCartRuleData = new CartRuleFaker(
   {
     code: '3PAJA6B3',
-    customer: DefaultAccount.email,
-    percent: true,
-    value: 30,
+    discountType: 'Percent',
+    discountPercent: 30,
   },
 );
 
@@ -157,7 +156,8 @@ describe('CRUD cart rule', async () => {
     it('should verify the total after discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'verifyTotalAfterDiscount_1', baseContext);
 
-      const discountedPrice = Products.demo_1.finalPrice - (Products.demo_1.finalPrice * newCartRuleData.value / 100);
+      const discountedPrice = Products.demo_1.finalPrice
+        - (Products.demo_1.finalPrice * newCartRuleData.discountPercent / 100);
 
       const priceTTC = await cartPage.getTTCPrice(page);
       await expect(priceTTC).to.equal(parseFloat(discountedPrice.toFixed(2)));
@@ -265,7 +265,8 @@ describe('CRUD cart rule', async () => {
     it('should verify the total after discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'verifyTotalAfterDiscount_2', baseContext);
 
-      const discountedPrice = Products.demo_1.finalPrice - (Products.demo_1.finalPrice * editCartRuleData.value / 100);
+      const discountedPrice = Products.demo_1.finalPrice
+        - (Products.demo_1.finalPrice * editCartRuleData.discountPercent / 100);
 
       const priceTTC = await cartPage.getTTCPrice(page);
       await expect(priceTTC).to.equal(parseFloat(discountedPrice.toFixed(2)));

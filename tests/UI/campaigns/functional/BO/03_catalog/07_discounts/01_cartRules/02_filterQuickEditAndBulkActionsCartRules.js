@@ -20,16 +20,14 @@ const baseContext = 'functional_BO_catalog_discounts_cartRules_filterQuickEditAn
 const {expect} = require('chai');
 
 // Import data
-const {DefaultAccount} = require('@data/demo/customer');
 const CartRuleFaker = require('@data/faker/cartRule');
 
 const firstCartRule = new CartRuleFaker(
   {
     name: 'todelete1',
     code: '4QABV6I0',
-    customer: DefaultAccount.email,
-    percent: true,
-    value: 20,
+    discountType: 'Percent',
+    discountPercent: 20,
   },
 );
 
@@ -37,9 +35,8 @@ const secondCartRule = new CartRuleFaker(
   {
     name: 'todelete2',
     code: '3PAJA674',
-    customer: DefaultAccount.email,
-    percent: true,
-    value: 30,
+    discountType: 'Percent',
+    discountPercent: 30,
   },
 );
 
