@@ -106,7 +106,10 @@ export default function () {
         combinationsIds.push(combination.domId);
       });
 
-      window.modalConfirmation.create(window.translate_javascripts['Are you sure you want to delete the selected item(s)?'], null, {
+      window.modalConfirmation.create(
+        window.translate_javascripts['Are you sure you want to delete the selected item(s)?'],
+        null,
+        {
         onContinue() {
           const deletionURL = $(deleteCombinationsBtn).attr('data');
           $.ajax({
