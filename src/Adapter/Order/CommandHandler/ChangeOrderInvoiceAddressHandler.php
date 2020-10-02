@@ -84,7 +84,7 @@ final class ChangeOrderInvoiceAddressHandler extends AbstractOrderHandler implem
         $this->orderAmountUpdater->update($order, $cart);
 
         // Update OrderDetails tax if the address is the delivery address
-        if ($this->shopConfiguration->getForShop('PS_TAX_ADDRESS_TYPE', $this->getOrderShopConstraint($order)) === 'id_address_invoice') {
+        if ($this->shopConfiguration->get('PS_TAX_ADDRESS_TYPE', null, $this->getOrderShopConstraint($order)) === 'id_address_invoice') {
             $this->updateOrderDetailsTax($order, $cart, new Address($order->id_address_invoice));
         }
     }
