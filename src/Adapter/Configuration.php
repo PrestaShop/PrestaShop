@@ -106,6 +106,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
 
         $shopId = $this->getShopId($shopConstraint);
         $shopGroupId = $this->getShopGroupId($shopConstraint);
+        $isStrict = $this->isStrict($shopConstraint);
 
         //If configuration has never been accessed it is still empty and hasKey/isLangKey will always return false
         if (!ConfigurationLegacy::configurationIsLoaded()) {
@@ -119,16 +120,16 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
 
         // Since hasKey doesn't check manage the fallback shop > shop group > global, we handle it manually
         $hasKey = ConfigurationLegacy::hasKey($key, null, null, $shopId);
-        if ($hasKey || $shopConstraint->isStrict()) {
+        if ($hasKey || $isStrict) {
             return $hasKey ? ConfigurationLegacy::get($key, null, null, $shopId) : null;
         }
 
         $hasKey = ConfigurationLegacy::hasKey($key, null, $shopGroupId);
-        if ($hasKey || $shopConstraint->isStrict()) {
+        if ($hasKey || $isStrict) {
             return $hasKey ? ConfigurationLegacy::get($key, null, $shopGroupId) : null;
         }
 
-        if ($hasKey = ConfigurationLegacy::hasKey($key) || $shopConstraint->isStrict()) {
+        if ($hasKey = ConfigurationLegacy::hasKey($key) || $isStrict) {
             return $hasKey ? ConfigurationLegacy::get($key) : null;
         }
 
@@ -185,14 +186,15 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     {
         $shopId = $this->getShopId($shopConstraint);
         $shopGroupId = $this->getShopGroupId($shopConstraint);
+        $isStrict = $this->isStrict($shopConstraint);
 
         $hasKey = ConfigurationLegacy::hasKey($key, null, null, $shopId);
-        if ($hasKey || $shopConstraint->isStrict()) {
+        if ($hasKey || $isStrict) {
             return $hasKey;
         }
 
         $hasKey = ConfigurationLegacy::hasKey($key, null, $shopGroupId);
-        if ($hasKey || $shopConstraint->isStrict()) {
+        if ($hasKey || $isStrict) {
             return $hasKey;
         }
 
@@ -325,5 +327,15 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
             ? $shopConstraint->getShopGroupId()->getValue()
             : null
         ;
+    }
+
+    /**
+     * @param ShopConstraint|null $shopConstraint
+     *
+     * @return int|null
+     */
+    private function isStrict(?ShopConstraint $shopConstraint): ?int
+    {
+        return null !== $shopConstraint ? $shopConstraint->isStrict() : false;
     }
 }
