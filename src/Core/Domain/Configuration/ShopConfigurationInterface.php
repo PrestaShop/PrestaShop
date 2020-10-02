@@ -28,13 +28,34 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Configuration;
 
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-interface ShopConfigurationInterface
+interface ShopConfigurationInterface extends ConfigurationInterface
 {
-    public function getForShop(string $key, ShopConstraint $shopConstraint);
+    /**
+     * @param string $key
+     * @param mixed|null $default
+     * @param ShopConstraint|null $shopConstraint
+     *
+     * @return mixed
+     */
+    public function get($key, $default = null, ShopConstraint $shopConstraint = null);
 
-    public function setForShop(string $key, $value, ShopConstraint $shopConstraint): void;
+    /**
+     * @param string $key
+     * @param mixed $value
+     * @param ShopConstraint|null $shopConstraint
+     *
+     * @return mixed
+     */
+    public function set($key, $value, ShopConstraint $shopConstraint = null);
 
-    public function hasForShop(string $key, ShopConstraint $shopConstraint): bool;
+    /**
+     * @param string $key
+     * @param ShopConstraint|null $shopConstraint
+     *
+     * @return mixed
+     */
+    public function has($key, ShopConstraint $shopConstraint = null);
 }

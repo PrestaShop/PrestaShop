@@ -30,10 +30,8 @@ use Combination;
 use Configuration as ConfigurationLegacy;
 use Feature;
 use Language;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShopBundle\Exception\NotImplementedException;
 use Shop;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -41,7 +39,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 /**
  * Adapter of Configuration ObjectModel.
  */
-class Configuration extends ParameterBag implements ConfigurationInterface, ShopConfigurationInterface
+class Configuration extends ParameterBag implements ShopConfigurationInterface
 {
     /**
      * @var Shop
@@ -96,39 +94,19 @@ class Configuration extends ParameterBag implements ConfigurationInterface, Shop
      *
      * @param string $key
      * @param mixed $default The default value if the parameter key does not exist
+     * @param ShopConstraint|null $shopConstraint
      *
      * @return mixed
      */
-    public function get($key, $default = null)
+    public function get($key, $default = null, ShopConstraint $shopConstraint = null)
     {
         if (defined($key)) {
             return constant($key);
         }
 
-        return $this->doGet($key, $default);
-    }
+        $shopId = $this->getShopId($shopConstraint);
+        $shopGroupId = $this->getShopGroupId($shopConstraint);
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getForShop(string $key, ShopConstraint $shopConstraint)
-    {
-        $shopId = null !== $shopConstraint->getShopId() ? $shopConstraint->getShopId()->getValue() : null;
-        $shopGroupId = null !== $shopConstraint->getShopGroupId() ? $shopConstraint->getShopGroupId()->getValue() : null;
-
-        return $this->doGet($key, null, $shopId, $shopGroupId);
-    }
-
-    /**
-     * @param $key
-     * @param null $default
-     * @param int|null $shopId
-     * @param int|null $shopGroupId
-     *
-     * @return array|false|mixed|string|null
-     */
-    private function doGet($key, $default = null, ?int $shopId = null, ?int $shopGroupId = null)
-    {
         //If configuration has never been accessed it is still empty and hasKey/isLangKey will always return false
         if (!ConfigurationLegacy::configurationIsLoaded()) {
             ConfigurationLegacy::loadConfiguration();
@@ -140,16 +118,18 @@ class Configuration extends ParameterBag implements ConfigurationInterface, Shop
         }
 
         // Since hasKey doesn't check manage the fallback shop > shop group > global, we handle it manually
-        if (ConfigurationLegacy::hasKey($key, null, null, $shopId)) {
-            return ConfigurationLegacy::get($key, null, null, $shopId);
+        $hasKey = ConfigurationLegacy::hasKey($key, null, null, $shopId);
+        if ($hasKey || $shopConstraint->isStrict()) {
+            return $hasKey ? ConfigurationLegacy::get($key, null, null, $shopId) : null;
         }
 
-        if (ConfigurationLegacy::hasKey($key, null, $shopGroupId)) {
-            return ConfigurationLegacy::get($key, null, $shopGroupId);
+        $hasKey = ConfigurationLegacy::hasKey($key, null, $shopGroupId);
+        if ($hasKey || $shopConstraint->isStrict()) {
+            return $hasKey ? ConfigurationLegacy::get($key, null, $shopGroupId) : null;
         }
 
-        if (ConfigurationLegacy::hasKey($key)) {
-            return ConfigurationLegacy::get($key);
+        if ($hasKey = ConfigurationLegacy::hasKey($key) || $shopConstraint->isStrict()) {
+            return $hasKey ? ConfigurationLegacy::get($key) : null;
         }
 
         return $default;
@@ -160,21 +140,25 @@ class Configuration extends ParameterBag implements ConfigurationInterface, Shop
      *
      * @param string $key
      * @param mixed $value
+     * @param ShopConstraint|null $shopConstraint
      * @param array $options Options
      *
      * @return $this
      *
      * @throws \Exception
      */
-    public function set($key, $value, array $options = [])
+    public function set($key, $value, ShopConstraint $shopConstraint = null, array $options = [])
     {
         // By default, set a piece of configuration for all available shops and shop groups
         $shopGroupId = null;
         $shopId = null;
 
-        if ($this->shop instanceof Shop) {
+        if ($this->shop instanceof Shop && null === $shopConstraint) {
             $shopGroupId = $this->shop->id_shop_group;
             $shopId = $this->shop->id;
+        } else {
+            $shopId = $this->getShopId($shopConstraint);
+            $shopGroupId = $this->getShopGroupId($shopConstraint);
         }
 
         $html = isset($options['html']) ? (bool) $options['html'] : false;
@@ -197,45 +181,22 @@ class Configuration extends ParameterBag implements ConfigurationInterface, Shop
     /**
      * {@inheritdoc}
      */
-    public function setForShop(string $key, $value, ShopConstraint $shopConstraint): void
+    public function has($key, ShopConstraint $shopConstraint = null)
     {
-        $shopId = null !== $shopConstraint->getShopId() ? $shopConstraint->getShopId()->getValue() : null;
-        $shopGroupId = null !== $shopConstraint->getShopGroupId() ? $shopConstraint->getShopGroupId()->getValue() : null;
+        $shopId = $this->getShopId($shopConstraint);
+        $shopGroupId = $this->getShopGroupId($shopConstraint);
 
-        $success = ConfigurationLegacy::updateValue(
-            $key,
-            $value,
-            false,
-            $shopGroupId,
-            $shopId
-        );
-
-        if (!$success) {
-            throw new \Exception('Could not update configuration');
+        $hasKey = ConfigurationLegacy::hasKey($key, null, null, $shopId);
+        if ($hasKey || $shopConstraint->isStrict()) {
+            return $hasKey;
         }
-    }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function has($key)
-    {
+        $hasKey = ConfigurationLegacy::hasKey($key, null, $shopGroupId);
+        if ($hasKey || $shopConstraint->isStrict()) {
+            return $hasKey;
+        }
+
         return ConfigurationLegacy::hasKey($key);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasForShop(string $key, ShopConstraint $shopConstraint): bool
-    {
-        $shopId = null !== $shopConstraint->getShopId() ? $shopConstraint->getShopId()->getValue() : null;
-        $shopGroupId = null !== $shopConstraint->getShopGroupId() ? $shopConstraint->getShopGroupId()->getValue() : null;
-
-        return
-            ConfigurationLegacy::hasKey($key, null, null, $shopId)
-            || ConfigurationLegacy::hasKey($key, null, $shopGroupId)
-            || ConfigurationLegacy::hasKey($key)
-        ;
     }
 
     /**
@@ -338,5 +299,31 @@ class Configuration extends ParameterBag implements ConfigurationInterface, Shop
         }
 
         return $configuration;
+    }
+
+    /**
+     * @param ShopConstraint|null $shopConstraint
+     *
+     * @return int|null
+     */
+    private function getShopId(?ShopConstraint $shopConstraint): ?int
+    {
+        return null !== $shopConstraint && null !== $shopConstraint->getShopId()
+            ? $shopConstraint->getShopId()->getValue()
+            : null
+        ;
+    }
+
+    /**
+     * @param ShopConstraint|null $shopConstraint
+     *
+     * @return int|null
+     */
+    private function getShopGroupId(?ShopConstraint $shopConstraint): ?int
+    {
+        return null !== $shopConstraint && null !== $shopConstraint->getShopGroupId()
+            ? $shopConstraint->getShopGroupId()->getValue()
+            : null
+        ;
     }
 }
