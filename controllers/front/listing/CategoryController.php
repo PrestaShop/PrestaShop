@@ -45,16 +45,14 @@ class CategoryControllerCore extends ProductListingFrontController
     {
         if (Validate::isLoadedObject($this->category)) {
             parent::canonicalRedirection($this->context->link->getCategoryLink($this->category));
-        } elseif (!Validate::isLoadedObject($this->category) && $canonicalURL == '') {
+        } elseif ($canonicalURL) {
+            parent::canonicalRedirection($canonicalURL);
+        } else {
             header('HTTP/1.1 404 Not Found');
             header('Status: 404 Not Found');
             $this->errors[] = $this->trans("This category doesn't exists.", [], 'Shop.Notifications.Error');
             $this->setTemplate('errors/404');
-
-            return;
-        } elseif ($canonicalURL) {
-            parent::canonicalRedirection($canonicalURL);
-        }
+        } 
     }
 
     public function getCanonicalURL()
