@@ -43,15 +43,62 @@ class ShopConstraint
     private $shopGroupId;
 
     /**
-     * @param int|null $shopId
-     * @param int|null $shopGroupId
+     * Indicate if the value returned matches the constraints strictly, else it fallbacks to Shop > Group > Global value
+     *
+     * @var bool
+     */
+    private $strict;
+
+    /**
+     * Constraint to get configuration for a specific shop
+     *
+     * @param int $shopId
+     *
+     * @return static
      *
      * @throws ShopException
      */
-    public function __construct(?int $shopId, ?int $shopGroupId)
+    public static function shop(int $shopId): self
+    {
+        return new self($shopId, null, false);
+    }
+
+    /**
+     * Constraint to get configuration for a specific shop group
+     *
+     * @param int $shopGroupId
+     *
+     * @return static
+     *
+     * @throws ShopException
+     */
+    public static function shopGroup(int $shopGroupId): self
+    {
+        return new self(null, $shopGroupId, false);
+    }
+
+    /**
+     * Constraint to get configuration for all shops (the global value)
+     *
+     * @return static
+     */
+    public static function allShops(): self
+    {
+        return new self(null, null, false);
+    }
+
+    /**
+     * @param int|null $shopId
+     * @param int|null $shopGroupId
+     * @param bool $strict
+     *
+     * @throws ShopException
+     */
+    public function __construct(?int $shopId, ?int $shopGroupId, bool $strict = false)
     {
         $this->shopId = null !== $shopId ? new ShopId($shopId) : null;
         $this->shopGroupId = null !== $shopGroupId ? new ShopGroupId($shopGroupId) : null;
+        $this->strict = $strict;
     }
 
     /**
@@ -68,5 +115,13 @@ class ShopConstraint
     public function getShopGroupId(): ?ShopGroupId
     {
         return $this->shopGroupId;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStrict(): bool
+    {
+        return $this->strict;
     }
 }
