@@ -41,6 +41,7 @@ const year = today.getFullYear();
 const todayDate = `${month}/${day}/${year}`;
 
 /*
+Delete the non ordered shopping carts
 Filter shopping carts By :
 Id, order id, customer, carrier, date and online
 */
