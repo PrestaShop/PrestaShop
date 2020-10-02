@@ -1896,7 +1896,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                     ->select('e.`' . $primary . '` as id')
                     ->from($table, 'e')
                     ->where('e.`' . $primary . '` = ' . (int) $id_entity),
-                true
+                false
             );
 
         return isset($row['id']);
