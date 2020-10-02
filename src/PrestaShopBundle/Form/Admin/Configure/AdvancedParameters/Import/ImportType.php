@@ -69,6 +69,7 @@ class ImportType extends TranslatorAwareType
             ])
             ->add('iso_lang', ChoiceType::class, [
                 'required' => false,
+                'placeholder' => false,
                 'choices' => $this->getLocaleChoices(),
                 'label' => $this->trans('Language of the file', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('The locale must be installed ', 'Admin.Advparameters.Help')

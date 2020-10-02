@@ -113,14 +113,7 @@
     {% endblock %}
 
     <hr>
-
-    <div class="form-group">
-      {{ form_label(importForm.iso_lang) }}
-      {{ form_errors(importForm.iso_lang) }}
-      {{ form_widget(importForm.iso_lang) }}
-    </div>
-
-    {{ form_rest(importForm) }}
+    {{ form_widget(importForm) }}
   </div>
   <div class="card-footer">
     <div class="d-flex justify-content-end">
