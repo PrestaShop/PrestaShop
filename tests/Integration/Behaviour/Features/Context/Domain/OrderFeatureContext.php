@@ -284,6 +284,11 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $combinationId = 0;
         }
 
+        if (empty($data['price_tax_incl'])) {
+            $taxCalculator = $this->getProductTaxCalculator((int) $orderId, $product->getProductId());
+            $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
+        }
+
         $this->lastException = null;
         try {
             $this->getCommandBus()->handle(
@@ -292,7 +297,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                     (int) $orderInvoice->id,
                     (int) $product->getProductId(),
                     (int) $combinationId,
-                    $data['price'],
+                    $data['price_tax_incl'],
                     $data['price'],
                     (int) $data['amount']
                 )
