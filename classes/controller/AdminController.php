@@ -2964,7 +2964,7 @@ class AdminControllerCore extends Controller
                 $this->errors[] = $this->trans('You do not have permission to delete this.', [], 'Admin.Notifications.Error');
             }
         } elseif ((isset($_GET['status' . $this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier)) {
-            /* Change object statuts (active, inactive) */
+            /* Change object status (active, inactive) */
             if ($this->access('edit')) {
                 $this->action = 'status';
             } else {
