@@ -76,17 +76,17 @@ class ImportType extends TranslatorAwareType
                 'placeholder' => false,
                 'choices' => $this->getLocaleChoices(),
                 'label' => $this->trans('Language of the file', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('The locale must be installed ', 'Admin.Advparameters.Help')
+                'help' => $this->trans('The locale must be installed ', 'Admin.Advparameters.Help'),
             ])
             ->add('separator', TextType::class, [
                 'required' => false,
                 'label' => $this->trans('Field separator', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('e.g. ', 'Admin.Advparameters.Help') . ' 1; Blouse; 129.90; 5'
+                'help' => $this->trans('e.g. ', 'Admin.Advparameters.Help') . ' 1; Blouse; 129.90; 5',
             ])
             ->add('multiple_value_separator', TextType::class, [
                 'required' => false,
                 'label' => $this->trans('Multiple value separator', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('e.g. ', 'Admin.Advparameters.Help') . ' Blouse; red.jpg, blue.jpg, green.jpg; 129.90'
+                'help' => $this->trans('e.g. ', 'Admin.Advparameters.Help') . ' Blouse; red.jpg, blue.jpg, green.jpg; 129.90',
             ])
             ->add('truncate', SwitchType::class, [
                 'required' => false,
@@ -98,7 +98,7 @@ class ImportType extends TranslatorAwareType
                     'Admin.Advparameters.Feature',
                     [
                         '[1]' => '<span class="js-entity-name">',
-                        '[/1]' => '</span>'
+                        '[/1]' => '</span>',
                     ]
                 ),
             ])
