@@ -38,6 +38,13 @@ class ShoppingCarts extends BOBasePage {
     this.tableColumnCarrier = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
     this.tableColumnDate = row => `${this.tableBodyColumn(row)}:nth-child(6)`;
     this.tableColumnOnline = row => `${this.tableBodyColumn(row)}:nth-child(7)`;
+
+    // Bulk actions selectors
+    this.bulkActionBlock = 'div.bulk-actions';
+    this.bulkActionMenuButton = '#bulk_action_menu_cart';
+    this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
+    this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
+    this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
   }
 
   /* Filter methods */
@@ -172,6 +179,39 @@ class ShoppingCarts extends BOBasePage {
       await allRowsContentTable.push(rowContent);
     }
     return allRowsContentTable;
+  }
+
+  /* Bulk actions methods */
+  /**
+   * Bulk delete shopping carts
+   * @param page
+   * @return {Promise<string>}
+   */
+  async bulkDeleteShoppingCarts(page) {
+    // To confirm bulk delete action with dialog
+    this.dialogListener(page, true);
+
+    // Select all rows
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(page, this.selectAllLink),
+    ]);
+
+    await Promise.all([
+      page.click(this.selectAllLink),
+      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+    ]);
+
+    // Perform delete
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(page, this.bulkDeleteLink),
+    ]);
+
+    await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
+
+    // Return successful message
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 }
 
