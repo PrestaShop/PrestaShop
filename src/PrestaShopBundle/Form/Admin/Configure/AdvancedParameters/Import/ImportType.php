@@ -52,6 +52,7 @@ class ImportType extends TranslatorAwareType
             ->add('entity', ChoiceType::class, [
                 'label' => $this->trans('What do you want to import?', 'Admin.Advparameters.Feature'),
                 'required' => false,
+                'placeholder' => false,
                 'attr' => [
                     'class' => 'js-entity-select',
                 ],
