@@ -79,7 +79,7 @@ $(() => {
     ],
   );
 
-  const translatorInput = window.prestashop.instance.TranslatableInput;
+  const translatorInput = window.prestashop.instance.translatableInput;
   new ChoiceTable();
   new TextWithRecommendedLengthCounter();
 
