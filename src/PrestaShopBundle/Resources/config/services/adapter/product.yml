@@ -143,16 +143,6 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductCategoriesCommand
 
-    prestashop.adapter.product.command_handler.update_customization_field_handler:
-        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateCustomizationFieldHandler
-        arguments:
-            - '@prestashop.adapter.product.product_repository'
-            - '@prestashop.adapter.product.update.product_customization_field_updater'
-            - '@prestashop.adapter.product.customization_field_repository'
-        tags:
-            - name: tactician.handler
-              command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateCustomizationFieldCommand
-
     prestashop.adapter.product.command_handler.delete_customization_field_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DeleteCustomizationFieldHandler
         arguments:
