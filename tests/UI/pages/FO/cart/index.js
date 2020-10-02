@@ -8,6 +8,7 @@ class Cart extends FOBasePage {
     this.pageTitle = 'Cart';
 
     // Selectors for cart page
+    this.cartGridBlock = 'div.cart-grid';
     this.productItem = number => `#main li:nth-of-type(${number})`;
     this.productName = number => `${this.productItem(number)} div.product-line-info > a`;
     this.productPrice = number => `${this.productItem(number)} div.current-price > span`;
@@ -21,6 +22,15 @@ class Cart extends FOBasePage {
     this.promoCodeLink = '#main div.block-promo a[href=\'#promo-code\']';
     this.promoInput = '#promo-code input.promo-input';
     this.addPromoCodeButton = '#promo-code button.btn-primary';
+  }
+
+  /**
+   * Check cart page
+   * @param page
+   * @returns {Promise<boolean>}
+   */
+  isCartPage(page) {
+    return this.elementVisible(page, this.cartGridBlock, 1000);
   }
 
   /**
