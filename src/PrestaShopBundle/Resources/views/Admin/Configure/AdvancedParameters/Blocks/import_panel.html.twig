@@ -50,9 +50,7 @@
     <hr>
 
     <div class="form-group">
-      {{ form_label(importForm.entity) }}
-      {{ form_errors(importForm.entity) }}
-      {{ form_widget(importForm.entity, {'attr': {'class': 'js-entity-select'}}) }}
+      {{ form_row(importForm.entity) }}
     </div>
 
     <div class="alert alert-warning js-entity-alert" role="alert">

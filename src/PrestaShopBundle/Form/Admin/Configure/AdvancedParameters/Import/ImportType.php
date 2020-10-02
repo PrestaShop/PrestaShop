@@ -51,6 +51,10 @@ class ImportType extends TranslatorAwareType
             ->add('csv', HiddenType::class)
             ->add('entity', ChoiceType::class, [
                 'label' => $this->trans('What do you want to import?', 'Admin.Advparameters.Feature'),
+                'required' => false,
+                'attr' => [
+                    'class' => 'js-entity-select',
+                ],
                 'choices' => [
                     $this->trans('Categories', 'Admin.Global') => Entity::TYPE_CATEGORIES,
                     $this->trans('Products', 'Admin.Global') => Entity::TYPE_PRODUCTS,
