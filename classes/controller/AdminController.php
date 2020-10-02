@@ -414,13 +414,13 @@ class AdminControllerCore extends Controller
 
     /** @var float @var */
     public $timer_start;
-    
+
     /** @var bool */
     protected static $is_prestashop_up = true;
-    
+
     /** @var array */
     protected $translationsTab = [];
-    
+
     public function __construct($forceControllerName = '', $default_theme_name = 'default')
     {
         global $timer_start;
