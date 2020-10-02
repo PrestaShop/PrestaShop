@@ -188,8 +188,8 @@ abstract class AbstractOrderHandler
     /**
      * Create a specific price, or update it if it already exists
      *
-     * @param Number $priceTaxIncluded
-     * @param Number $priceTaxExcluded
+     * @param \PrestaShop\Decimal\Number $priceTaxIncluded
+     * @param \PrestaShop\Decimal\Number $priceTaxExcluded
      * @param Order $order
      * @param Product $product
      * @param Combination|null $combination
@@ -246,12 +246,12 @@ abstract class AbstractOrderHandler
     }
 
     /**
-     * @param Number $priceTaxIncluded
-     * @param Number $priceTaxExcluded
+     * @param \PrestaShop\Decimal\Number $priceTaxIncluded
+     * @param \PrestaShop\Decimal\Number $priceTaxExcluded
      * @param Order $order
      * @param Product $product
      *
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     private function getPrecisePriceTaxExcluded(
         Number $priceTaxIncluded,
@@ -315,7 +315,7 @@ abstract class AbstractOrderHandler
      * @param Order $order
      * @param Combination|null $combination
      *
-     * @return Number
+     * @return \PrestaShop\Decimal\Number
      */
     protected function getProductRegularPrice(
         Product $product,

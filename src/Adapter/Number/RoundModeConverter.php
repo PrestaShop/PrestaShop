@@ -50,10 +50,10 @@ class RoundModeConverter
      */
     public static function getNumberRoundMode(int $legacyRoundMode): string
     {
-        if (!isset(self::MODE_MAP[$legacyRoundMode])) {
+        if (!isset(static::MODE_MAP[$legacyRoundMode])) {
             throw new CoreException(sprintf('Cannot map round mode %d', $legacyRoundMode));
         }
 
-        return self::MODE_MAP[$legacyRoundMode];
+        return static::MODE_MAP[$legacyRoundMode];
     }
 }

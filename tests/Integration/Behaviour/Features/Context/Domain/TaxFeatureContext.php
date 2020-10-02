@@ -259,7 +259,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I add tax rule group :taxGroupReference for tax :taxReference with following conditions:
+     * @Then I add the tax rule group :taxGroupReference for the tax :taxReference with the following conditions:
      */
     public function addTaxRuleGroupToTax(string $taxGroupReference, string $taxReference, TableNode $table)
     {

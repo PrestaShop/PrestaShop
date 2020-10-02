@@ -966,7 +966,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then product :productName in :invoicePosition invoice from order :orderReference should have following details:
+     * @Then the product :productName in the :invoicePosition invoice from the order :orderReference should have the following details:
      *
      * @param string $orderReference
      * @param string $productName

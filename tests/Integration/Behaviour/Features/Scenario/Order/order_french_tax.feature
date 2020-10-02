@@ -14,7 +14,7 @@ Feature: Order from Back Office (BO)
       | name         | French Tax (20%) |
       | rate         | 20               |
       | is_enabled   | true             |
-    And I add tax rule group "french-tax-group" for tax "french-tax" with following conditions:
+    And I add the tax rule group "french-tax-group" for the tax "french-tax" with the following conditions:
       | name         | French Tax (20%) |
       | country      | FR               |
     And I set tax rule group "french-tax-group" to product "Mug The best is yet to come"
@@ -27,7 +27,7 @@ Feature: Order from Back Office (BO)
     And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
     And a carrier "price_carrier" with name "My cheap carrier" exists
     And I enable carrier "price_carrier"
-    And I associate tax rule group "french-tax-group" to carrier "price_carrier"
+    And I associate the tax rule group "french-tax-group" to carrier "price_carrier"
     And I select carrier "price_carrier" for cart "dummy_cart"
     And cart "dummy_cart" should have "price_carrier" as a carrier
     And I add order "bo_order1" with the following details:
@@ -52,7 +52,7 @@ Feature: Order from Back Office (BO)
       | price_tax_incl | 99.996                  |
     Then product "Mug The best is yet to come" in order "bo_order1" should have specific price 83.33
     When I generate invoice for "bo_order1" order
-    Then product "Mug The best is yet to come" in first invoice from order "bo_order1" should have following details:
+    Then the product "Mug The best is yet to come" in the first invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 2      |
       | product_price               | 83.33  |
       | original_product_price      | 11.90  |
@@ -79,7 +79,7 @@ Feature: Order from Back Office (BO)
       | price_tax_incl | 100.00                  |
     Then product "Mug The best is yet to come" in order "bo_order1" should have specific price 83.333333
     # product_price is computed for backward compatibility which is why it is rounded
-    And product "Mug The best is yet to come" in first invoice from order "bo_order1" should have following details:
+    And the product "Mug The best is yet to come" in the first invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 2         |
       | product_price               | 83.33     |
       | original_product_price      | 11.90     |
@@ -106,7 +106,7 @@ Feature: Order from Back Office (BO)
       | price          | 83.33                       |
       | price_tax_incl | 99.996                      |
     Then product "Mug The best is yet to come" in order "bo_order1" should have specific price 83.33
-    Then product "Mug The best is yet to come" in first invoice from order "bo_order1" should have following details:
+    Then the product "Mug The best is yet to come" in the first invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 2      |
       | product_price               | 83.33  |
       | original_product_price      | 11.90  |
@@ -114,7 +114,7 @@ Feature: Order from Back Office (BO)
       | unit_price_tax_excl         | 83.33  |
       | total_price_tax_incl        | 199.99 |
       | total_price_tax_excl        | 166.66 |
-    And product "Mug The best is yet to come" in second invoice from order "bo_order1" should have following details:
+    And the product "Mug The best is yet to come" in the second invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 2      |
       | product_price               | 83.33  |
       | original_product_price      | 11.90  |
@@ -141,7 +141,7 @@ Feature: Order from Back Office (BO)
       | price          | 83.33                       |
       | price_tax_incl | 100.00                      |
     Then product "Mug The best is yet to come" in order "bo_order1" should have specific price 83.333333
-    And product "Mug The best is yet to come" in first invoice from order "bo_order1" should have following details:
+    And the product "Mug The best is yet to come" in the first invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 2         |
       | product_price               | 83.33     |
       | original_product_price      | 11.90     |
@@ -149,7 +149,7 @@ Feature: Order from Back Office (BO)
       | unit_price_tax_excl         | 83.333333 |
       | total_price_tax_incl        | 200       |
       | total_price_tax_excl        | 166.67    |
-    And product "Mug The best is yet to come" in second invoice from order "bo_order1" should have following details:
+    And the product "Mug The best is yet to come" in the second invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 2         |
       | product_price               | 83.33     |
       | original_product_price      | 11.90     |
@@ -157,7 +157,7 @@ Feature: Order from Back Office (BO)
       | unit_price_tax_excl         | 83.333333 |
       | total_price_tax_incl        | 200       |
       | total_price_tax_excl        | 166.67    |
-    And product "Mug The best is yet to come" in third invoice from order "bo_order1" should have following details:
+    And the product "Mug The best is yet to come" in the third invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 4         |
       | product_price               | 83.33     |
       | original_product_price      | 11.90     |

@@ -413,7 +413,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then I associate tax rule group :taxRulesGroupReference to carrier :carrierReference
+     * @Then I associate the tax rule group :taxRulesGroupReference to carrier :carrierReference
      *
      * @param string $taxRulesGroupReference
      * @param string $carrierReference
