@@ -14,6 +14,7 @@ class Cart extends FOBasePage {
     this.productQuantity = number => `${this.productItem(number)} div.input-group input.js-cart-line-product-quantity`;
     this.proceedToCheckoutButton = '#main div.checkout a';
     this.disabledProceedToCheckoutButton = '#main div.checkout button.disabled';
+    this.subtotalDiscountValueSpan = '#cart-subtotal-discount span.value';
     this.cartTotalTTC = '.cart-summary-totals span.value';
     this.itemsNumber = '#cart-subtotal-products span.label.js-subtotal';
     this.alertWarning = '.checkout.cart-detailed-actions.card-block div.alert.alert-warning';
@@ -78,8 +79,12 @@ class Cart extends FOBasePage {
    * @param page
    * @returns {Promise<number>}
    */
-  async getTTCPrice(page) {
+  getTTCPrice(page) {
     return this.getPriceFromText(page, this.cartTotalTTC, 2000);
+  }
+
+  getSubtotalDiscountValue(page) {
+    return this.getPriceFromText(page, this.subtotalDiscountValueSpan, 2000);
   }
 
   /**
