@@ -28,16 +28,17 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Address;
 use AdminController;
 use Behat\Gherkin\Node\TableNode;
 use Cart;
+use Configuration;
 use Context;
 use FrontController;
 use Order;
 use OrderInvoice;
 use OrderState;
 use PHPUnit\Framework\Assert as Assert;
-use PrestaShop\PrestaShop\Adapter\Entity\TaxCalculator;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscountValueException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
@@ -73,6 +74,8 @@ use RuntimeException;
 use SpecificPrice;
 use stdClass;
 use Tax;
+use TaxCalculator;
+use TaxManagerFactory;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -174,11 +177,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $orderId = SharedStorage::getStorage()->get($orderReference);
         $data = $table->getRowsHash();
 
-        if (empty($data['price_tax_incl'])) {
-            $taxCalculator = $this->getOrderTaxCalculator($orderId);
-            $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
-        }
-
         $productName = $data['name'];
         $product = $this->getProductByName($productName);
 
@@ -187,6 +185,11 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $combinationId = $this->getProductCombinationId($product, $data['combination']);
         } else {
             $combinationId = 0;
+        }
+
+        if (empty($data['price_tax_incl'])) {
+            $taxCalculator = $this->getProductTaxCalculator((int) $orderId, (int) $productId);
+            $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
         }
 
         $this->lastException = null;
@@ -555,7 +558,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         // if tax included price is not given, it is calculated
         if (!isset($data['price_tax_incl'])) {
-            $taxCalculator = $this->getOrderTaxCalculator($orderId);
+            $taxCalculator = $this->getProductTaxCalculator($orderId, (int) $productOrderDetail['product_id']);
             $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
         }
 
@@ -1599,16 +1602,12 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
-    private function getOrderTaxCalculator(int $orderId)
+    private function getProductTaxCalculator(int $orderId, int $productId)
     {
         $order = new Order($orderId);
-        $taxes = $order->getOrderDetailTaxes();
+        $taxAddress = new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
+        $taxManager = TaxManagerFactory::getManager($taxAddress, Product::getIdTaxRulesGroupByIdProduct((int) $productId, Context::getContext()));
 
-        $taxesBag = [];
-        foreach ($taxes as $tax) {
-            $taxesBag[] = new Tax($tax['id_tax']);
-        }
-
-        return !empty($taxesBag) ? new TaxCalculator($taxesBag) : null;
+        return $taxManager->getTaxCalculator();
     }
 }
