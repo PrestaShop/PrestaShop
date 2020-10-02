@@ -37,7 +37,11 @@ let page;
 let numberOfCustomers = 0;
 
 /*
-
+Create 16 shopping carts
+Pagination
+Sort shopping cart table by :
+Id, Order ID, Customer, carrier, date and Online
+Delete customers
 */
 describe('sort and pagination shopping carts', async () => {
   // before and after functions
@@ -60,7 +64,7 @@ describe('sort and pagination shopping carts', async () => {
     await expect(isHomePage, 'Fail to open FO home page').to.be.true;
   });
 
-  // 1 - create 15 shopping carts
+  // 1 - create 16 shopping carts
   const creationTests = new Array(16).fill(0, 0, 16);
 
   creationTests.forEach((test, index) => {
