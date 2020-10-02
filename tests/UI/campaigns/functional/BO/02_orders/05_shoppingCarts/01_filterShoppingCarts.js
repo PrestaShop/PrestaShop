@@ -41,6 +41,7 @@ const year = today.getFullYear();
 const todayDate = `${month}/${day}/${year}`;
 
 /*
+Delete the non ordered shopping carts
 Filter shopping carts By :
 Id, order id, customer, carrier, date and online
 */
@@ -77,6 +78,36 @@ describe('Filter the Shopping carts table', async () => {
 
     numberOfShoppingCarts = await shoppingCartsPage.resetAndGetNumberOfLines(page);
     await expect(numberOfShoppingCarts).to.be.above(0);
+  });
+
+  it('should search the non ordered shopping carts', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'searchNonOrderedShoppingCarts', baseContext);
+
+    await shoppingCartsPage.filterTable(page, 'input', 'status', 'Non ordered');
+
+    const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
+    await expect(numberOfShoppingCartsAfterFilter).to.be.at.most(numberOfShoppingCarts);
+
+    numberOfShoppingCarts -= numberOfShoppingCartsAfterFilter;
+
+    for (let row = 1; row <= numberOfShoppingCartsAfterFilter; row++) {
+      const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'c!lastname');
+      await expect(textColumn).to.contains('Non ordered');
+    }
+  });
+
+  it('should delete the non ordered shopping carts by bulk actions', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'deleteNonOrderedShoppingCarts', baseContext);
+
+    const deleteTextResult = await shoppingCartsPage.bulkDeleteShoppingCarts(page);
+    await expect(deleteTextResult).to.be.contains(shoppingCartsPage.successfulMultiDeleteMessage);
+  });
+
+  it('should reset all filters', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDeleteNonOrderedCarts', baseContext);
+
+    const numberOfShoppingCartsAfterReset = await shoppingCartsPage.resetAndGetNumberOfLines(page);
+    await expect(numberOfShoppingCartsAfterReset).to.be.equal(numberOfShoppingCarts);
   });
 
   const tests = [
