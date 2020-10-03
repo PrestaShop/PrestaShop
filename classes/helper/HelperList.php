@@ -261,6 +261,15 @@ class HelperListCore extends Helper
                 $this->_list[$index]['short_shop_name'] = Tools::strlen($tr['shop_name']) > 15 ? Tools::substr($tr['shop_name'], 0, 15) . '...' : $tr['shop_name'];
             }
 
+            if (class_exists($this->className)) {
+                $object = new $this->className($id);
+                $colorField = $object->getColorFieldName();
+
+                if (Validate::isLoadedObject($object) && $object->hasColorField() && isset($tr[$colorField])) {
+                    $this->_list[$index][$colorField] = $object->getColor();
+                }
+            }
+
             $is_first = true;
             // Check all available actions to add to the current list row
             foreach ($this->actions as $action) {
