@@ -2251,13 +2251,13 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             return $this->color;
         }
 
-        return !empty($this->color) ? $this->color : self::DEFAULT_COLOR;
+        return !empty($this->color) ? $this->color : static::DEFAULT_COLOR;
     }
 
     public function setDefautlColor()
     {
         if ($this->hasColorField() && $this->use_default_color) {
-            $this->{$this->color_field_name} = $this->{$this->color_field_name} ?: self::DEFAULT_COLOR;
+            $this->{$this->color_field_name} = $this->{$this->color_field_name} ?: static::DEFAULT_COLOR;
         }
     }
 
