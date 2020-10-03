@@ -30,6 +30,8 @@ class OrderReturnStateCore extends ObjectModel
 
     /** @var string Display state in the specified color */
     public $color;
+    
+    protected $use_default_color = true;
 
     /**
      * @see ObjectModel::$definition
