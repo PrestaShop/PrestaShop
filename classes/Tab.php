@@ -682,40 +682,12 @@ class TabCore extends ObjectModel
         return Db::getInstance()->getValue('SELECT class_name FROM ' . _DB_PREFIX_ . 'tab WHERE id_tab = ' . (int) $idTab);
     }
 
-    /**
-     * @param string $file_to_refresh
-     * @param string $external_file
-     *
-     * @return bool
-     */
-    private static function refresh($file_to_refresh, $external_file)
-    {
-        $content = Tools::file_get_contents($external_file);
-
-        return $content ? (bool) file_put_contents(_PS_ROOT_DIR_ . $file_to_refresh, $content) : false;
-    }
-
-    /**
-     * @param string $file
-     * @param int $timeout
-     *
-     * @return bool
-     */
-    private static function isFresh($file, $timeout = 604800)
-    {
-        if (($time = @filemtime(_PS_ROOT_DIR_ . $file)) && filesize(_PS_ROOT_DIR_ . $file) > 0) {
-            return (time() - $time) < $timeout;
-        }
-
-        return false;
-    }
-
     public static function getTabModulesList($idTab)
     {
         $modulesList = ['default_list' => [], 'slider_list' => []];
 
-        if (!self::isFresh(Module::CACHE_FILE_TAB_MODULES_LIST, 604800)) {
-            self::refresh(Module::CACHE_FILE_TAB_MODULES_LIST, _PS_TAB_MODULE_LIST_URL_);
+        if (!Tools::isFileFresh(Module::CACHE_FILE_TAB_MODULES_LIST, 604800)) {
+            Tools::refreshFile(Module::CACHE_FILE_TAB_MODULES_LIST, _PS_TAB_MODULE_LIST_URL_);
         }
 
         $xmlTabModulesList = @simplexml_load_file(_PS_ROOT_DIR_ . Module::CACHE_FILE_TAB_MODULES_LIST);

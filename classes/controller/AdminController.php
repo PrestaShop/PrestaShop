@@ -4265,6 +4265,8 @@ class AdminControllerCore extends Controller
     }
 
     /**
+     * @deprecated Since 1.7.7 Use Tools::isFileFresh instead
+     *
      * @param string $file
      * @param int $timeout
      *
@@ -4272,17 +4274,12 @@ class AdminControllerCore extends Controller
      */
     public function isFresh($file, $timeout = 604800)
     {
-        if (($time = @filemtime(_PS_ROOT_DIR_ . $file)) && filesize(_PS_ROOT_DIR_ . $file) > 0) {
-            return (time() - $time) < $timeout;
-        }
-
-        return false;
+        return Tools::isFileFresh($file, $timeout);
     }
 
-    /** @var bool */
-    protected static $is_prestashop_up = true;
-
     /**
+     * @deprecated Since 1.7.7 Use Tools::refreshFile instead
+     *
      * @param string $file_to_refresh
      * @param string $external_file
      *
@@ -4290,12 +4287,7 @@ class AdminControllerCore extends Controller
      */
     public function refresh($file_to_refresh, $external_file)
     {
-        if (self::$is_prestashop_up && $content = Tools::file_get_contents($external_file)) {
-            return (bool) file_put_contents(_PS_ROOT_DIR_ . $file_to_refresh, $content);
-        }
-        self::$is_prestashop_up = false;
-
-        return false;
+        return Tools::refreshFile($file_to_refresh, $external_file);
     }
 
     /**
