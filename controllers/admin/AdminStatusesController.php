@@ -175,10 +175,9 @@ class AdminStatusesControllerCore extends AdminController
         $helper->allow_employee_form_lang = $this->allow_employee_form_lang;
 
         $helper->fields_value = [
-           'name' => $this->getFieldValue($order_return_state, 'name'),
-           'color' => $order_return_state->getColor(),
+            'name' => $this->getFieldValue($order_return_state, 'name'),
+            'color' => $order_return_state->getColor(),
         ];
-
 
         $helper->toolbar_btn = $this->toolbar_btn;
         $helper->title = $this->trans('Edit return status', [], 'Admin.Shopparameters.Feature');
@@ -441,7 +440,7 @@ class AdminStatusesControllerCore extends AdminController
             'pdf_delivery_on' => $this->getFieldValue($obj, 'pdf_delivery'),
             'pdf_invoice_on' => $this->getFieldValue($obj, 'pdf_invoice'),
             'color' => $obj->getColor(),
-        ];        
+        ];
 
         return parent::renderForm();
     }
