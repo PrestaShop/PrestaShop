@@ -23,7 +23,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% if record[column.options.field] %}
+{% set value = record[column.options.field] %}
+
+{% if column.options.use_icon == true %}
+  <i class="material-icons grid-toggler-icon-{% if value == true %}valid{% else %}not-valid{% endif %}">
+    {% if value %}
+      check
+    {% else %}
+      clear
+    {% endif %}
+  </i>
+{% elseif value %}
   {{ column.options.true_name }}
 {% else %}
   {{ column.options.false_name }}
