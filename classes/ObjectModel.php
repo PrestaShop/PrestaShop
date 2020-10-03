@@ -52,6 +52,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     const HAS_ONE = 1;
     const HAS_MANY = 2;
 
+    const DEFAULT_COLOR = '#ffffff';
+
     /** @var int Object ID */
     public $id;
 
@@ -144,6 +146,10 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
     /** @var PrestaShopBundle\Translation\Translator */
     protected $translator;
+
+    /** @var string */
+    protected $use_default_color = false;
+    protected $color_field_name = 'color';
 
     /**
      * @var array Contains object definition
@@ -553,6 +559,11 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             }
         }
 
+        // Set default color field value when this is empty
+        if (property_exists($this, $this->color_field_name) && empty($this->{$this->color_field_name})) {
+            $this->setDefautlColor();
+        }
+
         // Database insertion
         if (Shop::checkIdShopDefault($this->def['table'])) {
             $this->id_shop_default = (in_array(Configuration::get('PS_SHOP_DEFAULT'), $id_shop_list) == true) ? Configuration::get('PS_SHOP_DEFAULT') : min($id_shop_list);
@@ -724,6 +735,11 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             if (isset($this->update_fields) && is_array($this->update_fields) && count($this->update_fields)) {
                 $this->update_fields['date_add'] = true;
             }
+        }
+
+        // Set default color field value when this is empty
+        if (property_exists($this, $this->color_field_name) && empty($this->{$this->color_field_name})) {
+            $this->setDefautlColor();
         }
 
         $id_shop_list = Shop::getContextListShopID();
@@ -2210,4 +2226,42 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             $this->update_fields[$fieldName] = $value;
         }
     }
+
+    public function hasColorField()
+    {
+        $def = $this->def;
+        $hasDefinition = !empty($def) && is_array($def) && array_key_exists('fields', $def);
+
+        if (!$hasDefinition || empty($this->color_field_name)) {
+            return false;
+        }
+
+        $field = $this->color_field_name;
+
+        return array_key_exists($field, $def['fields']) && $def['fields'][$field]['validate'] == 'isColor';
+    }
+
+    public function getColor()
+    {
+        if (!$this->hasColorField()) {
+			return null;
+		}
+        
+        if (!$this->use_default_color) {
+            return $this->color;
+        }
+        
+        return !empty($this->color) ? $this->color : self::DEFAULT_COLOR;
+    }
+
+    public function setDefautlColor()
+    {
+        if ($this->hasColorField() && $this->use_default_color) {
+            $this->{$this->color_field_name} = $this->{$this->color_field_name} ?: self::DEFAULT_COLOR;
+        }
+    }
+    
+    public function getColorFieldName() {
+		return $this->color_field_name;
+	}
 }
