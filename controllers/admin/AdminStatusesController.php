@@ -174,17 +174,11 @@ class AdminStatusesControllerCore extends AdminController
         $helper->default_form_language = $this->default_form_language;
         $helper->allow_employee_form_lang = $this->allow_employee_form_lang;
 
-        if ($order_return_state->id) {
-            $helper->fields_value = [
-                'name' => $this->getFieldValue($order_return_state, 'name'),
-                'color' => $this->getFieldValue($order_return_state, 'color'),
-            ];
-        } else {
-            $helper->fields_value = [
-                'name' => $this->getFieldValue($order_return_state, 'name'),
-                'color' => '#ffffff',
-            ];
-        }
+        $helper->fields_value = [
+           'name' => $this->getFieldValue($order_return_state, 'name'),
+           'color' => $order_return_state->getColor(),
+        ];
+
 
         $helper->toolbar_btn = $this->toolbar_btn;
         $helper->title = $this->trans('Edit return status', [], 'Admin.Shopparameters.Feature');
@@ -446,13 +440,8 @@ class AdminStatusesControllerCore extends AdminController
             'delivery_on' => $this->getFieldValue($obj, 'delivery'),
             'pdf_delivery_on' => $this->getFieldValue($obj, 'pdf_delivery'),
             'pdf_invoice_on' => $this->getFieldValue($obj, 'pdf_invoice'),
-        ];
-
-        if ($this->getFieldValue($obj, 'color') !== false) {
-            $this->fields_value['color'] = $this->getFieldValue($obj, 'color');
-        } else {
-            $this->fields_value['color'] = '#ffffff';
-        }
+            'color' => $obj->getColor(),
+        ];        
 
         return parent::renderForm();
     }
