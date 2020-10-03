@@ -4352,6 +4352,32 @@ exit;
     {
         static::$fallbackParameters = $fallbackParameters;
     }
+
+    /**
+     * @param string $file_to_refresh
+     * @param string $external_file
+     *
+     * @return bool
+     */
+    public static function refreshFile($file_to_refresh, $external_file)
+    {
+        return (bool) static::copy($external_file, _PS_ROOT_DIR_ . $file_to_refresh);
+    }
+
+    /**
+     * @param string $file
+     * @param int $timeout
+     *
+     * @return bool
+     */
+    public static function isFileFresh($file, $timeout = 604800)
+    {
+        if (($time = @filemtime(_PS_ROOT_DIR_ . $file)) && filesize(_PS_ROOT_DIR_ . $file) > 0) {
+            return (time() - $time) < $timeout;
+        }
+
+        return false;
+    }
 }
 
 /**
