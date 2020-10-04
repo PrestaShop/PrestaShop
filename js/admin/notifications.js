@@ -85,7 +85,7 @@ function getPush()
         var notifications_total = nbOrders + nbCustomers + nbCustomerMessages;
 
 				// Add orders notifications to the list
-				html = "";
+				var html = "";
 				$.each(json.order.results, function(property, value) {
 					html += "<a class='notif' href='"+baseAdminDir+"index.php?tab=AdminOrders&token=" + token_admin_orders + "&vieworder&id_order=" + parseInt(value.id_order) + "'>";
 					html += "#" + parseInt(value.id_order) + " - ";
