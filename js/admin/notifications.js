@@ -88,8 +88,8 @@ function getPush()
       // Add orders notifications to the list
       var html = "";
       $.each(json.order.results, function(property, value) {
-        html += "<a class='notif' href='"+baseAdminDir+"index.php?tab=AdminOrders&token=" + token_admin_orders + "&vieworder&id_order=" + parseInt(value.id_order) + "'>";
-        html += "#" + parseInt(value.id_order) + " - ";
+        html += "<a class='notif' href='"+baseAdminDir+"index.php?tab=AdminOrders&token=" + token_admin_orders + "&vieworder&id_order=" + value.id_order + "'>";
+        html += "#" + value.id_order + " - ";
         html += from_msg + "&nbsp;<strong>" + value.customer_name + "</strong>";
         html += " (" + value.iso_code + ")";
         html += "<strong class='pull-right'>" + value.total_paid + "</strong>";
@@ -99,7 +99,7 @@ function getPush()
         html += "</a>";
       });
       $("#orders-notifications").children('.notification-elements').empty();
-      if (parseInt(json.order.total) > 0)
+      if (nbOrders > 0)
       {
         $("#orders-notifications").removeClass('empty');
         $("#orders-notifications").children('.notification-elements').append(html);
@@ -121,7 +121,7 @@ function getPush()
         html += "</a>";
       });
       $("#customers-notifications").children('.notification-elements').empty();
-      if (parseInt(json.customer.total) > 0)
+      if (nbCustomers > 0)
       {
         $("#customers-notifications").removeClass('empty');
         $("#customers-notifications").children('.notification-elements').append(html);
@@ -134,7 +134,7 @@ function getPush()
       // Add messages notifications to the list
       html = "";
       $.each(json.customer_message.results, function(property, value) {
-        html += "<a class='notif' href='"+baseAdminDir+"index.php?tab=AdminCustomerThreads&token=" + token_admin_customer_threads + "&viewcustomer_thread&id_customer_thread=" + parseInt(value.id_customer_thread) + "'>";
+        html += "<a class='notif' href='"+baseAdminDir+"index.php?tab=AdminCustomerThreads&token=" + token_admin_customer_threads + "&viewcustomer_thread&id_customer_thread=" + value.id_customer_thread + "'>";
         html += "<span class='message-notification-status " + value.status + "'><i class='material-icons'>fiber_manual_record</i> " + value.status + "</span> - ";
         html += "<strong>" + value.customer_name + "</strong>";
         if (value.company !== "") {
@@ -144,7 +144,7 @@ function getPush()
         html += "</a>";
       });
       $("#messages-notifications").children('.notification-elements').empty();
-      if (parseInt(json.customer_message.total) > 0)
+      if (nbCustomerMessages > 0)
       {
         $("#messages-notifications").removeClass('empty');
         $("#messages-notifications").children('.notification-elements').append(html);
