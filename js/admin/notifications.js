@@ -58,100 +58,81 @@ function updateEmployeeNotifications() {
   );
 }
 
-function getPush()
-{
-	$.ajax({
-		type: 'POST',
-		headers: {"cache-control": "no-cache"},
-		url: admin_notification_get_link+'&rand=' + new Date().getTime(),
-		cache: false,
-		dataType : 'json',
-		success: function(json) {
+function renderOrderNotification(value) {
+  var html = "<a class='notif' href='" + baseAdminDir + "index.php?tab=AdminOrders&token=" + token_admin_orders;
+  html += "&vieworder&id_order=" + value.id_order + "'>";
+  html += "#" + value.id_order + " - ";
+  html += from_msg + "&nbsp;<strong>" + value.customer_name + "</strong>";
+  html += " (" + value.iso_code + ")";
+  html += "<strong class='pull-right'>" + value.total_paid + "</strong>";
+  if (value.carrier !== "") {
+    html += " - " + value.carrier;
+  }
+  return html + "</a>";
+}
+
+function renderCustomerNotification(value) {
+  var html = "<a class='notif' href='" + value.customer_view_url + "'>";
+  html += "#" + value.id_customer + " - <strong>" + value.customer_name + "</strong>"
+  if (value.company !== "") {
+    html += " (" + value.company + ")";
+  }
+  html += " - " + customer_name_msg + " " + value.date_add;
+  return html + "</a>";
+}
+
+function renderMessageNotification(value) {
+  var html = "<a class='notif' href='" + baseAdminDir + "index.php?tab=AdminCustomerThreads&token=" + token_admin_customer_threads + "&viewcustomer_thread&id_customer_thread=" + value.id_customer_thread + "'>";
+  html += "<span class='message-notification-status " + value.status + "'><i class='material-icons'>fiber_manual_record</i> " + value.status + "</span> - ";
+  html += "<strong>" + value.customer_name + "</strong>";
+  if (value.company !== "") {
+    html += " (" + value.company + ")";
+  }
+  html += " - <i class='material-icons'>access_time</i> " + value.date_add;
+  return html + "</a>";
+}
+
+function renderNotifications(panelId, data, renderFn) {
+  var panel = $('#' + panelId);
+  var tabCounter = panel.closest('#notification').find('a[href="#' + panelId + '"] .notif-counter');
+  if (data.total > 0) {
+    var html = data.results.map(renderFn).join('')
+    panel.removeClass('empty').children('.notification-elements').html(html);
+    tabCounter.text(' (' + data.total + ')').data('nb', data.total);
+  } else {
+    panel.addClass('empty').children('.notification-elements').empty();
+    tabCounter.text('');
+  }
+}
+
+function getPush() {
+  $.ajax({
+    type: 'POST',
+    headers: { "cache-control": "no-cache" },
+    url: admin_notification_get_link + '&rand=' + new Date().getTime(),
+    cache: false,
+    dataType: 'json',
+    success: function (json) {
       setTimeout(getPush, 120000);
-			if (!json) {
+      if (!json) {
         return;
       }
       // Set moment language
       moment.lang(full_language_code);
 
-      var nbOrders = parseInt(json.order.total);
-      var nbCustomers = parseInt(json.customer.total);
-      var nbCustomerMessages = parseInt(json.customer_message.total);
-      var notifications_total = nbOrders + nbCustomers + nbCustomerMessages;
-
       // Add orders notifications to the list
-      var html = "";
-      $.each(json.order.results, function(property, value) {
-        html += "<a class='notif' href='"+baseAdminDir+"index.php?tab=AdminOrders&token=" + token_admin_orders + "&vieworder&id_order=" + value.id_order + "'>";
-        html += "#" + value.id_order + " - ";
-        html += from_msg + "&nbsp;<strong>" + value.customer_name + "</strong>";
-        html += " (" + value.iso_code + ")";
-        html += "<strong class='pull-right'>" + value.total_paid + "</strong>";
-        if (value.carrier !== "") {
-          html += " - " + value.carrier;
-        }
-        html += "</a>";
-      });
-      $("#orders-notifications").children('.notification-elements').empty();
-      if (nbOrders > 0)
-      {
-        $("#orders-notifications").removeClass('empty');
-        $("#orders-notifications").children('.notification-elements').append(html);
-        $("#orders_notif_value").text(' (' + nbOrders + ')').data('nb', nbOrders);
-      } else {
-        $("#orders-notifications").addClass('empty');
-        $("#orders_notif_value").text('');
-      }
+      renderNotifications('orders-notifications', json.order, renderOrderNotification);
 
       // Add customers notifications to the list
-      html = "";
-      $.each(json.customer.results, function(property, value) {
-        html += "<a class='notif' href='" + value.customer_view_url + "'>";
-        html += "#" + value.id_customer + " - <strong>" + value.customer_name + "</strong>"
-        if (value.company !== "") {
-          html += " (" + value.company + ")";
-        }
-        html += " - " + customer_name_msg + " " + value.date_add;
-        html += "</a>";
-      });
-      $("#customers-notifications").children('.notification-elements').empty();
-      if (nbCustomers > 0)
-      {
-        $("#customers-notifications").removeClass('empty');
-        $("#customers-notifications").children('.notification-elements').append(html);
-        $("#customers_notif_value").text(' (' + nbCustomers + ')').data('nb', nbCustomers);
-      } else {
-        $("#customers-notifications").addClass('empty');
-        $("#customers_notif_value").text('');
-      }
+      renderNotifications('customers-notifications', json.customer, renderCustomerNotification);
 
       // Add messages notifications to the list
-      html = "";
-      $.each(json.customer_message.results, function(property, value) {
-        html += "<a class='notif' href='"+baseAdminDir+"index.php?tab=AdminCustomerThreads&token=" + token_admin_customer_threads + "&viewcustomer_thread&id_customer_thread=" + value.id_customer_thread + "'>";
-        html += "<span class='message-notification-status " + value.status + "'><i class='material-icons'>fiber_manual_record</i> " + value.status + "</span> - ";
-        html += "<strong>" + value.customer_name + "</strong>";
-        if (value.company !== "") {
-          html += " (" + value.company + ")";
-        }
-        html += " - <i class='material-icons'>access_time</i> " + value.date_add;
-        html += "</a>";
-      });
-      $("#messages-notifications").children('.notification-elements').empty();
-      if (nbCustomerMessages > 0)
-      {
-        $("#messages-notifications").removeClass('empty');
-        $("#messages-notifications").children('.notification-elements').append(html);
-        $("#customer_messages_notif_value").text(' (' + nbCustomerMessages + ')').data('nb', nbCustomerMessages);
-      } else {
-        $("#messages-notifications").addClass('empty');
-        $("#customer_messages_notif_value").text('');
-      }
+      renderNotifications('messages-notifications', json.customer_message, renderMessageNotification);
 
-
-      if (notifications_total > 0) {
+      var notifCount = parseInt(json.order.total) + parseInt(json.customer.total) + parseInt(json.customer_message.total);
+      if (notifCount > 0) {
         $("#total_notif_number_wrapper").removeClass('hide');
-        $('#total_notif_value').text(notifications_total);
+        $('#total_notif_value').text(notifCount);
       } else {
         $("#total_notif_number_wrapper").addClass('hide');
       }
