@@ -27,7 +27,7 @@ $(document).ready(function() {
     $('.translatable span.hint').append('<br /><span class="red">' + youEditFieldFor + '</span>')
   }
 
-  $('.notification.dropdown-toggle').on('click', function (event) {
+  $('.notification.dropdown-toggle').on('click', function () {
     $(this).parent().toggleClass('open');
     updateEmployeeNotifications();
   });
