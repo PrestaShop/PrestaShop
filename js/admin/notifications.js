@@ -70,7 +70,6 @@ function getPush()
 		type: 'POST',
 		headers: {"cache-control": "no-cache"},
 		url: admin_notification_get_link+'&rand=' + new Date().getTime(),
-		async: true,
 		cache: false,
 		dataType : 'json',
 		success: function(json) {
