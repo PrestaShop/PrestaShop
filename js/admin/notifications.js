@@ -27,11 +27,6 @@ $(document).ready(function() {
 	if (youEditFieldFor)
 		hints.html(hints.html() + '<br /><span class="red">' + youEditFieldFor + '</span>');
 
-	var html = "";
-	var nb_notifs = 0;
-	var wrapper_id = "";
-	var type = new Array();
-
   $('.notification.dropdown-toggle').on('click', function (event) {
     $(this).parent().toggleClass('open');
     updateEmployeeNotifications();
