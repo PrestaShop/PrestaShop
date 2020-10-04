@@ -73,94 +73,94 @@ function getPush()
 		cache: false,
 		dataType : 'json',
 		success: function(json) {
-			if (json)
-			{
-				// Set moment language
-				moment.lang(full_language_code);
-
-        var nbOrders = parseInt(json.order.total);
-        var nbCustomers = parseInt(json.customer.total);
-        var nbCustomerMessages = parseInt(json.customer_message.total);
-        var notifications_total = nbOrders + nbCustomers + nbCustomerMessages;
-
-				// Add orders notifications to the list
-				var html = "";
-				$.each(json.order.results, function(property, value) {
-					html += "<a class='notif' href='"+baseAdminDir+"index.php?tab=AdminOrders&token=" + token_admin_orders + "&vieworder&id_order=" + parseInt(value.id_order) + "'>";
-					html += "#" + parseInt(value.id_order) + " - ";
-          html += from_msg + "&nbsp;<strong>" + value.customer_name + "</strong>";
-          html += " (" + value.iso_code + ")";
-					html += "<strong class='pull-right'>" + value.total_paid + "</strong>";
-          if (value.carrier !== "") {
-            html += " - " + value.carrier;
-          }
-					html += "</a>";
-				});
-        $("#orders-notifications").children('.notification-elements').empty();
-				if (parseInt(json.order.total) > 0)
-				{
-          $("#orders-notifications").removeClass('empty');
-					$("#orders-notifications").children('.notification-elements').append(html);
-					$("#orders_notif_value").text(' (' + nbOrders + ')').data('nb', nbOrders);
-				} else {
-          $("#orders-notifications").addClass('empty');
-          $("#orders_notif_value").text('');
-        }
-
-				// Add customers notifications to the list
-				html = "";
-				$.each(json.customer.results, function(property, value) {
-					html += "<a class='notif' href='" + value.customer_view_url + "'>";
-					html += "#" + value.id_customer + " - <strong>" + value.customer_name + "</strong>"
-          if (value.company !== "") {
-            html += " (" + value.company + ")";
-          }
-          html += " - " + customer_name_msg + " " + value.date_add;
-					html += "</a>";
-				});
-        $("#customers-notifications").children('.notification-elements').empty();
-				if (parseInt(json.customer.total) > 0)
-				{
-          $("#customers-notifications").removeClass('empty');
-          $("#customers-notifications").children('.notification-elements').append(html);
-					$("#customers_notif_value").text(' (' + nbCustomers + ')').data('nb', nbCustomers);
-				} else {
-          $("#customers-notifications").addClass('empty');
-          $("#customers_notif_value").text('');
-        }
-
-				// Add messages notifications to the list
-				html = "";
-				$.each(json.customer_message.results, function(property, value) {
-					html += "<a class='notif' href='"+baseAdminDir+"index.php?tab=AdminCustomerThreads&token=" + token_admin_customer_threads + "&viewcustomer_thread&id_customer_thread=" + parseInt(value.id_customer_thread) + "'>";
-					html += "<span class='message-notification-status " + value.status + "'><i class='material-icons'>fiber_manual_record</i> " + value.status + "</span> - ";
-          html += "<strong>" + value.customer_name + "</strong>";
-          if (value.company !== "") {
-            html += " (" + value.company + ")";
-          }
-          html += " - <i class='material-icons'>access_time</i> " + value.date_add;
-					html += "</a>";
-				});
-        $("#messages-notifications").children('.notification-elements').empty();
-				if (parseInt(json.customer_message.total) > 0)
-				{
-          $("#messages-notifications").removeClass('empty');
-          $("#messages-notifications").children('.notification-elements').append(html);
-					$("#customer_messages_notif_value").text(' (' + nbCustomerMessages + ')').data('nb', nbCustomerMessages);
-				} else {
-          $("#messages-notifications").addClass('empty');
-          $("#customer_messages_notif_value").text('');
-        }
-
-
-        if (notifications_total > 0) {
-          $("#total_notif_number_wrapper").removeClass('hide');
-          $('#total_notif_value').text(notifications_total);
-        } else {
-          $("#total_notif_number_wrapper").addClass('hide');
-        }
-			}
       setTimeout(getPush, 120000);
+			if (!json) {
+        return;
+      }
+      // Set moment language
+      moment.lang(full_language_code);
+
+      var nbOrders = parseInt(json.order.total);
+      var nbCustomers = parseInt(json.customer.total);
+      var nbCustomerMessages = parseInt(json.customer_message.total);
+      var notifications_total = nbOrders + nbCustomers + nbCustomerMessages;
+
+      // Add orders notifications to the list
+      var html = "";
+      $.each(json.order.results, function(property, value) {
+        html += "<a class='notif' href='"+baseAdminDir+"index.php?tab=AdminOrders&token=" + token_admin_orders + "&vieworder&id_order=" + parseInt(value.id_order) + "'>";
+        html += "#" + parseInt(value.id_order) + " - ";
+        html += from_msg + "&nbsp;<strong>" + value.customer_name + "</strong>";
+        html += " (" + value.iso_code + ")";
+        html += "<strong class='pull-right'>" + value.total_paid + "</strong>";
+        if (value.carrier !== "") {
+          html += " - " + value.carrier;
+        }
+        html += "</a>";
+      });
+      $("#orders-notifications").children('.notification-elements').empty();
+      if (parseInt(json.order.total) > 0)
+      {
+        $("#orders-notifications").removeClass('empty');
+        $("#orders-notifications").children('.notification-elements').append(html);
+        $("#orders_notif_value").text(' (' + nbOrders + ')').data('nb', nbOrders);
+      } else {
+        $("#orders-notifications").addClass('empty');
+        $("#orders_notif_value").text('');
+      }
+
+      // Add customers notifications to the list
+      html = "";
+      $.each(json.customer.results, function(property, value) {
+        html += "<a class='notif' href='" + value.customer_view_url + "'>";
+        html += "#" + value.id_customer + " - <strong>" + value.customer_name + "</strong>"
+        if (value.company !== "") {
+          html += " (" + value.company + ")";
+        }
+        html += " - " + customer_name_msg + " " + value.date_add;
+        html += "</a>";
+      });
+      $("#customers-notifications").children('.notification-elements').empty();
+      if (parseInt(json.customer.total) > 0)
+      {
+        $("#customers-notifications").removeClass('empty');
+        $("#customers-notifications").children('.notification-elements').append(html);
+        $("#customers_notif_value").text(' (' + nbCustomers + ')').data('nb', nbCustomers);
+      } else {
+        $("#customers-notifications").addClass('empty');
+        $("#customers_notif_value").text('');
+      }
+
+      // Add messages notifications to the list
+      html = "";
+      $.each(json.customer_message.results, function(property, value) {
+        html += "<a class='notif' href='"+baseAdminDir+"index.php?tab=AdminCustomerThreads&token=" + token_admin_customer_threads + "&viewcustomer_thread&id_customer_thread=" + parseInt(value.id_customer_thread) + "'>";
+        html += "<span class='message-notification-status " + value.status + "'><i class='material-icons'>fiber_manual_record</i> " + value.status + "</span> - ";
+        html += "<strong>" + value.customer_name + "</strong>";
+        if (value.company !== "") {
+          html += " (" + value.company + ")";
+        }
+        html += " - <i class='material-icons'>access_time</i> " + value.date_add;
+        html += "</a>";
+      });
+      $("#messages-notifications").children('.notification-elements').empty();
+      if (parseInt(json.customer_message.total) > 0)
+      {
+        $("#messages-notifications").removeClass('empty');
+        $("#messages-notifications").children('.notification-elements').append(html);
+        $("#customer_messages_notif_value").text(' (' + nbCustomerMessages + ')').data('nb', nbCustomerMessages);
+      } else {
+        $("#messages-notifications").addClass('empty');
+        $("#customer_messages_notif_value").text('');
+      }
+
+
+      if (notifications_total > 0) {
+        $("#total_notif_number_wrapper").removeClass('hide');
+        $('#total_notif_value').text(notifications_total);
+      } else {
+        $("#total_notif_number_wrapper").addClass('hide');
+      }
 		}
 	});
 }
