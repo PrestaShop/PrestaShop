@@ -161,7 +161,7 @@ function getPush()
           $("#total_notif_number_wrapper").addClass('hide');
         }
 			}
-      setTimeout("getPush()", 120000);
+      setTimeout(getPush, 120000);
 		}
 	});
 }
