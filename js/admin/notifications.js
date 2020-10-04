@@ -23,9 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 $(document).ready(function() {
-	var hints = $('.translatable span.hint');
-	if (youEditFieldFor)
-		hints.html(hints.html() + '<br /><span class="red">' + youEditFieldFor + '</span>');
+	if (youEditFieldFor) {
+    $('.translatable span.hint').append('<br /><span class="red">' + youEditFieldFor + '</span>')
+  }
 
   $('.notification.dropdown-toggle').on('click', function (event) {
     $(this).parent().toggleClass('open');
