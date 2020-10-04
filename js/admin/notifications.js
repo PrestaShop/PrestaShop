@@ -32,15 +32,10 @@ $(document).ready(function() {
     updateEmployeeNotifications();
   });
 
-  $('body').on('click', function (e) {
-    if (!$('#notification.dropdown').is(e.target)
-      && $('#notification.dropdown').has(e.target).length === 0
-      && $('.open').has(e.target).length === 0
-    ) {
-      if ($('#notification.dropdown').hasClass('open')) {
-        getPush();
-      }
-      $('#notification.dropdown').removeClass('open');
+  $(document).on('click', function (e) {
+    if (!$(e.target).closest('#notification').length && $('#notification').hasClass('open')) {
+      $('#notification').removeClass('open');
+      getPush();
     }
   });
 
