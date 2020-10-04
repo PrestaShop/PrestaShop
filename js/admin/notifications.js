@@ -22,8 +22,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-$(document).ready(function() {
-	if (youEditFieldFor) {
+$(document).ready(function () {
+  if (youEditFieldFor) {
     $('.translatable span.hint').append('<br /><span class="red">' + youEditFieldFor + '</span>')
   }
 
@@ -43,11 +43,10 @@ $(document).ready(function() {
     updateEmployeeNotifications();
   });
 
-	// call it once immediately, then use setTimeout
+  // call it once immediately, then use setTimeout
   if (parseInt(show_new_orders) || parseInt(show_new_customers) || parseInt(show_new_messages)) {
-	  getPush();
+    getPush();
   }
-
 });
 
 function updateEmployeeNotifications() {
@@ -156,6 +155,6 @@ function getPush()
       } else {
         $("#total_notif_number_wrapper").addClass('hide');
       }
-		}
-	});
+    }
+  });
 }
