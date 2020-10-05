@@ -639,7 +639,7 @@ class AdminStatusesControllerCore extends AdminController
                     return $order_state;
                 }
 
-                Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token);
+                Tools::redirectAdmin(self::$currentIndex . '&conf=1&token=' . $this->token);
             }
         } elseif (Tools::isSubmit('submitBulkdelete' . $this->table)) {
             if (!$this->access('delete')) {
