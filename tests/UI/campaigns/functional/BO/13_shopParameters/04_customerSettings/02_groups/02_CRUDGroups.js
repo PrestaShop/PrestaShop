@@ -155,11 +155,14 @@ describe('Create, update and delete group in BO', async () => {
     });
 
     it('should delete group', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deletegroup', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteGroup', baseContext);
 
       const textResult = await groupsPage.deleteGroup(page, 1);
       await expect(textResult).to.contains(groupsPage.successfulDeleteMessage);
+    });
 
+    it('should reset filter', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
       const numberOfGroupsAfterDelete = await groupsPage.resetAndGetNumberOfLines(page);
       await expect(numberOfGroupsAfterDelete).to.be.equal(numberOfGroups);
     });
