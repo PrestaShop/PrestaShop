@@ -298,6 +298,7 @@ class OrderAmountUpdater
                     $orderCartRule = new OrderCartRule($orderCartRuleData['id_order_cart_rule']);
                     $orderCartRule->id_order = $order->id;
                     $orderCartRule->name = $cartRule->name;
+                    $orderCartRule->free_shipping = $cartRule->free_shipping;
                     $orderCartRule->value = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxIncluded(), $computingPrecision);
                     $orderCartRule->value_tax_excl = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxExcluded(), $computingPrecision);
                     $orderCartRule->save();
@@ -330,6 +331,7 @@ class OrderAmountUpdater
             $orderCartRule->id_cart_rule = $cartRule->id;
             $orderCartRule->id_order_invoice = $orderInvoiceId ?? 0;
             $orderCartRule->name = $cartRule->name;
+            $orderCartRule->free_shipping = $cartRule->free_shipping;
             $orderCartRule->value = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxIncluded(), $computingPrecision);
             $orderCartRule->value_tax_excl = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxExcluded(), $computingPrecision);
             $orderCartRule->save();
