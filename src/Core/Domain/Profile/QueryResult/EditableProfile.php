@@ -82,7 +82,7 @@ class EditableProfile
     /**
      * @return string|null
      */
-    public function getAvatarUrl()
+    public function getAvatarUrl(): ?string
     {
         return $this->avatarUrl;
     }
