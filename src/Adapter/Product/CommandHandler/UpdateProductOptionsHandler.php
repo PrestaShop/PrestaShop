@@ -29,98 +29,113 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use Manufacturer;
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductOptionsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use Product;
 
 /**
- * Handles UpdateProductOptionsCommand using legacy object models
+ * Handles @see UpdateProductOptionsCommand using legacy object models
  */
-final class UpdateProductOptionsHandler extends AbstractProductHandler implements UpdateProductOptionsHandlerInterface
+final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerInterface
 {
+    /**
+     * @var ProductRepository
+     */
+    private $productRepository;
+
+    /**
+     * @param ProductRepository $productRepository
+     */
+    public function __construct(
+        ProductRepository $productRepository
+    ) {
+        $this->productRepository = $productRepository;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function handle(UpdateProductOptionsCommand $command): void
     {
-        $productId = $command->getProductId();
+        $product = $this->productRepository->get($command->getProductId());
+        $updatableProperties = $this->fillUpdatableProperties($product, $command);
 
-        $product = $this->getProduct($productId);
-        $this->fillUpdatableFieldsWithCommandData($product, $command);
-        $product->setFieldsToUpdate($this->fieldsToUpdate);
-
-        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_OPTIONS);
+        $this->productRepository->partialUpdate($product, $updatableProperties, CannotUpdateProductException::FAILED_UPDATE_OPTIONS);
     }
 
     /**
      * @param Product $product
      * @param UpdateProductOptionsCommand $command
+     *
+     * @return string[]|array<string, int[]> updatable properties
      */
-    private function fillUpdatableFieldsWithCommandData(Product $product, UpdateProductOptionsCommand $command): void
+    private function fillUpdatableProperties(Product $product, UpdateProductOptionsCommand $command): array
     {
+        $updatableProperties = [];
+
         if (null !== $command->getVisibility()) {
             $product->visibility = $command->getVisibility()->getValue();
-            $this->fieldsToUpdate['visibility'] = true;
+            $updatableProperties[] = 'visibility';
         }
 
         if (null !== $command->isAvailableForOrder()) {
             $product->available_for_order = $command->isAvailableForOrder();
-            $this->fieldsToUpdate['available_for_order'] = true;
+            $updatableProperties[] = 'available_for_order';
         }
 
         if (null !== $command->isOnlineOnly()) {
             $product->online_only = $command->isOnlineOnly();
-            $this->fieldsToUpdate['online_only'] = true;
+            $updatableProperties[] = 'online_only';
         }
 
         if (null !== $command->showPrice()) {
             $product->show_price = $command->showPrice();
-            $this->fieldsToUpdate['show_price'] = true;
+            $updatableProperties[] = 'show_price';
         }
 
         if (null !== $command->getCondition()) {
             $product->condition = $command->getCondition()->getValue();
-            $this->fieldsToUpdate['condition'] = true;
+            $updatableProperties[] = 'condition';
         }
 
         if (null !== $command->getEan13()) {
             $product->ean13 = $command->getEan13()->getValue();
-            $this->fieldsToUpdate['ean13'] = true;
+            $updatableProperties[] = 'ean13';
         }
 
         if (null !== $command->getIsbn()) {
             $product->isbn = $command->getIsbn()->getValue();
-            $this->fieldsToUpdate['isbn'] = true;
+            $updatableProperties[] = 'isbn';
         }
 
         if (null !== $command->getMpn()) {
             $product->mpn = $command->getMpn();
-            $this->validateField($product, 'mpn', ProductConstraintException::INVALID_MPN);
-            $this->fieldsToUpdate['mpn'] = true;
+            $updatableProperties[] = 'mpn';
         }
 
         if (null !== $command->getReference()) {
             $product->reference = $command->getReference()->getValue();
-            $this->fieldsToUpdate['reference'] = true;
+            $updatableProperties[] = 'reference';
         }
 
         if (null !== $command->getUpc()) {
             $product->upc = $command->getUpc()->getValue();
-            $this->fieldsToUpdate['upc'] = true;
+            $updatableProperties[] = 'upc';
         }
 
         $manufacturerId = $command->getManufacturerId();
         if (null !== $manufacturerId) {
             $this->assertManufacturerExists($manufacturerId);
             $product->id_manufacturer = $manufacturerId->getValue();
-            $this->fieldsToUpdate['id_manufacturer'] = true;
+            $updatableProperties[] = 'id_manufacturer';
         }
+
+        return $updatableProperties;
     }
 
     /**
