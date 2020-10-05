@@ -182,7 +182,7 @@ abstract class HTMLTemplateCore
                 [
                     'object' => $object,
                     // The smarty instance is a clone that does NOT escape HTML
-                    'smarty' => $this->smarty
+                    'smarty' => $this->smarty,
                 ]
             ),
         ]);
