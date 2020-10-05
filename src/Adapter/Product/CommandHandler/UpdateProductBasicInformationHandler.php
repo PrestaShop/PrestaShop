@@ -90,39 +90,21 @@ final class UpdateProductBasicInformationHandler implements UpdateProductBasicIn
         $localizedNames = $command->getLocalizedNames();
         if (null !== $localizedNames) {
             $product->name = $localizedNames;
-            $updatableProperties['name'] = $this->getUpdatableLangs($localizedNames);
+            $updatableProperties['name'] = array_keys($localizedNames);
         }
 
         $localizedDescriptions = $command->getLocalizedDescriptions();
         if (null !== $localizedDescriptions) {
             $product->description = $localizedDescriptions;
-            $updatableProperties['description'] = $this->getUpdatableLangs($localizedDescriptions);
+            $updatableProperties['description'] = array_keys($localizedDescriptions);
         }
 
         $localizedShortDescriptions = $command->getLocalizedShortDescriptions();
         if (null !== $localizedShortDescriptions) {
             $product->description_short = $localizedShortDescriptions;
-            $updatableProperties['description_short'] = $this->getUpdatableLangs($localizedShortDescriptions);
+            $updatableProperties['description_short'] = array_keys($localizedShortDescriptions);
         }
 
         return $updatableProperties;
-    }
-
-    /**
-     * @param array $property
-     *
-     * @return int[]
-     */
-    private function getUpdatableLangs(array $property): array
-    {
-        $updatableLangs = [];
-        foreach ($property as $langId => $value) {
-            if (null === $value) {
-                continue;
-            }
-            $updatableLangs[] = $langId;
-        }
-
-        return $updatableLangs;
     }
 }
