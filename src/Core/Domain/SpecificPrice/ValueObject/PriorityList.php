@@ -74,7 +74,7 @@ class PriorityList
      *
      * @throws SpecificPriceConstraintException
      */
-    public function assertPriorities(array $priorities): void
+    private function assertPriorities(array $priorities): void
     {
         $checkedPriorities = [];
         foreach ($priorities as $priority) {
