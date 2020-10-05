@@ -84,7 +84,7 @@ class SpecificPriceForEditing
     /**
      * @var int|null
      */
-    private $productAttributeId;
+    private $combinationId;
 
     /**
      * @var int|null
@@ -131,7 +131,7 @@ class SpecificPriceForEditing
      * @param int $shopGroupId
      * @param int $shopId
      * @param int $cartId
-     * @param int $productAttributeId
+     * @param int $combinationId
      * @param int $currencyId
      * @param int $catalogPriceRuleId
      * @param int $countryId
@@ -150,7 +150,7 @@ class SpecificPriceForEditing
         int $shopGroupId,
         int $shopId,
         int $cartId,
-        int $productAttributeId,
+        int $combinationId,
         int $currencyId,
         int $catalogPriceRuleId,
         int $countryId,
@@ -168,7 +168,7 @@ class SpecificPriceForEditing
         $this->shopGroupId = $shopGroupId;
         $this->shopId = $shopId;
         $this->cartId = $cartId;
-        $this->productAttributeId = $productAttributeId;
+        $this->combinationId = $combinationId;
         $this->currencyId = $currencyId;
         $this->catalogPriceRuleId = $catalogPriceRuleId;
         $this->countryId = $countryId;
@@ -253,9 +253,9 @@ class SpecificPriceForEditing
     /**
      * @return int|null
      */
-    public function getProductAttributeId(): ?int
+    public function getCombinationId(): ?int
     {
-        return $this->productAttributeId;
+        return $this->combinationId;
     }
 
     /**
