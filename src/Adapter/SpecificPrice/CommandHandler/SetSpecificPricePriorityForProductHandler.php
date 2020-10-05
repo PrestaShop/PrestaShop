@@ -28,16 +28,37 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\SpecificPrice\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\SpecificPrice\Update\SpecificPricePriorityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\SetSpecificPricePriorityForProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\CommandHandler\SetSpecificPricePriorityForProductHandlerInterface;
 
-class SetSpecificPricePriorityForProductHandler implements SetSpecificPricePriorityForProductHandlerInterface
+/**
+ * Handles @see SetSpecificPricePriorityForProductCommand using legacy obj model
+ */
+final class SetSpecificPricePriorityForProductHandler implements SetSpecificPricePriorityForProductHandlerInterface
 {
+    /**
+     * @var SpecificPricePriorityUpdater
+     */
+    private $specificPricePriorityUpdater;
+
+    /**
+     * @param SpecificPricePriorityUpdater $specificPricePriorityUpdater
+     */
+    public function __construct(
+        SpecificPricePriorityUpdater $specificPricePriorityUpdater
+    ) {
+        $this->specificPricePriorityUpdater = $specificPricePriorityUpdater;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function handle(SetSpecificPricePriorityForProductCommand $command): void
     {
-        // TODO: Implement handle() method.
+        $this->specificPricePriorityUpdater->setPrioritiesForProduct(
+            $command->getProductId(),
+            $command->getPriorityList()
+        );
     }
 }
