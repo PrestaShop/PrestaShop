@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\SpecificPrice\QueryHandler;
 
+use DateTime;
+use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Adapter\SpecificPrice\Repository\SpecificPriceRepository;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Query\GetSpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\QueryHandler\GetSpecificPriceForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\QueryResult\SpecificPriceForEditing;
@@ -37,8 +40,47 @@ use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\QueryResult\SpecificPriceFor
  */
 final class GetSpecificPriceForEditingHandler implements GetSpecificPriceForEditingHandlerInterface
 {
+    /**
+     * @var SpecificPriceRepository
+     */
+    private $specificPriceRepository;
+
+    /**
+     * @param SpecificPriceRepository $specificPriceRepository
+     */
+    public function __construct(
+        SpecificPriceRepository $specificPriceRepository
+    ) {
+        $this->specificPriceRepository = $specificPriceRepository;
+    }
+
+    /**
+     * @param GetSpecificPriceForEditing $query
+     *
+     * @return SpecificPriceForEditing
+     */
     public function handle(GetSpecificPriceForEditing $query): SpecificPriceForEditing
     {
-        // TODO: Implement handle() method.
+        $specificPrice = $this->specificPriceRepository->get($query->getSpecificPriceId());
+
+        return new SpecificPriceForEditing(
+            (int) $specificPrice->id_product,
+            $specificPrice->reduction_type,
+            new Number((string) $specificPrice->reduction),
+            (bool) $specificPrice->reduction_tax,
+            new Number($specificPrice->price),
+            (int) $specificPrice->from_quantity,
+            (int) $specificPrice->id_shop_group,
+            (int) $specificPrice->id_shop,
+            (int) $specificPrice->id_cart,
+            (int) $specificPrice->id_product_attribute,
+            (int) $specificPrice->id_currency,
+            (int) $specificPrice->id_specific_price_rule,
+            (int) $specificPrice->id_country,
+            (int) $specificPrice->id_group,
+            (int) $specificPrice->id_customer,
+            new DateTime($specificPrice->from),
+            new DateTime($specificPrice->to)
+        );
     }
 }

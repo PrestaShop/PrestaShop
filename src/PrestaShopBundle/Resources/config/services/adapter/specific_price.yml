@@ -39,3 +39,5 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Query\GetSpecificPriceForEditing
 
+    prestashop.adapter.specific_price.repository.specific_price_repository:
+        class: PrestaShop\PrestaShop\Adapter\SpecificPrice\Repository\SpecificPriceRepository

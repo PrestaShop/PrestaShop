@@ -90,7 +90,7 @@ class AddSpecificPriceCommand
     private $currencyId;
 
     /**
-     * @var int|null
+     * @var int|null @todo: it's not CartruleId! It is CatalogPriceRuleId (named SpecificPriceRuleId in legacy)
      */
     private $catalogPriceRuleId;
 
