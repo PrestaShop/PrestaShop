@@ -24,7 +24,7 @@
  */
 $(document).ready(function () {
   if (youEditFieldFor) {
-    $('.translatable span.hint').append(`<br /><span class="red">${youEditFieldFor}</span>`)
+    $('.translatable span.hint').append(`<br /><span class="red">${youEditFieldFor}</span>`);
   }
 
   $('.notification.dropdown-toggle').on('click', function () {
@@ -59,46 +59,46 @@ function updateEmployeeNotifications() {
 }
 
 function renderOrderNotification(value) {
-  var html = "<a class='notif' href='" + baseAdminDir + "index.php?tab=AdminOrders&token=" + token_admin_orders;
-  html += "&vieworder&id_order=" + value.id_order + "'>";
-  html += "#" + value.id_order + " - ";
-  html += from_msg + "&nbsp;<strong>" + value.customer_name + "</strong>";
-  html += " (" + value.iso_code + ")";
-  html += "<strong class='pull-right'>" + value.total_paid + "</strong>";
-  if (value.carrier !== "") {
-    html += " - " + value.carrier;
-  }
-  return html + "</a>";
+  const query = `tab=AdminOrders&token=${token_admin_orders}&vieworder&id_order=${value.id_order}`;
+  const carrier = value.carrier !== '' ? ` - ${value.carrier}` : '';
+  return `
+    <a class="notif" href="${baseAdminDir}index.php?${query}">
+      #${value.id_order} - ${from_msg}&nbsp;<strong>${value.customer_name}</strong> (${value.iso_code})
+      <strong class="pull-right">${value.total_paid}</strong>${carrier}
+    </a>
+  `;
 }
 
 function renderCustomerNotification(value) {
-  var html = "<a class='notif' href='" + value.customer_view_url + "'>";
-  html += "#" + value.id_customer + " - <strong>" + value.customer_name + "</strong>"
-  if (value.company !== "") {
-    html += " (" + value.company + ")";
-  }
-  html += " - " + customer_name_msg + " " + value.date_add;
-  return html + "</a>";
+  const company = value.company !== '' ? ` (${value.company})` : '';
+  return `
+    <a class="notif" href="${value.customer_view_url}">
+      #${value.id_customer} - <strong>${value.customer_name}</strong>${company} - ${customer_name_msg} ${value.date_add};
+    </a>
+  `;
 }
 
 function renderMessageNotification(value) {
-  var html = "<a class='notif' href='" + baseAdminDir + "index.php?tab=AdminCustomerThreads&token=" + token_admin_customer_threads + "&viewcustomer_thread&id_customer_thread=" + value.id_customer_thread + "'>";
-  html += "<span class='message-notification-status " + value.status + "'><i class='material-icons'>fiber_manual_record</i> " + value.status + "</span> - ";
-  html += "<strong>" + value.customer_name + "</strong>";
-  if (value.company !== "") {
-    html += " (" + value.company + ")";
-  }
-  html += " - <i class='material-icons'>access_time</i> " + value.date_add;
-  return html + "</a>";
+  const query = `tab=AdminCustomerThreads&token=${token_admin_customer_threads}&viewcustomer_thread&id_customer_thread=${value.id_customer_thread}`;
+  const company = value.company !== '' ? ` (${value.company})` : '';
+  return `
+    <a class="notif" href="${baseAdminDir}index.php?${query}">
+      <span class="message-notification-status ${value.status}">
+        <i class="material-icons">fiber_manual_record</i> ${value.status}
+      </span>
+       - <strong>${value.customer_name}</strong> ${company}
+       - <i class="material-icons">access_time</i> ${value.date_add}
+    </a>
+  `;
 }
 
 function renderNotifications(panelId, data, renderFn) {
   var panel = $('#' + panelId);
-  var tabCounter = panel.closest('#notification').find('a[href="#' + panelId + '"] .notif-counter');
+  var tabCounter = panel.closest('#notification').find(`a[href="#${panelId}"] .notif-counter`);
   if (data.total > 0) {
     var html = data.results.map(renderFn).join('')
     panel.removeClass('empty').children('.notification-elements').html(html);
-    tabCounter.text(' (' + data.total + ')').data('nb', data.total);
+    tabCounter.text(` (${data.total})`).data('nb', data.total);
   } else {
     panel.addClass('empty').children('.notification-elements').empty();
     tabCounter.text('');
@@ -109,7 +109,7 @@ function getPush() {
   $.ajax({
     type: 'POST',
     headers: { "cache-control": "no-cache" },
-    url: admin_notification_get_link + '&rand=' + new Date().getTime(),
+    url: `${admin_notification_get_link}&rand=${new Date().getTime()}`,
     cache: false,
     dataType: 'json',
     success: function (json) {
