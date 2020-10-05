@@ -13,7 +13,6 @@ const addCartRulePage = require('@pages/BO/catalog/discounts/add');
 
 // Import data
 const CartRuleFaker = require('@data/faker/cartRule');
-const {DefaultAccount} = require('@data/demo/customer');
 
 // import test context
 const testContext = require('@utils/testContext');
@@ -62,9 +61,8 @@ describe('Sort and pagination cart rules', async () => {
     describe(`Create cart rule n°${index + 1}`, async () => {
       const cartRuleData = new CartRuleFaker({
         name: `todelete${index}`,
-        customer: DefaultAccount.email,
-        percent: true,
-        value: 20,
+        discountType: 'Percent',
+        discountPercent: 20,
       });
 
       it('should go to new cart rule page', async function () {
