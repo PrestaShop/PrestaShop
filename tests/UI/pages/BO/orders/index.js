@@ -277,6 +277,17 @@ class Order extends BOBasePage {
     );
   }
 
+  /**
+   * Get order total price
+   * @param page
+   * @param row
+   * @return {number}
+   */
+  async getOrderTTCPrice(page, row) {
+    // Delete the first character (currency symbol) before getting TTC
+    return parseFloat((await this.getTextColumn(page, 'total_paid_tax_incl', row)).substring(1));
+  }
+
 
   /* Bulk actions methods */
 
