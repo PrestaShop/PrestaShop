@@ -79,12 +79,16 @@ class PriorityList
         $checkedPriorities = [];
         foreach ($priorities as $priority) {
             if (!in_array($priority, static::AVAILABLE_PRIORITIES)) {
-                throw new SpecificPriceConstraintException('Invalid priority value "%s"', $priority);
+                throw new SpecificPriceConstraintException(
+                    sprintf('Invalid priority value "%s"', $priority),
+                    SpecificPriceConstraintException::INVALID_PRIORITY
+                );
             }
 
             if (in_array($priority, $checkedPriorities)) {
                 throw new SpecificPriceConstraintException(
-                    'Invalid priorities. Priorities cannot duplicate.'
+                    'Invalid priorities. Priorities cannot duplicate.',
+                    SpecificPriceConstraintException::INVALID_PRIORITY
                 );
             }
 

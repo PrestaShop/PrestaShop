@@ -45,4 +45,9 @@ class SpecificPriceConstraintException extends SpecificPriceException
      * When date range is not valid
      */
     const INVALID_DATE_RANGE = 3;
+
+    /**
+     * When specific price priority value is not valid
+     */
+    const INVALID_PRIORITY = 4;
 }
