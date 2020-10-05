@@ -78,7 +78,7 @@ class PriorityList
     {
         $checkedPriorities = [];
         foreach ($priorities as $priority) {
-            if (!in_array($priority, static::AVAILABLE_PRIORITIES)) {
+            if (!in_array($priority, static::AVAILABLE_PRIORITIES, true)) {
                 throw new SpecificPriceConstraintException(
                     sprintf('Invalid priority value "%s"', $priority),
                     SpecificPriceConstraintException::INVALID_PRIORITY
