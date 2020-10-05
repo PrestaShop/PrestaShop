@@ -28,11 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use Manufacturer;
+use PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerIdInterface;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductOptionsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -49,12 +48,20 @@ final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerIn
     private $productRepository;
 
     /**
+     * @var ManufacturerRepository
+     */
+    private $manufacturerRepository;
+
+    /**
      * @param ProductRepository $productRepository
+     * @param ManufacturerRepository $manufacturerRepository
      */
     public function __construct(
-        ProductRepository $productRepository
+        ProductRepository $productRepository,
+        ManufacturerRepository $manufacturerRepository
     ) {
         $this->productRepository = $productRepository;
+        $this->manufacturerRepository = $manufacturerRepository;
     }
 
     /**
@@ -140,15 +147,11 @@ final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerIn
 
     /**
      * @param ManufacturerIdInterface $manufacturerId
-     *
-     * @throws ManufacturerNotFoundException
      */
     private function assertManufacturerExists(ManufacturerIdInterface $manufacturerId): void
     {
-        if ($manufacturerId instanceof NoManufacturerId || Manufacturer::manufacturerExists($manufacturerId->getValue())) {
-            return;
+        if ($manufacturerId instanceof ManufacturerId) {
+            $this->manufacturerRepository->assertManufacturerExists($manufacturerId);
         }
-
-        throw new ManufacturerNotFoundException(sprintf('Manufacturer #%d does not exist', $manufacturerId->getValue()));
     }
 }
