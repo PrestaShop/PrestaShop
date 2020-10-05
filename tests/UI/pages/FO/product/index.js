@@ -62,7 +62,7 @@ class Product extends FOBasePage {
     }
     if (quantity !== 1 && attributeToChoose !== '') {
       await this.setValue(page, this.productQuantity, attributeToChoose.quantity.toString());
-    } else if(quantity !== 1) {
+    } else if (quantity !== 1) {
       await this.setValue(page, this.productQuantity, quantity.toString());
     }
 

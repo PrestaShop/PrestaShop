@@ -45,7 +45,7 @@ module.exports = class CartRule {
       ? false : cartRuleToCreate.excludeDiscountProducts;
 
     this.freeGift = cartRuleToCreate.freeGift === undefined ? false : cartRuleToCreate.freeGift;
-    if(this.freeGift) {
+    if (this.freeGift) {
       this.freeGiftProduct = cartRuleToCreate.freeGiftProduct;
     }
   }

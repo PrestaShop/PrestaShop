@@ -187,13 +187,13 @@ class AddCartRule extends BOBasePage {
     // Set free gift
     await page.click(this.sendFreeGifToggle(cartRuleData.freeGift ? 'on' : 'off'));
 
-    if(cartRuleData.freeGift) {
+    if (cartRuleData.freeGift) {
       await this.setValue(page, this.freeGiftFilterInput, cartRuleData.freeGiftProduct.name);
       await this.waitForVisibleSelector(page, this.freeGiftProductSelect);
       await this.selectByVisibleText(
         page,
         this.freeGiftProductSelect,
-        cartRuleData.freeGiftProduct.name + ' - €' + cartRuleData.freeGiftProduct.price,
+        `${cartRuleData.freeGiftProduct.name} - €${cartRuleData.freeGiftProduct.price}`,
       );
     }
   }
