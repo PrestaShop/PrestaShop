@@ -72,7 +72,6 @@ final class GetSpecificPriceForEditingHandler implements GetSpecificPriceForEdit
             (int) $specificPrice->from_quantity,
             (int) $specificPrice->id_shop_group,
             (int) $specificPrice->id_shop,
-            (int) $specificPrice->id_cart,
             (int) $specificPrice->id_product_attribute,
             (int) $specificPrice->id_currency,
             (int) $specificPrice->id_specific_price_rule,
