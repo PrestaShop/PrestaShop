@@ -53,7 +53,7 @@ class PriorityList
     private $priorities;
 
     /**
-     * @param $priorities
+     * @param string[] $priorities
      */
     public function __construct(array $priorities)
     {
