@@ -57,6 +57,8 @@ class ModuleController extends ModuleAbstractController
 {
     const CONTROLLER_NAME = 'ADMINMODULESSF';
 
+    const MAX_MODULES_DISPLAYED = 6;
+
     /**
      * @AdminSecurity("is_granted(['read'], 'ADMINMODULESSF_')")
      *
@@ -126,6 +128,7 @@ class ModuleController extends ModuleAbstractController
         return $this->render(
             '@PrestaShop/Admin/Module/manage.html.twig',
             [
+                'maxModulesDisplayed' => self::MAX_MODULES_DISPLAYED,
                 'bulkActions' => $bulkActions,
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
                 'layoutTitle' => $this->trans('Module manager', 'Admin.Modules.Feature'),
