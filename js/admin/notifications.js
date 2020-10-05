@@ -24,7 +24,7 @@
  */
 $(document).ready(function () {
   if (youEditFieldFor) {
-    $('.translatable span.hint').append('<br /><span class="red">' + youEditFieldFor + '</span>')
+    $('.translatable span.hint').append(`<br /><span class="red">${youEditFieldFor}</span>`)
   }
 
   $('.notification.dropdown-toggle').on('click', function () {
