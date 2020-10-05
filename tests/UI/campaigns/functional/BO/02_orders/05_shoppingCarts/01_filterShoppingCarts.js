@@ -80,7 +80,7 @@ describe('Filter the Shopping carts table', async () => {
     await expect(numberOfShoppingCarts).to.be.above(0);
   });
 
-  it('should search the non ordered shopping carts', async function () {
+  it('should search the non ordered shopping carts and delete them if exist', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchNonOrderedShoppingCarts', baseContext);
 
     await shoppingCartsPage.filterTable(page, 'input', 'status', 'Non ordered');
@@ -94,13 +94,11 @@ describe('Filter the Shopping carts table', async () => {
       const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'c!lastname');
       await expect(textColumn).to.contains('Non ordered');
     }
-  });
 
-  it('should delete the non ordered shopping carts by bulk actions', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'deleteNonOrderedShoppingCarts', baseContext);
-
-    const deleteTextResult = await shoppingCartsPage.bulkDeleteShoppingCarts(page);
-    await expect(deleteTextResult).to.be.contains(shoppingCartsPage.successfulMultiDeleteMessage);
+    if (numberOfShoppingCartsAfterFilter > 0) {
+      const deleteTextResult = await shoppingCartsPage.bulkDeleteShoppingCarts(page);
+      await expect(deleteTextResult).to.be.contains(shoppingCartsPage.successfulMultiDeleteMessage);
+    }
   });
 
   it('should reset all filters', async function () {
