@@ -91,14 +91,14 @@ const baseContext = 'functional_BO_catalog_discounts_precision_checkPrecision';
 let browserContext;
 let page;
 
-describe('Change currency precision and check orders total price in FO, BO and database', async function() {
+describe('Change currency precision and check orders total price in FO, BO and database', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
   });
 
-  after(async function() {
+  after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
@@ -106,8 +106,8 @@ describe('Change currency precision and check orders total price in FO, BO and d
     await loginCommon.loginBO(this, page);
   });
 
-  describe('Change currency precision', async function() {
-    it('should go to localization page', async function() {
+  describe('Change currency precision', async () => {
+    it('should go to localization page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPageToChangePrecision', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -123,7 +123,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
     });
 
 
-    it('should go to currencies page', async function() {
+    it('should go to currencies page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPageToChangePrecision', baseContext);
 
       await localizationPage.goToSubTabCurrencies(page);
@@ -131,7 +131,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
       await expect(pageTitle).to.contains(currenciesPage.pageTitle);
     });
 
-    it(`should filter by iso code '${Currencies.euro.isoCode}'`, async function() {
+    it(`should filter by iso code '${Currencies.euro.isoCode}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterCurrenciesToChangePrecision', baseContext);
 
       // Filter
@@ -142,7 +142,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
       await expect(numberOfCurrenciesAfterFilter).to.be.at.least(1);
     });
 
-    it('should go to edit currency page', async function() {
+    it('should go to edit currency page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditCurrencyToChangePrecision', baseContext);
 
       await currenciesPage.goToEditCurrencyPage(page, 1);
@@ -150,7 +150,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
       await expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
     });
 
-    it('should set precision to 3', async function() {
+    it('should set precision to 3', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changePrecision', baseContext);
 
       // Set currency precision to 3 and check successful update message
@@ -159,8 +159,8 @@ describe('Change currency precision and check orders total price in FO, BO and d
     });
   });
 
-  describe('Create cart rules', async function() {
-    it('should go to cart rule page', async function() {
+  describe('Create cart rules', async () => {
+    it('should go to cart rule page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCartRulesPageToCreate', baseContext);
 
       await addCurrencyPage.goToSubMenu(
@@ -173,8 +173,8 @@ describe('Change currency precision and check orders total price in FO, BO and d
       await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
     });
 
-    describe('Create a percentage cart rule', async function() {
-      it('should go to new cart rule page', async function() {
+    describe('Create a percentage cart rule', async () => {
+      it('should go to new cart rule page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage1', baseContext);
 
         await cartRulesPage.goToAddNewCartRulesPage(page);
@@ -182,7 +182,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
         await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
       });
 
-      it('should create new cart rule', async function() {
+      it('should create new cart rule', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createPercentCartRule', baseContext);
 
         const validationMessage = await addCartRulePage.createEditCartRules(page, percentCartRule);
@@ -190,8 +190,8 @@ describe('Change currency precision and check orders total price in FO, BO and d
       });
     });
 
-    describe('Create a gift cart rule', async function() {
-      it('should go to new cart rule page', async function() {
+    describe('Create a gift cart rule', async () => {
+      it('should go to new cart rule page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage2', baseContext);
 
         await cartRulesPage.goToAddNewCartRulesPage(page);
@@ -199,7 +199,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
         await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
       });
 
-      it('should create new cart rule', async function() {
+      it('should create new cart rule', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createGiftCartRule', baseContext);
 
         const validationMessage = await addCartRulePage.createEditCartRules(page, giftCartRule);
@@ -208,8 +208,8 @@ describe('Change currency precision and check orders total price in FO, BO and d
     });
   });
 
-  describe('Place an order with discounts in FO', async function() {
-    it('should go to FO page', async function() {
+  describe('Place an order with discounts in FO', async () => {
+    it('should go to FO page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
       page = await cartRulesPage.viewMyShop(page);
@@ -219,7 +219,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
       await expect(isHomePage, 'Fail to open FO home page').to.be.true;
     });
 
-    it('should go to login page', async function() {
+    it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOLoginPage', baseContext);
 
       await homePage.goToLoginPage(page);
@@ -227,7 +227,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
       await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
 
-    it('should sign in with default customer', async function() {
+    it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'loginInFO', baseContext);
 
       await foLoginPage.customerLogin(page, DefaultAccount);
@@ -235,7 +235,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
 
-    it('should add product to cart', async function() {
+    it('should add product to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       // Go to home page
@@ -253,7 +253,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
       await expect(isCartPage, 'Fail to go to cart page').to.be.true;
     });
 
-    it('should add percent discount and check that the discount was added', async function() {
+    it('should add percent discount and check that the discount was added', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addPercentDiscount', baseContext);
 
       await cartPage.addPromoCode(page, percentCartRule.code);
@@ -263,7 +263,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
         .to.equal(-(orderToMake.percentDiscountValue));
     });
 
-    it('should add free gift discount and check that the discount was added', async function() {
+    it('should add free gift discount and check that the discount was added', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addGiftDiscount', baseContext);
 
       await cartPage.addPromoCode(page, giftCartRule.code);
@@ -273,7 +273,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
         .to.equal(-(orderToMake.percentDiscountValue + orderToMake.giftDiscountValue));
     });
 
-    it('should check order total price', async function() {
+    it('should check order total price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkToTalPriceInFO', baseContext);
 
       const totalPrice = await cartPage.getTTCPrice(page);
@@ -281,7 +281,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
         .to.equal(orderToMake.ttcPrice);
     });
 
-    it('should confirm the order', async function() {
+    it('should confirm the order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
       // Proceed to checkout the shopping cart
@@ -304,8 +304,8 @@ describe('Change currency precision and check orders total price in FO, BO and d
     });
   });
 
-  describe('Check order total price with precision in order page', async function() {
-    it('should go back to BO', async function() {
+  describe('Check order total price with precision in orders page', async () => {
+    it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
       // Close tab and init other page objects with new current tab
@@ -315,7 +315,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
       await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
     });
 
-    it('should go to orders page', async function() {
+    it('should go to orders page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
       await cartRulesPage.goToSubMenu(
@@ -328,7 +328,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
       await expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
-    it('should check order total price', async function() {
+    it('should check order total price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkToTalPriceInBO', baseContext);
 
       const totalPriceInOrdersPage = await ordersPage.getOrderTTCPrice(page, 1);
@@ -336,8 +336,8 @@ describe('Change currency precision and check orders total price in FO, BO and d
     });
   });
 
-  describe('Check order total price with precision in database', async function() {
-    it('should go to sql manager page', async function() {
+  describe('Check order total price with precision in database', async () => {
+    it('should go to sql manager page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToSqlManagerPage', baseContext);
 
       await ordersPage.goToSubMenu(
@@ -350,8 +350,8 @@ describe('Change currency precision and check orders total price in FO, BO and d
       await expect(pageTitle).to.contains(sqlManagerPage.pageTitle);
     });
 
-    describe('Create new SQL query to get last order total price', async function() {
-      it('should go to \'New SQL query\' page', async function() {
+    describe('Create new SQL query to get last order total price', async () => {
+      it('should go to \'New SQL query\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToCreateSqlQueryPage', baseContext);
 
         await sqlManagerPage.goToNewSQLQueryPage(page);
@@ -360,7 +360,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
         await expect(pageTitle).to.contains(addSqlQueryPage.pageTitle);
       });
 
-      it('should create new SQL query', async function() {
+      it('should create new SQL query', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createSqlQuery', baseContext);
 
         const textResult = await addSqlQueryPage.createEditSQLQuery(page, sqlQueryData);
@@ -368,8 +368,8 @@ describe('Change currency precision and check orders total price in FO, BO and d
       });
     });
 
-    describe('Check last order total price in database', async function() {
-      it('should filter list by name', async function() {
+    describe('Check last order total price in database', async () => {
+      it('should filter list by name', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterSqlQueriesToView', baseContext);
 
         await sqlManagerPage.resetFilter(page);
@@ -380,7 +380,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
         await expect(sqlQueryName).to.contains(sqlQueryData.name);
       });
 
-      it('should click on view button', async function() {
+      it('should click on view button', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'viewSqlQuery', baseContext);
 
         await sqlManagerPage.goToViewSQLQueryPage(page, 1);
@@ -389,7 +389,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
         await expect(pageTitle).to.contains(viewSqlQueryPage.pageTitle);
       });
 
-      it('should check order discount in database', async function() {
+      it('should check order discount in database', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkLastOrderDiscountInDatabase', baseContext);
 
         // Get total discount from first column of the first row
@@ -397,7 +397,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
         await expect(parseFloat(discountInDatabase), 'Discount price is incorrect in database')
           .to.equal(orderToMake.percentDiscountValue + orderToMake.giftDiscountValue);
       });
-      it('should check last order total price', async function() {
+      it('should check last order total price', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkToTalPriceInDatabase', baseContext);
 
         // Get total discount from second column of the first row
@@ -414,9 +414,9 @@ describe('Change currency precision and check orders total price in FO, BO and d
   Delete cart rules created
   Delete Sql query created
    */
-  describe('Reset currency precision and delete created data', async function () {
-    describe('Reset currency precision', async function() {
-      it('should go to localization page', async function() {
+  describe('Reset currency precision and delete created data', async () => {
+    describe('Reset currency precision', async () => {
+      it('should go to localization page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPageToReset', baseContext);
 
         await sqlManagerPage.goToSubMenu(
@@ -430,7 +430,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
       });
 
 
-      it('should go to currencies page', async function() {
+      it('should go to currencies page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPageToReset', baseContext);
 
         await localizationPage.goToSubTabCurrencies(page);
@@ -438,7 +438,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
         await expect(pageTitle).to.contains(currenciesPage.pageTitle);
       });
 
-      it(`should filter by iso code '${Currencies.euro.isoCode}'`, async function() {
+      it(`should filter by iso code '${Currencies.euro.isoCode}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterCurrenciesToReset', baseContext);
 
         // Filter
@@ -449,7 +449,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
         await expect(numberOfCurrenciesAfterFilter).to.be.at.least(1);
       });
 
-      it('should go to edit currency page', async function() {
+      it('should go to edit currency page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToEditCurrencyPageToReset', baseContext);
 
         await currenciesPage.goToEditCurrencyPage(page, 1);
@@ -457,7 +457,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
         await expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
       });
 
-      it('should reset currency precision', async function() {
+      it('should reset currency precision', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'resetCurrencyPrecision', baseContext);
 
         // Set currency precision to 2 and check successful update message
@@ -466,8 +466,8 @@ describe('Change currency precision and check orders total price in FO, BO and d
       });
     });
 
-    describe('Delete created cart rules', async function() {
-      it('should go to cart rules page', async function() {
+    describe('Delete created cart rules', async () => {
+      it('should go to cart rules page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToCartRulesPageToDelete', baseContext);
 
         await currenciesPage.goToSubMenu(
@@ -480,7 +480,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
         await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
       });
 
-      it('should bulk delete cart rules', async function() {
+      it('should bulk delete cart rules', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'deleteCartRules', baseContext);
 
         const deleteTextResult = await cartRulesPage.bulkDeleteCartRules(page);
@@ -488,7 +488,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
       });
     });
 
-    describe('Delete SQL query', async function() {
+    describe('Delete SQL query', async () => {
       it('should go to \'SQL Manager\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToSqlManagerPageToDelete', baseContext);
 
