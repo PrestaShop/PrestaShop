@@ -926,8 +926,8 @@
         <note>Line: 310</note>
       </trans-unit>
       <trans-unit id="313c18a58c9b461fbb29be3e39837d95">
-        <source><![CDATA[Review this credit slip and download it on our shop, go to the <a href="{order_slip_url}" target="_blank">%credit_slips_label%</a> section of your customer account.]]></source>
-        <target><![CDATA[Review this credit slip and download it on our shop, go to the <a href="{order_slip_url}" target="_blank">%credit_slips_label%</a> section of your customer account.]]></target>
+        <source><![CDATA[Review this credit slip and download your invoice on our shop, go to the <a href="{history_url}" target="_blank">%credit_slips_label%</a> section of your customer account.]]></source>
+        <target><![CDATA[Review this credit slip and download your invoice on our shop, go to the <a href="{history_url}" target="_blank">%credit_slips_label%</a> section of your customer account.]]></target>
         <note>Line: 303</note>
       </trans-unit>
     </body>
