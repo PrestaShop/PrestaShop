@@ -34,6 +34,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.creditSlipsLink = '#subtab-AdminSlip';
     // Delivery slips
     this.deliverySlipslink = '#subtab-AdminDeliverySlip';
+    // Shopping carts
+    this.shoppingCartsLink = '#subtab-AdminCarts';
 
     // Catalog
     this.catalogParentLink = 'li#subtab-AdminCatalog';
