@@ -2,6 +2,7 @@
   display: inline-block;
   @include search-box();
 }
+
 .header-top {
   .search-widget {
     form {
@@ -24,6 +25,7 @@
     }
   }
 }
+
 #checkout {
   #search_widget {
     display: none; /* Not ideal solution by allows to reuse same hooks/templates */
@@ -51,8 +53,10 @@
   .header-top {
     .search-widget {
       float: none;
+
       form {
         margin: 0 auto;
+
         input[type="text"] {
           min-width: inherit;
           background: #fff;
@@ -61,6 +65,7 @@
     }
   }
 }
+
 @include media-breakpoint-up(md) {
   .search-widget {
     min-width: 15.63rem;

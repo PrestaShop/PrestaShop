@@ -35,6 +35,7 @@
       &:last-child {
         margin-bottom: 0;
       }
+
       &.cart-total {
         padding: 1rem 0;
 
@@ -42,9 +43,11 @@
         .value {
           font-weight: 600;
         }
+
         .label {
           font-size: 1rem;
         }
+
         .value {
           font-size: 1rem;
         }
@@ -76,11 +79,13 @@
     color: $gray-dark;
     white-space: inherit;
   }
+
   .value {
     float: right;
     font-weight: 600;
     color: $gray-darker;
   }
+
   &.cart-summary-subtotals {
     .label,
     .value {
@@ -96,11 +101,14 @@
 
 /** CART BODY **/
 .cart-grid-body {
+  margin-bottom: 0.75rem;
+
   a.label {
     &:hover {
       color: $brand-primary;
     }
   }
+
   .card-block {
     padding: 1rem;
     h1 {
@@ -109,10 +117,10 @@
       font-weight: 400;
     }
   }
+
   .cart-overview {
     padding: 1rem;
   }
-  margin-bottom: 0.75rem;
 }
 
 /** CART RIGHT **/
@@ -135,12 +143,14 @@
       }
     }
   }
+
   .cart-summary-line {
     &.cart-subtotal-products {
       .label,
       .value {
         font-weight: 600;
       }
+
       .value {
         font-size: 1rem;
       }
@@ -153,12 +163,14 @@
 
   .promo-code {
     padding: 1rem;
+
     .alert-danger {
       position: relative;
       display: none;
       margin-top: 1.25rem;
       color: #fff;
       background: $brand-danger;
+
       &::after {
         position: absolute;
         bottom: 100%;
@@ -173,10 +185,12 @@
         border-bottom-color: $brand-danger;
       }
     }
+
     form {
       text-align: center;
     }
   }
+
   .promo-input {
     width: 50%;
     height: 2.5rem;
@@ -191,27 +205,32 @@
       border: 2px solid $brand-primary;
     }
   }
+
   .cart-summary-line .label,
   .promo-name {
     margin-bottom: 0;
     font-weight: 600;
     color: $brand-warning;
+
     a {
       display: inline-block;
       font-weight: 500;
       color: $gray-darker;
     }
   }
+
   .promo-name {
     .cart-summary-line {
       .label {
         font-weight: 500;
         color: $gray-dark;
       }
+
       span {
         color: $warning-second;
       }
     }
+
     .material-icons {
       margin-left: 0.4rem;
       font-size: 1.2rem;
@@ -229,6 +248,7 @@
     &.cancel-promo {
       margin-bottom: 0;
       color: $brand-primary;
+
       &[aria-expanded="true"] {
         display: block;
         padding: 0;
@@ -236,11 +256,13 @@
       }
     }
   }
+
   &.promo-highlighted {
     padding: 0 1rem;
     margin-bottom: 0;
     text-align: center;
   }
+
   p {
     margin-bottom: 0;
   }
@@ -263,12 +285,15 @@
       text-align: left;
       white-space: inherit;
     }
+
     > .out-of-stock {
       color: #f00;
     }
+
     > .available {
       color: $brand-success;
     }
+
     > .unit-price-cart {
       padding-left: 0.3125rem;
       font-size: 0.875rem;
@@ -283,6 +308,7 @@
   .product-price {
     line-height: 36px;
     color: $gray-darker;
+
     .remove-from-cart {
       display: inline-block;
       margin-top: 0.3125rem;
@@ -302,21 +328,25 @@
   .cart-items {
     padding: 1rem 0;
   }
+
   .cart-item {
     border-bottom: 1px solid $gray-light;
     &:last-child {
       border-bottom: 0;
     }
   }
+
   .cart-grid-body {
     .cart-overview {
       padding: 0;
     }
+
     .no-items {
       display: inline-block;
       padding: 1rem;
     }
   }
+
   .product-line-grid-left {
     // stylelint-disable-next-line
     padding-right: 0 !important;
@@ -328,6 +358,7 @@
     .qty {
       width: 100%;
     }
+
     .price {
       width: 100%;
     }

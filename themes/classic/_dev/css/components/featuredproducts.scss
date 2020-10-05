@@ -61,6 +61,7 @@ $product-description-height: 70px;
     .product-thumbnail {
       position: relative;
       height: calc(100% - #{$product-description-height});
+
       img {
         position: relative;
         top: 0;
@@ -73,6 +74,7 @@ $product-description-height: 70px;
       }
     }
   }
+
   .products-section-title {
     margin: 2.5rem 0;
     font-weight: 500;

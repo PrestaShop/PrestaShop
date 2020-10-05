@@ -174,6 +174,7 @@ small.value {
       text-transform: uppercase;
       border: 0;
       box-shadow: none;
+
       &[data-action="show-password"] {
         padding: 0.78rem 1rem;
         background: $gray;
@@ -220,6 +221,7 @@ textarea {
   }
   /* stylelint-enable */
 }
+
 .form-control-select {
   height: 2.625rem;
   padding: 0 0.5rem;
@@ -589,4 +591,19 @@ form {
   align-items: center;
   // 30px corresponds to the default margin size from bootstrap 4.0.0-alpha.5 for modal-dialog class
   min-height: calc(100% - (30px * 2));
+}
+
+.popover {
+  font-family: inherit;
+}
+
+input[type="number"] {
+  /* stylelint-disable */
+  -moz-appearance: textfield;
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+  }
+  /* stylelint-enable */
 }

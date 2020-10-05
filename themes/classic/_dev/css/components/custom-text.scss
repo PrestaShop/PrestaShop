@@ -4,40 +4,48 @@
   text-align: center;
   background: #fff;
   border-radius: 2px;
+
   h2 {
     font-size: 1.563rem;
     font-weight: 700;
     color: $gray-darker;
     text-transform: uppercase;
   }
+
   p {
     font-size: 1.1em;
     font-weight: 400;
     color: $gray-darker;
+
     .dark {
       font-weight: 400;
       color: $gray;
     }
   }
+
   img {
     max-width: 100%;
     height: 100%;
   }
 }
+
 .page-content.page-cms {
   padding: 1.25rem;
   text-align: justify;
   background: #fff;
+
   .cms-box {
     img {
       max-width: 100%;
     }
   }
+
   ul {
     @extend p;
     list-style: disc inside none;
   }
 }
+
 @include media-breakpoint-down(md) {
   #block-cmsinfo {
     padding: $medium-space $large-space;
