@@ -48,9 +48,48 @@ class ProductValidator extends AbstractObjectModelValidator
      */
     public function validate(Product $product): void
     {
+        $this->validateCustomizability($product);
+        $this->validateBasicInfo($product);
+        //@todo; more properties when refactoring other handlers to use updater/validator
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @throws ProductConstraintException
+     */
+    private function validateCustomizability(Product $product): void
+    {
         $this->validateObjectModelProperty($product, 'customizable', ProductConstraintException::class);
         $this->validateObjectModelProperty($product, 'text_fields', ProductConstraintException::class);
         $this->validateObjectModelProperty($product, 'uploadable_files', ProductConstraintException::class);
-        //@todo; more properties when refactoring other handlers to use updater/validator
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @throws ProductConstraintException
+     */
+    private function validateBasicInfo(Product $product): void
+    {
+        $this->validateObjectModelLocalizedProperty(
+            $product,
+            'name',
+            ProductConstraintException::class,
+            ProductConstraintException::INVALID_NAME
+        );
+        $this->validateObjectModelLocalizedProperty(
+            $product,
+            'description',
+            ProductConstraintException::class,
+            ProductConstraintException::INVALID_DESCRIPTION
+        );
+
+        $this->validateObjectModelLocalizedProperty(
+            $product,
+            'description_short',
+            ProductConstraintException::class,
+            ProductConstraintException::INVALID_SHORT_DESCRIPTION
+        );
     }
 }

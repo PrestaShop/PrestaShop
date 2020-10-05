@@ -112,7 +112,7 @@ class ProductSupplierUpdater
 
         $this->productRepository->partialUpdate(
             $product,
-            ['supplier_reference' => true, 'wholesale_price' => true, 'id_supplier' => true],
+            ['supplier_reference', 'wholesale_price', 'id_supplier'],
             CannotUpdateProductException::FAILED_UPDATE_DEFAULT_SUPPLIER
         );
     }
@@ -152,7 +152,7 @@ class ProductSupplierUpdater
 
         $this->productRepository->partialUpdate(
             $product,
-            ['supplier_reference' => true, 'wholesale_price' => true, 'id_supplier' => true],
+            ['supplier_reference', 'wholesale_price', 'id_supplier'],
             CannotUpdateProductException::FAILED_UPDATE_DEFAULT_SUPPLIER
         );
     }
