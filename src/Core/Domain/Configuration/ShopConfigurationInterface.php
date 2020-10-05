@@ -47,7 +47,7 @@ interface ShopConfigurationInterface extends ConfigurationInterface
      * @param mixed $value
      * @param ShopConstraint|null $shopConstraint
      *
-     * @return mixed
+     * @return ShopConfigurationInterface
      */
     public function set($key, $value, ShopConstraint $shopConstraint = null);
 
@@ -55,7 +55,7 @@ interface ShopConfigurationInterface extends ConfigurationInterface
      * @param string $key
      * @param ShopConstraint|null $shopConstraint
      *
-     * @return mixed
+     * @return bool
      */
     public function has($key, ShopConstraint $shopConstraint = null);
 }
