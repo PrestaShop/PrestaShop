@@ -596,3 +596,91 @@ Feature: Order from Back Office (BO)
       | total_price_tax_incl        | 23.800 |
       | total_price_tax_excl        | 23.800 |
     And order "bo_order1" should have cart rule "FreeShippingDiscount" with amount "$5.00"
+
+  Scenario: I apply free discount shipping after it has been changed the discount should be correct
+    Given shop configuration for "PS_TAX_ADDRESS_TYPE" is set to id_address_invoice
+    Given I enable carrier "price_carrier"
+    And I select carrier "default_carrier" for cart "dummy_cart"
+    Then cart "dummy_cart" should have "default_carrier" as a carrier
+    And I add order "bo_order1" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    And order "bo_order1" should have "default_carrier" as a carrier
+    And order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 0.600 |
+      | shipping_cost_tax_excl | 7.00  |
+      | shipping_cost_tax_incl | 7.42  |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2      |
+      | product_price               | 11.900 |
+      | unit_price_tax_incl         | 12.614 |
+      | unit_price_tax_excl         | 11.900 |
+      | total_price_tax_incl        | 25.230 |
+      | total_price_tax_excl        | 23.800 |
+    When I update order "bo_order1" Tracking number to "TEST1234" and Carrier to "price_carrier"
+    Then cart "dummy_cart" should have "price_carrier" as a carrier
+    And order "bo_order1" should have "price_carrier" as a carrier
+    And order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 29.800 |
+      | total_paid_tax_incl      | 31.590 |
+      | total_paid               | 31.590 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 6.0    |
+      | total_shipping_tax_incl  | 6.36   |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 0.600 |
+      | shipping_cost_tax_excl | 6.00  |
+      | shipping_cost_tax_incl | 6.36  |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2      |
+      | product_price               | 11.900 |
+      | unit_price_tax_incl         | 12.614 |
+      | unit_price_tax_excl         | 11.900 |
+      | total_price_tax_incl        | 25.230 |
+      | total_price_tax_excl        | 23.800 |
+    And I add discount to order "bo_order1" with following details:
+      | name      | FreeShippingDiscount |
+      | type      | free_shipping        |
+    And order "bo_order1" should have 2 products in total
+    And order "bo_order1" should have 0 invoices
+    And order "bo_order1" should have 1 cart rule
+    Then order "bo_order1" should have cart rule "FreeShippingDiscount" with amount "$6.00"
+    And order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 6.0    |
+      | total_discounts_tax_incl | 6.36   |
+      | total_paid_tax_excl      | 23.800 |
+      | total_paid_tax_incl      | 25.230 |
+      | total_paid               | 25.230 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 6.0    |
+      | total_shipping_tax_incl  | 6.36   |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 0.600 |
+      | shipping_cost_tax_excl | 6.00  |
+      | shipping_cost_tax_incl | 6.36  |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2      |
+      | product_price               | 11.900 |
+      | unit_price_tax_incl         | 12.614 |
+      | unit_price_tax_excl         | 11.900 |
+      | total_price_tax_incl        | 25.230 |
+      | total_price_tax_excl        | 23.800 |
