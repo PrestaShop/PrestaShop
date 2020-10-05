@@ -70,7 +70,7 @@ final class ProfileFormDataHandler implements FormDataHandlerInterface
 
         /** @var UploadedFile $uploadedAvatar */
         $uploadedAvatar = $data['avatarUrl'] ?? null;
-        if (!empty($uploadedAvatar) && $uploadedAvatar instanceof UploadedFile) {
+        if ($uploadedAvatar instanceof UploadedFile) {
             $this->imageUploader->upload($profileId->getValue(), $uploadedAvatar);
         }
 

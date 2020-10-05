@@ -74,9 +74,9 @@ final class ProfileImageUploader extends AbstractImageUploader
     /**
      * Deletes old image
      *
-     * @param $id
+     * @param int $id
      */
-    private function deleteOldImage($id)
+    private function deleteOldImage($id): void
     {
         $profile = new Profile($id);
         $profile->deleteImage();

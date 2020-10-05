@@ -604,7 +604,7 @@ class EmployeeCore extends ObjectModel
 
         // Default from Profile
         $profile = new Profile($this->id_profile);
-        $defaultProfile = $profile->id == $this->id_profile ? $profile->getProfileImage() : null;
+        $defaultProfile = (int) $profile->id === (int) $this->id_profile ? $profile->getProfileImage() : null;
         $imageUrl = $imageUrl ?? $defaultProfile;
 
         // Gravatar
