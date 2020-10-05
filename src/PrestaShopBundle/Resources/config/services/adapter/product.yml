@@ -240,6 +240,7 @@ services:
         arguments:
             - '@prestashop.adapter.product.repository.product_supplier_repository'
             - '@prestashop.adapter.product.update.product_supplier_updater'
+            - '@prestashop.adapter.product.product_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand
