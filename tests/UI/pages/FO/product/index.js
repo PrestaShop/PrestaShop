@@ -29,6 +29,7 @@ class Product extends FOBasePage {
     this.discountTable = '.table-product-discounts';
     this.discountColumn = `${this.discountTable} th:nth-child(2)`;
     this.discountValue = `${this.discountTable} td:nth-child(2)`;
+    this.discountAmountSpan = `${this.productPricesBlock} .discount.discount-amount`;
   }
 
   /**
@@ -76,6 +77,16 @@ class Product extends FOBasePage {
       await this.waitForSelectorAndClick(page, this.continueShoppingButton);
       await page.waitForSelector(this.continueShoppingButton, {hidden: true});
     }
+  }
+
+  /**
+   * Set quantity
+   * @param page
+   * @param quantity
+   * @returns {Promise<void>}
+   */
+  async setQuantity(page, quantity) {
+    await this.setValue(page, this.productQuantity, quantity);
   }
 
   /**
@@ -162,6 +173,15 @@ class Product extends FOBasePage {
    */
   getDiscountValue(page) {
     return this.getTextContent(page, this.discountValue);
+  }
+
+  /**
+   * Get discount amount
+   * @param page
+   * @returns {Promise<string>}
+   */
+  getDiscountAmount(page) {
+    return this.getTextContent(page, this.discountAmountSpan);
   }
 
   /**
