@@ -340,12 +340,8 @@ class CartCore extends ObjectModel
      */
     public function updateDeliveryAddressId(int $currentAddressId, int $newAddressId)
     {
-        $needsUpdate = false;
         if (!isset($this->id_address_delivery) || (int) $this->id_address_delivery === $currentAddressId) {
-            $needsUpdate = true;
             $this->id_address_delivery = $newAddressId;
-        }
-        if ($needsUpdate) {
             $this->update();
         }
 
