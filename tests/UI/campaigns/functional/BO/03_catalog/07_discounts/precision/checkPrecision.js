@@ -76,7 +76,6 @@ const sqlQueryData = {
 const orderToMake = {
   product: Products.demo_3,
   quantityToOrder: 4,
-  totalWithoutDiscount: 152.136,
   percentDiscountValue: 20.678,
   giftDiscountValue: giftCartRule.freeGiftProduct.price,
   ttcPrice: 117.178,
