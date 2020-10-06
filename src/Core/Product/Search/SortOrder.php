@@ -120,10 +120,13 @@ class SortOrder
      */
     public static function newFromString($sortOrderConfiguration)
     {
-        if (count(explode('.', $sortOrderConfiguration)) !== 3) {
-            return new static('', '', 'asc');
+        $sortParams = explode('.', $sortOrderConfiguration);
+
+        if (count($sortParams) < 3) {
+            return static::random();
         }
-        list($entity, $field, $direction) = explode('.', $sortOrderConfiguration);
+
+        list($entity, $field, $direction) = $sortParams;
 
         return new static($entity, $field, $direction);
     }
