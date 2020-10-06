@@ -40,7 +40,7 @@ class PriorityListTest extends TestCase
      *
      * @param string[] $priorities
      */
-    public function test_creates_object_with_valid_priorities(array $priorities): void
+    public function testCreatesObjectWithValidPriorities(array $priorities): void
     {
         $priorityList = new PriorityList($priorities);
 
@@ -52,7 +52,7 @@ class PriorityListTest extends TestCase
      *
      * @param string[] $priorities
      */
-    public function test_throws_exception_when_invalid_are_provided(array $priorities): void
+    public function testThrowsExceptionWhenInvalidAreProvided(array $priorities): void
     {
         $this->expectException(SpecificPriceConstraintException::class);
         $this->expectExceptionCode(SpecificPriceConstraintException::INVALID_PRIORITY);
@@ -65,7 +65,7 @@ class PriorityListTest extends TestCase
      *
      * @param string[] $priorities
      */
-    public function test_throws_exception_when_duplicate_priorities_are_provided(array $priorities): void
+    public function testThrowsExceptionWhenDuplicatePrioritiesAreProvided(array $priorities): void
     {
         $this->expectException(SpecificPriceConstraintException::class);
         $this->expectExceptionCode(SpecificPriceConstraintException::DUPLICATE_PRIORITY);
