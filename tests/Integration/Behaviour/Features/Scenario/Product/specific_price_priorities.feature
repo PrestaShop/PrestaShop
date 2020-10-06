@@ -8,7 +8,8 @@ Feature: Set Specific Price priorities from Back Office (BO).
     Given I add product "product1" with following information:
       | name       | en-US:pocket watch |
       | is_virtual | false              |
-    And product "product1" type should be standard
+    And product "product1" should have following specific price priorities:
+      | id_shop | id_currency | id_country | id_group |
     When I set following specific price priorities for product "product1":
       | id_country | id_currency | id_group | id_shop |
     Then product "product1" should have following specific price priorities:
@@ -25,8 +26,10 @@ Feature: Set Specific Price priorities from Back Office (BO).
     And I add product "product3" with following information:
       | name       | en-US:silver wrist watch |
       | is_virtual | false                    |
-    And product "product2" type should be standard
-    And product "product3" type should be standard
+    And product "product2" should have following specific price priorities:
+      | id_shop | id_currency | id_country | id_group |
+    And product "product3" should have following specific price priorities:
+      | id_shop | id_currency | id_country | id_group |
     When I set following specific price priorities for all products:
       | id_country | id_currency | id_group | id_shop |
     Then product "product2" should have following specific price priorities:
@@ -36,11 +39,17 @@ Feature: Set Specific Price priorities from Back Office (BO).
 
   Scenario: Specific price priorities that was set to a single product
   overrides the previously set global priorities (overrides priorities for this product only)
-    Given I set following specific price priorities for all products:
+    Given product "product1" should have following specific price priorities:
+      | id_country | id_currency | id_group | id_shop |
+    And product "product2" should have following specific price priorities:
+      | id_country | id_currency | id_group | id_shop |
+    And product "product3" should have following specific price priorities:
+      | id_country | id_currency | id_group | id_shop |
+    When I set following specific price priorities for all products:
       | id_shop | id_currency | id_group | id_country |
-    And product "product1" should have following specific price priorities:
+    Then product "product1" should have following specific price priorities:
       | id_shop | id_currency | id_group | id_country |
-    Then product "product2" should have following specific price priorities:
+    And product "product2" should have following specific price priorities:
       | id_shop | id_currency | id_group | id_country |
     And product "product3" should have following specific price priorities:
       | id_shop | id_currency | id_group | id_country |
@@ -55,13 +64,19 @@ Feature: Set Specific Price priorities from Back Office (BO).
 
   Scenario: Specific price priorities that was set to all products
   overrides the previously set priorities for a single product (overrides priorities for all products)
-    Given I set following specific price priorities for product "product1":
+    Given product "product1" should have following specific price priorities:
+      | id_group | id_currency | id_country | id_shop |
+    And product "product2" should have following specific price priorities:
+      | id_shop | id_currency | id_group | id_country |
+    And product "product3" should have following specific price priorities:
+      | id_shop | id_currency | id_group | id_country |
+    When I set following specific price priorities for product "product1":
       | id_shop | id_currency | id_group | id_country |
     And I set following specific price priorities for product "product2":
       | id_currency | id_shop | id_group | id_country |
     And I set following specific price priorities for product "product3":
       | id_country | id_shop | id_group | id_currency |
-    And product "product1" should have following specific price priorities:
+    Then product "product1" should have following specific price priorities:
       | id_shop | id_currency | id_group | id_country |
     And product "product2" should have following specific price priorities:
       | id_currency | id_shop | id_group | id_country |
