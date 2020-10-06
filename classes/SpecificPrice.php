@@ -283,7 +283,7 @@ class SpecificPriceCore extends ObjectModel
         $key_cache = __FUNCTION__ . '-' . $field_name . '-' . $threshold;
         $specific_list = [];
         if (!array_key_exists($key_cache, self::$_filterOutCache)) {
-            $query_count = 'SELECT COUNT(DISTINCT `' . $name . '`) FROM `' . _DB_PREFIX_ . 'specific_price` WHERE `' . $name . '` != 0';
+            $query_count = 'SELECT COUNT(*) FROM (SELECT DISTINCT `' . $name . '` FROM `' . _DB_PREFIX_ . 'specific_price` WHERE `' . $name . '` != 0 GROUP BY id_product ) AS counted';
             $specific_count = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query_count);
             if ($specific_count == 0) {
                 self::$_no_specific_values[$field_name] = true;
