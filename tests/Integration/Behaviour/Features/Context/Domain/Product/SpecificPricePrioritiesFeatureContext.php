@@ -31,6 +31,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\SetGlobalSpecificPricePriorityCommand;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\SetSpecificPricePriorityForProductCommand;
 use SpecificPrice;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -53,6 +54,23 @@ class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContex
                 $this->getSharedStorage()->get($productReference),
                 $priorities
             ));
+        } catch (DomainException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I set following specific price priorities for all products:
+     *
+     * @param TableNode $prioritiesTable
+     */
+    public function setGlobalPriorities(TableNode $prioritiesTable): void
+    {
+        $priorities = PrimitiveUtils::castStringArrayIntoArray($prioritiesTable->getRow(0)[0]);
+
+        try {
+            SpecificPrice::flushCache();
+            $this->getCommandBus()->handle(new SetGlobalSpecificPricePriorityCommand($priorities));
         } catch (DomainException $e) {
             $this->setLastException($e);
         }
