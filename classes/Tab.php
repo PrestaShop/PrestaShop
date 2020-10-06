@@ -686,7 +686,7 @@ class TabCore extends ObjectModel
     {
         $modulesList = ['default_list' => [], 'slider_list' => []];
 
-        if (!Tools::isFileFresh(Module::CACHE_FILE_TAB_MODULES_LIST, 604800)) {
+        if (!Tools::isFileFresh(Module::CACHE_FILE_TAB_MODULES_LIST, Tools::CACHE_LIFETIME_SECONDS)) {
             Tools::refreshFile(Module::CACHE_FILE_TAB_MODULES_LIST, _PS_TAB_MODULE_LIST_URL_);
         }
 
