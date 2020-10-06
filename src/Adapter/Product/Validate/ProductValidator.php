@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Validate;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use Product;
 
 /**
@@ -50,6 +51,7 @@ class ProductValidator extends AbstractObjectModelValidator
     {
         $this->validateCustomizability($product);
         $this->validateBasicInfo($product);
+        $this->validateOptions($product);
         //@todo; more properties when refactoring other handlers to use updater/validator
     }
 
@@ -90,6 +92,77 @@ class ProductValidator extends AbstractObjectModelValidator
             'description_short',
             ProductConstraintException::class,
             ProductConstraintException::INVALID_SHORT_DESCRIPTION
+        );
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @throws CoreException
+     */
+    private function validateOptions(Product $product): void
+    {
+        $this->validateObjectModelProperty(
+            $product,
+            'available_for_order',
+            ProductConstraintException::class
+        );
+        $this->validateObjectModelProperty(
+            $product,
+            'online_only',
+            ProductConstraintException::class
+        );
+        $this->validateObjectModelProperty(
+            $product,
+            'show_price',
+            ProductConstraintException::class
+        );
+        $this->validateObjectModelProperty(
+            $product,
+            'id_manufacturer',
+            ProductConstraintException::class
+        );
+        $this->validateObjectModelProperty(
+            $product,
+            'visibility',
+            ProductConstraintException::class,
+            ProductConstraintException::INVALID_VISIBILITY
+        );
+        $this->validateObjectModelProperty(
+            $product,
+            'condition',
+            ProductConstraintException::class,
+            ProductConstraintException::INVALID_CONDITION
+        );
+        $this->validateObjectModelProperty(
+            $product,
+            'ean13',
+            ProductConstraintException::class,
+            ProductConstraintException::INVALID_EAN_13
+        );
+        $this->validateObjectModelProperty(
+            $product,
+            'isbn',
+            ProductConstraintException::class,
+            ProductConstraintException::INVALID_ISBN
+        );
+        $this->validateObjectModelProperty(
+            $product,
+            'mpn',
+            ProductConstraintException::class,
+            ProductConstraintException::INVALID_MPN
+        );
+        $this->validateObjectModelProperty(
+            $product,
+            'reference',
+            ProductConstraintException::class,
+            ProductConstraintException::INVALID_REFERENCE
+        );
+        $this->validateObjectModelProperty(
+            $product,
+            'upc',
+            ProductConstraintException::class,
+            ProductConstraintException::INVALID_UPC
         );
     }
 }
