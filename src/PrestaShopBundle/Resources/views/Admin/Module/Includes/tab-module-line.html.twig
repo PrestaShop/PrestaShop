@@ -55,7 +55,7 @@
       </div>
       <p class="module_description">
         {% if module.attributes.description is defined and module.attributes.description is not empty %}
-          {{ module.attributes.description }}
+          {{ module.attributes.description|raw }}
         {% endif %}
       </p>
       {% if (module.attributes.message is defined and module.attributes.name is not empty) and (module.attributes.type is not defined or module.attributes.type != 'addonsMustHave' or module.attributes.type != 'addonsNative') %}
