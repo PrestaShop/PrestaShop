@@ -58,7 +58,7 @@ describe('Change attribute and value position', async () => {
   describe('Change attribute position', async () => {
     // Should reset filters and sort by position before changing position
     it('should reset all filters and get number of attributes in BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAttributesFilters', baseContext);
 
       const numberOfAttributes = await attributesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfAttributes).to.be.above(2);
@@ -82,7 +82,7 @@ describe('Change attribute and value position', async () => {
     });
 
     it('should change first attribute position to 3', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changePosition', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'changeAttributePosition', baseContext);
 
       // Get first row attribute name
       const firstRowAttributeName = await attributesPage.getTextColumn(page, 1, 'b!name');
@@ -97,7 +97,7 @@ describe('Change attribute and value position', async () => {
     });
 
     it('should reset third attribute position to 1', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetPosition', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAttributePosition', baseContext);
 
       // Get third row attribute name
       const thirdRowAttributeName = await attributesPage.getTextColumn(page, 3, 'b!name');
@@ -142,14 +142,14 @@ describe('Change attribute and value position', async () => {
 
     // Should reset filters before changing position
     it('should reset all filters and get number of attributes in BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'resetValueFilters', baseContext);
 
       const numberOfValues = await viewAttributePage.resetAndGetNumberOfLines(page);
       await expect(numberOfValues).to.be.above(2);
     });
 
     it('should change first value position to 3', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changePosition', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'changeValuePosition', baseContext);
 
       // Get first row attribute name
       const firstRowValueName = await viewAttributePage.getTextColumn(page, 1, 'b!name');
@@ -164,7 +164,7 @@ describe('Change attribute and value position', async () => {
     });
 
     it('should reset third value position to 1', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetPosition', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'resetValuePosition', baseContext);
 
       // Get third row attribute name
       const thirdRowValueName = await viewAttributePage.getTextColumn(page, 3, 'b!name');
