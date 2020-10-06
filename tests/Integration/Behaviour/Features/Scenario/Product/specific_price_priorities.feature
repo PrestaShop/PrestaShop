@@ -11,3 +11,9 @@ Feature: Set Specific Price priorities from Back Office (BO).
     And product "product1" type should be standard
     When I set following specific price priorities for product "product1":
       | [id_country, id_currency, id_group, id_shop] |
+    Then product "product1" should have following specific price priorities:
+      | [id_country, id_currency, id_group, id_shop] |
+    When I set following specific price priorities for product "product1":
+      | [id_currency, id_country, id_group, id_shop] |
+    Then product "product1" should have following specific price priorities:
+      | [id_currency, id_country, id_group, id_shop] |

@@ -29,8 +29,10 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\SetSpecificPricePriorityForProductCommand;
+use SpecificPrice;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContext
@@ -46,6 +48,7 @@ class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContex
         $priorities = PrimitiveUtils::castStringArrayIntoArray($prioritiesTable->getRow(0)[0]);
 
         try {
+            SpecificPrice::flushCache();
             $this->getCommandBus()->handle(new SetSpecificPricePriorityForProductCommand(
                 $this->getSharedStorage()->get($productReference),
                 $priorities
@@ -53,5 +56,27 @@ class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContex
         } catch (DomainException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @Then product :productReference should have following specific price priorities:
+     *
+     * @param string $productReference
+     * @param TableNode $prioritiesTable
+     */
+    public function assertProductPriorities(string $productReference, TableNode $prioritiesTable): void
+    {
+        $expectedPriorities = PrimitiveUtils::castStringArrayIntoArray($prioritiesTable->getRow(0)[0]);
+        $actualPriorities = SpecificPrice::getPriority($this->getSharedStorage()->get($productReference));
+
+        if ($actualPriorities[0] == 'id_customer') {
+            unset($actualPriorities[0]);
+        }
+
+        Assert::assertEquals(
+            $expectedPriorities,
+            array_values($actualPriorities),
+            sprintf('Unexpected specific price priorities [%s]', var_export($actualPriorities, true))
+        );
     }
 }
