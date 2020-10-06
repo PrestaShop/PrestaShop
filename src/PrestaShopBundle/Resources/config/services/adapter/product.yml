@@ -171,6 +171,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllAssociatedProductCategoriesHandler
         arguments:
             - '@=service("prestashop.adapter.legacy.configuration").getInt("PS_HOME_CATEGORY")'
+            - '@prestashop.adapter.product.update.product_category_updater'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductCategoriesCommand

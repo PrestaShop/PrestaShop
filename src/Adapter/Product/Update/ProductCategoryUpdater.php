@@ -92,7 +92,7 @@ class ProductCategoryUpdater
      * @param Product $product
      * @param CategoryId $defaultCategoryId
      */
-    public function updateDefaultCategory(Product $product, CategoryId $defaultCategoryId): void
+    private function updateDefaultCategory(Product $product, CategoryId $defaultCategoryId): void
     {
         $categoryId = $defaultCategoryId->getValue();
 

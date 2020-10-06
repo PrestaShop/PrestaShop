@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductCategoriesAssociationHandler;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductCategoryUpdater;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\RemoveAllAssociatedProductCategoriesHandlerInterface;
 
@@ -43,11 +45,20 @@ final class RemoveAllAssociatedProductCategoriesHandler extends AbstractProductC
     private $homeCategoryId;
 
     /**
-     * @param int $homeCategoryId
+     * @var ProductCategoryUpdater
      */
-    public function __construct(int $homeCategoryId)
-    {
+    private $productCategoryUpdater;
+
+    /**
+     * @param int $homeCategoryId
+     * @param ProductCategoryUpdater $productCategoryUpdater
+     */
+    public function __construct(
+        int $homeCategoryId,
+        ProductCategoryUpdater $productCategoryUpdater
+    ) {
         $this->homeCategoryId = $homeCategoryId;
+        $this->productCategoryUpdater = $productCategoryUpdater;
     }
 
     /**
@@ -56,10 +67,10 @@ final class RemoveAllAssociatedProductCategoriesHandler extends AbstractProductC
     public function handle(RemoveAllAssociatedProductCategoriesCommand $command): void
     {
         $product = $this->getProduct($command->getProductId());
+        $categoryId = new CategoryId($this->homeCategoryId);
 
         // remove all categories associated with this product, keep only home Category
         // @todo: this is likely to break with multishop
-        $this->updateCategories($product, [$this->homeCategoryId]);
-        $this->updateDefaultCategory($product, $this->homeCategoryId);
+        $this->productCategoryUpdater->updateCategories($product, [$categoryId], $categoryId);
     }
 }
