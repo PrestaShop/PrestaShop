@@ -8,6 +8,7 @@ class Attributes extends BOBasePage {
     this.pageTitle = 'Attributes • ';
 
     this.alertSuccessBlockParagraph = '.alert-success';
+    this.growlMessageBlock = '#growls .growl-message:last-of-type';
 
     // Header selectors
     this.addNewAttributeLink = '#page-header-desc-attribute_group-new_attribute_group';
@@ -221,6 +222,23 @@ class Attributes extends BOBasePage {
 
     // Get successful message
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Change attribute position
+   * @param page
+   * @param actualPosition
+   * @param newPosition
+   * @return {Promise<string>}
+   */
+  async changePosition(page, actualPosition, newPosition) {
+    await this.dragAndDrop(
+      page,
+      this.tableColumnPosition(actualPosition),
+      this.tableColumnPosition(newPosition),
+    );
+
+    return this.getTextContent(page, this.growlMessageBlock);
   }
 
   /* Bulk actions methods */
