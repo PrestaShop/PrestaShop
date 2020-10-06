@@ -102,7 +102,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             header('HTTP/1.1 404 Not Found');
             header('Status: 404 Not Found');
             $this->errors[] = $this->trans('This product is no longer available.', [], 'Shop.Notifications.Error');
-            $this->setTemplate('errors/404');   
+            $this->setTemplate('errors/404');
         } else {
             $this->canonicalRedirection();
             /*
@@ -1253,12 +1253,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $page = parent::getTemplateVarPage();
 
         if (!Validate::isLoadedObject($this->product)) {
-            $page['title'] = $this->trans('The page you are looking for was not found.', array(), 'Shop.Theme.Global');
+            $page['title'] = $this->trans('The page you are looking for was not found.', [], 'Shop.Theme.Global');
             $page['page_name'] = 'pagenotfound';
 
             return $page;
         }
-        
+
         $page['body_classes']['product-id-' . $this->product->id] = true;
         $page['body_classes']['product-' . $this->product->name] = true;
         $page['body_classes']['product-id-category-' . $this->product->id_category_default] = true;
