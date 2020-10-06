@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
 use Category;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
@@ -56,15 +57,18 @@ class ProductCategoryUpdater
 
     /**
      * @param Product $product
-     * @param int[] $categoryIds
+     * @param CategoryId[] $categoryIds
+     * @param CategoryId $defaultCategoryId
      *
      * Warning: $categoryIds will replace current categories, erasing previous data
      *
      * @throws CannotUpdateProductException
      * @throws CoreException
      */
-    protected function updateCategories(Product $product, array $categoryIds): void
+    public function updateCategories(Product $product, array $categoryIds, CategoryId $defaultCategoryId): void
     {
+        $categoryIds = $this->formatCategoryIdsList($categoryIds, $defaultCategoryId);
+
         try {
             $this->assertCategoriesExists($categoryIds);
 
@@ -74,6 +78,7 @@ class ProductCategoryUpdater
                     CannotUpdateProductException::FAILED_UPDATE_CATEGORIES
                 );
             }
+            $this->updateDefaultCategory($product, $defaultCategoryId);
         } catch (PrestaShopException $e) {
             throw new CoreException(
                 sprintf('Error occurred when trying to update product #%d categories', $product->id),
@@ -85,10 +90,12 @@ class ProductCategoryUpdater
 
     /**
      * @param Product $product
-     * @param int $categoryId
+     * @param CategoryId $defaultCategoryId
      */
-    public function updateDefaultCategory(Product $product, int $categoryId): void
+    public function updateDefaultCategory(Product $product, CategoryId $defaultCategoryId): void
     {
+        $categoryId = $defaultCategoryId->getValue();
+
         $this->assertCategoriesExists([$categoryId]);
         $product->id_category_default = $categoryId;
 
@@ -97,6 +104,28 @@ class ProductCategoryUpdater
             ['id_category_default'],
             CannotUpdateProductException::FAILED_UPDATE_DEFAULT_CATEGORY
         );
+    }
+
+    /**
+     * Re-map array to contain scalar values instead of object,
+     * append default category id to the list
+     * and filter-out duplicate values
+     *
+     * @param CategoryId[] $categoryIds
+     * @param CategoryId $defaultCategoryId
+     *
+     * @return int[]
+     */
+    private function formatCategoryIdsList(array $categoryIds, CategoryId $defaultCategoryId): array
+    {
+        $categoryIds = array_map(function (CategoryId $categoryId) {
+            return $categoryId->getValue();
+        }, $categoryIds);
+
+        $categoryIds[] = $defaultCategoryId->getValue();
+        $categoryIds = array_unique($categoryIds, SORT_REGULAR);
+
+        return $categoryIds;
     }
 
     /**

@@ -28,47 +28,44 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductCategoriesAssociationHandler;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductCategoryUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\SetAssociatedProductCategoriesHandlerInterface;
 
 /**
  * Handles @var SetAssociatedProductCategoriesCommand using legacy object model
  */
-final class SetAssociatedProductCategoriesHandler extends AbstractProductCategoriesAssociationHandler implements SetAssociatedProductCategoriesHandlerInterface
+final class SetAssociatedProductCategoriesHandler implements SetAssociatedProductCategoriesHandlerInterface
 {
+    /**
+     * @var ProductRepository
+     */
+    private $productRepository;
+
+    /**
+     * @var ProductCategoryUpdater
+     */
+    private $productCategoryUpdater;
+
+    /**
+     * @param ProductRepository $productRepository
+     * @param ProductCategoryUpdater $productCategoryUpdater
+     */
+    public function __construct(
+        ProductRepository $productRepository,
+        ProductCategoryUpdater $productCategoryUpdater
+    ) {
+        $this->productRepository = $productRepository;
+        $this->productCategoryUpdater = $productCategoryUpdater;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function handle(SetAssociatedProductCategoriesCommand $command): void
     {
-        $product = $this->getProduct($command->getProductId());
-        $defaultCategoryId = $command->getDefaultCategoryId()->getValue();
-        $categoryIds = $this->formatCategoryIdsList($command);
-
-        $this->updateCategories($product, $categoryIds);
-        $this->updateDefaultCategory($product, $defaultCategoryId);
-    }
-
-    /**
-     * Re-map array to contain scalar values instead of object,
-     * append default category id to the list
-     * and filter-out duplicate values
-     *
-     * @param SetAssociatedProductCategoriesCommand $command
-     *
-     * @return int[]
-     */
-    private function formatCategoryIdsList(SetAssociatedProductCategoriesCommand $command): array
-    {
-        $categoryIds = array_map(function (CategoryId $categoryId) {
-            return $categoryId->getValue();
-        }, $command->getCategoryIds());
-
-        $categoryIds[] = $command->getDefaultCategoryId()->getValue();
-        $categoryIds = array_unique($categoryIds, SORT_REGULAR);
-
-        return $categoryIds;
+        $product = $this->productRepository->get($command->getProductId());
+        $this->productCategoryUpdater->updateCategories($product, $command->getCategoryIds(), $command->getDefaultCategoryId());
     }
 }

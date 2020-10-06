@@ -160,6 +160,9 @@ services:
 
     prestashop.adapter.product.command_handler.set_associated_product_categories_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetAssociatedProductCategoriesHandler
+        arguments:
+            - '@prestashop.adapter.product.product_repository'
+            - '@prestashop.adapter.product.update.product_category_updater'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductCategoriesCommand
