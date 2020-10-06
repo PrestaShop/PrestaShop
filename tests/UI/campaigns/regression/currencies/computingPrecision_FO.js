@@ -90,6 +90,19 @@ const baseContext = 'regression_currencies_computingPrecision_FO';
 let browserContext;
 let page;
 
+/*
+Change euro decimal to 3
+Create 2 cart rules
+  1. 15% discount
+  2. Product 'Mug today is a good day' as a gift product
+Place an order in FO with the cart rules created
+  1. Check discount value after first cart rule added
+  2. Check discount value after second cart rule added
+  3. CheckTTC after second cart rule added
+  4.Finish the order
+Go Back To BO and check TTC in Orders page
+Create new sql query to check discount value and ttc in database
+ */
 describe('Change currency precision and check orders total price in FO, BO and database', async () => {
   // before and after functions
   before(async function () {
@@ -406,7 +419,6 @@ describe('Change currency precision and check orders total price in FO, BO and d
       });
     });
   });
-
 
   /*
   Reset Currency precision
