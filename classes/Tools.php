@@ -40,7 +40,7 @@ class ToolsCore
 {
     const CACERT_LOCATION = 'https://curl.haxx.se/ca/cacert.pem';
     const SERVICE_LOCALE_REPOSITORY = 'prestashop.core.localization.locale.repository';
-    const CACHE_LIFETIME_SECONDS = 604800;
+    public const CACHE_LIFETIME_SECONDS = 604800;
 
     protected static $file_exists_cache = [];
     protected static $_forceCompile;
