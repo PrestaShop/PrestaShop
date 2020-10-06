@@ -52,7 +52,7 @@ class ShopGroupId
     /**
      * @return int
      */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->shopGroupId;
     }
@@ -62,7 +62,7 @@ class ShopGroupId
      *
      * @throws ShopException
      */
-    private function assertIsGreaterThanZero(int $shopGroupId)
+    private function assertIsGreaterThanZero(int $shopGroupId): void
     {
         if (0 >= $shopGroupId) {
             throw new ShopException(sprintf('Shop id %s is invalid. Shop id must be number that is greater than zero.', var_export($shopGroupId, true)));
