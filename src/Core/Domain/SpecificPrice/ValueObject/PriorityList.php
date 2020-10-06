@@ -88,7 +88,7 @@ class PriorityList
             if (in_array($priority, $checkedPriorities)) {
                 throw new SpecificPriceConstraintException(
                     'Invalid priorities. Priorities cannot duplicate.',
-                    SpecificPriceConstraintException::INVALID_PRIORITY
+                    SpecificPriceConstraintException::DUPLICATE_PRIORITY
                 );
             }
 

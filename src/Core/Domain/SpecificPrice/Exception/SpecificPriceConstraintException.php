@@ -50,4 +50,9 @@ class SpecificPriceConstraintException extends SpecificPriceException
      * When specific price priority value is not valid
      */
     const INVALID_PRIORITY = 4;
+
+    /**
+     * When there is duplicated priorities in specific price priority list
+     */
+    const DUPLICATE_PRIORITY = 5;
 }

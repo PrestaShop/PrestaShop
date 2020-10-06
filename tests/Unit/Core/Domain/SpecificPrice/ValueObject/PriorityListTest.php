@@ -52,10 +52,23 @@ class PriorityListTest extends TestCase
      *
      * @param string[] $priorities
      */
-    public function test_throws_exception_when_invalid_or_duplicated_priorities_are_provided(array $priorities): void
+    public function test_throws_exception_when_invalid_are_provided(array $priorities): void
     {
         $this->expectException(SpecificPriceConstraintException::class);
         $this->expectExceptionCode(SpecificPriceConstraintException::INVALID_PRIORITY);
+
+        new PriorityList($priorities);
+    }
+
+    /**
+     * @dataProvider getDuplicatePriorities
+     *
+     * @param string[] $priorities
+     */
+    public function test_throws_exception_when_duplicate_priorities_are_provided(array $priorities): void
+    {
+        $this->expectException(SpecificPriceConstraintException::class);
+        $this->expectExceptionCode(SpecificPriceConstraintException::DUPLICATE_PRIORITY);
 
         new PriorityList($priorities);
     }
@@ -81,9 +94,18 @@ class PriorityListTest extends TestCase
     {
         yield [
             ['id_random', 'id_currency', 'id_group', 'id_shop'],
-            ['id_country', 'id_country', 'id_group', 'id_shop'],
-            ['id_country', 'id_currency', 'id_group', 'id_group'],
             ['id_country', 'id_currency', 'id_group', 'id_GROUP'],
+        ];
+    }
+
+    /**
+     * @return Generator
+     */
+    public function getDuplicatePriorities(): Generator
+    {
+        yield [
+            ['id_currency', 'id_currency', 'id_group', 'id_shop'],
+            ['id_country', 'id_shop', 'id_group', 'id_group'],
         ];
     }
 }
