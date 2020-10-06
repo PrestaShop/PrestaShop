@@ -213,6 +213,7 @@ body#checkout {
 
     .default-input {
       min-width: 40%;
+
       &[name="address1"],
       &[name="address2"] {
         min-width: 60%;
@@ -221,6 +222,7 @@ body#checkout {
 
     .radio-field {
       margin-top: 1.875rem;
+
       label {
         display: inline;
       }

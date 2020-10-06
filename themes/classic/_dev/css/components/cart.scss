@@ -198,6 +198,7 @@
     color: $gray-darker;
     text-indent: 0.625rem;
     border: $gray 1px solid;
+
     + button {
       margin-top: -4px;
       margin-left: -1px;
@@ -236,6 +237,7 @@
       font-size: 1.2rem;
     }
   }
+
   .promo-code-button {
     display: block;
     padding: 0 0 1rem;
@@ -331,6 +333,7 @@
 
   .cart-item {
     border-bottom: 1px solid $gray-light;
+
     &:last-child {
       border-bottom: 0;
     }
