@@ -84,7 +84,7 @@ const orderToMake = {
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_catalog_discounts_precision_checkPrecision';
+const baseContext = 'regression_currencies_computingPrecision_FO';
 
 // Browser and tab
 let browserContext;
