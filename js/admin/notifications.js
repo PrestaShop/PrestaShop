@@ -117,8 +117,6 @@ function getPush() {
       if (!json) {
         return;
       }
-      // Set moment language
-      moment.lang(full_language_code);
 
       // Add orders notifications to the list
       renderNotifications('orders-notifications', json.order, renderOrderNotification);
