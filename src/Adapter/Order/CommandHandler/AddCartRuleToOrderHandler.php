@@ -95,6 +95,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         $cartRuleObj->quantity_per_user = 1;
         $cartRuleObj->active = 0;
         $cartRuleObj->highlight = 0;
+        $cartRuleObj->reduction_currency = (int) $order->id_currency;
 
         if ($command->getCartRuleType() === OrderDiscountType::DISCOUNT_PERCENT) {
             $cartRuleObj->reduction_percent = (float) (string) $command->getDiscountValue();
