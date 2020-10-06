@@ -172,6 +172,7 @@ services:
         arguments:
             - '@=service("prestashop.adapter.legacy.configuration").getInt("PS_HOME_CATEGORY")'
             - '@prestashop.adapter.product.update.product_category_updater'
+            - '@prestashop.adapter.product.product_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductCategoriesCommand
@@ -348,7 +349,6 @@ services:
             - '@prestashop.adapter.supplier.repository.supplier_repository'
             - '@prestashop.adapter.product.repository.product_supplier_repository'
 
-<<<<<<< HEAD
     prestashop.adapter.product.update.related_products_updater:
         class: PrestaShop\PrestaShop\Adapter\Product\Update\RelatedProductsUpdater
         arguments:
