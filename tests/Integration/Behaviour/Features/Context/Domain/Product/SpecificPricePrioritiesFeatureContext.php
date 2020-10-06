@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\SetGlobalSpecificPricePriorityCommand;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\SetSpecificPricePriorityForProductCommand;
 use SpecificPrice;
-use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContext
 {
@@ -46,10 +45,9 @@ class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContex
      */
     public function setPrioritiesForSingleProduct(string $productReference, TableNode $prioritiesTable): void
     {
-        $priorities = PrimitiveUtils::castStringArrayIntoArray($prioritiesTable->getRow(0)[0]);
+        $priorities = $prioritiesTable->getRow(0);
 
         try {
-            SpecificPrice::flushCache();
             $this->getCommandBus()->handle(new SetSpecificPricePriorityForProductCommand(
                 $this->getSharedStorage()->get($productReference),
                 $priorities
@@ -66,10 +64,9 @@ class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContex
      */
     public function setGlobalPriorities(TableNode $prioritiesTable): void
     {
-        $priorities = PrimitiveUtils::castStringArrayIntoArray($prioritiesTable->getRow(0)[0]);
+        $priorities = $prioritiesTable->getRow(0);
 
         try {
-            SpecificPrice::flushCache();
             $this->getCommandBus()->handle(new SetGlobalSpecificPricePriorityCommand($priorities));
         } catch (DomainException $e) {
             $this->setLastException($e);
@@ -84,7 +81,8 @@ class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContex
      */
     public function assertProductPriorities(string $productReference, TableNode $prioritiesTable): void
     {
-        $expectedPriorities = PrimitiveUtils::castStringArrayIntoArray($prioritiesTable->getRow(0)[0]);
+        $expectedPriorities = $prioritiesTable->getRow(0);
+        SpecificPrice::flushCache();
         $actualPriorities = SpecificPrice::getPriority($this->getSharedStorage()->get($productReference));
 
         if ($actualPriorities[0] == 'id_customer') {
