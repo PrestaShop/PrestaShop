@@ -52,6 +52,7 @@ class ProductValidator extends AbstractObjectModelValidator
         $this->validateCustomizability($product);
         $this->validateBasicInfo($product);
         $this->validateOptions($product);
+        $this->validateShipping($product);
         //@todo; more properties when refactoring other handlers to use updater/validator
     }
 
@@ -163,6 +164,57 @@ class ProductValidator extends AbstractObjectModelValidator
             'upc',
             ProductConstraintException::class,
             ProductConstraintException::INVALID_UPC
+        );
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @throws ProductConstraintException
+     */
+    private function validateShipping(Product $product): void
+    {
+        $this->validateProductProperty($product, 'width', ProductConstraintException::INVALID_WIDTH);
+        $this->validateProductProperty($product, 'height', ProductConstraintException::INVALID_HEIGHT);
+        $this->validateProductProperty($product, 'depth', ProductConstraintException::INVALID_DEPTH);
+        $this->validateProductProperty($product, 'weight', ProductConstraintException::INVALID_WEIGHT);
+        $this->validateProductProperty($product, 'additional_shipping_cost', ProductConstraintException::INVALID_ADDITIONAL_SHIPPING_COST);
+        $this->validateProductProperty($product, 'additional_delivery_times');
+        $this->validateProductLocalizedProperty($product, 'delivery_in_stock', ProductConstraintException::INVALID_DELIVERY_TIME_IN_STOCK_NOTES);
+        $this->validateProductLocalizedProperty($product, 'delivery_out_stock', ProductConstraintException::INVALID_DELIVERY_TIME_OUT_OF_STOCK_NOTES);
+    }
+
+    /**
+     * @param Product $product
+     * @param string $propertyName
+     * @param int $errorCode
+     *
+     * @throws ProductConstraintException
+     */
+    private function validateProductProperty(Product $product, string $propertyName, int $errorCode = 0): void
+    {
+        $this->validateObjectModelProperty(
+            $product,
+            $propertyName,
+            ProductConstraintException::class,
+            $errorCode
+        );
+    }
+
+    /**
+     * @param Product $product
+     * @param string $propertyName
+     * @param int $errorCode
+     *
+     * @throws ProductConstraintException
+     */
+    private function validateProductLocalizedProperty(Product $product, string $propertyName, int $errorCode = 0): void
+    {
+        $this->validateObjectModelLocalizedProperty(
+            $product,
+            $propertyName,
+            ProductConstraintException::class,
+            $errorCode
         );
     }
 }
