@@ -96,6 +96,20 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * This hook can be used to flag a feature for kernel reboot, this is useful
+     * to force recreation of services (e.g: when you add some currencies in the
+     * database, you may need to reset the CLDR related services to use the new ones)
+     *
+     * @BeforeScenario  @reboot-kernel-before-scenario
+     */
+    public static function rebootKernelPrepareScenario()
+    {
+        $realCacheDir = self::$kernel->getContainer()->getParameter('kernel.cache_dir');
+        $warmupDir = substr($realCacheDir, 0, -1) . ('_' === substr($realCacheDir, -1) ? '-' : '_');
+        self::$kernel->reboot($warmupDir);
+    }
+
+    /**
      * Return PrestaShop Symfony services container
      *
      * @return ContainerInterface
