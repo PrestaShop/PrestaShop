@@ -26,6 +26,14 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 
+/*
+Go To attributes page
+Change first attribute position to 3
+Reset attribute position
+View first attribute
+Change first value position to 3
+Reset value position
+ */
 describe('Change attribute and value position', async () => {
   // before and after functions
   before(async function () {
