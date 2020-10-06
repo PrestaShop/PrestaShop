@@ -51,7 +51,7 @@ class SpecificPricePriorityUpdater extends AbstractObjectModelRepository
     public function setPrioritiesForProduct(ProductId $productId, PriorityList $priorityList): void
     {
         try {
-            if (!SpecificPrice::setSpecificPriority($productId->getValue(), implode(';', $priorityList->getPriorities()))) {
+            if (!SpecificPrice::setSpecificPriority($productId->getValue(), $priorityList->getPriorities())) {
                 throw new CannotSetSpecificPricePrioritiesException(sprintf(
                     'Failed to set specific price priorities for product #%d',
                     $productId->getValue()
@@ -74,7 +74,7 @@ class SpecificPricePriorityUpdater extends AbstractObjectModelRepository
     public function setGlobalPriorities(PriorityList $priorityList): void
     {
         try {
-            if (!SpecificPrice::setPriorities(implode(';', $priorityList->getPriorities()))) {
+            if (!SpecificPrice::setPriorities($priorityList->getPriorities())) {
                 throw new CannotSetSpecificPricePrioritiesException('Failed to set specific price priorities');
             }
         } catch (PrestaShopException $e) {
