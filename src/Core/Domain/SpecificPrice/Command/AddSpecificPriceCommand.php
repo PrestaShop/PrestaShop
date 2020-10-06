@@ -92,7 +92,7 @@ class AddSpecificPriceCommand
     /**
      * @var int|null
      */
-    private $cartRuleId;
+    private $catalogPriceRuleId;
 
     /**
      * @var int|null
@@ -282,18 +282,38 @@ class AddSpecificPriceCommand
 
     /**
      * @return int|null
+     *
+     * @deprecated use getCatalogPriceRuleId() instead. (wrong naming used in migration process)
      */
     public function getCartRuleId(): ?int
     {
-        return $this->cartRuleId;
+        return $this->catalogPriceRuleId;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getCatalogPriceRuleId(): ?int
+    {
+        return $this->catalogPriceRuleId;
     }
 
     /**
      * @param int $cartRuleId
+     *
+     * @deprecated use setCatalogPriceRuleId() instead. (wrong naming used in migration process)
      */
     public function setCartRuleId(int $cartRuleId): void
     {
-        $this->cartRuleId = $cartRuleId;
+        $this->catalogPriceRuleId = $cartRuleId;
+    }
+
+    /**
+     * @param int $catalogPriceRuleId
+     */
+    public function setCatalogPriceRuleId(int $catalogPriceRuleId): void
+    {
+        $this->catalogPriceRuleId = $catalogPriceRuleId;
     }
 
     /**
