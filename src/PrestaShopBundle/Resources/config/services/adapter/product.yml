@@ -103,6 +103,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductPricesHandler
         arguments:
             - '@prestashop.core.util.number.number_extractor'
+            - '@prestashop.adapter.product.product_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand
