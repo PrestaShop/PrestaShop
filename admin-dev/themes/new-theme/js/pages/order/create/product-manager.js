@@ -196,7 +196,7 @@ export default class ProductManager {
       params.currency_id = $(createOrderMap.cartCurrencySelect).data('selectedCurrencyId');
     }
 
-    const $searchRequest = $.get(this.router.generate('admin_products_search'), params);
+    const $searchRequest = $.get(this.router.generate('admin_orders_products_search'), params);
     this.activeSearchRequest = $searchRequest;
 
     $searchRequest
