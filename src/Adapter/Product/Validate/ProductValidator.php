@@ -53,7 +53,7 @@ class ProductValidator extends AbstractObjectModelValidator
         $this->validateBasicInfo($product);
         $this->validateOptions($product);
         $this->validateShipping($product);
-        //@todo; more properties when refactoring other handlers to use updater/validator
+        $this->validateSeo($product);
     }
 
     /**
@@ -115,6 +115,21 @@ class ProductValidator extends AbstractObjectModelValidator
         $this->validateProductProperty($product, 'additional_delivery_times');
         $this->validateProductLocalizedProperty($product, 'delivery_in_stock', ProductConstraintException::INVALID_DELIVERY_TIME_IN_STOCK_NOTES);
         $this->validateProductLocalizedProperty($product, 'delivery_out_stock', ProductConstraintException::INVALID_DELIVERY_TIME_OUT_OF_STOCK_NOTES);
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @throws ProductConstraintException
+     * @throws CoreException
+     */
+    private function validateSeo(Product $product): void
+    {
+        $this->validateProductProperty($product, 'redirect_type', ProductConstraintException::INVALID_REDIRECT_TYPE);
+        $this->validateProductProperty($product, 'id_type_redirected', ProductConstraintException::INVALID_REDIRECT_TARGET);
+        $this->validateProductLocalizedProperty($product, 'meta_description', ProductConstraintException::INVALID_META_DESCRIPTION);
+        $this->validateProductLocalizedProperty($product, 'meta_title', ProductConstraintException::INVALID_META_TITLE);
+        $this->validateProductLocalizedProperty($product, 'link_rewrite', ProductConstraintException::INVALID_LINK_REWRITE);
     }
 
     /**

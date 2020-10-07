@@ -30,15 +30,11 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSeoInfoFiller;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductSeoHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectOption;
 use Product;
 
 /**
@@ -52,12 +48,20 @@ class UpdateProductSeoHandler extends AbstractProductHandler implements UpdatePr
     private $productRepository;
 
     /**
+     * @var ProductSeoInfoFiller
+     */
+    private $productSeoInfoFiller;
+
+    /**
      * @param ProductRepository $productRepository
+     * @param ProductSeoInfoFiller $productSeoInfoFiller
      */
     public function __construct(
-        ProductRepository $productRepository
+        ProductRepository $productRepository,
+        ProductSeoInfoFiller $productSeoInfoFiller
     ) {
         $this->productRepository = $productRepository;
+        $this->productSeoInfoFiller = $productSeoInfoFiller;
     }
 
     /**
@@ -81,11 +85,11 @@ class UpdateProductSeoHandler extends AbstractProductHandler implements UpdatePr
     {
         $updatableProperties = [];
 
-        $redirectOption = $command->getRedirectOption();
-        if (null !== $redirectOption) {
-            $this->fillRedirectOptionValues($product, $redirectOption);
-            $updatableProperties[] = 'redirect_type';
-            $updatableProperties[] = 'id_type_redirected';
+        if (null !== $command->getRedirectOption()) {
+            $updatableProperties = array_merge(
+                $updatableProperties,
+                $this->productSeoInfoFiller->fillRedirectOption($product, $command->getRedirectOption())
+            );
         }
 
         if (null !== $command->getLocalizedMetaDescriptions()) {
@@ -107,59 +111,5 @@ class UpdateProductSeoHandler extends AbstractProductHandler implements UpdatePr
         }
 
         return $updatableProperties;
-    }
-
-    /**
-     * @param Product $product
-     * @param RedirectOption $redirectOption
-     *
-     * @throws CategoryNotFoundException
-     * @throws ProductException
-     * @throws ProductNotFoundException
-     */
-    private function fillRedirectOptionValues(Product $product, RedirectOption $redirectOption): void
-    {
-        $redirectType = $redirectOption->getRedirectType();
-        $redirectTarget = $redirectOption->getRedirectTarget();
-
-        if ($redirectType->isProductType()) {
-            $this->assertProductExists($redirectTarget->getValue());
-        } elseif (!$redirectType->isTypeNotFound() && !$redirectTarget->isNoTarget()) {
-            $this->assertCategoryExists($redirectTarget->getValue());
-        }
-
-        $product->redirect_type = $redirectType->getValue();
-        $product->id_type_redirected = $redirectTarget->getValue();
-    }
-
-    /**
-     * @param int $categoryId
-     *
-     * @throws CategoryNotFoundException
-     * @throws ProductException
-     */
-    private function assertCategoryExists(int $categoryId): void
-    {
-        if (!$this->entityExists('category', $categoryId)) {
-            throw new CategoryNotFoundException(
-                new CategoryId($categoryId),
-                sprintf('Category #%d does not exist', $categoryId)
-            );
-        }
-    }
-
-    /**
-     * @param int $productId
-     *
-     * @throws ProductException
-     * @throws ProductNotFoundException
-     */
-    private function assertProductExists(int $productId): void
-    {
-        if (!$this->entityExists('product', $productId)) {
-            throw new ProductNotFoundException(
-                sprintf('Product #%d does not exist', $productId)
-            );
-        }
     }
 }

@@ -111,3 +111,6 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryIsEnabled
+
+  prestashop.adapter.category.repository.category_repository:
+    class: PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository
