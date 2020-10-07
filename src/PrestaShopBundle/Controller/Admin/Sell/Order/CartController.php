@@ -32,10 +32,10 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddProductToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveCartRuleFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartDeliverySettingsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
@@ -258,12 +258,18 @@ class CartController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function setFreeShippingAction(Request $request, int $cartId)
+    public function updateDeliverySettingsAction(Request $request, int $cartId)
     {
+        $configuration = $this->get('prestashop.adapter.legacy.configuration');
+        $recycledPackagingEnabled = (bool) $configuration->get('PS_RECYCLABLE_PACK');
+        $giftSettingsEnabled = (bool) $configuration->get('PS_GIFT_WRAPPING');
+
         try {
-            $this->getCommandBus()->handle(new SetFreeShippingToCartCommand(
+            $this->getCommandBus()->handle(new UpdateCartDeliverySettingsCommand(
                 $cartId,
-                $request->request->getBoolean('freeShipping')
+                $request->request->getBoolean('freeShipping'),
+                ($giftSettingsEnabled ? $request->request->getBoolean('isAGift', null) : null),
+                ($recycledPackagingEnabled ? $request->request->getBoolean('useRecycledPackaging', null) : null)
             ));
 
             return $this->json($this->getCartInfo($cartId));

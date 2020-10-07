@@ -54,21 +54,37 @@ class CartShipping
     private $deliveryOptions;
 
     /**
+     * @var bool
+     */
+    private $isRecycledPackaging;
+
+    /**
+     * @var bool
+     */
+    private $isGift;
+
+    /**
      * @param string $shippingPrice
      * @param bool $freeShipping
      * @param CartDeliveryOption[] $deliveryOptions
      * @param int|null $selectedCarrierId
+     * @param bool $isGift
+     * @param bool $isRecycledPackaging
      */
     public function __construct(
         string $shippingPrice,
         bool $freeShipping,
         array $deliveryOptions,
-        ?int $selectedCarrierId
+        ?int $selectedCarrierId,
+        bool $isGift,
+        bool $isRecycledPackaging
     ) {
         $this->shippingPrice = $shippingPrice;
         $this->freeShipping = $freeShipping;
         $this->deliveryOptions = $deliveryOptions;
         $this->selectedCarrierId = $selectedCarrierId;
+        $this->isGift = $isGift;
+        $this->isRecycledPackaging = $isRecycledPackaging;
     }
 
     /**
@@ -101,5 +117,21 @@ class CartShipping
     public function getSelectedCarrierId()
     {
         return $this->selectedCarrierId;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRecycledPackaging(): bool
+    {
+        return $this->isRecycledPackaging;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGift(): bool
+    {
+        return $this->isGift;
     }
 }

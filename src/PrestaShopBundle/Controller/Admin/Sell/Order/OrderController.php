@@ -234,10 +234,14 @@ class OrderController extends FrameworkBundleAdminController
         $languages = $this->get('prestashop.core.form.choice_provider.language_by_id')->getChoices();
         $currencies = $this->get('prestashop.core.form.choice_provider.currency_by_id')->getChoices();
 
+        $configuration = $this->get('prestashop.adapter.legacy.configuration');
+
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/create.html.twig', [
             'currencies' => $currencies,
             'languages' => $languages,
             'summaryForm' => $summaryForm->createView(),
+            'recycledPackagingEnabled' => (bool) $configuration->get('PS_RECYCLABLE_PACK'),
+            'giftSettingsEnabled' => (bool) $configuration->get('PS_GIFT_WRAPPING'),
         ]);
     }
 

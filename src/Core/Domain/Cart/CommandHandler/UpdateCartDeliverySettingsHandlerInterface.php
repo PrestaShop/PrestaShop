@@ -26,15 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartDeliverySettingsCommand;
 
-/**
- * Interface for service that set free shipping to cart
- */
-interface SetFreeShippingToCartHandlerInterface
+interface UpdateCartDeliverySettingsHandlerInterface
 {
     /**
-     * @param SetFreeShippingToCartCommand $command
+     * @param UpdateCartDeliverySettingsCommand $command
      */
-    public function handle(SetFreeShippingToCartCommand $command);
+    public function handle(UpdateCartDeliverySettingsCommand $command);
 }
