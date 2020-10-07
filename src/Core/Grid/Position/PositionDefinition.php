@@ -113,7 +113,7 @@ final class PositionDefinition implements PositionDefinitionInterface
     /**
      * If shop id is available we try to update position
      * in relation to multi-store table
-     * 
+     *
      * @return int|null
      */
     public function getShopId()
