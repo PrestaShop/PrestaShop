@@ -81,7 +81,11 @@ final class DoctrinePositionMultiStoreUpdateHandler implements PositionUpdateHan
         $qb
             ->from($this->dbPrefix . $positionDefinition->getTable().'_shop', 't')
             ->select('t.' . $positionDefinition->getIdField() . ', t.' . $positionDefinition->getPositionField())
+            ->andWhere('t.id_shop = :shopId')
+            ->andWhere('tr.' . $positionDefinition->getParentIdField() . ' = :parentId')
+            ->setParameter('shopId', $this->shopId)
             ->addOrderBy('t.' . $positionDefinition->getPositionField(), 'ASC');
+            
 
         if (null !== $parentId && null !== $positionDefinition->getParentIdField()) {
             $qb
@@ -89,7 +93,7 @@ final class DoctrinePositionMultiStoreUpdateHandler implements PositionUpdateHan
                     't',
                     $this->dbPrefix . $positionDefinition->getTable(),
                     'tr',
-                    'tr.id_cms_category =:parentId'
+                    'tr.' . $positionDefinition->getIdField() .' = t.' . $positionDefinition->getIdField()
                 )
                 ->setParameter('parentId', $parentId);
         }
@@ -111,6 +115,11 @@ final class DoctrinePositionMultiStoreUpdateHandler implements PositionUpdateHan
     {
         try {
             $this->connection->beginTransaction();
+
+            if (null != $positionDefinition->getShopId()) {
+                $this->shopId = $positionDefinition->getShopId();
+            }
+
             $positionIndex = 0;
             foreach ($newPositions as $rowId => $newPosition) {
                 $qb = $this->connection->createQueryBuilder();
