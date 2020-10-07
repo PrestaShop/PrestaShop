@@ -65,8 +65,8 @@ const giftCartRule = new CartRuleFaker(
 
 // Create sql query data to get last order discount and total price
 const sqlQueryData = {
-  name: 'Discount and TTC from last order',
-  sqlQuery: 'SELECT total_discounts, total_paid_tax_incl '
+  name: 'Discount and ATI from last order',
+  sqlQuery: orderRef => 'SELECT total_discounts, total_paid_tax_incl '
     + 'from  ps_orders '
     + 'ORDER BY id_order '
     + 'DESC LIMIT 1;',
@@ -78,7 +78,7 @@ const orderToMake = {
   quantityToOrder: 4,
   percentDiscountValue: 20.678,
   giftDiscountValue: giftCartRule.freeGiftProduct.price,
-  ttcPrice: 117.178,
+  atiPrice: 117.178,
 };
 
 // Import test context
@@ -99,7 +99,7 @@ Place an order in FO with the cart rules created
   1. Check discount value after first cart rule added
   2. Check discount value after second cart rule added
   3. CheckTTC after second cart rule added
-  4.Finish the order
+  4. Finish the order
 Go Back To BO and check TTC in Orders page
 Create new sql query to check discount value and ttc in database
  */
@@ -261,8 +261,8 @@ describe('Change currency precision and check orders total price in FO, BO and d
       await productPage.addProductToTheCart(page, orderToMake.quantityToOrder);
 
       // Check cart page
-      const isCartPage = await cartPage.isCartPage(page);
-      await expect(isCartPage, 'Fail to go to cart page').to.be.true;
+      const pageTitle = await cartPage.getPageTitle(page);
+      await expect(pageTitle, 'Fail to go to cart page').to.contains(cartPage.pageTitle);
     });
 
     it('should add percent discount and check that the discount was added', async function () {
@@ -288,9 +288,9 @@ describe('Change currency precision and check orders total price in FO, BO and d
     it('should check order total price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkToTalPriceInFO', baseContext);
 
-      const totalPrice = await cartPage.getTTCPrice(page);
+      const totalPrice = await cartPage.getATIPrice(page);
       await expect(totalPrice, 'Order total price is incorrect')
-        .to.equal(orderToMake.ttcPrice);
+        .to.equal(orderToMake.atiPrice);
     });
 
     it('should confirm the order', async function () {
@@ -343,8 +343,8 @@ describe('Change currency precision and check orders total price in FO, BO and d
     it('should check order total price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkToTalPriceInBO', baseContext);
 
-      const totalPriceInOrdersPage = await ordersPage.getOrderTTCPrice(page, 1);
-      await expect(totalPriceInOrdersPage, 'Order total price is incorrect').to.equal(orderToMake.ttcPrice);
+      const totalPriceInOrdersPage = await ordersPage.getOrderATIPrice(page, 1);
+      await expect(totalPriceInOrdersPage, 'Order total price is incorrect').to.equal(orderToMake.atiPrice);
     });
   });
 
@@ -415,7 +415,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
         // Get total discount from second column of the first row
         const totalPriceInDatabase = await viewSqlQueryPage.getTextColumn(page, 1, 2);
         await expect(parseFloat(totalPriceInDatabase), 'Total price is incorrect in database')
-          .to.equal(orderToMake.ttcPrice);
+          .to.equal(orderToMake.atiPrice);
       });
     });
   });

@@ -16,21 +16,12 @@ class Cart extends FOBasePage {
     this.proceedToCheckoutButton = '#main div.checkout a';
     this.disabledProceedToCheckoutButton = '#main div.checkout button.disabled';
     this.subtotalDiscountValueSpan = '#cart-subtotal-discount span.value';
-    this.cartTotalTTC = '.cart-summary-totals span.value';
+    this.cartTotalATI = '.cart-summary-totals span.value';
     this.itemsNumber = '#cart-subtotal-products span.label.js-subtotal';
     this.alertWarning = '.checkout.cart-detailed-actions.card-block div.alert.alert-warning';
     this.promoCodeLink = '#main div.block-promo a[href=\'#promo-code\']';
     this.promoInput = '#promo-code input.promo-input';
     this.addPromoCodeButton = '#promo-code button.btn-primary';
-  }
-
-  /**
-   * Check cart page
-   * @param page
-   * @returns {Promise<boolean>}
-   */
-  isCartPage(page) {
-    return this.elementVisible(page, this.cartGridBlock, 1000);
   }
 
   /**
@@ -85,12 +76,12 @@ class Cart extends FOBasePage {
   }
 
   /**
-   * Get price TTC
+   * Get All tax included price
    * @param page
    * @returns {Promise<number>}
    */
-  getTTCPrice(page) {
-    return this.getPriceFromText(page, this.cartTotalTTC, 2000);
+  getATIPrice(page) {
+    return this.getPriceFromText(page, this.cartTotalATI, 2000);
   }
 
   getSubtotalDiscountValue(page) {

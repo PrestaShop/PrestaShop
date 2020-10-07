@@ -283,7 +283,7 @@ class Order extends BOBasePage {
    * @param row
    * @return {number}
    */
-  async getOrderTTCPrice(page, row) {
+  async getOrderATIPrice(page, row) {
     // Delete the first character (currency symbol) before getting TTC
     return parseFloat((await this.getTextColumn(page, 'total_paid_tax_incl', row)).substring(1));
   }

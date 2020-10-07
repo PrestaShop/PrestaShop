@@ -136,7 +136,7 @@ describe('Choose quantity discount based on', async () => {
     await foProductPage.addProductToTheCart(page, 1, firstAttributeToChoose, false);
     await foProductPage.addProductToTheCart(page, 1, secondAttributeToChoose, true);
 
-    const priceTTC = await cartPage.getTTCPrice(page);
+    const priceTTC = await cartPage.getATIPrice(page);
     await expect(priceTTC).to.equal(firstCartTotalTTC);
 
     page = await cartPage.closePage(browserContext, page, 0);
@@ -168,7 +168,7 @@ describe('Choose quantity discount based on', async () => {
     page = await productSettingsPage.viewMyShop(page);
 
     await foProductPage.goToCartPage(page);
-    const priceTTC = await cartPage.getTTCPrice(page);
+    const priceTTC = await cartPage.getATIPrice(page);
     await expect(priceTTC).to.equal(secondCartTotalTTC);
 
     page = await cartPage.closePage(browserContext, page, 0);
