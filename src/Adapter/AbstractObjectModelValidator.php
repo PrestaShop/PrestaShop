@@ -78,8 +78,14 @@ abstract class AbstractObjectModelValidator
      */
     protected function validateObjectModelLocalizedProperty(ObjectModel $objectModel, string $propertyName, string $exceptionClass, int $errorCode = 0)
     {
+        $localizedValues = $objectModel->{$propertyName};
+
+        if (null === $localizedValues) {
+            return;
+        }
+
         try {
-            foreach ($objectModel->{$propertyName} as $langId => $value) {
+            foreach ($localizedValues as $langId => $value) {
                 if (true !== $objectModel->validateField($propertyName, $value, $langId)) {
                     throw new $exceptionClass(
                         sprintf(
