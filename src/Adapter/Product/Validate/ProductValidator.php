@@ -86,7 +86,6 @@ class ProductValidator extends AbstractObjectModelValidator
             ProductConstraintException::class,
             ProductConstraintException::INVALID_DESCRIPTION
         );
-
         $this->validateObjectModelLocalizedProperty(
             $product,
             'description_short',
