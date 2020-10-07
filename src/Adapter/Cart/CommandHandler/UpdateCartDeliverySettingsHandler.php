@@ -71,12 +71,8 @@ final class UpdateCartDeliverySettingsHandler extends AbstractCartHandler implem
         $cart = $this->getCart($command->getCartId());
 
         $this->handleFreeShippingOption($cart, $command);
-        if ($command->isAGift() !== null) {
-            $this->handleGiftOption($cart, $command);
-        }
-        if ($command->useRecycledPackaging() !== null) {
-            $this->handleRecycledWrappingOption($cart, $command);
-        }
+        $this->handleGiftOption($cart, $command);
+        $this->handleRecycledWrappingOption($cart, $command);
     }
 
     /**
@@ -169,8 +165,11 @@ final class UpdateCartDeliverySettingsHandler extends AbstractCartHandler implem
      */
     private function handleGiftOption(Cart $cart, UpdateCartDeliverySettingsCommand $command): void
     {
+        if ($command->isAGift() !== null) {
+            return;
+        }
+
         $cart->gift = $command->isAGift();
-        $cart->save();
 
         try {
             if (false === $cart->update()) {
@@ -190,8 +189,10 @@ final class UpdateCartDeliverySettingsHandler extends AbstractCartHandler implem
      */
     private function handleRecycledWrappingOption(Cart $cart, UpdateCartDeliverySettingsCommand $command): void
     {
+        if ($command->useRecycledPackaging() !== null) {
+            return;
+        }
         $cart->recyclable = $command->useRecycledPackaging();
-        $cart->save();
 
         try {
             if (false === $cart->update()) {

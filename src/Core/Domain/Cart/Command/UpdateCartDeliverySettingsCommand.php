@@ -56,7 +56,11 @@ class UpdateCartDeliverySettingsCommand
      * @param bool $isAGift
      * @param bool $useRecycledPackaging
      */
-    public function __construct(int $cartId, bool $allowFreeShipping, ?bool $isAGift, ?bool $useRecycledPackaging)
+    public function __construct(
+        int $cartId,
+        bool $allowFreeShipping,
+        ?bool $isAGift = null,
+        ?bool $useRecycledPackaging = null)
     {
         $this->cartId = new CartId($cartId);
         $this->allowFreeShipping = $allowFreeShipping;
