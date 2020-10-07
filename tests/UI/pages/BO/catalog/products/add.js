@@ -17,7 +17,7 @@ class AddProduct extends BOBasePage {
     this.productWithCombinationsInput = '#show_variations_selector div:nth-of-type(2) input';
     this.productReferenceInput = '#form_step6_reference';
     this.productQuantityInput = '#form_step1_qty_0_shortcut';
-    this.productPriceTtcInput = '#form_step1_price_ttc_shortcut';
+    this.productPriceAtiInput = '#form_step1_price_ttc_shortcut';
     this.saveProductButton = 'input#submit[value=\'Save\']';
     this.goToCatalogButton = '#product_form_save_go_to_catalog_btn';
     this.previewProductLink = 'a#product_form_preview_btn';
@@ -85,7 +85,7 @@ class AddProduct extends BOBasePage {
   }
 
   /**
-   * Set Name, type of product, Reference, price ttc, description and short description
+   * Set Name, type of product, Reference, price ATI, description and short description
    * @param page
    * @param productData
    * @return {Promise<void>}
@@ -102,7 +102,7 @@ class AddProduct extends BOBasePage {
       await this.setValue(page, this.productQuantityInput, productData.quantity.toString());
     }
     await this.selectByVisibleText(page, this.productTaxRuleSelect, productData.taxRule);
-    await this.setValue(page, this.productPriceTtcInput, productData.price.toString());
+    await this.setValue(page, this.productPriceAtiInput, productData.price.toString());
   }
 
   /**

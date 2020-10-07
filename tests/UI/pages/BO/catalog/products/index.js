@@ -45,7 +45,7 @@ class Product extends BOBasePage {
     this.productsListTableColumnReference = row => `${this.productsListTableRow(row)} td:nth-child(5)`;
     this.productsListTableColumnCategory = row => `${this.productsListTableRow(row)} td:nth-child(6)`;
     this.productsListTableColumnPrice = row => `${this.productsListTableRow(row)} td:nth-child(7)`;
-    this.productsListTableColumnPriceTTC = row => `${this.productsListTableRow(row)} td:nth-child(8)`;
+    this.productsListTableColumnPriceATI = row => `${this.productsListTableRow(row)} td:nth-child(8)`;
     this.productsListTableColumnQuantity = row => `${this.productsListTableRow(row)} td.product-sav-quantity`;
     this.productsListTableColumnStatus = row => `${this.productsListTableRow(row)} td:nth-child(10)`;
     this.productsListTableColumnStatusEnabled = row => `${this.productsListTableColumnStatus(row)} .action-enabled`;
@@ -150,7 +150,7 @@ class Product extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getProductPriceFromList(page, row, withTaxes) {
-    const selector = withTaxes ? this.productsListTableColumnPriceTTC : this.productsListTableColumnPrice;
+    const selector = withTaxes ? this.productsListTableColumnPriceATI : this.productsListTableColumnPrice;
     const text = await this.getTextContent(page, selector(row));
     const price = /\d+(\.\d+)?/g.exec(text).toString();
     return parseFloat(price);

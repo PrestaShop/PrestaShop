@@ -97,10 +97,10 @@ Create 2 cart rules
 Place an order in FO with the cart rules created
   1. Check discount value after first cart rule added
   2. Check discount value after second cart rule added
-  3. CheckTTC after second cart rule added
+  3. Check ATI after second cart rule added
   4. Finish the order
-Go Back To BO and check TTC in Orders page
-Create new sql query to check discount value and ttc in database
+Go Back To BO and check ATI price in Orders page
+Create new sql query to check discount value and ATI price in database
  */
 describe('Change currency precision and check orders total price in FO, BO and database', async () => {
   // before and after functions
