@@ -30,8 +30,9 @@ use Cart;
 use CartRule;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
-use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\SetFreeShippingToCartHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartDeliverySettingsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartDeliverySettingsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CannotDeleteCartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
 use PrestaShopException;
@@ -40,7 +41,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * @internal
  */
-final class SetFreeShippingToCartHandler extends AbstractCartHandler implements SetFreeShippingToCartHandlerInterface
+final class UpdateCartDeliverySettingsHandler extends AbstractCartHandler implements UpdateCartDeliverySettingsHandlerInterface
 {
     /**
      * @var TranslatorInterface
@@ -65,35 +66,16 @@ final class SetFreeShippingToCartHandler extends AbstractCartHandler implements 
     /**
      * {@inheritdoc}
      */
-    public function handle(SetFreeShippingToCartCommand $command): void
+    public function handle(UpdateCartDeliverySettingsCommand $command): void
     {
         $cart = $this->getCart($command->getCartId());
 
-        $backOfficeOrderCode = sprintf('%s%s', CartRule::BO_ORDER_CODE_PREFIX, $cart->id);
-
-        $freeShippingCartRule = $this->getCartRuleForBackOfficeFreeShipping($backOfficeOrderCode);
-
-        if ($command->allowFreeShipping()) {
-            if (null === $freeShippingCartRule) {
-                $freeShippingCartRule = $this->createCartRule($cart, $backOfficeOrderCode);
-            }
-            $cart->addCartRule((int) $freeShippingCartRule->id);
-
-            return;
+        $this->handleFreeShippingOption($cart, $command);
+        if ($command->isAGift() !== null) {
+            $this->handleGiftOption($cart, $command);
         }
-
-        if (null === $freeShippingCartRule) {
-            return;
-        }
-
-        $cart->removeCartRule((int) $freeShippingCartRule->id);
-
-        try {
-            if (false === $freeShippingCartRule->delete()) {
-                throw new CannotDeleteCartRuleException(sprintf('Failed deleting cart rule #%s', $freeShippingCartRule->id));
-            }
-        } catch (PrestaShopException $e) {
-            throw new CartRuleException(sprintf('An error occurred when trying to delete cart rule #%s', $freeShippingCartRule->id));
+        if ($command->useRecycledPackaging() !== null) {
+            $this->handleRecycledWrappingOption($cart, $command);
         }
     }
 
@@ -138,5 +120,85 @@ final class SetFreeShippingToCartHandler extends AbstractCartHandler implements 
         $freeShippingCartRule->add();
 
         return $freeShippingCartRule;
+    }
+
+    /**
+     * @param Cart $cart
+     * @param UpdateCartDeliverySettingsCommand $command
+     *
+     * @throws CannotDeleteCartRuleException
+     * @throws CartRuleException
+     * @throws PrestaShopException
+     */
+    protected function handleFreeShippingOption(Cart $cart, UpdateCartDeliverySettingsCommand $command): void
+    {
+        $backOfficeOrderCode = sprintf('%s%s', CartRule::BO_ORDER_CODE_PREFIX, $cart->id);
+
+        $freeShippingCartRule = $this->getCartRuleForBackOfficeFreeShipping($backOfficeOrderCode);
+
+        if ($command->allowFreeShipping()) {
+            if (null === $freeShippingCartRule) {
+                $freeShippingCartRule = $this->createCartRule($cart, $backOfficeOrderCode);
+            }
+            $cart->addCartRule((int) $freeShippingCartRule->id);
+
+            return;
+        }
+
+        if (null === $freeShippingCartRule) {
+            return;
+        }
+
+        $cart->removeCartRule((int) $freeShippingCartRule->id);
+
+        try {
+            if (false === $freeShippingCartRule->delete()) {
+                throw new CannotDeleteCartRuleException(sprintf('Failed deleting cart rule #%s', $freeShippingCartRule->id));
+            }
+        } catch (PrestaShopException $e) {
+            throw new CartRuleException(sprintf('An error occurred when trying to delete cart rule #%s', $freeShippingCartRule->id));
+        }
+    }
+
+    /**
+     * @param Cart $cart
+     * @param UpdateCartDeliverySettingsCommand $command
+     *
+     * @throws CartException
+     * @throws PrestaShopException
+     */
+    private function handleGiftOption(Cart $cart, UpdateCartDeliverySettingsCommand $command): void
+    {
+        $cart->gift = $command->isAGift();
+        $cart->save();
+
+        try {
+            if (false === $cart->update()) {
+                throw new CartException('Failed to update cart gift option');
+            }
+        } catch (PrestaShopException $e) {
+            throw new CartException(sprintf('An error occurred while trying to update gift option for cart with id "%s"', $cart->id));
+        }
+    }
+
+    /**
+     * @param Cart $cart
+     * @param UpdateCartDeliverySettingsCommand $command
+     *
+     * @throws CartException
+     * @throws PrestaShopException
+     */
+    private function handleRecycledWrappingOption(Cart $cart, UpdateCartDeliverySettingsCommand $command): void
+    {
+        $cart->recyclable = $command->useRecycledPackaging();
+        $cart->save();
+
+        try {
+            if (false === $cart->update()) {
+                throw new CartException('Failed to update cart recycle wrapping option');
+            }
+        } catch (PrestaShopException $e) {
+            throw new CartException(sprintf('An error occurred while trying to update recycle wrapping option for cart with id "%s"', $cart->id));
+        }
     }
 }

@@ -28,10 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Cart\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 
-/**
- * Adds free shipping to cart when creating order from Back Office
- */
-class SetFreeShippingToCartCommand
+class UpdateCartDeliverySettingsCommand
 {
     /**
      * @var CartId
@@ -44,13 +41,27 @@ class SetFreeShippingToCartCommand
     private $allowFreeShipping;
 
     /**
+     * @var bool
+     */
+    private $isAGift;
+
+    /**
+     * @var bool
+     */
+    private $useRecycledPackaging;
+
+    /**
      * @param int $cartId
      * @param bool $allowFreeShipping
+     * @param bool $isAGift
+     * @param bool $useRecycledPackaging
      */
-    public function __construct(int $cartId, bool $allowFreeShipping)
+    public function __construct(int $cartId, bool $allowFreeShipping, ?bool $isAGift, ?bool $useRecycledPackaging)
     {
         $this->cartId = new CartId($cartId);
         $this->allowFreeShipping = $allowFreeShipping;
+        $this->isAGift = $isAGift;
+        $this->useRecycledPackaging = $useRecycledPackaging;
     }
 
     /**
@@ -67,5 +78,21 @@ class SetFreeShippingToCartCommand
     public function allowFreeShipping(): bool
     {
         return $this->allowFreeShipping;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function isAGift(): ?bool
+    {
+        return $this->isAGift;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function useRecycledPackaging(): ?bool
+    {
+        return $this->useRecycledPackaging;
     }
 }
