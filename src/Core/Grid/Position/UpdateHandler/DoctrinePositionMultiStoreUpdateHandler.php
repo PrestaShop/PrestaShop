@@ -79,7 +79,7 @@ final class DoctrinePositionMultiStoreUpdateHandler implements PositionUpdateHan
 
         $qb = $this->connection->createQueryBuilder();
         $qb
-            ->from($this->dbPrefix . $positionDefinition->getTable().'_shop', 't')
+            ->from($this->dbPrefix . $positionDefinition->getTable(). '_shop', 't')
             ->select('t.' . $positionDefinition->getIdField() . ', t.' . $positionDefinition->getPositionField())
             ->andWhere('t.id_shop = :shopId')
             ->andWhere('tr.' . $positionDefinition->getParentIdField() . ' = :parentId')
