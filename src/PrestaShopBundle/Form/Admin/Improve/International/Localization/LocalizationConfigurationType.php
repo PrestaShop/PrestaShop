@@ -99,8 +99,8 @@ class LocalizationConfigurationType extends TranslatorAwareType
                 'choice_translation_domain' => false,
                 'attr' => [
                     'data-minimumResultsForSearch' => '7',
-                    'data-toggle' => 'select2'
-                ]
+                    'data-toggle' => 'select2',
+                ],
             ])
             ->add('detect_language_from_browser', SwitchType::class, [
                 'required' => false,
@@ -127,20 +127,20 @@ class LocalizationConfigurationType extends TranslatorAwareType
                 'choice_translation_domain' => false,
                 'attr' => [
                     'data-minimumResultsForSearch' => '7',
-                    'data-toggle' => 'select2'
-                ]
+                    'data-toggle' => 'select2',
+                ],
             ])
             ->add('detect_country_from_browser', SwitchType::class, [
-                    'required' => false,
-                    'label' => $this->trans(
-                        'Default country',
-                        'Admin.International.Feature'
-                    ),
-                    'help' => $this->trans(
-                        'The default country used in your shop.',
-                        'Admin.International.Help'
-                    ),
-                ]
+                'required' => false,
+                'label' => $this->trans(
+                    'Default country',
+                    'Admin.International.Feature'
+                ),
+                'help' => $this->trans(
+                    'The default country used in your shop.',
+                    'Admin.International.Help'
+                ),
+            ]
             )
             ->add('default_currency', ChoiceType::class, [
                 'required' => false,
@@ -157,8 +157,8 @@ class LocalizationConfigurationType extends TranslatorAwareType
                 'attr' => [
                     'data-warning-message' => 'Before changing the default currency, we strongly recommend that you enable maintenance mode. Indeed, any change on the default currency requires a manual adjustment of the price of each product and its combinations.',
                     'data-minimumResultsForSearch' => '7',
-                    'data-toggle' => 'select2'
-                ]
+                    'data-toggle' => 'select2',
+                ],
             ])
             ->add('timezone', ChoiceType::class, [
                 'required' => false,
@@ -170,8 +170,8 @@ class LocalizationConfigurationType extends TranslatorAwareType
                 'choice_translation_domain' => false,
                 'attr' => [
                     'data-minimumResultsForSearch' => '7',
-                    'data-toggle' => 'select2'
-                ]
+                    'data-toggle' => 'select2',
+                ],
             ]);
     }
 }
