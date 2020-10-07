@@ -40,5 +40,17 @@ services:
     arguments:
       - '@prestashop.core.grid.position.update_handler.doctrine_position_update_handler'
 
+  prestashop.core.grid.position.update_handler.doctrine_position_multi_store_update_handler:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Position\UpdateHandler\DoctrinePositionMultiStoreUpdateHandler'
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+      - '@=service("prestashop.adapter.shop.context").getContextShopID()'
+
+  prestashop.core.grid.position.doctrine_grid_multi_store_position_updater:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Position\GridPositionMultiStoreUpdater'
+    arguments:
+      - '@prestashop.core.grid.position.update_handler.doctrine_position_multi_store_update_handler'
+
   prestashop.core.grid.query.filter.doctrine_filter_applicator:
     class: 'PrestaShop\PrestaShop\Core\Grid\Query\Filter\DoctrineFilterApplicator'

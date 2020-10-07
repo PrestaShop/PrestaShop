@@ -595,7 +595,7 @@ class CmsPageController extends FrameworkBundleAdminController
             return $this->redirectToParentIndexPage($cmsCategoryParentId);
         }
 
-        $updater = $this->get('prestashop.core.grid.position.doctrine_grid_position_updater');
+        $updater = $this->get('prestashop.core.grid.position.doctrine_grid_multi_store_position_updater');
 
         try {
             $updater->update($positionUpdate);
