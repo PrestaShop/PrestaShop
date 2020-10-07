@@ -82,12 +82,12 @@ final class DoctrinePositionMultiStoreUpdateHandler implements PositionUpdateHan
             ->from($this->dbPrefix . $positionDefinition->getTable() . '_shop', 't')
             ->select('t.' . $positionDefinition->getIdField() . ', t.' . $positionDefinition->getPositionField())
             ->andWhere('t.id_shop = :shopId')
-            ->andWhere('tr.' . $positionDefinition->getParentIdField() . ' = :parentId')
             ->setParameter('shopId', $this->shopId)
             ->addOrderBy('t.' . $positionDefinition->getPositionField(), 'ASC');
 
         if (null !== $parentId && null !== $positionDefinition->getParentIdField()) {
             $qb
+                ->andWhere('tr.' . $positionDefinition->getParentIdField() . ' = :parentId')
                 ->leftJoin(
                     't',
                     $this->dbPrefix . $positionDefinition->getTable(),
