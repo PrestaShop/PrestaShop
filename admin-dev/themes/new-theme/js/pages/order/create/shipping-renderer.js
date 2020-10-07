@@ -63,8 +63,9 @@ export default class ShippingRenderer {
     this._renderDeliveryOptions(shipping.deliveryOptions, shipping.selectedCarrierId);
     this._renderTotalShipping(shipping.shippingPrice);
     this._renderFreeShippingSwitch(shipping.freeShipping);
-    this._renderRecycledPackagingSwitch(shipping.recycledPackaging);
-    this._renderGiftSwitch(shipping.gift);
+    this.renderRecycledPackagingSwitch(shipping.recycledPackaging);
+    this.renderGiftMessageField(shipping.giftMessage);
+    this.renderGiftSwitch(shipping.gift);
     this._showForm();
     this._showContainer();
   }
@@ -91,7 +92,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  _renderRecycledPackagingSwitch(useRecycledPackaging) {
+  renderRecycledPackagingSwitch(useRecycledPackaging) {
     $(createOrderMap.recycledPackagingSwitch).each((key, input) => {
       if (input.value === '1') {
         input.checked = useRecycledPackaging;
@@ -106,7 +107,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  _renderGiftSwitch(isAGift) {
+  renderGiftSwitch(isAGift) {
     $(createOrderMap.isAGiftSwitch).each((key, input) => {
       if (input.value === '1') {
         input.checked = isAGift;
@@ -114,6 +115,15 @@ export default class ShippingRenderer {
         input.checked = !isAGift;
       }
     });
+  }
+
+  /**
+   * @param giftMessage
+   *
+   * @private
+   */
+  renderGiftMessageField(giftMessage) {
+    $(createOrderMap.giftMessageField).val(giftMessage);
   }
 
   /**

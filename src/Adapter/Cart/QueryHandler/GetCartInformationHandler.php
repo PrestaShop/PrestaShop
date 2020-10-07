@@ -340,7 +340,8 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             $this->fetchCartDeliveryOptions($deliveryOptionsByAddress, $deliveryAddress),
             (int) $carrier->id ?: null,
             (bool) $cart->gift,
-            (bool) $cart->recyclable
+            (bool) $cart->recyclable,
+            $cart->gift_message
         );
     }
 

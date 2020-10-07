@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartDeliverySettingsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartDeliverySettingsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\InvalidGiftMessageException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CannotDeleteCartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
 use PrestaShopException;
@@ -70,9 +71,14 @@ final class UpdateCartDeliverySettingsHandler extends AbstractCartHandler implem
     {
         $cart = $this->getCart($command->getCartId());
 
+        if (!\Validate::isMessage($command->getGiftMessage())) {
+            throw new InvalidGiftMessageException();
+        }
+
         $this->handleFreeShippingOption($cart, $command);
         $this->handleGiftOption($cart, $command);
         $this->handleRecycledWrappingOption($cart, $command);
+        $this->handleGiftMessageOption($cart, $command);
     }
 
     /**
@@ -149,10 +155,10 @@ final class UpdateCartDeliverySettingsHandler extends AbstractCartHandler implem
 
         try {
             if (false === $freeShippingCartRule->delete()) {
-                throw new CannotDeleteCartRuleException(sprintf('Failed deleting cart rule #%s', $freeShippingCartRule->id));
+                throw new CannotDeleteCartRuleException(sprintf('Failed deleting cart rule #%d', $freeShippingCartRule->id));
             }
         } catch (PrestaShopException $e) {
-            throw new CartRuleException(sprintf('An error occurred when trying to delete cart rule #%s', $freeShippingCartRule->id));
+            throw new CartRuleException(sprintf('An error occurred when trying to delete cart rule #%d', $freeShippingCartRule->id));
         }
     }
 
@@ -165,7 +171,7 @@ final class UpdateCartDeliverySettingsHandler extends AbstractCartHandler implem
      */
     private function handleGiftOption(Cart $cart, UpdateCartDeliverySettingsCommand $command): void
     {
-        if ($command->isAGift() !== null) {
+        if ($command->isAGift() === null) {
             return;
         }
 
@@ -176,7 +182,7 @@ final class UpdateCartDeliverySettingsHandler extends AbstractCartHandler implem
                 throw new CartException('Failed to update cart gift option');
             }
         } catch (PrestaShopException $e) {
-            throw new CartException(sprintf('An error occurred while trying to update gift option for cart with id "%s"', $cart->id));
+            throw new CartException(sprintf('An error occurred while trying to update gift option for cart with id "%d"', $cart->id));
         }
     }
 
@@ -189,7 +195,7 @@ final class UpdateCartDeliverySettingsHandler extends AbstractCartHandler implem
      */
     private function handleRecycledWrappingOption(Cart $cart, UpdateCartDeliverySettingsCommand $command): void
     {
-        if ($command->useRecycledPackaging() !== null) {
+        if ($command->useRecycledPackaging() === null) {
             return;
         }
         $cart->recyclable = $command->useRecycledPackaging();
@@ -199,7 +205,30 @@ final class UpdateCartDeliverySettingsHandler extends AbstractCartHandler implem
                 throw new CartException('Failed to update cart recycle wrapping option');
             }
         } catch (PrestaShopException $e) {
-            throw new CartException(sprintf('An error occurred while trying to update recycle wrapping option for cart with id "%s"', $cart->id));
+            throw new CartException(sprintf('An error occurred while trying to update recycle wrapping option for cart with id "%d"', $cart->id));
+        }
+    }
+
+    /**
+     * @param Cart $cart
+     * @param UpdateCartDeliverySettingsCommand $command
+     *
+     * @throws CartException
+     */
+    private function handleGiftMessageOption(Cart $cart, UpdateCartDeliverySettingsCommand $command): void
+    {
+        if ($command->getGiftMessage() === null) {
+            return;
+        }
+        $cart->gift_message = $command->getGiftMessage();
+        $cart->save();
+
+        try {
+            if (false === $cart->update()) {
+                throw new CartException('Failed to update cart gift message');
+            }
+        } catch (PrestaShopException $e) {
+            throw new CartException(sprintf('An error occurred while trying to update gift message for cart with id "%d"', $cart->id));
         }
     }
 }

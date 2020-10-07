@@ -216,6 +216,10 @@ export default class CreateOrderPage {
       this.cartEditor.updateDeliveryOptions(this.cartId),
     );
 
+    this.$container.on('blur', createOrderMap.giftMessageField, e =>
+      this.cartEditor.updateDeliveryOptions(this.cartId),
+    );
+
     this.$container.on('click', createOrderMap.addToCartButton, () =>
       this.productManager.addProductToCart(this.cartId),
     );

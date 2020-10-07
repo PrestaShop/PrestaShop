@@ -51,21 +51,29 @@ class UpdateCartDeliverySettingsCommand
     private $useRecycledPackaging;
 
     /**
+     * @var string
+     */
+    private $giftMessage;
+
+    /**
      * @param int $cartId
      * @param bool $allowFreeShipping
      * @param bool $isAGift
      * @param bool $useRecycledPackaging
+     * @param string $giftMessage
      */
     public function __construct(
         int $cartId,
         bool $allowFreeShipping,
         ?bool $isAGift = null,
-        ?bool $useRecycledPackaging = null)
-    {
+        ?bool $useRecycledPackaging = null,
+        ?string $giftMessage = null
+    ) {
         $this->cartId = new CartId($cartId);
         $this->allowFreeShipping = $allowFreeShipping;
         $this->isAGift = $isAGift;
         $this->useRecycledPackaging = $useRecycledPackaging;
+        $this->giftMessage = $giftMessage;
     }
 
     /**
@@ -98,5 +106,13 @@ class UpdateCartDeliverySettingsCommand
     public function useRecycledPackaging(): ?bool
     {
         return $this->useRecycledPackaging;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getGiftMessage(): ?string
+    {
+        return $this->giftMessage;
     }
 }
