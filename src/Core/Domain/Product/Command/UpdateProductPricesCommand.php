@@ -93,7 +93,10 @@ class UpdateProductPricesCommand
     }
 
     /**
+<<<<<<< HEAD
      * @return DecimalNumber|null
+     * @return Number|null
+>>>>>>>  POC PriceFiller service to wrap domain logic for update
      */
     public function getPrice(): ?DecimalNumber
     {
@@ -113,7 +116,10 @@ class UpdateProductPricesCommand
     }
 
     /**
+<<<<<<< HEAD
      * @return DecimalNumber|null
+     * @return Number|null
+>>>>>>>  POC PriceFiller service to wrap domain logic for update
      */
     public function getEcotax(): ?DecimalNumber
     {
@@ -173,7 +179,10 @@ class UpdateProductPricesCommand
     }
 
     /**
+<<<<<<< HEAD
      * @return DecimalNumber|null
+     * @return Number|null
+>>>>>>>  POC PriceFiller service to wrap domain logic for update
      */
     public function getWholesalePrice(): ?DecimalNumber
     {
@@ -193,7 +202,10 @@ class UpdateProductPricesCommand
     }
 
     /**
+<<<<<<< HEAD
      * @return DecimalNumber|null
+     * @return Number|null
+>>>>>>>  POC PriceFiller service to wrap domain logic for update
      */
     public function getUnitPrice(): ?DecimalNumber
     {

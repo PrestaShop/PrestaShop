@@ -104,6 +104,7 @@ services:
         arguments:
             - '@prestashop.core.util.number.number_extractor'
             - '@prestashop.adapter.product.product_repository'
+            - '@prestashop.adapter.product.product_price_filler'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand
@@ -298,6 +299,9 @@ services:
             - '%database_prefix%'
             - '@prestashop.adapter.product.validate.product_validator'
             - '@=service("prestashop.adapter.legacy.context").getContext().shop.id_category'
+
+    prestashop.adapter.product.product_price_filler:
+        class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductPriceFiller
 
     prestashop.adapter.product.validate.customization_field_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\Validate\CustomizationFieldValidator
