@@ -194,7 +194,7 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
             )
         ;
 
-        if ($this->isAllShopContextOrShopFeatureIsNotUsed()) {
+        if ($this->multistoreContextChecker->isSingleShopContext()) {
             $columnCollection
                 ->addAfter(
                     'head_seo_title',
@@ -282,7 +282,7 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
             )
         ;
 
-        if ($this->isAllShopContextOrShopFeatureIsNotUsed()) {
+        if ($this->multistoreContextChecker->isSingleShopContext()) {
             $filterCollection
                 ->add((new Filter('position', TextType::class))
                 ->setTypeOptions([

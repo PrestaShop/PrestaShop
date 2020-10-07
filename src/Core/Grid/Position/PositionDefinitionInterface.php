@@ -61,4 +61,12 @@ interface PositionDefinitionInterface
      * @return string|null
      */
     public function getParentIdField();
+
+    /**
+     * Id of the shop, if not null we are trying to update position
+     * in relation to multi-store context
+     *
+     * @return int|null
+     */
+    public function getShopId();
 }

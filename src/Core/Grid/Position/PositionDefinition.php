@@ -53,21 +53,29 @@ final class PositionDefinition implements PositionDefinitionInterface
     private $parentIdField;
 
     /**
+     * @var int|null
+     */
+    private $shopId;
+
+    /**
      * @param string $table
      * @param string $idField
      * @param string $positionField
      * @param string|null $parentIdField
+     * @param int|null $shopId
      */
     public function __construct(
         $table,
         $idField,
         $positionField,
-        $parentIdField = null
+        $parentIdField = null,
+        $shopId = null
     ) {
         $this->table = $table;
         $this->idField = $idField;
         $this->positionField = $positionField;
         $this->parentIdField = $parentIdField;
+        $this->shopId = $shopId;
     }
 
     /**
@@ -100,5 +108,16 @@ final class PositionDefinition implements PositionDefinitionInterface
     public function getParentIdField()
     {
         return $this->parentIdField;
+    }
+
+    /**
+     * If shop id is available we try to update position
+     * in relation to multi-store table
+     * 
+     * @return int|null
+     */
+    public function getShopId()
+    {
+        return $this->shopId;
     }
 }

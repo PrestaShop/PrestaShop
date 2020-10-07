@@ -25,4 +25,10 @@ ALTER TABLE `PREFIX_hook` ADD `active` TINYINT(1) UNSIGNED DEFAULT 1 NOT NULL AF
 
 ALTER TABLE `PREFIX_orders` ADD COLUMN `note` TEXT AFTER `date_upd`;
 
+ALTER TABLE `PREFIX_cms_shop` ADD COLUMN `position` int(10) unsigned NOT NULL DEFAULT '0';
+UPDATE `PREFIX_cms_shop` cs
+JOIN `PREFIX_cms` c ON c.`id_cms` = cs.`id_cms`
+SET cs.`position` = c.`position`;
+
+
 ALTER TABLE `PREFIX_currency` CHANGE `numeric_iso_code` `numeric_iso_code` varchar(3) NULL DEFAULT NULL;
