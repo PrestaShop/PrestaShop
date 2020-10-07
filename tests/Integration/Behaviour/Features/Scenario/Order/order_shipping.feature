@@ -49,6 +49,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 6.0    |
       | total_shipping_tax_incl  | 6.36   |
+      | carrier_tax_rate         | 6.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 0.600 |
       | shipping_cost_tax_excl | 6.00  |
@@ -71,6 +72,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 4.0    |
       | total_shipping_tax_incl  | 4.24   |
+      | carrier_tax_rate         | 6.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 1.860 |
       | shipping_cost_tax_excl | 4.00  |
@@ -90,6 +92,7 @@ Feature: Order from Back Office (BO)
       | total_paid_tax_incl      | 122.75 |
       | total_paid               | 122.75 |
       | total_paid_real          | 0.0    |
+      | carrier_tax_rate         | 6.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 4.380 |
       | shipping_cost_tax_excl | 2.00  |
@@ -109,6 +112,7 @@ Feature: Order from Back Office (BO)
       | total_paid_tax_incl      | 61.27  |
       | total_paid               | 61.27  |
       | total_paid_real          | 0.0    |
+      | carrier_tax_rate         | 6.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 4.380 |
       | shipping_cost_tax_excl | 4.00  |
@@ -140,6 +144,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 2.0    |
       | total_shipping_tax_incl  | 2.12   |
+      | carrier_tax_rate         | 6.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 0.600 |
       | shipping_cost_tax_excl | 2.00  |
@@ -162,6 +167,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 5.0    |
       | total_shipping_tax_incl  | 5.30   |
+      | carrier_tax_rate         | 6.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 1.860 |
       | shipping_cost_tax_excl | 5.00  |
@@ -181,6 +187,7 @@ Feature: Order from Back Office (BO)
       | total_paid_tax_incl      | 129.11 |
       | total_paid               | 129.11 |
       | total_paid_real          | 0.0    |
+      | carrier_tax_rate         | 6.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 4.380 |
       | shipping_cost_tax_excl | 8.00  |
@@ -200,6 +207,7 @@ Feature: Order from Back Office (BO)
       | total_paid_tax_incl      | 65.51  |
       | total_paid               | 65.51  |
       | total_paid_real          | 0.0    |
+      | carrier_tax_rate         | 6.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 4.380 |
       | shipping_cost_tax_excl | 8.00  |
@@ -227,6 +235,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 2.0    |
       | total_shipping_tax_incl  | 2.12   |
+      | carrier_tax_rate         | 6.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 0.600 |
       | shipping_cost_tax_excl | 2.00  |
@@ -249,6 +258,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 5.0    |
       | total_shipping_tax_incl  | 5.30   |
+      | carrier_tax_rate         | 6.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 1.860 |
       | shipping_cost_tax_excl | 5.00  |
@@ -267,6 +277,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
+      | carrier_tax_rate         | 6.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 1.860 |
       | shipping_cost_tax_excl | 7.00  |
@@ -285,6 +296,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 4.0    |
       | total_shipping_tax_incl  | 4.24   |
+      | carrier_tax_rate         | 6.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 1.860 |
       | shipping_cost_tax_excl | 4.00  |
@@ -313,6 +325,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 2.0    |
       | total_shipping_tax_incl  | 2.12   |
+      | carrier_tax_rate         | 6.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 0.600 |
       | shipping_cost_tax_excl | 2.00  |
@@ -335,6 +348,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 2.0    |
       | total_shipping_tax_incl  | 2.12   |
+      | carrier_tax_rate         | 6.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 1.860 |
       | shipping_cost_tax_excl | 2.00  |
@@ -354,6 +368,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 2.0    |
       | total_shipping_tax_incl  | 2.12   |
+      | carrier_tax_rate         | 6.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 4.380 |
       | shipping_cost_tax_excl | 2.00  |
@@ -371,6 +386,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 2.0    |
       | total_shipping_tax_incl  | 2.12   |
+      | carrier_tax_rate         | 6.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 4.380 |
       | shipping_cost_tax_excl | 2.00  |
@@ -388,6 +404,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 2.0    |
       | total_shipping_tax_incl  | 2.12   |
+      | carrier_tax_rate         | 6.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 4.380 |
       | shipping_cost_tax_excl | 2.00  |
@@ -422,6 +439,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 6.0    |
       | total_shipping_tax_incl  | 6.36   |
+      | carrier_tax_rate         | 6.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 0.600 |
       | shipping_cost_tax_excl | 6.00  |
@@ -455,6 +473,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 5.0    |
       | total_shipping_tax_incl  | 5.30   |
+      | carrier_tax_rate         | 6.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 0.600 |
       | shipping_cost_tax_excl | 5.00  |
@@ -482,6 +501,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 5.0    |
       | total_shipping_tax_incl  | 5.00   |
+      | carrier_tax_rate         | 0.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 0.600 |
       | shipping_cost_tax_excl | 5.00  |
@@ -524,6 +544,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 6.0    |
       | total_shipping_tax_incl  | 6.36   |
+      | carrier_tax_rate         | 6.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 0.600 |
       | shipping_cost_tax_excl | 6.00  |
@@ -557,6 +578,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 6.0    |
       | total_shipping_tax_incl  | 6.36   |
+      | carrier_tax_rate         | 6.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 0.600 |
       | shipping_cost_tax_excl | 6.00  |
@@ -584,6 +606,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 5.0    |
       | total_shipping_tax_incl  | 5.00   |
+      | carrier_tax_rate         | 0.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 0.600 |
       | shipping_cost_tax_excl | 5.00  |
@@ -619,6 +642,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
+      | carrier_tax_rate         | 6.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 0.600 |
       | shipping_cost_tax_excl | 7.00  |
@@ -644,6 +668,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 6.0    |
       | total_shipping_tax_incl  | 6.36   |
+      | carrier_tax_rate         | 6.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 0.600 |
       | shipping_cost_tax_excl | 6.00  |
@@ -673,6 +698,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 6.0    |
       | total_shipping_tax_incl  | 6.36   |
+      | carrier_tax_rate         | 6.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 0.600 |
       | shipping_cost_tax_excl | 6.00  |
@@ -718,6 +744,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 5.0    |
       | total_shipping_tax_incl  | 5.0    |
+      | carrier_tax_rate         | 0.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 0.600 |
       | shipping_cost_tax_excl | 5.00  |
@@ -753,6 +780,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 6.0    |
       | total_shipping_tax_incl  | 6.36   |
+      | carrier_tax_rate         | 6.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 0.600 |
       | shipping_cost_tax_excl | 6.00  |
@@ -781,6 +809,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 5.0    |
       | total_shipping_tax_incl  | 5.0    |
+      | carrier_tax_rate         | 0.0    |
     And order "bo_order1" carrier should have following details:
       | weight                 | 0.600 |
       | shipping_cost_tax_excl | 5.00  |

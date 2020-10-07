@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
+use Address;
 use Cache;
 use Carrier;
 use Cart;
@@ -136,14 +137,14 @@ class OrderAmountUpdater
             $order->total_paid_tax_excl -= $shippingDiffTaxExcluded;
         }
 
+        // Update carrier weight for shipping cost
+        $this->updateOrderCarrier($order, $cart);
+
         if (!$order->update()) {
             throw new OrderException('Could not update order invoice in database.');
         }
 
         $this->updateOrderInvoices($order, $cart, $computingPrecision);
-
-        // Update carrier weight for shipping cost
-        $this->updateOrderCarrier($order);
     }
 
     /**
@@ -166,11 +167,12 @@ class OrderAmountUpdater
 
     /**
      * @param Order $order
+     * @param Cart $cart
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    private function updateOrderCarrier(Order $order): void
+    private function updateOrderCarrier(Order $order, Cart $cart): void
     {
         $orderCarrier = new OrderCarrier((int) $order->getIdOrderCarrier());
 
@@ -181,6 +183,14 @@ class OrderAmountUpdater
 
             if ($orderCarrier->update()) {
                 $order->weight = sprintf('%.3f ' . $this->configuration->get('PS_WEIGHT_UNIT'), $orderCarrier->weight);
+            }
+        }
+
+        if (!$cart->isVirtualCart() && isset($order->id_carrier)) {
+            $carrier = new Carrier((int) $order->id_carrier, (int) $cart->id_lang);
+            if (null !== $carrier && Validate::isLoadedObject($carrier)) {
+                $taxAddressId = (int) $order->{$this->configuration->get('PS_TAX_ADDRESS_TYPE')};
+                $order->carrier_tax_rate = $carrier->getTaxesRate(new Address($taxAddressId));
             }
         }
     }
