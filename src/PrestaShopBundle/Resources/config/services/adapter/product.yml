@@ -148,37 +148,6 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductCategoriesCommand
 
-    prestashop.adapter.product.command_handler.add_customization_field_handler:
-        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddCustomizationFieldHandler
-        arguments:
-            - '@prestashop.adapter.product.product_repository'
-            - '@prestashop.adapter.product.update.product_customization_field_updater'
-            - '@prestashop.adapter.product.customization_field_repository'
-        tags:
-            - name: tactician.handler
-              command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\AddCustomizationFieldCommand
-
-    prestashop.adapter.product.command_handler.update_customization_field_handler:
-        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateCustomizationFieldHandler
-        arguments:
-            - '@prestashop.adapter.product.product_repository'
-            - '@prestashop.adapter.product.update.product_customization_field_updater'
-            - '@prestashop.adapter.product.customization_field_repository'
-        tags:
-            - name: tactician.handler
-              command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateCustomizationFieldCommand
-
-    prestashop.adapter.product.command_handler.delete_customization_field_handler:
-        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DeleteCustomizationFieldHandler
-        arguments:
-            - '@prestashop.adapter.product.update.customization_field_deleter'
-            - '@prestashop.adapter.product.customization_field_repository'
-            - '@prestashop.adapter.product.product_repository'
-            - '@prestashop.adapter.product.update.product_customization_field_updater'
-        tags:
-            - name: tactician.handler
-              command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\DeleteCustomizationFieldCommand
-
     prestashop.adapter.product.query_handler.get_product_customization_fields_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductCustomizationFieldsHandler
         arguments:
