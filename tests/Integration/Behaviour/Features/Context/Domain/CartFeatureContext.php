@@ -347,6 +347,27 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I declare cart :cartReference is a gift with message :message
+     *
+     * @param string $cartReference
+     * @param string $message
+     */
+    public function sendAsAGift(string $cartReference, string $message)
+    {
+        $cartId = SharedStorage::getStorage()->get($cartReference);
+
+        $this->getCommandBus()->handle(
+            new UpdateCartDeliverySettingsCommand(
+                $cartId,
+                true,
+                true,
+                false,
+                $message
+            )
+        );
+    }
+
+    /**
      * @When I use a voucher :voucherCode for a discount of :discountAmount on the cart :cartReference
      *
      * @param string $voucherCode
@@ -663,16 +684,6 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
         $this->getSharedStorage()->set($voucherCode, $cartRuleId);
         $this->getSharedStorage()->set($giftProductName, $productId);
-    }
-
-    /**
-     * @Then cart :cartReference should have free shipping
-     */
-    public function assertCartShippingIsFree(string $cartReference)
-    {
-        $cartInfo = $this->getCartInformationByReference($cartReference);
-        Assert::assertTrue($cartInfo->getShipping()->isFreeShipping());
-        Assert::assertEquals('0', $cartInfo->getShipping()->getShippingPrice());
     }
 
     /**
