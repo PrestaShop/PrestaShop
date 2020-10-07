@@ -96,7 +96,7 @@ class CarriersController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function searchAction(Request $request)
+    public function searchAction(Request $request): RedirectResponse
     {
         /** @var ResponseBuilder $responseBuilder */
         $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
@@ -116,7 +116,7 @@ class CarriersController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function editAction(int $carrierId)
+    public function editAction(int $carrierId): RedirectResponse
     {
         return $this->redirect($this->getAdminLink('AdminCarrierWizard', ['id_carrier' => $carrierId]));
     }
@@ -134,7 +134,7 @@ class CarriersController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function deleteAction(int $carrierId)
+    public function deleteAction(int $carrierId): RedirectResponse
     {
         try {
             $this->getCommandBus()->handle(new DeleteCarrierCommand($carrierId));
@@ -161,7 +161,7 @@ class CarriersController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function toggleStatusAction(int $carrierId)
+    public function toggleStatusAction(int $carrierId): RedirectResponse
     {
         try {
             $this->getCommandBus()->handle(new ToggleCarrierStatusCommand($carrierId));
@@ -194,7 +194,7 @@ class CarriersController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function toggleIsFreeAction(int $carrierId)
+    public function toggleIsFreeAction(int $carrierId): RedirectResponse
     {
         try {
             $this->getCommandBus()->handle(new ToggleCarrierIsFreeCommand($carrierId));
@@ -227,7 +227,7 @@ class CarriersController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function updatePositionAction(Request $request)
+    public function updatePositionAction(Request $request): RedirectResponse
     {
         $positionsData = [
             'positions' => $request->request->get('positions'),
@@ -262,7 +262,7 @@ class CarriersController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function bulkDeleteAction(Request $request)
+    public function bulkDeleteAction(Request $request): RedirectResponse
     {
         $carrierIds = $this->getCarrierIdsFromRequest($request);
 
@@ -292,7 +292,7 @@ class CarriersController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function bulkEnableStatusAction(Request $request)
+    public function bulkEnableStatusAction(Request $request): RedirectResponse
     {
         $carrierIds = $this->getCarrierIdsFromRequest($request);
 
@@ -322,7 +322,7 @@ class CarriersController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function bulkDisableStatusAction(Request $request)
+    public function bulkDisableStatusAction(Request $request): RedirectResponse
     {
         $carrierIds = $this->getCarrierIdsFromRequest($request);
 
@@ -339,7 +339,7 @@ class CarriersController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_carriers_index');
     }
 
-    private function getErrorMessages()
+    private function getErrorMessages(): array
     {
         return [
             CarrierNotFoundException::class => $this->trans(
@@ -373,7 +373,7 @@ class CarriersController extends FrameworkBundleAdminController
         ];
     }
 
-    private function getLayoutHeaderToolbarButtons()
+    private function getLayoutHeaderToolbarButtons(): array
     {
         $toolbarButtons['add'] = [
             'href' => $this->getAdminLink('AdminCarrierWizard', []),
@@ -391,7 +391,7 @@ class CarriersController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    private function getCarrierIdsFromRequest(Request $request)
+    private function getCarrierIdsFromRequest(Request $request): array
     {
         $carrierIds = $request->request->get('carrier_bulk');
 
