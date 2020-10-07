@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
@@ -46,45 +47,66 @@ use Product;
 class UpdateProductSeoHandler extends AbstractProductHandler implements UpdateProductSeoHandlerInterface
 {
     /**
+     * @var ProductRepository
+     */
+    private $productRepository;
+
+    /**
+     * @param ProductRepository $productRepository
+     */
+    public function __construct(
+        ProductRepository $productRepository
+    ) {
+        $this->productRepository = $productRepository;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(UpdateProductSeoCommand $command): void
     {
         $product = $this->getProduct($command->getProductId());
-        $this->fillUpdatableFieldsWithCommandData($product, $command);
+        $updatableProperties = $this->fillUpdatableProperties($product, $command);
 
-        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_SEO);
+        $this->productRepository->partialUpdate($product, $updatableProperties, CannotUpdateProductException::FAILED_UPDATE_SEO);
     }
 
     /**
      * @param Product $product
      * @param UpdateProductSeoCommand $command
+     *
+     * @return array
      */
-    private function fillUpdatableFieldsWithCommandData(Product $product, UpdateProductSeoCommand $command): void
+    private function fillUpdatableProperties(Product $product, UpdateProductSeoCommand $command): array
     {
-        $redirectOption = $command->getRedirectOption();
+        $updatableProperties = [];
 
+        $redirectOption = $command->getRedirectOption();
         if (null !== $redirectOption) {
             $this->fillRedirectOptionValues($product, $redirectOption);
+            $updatableProperties[] = 'redirect_type';
+            $updatableProperties[] = 'id_type_redirected';
         }
 
         if (null !== $command->getLocalizedMetaDescriptions()) {
             $product->meta_description = $command->getLocalizedMetaDescriptions();
             $this->validateLocalizedField($product, 'meta_description', ProductConstraintException::INVALID_META_DESCRIPTION);
-            $this->fieldsToUpdate['meta_description'] = true;
+            $updatableProperties[] = 'meta_description';
         }
 
         if (null !== $command->getLocalizedMetaTitles()) {
             $product->meta_title = $command->getLocalizedMetaTitles();
             $this->validateLocalizedField($product, 'meta_title', ProductConstraintException::INVALID_META_TITLE);
-            $this->fieldsToUpdate['meta_title'] = true;
+            $updatableProperties[] = 'meta_title';
         }
 
         if (null !== $command->getLocalizedLinkRewrites()) {
             $product->link_rewrite = $command->getLocalizedLinkRewrites();
             $this->validateLocalizedField($product, 'link_rewrite', ProductConstraintException::INVALID_LINK_REWRITE);
-            $this->fieldsToUpdate['link_rewrite'] = true;
+            $updatableProperties[] = 'link_rewrite';
         }
+
+        return $updatableProperties;
     }
 
     /**
@@ -108,8 +130,6 @@ class UpdateProductSeoHandler extends AbstractProductHandler implements UpdatePr
 
         $product->redirect_type = $redirectType->getValue();
         $product->id_type_redirected = $redirectTarget->getValue();
-        $this->fieldsToUpdate['redirect_type'] = true;
-        $this->fieldsToUpdate['id_type_redirected'] = true;
     }
 
     /**

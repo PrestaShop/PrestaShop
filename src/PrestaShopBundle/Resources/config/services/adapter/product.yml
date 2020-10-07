@@ -248,6 +248,8 @@ services:
 
     prestashop.adapter.product.command_handler.update_product_seo_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductSeoHandler
+        arguments:
+            - '@prestashop.adapter.product.product_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand
