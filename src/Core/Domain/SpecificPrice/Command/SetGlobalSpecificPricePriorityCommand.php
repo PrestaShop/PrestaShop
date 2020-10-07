@@ -24,35 +24,35 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception;
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\ValueObject\PriorityList;
 
 /**
- * Thrown when specific price constraints are violated
+ * Sets global priorities for specific price
  */
-class SpecificPriceConstraintException extends SpecificPriceException
+class SetGlobalSpecificPricePriorityCommand
 {
     /**
-     * When catalog price rule id is not valid
+     * @var PriorityList
      */
-    const INVALID_ID = 1;
+    private $priorityList;
 
     /**
-     * When date-time format is invalid
+     * @param string[] $priorityList
      */
-    const INVALID_DATETIME = 2;
+    public function __construct(array $priorityList)
+    {
+        $this->priorityList = new PriorityList($priorityList);
+    }
 
     /**
-     * When date range is not valid
+     * @return PriorityList
      */
-    const INVALID_DATE_RANGE = 3;
-
-    /**
-     * When specific price priority value is not valid
-     */
-    const INVALID_PRIORITY = 4;
-
-    /**
-     * When there is duplicated priorities in specific price priority list
-     */
-    const DUPLICATE_PRIORITY = 5;
+    public function getPriorityList(): PriorityList
+    {
+        return $this->priorityList;
+    }
 }

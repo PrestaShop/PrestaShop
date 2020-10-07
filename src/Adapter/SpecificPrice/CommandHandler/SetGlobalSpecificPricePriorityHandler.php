@@ -24,35 +24,38 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception;
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Adapter\SpecificPrice\CommandHandler;
+
+use PrestaShop\PrestaShop\Adapter\SpecificPrice\Update\SpecificPricePriorityUpdater;
+use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\SetGlobalSpecificPricePriorityCommand;
+use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\CommandHandler\SetGlobalSpecificPricePriorityHandlerInterface;
 
 /**
- * Thrown when specific price constraints are violated
+ * Handles @see SetGlobalSpecificPricePriorityCommand using legacy object model
  */
-class SpecificPriceConstraintException extends SpecificPriceException
+final class SetGlobalSpecificPricePriorityHandler implements SetGlobalSpecificPricePriorityHandlerInterface
 {
     /**
-     * When catalog price rule id is not valid
+     * @var SpecificPricePriorityUpdater
      */
-    const INVALID_ID = 1;
+    private $specificPricePriorityUpdater;
 
     /**
-     * When date-time format is invalid
+     * @param SpecificPricePriorityUpdater $specificPricePriorityUpdater
      */
-    const INVALID_DATETIME = 2;
+    public function __construct(
+        SpecificPricePriorityUpdater $specificPricePriorityUpdater
+    ) {
+        $this->specificPricePriorityUpdater = $specificPricePriorityUpdater;
+    }
 
     /**
-     * When date range is not valid
+     * {@inheritdoc}
      */
-    const INVALID_DATE_RANGE = 3;
-
-    /**
-     * When specific price priority value is not valid
-     */
-    const INVALID_PRIORITY = 4;
-
-    /**
-     * When there is duplicated priorities in specific price priority list
-     */
-    const DUPLICATE_PRIORITY = 5;
+    public function handle(SetGlobalSpecificPricePriorityCommand $command): void
+    {
+        $this->specificPricePriorityUpdater->setGlobalPriorities($command->getPriorityList());
+    }
 }

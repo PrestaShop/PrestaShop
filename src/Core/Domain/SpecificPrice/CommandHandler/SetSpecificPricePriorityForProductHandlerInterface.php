@@ -24,35 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\SetSpecificPricePriorityForProductCommand;
 
 /**
- * Thrown when specific price constraints are violated
+ * Defines contract to handle @see SetSpecificPricePriorityForProductCommand
  */
-class SpecificPriceConstraintException extends SpecificPriceException
+interface SetSpecificPricePriorityForProductHandlerInterface
 {
     /**
-     * When catalog price rule id is not valid
+     * @param SetSpecificPricePriorityForProductCommand $command
      */
-    const INVALID_ID = 1;
-
-    /**
-     * When date-time format is invalid
-     */
-    const INVALID_DATETIME = 2;
-
-    /**
-     * When date range is not valid
-     */
-    const INVALID_DATE_RANGE = 3;
-
-    /**
-     * When specific price priority value is not valid
-     */
-    const INVALID_PRIORITY = 4;
-
-    /**
-     * When there is duplicated priorities in specific price priority list
-     */
-    const DUPLICATE_PRIORITY = 5;
+    public function handle(SetSpecificPricePriorityForProductCommand $command): void;
 }
