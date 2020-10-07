@@ -31,6 +31,8 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Validate;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException as ProductConstraintExceptionAlias;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -88,6 +90,8 @@ class ProductValidator extends AbstractObjectModelValidator
      * @throws ProductConstraintException
      * @throws ProductPackConstraintException
      * @throws ProductStockConstraintException
+     * @throws ProductConstraintExceptionAlias
+     * @throws ProductException
      */
     public function validate(Product $product): void
     {
@@ -97,12 +101,13 @@ class ProductValidator extends AbstractObjectModelValidator
         $this->validateShipping($product);
         $this->validateStock($product);
         $this->validateSeo($product);
+        $this->validatePrices($product);
     }
 
     /**
      * @param Product $product
      *
-     * @throws ProductConstraintException
+     * @throws ProductConstraintExceptionAlias
      */
     private function validateCustomizability(Product $product): void
     {
@@ -114,13 +119,13 @@ class ProductValidator extends AbstractObjectModelValidator
     /**
      * @param Product $product
      *
-     * @throws ProductConstraintException
+     * @throws ProductConstraintExceptionAlias
      */
     private function validateBasicInfo(Product $product): void
     {
-        $this->validateProductLocalizedProperty($product, 'name', ProductConstraintException::INVALID_NAME);
-        $this->validateProductLocalizedProperty($product, 'description', ProductConstraintException::INVALID_DESCRIPTION);
-        $this->validateProductLocalizedProperty($product, 'description_short', ProductConstraintException::INVALID_SHORT_DESCRIPTION);
+        $this->validateProductLocalizedProperty($product, 'name', ProductConstraintExceptionAlias::INVALID_NAME);
+        $this->validateProductLocalizedProperty($product, 'description', ProductConstraintExceptionAlias::INVALID_DESCRIPTION);
+        $this->validateProductLocalizedProperty($product, 'description_short', ProductConstraintExceptionAlias::INVALID_SHORT_DESCRIPTION);
     }
 
     /**
@@ -134,30 +139,44 @@ class ProductValidator extends AbstractObjectModelValidator
         $this->validateProductProperty($product, 'online_only');
         $this->validateProductProperty($product, 'show_price');
         $this->validateProductProperty($product, 'id_manufacturer');
-        $this->validateProductProperty($product, 'visibility', ProductConstraintException::INVALID_VISIBILITY);
-        $this->validateProductProperty($product, 'condition', ProductConstraintException::INVALID_CONDITION);
-        $this->validateProductProperty($product, 'ean13', ProductConstraintException::INVALID_EAN_13);
-        $this->validateProductProperty($product, 'isbn', ProductConstraintException::INVALID_ISBN);
-        $this->validateProductProperty($product, 'mpn', ProductConstraintException::INVALID_MPN);
-        $this->validateProductProperty($product, 'reference', ProductConstraintException::INVALID_REFERENCE);
-        $this->validateProductProperty($product, 'upc', ProductConstraintException::INVALID_UPC);
+        $this->validateProductProperty($product, 'visibility', ProductConstraintExceptionAlias::INVALID_VISIBILITY);
+        $this->validateProductProperty($product, 'condition', ProductConstraintExceptionAlias::INVALID_CONDITION);
+        $this->validateProductProperty($product, 'ean13', ProductConstraintExceptionAlias::INVALID_EAN_13);
+        $this->validateProductProperty($product, 'isbn', ProductConstraintExceptionAlias::INVALID_ISBN);
+        $this->validateProductProperty($product, 'mpn', ProductConstraintExceptionAlias::INVALID_MPN);
+        $this->validateProductProperty($product, 'reference', ProductConstraintExceptionAlias::INVALID_REFERENCE);
+        $this->validateProductProperty($product, 'upc', ProductConstraintExceptionAlias::INVALID_UPC);
     }
 
     /**
      * @param Product $product
      *
-     * @throws ProductConstraintException
+     * @throws ProductConstraintExceptionAlias
      */
     private function validateShipping(Product $product): void
     {
-        $this->validateProductProperty($product, 'width', ProductConstraintException::INVALID_WIDTH);
-        $this->validateProductProperty($product, 'height', ProductConstraintException::INVALID_HEIGHT);
-        $this->validateProductProperty($product, 'depth', ProductConstraintException::INVALID_DEPTH);
-        $this->validateProductProperty($product, 'weight', ProductConstraintException::INVALID_WEIGHT);
-        $this->validateProductProperty($product, 'additional_shipping_cost', ProductConstraintException::INVALID_ADDITIONAL_SHIPPING_COST);
+        $this->validateProductProperty($product, 'width', ProductConstraintExceptionAlias::INVALID_WIDTH);
+        $this->validateProductProperty($product, 'height', ProductConstraintExceptionAlias::INVALID_HEIGHT);
+        $this->validateProductProperty($product, 'depth', ProductConstraintExceptionAlias::INVALID_DEPTH);
+        $this->validateProductProperty($product, 'weight', ProductConstraintExceptionAlias::INVALID_WEIGHT);
+        $this->validateProductProperty($product, 'additional_shipping_cost', ProductConstraintExceptionAlias::INVALID_ADDITIONAL_SHIPPING_COST);
         $this->validateProductProperty($product, 'additional_delivery_times');
-        $this->validateProductLocalizedProperty($product, 'delivery_in_stock', ProductConstraintException::INVALID_DELIVERY_TIME_IN_STOCK_NOTES);
-        $this->validateProductLocalizedProperty($product, 'delivery_out_stock', ProductConstraintException::INVALID_DELIVERY_TIME_OUT_OF_STOCK_NOTES);
+        $this->validateProductLocalizedProperty($product, 'delivery_in_stock', ProductConstraintExceptionAlias::INVALID_DELIVERY_TIME_IN_STOCK_NOTES);
+        $this->validateProductLocalizedProperty($product, 'delivery_out_stock', ProductConstraintExceptionAlias::INVALID_DELIVERY_TIME_OUT_OF_STOCK_NOTES);
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @throws ProductConstraintExceptionAlias
+     */
+    private function validatePrices(Product $product): void
+    {
+        $this->validateProductProperty($product, 'price', ProductConstraintExceptionAlias::INVALID_PRICE);
+        $this->validateProductProperty($product, 'unity');
+        $this->validateProductProperty($product, 'ecotax', ProductConstraintExceptionAlias::INVALID_ECOTAX);
+        $this->validateProductProperty($product, 'id_tax_rules_group', ProductConstraintExceptionAlias::INVALID_TAX_RULES_GROUP_ID);
+        $this->validateProductProperty($product, 'wholesale_price', ProductConstraintExceptionAlias::INVALID_WHOLESALE_PRICE);
     }
 
     /**
@@ -271,14 +290,14 @@ class ProductValidator extends AbstractObjectModelValidator
      * @param string $propertyName
      * @param int $errorCode
      *
-     * @throws ProductConstraintException
+     * @throws ProductConstraintExceptionAlias
      */
     private function validateProductProperty(Product $product, string $propertyName, int $errorCode = 0): void
     {
         $this->validateObjectModelProperty(
             $product,
             $propertyName,
-            ProductConstraintException::class,
+            ProductConstraintExceptionAlias::class,
             $errorCode
         );
     }
@@ -288,14 +307,14 @@ class ProductValidator extends AbstractObjectModelValidator
      * @param string $propertyName
      * @param int $errorCode
      *
-     * @throws ProductConstraintException
+     * @throws ProductConstraintExceptionAlias
      */
     private function validateProductLocalizedProperty(Product $product, string $propertyName, int $errorCode = 0): void
     {
         $this->validateObjectModelLocalizedProperty(
             $product,
             $propertyName,
-            ProductConstraintException::class,
+            ProductConstraintExceptionAlias::class,
             $errorCode
         );
     }

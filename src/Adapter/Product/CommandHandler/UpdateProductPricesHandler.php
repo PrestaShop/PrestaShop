@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\Decimal\Exception\DivisionByZeroException;
 use PrestaShop\PrestaShop\Adapter\Entity\TaxRulesGroup;
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductPricesHandlerInterface;
@@ -46,7 +45,7 @@ use Product;
 /**
  * Updates product price information using legacy object models
  */
-final class UpdateProductPricesHandler extends AbstractProductHandler implements UpdateProductPricesHandlerInterface
+final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInterface
 {
     /**
      * @var NumberExtractor
@@ -96,7 +95,6 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
         $price = $command->getPrice();
         if (null !== $price) {
             $product->price = (float) (string) $price;
-            $this->validateField($product, 'price', ProductConstraintException::INVALID_PRICE);
             $updatableProperties[] = 'price';
         } else {
             $price = new DecimalNumber((string) $product->price);
@@ -112,7 +110,6 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
 
         if (null !== $command->getEcotax()) {
             $product->ecotax = (float) (string) $command->getEcotax();
-            $this->validateField($product, 'ecotax', ProductConstraintException::INVALID_ECOTAX);
             $updatableProperties[] = 'ecotax';
         }
 
@@ -120,7 +117,6 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
 
         if (null !== $taxRulesGroupId) {
             $product->id_tax_rules_group = $taxRulesGroupId;
-            $this->validateField($product, 'id_tax_rules_group', ProductConstraintException::INVALID_TAX_RULES_GROUP_ID);
             $this->assertTaxRulesGroupExists($taxRulesGroupId);
             $updatableProperties[] = 'id_tax_rules_group';
         }
@@ -131,8 +127,7 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
         }
 
         if (null !== $command->getWholesalePrice()) {
-            $product->wholesale_price = (string) $command->getWholesalePrice();
-            $this->validateField($product, 'wholesale_price', ProductConstraintException::INVALID_WHOLESALE_PRICE);
+            $product->wholesale_price = (float) (string) $command->getWholesalePrice();
             $updatableProperties[] = 'wholesale_price';
         }
 
