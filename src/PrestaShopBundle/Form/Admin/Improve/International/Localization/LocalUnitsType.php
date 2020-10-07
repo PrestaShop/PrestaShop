@@ -43,7 +43,6 @@ class LocalUnitsType extends TranslatorAwareType
     {
         $builder
             ->add('weight_unit', TextType::class, [
-                'required' => false,
                 'label' => $this->trans(
                     'Weight unit',
                     'Admin.International.Feature'
@@ -54,7 +53,6 @@ class LocalUnitsType extends TranslatorAwareType
                 ),
             ])
             ->add('distance_unit', TextType::class, [
-                'required' => false,
                 'label' => $this->trans(
                     'Distance unit',
                     'Admin.International.Feature'
@@ -65,7 +63,6 @@ class LocalUnitsType extends TranslatorAwareType
                 ),
             ])
             ->add('volume_unit', TextType::class, [
-                'required' => false,
                 'label' => $this->trans(
                     'Volume unit',
                     'Admin.International.Feature'
@@ -76,7 +73,6 @@ class LocalUnitsType extends TranslatorAwareType
                 ),
             ])
             ->add('dimension_unit', TextType::class, [
-                'required' => false,
                 'label' => $this->trans(
                     'Dimension unit',
                     'Admin.International.Feature'
