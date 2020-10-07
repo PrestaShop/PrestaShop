@@ -139,10 +139,14 @@ class OrderDetailCore extends ObjectModel
     /** @var datetime */
     public $download_deadline;
 
-    /** @var string $tax_name * */
+    /**
+     * @var string @deprecated Order Detail Tax is saved in order_detail_tax table now
+     */
     public $tax_name;
 
-    /** @var float $tax_rate * */
+    /**
+     * @var float @deprecated Order Detail Tax is saved in order_detail_tax table now
+     */
     public $tax_rate;
 
     /** @var float $tax_computation_method * */
@@ -357,9 +361,8 @@ class OrderDetailCore extends ObjectModel
         if ($results = Db::getInstance()->executeS($sql)) {
             foreach ($results as $result) {
                 $taxes[] = new Tax((int) $result['id_tax']);
+                $computation_method = $result['tax_computation_method'];
             }
-
-            $computation_method = $result['tax_computation_method'];
         }
 
         return new TaxCalculator($taxes, $computation_method);
@@ -372,6 +375,9 @@ class OrderDetailCore extends ObjectModel
      * @deprecated Functionality moved to Order::updateOrderDetailTax
      *             because we need the full order object to do a good job here.
      *             Will no longer be supported after 1.6.1
+     *             (Note: this one is not that deprecated because Order::updateOrderDetailTax
+     *             performs no update unless order_detail_tax is filled. So we rely on updateTaxAmount
+     *             which correctly builds the TaxCalculator with up to date taxes unlike getTaxCalculatorStatic)
      *
      * @return bool
      */
@@ -444,12 +450,18 @@ class OrderDetailCore extends ObjectModel
 
     public function updateTaxAmount($order)
     {
-        $this->setContext((int) $this->id_shop);
         $address = new Address((int) $order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
-        $tax_manager = TaxManagerFactory::getManager($address, (int) Product::getIdTaxRulesGroupByIdProduct((int) $this->product_id, $this->context));
-        $this->tax_calculator = $tax_manager->getTaxCalculator();
+        $this->tax_calculator = $this->getTaxCalculatorByAddress($address);
 
         return $this->saveTaxCalculator($order, true);
+    }
+
+    public function getTaxCalculatorByAddress(Address $address)
+    {
+        $this->setContext((int) $this->id_shop);
+        $tax_manager = TaxManagerFactory::getManager($address, (int) Product::getIdTaxRulesGroupByIdProduct((int) $this->product_id, $this->context));
+
+        return $tax_manager->getTaxCalculator();
     }
 
     /**

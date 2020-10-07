@@ -48,7 +48,6 @@ use PrestaShopDatabaseException;
 use PrestaShopException;
 use Product;
 use SpecificPrice;
-use TaxManagerFactory;
 use Tools;
 use Validate;
 
@@ -374,28 +373,30 @@ abstract class AbstractOrderHandler
      */
     protected function updateOrderDetailsTax(Order $order, Cart $cart, Address $taxAddress): void
     {
-        // Fields that are updated (refunds are not modified, even though the tax changed we need to keep track
-        // of the actual refunded amount).
-        $updatedFields = [
-            'unit_price_tax',
-            'total_price_tax',
-            'total_shipping_price_tax',
-        ];
         $computingPrecision = $this->getPrecisionFromCart($cart);
 
         $context = Context::getContext();
         foreach ($order->getOrderDetailList() as $row) {
             $orderDetail = new OrderDetail($row['id_order_detail']);
             $orderDetail->id_tax_rules_group = (int) Product::getIdTaxRulesGroupByIdProduct($orderDetail->product_id, $context);
-            $taxManager = TaxManagerFactory::getManager($taxAddress, $orderDetail->id_tax_rules_group);
-            $taxCalculator = $taxManager->getTaxCalculator();
+            $taxCalculator = $orderDetail->getTaxCalculatorByAddress($taxAddress);
 
-            foreach ($updatedFields as $updatedField) {
-                $orderDetail->{$updatedField . '_incl'} = Tools::ps_round($taxCalculator->addTaxes($orderDetail->{$updatedField . '_excl'}), $computingPrecision);
+            // Refunds are not modified, even though the tax changed we need to keep track of the actual refunded amount
+            switch (Configuration::get('PS_ROUND_TYPE')) {
+                case Order::ROUND_ITEM:
+                    $orderDetail->unit_price_tax_incl = Tools::ps_round($taxCalculator->addTaxes($orderDetail->unit_price_tax_excl), $computingPrecision);
+
+                    break;
+                case Order::ROUND_LINE:
+                case Order::ROUND_TOTAL:
+                    $orderDetail->unit_price_tax_incl = $taxCalculator->addTaxes($orderDetail->unit_price_tax_excl);
+
+                    break;
             }
+            $orderDetail->total_price_tax_incl = Tools::ps_round($taxCalculator->addTaxes($orderDetail->total_price_tax_excl), $computingPrecision);
+            $orderDetail->total_shipping_price_tax_incl = Tools::ps_round($taxCalculator->addTaxes($orderDetail->total_shipping_price_tax_excl), $computingPrecision);
 
-            $orderDetail->tax_rate = $taxCalculator->getTotalRate();
-            $orderDetail->tax_name = $taxCalculator->getTaxesName();
+            $orderDetail->updateTaxAmount($order);
             $orderDetail->update();
         }
     }
