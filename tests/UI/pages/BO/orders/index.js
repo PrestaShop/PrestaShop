@@ -284,7 +284,7 @@ class Order extends BOBasePage {
    * @return {number}
    */
   async getOrderATIPrice(page, row) {
-    // Delete the first character (currency symbol) before getting TTC
+    // Delete the first character (currency symbol) before getting price ATI
     return parseFloat((await this.getTextColumn(page, 'total_paid_tax_incl', row)).substring(1));
   }
 

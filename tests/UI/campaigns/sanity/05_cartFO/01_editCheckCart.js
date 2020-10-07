@@ -103,9 +103,9 @@ describe('Check Cart in FO', async () => {
     ]);
   });
 
-  it('should get the Total TTC', async function () {
+  it('should get the ATI price', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkTotalATI', baseContext);
-    // getNumberFromText is used to get the Total TTC price
+    // getNumberFromText is used to get the price ATI
     totalATI = await cartPage.getATIPrice(page);
     await expect(totalATI).to.be.equal(CartData.customCartData.cartTotalATI);
   });
@@ -120,7 +120,7 @@ describe('Check Cart in FO', async () => {
   it('should edit the quantity of the first product ordered', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'editProductQuantity1', baseContext);
     await cartPage.editProductQuantity(page, '1', '3');
-    // getNumberFromText is used to get the new Total TTC price
+    // getNumberFromText is used to get the new price ATI
     const totalPrice = await cartPage.getATIPrice(page);
     await expect(totalPrice).to.be.above(totalATI);
     // getNumberFromText is used to get the new products number
@@ -131,7 +131,7 @@ describe('Check Cart in FO', async () => {
   it('should edit the quantity of the second product ordered', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'editProductQuantity2', baseContext);
     await cartPage.editProductQuantity(page, '2', '2');
-    // getNumberFromText is used to get the new Total TTC price
+    // getNumberFromText is used to get the new price ATI
     const totalPrice = await cartPage.getATIPrice(page);
     await expect(totalPrice).to.be.above(totalATI);
     // getNumberFromText is used to get the new products number
