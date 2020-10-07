@@ -131,6 +131,7 @@ export default {
   freeShippingSwitch: '.js-free-shipping-switch',
   recycledPackagingSwitch: '.js-recycled-packaging-switch',
   isAGiftSwitch: '.js-is-gift-switch',
+  giftMessageField: '#cart_gift_message',
 
   // selectors related to cart block
   cartBlock: '#cart-block',
