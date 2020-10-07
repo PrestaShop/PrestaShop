@@ -68,8 +68,7 @@ const sqlQueryData = {
   name: 'Discount and ATI from last order',
   sqlQuery: orderRef => 'SELECT total_discounts, total_paid_tax_incl '
     + 'from  ps_orders '
-    + 'ORDER BY id_order '
-    + 'DESC LIMIT 1;',
+    + `WHERE reference = '${orderRef}'`,
 };
 
 // Init data for the order
@@ -343,6 +342,10 @@ describe('Change currency precision and check orders total price in FO, BO and d
     it('should check order total price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkToTalPriceInBO', baseContext);
 
+      // Get order reference to use in sql query
+      orderToMake.reference = await ordersPage.getTextColumn(page, 'reference', 1);
+
+      // Check total price
       const totalPriceInOrdersPage = await ordersPage.getOrderATIPrice(page, 1);
       await expect(totalPriceInOrdersPage, 'Order total price is incorrect').to.equal(orderToMake.atiPrice);
     });
@@ -367,6 +370,9 @@ describe('Change currency precision and check orders total price in FO, BO and d
         await testContext.addContextItem(this, 'testIdentifier', 'goToCreateSqlQueryPage', baseContext);
 
         await sqlManagerPage.goToNewSQLQueryPage(page);
+
+        // Adding order reference to sql query
+        sqlQueryData.sqlQuery = sqlQueryData.sqlQuery(orderToMake.reference);
 
         const pageTitle = await addSqlQueryPage.getPageTitle(page);
         await expect(pageTitle).to.contains(addSqlQueryPage.pageTitle);
