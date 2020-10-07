@@ -71,7 +71,8 @@ class AddCartRule extends BOBasePage {
     this.excludeDiscountProductsToggle = toggle => `${this.cartRuleForm} label`
       + `[for='reduction_exclude_special_${toggle}']`;
     this.sendFreeGifToggle = toggle => `${this.cartRuleForm} label[for='free_gift_${toggle}']`;
-
+    this.freeGiftFilterInput = '#giftProductFilter';
+    this.freeGiftProductSelect = '#gift_product';
     // Form footer selectors
     this.saveButton = '#desc-cart_rule-save';
   }
@@ -183,8 +184,18 @@ class AddCartRule extends BOBasePage {
         throw new Error(`${cartRuleData.discountType} was not found as a discount option`);
     }
 
-    // Set free gift toggle
+    // Set free gift
     await page.click(this.sendFreeGifToggle(cartRuleData.freeGift ? 'on' : 'off'));
+
+    if (cartRuleData.freeGift) {
+      await this.setValue(page, this.freeGiftFilterInput, cartRuleData.freeGiftProduct.name);
+      await this.waitForVisibleSelector(page, this.freeGiftProductSelect);
+      await this.selectByVisibleText(
+        page,
+        this.freeGiftProductSelect,
+        `${cartRuleData.freeGiftProduct.name} - €${cartRuleData.freeGiftProduct.price}`,
+      );
+    }
   }
 
 

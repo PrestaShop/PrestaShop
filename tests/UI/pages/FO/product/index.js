@@ -60,11 +60,15 @@ class Product extends FOBasePage {
         page.click(this.colorInput(attributeToChoose.color)),
       ]);
     }
-    if (quantity !== 1) {
+    if (quantity !== 1 && attributeToChoose !== '') {
       await this.setValue(page, this.productQuantity, attributeToChoose.quantity.toString());
+    } else if (quantity !== 1) {
+      await this.setValue(page, this.productQuantity, quantity.toString());
     }
+
     await this.waitForSelectorAndClick(page, this.addToCartButton);
     await this.waitForVisibleSelector(page, `${this.blockCartModal}[style*='display: block;']`);
+
     if (proceedToCheckout) {
       await this.waitForVisibleSelector(page, this.proceedToCheckoutButton);
       await this.clickAndWaitForNavigation(page, this.proceedToCheckoutButton);

@@ -143,14 +143,14 @@ describe('CRUD cart rule', async () => {
     it('should verify the total before discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'verifyTotalBeforeDiscount_1', baseContext);
 
-      const priceTTC = await cartPage.getTTCPrice(page);
+      const priceTTC = await cartPage.getATIPrice(page);
       await expect(priceTTC).to.equal(Products.demo_1.finalPrice);
     });
 
     it('should set the promo code', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'setPromoCode_1', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'addPromoCode_1', baseContext);
 
-      await cartPage.setPromoCode(page, newCartRuleData.code);
+      await cartPage.addPromoCode(page, newCartRuleData.code);
     });
 
     it('should verify the total after discount', async function () {
@@ -159,7 +159,7 @@ describe('CRUD cart rule', async () => {
       const discountedPrice = Products.demo_1.finalPrice
         - (Products.demo_1.finalPrice * newCartRuleData.discountPercent / 100);
 
-      const priceTTC = await cartPage.getTTCPrice(page);
+      const priceTTC = await cartPage.getATIPrice(page);
       await expect(priceTTC).to.equal(parseFloat(discountedPrice.toFixed(2)));
     });
 
@@ -252,14 +252,14 @@ describe('CRUD cart rule', async () => {
     it('should verify the total before discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'verifyTotalBeforeDiscount_2', baseContext);
 
-      const priceTTC = await cartPage.getTTCPrice(page);
+      const priceTTC = await cartPage.getATIPrice(page);
       await expect(priceTTC).to.equal(Products.demo_1.finalPrice);
     });
 
     it('should set the promo code', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'setPromoCode_2', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'addPromoCode_2', baseContext);
 
-      await cartPage.setPromoCode(page, editCartRuleData.code);
+      await cartPage.addPromoCode(page, editCartRuleData.code);
     });
 
     it('should verify the total after discount', async function () {
@@ -268,7 +268,7 @@ describe('CRUD cart rule', async () => {
       const discountedPrice = Products.demo_1.finalPrice
         - (Products.demo_1.finalPrice * editCartRuleData.discountPercent / 100);
 
-      const priceTTC = await cartPage.getTTCPrice(page);
+      const priceTTC = await cartPage.getATIPrice(page);
       await expect(priceTTC).to.equal(parseFloat(discountedPrice.toFixed(2)));
     });
   });
