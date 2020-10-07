@@ -50,7 +50,7 @@ class CategoryControllerCore extends ProductListingFrontController
         } else {
             header('HTTP/1.1 404 Not Found');
             header('Status: 404 Not Found');
-            $this->errors[] = $this->trans("This category doesn't exists.", [], 'Shop.Notifications.Error');
+            $this->errors[] = $this->trans("This category does not exist.", [], 'Shop.Notifications.Error');
             $this->setTemplate('errors/404');
         }
     }
