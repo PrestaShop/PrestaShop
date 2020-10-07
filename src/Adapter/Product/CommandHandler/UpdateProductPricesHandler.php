@@ -30,16 +30,12 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\Decimal\Exception\DivisionByZeroException;
-use PrestaShop\PrestaShop\Adapter\Entity\TaxRulesGroup;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductPricesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ProductTaxRulesGroupSettings;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
-use PrestaShopException;
 use Product;
 
 /**
@@ -117,7 +113,6 @@ final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInte
 
         if (null !== $taxRulesGroupId) {
             $product->id_tax_rules_group = $taxRulesGroupId;
-            $this->assertTaxRulesGroupExists($taxRulesGroupId);
             $updatableProperties[] = 'id_tax_rules_group';
         }
 
@@ -181,41 +176,6 @@ final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInte
     }
 
     /**
-     * @param int $taxRulesGroupId
-     *
-     * @throws ProductConstraintException
-     * @throws ProductException
-     */
-    private function assertTaxRulesGroupExists(int $taxRulesGroupId): void
-    {
-        if (ProductTaxRulesGroupSettings::NONE_APPLIED === $taxRulesGroupId) {
-            return;
-        }
-
-        try {
-            $taxRulesGroup = new TaxRulesGroup($taxRulesGroupId);
-            if (!$taxRulesGroup->id) {
-                throw new ProductConstraintException(
-                    sprintf(
-                        'Invalid tax rules group id "%d". Group doesn\'t exist',
-                        $taxRulesGroupId
-                    ),
-                    ProductConstraintException::INVALID_TAX_RULES_GROUP_ID
-                );
-            }
-        } catch (PrestaShopException $e) {
-            throw new ProductException(
-                sprintf(
-                    'Error occurred when trying to load tax rules group #%d for product',
-                    $taxRulesGroupId
-                ),
-                0,
-                $e
-            );
-        }
-    }
-
-    /**
      * @param Product $product
      * @param DecimalNumber $unitPrice
      * @param DecimalNumber $price
@@ -224,8 +184,6 @@ final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInte
      */
     private function setUnitPriceInfo(Product $product, DecimalNumber $unitPrice, ?DecimalNumber $price): void
     {
-        $this->validateUnitPrice($unitPrice);
-
         // If unit price or price is zero, then reset ratio to zero too
         if ($unitPrice->equalsZero() || $price->equalsZero()) {
             $ratio = new DecimalNumber('0');
@@ -234,8 +192,10 @@ final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInte
         }
         // unit_price_ratio is calculated based on input price and unit_price & then is saved to database,
         // however - unit_price is not saved to database. When loading product it is calculated depending on price and unit_price_ratio
-        // so there is no static values saved, that's why unit_price is always inaccurate
+        // so there is no static values saved, that's why unit_price is inaccurate
         $product->unit_price_ratio = (float) (string) $ratio;
+        //set unit_price to go through validation
+        $product->unit_price = (float) (string) $unitPrice;
     }
 
     /**

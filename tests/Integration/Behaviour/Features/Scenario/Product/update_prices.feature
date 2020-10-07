@@ -140,4 +140,4 @@ Feature: Update product price fields from Back Office (BO).
         And product product5 should have following prices information:
           | tax rules group |           |
         When I update product "product5" prices and apply non-existing tax rules group
-        Then I should get error that product "tax rules group" is invalid
+        Then I should get error that tax rules group does not exist

@@ -31,8 +31,8 @@ use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Exception\ProductException;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\CombinationDetails;
 use Tests\Integration\Behaviour\Features\Context\Util\ProductCombinationFactory;
@@ -214,7 +214,6 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
             'ecotax' => ProductConstraintException::INVALID_ECOTAX,
             'wholesale_price' => ProductConstraintException::INVALID_WHOLESALE_PRICE,
             'unit_price' => ProductConstraintException::INVALID_UNIT_PRICE,
-            'tax rules group' => ProductConstraintException::INVALID_TAX_RULES_GROUP_ID,
             'tag' => ProductConstraintException::INVALID_TAG,
             'width' => ProductConstraintException::INVALID_WIDTH,
             'height' => ProductConstraintException::INVALID_HEIGHT,

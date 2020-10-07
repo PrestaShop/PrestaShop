@@ -72,152 +72,147 @@ class ProductConstraintException extends ProductException
     const INVALID_ECOTAX = 80;
 
     /**
-     * When invalid product tax rules group id is supplied
-     */
-    const INVALID_TAX_RULES_GROUP_ID = 90;
-
-    /**
      * When invalid product unit price is supplied
      */
-    const INVALID_UNIT_PRICE = 100;
+    const INVALID_UNIT_PRICE = 90;
 
     /**
      * When invalid product wholesale_price is supplied
      */
-    const INVALID_WHOLESALE_PRICE = 110;
+    const INVALID_WHOLESALE_PRICE = 100;
 
     /**
      * When product visibility value is invalid
      */
-    const INVALID_VISIBILITY = 120;
+    const INVALID_VISIBILITY = 110;
 
     /**
      * When product Ean13 code value is invalid
      */
-    const INVALID_EAN_13 = 130;
+    const INVALID_EAN_13 = 120;
 
     /**
      * When product ISBN code value is invalid
      */
-    const INVALID_ISBN = 140;
+    const INVALID_ISBN = 130;
 
     /**
      * When product mpn code value is invalid
      */
-    const INVALID_MPN = 150;
+    const INVALID_MPN = 140;
 
     /**
      * When product upc code value is invalid
      */
-    const INVALID_UPC = 160;
+    const INVALID_UPC = 150;
 
     /**
      * When product reference value is invalid
      */
-    const INVALID_REFERENCE = 170;
+    const INVALID_REFERENCE = 160;
 
     /**
      * When product tag value is invalid
      */
-    const INVALID_TAG = 180;
+    const INVALID_TAG = 170;
 
     /**
      * When product additional time notes type is invalid
      */
-    const INVALID_ADDITIONAL_TIME_NOTES_TYPE = 190;
+    const INVALID_ADDITIONAL_TIME_NOTES_TYPE = 180;
 
     /**
      * When product width is invalid
      */
-    const INVALID_WIDTH = 200;
+    const INVALID_WIDTH = 190;
 
     /**
      * When product height is invalid
      */
-    const INVALID_HEIGHT = 210;
+    const INVALID_HEIGHT = 200;
 
     /**
      * When product depth is invalid
      */
-    const INVALID_DEPTH = 220;
+    const INVALID_DEPTH = 210;
 
     /**
      * When product weight is invalid
      */
-    const INVALID_WEIGHT = 230;
+    const INVALID_WEIGHT = 220;
 
     /**
      * When product additional shipping cost is invalid
      */
-    const INVALID_ADDITIONAL_SHIPPING_COST = 240;
+    const INVALID_ADDITIONAL_SHIPPING_COST = 230;
 
     /**
      * When product delivery time in stock notes are invalid
      */
-    const INVALID_DELIVERY_TIME_IN_STOCK_NOTES = 250;
+    const INVALID_DELIVERY_TIME_IN_STOCK_NOTES = 240;
 
     /**
      * When product delivery time out of stock notes are invalid
      */
-    const INVALID_DELIVERY_TIME_OUT_OF_STOCK_NOTES = 260;
+    const INVALID_DELIVERY_TIME_OUT_OF_STOCK_NOTES = 250;
 
     /**
      * When product redirect type is invalid
      */
-    const INVALID_REDIRECT_TYPE = 270;
+    const INVALID_REDIRECT_TYPE = 260;
 
     /**
      * When product redirect target
      */
-    const INVALID_REDIRECT_TARGET = 280;
+    const INVALID_REDIRECT_TARGET = 270;
 
     /**
      * When product meta description is invalid
      */
-    const INVALID_META_DESCRIPTION = 290;
+    const INVALID_META_DESCRIPTION = 280;
 
     /**
      * When product meta title is invalid
      */
-    const INVALID_META_TITLE = 300;
+    const INVALID_META_TITLE = 290;
 
     /**
      * When product link rewrite is invalid
      */
-    const INVALID_LINK_REWRITE = 310;
+    const INVALID_LINK_REWRITE = 300;
 
     /**
      * When product minimal quantity is invalid
      */
-    const INVALID_MINIMAL_QUANTITY = 320;
+    const INVALID_MINIMAL_QUANTITY = 310;
 
     /**
      * When product location is invalid
      */
-    const INVALID_LOCATION = 330;
+    const INVALID_LOCATION = 320;
 
     /**
      * When product available later labels are invalid
      */
-    const INVALID_AVAILABLE_LATER = 340;
+    const INVALID_AVAILABLE_LATER = 330;
 
     /**
      * When product available now labels are is invalid
      */
-    const INVALID_AVAILABLE_NOW = 350;
+    const INVALID_AVAILABLE_NOW = 340;
 
     /**
      * When product available date is invalid
      */
-    const INVALID_AVAILABLE_DATE = 360;
+    const INVALID_AVAILABLE_DATE = 350;
 
     /**
      * When product low stock alert is invalid
      */
-    const INVALID_LOW_STOCK_ALERT = 370;
+    const INVALID_LOW_STOCK_ALERT = 360;
 
     /**
      * When product low stock threshold is invalid
      */
-    const INVALID_LOW_STOCK_THRESHOLD = 380;
+    const INVALID_LOW_STOCK_THRESHOLD = 370;
 }
