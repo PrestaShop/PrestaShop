@@ -745,6 +745,22 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then order :reference should be a gift with message :message
+     *
+     * @param string $reference
+     * @param string $message
+     */
+    public function createdOrderShouldBeAGift(string $reference, string $message)
+    {
+        $orderId = SharedStorage::getStorage()->get($reference);
+
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        Assert::assertTrue($orderForViewing->getShipping()->isGiftWrapping());
+        Assert::assertEquals($message, $orderForViewing->getShipping()->getGiftMessage());
+    }
+
+    /**
      * @Then order :orderReference should have invoice
      *
      * @param string $orderReference

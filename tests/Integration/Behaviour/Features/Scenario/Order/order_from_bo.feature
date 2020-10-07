@@ -278,11 +278,12 @@ Feature: Order from Back Office (BO)
     When I generate invoice for "bo_order1" order
     Then order "bo_order1" should have invoice
 
-  Scenario: Add order from Back Office with free shipping
+  Scenario: Add gift order from Back Office with free shipping
     And I create an empty cart "dummy_cart2" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart2"
     And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart2"
     And I set Free shipping to the cart "dummy_cart2"
+    And I declare cart "dummy_cart2" is a gift with message "Some Xmas love"
     And I add order "bo_order2" with the following details:
       | cart                | dummy_cart2         |
       | message             | test                |
@@ -291,6 +292,7 @@ Feature: Order from Back Office (BO)
     Then order "bo_order2" should have 2 products in total
     And order "bo_order2" should have free shipping
     And order "bo_order2" should have "dummy_payment" payment method
+    And order "bo_order2" should be a gift with message "Some Xmas love"
 
   Scenario: Update multiple orders statuses using Bulk actions
     And I create an empty cart "dummy_cart3" for customer "testCustomer"
