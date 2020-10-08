@@ -1329,15 +1329,17 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      *
      * @return bool
      */
-    public function isQuickView()
+    public function isQuickView(): bool
     {
         return $this->isQuickView;
     }
 
     /**
      * Set quick view mode.
+     *
+     * @param bool $enabled
      */
-    public function setQuickViewMode($enabled = true)
+    public function setQuickViewMode(bool $enabled = true)
     {
         $this->isQuickView = $enabled;
     }
