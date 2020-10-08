@@ -58,9 +58,9 @@ class UpdateCartDeliverySettingsCommand
     /**
      * @param int $cartId
      * @param bool $allowFreeShipping
-     * @param bool $isAGift
-     * @param bool $useRecycledPackaging
-     * @param string $giftMessage
+     * @param bool|null $isAGift
+     * @param bool|null $useRecycledPackaging
+     * @param string|null $giftMessage
      */
     public function __construct(
         int $cartId,

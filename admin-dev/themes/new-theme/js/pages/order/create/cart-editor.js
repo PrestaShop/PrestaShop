@@ -79,7 +79,7 @@ export default class CartEditor {
       freeShipping: freeShippingEnabled,
       isAGift: isAGiftEnabled,
       useRecycledPackaging: useRecycledPackagingEnabled,
-      giftMessage : giftMessage,
+      giftMessage,
     }).then(cartInfo => EventEmitter.emit(eventMap.cartDeliverySettingChanged, cartInfo))
       .catch(response => showErrorMessage(response.responseJSON.message));
   }
