@@ -456,7 +456,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'product_has_combinations' => !empty($this->combinations),
             'id_product_attribute' => $product['id_product_attribute'],
             'product_title' => $product['title'],
-            'is_quick_view' => $isQuickView
+            'is_quick_view' => $isQuickView,
         ]));
     }
 
@@ -1325,8 +1325,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     }
 
     /**
-     * Return information whether we are or not in quick view mode
-     * 
+     * Return information whether we are or not in quick view mode.
+     *
      * @return bool
      */
     public function isQuickView()
@@ -1335,9 +1335,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     }
 
     /**
-     * Set if product is in quick view mode or not
-     * 
-     * @return void
+     * Set quick view mode.
      */
     public function setQuickViewMode($enabled = true)
     {
