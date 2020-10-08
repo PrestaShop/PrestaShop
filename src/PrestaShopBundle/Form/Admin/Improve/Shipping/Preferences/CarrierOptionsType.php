@@ -80,8 +80,6 @@ class CarrierOptionsType extends TranslatorAwareType
         $builder
             ->add('default_carrier', ChoiceType::class, [
                 'choices' => $carrierChoices,
-                'required' => false,
-                'placeholder' => false,
                 'label' => $this->trans(
                     'Default carrier',
                     'Admin.Shipping.Feature'
@@ -93,8 +91,6 @@ class CarrierOptionsType extends TranslatorAwareType
             ])
             ->add('carrier_default_order_by', ChoiceType::class, [
                 'choices' => $this->orderByChoices,
-                'required' => false,
-                'placeholder' => false,
                 'choice_translation_domain' => 'Admin.Global',
                 'label' => $this->trans(
                     'Sort by',
@@ -107,8 +103,6 @@ class CarrierOptionsType extends TranslatorAwareType
             ])
             ->add('carrier_default_order_way', ChoiceType::class, [
                 'choices' => $this->orderWayChoices,
-                'required' => false,
-                'placeholder' => false,
                 'choice_translation_domain' => 'Admin.Global',
                 'label' => $this->trans(
                     'Order by',
