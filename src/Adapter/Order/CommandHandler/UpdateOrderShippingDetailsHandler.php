@@ -123,22 +123,4 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
             ], null, false, true, false, $order->id_shop);
         }
     }
-
-    /**
-     * Delivery option consists of deliveryAddress and carrierId.
-     *
-     * Legacy multishipping feature used comma separated carriers in delivery option (e.g. {'1':'6,7'}
-     * Now that multishipping is gone - delivery option should consist of one carrier and one address.
-     *
-     * However the structure of deliveryOptions is still used with comma in legacy, so
-     * this method provides assurance for deliveryOption structure until major refactoring
-     *
-     * @param int $carrierId
-     *
-     * @return string
-     */
-    private function formatLegacyDeliveryOptionFromCarrierId(int $carrierId): string
-    {
-        return sprintf('%s,', $carrierId);
-    }
 }

@@ -114,6 +114,6 @@ final class UpdateCartCarrierHandler extends AbstractCartHandler implements Upda
      */
     private function formatLegacyDeliveryOptionFromCarrierId(int $carrierId): string
     {
-        return sprintf('%s,', $carrierId);
+        return sprintf('%d,', $carrierId);
     }
 }

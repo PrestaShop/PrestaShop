@@ -65,7 +65,13 @@ class ShopGroupId
     private function assertIsGreaterThanZero(int $shopGroupId): void
     {
         if (0 >= $shopGroupId) {
-            throw new ShopException(sprintf('Shop id %s is invalid. Shop id must be number that is greater than zero.', var_export($shopGroupId, true)));
+            throw new ShopException(
+                sprintf(
+                    'Shop id %s is invalid. Shop id must be number that is greater than zero.',
+                    var_export($shopGroupId, true
+                    )
+                )
+            );
         }
     }
 }
