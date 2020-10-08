@@ -6,6 +6,7 @@ class AddCatalogPriceRule extends BOBasePage {
     super();
 
     this.pageTitle = 'Catalog Price Rules > Add new •';
+    this.editPageTitle = 'Catalog Price Rules > Edit:';
 
     // Selectors
     this.catalogPriceRuleForm = '#specific_price_rule_form';
@@ -27,7 +28,7 @@ class AddCatalogPriceRule extends BOBasePage {
    * @param priceRuleData
    * @returns {Promise<string>}
    */
-  async createEditCatalogPriceRule(page, priceRuleData) {
+  async setCatalogPriceRule(page, priceRuleData) {
     await this.setValue(page, this.nameInput, priceRuleData.name);
     await this.selectByVisibleText(page, this.currencySelect, priceRuleData.currency);
     await this.selectByVisibleText(page, this.countrySelect, priceRuleData.country);

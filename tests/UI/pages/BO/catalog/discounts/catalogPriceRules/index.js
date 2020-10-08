@@ -26,6 +26,7 @@ class CatalogPriceRules extends BOBasePage {
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} ul.dropdown-menu`;
     this.confirmDeleteButton = '#popup_ok';
     this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a.delete`;
+    this.editRowLink = row => `${this.actionsColumn(row)} a.edit`;
   }
 
   /* Methods */
@@ -36,6 +37,19 @@ class CatalogPriceRules extends BOBasePage {
    */
   async goToAddNewCatalogPriceRulePage(page) {
     await this.clickAndWaitForNavigation(page, this.addNewCatalogPriceRuleButton);
+  }
+
+  /**
+   * Go to edit catalog price rule page
+   * @param page
+   * @param ruleName
+   * @returns {Promise<void>}
+   */
+  async goToEditCatalogPriceRulePage(page, ruleName) {
+    if (await this.elementVisible(page, this.filterNameColumn)) {
+      await this.filterTableByRuleName(page, ruleName);
+    }
+    await this.clickAndWaitForNavigation(page, this.editRowLink(1));
   }
 
   /**
@@ -57,7 +71,6 @@ class CatalogPriceRules extends BOBasePage {
    * @returns {Promise<string>}
    */
   async deleteCatalogPriceRule(page, ruleName) {
-    await this.dialogListener(page, true);
     if (await this.elementVisible(page, this.filterNameColumn)) {
       await this.filterTableByRuleName(page, ruleName);
     }
