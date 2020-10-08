@@ -75,6 +75,8 @@ class GeolocationOptionsType extends TranslatorAwareType
     {
         $builder
             ->add('geolocation_behaviour', ChoiceType::class, [
+                'required' => false,
+                'placeholder' => false,
                 'label' => $this->trans(
                     'Geolocation behavior for restricted countries',
                     'Admin.International.Feature'
@@ -86,6 +88,8 @@ class GeolocationOptionsType extends TranslatorAwareType
                 'choice_translation_domain' => false,
             ])
             ->add('geolocation_na_behaviour', ChoiceType::class, [
+                'required' => false,
+                'placeholder' => false,
                 'label' => $this->trans(
                     'Geolocation behavior for other countries',
                     'Admin.International.Feature'
@@ -98,6 +102,7 @@ class GeolocationOptionsType extends TranslatorAwareType
                 'choice_translation_domain' => false,
             ])
             ->add('geolocation_countries', MaterialChoiceTableType::class, [
+                'required' => false,
                 'label' => $this->trans(
                     'Select the countries from which your store is accessible',
                     'Admin.International.Feature'

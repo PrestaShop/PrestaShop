@@ -43,6 +43,7 @@ class GeolocationByIpAddressType extends TranslatorAwareType
     {
         $builder
             ->add('geolocation_enabled', SwitchType::class, [
+                'required' => false,
                 'label' => $this->trans(
                     'Geolocation by IP address',
                     'Admin.International.Feature'
