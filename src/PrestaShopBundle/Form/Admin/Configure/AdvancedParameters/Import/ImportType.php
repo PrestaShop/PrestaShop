@@ -51,8 +51,6 @@ class ImportType extends TranslatorAwareType
             ->add('csv', HiddenType::class)
             ->add('entity', ChoiceType::class, [
                 'label' => $this->trans('What do you want to import?', 'Admin.Advparameters.Feature'),
-                'required' => false,
-                'placeholder' => false,
                 'attr' => [
                     'class' => 'js-entity-select',
                 ],
@@ -73,24 +71,19 @@ class ImportType extends TranslatorAwareType
                 'label' => $this->trans('Select a file to import', 'Admin.Advparameters.Feature'),
             ])
             ->add('iso_lang', ChoiceType::class, [
-                'required' => false,
-                'placeholder' => false,
                 'choices' => $this->getLocaleChoices(),
                 'label' => $this->trans('Language of the file', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('The locale must be installed ', 'Admin.Advparameters.Help'),
             ])
             ->add('separator', TextType::class, [
-                'required' => false,
                 'label' => $this->trans('Field separator', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('e.g. ', 'Admin.Advparameters.Help') . ' 1; Blouse; 129.90; 5',
             ])
             ->add('multiple_value_separator', TextType::class, [
-                'required' => false,
                 'label' => $this->trans('Multiple value separator', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('e.g. ', 'Admin.Advparameters.Help') . ' Blouse; red.jpg, blue.jpg, green.jpg; 129.90',
             ])
             ->add('truncate', SwitchType::class, [
-                'required' => false,
                 'attr' => [
                     'class' => 'js-truncate-form-group',
                 ],
@@ -104,21 +97,18 @@ class ImportType extends TranslatorAwareType
                 ),
             ])
             ->add('match_ref', SwitchType::class, [
-                'required' => false,
                 'attr' => [
                     'class' => 'js-match-ref-form-group',
                 ],
                 'label' => $this->trans('Use product reference as key', 'Admin.Advparameters.Feature'),
             ])
             ->add('regenerate', SwitchType::class, [
-                'required' => false,
                 'attr' => [
                     'class' => 'js-regenerate-form-group',
                 ],
                 'label' => $this->trans('Skip thumbnails regeneration', 'Admin.Advparameters.Feature'),
             ])
             ->add('forceIDs', SwitchType::class, [
-                'required' => false,
                 'attr' => [
                     'class' => 'js-force-ids-form-group',
                 ],
@@ -126,7 +116,6 @@ class ImportType extends TranslatorAwareType
                 'help' => $this->trans('If you enable this option, your imported items\' ID number will be used as is. If you do not enable this option, the imported ID numbers will be ignored, and PrestaShop will instead create auto-incremented ID numbers for all the imported items.', 'Admin.Advparameters.Help'),
             ])
             ->add('sendemail', SwitchType::class, [
-                'required' => false,
                 'label' => $this->trans('Send notification email', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('Sends an email to let you know your import is complete. It can be useful when handling large files, as the import may take some time.', 'Admin.Advparameters.Help'),
             ]);
