@@ -663,6 +663,16 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then cart :cartReference should have free shipping
+     */
+    public function assertCartShippingIsFree(string $cartReference)
+    {
+        $cartInfo = $this->getCartInformationByReference($cartReference);
+        Assert::assertTrue($cartInfo->getShipping()->isFreeShipping());
+        Assert::assertEquals('0', $cartInfo->getShipping()->getShippingPrice());
+    }
+
+    /**
      * @Given /^I use a voucher "(.+)" which provides a gift product "(.+)" and free shipping on the cart "(.+)"$/
      */
     public function addGiftPlusFreeShippingCartRule(string $voucherCode, string $giftProductName, string $cartReference)
