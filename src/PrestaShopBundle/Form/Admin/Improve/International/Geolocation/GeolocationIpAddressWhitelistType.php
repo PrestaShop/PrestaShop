@@ -44,6 +44,7 @@ class GeolocationIpAddressWhitelistType extends TranslatorAwareType
     {
         $builder
             ->add('geolocation_whitelist', TextareaType::class, [
+                'required' => false,
                 'label' => $this->trans(
                     'Whitelisted IP addresses',
                     'Admin.International.Feature'
