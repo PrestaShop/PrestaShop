@@ -64,7 +64,7 @@ class AdminStatusesControllerCore extends AdminController
     /**
      * init all variables to render the order status list.
      */
-    protected function initOrderStatutsList()
+    protected function initOrderStatusList()
     {
         $this->table = 'order_state';
         $this->className = 'OrderState';
@@ -226,7 +226,7 @@ class AdminStatusesControllerCore extends AdminController
                 'icon' => 'icon-trash',
             ],
         ];
-        $this->initOrderStatutsList();
+        $this->initOrderStatusList();
         $lists = parent::renderList();
 
         //init and render the second list
@@ -656,7 +656,7 @@ class AdminStatusesControllerCore extends AdminController
     protected function filterToField($key, $filter)
     {
         if ($this->table == 'order_state') {
-            $this->initOrderStatutsList();
+            $this->initOrderStatusList();
         } elseif ($this->table == 'order_return_state') {
             $this->initOrdersReturnsList();
         }
