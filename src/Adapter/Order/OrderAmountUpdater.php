@@ -259,7 +259,11 @@ class OrderAmountUpdater
                     break;
             }
 
-            // Finally update taxes (order_detail_tax table)
+            // Finally update taxes (order_detail_tax table) We don't use Order::updateOrderDetailTax because there
+            // it rely too much on order_detail_tax and there are two things it's not able to do
+            // - insert new order_detail_tax when no one was present
+            // - clean all order_detail_tax when they are not needed any more
+            // This should be fixed and refactored so that OrderDetail::saveTaxCalculator can really be depreciated
             $orderDetail->updateTaxAmount($order);
 
             if (!$orderDetail->update()) {

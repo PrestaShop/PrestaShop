@@ -226,7 +226,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
 
         $order = new Order($orderId);
         $orderProductsTaxDetails = $order->getProductTaxesDetails();
-        Assert::isEmpty($orderProductsTaxDetails);
+        Assert::assertEmpty($orderProductsTaxDetails, 'The order should have no tax details');
     }
 
     /**

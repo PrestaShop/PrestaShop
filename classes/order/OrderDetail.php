@@ -392,10 +392,6 @@ class OrderDetailCore extends ObjectModel
             return false;
         }
 
-        if (count($this->tax_calculator->taxes) == 0) {
-            return true;
-        }
-
         if ($order->total_products <= 0) {
             return true;
         }
@@ -441,11 +437,15 @@ class OrderDetailCore extends ObjectModel
             Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'order_detail_tax` WHERE id_order_detail=' . (int) $this->id);
         }
 
-        $values = rtrim($values, ',');
-        $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'order_detail_tax` (id_order_detail, id_tax, unit_amount, total_amount)
+        if (!empty($values)) {
+            $values = rtrim($values, ',');
+            $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'order_detail_tax` (id_order_detail, id_tax, unit_amount, total_amount)
                 VALUES ' . $values;
 
-        return Db::getInstance()->execute($sql);
+            return Db::getInstance()->execute($sql);
+        }
+
+        return true;
     }
 
     public function updateTaxAmount($order)
