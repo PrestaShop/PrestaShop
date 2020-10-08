@@ -4371,7 +4371,7 @@ exit;
      *
      * @return bool
      */
-    public static function isFileFresh(string $file, int $timeout = self::CACHE_LIFETIME_SECONDS): bool
+    public static function isFileFresh(string $file, int $timeout = static::CACHE_LIFETIME_SECONDS): bool
     {
         if (($time = @filemtime(_PS_ROOT_DIR_ . $file)) && filesize(_PS_ROOT_DIR_ . $file) > 0) {
             return (time() - $time) < $timeout;
