@@ -60,7 +60,7 @@ class ShopConstraint
      */
     public static function shop(int $shopId): self
     {
-        return new self($shopId, null, false);
+        return new static($shopId, null, false);
     }
 
     /**
@@ -74,7 +74,7 @@ class ShopConstraint
      */
     public static function shopGroup(int $shopGroupId): self
     {
-        return new self(null, $shopGroupId, false);
+        return new static(null, $shopGroupId, false);
     }
 
     /**
@@ -84,7 +84,7 @@ class ShopConstraint
      */
     public static function allShops(): self
     {
-        return new self(null, null, false);
+        return new static(null, null, false);
     }
 
     /**
