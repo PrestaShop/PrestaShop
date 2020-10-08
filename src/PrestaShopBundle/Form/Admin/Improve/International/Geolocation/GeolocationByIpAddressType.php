@@ -28,7 +28,6 @@ namespace PrestaShopBundle\Form\Admin\Improve\International\Geolocation;
 
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
@@ -51,7 +50,7 @@ class GeolocationByIpAddressType extends TranslatorAwareType
                 'help' => $this->trans(
                     'This option allows you, among other things, to restrict access to your shop for certain countries. See below.',
                     'Admin.International.Help'
-                )
+                ),
             ]);
     }
 }
