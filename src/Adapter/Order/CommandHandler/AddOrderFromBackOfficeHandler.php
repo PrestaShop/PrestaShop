@@ -83,6 +83,8 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
         $this->assertAddressesAreNotDisabled($cart);
 
         //Context country, language and currency is used in PaymentModule::validateOrder (it should rely on cart address country instead)
+        $language = $this->contextStateManager->getLanguage();
+
         $this->contextStateManager
             ->setCart($cart)
             ->setCurrency(new Currency($cart->id_currency))
@@ -90,6 +92,8 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
             ->setLanguage(new Language($cart->id_lang))
             ->setCountry($this->getTaxCountry($cart))
         ;
+
+        $language = $this->contextStateManager->getLanguage();
 
         $translator = Context::getContext()->getTranslator();
         $employee = new Employee($command->getEmployeeId()->getValue());
