@@ -137,7 +137,7 @@ class PrestaShopAutoload
 
             // If requested class does not exist, load associated core class
             if (isset($this->index[$className]) && !$this->index[$className]['path']) {
-                require_once $classDir . $this->index[$className . 'Core']['path'];
+                include_once $classDir . $this->index[$className . 'Core']['path'];
 
                 if ($this->index[$className . 'Core']['type'] != 'interface') {
                     eval($this->index[$className . 'Core']['type'] . ' ' . $className . ' extends ' . $className . 'Core {}');
@@ -145,19 +145,19 @@ class PrestaShopAutoload
             } else {
                 // request a non Core Class load the associated Core class if exists
                 if (isset($this->index[$className . 'Core'])) {
-                    require_once $this->root_dir . $this->index[$className . 'Core']['path'];
+                    include_once $this->root_dir . $this->index[$className . 'Core']['path'];
                 }
 
                 if (isset($this->index[$className])) {
-                    require_once $classDir . $this->index[$className]['path'];
+                    include_once $classDir . $this->index[$className]['path'];
                 }
             }
         } elseif (isset($this->index[$className]['path']) && $this->index[$className]['path']) {
             // Call directly ProductCore, ShopCore class
-            require_once $this->root_dir . $this->index[$className]['path'];
+            include_once $this->root_dir . $this->index[$className]['path'];
         }
         if (strpos($className, 'PrestaShop\PrestaShop\Adapter\Entity') !== false) {
-            require_once static::getNamespacedStubFileIndex();
+            include_once static::getNamespacedStubFileIndex();
         }
     }
 
