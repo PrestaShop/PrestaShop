@@ -110,7 +110,7 @@ describe('CRUD catalog price rules', async () => {
   // 2 - Check catalog price rule in FO
   describe('Check catalog price rule in FO', async () => {
     it('should check the discount', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedCatalogPriceRule', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNewCatalogPriceRule', baseContext);
 
       page = await addCatalogPriceRulePage.viewMyShop(page);
 
@@ -150,7 +150,7 @@ describe('CRUD catalog price rules', async () => {
   // 3 - Update catalog price rule
   describe('Update catalog price rule', async () => {
     it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo1', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBoToUpdate', baseContext);
 
       page = await productPage.closePage(browserContext, page, 0);
 
@@ -159,7 +159,7 @@ describe('CRUD catalog price rules', async () => {
     });
 
     it('should update the created catalog price rule', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createCatalogPriceRule', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'updateCatalogPriceRule', baseContext);
 
       await catalogPriceRulesPage.goToEditCatalogPriceRulePage(page, newCatalogPriceRuleData);
       const pageTitle = await addCatalogPriceRulePage.getPageTitle(page);
@@ -173,7 +173,7 @@ describe('CRUD catalog price rules', async () => {
   // 4 - Check updated catalog price rule in FO
   describe('Check catalog price rule in FO', async () => {
     it('should check the discount', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedCatalogPriceRule', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedCatalogPriceRule', baseContext);
 
       page = await addCatalogPriceRulePage.viewMyShop(page);
 
@@ -213,7 +213,7 @@ describe('CRUD catalog price rules', async () => {
   // 5 - Delete catalog price rule
   describe('Delete catalog price rule', async () => {
     it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo1', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBoToDelete', baseContext);
 
       page = await productPage.closePage(browserContext, page, 0);
 
