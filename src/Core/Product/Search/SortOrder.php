@@ -123,7 +123,7 @@ class SortOrder
         $sortParams = explode('.', $sortOrderConfiguration);
 
         if (count($sortParams) < 3) {
-            return static::random();
+            throw new \PrestaShopException('Invalid argument');
         }
 
         list($entity, $field, $direction) = $sortParams;
