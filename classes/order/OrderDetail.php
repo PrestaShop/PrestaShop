@@ -463,7 +463,7 @@ class OrderDetailCore extends ObjectModel
      *
      * @return TaxCalculator
      */
-    public function getTaxCalculatorByAddress(Address $address)
+    public function getTaxCalculatorByAddress(Address $address): TaxCalculator
     {
         $this->setContext((int) $this->id_shop);
         $tax_manager = TaxManagerFactory::getManager($address, $this->getTaxRulesGroupId());
