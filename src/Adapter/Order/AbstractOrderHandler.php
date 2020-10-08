@@ -49,6 +49,7 @@ use PrestaShopException;
 use Product;
 use SpecificPrice;
 use Tools;
+use TaxManagerFactory;
 use Validate;
 
 /**
