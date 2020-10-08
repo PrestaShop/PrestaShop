@@ -234,12 +234,12 @@ class AdminImagesControllerCore extends AdminController
                         [
                             'id' => 'products_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', [], 'Admin.Global'),
+                            'label' => $this->trans('Yes', [], 'Admin.Global'),
                         ],
                         [
                             'id' => 'products_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', [], 'Admin.Global'),
+                            'label' => $this->trans('No', [], 'Admin.Global'),
                         ],
                     ],
                 ],
@@ -255,12 +255,12 @@ class AdminImagesControllerCore extends AdminController
                         [
                             'id' => 'categories_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', [], 'Admin.Global'),
+                            'label' => $this->trans('Yes', [], 'Admin.Global'),
                         ],
                         [
                             'id' => 'categories_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', [], 'Admin.Global'),
+                            'label' => $this->trans('No', [], 'Admin.Global'),
                         ],
                     ],
                 ],
@@ -275,12 +275,12 @@ class AdminImagesControllerCore extends AdminController
                         [
                             'id' => 'manufacturers_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', [], 'Admin.Global'),
+                            'label' => $this->trans('Yes', [], 'Admin.Global'),
                         ],
                         [
                             'id' => 'manufacturers_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', [], 'Admin.Global'),
+                            'label' => $this->trans('No', [], 'Admin.Global'),
                         ],
                     ],
                 ],
@@ -295,12 +295,12 @@ class AdminImagesControllerCore extends AdminController
                         [
                             'id' => 'suppliers_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', [], 'Admin.Global'),
+                            'label' => $this->trans('Yes', [], 'Admin.Global'),
                         ],
                         [
                             'id' => 'suppliers_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', [], 'Admin.Global'),
+                            'label' => $this->trans('No', [], 'Admin.Global'),
                         ],
                     ],
                 ],
@@ -315,12 +315,12 @@ class AdminImagesControllerCore extends AdminController
                         [
                             'id' => 'stores_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', [], 'Admin.Global'),
+                            'label' => $this->trans('Yes', [], 'Admin.Global'),
                         ],
                         [
                             'id' => 'stores_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', [], 'Admin.Global'),
+                            'label' => $this->trans('No', [], 'Admin.Global'),
                         ],
                     ],
                 ],
