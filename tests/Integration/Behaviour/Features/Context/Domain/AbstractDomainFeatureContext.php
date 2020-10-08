@@ -82,14 +82,6 @@ abstract class AbstractDomainFeatureContext implements Context
     }
 
     /**
-     * @return object|\PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyCache|null
-     */
-    protected function getCurrencyCache()
-    {
-        return CommonFeatureContext::getContainer()->get('prestashop.core.localization.currency.middleware.cache');
-    }
-
-    /**
      * @return CommandBusInterface
      */
     protected function getQueryBus()

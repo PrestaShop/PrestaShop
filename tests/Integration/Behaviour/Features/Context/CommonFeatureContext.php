@@ -30,6 +30,7 @@ use AppKernel;
 use Cache;
 use Category;
 use Context;
+use Currency;
 use Employee;
 use Language;
 use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
@@ -147,5 +148,6 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         Category::resetStaticCache();
         Product::resetStaticCache();
         Language::resetCache();
+        Currency::resetStaticCache();
     }
 }

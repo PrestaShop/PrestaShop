@@ -1,6 +1,7 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags multiple-currencies-to-order
 @reset-database-before-feature
 @reboot-kernel-before-feature
+@clear-cache-before-feature
 @multiple-currencies-to-order
 Feature: Multiple currencies for Order in Back Office (BO)
   In order to manage multiple currencies for orders in BO
@@ -93,7 +94,6 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_shipping_tax_incl  | 74.20  |
 
 #  @database-scenario
-  @reboot-kernel-before-scenario
   Scenario: Add product to an order with secondary currency
     When I add products to order "bo_order1" without invoice and the following products details:
       | name          | Mug Today is a good day  |
