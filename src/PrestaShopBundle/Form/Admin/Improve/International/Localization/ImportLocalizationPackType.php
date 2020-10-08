@@ -66,8 +66,6 @@ class ImportLocalizationPackType extends TranslatorAwareType
     {
         $builder
             ->add('iso_localization_pack', ChoiceType::class, [
-                'placeholder' => false,
-                'required' => false,
                 'label' => $this->trans(
                     'Localization pack you want to import',
                     'Admin.International.Feature'
@@ -82,7 +80,6 @@ class ImportLocalizationPackType extends TranslatorAwareType
                 ),
                 'expanded' => true,
                 'multiple' => true,
-                'required' => false,
                 'choices' => $this->getContentToImportChoices(),
                 'data' => [
                     LocalizationPackImportConfigInterface::CONTENT_STATES,
@@ -94,7 +91,6 @@ class ImportLocalizationPackType extends TranslatorAwareType
                 'choice_translation_domain' => false,
             ])
             ->add('download_pack_data', SwitchType::class, [
-                'required' => false,
                 'label' => $this->trans(
                     'Download pack data',
                     'Admin.International.Feature'

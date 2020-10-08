@@ -86,7 +86,6 @@ class LocalizationConfigurationType extends TranslatorAwareType
     {
         $builder
             ->add('default_language', ChoiceType::class, [
-                'required' => false,
                 'label' => $this->trans(
                     'Default language',
                     'Admin.International.Feature'
@@ -103,7 +102,6 @@ class LocalizationConfigurationType extends TranslatorAwareType
                 ],
             ])
             ->add('detect_language_from_browser', SwitchType::class, [
-                'required' => false,
                 'label' => $this->trans(
                     'Set language from browser',
                     'Admin.International.Feature'
@@ -114,7 +112,6 @@ class LocalizationConfigurationType extends TranslatorAwareType
                 ),
             ])
             ->add('default_country', ChoiceType::class, [
-                'required' => false,
                 'label' => $this->trans(
                     'Set language from browser',
                     'Admin.International.Feature'
@@ -131,7 +128,6 @@ class LocalizationConfigurationType extends TranslatorAwareType
                 ],
             ])
             ->add('detect_country_from_browser', SwitchType::class, [
-                'required' => false,
                 'label' => $this->trans(
                     'Default country',
                     'Admin.International.Feature'
@@ -143,7 +139,6 @@ class LocalizationConfigurationType extends TranslatorAwareType
             ]
             )
             ->add('default_currency', ChoiceType::class, [
-                'required' => false,
                 'choices' => $this->currencyChoices,
                 'choice_translation_domain' => false,
                 'label' => $this->trans(
@@ -161,7 +156,6 @@ class LocalizationConfigurationType extends TranslatorAwareType
                 ],
             ])
             ->add('timezone', ChoiceType::class, [
-                'required' => false,
                 'label' => $this->trans(
                     'Time zone',
                     'Admin.International.Feature'
