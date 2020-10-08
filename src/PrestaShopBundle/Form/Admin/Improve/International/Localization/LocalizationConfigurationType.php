@@ -107,17 +107,17 @@ class LocalizationConfigurationType extends TranslatorAwareType
                     'Admin.International.Feature'
                 ),
                 'help' => $this->trans(
-                    'Set browser language as default language',
+                    'Set browser language as default language.',
                     'Admin.International.Help'
                 ),
             ])
             ->add('default_country', ChoiceType::class, [
                 'label' => $this->trans(
-                    'Set language from browser',
+                    'Default country',
                     'Admin.International.Feature'
                 ),
                 'help' => $this->trans(
-                    'Set browser language as default language',
+                    'The default country used in your shop.',
                     'Admin.International.Help'
                 ),
                 'choices' => $this->countryChoices,
@@ -129,11 +129,11 @@ class LocalizationConfigurationType extends TranslatorAwareType
             ])
             ->add('detect_country_from_browser', SwitchType::class, [
                 'label' => $this->trans(
-                    'Default country',
+                    'Set default country from browser language',
                     'Admin.International.Feature'
                 ),
                 'help' => $this->trans(
-                    'The default country used in your shop.',
+                    'Set country corresponding to browser language.',
                     'Admin.International.Help'
                 ),
             ]
