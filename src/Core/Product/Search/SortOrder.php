@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Product\Search;
 
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Product\Search\Exception\InvalidSortOrderDirectionException;
 
 /**
@@ -123,7 +124,7 @@ class SortOrder
         $sortParams = explode('.', $sortOrderConfiguration);
 
         if (count($sortParams) < 3) {
-            throw new \PrestaShopException('Invalid argument');
+            throw new CoreException('Invalid argument');
         }
 
         list($entity, $field, $direction) = $sortParams;
