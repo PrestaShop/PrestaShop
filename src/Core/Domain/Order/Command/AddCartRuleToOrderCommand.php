@@ -113,7 +113,7 @@ class AddCartRuleToOrderCommand
     /**
      * @return DecimalNumber|null
      */
-    public function getDiscountValue(): ?Number
+    public function getDiscountValue(): ?DecimalNumber
     {
         return $this->value;
     }
