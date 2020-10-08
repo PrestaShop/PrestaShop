@@ -310,7 +310,7 @@ class SpecificPriceFormHandler {
    */
   deleteSpecificPrice(clickedLink) {
     window.modalConfirmation.create(
-      window.translate_javascripts['This will delete the specific price. Do you wish to proceed?'],
+      window.translate_javascripts['Are you sure you want to delete this item?'],
       null,
       {
         onContinue: () => {
