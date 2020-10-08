@@ -21,7 +21,7 @@ const {Products} = require('@data/demo/products');
 // import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_catalog_discounts_cartRules_CRUDCatalogPriceRule';
+const baseContext = 'functional_BO_catalog_discounts_catalogPriceRules_CRUDCatalogPriceRule';
 
 let browserContext;
 let page;
