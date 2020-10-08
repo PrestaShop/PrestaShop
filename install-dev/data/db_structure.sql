@@ -393,7 +393,6 @@ CREATE TABLE `PREFIX_category_product` (
 CREATE TABLE `PREFIX_cms` (
   `id_cms` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `id_cms_category` int(10) unsigned NOT NULL,
-  `position` int(10) unsigned NOT NULL DEFAULT '0',
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `indexation` tinyint(1) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_cms`)
@@ -2329,6 +2328,7 @@ CREATE TABLE `PREFIX_address_format` (
 CREATE TABLE `PREFIX_cms_shop` (
   `id_cms` INT(11) UNSIGNED NOT NULL,
   `id_shop` INT(11) UNSIGNED NOT NULL,
+  `position` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_cms`, `id_shop`),
   KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
