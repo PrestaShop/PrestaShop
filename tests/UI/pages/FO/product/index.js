@@ -7,7 +7,6 @@ class Product extends FOBasePage {
 
     // Selectors for product page
     this.productName = '#main h1[itemprop="name"]';
-    this.productPrice = '#main span[itemprop="price"]';
     this.productQuantity = '#quantity_wanted';
     this.productDescription = '#description';
     this.colorInput = color => `#group_2 li input[title=${color}]`;
@@ -24,12 +23,17 @@ class Product extends FOBasePage {
     this.metaLink = '#main > meta';
     // Product prices block
     this.productPricesBlock = 'div.product-prices';
+    this.discountAmountSpan = `${this.productPricesBlock} .discount.discount-amount`;
+    this.discountPercentageSpan = `${this.productPricesBlock} .discount.discount-percentage`;
+    this.regularPrice = `${this.productPricesBlock} .regular-price`;
+    this.productPrice = `${this.productPricesBlock} span[itemprop='price']`;
     this.taxShippingDeliveryBlock = `${this.productPricesBlock} div.tax-shipping-delivery-label`;
     this.deliveryInformationSpan = `${this.taxShippingDeliveryBlock} span.delivery-information`;
+    // Volume discounts table
     this.discountTable = '.table-product-discounts';
-    this.discountColumn = `${this.discountTable} th:nth-child(2)`;
-    this.discountValue = `${this.discountTable} td:nth-child(2)`;
-    this.discountAmountSpan = `${this.productPricesBlock} .discount.discount-amount`;
+    this.quantityDiscountValue = `${this.discountTable} td:nth-child(1)`;
+    this.unitDiscountColumn = `${this.discountTable} th:nth-child(2)`;
+    this.unitDiscountValue = `${this.discountTable} td:nth-child(2)`;
   }
 
   /**
@@ -163,16 +167,25 @@ class Product extends FOBasePage {
    * @returns {Promise<string>}
    */
   getDiscountColumnTitle(page) {
-    return this.getTextContent(page, this.discountColumn);
+    return this.getTextContent(page, this.unitDiscountColumn);
   }
 
   /**
-   * Get discount value
+   * Get quantity discount value from volume discounts table
+   * @param page
+   * @returns {Promise<number>}
+   */
+  getQuantityDiscountValue(page) {
+    return this.getNumberFromText(page, this.quantityDiscountValue);
+  }
+
+  /**
+   * Get discount value from volume discounts table
    * @param page
    * @returns {Promise<string>}
    */
   getDiscountValue(page) {
-    return this.getTextContent(page, this.discountValue);
+    return this.getTextContent(page, this.unitDiscountValue);
   }
 
   /**
@@ -182,6 +195,15 @@ class Product extends FOBasePage {
    */
   getDiscountAmount(page) {
     return this.getTextContent(page, this.discountAmountSpan);
+  }
+
+  /**
+   * Get discount percentage
+   * @param page
+   * @returns {Promise<string>}
+   */
+  getDiscountPercentage(page) {
+    return this.getTextContent(page, this.discountPercentageSpan);
   }
 
   /**

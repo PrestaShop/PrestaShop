@@ -45,11 +45,18 @@ const editCatalogPriceRuleData = new PriceRuleFaker(
     group: 'All groups',
     reductionType: 'Amount',
     reductionTax: 'Tax included',
-    fromQuantity: 3,
+    fromQuantity: 4,
     reduction: 15,
   },
 );
 
+/*
+Create new catalog price rules
+Check the rule in FO
+Update catalog price rules
+Check the updated rule in FO
+Delete catalog price rules
+*/
 describe('CRUD catalog price rules', async () => {
   // before and after functions
   before(async function () {
@@ -95,7 +102,7 @@ describe('CRUD catalog price rules', async () => {
       const pageTitle = await addCatalogPriceRulePage.getPageTitle(page);
       await expect(pageTitle).to.contains(addCatalogPriceRulePage.pageTitle);
 
-      const validationMessage = await addCatalogPriceRulePage.createEditCatalogPriceRule(page, newCatalogPriceRuleData);
+      const validationMessage = await addCatalogPriceRulePage.setCatalogPriceRule(page, newCatalogPriceRuleData);
       await expect(validationMessage).to.contains(catalogPriceRulesPage.successfulCreationMessage);
     });
   });
@@ -111,10 +118,21 @@ describe('CRUD catalog price rules', async () => {
       // Go to first product page
       await homePage.goToProductPage(page, 1);
 
-      // Check discount value
+      // Check quantity for discount value
+      const quantityDiscountValue = await productPage.getQuantityDiscountValue(page);
+      await expect(quantityDiscountValue).to.equal(3);
 
-      let columnValue = await productPage.getDiscountAmount(page);
-      await expect(columnValue).to.not.equal('Save €20.00');
+      // Check unit discount value
+      const unitDiscountValue = await productPage.getDiscountValue(page);
+      await expect(unitDiscountValue).to.equal('€20.00');
+
+      // Check discount percentage
+      let columnValue = await productPage.getDiscountPercentage(page);
+      await expect(columnValue).to.equal('Save 20%');
+
+      // Check final price
+      let finalPrice = await productPage.getProductInformation(page);
+      expect(finalPrice.price).to.equal(22.94);
 
       // Set quantity of the product
       await productPage.setQuantity(page, 3);
@@ -122,28 +140,92 @@ describe('CRUD catalog price rules', async () => {
       // Check discount value
       columnValue = await productPage.getDiscountAmount(page);
       await expect(columnValue).to.equal('Save €20.00');
+
+      // Check final price
+      finalPrice = await productPage.getProductInformation(page);
+      expect(finalPrice.price).to.equal(8.68);
     });
   });
 
   // 3 - Update catalog price rule
-  /*describe('Update catalog price rule', async () => {
+  describe('Update catalog price rule', async () => {
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo1', baseContext);
+
+      page = await productPage.closePage(browserContext, page, 0);
+
+      const pageTitle = await catalogPriceRulesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(catalogPriceRulesPage.pageTitle);
+    });
+
     it('should update the created catalog price rule', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCatalogPriceRule', baseContext);
 
-      await catalogPriceRulesPage.goToAddNewCatalogPriceRulePage(page);
+      await catalogPriceRulesPage.goToEditCatalogPriceRulePage(page, newCatalogPriceRuleData);
       const pageTitle = await addCatalogPriceRulePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addCatalogPriceRulePage.pageTitle);
+      await expect(pageTitle).to.contains(addCatalogPriceRulePage.editPageTitle);
 
-      const validationMessage = await addCatalogPriceRulePage.createEditCatalogPriceRule(page, newCatalogPriceRuleData);
-      await expect(validationMessage).to.contains(catalogPriceRulesPage.successfulCreationMessage);
+      const validationMessage = await addCatalogPriceRulePage.setCatalogPriceRule(page, editCatalogPriceRuleData);
+      await expect(validationMessage).to.contains(catalogPriceRulesPage.successfulUpdateMessage);
     });
-  });*/
+  });
+
+  // 4 - Check updated catalog price rule in FO
+  describe('Check catalog price rule in FO', async () => {
+    it('should check the discount', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedCatalogPriceRule', baseContext);
+
+      page = await addCatalogPriceRulePage.viewMyShop(page);
+
+      await homePage.changeLanguage(page, 'en');
+      // Go to first product page
+      await homePage.goToProductPage(page, 1);
+
+      // Check quantity for discount value
+      const quantityDiscountValue = await productPage.getQuantityDiscountValue(page);
+      await expect(quantityDiscountValue).to.equal(4);
+
+      // Check unit discount value
+      const unitDiscountValue = await productPage.getDiscountValue(page);
+      await expect(unitDiscountValue).to.equal('€15.00');
+
+      // Check discount percentage
+      let columnValue = await productPage.getDiscountPercentage(page);
+      await expect(columnValue).to.equal('Save 20%');
+
+      // Check final price
+      let finalPrice = await productPage.getProductInformation(page);
+      expect(finalPrice.price).to.equal(22.94);
+
+      // Set quantity of the product
+      await productPage.setQuantity(page, 4);
+
+      // Check discount value
+      columnValue = await productPage.getDiscountAmount(page);
+      await expect(columnValue).to.equal('Save €15.00');
+
+      // Check final price
+      finalPrice = await productPage.getProductInformation(page);
+      expect(finalPrice.price).to.equal(13.68);
+    });
+  });
 
   // 5 - Delete catalog price rule
-  /*it('should delete catalog price rule', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'deleteCatalogPriceRule', baseContext);
+  describe('Delete catalog price rule', async () => {
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo1', baseContext);
 
-    const deleteTextResult = await catalogPriceRulesPage.deleteCatalogPriceRule(page, newCatalogPriceRuleData.name);
-    await expect(deleteTextResult).to.contains(catalogPriceRulesPage.successfulDeleteMessage);
-  });*/
+      page = await productPage.closePage(browserContext, page, 0);
+
+      const pageTitle = await catalogPriceRulesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(catalogPriceRulesPage.pageTitle);
+    });
+
+    it('should delete catalog price rule', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteCatalogPriceRule', baseContext);
+
+      const deleteTextResult = await catalogPriceRulesPage.deleteCatalogPriceRule(page, editCatalogPriceRuleData.name);
+      await expect(deleteTextResult).to.contains(catalogPriceRulesPage.successfulDeleteMessage);
+    });
+  });
 });
