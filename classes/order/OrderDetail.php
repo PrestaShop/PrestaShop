@@ -456,12 +456,29 @@ class OrderDetailCore extends ObjectModel
         return $this->saveTaxCalculator($order, true);
     }
 
+    /**
+     * Get a TaxCalculator adapted for the OrderDetail's product and the specified address
+     *
+     * @param Address $address
+     *
+     * @return TaxCalculator
+     */
     public function getTaxCalculatorByAddress(Address $address)
     {
         $this->setContext((int) $this->id_shop);
-        $tax_manager = TaxManagerFactory::getManager($address, (int) Product::getIdTaxRulesGroupByIdProduct((int) $this->product_id, $this->context));
+        $tax_manager = TaxManagerFactory::getManager($address, $this->getTaxRulesGroupId());
 
         return $tax_manager->getTaxCalculator();
+    }
+
+    /**
+     * Dynamically get the taxRulesGroupId instead of relying one the one saved in database
+     *
+     * @return int
+     */
+    public function getTaxRulesGroupId(): int
+    {
+        return (int) Product::getIdTaxRulesGroupByIdProduct((int) $this->product_id, $this->context);
     }
 
     /**

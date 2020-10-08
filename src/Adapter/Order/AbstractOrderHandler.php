@@ -35,20 +35,17 @@ use Currency;
 use Customer;
 use Group;
 use Order;
-use OrderDetail;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Number\RoundModeConverter;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use Product;
 use SpecificPrice;
-use Tools;
 use TaxManagerFactory;
 use Validate;
 
@@ -349,56 +346,5 @@ abstract class AbstractOrderHandler
     protected function getNumberRoundMode(): string
     {
         return RoundModeConverter::getNumberRoundMode((int) Configuration::get('PS_PRICE_ROUND_MODE'));
-    }
-
-    /**
-     * @param Order $order
-     *
-     * @return ShopConstraint
-     */
-    protected function getOrderShopConstraint(Order $order): ShopConstraint
-    {
-        return new ShopConstraint(
-            (int) $order->id_shop,
-            (int) $order->id_shop_group
-        );
-    }
-
-    /**
-     * @param Order $order
-     * @param Cart $cart
-     * @param Address $taxAddress
-     *
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
-     */
-    protected function updateOrderDetailsTax(Order $order, Cart $cart, Address $taxAddress): void
-    {
-        $computingPrecision = $this->getPrecisionFromCart($cart);
-
-        $context = Context::getContext();
-        foreach ($order->getOrderDetailList() as $row) {
-            $orderDetail = new OrderDetail($row['id_order_detail']);
-            $orderDetail->id_tax_rules_group = (int) Product::getIdTaxRulesGroupByIdProduct($orderDetail->product_id, $context);
-            $taxCalculator = $orderDetail->getTaxCalculatorByAddress($taxAddress);
-
-            // Refunds are not modified, even though the tax changed we need to keep track of the actual refunded amount
-            switch (Configuration::get('PS_ROUND_TYPE')) {
-                case Order::ROUND_ITEM:
-                    $orderDetail->unit_price_tax_incl = Tools::ps_round($taxCalculator->addTaxes($orderDetail->unit_price_tax_excl), $computingPrecision);
-
-                    break;
-                case Order::ROUND_LINE:
-                case Order::ROUND_TOTAL:
-                    $orderDetail->unit_price_tax_incl = $taxCalculator->addTaxes($orderDetail->unit_price_tax_excl);
-
-                    break;
-            }
-            $orderDetail->total_price_tax_incl = Tools::ps_round($taxCalculator->addTaxes($orderDetail->total_price_tax_excl), $computingPrecision);
-            $orderDetail->total_shipping_price_tax_incl = Tools::ps_round($taxCalculator->addTaxes($orderDetail->total_shipping_price_tax_excl), $computingPrecision);
-
-            $orderDetail->updateTaxAmount($order);
-            $orderDetail->update();
-        }
     }
 }

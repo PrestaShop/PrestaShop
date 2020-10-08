@@ -30,7 +30,6 @@ use Address;
 use Cart;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderInvoiceAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\ChangeOrderInvoiceAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -47,20 +46,11 @@ final class ChangeOrderInvoiceAddressHandler extends AbstractOrderHandler implem
     private $orderAmountUpdater;
 
     /**
-     * @var ShopConfigurationInterface
-     */
-    private $shopConfiguration;
-
-    /**
      * @param OrderAmountUpdater $orderAmountUpdater
-     * @param ShopConfigurationInterface $shopConfiguration
      */
-    public function __construct(
-        OrderAmountUpdater $orderAmountUpdater,
-        ShopConfigurationInterface $shopConfiguration
-    ) {
+    public function __construct(OrderAmountUpdater $orderAmountUpdater)
+    {
         $this->orderAmountUpdater = $orderAmountUpdater;
-        $this->shopConfiguration = $shopConfiguration;
     }
 
     /**
@@ -82,10 +72,5 @@ final class ChangeOrderInvoiceAddressHandler extends AbstractOrderHandler implem
 
         $order->id_address_invoice = $address->id;
         $this->orderAmountUpdater->update($order, $cart);
-
-        // Update OrderDetails tax if the address is the delivery address
-        if ($this->shopConfiguration->get('PS_TAX_ADDRESS_TYPE', null, $this->getOrderShopConstraint($order)) === 'id_address_invoice') {
-            $this->updateOrderDetailsTax($order, $cart, new Address($order->id_address_invoice));
-        }
     }
 }
