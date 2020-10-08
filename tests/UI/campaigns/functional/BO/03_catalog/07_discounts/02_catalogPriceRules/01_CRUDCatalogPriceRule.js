@@ -16,6 +16,7 @@ const homePage = require('@pages/FO/home');
 
 // Import data
 const PriceRuleFaker = require('@data/faker/catalogPriceRule');
+const {Products} = require('@data/demo/products');
 
 // import test context
 const testContext = require('@utils/testContext');
@@ -36,8 +37,6 @@ const newCatalogPriceRuleData = new PriceRuleFaker(
     reduction: 20,
   },
 );
-
-
 const editCatalogPriceRuleData = new PriceRuleFaker(
   {
     currency: 'All currencies',
@@ -49,6 +48,12 @@ const editCatalogPriceRuleData = new PriceRuleFaker(
     reduction: 15,
   },
 );
+const productPrice = Products.demo_1.finalPrice;
+const defaultDiscount = 'Save 20%';
+const priceAfterNewDiscount = 8.68;
+const discountAmountForNewDiscount = 'Save €20.00';
+const priceAfterUpdatedDiscount = 13.68;
+const discountAmountForUpdatedDiscount = 'Save €15.00';
 
 /*
 Create new catalog price rules
@@ -120,30 +125,30 @@ describe('CRUD catalog price rules', async () => {
 
       // Check quantity for discount value
       const quantityDiscountValue = await productPage.getQuantityDiscountValue(page);
-      await expect(quantityDiscountValue).to.equal(3);
+      await expect(quantityDiscountValue).to.equal(newCatalogPriceRuleData.fromQuantity);
 
       // Check unit discount value
       const unitDiscountValue = await productPage.getDiscountValue(page);
-      await expect(unitDiscountValue).to.equal('€20.00');
+      await expect(unitDiscountValue).to.equal(`€${newCatalogPriceRuleData.reduction}.00`);
 
       // Check discount percentage
       let columnValue = await productPage.getDiscountPercentage(page);
-      await expect(columnValue).to.equal('Save 20%');
+      await expect(columnValue).to.equal(defaultDiscount);
 
       // Check final price
       let finalPrice = await productPage.getProductInformation(page);
-      expect(finalPrice.price).to.equal(22.94);
+      expect(finalPrice.price).to.equal(productPrice);
 
       // Set quantity of the product
-      await productPage.setQuantity(page, 3);
+      await productPage.setQuantity(page, newCatalogPriceRuleData.fromQuantity);
 
       // Check discount value
       columnValue = await productPage.getDiscountAmount(page);
-      await expect(columnValue).to.equal('Save €20.00');
+      await expect(columnValue).to.equal(discountAmountForNewDiscount);
 
       // Check final price
       finalPrice = await productPage.getProductInformation(page);
-      expect(finalPrice.price).to.equal(8.68);
+      expect(finalPrice.price).to.equal(priceAfterNewDiscount);
     });
   });
 
@@ -171,7 +176,7 @@ describe('CRUD catalog price rules', async () => {
   });
 
   // 4 - Check updated catalog price rule in FO
-  describe('Check catalog price rule in FO', async () => {
+  describe('Check updated catalog price rule in FO', async () => {
     it('should check the discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedCatalogPriceRule', baseContext);
 
@@ -183,30 +188,30 @@ describe('CRUD catalog price rules', async () => {
 
       // Check quantity for discount value
       const quantityDiscountValue = await productPage.getQuantityDiscountValue(page);
-      await expect(quantityDiscountValue).to.equal(4);
+      await expect(quantityDiscountValue).to.equal(editCatalogPriceRuleData.fromQuantity);
 
       // Check unit discount value
       const unitDiscountValue = await productPage.getDiscountValue(page);
-      await expect(unitDiscountValue).to.equal('€15.00');
+      await expect(unitDiscountValue).to.equal(`€${editCatalogPriceRuleData.reduction}.00`);
 
       // Check discount percentage
       let columnValue = await productPage.getDiscountPercentage(page);
-      await expect(columnValue).to.equal('Save 20%');
+      await expect(columnValue).to.equal(defaultDiscount);
 
       // Check final price
       let finalPrice = await productPage.getProductInformation(page);
-      expect(finalPrice.price).to.equal(22.94);
+      expect(finalPrice.price).to.equal(productPrice);
 
       // Set quantity of the product
-      await productPage.setQuantity(page, 4);
+      await productPage.setQuantity(page, editCatalogPriceRuleData.fromQuantity);
 
       // Check discount value
       columnValue = await productPage.getDiscountAmount(page);
-      await expect(columnValue).to.equal('Save €15.00');
+      await expect(columnValue).to.equal(discountAmountForUpdatedDiscount);
 
       // Check final price
       finalPrice = await productPage.getProductInformation(page);
-      expect(finalPrice.price).to.equal(13.68);
+      expect(finalPrice.price).to.equal(priceAfterUpdatedDiscount);
     });
   });
 
