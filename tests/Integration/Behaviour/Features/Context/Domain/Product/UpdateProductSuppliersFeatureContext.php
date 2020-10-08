@@ -31,7 +31,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use Currency;
 use PHPUnit\Framework\Assert;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOptions;
@@ -136,7 +136,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
             } else {
                 $expectedProductSupplier['combination'] = CombinationId::NO_COMBINATION;
             }
-            $expectedProductSupplier['price tax excluded'] = new Number($expectedProductSupplier['price tax excluded']);
+            $expectedProductSupplier['price tax excluded'] = new DecimalNumber($expectedProductSupplier['price tax excluded']);
         }
 
         $actualProductSuppliers = [];
@@ -145,7 +145,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
                 $actualProductSuppliers[] = [
                     'product supplier reference' => $productSupplierForEditing->getReference(),
                     'currency' => Currency::getIsoCodeById($productSupplierForEditing->getCurrencyId()),
-                    'price tax excluded' => new Number($productSupplierForEditing->getPriceTaxExcluded()),
+                    'price tax excluded' => new DecimalNumber($productSupplierForEditing->getPriceTaxExcluded()),
                     'combination' => $productSupplierForEditing->getCombinationId(),
                 ];
             }

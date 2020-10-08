@@ -36,7 +36,7 @@ use Customer;
 use Language;
 use Link;
 use Message;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
@@ -215,20 +215,20 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
                 (int) $discount['id_cart_rule'],
                 $discount['name'],
                 $discount['description'],
-                (new Number((string) $discount['value_tax_exc']))->round($currency->precision)
+                (new DecimalNumber((string) $discount['value_tax_exc']))->round($currency->precision)
             );
         }
 
         foreach ($cart->getCartRules(CartRule::FILTER_ACTION_GIFT) as $giftRule) {
             $giftRuleId = (int) $giftRule['id_cart_rule'];
-            $finalValue = new Number((string) $giftRule['value_tax_exc']);
+            $finalValue = new DecimalNumber((string) $giftRule['value_tax_exc']);
 
             if (isset($cartRules[$giftRuleId])) {
                 // it is possible that one cart rule can have a gift product, but also have other conditions,
                 //so we need to sum their reduction values
                 /** @var CartInformation\CartRule $cartRule */
                 $cartRule = $cartRules[$giftRuleId];
-                $finalValue = $finalValue->plus(new Number($cartRule->getValue()));
+                $finalValue = $finalValue->plus(new DecimalNumber($cartRule->getValue()));
             }
 
             $cartRules[$giftRuleId] = new CartInformation\CartRule(

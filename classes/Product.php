@@ -30,7 +30,7 @@ define('_CUSTOMIZE_FILE_', 0);
 // Deprecated since 1.5.0.1 use Product::CUSTOMIZE_TEXTFIELD
 define('_CUSTOMIZE_TEXTFIELD_', 1);
 
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Product\ProductInterface;
@@ -651,8 +651,8 @@ class ProductCore extends ObjectModel
     {
         parent::__construct($id_product, $id_lang, $id_shop);
 
-        $unitPriceRatio = new Number((string) $this->unit_price_ratio);
-        $price = new Number((string) $this->price);
+        $unitPriceRatio = new DecimalNumber((string) $this->unit_price_ratio);
+        $price = new DecimalNumber((string) $this->price);
 
         if ($unitPriceRatio->isGreaterThanZero()) {
             $this->unit_price = (float) (string) $price->dividedBy($unitPriceRatio);

@@ -34,7 +34,7 @@ use OrderInvoice;
 use OrderReturn;
 use OrderSlip;
 use Pack;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderProductsForViewingHandlerInterface;
@@ -243,8 +243,8 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                 $totalPriceFormatted,
                 $product['current_stock'],
                 $imagePath,
-                (new Number((string) $product['unit_price_tax_excl']))->round($precision),
-                (new Number((string) $product['unit_price_tax_incl']))->round($precision),
+                (new DecimalNumber((string) $product['unit_price_tax_excl']))->round($precision),
+                (new DecimalNumber((string) $product['unit_price_tax_incl']))->round($precision),
                 (string) $product['tax_rate'],
                 $this->locale->formatPrice($product['amount_refunded'], $currency->iso_code),
                 $product['product_quantity_refunded'] + $product['product_quantity_return'],
