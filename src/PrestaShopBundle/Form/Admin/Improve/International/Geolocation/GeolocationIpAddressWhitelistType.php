@@ -48,7 +48,6 @@ class GeolocationIpAddressWhitelistType extends TranslatorAwareType
                     'Whitelisted IP addresses',
                     'Admin.International.Feature'
                 ),
-                'required' => false,
                 'attr' => [
                     'col' => 15,
                     'rows' => 30,
