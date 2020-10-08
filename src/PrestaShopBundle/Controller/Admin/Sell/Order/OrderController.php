@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
+use Currency;
 use Exception;
 use InvalidArgumentException;
 use PrestaShop\Decimal\Number;
@@ -76,6 +77,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizatio
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
@@ -1576,6 +1579,45 @@ class OrderController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_orders_view', [
             'orderId' => $orderId,
         ]);
+    }
+
+    /**
+     * @AdminSecurity(
+     *     "is_granted(['create', 'update'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to perform this search."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function searchProductsAction(Request $request): JsonResponse
+    {
+        try {
+            $defaultCurrencyId = (int) $this->get('prestashop.adapter.legacy.configuration')->get('PS_CURRENCY_DEFAULT');
+
+            $searchPhrase = $request->query->get('search_phrase');
+            $currencyId = $request->query->get('currency_id');
+            $currencyIsoCode = $currencyId !== null
+                ? Currency::getIsoCodeById((int) $currencyId)
+                : Currency::getIsoCodeById($defaultCurrencyId);
+            $orderId = null;
+            if ($request->query->has('order_id')) {
+                $orderId = (int) $request->query->get('order_id');
+            }
+
+            /** @var FoundProduct[] $foundProducts */
+            $foundProducts = $this->getQueryBus()->handle(new SearchProducts($searchPhrase, 10, $currencyIsoCode, $orderId));
+
+            return $this->json([
+                'products' => $foundProducts,
+            ]);
+        } catch (Exception $e) {
+            return $this->json(
+                [$e, 'message' => $this->getErrorMessageForException($e, [])],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
     }
 
     /**

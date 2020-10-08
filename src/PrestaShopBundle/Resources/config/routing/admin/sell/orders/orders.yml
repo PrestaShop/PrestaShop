@@ -366,3 +366,12 @@ admin_orders_product_prices:
     orderId: \d+
   options:
     expose: true
+
+admin_orders_products_search:
+    path: /products/search
+    methods: [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Order/Order:searchProducts
+        _legacy_controller: AdminOrders
+    options:
+        expose: true
