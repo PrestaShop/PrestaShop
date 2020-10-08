@@ -23,6 +23,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Kernel\ModuleRepositoryFactory;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -80,6 +82,20 @@ class AppKernel extends Kernel
         }
 
         return $bundles;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function reboot($warmupDir)
+    {
+        parent::reboot($warmupDir);
+
+        // We have classes to access the container from legacy code, they need to be cleaned after reboot
+        Context::getContext()->container = null;
+        SymfonyContainer::resetStaticCache();
+        // @todo: do not want to risk right now but maybe Context::getContext()->controller->container needs refreshing
+        //        but only if it is a Symfony container (do not override front legacy container)
     }
 
     /**
