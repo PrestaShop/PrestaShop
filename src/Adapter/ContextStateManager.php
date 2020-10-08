@@ -186,4 +186,8 @@ final class ContextStateManager
             unset($this->savedContextFields[$fieldName]);
         }
     }
+    public function getLanguage()
+    {
+        return $this->context->language;
+    }
 }

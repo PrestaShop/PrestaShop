@@ -53,7 +53,6 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_shipping_tax_incl  | 74.20  |
 
 #  @database-scenario
-  @reboot-kernel-before-scenario
   Scenario: Add cart rule of type 'amount' to an order with secondary currency
     Given I add discount to order "bo_order1" with following details:
       | name      | discount ten-euros    |
@@ -74,7 +73,6 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_shipping_tax_incl  | 74.20  |
 
 #  @database-scenario
-  @reboot-kernel-before-scenario
   Scenario: Add cart rule of type 'percent' to an order with secondary currency
     Given I add discount to order "bo_order1" with following details:
       | name      | discount ten-percents |
@@ -113,3 +111,16 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 70.00  |
       | total_shipping_tax_incl  | 74.20  |
+
+  Scenario: Update product in order with secondary currency
+    When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
+      | amount        | 3                       |
+      | price         | 12                      |
+    Then order "bo_order1" should contain 3 products "Mug The best is yet to come"
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 3  |
+      | product_price               | 12 |
+      | unit_price_tax_incl         | 12 |
+      | unit_price_tax_excl         | 12 |
+      | total_price_tax_incl        | 36 |
+      | total_price_tax_excl        | 36 |

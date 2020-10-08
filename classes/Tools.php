@@ -797,6 +797,9 @@ class ToolsCore
             $context->language->getLocale()
         );
 
+        var_dump(spl_object_hash($locale));
+        var_dump($locale->getPriceSpecifications());
+
         return $locale;
     }
 
