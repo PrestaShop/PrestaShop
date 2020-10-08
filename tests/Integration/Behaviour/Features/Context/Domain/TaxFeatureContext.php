@@ -259,9 +259,9 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I add tax rule group for tax :taxReference with following conditions:
+     * @Then I add the tax rule group :taxGroupReference for the tax :taxReference with the following conditions:
      */
-    public function addTaxRuleGroupToTax(string $taxReference, TableNode $table)
+    public function addTaxRuleGroupToTax(string $taxGroupReference, string $taxReference, TableNode $table)
     {
         $data = $table->getRowsHash();
 
@@ -270,7 +270,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
         $taxRulesGroup->active = 1;
         $taxRulesGroup->deleted = 0;
         $taxRulesGroup->save();
-        SharedStorage::getStorage()->set($data['name'], $taxRulesGroup->id);
+        SharedStorage::getStorage()->set($taxGroupReference, $taxRulesGroup->id);
 
         $tax = SharedStorage::getStorage()->get($taxReference);
         $taxRule = new TaxRule();
@@ -278,7 +278,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
         $taxRule->id_tax_rules_group = $taxRulesGroup->id;
         $taxRule->behavior = 1;
         $taxRule->id_country = Country::getByIso($data['country']);
-        $taxRule->id_state = State::getIdByIso($data['state']);
+        $taxRule->id_state = isset($data['state']) ? State::getIdByIso($data['state']) : 0;
         $taxRule->save();
     }
 }

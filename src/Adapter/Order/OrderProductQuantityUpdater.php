@@ -123,6 +123,10 @@ class OrderProductQuantityUpdater
                 $this->updateCustomizationOnProductDelete($order, $orderDetail, $oldQuantity);
             } else {
                 $this->assertValidProductQuantity($orderDetail, $newQuantity);
+                if (null !== $orderInvoice) {
+                    $orderDetail->id_order_invoice = $orderInvoice->id;
+                }
+
                 $orderDetail->product_quantity = $newQuantity;
                 $orderDetail->reduction_percent = 0;
                 // update taxes
@@ -136,7 +140,7 @@ class OrderProductQuantityUpdater
                 }
 
                 // Update quantity on the cart and stock
-                $cart = $this->updateProductQuantity($cart, $order, $orderDetail, $oldQuantity, $newQuantity);
+                $cart = $this->updateProductQuantity($cart, $orderDetail, $oldQuantity, $newQuantity);
             }
 
             // Update product stocks
@@ -161,7 +165,6 @@ class OrderProductQuantityUpdater
      */
     private function updateProductQuantity(
         Cart $cart,
-        Order $order,
         OrderDetail $orderDetail,
         int $oldQuantity,
         int $newQuantity

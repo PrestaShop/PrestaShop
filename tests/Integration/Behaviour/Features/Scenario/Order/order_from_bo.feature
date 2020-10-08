@@ -220,9 +220,9 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 3  |
       | product_price               | 12 |
-      | unit_price_tax_incl         | 12 |
+      | unit_price_tax_incl         | 12.72 |
       | unit_price_tax_excl         | 12 |
-      | total_price_tax_incl        | 36 |
+      | total_price_tax_incl        | 38.16 |
       | total_price_tax_excl        | 36 |
 
   Scenario: Update product in order with zero quantity is forbidden
@@ -333,3 +333,72 @@ Feature: Order from Back Office (BO)
     And I delete product "Mug Today is a good day" from catalogue
     And I update deleted product "Mug Today is a good day" in order "bo_order1"
     Then I should get error that the product being edited was not found
+
+  Scenario: Generate order then modify product price then add same product on another invoice and check the price
+    Given order "bo_order1" does not have any invoices
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2      |
+      | product_price               | 11.90  |
+      | unit_price_tax_incl         | 12.614 |
+      | unit_price_tax_excl         | 11.90  |
+      | total_price_tax_incl        | 25.23  |
+      | total_price_tax_excl        | 23.80  |
+    # The price included and excluded don't match exactly so the price excluded is gonna be recomputed with more details
+    When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
+      | amount         | 1                       |
+      | price          | 94.34                   |
+      | price_tax_incl | 100                     |
+    When I generate invoice for "bo_order1" order
+    Then the product "Mug The best is yet to come" in the first invoice from the order "bo_order1" should have the following details:
+      | product_quantity            | 1         |
+      | product_price               | 94.34     |
+      | original_product_price      | 11.90     |
+      | unit_price_tax_incl         | 99.999999 |
+      | unit_price_tax_excl         | 94.339622 |
+      | total_price_tax_incl        | 100       |
+      | total_price_tax_excl        | 94.34     |
+    And order "bo_order1" should have 1 products in total
+    And order "bo_order1" should have following details:
+      | total_products           | 94.34  |
+      | total_products_wt        | 100.00 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 101.34 |
+      | total_paid_tax_incl      | 107.42 |
+      | total_paid               | 107.42 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name           | Mug The best is yet to come |
+      | amount         | 1                           |
+      | price          | 94.34                       |
+      | price_tax_incl | 100                         |
+    Then the product "Mug The best is yet to come" in the first invoice from the order "bo_order1" should have the following details:
+      | product_quantity            | 1         |
+      | product_price               | 94.34     |
+      | original_product_price      | 11.90     |
+      | unit_price_tax_incl         | 99.999999 |
+      | unit_price_tax_excl         | 94.339622 |
+      | total_price_tax_incl        | 100       |
+      | total_price_tax_excl        | 94.34     |
+    And the product "Mug The best is yet to come" in the second invoice from the order "bo_order1" should have the following details:
+      | product_quantity            | 1         |
+      | product_price               | 94.34     |
+      | original_product_price      | 11.90     |
+      | unit_price_tax_incl         | 99.999999 |
+      | unit_price_tax_excl         | 94.339622 |
+      | total_price_tax_incl        | 100       |
+      | total_price_tax_excl        | 94.34     |
+    And order "bo_order1" should have 2 products in total
+    And order "bo_order1" should have following details:
+      | total_products           | 188.68 |
+      | total_products_wt        | 200.00 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 195.68 |
+      | total_paid_tax_incl      | 207.42 |
+      | total_paid               | 207.42 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |

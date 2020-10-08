@@ -28,9 +28,11 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Address;
 use AdminController;
 use Behat\Gherkin\Node\TableNode;
 use Cart;
+use Configuration;
 use Context;
 use FrontController;
 use Order;
@@ -72,6 +74,8 @@ use RuntimeException;
 use SpecificPrice;
 use stdClass;
 use Tax;
+use TaxCalculator;
+use TaxManagerFactory;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -171,10 +175,11 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     public function addProductsToOrderWithNewInvoiceAndTheFollowingDetails(string $orderReference, TableNode $table)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
-
         $data = $table->getRowsHash();
+
         $productName = $data['name'];
         $product = $this->getProductByName($productName);
+
         $productId = $product->getProductId();
         if (isset($data['combination'])) {
             $combinationId = $this->getProductCombinationId($product, $data['combination']);
@@ -182,7 +187,13 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $combinationId = 0;
         }
 
+        if (empty($data['price_tax_incl'])) {
+            $taxCalculator = $this->getProductTaxCalculator((int) $orderId, (int) $productId);
+            $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
+        }
+
         $this->lastException = null;
+
         try {
             $hasFreeShipping = null;
             if (isset($data['free_shipping'])) {
@@ -193,7 +204,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                     $orderId,
                     $productId,
                     $combinationId,
-                    $data['price'],
+                    $data['price_tax_incl'],
                     $data['price'],
                     (int) $data['amount'],
                     $hasFreeShipping
@@ -273,6 +284,11 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $combinationId = 0;
         }
 
+        if (empty($data['price_tax_incl'])) {
+            $taxCalculator = $this->getProductTaxCalculator((int) $orderId, $product->getProductId());
+            $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
+        }
+
         $this->lastException = null;
         try {
             $this->getCommandBus()->handle(
@@ -281,7 +297,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                     (int) $orderInvoice->id,
                     (int) $product->getProductId(),
                     (int) $combinationId,
-                    $data['price'],
+                    $data['price_tax_incl'],
                     $data['price'],
                     (int) $data['amount']
                 )
@@ -543,14 +559,20 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $invoice = $this->getInvoiceFromOrder($order, $data['invoice']);
             $invoiceId = (int) $invoice->id;
         }
-
         $this->lastException = null;
+
+        // if tax included price is not given, it is calculated
+        if (!isset($data['price_tax_incl'])) {
+            $taxCalculator = $this->getProductTaxCalculator($orderId, (int) $productOrderDetail['product_id']);
+            $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
+        }
+
         try {
             $this->getCommandBus()->handle(
                 new UpdateProductInOrderCommand(
                     (int) $orderId,
                     (int) $productOrderDetail['id_order_detail'],
-                    $data['price'],
+                    $data['price_tax_incl'],
                     $data['price'],
                     (int) $data['amount'],
                     $invoiceId
@@ -944,6 +966,35 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then the product :productName in the :invoicePosition invoice from the order :orderReference should have the following details:
+     *
+     * @param string $orderReference
+     * @param string $productName
+     */
+    public function checkProductDetailsInInvoiceWithReference(string $productName, string $invoicePosition, string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $order = new Order($orderId);
+        $orderInvoice = $this->getInvoiceFromOrder($order, $invoicePosition);
+
+        $productOrderDetail = $this->getOrderDetailFromOrder($productName, $orderReference, null, $orderInvoice->id);
+        $expectedDetails = $table->getRowsHash();
+        foreach ($expectedDetails as $detailName => $expectedDetailValue) {
+            Assert::assertEquals(
+                (float) $expectedDetailValue,
+                $productOrderDetail[$detailName],
+                sprintf(
+                    'Invalid product detail field %s for product %s, expected %s instead of %s',
+                    $detailName,
+                    $productName,
+                    $expectedDetailValue,
+                    $productOrderDetail[$detailName]
+                )
+            );
+        }
+    }
+
+    /**
      * @Then /^I watch the stock of product "(.+)"$/
      *
      * This statement must be called to store an initial stock for a product which then
@@ -1230,7 +1281,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $specificPrice->price
         );
         Assert::assertEquals('amount', $specificPrice->reduction_type);
-        Assert::assertFalse((bool) $specificPrice->reduction_tax);
+        Assert::assertTrue((bool) $specificPrice->reduction_tax);
     }
 
     /**
@@ -1546,5 +1597,22 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $this->assertLastErrorIs(
             CannotFindProductInOrderException::class
         );
+    }
+
+    /**
+     * @param int $orderId
+     *
+     * @return TaxCalculator|null
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    private function getProductTaxCalculator(int $orderId, int $productId)
+    {
+        $order = new Order($orderId);
+        $taxAddress = new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
+        $taxManager = TaxManagerFactory::getManager($taxAddress, Product::getIdTaxRulesGroupByIdProduct((int) $productId, Context::getContext()));
+
+        return $taxManager->getTaxCalculator();
     }
 }

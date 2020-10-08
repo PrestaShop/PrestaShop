@@ -37,6 +37,7 @@ use Currency;
 use Order;
 use OrderCarrier;
 use OrderCartRule;
+use OrderDetail;
 use PrestaShop\PrestaShop\Core\Cart\CartRuleData;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -80,6 +81,9 @@ class OrderAmountUpdater
 
         // @todo: use https://github.com/PrestaShop/decimal for price computations
         $computingPrecision = $this->getPrecisionFromCart($cart);
+
+        // Update order details (if quantity or product price have been modified)
+        $this->updateOrderDetails($order, $cart, $computingPrecision);
 
         // Recalculate cart rules and Fix differences between cart's cartRules and order's cartRules
         $this->updateOrderCartRules($order, $cart, $computingPrecision, $orderInvoiceId);
@@ -179,6 +183,79 @@ class OrderAmountUpdater
                 $order->weight = sprintf('%.3f ' . $this->configuration->get('PS_WEIGHT_UNIT'), $orderCarrier->weight);
             }
         }
+    }
+
+    /**
+     * @param Order $order
+     * @param Cart $cart
+     * @param int $computingPrecision
+     *
+     * @throws OrderException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    private function updateOrderDetails(Order $order, Cart $cart, int $computingPrecision): void
+    {
+        $cartProducts = $cart->getProducts(true);
+        foreach ($order->getCartProducts() as $orderProduct) {
+            $orderDetail = new OrderDetail($orderProduct['id_order_detail']);
+            $cartProduct = $this->getProductFromCart($cartProducts, (int) $orderDetail->product_id, (int) $orderDetail->product_attribute_id);
+
+            $unitPriceTaxExcl = (float) $cartProduct['price_with_reduction_without_tax'];
+            $unitPriceTaxIncl = (float) $cartProduct['price_without_reduction'];
+
+            $orderDetail->product_price = (float) $cartProduct['price'];
+            $orderDetail->unit_price_tax_excl = $unitPriceTaxExcl;
+            $orderDetail->unit_price_tax_incl = $unitPriceTaxIncl;
+
+            $roundType = $this->configuration->get('PS_ROUND_TYPE');
+            switch ($roundType) {
+                case Order::ROUND_TOTAL:
+                    $orderDetail->total_price_tax_excl = $unitPriceTaxExcl * $orderDetail->product_quantity;
+                    $orderDetail->total_price_tax_incl = $unitPriceTaxIncl * $orderDetail->product_quantity;
+
+                    break;
+                case Order::ROUND_LINE:
+                    $orderDetail->total_price_tax_excl = Tools::ps_round($unitPriceTaxExcl * $orderDetail->product_quantity, $computingPrecision);
+                    $orderDetail->total_price_tax_incl = Tools::ps_round($unitPriceTaxIncl * $orderDetail->product_quantity, $computingPrecision);
+
+                    break;
+
+                case Order::ROUND_ITEM:
+                default:
+                    $orderDetail->product_price = $orderDetail->unit_price_tax_excl = Tools::ps_round($unitPriceTaxExcl, $computingPrecision);
+                    $orderDetail->unit_price_tax_incl = Tools::ps_round($unitPriceTaxIncl, $computingPrecision);
+                    $orderDetail->total_price_tax_excl = $orderDetail->unit_price_tax_excl * $orderDetail->product_quantity;
+                    $orderDetail->total_price_tax_incl = $orderDetail->total_price_tax_incl * $orderDetail->product_quantity;
+
+                    break;
+            }
+
+            if (!$orderDetail->update()) {
+                throw new OrderException('An error occurred while editing the product line.');
+            }
+        }
+    }
+
+    /**
+     * @param array $cartProducts
+     * @param int $productId
+     * @param int|null $productAttributeId
+     *
+     * @return array
+     */
+    private function getProductFromCart(array $cartProducts, int $productId, int $productAttributeId): array
+    {
+        return array_reduce($cartProducts, function ($carry, $item) use ($productId, $productAttributeId) {
+            if (null !== $carry) {
+                return $carry;
+            }
+
+            $productMatch = $item['id_product'] == $productId;
+            $combinationMatch = $item['id_product_attribute'] == $productAttributeId;
+
+            return $productMatch && $combinationMatch ? $item : null;
+        });
     }
 
     /**
