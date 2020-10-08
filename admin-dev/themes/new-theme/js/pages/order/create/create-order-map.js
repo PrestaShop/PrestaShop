@@ -129,8 +129,8 @@ export default {
   deliveryOptionSelect: '#delivery-option-select',
   totalShippingField: '.js-total-shipping-tax-inc',
   freeShippingSwitch: '.js-free-shipping-switch',
-  recycledPackagingSwitch: '.js-recycled-packaging-switch',
-  isAGiftSwitch: '.js-is-gift-switch',
+  recycledPackagingSwitch: '.js-recycled-packaging-switch:checked',
+  isAGiftSwitch: '.js-is-gift-switch:checked',
   giftMessageField: '#cart_gift_message',
 
   // selectors related to cart block

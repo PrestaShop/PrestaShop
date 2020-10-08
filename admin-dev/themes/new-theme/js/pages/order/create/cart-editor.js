@@ -71,8 +71,8 @@ export default class CartEditor {
    */
   updateDeliveryOptions(cartId) {
     const freeShippingEnabled = $(createOrderMap.freeShippingSwitch)[1].checked;
-    const isAGiftEnabled = $(createOrderMap.isAGiftSwitch)[1].checked;
-    const useRecycledPackagingEnabled = $(createOrderMap.recycledPackagingSwitch)[1].checked;
+    const isAGiftEnabled = $(createOrderMap.isAGiftSwitch).val() === '1';
+    const useRecycledPackagingEnabled = $(createOrderMap.recycledPackagingSwitch).val() === '1';
     const giftMessage = $(createOrderMap.giftMessageField).val();
 
     $.post(this.router.generate('admin_carts_set_delivery_settings', {cartId}), {
