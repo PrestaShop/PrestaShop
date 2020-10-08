@@ -429,12 +429,11 @@ abstract class PaymentModuleCore extends Module
 
                         $product_price = Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, Context::getContext()->getComputingPrecision()) : $price_wt;
 
-                        $locale = Tools::getContextLocale($this->context);
                         $product_var_tpl = [
                             'id_product' => $product['id_product'],
                             'reference' => $product['reference'],
                             'name' => $product['name'] . (isset($product['attributes']) ? ' - ' . $product['attributes'] : ''),
-                            'price' => $locale->formatPrice($product_price * $product['quantity'], $this->context->currency->iso_code),
+                            'price' => Tools::getContextLocale($this->context)->formatPrice($product_price * $product['quantity'], $this->context->currency->iso_code),
                             'quantity' => $product['quantity'],
                             'customization' => [],
                         ];

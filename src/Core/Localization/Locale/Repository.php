@@ -152,8 +152,6 @@ class Repository implements RepositoryInterface
             );
         }
 
-//        var_dump(spl_object_hash($this->locales[$localeCode]));
-//        var_dump($this->locales[$localeCode]->getPriceSpecifications());
         return $this->locales[$localeCode];
     }
 
