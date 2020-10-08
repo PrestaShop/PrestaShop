@@ -96,6 +96,12 @@ class HookConfiguratorTest extends UnitTestCase
                         "product",
                     ],
                 ],
+                "blockcurrencies" => [
+                    "only_pages" => [
+                        "category",
+                        "product",
+                    ],
+                ],
             ],
         ];
 
@@ -104,6 +110,12 @@ class HookConfiguratorTest extends UnitTestCase
                 null,
                 "blocklanguages" => [
                     "except_pages" => [
+                        "category",
+                        "product",
+                    ],
+                ],
+                "blockcurrencies" => [
+                    "only_pages" => [
                         "category",
                         "product",
                     ],

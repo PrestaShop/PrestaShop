@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Module;
 
 use Db;
+use Dispatcher;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
 use Shop;
@@ -155,6 +156,20 @@ class HookRepository
                 ];
 
                 $this->db->insert('hook_module', $row);
+
+                if (!empty($extra_data['only_pages'])) {
+                    $extra_data['except_pages'] = [];
+
+                    $controllersNames = Dispatcher::getControllersNames(_PS_FRONT_CONTROLLER_DIR_);
+
+                    foreach ($controllersNames as $controllerName) {
+                        if (in_array($controllerName, $extra_data['only_pages'])) {
+                            continue;
+                        }
+
+                        $extra_data['except_pages'][] = $controllerName;
+                    }
+                }
 
                 if (!empty($extra_data['except_pages'])) {
                     $this->setModuleHookExceptions(

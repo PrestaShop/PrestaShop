@@ -28,6 +28,7 @@ namespace LegacyTests\Integration\Core\Module;
 
 use Context;
 use Db;
+use Dispatcher;
 use LegacyTests\TestCase\IntegrationTestCase;
 use LegacyTests\Unit\ContextMocker;
 use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
@@ -98,10 +99,10 @@ class HookRepositoryTest extends IntegrationTestCase
         );
     }
 
-    public function testExceptionsTakenIntoAccount()
+    public function testExceptExceptionsTakenIntoAccount()
     {
         $this->hookRepository->persistHooksConfiguration([
-            'displayTestHookNameWithExceptions' => [
+            'displayTestHookNameWithExceptExceptions' => [
                 [
                     'ps_emailsubscription' => [
                         'except_pages' => ['category', 'product'],
@@ -116,7 +117,50 @@ class HookRepositoryTest extends IntegrationTestCase
                     'except_pages' => ['category', 'product'],
                 ],
             ],
-            $this->hookRepository->getHooksWithModules()['displayTestHookNameWithExceptions']
+            $this->hookRepository->getHooksWithModules()['displayTestHookNameWithExceptExceptions']
+        );
+    }
+
+    public function testOnlyExceptionsTakenIntoAccount()
+    {
+        $featuredProductsModuleOnlyPages = ['category', 'product'];
+
+        $this->hookRepository->persistHooksConfiguration([
+            'displayTestHookNameWithOnlyExceptions' => [
+                [
+                    'ps_emailsubscription' => [
+                        'only_pages' => $featuredProductsModuleOnlyPages,
+                    ],
+                ],
+            ],
+        ]);
+
+        /*
+            Get all controllers names except thoses specified in $featuredProductsModuleOnlyPages.
+            Sort results on names (ASC) to correspond to `getHooksWithModules` order.
+         */
+        $controllersNames = Dispatcher::getControllersNames(_PS_FRONT_CONTROLLER_DIR_);
+
+        $featuredProductsModuleExceptPages = [];
+
+        foreach ($controllersNames as $controllerName) {
+            if (in_array($controllerName, $featuredProductsModuleOnlyPages)) {
+                continue;
+            }
+
+            $featuredProductsModuleExceptPages[] = $controllerName;
+        }
+
+        asort($featuredProductsModuleExceptPages);
+        $featuredProductsModuleExceptPages = array_values($featuredProductsModuleExceptPages);
+
+        $this->assertEquals(
+            [
+                'ps_emailsubscription' => [
+                    'except_pages' => $featuredProductsModuleExceptPages,
+                ],
+            ],
+            $this->hookRepository->getHooksWithModules()['displayTestHookNameWithOnlyExceptions']
         );
     }
 }
