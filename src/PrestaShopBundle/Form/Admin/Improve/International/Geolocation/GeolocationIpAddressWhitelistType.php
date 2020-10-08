@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Geolocation;
 
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -35,7 +36,7 @@ use Symfony\Component\Form\FormBuilderInterface;
  * Class GeolocationIpAddressWhitelistType is responsible for handling "Improve > International > Localization > Geolocation"
  * IP addresses whitelist form.
  */
-class GeolocationIpAddressWhitelistType extends AbstractType
+class GeolocationIpAddressWhitelistType extends TranslatorAwareType
 {
     /**
      * {@inheritdoc}
@@ -44,6 +45,10 @@ class GeolocationIpAddressWhitelistType extends AbstractType
     {
         $builder
             ->add('geolocation_whitelist', TextareaType::class, [
+                'label' => $this->trans(
+                    'Whitelisted IP addresses',
+                    'Admin.International.Feature'
+                ),
                 'required' => false,
                 'attr' => [
                     'col' => 15,

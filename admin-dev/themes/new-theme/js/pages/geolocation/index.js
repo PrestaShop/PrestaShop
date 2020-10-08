@@ -28,5 +28,9 @@ import ChoiceTable from '@components/choice-table';
 const {$} = window;
 
 $(() => {
-  new ChoiceTable();
+  window.prestashop.component.initComponents(
+    [
+      'ChoiceTable',
+    ],
+  );
 });

@@ -27,6 +27,7 @@ import TranslatableField from '@js/components/translatable-field.js';
 import TranslatableInput from '@js/components/translatable-input.js';
 import TinyMCEEditor from '@js/components/tinymce-editor.js';
 import TaggableField from '@js/components/taggable-field.js';
+import ChoiceTable from '@js/components/choice-table.js';
 
 const initPrestashopComponents = () => {
   window.prestashop = {...window.prestashop};
@@ -58,6 +59,7 @@ const initPrestashopComponents = () => {
     TinyMCEEditor,
     TranslatableInput,
     TaggableField,
+    ChoiceTable,
   };
 };
 export default initPrestashopComponents;
