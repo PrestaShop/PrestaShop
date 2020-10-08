@@ -71,6 +71,7 @@ class SystemInformation
             'instaWebInstalled' => $this->hostingInformation->isApacheInstawebModule(),
             'uname' => $this->hostingInformation->getUname(),
             'database' => $this->hostingInformation->getDatabaseInformation(),
+            'overrides' => $this->shopInformation->getOverridesList(),
             'shop' => $this->shopInformation->getShopInformation(),
             'isNativePHPmail' => $this->mailingInformation->isNativeMailUsed(),
             'smtp' => $this->mailingInformation->getSmtpInformation(),

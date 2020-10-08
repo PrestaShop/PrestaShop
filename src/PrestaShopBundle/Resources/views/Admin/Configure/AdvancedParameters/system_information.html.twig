@@ -102,6 +102,21 @@
                 </div>
             </div>
         </div>
+
+        <div class="card">
+          <h3 class="card-header">
+            <i class="material-icons">info_outline</i> {{ 'List of overrides'|trans({}, 'Admin.Advparameters.Feature') }}
+          </h3>
+          <div class="card-block">
+            <div class="card-text">
+              <ul>
+                {% for override in system.overrides %}
+                  <li>{{ override }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
     </div>
     {% endif %}
     <div class="col-lg-6">

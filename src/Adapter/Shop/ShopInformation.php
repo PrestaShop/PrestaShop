@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Shop;
 
 use AppKernel;
+use Tools;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 
 /**
@@ -60,5 +61,15 @@ class ShopInformation
             'path' => _PS_ROOT_DIR_,
             'theme' => $this->context->shop->theme->getName(),
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getOverridesList()
+    {
+        return array_filter(Tools::scandir(_PS_OVERRIDE_DIR_, 'php', '', true), function ($file) {
+            return basename($file) != 'index.php';
+        });
     }
 }
