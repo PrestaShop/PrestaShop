@@ -48,10 +48,18 @@ class PreferencesController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
-        $legacyController = $request->attributes->get('_legacy_controller');
-
         $handlingForm = $this->getHandlingFormHandler()->getForm();
         $carrierOptionsForm = $this->getCarrierOptionsFormHandler()->getForm();
+
+        return $this->renderForm($handlingForm, $carrierOptionsForm, $request);
+    }
+
+    /**
+     *
+     */
+    private function renderForm($handlingForm, $carrierOptionsForm, $request)
+    {
+        $legacyController = $request->attributes->get('_legacy_controller');
 
         return $this->render('@PrestaShop/Admin/Improve/Shipping/Preferences/preferences.html.twig', [
             'layoutTitle' => $this->trans('Preferences', 'Admin.Navigation.Menu'),
@@ -120,18 +128,17 @@ class PreferencesController extends FrameworkBundleAdminController
         $form = $formHandler->getForm();
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $saveErrors = $formHandler->save($data);
 
             if (0 === count($saveErrors)) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
-            } else {
-                $this->flashErrors($saveErrors);
+                return $this->redirectToRoute('admin_shipping_preferences');
             }
         }
 
-        return $this->redirectToRoute('admin_shipping_preferences');
+        return $this->renderForm($form, $this->getCarrierOptionsFormHandler()->getForm(), $request);
     }
 
     /**
