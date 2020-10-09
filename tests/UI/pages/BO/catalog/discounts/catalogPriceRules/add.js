@@ -36,10 +36,8 @@ class AddCatalogPriceRule extends BOBasePage {
     await this.selectByVisibleText(page, this.countrySelect, priceRuleData.country);
     await this.selectByVisibleText(page, this.groupSelect, priceRuleData.group);
     await this.setValue(page, this.fromQuantityInput, priceRuleData.fromQuantity.toString());
-
     await page.type(this.fromDateInput, priceRuleData.fromDate);
     await page.type(this.toDateInput, priceRuleData.toDate);
-
     await this.selectByVisibleText(page, this.reductionTypeSelect, priceRuleData.reductionType);
     await this.selectByVisibleText(page, this.reductionTaxSelect, priceRuleData.reductionTax);
     await this.setValue(page, this.reductionInput, priceRuleData.reduction.toString());
