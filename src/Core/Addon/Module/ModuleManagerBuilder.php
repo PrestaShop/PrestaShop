@@ -1,12 +1,13 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -17,12 +18,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
@@ -43,15 +43,14 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\Router;
-use Symfony\Component\Yaml\Yaml;
 
 class ModuleManagerBuilder
 {
@@ -157,30 +156,12 @@ class ModuleManagerBuilder
             return;
         }
 
-        $phpConfigFile = $this->getConfigDir() . '/config.php';
-        if (file_exists($phpConfigFile)
-            && filemtime($phpConfigFile) >= filemtime($this->getConfigDir() . DIRECTORY_SEPARATOR . 'config.yml')) {
-            $config = require $phpConfigFile;
-        } else {
-            $config = Yaml::parse(
-                file_get_contents(
-                    $this->getConfigDir() . DIRECTORY_SEPARATOR . 'config.yml'
-                )
-            );
+        $yamlParser = new YamlParser((new Configuration())->get('_PS_CACHE_DIR_'));
 
-            try {
-                $filesystem = new Filesystem();
-                $filesystem->dumpFile($phpConfigFile, '<?php return ' . var_export($config, true) . ';' . "\n");
-            } catch (IOException $e) {
-                return false;
-            }
-        }
+        $config = $yamlParser->parse($this->getConfigDir() . '/config.yml');
+        $prestashopAddonsConfig =
+            $yamlParser->parse($this->getConfigDir() . '/addons/categories.yml');
 
-        $prestashopAddonsConfig = Yaml::parse(
-            file_get_contents(
-                $this->getConfigDir() . DIRECTORY_SEPARATOR . 'addons/categories.yml'
-            )
-        );
         $clientConfig = $config['csa_guzzle']['clients']['addons_api']['config'];
 
         self::$translator = Context::getContext()->getTranslator();
@@ -221,8 +202,6 @@ class ModuleManagerBuilder
 
         self::$legacyLogger = new LegacyLogger();
         self::$categoriesProvider = new CategoriesProvider(
-            $marketPlaceClient,
-            self::$legacyLogger,
             $prestashopAddonsConfig['prestashop']['addons']['categories'],
             $themeModules
         );
@@ -256,7 +235,7 @@ class ModuleManagerBuilder
         // get the environment to load the good routing file
         $routeFileName = _PS_MODE_DEV_ === true ? 'routing_dev.yml' : 'routing.yml';
         $routesDirectory = $this->getConfigDir();
-        $locator = new FileLocator(array($routesDirectory));
+        $locator = new FileLocator([$routesDirectory]);
         $loader = new YamlFileLoader($locator);
 
         return new Router($loader, $routeFileName);
@@ -264,7 +243,7 @@ class ModuleManagerBuilder
 
     protected function getConfigDir()
     {
-        return _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'config';
+        return _PS_ROOT_DIR_ . '/app/config';
     }
 
     /**

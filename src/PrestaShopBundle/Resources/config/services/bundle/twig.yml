@@ -24,7 +24,11 @@ services:
 
     prestashop.twig.extension.layout:
         class: PrestaShopBundle\Twig\LayoutExtension
-        arguments: ["@prestashop.adapter.legacy.context", "%kernel.environment%"]
+        arguments:
+          - "@prestashop.adapter.legacy.context"
+          - "%kernel.environment%"
+          - "@prestashop.adapter.legacy.configuration"
+          - "@prestashop.adapter.data_provider.currency"
         tags:
             - { name: twig.extension }
 
@@ -58,3 +62,59 @@ services:
             - '@prestashop.static_cache.adapter'
         tags:
             - { name: twig.extension }
+
+    prestashop.bundle.twig.extension.documentation_link_provider_extension:
+        class: 'PrestaShopBundle\Twig\Extension\DocumentationLinkExtension'
+        arguments:
+            - '@prestashop.core.util.helper_card.documentation_link_provider'
+        tags:
+            - { name: twig.extension }
+
+    prestashop.twig.extension.context_iso_code_provider_extension:
+      class: PrestaShopBundle\Twig\ContextIsoCodeProviderExtension
+      arguments:
+        - "@=service('prestashop.adapter.legacy.context').getContext().language ? service('prestashop.adapter.legacy.context').getContext().language.iso_code : 'en'"
+      properties:
+        logger: "@logger"
+        translator: "@translator"
+      tags:
+        - { name: twig.extension }
+
+    prestashop.twig.extension.path_with_back_url_extension:
+      class: PrestaShopBundle\Twig\Extension\PathWithBackUrlExtension
+      arguments:
+        - '@twig.extension.routing'
+        - '@prestashop.core.uti.back_url_provider'
+        - '@=service("request_stack") ? service("request_stack") : null'
+      public: true
+      tags:
+        - { name: twig.extension }
+
+    prestashop.bundle.twig.extension.color_brightness_calculator_extension:
+      class: PrestaShopBundle\Twig\Extension\ColorBrightnessCalculatorExtension
+      arguments:
+        - '@prestashop.core.util.color_brightness_calculator'
+      tags:
+        - { name: twig.extension }
+
+    prestashop.bundle.twig.extension.js_router_metadata_extension:
+      class: PrestaShopBundle\Twig\Extension\JsRouterMetadataExtension
+      arguments:
+        - '@=service("request_stack")'
+        - '@=service("security.csrf.token_manager")'
+        - '@=service("prestashop.user_provider").getUsername()'
+      tags:
+        - { name: twig.extension }
+
+    prestashop.bundle.twig.extension.localization_extension:
+      class: 'PrestaShopBundle\Twig\Extension\LocalizationExtension'
+      arguments:
+        - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
+        - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_lite'
+      tags:
+        - { name: twig.extension }
+
+    prestashop.bundle.twig.extension.number_extension:
+      class: 'PrestaShopBundle\Twig\Extension\NumberExtension'
+      tags:
+        - { name: twig.extension }

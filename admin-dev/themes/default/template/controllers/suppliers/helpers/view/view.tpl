@@ -1,10 +1,11 @@
 {**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *}
 
 {extends file="helpers/view/view.tpl"}
@@ -38,6 +38,7 @@
 				<th><span class="title_box">{l s='Reference' d='Admin.Global'}</span></th>
 				<th><span class="title_box">{l s='EAN13'}</span></th>
 				<th><span class="title_box">{l s='UPC'}</span></th>
+				<th><span class="title_box">{l s='MPN' d='Admin.Catalog.Feature'}</span></th>
 				{if $stock_management && $shopContext != Shop::CONTEXT_ALL}<th class="right"><span class="title_box">{l s='Available Quantity'}</span></th>{/if}
 			</tr>
 		</thead>
@@ -52,6 +53,7 @@
 					<td>{if empty($product->reference)}{l s='N/A'}{else}{$product->reference}{/if}</td>
 					<td>{if empty($product->ean13)}{l s='N/A'}{else}{$product->ean13}{/if}</td>
 					<td>{if empty($product->upc)}{l s='N/A'}{else}{$product->upc}{/if}</td>
+					<td>{if empty($product->mpn)}{l s='N/A'}{else}{$product->mpn}{/if}</td>
 					{if $stock_management && $shopContext != Shop::CONTEXT_ALL}<td class="right" width="150">{$product->quantity}</td>{/if}
 				</tr>
 			{else}
@@ -64,6 +66,7 @@
 						<td>{if empty($product_attribute.reference)}{l s='N/A'}{else}{$product_attribute.reference}{/if}</td>
 						<td>{if empty($product_attribute.ean13)}{l s='N/A'}{else}{$product_attribute.ean13}{/if}</td>
 						<td>{if empty($product_attribute.upc)}{l s='N/A'}{else}{$product_attribute.upc}{/if}</td>
+						<td>{if empty($product_attribute.mpn)}{l s='N/A'}{else}{$product_attribute.mpn}{/if}</td>
 						{if $stock_management && $shopContext != Shop::CONTEXT_ALL}<td class="right">{$product_attribute.quantity}</td>{/if}
 					</tr>
 				{/foreach}

@@ -1,10 +1,11 @@
 {#**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *#}
 <div class="row" id="combinations">
   <div class="col-md-9">
@@ -35,7 +35,7 @@
     <div id="attributes-generator">
       <div class="alert alert-info" role="alert">
         <p class="alert-text">
-          {{ 'To add combinations, you first need to create proper attributes and values in [1]Attributes & Features[/1]. <br> When done, you may enter the wanted attributes (like "size" or "color") and their respective values ("XS", "red", "all", etc.) in the field below; or simply select them from the right column. Then click on "Generate": it will automatically create all the combinations for you!'|trans({}, 'Admin.Catalog.Help')|replace({'[1]': '<a class="alert-link" href=' ~ getAdminLink("AdminAttributesGroups") ~ ' target="_blank">', '[/1]': '</a>'})|raw }}
+          {{ 'To add combinations, you first need to create proper attributes and values in [1]%attributes_and_features_label%[/1]. <br> When done, you may enter the wanted attributes (like "size" or "color") and their respective values ("XS", "red", "all", etc.) in the field below; or simply select them from the right column. Then click on "%generate_label%": it will automatically create all the combinations for you!'|trans({'%attributes_and_features_label%': 'Attributes & Features'|trans({}, 'Admin.Navigation.Menu'), '%generate_label%': 'Generate'|trans({}, 'Admin.Actions')}, 'Admin.Catalog.Help')|replace({'[1]': '<a class="alert-link" href=' ~ getAdminLink("AdminAttributesGroups") ~ ' target="_blank">', '[/1]': '</a>'})|raw }}
         </p>
       </div>
       <div class="row">
@@ -85,8 +85,8 @@
             </th>
             <th></th>
             <th>{{ 'Combinations'|trans({}, 'Admin.Catalog.Feature') }}</th>
-            <th>{{ 'Impact on price'|trans({}, 'Admin.Catalog.Feature') }}</th>
-            <th>{{ 'Final price'|trans({}, 'Admin.Catalog.Feature') }}</th>
+            <th>{{ 'Impact on price (tax excl.)'|trans({}, 'Admin.Catalog.Feature') }}</th>
+            <th>{{ 'Final price (tax excl.)'|trans({}, 'Admin.Catalog.Feature') }}</th>
             {% if 'PS_STOCK_MANAGEMENT'|configuration %}
                 <th>{{ 'Quantity'|trans({}, 'Admin.Catalog.Feature') }}</th>
             {% endif %}
@@ -149,8 +149,9 @@
                 <label class="attribute-label" for="attribute-{{ attribute.id }}">
                   <span
                     class="pretty-checkbox {% if attribute.color is empty and attribute.texture is empty %} not-color {% endif %}"
-                    {% if attribute.color is not empty %} style="background-color: {{ attribute.color }}" {% endif %}
-                    {% if attribute.texture is not empty %} style="content: url({{ attribute.texture }})" {% endif %}
+                    {% if attribute.texture is not empty %} style="content: url({{ attribute.texture }})"
+                    {% elseif attribute.color is not empty %} style="background-color: {{ attribute.color }}"
+                    {% endif %}
                   >
                   </span>
                   {{ attribute.name }}

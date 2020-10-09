@@ -1,10 +1,11 @@
 {**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *}
 <table class="product" width="100%" cellpadding="4" cellspacing="0">
 
@@ -105,9 +105,9 @@
 					<td class="center"> &nbsp;</td>
 
 					<td>
-						{if isset($customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_]) && count($customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_]) > 0}
+						{if isset($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) && count($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) > 0}
 							<table style="width: 100%;">
-								{foreach $customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_] as $customization_infos}
+								{foreach $customization.datas[Product::CUSTOMIZE_TEXTFIELD] as $customization_infos}
 									<tr>
 										<td style="width: 30%;">
 											{$customization_infos.name|string_format:{l s='%s:' d='Shop.Pdf' pdf='true'}}
@@ -118,11 +118,11 @@
 							</table>
 						{/if}
 
-						{if isset($customization.datas[$smarty.const._CUSTOMIZE_FILE_]) && count($customization.datas[$smarty.const._CUSTOMIZE_FILE_]) > 0}
+						{if isset($customization.datas[Product::CUSTOMIZE_FILE]) && count($customization.datas[Product::CUSTOMIZE_FILE]) > 0}
 							<table style="width: 100%;">
 								<tr>
 									<td style="width: 70%;">{l s='image(s):' d='Shop.Pdf' pdf='true'}</td>
-									<td>{count($customization.datas[$smarty.const._CUSTOMIZE_FILE_])}</td>
+									<td>{count($customization.datas[Product::CUSTOMIZE_FILE])}</td>
 								</tr>
 							</table>
 						{/if}

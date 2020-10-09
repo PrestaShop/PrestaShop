@@ -6,23 +6,29 @@
   <feature_value id="Wool">
     <value>پشم</value>
   </feature_value>
-  <feature_value id="Elastane">
-    <value>الاستان</value>
+  <feature_value id="Ceramic">
+    <value>Ceramic</value>
   </feature_value>
   <feature_value id="Cotton">
     <value>پارچه ای</value>
   </feature_value>
-  <feature_value id="Ruled">
-    <value>یکدست</value>
+  <feature_value id="Recycled_Cardboard">
+    <value>Recycled cardboard</value>
   </feature_value>
-  <feature_value id="Plain">
-    <value>ساده</value>
+  <feature_value id="Matt_Paper">
+    <value>Matt paper</value>
   </feature_value>
-  <feature_value id="Squarred">
-    <value>چهارگوش</value>
+  <feature_value id="Long_Sleeves">
+    <value>Long sleeves</value>
   </feature_value>
-  <feature_value id="Doted">
-    <value>نقطه ای</value>
+  <feature_value id="Short_Sleeves">
+    <value>Short sleeves</value>
+  </feature_value>
+  <feature_value id="Removable_Cover">
+    <value>Removable cover</value>
+  </feature_value>
+  <feature_value id="120_Pages">
+    <value>120 pages</value>
   </feature_value>
   <feature_value id="White">
     <value>سفید</value>

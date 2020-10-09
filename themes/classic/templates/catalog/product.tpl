@@ -1,10 +1,11 @@
 {**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *}
 {extends file=$layout}
 
@@ -34,11 +34,16 @@
   <meta property="og:title" content="{$page.meta.title}">
   <meta property="og:site_name" content="{$shop.name}">
   <meta property="og:description" content="{$page.meta.description}">
-  <meta property="og:image" content="{$product.cover.large.url}">
-  <meta property="product:pretax_price:amount" content="{$product.price_tax_exc}">
-  <meta property="product:pretax_price:currency" content="{$currency.iso_code}">
-  <meta property="product:price:amount" content="{$product.price_amount}">
-  <meta property="product:price:currency" content="{$currency.iso_code}">
+  {if $product.cover}
+    <meta property="og:image" content="{$product.cover.large.url}">
+  {/if}
+
+  {if $product.show_price}
+    <meta property="product:pretax_price:amount" content="{$product.price_tax_exc}">
+    <meta property="product:pretax_price:currency" content="{$currency.iso_code}">
+    <meta property="product:price:amount" content="{$product.price_amount}">
+    <meta property="product:price:currency" content="{$currency.iso_code}">
+  {/if}
   {if isset($product.weight) && ($product.weight != 0)}
   <meta property="product:weight:value" content="{$product.weight}">
   <meta property="product:weight:units" content="{$product.weight_unit}">
@@ -50,18 +55,12 @@
   <section id="main" itemscope itemtype="https://schema.org/Product">
     <meta itemprop="url" content="{$product.url}">
 
-    <div class="row">
+    <div class="row product-container">
       <div class="col-md-6">
         {block name='page_content_container'}
           <section class="page-content" id="content">
             {block name='page_content'}
-              {block name='product_flags'}
-                <ul class="product-flags">
-                  {foreach from=$product.flags item=flag}
-                    <li class="product-flag {$flag.type}">{$flag.label}</li>
-                  {/foreach}
-                </ul>
-              {/block}
+              {include file='catalog/_partials/product-flags.tpl'}
 
               {block name='product_cover_thumbnails'}
                 {include file='catalog/_partials/product-cover-thumbnails.tpl'}
@@ -87,7 +86,7 @@
 
           <div class="product-information">
             {block name='product_description_short'}
-              <div id="product-description-short-{$product.id}" itemprop="description">{$product.description_short nofilter}</div>
+              <div id="product-description-short-{$product.id}" class="product-description" itemprop="description">{$product.description_short nofilter}</div>
             {/block}
 
             {if $product.is_customizable && count($product.customizations.fields)}
@@ -113,7 +112,7 @@
                         <p class="h4">{l s='This pack contains' d='Shop.Theme.Catalog'}</p>
                         {foreach from=$packItems item="product_pack"}
                           {block name='product_miniature'}
-                            {include file='catalog/_partials/miniatures/pack-product.tpl' product=$product_pack}
+                            {include file='catalog/_partials/miniatures/pack-product.tpl' product=$product_pack showPackProductsPrice=$product.show_price}
                           {/block}
                         {/foreach}
                     </section>
@@ -207,7 +206,7 @@
                          {foreach from=$product.attachments item=attachment}
                            <div class="attachment">
                              <h4><a href="{url entity='attachment' params=['id_attachment' => $attachment.id_attachment]}">{$attachment.name}</a></h4>
-                             <p>{$attachment.description}</p
+                             <p>{$attachment.description}</p>
                              <a href="{url entity='attachment' params=['id_attachment' => $attachment.id_attachment]}">
                                {l s='Download' d='Shop.Theme.Actions'} ({$attachment.file_size_formatted})
                              </a>
@@ -223,7 +222,7 @@
                    {$extra.content nofilter}
                  </div>
                  {/foreach}
-              </div>  
+              </div>
             </div>
           {/block}
         </div>
@@ -234,10 +233,10 @@
       {if $accessories}
         <section class="product-accessories clearfix">
           <p class="h5 text-uppercase">{l s='You might also like' d='Shop.Theme.Catalog'}</p>
-          <div class="products">
-            {foreach from=$accessories item="product_accessory"}
+          <div class="products" itemscope itemtype="http://schema.org/ItemList">
+            {foreach from=$accessories item="product_accessory" key="position"}
               {block name='product_miniature'}
-                {include file='catalog/_partials/miniatures/product.tpl' product=$product_accessory}
+                {include file='catalog/_partials/miniatures/product.tpl' product=$product_accessory position=$position}
               {/block}
             {/foreach}
           </div>

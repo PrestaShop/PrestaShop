@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2017 Unicode, Inc.
+<!-- Copyright © 1991-2019 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 13701 $"/>
+		<version number="$Revision$"/>
 		<language type="nnh"/>
 	</identity>
 	<localeDisplayNames>
@@ -45,7 +45,7 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 		<exemplarCharacters>[a á à â ǎ b c d e é è ê ě ɛ {ɛ\u0301} {ɛ\u0300} {ɛ\u0302} {ɛ\u030C} f g h i í ì j k l m ḿ n ń ŋ o ó ò ô ǒ ɔ {ɔ\u0301} {ɔ\u0300} {ɔ\u0302} {ɔ\u030C} p {pf} s {sh} t {ts} u ú ù û ǔ ʉ {ʉ\u0301} {ʉ\u0300} {ʉ\u0302} {ʉ\u030C} v w ẅ y ÿ z ʼ]</exemplarCharacters>
 		<exemplarCharacters type="auxiliary">[q r x]</exemplarCharacters>
 		<exemplarCharacters type="index">[A B C D E Ɛ F G H I J K L M N Ŋ O Ɔ P {Pf} R S {Sh} T {Ts} U Ʉ V W Ẅ Y Ÿ Z ʼ]</exemplarCharacters>
-		<exemplarCharacters type="numbers">[\- , . % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
+		<exemplarCharacters type="numbers">[\- ‑ , . % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
 		<exemplarCharacters type="punctuation">[, ; \: ! ? . ' ‘ ’ « »]</exemplarCharacters>
 	</characters>
 	<delimiters>

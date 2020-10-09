@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" ?><rss version="2.0" xml:base="https://www.prestashop.com/fr/blog/feed.xml" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:og="http://ogp.me/ns#" xmlns:article="http://ogp.me/ns/article#" xmlns:book="http://ogp.me/ns/book#" xmlns:profile="http://ogp.me/ns/profile#" xmlns:video="http://ogp.me/ns/video#" xmlns:product="http://ogp.me/ns/product#" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:sioc="http://rdfs.org/sioc/ns#" xmlns:sioct="http://rdfs.org/sioc/types#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+    <channel>
+        <title>Blog Feed</title>
+        <link>https://www.prestashop.com/fr/blog/feed.xml</link>
+        <description></description>
+        <language>fr</language>
+        <atom:link href="https://www.prestashop.com/fr/blog/feed.xml" rel="self" type="application/rss+xml" />
+        <item>
+            <title>Découvrez le module Avis Client disponible dans la version 1.7.6 de PrestaShop !</title>
+            <link>https://www.prestashop.com/fr/blog/module-avis-clients</link>
+            <description>La réassurance est un élément clé de la confiance des visiteurs sur un site.</description>
+            <pubDate>Mon, 15 Jul 2019 11:03:21 +0200</pubDate>
+            <dc:creator>Coline Ginestet</dc:creator>
+            <guid isPermaLink="false">https://www.prestashop.com/fr/blog/module-avis-clients</guid>
+        </item>
+        <item>
+            <title>Dix astuces pour gérer votre back office efficacement</title>
+            <link>https://www.prestashop.com/fr/blog/astuces-back-office-prestashop</link>
+            <description>On vous l’accorde, la prise en main de PrestaShop est dense et les parcours utilisateurs nombreux.</description>
+            <pubDate>Fri, 12 Jul 2019 11:49:07 +0200</pubDate>
+            <dc:creator>Louise Bonnard</dc:creator>
+            <guid isPermaLink="false">https://www.prestashop.com/fr/blog/astuces-back-office-prestashop</guid>
+        </item>
+        <item>
+            <title>Nouveautés, évolutions, fonctionnalités avancées,.. téléchargez dès maintenant PrestaShop 1.7.6!</title>
+            <link>https://www.prestashop.com/fr/blog/prestashop-1-7-6</link>
+            <description>Alors, quoi de nouveau dans la version 1.7.6 ?</description>
+            <pubDate>Tue, 09 Jul 2019 12:11:34 +0200</pubDate>
+            <dc:creator>Méguy Solvet</dc:creator>
+            <guid isPermaLink="false">https://www.prestashop.com/fr/blog/prestashop-1-7-6</guid>
+        </item>
+        <item>
+            <title>Comment la réalité augmentée permet-elle d’offrir de nouvelles expériences à vos clients ?</title>
+            <link>https://www.prestashop.com/fr/blog/realite-augmentee-conversion</link>
+            <description>L’intérêt des internautes pour le digital, toujours plus fort, se traduit par un changement dans leurs habitudes d’achat : l’arrivée de la réalité augmentée (AR) y participe et chamboule le domaine</description>
+            <pubDate>Thu, 04 Jul 2019 15:48:10 +0200</pubDate>
+            <dc:creator>YATEO</dc:creator>
+            <guid isPermaLink="false">https://www.prestashop.com/fr/blog/realite-augmentee-conversion</guid>
+        </item>
+        <item>
+            <title> Les réseaux sociaux : l’enjeu de la conversion ! </title>
+            <link>https://www.prestashop.com/fr/blog/ecommerce-reseaux-sociaux-conversion</link>
+            <description>Avec plus de 3,4 milliards d’utilisateurs dans le monde, et une moyenne de 2,22 heures par jour, les réseaux sociaux représentent deux enjeux majeurs pour les e-commerçants : la notoriété et les co</description>
+            <pubDate>Thu, 04 Jul 2019 10:18:52 +0200</pubDate>
+            <dc:creator>Equaero</dc:creator>
+            <guid isPermaLink="false">https://www.prestashop.com/fr/blog/ecommerce-reseaux-sociaux-conversion</guid>
+        </item>
+        <item>
+            <title>Comment utiliser les vidéos pour augmenter ses ventes e-commerce ?</title>
+            <link>https://www.prestashop.com/fr/blog/ecommerce-videos-croissance</link>
+            <description>Les consommateurs aiment avoir </description>
+            <pubDate>Tue, 02 Jul 2019 15:03:46 +0200</pubDate>
+            <dc:creator>YATEO</dc:creator>
+            <guid isPermaLink="false">https://www.prestashop.com/fr/blog/ecommerce-videos-croissance</guid>
+        </item>
+        <item>
+            <title>Le mobile : bientôt 1/3 des achats en ligne</title>
+            <link>https://www.prestashop.com/fr/blog/ecommerce-mobile-ventes</link>
+            <description>Le PSD Paris est l’occasion pour tous les acteurs de l’e-commerce de faire un point sur le secteur et d’observer les grandes tendances.</description>
+            <pubDate>Fri, 28 Jun 2019 15:49:06 +0200</pubDate>
+            <dc:creator>Equaero</dc:creator>
+            <guid isPermaLink="false">https://www.prestashop.com/fr/blog/ecommerce-mobile-ventes</guid>
+        </item>
+        <item>
+            <title>Comment utiliser les stories Instagram pour attirer du trafic et convertir ? </title>
+            <link>https://www.prestashop.com/fr/blog/stories-instagram-trafic-conversion</link>
+            <description>Comment passer à côté du potentiel d’Instagram en 2019 tant sa notoriété a explosé au cours des 5 dernières années ? </description>
+            <pubDate>Thu, 27 Jun 2019 17:51:17 +0200</pubDate>
+            <dc:creator>Eraclès</dc:creator>
+            <guid isPermaLink="false">https://www.prestashop.com/fr/blog/stories-instagram-trafic-conversion</guid>
+        </item>
+        <item>
+            <title>Comment choisir son module de livraison en e-commerce ?</title>
+            <link>https://www.prestashop.com/fr/blog/module-livraison-ecommerce</link>
+            <description>En e-commerce, la vente ne suffit pas pour assurer la réussite d’un business. Sans livraison, pas de satisfaction client.</description>
+            <pubDate>Tue, 25 Jun 2019 17:52:44 +0200</pubDate>
+            <dc:creator>Boxtal</dc:creator>
+            <guid isPermaLink="false">https://www.prestashop.com/fr/blog/module-livraison-ecommerce</guid>
+        </item>
+        <item>
+            <title>5 conseils pour booster votre visibilité locale</title>
+            <link>https://www.prestashop.com/fr/blog/conseils-visibilite-locale</link>
+            <description>Aujourd’hui, plus de 30 % des requêtes Google sur mobiles sont locales. De plus, 88 % des consommateurs ayant fait une recherche « à proximité » se sont rendus en boutique par la suite.</description>
+            <pubDate>Mon, 24 Jun 2019 10:13:22 +0200</pubDate>
+            <dc:creator>Produweb2</dc:creator>
+            <guid isPermaLink="false">https://www.prestashop.com/fr/blog/conseils-visibilite-locale</guid>
+        </item>
+    </channel>
+</rss>

@@ -5,17 +5,17 @@
       <trans-unit id="3aaaafde6f9b2701f9e6eb9292e95521">
         <source>Google sitemap</source>
         <target>Google sitemap</target>
-        <note>Line: 46</note>
+        <note>Line: 47</note>
       </trans-unit>
       <trans-unit id="935a6bc13704a117d22333c3155b5dae">
         <source>Generate your Google sitemap file</source>
         <target>Generate your Google sitemap file</target>
-        <note>Line: 47</note>
+        <note>Line: 48</note>
       </trans-unit>
       <trans-unit id="b52bf50c73995780892b9945ddc98708">
         <source>An error occured while trying to check your file permissions. Please adjust your permissions to allow PrestaShop to write a file in your root directory.</source>
         <target>An error occured while trying to check your file permissions. Please adjust your permissions to allow PrestaShop to write a file in your root directory.</target>
-        <note>Line: 580</note>
+        <note>Line: 583</note>
       </trans-unit>
     </body>
   </file>
@@ -141,7 +141,7 @@
       <trans-unit id="b7d7436a18bf546dd6438d92218868c1">
         <source>Check all</source>
         <target>Check all</target>
-        <note>Line: 150</note>
+        <note>Line: 146</note>
       </trans-unit>
       <trans-unit id="0cbc12a507b5e6c5e2cd4fe3f7a62d1f">
         <source>Indicate the pages that you do not want to include in your sitemap files:</source>
@@ -198,7 +198,7 @@
       <trans-unit id="13a3549902fb75af1df329df5f3b265a">
         <source>Uncheck all</source>
         <target>Uncheck all</target>
-        <note>Line: 153</note>
+        <note>Line: 147</note>
       </trans-unit>
       <trans-unit id="b79b56dbede0077a92563175fda9b54f">
         <source>This shop has no sitemap yet.</source>

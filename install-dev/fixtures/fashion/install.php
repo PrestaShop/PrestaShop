@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,14 +17,14 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShopBundle\Install\XmlLoader;
 
 /**
@@ -41,5 +42,44 @@ class InstallFixturesFashion extends XmlLoader
         }
 
         return $this->createEntity('customer', $identifier, 'Customer', $data, $data_lang);
+    }
+
+    /**
+     * @{inheritdoc}
+     */
+    public function populateFromXmlFiles()
+    {
+        // US and FL match John's address in the fixtures, if the XML is modified this should be updated as well
+        $taxRulesGroupId = $this->getTaxRulesGroupId('US', 'FL');
+        // This special tax rule group is useful for tests, however for fresh install it may not be available depending
+        // on the selected country, then we fallback on the default value 1 (legacy behaviour anyway)
+        if (!$taxRulesGroupId) {
+            $taxRulesGroupId = 1;
+        }
+        $this->storeId('tax_rules_group', 'default_tax_rule_group', $taxRulesGroupId);
+
+        parent::populateFromXmlFiles();
+
+        /**
+         * Refresh facetedsearch cache
+         */
+        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
+        $moduleManager = $moduleManagerBuilder->build();
+        if ($moduleManager->isInstalled('ps_facetedsearch')) {
+            $moduleManager->reset('ps_facetedsearch');
+        }
+    }
+
+    private function getTaxRulesGroupId(string $country, string $state)
+    {
+        $stateId = $this->retrieveId('state', $state);
+        $countryId = $this->retrieveId('country', $country);
+
+        return Db::getInstance()->getValue(
+            'SELECT id_tax_rules_group
+            FROM ' . _DB_PREFIX_ . 'tax_rule
+            WHERE
+            id_country=' . (int) $countryId . ' AND id_state=' . (int) $stateId
+        );
     }
 }

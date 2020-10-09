@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -36,17 +36,17 @@ class DbQueryCore
      *
      * @var array
      */
-    protected $query = array(
+    protected $query = [
         'type' => 'SELECT',
-        'select' => array(),
-        'from' => array(),
-        'join' => array(),
-        'where' => array(),
-        'group' => array(),
-        'having' => array(),
-        'order' => array(),
-        'limit' => array('offset' => 0, 'limit' => 0),
-    );
+        'select' => [],
+        'from' => [],
+        'join' => [],
+        'where' => [],
+        'group' => [],
+        'having' => [],
+        'order' => [],
+        'limit' => ['offset' => 0, 'limit' => 0],
+    ];
 
     /**
      * Sets type of the query.
@@ -57,7 +57,7 @@ class DbQueryCore
      */
     public function type($type)
     {
-        $types = array('SELECT', 'DELETE');
+        $types = ['SELECT', 'DELETE'];
 
         if (!empty($type) && in_array($type, $types)) {
             $this->query['type'] = $type;
@@ -265,10 +265,10 @@ class DbQueryCore
             $offset = 0;
         }
 
-        $this->query['limit'] = array(
+        $this->query['limit'] = [
             'offset' => $offset,
             'limit' => (int) $limit,
-        );
+        ];
 
         return $this;
     }

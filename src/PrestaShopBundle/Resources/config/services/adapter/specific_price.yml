@@ -1,0 +1,34 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.specific_price.command_handler.add_specific_price:
+        class: PrestaShop\PrestaShop\Adapter\SpecificPrice\CommandHandler\AddSpecificPriceHandler
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\AddSpecificPriceCommand
+
+    prestashop.adapter.specific_price.command_handler.delete_specific_price_by_cart_product:
+        class: PrestaShop\PrestaShop\Adapter\SpecificPrice\CommandHandler\DeleteSpecificPriceByCartProductHandler
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\DeleteSpecificPriceByCartProductCommand
+
+    prestashop.adapter.specific_price.command_handler.set_specific_price_priority_for_product_handler:
+        class: PrestaShop\PrestaShop\Adapter\SpecificPrice\CommandHandler\SetSpecificPricePriorityForProductHandler
+        arguments:
+            - '@prestashop.adapter.specific_price.update.specific_price_priority_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\SetSpecificPricePriorityForProductCommand
+
+    prestashop.adapter.specific_price.command_handler.set_global_specific_price_priority_handler:
+        class: PrestaShop\PrestaShop\Adapter\SpecificPrice\CommandHandler\SetGlobalSpecificPricePriorityHandler
+        arguments:
+            - '@prestashop.adapter.specific_price.update.specific_price_priority_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\SetGlobalSpecificPricePriorityCommand
+
+    prestashop.adapter.specific_price.update.specific_price_priority_updater:
+        class: PrestaShop\PrestaShop\Adapter\SpecificPrice\Update\SpecificPricePriorityUpdater

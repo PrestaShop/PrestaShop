@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2017 Unicode, Inc.
+<!-- Copyright © 1991-2019 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
@@ -9,7 +9,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 13701 $"/>
+		<version number="$Revision$"/>
 		<language type="fil"/>
 	</identity>
 	<localeDisplayNames>
@@ -67,6 +67,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="bug">Buginese</language>
 			<language type="byn">Blin</language>
 			<language type="ca">Catalan</language>
+			<language type="ccp">Chakma</language>
 			<language type="ce">Chechen</language>
 			<language type="ceb">Cebuano</language>
 			<language type="cgg">Chiga</language>
@@ -421,10 +422,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="yi">Yiddish</language>
 			<language type="yo">Yoruba</language>
 			<language type="yue">Cantonese</language>
+			<language type="yue" alt="menu">Chinese, Cantonese</language>
 			<language type="zgh">Standard Moroccan Tamazight</language>
 			<language type="zh">Chinese</language>
+			<language type="zh" alt="menu">Chinese, Mandarin</language>
 			<language type="zh_Hans">Pinasimpleng Chinese</language>
+			<language type="zh_Hans" alt="long">Pinasimpleng Mandarin Chinese</language>
 			<language type="zh_Hant">Tradisyonal na Chinese</language>
+			<language type="zh_Hant" alt="long">Tradisyonal na Mandarin Chinese</language>
 			<language type="zu">Zulu</language>
 			<language type="zun">Zuni</language>
 			<language type="zxx">Walang nilalaman na ukol sa wika</language>
@@ -509,6 +514,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="151">Silangang Europe</territory>
 			<territory type="154">Hilagang Europe</territory>
 			<territory type="155">Kanlurang Europe</territory>
+			<territory type="202">Sub-Saharan Africa</territory>
 			<territory type="419">Latin America</territory>
 			<territory type="AC">Acsencion island</territory>
 			<territory type="AD">Andorra</territory>
@@ -588,7 +594,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="ES">Spain</territory>
 			<territory type="ET">Ethiopia</territory>
 			<territory type="EU">European Union</territory>
-			<territory type="EZ" draft="contributed">Eurozone</territory>
+			<territory type="EZ">Eurozone</territory>
 			<territory type="FI">Finland</territory>
 			<territory type="FJ">Fiji</territory>
 			<territory type="FK">Falkland Islands</territory>
@@ -667,8 +673,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="MF">Saint Martin</territory>
 			<territory type="MG">Madagascar</territory>
 			<territory type="MH">Marshall Islands</territory>
-			<territory type="MK">Macedonia</territory>
-			<territory type="MK" alt="variant">Macedonia (FYROM)</territory>
+			<territory type="MK">North Macedonia</territory>
 			<territory type="ML">Mali</territory>
 			<territory type="MM">Myanmar (Burma)</territory>
 			<territory type="MN">Mongolia</territory>
@@ -741,6 +746,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="SX">Sint Maarten</territory>
 			<territory type="SY">Syria</territory>
 			<territory type="SZ">Swaziland</territory>
+			<territory type="SZ" alt="variant">Swaziland</territory>
 			<territory type="TA">Tristan de Cunha</territory>
 			<territory type="TC">Turks &amp; Caicos Islands</territory>
 			<territory type="TD">Chad</territory>
@@ -777,6 +783,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="VU">Vanuatu</territory>
 			<territory type="WF">Wallis &amp; Futuna</territory>
 			<territory type="WS">Samoa</territory>
+			<territory type="XA">Mga Pseudo-Accent</territory>
+			<territory type="XB">Pseudo-Bidi</territory>
 			<territory type="XK">Kosovo</territory>
 			<territory type="YE">Yemen</territory>
 			<territory type="YT">Mayotte</territory>
@@ -962,8 +970,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<exemplarCharacters>[a b c d e f g h i j k l m n ñ {ng} o p q r s t u v w x y z]</exemplarCharacters>
 		<exemplarCharacters type="auxiliary">[á à â é è ê í ì î ó ò ô ú ù û]</exemplarCharacters>
 		<exemplarCharacters type="index">[A B C D E F G H I J K L M N Ñ {Ng} O P Q R S T U V W X Y Z]</exemplarCharacters>
-		<exemplarCharacters type="numbers">[\- , . % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
-		<exemplarCharacters type="punctuation">[\- ‐ – — , ; \: ! ? . … ' ‘ ’ &quot; “ ” ( ) \[ \] § * / \&amp; # ′ ″]</exemplarCharacters>
+		<exemplarCharacters type="numbers">[\- ‑ , . % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
+		<exemplarCharacters type="punctuation">[\- ‐ ‑ – — , ; \: ! ? . … ' ‘ ’ &quot; “ ” ( ) \[ \] § * / \&amp; # ′ ″]</exemplarCharacters>
 		<ellipsis type="final">{0}…</ellipsis>
 		<ellipsis type="initial">…{0}</ellipsis>
 		<ellipsis type="medial">{0}…{1}</ellipsis>
@@ -971,6 +979,25 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<ellipsis type="word-initial">… {0}</ellipsis>
 		<ellipsis type="word-medial">{0} … {1}</ellipsis>
 		<moreInformation>?</moreInformation>
+		<parseLenients scope="date" level="lenient">
+			<parseLenient sample="-" draft="contributed">[\--/]</parseLenient>
+			<parseLenient sample=":" draft="contributed">[\:∶]</parseLenient>
+		</parseLenients>
+		<parseLenients scope="general" level="lenient">
+			<parseLenient sample="." draft="contributed">[.․。︒﹒．｡]</parseLenient>
+			<parseLenient sample="$" draft="contributed">[\$﹩＄$]</parseLenient>
+			<parseLenient sample="£" draft="contributed">[£₤]</parseLenient>
+			<parseLenient sample="₹" draft="contributed">[₨₹{Rp}{Rs}]</parseLenient>
+		</parseLenients>
+		<parseLenients scope="number" level="lenient">
+			<parseLenient sample="-" draft="contributed">[\-‒⁻₋−➖﹣－]</parseLenient>
+			<parseLenient sample="," draft="contributed">[,،٫、︐︑﹐﹑，､]</parseLenient>
+			<parseLenient sample="+" draft="contributed">[+⁺₊➕﬩﹢＋]</parseLenient>
+		</parseLenients>
+		<parseLenients scope="number" level="stricter">
+			<parseLenient sample="," draft="contributed">[,٫︐﹐，]</parseLenient>
+			<parseLenient sample="." draft="contributed">[.․﹒．｡]</parseLenient>
+		</parseLenients>
 	</characters>
 	<delimiters>
 		<quotationStart>“</quotationStart>
@@ -1766,18 +1793,18 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 						</dateTimeFormat>
 					</dateTimeFormatLength>
 					<availableFormats>
-						<dateFormatItem id="Bh" draft="contributed">h B</dateFormatItem>
-						<dateFormatItem id="Bhm" draft="contributed">h:mm B</dateFormatItem>
-						<dateFormatItem id="Bhms" draft="contributed">h:mm:ss B</dateFormatItem>
+						<dateFormatItem id="Bh">h B</dateFormatItem>
+						<dateFormatItem id="Bhm">h:mm B</dateFormatItem>
+						<dateFormatItem id="Bhms">h:mm:ss B</dateFormatItem>
 						<dateFormatItem id="d">d</dateFormatItem>
 						<dateFormatItem id="E">ccc</dateFormatItem>
-						<dateFormatItem id="EBhm" draft="contributed">E h:mm B</dateFormatItem>
-						<dateFormatItem id="EBhms" draft="contributed">E h:mm:ss B</dateFormatItem>
+						<dateFormatItem id="EBhm">E h:mm B</dateFormatItem>
+						<dateFormatItem id="EBhms">E h:mm:ss B</dateFormatItem>
 						<dateFormatItem id="Ed">d E</dateFormatItem>
-						<dateFormatItem id="Ehm" draft="contributed">E h:mm a</dateFormatItem>
-						<dateFormatItem id="EHm" draft="contributed">E HH:mm</dateFormatItem>
-						<dateFormatItem id="Ehms" draft="contributed">E h:mm:ss a</dateFormatItem>
-						<dateFormatItem id="EHms" draft="contributed">E HH:mm:ss</dateFormatItem>
+						<dateFormatItem id="Ehm">E h:mm a</dateFormatItem>
+						<dateFormatItem id="EHm">E HH:mm</dateFormatItem>
+						<dateFormatItem id="Ehms">E h:mm:ss a</dateFormatItem>
+						<dateFormatItem id="EHms">E HH:mm:ss</dateFormatItem>
 						<dateFormatItem id="Gy">y G</dateFormatItem>
 						<dateFormatItem id="GyMMM">MMM y G</dateFormatItem>
 						<dateFormatItem id="GyMMMd">MMM d, y G</dateFormatItem>
@@ -1815,37 +1842,75 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 						<intervalFormatItem id="d">
 							<greatestDifference id="d">d–d</greatestDifference>
 						</intervalFormatItem>
+						<intervalFormatItem id="Gy">
+							<greatestDifference id="G">y G – y G</greatestDifference>
+							<greatestDifference id="y">y – y G</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyM">
+							<greatestDifference id="G">M/y GGGGG – M/y GGGGG</greatestDifference>
+							<greatestDifference id="M">M/y – M/y GGGGG</greatestDifference>
+							<greatestDifference id="y">M/y – M/y GGGGG</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMd">
+							<greatestDifference id="d">M/d/y – M/d/y GGGGG</greatestDifference>
+							<greatestDifference id="G">M/d/y GGGGG – M/d/y GGGGG</greatestDifference>
+							<greatestDifference id="M">M/d/y – M/d/y GGGGG</greatestDifference>
+							<greatestDifference id="y">M/d/y – M/d/y GGGGG</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMEd">
+							<greatestDifference id="d">E, M/d/y – E, M/d/y GGGGG</greatestDifference>
+							<greatestDifference id="G">E, M/d/y GGGGG – E, M/d/y GGGGG</greatestDifference>
+							<greatestDifference id="M">E, M/d/y – E, M/d/y GGGGG</greatestDifference>
+							<greatestDifference id="y">E, M/d/y – E, M/d/y GGGGG</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMMM">
+							<greatestDifference id="G">MMM y G – MMM y G</greatestDifference>
+							<greatestDifference id="M">MMM – MMM y G</greatestDifference>
+							<greatestDifference id="y">MMM y – MMM y G</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMMMd">
+							<greatestDifference id="d">MMM d – d, y G</greatestDifference>
+							<greatestDifference id="G">MMM d, y G – MMM d, y G</greatestDifference>
+							<greatestDifference id="M">MMM d – MMM d, y G</greatestDifference>
+							<greatestDifference id="y">MMM d, y – MMM d, y G</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMMMEd">
+							<greatestDifference id="d">E, MMM d – E, MMM d, y G</greatestDifference>
+							<greatestDifference id="G">E, MMM d, y G – E, MMM d, y G</greatestDifference>
+							<greatestDifference id="M">E, MMM d – E, MMM d, y G</greatestDifference>
+							<greatestDifference id="y">E, MMM d, y – E, MMM d, y G</greatestDifference>
+						</intervalFormatItem>
 						<intervalFormatItem id="h">
-							<greatestDifference id="a">h a – h a</greatestDifference>
-							<greatestDifference id="h">h–h a</greatestDifference>
+							<greatestDifference id="a" draft="contributed">h a – h a</greatestDifference>
+							<greatestDifference id="h" draft="contributed">h–h a</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="H">
-							<greatestDifference id="H">HH–HH</greatestDifference>
+							<greatestDifference id="H" draft="contributed">HH–HH</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="hm">
-							<greatestDifference id="a">h:mm a – h:mm a</greatestDifference>
-							<greatestDifference id="h">h:mm–h:mm a</greatestDifference>
-							<greatestDifference id="m">h:mm–h:mm a</greatestDifference>
+							<greatestDifference id="a" draft="contributed">h:mm a – h:mm a</greatestDifference>
+							<greatestDifference id="h" draft="contributed">h:mm–h:mm a</greatestDifference>
+							<greatestDifference id="m" draft="contributed">h:mm–h:mm a</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="Hm">
-							<greatestDifference id="H">HH:mm–HH:mm</greatestDifference>
-							<greatestDifference id="m">HH:mm–HH:mm</greatestDifference>
+							<greatestDifference id="H" draft="contributed">HH:mm–HH:mm</greatestDifference>
+							<greatestDifference id="m" draft="contributed">HH:mm–HH:mm</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="hmv">
-							<greatestDifference id="a">h:mm a – h:mm a v</greatestDifference>
-							<greatestDifference id="h">h:mm–h:mm a v</greatestDifference>
-							<greatestDifference id="m">h:mm–h:mm a v</greatestDifference>
+							<greatestDifference id="a" draft="contributed">h:mm a – h:mm a v</greatestDifference>
+							<greatestDifference id="h" draft="contributed">h:mm–h:mm a v</greatestDifference>
+							<greatestDifference id="m" draft="contributed">h:mm–h:mm a v</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="Hmv">
-							<greatestDifference id="H">HH:mm–HH:mm v</greatestDifference>
-							<greatestDifference id="m">HH:mm–HH:mm v</greatestDifference>
+							<greatestDifference id="H" draft="contributed">HH:mm–HH:mm v</greatestDifference>
+							<greatestDifference id="m" draft="contributed">HH:mm–HH:mm v</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="hv">
-							<greatestDifference id="a">h a – h a v</greatestDifference>
-							<greatestDifference id="h">h–h a v</greatestDifference>
+							<greatestDifference id="a" draft="contributed">h a – h a v</greatestDifference>
+							<greatestDifference id="h" draft="contributed">h–h a v</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="Hv">
-							<greatestDifference id="H">HH–HH v</greatestDifference>
+							<greatestDifference id="H" draft="contributed">HH–HH v</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="M">
 							<greatestDifference id="M">M–M</greatestDifference>
@@ -2304,8 +2369,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 						<dateFormatItem id="MMMEd">E, MMM d</dateFormatItem>
 						<dateFormatItem id="MMMMd">MMMM d</dateFormatItem>
 						<dateFormatItem id="MMMMEd">E, MMMM d</dateFormatItem>
-						<dateFormatItem id="MMMMW" count="one">'ika'-W 'linggo' 'ng' MMM</dateFormatItem>
-						<dateFormatItem id="MMMMW" count="other">'linggo' W 'ng' MMM</dateFormatItem>
+						<dateFormatItem id="MMMMW" count="one">'ika'-W 'linggo' 'ng' MMMM</dateFormatItem>
+						<dateFormatItem id="MMMMW" count="other">'linggo' W 'ng' MMMM</dateFormatItem>
 						<dateFormatItem id="ms">mm:ss</dateFormatItem>
 						<dateFormatItem id="y">y</dateFormatItem>
 						<dateFormatItem id="yM">M/y</dateFormatItem>
@@ -2328,6 +2393,44 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 						<intervalFormatFallback>{0} – {1}</intervalFormatFallback>
 						<intervalFormatItem id="d">
 							<greatestDifference id="d">d–d</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="Gy">
+							<greatestDifference id="G">y G – y G</greatestDifference>
+							<greatestDifference id="y">y – y G</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyM">
+							<greatestDifference id="G">M/y GGGGG – M/y GGGGG</greatestDifference>
+							<greatestDifference id="M">M/y – M/y GGGGG</greatestDifference>
+							<greatestDifference id="y">M/y – M/y GGGGG</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMd">
+							<greatestDifference id="d">M/d/y – M/d/y GGGGG</greatestDifference>
+							<greatestDifference id="G">M/d/y GGGGG – M/d/y GGGGG</greatestDifference>
+							<greatestDifference id="M">M/d/y – M/d/y GGGGG</greatestDifference>
+							<greatestDifference id="y">M/d/y – M/d/y GGGGG</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMEd">
+							<greatestDifference id="d">E, M/d/y – E, M/d/y GGGGG</greatestDifference>
+							<greatestDifference id="G">E, M/d/y GGGGG – E, M/d/y GGGGG</greatestDifference>
+							<greatestDifference id="M">E, M/d/y – E, M/d/y GGGGG</greatestDifference>
+							<greatestDifference id="y">E, M/d/y – E, M/d/y GGGGG</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMMM">
+							<greatestDifference id="G">MMM y G – MMM y G</greatestDifference>
+							<greatestDifference id="M">MMM – MMM y G</greatestDifference>
+							<greatestDifference id="y">MMM y – MMM y G</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMMMd">
+							<greatestDifference id="d">MMM d – d, y G</greatestDifference>
+							<greatestDifference id="G">MMM d, y G – MMM d, y G</greatestDifference>
+							<greatestDifference id="M">MMM d – MMM d, y G</greatestDifference>
+							<greatestDifference id="y">MMM d, y – MMM d, y G</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMMMEd">
+							<greatestDifference id="d">E, MMM d – E, MMM d, y G</greatestDifference>
+							<greatestDifference id="G">E, MMM d, y G – E, MMM d, y G</greatestDifference>
+							<greatestDifference id="M">E, MMM d – E, MMM d, y G</greatestDifference>
+							<greatestDifference id="y">E, MMM d, y – E, MMM d, y G</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="h">
 							<greatestDifference id="a">h a – h a</greatestDifference>
@@ -3953,13 +4056,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>araw ng linggo</displayName>
 			</field>
 			<field type="weekday-short">
-				<displayName draft="provisional">araw ng linggo</displayName>
+				<displayName>araw ng linggo</displayName>
 			</field>
 			<field type="weekday-narrow">
-				<displayName draft="provisional">araw ng linggo</displayName>
+				<displayName>araw ng linggo</displayName>
 			</field>
 			<field type="weekdayOfMonth">
-				<displayName draft="provisional">karaniwang araw ng buwan</displayName>
+				<displayName>karaniwang araw ng buwan</displayName>
 			</field>
 			<field type="weekdayOfMonth-short">
 				<displayName>karaniwang araw ng buwan</displayName>
@@ -4355,10 +4458,10 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>time zone</displayName>
 			</field>
 			<field type="zone-short">
-				<displayName draft="provisional">time zone</displayName>
+				<displayName>zone</displayName>
 			</field>
 			<field type="zone-narrow">
-				<displayName draft="provisional">time zone</displayName>
+				<displayName>zone</displayName>
 			</field>
 		</fields>
 		<timeZoneNames>
@@ -4377,7 +4480,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</zone>
 			<zone type="Etc/UTC">
 				<long>
-					<standard draft="contributed">Coordinated Universal Time</standard>
+					<standard>Coordinated Universal Time</standard>
 				</long>
 			</zone>
 			<zone type="Etc/Unknown">
@@ -5045,6 +5148,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</zone>
 			<zone type="Asia/Aqtobe">
 				<exemplarCity>Aqtobe</exemplarCity>
+			</zone>
+			<zone type="Asia/Qostanay">
+				<exemplarCity>Kostanay</exemplarCity>
 			</zone>
 			<zone type="Asia/Qyzylorda">
 				<exemplarCity>Qyzylorda</exemplarCity>
@@ -6570,12 +6676,12 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		</otherNumberingSystems>
 		<minimumGroupingDigits draft="contributed">1</minimumGroupingDigits>
 		<symbols numberSystem="latn">
-			<decimal>.</decimal>
-			<group>,</group>
-			<list>;</list>
+			<decimal draft="contributed">.</decimal>
+			<group draft="contributed">,</group>
+			<list draft="contributed">;</list>
 			<percentSign>%</percentSign>
-			<plusSign>+</plusSign>
-			<minusSign>-</minusSign>
+			<plusSign draft="contributed">+</plusSign>
+			<minusSign draft="contributed">-</minusSign>
 			<exponential>E</exponential>
 			<superscriptingExponent>×</superscriptingExponent>
 			<perMille>‰</perMille>
@@ -6586,7 +6692,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<decimalFormats numberSystem="latn">
 			<decimalFormatLength>
 				<decimalFormat>
-					<pattern>#,##0.###</pattern>
+					<pattern draft="contributed">#,##0.###</pattern>
 				</decimalFormat>
 			</decimalFormatLength>
 			<decimalFormatLength type="long">
@@ -6711,13 +6817,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Afghan Afghani</displayName>
 				<displayName count="one">Afghan Afghani</displayName>
 				<displayName count="other">Afghan Afghanis</displayName>
-				<symbol>AFN</symbol>
+				<symbol draft="contributed">AFN</symbol>
 			</currency>
 			<currency type="ALL">
 				<displayName>Albanian Lek</displayName>
 				<displayName count="one">Albanian lek</displayName>
 				<displayName count="other">Albanian leke</displayName>
-				<symbol>ALL</symbol>
+				<symbol draft="contributed">ALL</symbol>
 			</currency>
 			<currency type="AMD">
 				<displayName>Armenian Dram</displayName>
@@ -6729,7 +6835,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Antillean Guilder ng Netherlands</displayName>
 				<displayName count="one">Antillean guilder ng Netherlands</displayName>
 				<displayName count="other">Antillean guilders ng Netherlands</displayName>
-				<symbol>ANG</symbol>
+				<symbol draft="contributed">ANG</symbol>
 			</currency>
 			<currency type="AOA">
 				<displayName>Angolan Kwanza</displayName>
@@ -6742,21 +6848,21 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Piso ng Argentina</displayName>
 				<displayName count="one">piso ng Argentina</displayName>
 				<displayName count="other">piso ng Argentina</displayName>
-				<symbol>ARS</symbol>
+				<symbol draft="contributed">ARS</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="AUD">
 				<displayName>Dolyar ng Australya</displayName>
 				<displayName count="one">dolyar ng Australya</displayName>
 				<displayName count="other">dolyares ng Australya</displayName>
-				<symbol>A$</symbol>
+				<symbol draft="contributed">A$</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="AWG">
 				<displayName>Florin ng Aruba</displayName>
 				<displayName count="one">florin ng Aruba</displayName>
 				<displayName count="other">florin ng Aruba</displayName>
-				<symbol>AWG</symbol>
+				<symbol draft="contributed">AWG</symbol>
 			</currency>
 			<currency type="AZN">
 				<displayName>Azerbaijani Manat</displayName>
@@ -6768,28 +6874,28 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Bosnia-Herzegovina Convertible Mark</displayName>
 				<displayName count="one">Bosnia-Herzegovina convertible mark</displayName>
 				<displayName count="other">Bosnia-Herzegovina convertible marks</displayName>
-				<symbol>BAM</symbol>
+				<symbol draft="contributed">BAM</symbol>
 				<symbol alt="narrow" draft="contributed">KM</symbol>
 			</currency>
 			<currency type="BBD">
 				<displayName>Dolyar ng Barbados</displayName>
 				<displayName count="one">dolyar ng Barbados</displayName>
 				<displayName count="other">dolyares ng Barbados</displayName>
-				<symbol>BBD</symbol>
+				<symbol draft="contributed">BBD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="BDT">
 				<displayName>Bangladeshi Taka</displayName>
 				<displayName count="one">Bangladeshi taka</displayName>
 				<displayName count="other">Bangladeshi takas</displayName>
-				<symbol>BDT</symbol>
+				<symbol draft="contributed">BDT</symbol>
 				<symbol alt="narrow" draft="contributed">৳</symbol>
 			</currency>
 			<currency type="BGN">
 				<displayName>Bulgarian Lev</displayName>
 				<displayName count="one">Bulgarian lev</displayName>
 				<displayName count="other">Bulgarian leva</displayName>
-				<symbol>BGN</symbol>
+				<symbol draft="contributed">BGN</symbol>
 			</currency>
 			<currency type="BHD">
 				<displayName>Bahraini Dinar</displayName>
@@ -6807,42 +6913,42 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Dolyar ng Bermuda</displayName>
 				<displayName count="one">dolyar ng Bermuda</displayName>
 				<displayName count="other">dolyares ng Bermuda</displayName>
-				<symbol>BMD</symbol>
+				<symbol draft="contributed">BMD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="BND">
 				<displayName>Dolyar ng Brunei</displayName>
 				<displayName count="one">dolyar ng Brunei</displayName>
 				<displayName count="other">dolyar ng Brunei</displayName>
-				<symbol>BND</symbol>
+				<symbol draft="contributed">BND</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="BOB">
 				<displayName>Boliviano ng Bolivia</displayName>
 				<displayName count="one">boliviano ng Bolivia</displayName>
 				<displayName count="other">bolivianos ng Bolivia</displayName>
-				<symbol>BOB</symbol>
+				<symbol draft="contributed">BOB</symbol>
 				<symbol alt="narrow" draft="contributed">Bs</symbol>
 			</currency>
 			<currency type="BRL">
 				<displayName>Real ng Barzil</displayName>
 				<displayName count="one">real ng Brazil</displayName>
 				<displayName count="other">reals ng Brazil</displayName>
-				<symbol>R$</symbol>
+				<symbol draft="contributed">R$</symbol>
 				<symbol alt="narrow" draft="contributed">R$</symbol>
 			</currency>
 			<currency type="BSD">
 				<displayName>Dolyar ng Bahamas</displayName>
 				<displayName count="one">dolyar ng Bahamas</displayName>
 				<displayName count="other">dolyares ng Bahamas</displayName>
-				<symbol>BSD</symbol>
+				<symbol draft="contributed">BSD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="BTN">
 				<displayName>Bhutanese Ngultrum</displayName>
 				<displayName count="one">Bhutanese ngultrum</displayName>
 				<displayName count="other">Bhutanese ngultrums</displayName>
-				<symbol>BTN</symbol>
+				<symbol draft="contributed">BTN</symbol>
 			</currency>
 			<currency type="BWP">
 				<displayName>Botswanan Pula</displayName>
@@ -6855,27 +6961,27 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Belarusian Ruble</displayName>
 				<displayName count="one">Belarusian ruble</displayName>
 				<displayName count="other">Belarusian rubles</displayName>
-				<symbol>BYN</symbol>
+				<symbol draft="contributed">BYN</symbol>
 				<symbol alt="narrow" draft="contributed">р.</symbol>
 			</currency>
 			<currency type="BYR">
 				<displayName>Belarusian Ruble (2000–2016)</displayName>
 				<displayName count="one">Belarusian ruble (2000–2016)</displayName>
 				<displayName count="other">Belarusian rubles (2000–2016)</displayName>
-				<symbol>BYR</symbol>
+				<symbol draft="contributed">BYR</symbol>
 			</currency>
 			<currency type="BZD">
 				<displayName>Dolyar ng Belize</displayName>
 				<displayName count="one">dolyar ng Belize</displayName>
 				<displayName count="other">dolyares ng Belize</displayName>
-				<symbol>BZD</symbol>
+				<symbol draft="contributed">BZD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="CAD">
 				<displayName>Dolyar ng Canada</displayName>
 				<displayName count="one">dolyar ng Canada</displayName>
 				<displayName count="other">Dolyares ng Canada</displayName>
-				<symbol>CA$</symbol>
+				<symbol draft="contributed">CA$</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="CDF">
@@ -6888,54 +6994,54 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Swiss Franc</displayName>
 				<displayName count="one">Swiss franc</displayName>
 				<displayName count="other">Swiss francs</displayName>
-				<symbol>CHF</symbol>
+				<symbol draft="contributed">CHF</symbol>
 			</currency>
 			<currency type="CLP">
 				<displayName>Piso ng Chile</displayName>
 				<displayName count="one">piso ng Chile</displayName>
 				<displayName count="other">piso ng Chile</displayName>
-				<symbol>CLP</symbol>
+				<symbol draft="contributed">CLP</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="CNH">
-				<displayName draft="contributed">CNH</displayName>
-				<displayName count="one" draft="contributed">CNH</displayName>
-				<displayName count="other" draft="contributed">CNH</displayName>
+				<displayName>Chinese Yuan (offshore)</displayName>
+				<displayName count="one">Chinese yuan (offshore)</displayName>
+				<displayName count="other">Chinese yuan (offshore)</displayName>
 				<symbol draft="contributed">CNH</symbol>
 			</currency>
 			<currency type="CNY">
 				<displayName>Chinese Yuan</displayName>
 				<displayName count="one">Chinese yuan</displayName>
 				<displayName count="other">Chinese yuan</displayName>
-				<symbol>CN¥</symbol>
+				<symbol draft="contributed">CN¥</symbol>
 				<symbol alt="narrow" draft="contributed">¥</symbol>
 			</currency>
 			<currency type="COP">
 				<displayName>Piso ng Colombia</displayName>
 				<displayName count="one">piso ng Colombia</displayName>
 				<displayName count="other">Piso ng Colombia</displayName>
-				<symbol>COP</symbol>
+				<symbol draft="contributed">COP</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="CRC">
 				<displayName>Colón ng Costa Rica</displayName>
 				<displayName count="one">colón ng Costa Rica</displayName>
 				<displayName count="other">colóns ng Costa Rica</displayName>
-				<symbol>CRC</symbol>
+				<symbol draft="contributed">CRC</symbol>
 				<symbol alt="narrow" draft="contributed">₡</symbol>
 			</currency>
 			<currency type="CUC">
 				<displayName>Convertible na Piso ng Cuba</displayName>
 				<displayName count="one">Convertible na piso ng Cuba</displayName>
 				<displayName count="other">Convertible na Piso ng Cuba</displayName>
-				<symbol>CUC</symbol>
+				<symbol draft="contributed">CUC</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="CUP">
 				<displayName>Piso ng Cuba</displayName>
 				<displayName count="one">piso ng Cuba</displayName>
 				<displayName count="other">piso ng Cuba</displayName>
-				<symbol>CUP</symbol>
+				<symbol draft="contributed">CUP</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="CVE">
@@ -6948,7 +7054,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Czech Republic Koruna</displayName>
 				<displayName count="one">Czech Republic koruna</displayName>
 				<displayName count="other">Czech Republic korunas</displayName>
-				<symbol>CZK</symbol>
+				<symbol draft="contributed">CZK</symbol>
 				<symbol alt="narrow" draft="contributed">Kč</symbol>
 			</currency>
 			<currency type="DEM">
@@ -6964,14 +7070,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Danish Krone</displayName>
 				<displayName count="one">Danish krone</displayName>
 				<displayName count="other">Danish kroner</displayName>
-				<symbol>DKK</symbol>
+				<symbol draft="contributed">DKK</symbol>
 				<symbol alt="narrow" draft="contributed">kr</symbol>
 			</currency>
 			<currency type="DOP">
 				<displayName>Piso ng Dominican</displayName>
 				<displayName count="one">Piso ng Dominican</displayName>
 				<displayName count="other">piso ng Dominican</displayName>
-				<symbol>DOP</symbol>
+				<symbol draft="contributed">DOP</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="DZD">
@@ -7006,7 +7112,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Euro</displayName>
 				<displayName count="one">euro</displayName>
 				<displayName count="other">euros</displayName>
-				<symbol>€</symbol>
+				<symbol draft="contributed">€</symbol>
 				<symbol alt="narrow" draft="contributed">€</symbol>
 			</currency>
 			<currency type="FJD">
@@ -7020,7 +7126,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Pound ng Falkland Islands</displayName>
 				<displayName count="one">pound ng Falkland Islands</displayName>
 				<displayName count="other">pounds ng Falkland Islands</displayName>
-				<symbol>FKP</symbol>
+				<symbol draft="contributed">FKP</symbol>
 				<symbol alt="narrow" draft="contributed">£</symbol>
 			</currency>
 			<currency type="FRF">
@@ -7030,7 +7136,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>British Pound</displayName>
 				<displayName count="one">British pound</displayName>
 				<displayName count="other">British pounds</displayName>
-				<symbol>£</symbol>
+				<symbol draft="contributed">£</symbol>
 				<symbol alt="narrow" draft="contributed">£</symbol>
 			</currency>
 			<currency type="GEL">
@@ -7051,7 +7157,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Gibraltar Pound</displayName>
 				<displayName count="one">Gibraltar pound</displayName>
 				<displayName count="other">Gibraltar pounds</displayName>
-				<symbol>GIP</symbol>
+				<symbol draft="contributed">GIP</symbol>
 				<symbol alt="narrow" draft="contributed">£</symbol>
 			</currency>
 			<currency type="GMD">
@@ -7071,69 +7177,69 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Quetzal ng Guatemala</displayName>
 				<displayName count="one">quetzal ng Guatemala</displayName>
 				<displayName count="other">quetzals ng Guatemala</displayName>
-				<symbol>GTQ</symbol>
+				<symbol draft="contributed">GTQ</symbol>
 				<symbol alt="narrow" draft="contributed">Q</symbol>
 			</currency>
 			<currency type="GYD">
 				<displayName>Dolyar ng Guyanese</displayName>
 				<displayName count="one">dolyar ng Guyanese</displayName>
 				<displayName count="other">dolyares ng Guyanese</displayName>
-				<symbol>GYD</symbol>
+				<symbol draft="contributed">GYD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="HKD">
 				<displayName>Dolyar ng Hong Kong</displayName>
 				<displayName count="one">dolyar ng Hong Kong</displayName>
 				<displayName count="other">dolyares ng Hong Kong</displayName>
-				<symbol>HK$</symbol>
+				<symbol draft="contributed">HK$</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="HNL">
 				<displayName>Lempira ng Honduras</displayName>
 				<displayName count="one">lempira ng Honduras</displayName>
 				<displayName count="other">lempiras ng Honduras</displayName>
-				<symbol>HNL</symbol>
+				<symbol draft="contributed">HNL</symbol>
 				<symbol alt="narrow" draft="contributed">L</symbol>
 			</currency>
 			<currency type="HRK">
 				<displayName>Croatian Kuna</displayName>
 				<displayName count="one">Croatian kuna</displayName>
 				<displayName count="other">Croatian kunas</displayName>
-				<symbol>HRK</symbol>
+				<symbol draft="contributed">HRK</symbol>
 				<symbol alt="narrow" draft="contributed">kn</symbol>
 			</currency>
 			<currency type="HTG">
 				<displayName>Gourde ng Haiti</displayName>
 				<displayName count="one">gourde ng Haiti</displayName>
 				<displayName count="other">gourdes ng Haiti</displayName>
-				<symbol>HTG</symbol>
+				<symbol draft="contributed">HTG</symbol>
 			</currency>
 			<currency type="HUF">
 				<displayName>Hungarian Forint</displayName>
 				<displayName count="one">Hungarian forint</displayName>
 				<displayName count="other">Hungarian forints</displayName>
-				<symbol>HUF</symbol>
+				<symbol draft="contributed">HUF</symbol>
 				<symbol alt="narrow" draft="contributed">Ft</symbol>
 			</currency>
 			<currency type="IDR">
 				<displayName>Indonesian Rupiah</displayName>
 				<displayName count="one">Indonesian rupiah</displayName>
 				<displayName count="other">Indonesian rupiahs</displayName>
-				<symbol>IDR</symbol>
+				<symbol draft="contributed">IDR</symbol>
 				<symbol alt="narrow" draft="contributed">Rp</symbol>
 			</currency>
 			<currency type="ILS">
 				<displayName>Israeli New Sheqel</displayName>
 				<displayName count="one">Israeli new sheqel</displayName>
 				<displayName count="other">Israeli new sheqels</displayName>
-				<symbol>₪</symbol>
+				<symbol draft="contributed">₪</symbol>
 				<symbol alt="narrow" draft="contributed">₪</symbol>
 			</currency>
 			<currency type="INR">
 				<displayName>Indian Rupee</displayName>
 				<displayName count="one">Indian rupee</displayName>
 				<displayName count="other">Indian rupees</displayName>
-				<symbol>₹</symbol>
+				<symbol draft="contributed">₹</symbol>
 				<symbol alt="narrow" draft="contributed">₹</symbol>
 			</currency>
 			<currency type="IQD">
@@ -7146,20 +7252,20 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Iranian Rial</displayName>
 				<displayName count="one">Iranian rial</displayName>
 				<displayName count="other">Iranian rials</displayName>
-				<symbol>IRR</symbol>
+				<symbol draft="contributed">IRR</symbol>
 			</currency>
 			<currency type="ISK">
 				<displayName>Icelandic Króna</displayName>
 				<displayName count="one">Icelandic króna</displayName>
 				<displayName count="other">Icelandic krónur</displayName>
-				<symbol>ISK</symbol>
+				<symbol draft="contributed">ISK</symbol>
 				<symbol alt="narrow" draft="contributed">kr</symbol>
 			</currency>
 			<currency type="JMD">
 				<displayName>Dolyar ng Jamaica</displayName>
 				<displayName count="one">dolyar ng Jamaica</displayName>
 				<displayName count="other">dolyares ng Jamaica</displayName>
-				<symbol>JMD</symbol>
+				<symbol draft="contributed">JMD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="JOD">
@@ -7191,7 +7297,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Cambodian Riel</displayName>
 				<displayName count="one">Cambodian riel</displayName>
 				<displayName count="other">Cambodian riels</displayName>
-				<symbol>KHR</symbol>
+				<symbol draft="contributed">KHR</symbol>
 				<symbol alt="narrow" draft="contributed">៛</symbol>
 			</currency>
 			<currency type="KMF">
@@ -7205,14 +7311,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Won ng Hilagang Korea</displayName>
 				<displayName count="one">won ng Hilagang Korea</displayName>
 				<displayName count="other">won ng Hilagang Korea</displayName>
-				<symbol>KPW</symbol>
+				<symbol draft="contributed">KPW</symbol>
 				<symbol alt="narrow" draft="contributed">₩</symbol>
 			</currency>
 			<currency type="KRW">
 				<displayName>Won ng Timog Korea</displayName>
 				<displayName count="one">won ng Timog Korea</displayName>
 				<displayName count="other">won ng Timog Korea</displayName>
-				<symbol>₩</symbol>
+				<symbol draft="contributed">₩</symbol>
 				<symbol alt="narrow" draft="contributed">₩</symbol>
 			</currency>
 			<currency type="KWD">
@@ -7225,7 +7331,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Dolyar ng Cayman Islands</displayName>
 				<displayName count="one">dolyar ng Cayman Islands</displayName>
 				<displayName count="other">dolyares ng Cayman Islands</displayName>
-				<symbol>KYD</symbol>
+				<symbol draft="contributed">KYD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="KZT">
@@ -7239,7 +7345,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Laotian Kip</displayName>
 				<displayName count="one">Laotian kip</displayName>
 				<displayName count="other">Laotian kips</displayName>
-				<symbol>LAK</symbol>
+				<symbol draft="contributed">LAK</symbol>
 				<symbol alt="narrow" draft="contributed">₭</symbol>
 			</currency>
 			<currency type="LBP">
@@ -7253,7 +7359,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Sri Lankan Rupee</displayName>
 				<displayName count="one">Sri Lankan rupee</displayName>
 				<displayName count="other">Sri Lankan rupees</displayName>
-				<symbol>LKR</symbol>
+				<symbol draft="contributed">LKR</symbol>
 				<symbol alt="narrow" draft="contributed">Rs</symbol>
 			</currency>
 			<currency type="LRD">
@@ -7270,13 +7376,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Lithuanian Litas</displayName>
 				<displayName count="one">Lithuanian litas</displayName>
 				<displayName count="other">Lithuanian litai</displayName>
-				<symbol>LTL</symbol>
+				<symbol draft="contributed">LTL</symbol>
 			</currency>
 			<currency type="LVL">
 				<displayName>Latvian Lats</displayName>
 				<displayName count="one">Latvian lats</displayName>
 				<displayName count="other">Latvian lati</displayName>
-				<symbol>LVL</symbol>
+				<symbol draft="contributed">LVL</symbol>
 			</currency>
 			<currency type="LYD">
 				<displayName>Libyan Dinar</displayName>
@@ -7294,7 +7400,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Moldovan Leu</displayName>
 				<displayName count="one">Moldovan leu</displayName>
 				<displayName count="other">Moldovan lei</displayName>
-				<symbol>MDL</symbol>
+				<symbol draft="contributed">MDL</symbol>
 			</currency>
 			<currency type="MGA">
 				<displayName>Malagasy Ariary</displayName>
@@ -7307,33 +7413,39 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Macedonian Denar</displayName>
 				<displayName count="one">Macedonian denar</displayName>
 				<displayName count="other">Macedonian denari</displayName>
-				<symbol>MKD</symbol>
+				<symbol draft="contributed">MKD</symbol>
 			</currency>
 			<currency type="MMK">
 				<displayName>Myanmar Kyat</displayName>
 				<displayName count="one">Myanmar kyat</displayName>
 				<displayName count="other">Myanmar kyats</displayName>
-				<symbol>MMK</symbol>
+				<symbol draft="contributed">MMK</symbol>
 				<symbol alt="narrow" draft="contributed">K</symbol>
 			</currency>
 			<currency type="MNT">
 				<displayName>Mongolian Tugrik</displayName>
 				<displayName count="one">Mongolian tugrik</displayName>
 				<displayName count="other">Mongolian tugriks</displayName>
-				<symbol>MNT</symbol>
+				<symbol draft="contributed">MNT</symbol>
 				<symbol alt="narrow" draft="contributed">₮</symbol>
 			</currency>
 			<currency type="MOP">
 				<displayName>Macanese Pataca</displayName>
 				<displayName count="one">Macanese pataca</displayName>
 				<displayName count="other">Macanese patacas</displayName>
-				<symbol>MOP</symbol>
+				<symbol draft="contributed">MOP</symbol>
 			</currency>
 			<currency type="MRO">
-				<displayName>Mauritanian Ouguiya</displayName>
+				<displayName>Mauritanian Ouguiya (1973–2017)</displayName>
+				<displayName count="one">Mauritanian ouguiya (1973–2017)</displayName>
+				<displayName count="other">Mauritanian ouguiyas (1973–2017)</displayName>
+				<symbol draft="contributed">MRO</symbol>
+			</currency>
+			<currency type="MRU">
+				<displayName>Ouguiya ng Mauritania</displayName>
 				<displayName count="one">Mauritanian ouguiya</displayName>
 				<displayName count="other">Mauritanian ouguiyas</displayName>
-				<symbol draft="contributed">MRO</symbol>
+				<symbol draft="contributed">MRU</symbol>
 			</currency>
 			<currency type="MUR">
 				<displayName>Mauritian Rupee</displayName>
@@ -7346,7 +7458,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Maldivian Rufiyaa</displayName>
 				<displayName count="one">Maldivian rufiyaa</displayName>
 				<displayName count="other">Maldivian rufiyaas</displayName>
-				<symbol>MVR</symbol>
+				<symbol draft="contributed">MVR</symbol>
 			</currency>
 			<currency type="MWK">
 				<displayName>Malawian Kwacha</displayName>
@@ -7358,14 +7470,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Piso ng Mexico</displayName>
 				<displayName count="one">piso ng Mexico</displayName>
 				<displayName count="other">piso ng Mexico</displayName>
-				<symbol>MX$</symbol>
+				<symbol draft="contributed">MX$</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="MYR">
 				<displayName>Malaysian Ringgit</displayName>
 				<displayName count="one">Malaysian ringgit</displayName>
 				<displayName count="other">Malaysian ringgits</displayName>
-				<symbol>MYR</symbol>
+				<symbol draft="contributed">MYR</symbol>
 				<symbol alt="narrow" draft="contributed">RM</symbol>
 			</currency>
 			<currency type="MZN">
@@ -7392,28 +7504,28 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Córdoba ng Nicaragua</displayName>
 				<displayName count="one">córdoba ng Nicaragua</displayName>
 				<displayName count="other">Nicaraguan córdobas</displayName>
-				<symbol>NIO</symbol>
+				<symbol draft="contributed">NIO</symbol>
 				<symbol alt="narrow" draft="contributed">C$</symbol>
 			</currency>
 			<currency type="NOK">
 				<displayName>Norwegian Krone</displayName>
 				<displayName count="one">Norwegian krone</displayName>
 				<displayName count="other">Norwegian kroner</displayName>
-				<symbol>NOK</symbol>
+				<symbol draft="contributed">NOK</symbol>
 				<symbol alt="narrow" draft="contributed">kr</symbol>
 			</currency>
 			<currency type="NPR">
 				<displayName>Nepalese Rupee</displayName>
 				<displayName count="one">Nepalese rupee</displayName>
 				<displayName count="other">Nepalese rupees</displayName>
-				<symbol>NPR</symbol>
+				<symbol draft="contributed">NPR</symbol>
 				<symbol alt="narrow" draft="contributed">Rs</symbol>
 			</currency>
 			<currency type="NZD">
 				<displayName>Dolyar ng New Zealand</displayName>
 				<displayName count="one">dolyares ng New Zealand</displayName>
 				<displayName count="other">dolyares ng New Zealand</displayName>
-				<symbol>NZ$</symbol>
+				<symbol draft="contributed">NZ$</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="OMR">
@@ -7426,13 +7538,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Balboa ng Panama</displayName>
 				<displayName count="one">balboa ng Panama</displayName>
 				<displayName count="other">Balboas ng Panama</displayName>
-				<symbol>PAB</symbol>
+				<symbol draft="contributed">PAB</symbol>
 			</currency>
 			<currency type="PEN">
 				<displayName>Peruvian Sol</displayName>
 				<displayName count="one">Peruvian sol</displayName>
 				<displayName count="other">Peruvian soles</displayName>
-				<symbol>PEN</symbol>
+				<symbol draft="contributed">PEN</symbol>
 			</currency>
 			<currency type="PGK">
 				<displayName>Papua New Guinean Kina</displayName>
@@ -7451,21 +7563,21 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Pakistani Rupee</displayName>
 				<displayName count="one">Pakistani rupee</displayName>
 				<displayName count="other">Pakistani rupees</displayName>
-				<symbol>PKR</symbol>
+				<symbol draft="contributed">PKR</symbol>
 				<symbol alt="narrow" draft="contributed">Rs</symbol>
 			</currency>
 			<currency type="PLN">
 				<displayName>Polish Zloty</displayName>
 				<displayName count="one">Polish zloty</displayName>
 				<displayName count="other">Polish zlotys</displayName>
-				<symbol>PLN</symbol>
+				<symbol draft="contributed">PLN</symbol>
 				<symbol alt="narrow" draft="contributed">zł</symbol>
 			</currency>
 			<currency type="PYG">
 				<displayName>Paraguayan Guarani</displayName>
 				<displayName count="one">Paraguayan guarani</displayName>
 				<displayName count="other">Paraguayan guaranis</displayName>
-				<symbol>PYG</symbol>
+				<symbol draft="contributed">PYG</symbol>
 				<symbol alt="narrow" draft="contributed">₲</symbol>
 			</currency>
 			<currency type="QAR">
@@ -7478,20 +7590,20 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Romanian Leu</displayName>
 				<displayName count="one">Romanian leu</displayName>
 				<displayName count="other">Romanian lei</displayName>
-				<symbol>RON</symbol>
+				<symbol draft="contributed">RON</symbol>
 				<symbol alt="narrow" draft="contributed">lei</symbol>
 			</currency>
 			<currency type="RSD">
 				<displayName>Serbian Dinar</displayName>
 				<displayName count="one">Serbian dinar</displayName>
 				<displayName count="other">Serbian dinars</displayName>
-				<symbol>RSD</symbol>
+				<symbol draft="contributed">RSD</symbol>
 			</currency>
 			<currency type="RUB">
 				<displayName>Russian Ruble</displayName>
 				<displayName count="one">Russian ruble</displayName>
 				<displayName count="other">Russian rubles</displayName>
-				<symbol>RUB</symbol>
+				<symbol draft="contributed">RUB</symbol>
 				<symbol alt="narrow" draft="contributed">₽</symbol>
 			</currency>
 			<currency type="RWF">
@@ -7530,14 +7642,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Swedish Krona</displayName>
 				<displayName count="one">Swedish krona</displayName>
 				<displayName count="other">Swedish kronor</displayName>
-				<symbol>SEK</symbol>
+				<symbol draft="contributed">SEK</symbol>
 				<symbol alt="narrow" draft="contributed">kr</symbol>
 			</currency>
 			<currency type="SGD">
 				<displayName>Dolyar ng Singapore</displayName>
 				<displayName count="one">dolyar ng Singapore</displayName>
 				<displayName count="other">dolyares ng Singapore</displayName>
-				<symbol>SGD</symbol>
+				<symbol draft="contributed">SGD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="SHP">
@@ -7569,7 +7681,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Dolyar ng Suriname</displayName>
 				<displayName count="one">dolyar ng Suriname</displayName>
 				<displayName count="other">dolyares ng Suriname</displayName>
-				<symbol>SRD</symbol>
+				<symbol draft="contributed">SRD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="SSP">
@@ -7580,10 +7692,16 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<symbol alt="narrow" draft="contributed">£</symbol>
 			</currency>
 			<currency type="STD">
-				<displayName>São Tomé &amp; Príncipe Dobra</displayName>
+				<displayName>São Tomé &amp; Príncipe Dobra (1977–2017)</displayName>
+				<displayName count="one">São Tomé &amp; Príncipe dobra (1977–2017)</displayName>
+				<displayName count="other">São Tomé &amp; Príncipe dobras (1977–2017)</displayName>
+				<symbol draft="contributed">STD</symbol>
+			</currency>
+			<currency type="STN">
+				<displayName>São Tomé &amp; Príncipe Dobra (2018)</displayName>
 				<displayName count="one">São Tomé &amp; Príncipe dobra</displayName>
 				<displayName count="other">São Tomé &amp; Príncipe dobras</displayName>
-				<symbol draft="contributed">STD</symbol>
+				<symbol draft="contributed">STN</symbol>
 				<symbol alt="narrow" draft="contributed">Db</symbol>
 			</currency>
 			<currency type="SYP">
@@ -7643,14 +7761,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Dolyar ng Trinidad and Tobago</displayName>
 				<displayName count="one">dolyar ng Trinidad and Tobago</displayName>
 				<displayName count="other">dolyares ng Trinidad and Tobago</displayName>
-				<symbol>TTD</symbol>
+				<symbol draft="contributed">TTD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="TWD">
 				<displayName>Dolyar ng New Taiwan</displayName>
 				<displayName count="one">dolyar ng New Taiwan</displayName>
 				<displayName count="other">dolyares ng New Taiwan</displayName>
-				<symbol>NT$</symbol>
+				<symbol draft="contributed">NT$</symbol>
 				<symbol alt="narrow" draft="contributed">NT$</symbol>
 			</currency>
 			<currency type="TZS">
@@ -7663,7 +7781,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Ukrainian Hryvnia</displayName>
 				<displayName count="one">Ukrainian hryvnia</displayName>
 				<displayName count="other">Ukrainian hryvnias</displayName>
-				<symbol>UAH</symbol>
+				<symbol draft="contributed">UAH</symbol>
 				<symbol alt="narrow" draft="contributed">₴</symbol>
 			</currency>
 			<currency type="UGX">
@@ -7683,7 +7801,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Piso ng Uruguay</displayName>
 				<displayName count="one">piso ng Uruguay</displayName>
 				<displayName count="other">piso ng Uruguay</displayName>
-				<symbol>UYU</symbol>
+				<symbol draft="contributed">UYU</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="UZS">
@@ -7696,17 +7814,23 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Venezuelan Bolívar (1871–2008)</displayName>
 			</currency>
 			<currency type="VEF">
+				<displayName>Bolívar ng Venezuela (2008–2018)</displayName>
+				<displayName count="one">bolívar ng Venezuela (2008–2018)</displayName>
+				<displayName count="other">bolívars ng Venezuela (2008–2018)</displayName>
+				<symbol draft="contributed">VEF</symbol>
+				<symbol alt="narrow" draft="contributed">Bs</symbol>
+			</currency>
+			<currency type="VES">
 				<displayName>Bolívar ng Venezuela</displayName>
 				<displayName count="one">bolívar ng Venezuela</displayName>
 				<displayName count="other">bolívars ng Venezuela</displayName>
-				<symbol>VEF</symbol>
-				<symbol alt="narrow" draft="contributed">Bs</symbol>
+				<symbol draft="contributed">VES</symbol>
 			</currency>
 			<currency type="VND">
 				<displayName>Vietnamese Dong</displayName>
 				<displayName count="one">Vietnamese dong</displayName>
 				<displayName count="other">Vietnamese dong</displayName>
-				<symbol>₫</symbol>
+				<symbol draft="contributed">₫</symbol>
 				<symbol alt="narrow" draft="contributed">₫</symbol>
 			</currency>
 			<currency type="VUV">
@@ -7725,26 +7849,26 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>CFA Franc BEAC</displayName>
 				<displayName count="one">CFA franc BEAC</displayName>
 				<displayName count="other">CFA francs BEAC</displayName>
-				<symbol>FCFA</symbol>
+				<symbol draft="contributed">FCFA</symbol>
 			</currency>
 			<currency type="XCD">
 				<displayName>Dolyar ng Silangang Caribbean</displayName>
 				<displayName count="one">dolyar ng Silangang Caribbean</displayName>
 				<displayName count="other">dolyares ng Silangang Caribbean</displayName>
-				<symbol>EC$</symbol>
+				<symbol draft="contributed">EC$</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="XOF">
 				<displayName>CFA Franc ng Kanlurang Africa</displayName>
 				<displayName count="one">CFA franc ng Kanlurang Africa</displayName>
 				<displayName count="other">CFA francs ng Kanlurang Africa</displayName>
-				<symbol>CFA</symbol>
+				<symbol draft="contributed">CFA</symbol>
 			</currency>
 			<currency type="XPF">
 				<displayName>CFP Franc</displayName>
 				<displayName count="one">CFP franc</displayName>
 				<displayName count="other">CFP francs</displayName>
-				<symbol>CFPF</symbol>
+				<symbol draft="contributed">CFPF</symbol>
 			</currency>
 			<currency type="XXX">
 				<displayName>Hindi Kilalang Pera</displayName>
@@ -7896,6 +8020,26 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} part per million</unitPattern>
 				<unitPattern count="other">{0} parts per million</unitPattern>
 			</unit>
+			<unit type="concentr-percent">
+				<displayName>porsyento</displayName>
+				<unitPattern count="one">{0} porsyento</unitPattern>
+				<unitPattern count="other">{0} na porsyento</unitPattern>
+			</unit>
+			<unit type="concentr-permille">
+				<displayName>permille</displayName>
+				<unitPattern count="one">{0} permille</unitPattern>
+				<unitPattern count="other">{0} na permille</unitPattern>
+			</unit>
+			<unit type="concentr-permyriad">
+				<displayName>permyriad</displayName>
+				<unitPattern count="one">{0} permyriad</unitPattern>
+				<unitPattern count="other">{0} permyriad</unitPattern>
+			</unit>
+			<unit type="concentr-mole">
+				<displayName>mole</displayName>
+				<unitPattern count="one">{0} mole</unitPattern>
+				<unitPattern count="other">{0} mole</unitPattern>
+			</unit>
 			<unit type="consumption-liter-per-kilometer">
 				<displayName>litro kada kilometro</displayName>
 				<unitPattern count="one">{0} litro kada kilometro</unitPattern>
@@ -7915,6 +8059,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>milya kada Imp.gallon</displayName>
 				<unitPattern count="one">{0} milya kada Imp.galon</unitPattern>
 				<unitPattern count="other">{0} milya kada Imp. galon</unitPattern>
+			</unit>
+			<unit type="digital-petabyte">
+				<displayName>petabytes</displayName>
+				<unitPattern count="one">{0} petabyte</unitPattern>
+				<unitPattern count="other">{0} petabytes</unitPattern>
 			</unit>
 			<unit type="digital-terabyte">
 				<displayName>terabytes</displayName>
@@ -7970,6 +8119,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>mga siglo</displayName>
 				<unitPattern count="one">{0} siglo</unitPattern>
 				<unitPattern count="other">{0} siglo</unitPattern>
+			</unit>
+			<unit type="duration-decade">
+				<displayName draft="provisional">dekada</displayName>
+				<unitPattern count="one">{0} dekada</unitPattern>
+				<unitPattern count="other">{0} dekada</unitPattern>
 			</unit>
 			<unit type="duration-year">
 				<displayName>mga taon</displayName>
@@ -8078,6 +8232,26 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} kilowatt hour</unitPattern>
 				<unitPattern count="other">{0} na kilowatt-hour</unitPattern>
 			</unit>
+			<unit type="energy-electronvolt">
+				<displayName>electronvolt</displayName>
+				<unitPattern count="one">{0} electronvolt</unitPattern>
+				<unitPattern count="other">{0} electronvolt</unitPattern>
+			</unit>
+			<unit type="energy-british-thermal-unit">
+				<displayName>British thermal unit</displayName>
+				<unitPattern count="one">{0} British thermal unit</unitPattern>
+				<unitPattern count="other">{0} British thermal unit</unitPattern>
+			</unit>
+			<unit type="force-pound-force">
+				<displayName>pound of force</displayName>
+				<unitPattern count="one">{0} pound of force</unitPattern>
+				<unitPattern count="other">{0} pound of force</unitPattern>
+			</unit>
+			<unit type="force-newton">
+				<displayName>newton</displayName>
+				<unitPattern count="one">{0} newton</unitPattern>
+				<unitPattern count="other">{0} newton</unitPattern>
+			</unit>
 			<unit type="frequency-gigahertz">
 				<displayName>gigahertz</displayName>
 				<unitPattern count="one">{0} gigahertz</unitPattern>
@@ -8097,6 +8271,39 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>hertz</displayName>
 				<unitPattern count="one">{0} hertz</unitPattern>
 				<unitPattern count="other">{0} na hertz</unitPattern>
+			</unit>
+			<unit type="graphics-em">
+				<displayName>tipograpikang em</displayName>
+			</unit>
+			<unit type="graphics-pixel">
+				<displayName draft="provisional">mga pixel</displayName>
+				<unitPattern count="one">{0} pixel</unitPattern>
+				<unitPattern count="other">{0} pixel</unitPattern>
+			</unit>
+			<unit type="graphics-megapixel">
+				<displayName>megapixels</displayName>
+				<unitPattern count="one">{0} megapixel</unitPattern>
+				<unitPattern count="other">{0} megapixels</unitPattern>
+			</unit>
+			<unit type="graphics-pixel-per-centimeter">
+				<displayName draft="provisional">mga pixel bawat sentimetro</displayName>
+				<unitPattern count="one">{0} pixel bawat sentimetro</unitPattern>
+				<unitPattern count="other">{0} pixel bawat sentimetro</unitPattern>
+			</unit>
+			<unit type="graphics-pixel-per-inch">
+				<displayName draft="provisional">mga pixel bawat pulgada</displayName>
+				<unitPattern count="one">{0} pixel bawat pulgada</unitPattern>
+				<unitPattern count="other">{0} pixel bawat pulgada</unitPattern>
+			</unit>
+			<unit type="graphics-dot-per-centimeter">
+				<displayName>tuldok bawat sentimetro</displayName>
+				<unitPattern count="one">{0} tuldok bawat sentimetro</unitPattern>
+				<unitPattern count="other">{0} tuldok bawat sentimetro</unitPattern>
+			</unit>
+			<unit type="graphics-dot-per-inch">
+				<displayName>tuldok bawat pulgada</displayName>
+				<unitPattern count="one">{0} tuldok bawat pulgada</unitPattern>
+				<unitPattern count="other">{0} tuldok bawat pulgada</unitPattern>
 			</unit>
 			<unit type="length-kilometer">
 				<displayName>kilometro</displayName>
@@ -8199,14 +8406,24 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0} na milya-scandinavian</unitPattern>
 			</unit>
 			<unit type="length-point">
-				<displayName draft="contributed">puntos</displayName>
-				<unitPattern count="one" draft="contributed">{0} puntos</unitPattern>
-				<unitPattern count="other" draft="contributed">{0} puntos</unitPattern>
+				<displayName>puntos</displayName>
+				<unitPattern count="one">{0} puntos</unitPattern>
+				<unitPattern count="other">{0} puntos</unitPattern>
+			</unit>
+			<unit type="length-solar-radius">
+				<displayName>solar radii</displayName>
+				<unitPattern count="one">{0} solar radius</unitPattern>
+				<unitPattern count="other">{0} solar radii</unitPattern>
 			</unit>
 			<unit type="light-lux">
 				<displayName>lux</displayName>
 				<unitPattern count="one">{0} lux</unitPattern>
 				<unitPattern count="other">{0} na lux</unitPattern>
+			</unit>
+			<unit type="light-solar-luminosity">
+				<displayName>solar luminosity</displayName>
+				<unitPattern count="one">{0} solar luminosity</unitPattern>
+				<unitPattern count="other">{0} solar luminosity</unitPattern>
 			</unit>
 			<unit type="mass-metric-ton">
 				<displayName>toneladang metriko</displayName>
@@ -8267,6 +8484,21 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} karat</unitPattern>
 				<unitPattern count="other">{0} karat</unitPattern>
 			</unit>
+			<unit type="mass-dalton">
+				<displayName>dalton</displayName>
+				<unitPattern count="one">{0} dalton</unitPattern>
+				<unitPattern count="other">{0} dalton</unitPattern>
+			</unit>
+			<unit type="mass-earth-mass">
+				<displayName>Earth mass</displayName>
+				<unitPattern count="one">{0} Earth mass</unitPattern>
+				<unitPattern count="other">{0} Earth mass</unitPattern>
+			</unit>
+			<unit type="mass-solar-mass">
+				<displayName>solar mass</displayName>
+				<unitPattern count="one">{0} solar mass</unitPattern>
+				<unitPattern count="other">{0} solar mass</unitPattern>
+			</unit>
 			<unit type="power-gigawatt">
 				<displayName>gigawatts</displayName>
 				<unitPattern count="one">{0} gigawatt</unitPattern>
@@ -8297,11 +8529,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} horsepower</unitPattern>
 				<unitPattern count="other">{0} horsepower</unitPattern>
 			</unit>
-			<unit type="pressure-hectopascal">
-				<displayName>hectopascals</displayName>
-				<unitPattern count="one">{0} hectopascal</unitPattern>
-				<unitPattern count="other">{0} na hectopascal</unitPattern>
-			</unit>
 			<unit type="pressure-millimeter-of-mercury">
 				<displayName>milimetro ng asoge</displayName>
 				<unitPattern count="one">{0} millimetro ng mercury</unitPattern>
@@ -8321,6 +8548,30 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>millibar</displayName>
 				<unitPattern count="one">{0} millibar</unitPattern>
 				<unitPattern count="other">{0} na millibar</unitPattern>
+			</unit>
+			<unit type="pressure-atmosphere">
+				<displayName>atmospheres</displayName>
+				<unitPattern count="one">{0} atmosphere</unitPattern>
+				<unitPattern count="other">{0} atmospheres</unitPattern>
+			</unit>
+			<unit type="pressure-pascal">
+				<unitPattern count="one">{0} pascal</unitPattern>
+				<unitPattern count="other">{0} pascals</unitPattern>
+			</unit>
+			<unit type="pressure-hectopascal">
+				<displayName>hectopascals</displayName>
+				<unitPattern count="one">{0} hectopascal</unitPattern>
+				<unitPattern count="other">{0} na hectopascal</unitPattern>
+			</unit>
+			<unit type="pressure-kilopascal">
+				<displayName>kilopascal</displayName>
+				<unitPattern count="one">{0} kilopascal</unitPattern>
+				<unitPattern count="other">{0} kilopascal</unitPattern>
+			</unit>
+			<unit type="pressure-megapascal">
+				<displayName>megapascal</displayName>
+				<unitPattern count="one">{0} megapascal</unitPattern>
+				<unitPattern count="other">{0} megapascal</unitPattern>
 			</unit>
 			<unit type="speed-kilometer-per-hour">
 				<displayName>kilometro kada oras</displayName>
@@ -8361,6 +8612,16 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>degrees kelvin</displayName>
 				<unitPattern count="one">{0} degree kelvin</unitPattern>
 				<unitPattern count="other">{0} degrees kelvin</unitPattern>
+			</unit>
+			<unit type="torque-pound-foot">
+				<displayName>pound-feet</displayName>
+				<unitPattern count="one">{0} pound-foot</unitPattern>
+				<unitPattern count="other">{0} pound-feet</unitPattern>
+			</unit>
+			<unit type="torque-newton-meter">
+				<displayName>newton-meter</displayName>
+				<unitPattern count="one">{0} newton-meter</unitPattern>
+				<unitPattern count="other">{0} newton-meter</unitPattern>
 			</unit>
 			<unit type="volume-cubic-kilometer">
 				<displayName>kubiko kilometro</displayName>
@@ -8453,9 +8714,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</unit>
 			<unit type="volume-gallon-imperial">
 				<displayName>Imp. gal</displayName>
-				<unitPattern count="one">{0} gal Imp.</unitPattern>
-				<unitPattern count="other">{0} gal Imp.</unitPattern>
-				<perUnitPattern>{0}/gal Imp.</perUnitPattern>
+				<unitPattern count="one" draft="provisional">{0} gal Imp.</unitPattern>
+				<unitPattern count="other" draft="provisional">{0} gal Imp.</unitPattern>
+				<perUnitPattern draft="provisional">{0} kada Imp. galon</perUnitPattern>
 			</unit>
 			<unit type="volume-quart">
 				<displayName>quarts</displayName>
@@ -8477,6 +8738,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} fluid ounce</unitPattern>
 				<unitPattern count="other">{0} na fluid ounce</unitPattern>
 			</unit>
+			<unit type="volume-fluid-ounce-imperial">
+				<displayName>Imp. fluid ounce</displayName>
+				<unitPattern count="one">{0} Imp. fluid ounce</unitPattern>
+				<unitPattern count="other">{0} Imp. fluid ounce</unitPattern>
+			</unit>
 			<unit type="volume-tablespoon">
 				<displayName>kutsara</displayName>
 				<unitPattern count="one">{0} kutsara</unitPattern>
@@ -8487,7 +8753,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} kutsarita</unitPattern>
 				<unitPattern count="other">{0} na kutsarita</unitPattern>
 			</unit>
+			<unit type="volume-barrel">
+				<displayName draft="contributed">bariles</displayName>
+				<unitPattern count="one">{0} bariles</unitPattern>
+				<unitPattern count="other">{0} bariles</unitPattern>
+			</unit>
 			<coordinateUnit>
+				<displayName>cardinal direction</displayName>
 				<coordinateUnitPattern type="east">{0}S</coordinateUnitPattern>
 				<coordinateUnitPattern type="north">{0}H</coordinateUnitPattern>
 				<coordinateUnitPattern type="south">{0}T</coordinateUnitPattern>
@@ -8497,6 +8769,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<unitLength type="short">
 			<compoundUnit type="per">
 				<compoundUnitPattern>{0}/{1}</compoundUnitPattern>
+			</compoundUnit>
+			<compoundUnit type="times">
+				<compoundUnitPattern>{0}⋅{1}</compoundUnitPattern>
 			</compoundUnit>
 			<unit type="acceleration-g-force">
 				<displayName>g-force</displayName>
@@ -8603,6 +8878,24 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} ppm</unitPattern>
 				<unitPattern count="other">{0} ppm</unitPattern>
 			</unit>
+			<unit type="concentr-percent">
+				<displayName>%</displayName>
+				<unitPattern count="one">{0}%</unitPattern>
+				<unitPattern count="other">{0}%</unitPattern>
+			</unit>
+			<unit type="concentr-permille">
+				<displayName>‰</displayName>
+				<unitPattern count="one">{0}‰</unitPattern>
+				<unitPattern count="other">{0}‰</unitPattern>
+			</unit>
+			<unit type="concentr-permyriad">
+				<displayName>permyriad</displayName>
+				<unitPattern count="one">{0}‱</unitPattern>
+				<unitPattern count="other">{0}‱</unitPattern>
+			</unit>
+			<unit type="concentr-mole">
+				<displayName>mole</displayName>
+			</unit>
 			<unit type="consumption-liter-per-kilometer">
 				<displayName>litro/km</displayName>
 				<unitPattern count="one">{0} L/km</unitPattern>
@@ -8619,9 +8912,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0} na mpg</unitPattern>
 			</unit>
 			<unit type="consumption-mile-per-gallon-imperial">
-				<displayName>mpg Imp.</displayName>
+				<displayName draft="provisional">milya/gal Imp.</displayName>
 				<unitPattern count="one">{0} mpg Imp.</unitPattern>
 				<unitPattern count="other">{0} mpg Imp.</unitPattern>
+			</unit>
+			<unit type="digital-petabyte">
+				<displayName>PByte</displayName>
+				<unitPattern count="one">{0} PB</unitPattern>
+				<unitPattern count="other">{0} PB</unitPattern>
 			</unit>
 			<unit type="digital-terabyte">
 				<displayName>TByte</displayName>
@@ -8677,6 +8975,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>siglo</displayName>
 				<unitPattern count="one">{0} siglo</unitPattern>
 				<unitPattern count="other">{0} siglo</unitPattern>
+			</unit>
+			<unit type="duration-decade">
+				<displayName draft="provisional">dec</displayName>
+				<unitPattern count="one" draft="provisional">{0} dec</unitPattern>
+				<unitPattern count="other" draft="provisional">{0} dec</unitPattern>
 			</unit>
 			<unit type="duration-year">
 				<displayName>taon</displayName>
@@ -8785,6 +9088,31 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} kWh</unitPattern>
 				<unitPattern count="other">{0} kWh</unitPattern>
 			</unit>
+			<unit type="energy-electronvolt">
+				<displayName>electronvolt</displayName>
+				<unitPattern count="one">{0} eV</unitPattern>
+				<unitPattern count="other">{0} eV</unitPattern>
+			</unit>
+			<unit type="energy-british-thermal-unit">
+				<displayName>BTU</displayName>
+				<unitPattern count="one">{0} Btu</unitPattern>
+				<unitPattern count="other">{0} Btu</unitPattern>
+			</unit>
+			<unit type="energy-therm-us">
+				<displayName>US therm</displayName>
+				<unitPattern count="one">{0} US therm</unitPattern>
+				<unitPattern count="other">{0} US therm</unitPattern>
+			</unit>
+			<unit type="force-pound-force">
+				<displayName>pound-force</displayName>
+				<unitPattern count="one">{0} lbf</unitPattern>
+				<unitPattern count="other">{0} lbf</unitPattern>
+			</unit>
+			<unit type="force-newton">
+				<displayName>newton</displayName>
+				<unitPattern count="one">{0} N</unitPattern>
+				<unitPattern count="other">{0} N</unitPattern>
+			</unit>
 			<unit type="frequency-gigahertz">
 				<displayName>GHz</displayName>
 				<unitPattern count="one">{0} GHz</unitPattern>
@@ -8804,6 +9132,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Hz</displayName>
 				<unitPattern count="one">{0} Hz</unitPattern>
 				<unitPattern count="other">{0} Hz</unitPattern>
+			</unit>
+			<unit type="graphics-pixel">
+				<displayName draft="provisional">mga pixel</displayName>
 			</unit>
 			<unit type="length-kilometer">
 				<displayName>km</displayName>
@@ -8892,8 +9223,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</unit>
 			<unit type="length-fathom">
 				<displayName draft="contributed">fathoms</displayName>
-				<unitPattern count="one" draft="contributed">{0} ftm</unitPattern>
-				<unitPattern count="other" draft="contributed">{0} ftm</unitPattern>
+				<unitPattern count="one" draft="contributed">{0} fth</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} fth</unitPattern>
 			</unit>
 			<unit type="length-nautical-mile">
 				<displayName>nmi</displayName>
@@ -8906,14 +9237,22 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0} smi</unitPattern>
 			</unit>
 			<unit type="length-point">
-				<displayName draft="contributed">puntos</displayName>
-				<unitPattern count="one" draft="contributed">{0} pt</unitPattern>
-				<unitPattern count="other" draft="contributed">{0} pt</unitPattern>
+				<displayName>puntos</displayName>
+				<unitPattern count="one">{0} pt</unitPattern>
+				<unitPattern count="other">{0} pt</unitPattern>
+			</unit>
+			<unit type="length-solar-radius">
+				<displayName>solar radii</displayName>
 			</unit>
 			<unit type="light-lux">
 				<displayName>lux</displayName>
 				<unitPattern count="one">{0} lx</unitPattern>
 				<unitPattern count="other">{0} lx</unitPattern>
+			</unit>
+			<unit type="light-solar-luminosity">
+				<displayName>solar luminosity</displayName>
+				<unitPattern count="one">{0} L☉</unitPattern>
+				<unitPattern count="other">{0} L☉</unitPattern>
 			</unit>
 			<unit type="mass-metric-ton">
 				<displayName>t</displayName>
@@ -8974,6 +9313,21 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} KD</unitPattern>
 				<unitPattern count="other">{0} KD</unitPattern>
 			</unit>
+			<unit type="mass-dalton">
+				<displayName>dalton</displayName>
+				<unitPattern count="one">{0} Da</unitPattern>
+				<unitPattern count="other">{0} Da</unitPattern>
+			</unit>
+			<unit type="mass-earth-mass">
+				<displayName>Earth mass</displayName>
+				<unitPattern count="one">{0} M⊕</unitPattern>
+				<unitPattern count="other">{0} M⊕</unitPattern>
+			</unit>
+			<unit type="mass-solar-mass">
+				<displayName>solar mass</displayName>
+				<unitPattern count="one">{0} M☉</unitPattern>
+				<unitPattern count="other">{0} M☉</unitPattern>
+			</unit>
 			<unit type="power-gigawatt">
 				<displayName>GW</displayName>
 				<unitPattern count="one">{0} GW</unitPattern>
@@ -9004,11 +9358,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} hp</unitPattern>
 				<unitPattern count="other">{0} hp</unitPattern>
 			</unit>
-			<unit type="pressure-hectopascal">
-				<displayName>hPa</displayName>
-				<unitPattern count="one">{0} hPa</unitPattern>
-				<unitPattern count="other">{0} hPa</unitPattern>
-			</unit>
 			<unit type="pressure-millimeter-of-mercury">
 				<displayName>milimetro ng asoge</displayName>
 				<unitPattern count="one">{0} mm Hg</unitPattern>
@@ -9028,6 +9377,26 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>mbar</displayName>
 				<unitPattern count="one">{0} mb</unitPattern>
 				<unitPattern count="other">{0} mb</unitPattern>
+			</unit>
+			<unit type="pressure-atmosphere">
+				<displayName>atm</displayName>
+				<unitPattern count="one">{0} atm</unitPattern>
+				<unitPattern count="other">{0} atm</unitPattern>
+			</unit>
+			<unit type="pressure-hectopascal">
+				<displayName>hPa</displayName>
+				<unitPattern count="one">{0} hPa</unitPattern>
+				<unitPattern count="other">{0} hPa</unitPattern>
+			</unit>
+			<unit type="pressure-kilopascal">
+				<displayName>kPa</displayName>
+				<unitPattern count="one">{0} kPa</unitPattern>
+				<unitPattern count="other">{0} kPa</unitPattern>
+			</unit>
+			<unit type="pressure-megapascal">
+				<displayName>MPa</displayName>
+				<unitPattern count="one">{0} MPa</unitPattern>
+				<unitPattern count="other">{0} MPa</unitPattern>
 			</unit>
 			<unit type="speed-kilometer-per-hour">
 				<displayName>km/hr</displayName>
@@ -9068,6 +9437,16 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>deg. K</displayName>
 				<unitPattern count="one">{0}°K</unitPattern>
 				<unitPattern count="other">{0}°K</unitPattern>
+			</unit>
+			<unit type="torque-pound-foot">
+				<displayName>lbf⋅ft</displayName>
+				<unitPattern count="one">{0} lbf⋅ft</unitPattern>
+				<unitPattern count="other">{0} lbf⋅ft</unitPattern>
+			</unit>
+			<unit type="torque-newton-meter">
+				<displayName>N⋅m</displayName>
+				<unitPattern count="one">{0} N⋅m</unitPattern>
+				<unitPattern count="other">{0} N⋅m</unitPattern>
 			</unit>
 			<unit type="volume-cubic-kilometer">
 				<displayName>km³</displayName>
@@ -9194,7 +9573,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} tsp</unitPattern>
 				<unitPattern count="other">{0} tsp</unitPattern>
 			</unit>
+			<unit type="volume-barrel">
+				<displayName>bariles</displayName>
+			</unit>
 			<coordinateUnit>
+				<displayName>direction</displayName>
 				<coordinateUnitPattern type="east">{0}S</coordinateUnitPattern>
 				<coordinateUnitPattern type="north">{0}H</coordinateUnitPattern>
 				<coordinateUnitPattern type="south">{0}T</coordinateUnitPattern>
@@ -9211,13 +9594,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0}G</unitPattern>
 			</unit>
 			<unit type="acceleration-meter-per-second-squared">
-				<displayName draft="contributed">m/s²</displayName>
 				<unitPattern count="one" draft="contributed">{0}m/s²</unitPattern>
-				<unitPattern count="other" draft="contributed">{0} m/s²</unitPattern>
-			</unit>
-			<unit type="angle-degree">
-				<unitPattern count="one">{0}°</unitPattern>
-				<unitPattern count="other">{0}°</unitPattern>
+				<unitPattern count="other" draft="contributed">{0}m/s²</unitPattern>
 			</unit>
 			<unit type="angle-arc-minute">
 				<unitPattern count="one">{0}′</unitPattern>
@@ -9236,8 +9614,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0}ha</unitPattern>
 			</unit>
 			<unit type="area-square-meter">
-				<unitPattern count="one">{0} m²</unitPattern>
-				<unitPattern count="other">{0} m²</unitPattern>
+				<unitPattern count="one" draft="contributed">{0} m²</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} m²</unitPattern>
 			</unit>
 			<unit type="area-square-mile">
 				<unitPattern count="one">{0}mi²</unitPattern>
@@ -9251,15 +9629,15 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0}ft²</unitPattern>
 				<unitPattern count="other">{0}ft²</unitPattern>
 			</unit>
+			<unit type="concentr-percent">
+				<displayName>%</displayName>
+				<unitPattern count="one">{0}%</unitPattern>
+				<unitPattern count="other">{0}%</unitPattern>
+			</unit>
 			<unit type="consumption-liter-per-100kilometers">
 				<displayName>L/100km</displayName>
 				<unitPattern count="one">{0}L/100km</unitPattern>
 				<unitPattern count="other">{0}L/100km</unitPattern>
-			</unit>
-			<unit type="duration-century">
-				<displayName draft="contributed">c</displayName>
-				<unitPattern count="one" draft="contributed">{0} c</unitPattern>
-				<unitPattern count="other" draft="contributed">{0} c</unitPattern>
 			</unit>
 			<unit type="duration-year">
 				<displayName>taon</displayName>
@@ -9271,7 +9649,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>buwan</displayName>
 				<unitPattern count="one">{0}buwan</unitPattern>
 				<unitPattern count="other">{0} buwan</unitPattern>
-				<perUnitPattern draft="contributed">{0}/m</perUnitPattern>
 			</unit>
 			<unit type="duration-week">
 				<displayName>linggo</displayName>
@@ -9283,13 +9660,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>araw</displayName>
 				<unitPattern count="one">{0} araw</unitPattern>
 				<unitPattern count="other">{0} na araw</unitPattern>
-				<perUnitPattern draft="contributed">{0}/d</perUnitPattern>
 			</unit>
 			<unit type="duration-hour">
 				<displayName>oras</displayName>
 				<unitPattern count="one">{0} oras</unitPattern>
 				<unitPattern count="other">{0} oras</unitPattern>
-				<perUnitPattern draft="contributed">{0}/h</perUnitPattern>
 			</unit>
 			<unit type="duration-minute">
 				<displayName>min.</displayName>
@@ -9362,34 +9737,29 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0}pm</unitPattern>
 			</unit>
 			<unit type="length-mile">
-				<displayName draft="contributed">mi</displayName>
 				<unitPattern count="one">{0}mi</unitPattern>
 				<unitPattern count="other">{0}mi</unitPattern>
 			</unit>
 			<unit type="length-yard">
-				<displayName draft="contributed">yd</displayName>
 				<unitPattern count="one">{0}yd</unitPattern>
 				<unitPattern count="other">{0}yd</unitPattern>
 			</unit>
 			<unit type="length-foot">
-				<displayName draft="contributed">ft</displayName>
 				<unitPattern count="one">{0}′</unitPattern>
 				<unitPattern count="other">{0}′</unitPattern>
 				<perUnitPattern draft="contributed">{0}/ft</perUnitPattern>
 			</unit>
 			<unit type="length-inch">
-				<displayName draft="contributed">in</displayName>
 				<unitPattern count="one">{0}″</unitPattern>
 				<unitPattern count="other">{0}″</unitPattern>
 				<perUnitPattern draft="contributed">{0}/in</perUnitPattern>
 			</unit>
 			<unit type="length-parsec">
 				<displayName draft="contributed">parsecs</displayName>
-				<unitPattern count="one" draft="contributed">{0} pc</unitPattern>
+				<unitPattern count="one" draft="contributed">{0}pc</unitPattern>
 				<unitPattern count="other" draft="contributed">{0}pc</unitPattern>
 			</unit>
 			<unit type="length-light-year">
-				<displayName draft="contributed">ly</displayName>
 				<unitPattern count="one">{0}ly</unitPattern>
 				<unitPattern count="other">{0}ly</unitPattern>
 			</unit>
@@ -9401,12 +9771,12 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<unit type="length-furlong">
 				<displayName draft="contributed">furlong</displayName>
 				<unitPattern count="one" draft="contributed">{0}fur</unitPattern>
-				<unitPattern count="other" draft="contributed">{0} fur</unitPattern>
+				<unitPattern count="other" draft="contributed">{0}fur</unitPattern>
 			</unit>
 			<unit type="length-fathom">
 				<displayName draft="contributed">fathom</displayName>
-				<unitPattern count="one" draft="contributed">{0}fm</unitPattern>
-				<unitPattern count="other" draft="contributed">{0}fm</unitPattern>
+				<unitPattern count="one" draft="contributed">{0}fth</unitPattern>
+				<unitPattern count="other" draft="contributed">{0}fth</unitPattern>
 			</unit>
 			<unit type="length-nautical-mile">
 				<displayName draft="contributed">nmi</displayName>
@@ -9461,7 +9831,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other" draft="contributed">{0}st</unitPattern>
 			</unit>
 			<unit type="mass-pound">
-				<displayName draft="contributed">lb</displayName>
 				<unitPattern count="one">{0}#</unitPattern>
 				<unitPattern count="other">{0}#</unitPattern>
 				<perUnitPattern draft="contributed">{0}/lb</perUnitPattern>
@@ -9473,8 +9842,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<perUnitPattern draft="contributed">{0}/oz</perUnitPattern>
 			</unit>
 			<unit type="mass-ounce-troy">
-				<displayName draft="contributed">oz t</displayName>
-				<unitPattern count="one" draft="contributed">{0} oz t</unitPattern>
+				<unitPattern count="one" draft="contributed">{0}oz t</unitPattern>
 				<unitPattern count="other" draft="contributed">{0}oz t</unitPattern>
 			</unit>
 			<unit type="mass-carat">
@@ -9493,11 +9861,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<unit type="power-horsepower">
 				<unitPattern count="one">{0}hp</unitPattern>
 				<unitPattern count="other">{0}hp</unitPattern>
-			</unit>
-			<unit type="pressure-hectopascal">
-				<displayName draft="contributed">hPa</displayName>
-				<unitPattern count="one">{0}hPa</unitPattern>
-				<unitPattern count="other">{0}hPa</unitPattern>
 			</unit>
 			<unit type="pressure-millimeter-of-mercury">
 				<displayName draft="contributed">mmHg</displayName>
@@ -9518,6 +9881,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName draft="contributed">mbar</displayName>
 				<unitPattern count="one">{0}mb</unitPattern>
 				<unitPattern count="other">{0}mb</unitPattern>
+			</unit>
+			<unit type="pressure-hectopascal">
+				<displayName draft="contributed">hPa</displayName>
+				<unitPattern count="one">{0}hPa</unitPattern>
+				<unitPattern count="other">{0}hPa</unitPattern>
 			</unit>
 			<unit type="speed-kilometer-per-hour">
 				<displayName>km/hr</displayName>
@@ -9550,12 +9918,10 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0}°C</unitPattern>
 			</unit>
 			<unit type="temperature-fahrenheit">
-				<displayName draft="contributed">°F</displayName>
-				<unitPattern count="one">{0}°F</unitPattern>
-				<unitPattern count="other">{0}°F</unitPattern>
+				<unitPattern count="one" draft="contributed">{0}°F</unitPattern>
+				<unitPattern count="other" draft="contributed">{0}°F</unitPattern>
 			</unit>
 			<unit type="temperature-kelvin">
-				<displayName draft="contributed">K</displayName>
 				<unitPattern count="one" draft="contributed">{0}K</unitPattern>
 				<unitPattern count="other" draft="contributed">{0}K</unitPattern>
 			</unit>
@@ -9573,6 +9939,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0}L</unitPattern>
 			</unit>
 			<coordinateUnit>
+				<displayName>direction</displayName>
 				<coordinateUnitPattern type="east">{0}S</coordinateUnitPattern>
 				<coordinateUnitPattern type="north">{0}H</coordinateUnitPattern>
 				<coordinateUnitPattern type="south">{0}T</coordinateUnitPattern>
@@ -9602,9 +9969,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<listPatternPart type="end">{0}, o {1}</listPatternPart>
 			<listPatternPart type="2">{0} o {1}</listPatternPart>
 		</listPattern>
+		<listPattern type="standard-narrow">
+			<listPatternPart type="end">{0}, {1}</listPatternPart>
+			<listPatternPart type="2">{0}, {1}</listPatternPart>
+		</listPattern>
 		<listPattern type="standard-short">
-			<listPatternPart type="start">{0}, {1}</listPatternPart>
-			<listPatternPart type="middle">{0}, {1}</listPatternPart>
 			<listPatternPart type="end">{0}, at {1}</listPatternPart>
 			<listPatternPart type="2">{0} at {1}</listPatternPart>
 		</listPattern>
@@ -9637,14 +10006,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<characterLabelPattern type="all">{0} — lahat</characterLabelPattern>
 		<characterLabelPattern type="category-list">{0}: {1}</characterLabelPattern>
 		<characterLabelPattern type="compatibility">{0} — pagiging nababagay</characterLabelPattern>
-		<characterLabelPattern type="enclosed">{0} — enclosed</characterLabelPattern>
-		<characterLabelPattern type="extended">{0} — extended</characterLabelPattern>
+		<characterLabelPattern type="enclosed">{0} — naka-enclose</characterLabelPattern>
+		<characterLabelPattern type="extended">{0} — pinahaba</characterLabelPattern>
 		<characterLabelPattern type="historic">{0} — makasaysayan</characterLabelPattern>
 		<characterLabelPattern type="miscellaneous">{0} — miscellaneous</characterLabelPattern>
 		<characterLabelPattern type="other">{0} — iba pa</characterLabelPattern>
 		<characterLabelPattern type="scripts">mga script — {0}</characterLabelPattern>
 		<characterLabelPattern type="strokes" count="one">{0} stroke</characterLabelPattern>
-		<characterLabelPattern type="strokes" count="other">{0} strokes</characterLabelPattern>
+		<characterLabelPattern type="strokes" count="other">{0} (na) stroke</characterLabelPattern>
 		<characterLabel type="activities">aktibidad</characterLabel>
 		<characterLabel type="african_scripts">African script</characterLabel>
 		<characterLabel type="american_scripts">American script</characterLabel>
@@ -9657,23 +10026,22 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<characterLabel type="building">gusali</characterLabel>
 		<characterLabel type="bullets_stars">bullet o bituin</characterLabel>
 		<characterLabel type="consonantal_jamo">consonantal jamo</characterLabel>
-		<characterLabel type="currency_symbols">simbolo ng currency</characterLabel>
+		<characterLabel type="currency_symbols">simbolo ng pera</characterLabel>
 		<characterLabel type="dash_connector">dash o connector</characterLabel>
 		<characterLabel type="digits">digit</characterLabel>
 		<characterLabel type="dingbats">dingbat</characterLabel>
-		<characterLabel type="divination_symbols">divination symbol</characterLabel>
+		<characterLabel type="divination_symbols">simbolo ng paghula</characterLabel>
 		<characterLabel type="downwards_arrows">pababang arrow</characterLabel>
 		<characterLabel type="downwards_upwards_arrows">pababa at pataas na arrow</characterLabel>
-		<characterLabel type="east_asian_scripts">Script ng Silangang-Asya</characterLabel>
-		<characterLabel type="emoji">Emoji</characterLabel>
-		<characterLabel type="european_scripts">Mga Script sa Europa</characterLabel>
+		<characterLabel type="east_asian_scripts">Script ng Silangang Asya</characterLabel>
+		<characterLabel type="european_scripts">Script sa Europa</characterLabel>
 		<characterLabel type="female">babae</characterLabel>
 		<characterLabel type="flag">bandila</characterLabel>
 		<characterLabel type="flags">mga bandila</characterLabel>
 		<characterLabel type="food_drink">pagkain at inumin</characterLabel>
 		<characterLabel type="format">format</characterLabel>
-		<characterLabel type="format_whitespace">format &amp; whitespace</characterLabel>
-		<characterLabel type="full_width_form_variant">Mga Baryanteng Nasa Anyo na Buo ang Lapad</characterLabel>
+		<characterLabel type="format_whitespace">format at whitespace</characterLabel>
+		<characterLabel type="full_width_form_variant">full-width variant</characterLabel>
 		<characterLabel type="geometric_shapes">geometrikong hugis</characterLabel>
 		<characterLabel type="half_width_form_variant">half-width variant</characterLabel>
 		<characterLabel type="han_characters">Han character</characterLabel>
@@ -9696,7 +10064,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<characterLabel type="math_symbols">simbolo na pangmatematika</characterLabel>
 		<characterLabel type="middle_eastern_scripts">Script sa Gitnang-silangan</characterLabel>
 		<characterLabel type="miscellaneous">sari-sari</characterLabel>
-		<characterLabel type="modern_scripts">modern script</characterLabel>
+		<characterLabel type="modern_scripts">modernong script</characterLabel>
 		<characterLabel type="modifier">modifier</characterLabel>
 		<characterLabel type="musical_symbols">simbolo ng musika</characterLabel>
 		<characterLabel type="nature">kalikasan</characterLabel>
@@ -9706,14 +10074,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<characterLabel type="other">Iba pa</characterLabel>
 		<characterLabel type="paired">nakapares</characterLabel>
 		<characterLabel type="person">tao</characterLabel>
-		<characterLabel type="phonetic_alphabet">Ponetikong Alpabeto</characterLabel>
+		<characterLabel type="phonetic_alphabet">ponetikong alpabeto</characterLabel>
 		<characterLabel type="pictographs">pictograph</characterLabel>
 		<characterLabel type="place">lugar</characterLabel>
 		<characterLabel type="plant">halaman</characterLabel>
 		<characterLabel type="punctuation">bantas</characterLabel>
 		<characterLabel type="rightwards_arrows">pakanang arrow</characterLabel>
 		<characterLabel type="sign_standard_symbols">tanda o simbolo</characterLabel>
-		<characterLabel type="small_form_variant">maliliit na baryante</characterLabel>
+		<characterLabel type="small_form_variant">maliliit na variant</characterLabel>
 		<characterLabel type="smiley">smiley</characterLabel>
 		<characterLabel type="smileys_people">smiley o tao</characterLabel>
 		<characterLabel type="south_asian_scripts">Script sa Timog-asya</characterLabel>
@@ -9722,14 +10090,84 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<characterLabel type="sport">sport</characterLabel>
 		<characterLabel type="symbols">simbolo</characterLabel>
 		<characterLabel type="technical_symbols">teknikal na simbolo</characterLabel>
-		<characterLabel type="tone_marks">marka ng tone</characterLabel>
+		<characterLabel type="tone_marks">marka ng tono</characterLabel>
 		<characterLabel type="travel">paglalakbay</characterLabel>
 		<characterLabel type="travel_places">paglalakbay o lugar</characterLabel>
 		<characterLabel type="upwards_arrows">mga pataas na arrow</characterLabel>
-		<characterLabel type="variant_forms">baryante</characterLabel>
+		<characterLabel type="variant_forms">variant</characterLabel>
 		<characterLabel type="vocalic_jamo">vocalic jamo</characterLabel>
-		<characterLabel type="weather">lagay ng panahon</characterLabel>
+		<characterLabel type="weather">panahon</characterLabel>
 		<characterLabel type="western_asian_scripts">Script sa Kanlurang Asya</characterLabel>
 		<characterLabel type="whitespace">whitespace</characterLabel>
 	</characterLabels>
+	<typographicNames>
+		<axisName type="ital">italic</axisName>
+		<axisName type="opsz">optical size</axisName>
+		<axisName type="slnt">slant</axisName>
+		<axisName type="wdth">width</axisName>
+		<axisName type="wght">weight</axisName>
+		<styleName type="ital" subtype="1">cursive</styleName>
+		<styleName type="opsz" subtype="8">caption</styleName>
+		<styleName type="opsz" subtype="12">text</styleName>
+		<styleName type="opsz" subtype="18">titling</styleName>
+		<styleName type="opsz" subtype="72">display</styleName>
+		<styleName type="opsz" subtype="144">poster</styleName>
+		<styleName type="slnt" subtype="-12">backslanted</styleName>
+		<styleName type="slnt" subtype="0">upright</styleName>
+		<styleName type="slnt" subtype="12">slanted</styleName>
+		<styleName type="slnt" subtype="24">extra-slanted</styleName>
+		<styleName type="wdth" subtype="50">ultracondensed</styleName>
+		<styleName type="wdth" subtype="50" alt="compressed">ultracompressed</styleName>
+		<styleName type="wdth" subtype="50" alt="narrow">ultranarrow</styleName>
+		<styleName type="wdth" subtype="62.5">extra-condensed</styleName>
+		<styleName type="wdth" subtype="62.5" alt="compressed">extra-compressed</styleName>
+		<styleName type="wdth" subtype="62.5" alt="narrow">extra-narrow</styleName>
+		<styleName type="wdth" subtype="75">condensed</styleName>
+		<styleName type="wdth" subtype="75" alt="compressed">compressed</styleName>
+		<styleName type="wdth" subtype="75" alt="narrow">compressed</styleName>
+		<styleName type="wdth" subtype="87.5">semicondensed</styleName>
+		<styleName type="wdth" subtype="87.5" alt="compressed">semicompressed</styleName>
+		<styleName type="wdth" subtype="87.5" alt="narrow">seminarrow</styleName>
+		<styleName type="wdth" subtype="100">normal</styleName>
+		<styleName type="wdth" subtype="112.5">semiexpanded</styleName>
+		<styleName type="wdth" subtype="112.5" alt="extended">semiextended</styleName>
+		<styleName type="wdth" subtype="112.5" alt="wide">semiwide</styleName>
+		<styleName type="wdth" subtype="125">expanded</styleName>
+		<styleName type="wdth" subtype="125" alt="extended">extended</styleName>
+		<styleName type="wdth" subtype="125" alt="wide">wide</styleName>
+		<styleName type="wdth" subtype="150">extra-expanded</styleName>
+		<styleName type="wdth" subtype="150" alt="extended">extra-extended</styleName>
+		<styleName type="wdth" subtype="150" alt="wide">extra-wide</styleName>
+		<styleName type="wdth" subtype="200">ultraexpanded</styleName>
+		<styleName type="wdth" subtype="200" alt="extended">ultraextended</styleName>
+		<styleName type="wdth" subtype="200" alt="wide">ultrawide</styleName>
+		<styleName type="wght" subtype="100">thin</styleName>
+		<styleName type="wght" subtype="200">extra-light</styleName>
+		<styleName type="wght" subtype="200" alt="ultra">ultralight</styleName>
+		<styleName type="wght" subtype="300">light</styleName>
+		<styleName type="wght" subtype="350">semilight</styleName>
+		<styleName type="wght" subtype="380">book</styleName>
+		<styleName type="wght" subtype="400">regular</styleName>
+		<styleName type="wght" subtype="500">medium</styleName>
+		<styleName type="wght" subtype="600">semibold</styleName>
+		<styleName type="wght" subtype="600" alt="demi">demibold</styleName>
+		<styleName type="wght" subtype="700">bold</styleName>
+		<styleName type="wght" subtype="800">extra-bold</styleName>
+		<styleName type="wght" subtype="900">black</styleName>
+		<styleName type="wght" subtype="900" alt="heavy">heavy</styleName>
+		<styleName type="wght" subtype="950">extra-black</styleName>
+		<styleName type="wght" subtype="950" alt="ultrablack">ultrablack</styleName>
+		<styleName type="wght" subtype="950" alt="ultraheavy">ultraheavy</styleName>
+		<featureName type="afrc">vertical fractions</featureName>
+		<featureName type="cpsp">capital spacing</featureName>
+		<featureName type="dlig">optional ligatures</featureName>
+		<featureName type="frac">diagonal fractions</featureName>
+		<featureName type="lnum">lining numbers</featureName>
+		<featureName type="onum">old-style figures</featureName>
+		<featureName type="ordn">ordinals</featureName>
+		<featureName type="pnum">proportional numbers</featureName>
+		<featureName type="smcp">small capitals</featureName>
+		<featureName type="tnum">tabular numbers</featureName>
+		<featureName type="zero">slashed zero</featureName>
+	</typographicNames>
 </ldml>

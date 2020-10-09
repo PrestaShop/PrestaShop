@@ -1,10 +1,11 @@
 /**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 import $ from 'jquery';
 import 'velocity-animate';
@@ -28,10 +28,8 @@ import 'velocity-animate';
 export default class ProductSelect {
   init() {
     const MAX_THUMBS = 5;
-    const FLAG_MARGIN = 10;
     let $arrows =   $('.js-modal-arrows');
     let $thumbnails = $('.js-modal-product-images');
-    let $onsale =  $('.on-sale');
 
     $('body').on('click','.js-modal-thumb', (event) => {
       if($('.js-modal-thumb').hasClass('selected')){
@@ -48,9 +46,6 @@ export default class ProductSelect {
       }
     });
 
-    if($onsale.length && $('#product').length){
-      $('.new').css('top',$onsale.height() + FLAG_MARGIN);
-    }
     if ($('.js-modal-product-images li').length <= MAX_THUMBS) {
       $arrows.css('opacity', '.2');
     } else {

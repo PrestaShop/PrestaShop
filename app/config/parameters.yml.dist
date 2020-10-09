@@ -23,3 +23,5 @@ parameters:
     ps_cache_enable: false
     ps_creation_date: ~
     locale: en-US
+
+    use_debug_toolbar: true

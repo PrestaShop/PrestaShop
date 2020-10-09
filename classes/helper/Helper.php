@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 class HelperCore
 {
@@ -58,7 +58,7 @@ class HelperCore
      */
     public $base_tpl = 'content.tpl';
 
-    public $tpl_vars = array();
+    public $tpl_vars = [];
 
     public function __construct()
     {
@@ -119,11 +119,11 @@ class HelperCore
      */
     public static function renderAdminCategorieTree(
         $translations,
-        $selected_cat = array(),
+        $selected_cat = [],
         $input_name = 'categoryBox',
         $use_radio = false,
         $use_search = false,
-        $disabled_categories = array(),
+        $disabled_categories = [],
         $use_in_popup = false
     ) {
         Tools::displayAsDeprecated();
@@ -132,7 +132,7 @@ class HelperCore
         if (isset($translations['Root'])) {
             $root = $translations['Root'];
         } elseif (isset($translations['Home'])) {
-            $root = array('name' => $translations['Home'], 'id_category' => 1);
+            $root = ['name' => $translations['Home'], 'id_category' => 1];
         } else {
             throw new PrestaShopException('Missing root category parameter.');
         }
@@ -159,22 +159,22 @@ class HelperCore
      */
     public function renderCategoryTree(
         $root = null,
-        $selected_cat = array(),
+        $selected_cat = [],
         $input_name = 'categoryBox',
         $use_radio = false,
         $use_search = false,
-        $disabled_categories = array()
+        $disabled_categories = []
     ) {
         $translator = Context::getContext()->getTranslator();
 
-        $translations = array(
-            'selected' => $translator->trans('Selected', array(), 'Admin.Global'),
-            'Collapse All' => $translator->trans('Collapse All', array(), 'Admin.Actions'),
-            'Expand All' => $translator->trans('Expand All', array(), 'Admin.Actions'),
-            'Check All' => $translator->trans('Check All', array(), 'Admin.Actions'),
-            'Uncheck All' => $translator->trans('Uncheck All', array(), 'Admin.Actions'),
-            'search' => $translator->trans('Find a category', array(), 'Admin.Actions'),
-        );
+        $translations = [
+            'selected' => $translator->trans('Selected', [], 'Admin.Global'),
+            'Collapse All' => $translator->trans('Collapse All', [], 'Admin.Actions'),
+            'Expand All' => $translator->trans('Expand All', [], 'Admin.Actions'),
+            'Check All' => $translator->trans('Check All', [], 'Admin.Actions'),
+            'Uncheck All' => $translator->trans('Uncheck All', [], 'Admin.Actions'),
+            'search' => $translator->trans('Find a category', [], 'Admin.Actions'),
+        ];
 
         if (Tools::isSubmit('id_shop')) {
             $id_shop = Tools::getValue('id_shop');
@@ -189,7 +189,7 @@ class HelperCore
         $root_category = Category::getRootCategory(null, $shop);
         $disabled_categories[] = (int) Configuration::get('PS_ROOT_CATEGORY');
         if (!$root) {
-            $root = array('name' => $root_category->name, 'id_category' => $root_category->id);
+            $root = ['name' => $root_category->name, 'id_category' => $root_category->id];
         }
 
         if (!$use_radio) {
@@ -319,8 +319,8 @@ class HelperCore
      */
     public function renderRequiredFields($class_name, $identifier, $table_fields)
     {
-        $rules = call_user_func_array(array($class_name, 'getValidationRules'), array($class_name));
-        $required_class_fields = array($identifier);
+        $rules = call_user_func_array([$class_name, 'getValidationRules'], [$class_name]);
+        $required_class_fields = [$identifier];
         foreach ($rules['required'] as $required) {
             $required_class_fields[] = $required;
         }
@@ -329,19 +329,19 @@ class HelperCore
         $object = new $class_name();
         $res = $object->getFieldsRequiredDatabase();
 
-        $required_fields = array();
+        $required_fields = [];
         foreach ($res as $row) {
             $required_fields[(int) $row['id_required_field']] = $row['field_name'];
         }
 
-        $this->tpl_vars = array(
+        $this->tpl_vars = [
             'table_fields' => $table_fields,
             'irow' => 0,
             'required_class_fields' => $required_class_fields,
             'required_fields' => $required_fields,
             'current' => $this->currentIndex,
             'token' => $this->token,
-        );
+        ];
 
         $tpl = $this->createTemplate('helpers/required_fields.tpl');
         $tpl->assign($this->tpl_vars);
@@ -351,10 +351,10 @@ class HelperCore
 
     public function renderModulesList($modules_list)
     {
-        $this->tpl_vars = array(
+        $this->tpl_vars = [
             'modules_list' => $modules_list,
             'modules_uri' => __PS_BASE_URI__ . basename(_PS_MODULE_DIR_),
-        );
+        ];
         // The translations for this are defined by AdminModules, so override the context for the translations
         $override_controller_name_for_translations = Context::getContext()->override_controller_name_for_translations;
         Context::getContext()->override_controller_name_for_translations = 'AdminModules';

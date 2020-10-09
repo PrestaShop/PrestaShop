@@ -25,3 +25,11 @@ _seo_urls:
 _contacts:
     resource: "contacts.yml"
     prefix: /contacts/
+
+_order_states:
+  resource: "order_states.yml"
+  prefix: /order-states/
+
+_order_return_states:
+  resource: "order_return_states.yml"
+  prefix: /order-return-states/

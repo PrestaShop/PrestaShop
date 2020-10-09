@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 class OrderReturnCore extends ObjectModel
 {
@@ -49,18 +49,18 @@ class OrderReturnCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'order_return',
         'primary' => 'id_order_return',
-        'fields' => array(
-            'id_customer' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_order' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'question' => array('type' => self::TYPE_HTML, 'validate' => 'isCleanHtml'),
-            'state' => array('type' => self::TYPE_STRING),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-        ),
-    );
+        'fields' => [
+            'id_customer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'question' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml'],
+            'state' => ['type' => self::TYPE_STRING],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+        ],
+    ];
 
     public function addReturnDetail($order_detail_list, $product_qty_list, $customization_ids, $customization_qty_input)
     {
@@ -68,7 +68,7 @@ class OrderReturnCore extends ObjectModel
         if ($order_detail_list) {
             foreach ($order_detail_list as $key => $order_detail) {
                 if ($qty = (int) $product_qty_list[$key]) {
-                    Db::getInstance()->insert('order_return_detail', array('id_order_return' => (int) $this->id, 'id_order_detail' => (int) $order_detail, 'product_quantity' => $qty, 'id_customization' => 0));
+                    Db::getInstance()->insert('order_return_detail', ['id_order_return' => (int) $this->id, 'id_order_detail' => (int) $order_detail, 'product_quantity' => $qty, 'id_customization' => 0]);
                 }
             }
         }
@@ -77,7 +77,7 @@ class OrderReturnCore extends ObjectModel
             foreach ($customization_ids as $order_detail_id => $customizations) {
                 foreach ($customizations as $customization_id) {
                     if ($quantity = (int) $customization_qty_input[(int) $customization_id]) {
-                        Db::getInstance()->insert('order_return_detail', array('id_order_return' => (int) $this->id, 'id_order_detail' => (int) $order_detail_id, 'product_quantity' => $quantity, 'id_customization' => (int) $customization_id));
+                        Db::getInstance()->insert('order_return_detail', ['id_order_return' => (int) $this->id, 'id_order_detail' => (int) $order_detail_id, 'product_quantity' => $quantity, 'id_customization' => (int) $customization_id]);
                     }
                 }
             }
@@ -102,6 +102,9 @@ class OrderReturnCore extends ObjectModel
         /* Quantity check */
         if ($order_detail_list) {
             foreach (array_keys($order_detail_list) as $key) {
+                if (!isset($product_qty_list[$key])) {
+                    return false;
+                }
                 if ($qty = (int) $product_qty_list[$key]) {
                     if ($products[$key]['product_quantity'] - $qty < 0) {
                         return false;
@@ -183,12 +186,12 @@ class OrderReturnCore extends ObjectModel
     {
         $products_ret = OrderReturn::getOrdersReturnDetail($order_return_id);
         $products = $order->getProducts();
-        $tmp = array();
+        $tmp = [];
         foreach ($products_ret as $return_detail) {
             $tmp[$return_detail['id_order_detail']]['quantity'] = isset($tmp[$return_detail['id_order_detail']]['quantity']) ? $tmp[$return_detail['id_order_detail']]['quantity'] + (int) $return_detail['product_quantity'] : (int) $return_detail['product_quantity'];
             $tmp[$return_detail['id_order_detail']]['customizations'] = (int) $return_detail['id_customization'];
         }
-        $res_tab = array();
+        $res_tab = [];
         foreach ($products as $key => $product) {
             if (isset($tmp[$product['id_order_detail']])) {
                 $res_tab[$key] = $product;
@@ -262,7 +265,7 @@ class OrderReturnCore extends ObjectModel
             return;
         }
 
-        $detail_list = array();
+        $detail_list = [];
         foreach ($details as $detail) {
             $detail_list[$detail['id_order_detail']] = $detail;
         }

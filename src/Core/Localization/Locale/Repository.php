@@ -1,12 +1,13 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -17,24 +18,22 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Localization\Locale;
 
 use PrestaShop\Decimal\Operation\Rounding;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\Locale as CldrLocale;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository as CldrLocaleRepository;
-use PrestaShop\PrestaShop\Core\Localization\Currency;
-use PrestaShop\PrestaShop\Core\Localization\Currency\Repository as CurrencyRepository;
+use PrestaShop\PrestaShop\Core\Localization\Currency\RepositoryInterface as CurrencyRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Number\Formatter as NumberFormatter;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Factory as SpecificationFactory;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberCollection as PriceSpecificationMap;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
@@ -43,10 +42,16 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecific
  * Locale repository.
  *
  * Used to get locale instances.
- * This repository manages all dependencies needed to create a complete Locale instance
+ * This repository manages all dependencies needed to create a complete Localization/Locale instance
  */
 class Repository implements RepositoryInterface
 {
+    /**
+     * Max number of digits to use in the fraction part of a decimal number
+     * This is a default value.
+     */
+    const MAX_FRACTION_DIGITS = 3;
+
     /**
      * Repository used to retrieve low level CLDR locale objects.
      *
@@ -57,7 +62,7 @@ class Repository implements RepositoryInterface
     /**
      * Repository used to retrieve Currency objects.
      *
-     * @var CurrencyRepository
+     * @var CurrencyRepositoryInterface
      */
     protected $currencyRepository;
 
@@ -71,7 +76,7 @@ class Repository implements RepositoryInterface
 
     /**
      * Numbering system to use when formatting numbers.
-     * Default value : "latn".
+     * Default value: "latn".
      *
      * @see http://cldr.unicode.org/translation/numbering-systems
      *
@@ -82,7 +87,7 @@ class Repository implements RepositoryInterface
     /**
      * Currency display type
      * Default is "symbol". But sometimes you may want to display the currency code instead.
-     * Possible values : PrestaShop\PrestaShop\Core\Localization\Specification\Price::CURRENCY_DISPLAY_*.
+     * Possible values: PrestaShop\PrestaShop\Core\Localization\Specification\Price::CURRENCY_DISPLAY_*.
      *
      * @var string
      */
@@ -95,18 +100,42 @@ class Repository implements RepositoryInterface
      */
     protected $locales;
 
+    /**
+     * Should we group digits in a number's integer part ?
+     *
+     * @var bool
+     */
+    protected $numberGroupingUsed;
+
+    /**
+     * Max number of digits to display in a number's decimal part.
+     *
+     * @var int
+     */
+    protected $maxFractionDigits;
+
+    /**
+     * @var SpecificationFactory
+     */
+    protected $specificationFactory;
+
     public function __construct(
         CldrLocaleRepository $cldrLocaleRepository,
-        CurrencyRepository $currencyRepository,
+        CurrencyRepositoryInterface $currencyRepository,
         $roundingMode = Rounding::ROUND_HALF_UP,
         $numberingSystem = Locale::NUMBERING_SYSTEM_LATIN,
-        $currencyDisplayType = PriceSpecification::CURRENCY_DISPLAY_SYMBOL
+        $currencyDisplayType = PriceSpecification::CURRENCY_DISPLAY_SYMBOL,
+        $groupingUsed = true,
+        $maxFractionDigits = self::MAX_FRACTION_DIGITS
     ) {
         $this->cldrLocaleRepository = $cldrLocaleRepository;
         $this->currencyRepository = $currencyRepository;
         $this->roundingMode = $roundingMode;
         $this->numberingSystem = $numberingSystem;
         $this->currencyDisplayType = $currencyDisplayType;
+        $this->numberGroupingUsed = $groupingUsed;
+        $this->maxFractionDigits = $maxFractionDigits;
+        $this->specificationFactory = new SpecificationFactory();
     }
 
     /**
@@ -147,7 +176,11 @@ class Repository implements RepositoryInterface
             throw new LocalizationException('CLDR locale not found for locale code "' . $localeCode . '"');
         }
 
-        return $this->buildNumberSpecification($cldrLocale);
+        return $this->specificationFactory->buildNumberSpecification(
+            $cldrLocale,
+            $this->maxFractionDigits,
+            $this->numberGroupingUsed
+        );
     }
 
     /**
@@ -171,14 +204,24 @@ class Repository implements RepositoryInterface
             throw new LocalizationException('CLDR locale not found for locale code "' . $localeCode . '"');
         }
 
-        $currencies = $this->currencyRepository->getInstalledCurrencies();
+        $currencies = $this->currencyRepository->getAllInstalledCurrencies($localeCode);
 
         $priceSpecifications = new PriceSpecificationMap();
         foreach ($currencies as $currency) {
-            $priceSpecification = $this->buildPriceSpecification($cldrLocale, $currency, $localeCode);
+            // Build the spec
+            $thisPriceSpecification = (new SpecificationFactory())->buildPriceSpecification(
+                $localeCode,
+                $cldrLocale,
+                $currency,
+                $this->numberGroupingUsed,
+                $this->currencyDisplayType,
+                (int) $currency->getDecimalPrecision()
+            );
+
+            // Add the spec to the collection
             $priceSpecifications->add(
-                $priceSpecification->getCurrencyCode(),
-                $priceSpecification
+                $thisPriceSpecification->getCurrencyCode(),
+                $thisPriceSpecification
             );
         }
 
@@ -186,59 +229,18 @@ class Repository implements RepositoryInterface
     }
 
     /**
-     * Build a Number specification from a CLDR Locale object.
-     *
-     * @param CldrLocale $cldrLocale
-     *                               This CldrLocale object is a low level data object extracted from CLDR data source
-     *
-     * @return NumberSpecification
-     *
-     * @throws LocalizationException
+     * @return bool
      */
-    protected function buildNumberSpecification($cldrLocale)
+    public function isNumberGroupingUsed()
     {
-        return new NumberSpecification(
-            $cldrLocale->getNumberPositivePattern(),
-            $cldrLocale->getNumberNegativePattern(),
-            $cldrLocale->getNumberSymbols(),
-            $cldrLocale->getNumberMaxFractionDigits(),
-            $cldrLocale->getNumberMinFractionDigits(),
-            $cldrLocale->getNumberGroupingUsed(),
-            $cldrLocale->getNumberPrimaryGroupSize(),
-            $cldrLocale->getNumberSecondaryGroupSize()
-        );
+        return $this->numberGroupingUsed;
     }
 
     /**
-     * Build a Price specification from a CLDR Locale object and a Currency object.
-     *
-     * @param CldrLocale $cldrLocale
-     *                               This CldrLocale object is a low level data object extracted from CLDR data source
-     * @param Currency $currency
-     *                           This Currency object brings missing specification to format a number as a price
-     * @param string $localeCode
-     *                           Some price specs need to be localized (eg : currency symbol)
-     *                           Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
-     *                           eg: fr-FR, en-US
-     *
-     * @return PriceSpecification
-     *
-     * @throws LocalizationException
+     * @return string
      */
-    protected function buildPriceSpecification(CldrLocale $cldrLocale, Currency $currency, $localeCode)
+    public function getCurrencyDisplayType()
     {
-        return new PriceSpecification(
-            $cldrLocale->getNumberPositivePattern(),
-            $cldrLocale->getNumberNegativePattern(),
-            $cldrLocale->getNumberSymbols(),
-            $cldrLocale->getNumberMaxFractionDigits(),
-            $cldrLocale->getNumberMinFractionDigits(),
-            $cldrLocale->getNumberGroupingUsed(),
-            $cldrLocale->getNumberPrimaryGroupSize(),
-            $cldrLocale->getNumberSecondaryGroupSize(),
-            $this->currencyDisplayType,
-            $currency->getSymbol($localeCode),
-            $currency->getIsoCode()
-        );
+        return $this->currencyDisplayType;
     }
 }

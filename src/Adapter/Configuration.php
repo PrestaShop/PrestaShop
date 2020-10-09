@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter;
@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter;
 use Combination;
 use Configuration as ConfigurationLegacy;
 use Feature;
+use Language;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShopBundle\Exception\NotImplementedException;
 use Shop;
@@ -44,7 +45,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
      */
     private $shop;
 
-    public function __construct(array $parameters = array())
+    public function __construct(array $parameters = [])
     {
         // Do nothing
         if (!empty($parameters)) {
@@ -71,7 +72,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function replace(array $parameters = array())
+    public function replace(array $parameters = [])
     {
         $this->add($parameters);
     }
@@ -79,7 +80,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function add(array $parameters = array())
+    public function add(array $parameters = [])
     {
         foreach ($parameters as $key => $value) {
             $this->set($key, $value);
@@ -101,10 +102,14 @@ class Configuration extends ParameterBag implements ConfigurationInterface
             return constant($key);
         }
 
+        //If configuration has never been accessed it is still empty and hasKey/isLangKey will always return false
+        if (!ConfigurationLegacy::configurationIsLoaded()) {
+            ConfigurationLegacy::loadConfiguration();
+        }
+
         // if the key is multi lang related, we return an array with the value per language.
-        // getInt() meaning probably getInternational()
         if (ConfigurationLegacy::isLangKey($key)) {
-            return ConfigurationLegacy::getInt($key);
+            return $this->getLocalized($key);
         }
 
         if (ConfigurationLegacy::hasKey($key)) {
@@ -164,9 +169,9 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     /**
      * Removes a configuration key.
      *
-     * @param type $key
+     * @param string $key
      *
-     * @return type
+     * @return self
      */
     public function remove($key)
     {
@@ -184,9 +189,9 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     /**
      * Unset configuration value.
      *
-     * @param $key
+     * @param string $key
      *
-     * @return $this
+     * @return void
      *
      * @throws \Exception
      *
@@ -241,5 +246,23 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     public function restrictUpdatesTo(Shop $shop)
     {
         $this->shop = $shop;
+    }
+
+    /**
+     * Get localized configuration in all languages
+     *
+     * @param string $key
+     *
+     * @return array Array of langId => localizedConfiguration
+     */
+    private function getLocalized($key)
+    {
+        $configuration = [];
+
+        foreach (Language::getIDs(false) as $langId) {
+            $configuration[$langId] = ConfigurationLegacy::get($key, $langId);
+        }
+
+        return $configuration;
     }
 }

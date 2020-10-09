@@ -96,17 +96,21 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
       </trans-unit>
     </body>
   </file>
+  <file original="themes/classic/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription-column.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e0aa021e21dddbd6d8cecec71e9cf564">
+        <source>OK</source>
+        <target>OK</target>
+        <note>Line: 35</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="themes/classic/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="b26917587d98330d93f87808fc9d7267">
         <source>Subscribe</source>
         <target>Subscribe</target>
         <note>Line: 37</note>
-      </trans-unit>
-      <trans-unit id="e0aa021e21dddbd6d8cecec71e9cf564">
-        <source>OK</source>
-        <target>OK</target>
-        <note>Line: 43</note>
       </trans-unit>
     </body>
   </file>
@@ -124,12 +128,12 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
       <trans-unit id="300225ee958b6350abc51805dab83c24">
         <source>Continue shopping</source>
         <target>Continue shopping</target>
-        <note>Line: 66</note>
+        <note>Line: 76</note>
       </trans-unit>
       <trans-unit id="7e0bf6d67701868aac3116ade8fea957">
         <source>Proceed to checkout</source>
         <target>Proceed to checkout</target>
-        <note>Line: 67</note>
+        <note>Line: 77</note>
       </trans-unit>
     </body>
   </file>
@@ -152,12 +156,12 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
       <trans-unit id="498f79c4c5bbde77f1bceb6c86fd0f6d">
         <source>Show</source>
         <target>Show</target>
-        <note>Line: 152</note>
+        <note>Line: 153</note>
       </trans-unit>
       <trans-unit id="62a5e490880a92eef74f167d9dc6dca0">
         <source>Hide</source>
         <target>Hide</target>
-        <note>Line: 150</note>
+        <note>Line: 151</note>
       </trans-unit>
     </body>
   </file>
@@ -185,7 +189,7 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
       <trans-unit id="81aa2078d1eceede831b2976dbf32e62">
         <source>Clear all</source>
         <target>Clear all</target>
-        <note>Line: 35</note>
+        <note>Line: 36</note>
       </trans-unit>
     </body>
   </file>
@@ -203,7 +207,7 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
       <trans-unit id="c91e4ee170226d66e90f99ba917e4c20">
         <source>Quick view</source>
         <target>Quick view</target>
-        <note>Line: 98</note>
+        <note>Line: 94</note>
       </trans-unit>
     </body>
   </file>
@@ -249,7 +253,7 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
       <trans-unit id="7c491b68fcdc8169f7aadfffbafaf47d">
         <source>Back to top</source>
         <target>Back to top</target>
-        <note>Line: 40</note>
+        <note>Line: 34</note>
       </trans-unit>
     </body>
   </file>
@@ -258,7 +262,7 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
       <trans-unit id="e0626222614bdee31951d84c64e5e9ff">
         <source>Select</source>
         <target>Select</target>
-        <note>Line: 33</note>
+        <note>Line: 34</note>
       </trans-unit>
     </body>
   </file>
@@ -267,7 +271,7 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
       <trans-unit id="801ab24683a4a8c433c6eb40c48bcd9d">
         <source>Download</source>
         <target>Download</target>
-        <note>Line: 212</note>
+        <note>Line: 208</note>
       </trans-unit>
     </body>
   </file>
@@ -294,12 +298,12 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
       <trans-unit id="12a7a93d72ded50311b52c7d0a853e3c">
         <source>Take advantage of our exclusive offers:</source>
         <target>Take advantage of our exclusive offers:</target>
-        <note>Line: 70</note>
+        <note>Line: 78</note>
       </trans-unit>
       <trans-unit id="ec211f7c20af43e742bf2570c3cb84f9">
         <source>Add</source>
         <target>Add</target>
-        <note>Line: 57</note>
+        <note>Line: 60</note>
       </trans-unit>
     </body>
   </file>
@@ -362,12 +366,12 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
       <trans-unit id="f2a6c498fb90ee345d997f888fce3b18">
         <source>Delete</source>
         <target>Delete</target>
-        <note>Line: 40</note>
+        <note>Line: 42</note>
       </trans-unit>
       <trans-unit id="06933067aafd48425d67bcb01bba5cb6">
         <source>Update</source>
         <target>Update</target>
-        <note>Line: 36</note>
+        <note>Line: 38</note>
       </trans-unit>
     </body>
   </file>

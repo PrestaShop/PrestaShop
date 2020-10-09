@@ -1,0 +1,104 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+{{ form_start(catalogPriceRuleForm) }}
+{{ form_errors(catalogPriceRuleForm) }}
+<div class="card">
+  <h3 class="card-header">
+    <i class="material-icons">attach_money</i>
+    {{ 'Catalog price rules'|trans({}, 'Admin.Catalog.Feature') }}
+  </h3>
+  <div class="card-block row">
+    <div class="card-text">
+      {{ ps.form_group_row(catalogPriceRuleForm.name, {}, {
+        'label': 'Name'|trans({}, 'Admin.Global'),
+      }) }}
+
+      {% if catalogPriceRuleForm.id_shop is defined %}
+        {{ ps.form_group_row(catalogPriceRuleForm.id_shop, {}, {
+          'label': 'Shop'|trans({}, 'Admin.Global')
+        }) }}
+      {% endif %}
+
+      {{ ps.form_group_row(catalogPriceRuleForm.id_currency, {}, {
+        'label': 'Currency'|trans({}, 'Admin.Global'),
+      }) }}
+
+      {{ ps.form_group_row(catalogPriceRuleForm.id_country, {}, {
+        'label': 'Country'|trans({}, 'Admin.Global'),
+      }) }}
+
+      {{ ps.form_group_row(catalogPriceRuleForm.id_group, {}, {
+        'label': 'Group'|trans({}, 'Admin.Global'),
+      }) }}
+
+      {{ ps.form_group_row(catalogPriceRuleForm.from_quantity, {}, {
+        'label': 'From quantity'|trans({}, 'Admin.Catalog.Feature'),
+      }) }}
+
+      {{ ps.form_group_row(catalogPriceRuleForm.price, {}, {
+        'label': 'Price (tax excl.)'|trans({}, 'Admin.Catalog.Feature'),
+      }) }}
+
+      {{ ps.form_group_row(catalogPriceRuleForm.leave_initial_price, {}, {'label': ''}) }}
+
+      {{ ps.form_group_row(catalogPriceRuleForm.date_range.from, {}, {
+        'label': 'From'|trans({}, 'Admin.Global'),
+      }) }}
+
+      {{ ps.form_group_row(catalogPriceRuleForm.date_range.to, {}, {
+        'label': 'To'|trans({}, 'Admin.Global'),
+      }) }}
+
+      {{ ps.form_group_row(catalogPriceRuleForm.reduction.type, {'attr': {'class': 'js-reduction-type-source'}}, {
+        'label': 'Reduction type'|trans({}, 'Admin.Catalog.Feature'),
+      }) }}
+
+      <div class="js-include-tax-target">
+        {{ ps.form_group_row(catalogPriceRuleForm.include_tax, {'attr': {'class': 'js-include-tax-target'}}, {
+          'label': 'Reduction with or without taxes'|trans({}, 'Admin.Catalog.Feature'),
+        }) }}
+      </div>
+
+      {{ ps.form_group_row(catalogPriceRuleForm.reduction.value, {}, {
+        'label': 'Reduction'|trans({}, 'Admin.Catalog.Feature'),
+      }) }}
+
+      {% block catalog_price_rule_form_rest %}
+        {{ form_rest(catalogPriceRuleForm) }}
+      {% endblock %}
+    </div>
+  </div>
+  <div class="card-footer">
+    <a href="{{ path('admin_catalog_price_rules_index') }}" class="btn btn-outline-secondary">
+      {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+    </a>
+    <button class="btn btn-primary float-right">
+      {{ 'Save'|trans({}, 'Admin.Actions') }}
+    </button>
+  </div>
+</div>
+{{ form_end(catalogPriceRuleForm) }}

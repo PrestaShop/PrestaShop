@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,18 +17,61 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Product\Search;
 
+/**
+ * This class is a serializer for URL fragments.
+ */
 class URLFragmentSerializer
 {
+    /**
+     * @param array $fragment
+     *
+     * @return string
+     */
+    public function serialize(array $fragment)
+    {
+        $parts = [];
+        foreach ($fragment as $key => $values) {
+            array_unshift($values, $key);
+            $parts[] = $this->serializeListOfStrings('-', '-', $values);
+        }
+
+        return $this->serializeListOfStrings('/', '/', $parts);
+    }
+
+    /**
+     * @param string $string
+     *
+     * @return array
+     */
+    public function unserialize($string)
+    {
+        $fragment = [];
+        $parts = $this->unserializeListOfStrings('/', '/', $string);
+        foreach ($parts as $part) {
+            $values = $this->unserializeListOfStrings('-', '-', $part);
+            $key = array_shift($values);
+            $fragment[$key] = $values;
+        }
+
+        return $fragment;
+    }
+
+    /**
+     * @param string $separator the string separator
+     * @param string $escape the string escape
+     * @param array $list
+     *
+     * @return string
+     */
     private function serializeListOfStrings($separator, $escape, array $list)
     {
         return implode($separator, array_map(function ($item) use ($separator, $escape) {
@@ -35,34 +79,41 @@ class URLFragmentSerializer
         }, $list));
     }
 
-    private function unserializeListOfStrings($separator, $escape, $str)
+    /**
+     * @param string $separator the string separator
+     * @param string $escape the string escape
+     * @param string $string the UTF8 string
+     *
+     * @return array
+     */
+    private function unserializeListOfStrings($separator, $escape, $string)
     {
         $list = [];
         $currentString = '';
         $escaping = false;
 
         // get UTF-8 chars, inspired from http://stackoverflow.com/questions/9438158/split-utf8-string-into-array-of-chars
-        $arr = [];
-        preg_match_all('/./u', $str, $arr);
-        $chars = $arr[0];
+        $arrayOfCharacters = [];
+        preg_match_all('/./u', $string, $arrayOfCharacters);
+        $characters = $arrayOfCharacters[0];
 
-        foreach ($chars as $char) {
+        foreach ($characters as $character) {
             if ($escaping) {
-                if ($char === $separator || $char === $escape) {
-                    $currentString .= $char;
+                if ($character === $separator || $character === $escape) {
+                    $currentString .= $character;
                 } else {
                     $list[] = $currentString;
-                    $currentString = $char;
+                    $currentString = $character;
                 }
                 $escaping = false;
             } else {
-                if ($char === $escape) {
+                if ($character === $escape) {
                     $escaping = true;
-                } elseif ($char === $separator) {
+                } elseif ($character === $separator) {
                     $list[] = $currentString;
                     $currentString = '';
                 } else {
-                    $currentString .= $char;
+                    $currentString .= $character;
                 }
             }
         }
@@ -76,29 +127,5 @@ class URLFragmentSerializer
         }
 
         return $list;
-    }
-
-    public function serialize(array $fragment)
-    {
-        $parts = [];
-        foreach ($fragment as $key => $values) {
-            array_unshift($values, $key);
-            $parts[] = $this->serializeListOfStrings('-', '-', $values);
-        }
-
-        return $this->serializeListOfStrings('/', '/', $parts);
-    }
-
-    public function unserialize($str)
-    {
-        $fragment = [];
-        $parts = $this->unserializeListOfStrings('/', '/', $str);
-        foreach ($parts as $part) {
-            $values = $this->unserializeListOfStrings('-', '-', $part);
-            $key = array_shift($values);
-            $fragment[$key] = $values;
-        }
-
-        return $fragment;
     }
 }

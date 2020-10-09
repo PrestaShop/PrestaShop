@@ -1,10 +1,11 @@
 {**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *}
 {if isset($fields.title)}<h3>{$fields.title}</h3>{/if}
 
@@ -67,7 +67,7 @@
 					<div class="form-wrapper">
 					{foreach $field as $input}
 						{block name="input_row"}
-						<div class="form-group{if isset($input.form_group_class)} {$input.form_group_class}{/if}{if $input.type == 'hidden'} hide{/if}"{if $input.name == 'id_state'} id="contains_states"{if !$contains_states} style="display:none;"{/if}{/if}{if isset($tabs) && isset($input.tab)} data-tab-id="{$input.tab}"{/if}>
+						<div class="form-group{if isset($input.form_group_class)} {$input.form_group_class}{/if}{if $input.type == 'hidden'} hide{/if}"{if $input.name == 'id_state'} id="contains_states"{if !$contains_states} style="display:none;"{/if}{/if}{if $input.name == 'dni'} id="dni_required"{if !$dni_required} style="display:none;"{/if}{/if}{if isset($tabs) && isset($input.tab)} data-tab-id="{$input.tab}"{/if}>
 						{if $input.type == 'hidden'}
 							<input type="hidden" name="{$input.name}" id="{$input.name}" value="{$fields_value[$input.name]|escape:'html':'UTF-8'}" />
 						{else}
@@ -419,11 +419,7 @@
 										<input type="radio" name="{$input.name}"{if $value.value == 1} id="{$input.name}_on"{else} id="{$input.name}_off"{/if} value="{$value.value}"{if $fields_value[$input.name] == $value.value} checked="checked"{/if}{if (isset($input.disabled) && $input.disabled) or (isset($value.disabled) && $value.disabled)} disabled="disabled"{/if}/>
 										{strip}
 										<label {if $value.value == 1} for="{$input.name}_on"{else} for="{$input.name}_off"{/if}>
-											{if $value.value == 1}
-												{l s='Yes' d='Admin.Global'}
-											{else}
-												{l s='No' d='Admin.Global'}
-											{/if}
+											{$value.label}
 										</label>
 										{/strip}
 										{/foreach}
@@ -850,7 +846,7 @@
 						</button>
 						{/if}
 						{if isset($show_cancel_button) && $show_cancel_button}
-						<a href="#" class="btn btn-default" {if $table}id="{$table}_form_cancel_btn"{/if} onclick="window.history.back();">
+						<a class="btn btn-default" {if $table}id="{$table}_form_cancel_btn"{/if} onclick="javascript:window.history.back();">
 							<i class="process-icon-cancel"></i> {l s='Cancel' d='Admin.Actions'}
 						</a>
 						{/if}
@@ -948,6 +944,9 @@
 				}
 			{/if}
 
+			dniRequired();
+			$('#id_country').change(dniRequired);
+
 			if ($(".datepicker").length > 0)
 				$(".datepicker").datepicker({
 					prevText: '',
@@ -977,7 +976,8 @@
 			$(".textarea-autosize").autosize();
 			{/if}
 		});
-	state_token = '{getAdminToken tab='AdminStates'}';
+		state_token = '{getAdminToken tab='AdminStates'}';
+		address_token = '{getAdminToken tab='AdminAddresses'}';
 	{block name="script"}{/block}
 	</script>
 {/if}

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Foundation\Filesystem;
@@ -31,13 +31,23 @@ use SplFileInfo;
 class FileSystem
 {
     /**
+     * Default mode for directories
+     */
+    const DEFAULT_MODE_FOLDER = 0755;
+
+    /**
+     * Default mode for files
+     */
+    const DEFAULT_MODE_FILE = 0644;
+
+    /**
      * Replaces directory separators with the system's native one
      * and trims the trailing separator.
      */
     public function normalizePath($path)
     {
         return rtrim(
-            str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path),
+            str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path),
             DIRECTORY_SEPARATOR
         );
     }
@@ -66,8 +76,8 @@ class FileSystem
             return $this->joinPaths(
                 $arg_0,
                 call_user_func_array(
-                    array($this,
-                        'joinPaths', ),
+                    [$this,
+                        'joinPaths', ],
                     array_slice($func_args, 1)
                 )
             );
@@ -80,29 +90,21 @@ class FileSystem
      * If $path is a file and not a directory, just gets the file info for it
      * and return it in an array.
      *
-     * @return an array of SplFileInfo object indexed by file path
+     * @param string $path
+     *
+     * @return SplFileInfo[] Array of SplFileInfo object indexed by file path
      */
     public function listEntriesRecursively($path)
     {
         if (!file_exists($path)) {
-            throw new Exception(
-                sprintf(
-                    'No such file or directory: %s',
-                    $path
-                )
-            );
+            throw new Exception(sprintf('No such file or directory: %s', $path));
         }
 
         if (!is_dir($path)) {
-            throw new Exception(
-                sprintf(
-                    '%s is not a directory',
-                    $path
-                )
-            );
+            throw new Exception(sprintf('%s is not a directory', $path));
         }
 
-        $entries = array();
+        $entries = [];
 
         foreach (scandir($path) as $entry) {
             if ($entry === '.' || $entry === '..') {
@@ -140,7 +142,7 @@ class FileSystem
     {
         return array_filter(
             $this->listEntriesRecursively($path),
-            array($this, 'matchOnlyFiles')
+            [$this, 'matchOnlyFiles']
         );
     }
 }

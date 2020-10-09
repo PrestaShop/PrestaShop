@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2017 Unicode, Inc.
+<!-- Copyright © 1991-2019 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 13705 $"/>
+		<version number="$Revision$"/>
 		<language type="ce"/>
 	</identity>
 	<localeDisplayNames>
@@ -106,7 +106,6 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			<language type="en_GB">британин ингалсан</language>
 			<language type="en_GB" alt="short">ингалсан (Британи)</language>
 			<language type="en_US">американ ингалсан</language>
-			<language type="en_US" alt="short">ингалсан (АЦШ)</language>
 			<language type="eo">эсперанто</language>
 			<language type="es">испанхойн</language>
 			<language type="es_419">латинан американ испанхойн</language>
@@ -651,7 +650,6 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			<territory type="MF">Сен-Мартен</territory>
 			<territory type="MG">Мадагаскар</territory>
 			<territory type="MH">Маршаллан гӀайренаш</territory>
-			<territory type="MK">Македони</territory>
 			<territory type="ML">Мали</territory>
 			<territory type="MM">Мьянма (Бирма)</territory>
 			<territory type="MN">Монголи</territory>
@@ -797,8 +795,8 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 	<characters>
 		<exemplarCharacters>[а {аь} б в г {гӏ} д е ё ж з и {ий} й к {кк} {ккх} {кх} {кь} {кӏ} л м н о {ов} {оь} п {пп} {пӏ} р {рхӏ} с {сс} т {тт} {тӏ} у {ув} {уь} {уьй} ф х {хь} {хӏ} ц {цӏ} ч {чӏ} ш щ ъ ы ь э ю {юь} я {яь}]</exemplarCharacters>
 		<exemplarCharacters type="index">[А Б В Г Д Е Ё Ж З И К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ъ Ы Ь Э Ю Я]</exemplarCharacters>
-		<exemplarCharacters type="numbers">[\- , . % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
-		<exemplarCharacters type="punctuation">[\- ‐ – — , ; \: ! ? . … ' ‘ ‚ &quot; “ „ « » ( ) \[ \] \{ \} § @ * / \&amp; #]</exemplarCharacters>
+		<exemplarCharacters type="numbers">[\- ‑ , . % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
+		<exemplarCharacters type="punctuation">[\- ‐ ‑ – — , ; \: ! ? . … ' ‘ ‚ &quot; “ „ « » ( ) \[ \] \{ \} § @ * / \&amp; #]</exemplarCharacters>
 	</characters>
 	<dates>
 		<calendars>
@@ -1035,6 +1033,7 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 					</eraNames>
 					<eraAbbr>
 						<era type="0">в. э. тӀ. я</era>
+						<era type="0" alt="variant">МАССО</era>
 						<era type="1">в. э</era>
 					</eraAbbr>
 				</eras>
@@ -1173,6 +1172,7 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 					<relativeTimePattern count="one">{0} кӀир. хьалха</relativeTimePattern>
 					<relativeTimePattern count="other">{0} кӀир. хьалха</relativeTimePattern>
 				</relativeTime>
+				<relativePeriod>кӀирнахь</relativePeriod>
 			</field>
 			<field type="week-narrow">
 				<displayName>кӀир.</displayName>
@@ -1184,6 +1184,16 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 					<relativeTimePattern count="one">{0} кӀир. хьалха</relativeTimePattern>
 					<relativeTimePattern count="other">{0} кӀир. хьалха</relativeTimePattern>
 				</relativeTime>
+				<relativePeriod>кӀирнахь {0}</relativePeriod>
+			</field>
+			<field type="weekOfMonth">
+				<displayName>беттан кӀира</displayName>
+			</field>
+			<field type="weekOfMonth-short">
+				<displayName>беттан кӀира</displayName>
+			</field>
+			<field type="weekOfMonth-narrow">
+				<displayName>беттан кӀира</displayName>
 			</field>
 			<field type="day">
 				<displayName>де</displayName>
@@ -1221,23 +1231,68 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 					<relativeTimePattern count="other">{0} де хьалха</relativeTimePattern>
 				</relativeTime>
 			</field>
+			<field type="dayOfYear">
+				<displayName>шеран де</displayName>
+			</field>
+			<field type="dayOfYear-short">
+				<displayName>шеран де</displayName>
+			</field>
+			<field type="dayOfYear-narrow">
+				<displayName>шеран де</displayName>
+			</field>
 			<field type="weekday">
-				<displayName>кӀиран де</displayName>
+				<displayName>кӀиранан де</displayName>
+			</field>
+			<field type="weekday-short">
+				<displayName>кӀиранан де</displayName>
+			</field>
+			<field type="weekday-narrow">
+				<displayName>кӀиранан де</displayName>
+			</field>
+			<field type="weekdayOfMonth">
+				<displayName>кӀиранан де</displayName>
+			</field>
+			<field type="weekdayOfMonth-short">
+				<displayName>кӀиранан де</displayName>
 			</field>
 			<field type="sun">
 				<relative type="-1">даханчу кӀиранан дийнахь</relative>
 				<relative type="0">карарчу кӀиранан дийнахь</relative>
 				<relative type="1">рогӀерчу кӀиранан дийнахь</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">+{0} кӀиранденошкахь</relativeTimePattern>
+					<relativeTimePattern count="other">+{0} кӀиранденошкахь</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">-{0} кӀиранденошкахь</relativeTimePattern>
+					<relativeTimePattern count="other">-{0} кӀиранденошкахь</relativeTimePattern>
+				</relativeTime>
 			</field>
 			<field type="sun-short">
 				<relative type="-1">даханчу кӀиранан д.</relative>
 				<relative type="0">карарчу кӀиранан д.</relative>
 				<relative type="1">рогӀерчу кӀиранан д.</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">+{0} кӀиранденошкахь</relativeTimePattern>
+					<relativeTimePattern count="other">+{0} кӀиранденошкахь</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">-{0} кӀиранденошкахь</relativeTimePattern>
+					<relativeTimePattern count="other">-{0} кӀиранденошкахь</relativeTimePattern>
+				</relativeTime>
 			</field>
 			<field type="sun-narrow">
 				<relative type="-1">даханчу кӀиранан д.</relative>
 				<relative type="0">карарчу кӀиранан д.</relative>
 				<relative type="1">рогӀерчу кӀиранан д</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">+{0} кӀиранденошкахь</relativeTimePattern>
+					<relativeTimePattern count="other">+{0} кӀиранденошкахь</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">-{0} кӀиранденошкахь</relativeTimePattern>
+					<relativeTimePattern count="other">-{0} кӀиранденошкахь</relativeTimePattern>
+				</relativeTime>
 			</field>
 			<field type="mon">
 				<relative type="-1">даханчу оршотан дийнахь</relative>
@@ -1258,66 +1313,146 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<relative type="-1">даханчу шинарин дийнахь</relative>
 				<relative type="0">карарчу шинарин дийнахь</relative>
 				<relative type="1">рогӀерчу шинарин дийнахь</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">+{0} Ширанаденошкахь</relativeTimePattern>
+					<relativeTimePattern count="other">+{0} Ширанаденошкахь</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">-{0} Ширанаденошкахь</relativeTimePattern>
+					<relativeTimePattern count="other">-{0} Ширанаденошкахь</relativeTimePattern>
+				</relativeTime>
 			</field>
 			<field type="tue-short">
 				<relative type="-1">даханчу шинарин д.</relative>
 				<relative type="0">карарчу шинарин д.</relative>
 				<relative type="1">рогӀерчу шинарин д.</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">+{0} Ширанаденошкахь</relativeTimePattern>
+					<relativeTimePattern count="other">+{0} Ширанаденошкахь</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">-{0} Ширанаденошкахь</relativeTimePattern>
+					<relativeTimePattern count="other">-{0} Ширанаденошкахь</relativeTimePattern>
+				</relativeTime>
 			</field>
 			<field type="tue-narrow">
 				<relative type="-1">даханчу шинарин д.</relative>
 				<relative type="0">карарчу шинарин д.</relative>
 				<relative type="1">рогӀерчу шинарин д.</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">+{0} Ширанаденошкахь</relativeTimePattern>
+					<relativeTimePattern count="other">+{0} Ширанаденошкахь</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">-{0} Ширанаденошкахь</relativeTimePattern>
+					<relativeTimePattern count="other">-{0} Ширанаденошкахь</relativeTimePattern>
+				</relativeTime>
 			</field>
 			<field type="wed">
 				<relative type="-1">даханчу кхаарин дийнахь</relative>
 				<relative type="0">карарчу кхаарин дийнахь</relative>
 				<relative type="1">рогӀерчу кхаарин дийнахь</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">+{0} Кхааринденошкахь</relativeTimePattern>
+					<relativeTimePattern count="other">+{0} Кхааринденошкахь</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">-{0} Кхааринденошкахь</relativeTimePattern>
+					<relativeTimePattern count="other">-{0} Кхааринденошкахь</relativeTimePattern>
+				</relativeTime>
 			</field>
 			<field type="wed-short">
 				<relative type="-1">даханчу кхаарин д.</relative>
 				<relative type="0">карарчу кхаарин д.</relative>
 				<relative type="1">рогӀерчу кхаарин д.</relative>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">-{0} Кхааринденошкахь</relativeTimePattern>
+					<relativeTimePattern count="other">-{0} Кхааринденошкахь</relativeTimePattern>
+				</relativeTime>
 			</field>
 			<field type="wed-narrow">
 				<relative type="-1">даханчу кхаарин д.</relative>
 				<relative type="0">карарчу кхаарин д.</relative>
 				<relative type="1">рогӀерчу кхаарин д.</relative>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">-{0} Кхааринденошкахь</relativeTimePattern>
+					<relativeTimePattern count="other">-{0} Кхааринденошкахь</relativeTimePattern>
+				</relativeTime>
 			</field>
 			<field type="thu">
 				<relative type="-1">даханчу еарин дийнахь</relative>
 				<relative type="0">карарчу еарин дийнахь</relative>
 				<relative type="1">рогӀерчу еарин дийнахь</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">+{0} Еаринденошкахь</relativeTimePattern>
+					<relativeTimePattern count="other">+{0} Еаринденошкахь</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">-{0} Еаринденошкахь</relativeTimePattern>
+					<relativeTimePattern count="other">-{0} Еаринденошкахь</relativeTimePattern>
+				</relativeTime>
 			</field>
 			<field type="thu-short">
 				<relative type="-1">даханчу еарин д.</relative>
 				<relative type="0">карарчу еарин д.</relative>
 				<relative type="1">рогӀерчу еарин д.</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">+{0} Еаринденошкахь</relativeTimePattern>
+					<relativeTimePattern count="other">+{0} Еаринденошкахь</relativeTimePattern>
+				</relativeTime>
 			</field>
 			<field type="thu-narrow">
 				<relative type="-1">даханчу еарин д.</relative>
 				<relative type="0">карарчу еарин д.</relative>
 				<relative type="1">рогӀерчу еарин д.</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">+{0} Еаринденошкахь</relativeTimePattern>
+					<relativeTimePattern count="other">+{0} Еаринденошкахь</relativeTimePattern>
+				</relativeTime>
 			</field>
 			<field type="fri">
 				<relative type="-1">даханчу пӀераскан дийнахь</relative>
 				<relative type="0">карарчу пӀераскан дийнахь</relative>
 				<relative type="1">рогӀерчу пӀераскан дийнахь</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">+{0} ПӀерасканденошкахь</relativeTimePattern>
+					<relativeTimePattern count="other">+{0} ПӀерасканденошкахь</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">-{0} ПӀерасканденошкахь</relativeTimePattern>
+					<relativeTimePattern count="other">-{0} ПӀерасканденошкахь</relativeTimePattern>
+				</relativeTime>
 			</field>
 			<field type="fri-short">
 				<relative type="-1">даханчу пӀераскан д.</relative>
 				<relative type="0">карарчу пӀераскан д.</relative>
 				<relative type="1">рогӀерчу пӀераскан д.</relative>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">-{0} ПӀерасканденошкахь</relativeTimePattern>
+					<relativeTimePattern count="other">-{0} ПӀерасканденошкахь</relativeTimePattern>
+				</relativeTime>
 			</field>
 			<field type="fri-narrow">
 				<relative type="-1">даханчу пӀераскан д.</relative>
 				<relative type="0">карарчу пӀераскан д.</relative>
 				<relative type="1">рогӀерчу пӀераскан д.</relative>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">-{0} ПӀерасканденошкахь</relativeTimePattern>
+					<relativeTimePattern count="other">-{0} ПӀерасканденошкахь</relativeTimePattern>
+				</relativeTime>
 			</field>
 			<field type="sat">
 				<relative type="-1">даханчу шотдийнахь</relative>
 				<relative type="0">карарчу шотдийнахь</relative>
 				<relative type="1">рогӀерчу шотдийнахь</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">+{0} Шотденошкахь</relativeTimePattern>
+					<relativeTimePattern count="other">+{0} Шотденошкахь</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">-{0} Шотденошкахь</relativeTimePattern>
+					<relativeTimePattern count="other">-{0} Шотденошкахь</relativeTimePattern>
+				</relativeTime>
 			</field>
 			<field type="sat-short">
 				<relative type="-1">даханчу шотд.</relative>
@@ -1334,6 +1469,7 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			</field>
 			<field type="hour">
 				<displayName>сахьт</displayName>
+				<relative type="0">хӀокху сахьтехь</relative>
 				<relativeTime type="future">
 					<relativeTimePattern count="one">{0} сахьт даьлча</relativeTimePattern>
 					<relativeTimePattern count="other">{0} сахьт даьлча</relativeTimePattern>
@@ -1367,6 +1503,7 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			</field>
 			<field type="minute">
 				<displayName>минот</displayName>
+				<relative type="0">хӀокху минотехь</relative>
 				<relativeTime type="future">
 					<relativeTimePattern count="one">{0} минот яьлча</relativeTimePattern>
 					<relativeTimePattern count="other">{0} минот яьлча</relativeTimePattern>
@@ -1400,6 +1537,7 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			</field>
 			<field type="second">
 				<displayName>секунд</displayName>
+				<relative type="0">хӀинца</relative>
 				<relativeTime type="future">
 					<relativeTimePattern count="one">{0} секунд яьлча</relativeTimePattern>
 					<relativeTimePattern count="other">{0} секунд яьлча</relativeTimePattern>
@@ -1713,6 +1851,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			<zone type="America/Vancouver">
 				<exemplarCity>Ванкувер</exemplarCity>
 			</zone>
+			<zone type="America/Fort_Nelson">
+				<exemplarCity>Форт Нельсон</exemplarCity>
+			</zone>
 			<zone type="America/Dawson_Creek">
 				<exemplarCity>Доусон-Крик</exemplarCity>
 			</zone>
@@ -1809,6 +1950,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			<zone type="Pacific/Easter">
 				<exemplarCity>Мархин гӀайренаш</exemplarCity>
 			</zone>
+			<zone type="America/Punta_Arenas">
+				<exemplarCity>Пунта-Аренас</exemplarCity>
+			</zone>
 			<zone type="America/Santiago">
 				<exemplarCity>Сантьяго</exemplarCity>
 			</zone>
@@ -1841,6 +1985,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			</zone>
 			<zone type="Asia/Nicosia">
 				<exemplarCity>Никоси</exemplarCity>
+			</zone>
+			<zone type="Asia/Famagusta">
+				<exemplarCity>Фамагуста</exemplarCity>
 			</zone>
 			<zone type="Europe/Prague">
 				<exemplarCity>Прага</exemplarCity>
@@ -2723,7 +2870,7 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			</zone>
 			<metazone type="Afghanistan">
 				<long>
-					<standard>ОвхӀан мохк</standard>
+					<standard>ОвхӀан</standard>
 				</long>
 			</metazone>
 			<metazone type="Africa_Central">
@@ -2931,9 +3078,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			</metazone>
 			<metazone type="China">
 				<long>
-					<generic>Китай</generic>
-					<standard>Китай, стандартан хан</standard>
-					<daylight>Китай, аьхкенан хан</daylight>
+					<generic>Цийчоь</generic>
+					<standard>Цийчоьнан, стандартан хан</standard>
+					<daylight>Цийчоьнан, аьхкенан хан</daylight>
 				</long>
 			</metazone>
 			<metazone type="Choibalsan">
@@ -3125,7 +3272,7 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			</metazone>
 			<metazone type="India">
 				<long>
-					<standard>Инди</standard>
+					<standard>ХӀинди</standard>
 				</long>
 			</metazone>
 			<metazone type="Indian_Ocean">
@@ -3176,9 +3323,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			</metazone>
 			<metazone type="Japan">
 				<long>
-					<generic>Япони</generic>
-					<standard>Япони, стандартан хан</standard>
-					<daylight>Япони, аьхкенан хан</daylight>
+					<generic>Япон</generic>
+					<standard>Япон, стандартан хан</standard>
+					<daylight>Япон, аьхкенан хан</daylight>
 				</long>
 			</metazone>
 			<metazone type="Kazakhstan_Eastern">
@@ -3424,6 +3571,11 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			<metazone type="Ponape">
 				<long>
 					<standard>Понапе, гӀ-наш</standard>
+				</long>
+			</metazone>
+			<metazone type="Pyongyang">
+				<long>
+					<standard>Пхеньян</standard>
 				</long>
 			</metazone>
 			<metazone type="Reunion">
@@ -4327,10 +4479,15 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<symbol draft="contributed">MOP</symbol>
 			</currency>
 			<currency type="MRO">
+				<displayName>Мавританин уги (1973–2017)</displayName>
+				<displayName count="one">Мавританин уги (1973–2017)</displayName>
+				<displayName count="other">Мавританин угиш (1973–2017)</displayName>
+				<symbol draft="contributed">MRO</symbol>
+			</currency>
+			<currency type="MRU">
 				<displayName>Мавританин уги</displayName>
 				<displayName count="one">Мавританин уги</displayName>
 				<displayName count="other">Мавританин угиш</displayName>
-				<symbol draft="contributed">MRO</symbol>
 			</currency>
 			<currency type="MUR">
 				<displayName>Маврикин рупи</displayName>
@@ -4570,10 +4727,15 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<symbol alt="narrow" draft="contributed">£</symbol>
 			</currency>
 			<currency type="STD">
+				<displayName>Сан-Томен а, Принсипин а добра (1977–2017)</displayName>
+				<displayName count="one">Сан-Томен а, Принсипин а добра (1977–2017)</displayName>
+				<displayName count="other">Сан-Томен а, Принсипин а добраш (1977–2017)</displayName>
+				<symbol draft="contributed">STD</symbol>
+			</currency>
+			<currency type="STN">
 				<displayName>Сан-Томен а, Принсипин а добра</displayName>
 				<displayName count="one">Сан-Томен а, Принсипин а добра</displayName>
 				<displayName count="other">Сан-Томен а, Принсипин а добраш</displayName>
-				<symbol draft="contributed">STD</symbol>
 				<symbol alt="narrow" draft="contributed">Db</symbol>
 			</currency>
 			<currency type="SYP">
@@ -4683,11 +4845,16 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<symbol draft="contributed">UZS</symbol>
 			</currency>
 			<currency type="VEF">
+				<displayName>Венесуэлан боливар (2008–2018)</displayName>
+				<displayName count="one">Венесуэлан боливар (2008–2018)</displayName>
+				<displayName count="other">Венесуэлан боливарш (2008–2018)</displayName>
+				<symbol draft="contributed">VEF</symbol>
+				<symbol alt="narrow" draft="contributed">Bs</symbol>
+			</currency>
+			<currency type="VES">
 				<displayName>Венесуэлан боливар</displayName>
 				<displayName count="one">Венесуэлан боливар</displayName>
 				<displayName count="other">Венесуэлан боливарш</displayName>
-				<symbol draft="contributed">VEF</symbol>
-				<symbol alt="narrow" draft="contributed">Bs</symbol>
 			</currency>
 			<currency type="VND">
 				<displayName>Вьетнаман донг</displayName>

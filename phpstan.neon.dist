@@ -1,0 +1,15 @@
+parameters:
+	level: 2
+	bootstrapFiles:
+		- .github/workflows/phpstan/autoload.php
+	paths:
+		- src
+	ignoreErrors:
+		- '#^Unsafe usage of new static\(\)\.$#'
+		- '#^Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition\:\:#'
+	universalObjectCratesClasses:
+		- Cookie
+		- ObjectModel
+		- Order
+		- OrderInvoice
+		- Product

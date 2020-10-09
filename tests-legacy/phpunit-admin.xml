@@ -26,8 +26,6 @@
         <testsuite name="Unit">
             <directory>Unit</directory>
         </testsuite>
-    </testsuites>
-    <testsuites>
         <testsuite name="Integration">
             <directory>Integration</directory>
         </testsuite>

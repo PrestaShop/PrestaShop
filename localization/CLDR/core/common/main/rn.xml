@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2017 Unicode, Inc.
+<!-- Copyright © 1991-2019 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 13701 $"/>
+		<version number="$Revision$"/>
 		<language type="rn"/>
 	</identity>
 	<localeDisplayNames>
@@ -184,7 +184,6 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			<territory type="MD">Moludavi</territory>
 			<territory type="MG">Madagasikari</territory>
 			<territory type="MH">Izinga rya Marishari</territory>
-			<territory type="MK">Masedoniya</territory>
 			<territory type="ML">Mali</territory>
 			<territory type="MM">Birimaniya</territory>
 			<territory type="MN">Mongoliya</territory>
@@ -288,7 +287,7 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 	<characters>
 		<exemplarCharacters>[a b c d e f g h i j k l m n o p q r s t u v w x y z]</exemplarCharacters>
 		<exemplarCharacters type="index">[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]</exemplarCharacters>
-		<exemplarCharacters type="numbers">[\- , . % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
+		<exemplarCharacters type="numbers">[\- ‑ , . % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
 	</characters>
 	<delimiters>
 		<quotationStart>”</quotationStart>
@@ -687,6 +686,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName>Iriyari ryo muri Madagasikari</displayName>
 			</currency>
 			<currency type="MRO">
+				<displayName>Ugwiya ryo muri Moritaniya (1973–2017)</displayName>
+			</currency>
+			<currency type="MRU">
 				<displayName>Ugwiya ryo muri Moritaniya</displayName>
 			</currency>
 			<currency type="MUR">
@@ -726,6 +728,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName>Ishilingi ryo muri Somaliya</displayName>
 			</currency>
 			<currency type="STD">
+				<displayName>Idobura ryo muri Sawotome na Perensipe (1977–2017)</displayName>
+			</currency>
+			<currency type="STN">
 				<displayName>Idobura ryo muri Sawotome na Perensipe</displayName>
 			</currency>
 			<currency type="SZL">

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 class ShopUrlCore extends ObjectModel
 {
@@ -33,31 +33,31 @@ class ShopUrlCore extends ObjectModel
     public $main;
     public $active;
 
-    protected static $main_domain = array();
-    protected static $main_domain_ssl = array();
+    protected static $main_domain = [];
+    protected static $main_domain_ssl = [];
 
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'shop_url',
         'primary' => 'id_shop_url',
-        'fields' => array(
-            'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'main' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'domain' => array('type' => self::TYPE_STRING, 'required' => true, 'size' => 255, 'validate' => 'isCleanHtml'),
-            'domain_ssl' => array('type' => self::TYPE_STRING, 'size' => 255, 'validate' => 'isCleanHtml'),
-            'id_shop' => array('type' => self::TYPE_INT, 'required' => true),
-            'physical_uri' => array('type' => self::TYPE_STRING, 'size' => 64),
-            'virtual_uri' => array('type' => self::TYPE_STRING, 'size' => 64),
-        ),
-    );
+        'fields' => [
+            'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'main' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'domain' => ['type' => self::TYPE_STRING, 'required' => true, 'size' => 255, 'validate' => 'isCleanHtml'],
+            'domain_ssl' => ['type' => self::TYPE_STRING, 'size' => 255, 'validate' => 'isCleanHtml'],
+            'id_shop' => ['type' => self::TYPE_INT, 'required' => true],
+            'physical_uri' => ['type' => self::TYPE_STRING, 'size' => 64],
+            'virtual_uri' => ['type' => self::TYPE_STRING, 'size' => 64],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id_shop' => array('xlink_resource' => 'shops'),
-        ),
-    );
+    protected $webserviceParameters = [
+        'fields' => [
+            'id_shop' => ['xlink_resource' => 'shops'],
+        ],
+    ];
 
     /**
      * @see ObjectModel::getFields()
@@ -119,8 +119,8 @@ class ShopUrlCore extends ObjectModel
 
     public function setMain()
     {
-        $res = Db::getInstance()->update('shop_url', array('main' => 0), 'id_shop = ' . (int) $this->id_shop);
-        $res &= Db::getInstance()->update('shop_url', array('main' => 1), 'id_shop_url = ' . (int) $this->id);
+        $res = Db::getInstance()->update('shop_url', ['main' => 0], 'id_shop = ' . (int) $this->id_shop);
+        $res &= Db::getInstance()->update('shop_url', ['main' => 1], 'id_shop_url = ' . (int) $this->id);
         $this->main = true;
 
         // Reset main URL for all shops to prevent problems
@@ -132,7 +132,7 @@ class ShopUrlCore extends ObjectModel
                 ) = 0
                 GROUP BY s1.id_shop';
         foreach (Db::getInstance()->executeS($sql) as $row) {
-            Db::getInstance()->update('shop_url', array('main' => 1), 'id_shop_url = ' . $row['id_shop_url']);
+            Db::getInstance()->update('shop_url', ['main' => 1], 'id_shop_url = ' . $row['id_shop_url']);
         }
 
         return $res;
@@ -166,6 +166,15 @@ class ShopUrlCore extends ObjectModel
     public static function cacheMainDomainForShop($id_shop)
     {
         if (!isset(self::$main_domain_ssl[(int) $id_shop]) || !isset(self::$main_domain[(int) $id_shop])) {
+            // May be called while the context is not instanciated yet
+            // For instance in first step of the installer
+            if ($id_shop === null && !isset(Context::getContext()->shop)) {
+                self::$main_domain[(int) $id_shop] = null;
+                self::$main_domain_ssl[(int) $id_shop] = null;
+
+                return;
+            }
+
             $row = Db::getInstance()->getRow('
             SELECT domain, domain_ssl
             FROM ' . _DB_PREFIX_ . 'shop_url
@@ -178,8 +187,8 @@ class ShopUrlCore extends ObjectModel
 
     public static function resetMainDomainCache()
     {
-        self::$main_domain = array();
-        self::$main_domain_ssl = array();
+        self::$main_domain = [];
+        self::$main_domain_ssl = [];
     }
 
     public static function getMainShopDomain($id_shop = null)

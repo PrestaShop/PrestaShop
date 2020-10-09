@@ -1,10 +1,11 @@
 {**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *}
 <script>
 	var dashboard_ajax_url = '{$link->getAdminLink('AdminDashboard')}';
@@ -90,7 +90,7 @@
 		<div class="col-md-8 col-lg-7" id="hookDashboardZoneTwo">
 			{$hookDashboardZoneTwo}
 			<div id="dashaddons" class="row-margin-bottom">
-				<a href="https://addons.prestashop.com/en/209-dashboards?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">
+				<a href="https://addons.prestashop.com/en/209-dashboards?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" target="_blank" rel="noopener noreferrer nofollow">
 					<i class="icon-plus"></i> {l s='Add more dashboard modules' d='Admin.Dashboard.Feature'}
 				</a>
 			</div>
@@ -105,26 +105,14 @@
 				<iframe style="overflow:hidden;border:none" src="{$new_version_url|escape:'html':'UTF-8'}" ></iframe>
 			</section>
 			<section class="dash_links panel">
-				<h3><i class="icon-link"></i> {l s="Useful links" d='Admin.Dashboard.Feature'}</h3>
+				<h3><i class="icon-link"></i> {l s="We stay by your side!" d='Admin.Dashboard.Feature'}</h3>
 					<dl>
-						<dt><a href="http://doc.prestashop.com/display/PS17?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">{l s="Official Documentation" d='Admin.Dashboard.Feature'}</a></dt>
-						<dd>{l s="User, Developer and Designer Guides" d='Admin.Dashboard.Feature'}</dd>
+						<dt><a href="{$help_center_link}" target="_blank" rel="noopener noreferrer nofollow">{l s="Help Center" d='Admin.Global'}</a></dt>
+						<dd>{l s="Documentation, support, experts, training... PrestaShop and all of its community are here to guide you" d='Admin.Dashboard.Feature'}</dd>
 					</dl>
 					<dl>
-						<dt><a href="http://www.prestashop.com/forums?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">{l s="PrestaShop Forum" d='Admin.Dashboard.Feature'}</a></dt>
-						<dd>{l s="Connect with the PrestaShop community" d='Admin.Dashboard.Feature'}</dd>
-					</dl>
-					<dl>
-						<dt><a href="https://addons.prestashop.com?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">{l s="PrestaShop Addons" d='Admin.Dashboard.Feature'}</a></dt>
-						<dd>{l s="Enhance your store with templates & modules" d='Admin.Dashboard.Feature'}</dd>
-					</dl>
-					<dl>
-						<dt><a href="https://github.com/PrestaShop/PrestaShop/issues" class="_blank">{l s="GitHub" d='Admin.Global'}</a></dt>
-						<dd>{l s="Report issues on GitHub" d='Admin.Dashboard.Feature'}</dd>
-					</dl>
-					<dl>
-						<dt><a href="http://www.prestashop.com/en/contact-us?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">{l s="Contact Us!" d='Admin.Dashboard.Feature'}</a></dt>
-						<dd></dd>
+						<dt><a href="https://addons.prestashop.com?utm_source=back-office&amp;utm_medium=links&amp;utm_campaign=addons-{$lang_iso}&amp;utm_content=download17" target="_blank" rel="noopener noreferrer nofollow">{l s="PrestaShop Marketplace" d='Admin.Dashboard.Feature'}</a></dt>
+						<dd>{l s="Traffic, conversion rate, customer loyalty... Increase your sales with all of the PrestaShop modules and themes" d='Admin.Dashboard.Feature'}</dd>
 					</dl>
 			</section>
 		</div>

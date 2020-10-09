@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.attribute_group.attribute_group_view_data_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\AttributeGroup\AttributeGroupViewDataProvider'
+    arguments:
+      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+      - "@=service('prestashop.adapter.legacy.configuration')"

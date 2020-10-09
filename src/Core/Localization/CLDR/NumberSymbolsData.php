@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
@@ -39,7 +39,7 @@ class NumberSymbolsData
      *
      * @var string
      */
-    public $decimal;
+    protected $decimal;
 
     /**
      * Digits group separator character.
@@ -49,7 +49,7 @@ class NumberSymbolsData
      *
      * @var string
      */
-    public $group;
+    protected $group;
 
     /**
      * List elements separator character.
@@ -58,7 +58,7 @@ class NumberSymbolsData
      *
      * @var string
      */
-    public $list;
+    protected $list;
 
     /**
      * Percent sign character.
@@ -67,7 +67,7 @@ class NumberSymbolsData
      *
      * @var string
      */
-    public $percentSign;
+    protected $percentSign;
 
     /**
      * Minus sign character.
@@ -76,7 +76,7 @@ class NumberSymbolsData
      *
      * @var string
      */
-    public $minusSign;
+    protected $minusSign;
 
     /**
      * Plus sign character.
@@ -86,7 +86,7 @@ class NumberSymbolsData
      *
      * @var string
      */
-    public $plusSign;
+    protected $plusSign;
 
     /**
      * Exponential character.
@@ -95,7 +95,7 @@ class NumberSymbolsData
      *
      * @var string
      */
-    public $exponential;
+    protected $exponential;
 
     /**
      * Superscripting exponent character.
@@ -105,7 +105,7 @@ class NumberSymbolsData
      *
      * @var string
      */
-    public $superscriptingExponent;
+    protected $superscriptingExponent;
 
     /**
      * Permille sign character.
@@ -114,21 +114,21 @@ class NumberSymbolsData
      *
      * @var string
      */
-    public $perMille;
+    protected $perMille;
 
     /**
      * The infinity sign. Corresponds to the IEEE infinity bit pattern.
      *
      * @var string
      */
-    public $infinity;
+    protected $infinity;
 
     /**
      * The NaN (Not A Number) sign. Corresponds to the IEEE NaN bit pattern.
      *
      * @var string
      */
-    public $nan;
+    protected $nan;
 
     /**
      * Separator used in date-time formatting.
@@ -138,88 +138,366 @@ class NumberSymbolsData
      *
      * @var string
      */
-    public $timeSeparator;
+    protected $timeSeparator;
 
     /**
      * Will be set when decimal separator is different when formatting a price.
      *
      * @var string
      */
-    public $currencyDecimal;
+    protected $currencyDecimal;
 
     /**
      * Will be set when digits grouping is different when formatting a price.
      *
      * @var string
      */
-    public $currencyGroup;
+    protected $currencyGroup;
 
     /**
      * Override this object's symbols with another NumberSymbolsData object.
      *
-     * @param NumberSymbolsData $symbolsData
-     *                                       Symbols to use for the override
+     * @param NumberSymbolsData $symbolsData Symbols to use for the override
      *
-     * @return $this
-     *               Fluent interface
+     * @return $this Fluent interface
      */
     public function overrideWith(NumberSymbolsData $symbolsData)
     {
-        if (isset($symbolsData->decimal)) {
-            $this->decimal = $symbolsData->decimal;
+        if (null !== $symbolsData->getDecimal()) {
+            $this->setDecimal($symbolsData->getDecimal());
         }
 
-        if (isset($symbolsData->group)) {
-            $this->group = $symbolsData->group;
+        if (null !== $symbolsData->getGroup()) {
+            $this->setGroup($symbolsData->getGroup());
         }
 
-        if (isset($symbolsData->list)) {
-            $this->list = $symbolsData->list;
+        if (null !== $symbolsData->getList()) {
+            $this->setList($symbolsData->getList());
         }
 
-        if (isset($symbolsData->percentSign)) {
-            $this->percentSign = $symbolsData->percentSign;
+        if (null !== $symbolsData->getPercentSign()) {
+            $this->setPercentSign($symbolsData->getPercentSign());
         }
 
-        if (isset($symbolsData->minusSign)) {
-            $this->minusSign = $symbolsData->minusSign;
+        if (null !== $symbolsData->getMinusSign()) {
+            $this->setMinusSign($symbolsData->getMinusSign());
         }
 
-        if (isset($symbolsData->plusSign)) {
-            $this->plusSign = $symbolsData->plusSign;
+        if (null !== $symbolsData->getPlusSign()) {
+            $this->setPlusSign($symbolsData->getPlusSign());
         }
 
-        if (isset($symbolsData->exponential)) {
-            $this->exponential = $symbolsData->exponential;
+        if (null !== $symbolsData->getExponential()) {
+            $this->setExponential($symbolsData->getExponential());
         }
 
-        if (isset($symbolsData->superscriptingExponent)) {
-            $this->superscriptingExponent = $symbolsData->superscriptingExponent;
+        if (null !== $symbolsData->getSuperscriptingExponent()) {
+            $this->setSuperscriptingExponent($symbolsData->getSuperscriptingExponent());
         }
 
-        if (isset($symbolsData->perMille)) {
-            $this->perMille = $symbolsData->perMille;
+        if (null !== $symbolsData->getPerMille()) {
+            $this->setPerMille($symbolsData->getPerMille());
         }
 
-        if (isset($symbolsData->infinity)) {
-            $this->infinity = $symbolsData->infinity;
+        if (null !== $symbolsData->getInfinity()) {
+            $this->setInfinity($symbolsData->getInfinity());
         }
 
-        if (isset($symbolsData->nan)) {
-            $this->nan = $symbolsData->nan;
+        if (null !== $symbolsData->getNan()) {
+            $this->setNan($symbolsData->getNan());
         }
 
-        if (isset($symbolsData->timeSeparator)) {
-            $this->timeSeparator = $symbolsData->timeSeparator;
+        if (null !== $symbolsData->getTimeSeparator()) {
+            $this->setTimeSeparator($symbolsData->getTimeSeparator());
         }
 
-        if (isset($symbolsData->currencyDecimal)) {
-            $this->currencyDecimal = $symbolsData->currencyDecimal;
+        if (null !== $symbolsData->getCurrencyDecimal()) {
+            $this->setCurrencyDecimal($symbolsData->getCurrencyDecimal());
         }
 
-        if (isset($symbolsData->currencyGroup)) {
-            $this->currencyGroup = $symbolsData->currencyGroup;
+        if (null !== $symbolsData->getCurrencyGroup()) {
+            $this->setCurrencyGroup($symbolsData->getCurrencyGroup());
         }
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDecimal()
+    {
+        return $this->decimal;
+    }
+
+    /**
+     * @param string $decimal
+     *
+     * @return NumberSymbolsData
+     */
+    public function setDecimal($decimal)
+    {
+        $this->decimal = $decimal;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGroup()
+    {
+        return $this->group;
+    }
+
+    /**
+     * @param string $group
+     *
+     * @return NumberSymbolsData
+     */
+    public function setGroup($group)
+    {
+        $this->group = $group;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getList()
+    {
+        return $this->list;
+    }
+
+    /**
+     * @param string $list
+     *
+     * @return NumberSymbolsData
+     */
+    public function setList($list)
+    {
+        $this->list = $list;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPercentSign()
+    {
+        return $this->percentSign;
+    }
+
+    /**
+     * @param string $percentSign
+     *
+     * @return NumberSymbolsData
+     */
+    public function setPercentSign($percentSign)
+    {
+        $this->percentSign = $percentSign;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMinusSign()
+    {
+        return $this->minusSign;
+    }
+
+    /**
+     * @param string $minusSign
+     *
+     * @return NumberSymbolsData
+     */
+    public function setMinusSign($minusSign)
+    {
+        $this->minusSign = $minusSign;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPlusSign()
+    {
+        return $this->plusSign;
+    }
+
+    /**
+     * @param string $plusSign
+     *
+     * @return NumberSymbolsData
+     */
+    public function setPlusSign($plusSign)
+    {
+        $this->plusSign = $plusSign;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExponential()
+    {
+        return $this->exponential;
+    }
+
+    /**
+     * @param string $exponential
+     *
+     * @return NumberSymbolsData
+     */
+    public function setExponential($exponential)
+    {
+        $this->exponential = $exponential;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSuperscriptingExponent()
+    {
+        return $this->superscriptingExponent;
+    }
+
+    /**
+     * @param string $superscriptingExponent
+     *
+     * @return NumberSymbolsData
+     */
+    public function setSuperscriptingExponent($superscriptingExponent)
+    {
+        $this->superscriptingExponent = $superscriptingExponent;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPerMille()
+    {
+        return $this->perMille;
+    }
+
+    /**
+     * @param string $perMille
+     *
+     * @return NumberSymbolsData
+     */
+    public function setPerMille($perMille)
+    {
+        $this->perMille = $perMille;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInfinity()
+    {
+        return $this->infinity;
+    }
+
+    /**
+     * @param string $infinity
+     *
+     * @return NumberSymbolsData
+     */
+    public function setInfinity($infinity)
+    {
+        $this->infinity = $infinity;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNan()
+    {
+        return $this->nan;
+    }
+
+    /**
+     * @param string $nan
+     *
+     * @return NumberSymbolsData
+     */
+    public function setNan($nan)
+    {
+        $this->nan = $nan;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTimeSeparator()
+    {
+        return $this->timeSeparator;
+    }
+
+    /**
+     * @param string $timeSeparator
+     *
+     * @return NumberSymbolsData
+     */
+    public function setTimeSeparator($timeSeparator)
+    {
+        $this->timeSeparator = $timeSeparator;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrencyDecimal()
+    {
+        return $this->currencyDecimal;
+    }
+
+    /**
+     * @param string $currencyDecimal
+     *
+     * @return NumberSymbolsData
+     */
+    public function setCurrencyDecimal($currencyDecimal)
+    {
+        $this->currencyDecimal = $currencyDecimal;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrencyGroup()
+    {
+        return $this->currencyGroup;
+    }
+
+    /**
+     * @param string $currencyGroup
+     *
+     * @return NumberSymbolsData
+     */
+    public function setCurrencyGroup($currencyGroup)
+    {
+        $this->currencyGroup = $currencyGroup;
 
         return $this;
     }

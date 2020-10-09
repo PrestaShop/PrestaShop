@@ -5,7 +5,7 @@
       <trans-unit id="a9e3d6296e9b194ee466230d8438935a">
         <source>Receive offers from our partners</source>
         <target>Receive offers from our partners</target>
-        <note>Line: 211</note>
+        <note>Line: 225</note>
       </trans-unit>
     </body>
   </file>
@@ -23,7 +23,7 @@
       <trans-unit id="4b877ba8588b19f1b278510bf2b57ebb">
         <source>Log me out</source>
         <target>Log me out</target>
-        <note>Line: 3</note>
+        <note>Line: 27</note>
       </trans-unit>
     </body>
   </file>
@@ -101,12 +101,12 @@ File: themes/StarterTheme/templates/customer/my-account.tpl:34</note>
       <trans-unit id="8e3ecabff428ab5465ab8feb928436e0">
         <source>Not you? [1]Log out[/1]</source>
         <target>Not you? [1]Log out[/1]</target>
-        <note>Line: 24</note>
+        <note>Line: 26</note>
       </trans-unit>
       <trans-unit id="6280ed214163d6e214763ff970910cdc">
         <source>Connected as [1]%firstname% %lastname%[/1].</source>
         <target>Connected as [1]%firstname% %lastname%[/1].</target>
-        <note>Line: 11</note>
+        <note>Line: 13</note>
       </trans-unit>
     </body>
   </file>

@@ -17,7 +17,7 @@
     </state>
     <state id="AP" id_country="US" id_zone="North_America" iso_code="AP" tax_behavior="0" active="1">
       <name>AP</name>
-    </state>   
+    </state>
     <state id="AL" id_country="US" id_zone="North_America" iso_code="AL" tax_behavior="0" active="1">
       <name>Alabama</name>
     </state>
@@ -980,6 +980,90 @@
     </state>
     <state id="AU-WA" id_country="AU" id_zone="Oceania" iso_code="WA" tax_behavior="0" active="1">
       <name>Western Australia</name>
-    </state>  
+    </state>
+    <state id="IN-AP" id_country="IN" id_zone="Asia" iso_code="AP" tax_behavior="0" active="1">
+      <name>Andhra Pradesh</name>
+    </state>
+    <state id="IN-AR" id_country="IN" id_zone="Asia" iso_code="AR" tax_behavior="0" active="1">
+      <name>Arunachal Pradesh</name>
+    </state>
+    <state id="IN-AS" id_country="IN" id_zone="Asia" iso_code="AS" tax_behavior="0" active="1">
+      <name>Assam</name>
+    </state>
+    <state id="IN-BR" id_country="IN" id_zone="Asia" iso_code="BR" tax_behavior="0" active="1">
+      <name>Bihar</name>
+    </state>
+    <state id="IN-CT" id_country="IN" id_zone="Asia" iso_code="CT" tax_behavior="0" active="1">
+      <name>Chhattisgarh</name>
+    </state>
+    <state id="IN-GA" id_country="IN" id_zone="Asia" iso_code="GA" tax_behavior="0" active="1">
+      <name>Goa</name>
+    </state>
+    <state id="IN-GJ" id_country="IN" id_zone="Asia" iso_code="GJ" tax_behavior="0" active="1">
+      <name>Gujarat</name>
+    </state>
+    <state id="IN-HR" id_country="IN" id_zone="Asia" iso_code="HR" tax_behavior="0" active="1">
+      <name>Haryana</name>
+    </state>
+    <state id="IN-HP" id_country="IN" id_zone="Asia" iso_code="HP" tax_behavior="0" active="1">
+      <name>Himachal Pradesh</name>
+    </state>
+    <state id="IN-JH" id_country="IN" id_zone="Asia" iso_code="JH" tax_behavior="0" active="1">
+      <name>Jharkhand</name>
+    </state>
+    <state id="IN-KA" id_country="IN" id_zone="Asia" iso_code="KA" tax_behavior="0" active="1">
+      <name>Karnataka</name>
+    </state>
+    <state id="IN-KL" id_country="IN" id_zone="Asia" iso_code="KL" tax_behavior="0" active="1">
+      <name>Kerala</name>
+    </state>
+    <state id="IN-MP" id_country="IN" id_zone="Asia" iso_code="MP" tax_behavior="0" active="1">
+      <name>Madhya Pradesh</name>
+    </state>
+    <state id="IN-MH" id_country="IN" id_zone="Asia" iso_code="MH" tax_behavior="0" active="1">
+      <name>Maharashtra</name>
+    </state>
+    <state id="IN-MN" id_country="IN" id_zone="Asia" iso_code="MN" tax_behavior="0" active="1">
+      <name>Manipur</name>
+    </state>
+    <state id="IN-ML" id_country="IN" id_zone="Asia" iso_code="ML" tax_behavior="0" active="1">
+      <name>Meghalaya</name>
+    </state>
+    <state id="IN-MZ" id_country="IN" id_zone="Asia" iso_code="MZ" tax_behavior="0" active="1">
+      <name>Mizoram</name>
+    </state>
+    <state id="IN-NL" id_country="IN" id_zone="Asia" iso_code="NL" tax_behavior="0" active="1">
+      <name>Nagaland</name>
+    </state>
+    <state id="IN-OR" id_country="IN" id_zone="Asia" iso_code="OR" tax_behavior="0" active="1">
+      <name>Odisha</name>
+    </state>
+    <state id="IN-PB" id_country="IN" id_zone="Asia" iso_code="PB" tax_behavior="0" active="1">
+      <name>Punjab</name>
+    </state>
+    <state id="IN-RJ" id_country="IN" id_zone="Asia" iso_code="RJ" tax_behavior="0" active="1">
+      <name>Rajasthan</name>
+    </state>
+    <state id="IN-SK" id_country="IN" id_zone="Asia" iso_code="SK" tax_behavior="0" active="1">
+      <name>Sikkim</name>
+    </state>
+    <state id="IN-TN" id_country="IN" id_zone="Asia" iso_code="TN" tax_behavior="0" active="1">
+      <name>Tamil Nadu</name>
+    </state>
+    <state id="IN-TG" id_country="IN" id_zone="Asia" iso_code="TG" tax_behavior="0" active="1">
+      <name>Telangana</name>
+    </state>
+    <state id="IN-TR" id_country="IN" id_zone="Asia" iso_code="TR" tax_behavior="0" active="1">
+      <name>Tripura</name>
+    </state>
+    <state id="IN-UP" id_country="IN" id_zone="Asia" iso_code="UP" tax_behavior="0" active="1">
+      <name>Uttar Pradesh</name>
+    </state>
+    <state id="IN-UT" id_country="IN" id_zone="Asia" iso_code="UT" tax_behavior="0" active="1">
+      <name>Uttarakhand</name>
+    </state>
+    <state id="IN-WB" id_country="IN" id_zone="Asia" iso_code="WB" tax_behavior="0" active="1">
+      <name>West Bengal</name>
+    </state>
   </entities>
 </entity_state>

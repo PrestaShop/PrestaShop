@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -48,33 +48,33 @@ class GuestCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'guest',
         'primary' => 'id_guest',
-        'fields' => array(
-            'id_operating_system' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_web_browser' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_customer' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'javascript' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'screen_resolution_x' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'screen_resolution_y' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'screen_color' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'sun_java' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'adobe_flash' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'adobe_director' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'apple_quicktime' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'real_player' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'windows_media' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'accept_language' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 8),
-            'mobile_theme' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-        ),
-    );
+        'fields' => [
+            'id_operating_system' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'id_web_browser' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'id_customer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'javascript' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'screen_resolution_x' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'screen_resolution_y' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'screen_color' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'sun_java' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'adobe_flash' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'adobe_director' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'apple_quicktime' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'real_player' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'windows_media' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'accept_language' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 8],
+            'mobile_theme' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id_customer' => array('xlink_resource' => 'customers'),
-        ),
-    );
+    protected $webserviceParameters = [
+        'fields' => [
+            'id_customer' => ['xlink_resource' => 'customers'],
+        ],
+    ];
 
     /**
      * Set user agent.
@@ -99,7 +99,7 @@ class GuestCore extends ObjectModel
     protected function getLanguage($acceptLanguage)
     {
         // $langsArray is filled with all the languages accepted, ordered by priority
-        $langsArray = array();
+        $langsArray = [];
         preg_match_all('/([a-z]{2}(-[a-z]{2})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/', $acceptLanguage, $array);
         if (count($array[1])) {
             $langsArray = array_combine($array[1], $array[4]);
@@ -122,7 +122,7 @@ class GuestCore extends ObjectModel
      */
     protected function getBrowser($userAgent)
     {
-        $browserArray = array(
+        $browserArray = [
             'Chrome' => 'Chrome/',
             'Safari' => 'Safari',
             'Safari iPad' => 'iPad',
@@ -134,7 +134,7 @@ class GuestCore extends ObjectModel
             'IE 8' => 'MSIE 8',
             'IE 7' => 'MSIE 7',
             'IE 6' => 'MSIE 6',
-        );
+        ];
         foreach ($browserArray as $k => $value) {
             if (strstr($userAgent, $value)) {
                 $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
@@ -156,7 +156,7 @@ class GuestCore extends ObjectModel
      */
     protected function getOs($userAgent)
     {
-        $osArray = array(
+        $osArray = [
             'Windows 10' => 'Windows NT 10',
             'Windows 8.1' => 'Windows NT 6.3',
             'Windows 8' => 'Windows NT 6.2',
@@ -166,7 +166,7 @@ class GuestCore extends ObjectModel
             'MacOsX' => 'Mac OS X',
             'Android' => 'Android',
             'Linux' => 'X11',
-        );
+        ];
 
         foreach ($osArray as $k => $value) {
             if (strstr($userAgent, $value)) {

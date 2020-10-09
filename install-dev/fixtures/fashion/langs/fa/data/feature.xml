@@ -1,18 +1,9 @@
 <?xml version="1.0"?>
 <entity_feature>
-  <feature id="Compositions">
-    <name>ترکیب ها</name>
+  <feature id="Composition">
+    <name>Composition</name>
   </feature>
-  <feature id="Paper_Type">
-    <name>نوع کاغذ</name>
-  </feature>
-  <feature id="Color">
-    <name>رنگ</name>
-  </feature>
-  <feature id="Size">
-    <name>اندازه</name>
-  </feature>
-  <feature id="Frame_Size">
-    <name>ابعاد قاب</name>
+  <feature id="Property">
+    <name>Property</name>
   </feature>
 </entity_feature>

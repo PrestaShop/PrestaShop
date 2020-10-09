@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -45,54 +45,54 @@ class AdminSearchEnginesControllerCore extends AdminController
             $this->deleted = false;
         }
 
-        $this->bulk_actions = array(
-            'delete' => array(
-                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
-                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
+        $this->bulk_actions = [
+            'delete' => [
+                'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 'icon' => 'icon-trash',
-            ),
-        );
+            ],
+        ];
 
-        $this->fields_list = array(
-            'id_search_engine' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'width' => 25),
-            'server' => array('title' => $this->trans('Server', array(), 'Admin.Shopparameters.Feature')),
-            'getvar' => array('title' => $this->trans('GET variable', array(), 'Admin.Shopparameters.Feature'), 'width' => 100),
-        );
+        $this->fields_list = [
+            'id_search_engine' => ['title' => $this->trans('ID', [], 'Admin.Global'), 'width' => 25],
+            'server' => ['title' => $this->trans('Server', [], 'Admin.Shopparameters.Feature')],
+            'getvar' => ['title' => $this->trans('GET variable', [], 'Admin.Shopparameters.Feature'), 'width' => 100],
+        ];
 
-        $this->fields_form = array(
-            'legend' => array(
-                'title' => $this->trans('Referrer', array(), 'Admin.Shopparameters.Feature'),
-            ),
-            'input' => array(
-                array(
+        $this->fields_form = [
+            'legend' => [
+                'title' => $this->trans('Referrer', [], 'Admin.Shopparameters.Feature'),
+            ],
+            'input' => [
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Server', array(), 'Admin.Shopparameters.Feature'),
+                    'label' => $this->trans('Server', [], 'Admin.Shopparameters.Feature'),
                     'name' => 'server',
                     'size' => 20,
                     'required' => true,
-                ),
-                array(
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('$_GET variable', array(), 'Admin.Shopparameters.Feature'),
+                    'label' => $this->trans('$_GET variable', [], 'Admin.Shopparameters.Feature'),
                     'name' => 'getvar',
                     'size' => 40,
                     'required' => true,
-                ),
-            ),
-            'submit' => array(
-                'title' => $this->trans('Save', array(), 'Admin.Actions'),
-            ),
-        );
+                ],
+            ],
+            'submit' => [
+                'title' => $this->trans('Save', [], 'Admin.Actions'),
+            ],
+        ];
     }
 
     public function initPageHeaderToolbar()
     {
         if (empty($this->display)) {
-            $this->page_header_toolbar_btn['new_search_engine'] = array(
+            $this->page_header_toolbar_btn['new_search_engine'] = [
                 'href' => self::$currentIndex . '&addsearch_engine&token=' . $this->token,
-                'desc' => $this->trans('Add new search engine', array(), 'Admin.Shopparameters.Feature'),
+                'desc' => $this->trans('Add new search engine', [], 'Admin.Shopparameters.Feature'),
                 'icon' => 'process-icon-new',
-            );
+            ];
         }
 
         $this->identifier_name = 'server';

@@ -1,10 +1,11 @@
 {**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *}
 
 <script type="text/javascript">
@@ -95,7 +95,7 @@
 
 				<div class="alert alert-info">{l s='You\'re currently generating combinations for the following product:'} <b>{$product_name|escape:'html':'UTF-8'}</b></div>
 
-				<div class="alert alert-info"><strong>{l s='Step 1: On the left side, select the attributes you want to use (Hold down the "Ctrl" key on your keyboard and validate by clicking on "Add")'}</strong></div>
+				<div class="alert alert-info"><strong>{l s='Step 1: On the left side, select the attributes you want to use (Hold down the "Ctrl" key on your keyboard and validate by clicking on "%add_label%")' d='Admin.Catalog.Notification' sprintf=['%add_label%' => {l s='Add' d='Admin.Actions'}]}</strong></div>
 
 				{foreach $attribute_groups as $k => $attribute_group}
 					{if isset($attribute_js[$attribute_group['id_attribute_group']])}
@@ -135,7 +135,7 @@
 						</tr>
 					</tbody>
 				</table>
-				<div class="alert alert-info">{l s='Please click on "Generate these combinations".'}</div>
+				<div class="alert alert-info">{l s='Please click on "%generate_label%".' d='Admin.Catalog.Notification' sprintf=['%generate_label%' => {l s='Generate these combinations'}]}</div>
 				<button type="submit" class="btn btn-default" name="generate"><i class="icon-random"></i> {l s='Generate these combinations'}</button>
 			</div>
 		</div>

@@ -111,6 +111,12 @@
           <i>To install PrestaShop <?php echo _PS_INSTALL_VERSION_ ?> you need to update your version of PHP.</i>
       </li>
     <?php endif; ?>
+    <?php if (PHP_VERSION_ID > _PS_INSTALL_MAXIMUM_PHP_VERSION_ID_): ?>
+      <li>
+          PrestaShop requires at most PHP <?php echo _PS_INSTALL_MAXIMUM_PHP_VERSION_ ?> or fewer versions.
+          <i>To install PrestaShop <?php echo _PS_INSTALL_VERSION_ ?> you need to downgrade your version of PHP.</i>
+      </li>
+    <?php endif; ?>
         <?php if (!is_writable(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'var'.DIRECTORY_SEPARATOR.'cache')): ?>
       <li>
           PrestaShop installation needs to write critical files in the folder var/cache.

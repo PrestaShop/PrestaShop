@@ -1,31 +1,79 @@
 .cart-grid {
   margin-bottom: 1rem;
 }
+
 .cart-items {
   margin-bottom: 0;
 }
+
 .cart-item {
   padding: 1rem 0;
 }
+
+.card-block {
+  padding: 1.25rem 1.25rem 0.5rem;
+
+  &.checkout {
+    padding-top: 0;
+    padding-bottom: 1.75rem;
+    margin-top: 1rem;
+  }
+
+  &.cart-summary-totals {
+    padding: 0 1rem 1rem;
+    .cart-summary-line {
+      padding: 0.5rem 0.2rem 0;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+      &.cart-total {
+        padding: 0.5rem;
+        background-color: $gray-light;
+        .label,
+        .value {
+          font-weight: 600;
+        }
+        .label {
+          font-size: 1rem;
+        }
+        .value {
+          font-size: 1.125rem;
+        }
+      }
+      span {
+        &.sub {
+          float: none;
+          font-size: 0.88rem;
+          text-align: left;
+        }
+      }
+    }
+  }
+}
+
 .cart-summary-line {
-  @include clearfix;
+  @include clearfix();
+  margin-bottom: 0.315rem;
   clear: both;
   .label {
     padding-left: 0;
-    font-weight: normal;
+    font-weight: 500;
+    color: $gray-dark;
     white-space: inherit;
   }
   .value {
-    color: $gray-darker;
     float: right;
+    color: $gray-darker;
   }
   &.cart-summary-subtotals {
     .label,
     .value {
-      font-weight: normal;
+      font-weight: 500;
     }
   }
 }
+
 /** CART BODY **/
 .cart-grid-body {
   a.label {
@@ -44,43 +92,63 @@
   }
   margin-bottom: 0.75rem;
 }
+
 /** CART RIGHT **/
 .cart-grid-right {
   .promo-discounts {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
     margin-bottom: 0;
+    text-align: center;
+
     .cart-summary-line {
       .label {
+        font-size: 1rem;
         color: $gray;
+
         .code {
-          text-decoration: underline;
+          color: $warning-second;
           cursor: pointer;
         }
       }
     }
   }
+  .cart-summary-line {
+    &.cart-subtotal-products {
+      .label,
+      .value {
+        font-weight: 600;
+      }
+      .value {
+        font-size: 1rem;
+      }
+    }
+  }
 }
+
 .block-promo {
+  margin-bottom: 1rem;
+
   .promo-code {
-    padding: 1.60rem;
-    background: $gray-light;
+    padding: 1rem;
     .alert-danger {
       position: relative;
-      margin-top: 1.25rem;
-      background: $brand-danger;
-      color: white;
       display: none;
+      margin-top: 1.25rem;
+      color: #fff;
+      background: $brand-danger;
       &::after {
+        position: absolute;
         bottom: 100%;
         left: 10%;
-        border: solid transparent;
-        content: " ";
-        height: 0;
         width: 0;
-        position: absolute;
-        pointer-events: none;
-        border-bottom-color:  $brand-danger;
-        border-width: 10px;
+        height: 0;
         margin-left: -10px;
+        pointer-events: none;
+        content: " ";
+        border: solid transparent;
+        border-width: 10px;
+        border-bottom-color: $brand-danger;
       }
     }
     form {
@@ -88,43 +156,81 @@
     }
   }
   .promo-input {
-    color: $gray-darker;
-    border: $gray 1px solid;
-    height: 2.5rem;
-    text-indent: 0.625rem;
     width: 50%;
+    height: 2.5rem;
+    margin-right: -0.24rem;
+    color: $gray-darker;
+    text-indent: 0.625rem;
+    border: $gray 1px solid;
     + button {
       margin-top: -4px;
+      margin-left: -1px;
       text-transform: capitalize;
+      border: 2px solid $brand-primary;
     }
   }
   .cart-summary-line .label,
   .promo-name {
-    color: $brand-warning;
+    margin-bottom: 0;
     font-weight: 600;
+    color: $brand-warning;
     a {
-      font-weight: normal;
-      color: $gray-darker;
       display: inline-block;
+      font-weight: 500;
+      color: $gray-darker;
+    }
+  }
+  .promo-name {
+    .cart-summary-line {
+      .label {
+        font-weight: 500;
+        color: $gray-dark;
+      }
+      span {
+        color: $warning-second;
+      }
+    }
+    .material-icons {
+      margin-left: 0.4rem;
+      font-size: 1.2rem;
     }
   }
   .promo-code-button {
-    padding-left: 1.25rem;
-    margin-bottom: 1.25rem;
-    display: inline-block;
+    display: block;
+    padding: 0 0 1rem;
+    text-align: center;
+
+    &.with-discounts {
+      display: none;
+    }
+
+    &.cancel-promo {
+      margin-bottom: 0;
+      color: $brand-primary;
+      &[aria-expanded="true"] {
+        display: block;
+        padding: 0;
+        margin-top: 1rem;
+      }
+    }
   }
   &.promo-highlighted {
-    padding: 1.25rem;
-    padding-bottom: 0;
+    padding: 0 1rem;
+    margin-bottom: 0;
+    text-align: center;
+  }
+  p {
     margin-bottom: 0;
   }
 }
+
 /** CONTENT LEFT **/
 .product-line-grid-left {
   img {
     max-width: 100%;
   }
 }
+
 /** CONTENT BODY **/
 .product-line-grid-body {
   > .product-line-info {
@@ -135,7 +241,7 @@
       white-space: inherit;
     }
     > .out-of-stock {
-      color: red;
+      color: #f00;
     }
     > .available {
       color: $brand-success;
@@ -147,16 +253,17 @@
     }
   }
 }
+
 /** CONTENT LEFT **/
 .product-line-grid-right {
   .cart-line-product-actions,
   .product-price {
-    color: $gray-darker;
     line-height: 36px;
+    color: $gray-darker;
     .remove-from-cart {
-      color: $gray-darker;
       display: inline-block;
       margin-top: 0.3125rem;
+      color: $gray-darker;
     }
   }
 }
@@ -183,11 +290,12 @@
       padding: 0;
     }
     .no-items {
-      padding: 1rem;
       display: inline-block;
+      padding: 1rem;
     }
   }
   .product-line-grid-left {
+    // stylelint-disable-next-line
     padding-right: 0 !important;
   }
 }

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 class CmsControllerCore extends FrontController
 {
@@ -93,7 +93,7 @@ class CmsControllerCore extends FrontController
 
             $filteredCmsContent = Hook::exec(
                 'filterCmsContent',
-                array('object' => $cmsVar),
+                ['object' => $cmsVar],
                 $id_module = null,
                 $array_return = false,
                 $check_exceptions = true,
@@ -105,9 +105,9 @@ class CmsControllerCore extends FrontController
                 $cmsVar = $filteredCmsContent['object'];
             }
 
-            $this->context->smarty->assign(array(
+            $this->context->smarty->assign([
                 'cms' => $cmsVar,
-            ));
+            ]);
 
             if ($this->cms->indexation == 0) {
                 $this->context->smarty->assign('nobots', true);
@@ -115,14 +115,14 @@ class CmsControllerCore extends FrontController
 
             $this->setTemplate(
                 'cms/page',
-                array('entity' => 'cms', 'id' => $this->cms->id)
+                ['entity' => 'cms', 'id' => $this->cms->id]
             );
         } elseif ($this->assignCase == 2) {
             $cmsCategoryVar = $this->getTemplateVarCategoryCms();
 
             $filteredCmsCategoryContent = Hook::exec(
                 'filterCmsCategoryContent',
-                array('object' => $cmsCategoryVar),
+                ['object' => $cmsCategoryVar],
                 $id_module = null,
                 $array_return = false,
                 $check_exceptions = true,
@@ -146,7 +146,7 @@ class CmsControllerCore extends FrontController
      */
     protected function getSSLCMSPageIds()
     {
-        return array((int) Configuration::get('PS_CONDITIONS_CMS_ID'), (int) Configuration::get('LEGAL_CMS_ID_REVOCATION'));
+        return [(int) Configuration::get('PS_CONDITIONS_CMS_ID'), (int) Configuration::get('LEGAL_CMS_ID_REVOCATION')];
     }
 
     public function getBreadcrumbLinks()
@@ -162,18 +162,18 @@ class CmsControllerCore extends FrontController
         if ($cmsCategory->id_parent != 0) {
             foreach (array_reverse($cmsCategory->getParentsCategories()) as $category) {
                 $cmsSubCategory = new CMSCategory($category['id_cms_category']);
-                $breadcrumb['links'][] = array(
+                $breadcrumb['links'][] = [
                     'title' => $cmsSubCategory->getName(),
                     'url' => $this->context->link->getCMSCategoryLink($cmsSubCategory),
-                );
+                ];
             }
         }
 
         if ($this->assignCase == 1) {
-            $breadcrumb['links'][] = array(
+            $breadcrumb['links'][] = [
                 'title' => $this->context->controller->cms->meta_title,
                 'url' => $this->context->link->getCMSLink($this->context->controller->cms),
-            );
+            ];
         }
 
         return $breadcrumb;
@@ -197,11 +197,11 @@ class CmsControllerCore extends FrontController
 
     public function getTemplateVarCategoryCms()
     {
-        $categoryCms = array();
+        $categoryCms = [];
 
         $categoryCms['cms_category'] = $this->objectPresenter->present($this->cms_category);
-        $categoryCms['sub_categories'] = array();
-        $categoryCms['cms_pages'] = array();
+        $categoryCms['sub_categories'] = [];
+        $categoryCms['cms_pages'] = [];
 
         foreach ($this->cms_category->getSubCategories($this->context->language->id) as $subCategory) {
             $categoryCms['sub_categories'][$subCategory['id_cms_category']] = $subCategory;

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Localization\Specification;
@@ -72,8 +72,13 @@ class Number implements NumberInterface
         $this->positivePattern = $positivePattern;
         $this->negativePattern = $negativePattern;
         $this->symbols = $symbols;
+
+        if ($maxFractionDigits < $minFractionDigits) {
+            $minFractionDigits = $maxFractionDigits;
+        }
         $this->maxFractionDigits = $maxFractionDigits;
         $this->minFractionDigits = $minFractionDigits;
+
         $this->groupingUsed = $groupingUsed;
         $this->primaryGroupSize = $primaryGroupSize;
         $this->secondaryGroupSize = $secondaryGroupSize;
@@ -137,7 +142,7 @@ class Number implements NumberInterface
 
     /**
      * Size of primary digits group in the number
-     * eg: 999 is the primary group in this number : 1 234 999.567.
+     * e.g.: 999 is the primary group in this number: 1 234 999.567.
      *
      * @var int
      */
@@ -145,8 +150,8 @@ class Number implements NumberInterface
 
     /**
      * Size of secondary digits groups in the number
-     * eg: 999 is a secondary group in this number : 123 999 456.789
-     * eg: another secondary group (still 999) : 999 123 456.789.
+     * eg: 999 is a secondary group in this number: 123 999 456.789
+     * eg: another secondary group (still 999): 999 123 456.789.
      *
      * @var int
      */
@@ -174,7 +179,7 @@ class Number implements NumberInterface
      *
      * @throws LocalizationException
      */
-    public function getSymbolsByNumberingSystem($numberingSystem = null)
+    public function getSymbolsByNumberingSystem($numberingSystem = NumberInterface::NUMBERING_SYSTEM_LATIN)
     {
         if (!isset($this->symbols[$numberingSystem])) {
             throw new LocalizationException('Unknown or invalid numbering system');
@@ -317,5 +322,24 @@ class Number implements NumberInterface
         ) {
             throw new LocalizationException('Invalid secondaryGroupSize');
         }
+    }
+
+    /**
+     * To array function
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            'numberSymbols' => $this->getSymbolsByNumberingSystem()->toArray(),
+            'positivePattern' => $this->getPositivePattern(),
+            'negativePattern' => $this->getNegativePattern(),
+            'maxFractionDigits' => $this->getMaxFractionDigits(),
+            'minFractionDigits' => $this->getMinFractionDigits(),
+            'groupingUsed' => $this->isGroupingUsed(),
+            'primaryGroupSize' => $this->getPrimaryGroupSize(),
+            'secondaryGroupSize' => $this->getSecondaryGroupSize(),
+        ];
     }
 }

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 class QqUploadedFileFormCore
 {
@@ -34,7 +34,7 @@ class QqUploadedFileFormCore
     {
         $product = new Product($_GET['id_product']);
         if (!Validate::isLoadedObject($product)) {
-            return array('error' => Context::getContext()->getTranslator()->trans('Cannot add image because product creation failed.', array(), 'Admin.Catalog.Notification'));
+            return ['error' => Context::getContext()->getTranslator()->trans('Cannot add image because product creation failed.', [], 'Admin.Catalog.Notification')];
         } else {
             $image = new Image();
             $image->id_product = (int) $product->id;
@@ -45,7 +45,7 @@ class QqUploadedFileFormCore
                     if (Validate::isGenericName($legend)) {
                         $image->legend[(int) $key] = $legend;
                     } else {
-                        return array('error' => Context::getContext()->getTranslator()->trans('Error on image caption: "%1s" is not a valid caption.', array(Tools::safeOutput($legend)), 'Admin.Catalog.Notification'));
+                        return ['error' => Context::getContext()->getTranslator()->trans('Error on image caption: "%1s" is not a valid caption.', [Tools::safeOutput($legend)], 'Admin.Catalog.Notification')];
                     }
                 }
             }
@@ -56,10 +56,10 @@ class QqUploadedFileFormCore
             }
 
             if (($validate = $image->validateFieldsLang(false, true)) !== true) {
-                return array('error' => $validate);
+                return ['error' => $validate];
             }
             if (!$image->add()) {
-                return array('error' => Context::getContext()->getTranslator()->trans('Error while creating additional image', array(), 'Admin.Catalog.Notification'));
+                return ['error' => Context::getContext()->getTranslator()->trans('Error while creating additional image', [], 'Admin.Catalog.Notification')];
             } else {
                 return $this->copyImage($product->id, $image->id);
             }
@@ -70,29 +70,29 @@ class QqUploadedFileFormCore
     {
         $image = new Image($id_image);
         if (!$new_path = $image->getPathForCreation()) {
-            return array('error' => Context::getContext()->getTranslator()->trans('An error occurred while attempting to create a new folder.', array(), 'Admin.Notifications.Error'));
+            return ['error' => Context::getContext()->getTranslator()->trans('An error occurred while attempting to create a new folder.', [], 'Admin.Notifications.Error')];
         }
         if (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES['qqfile']['tmp_name'], $tmpName)) {
-            return array('error' => Context::getContext()->getTranslator()->trans('An error occurred while uploading the image.', array(), 'Admin.Notifications.Error'));
+            return ['error' => Context::getContext()->getTranslator()->trans('An error occurred while uploading the image.', [], 'Admin.Notifications.Error')];
         } elseif (!ImageManager::resize($tmpName, $new_path . '.' . $image->image_format)) {
-            return array('error' => Context::getContext()->getTranslator()->trans('An error occurred while copying the image.', array(), 'Admin.Notifications.Error'));
+            return ['error' => Context::getContext()->getTranslator()->trans('An error occurred while copying the image.', [], 'Admin.Notifications.Error')];
         } elseif ($method == 'auto') {
             $imagesTypes = ImageType::getImagesTypes('products');
             foreach ($imagesTypes as $imageType) {
                 if (!ImageManager::resize($tmpName, $new_path . '-' . stripslashes($imageType['name']) . '.' . $image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
-                    return array('error' => Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', array(stripslashes($imageType['name'])), 'Admin.Notifications.Error'));
+                    return ['error' => Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', [stripslashes($imageType['name'])], 'Admin.Notifications.Error')];
                 }
             }
         }
         unlink($tmpName);
-        Hook::exec('actionWatermark', array('id_image' => $id_image, 'id_product' => $id_product));
+        Hook::exec('actionWatermark', ['id_image' => $id_image, 'id_product' => $id_product]);
 
         if (!$image->update()) {
-            return array('error' => Context::getContext()->getTranslator()->trans('Error while updating the status.', array(), 'Admin.Notifications.Error'));
+            return ['error' => Context::getContext()->getTranslator()->trans('Error while updating the status.', [], 'Admin.Notifications.Error')];
         }
-        $img = array('id_image' => $image->id, 'position' => $image->position, 'cover' => $image->cover, 'name' => $this->getName(), 'legend' => $image->legend);
+        $img = ['id_image' => $image->id, 'position' => $image->position, 'cover' => $image->cover, 'name' => $this->getName(), 'legend' => $image->legend];
 
-        return array('success' => $img);
+        return ['success' => $img];
     }
 
     public function getName()

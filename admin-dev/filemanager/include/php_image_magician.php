@@ -1482,7 +1482,7 @@ class imageLib
       $colour = imagecolorallocate($shadow, 0, 0, 0);
       imagefilledrectangle($shadow, 0, 0, $width+$blurWidth, $height+$blurHeight, $colour);
 
-      for ($i=0;$i<=STEPS;$i++) {
+      for ($i=0; $i<=STEPS; $i++) {
           $t = ((1.0*$i)/STEPS);
           $intensity = 255*$t*$t;
 
@@ -1500,7 +1500,7 @@ class imageLib
           imagepolygon($shadow, $points, 8, $colour);
       }
 
-      for ($i=0;$i<=STEPS;$i++) {
+      for ($i=0; $i<=STEPS; $i++) {
           $t = ((1.0*$i)/STEPS);
           $intensity = 255*$t*$t;
 
@@ -1518,8 +1518,8 @@ class imageLib
     // *** The magic
         imagealphablending($rgb, false);
 
-      for ($theX=0;$theX<imagesx($rgb);$theX++) {
-          for ($theY=0;$theY<imagesy($rgb);$theY++) {
+      for ($theX=0; $theX<imagesx($rgb); $theX++) {
+          for ($theY=0; $theY<imagesy($rgb); $theY++) {
 
         // *** Get the RGB values for every pixel of the RGB image
         $colArray = imagecolorat($rgb, $theX, $theY);
@@ -3196,7 +3196,7 @@ class imageLib
   {
 
     //Ouverture du fichier en mode binaire
-    if (! $f1 = fopen($filename, "rb")) {
+    if (!$f1 = fopen($filename, "rb")) {
         return false;
     }
 

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Crypto;
@@ -32,7 +32,7 @@ namespace PrestaShop\PrestaShop\Core\Crypto;
 class Hashing
 {
     /** @var array should contain hashing methods */
-    private $hashMethods = array();
+    private $hashMethods = [];
 
     /**
      * Check if it's the first function of the array that was used for hashing.
@@ -103,25 +103,37 @@ class Hashing
      */
     private function initHashMethods()
     {
-        $this->hashMethods = array(
-            'bcrypt' => array(
-                'option' => array(),
+        $this->hashMethods = [
+            'bcrypt' => [
+                'option' => [],
                 'hash' => function ($passwd, $staticSalt, $option) {
                     return password_hash($passwd, PASSWORD_BCRYPT);
                 },
                 'verify' => function ($passwd, $hash, $staticSalt) {
+                    /*
+                     * Prevent enumeration because nothing happens
+                     * when there is no, or an invalid hash.
+                     * Also, change the password to be sure it's not maching
+                     * the new hash.
+                     * The new hash is equal to 'test' in BCRYPT context.
+                     */
+                    if (empty($hash)) {
+                        $hash = '$2y$10$azRqq.pN0OlWjeVfVMZXOOwqYAx1hMfme6ZnDV.27grGOEZvG.uAO';
+                        $passwd = 'wrongPassword';
+                    }
+
                     return password_verify($passwd, $hash);
                 },
-            ),
-            'md5' => array(
-                'option' => array(),
+            ],
+            'md5' => [
+                'option' => [],
                 'hash' => function ($passwd, $staticSalt, $option) {
                     return md5($staticSalt . $passwd);
                 },
                 'verify' => function ($passwd, $hash, $staticSalt) {
                     return md5($staticSalt . $passwd) === $hash;
                 },
-            ),
-        );
+            ],
+        ];
     }
 }

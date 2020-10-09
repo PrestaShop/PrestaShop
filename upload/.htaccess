@@ -1,7 +1,12 @@
 <IfModule mod_mime.c>
-	RemoveHandler .php .phtml .php3 .php4 .php5
-	RemoveType .php .phtml .php3 .php4 .php5
+    RemoveHandler .php .phtml .php3 .php4 .php5
+    RemoveType .php .phtml .php3 .php4 .php5
 </IfModule>
 <IfModule mod_php5.c>
-	php_flag engine off
+    php_flag engine off
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header set Content-Disposition "Attachment"
+  Header set X-Content-Type-Options "nosniff"
 </IfModule>

@@ -1,0 +1,101 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% if not orderForViewing.virtual %}
+
+    {% if orderForViewing.shipping.giftMessage %}
+      <div class="row col-lg-12">
+        <label>
+          {{ 'Gift message:'|trans({}, 'Admin.Global') }}
+        </label>
+        <div id="gift-message" class="col-lg-9">
+           {{ orderForViewing.shipping.giftMessage }}
+        </div>
+      </div>
+    {% endif %}
+
+    <table class="table">
+    <thead>
+      <tr>
+        <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
+        <th>&nbsp;</th>
+        <th>{{ 'Carrier'|trans({}, 'Admin.Shipping.Feature') }}</th>
+        <th>{{ 'Weight'|trans({}, 'Admin.Global') }}</th>
+        <th>{{ 'Shipping cost'|trans({}, 'Admin.Shipping.Feature') }}</th>
+        <th>{{ 'Tracking number'|trans({}, 'Admin.Shipping.Feature') }}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for carrier in orderForViewing.shipping.carriers %}
+        <tr>
+          <td>{{ carrier.date|date_format_lite }}</td>
+          <td>&nbsp;</td>
+          <td>{{ carrier.name }}</td>
+          <td>{{ carrier.weight }}</td>
+          <td>{{ carrier.price }}</td>
+          <td>
+            {% if carrier.trackingNumber %}
+              {% if carrier.trackingUrl %}
+                <a href="{{ carrier.trackingUrl }}">{{ carrier.trackingNumber }}</a>
+              {% else %}
+                {{ carrier.trackingNumber }}
+              {% endif %}
+            {% endif %}
+          </td>
+          <td class="text-right">
+            {% if carrier.canEdit %}
+              <a href="#"
+                 class="js-update-shipping-btn d-print-none"
+                 data-toggle="modal"
+                 data-target="#updateOrderShippingModal"
+                 data-order-carrier-id="{{ carrier.orderCarrierId }}"
+                 data-order-tracking-number="{{ carrier.trackingNumber }}"
+              >
+                {{ 'Edit'|trans({}, 'Admin.Actions') }}
+              </a>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% if orderForViewing.shipping.carrierModuleInfo %}
+    {{ orderForViewing.shipping.carrierModuleInfo|raw }}
+  {% endif %}
+
+  {% if orderForViewing.shipping.recycledPackaging %}
+    <span class="badge badge-success">{{ 'Recycled packaging'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+  {% endif %}
+
+  {% if orderForViewing.shipping.giftWrapping %}
+    <span class="badge badge-success">{{ 'Gift wrapping'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+  {% endif %}
+{% else %}
+  <p class="text-center mb-0">
+    {{ 'Shipping does not apply to virtual orders'|trans({}, 'Admin.Orderscustomers.Feature') }}
+  </p>
+{% endif %}

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 use PrestaShopBundle\Security\Voter\PageVoter;
@@ -123,14 +123,23 @@ function add_new_tab_17($className, $name, $id_parent, $returnId = false, $paren
             FROM `'._DB_PREFIX_.'tab`
             WHERE `id_tab` = "'.(int) $id_parent.'"
         ');
+    } elseif (!empty($parentTab)) {
+        $parentClassName = $parentTab;
     }
 
     foreach (array(PageVoter::CREATE, PageVoter::READ, PageVoter::UPDATE, PageVoter::DELETE) as $role) {
         // 1- Add role
         $roleToAdd = strtoupper('ROLE_MOD_TAB_'.$className.'_'.$role);
         Db::getInstance()->execute('INSERT IGNORE INTO `'._DB_PREFIX_.'authorization_role` (`slug`)
-            VALUES ("'.$roleToAdd.'")');
+            VALUES ("'.pSQL($roleToAdd).'")');
         $newID = Db::getInstance()->Insert_ID();
+        if (!$newID) {
+            $newID = Db::getInstance()->getValue('
+                SELECT `id_authorization_role`
+                FROM `'._DB_PREFIX_.'authorization_role`
+                WHERE `slug` = "'.pSQL($roleToAdd).'"
+            ');
+        }
 
         // 2- Copy access from the parent
         if (!empty($parentClassName) && !empty($newID)) {

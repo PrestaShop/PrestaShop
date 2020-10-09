@@ -116,35 +116,21 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/_shipping.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/carriers/helpers/list/list_header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="552a0d8c17d95d5dbdc0c28217024f5a">
-        <source>Shipping cost</source>
-        <target>Shipping cost</target>
-        <note>Line: 42</note>
+      <trans-unit id="c26732c157d7b353c1be9f7ba8962e57">
+        <source>Add new carrier</source>
+        <target>Add new carrier</target>
+        <note>Line: 32</note>
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/carts/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="29aa46cc3d2677c7e0f216910df600ff">
         <source>Free shipping</source>
         <target>Free shipping</target>
-        <note>Line: 1428</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="914419aa32f04011357d3b604a86d7eb">
-        <source>Carrier</source>
-        <target>Carrier</target>
-        <note>Line: 338</note>
-      </trans-unit>
-      <trans-unit id="5068c162a60b5859f973f701333f45c5">
-        <source>Tracking number</source>
-        <target>Tracking number</target>
-        <note>Line: 339</note>
+        <note>Line: 212</note>
       </trans-unit>
     </body>
   </file>
@@ -248,11 +234,6 @@
         <target>Free Shipping</target>
         <note>Line: 96</note>
       </trans-unit>
-      <trans-unit id="c26732c157d7b353c1be9f7ba8962e57">
-        <source>Add new carrier</source>
-        <target>Add new carrier</target>
-        <note>Line: 128</note>
-      </trans-unit>
       <trans-unit id="1c0e287237d8c352c6ead633b019c047">
         <source>Apply shipping cost</source>
         <target>Apply shipping cost</target>
@@ -301,12 +282,7 @@
       <trans-unit id="4e140ba723a03baa6948340bf90e2ef6">
         <source>Name:</source>
         <target>Name:</target>
-        <note>Line: 707</note>
-      </trans-unit>
-      <trans-unit id="1d6af794b2599c1407a83029a09d1ecf">
-        <source>Carriers</source>
-        <target>Carriers</target>
-        <note>Line: 165</note>
+        <note>Line: 713</note>
       </trans-unit>
       <trans-unit id="dde695268ea519ababd83f0ca3d274fc">
         <source>Transit time</source>
@@ -365,6 +341,38 @@
         <source>Handling</source>
         <target>Handling</target>
         <note>Line: 32</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/details.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1d6af794b2599c1407a83029a09d1ecf">
+        <source>Carriers</source>
+        <target>Carriers</target>
+        <note>Line: 35</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/shipping.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="552a0d8c17d95d5dbdc0c28217024f5a">
+        <source>Shipping cost</source>
+        <target>Shipping cost</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="914419aa32f04011357d3b604a86d7eb">
+        <source>Carrier</source>
+        <target>Carrier</target>
+        <note>Line: 44</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/preview.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5068c162a60b5859f973f701333f45c5">
+        <source>Tracking number</source>
+        <target>Tracking number</target>
+        <note>Line: 48</note>
       </trans-unit>
     </body>
   </file>

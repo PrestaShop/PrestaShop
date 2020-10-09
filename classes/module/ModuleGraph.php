@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,25 +17,24 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 abstract class ModuleGraphCore extends Module
 {
     protected $_employee;
 
     /** @var array of integers graph data */
-    protected $_values = array();
+    protected $_values = [];
 
     /** @var array of strings graph legends (X axis) */
-    protected $_legend = array();
+    protected $_legend = [];
 
     /** @var array string graph titles */
-    protected $_titles = array('main' => null, 'x' => null, 'y' => null);
+    protected $_titles = ['main' => null, 'x' => null, 'y' => null];
 
     /** @var ModuleGraphEngine graph engine */
     protected $_render;
@@ -71,7 +71,7 @@ abstract class ModuleGraphCore extends Module
                     $this->_legend[$i] = ($i % 2) ? '' : sprintf('%02dh', $i);
                 }
             }
-            if (is_callable(array($this, 'setDayValues'))) {
+            if (is_callable([$this, 'setDayValues'])) {
                 $this->setDayValues($layers);
             }
         } elseif (strtotime($this->_employee->stats_date_to) - strtotime($this->_employee->stats_date_from) <= 2678400) {
@@ -79,7 +79,7 @@ abstract class ModuleGraphCore extends Module
             // @TODO : change to manage 28 to 31 days
 
             if ($legend) {
-                $days = array();
+                $days = [];
                 if ($from_array['mon'] == $to_array['mon']) {
                     for ($i = $from_array['mday']; $i <= $to_array['mday']; ++$i) {
                         $days[] = $i;
@@ -104,14 +104,14 @@ abstract class ModuleGraphCore extends Module
                     $this->_legend[$i] = ($i % 2) ? '' : sprintf('%02d', $i);
                 }
             }
-            if (is_callable(array($this, 'setMonthValues'))) {
+            if (is_callable([$this, 'setMonthValues'])) {
                 $this->setMonthValues($layers);
             }
         } elseif (strtotime('-1 year', strtotime($this->_employee->stats_date_to)) < strtotime($this->_employee->stats_date_from)) {
             // If the granularity is less than 1 year
 
             if ($legend) {
-                $months = array();
+                $months = [];
                 if ($from_array['year'] == $to_array['year']) {
                     for ($i = $from_array['mon']; $i <= $to_array['mon']; ++$i) {
                         $months[] = $i;
@@ -135,14 +135,14 @@ abstract class ModuleGraphCore extends Module
                     $this->_legend[$i] = sprintf('%02d', $i);
                 }
             }
-            if (is_callable(array($this, 'setYearValues'))) {
+            if (is_callable([$this, 'setYearValues'])) {
                 $this->setYearValues($layers);
             }
         } else {
             // If the granularity is greater than 1 year
 
             if ($legend) {
-                $years = array();
+                $years = [];
                 for ($i = $from_array['year']; $i <= $to_array['year']; ++$i) {
                     $years[] = $i;
                 }
@@ -157,7 +157,7 @@ abstract class ModuleGraphCore extends Module
                     $this->_legend[$i] = sprintf('%04d', $i);
                 }
             }
-            if (is_callable(array($this, 'setAllTimeValues'))) {
+            if (is_callable([$this, 'setAllTimeValues'])) {
                 $this->setAllTimeValues($layers);
             }
         }
@@ -275,13 +275,13 @@ abstract class ModuleGraphCore extends Module
     {
         $context = Context::getContext();
         if (!($render = Configuration::get('PS_STATS_RENDER'))) {
-            return Context::getContext()->getTranslator()->trans('No graph engine selected', array(), 'Admin.Modules.Notification');
+            return Context::getContext()->getTranslator()->trans('No graph engine selected', [], 'Admin.Modules.Notification');
         }
         if (!Validate::isModuleName($render)) {
             die(Tools::displayError());
         }
         if (!file_exists(_PS_ROOT_DIR_ . '/modules/' . $render . '/' . $render . '.php')) {
-            return Context::getContext()->getTranslator()->trans('Graph engine selected is unavailable.', array(), 'Admin.Modules.Notification');
+            return Context::getContext()->getTranslator()->trans('Graph engine selected is unavailable.', [], 'Admin.Modules.Notification');
         }
 
         $id_employee = (int) $context->employee->id;
@@ -305,11 +305,13 @@ abstract class ModuleGraphCore extends Module
         $url_params['module'] = Tools::getValue('module');
         $url_params['id_employee'] = $id_employee;
         $url_params['id_lang'] = $id_lang;
-        $drawer = 'drawer.php?' . http_build_query(array_map('Tools::safeOutput', $url_params), '', '&');
+        $url_params['ajax'] = 1;
+        $url_params['action'] = 'graphDraw';
+        $drawer = Context::getContext()->link->getAdminLink('AdminStats', true, [], array_map('Tools::safeOutput', $url_params));
 
         require_once _PS_ROOT_DIR_ . '/modules/' . $render . '/' . $render . '.php';
 
-        return call_user_func(array($render, 'hookGraphEngine'), $params, $drawer);
+        return call_user_func([$render, 'hookGraphEngine'], $params, $drawer);
     }
 
     protected static function getEmployee($employee = null, Context $context = null)

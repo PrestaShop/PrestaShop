@@ -3,18 +3,21 @@ api_stock_list_products:
     methods: [GET]
     defaults:
         _controller: prestashop.core.api.stock.controller:listProductsAction
+        _legacy_controller: AdminStockManagement
 
 api_stock_list_products_export:
     path: /export
     methods: [GET]
     defaults:
         _controller: prestashop.core.api.stock.controller:listProductsExportAction
+        _legacy_controller: AdminStockManagement
 
 api_stock_list_product_combinations:
     path: /{productId}
     methods: [GET]
     defaults:
         _controller: prestashop.core.api.stock.controller:listProductsAction
+        _legacy_controller: AdminStockManagement
     requirements:
         productId: \d+
 
@@ -23,6 +26,7 @@ api_stock_edit_product:
     methods: [POST]
     defaults:
         _controller: prestashop.core.api.stock.controller:editProductAction
+        _legacy_controller: AdminStockManagement
     requirements:
         productId: \d+
 
@@ -31,6 +35,7 @@ api_stock_edit_product_combination:
     methods: [POST]
     defaults:
         _controller: prestashop.core.api.stock.controller:editProductAction
+        _legacy_controller: AdminStockManagement
     requirements:
         productId: \d+
         combinationId: \d+
@@ -40,3 +45,4 @@ api_stock_bulk_edit_products:
     methods: [POST]
     defaults:
         _controller: prestashop.core.api.stock.controller:bulkEditProductsAction
+        _legacy_controller: AdminStockManagement

@@ -76,7 +76,9 @@ services:
 
     prestashop.adapter.general.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\GeneralConfiguration'
-        arguments: ['@prestashop.adapter.legacy.configuration']
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@=service("prestashop.adapter.legacy.context").getContext().cookie'
 
     prestashop.adapter.maintenance.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Shop\MaintenanceConfiguration'
@@ -224,8 +226,35 @@ services:
             - '@prestashop.adapter.legacy.configuration'
             - '@=service("prestashop.adapter.data_provider.default_route").getRules()'
 
+    prestashop.adapter.meta.seo_options.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\SEOOptionsDataConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
     prestashop.core.team.employee.configuration.employee_options_configuration:
         class: 'PrestaShop\PrestaShop\Core\Team\Employee\Configuration\EmployeeOptionsConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
             - '@prestashop.core.team.employee.configuration.options_checker'
+
+    prestashop.core.tax.tax_options_configuration:
+        class: 'PrestaShop\PrestaShop\Core\Tax\TaxOptionsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.tax.ecotax.ecotax_resetter'
+
+    prestashop.core.mail_theme.configuration:
+      class: 'PrestaShop\PrestaShop\Core\MailTemplate\MailThemeConfiguration'
+      arguments:
+        - '@prestashop.adapter.legacy.configuration'
+        - '@prestashop.core.mail_template.theme_catalog'
+
+    prestashop.core.merchandise_return.configuration.merchandise_return_options_configuration:
+        class: 'PrestaShop\PrestaShop\Core\MerchandiseReturn\Configuration\MerchandiseReturnOptionsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.credit_slip.credit_slip_options.configuration:
+      class: 'PrestaShop\PrestaShop\Core\CreditSlip\CreditSlipOptionsConfiguration'
+      arguments:
+        - '@prestashop.adapter.legacy.configuration'

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,18 +17,23 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
+use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler;
 use PrestaShop\PrestaShop\Core\Search\Filters\MetaFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -51,33 +57,44 @@ class MetaController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function indexAction(MetaFilters $filters)
+    public function indexAction(MetaFilters $filters, Request $request)
     {
         $seoUrlsGridFactory = $this->get('prestashop.core.grid.factory.meta');
-        $grid = $seoUrlsGridFactory->getGrid($filters);
 
-        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
-        $presentedGrid = $gridPresenter->present($grid);
-
-        $metaForm = $this->get('prestashop.admin.meta_settings.form_handler')->getForm();
-
-        $tools = $this->get('prestashop.adapter.tools');
         $context = $this->get('prestashop.adapter.shop.context');
-
-        $urlFileChecker = $this->get('prestashop.core.util.url.url_file_checker');
-
-        $hostingInformation = $this->get('prestashop.adapter.hosting_information');
-
-        $defaultRoutesProvider = $this->get('prestashop.adapter.data_provider.default_route');
 
         $isShopContext = $context->isShopContext();
         $isShopFeatureActive = $this->get('prestashop.adapter.multistore_feature')->isActive();
 
+        $isGridDisplayed = !($isShopFeatureActive && !$isShopContext);
+
+        $presentedGrid = null;
+        if ($isGridDisplayed) {
+            $grid = $seoUrlsGridFactory->getGrid($filters);
+
+            $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
+            $presentedGrid = $gridPresenter->present($grid);
+        }
+
+        $setUpUrlsForm = $this->getSetUpUrlsFormHandler()->getForm();
+        $shopUrlsForm = $this->getShopUrlsFormHandler()->getForm();
+        $seoOptionsForm = $this->getSeoOptionsFormHandler()->getForm();
+
+        $urlSchemaForm = null;
+        $isRewriteSettingEnabled = $this->get('prestashop.adapter.legacy.configuration')->get('PS_REWRITING_SETTINGS');
+        if ($isRewriteSettingEnabled) {
+            $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
+        }
+
+        $tools = $this->get('prestashop.adapter.tools');
+        $urlFileChecker = $this->get('prestashop.core.util.url.url_file_checker');
+        $hostingInformation = $this->get('prestashop.adapter.hosting_information');
+        $defaultRoutesProvider = $this->get('prestashop.adapter.data_provider.default_route');
         $helperBlockLinkProvider = $this->get('prestashop.core.util.helper_card.documentation_link_provider');
         $metaDataProvider = $this->get('prestashop.adapter.meta.data_provider');
 
         $showcaseCardIsClosed = $this->getQueryBus()->handle(
-            new GetShowcaseCardIsClosed($this->getContext()->employee->id, ShowcaseCard::SEO_URLS_CARD)
+            new GetShowcaseCardIsClosed((int) $this->getContext()->employee->id, ShowcaseCard::SEO_URLS_CARD)
         );
 
         return $this->render(
@@ -85,24 +102,28 @@ class MetaController extends FrameworkBundleAdminController
             [
                 'layoutHeaderToolbarBtn' => [
                     'add' => [
-                        'href' => $this->getAdminLink('AdminMeta', ['addmeta' => '']),
+                        'href' => $this->generateUrl('admin_metas_create'),
                         'desc' => $this->trans('Add a new page', 'Admin.Shopparameters.Feature'),
                         'icon' => 'add_circle_outline',
                     ],
                 ],
                 'grid' => $presentedGrid,
-                'metaForm' => $metaForm->createView(),
+                'setUpUrlsForm' => $setUpUrlsForm->createView(),
+                'shopUrlsForm' => $shopUrlsForm->createView(),
+                'urlSchemaForm' => $urlSchemaForm !== null ? $urlSchemaForm->createView() : null,
+                'seoOptionsForm' => $seoOptionsForm->createView(),
                 'robotsForm' => $this->createFormBuilder()->getForm()->createView(),
                 'routeKeywords' => $defaultRoutesProvider->getKeywords(),
+                'isGridDisplayed' => $isGridDisplayed,
                 'isModRewriteActive' => $tools->isModRewriteActive(),
+                'isShopContext' => $isShopContext,
                 'isHtaccessFileValid' => $urlFileChecker->isHtaccessFileWritable(),
                 'isRobotsTextFileValid' => $urlFileChecker->isRobotsFileWritable(),
-                'isShopContext' => $isShopContext,
                 'isShopFeatureActive' => $isShopFeatureActive,
                 'isHostMode' => $hostingInformation->isHostMode(),
                 'enableSidebar' => true,
-                'help_link' => $this->generateSidebarLink('AdminMeta'),
-                'helperDocLink' => $helperBlockLinkProvider->getLink(),
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                'helperDocLink' => $helperBlockLinkProvider->getLink('meta'),
                 'indexPageId' => $metaDataProvider->getIdByPage('index'),
                 'metaShowcaseCardName' => ShowcaseCard::SEO_URLS_CARD,
                 'showcaseCardIsClosed' => $showcaseCardIsClosed,
@@ -112,6 +133,9 @@ class MetaController extends FrameworkBundleAdminController
 
     /**
      * Used for applying filtering actions.
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @param Request $request
      *
@@ -139,18 +163,32 @@ class MetaController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to add this.")
      *
+     * @param Request $request
+     *
      * @return Response
      */
-    public function createAction()
+    public function createAction(Request $request)
     {
-        $legacyLink = $this->getAdminLink(
-            'AdminMeta',
-            [
-                'addmeta' => 1,
-            ]
-        );
+        $data = [];
+        $metaForm = $this->getMetaFormBuilder()->getForm($data);
+        $metaForm->handleRequest($request);
 
-        return $this->redirect($legacyLink);
+        try {
+            $result = $this->getMetaFormHandler()->handle($metaForm);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_metas_index');
+            }
+        } catch (Exception $exception) {
+            $this->addFlash('error', $this->handleException($exception));
+        }
+
+        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/create.html.twig', [
+            'meta_form' => $metaForm->createView(),
+        ]
+        );
     }
 
     /**
@@ -159,20 +197,33 @@ class MetaController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      *
      * @param int $metaId
+     * @param Request $request
      *
-     * @return RedirectResponse
+     * @return Response
      */
-    public function editAction($metaId)
+    public function editAction($metaId, Request $request)
     {
-        $legacyLink = $this->getAdminLink(
-            'AdminMeta',
-            [
-                'id_meta' => $metaId,
-                'updatemeta' => 1,
-            ]
-        );
+        try {
+            $metaForm = $this->getMetaFormBuilder()->getFormFor($metaId);
+            $metaForm->handleRequest($request);
 
-        return $this->redirect($legacyLink);
+            $result = $this->getMetaFormHandler()->handleFor($metaId, $metaForm);
+
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_metas_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->handleException($e));
+
+            return $this->redirectToRoute('admin_metas_index');
+        }
+
+        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/edit.html.twig', [
+            'meta_form' => $metaForm->createView(),
+        ]
+        );
     }
 
     /**
@@ -232,8 +283,6 @@ class MetaController extends FrameworkBundleAdminController
     }
 
     /**
-     * Submits settings forms.
-     *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      * @DemoRestricted(redirectRoute="admin_metas_index")
      *
@@ -241,23 +290,95 @@ class MetaController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function saveOptionsAction(Request $request)
+    public function processSetUpUrlsFormAction(Request $request)
     {
-        $formHandler = $this->get('prestashop.admin.meta_settings.form_handler');
-        $configurationForm = $formHandler->getForm();
+        return $this->processForm(
+            $request,
+            $this->getSetUpUrlsFormHandler(),
+            'SetUpUrls'
+        );
+    }
 
-        $configurationForm->handleRequest($request);
+    /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     * @DemoRestricted(redirectRoute="admin_metas_index")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processShopUrlsFormAction(Request $request)
+    {
+        return $this->processForm(
+            $request,
+            $this->getShopUrlsFormHandler(),
+            'ShopUrls'
+        );
+    }
 
-        if ($configurationForm->isSubmitted()) {
-            $errors = $formHandler->save($configurationForm->getData());
+    /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     * @DemoRestricted(redirectRoute="admin_metas_index")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processUrlSchemaFormAction(Request $request)
+    {
+        return $this->processForm(
+            $request,
+            $this->getUrlSchemaFormHandler(),
+            'UrlSchema'
+        );
+    }
 
-            if (!empty($errors)) {
-                $this->flashErrors($errors);
+    /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     * @DemoRestricted(redirectRoute="admin_metas_index")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processSeoOptionsFormAction(Request $request)
+    {
+        return $this->processForm(
+            $request,
+            $this->getSeoOptionsFormHandler(),
+            'SeoOptions'
+        );
+    }
+
+    /**
+     * Process the Meta configuration form.
+     *
+     * @param Request $request
+     * @param FormHandlerInterface $formHandler
+     * @param string $hookName
+     *
+     * @return RedirectResponse
+     */
+    protected function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName)
+    {
+        $this->dispatchHook(
+            'actionAdminShopParametersMetaControllerPostProcess' . $hookName . 'Before',
+            ['controller' => $this]
+        );
+
+        $this->dispatchHook('actionAdminAdminShopParametersMetaControllerPostProcessBefore', ['controller' => $this]);
+
+        $form = $formHandler->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $data = $form->getData();
+            $saveErrors = $formHandler->save($data);
+
+            if (0 === count($saveErrors)) {
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
             } else {
-                $this->addFlash(
-                    'success',
-                    $this->trans('The settings have been successfully updated.', 'Admin.Notifications.Success')
-                );
+                $this->flashErrors($saveErrors);
             }
         }
 
@@ -299,5 +420,170 @@ class MetaController extends FrameworkBundleAdminController
         );
 
         return $this->redirectToRoute('admin_metas_index');
+    }
+
+    /**
+     * Gets form builder.
+     *
+     * @return FormBuilderInterface
+     */
+    private function getMetaFormBuilder()
+    {
+        return $this->get('prestashop.core.form.builder.meta_form_builder');
+    }
+
+    /**
+     * @return Handler\FormHandlerInterface
+     */
+    private function getMetaFormHandler()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.meta_form_handler');
+    }
+
+    /**
+     * Handles exception by its type and status code or by its type only and returns error message.
+     *
+     * @param Exception $exception
+     *
+     * @return string
+     *
+     * @todo use FrameworkAdminBundleController::getErrorMessageForException() instead
+     */
+    private function handleException(Exception $exception)
+    {
+        if (0 !== $exception->getCode()) {
+            return $this->getExceptionByClassAndErrorCode($exception);
+        }
+
+        return $this->getExceptionByType($exception);
+    }
+
+    /**
+     * Gets exception by class and error code.
+     *
+     * @param Exception $exception
+     *
+     * @return string
+     */
+    private function getExceptionByClassAndErrorCode(Exception $exception)
+    {
+        $exceptionDictionary = [
+            MetaConstraintException::class => [
+                MetaConstraintException::INVALID_URL_REWRITE => $this->trans(
+                        'The %s field is not valid',
+                        'Admin.Notifications.Error',
+                        [
+                            sprintf(
+                                '"%s"',
+                                $this->trans('Rewritten URL', 'Admin.Shopparameters.Feature')
+                            ),
+                        ]
+                    ),
+                MetaConstraintException::INVALID_PAGE_NAME => $this->trans(
+                        'The %s field is required.',
+                        'Admin.Notifications.Error',
+                        [
+                            sprintf(
+                                '"%s"',
+                                $this->trans('Page name', 'Admin.Shopparameters.Feature')
+                            ),
+                        ]
+                    ),
+                MetaConstraintException::INVALID_PAGE_TITLE => $this->trans(
+                        'The %s field is not valid',
+                        'Admin.Notifications.Error',
+                        [
+                            sprintf(
+                                '"%s"',
+                                $this->trans('Page title', 'Admin.Shopparameters.Feature')
+                            ),
+                        ]
+                    ),
+                MetaConstraintException::INVALID_META_DESCRIPTION => $this->trans(
+                        'The %s field is not valid',
+                        'Admin.Notifications.Error',
+                        [
+                            sprintf(
+                                '"%s"',
+                                $this->trans('Meta description', 'Admin.Global')
+                            ),
+                        ]
+                    ),
+                MetaConstraintException::INVALID_META_KEYWORDS => $this->trans(
+                        'The %s field is not valid',
+                        'Admin.Notifications.Error',
+                        [
+                            sprintf(
+                                '"%s"',
+                                $this->trans('Meta keywords', 'Admin.Global')
+                            ),
+                        ]
+                    ),
+            ],
+        ];
+
+        $exceptionClass = get_class($exception);
+        $exceptionCode = $exception->getCode();
+        if (isset($exceptionDictionary[$exceptionClass][$exceptionCode])) {
+            return $exceptionDictionary[$exceptionClass][$exceptionCode];
+        }
+
+        return $this->getFallbackErrorMessage($exceptionClass, $exceptionCode);
+    }
+
+    /**
+     * Gets exception by class type.
+     *
+     * @param Exception $exception
+     *
+     * @return string
+     */
+    private function getExceptionByType(Exception $exception)
+    {
+        $exceptionDictionary = [
+            MetaNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+        ];
+
+        $exceptionClass = get_class($exception);
+        if (isset($exceptionDictionary[$exceptionClass])) {
+            return $exceptionDictionary[$exceptionClass];
+        }
+
+        return $this->getFallbackErrorMessage($exceptionClass, $exception->getCode());
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    protected function getSetUpUrlsFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.admin.meta_settings.set_up_urls.form_handler');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    protected function getShopUrlsFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.admin.meta_settings.shop_urls.form_handler');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    protected function getUrlSchemaFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.admin.meta_settings.url_schema.form_handler');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    protected function getSeoOptionsFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.admin.meta_settings.seo_options.form_handler');
     }
 }

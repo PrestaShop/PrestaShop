@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
- * Class LanguageByIdChoiceProvider provides language choices with ID values.
+ * Class LanguageByIdChoiceProvider provides active language choices with ID values.
  */
 final class LanguageByIdChoiceProvider implements FormChoiceProviderInterface
 {
@@ -48,16 +48,15 @@ final class LanguageByIdChoiceProvider implements FormChoiceProviderInterface
     }
 
     /**
-     * Get language choices for form.
+     * Get active language choices for form.
      *
      * @return array
      */
     public function getChoices()
     {
-        $languages = $this->languageDataProvider->getLanguages();
         $choices = [];
 
-        foreach ($languages as $language) {
+        foreach ($this->languageDataProvider->getLanguages() as $language) {
             $choices[$language['name']] = $language['id_lang'];
         }
 
