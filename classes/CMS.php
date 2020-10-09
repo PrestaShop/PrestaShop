@@ -248,7 +248,7 @@ class CMSCore extends ObjectModel
         }
 
         if (!$idCategory) {
-            throw new InvalidArgumentException('You need to provide valid idCategory');
+            throw new InvalidArgumentException('You need to provide valid CMS Category ID');
         }
 
         return Db::getInstance()->execute('
@@ -275,7 +275,7 @@ class CMSCore extends ObjectModel
         }
 
         if (!$idCategory) {
-            throw new InvalidArgumentException('You need to provide valid idCategory');
+            throw new InvalidArgumentException('You need to provide valid CMS Category ID');
         }
 
         $sql = '
