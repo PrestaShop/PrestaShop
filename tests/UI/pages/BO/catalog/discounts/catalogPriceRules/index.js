@@ -22,6 +22,8 @@ class CatalogPriceRules extends BOBasePage {
     // Filters
     this.filterRow = `${this.gridTable} tr.filter`;
     this.filterColumn = filterBy => `${this.filterRow} [name='specific_price_ruleFilter_${filterBy}']`;
+    this.filterDateFromColumn = filterBy => `${this.filterRow} #local_specific_price_ruleFilter_a__${filterBy}_0`;
+    this.filterDateToColumn = filterBy => `${this.filterRow} #local_specific_price_ruleFilter_a__${filterBy}_1`;
     this.filterSearchButton = `${this.gridTable} #submitFilterButtonspecific_price_rule`;
     this.filterResetButton = 'button[name=\'submitResetspecific_price_rule\']';
 
@@ -84,7 +86,9 @@ class CatalogPriceRules extends BOBasePage {
    * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
-    await this.resetFilter(page);
+    if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
+      await this.resetFilter(page);
+    }
     return this.getNumberOfElementInGrid(page);
   }
 
@@ -126,6 +130,21 @@ class CatalogPriceRules extends BOBasePage {
       default:
         throw new Error(`Filter ${filterBy} was not found`);
     }
+  }
+
+  /**
+   * Filter by date
+   * @param page
+   * @param filterBy
+   * @param dateFrom
+   * @param dateTo
+   * @returns {Promise<void>}
+   */
+  async filterByDate(page, filterBy, dateFrom, dateTo) {
+    await page.type(this.filterDateFromColumn(filterBy), dateFrom);
+    await page.type(this.filterDateToColumn(filterBy), dateTo);
+    // click on search
+    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
 
   /**
@@ -192,6 +211,14 @@ class CatalogPriceRules extends BOBasePage {
 
       case 'reduction':
         columnSelector = this.tableColumn(row, 10);
+        break;
+
+      case 'from':
+        columnSelector = this.tableColumn(row, 11);
+        break;
+
+      case 'to':
+        columnSelector = this.tableColumn(row, 12);
         break;
 
       default:

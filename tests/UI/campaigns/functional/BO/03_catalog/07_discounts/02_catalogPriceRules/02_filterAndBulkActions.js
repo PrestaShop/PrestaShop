@@ -23,29 +23,38 @@ const {expect} = require('chai');
 // Import data
 const PriceRuleFaker = require('@data/faker/catalogPriceRule');
 
-const firstPriceRule = new PriceRuleFaker(
-  {
-    name: 'toDelete1',
-  },
-);
-
-const secondPriceRule = new PriceRuleFaker(
-  {
-    name: 'toDelete2',
-  },
-);
-
 // Browser and tab
 let browserContext;
 let page;
 
 let numberOfCatalogPriceRules = 0;
 
+// Today date
+const today = new Date();
+
+// Current day
+const day = (`0${today.getDate()}`).slice(-2);
+
+// Current month
+const month = (`0${today.getMonth() + 1}`).slice(-2);
+
+// Current year
+const year = today.getFullYear();
+
+// Date today format (yyyy-mm-dd)
+const todayDate = `${year}-${month}-${day}`;
+
+// Date today format (mm-dd-yyyy)
+const todayDateToCheck = `${month}/${day}/${year}`;
+
+const firstPriceRule = new PriceRuleFaker({name: 'toDelete1', fromDate: todayDate, toDate: todayDate});
+const secondPriceRule = new PriceRuleFaker({name: 'toDelete2', fromDate: todayDate, toDate: todayDate});
+
 /*
 Create 2 catalog price rules
-Filter catalog price rules by id, priority, code, quantity, status
-Quick edit first cart rule in list
-Enable, disable and delete cart rules by bulk actions
+Filter catalog price rules by id, Name, Shop, Currency, Country, Group, From quantity, Reduction type,
+Reduction, Beginning, End
+Delete created catalog price rules by bulk actions
  */
 describe('Filter, quick edit and bulk actions catalog price rules', async () => {
   // before and after functions
@@ -198,6 +207,46 @@ describe('Filter, quick edit and bulk actions catalog price rules', async () => 
           );
 
           await expect(textColumn).to.contains(test.args.filterValue);
+        }
+      });
+
+      it('should reset all filters', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
+
+        const numberOfPriceRulesAfterReset = await catalogPriceRulesPage.resetAndGetNumberOfLines(page);
+        await expect(numberOfPriceRulesAfterReset).to.equal(numberOfCatalogPriceRules + 2);
+      });
+    });
+
+    const filterByDate = [
+      {
+        args: {
+          testIdentifier: 'filterDateBeginning', filterBy: 'from', firstDate: todayDate, secondDate: todayDate,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'filterDateEnd', filterBy: 'to', firstDate: todayDate, secondDate: todayDate,
+        },
+      },
+    ];
+    filterByDate.forEach((test) => {
+      it('should filter by date Beginning and date End', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
+        // Filter by date
+        await catalogPriceRulesPage.filterByDate(page, test.args.filterBy, test.args.firstDate, test.args.secondDate);
+
+        // Get number of elements
+        const numberOfShoppingCartsAfterFilter = await catalogPriceRulesPage.getNumberOfElementInGrid(page);
+
+        for (let row = 1; row <= numberOfShoppingCartsAfterFilter; row++) {
+          const textColumn = await catalogPriceRulesPage.getTextColumn(
+            page,
+            row,
+            test.args.filterBy,
+          );
+          await expect(textColumn).to.contains(todayDateToCheck);
         }
       });
 
