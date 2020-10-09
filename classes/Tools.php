@@ -40,6 +40,7 @@ class ToolsCore
 {
     const CACERT_LOCATION = 'https://curl.haxx.se/ca/cacert.pem';
     const SERVICE_LOCALE_REPOSITORY = 'prestashop.core.localization.locale.repository';
+    public const CACHE_LIFETIME_SECONDS = 604800;
 
     protected static $file_exists_cache = [];
     protected static $_forceCompile;
@@ -4351,6 +4352,32 @@ exit;
     public static function setFallbackParameters(array $fallbackParameters): void
     {
         static::$fallbackParameters = $fallbackParameters;
+    }
+
+    /**
+     * @param string $file_to_refresh
+     * @param string $external_file
+     *
+     * @return bool
+     */
+    public static function refreshFile(string $file_to_refresh, string $external_file): bool
+    {
+        return (bool) static::copy($external_file, _PS_ROOT_DIR_ . $file_to_refresh);
+    }
+
+    /**
+     * @param string $file
+     * @param int $timeout
+     *
+     * @return bool
+     */
+    public static function isFileFresh(string $file, int $timeout = self::CACHE_LIFETIME_SECONDS): bool
+    {
+        if (($time = @filemtime(_PS_ROOT_DIR_ . $file)) && filesize(_PS_ROOT_DIR_ . $file) > 0) {
+            return (time() - $time) < $timeout;
+        }
+
+        return false;
     }
 }
 
