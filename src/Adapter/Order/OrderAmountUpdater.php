@@ -230,7 +230,22 @@ class OrderAmountUpdater
             $orderDetail->id_tax_rules_group = $orderDetail->getTaxRulesGroupId();
 
             $unitPriceTaxExcl = (float) $cartProduct['price_with_reduction_without_tax'];
-            $unitPriceTaxIncl = (float) $cartProduct['price_without_reduction'];
+            $unitPriceTaxIncl = (float) $cartProduct['price_with_reduction'];
+
+            $defaultCurrency = Currency::getDefaultCurrency();
+            if (false !== $defaultCurrency && (int) $defaultCurrency->id !== (int) $order->id_currency) {
+                $orderCurrency = new Currency((int) $order->id_currency);
+                $unitPriceTaxIncl = Tools::convertPriceFull(
+                  $unitPriceTaxIncl,
+                  $defaultCurrency,
+                  $orderCurrency
+                );
+                $unitPriceTaxExcl = Tools::convertPriceFull(
+                    $unitPriceTaxExcl,
+                    $defaultCurrency,
+                    $orderCurrency
+                );
+            }
 
             $orderDetail->product_price = (float) $cartProduct['price'];
             $orderDetail->unit_price_tax_excl = $unitPriceTaxExcl;
