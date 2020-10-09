@@ -209,4 +209,14 @@ describe('Filter, quick edit and bulk actions catalog price rules', async () => 
       });
     });
   });
+
+  // 3 - Delete catalog price rules with bulk actions
+  describe('Bulk delete catalog price rules', async () => {
+    it('should bulk delete cart rules', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'bulkDeletePriceRules', baseContext);
+
+      const deleteTextResult = await catalogPriceRulesPage.bulkDeletePriceRules(page);
+      await expect(deleteTextResult).to.be.contains(catalogPriceRulesPage.successfulMultiDeleteMessage);
+    });
+  });
 });

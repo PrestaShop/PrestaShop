@@ -38,6 +38,13 @@ class CatalogPriceRules extends BOBasePage {
     this.confirmDeleteButton = '#popup_ok';
     this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a.delete`;
     this.editRowLink = row => `${this.actionsColumn(row)} a.edit`;
+
+    // Bulk actions selectors
+    this.bulkActionBlock = 'div.bulk-actions';
+    this.bulkActionMenuButton = '#bulk_action_menu_specific_price_rule';
+    this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
+    this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
+    this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
   }
 
   /* Methods */
@@ -192,6 +199,40 @@ class CatalogPriceRules extends BOBasePage {
     }
 
     return this.getTextContent(page, columnSelector);
+  }
+
+  /**
+   * Select all rows
+   * @param page
+   * @return {Promise<void>}
+   */
+  async bulkSelectRows(page) {
+    await page.click(this.bulkActionMenuButton);
+
+    await Promise.all([
+      page.click(this.selectAllLink),
+      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+    ]);
+  }
+
+  /**
+   * Bulk delete price rules
+   * @param page
+   * @return {Promise<void>}
+   */
+  async bulkDeletePriceRules(page) {
+    // To confirm bulk delete action with dialog
+    this.dialogListener(page, true);
+
+    // Select all rows
+    await this.bulkSelectRows(page);
+
+    // Perform delete
+    await page.click(this.bulkActionMenuButton);
+    await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
+
+    // Return successful message
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 }
 
