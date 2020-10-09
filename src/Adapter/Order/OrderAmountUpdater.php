@@ -432,6 +432,26 @@ class OrderAmountUpdater
                 $computingPrecision
             );
 
+            $totalShippingTaxIncluded = $invoice->total_shipping_tax_incl;
+            $totalShippingTaxExcluded = $invoice->total_shipping_tax_excl;
+
+            $invoice->total_shipping = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $currentInvoiceProducts, $carrierId);
+            $invoice->total_shipping_tax_excl = $cart->getOrderTotal(false, Cart::ONLY_SHIPPING, $currentInvoiceProducts, $carrierId);
+            $invoice->total_shipping_tax_incl = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $currentInvoiceProducts, $carrierId);
+
+            if (!$this->getOrderConfiguration('PS_ORDER_RECALCULATE_SHIPPING', $order)) {
+                $shippingDiffTaxIncluded = $invoice->total_shipping_tax_incl - $totalShippingTaxIncluded;
+                $shippingDiffTaxExcluded = $invoice->total_shipping_tax_excl - $totalShippingTaxExcluded;
+
+                $invoice->total_shipping = $totalShippingTaxIncluded;
+                $invoice->total_shipping_tax_incl = $totalShippingTaxIncluded;
+                $invoice->total_shipping_tax_excl = $totalShippingTaxExcluded;
+
+                $invoice->total_paid -= $shippingDiffTaxIncluded;
+                $invoice->total_paid_tax_incl -= $shippingDiffTaxIncluded;
+                $invoice->total_paid_tax_excl -= $shippingDiffTaxExcluded;
+            }
+
             if (!$invoice->update()) {
                 throw new OrderException('Could not update order invoice in database.');
             }

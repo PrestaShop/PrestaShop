@@ -367,30 +367,18 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         foreach ($invoiceShippingData as $invoiceShippingIndex => $invoiceShippingDetails) {
             $shippingTaxDetails = $invoiceShippingTaxDetails[$invoiceShippingIndex];
             foreach ($invoiceShippingDetails as $shippingField => $shippingValue) {
-                if (empty($shippingValue)) {
-                    Assert::assertNull(
-                        $shippingTaxDetails[$shippingField],
-                        sprintf(
-                            'Expected field %s to be null instead of %s',
-                            $shippingField,
-                            $shippingTaxDetails[$shippingField]
-                        )
-                    );
-                } else {
-                    Assert::assertEquals(
-                        (float) $shippingValue,
-                        (float) $shippingTaxDetails[$shippingField],
-                        sprintf(
-                            'Invalid order tax field %s, expected %s instead of %s',
-                            $shippingField,
-                            $shippingValue,
-                            (float) $shippingTaxDetails[$shippingField]
-                        )
-                    );
-                }
+                Assert::assertEquals(
+                    (float) $shippingValue,
+                    (float) $shippingTaxDetails[$shippingField],
+                    sprintf(
+                        'Invalid order tax field %s, expected %s instead of %s',
+                        $shippingField,
+                        $shippingValue,
+                        (float) $shippingTaxDetails[$shippingField]
+                    )
+                );
             }
         }
-
     }
 
     /**
