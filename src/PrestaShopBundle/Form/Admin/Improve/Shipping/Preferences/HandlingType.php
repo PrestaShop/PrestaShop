@@ -87,7 +87,7 @@ class HandlingType extends TranslatorAwareType
                 'required' => false,
                 'empty_data' => '0',
                 'constraints' => [
-                    new GreaterThanOrEqual(['value' => '0']),
+                    new GreaterThanOrEqual(['value' => 0]),
                     new Type(['type' => 'numeric']),
                 ],
                 'label' => $this->trans(
@@ -104,7 +104,7 @@ class HandlingType extends TranslatorAwareType
                     'Admin.Shipping.Feature'
                 ),
                 'constraints' => [
-                    new GreaterThanOrEqual(['value' => '0']),
+                    new GreaterThanOrEqual(['value' => 0]),
                     new Type(['type' => 'numeric']),
                 ],
             ]);
