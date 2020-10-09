@@ -184,7 +184,13 @@ final class UpdateCartDeliverySettingsHandler extends AbstractCartHandler implem
 
         $cart->removeCartRule((int) $freeShippingCartRule->id);
 
-        return;
+        try {
+            if (false === $freeShippingCartRule->delete()) {
+                throw new CannotDeleteCartRuleException(sprintf('Failed deleting cart rule #%s', $freeShippingCartRule->id));
+            }
+        } catch (PrestaShopException $e) {
+            throw new CartRuleException(sprintf('An error occurred when trying to delete cart rule #%s', $freeShippingCartRule->id));
+        }
     }
 
     /**
