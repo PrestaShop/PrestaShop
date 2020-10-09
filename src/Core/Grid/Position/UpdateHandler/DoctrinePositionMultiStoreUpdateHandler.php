@@ -23,6 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Position\UpdateHandler;
 
@@ -60,8 +61,8 @@ final class DoctrinePositionMultiStoreUpdateHandler implements PositionUpdateHan
      */
     public function __construct(
         Connection $connection,
-        $dbPrefix,
-        $shopId
+        string $dbPrefix,
+        int $shopId
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
@@ -71,7 +72,7 @@ final class DoctrinePositionMultiStoreUpdateHandler implements PositionUpdateHan
     /**
      * {@inheritdoc}
      */
-    public function getCurrentPositions(PositionDefinitionInterface $positionDefinition, $parentId = null)
+    public function getCurrentPositions(PositionDefinitionInterface $positionDefinition, int $parentId = null)
     {
         if (null != $positionDefinition->getShopId()) {
             $this->shopId = $positionDefinition->getShopId();

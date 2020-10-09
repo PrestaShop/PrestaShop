@@ -23,6 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Position;
 
@@ -62,7 +63,7 @@ final class GridPositionMultiStoreUpdater implements GridPositionUpdaterInterfac
      *
      * @return array
      */
-    private function getNewPositions(PositionUpdateInterface $positionUpdate)
+    private function getNewPositions(PositionUpdateInterface $positionUpdate): array
     {
         $positions = $this->updateHandler->getCurrentPositions($positionUpdate->getPositionDefinition(), $positionUpdate->getParentId());
 

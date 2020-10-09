@@ -68,5 +68,5 @@ interface PositionDefinitionInterface
      *
      * @return int|null
      */
-    public function getShopId();
+    public function getShopId(): ?int;
 }

@@ -116,7 +116,7 @@ final class PositionDefinition implements PositionDefinitionInterface
      *
      * @return int|null
      */
-    public function getShopId()
+    public function getShopId(): ?int
     {
         return $this->shopId;
     }
