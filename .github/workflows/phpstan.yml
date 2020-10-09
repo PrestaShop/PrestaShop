@@ -3,14 +3,13 @@ on: [push, pull_request]
 jobs:
   phpstan:
     name: phpstan
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v1
         with:
           php-version: '7.3'
           extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv
-          tools: phpstan
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0

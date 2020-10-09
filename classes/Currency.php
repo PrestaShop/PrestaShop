@@ -60,7 +60,7 @@ class CurrencyCore extends ObjectModel
     /**
      * Numeric ISO 4217 code of this currency.
      *
-     * @var string
+     * @var string|null
      */
     public $numeric_iso_code;
 
@@ -175,7 +175,7 @@ class CurrencyCore extends ObjectModel
         'multilang' => true,
         'fields' => [
             'iso_code' => ['type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3],
-            'numeric_iso_code' => ['type' => self::TYPE_STRING, 'validate' => 'isNumericIsoCode', 'size' => 3],
+            'numeric_iso_code' => ['type' => self::TYPE_STRING, 'allow_null' => true, 'validate' => 'isNumericIsoCode', 'size' => 3],
             'precision' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
             'conversion_rate' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true, 'shop' => true],
             'deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
