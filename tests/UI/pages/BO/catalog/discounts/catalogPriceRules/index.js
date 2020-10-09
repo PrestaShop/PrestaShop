@@ -20,7 +20,8 @@ class CatalogPriceRules extends BOBasePage {
     this.gridTable = '#table-specific_price_rule';
 
     // Filters
-    this.filterNameColumn = `${this.gridTable} input[name='specific_price_ruleFilter_a!name']`;
+    this.filterRow = `${this.gridTable} tr.filter`;
+    this.filterColumn = filterBy => `${this.filterRow} [name='specific_price_ruleFilter_${filterBy}']`;
     this.filterSearchButton = `${this.gridTable} #submitFilterButtonspecific_price_rule`;
     this.filterResetButton = 'button[name=\'submitResetspecific_price_rule\']';
 
@@ -28,7 +29,7 @@ class CatalogPriceRules extends BOBasePage {
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
-    this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
+    this.tableColumn = (row, column) => `${this.tableRow(row)} td:nth-child(${column})`;
 
     // Actions buttons in Row
     this.actionsColumn = row => `${this.tableRow(row)} td .btn-group-action`;
@@ -87,22 +88,37 @@ class CatalogPriceRules extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToEditCatalogPriceRulePage(page, ruleName) {
-    if (await this.elementVisible(page, this.filterNameColumn)) {
-      await this.filterTableByRuleName(page, ruleName);
+    if (await this.elementVisible(page, this.filterColumn('a!name'))) {
+      await this.filterPriceRules(page, 'select', 'a!name', ruleName);
     }
     await this.clickAndWaitForNavigation(page, this.editRowLink(1));
   }
 
   /**
-   * Filter table by rule name
+   * Filter catalog price rules table
    * @param page
-   * @param name
+   * @param filterType
+   * @param filterBy
+   * @param value
    * @returns {Promise<void>}
    */
-  async filterTableByRuleName(page, name) {
-    await this.setValue(page, this.filterNameColumn, name);
-    // click on search
-    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+  async filterPriceRules(page, filterType, filterBy, value) {
+    switch (filterType) {
+      case 'input':
+        await this.setValue(page, this.filterColumn(filterBy), value.toString());
+        await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+        break;
+
+      case 'select':
+        await Promise.all([
+          page.waitForNavigation({waitUntil: 'networkidle'}),
+          this.selectByVisibleText(page, this.filterColumn(filterBy), value),
+        ]);
+        break;
+
+      default:
+        throw new Error(`Filter ${filterBy} was not found`);
+    }
   }
 
   /**
@@ -112,8 +128,8 @@ class CatalogPriceRules extends BOBasePage {
    * @returns {Promise<string>}
    */
   async deleteCatalogPriceRule(page, ruleName) {
-    if (await this.elementVisible(page, this.filterNameColumn)) {
-      await this.filterTableByRuleName(page, ruleName);
+    if (await this.elementVisible(page, this.filterColumn('a!name'))) {
+      await this.filterPriceRules(page, 'select', 'a!name', ruleName);
     }
     await this.waitForSelectorAndClick(page, this.dropdownToggleButton(1));
     await Promise.all([
@@ -122,6 +138,60 @@ class CatalogPriceRules extends BOBasePage {
     ]);
     await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
     return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /**
+   * Get text from column in table
+   * @param page
+   * @param row
+   * @param columnName
+   * @return {Promise<string>}
+   */
+  async getTextColumn(page, row, columnName) {
+    let columnSelector;
+
+    switch (columnName) {
+      case 'id_specific_price_rule':
+        columnSelector = this.tableColumn(row, 2);
+        break;
+
+      case 'a!name':
+        columnSelector = this.tableColumn(row, 3);
+        break;
+
+      case 's!name':
+        columnSelector = this.tableColumn(row, 4);
+        break;
+
+      case 'cul!name':
+        columnSelector = this.tableColumn(row, 5);
+        break;
+
+      case 'cl!name':
+        columnSelector = this.tableColumn(row, 6);
+        break;
+
+      case 'gl!name':
+        columnSelector = this.tableColumn(row, 7);
+        break;
+
+      case 'from_quantity':
+        columnSelector = this.tableColumn(row, 8);
+        break;
+
+      case 'a!reduction_type':
+        columnSelector = this.tableColumn(row, 9);
+        break;
+
+      case 'reduction':
+        columnSelector = this.tableColumn(row, 10);
+        break;
+
+      default:
+        throw new Error(`Column ${columnName} was not found`);
+    }
+
+    return this.getTextContent(page, columnSelector);
   }
 }
 

@@ -15,7 +15,7 @@ const addCatalogPriceRulePage = require('@pages/BO/catalog/discounts/catalogPric
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_catalog_discounts_catalogPriceRules_filterQuickEditAndBulkActions';
+const baseContext = 'functional_BO_catalog_discounts_catalogPriceRules_filterAndBulkActions';
 
 // Import expect from chai
 const {expect} = require('chai');
@@ -109,5 +109,104 @@ describe('Filter, quick edit and bulk actions catalog price rules', async () => 
           await expect(numberOfCatalogPriceRulesAfterCreation).to.be.at.most(numberOfCatalogPriceRules + index + 1);
         });
       });
+  });
+
+  // 2 - Filter catalog price rules table
+  describe('Filter catalog price rules', async () => {
+    const tests = [
+      {
+        args: {
+          testIdentifier: 'filterID', filterType: 'input', filterBy: 'id_specific_price_rule', filterValue: 1,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'filterName', filterType: 'input', filterBy: 'a!name', filterValue: firstPriceRule.name,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'filterShop', filterType: 'input', filterBy: 's!name', filterValue: global.INSTALL.SHOPNAME,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'filterCurrency',
+          filterType: 'input',
+          filterBy: 'cul!name',
+          filterValue: secondPriceRule.currency,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'filterCountry',
+          filterType: 'input',
+          filterBy: 'cl!name',
+          filterValue: secondPriceRule.country,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'filterGroup', filterType: 'input', filterBy: 'gl!name', filterValue: firstPriceRule.group,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'filterFromQuantity',
+          filterType: 'input',
+          filterBy: 'from_quantity',
+          filterValue: firstPriceRule.fromQuantity,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'filterReductionType',
+          filterType: 'select',
+          filterBy: 'a!reduction_type',
+          filterValue: secondPriceRule.reductionType,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'filterReduction',
+          filterType: 'input',
+          filterBy: 'reduction',
+          filterValue: firstPriceRule.reduction,
+        },
+      },
+    ];
+
+    tests.forEach((test) => {
+      it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
+        await catalogPriceRulesPage.filterPriceRules(
+          page,
+          test.args.filterType,
+          test.args.filterBy,
+          test.args.filterValue,
+        );
+
+        const numberOfPriceRulesAfterFilter = await catalogPriceRulesPage.getNumberOfElementInGrid(page);
+        await expect(numberOfPriceRulesAfterFilter).to.be.at.most(numberOfCatalogPriceRules + 2);
+
+        for (let row = 1; row <= numberOfPriceRulesAfterFilter; row++) {
+          const textColumn = await catalogPriceRulesPage.getTextColumn(
+            page,
+            row,
+            test.args.filterBy,
+          );
+
+          await expect(textColumn).to.contains(test.args.filterValue);
+        }
+      });
+
+      it('should reset all filters', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
+
+        const numberOfPriceRulesAfterReset = await catalogPriceRulesPage.resetAndGetNumberOfLines(page);
+        await expect(numberOfPriceRulesAfterReset).to.equal(numberOfCatalogPriceRules + 2);
+      });
+    });
   });
 });
