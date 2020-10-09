@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Number;
 
 use InvalidArgumentException as SPLInvalidArgumentException;
-use PrestaShop\Decimal\Number as DecimalNumber;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\Decimal\Operation\Rounding;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberInterface as NumberSpecification;
