@@ -75,13 +75,12 @@ final class UpdateCartDeliverySettingsHandler extends AbstractCartHandler implem
             throw new InvalidGiftMessageException();
         }
 
-        $shouldSaveCartAfterFreeShipping = $this->handleFreeShippingOption($cart, $command);
+        $this->handleFreeShippingOption($cart, $command);
         $shouldSaveCartAfterGiftOption = $this->handleGiftOption($cart, $command);
         $shouldSaveCartAfterWrappingOption = $this->handleRecycledWrappingOption($cart, $command);
         $shouldSaveCartAfterGiftMessageOption = $this->handleGiftMessageOption($cart, $command);
 
-        $shouldSaveCart = ($shouldSaveCartAfterFreeShipping
-            || $shouldSaveCartAfterGiftOption
+        $shouldSaveCart = ($shouldSaveCartAfterGiftOption
             || $shouldSaveCartAfterWrappingOption
             || $shouldSaveCartAfterGiftMessageOption);
 
@@ -158,11 +157,9 @@ final class UpdateCartDeliverySettingsHandler extends AbstractCartHandler implem
      * @param Cart $cart
      * @param UpdateCartDeliverySettingsCommand $command
      *
-     * @return bool should cart be saved after or not
-     *
      * @throws CannotDeleteCartRuleException
      */
-    protected function handleFreeShippingOption(Cart $cart, UpdateCartDeliverySettingsCommand $command): bool
+    protected function handleFreeShippingOption(Cart $cart, UpdateCartDeliverySettingsCommand $command): void
     {
         $backOfficeOrderCode = sprintf('%s%s', CartRule::BO_ORDER_CODE_PREFIX, $cart->id);
 
@@ -178,18 +175,16 @@ final class UpdateCartDeliverySettingsHandler extends AbstractCartHandler implem
             }
             $cart->addCartRule((int) $freeShippingCartRule->id);
 
-            return true;
+            return;
         }
 
         if (null === $freeShippingCartRule) {
-            // Step 2
-            return false;
+            return;
         }
 
-        // Step 3
         $cart->removeCartRule((int) $freeShippingCartRule->id);
 
-        return true;
+        return;
     }
 
     /**
