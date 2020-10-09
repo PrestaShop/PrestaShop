@@ -53,7 +53,6 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_shipping_tax_excl  | 70.00  |
       | total_shipping_tax_incl  | 74.20  |
 
-#  @database-scenario
   Scenario: Add cart rule of type 'amount' to an order with secondary currency
     Given I add discount to order "bo_order1" with following details:
       | name      | discount ten-euros    |
@@ -73,7 +72,6 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_shipping_tax_excl  | 70.00  |
       | total_shipping_tax_incl  | 74.20  |
 
-#  @database-scenario
   Scenario: Add cart rule of type 'percent' to an order with secondary currency
     Given I add discount to order "bo_order1" with following details:
       | name      | discount ten-percents |
@@ -93,7 +91,24 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_shipping_tax_excl  | 70.00  |
       | total_shipping_tax_incl  | 74.20  |
 
-#  @database-scenario
+  Scenario: Add cart rule of type 'free-shipping' to an order with secondary currency
+    Given I add discount to order "bo_order1" with following details:
+      | name      | discount free-shipping |
+      | type      | free_shipping          |
+    Then order "bo_order1" should have 1 cart rule
+    Then order "bo_order1" should have cart rule "discount free-shipping" with amount "€70.00"
+    Then order "bo_order1" should have following details:
+      | total_products           | 238.00 |
+      | total_products_wt        | 252.28 |
+      | total_discounts_tax_excl | 70.00  |
+      | total_discounts_tax_incl | 74.20  |
+      | total_paid_tax_excl      | 238.00 |
+      | total_paid_tax_incl      | 252.28 |
+      | total_paid               | 252.28 |
+      | total_paid_real          | 0.00   |
+      | total_shipping_tax_excl  | 70.00   |
+      | total_shipping_tax_incl  | 74.20   |
+
   Scenario: Add product to an order with secondary currency
     When I add products to order "bo_order1" without invoice and the following products details:
       | name          | Mug Today is a good day  |
@@ -115,12 +130,56 @@ Feature: Multiple currencies for Order in Back Office (BO)
   Scenario: Update product in order with secondary currency
     When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
       | amount        | 3                       |
-      | price         | 12                      |
+      | price         | 12.00                   |
     Then order "bo_order1" should contain 3 products "Mug The best is yet to come"
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 3  |
-      | product_price               | 12 |
-      | unit_price_tax_incl         | 12 |
-      | unit_price_tax_excl         | 12 |
-      | total_price_tax_incl        | 36 |
-      | total_price_tax_excl        | 36 |
+      | product_price               | 12.00 |
+      | unit_price_tax_incl         | 12.00 |
+      | unit_price_tax_excl         | 12.00 |
+      | total_price_tax_incl        | 36.00 |
+      | total_price_tax_excl        | 36.00 |
+
+  Scenario: Check invoice for an order with secondary currency and discount
+    Given I add discount to order "bo_order1" with following details:
+      | name      | discount ten-euros    |
+      | type      | amount                |
+      | value     | 10                    |
+    When I generate invoice for "bo_order1" order
+    Then order "bo_order1" should have 1 invoice
+    And the first invoice from order "bo_order1" should contain 2 products "Mug The best is yet to come"
+    And the first invoice from order "bo_order1" should have following details:
+      | total_products          | 238.00   |
+      | total_products_wt       | 252.28   |
+      | total_discount_tax_excl | 9.43     |
+      | total_discount_tax_incl | 10.0     |
+      | total_paid_tax_excl     | 298.57   |
+      | total_paid_tax_incl     | 316.48   |
+      | total_shipping_tax_excl | 70.00    |
+      | total_shipping_tax_incl | 74.20    |
+
+  Scenario: Carrier change for an order with secondary currency
+    Given a carrier "default_carrier" with name "My carrier" exists
+    And a carrier "price_carrier" with name "My cheap carrier" exists
+    And I enable carrier "price_carrier"
+    And order "bo_order1" should have "default_carrier" as a carrier
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 0.600 |
+      | shipping_cost_tax_excl | 70.00  |
+      | shipping_cost_tax_incl | 74.20  |
+    When I update order "bo_order1" Tracking number to "TEST1234" and Carrier to "price_carrier"
+    Then order "bo_order1" should have following details:
+      | total_products           | 238.00 |
+      | total_products_wt        | 252.28 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 298.00 |
+      | total_paid_tax_incl      | 315.88 |
+      | total_paid               | 315.88 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 60.00  |
+      | total_shipping_tax_incl  | 63.60  |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 0.600 |
+      | shipping_cost_tax_excl | 60.00  |
+      | shipping_cost_tax_incl | 63.60  |
