@@ -29,7 +29,6 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Shipping;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -83,6 +82,7 @@ class PreferencesController extends FrameworkBundleAdminController
 
             if (0 === count($saveErrors)) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+
                 return $this->redirectToRoute('admin_shipping_preferences');
             }
             $this->flashErrors($saveErrors);
@@ -119,6 +119,7 @@ class PreferencesController extends FrameworkBundleAdminController
 
             if (0 === count($saveErrors)) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+
                 return $this->redirectToRoute('admin_shipping_preferences');
             }
         }
@@ -146,6 +147,7 @@ class PreferencesController extends FrameworkBundleAdminController
      * @param $handlingForm
      * @param $carrierOptionsForm
      * @param $request
+     *
      * @return Response|null
      */
     protected function renderForm($handlingForm, $carrierOptionsForm, $request)

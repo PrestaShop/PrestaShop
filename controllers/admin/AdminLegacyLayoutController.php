@@ -106,7 +106,6 @@ class AdminLegacyLayoutControllerCore extends AdminController
      */
     public function initProcess()
     {
-
     }
 
     /**

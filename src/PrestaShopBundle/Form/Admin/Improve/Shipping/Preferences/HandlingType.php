@@ -35,7 +35,6 @@ use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\Type;
 
@@ -75,8 +74,8 @@ class HandlingType extends TranslatorAwareType
                 'required' => false,
                 'empty_data' => '0',
                 'constraints' => [
-                    new GreaterThanOrEqual(['value' => '0',]),
-                    new Type(['type' => 'numeric'])
+                    new GreaterThanOrEqual(['value' => '0']),
+                    new Type(['type' => 'numeric']),
                 ],
                 'label' => $this->trans(
                     'Handling charges',
@@ -88,8 +87,8 @@ class HandlingType extends TranslatorAwareType
                 'required' => false,
                 'empty_data' => '0',
                 'constraints' => [
-                    new GreaterThanOrEqual(['value' => '0',]),
-                    new Type(['type' => 'numeric'])
+                    new GreaterThanOrEqual(['value' => '0']),
+                    new Type(['type' => 'numeric']),
                 ],
                 'label' => $this->trans(
                     'Free shipping starts at',
@@ -105,9 +104,9 @@ class HandlingType extends TranslatorAwareType
                     'Admin.Shipping.Feature'
                 ),
                 'constraints' => [
-                    new GreaterThanOrEqual(['value' => '0',]),
-                    new Type(['type' => 'numeric'])
-                ]
+                    new GreaterThanOrEqual(['value' => '0']),
+                    new Type(['type' => 'numeric']),
+                ],
             ]);
     }
 
