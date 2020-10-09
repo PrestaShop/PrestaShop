@@ -53,7 +53,7 @@ class CMSCore extends ObjectModel
         'multilang_shop' => true,
         'fields' => [
             'id_cms_category' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
-            'position' => ['type' => self::TYPE_INT],
+            'position' => ['type' => self::TYPE_INT, 'shop' => true],
             'indexation' => ['type' => self::TYPE_BOOL],
             'active' => ['type' => self::TYPE_BOOL],
 
@@ -126,6 +126,8 @@ class CMSCore extends ObjectModel
     }
 
     /**
+     * @deprecated 1.7.8.0 Use CMS::getCMSPages() instead
+     * 
      * Get links.
      *
      * @param int $idLang Language ID
@@ -163,6 +165,8 @@ class CMSCore extends ObjectModel
     }
 
     /**
+     * @deprecated 1.7.8.0 Use CMS::getCMSPages() instead
+     * 
      * @param null $idLang
      * @param bool $idBlock
      * @param bool $active
@@ -232,51 +236,63 @@ class CMSCore extends ObjectModel
     }
 
     /**
-     * @param $idCategory
+     * @param int $idCategory
+     * @param int $idShop
      *
      * @return bool
      */
-    public static function cleanPositions($idCategory)
+    public static function cleanPositions($idCategory, $idShop = null)
     {
-        $sql = '
-		SELECT `id_cms`
-		FROM `' . _DB_PREFIX_ . 'cms`
-		WHERE `id_cms_category` = ' . (int) $idCategory . '
-		ORDER BY `position`';
-
-        $result = Db::getInstance()->executeS($sql);
-
-        for ($i = 0, $total = count($result); $i < $total; ++$i) {
-            $sql = 'UPDATE `' . _DB_PREFIX_ . 'cms`
-					SET `position` = ' . (int) $i . '
-					WHERE `id_cms_category` = ' . (int) $idCategory . '
-						AND `id_cms` = ' . (int) $result[$i]['id_cms'];
-            Db::getInstance()->execute($sql);
+        if (!$idShop) {
+            $idShop = Context::getContext()->shop->id;
         }
 
-        return true;
+        if (!$idCategory) {
+            throw new InvalidArgumentException('You need to provide valid idCategory');
+        }
+
+        return Db::getInstance()->execute('
+            UPDATE `'._DB_PREFIX_.'cms_shop` cp1 JOIN (
+                SELECT c.`id_cms_category`, c.`id_cms`, @i := @i+1 `new_position`
+                FROM `'._DB_PREFIX_.'cms` c
+                LEFT JOIN `' . _DB_PREFIX_ . 'cms_shop` cs ON (cs.`id_cms` = c.`id_cms`), (select @i:=-1) temp
+                WHERE cs.`id_shop` = ' . (int) $idShop. ' AND c.`id_cms_category` = ' . (int) $idCategory . '
+                ORDER BY cs.`position`
+            ) cp2 on (cp1.id_cms = cp2.id_cms AND cp1.id_shop = 2) set cp1.`position` = cp2.`new_position`'
+        );
     }
 
     /**
-     * @param $idCategory
+     * @param int $idCategory
+     * @param int $idShop
      *
      * @return false|string|null
      */
-    public static function getLastPosition($idCategory)
+    public static function getLastPosition($idCategory, $idShop = null)
     {
+        if (!$idShop) {
+            $idShop = Context::getContext()->shop->id;
+        }
+
+        if (!$idCategory) {
+            throw new InvalidArgumentException('You need to provide valid idCategory');
+        }
+
         $sql = '
-		SELECT MAX(position) + 1
-		FROM `' . _DB_PREFIX_ . 'cms`
-		WHERE `id_cms_category` = ' . (int) $idCategory;
+            SELECT MAX(cs.`position`) + 1
+            FROM `' . _DB_PREFIX_ . 'cms_shop` cs
+            LEFT JOIN `' . _DB_PREFIX_ . 'cms` c ON (c.`id_cms` = cs.id_cms)
+            WHERE cs.`id_shop` = ' . (int) $idShop. ' AND c.`id_cms_category` = ' . (int) $idCategory
+        ;
 
         return Db::getInstance()->getValue($sql);
     }
 
     /**
-     * @param null $idLang
-     * @param null $idCmsCategory
+     * @param int $idLang
+     * @param int $idCmsCategory
      * @param bool $active
-     * @param null $idShop
+     * @param int $idShop
      *
      * @return array|false|mysqli_result|PDOStatement|resource|null
      */
@@ -286,17 +302,18 @@ class CMSCore extends ObjectModel
         $sql->select('*');
         $sql->from('cms', 'c');
 
-        if ($idLang) {
-            if ($idShop) {
-                $sql->innerJoin('cms_lang', 'l', 'c.id_cms = l.id_cms AND l.id_lang = ' . (int) $idLang . ' AND l.id_shop = ' . (int) $idShop);
-            } else {
-                $sql->innerJoin('cms_lang', 'l', 'c.id_cms = l.id_cms AND l.id_lang = ' . (int) $idLang);
-            }
+        $context = Context::getContext();
+
+        if (!$idLang) {
+            $idLang = $context->language->id;
         }
 
-        if ($idShop) {
-            $sql->innerJoin('cms_shop', 'cs', 'c.id_cms = cs.id_cms AND cs.id_shop = ' . (int) $idShop);
+        if (!$idShop) {
+            $idShop = $context->shop->id;
         }
+        
+        $sql->innerJoin('cms_lang', 'l', 'c.id_cms = l.id_cms AND l.id_lang = ' . (int) $idLang . ' AND l.id_shop = ' . (int) $idShop);
+        $sql->innerJoin('cms_shop', 'cs', 'c.id_cms = cs.id_cms AND cs.id_shop = ' . (int) $idShop);
 
         if ($active) {
             $sql->where('c.active = 1');
@@ -306,9 +323,23 @@ class CMSCore extends ObjectModel
             $sql->where('c.id_cms_category = ' . (int) $idCmsCategory);
         }
 
-        $sql->orderBy('position');
+        $sql->orderBy('cs.position');
 
-        return Db::getInstance()->executeS($sql);
+        $cmsPages = Db::getInstance()->executeS($sql);
+
+        if (!$cmsPages) {
+            return false;
+        }
+
+        $cmsPages = array_map(
+            function ($page) use ($idLang, $context) {
+                $page['url'] = $context->link->getCMSLink((int) $page['id_cms'], $page['link_rewrite'], null, $idLang);
+                return $page;
+            },
+            $cmsPages
+        );
+
+        return $cmsPages;
     }
 
     /**
