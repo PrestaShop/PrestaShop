@@ -144,9 +144,9 @@ class PreferencesController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param $handlingForm
-     * @param $carrierOptionsForm
-     * @param $request
+     * @param Form $handlingForm
+     * @param Form $carrierOptionsForm
+     * @param Request $request
      *
      * @return Response|null
      */
