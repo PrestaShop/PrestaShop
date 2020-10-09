@@ -127,7 +127,7 @@ class CMSCore extends ObjectModel
 
     /**
      * @deprecated 1.7.8.0 Use CMS::getCMSPages() instead
-     * 
+     *
      * Get links.
      *
      * @param int $idLang Language ID
@@ -166,7 +166,7 @@ class CMSCore extends ObjectModel
 
     /**
      * @deprecated 1.7.8.0 Use CMS::getCMSPages() instead
-     * 
+     *
      * @param null $idLang
      * @param bool $idBlock
      * @param bool $active
@@ -252,13 +252,13 @@ class CMSCore extends ObjectModel
         }
 
         return Db::getInstance()->execute('
-            UPDATE `'._DB_PREFIX_.'cms_shop` cp1 JOIN (
+            UPDATE `' . _DB_PREFIX_ . 'cms_shop` cp1 JOIN (
                 SELECT c.`id_cms_category`, c.`id_cms`, @i := @i+1 `new_position`
-                FROM `'._DB_PREFIX_.'cms` c
+                FROM `' . _DB_PREFIX_ . 'cms` c
                 LEFT JOIN `' . _DB_PREFIX_ . 'cms_shop` cs ON (cs.`id_cms` = c.`id_cms`), (select @i:=-1) temp
-                WHERE cs.`id_shop` = ' . (int) $idShop. ' AND c.`id_cms_category` = ' . (int) $idCategory . '
+                WHERE cs.`id_shop` = ' . (int) $idShop . ' AND c.`id_cms_category` = ' . (int) $idCategory . '
                 ORDER BY cs.`position`
-            ) cp2 on (cp1.id_cms = cp2.id_cms AND cp1.id_shop = 2) set cp1.`position` = cp2.`new_position`'
+            ) cp2 on (cp1.id_cms = cp2.id_cms AND cp1.id_shop = ' . (int) $idShop . ') set cp1.`position` = cp2.`new_position`'
         );
     }
 
@@ -282,7 +282,7 @@ class CMSCore extends ObjectModel
             SELECT MAX(cs.`position`) + 1
             FROM `' . _DB_PREFIX_ . 'cms_shop` cs
             LEFT JOIN `' . _DB_PREFIX_ . 'cms` c ON (c.`id_cms` = cs.id_cms)
-            WHERE cs.`id_shop` = ' . (int) $idShop. ' AND c.`id_cms_category` = ' . (int) $idCategory
+            WHERE cs.`id_shop` = ' . (int) $idShop . ' AND c.`id_cms_category` = ' . (int) $idCategory
         ;
 
         return Db::getInstance()->getValue($sql);
@@ -311,7 +311,7 @@ class CMSCore extends ObjectModel
         if (!$idShop) {
             $idShop = $context->shop->id;
         }
-        
+
         $sql->innerJoin('cms_lang', 'l', 'c.id_cms = l.id_cms AND l.id_lang = ' . (int) $idLang . ' AND l.id_shop = ' . (int) $idShop);
         $sql->innerJoin('cms_shop', 'cs', 'c.id_cms = cs.id_cms AND cs.id_shop = ' . (int) $idShop);
 
@@ -334,6 +334,7 @@ class CMSCore extends ObjectModel
         $cmsPages = array_map(
             function ($page) use ($idLang, $context) {
                 $page['url'] = $context->link->getCMSLink((int) $page['id_cms'], $page['link_rewrite'], null, $idLang);
+
                 return $page;
             },
             $cmsPages
