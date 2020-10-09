@@ -44,7 +44,7 @@ const year = today.getFullYear();
 // Date today format (yyyy-mm-dd)
 const todayDate = `${year}-${month}-${day}`;
 
-// Date today format (mm-dd-yyyy)
+// Date today format (mm/dd/yyyy)
 const todayDateToCheck = `${month}/${day}/${year}`;
 
 const firstPriceRule = new PriceRuleFaker({name: 'toDelete1', fromDate: todayDate, toDate: todayDate});
