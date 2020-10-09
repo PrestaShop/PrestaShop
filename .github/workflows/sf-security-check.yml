@@ -1,0 +1,14 @@
+name: PHP Symfony Security Check
+on: [ push, pull_request ]
+jobs:
+    sfsecuritycheck:
+        name: sf-security-check
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/cache@v2
+              id: cache-db
+              with:
+                  path: ~/.symfony/cache
+                  key: db
+            - uses: symfonycorp/security-checker-action@v2
