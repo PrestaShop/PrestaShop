@@ -72,7 +72,7 @@ final class DoctrinePositionMultiStoreUpdateHandler implements PositionUpdateHan
     /**
      * {@inheritdoc}
      */
-    public function getCurrentPositions(PositionDefinitionInterface $positionDefinition, int $parentId = null)
+    public function getCurrentPositions(PositionDefinitionInterface $positionDefinition, $parentId = null)
     {
         if (null != $positionDefinition->getShopId()) {
             $this->shopId = $positionDefinition->getShopId();
