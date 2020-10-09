@@ -72,7 +72,7 @@ class CatalogPriceRules extends BOBasePage {
   }
 
   /**
-   * Get Number of cart rules
+   * Get Number of catalog price rules
    * @param page
    * @return {Promise<number>}
    */
