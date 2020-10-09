@@ -313,7 +313,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         );
 
         Hook::exec('actionProductSearchProviderRunQueryAfter', [
-            'query'  => $query,
+            'query' => $query,
             'result' => $result,
         ]);
 
