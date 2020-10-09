@@ -35,9 +35,9 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartDeliverySett
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\InvalidGiftMessageException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CannotDeleteCartRuleException;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
 use PrestaShopException;
 use Symfony\Component\Translation\TranslatorInterface;
+use Validate;
 
 /**
  * @internal
@@ -71,17 +71,36 @@ final class UpdateCartDeliverySettingsHandler extends AbstractCartHandler implem
     {
         $cart = $this->getCart($command->getCartId());
 
-        if (!\Validate::isMessage($command->getGiftMessage())) {
+        if (($command->getGiftMessage() !== null) && (!Validate::isMessage($command->getGiftMessage()))) {
             throw new InvalidGiftMessageException();
         }
 
-        $this->handleFreeShippingOption($cart, $command);
-        $this->handleGiftOption($cart, $command);
-        $this->handleRecycledWrappingOption($cart, $command);
-        $this->handleGiftMessageOption($cart, $command);
+        $shouldSaveCartAfterFreeShipping = $this->handleFreeShippingOption($cart, $command);
+        $shouldSaveCartAfterGiftOption = $this->handleGiftOption($cart, $command);
+        $shouldSaveCartAfterWrappingOption = $this->handleRecycledWrappingOption($cart, $command);
+        $shouldSaveCartAfterGiftMessageOption = $this->handleGiftMessageOption($cart, $command);
+
+        $shouldSaveCart = ($shouldSaveCartAfterFreeShipping
+            || $shouldSaveCartAfterGiftOption
+            || $shouldSaveCartAfterWrappingOption
+            || $shouldSaveCartAfterGiftMessageOption);
+
+        if ($shouldSaveCart) {
+            try {
+                if (false === $cart->update()) {
+                    throw new CartException('Failed to update cart delivery settings');
+                }
+            } catch (PrestaShopException $e) {
+                throw new CartException(sprintf('An error occurred while trying to update delivery settings for cart with id "%d"', $cart->id));
+            }
+        }
     }
 
     /**
+     * Sometimes, the cart rule to enable 'free shipping' exists
+     * but is not linked to the cart. We look for this cart rule
+     * to avoid creating duplicates.
+     *
      * @param string $code
      *
      * @return CartRule|null
@@ -99,6 +118,12 @@ final class UpdateCartDeliverySettingsHandler extends AbstractCartHandler implem
         return new CartRule((int) $cartRuleId);
     }
 
+    /**
+     * @param Cart $cart
+     * @param string $backOfficeOrderCode
+     *
+     * @return CartRule
+     */
     private function createCartRule(Cart $cart, string $backOfficeOrderCode): CartRule
     {
         $freeShippingCartRule = new CartRule();
@@ -125,110 +150,99 @@ final class UpdateCartDeliverySettingsHandler extends AbstractCartHandler implem
     }
 
     /**
+     * This method works as follows:
+     * 1. if free shipping should be enabled, enable it
+     * 2. if free shipping should not be enabled and cart already does not have free shipping, do nothing
+     * 3.if free shipping should not be enabled and cart has free shipping, disable it
+     *
      * @param Cart $cart
      * @param UpdateCartDeliverySettingsCommand $command
      *
+     * @return bool should cart be saved after or not
+     *
      * @throws CannotDeleteCartRuleException
-     * @throws CartRuleException
-     * @throws PrestaShopException
      */
-    protected function handleFreeShippingOption(Cart $cart, UpdateCartDeliverySettingsCommand $command): void
+    protected function handleFreeShippingOption(Cart $cart, UpdateCartDeliverySettingsCommand $command): bool
     {
         $backOfficeOrderCode = sprintf('%s%s', CartRule::BO_ORDER_CODE_PREFIX, $cart->id);
 
         $freeShippingCartRule = $this->getCartRuleForBackOfficeFreeShipping($backOfficeOrderCode);
 
-        if ($command->allowFreeShipping()) {
+        $freeShippingShouldBeEnabled = $command->allowFreeShipping();
+
+        // Step 1
+        if ($freeShippingShouldBeEnabled) {
             if (null === $freeShippingCartRule) {
+                // there is not yet a 'free shipping' cart rule available in the system so we create it
                 $freeShippingCartRule = $this->createCartRule($cart, $backOfficeOrderCode);
             }
             $cart->addCartRule((int) $freeShippingCartRule->id);
 
-            return;
+            return true;
         }
 
         if (null === $freeShippingCartRule) {
-            return;
+            // Step 2
+            return false;
         }
 
+        // Step 3
         $cart->removeCartRule((int) $freeShippingCartRule->id);
 
-        try {
-            if (false === $freeShippingCartRule->delete()) {
-                throw new CannotDeleteCartRuleException(sprintf('Failed deleting cart rule #%d', $freeShippingCartRule->id));
-            }
-        } catch (PrestaShopException $e) {
-            throw new CartRuleException(sprintf('An error occurred when trying to delete cart rule #%d', $freeShippingCartRule->id));
-        }
+        return true;
     }
 
     /**
      * @param Cart $cart
      * @param UpdateCartDeliverySettingsCommand $command
      *
+     * @return bool should save the cart or not
+     *
      * @throws CartException
      * @throws PrestaShopException
      */
-    private function handleGiftOption(Cart $cart, UpdateCartDeliverySettingsCommand $command): void
+    private function handleGiftOption(Cart $cart, UpdateCartDeliverySettingsCommand $command): bool
     {
         if ($command->isAGift() === null) {
-            return;
+            return false;
         }
 
         $cart->gift = $command->isAGift();
 
-        try {
-            if (false === $cart->update()) {
-                throw new CartException('Failed to update cart gift option');
-            }
-        } catch (PrestaShopException $e) {
-            throw new CartException(sprintf('An error occurred while trying to update gift option for cart with id "%d"', $cart->id));
-        }
+        return true;
     }
 
     /**
      * @param Cart $cart
      * @param UpdateCartDeliverySettingsCommand $command
      *
-     * @throws CartException
-     * @throws PrestaShopException
+     * @return bool should save the cart or not
      */
-    private function handleRecycledWrappingOption(Cart $cart, UpdateCartDeliverySettingsCommand $command): void
+    private function handleRecycledWrappingOption(Cart $cart, UpdateCartDeliverySettingsCommand $command): bool
     {
         if ($command->useRecycledPackaging() === null) {
-            return;
+            return false;
         }
+
         $cart->recyclable = $command->useRecycledPackaging();
 
-        try {
-            if (false === $cart->update()) {
-                throw new CartException('Failed to update cart recycle wrapping option');
-            }
-        } catch (PrestaShopException $e) {
-            throw new CartException(sprintf('An error occurred while trying to update recycle wrapping option for cart with id "%d"', $cart->id));
-        }
+        return true;
     }
 
     /**
      * @param Cart $cart
      * @param UpdateCartDeliverySettingsCommand $command
      *
-     * @throws CartException
+     * @return bool should save the cart or not
      */
-    private function handleGiftMessageOption(Cart $cart, UpdateCartDeliverySettingsCommand $command): void
+    private function handleGiftMessageOption(Cart $cart, UpdateCartDeliverySettingsCommand $command): bool
     {
         if ($command->getGiftMessage() === null) {
-            return;
+            return false;
         }
-        $cart->gift_message = $command->getGiftMessage();
-        $cart->save();
 
-        try {
-            if (false === $cart->update()) {
-                throw new CartException('Failed to update cart gift message');
-            }
-        } catch (PrestaShopException $e) {
-            throw new CartException(sprintf('An error occurred while trying to update gift message for cart with id "%d"', $cart->id));
-        }
+        $cart->gift_message = $command->getGiftMessage();
+
+        return true;
     }
 }
