@@ -9,17 +9,27 @@ class CatalogPriceRules extends BOBasePage {
 
     // Selectors header
     this.addNewCatalogPriceRuleButton = '#page-header-desc-specific_price_rule-new_specific_price_rule';
+
+    // Form selectors
+    this.gridForm = '#form-specific_price_rule';
+    this.gridTableHeaderTitle = `${this.gridForm} .panel-heading`;
+    this.gridTableNumberOfTitlesSpan = `${this.gridTableHeaderTitle} span.badge`;
+
     // Selectors grid panel
     this.gridPanel = '#attachment_grid_panel';
     this.gridTable = '#table-specific_price_rule';
+
     // Filters
     this.filterNameColumn = `${this.gridTable} input[name='specific_price_ruleFilter_a!name']`;
     this.filterSearchButton = `${this.gridTable} #submitFilterButtonspecific_price_rule`;
+    this.filterResetButton = 'button[name=\'submitResetspecific_price_rule\']';
+
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
+
     // Actions buttons in Row
     this.actionsColumn = row => `${this.tableRow(row)} td .btn-group-action`;
     this.dropdownToggleButton = row => `${this.actionsColumn(row)} button.dropdown-toggle`;
@@ -37,6 +47,37 @@ class CatalogPriceRules extends BOBasePage {
    */
   async goToAddNewCatalogPriceRulePage(page) {
     await this.clickAndWaitForNavigation(page, this.addNewCatalogPriceRuleButton);
+  }
+
+  /**
+   * Reset all filters
+   * @param page
+   * @return {Promise<void>}
+   */
+  async resetFilter(page) {
+    if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
+      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+    }
+    await this.waitForVisibleSelector(page, this.filterSearchButton, 2000);
+  }
+
+  /**
+   * Get Number of cart rules
+   * @param page
+   * @return {Promise<number>}
+   */
+  getNumberOfElementInGrid(page) {
+    return this.getNumberFromText(page, this.gridTableNumberOfTitlesSpan);
+  }
+
+  /**
+   * Reset and get number of catalog price rules
+   * @param page
+   * @return {Promise<number>}
+   */
+  async resetAndGetNumberOfLines(page) {
+    await this.resetFilter(page);
+    return this.getNumberOfElementInGrid(page);
   }
 
   /**

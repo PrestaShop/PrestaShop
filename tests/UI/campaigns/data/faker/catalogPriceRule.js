@@ -4,6 +4,7 @@ const {groupAccess} = require('@data/demo/groupAccess');
 const {countries} = require('@data/demo/countries');
 
 const countriesNames = Object.values(countries).map(country => country.name);
+const groupAccessNames = Object.values(groupAccess).map(group => group.name);
 
 const currencies = ['All currencies', 'Euro'];
 const reductionType = ['Amount', 'Percentage'];
@@ -14,7 +15,7 @@ module.exports = class Category {
     this.name = priceRuleToCreate.name || faker.commerce.department();
     this.currency = priceRuleToCreate.currency || faker.random.arrayElement(currencies);
     this.country = priceRuleToCreate.country || faker.random.arrayElement(countriesNames);
-    this.group = priceRuleToCreate.group || faker.random.arrayElement(groupAccess);
+    this.group = priceRuleToCreate.group || faker.random.arrayElement(groupAccessNames);
     this.fromQuantity = priceRuleToCreate.fromQuantity === undefined
       ? faker.random.number({min: 1, max: 9})
       : priceRuleToCreate.fromQuantity;
