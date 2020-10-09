@@ -133,12 +133,13 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | price         | 12.00                   |
     Then order "bo_order1" should contain 3 products "Mug The best is yet to come"
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
-      | product_quantity            | 3  |
+      | product_quantity            | 3     |
       | product_price               | 12.00 |
-      | unit_price_tax_incl         | 12.00 |
+      | unit_price_tax_incl         | 12.72 |
       | unit_price_tax_excl         | 12.00 |
-      | total_price_tax_incl        | 36.00 |
+      | total_price_tax_incl        | 38.16 |
       | total_price_tax_excl        | 36.00 |
+    And product "Mug The best is yet to come" in order "bo_order1" should have specific price 12.00
 
   Scenario: Check invoice for an order with secondary currency and discount
     Given I add discount to order "bo_order1" with following details:
