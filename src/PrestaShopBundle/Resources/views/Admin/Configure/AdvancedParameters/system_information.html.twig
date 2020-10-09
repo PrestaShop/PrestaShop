@@ -39,71 +39,71 @@
             </div>
         </div>
         {% if system.notHostMode %}
-        <div class="card">
-            <h3 class="card-header">
-                <i class="material-icons">info_outline</i> {{ 'Server information'|trans }}
-            </h3>
-            <div class="card-block">
-                <div class="card-text">
-                    {% if system.uname is not empty %}
-                        <p>
-                            <strong>{{ 'Server information'|trans }}</strong> {{ system.uname }}
-                        </p>
-                    {% endif %}
-                    <p>
-                        <strong>{{ 'Server software version:'|trans }}</strong> {{ system.server.version }}
-                    </p>
-                    <p>
-                        <strong>{{ 'PHP version:'|trans }}</strong> {{ system.server.php.version }}
-                    </p>
-                    <p>
-                        <strong>{{ 'Memory limit:'|trans }}</strong> {{ system.server.php.memoryLimit }}
-                    </p>
-                    <p>
-                        <strong>{{ 'Max execution time:'|trans }}</strong> {{ system.server.php.maxExecutionTime }}
-                    </p>
-                    <p>
-                        <strong>{{ 'Upload Max File size:'|trans }}</strong> {{ system.server.php.maxFileSizeUpload }}
-                    </p>
-                    {% if system.instaWebInstalled %}
-                        <p>{{ 'PageSpeed module for Apache installed (mod_instaweb)'|trans }}</p>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
+          <div class="card">
+              <h3 class="card-header">
+                  <i class="material-icons">info_outline</i> {{ 'Server information'|trans }}
+              </h3>
+              <div class="card-block">
+                  <div class="card-text">
+                      {% if system.uname is not empty %}
+                          <p>
+                              <strong>{{ 'Server information'|trans }}</strong> {{ system.uname }}
+                          </p>
+                      {% endif %}
+                      <p>
+                          <strong>{{ 'Server software version:'|trans }}</strong> {{ system.server.version }}
+                      </p>
+                      <p>
+                          <strong>{{ 'PHP version:'|trans }}</strong> {{ system.server.php.version }}
+                      </p>
+                      <p>
+                          <strong>{{ 'Memory limit:'|trans }}</strong> {{ system.server.php.memoryLimit }}
+                      </p>
+                      <p>
+                          <strong>{{ 'Max execution time:'|trans }}</strong> {{ system.server.php.maxExecutionTime }}
+                      </p>
+                      <p>
+                          <strong>{{ 'Upload Max File size:'|trans }}</strong> {{ system.server.php.maxFileSizeUpload }}
+                      </p>
+                      {% if system.instaWebInstalled %}
+                          <p>{{ 'PageSpeed module for Apache installed (mod_instaweb)'|trans }}</p>
+                      {% endif %}
+                  </div>
+              </div>
+          </div>
 
-        <div class="card">
-            <h3 class="card-header">
-                <i class="material-icons">info_outline</i> {{ 'Database information'|trans({}, 'Admin.Advparameters.Feature') }}
-            </h3>
-            <div class="card-block">
-                <div class="card-text">
-                    <p>
-                        <strong>{{ 'MySQL version:'|trans }}</strong> {{ system.database.version }}
-                    </p>
-                    <p>
-                        <strong>{{ 'MySQL server:'|trans }}</strong> {{ system.database.server }}
-                    </p>
-                    <p>
-                        <strong>{{ 'MySQL name:'|trans }}</strong> {{ system.database.name }}
-                    </p>
-                    <p>
-                        <strong>{{ 'MySQL user:'|trans }}</strong> {{ system.database.user }}
-                    </p>
-                    <p>
-                        <strong>{{ 'Tables prefix:'|trans }}</strong> {{ system.database.prefix }}
-                    </p>
-                    <p>
-                        <strong>{{ 'MySQL engine:'|trans }}</strong> {{ system.database.engine }}
-                    </p>
-                    <p>
-                        <strong>{{ 'MySQL driver:'|trans }}</strong> {{ system.database.driver }}
-                    </p>
-                </div>
-            </div>
-        </div>
+          <div class="card">
+              <h3 class="card-header">
+                  <i class="material-icons">info_outline</i> {{ 'Database information'|trans({}, 'Admin.Advparameters.Feature') }}
+              </h3>
+              <div class="card-block">
+                  <div class="card-text">
+                      <p>
+                          <strong>{{ 'MySQL version:'|trans }}</strong> {{ system.database.version }}
+                      </p>
+                      <p>
+                          <strong>{{ 'MySQL server:'|trans }}</strong> {{ system.database.server }}
+                      </p>
+                      <p>
+                          <strong>{{ 'MySQL name:'|trans }}</strong> {{ system.database.name }}
+                      </p>
+                      <p>
+                          <strong>{{ 'MySQL user:'|trans }}</strong> {{ system.database.user }}
+                      </p>
+                      <p>
+                          <strong>{{ 'Tables prefix:'|trans }}</strong> {{ system.database.prefix }}
+                      </p>
+                      <p>
+                          <strong>{{ 'MySQL engine:'|trans }}</strong> {{ system.database.engine }}
+                      </p>
+                      <p>
+                          <strong>{{ 'MySQL driver:'|trans }}</strong> {{ system.database.driver }}
+                      </p>
+                  </div>
+              </div>
+          </div>
 
-        <div class="card">
+          <div class="card">
           <h3 class="card-header">
             <i class="material-icons">info_outline</i> {{ 'List of overrides'|trans({}, 'Admin.Advparameters.Feature') }}
           </h3>
@@ -117,8 +117,8 @@
             </div>
           </div>
         </div>
+        {% endif %}
     </div>
-    {% endif %}
     <div class="col-lg-6">
         <div class="card">
             <h3 class="card-header">
