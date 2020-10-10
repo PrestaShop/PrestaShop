@@ -5054,7 +5054,10 @@ class ProductCore extends ObjectModel
                 $row['cover_image_id'] = $cover['id_image'];
             }
         }
-        $cache_key .= '-cover' . (int) $row['cover_image_id'];
+
+        if (isset($row['cover_image_id'])) {
+            $cache_key .= '-cover' . (int) $row['cover_image_id'];
+        }
 
         Hook::exec('actionGetProductPropertiesAfter', [
             'id_lang' => $id_lang,
