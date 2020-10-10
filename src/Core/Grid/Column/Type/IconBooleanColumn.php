@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,12 +22,41 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% set value = record[column.options.field] %}
+declare(strict_types=1);
 
-{% if value %}
-  {{ column.options.true_name }}
-{% else %}
-  {{ column.options.false_name }}
-{% endif %}
+namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
+
+use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+/**
+ * Column
+ */
+final class IconBooleanColumn extends AbstractColumn
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getType()
+    {
+        return 'icon_boolean';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver
+            ->setRequired([
+                'field'
+            ])
+            ->setDefaults([
+                'clickable' => false,
+            ])
+            ->setAllowedTypes('field', 'string')
+            ->setAllowedTypes('clickable', 'bool');
+    }
+}
