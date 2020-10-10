@@ -1,4 +1,4 @@
-{# **
+{#**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * #}
+ *#}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain "Admin.Advparameters.Feature" %}
 
@@ -74,8 +74,7 @@
 
     <div class="card">
       <h3 class="card-header">
-        <i
-          class="material-icons">info_outline</i> {{ 'Database information'|trans({}, 'Admin.Advparameters.Feature') }}
+        <i class="material-icons">info_outline</i> {{ 'Database information'|trans({}, 'Admin.Advparameters.Feature') }}
       </h3>
       <div class="card-block">
         <div class="card-text">
@@ -106,8 +105,7 @@
 
     <div class="card">
       <h3 class="card-header">
-        <i
-          class="material-icons">info_outline</i> {{ 'List of overrides'|trans({}, 'Admin.Advparameters.Feature') }}
+        <i class="material-icons">info_outline</i> {{ 'List of overrides'|trans({}, 'Admin.Advparameters.Feature') }}
       </h3>
       <div class="card-block">
         <div class="card-text">
@@ -212,8 +210,7 @@
             <span class="text-success">{{ 'OK'|trans({}, 'Admin.Advparameters.Notification') }}</span>
           </p>
           {% else %}
-          <span
-            class="text-danger">{{ 'Please fix the following error(s)'|trans({}, 'Admin.Advparameters.Notification') }}</span>
+          <span class="text-danger">{{ 'Please fix the following error(s)'|trans({}, 'Admin.Advparameters.Notification') }}</span>
           </p>
           <ul>
             {% for key, value in requirements.testsRequired %}
@@ -230,8 +227,7 @@
             <span class="text-success">{{ 'OK'|trans({}, 'Admin.Advparameters.Notification') }}</span>
           </p>
           {% else %}
-          <span
-            class="text-danger">{{ 'Please fix the following error(s)'|trans({}, 'Admin.Advparameters.Notification') }}</span>
+          <span class="text-danger">{{ 'Please fix the following error(s)'|trans({}, 'Admin.Advparameters.Notification') }}</span>
           </p>
           <ul>
             {% for key, value in requirements.testsOptional %}
