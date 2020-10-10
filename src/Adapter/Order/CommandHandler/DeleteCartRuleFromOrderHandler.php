@@ -27,7 +27,10 @@
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Cart;
+use Currency;
+use Customer;
 use OrderCartRule;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand;
@@ -44,13 +47,18 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
      * @var OrderAmountUpdater
      */
     private $orderAmountUpdater;
+    /**
+     * @var ContextStateManager
+     */
+    private $contextStateManager;
 
     /**
      * @param OrderAmountUpdater $orderAmountUpdater
      */
-    public function __construct(OrderAmountUpdater $orderAmountUpdater)
+    public function __construct(OrderAmountUpdater $orderAmountUpdater, ContextStateManager $contextStateManager)
     {
         $this->orderAmountUpdater = $orderAmountUpdater;
+        $this->contextStateManager = $contextStateManager;
     }
 
     /**
@@ -68,6 +76,10 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
         if (!Validate::isLoadedObject($cart) || $order->id_cart != $cart->id) {
             throw new OrderException('Invalid cart provided.');
         }
+
+        $this->contextStateManager
+            ->setCurrency(new Currency($order->id_currency))
+            ->setCustomer(new Customer($order->id_customer));
 
         // Delete Order Cart Rule and update Order
         $orderCartRule->softDelete();
