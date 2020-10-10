@@ -312,3 +312,8 @@ services:
       - "@=service('router').generate('admin_common_reset_search', {'controller': 'state', 'action': 'index'})"
       - "@=service('router').generate('admin_states_index')"
     public: true
+
+  prestashop.core.grid.definition.factory.image_type:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ImageTypeGridDefinitionFactory'
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    public: true
