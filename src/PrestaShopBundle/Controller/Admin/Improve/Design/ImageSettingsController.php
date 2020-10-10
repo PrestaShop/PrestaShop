@@ -73,7 +73,7 @@ class ImageSettingsController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function searchAction(Request $request)
+    public function searchAction(Request $request): RedirectResponse
     {
         /** @var ResponseBuilder $responseBuilder */
         $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
