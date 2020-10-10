@@ -359,3 +359,11 @@ services:
           - '@prestashop.core.grid.data.factory.zone'
           - '@prestashop.core.grid.filter.form_factory'
           - '@prestashop.core.hook.dispatcher'
+
+    prestashop.core.grid.factory.image_type:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.image_type'
+            - '@prestashop.core.grid.data.factory.image_type_decorator'
+            - '@prestashop.core.grid.filter.form_factory'
+            - '@prestashop.core.hook.dispatcher'
