@@ -373,3 +373,10 @@ services:
         public: true
         arguments:
             - '@prestashop.core.query.doctrine_search_criteria_applicator'
+
+    prestashop.core.grid.query_builder.image_type:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\ImageTypeQueryBuilder'
+        parent: 'prestashop.core.grid.abstract_query_builder'
+        arguments:
+            - '@prestashop.core.query.doctrine_search_criteria_applicator'
+        public: true
