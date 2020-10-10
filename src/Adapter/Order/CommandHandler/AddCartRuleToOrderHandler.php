@@ -30,8 +30,10 @@ use Cart;
 use CartRule;
 use Configuration;
 use Currency;
+use Customer;
 use Order;
 use OrderInvoice;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscountValueException;
@@ -52,13 +54,18 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
      * @var OrderAmountUpdater
      */
     private $orderAmountUpdater;
+    /**
+     * @var ContextStateManager
+     */
+    private $contextStateManager;
 
     /**
      * @param OrderAmountUpdater $orderAmountUpdater
      */
-    public function __construct(OrderAmountUpdater $orderAmountUpdater)
+    public function __construct(OrderAmountUpdater $orderAmountUpdater, ContextStateManager $contextStateManager)
     {
         $this->orderAmountUpdater = $orderAmountUpdater;
+        $this->contextStateManager = $contextStateManager;
     }
 
     /**
@@ -68,6 +75,10 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
     {
         $this->assertPercentCartRule($command);
         $order = $this->getOrder($command->getOrderId());
+
+        $this->contextStateManager
+            ->setCurrency(new Currency($order->id_currency))
+            ->setCustomer(new Customer($order->id_customer));
 
         $computingPrecision = new ComputingPrecision();
         $currency = new Currency((int) $order->id_currency);
