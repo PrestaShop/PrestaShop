@@ -1,0 +1,15 @@
+admin_image_settings_index:
+    path: /
+    methods: GET
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\Design\ImageSettings:index'
+        _legacy_controller: AdminImages
+        _legacy_link: AdminImages
+
+admin_image_settings_search:
+    path: /
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\Design\ImageSettings:search'
+        _legacy_controller: AdminImages
+        _legacy_link: AdminImages:submitFilterimage_type
