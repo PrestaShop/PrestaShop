@@ -66,6 +66,7 @@ module.exports = {
     feature_form: './js/pages/feature/form',
     form_popover_error: './js/components/form/form-popover-error',
     geolocation: './js/pages/geolocation',
+    image_settings: './js/pages/image-settings',
     imports: './js/pages/import',
     improve_design_positions: './js/pages/improve/design_positions',
     invoices: './js/pages/invoices',
