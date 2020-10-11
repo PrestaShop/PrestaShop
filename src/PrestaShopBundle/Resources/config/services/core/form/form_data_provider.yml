@@ -153,3 +153,8 @@ services:
       class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ProductFormDataProvider'
       arguments:
           - '@prestashop.core.query_bus'
+
+  prestashop.core.form.identifiable_object.data_provider.image_type_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ImageTypeFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
