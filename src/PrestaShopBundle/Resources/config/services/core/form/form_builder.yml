@@ -210,3 +210,10 @@ services:
     arguments:
       - 'PrestaShopBundle\Form\Admin\Improve\International\Locations\ZoneType'
       - '@prestashop.core.form.identifiable_object.data_provider.zone_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.image_type_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\ImageTypeType'
+      - '@prestashop.core.form.identifiable_object.data_provider.image_type_form_data_provider'
