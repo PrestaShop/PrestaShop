@@ -338,7 +338,10 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             $isFreeShipping ? '0' : (string) $legacySummary['total_shipping'],
             $isFreeShipping,
             $this->fetchCartDeliveryOptions($deliveryOptionsByAddress, $deliveryAddress),
-            (int) $carrier->id ?: null
+            (int) $carrier->id ?: null,
+            (bool) $cart->gift,
+            (bool) $cart->recyclable,
+            $cart->gift_message
         );
     }
 

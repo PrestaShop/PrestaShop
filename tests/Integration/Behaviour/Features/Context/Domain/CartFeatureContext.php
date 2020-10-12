@@ -42,10 +42,10 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveCartRuleFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartDeliverySettingsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
@@ -339,9 +339,30 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     public function setFreeShippingToCart(string $cartReference)
     {
         $this->getCommandBus()->handle(
-            new SetFreeShippingToCartCommand(
+            new UpdateCartDeliverySettingsCommand(
                 SharedStorage::getStorage()->get($cartReference),
                 true
+            )
+        );
+    }
+
+    /**
+     * @When I declare cart :cartReference is a gift with message :message
+     *
+     * @param string $cartReference
+     * @param string $message
+     */
+    public function sendAsAGift(string $cartReference, string $message)
+    {
+        $cartId = SharedStorage::getStorage()->get($cartReference);
+
+        $this->getCommandBus()->handle(
+            new UpdateCartDeliverySettingsCommand(
+                $cartId,
+                true,
+                true,
+                false,
+                $message
             )
         );
     }
@@ -642,6 +663,16 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then cart :cartReference should have free shipping
+     */
+    public function assertCartShippingIsFree(string $cartReference)
+    {
+        $cartInfo = $this->getCartInformationByReference($cartReference);
+        Assert::assertTrue($cartInfo->getShipping()->isFreeShipping());
+        Assert::assertEquals('0', $cartInfo->getShipping()->getShippingPrice());
+    }
+
+    /**
      * @Given /^I use a voucher "(.+)" which provides a gift product "(.+)" and free shipping on the cart "(.+)"$/
      */
     public function addGiftPlusFreeShippingCartRule(string $voucherCode, string $giftProductName, string $cartReference)
@@ -663,16 +694,6 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
         $this->getSharedStorage()->set($voucherCode, $cartRuleId);
         $this->getSharedStorage()->set($giftProductName, $productId);
-    }
-
-    /**
-     * @Then cart :cartReference should have free shipping
-     */
-    public function assertCartShippingIsFree(string $cartReference)
-    {
-        $cartInfo = $this->getCartInformationByReference($cartReference);
-        Assert::assertTrue($cartInfo->getShipping()->isFreeShipping());
-        Assert::assertEquals('0', $cartInfo->getShipping()->getShippingPrice());
     }
 
     /**

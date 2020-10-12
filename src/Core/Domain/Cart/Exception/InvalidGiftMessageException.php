@@ -23,18 +23,10 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
-
-/**
- * Interface for service that set free shipping to cart
- */
-interface SetFreeShippingToCartHandlerInterface
+class InvalidGiftMessageException extends CartException
 {
-    /**
-     * @param SetFreeShippingToCartCommand $command
-     */
-    public function handle(SetFreeShippingToCartCommand $command);
 }

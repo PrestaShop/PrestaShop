@@ -32,14 +32,15 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddProductToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveCartRuleFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartDeliverySettingsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\InvalidGiftMessageException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
@@ -258,19 +259,26 @@ class CartController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function setFreeShippingAction(Request $request, int $cartId)
+    public function updateDeliverySettingsAction(Request $request, int $cartId)
     {
+        $configuration = $this->get('prestashop.adapter.legacy.configuration');
+        $recycledPackagingEnabled = (bool) $configuration->get('PS_RECYCLABLE_PACK');
+        $giftSettingsEnabled = (bool) $configuration->get('PS_GIFT_WRAPPING');
+
         try {
-            $this->getCommandBus()->handle(new SetFreeShippingToCartCommand(
+            $this->getCommandBus()->handle(new UpdateCartDeliverySettingsCommand(
                 $cartId,
-                $request->request->getBoolean('freeShipping')
+                $request->request->getBoolean('freeShipping'),
+                ($giftSettingsEnabled ? $request->request->getBoolean('isAGift', null) : null),
+                ($recycledPackagingEnabled ? $request->request->getBoolean('useRecycledPackaging', null) : null),
+                ((!empty($request->request->get('giftMessage', null))) ? $request->request->get('giftMessage', null) : null)
             ));
 
             return $this->json($this->getCartInfo($cartId));
         } catch (Exception $e) {
             return $this->json(
                 ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
-                Response::HTTP_INTERNAL_SERVER_ERROR
+                Response::HTTP_BAD_REQUEST
             );
         }
     }
@@ -582,6 +590,10 @@ class CartController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
             ],
+            InvalidGiftMessageException::class => $this->trans(
+                'Gift message not valid',
+                'Admin.Notifications.Error'
+            ),
         ];
     }
 }
