@@ -29,9 +29,10 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\BooleanColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
@@ -142,6 +143,9 @@ class ImageTypeGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new ActionColumn('actions'))
+                    ->setOptions([
+                        'actions' => $this->getRowActions(),
+                    ])
             );
     }
 
@@ -247,6 +251,25 @@ class ImageTypeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new SimpleGridAction('common_export_sql_manager'))
                     ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
                     ->setIcon('storage')
+            );
+    }
+
+    /**
+     * @return RowActionCollection
+     */
+    private function getRowActions(): RowActionCollection
+    {
+        return (new RowActionCollection())
+            ->add(
+                (new LinkRowAction('edit'))
+                    ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                    ->setIcon('edit')
+                    ->setOptions([
+                        'route' => 'admin_image_settings_edit',
+                        'route_param_name' => 'imageTypeId',
+                        'route_param_field' => 'id_image_type',
+                        'clickable_row' => true,
+                    ])
             );
     }
 }
