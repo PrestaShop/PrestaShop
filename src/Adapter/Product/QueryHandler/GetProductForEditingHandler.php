@@ -31,7 +31,7 @@ use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Converter\OutOfStockTypeConverter;
 use PrestaShop\PrestaShop\Adapter\Product\Converter\PackStockTypeConverter;
-use PrestaShop\PrestaShop\Adapter\Product\Provider\StockAvailableProvider;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
@@ -65,20 +65,20 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
     private $numberExtractor;
 
     /**
-     * @var StockAvailableProvider
+     * @var StockAvailableRepository
      */
-    private $stockAvailableProvider;
+    private $stockAvailableRepository;
 
     /**
      * @param NumberExtractor $numberExtractor
-     * @param StockAvailableProvider $stockAvailableProvider
+     * @param StockAvailableRepository $stockAvailableRepository
      */
     public function __construct(
         NumberExtractor $numberExtractor,
-        StockAvailableProvider $stockAvailableProvider
+        StockAvailableRepository $stockAvailableRepository
     ) {
         $this->numberExtractor = $numberExtractor;
-        $this->stockAvailableProvider = $stockAvailableProvider;
+        $this->stockAvailableRepository = $stockAvailableRepository;
     }
 
     /**
@@ -296,7 +296,7 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
     {
         try {
             // Theoretically StockAvailable is created for each product when Product::add is called
-            $stockAvailable = $this->stockAvailableProvider->get(new ProductId($product->id));
+            $stockAvailable = $this->stockAvailableRepository->get(new ProductId($product->id));
 
             return new ProductStock(
                 $product->advanced_stock_management,
