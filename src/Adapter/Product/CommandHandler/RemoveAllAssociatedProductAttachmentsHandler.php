@@ -28,19 +28,34 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductAttachmentUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductAttachmentsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\RemoveAllAssociatedProductAttachmentsHandlerInterface;
 
 /**
- * Removes all product-attachment associations for given product using legacy object model
+ * Removes all product-attachment associations for given product
  */
 class RemoveAllAssociatedProductAttachmentsHandler implements RemoveAllAssociatedProductAttachmentsHandlerInterface
 {
+    /**
+     * @var ProductAttachmentUpdater
+     */
+    private $productAttachmentUpdater;
+
+    /**
+     * @param ProductAttachmentUpdater $productAttachmentUpdater
+     */
+    public function __construct(
+        ProductAttachmentUpdater $productAttachmentUpdater
+    ) {
+        $this->productAttachmentUpdater = $productAttachmentUpdater;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function handle(RemoveAllAssociatedProductAttachmentsCommand $command): void
     {
-        // TODO: Implement handle() method.
+        $this->productAttachmentUpdater->setAttachments($command->getProductId(), []);
     }
 }
