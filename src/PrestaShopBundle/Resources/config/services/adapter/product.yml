@@ -133,12 +133,16 @@ services:
 
     prestashop.adapter.product.command_handler.set_pack_products_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetPackProductsHandler
+        arguments:
+            - '@prestashop.adapter.product.update.product_pack_updater'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetPackProductsCommand
 
     prestashop.adapter.product.command_handler.remove_all_products_from_pack_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllProductsFromPackHandler
+        arguments:
+            - '@prestashop.adapter.product.update.product_pack_updater'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllProductsFromPackCommand
