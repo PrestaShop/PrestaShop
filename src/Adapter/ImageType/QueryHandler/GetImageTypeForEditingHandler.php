@@ -47,9 +47,9 @@ final class GetImageTypeForEditingHandler extends AbstractImageTypeHandler imple
 
         return new EditableImageType(
             $query->getImageTypeId(),
-            $imageType->name,
-            $imageType->width,
-            $imageType->height,
+            (string) $imageType->name,
+            (int) $imageType->width,
+            (int) $imageType->height,
             (bool) $imageType->products,
             (bool) $imageType->categories,
             (bool) $imageType->manufacturers,
