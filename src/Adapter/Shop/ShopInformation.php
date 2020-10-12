@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Adapter\Shop;
 
 use AppKernel;
-use Tools;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Tools;
 
 /**
  * Retrieve common information from a the actual Shop.
