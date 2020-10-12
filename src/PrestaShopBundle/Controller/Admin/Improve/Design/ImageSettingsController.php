@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\ImageType\Exception\DeleteImageTypeException;
 use PrestaShop\PrestaShop\Core\Domain\ImageType\Exception\ImageTypeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ImageType\Query\GetImageTypeForEditing;
 use PrestaShop\PrestaShop\Core\Domain\ImageType\QueryResult\EditableImageType;
@@ -185,6 +186,16 @@ class ImageSettingsController extends FrameworkBundleAdminController
                 'The object cannot be loaded (or found)',
                 'Admin.Notifications.Error'
             ),
+            DeleteImageTypeException::class => [
+                DeleteImageTypeException::FAILED_DELETE => $this->trans(
+                    'An error occurred while deleting the object.',
+                    'Admin.Notifications.Error'
+                ),
+                DeleteImageTypeException::FAILED_BULK_DELETE => $this->trans(
+                    'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
         ];
     }
 }
