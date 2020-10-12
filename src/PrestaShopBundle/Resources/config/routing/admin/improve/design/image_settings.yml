@@ -33,3 +33,15 @@ admin_image_settings_edit:
             id_image_type: imageTypeId
     requirements:
         imageTypeId: \d+
+
+admin_image_settings_delete:
+    path: /{imageTypeId}/delete
+    methods: [POST, DELETE]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\Design\ImageSettings:delete'
+        _legacy_controller: AdminImages
+        _legacy_link: AdminImages:deleteimage_type
+        _legacy_parameters:
+            id_image_type: imageTypeId
+    requirements:
+        imageTypeId: \d+
