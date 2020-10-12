@@ -64,6 +64,22 @@ class UpdateTagsFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @When I remove all product :productReference tags
+     *
+     * @param string $productReference
+     */
+    public function removeAllTags(string $productReference)
+    {
+        $productId = $this->getSharedStorage()->get($productReference);
+
+        try {
+            $this->getCommandBus()->handle(new SetProductTagsCommand($productId, []));
+        } catch (ProductException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
      * Product tags differs from other localized properties, because each locale can have an array of tags
      * (whereas common property will have one value per language)
      * This is why it needs some additional parsing
