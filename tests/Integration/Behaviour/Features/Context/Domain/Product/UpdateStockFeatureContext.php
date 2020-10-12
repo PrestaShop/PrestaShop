@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductStockException;
 use PrestaShopBundle\Api\QueryStockMovementParamsCollection;
 use PrestaShopBundle\Entity\Repository\StockMovementRepository;
 use RuntimeException;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class UpdateStockFeatureContext extends AbstractProductFeatureContext
 {
@@ -172,12 +173,12 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
     private function setUpdateStockCommandData(array $data, UpdateProductStockCommand $command): array
     {
         if (isset($data['use_advanced_stock_management'])) {
-            $command->setUseAdvancedStockManagement((bool) $data['use_advanced_stock_management']);
+            $command->setUseAdvancedStockManagement(PrimitiveUtils::castStringBooleanIntoBoolean($data['use_advanced_stock_management']));
             unset($data['use_advanced_stock_management']);
         }
 
         if (isset($data['depends_on_stock'])) {
-            $command->setDependsOnStock((bool) $data['depends_on_stock']);
+            $command->setDependsOnStock(PrimitiveUtils::castStringBooleanIntoBoolean($data['depends_on_stock']));
             unset($data['depends_on_stock']);
         }
 
@@ -196,6 +197,11 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         if (isset($data['quantity'])) {
             $command->setQuantity((int) $data['quantity']);
             unset($data['quantity']);
+        }
+
+        if (isset($data['add_movement'])) {
+            $command->setAddMovement(PrimitiveUtils::castStringBooleanIntoBoolean($data['add_movement']));
+            unset($data['add_movement']);
         }
 
         return $data;
