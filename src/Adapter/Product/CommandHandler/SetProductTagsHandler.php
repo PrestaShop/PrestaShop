@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductTagUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand;
@@ -37,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductTagsHa
 /**
  * Handles UpdateProductTagsCommand using legacy object model
  */
-final class SetProductTagsHandler extends AbstractProductHandler implements UpdateProductTagsHandlerInterface
+final class SetProductTagsHandler implements UpdateProductTagsHandlerInterface
 {
     /**
      * @var ProductRepository
