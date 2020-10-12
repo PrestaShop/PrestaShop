@@ -28,6 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
+use Exception;
+use PrestaShop\PrestaShop\Core\Domain\ImageType\Exception\ImageTypeNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\ImageType\Query\GetImageTypeForEditing;
+use PrestaShop\PrestaShop\Core\Domain\ImageType\QueryResult\EditableImageType;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ImageTypeGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\ImageTypeFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -84,5 +88,67 @@ class ImageSettingsController extends FrameworkBundleAdminController
             ImageTypeGridDefinitionFactory::GRID_ID,
             'admin_image_settings_index'
         );
+    }
+
+    /**
+     * Handles image type edit
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_image_settings_index",
+     * )
+     *
+     * @param Request $request
+     * @param int $imageTypeId
+     *
+     * @return Response
+     */
+    public function editAction(Request $request, int $imageTypeId): Response
+    {
+        $imageTypeFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.image_type_form_builder');
+        $imageTypeFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.image_type_form_handler');
+
+        try {
+            $imageTypeForm = $imageTypeFormBuilder->getFormFor($imageTypeId);
+        } catch (Exception $exception) {
+            $this->addFlash('error', $this->getErrorMessageForException($exception, $this->getErrorMessages()));
+            return $this->redirectToRoute('admin_image_settings_index');
+        }
+
+        try {
+            $imageTypeForm->handleRequest($request);
+            $result = $imageTypeFormHandler->handleFor($imageTypeId, $imageTypeForm);
+
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                return $this->redirectToRoute('admin_image_settings_index');
+            }
+        } catch (Exception $exception) {
+            $this->addFlash('error', $this->getErrorMessageForException($exception, $this->getErrorMessages()));
+
+            if ($exception instanceof ImageTypeNotFoundException) {
+                return $this->redirectToRoute('admin_image_settings_index');
+            }
+        }
+
+        /** @var EditableImageType $editableImageType */
+        $editableImageType = $this->getQueryBus()->handle(new GetImageTypeForEditing($imageTypeId));
+
+        return $this->render('@PrestaShop/Admin/Improve/Design/ImageSettings/edit.html.twig', [
+            'imageTypeForm' => $imageTypeForm->createView(),
+            'imageTypeName' => $editableImageType->getName(),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
+        ]);
+    }
+
+    private function getErrorMessages(): array
+    {
+        return [
+            ImageTypeNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+        ];
     }
 }
