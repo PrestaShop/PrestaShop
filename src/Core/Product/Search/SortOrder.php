@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Product\Search;
 
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Product\Search\Exception\InvalidSortOrderDirectionException;
 
 /**
@@ -120,7 +121,13 @@ class SortOrder
      */
     public static function newFromString($sortOrderConfiguration)
     {
-        list($entity, $field, $direction) = explode('.', $sortOrderConfiguration);
+        $sortParams = explode('.', $sortOrderConfiguration);
+
+        if (count($sortParams) < 3) {
+            throw new CoreException('Invalid argument');
+        }
+
+        list($entity, $field, $direction) = $sortParams;
 
         return new static($entity, $field, $direction);
     }
