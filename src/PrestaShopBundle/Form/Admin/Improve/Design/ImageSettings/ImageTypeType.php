@@ -28,13 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Type;
 
 /**
@@ -61,8 +61,8 @@ class ImageTypeType extends TranslatorAwareType
                             ]
                         )
                     ]),
-                    new TypedRegex([
-                        'type' => 'generic_name',
+                    new Regex([
+                        'pattern' => '/^[a-z0-9_-]*$/'
                     ]),
                 ]
             ])
