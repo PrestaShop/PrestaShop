@@ -26,15 +26,15 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Provider;
+namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
-use PrestaShop\PrestaShop\Adapter\AbstractObjectModelProvider;
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use StockAvailable;
 
-class StockAvailableProvider extends AbstractObjectModelProvider
+class StockAvailableRepository extends AbstractObjectModelRepository
 {
     /**
      * @param ProductId $productId

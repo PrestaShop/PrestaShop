@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Converter\OutOfStockTypeConverter;
 use PrestaShop\PrestaShop\Adapter\Product\Converter\PackStockTypeConverter;
-use PrestaShop\PrestaShop\Adapter\Product\Provider\StockAvailableProvider;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Updater\ProductStockUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductStockHandlerInterface;
@@ -42,9 +42,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductStockH
 class UpdateProductStockHandler extends AbstractProductHandler implements UpdateProductStockHandlerInterface
 {
     /**
-     * @var StockAvailableProvider
+     * @var StockAvailableRepository
      */
-    private $stockAvailableProvider;
+    private $stockAvailableRepository;
 
     /**
      * @var ProductStockUpdater
@@ -52,14 +52,14 @@ class UpdateProductStockHandler extends AbstractProductHandler implements Update
     private $productStockUpdater;
 
     /**
-     * @param StockAvailableProvider $stockAvailableProvider
+     * @param StockAvailableRepository $stockAvailableRepository
      * @param ProductStockUpdater $productStockUpdater
      */
     public function __construct(
-        StockAvailableProvider $stockAvailableProvider,
+        StockAvailableRepository $stockAvailableRepository,
         ProductStockUpdater $productStockUpdater
     ) {
-        $this->stockAvailableProvider = $stockAvailableProvider;
+        $this->stockAvailableRepository = $stockAvailableRepository;
         $this->productStockUpdater = $productStockUpdater;
     }
 
@@ -69,7 +69,7 @@ class UpdateProductStockHandler extends AbstractProductHandler implements Update
     public function handle(UpdateProductStockCommand $command): void
     {
         $product = $this->getFullProduct($command->getProductId());
-        $stockAvailable = $this->stockAvailableProvider->getOrCreate($command->getProductId());
+        $stockAvailable = $this->stockAvailableRepository->getOrCreate($command->getProductId());
 
         $this->productStockUpdater->update($product, $stockAvailable, $this->formatCommandToArray($command), $command->addMovement());
     }
