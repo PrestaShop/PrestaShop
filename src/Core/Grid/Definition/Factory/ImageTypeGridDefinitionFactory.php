@@ -50,6 +50,8 @@ class ImageTypeGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     const GRID_ID = 'image_type';
 
+    use DeleteActionTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -270,6 +272,13 @@ class ImageTypeGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'route_param_field' => 'id_image_type',
                         'clickable_row' => true,
                     ])
+            )
+            ->add(
+                $this->buildDeleteAction(
+                    'admin_image_settings_delete',
+                    'imageTypeId',
+                    'id_image_type'
+                )
             );
     }
 }
