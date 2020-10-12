@@ -6937,8 +6937,9 @@ class ProductCore extends ObjectModel
         $ids = array();
         $refs = array();
         $whereStatements = array();
+        $match_ref = Tools::getValue('match_ref');
         foreach ((is_array($ids_or_refs) ? $ids_or_refs : array($ids_or_refs)) as $id_or_ref) {
-            if (is_numeric($id_or_ref)) {
+            if (is_numeric($id_or_ref) && !$match_ref) {
                 $ids[] = (int) $id_or_ref;
             } elseif (is_string($id_or_ref)) {
                 $refs[] = '\'' . pSQL($id_or_ref) . '\'';
