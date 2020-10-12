@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
@@ -51,6 +52,7 @@ class ImageTypeGridDefinitionFactory extends AbstractGridDefinitionFactory
     const GRID_ID = 'image_type';
 
     use DeleteActionTrait;
+    use BulkDeleteActionTrait;
 
     /**
      * {@inheritdoc}
@@ -230,6 +232,17 @@ class ImageTypeGridDefinitionFactory extends AbstractGridDefinitionFactory
                         ],
                         'redirect_route' => 'admin_image_settings_index',
                     ])
+            );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getBulkActions(): BulkActionCollection
+    {
+        return (new BulkActionCollection())
+            ->add(
+                $this->buildBulkDeleteAction('admin_image_settings_bulk_delete')
             );
     }
 
