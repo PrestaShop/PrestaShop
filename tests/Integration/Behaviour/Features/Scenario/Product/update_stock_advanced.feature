@@ -14,33 +14,33 @@ Feature: Update product stock from Back Office (BO)
       | name       | en-US:Presta camera |
       | is_virtual | false               |
     And product "product1" should have following stock information:
-      | use_advanced_stock_management | 0           |
+      | use_advanced_stock_management | false       |
     When I update product "product1" stock with following information:
-      | use_advanced_stock_management | 1           |
+      | use_advanced_stock_management | true        |
     Then product "product1" should have following stock information:
-      | use_advanced_stock_management | 1           |
+      | use_advanced_stock_management | true        |
 
   Scenario: I update product depends on stock (also check automatic update when disabling advanced stock on product)
     Given I add product "product1" with following information:
       | name       | en-US:Presta camera |
       | is_virtual | false               |
     And product "product1" should have following stock information:
-      | use_advanced_stock_management | 0           |
-      | depends_on_stock              | 0           |
+      | use_advanced_stock_management | false       |
+      | depends_on_stock              | false       |
     When I update product "product1" stock with following information:
-      | depends_on_stock | 1           |
+      | depends_on_stock | true        |
     And I should get error that stock management is disabled on product
     When I update product "product1" stock with following information:
-      | use_advanced_stock_management | 1           |
-      | depends_on_stock              | 1           |
+      | use_advanced_stock_management | true        |
+      | depends_on_stock              | true        |
     Then product "product1" should have following stock information:
-      | use_advanced_stock_management | 1           |
-      | depends_on_stock              | 1           |
+      | use_advanced_stock_management | true        |
+      | depends_on_stock              | true        |
     When I update product "product1" stock with following information:
-      | use_advanced_stock_management | 0           |
+      | use_advanced_stock_management | false       |
     Then product "product1" should have following stock information:
-      | use_advanced_stock_management | 0           |
-      | depends_on_stock              | 0           |
+      | use_advanced_stock_management | false       |
+      | depends_on_stock              | false       |
 
   Scenario: I update pack stock type
     Given I add product "productPack1" with following information:
@@ -91,23 +91,23 @@ Feature: Update product stock from Back Office (BO)
     # Can not depends on stock since default config depends on product
     Given shop configuration for "PS_PACK_STOCK_TYPE" is set to 1
     When I update product "productPack1" stock with following information:
-      | use_advanced_stock_management | 1           |
-      | depends_on_stock              | 1           |
+      | use_advanced_stock_management | true        |
+      | depends_on_stock              | true        |
     And I should get error that pack stock type is incompatible
     # Can not depends on stock since default config depends on both
     Given shop configuration for "PS_PACK_STOCK_TYPE" is set to 2
     When I update product "productPack1" stock with following information:
-      | use_advanced_stock_management | 1           |
-      | depends_on_stock              | 1           |
+      | use_advanced_stock_management | true        |
+      | depends_on_stock              | true        |
     And I should get error that pack stock type is incompatible
     # Let's ignore default configuration If it depends on pack stock only it is compatible with depends on stock
     When I update product "productPack1" stock with following information:
-      | use_advanced_stock_management | 1                    |
-      | depends_on_stock              | 1                    |
+      | use_advanced_stock_management | true                 |
+      | depends_on_stock              | true                 |
       | pack_stock_type               | stock_type_pack_only |
     Then product "productPack1" should have following stock information:
-      | use_advanced_stock_management | 1                    |
-      | depends_on_stock              | 1                    |
+      | use_advanced_stock_management | true                 |
+      | depends_on_stock              | true                 |
       | pack_stock_type               | stock_type_pack_only |
     # If pack depends on product or both it is still not possible
     When I update product "productPack1" stock with following information:
@@ -118,17 +118,17 @@ Feature: Update product stock from Back Office (BO)
     And I should get error that pack stock type is incompatible
     # Unless all the pack's products have advanced stock management
     When I update product "product2" stock with following information:
-      | use_advanced_stock_management | 1                    |
+      | use_advanced_stock_management | true                 |
     Then product "product2" should have following stock information:
-      | use_advanced_stock_management | 1                    |
+      | use_advanced_stock_management | true                 |
     When I update product "productPack1" stock with following information:
       | pack_stock_type               | stock_type_products_only |
     And I should get error that pack stock type is incompatible
     # I said ALL of them
     When I update product "product3" stock with following information:
-      | use_advanced_stock_management | 1                    |
+      | use_advanced_stock_management | true                 |
     Then product "product3" should have following stock information:
-      | use_advanced_stock_management | 1                    |
+      | use_advanced_stock_management | true                 |
     When I update product "productPack1" stock with following information:
       | pack_stock_type               | stock_type_products_only |
     Then product "productPack1" should have following stock information:
