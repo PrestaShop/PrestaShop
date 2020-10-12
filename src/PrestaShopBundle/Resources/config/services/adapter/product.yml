@@ -116,6 +116,15 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand
 
+    prestashop.adapter.product.command_handler.remove_all_product_tags_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllProductTagsHandler
+        arguments:
+            - '@prestashop.adapter.product.repository.product_repository'
+            - '@prestashop.adapter.product.updater.product_tag_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllProductTagsCommand
+
     prestashop.adapter.product.command_handler.update_product_options_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductOptionsHandler
         arguments:
