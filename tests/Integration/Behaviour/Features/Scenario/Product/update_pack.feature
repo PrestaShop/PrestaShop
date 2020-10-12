@@ -118,3 +118,12 @@ Feature: Add product to pack from Back Office (BO)
       | product       | combination | quantity |
       | productSkirt1 | whiteS      | 10       |
       | productSkirt1 | blackM      | 10       |
+
+  Scenario: I remove all combination products from existing pack
+    Given product "productPack4" type should be pack
+    And pack productPack4 should contain products with following quantities:
+      | product       | combination | quantity |
+      | productSkirt1 | whiteS      | 10       |
+      | productSkirt1 | blackM      | 10       |
+    When I remove all products from pack productPack4
+    Then product "productPack4" type should be standard
