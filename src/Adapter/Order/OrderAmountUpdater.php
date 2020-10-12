@@ -230,6 +230,7 @@ class OrderAmountUpdater
             $orderDetail->id_tax_rules_group = $orderDetail->getTaxRulesGroupId();
 
             $unitPriceTaxExcl = (float) $cartProduct['price_with_reduction_without_tax'];
+            // this is the price with specific_price applied
             $unitPriceTaxIncl = (float) $cartProduct['price_with_reduction'];
 
             $orderDetail->product_price = (float) $cartProduct['price'];

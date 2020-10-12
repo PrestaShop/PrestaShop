@@ -109,6 +109,55 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_shipping_tax_excl  | 70.00   |
       | total_shipping_tax_incl  | 74.20   |
 
+  Scenario: Add cart rule of type 'amount' to an order with secondary currency and a product with specific price
+    Given there is a product in the catalog named "Test Product With Discount and SpecificPrice" with a price of 16.0 and 100 items in stock
+    And product "Test Product With Discount and SpecificPrice" has a specific price named "discount25" with a discount of 25.0 percent
+    And product "Test Product With Discount and SpecificPrice" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 1          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+    And there is a cart rule named "CartRuleAmountOnSelectedProduct" that applies an amount discount of 1.0 with priority 1, quantity of 100 and quantity per user 100
+    And cart rule "CartRuleAmountOnSelectedProduct" has no discount code
+    And cart rule "CartRuleAmountOnSelectedProduct" is restricted to product "Test Product With Discount and SpecificPrice"
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product With Discount and SpecificPrice |
+      | amount        | 1                                     |
+      | price         | 120                                   |
+    Then product "Test Product With Discount and SpecificPrice" in order "bo_order1" should have no specific price
+#    For product "Test Product With Discount and SpecificPrice"
+#    Due to the specific price 25% of €160, the customer have to pay 75% of the product price : €120
+#    We set 120 here to simulate what the user see by default in the BO
+    Then order "bo_order1" should have 1 cart rule
+    Then order "bo_order1" should have cart rule "CartRuleAmountOnSelectedProduct" with amount "€10.00"
+#    The cart rule adds a discount of €10. He will pay a final price of 110
+    Then order "bo_order1" should have following details:
+      | total_products           | 358.00 |
+      | total_products_wt        | 379.48 |
+      | total_discounts_tax_excl | 10.00  |
+      | total_discounts_tax_incl | 10.60  |
+      | total_paid_tax_excl      | 418.00 |
+      | total_paid_tax_incl      | 443.08 |
+      | total_paid               | 443.08 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 70.00  |
+      | total_shipping_tax_incl  | 74.20  |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2        |
+      | product_price               | 119.00   |
+      | unit_price_tax_incl         | 126.14   |
+      | unit_price_tax_excl         | 119.00   |
+      | total_price_tax_incl        | 252.28   |
+      | total_price_tax_excl        | 238.00   |
+    And product "Test Product With Discount and SpecificPrice" in order "bo_order1" has following details:
+      | product_quantity            | 1        |
+      | product_price               | 120.00   |
+      | unit_price_tax_incl         | 127.20   |
+      | unit_price_tax_excl         | 120.00   |
+      | total_price_tax_incl        | 127.20   |
+      | total_price_tax_excl        | 120.00   |
+
   Scenario: Add product to an order with secondary currency
     When I add products to order "bo_order1" without invoice and the following products details:
       | name          | Mug Today is a good day  |
