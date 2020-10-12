@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 use Cart;
 use Currency;
 use Customer;
+use Order;
 use OrderCartRule;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
@@ -81,10 +82,14 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
             ->setCurrency(new Currency($order->id_currency))
             ->setCustomer(new Customer($order->id_customer));
 
-        // Delete Order Cart Rule and update Order
-        $orderCartRule->softDelete();
-        $cart->removeCartRule($orderCartRule->id_cart_rule);
+        try {
+            // Delete Order Cart Rule and update Order
+            $orderCartRule->softDelete();
+            $cart->removeCartRule($orderCartRule->id_cart_rule);
 
-        $this->orderAmountUpdater->update($order, $cart, $orderCartRule->id_order_invoice);
+            $this->orderAmountUpdater->update($order, $cart, $orderCartRule->id_order_invoice);
+        } finally {
+            $this->contextStateManager->restoreContext();
+        }
     }
 }
