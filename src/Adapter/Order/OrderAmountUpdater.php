@@ -202,6 +202,7 @@ class OrderAmountUpdater
             $cartProduct = $this->getProductFromCart($cartProducts, (int) $orderDetail->product_id, (int) $orderDetail->product_attribute_id);
 
             $unitPriceTaxExcl = (float) $cartProduct['price_with_reduction_without_tax'];
+            // this is the price with specific_price applied
             $unitPriceTaxIncl = (float) $cartProduct['price_with_reduction'];
 
             $orderDetail->product_price = (float) $cartProduct['price'];
