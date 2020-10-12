@@ -45,3 +45,11 @@ admin_image_settings_delete:
             id_image_type: imageTypeId
     requirements:
         imageTypeId: \d+
+
+admin_image_settings_bulk_delete:
+    path: /bulk-delete
+    methods: [POST, DELETE]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\Design\ImageSettings:bulkDelete'
+        _legacy_controller: AdminImages
+        _legacy_link: AdminImages:submitBulkdeleteimage_type
