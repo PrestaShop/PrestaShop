@@ -26,10 +26,12 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Updater;
+namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
 use Pack;
-use PrestaShop\PrestaShop\Adapter\AbstractObjectModelPersister;
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelFiller;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductStockException;
@@ -38,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Stock\StockManager;
 use Product;
 use StockAvailable;
 
-class ProductStockUpdater extends AbstractObjectModelPersister
+class ProductStockUpdater extends AbstractObjectModelFiller
 {
     /**
      * @var ConfigurationInterface
@@ -51,14 +53,31 @@ class ProductStockUpdater extends AbstractObjectModelPersister
     private $stockManager;
 
     /**
+     * @var ProductRepository
+     */
+    private $productRepository;
+
+    /**
+     * @var StockAvailableRepository
+     */
+    private $stockAvailableRepository;
+
+    /**
      * @param ConfigurationInterface $configuration
+     * @param StockManager $stockManager
+     * @param ProductRepository $productRepository
+     * @param StockAvailableRepository $stockAvailableRepository
      */
     public function __construct(
         ConfigurationInterface $configuration,
-        StockManager $stockManager
+        StockManager $stockManager,
+        ProductRepository $productRepository,
+        StockAvailableRepository $stockAvailableRepository
     ) {
         $this->configuration = $configuration;
         $this->stockManager = $stockManager;
+        $this->productRepository = $productRepository;
+        $this->stockAvailableRepository = $stockAvailableRepository;
     }
 
     /**
@@ -111,8 +130,8 @@ class ProductStockUpdater extends AbstractObjectModelPersister
 
         $this->fillProperties($product, $stockAvailable, $propertiesToUpdate, $addMovement);
 
-        $this->updateObjectModel($product, CannotUpdateProductException::class, CannotUpdateProductException::FAILED_UPDATE_STOCK);
-        $this->updateObjectModel($stockAvailable, ProductStockException::class, ProductStockException::CANNOT_SAVE_STOCK_AVAILABLE);
+        $this->productRepository->partialUpdate($product, $product->getFieldsToUpdate(), CannotUpdateProductException::FAILED_UPDATE_STOCK);
+        $this->stockAvailableRepository->update($stockAvailable);
     }
 
     /**
@@ -147,8 +166,8 @@ class ProductStockUpdater extends AbstractObjectModelPersister
 
         $this->fillProperties($product, $stockAvailable, $propertiesToUpdate, $addMovement);
 
-        $this->updateObjectModel($product, CannotUpdateProductException::class, CannotUpdateProductException::FAILED_UPDATE_STOCK);
-        $this->updateObjectModel($stockAvailable, ProductStockException::class, ProductStockException::CANNOT_SAVE_STOCK_AVAILABLE);
+        $this->productRepository->partialUpdate($product, $product->getFieldsToUpdate(), CannotUpdateProductException::FAILED_UPDATE_STOCK);
+        $this->stockAvailableRepository->update($stockAvailable);
 
         if (isset($propertiesToUpdate['depends_on_stock']) && $propertiesToUpdate['depends_on_stock']) {
             StockAvailable::synchronize($product->id);
