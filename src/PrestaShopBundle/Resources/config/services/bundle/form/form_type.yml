@@ -1413,3 +1413,10 @@ services:
         public: true
         tags:
             - { name: form.type }
+
+    form.type.improve.design.image_settings.image_type:
+      class: 'PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\ImageTypeType'
+      parent: 'form.type.translatable.aware'
+      public: true
+      tags:
+        - { name: form.type }
