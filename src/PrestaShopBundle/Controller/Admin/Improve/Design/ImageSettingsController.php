@@ -29,7 +29,9 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\ImageType\Command\DeleteImageTypeCommand;
 use PrestaShop\PrestaShop\Core\Domain\ImageType\Exception\DeleteImageTypeException;
+use PrestaShop\PrestaShop\Core\Domain\ImageType\Exception\ImageTypeException;
 use PrestaShop\PrestaShop\Core\Domain\ImageType\Exception\ImageTypeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ImageType\Query\GetImageTypeForEditing;
 use PrestaShop\PrestaShop\Core\Domain\ImageType\QueryResult\EditableImageType;
@@ -177,6 +179,33 @@ class ImageSettingsController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
         ]);
+    }
+
+    /**
+     * Deletes image type
+     *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_image_settings_index",
+     * )
+     *
+     * @param int $imageTypeId
+     *
+     * @return RedirectResponse
+     */
+    public function deleteAction(int $imageTypeId): RedirectResponse
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteImageTypeCommand($imageTypeId));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+        } catch (ImageTypeException $exception) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_image_settings_index');
     }
 
     private function getErrorMessages(): array
