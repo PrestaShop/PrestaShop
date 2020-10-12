@@ -107,11 +107,11 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand
 
-    prestashop.adapter.product.command_handler.update_product_tags_handler:
-        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductTagsHandler
+    prestashop.adapter.product.command_handler.set_product_tags_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetProductTagsHandler
         tags:
             - name: tactician.handler
-              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTagsCommand
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand
 
     prestashop.adapter.product.command_handler.update_product_options_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductOptionsHandler

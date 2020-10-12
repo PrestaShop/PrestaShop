@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 /**
  * Updates product tags in provided languages
  */
-class UpdateProductTagsCommand
+class SetProductTagsCommand
 {
     /**
      * @var ProductId
