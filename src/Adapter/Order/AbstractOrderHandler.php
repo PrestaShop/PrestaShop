@@ -35,7 +35,7 @@ use Customer;
 use Group;
 use Order;
 use OrderDetail;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
@@ -186,8 +186,8 @@ abstract class AbstractOrderHandler
     /**
      * Create a specific price, or update it if it already exists
      *
-     * @param \PrestaShop\Decimal\Number $priceTaxIncluded
-     * @param \PrestaShop\Decimal\Number $priceTaxExcluded
+     * @param DecimalNumber $priceTaxIncluded
+     * @param DecimalNumber $priceTaxExcluded
      * @param Order $order
      * @param Product $product
      * @param Combination|null $combination
@@ -196,8 +196,8 @@ abstract class AbstractOrderHandler
      * @throws \PrestaShopDatabaseException
      */
     protected function updateSpecificPrice(
-        Number $priceTaxIncluded,
-        Number $priceTaxExcluded,
+        DecimalNumber $priceTaxIncluded,
+        DecimalNumber $priceTaxExcluded,
         Order $order,
         Product $product,
         ?Combination $combination
@@ -205,7 +205,7 @@ abstract class AbstractOrderHandler
         $productSpecificPrice = $this->getProductSpecificPriceInOrder($product, $order, $combination);
 
         $productOriginalPrice = $this->getProductRegularPrice($product, $order, $combination);
-        $roundedPrice = new Number($priceTaxExcluded->round(self::COMPARISON_PRECISION));
+        $roundedPrice = new DecimalNumber($priceTaxExcluded->round(self::COMPARISON_PRECISION));
 
         if ($productOriginalPrice->equals($roundedPrice)) {
             // Product specific price is not useful any more we can delete it
@@ -284,16 +284,16 @@ abstract class AbstractOrderHandler
      * @param Order $order
      * @param Combination|null $combination
      *
-     * @return \PrestaShop\Decimal\Number
+     * @return DecimalNumber
      */
     protected function getProductRegularPrice(
         Product $product,
         Order $order,
         ?Combination $combination
-    ): Number {
+    ): DecimalNumber {
         // Get price via getPriceStatic so that the catalog price rules are applied
 
-        return new Number((string) Product::getPriceStatic(
+        return new DecimalNumber((string) Product::getPriceStatic(
             $product->id,
             false,
             null !== $combination ? $combination->id : 0,

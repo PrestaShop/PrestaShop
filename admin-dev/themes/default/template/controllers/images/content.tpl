@@ -63,10 +63,9 @@
                 {l s='Regenerate thumbnails' d='Admin.Design.Feature'}
             </h3>
 
-			<div class="alert alert-info">
-				{l s='Regenerates thumbnails for all existing images' d='Admin.Design.Help'}<br />
-				{l s='Please be patient. This can take several minutes.' d='Admin.Design.Help'}<br />
-				{l s='Be careful! Manually uploaded thumbnails will be erased and replaced by automatically generated thumbnails.' d='Admin.Design.Help'}
+			<div class="alert alert-warning">
+				{l s='Be careful! Depending on the options selected, former manually uploaded thumbnails might be erased and replaced by automatically generated thumbnails.' d='Admin.Design.Notification'}<br />
+				{l s='Also, regenerating thumbnails for all existing images can take several minutes, please be patient.' d='Admin.Design.Notification'}
 			</div>
 
 			<div class="form-group">

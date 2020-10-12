@@ -24,17 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\DeleteCustomizationFieldCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception;
 
 /**
- * Defines contract to handle @var DeleteCustomizationFieldCommand
+ * Thrown when setting specific price priorities fails
  */
-interface DeleteCustomizationFieldHandlerInterface
+class CannotSetSpecificPricePrioritiesException extends SpecificPriceException
 {
-    /**
-     * @param DeleteCustomizationFieldCommand $command
-     */
-    public function handle(DeleteCustomizationFieldCommand $command): void;
 }

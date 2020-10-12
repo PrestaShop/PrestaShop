@@ -24,17 +24,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateCustomizationFieldCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\SetGlobalSpecificPricePriorityCommand;
 
 /**
- * Defines contract to handle @var UpdateCustomizationFieldCommand
+ * Defines contract for handling @see SetGlobalSpecificPricePriorityCommand
  */
-interface UpdateCustomizationFieldHandlerInterface
+interface SetGlobalSpecificPricePriorityHandlerInterface
 {
     /**
-     * @param UpdateCustomizationFieldCommand $command
+     * @param SetGlobalSpecificPricePriorityCommand $command
      */
-    public function handle(UpdateCustomizationFieldCommand $command): void;
+    public function handle(SetGlobalSpecificPricePriorityCommand $command): void;
 }

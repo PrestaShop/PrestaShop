@@ -31,7 +31,7 @@ use DateTime;
 use Hook;
 use Language;
 use Link;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\Decimal\Operation\Rounding;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
@@ -672,8 +672,8 @@ class ProductLazyArray extends AbstractLazyArray
             $this->product['has_discount'] = (0 != $product['reduction']);
             $this->product['discount_type'] = $product['specific_prices']['reduction_type'];
 
-            $absoluteReduction = new Number($product['specific_prices']['reduction']);
-            $absoluteReduction = $absoluteReduction->times(new Number('100'));
+            $absoluteReduction = new DecimalNumber($product['specific_prices']['reduction']);
+            $absoluteReduction = $absoluteReduction->times(new DecimalNumber('100'));
             $negativeReduction = $absoluteReduction->toNegative();
             $presAbsoluteReduction = $absoluteReduction->round(2, Rounding::ROUND_HALF_UP);
             $presNegativeReduction = $negativeReduction->round(2, Rounding::ROUND_HALF_UP);

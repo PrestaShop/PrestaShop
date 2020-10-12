@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\ValueObject\OrderInvoiceId;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderDiscountType;
@@ -82,7 +82,7 @@ class AddCartRuleToOrderCommand
         $this->orderId = new OrderId($orderId);
         $this->cartRuleName = $cartRuleName;
         $this->cartRuleType = $cartRuleType;
-        $this->value = null !== $value ? new Number($value) : null;
+        $this->value = null !== $value ? new DecimalNumber($value) : null;
         $this->orderInvoiceId = $orderInvoiceId ? new OrderInvoiceId($orderInvoiceId) : null;
     }
 
@@ -111,9 +111,9 @@ class AddCartRuleToOrderCommand
     }
 
     /**
-     * @return \PrestaShop\Decimal\Number|null
+     * @return DecimalNumber|null
      */
-    public function getDiscountValue(): ?Number
+    public function getDiscountValue(): ?DecimalNumber
     {
         return $this->value;
     }

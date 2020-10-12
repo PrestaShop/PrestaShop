@@ -31,7 +31,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use Carrier;
 use PHPUnit\Framework\Assert;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductShippingCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
@@ -134,7 +134,7 @@ class UpdateShippingFeatureContext extends AbstractProductFeatureContext
 
         foreach ($numberShippingFields as $field) {
             if (isset($expectedValues[$field])) {
-                $expectedNumber = new Number((string) $expectedValues[$field]);
+                $expectedNumber = new DecimalNumber((string) $expectedValues[$field]);
                 $actualNumber = $propertyAccessor->getValue($actualValues, $field);
 
                 if (!$expectedNumber->equals($actualNumber)) {
