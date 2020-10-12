@@ -11,6 +11,9 @@ class SeoAndUrls extends BOBasePage {
     this.addNewSeoPageLink = '#page-header-desc-configuration-add';
     this.successfulSettingsUpdateMessage = 'The settings have been successfully updated.';
 
+    // Sub tabs selectors
+    this.searchEnginesSubTabLink = '#subtab-AdminSearchEngines';
+
     // Grid selectors
     this.gridPanel = '#meta_grid_panel';
     this.gridTable = '#meta_grid_table';
@@ -68,6 +71,15 @@ class SeoAndUrls extends BOBasePage {
    */
   async goToNewSeoUrlPage(page) {
     await this.clickAndWaitForNavigation(page, this.addNewSeoPageLink);
+  }
+
+  /**
+   * Go to search engines page
+   * @param page
+   * @return {Promise<void>}
+   */
+  async goToSearchEnginesPage(page) {
+    await this.clickAndWaitForNavigation(page, this.searchEnginesSubTabLink);
   }
 
   /* Bulk actions methods */
