@@ -29,7 +29,9 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssociateProductAttachmentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductAttachmentsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductAttachmentsCommand;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -103,7 +105,14 @@ class UpdateAttachmentFeatureContext extends AbstractProductFeatureContext
             $attachmentIds[] = $this->getSharedStorage()->get($attachmentReference);
         }
 
-        $this->setProductAttachments($this->getSharedStorage()->get($productReference), $attachmentIds);
+        try {
+            $this->getCommandBus()->handle(new SetAssociatedProductAttachmentsCommand(
+                $this->getSharedStorage()->get($productReference),
+                $attachmentIds
+            ));
+        } catch (DomainException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
@@ -113,18 +122,12 @@ class UpdateAttachmentFeatureContext extends AbstractProductFeatureContext
      */
     public function removeProductAttachmentsAssociation(string $productReference)
     {
-        $this->setProductAttachments($this->getSharedStorage()->get($productReference), []);
-    }
-
-    /**
-     * @param int $productId
-     * @param array $attachmentIds
-     */
-    private function setProductAttachments(int $productId, array $attachmentIds): void
-    {
-        $this->getCommandBus()->handle(new SetAssociatedProductAttachmentsCommand(
-            $productId,
-            $attachmentIds
-        ));
+        try {
+            $this->getCommandBus()->handle(new RemoveAllAssociatedProductAttachmentsCommand(
+                $this->getSharedStorage()->get($productReference)
+            ));
+        } catch (DomainException $e) {
+            $this->setLastException($e);
+        }
     }
 }
