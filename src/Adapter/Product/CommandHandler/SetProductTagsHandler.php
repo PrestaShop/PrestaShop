@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTagsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductTagsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
@@ -41,12 +41,12 @@ use Tag;
 /**
  * Handles UpdateProductTagsCommand using legacy object model
  */
-final class UpdateProductTagsHandler extends AbstractProductHandler implements UpdateProductTagsHandlerInterface
+final class SetProductTagsHandler extends AbstractProductHandler implements UpdateProductTagsHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(UpdateProductTagsCommand $command): void
+    public function handle(SetProductTagsCommand $command): void
     {
         $product = $this->getProduct($command->getProductId());
 
