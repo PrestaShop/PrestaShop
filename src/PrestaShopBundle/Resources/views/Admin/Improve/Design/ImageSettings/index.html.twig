@@ -25,6 +25,14 @@
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
+{% set layoutHeaderToolbarBtn = {
+  'add' : {
+    'href': path('admin_image_settings_create'),
+    'desc': 'Add new image type'|trans({}, 'Admin.Design.Feature'),
+    'icon': 'add_circle_outline'
+  }
+} %}
+
 {% block content %}
   {% include "@PrestaShop/Admin/Improve/Design/ImageSettings/Blocks/alert.html.twig" %}
 
