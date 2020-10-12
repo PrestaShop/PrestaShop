@@ -13,3 +13,15 @@ admin_image_settings_search:
         _controller: 'PrestaShopBundle:Admin\Improve\Design\ImageSettings:search'
         _legacy_controller: AdminImages
         _legacy_link: AdminImages:submitFilterimage_type
+
+admin_image_settings_edit:
+    path: /{imageTypeId}/edit
+    methods: [GET, POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\Design\ImageSettings:edit'
+        _legacy_controller: AdminImages
+        _legacy_link: AdminImages:updateimage_type
+        _legacy_parameters:
+            id_image_type: imageTypeId
+    requirements:
+        imageTypeId: \d+
