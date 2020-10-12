@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\ImageType\Command\BulkDeleteImageTypeCommand;
 use PrestaShop\PrestaShop\Core\Domain\ImageType\Command\DeleteImageTypeCommand;
 use PrestaShop\PrestaShop\Core\Domain\ImageType\Exception\DeleteImageTypeException;
 use PrestaShop\PrestaShop\Core\Domain\ImageType\Exception\ImageTypeException;
@@ -206,6 +207,53 @@ class ImageSettingsController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_image_settings_index');
+    }
+
+    /**
+     * Deletes image types in bulk action
+     *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_image_settings_index"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkDeleteAction(Request $request): RedirectResponse
+    {
+        $imageTypeIds = $this->getBulkImageTypeIdsFromRequest($request);
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteImageTypeCommand($imageTypeIds));
+            $this->addFlash(
+                'success',
+                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+            );
+        } catch (ImageTypeException $exception) {
+            $this->addFlash('error', $this->getErrorMessageForException($exception, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_image_settings_index');
+    }
+
+    /**
+     * Get image type IDs from request for bulk action.
+     *
+     * @param Request $request
+     *
+     * @return int[]
+     */
+    private function getBulkImageTypeIdsFromRequest(Request $request): array
+    {
+        $imageTypeIds = $request->request->get('image_type_bulk');
+
+        if (!is_array($imageTypeIds)) {
+            return [];
+        }
+
+        return array_map('intval', $imageTypeIds);
     }
 
     private function getErrorMessages(): array
