@@ -148,38 +148,39 @@
       </h3>
       <div class="card-block">
         <div class="card-text">
-          <p>
-            <strong>{{ 'Mail method:'|trans }}</strong>
-
-            {% if system.isNativePHPmail %}
-            {{ 'You are using /usr/sbin/sendmail'|trans }}
-            {% else %}
-            {{ 'You are using your own SMTP parameters.'|trans }}</p>
-          <p>
-            <strong>{{ 'SMTP server:'|trans }}</strong> {{ system.smtp.server }}
-          </p>
-          <p>
-            <strong>{{ 'SMTP username:'|trans }}</strong>
-            {% if system.smtp.user is not empty %}
-              {{ 'Defined'|trans }}
-            {% else %}
-              <span style="color:red;">{{ 'Not defined'|trans }}</span>
-            {% endif %}
-          </p>
-          <p>
-            <strong>{{ 'SMTP password:'|trans }}</strong>
-            {% if system.smtp.password is not empty %}
-              {{ 'Defined'|trans }}
-            {% else %}
-              <span style="color:red;">{{ 'Not defined'|trans }}</span>
-            {% endif %}
-          </p>
-          <p>
-            <strong>{{ 'Encryption:'|trans }}</strong> {{ system.smtp.encryption }}
-          </p>
-          <p>
-            <strong>{{ 'SMTP port:'|trans }}</strong> {{ system.smtp.port }}
-          </p>
+          {% if system.isNativePHPmail %}
+            <p>
+              <strong>{{ 'Mail method:'|trans }}</strong> {{ 'You are using /usr/sbin/sendmail'|trans }}
+            </p>
+          {% else %}
+            <p>
+              <strong>{{ 'Mail method:'|trans }}</strong> {{ 'You are using your own SMTP parameters.'|trans }}
+            </p>
+            <p>
+              <strong>{{ 'SMTP server:'|trans }}</strong> {{ system.smtp.server }}
+            </p>
+            <p>
+              <strong>{{ 'SMTP username:'|trans }}</strong>
+              {% if system.smtp.user is not empty %}
+                {{ 'Defined'|trans }}
+              {% else %}
+                <span style="color:red;">{{ 'Not defined'|trans }}</span>
+              {% endif %}
+            </p>
+            <p>
+              <strong>{{ 'SMTP password:'|trans }}</strong>
+              {% if system.smtp.password is not empty %}
+                {{ 'Defined'|trans }}
+              {% else %}
+                <span style="color:red;">{{ 'Not defined'|trans }}</span>
+              {% endif %}
+            </p>
+            <p>
+              <strong>{{ 'Encryption:'|trans }}</strong> {{ system.smtp.encryption }}
+            </p>
+            <p>
+              <strong>{{ 'SMTP port:'|trans }}</strong> {{ system.smtp.port }}
+            </p>
           {% endif %}
         </div>
       </div>
