@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Update\ProductTagUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\RemoveAllProductTagsHandlerInterface;
 
-class RemoveAllProductTagsHandler implements RemoveAllProductTagsHandlerInterface
+final class RemoveAllProductTagsHandler implements RemoveAllProductTagsHandlerInterface
 {
     /**
      * @var ProductRepository

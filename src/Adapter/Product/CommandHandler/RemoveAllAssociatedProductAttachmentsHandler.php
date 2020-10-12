@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\RemoveAllAssociated
 /**
  * Removes all product-attachment associations for given product
  */
-class RemoveAllAssociatedProductAttachmentsHandler implements RemoveAllAssociatedProductAttachmentsHandlerInterface
+final class RemoveAllAssociatedProductAttachmentsHandler implements RemoveAllAssociatedProductAttachmentsHandlerInterface
 {
     /**
      * @var ProductAttachmentUpdater
