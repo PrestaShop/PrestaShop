@@ -185,11 +185,30 @@ Feature: Update product stock from Back Office (BO)
       | quantity | 51 |
     And product "product1" last stock movement has following details:
       | physical_quantity | 51 |
-      | sign              | 1 |
+      | sign              | 1  |
     When I update product "product1" stock with following information:
       | quantity | 42 |
     Then product "product1" should have following stock information:
       | quantity | 42 |
     And product "product1" last stock movement has following details:
-      | physical_quantity | 9 |
+      | physical_quantity | 9  |
+      | sign              | -1 |
+
+  Scenario: I update product quantity
+    Given I add product "product1" with following information:
+      | name       | en-US:Presta camera |
+      | is_virtual | false               |
+    And product "product1" should have following stock information:
+      | quantity     | 0 |
+    When I update product "product1" stock with following information:
+      | quantity     | 51    |
+      | add_movement | false |
+    And product "product1" has no stock movements
+    When I update product "product1" stock with following information:
+      | quantity     | 42   |
+      | add_movement | true |
+    Then product "product1" should have following stock information:
+      | quantity | 42 |
+    And product "product1" last stock movement has following details:
+      | physical_quantity | 9  |
       | sign              | -1 |

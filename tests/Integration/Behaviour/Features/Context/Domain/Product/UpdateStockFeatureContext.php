@@ -123,6 +123,25 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @Then product :productReference has no stock movements
+     */
+    public function assertProductHasNoStockMovement(string $productReference)
+    {
+        $productId = $this->getSharedStorage()->get($productReference);
+
+        /** @var StockMovementRepository $stockMovementRepository */
+        $stockMovementRepository = $this->getContainer()->get('prestashop.core.api.stock_movement.repository');
+        $params = new QueryStockMovementParamsCollection();
+        $params->fromArray([
+            'productId' => $productId,
+        ]);
+        $movements = $stockMovementRepository->getData($params);
+        if (count($movements) > 0) {
+            throw new RuntimeException(sprintf('Unexpected stock movement found for product %s', $productReference));
+        }
+    }
+
+    /**
      * @Then I should get error that stock management is disabled
      */
     public function assertStockManagementDisabledError(): void
