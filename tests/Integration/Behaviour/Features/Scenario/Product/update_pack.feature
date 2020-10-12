@@ -1,4 +1,4 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-pack
+# `./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-pack`
 @reset-database-before-feature
 @clear-cache-after-feature
 @update-pack
@@ -106,24 +106,70 @@ Feature: Add product to pack from Back Office (BO)
     And product "productSkirt1" has following combinations:
       | reference | quantity | attributes         |
       | whiteS    | 15       | Size:S;Color:White |
+      | whiteM    | 15       | Size:M;Color:White |
       | blackM    | 13       | Size:M;Color:Black |
     And product productSkirt1 type should be combination
     And product "productPack4" type should be standard
     When I update pack productPack4 with following product quantities:
       | product       | combination | quantity |
       | productSkirt1 | whiteS      | 10       |
-      | productSkirt1 | blackM      | 10       |
+      | productSkirt1 | whiteM      | 11       |
+      | productSkirt1 | blackM      | 12       |
     Then product "productPack4" type should be pack
     And pack productPack4 should contain products with following quantities:
       | product       | combination | quantity |
       | productSkirt1 | whiteS      | 10       |
-      | productSkirt1 | blackM      | 10       |
+      | productSkirt1 | whiteM      | 11       |
+      | productSkirt1 | blackM      | 12       |
 
-  Scenario: I remove all combination products from existing pack
+  Scenario: Add combination & standard product to a pack
+    Given product "product2" type should be standard
+    And product productSkirt1 type should be combination
+    And product "productSkirt1" has following combinations:
+      | reference | quantity | attributes         |
+      | whiteS    | 15       | Size:S;Color:White |
+      | whiteM    | 15       | Size:M;Color:White |
+      | blackM    | 13       | Size:M;Color:Black |
+    When I update pack productPack4 with following product quantities:
+      | product       | combination | quantity |
+      | productSkirt1 | whiteS      | 10       |
+      | productSkirt1 | whiteM      | 11       |
+      | productSkirt1 | blackM      | 12       |
+      | product2      |             | 2        |
+    Then product "productPack4" type should be pack
+    And pack productPack4 should contain products with following quantities:
+      | product       | combination | quantity |
+      | productSkirt1 | whiteS      | 10       |
+      | productSkirt1 | whiteM      | 11       |
+      | productSkirt1 | blackM      | 12       |
+      | product2      |             | 2        |
+
+  Scenario: I remove one combination of same product from existing pack and change another combination quantity
     Given product "productPack4" type should be pack
     And pack productPack4 should contain products with following quantities:
       | product       | combination | quantity |
       | productSkirt1 | whiteS      | 10       |
-      | productSkirt1 | blackM      | 10       |
+      | productSkirt1 | whiteM      | 11       |
+      | productSkirt1 | blackM      | 12       |
+      | product2      |             | 2        |
+    When I update pack productPack4 with following product quantities:
+      | product       | combination | quantity |
+      | productSkirt1 | whiteS      | 10       |
+      | productSkirt1 | blackM      | 9        |
+      | product2      |             | 2        |
+    Then pack productPack4 should contain products with following quantities:
+      | product       | combination | quantity |
+      | productSkirt1 | whiteS      | 10       |
+      | productSkirt1 | blackM      | 9        |
+      | product2      |             | 2        |
+    Then product "productPack4" type should be pack
+
+  Scenario: I remove all products from existing pack when it contains combination and standard products
+    Given product "productPack4" type should be pack
+    And pack productPack4 should contain products with following quantities:
+      | product       | combination | quantity |
+      | productSkirt1 | whiteS      | 10       |
+      | productSkirt1 | blackM      | 9        |
+      | product2      |             | 2        |
     When I remove all products from pack productPack4
     Then product "productPack4" type should be standard
