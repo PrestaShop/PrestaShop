@@ -23,7 +23,7 @@ let browserContext;
 let page;
 
 /*
-Sort zones table
+Sort countries table
 Paginate between pages
  */
 describe('Sort and pagination countries table', async () => {
@@ -87,7 +87,7 @@ describe('Sort and pagination countries table', async () => {
     });
 
     it('should change the item number to 300 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo300', baseContext);
 
       const paginationNumber = await countriesPage.selectPaginationLimit(page, '300');
       expect(paginationNumber).to.equal('1');
@@ -175,7 +175,7 @@ describe('Sort and pagination countries table', async () => {
     });
 
     it('should change the item number to 50 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
       const paginationNumber = await countriesPage.selectPaginationLimit(page, '50');
       expect(paginationNumber).to.equal('1');
