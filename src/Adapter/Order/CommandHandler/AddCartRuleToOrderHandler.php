@@ -61,6 +61,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
 
     /**
      * @param OrderAmountUpdater $orderAmountUpdater
+     * @param ContextStateManager $contextStateManager
      */
     public function __construct(OrderAmountUpdater $orderAmountUpdater, ContextStateManager $contextStateManager)
     {
@@ -80,6 +81,26 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
             ->setCurrency(new Currency($order->id_currency))
             ->setCustomer(new Customer($order->id_customer));
 
+        try {
+            $this->addCartRuleAndUpdateOrder($command, $order);
+        } finally {
+            $this->contextStateManager->restoreContext();
+        }
+    }
+
+    /**
+     * @param AddCartRuleToOrderCommand $command
+     * @param Order $order
+     *
+     * @return void
+     *
+     * @throws InvalidCartRuleDiscountValueException
+     * @throws OrderException
+     * @throws PrestaShopException
+     * @throws \PrestaShopDatabaseException
+     */
+    private function addCartRuleAndUpdateOrder(AddCartRuleToOrderCommand $command, Order $order): void
+    {
         $computingPrecision = new ComputingPrecision();
         $currency = new Currency((int) $order->id_currency);
         $precision = $computingPrecision->getPrecision($currency->precision);

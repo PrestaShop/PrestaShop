@@ -123,7 +123,7 @@ Feature: Multiple currencies for Order in Back Office (BO)
     And cart rule "CartRuleAmountOnSelectedProduct" is restricted to product "Test Product With Discount and SpecificPrice"
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Test Product With Discount and SpecificPrice |
-      | amount        | 1                                     |
+      | amount        | 2                                     |
       | price         | 120                                   |
     Then product "Test Product With Discount and SpecificPrice" in order "bo_order1" should have no specific price
 #    For product "Test Product With Discount and SpecificPrice"
@@ -133,13 +133,13 @@ Feature: Multiple currencies for Order in Back Office (BO)
     Then order "bo_order1" should have cart rule "CartRuleAmountOnSelectedProduct" with amount "€10.00"
 #    The cart rule adds a discount of €10. He will pay a final price of 110
     Then order "bo_order1" should have following details:
-      | total_products           | 358.00 |
-      | total_products_wt        | 379.48 |
+      | total_products           | 478.00 |
+      | total_products_wt        | 506.68 |
       | total_discounts_tax_excl | 10.00  |
       | total_discounts_tax_incl | 10.60  |
-      | total_paid_tax_excl      | 418.00 |
-      | total_paid_tax_incl      | 443.08 |
-      | total_paid               | 443.08 |
+      | total_paid_tax_excl      | 538.00 |
+      | total_paid_tax_incl      | 570.28 |
+      | total_paid               | 570.28 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 70.00  |
       | total_shipping_tax_incl  | 74.20  |
@@ -151,12 +151,12 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_price_tax_incl        | 252.28   |
       | total_price_tax_excl        | 238.00   |
     And product "Test Product With Discount and SpecificPrice" in order "bo_order1" has following details:
-      | product_quantity            | 1        |
+      | product_quantity            | 2        |
       | product_price               | 120.00   |
       | unit_price_tax_incl         | 127.20   |
       | unit_price_tax_excl         | 120.00   |
-      | total_price_tax_incl        | 127.20   |
-      | total_price_tax_excl        | 120.00   |
+      | total_price_tax_incl        | 254.40   |
+      | total_price_tax_excl        | 240.00   |
 
   Scenario: Add product to an order with secondary currency
     When I add products to order "bo_order1" without invoice and the following products details:
@@ -175,6 +175,13 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 70.00  |
       | total_shipping_tax_incl  | 74.20  |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2     |
+      | product_price               | 119.00 |
+      | unit_price_tax_incl         | 126.14 |
+      | unit_price_tax_excl         | 119.00 |
+      | total_price_tax_incl        | 252.28 |
+      | total_price_tax_excl        | 238.00 |
 
   Scenario: Update product in order with secondary currency
     When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
@@ -189,6 +196,17 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_price_tax_incl        | 38.16 |
       | total_price_tax_excl        | 36.00 |
     And product "Mug The best is yet to come" in order "bo_order1" should have specific price 12.00
+    And order "bo_order1" should have following details:
+      | total_products           | 36.00 |
+      | total_products_wt        | 38.16 |
+      | total_discounts_tax_excl | 0.00   |
+      | total_discounts_tax_incl | 0.00   |
+      | total_paid_tax_excl      | 106.00 |
+      | total_paid_tax_incl      | 112.36 |
+      | total_paid               | 112.36 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 70.00  |
+      | total_shipping_tax_incl  | 74.20  |
 
   Scenario: Check invoice for an order with secondary currency and discount
     Given I add discount to order "bo_order1" with following details:
