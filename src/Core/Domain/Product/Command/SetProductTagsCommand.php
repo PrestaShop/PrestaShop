@@ -85,8 +85,7 @@ class SetProductTagsCommand
             throw new RuntimeException(sprintf(
                 'Empty array of product tags provided in %s. To remove all product tags use %s.',
                 self::class,
-                //@todo: use class
-                'RemoveAllProductTagsCommand'
+                RemoveAllProductTagsCommand::class
             ));
         }
 
