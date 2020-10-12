@@ -359,7 +359,7 @@ class Zones extends BOBasePage {
    */
   async selectPaginationLimit(page, number) {
     await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
-    await this.waitForSelectorAndClick(page, this.paginationItems(number));
+    await this.clickAndWaitForNavigation(page, this.paginationItems(number));
     return this.getPaginationLabel(page);
   }
 
