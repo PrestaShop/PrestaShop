@@ -91,6 +91,42 @@ class ImageSettingsController extends FrameworkBundleAdminController
     }
 
     /**
+     * Show image type creation form page and handle its submit.
+     *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function createAction(Request $request): Response
+    {
+        $imageTypeFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.image_type_form_handler');
+        $imageTypeFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.image_type_form_builder');
+
+        $imageTypeForm = $imageTypeFormBuilder->getForm();
+        $imageTypeForm->handleRequest($request);
+
+        try {
+            $result = $imageTypeFormHandler->handle($imageTypeForm);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_image_settings_index');
+            }
+        } catch (Exception $exception) {
+            $this->addFlash('error', $this->getErrorMessageForException($exception, $this->getErrorMessages()));
+        }
+
+        return $this->render('PrestaShopBundle:Admin/Improve/Design/ImageSettings:create.html.twig', [
+            'imageTypeForm' => $imageTypeForm->createView(),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
+        ]);
+    }
+
+    /**
      * Handles image type edit
      *
      * @AdminSecurity(
