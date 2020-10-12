@@ -37,6 +37,16 @@ use StockAvailable;
 class StockAvailableRepository extends AbstractObjectModelRepository
 {
     /**
+     * @param StockAvailable $stockAvailable
+     *
+     * @throws CoreException
+     */
+    public function update(StockAvailable $stockAvailable): void
+    {
+        $this->updateObjectModel($stockAvailable, ProductStockException::class, ProductStockException::CANNOT_SAVE_STOCK_AVAILABLE);
+    }
+
+    /**
      * @param ProductId $productId
      *
      * @return StockAvailable
