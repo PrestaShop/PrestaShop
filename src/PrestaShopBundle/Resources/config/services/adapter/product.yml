@@ -334,7 +334,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductStockHandler
         arguments:
             - '@prestashop.adapter.product.repository.stock_available_repository'
-            - '@prestashop.adapter.product.product_stock_updater'
+            - '@prestashop.adapter.product.update.product_stock_updater'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockCommand
@@ -452,8 +452,10 @@ services:
     prestashop.adapter.product.repository.stock_available_repository:
         class: PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository
 
-    prestashop.adapter.product.product_stock_updater:
-        class: PrestaShop\PrestaShop\Adapter\Product\Updater\ProductStockUpdater
+    prestashop.adapter.product.update.product_stock_updater:
+        class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductStockUpdater
         arguments:
             - '@prestashop.adapter.legacy.configuration'
             - '@prestashop.core.stock.stock_manager'
+            - '@prestashop.adapter.product.repository.product_repository'
+            - '@prestashop.adapter.product.repository.stock_available_repository'
