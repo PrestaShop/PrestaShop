@@ -28,9 +28,9 @@ let numberOfZones = 0;
 
 /*
 Sort zones table
-Delete zones with bulk actions
 Create 15 zones
 Paginate between pages
+Delete zones with bulk actions
  */
 
 describe('Sort and pagination zones table', async () => {

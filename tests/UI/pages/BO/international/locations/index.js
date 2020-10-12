@@ -315,7 +315,7 @@ class Zones extends BOBasePage {
   }
 
   /**
-   * Sort table by clicking on column name
+   * Sort table
    * @param page
    * @param sortBy, column to sort with
    * @param sortDirection, asc or desc
