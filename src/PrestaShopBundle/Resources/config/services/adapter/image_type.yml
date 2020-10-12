@@ -25,3 +25,9 @@ services:
         tags:
             - name: tactician.handler
               command: 'PrestaShop\PrestaShop\Core\Domain\ImageType\Command\DeleteImageTypeCommand'
+
+    prestashop.adapter.image_type.command_handler.bulk_delete_image_type_handler:
+        class: 'PrestaShop\PrestaShop\Adapter\ImageType\CommandHandler\BulkDeleteImageTypeHandler'
+        tags:
+            - name: tactician.handler
+              command: 'PrestaShop\PrestaShop\Core\Domain\ImageType\Command\BulkDeleteImageTypeCommand'
