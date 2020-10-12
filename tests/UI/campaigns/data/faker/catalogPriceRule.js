@@ -19,8 +19,8 @@ module.exports = class Category {
     this.fromQuantity = priceRuleToCreate.fromQuantity === undefined
       ? faker.random.number({min: 1, max: 9})
       : priceRuleToCreate.fromQuantity;
-    this.fromDate = priceRuleToCreate.fromDate || null;
-    this.toDate = priceRuleToCreate.toDate || null;
+    this.fromDate = priceRuleToCreate.fromDate || '';
+    this.toDate = priceRuleToCreate.toDate || '';
     this.reductionType = priceRuleToCreate.reductionType || faker.random.arrayElement(reductionType);
     this.reductionTax = priceRuleToCreate.reductionTax || faker.random.arrayElement(reductionTax);
     this.reduction = priceRuleToCreate.reduction || faker.random.number({min: 20, max: 30});
