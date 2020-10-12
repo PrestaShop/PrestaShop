@@ -225,24 +225,26 @@ abstract class AbstractOrderHandler
             return;
         }
 
-        $specificPrice = new SpecificPrice();
-        $specificPrice->id_shop = 0;
-        $specificPrice->id_cart = $order->id_cart;
-        $specificPrice->id_shop_group = 0;
-        $specificPrice->id_currency = $order->id_currency;
-        $specificPrice->id_country = 0;
-        $specificPrice->id_group = 0;
-        $specificPrice->id_customer = $order->id_customer;
-        $specificPrice->id_product = $product->id;
-        $specificPrice->id_product_attribute = $combination ? $combination->id : 0;
-        $specificPrice->price = (float) (string) $priceTaxExcluded;
-        $specificPrice->from_quantity = SpecificPrice::ORDER_DEFAULT_FROM_QUANTITY;
-        $specificPrice->reduction = 0;
-        $specificPrice->reduction_type = 'amount';
-        $specificPrice->reduction_tax = !$priceTaxIncluded->equals($priceTaxExcluded);
-        $specificPrice->from = SpecificPrice::ORDER_DEFAULT_DATE;
-        $specificPrice->to = SpecificPrice::ORDER_DEFAULT_DATE;
-        $specificPrice->add();
+        if (!$priceTaxExcluded->equals(new Number($product->price))) {
+            $specificPrice = new SpecificPrice();
+            $specificPrice->id_shop = 0;
+            $specificPrice->id_cart = $order->id_cart;
+            $specificPrice->id_shop_group = 0;
+            $specificPrice->id_currency = $order->id_currency;
+            $specificPrice->id_country = 0;
+            $specificPrice->id_group = 0;
+            $specificPrice->id_customer = $order->id_customer;
+            $specificPrice->id_product = $product->id;
+            $specificPrice->id_product_attribute = $combination ? $combination->id : 0;
+            $specificPrice->price = (float) (string) $priceTaxExcluded;
+            $specificPrice->from_quantity = SpecificPrice::ORDER_DEFAULT_FROM_QUANTITY;
+            $specificPrice->reduction = 0;
+            $specificPrice->reduction_type = 'amount';
+            $specificPrice->reduction_tax = !$priceTaxIncluded->equals($priceTaxExcluded);
+            $specificPrice->from = SpecificPrice::ORDER_DEFAULT_DATE;
+            $specificPrice->to = SpecificPrice::ORDER_DEFAULT_DATE;
+            $specificPrice->add();
+        }
     }
 
     /**
