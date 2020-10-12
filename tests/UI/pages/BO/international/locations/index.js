@@ -65,8 +65,9 @@ class Zones extends BOBasePage {
     this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Pagination selectors
-    this.paginationLabel = `${this.gridForm} .pagination`;
-    this.paginationDropdownButton = `${this.paginationLabel} .dropdown-toggle`;
+    this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
+    this.paginationDiv = `${this.gridForm} .pagination`;
+    this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
     this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
     this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
@@ -347,7 +348,7 @@ class Zones extends BOBasePage {
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
-    return this.getTextContent(page, 'ul.pagination.pull-right li.active a');
+    return this.getTextContent(page, this.paginationActiveLabel);
   }
 
   /**
@@ -382,4 +383,5 @@ class Zones extends BOBasePage {
     return this.getPaginationLabel(page);
   }
 }
+
 module.exports = new Zones();

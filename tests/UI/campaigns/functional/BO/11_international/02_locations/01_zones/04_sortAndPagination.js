@@ -28,7 +28,7 @@ let numberOfZones = 0;
 
 /*
 Sort zones table
-Create 15 zones
+Create 13 zones
 Paginate between pages
 Delete zones with bulk actions
  */
@@ -48,7 +48,7 @@ describe('Sort and pagination zones table', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'International/Locations\' page', async function () {
+  it('should go to \'International > Locations\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocationsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
