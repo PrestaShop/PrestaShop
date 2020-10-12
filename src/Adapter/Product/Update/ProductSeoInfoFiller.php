@@ -80,7 +80,7 @@ class ProductSeoInfoFiller
 
         if ($redirectType->isProductType()) {
             $this->productRepository->assertProductExists(new ProductId($redirectTarget->getValue()));
-        } elseif ($redirectType->isCategoryType()) {
+        } elseif ($redirectType->isCategoryType() && !$redirectTarget->isNoTarget()) {
             $this->categoryRepository->assertCategoryExists(new CategoryId($redirectTarget->getValue()));
         }
 
