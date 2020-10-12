@@ -31,6 +31,7 @@ use CartRule;
 use Configuration;
 use Currency;
 use Customer;
+use Exception;
 use Order;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
@@ -80,6 +81,26 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
             ->setCurrency(new Currency($order->id_currency))
             ->setCustomer(new Customer($order->id_customer));
 
+        try {
+            $this->addCartRuleAndUpdateOrder($command, $order);
+        } catch (Exception $exception) {
+            $this->contextStateManager->restoreContext();
+
+            throw $exception;
+        }
+    }
+
+    /**
+     * @param AddCartRuleToOrderCommand $command
+     * @param Order $order
+     *
+     * @throws InvalidCartRuleDiscountValueException
+     * @throws OrderException
+     * @throws PrestaShopException
+     * @throws \PrestaShopDatabaseException
+     */
+    private function addCartRuleAndUpdateOrder(AddCartRuleToOrderCommand $command, Order $order): void
+    {
         $computingPrecision = new ComputingPrecision();
         $currency = new Currency((int) $order->id_currency);
         $precision = $computingPrecision->getPrecision($currency->precision);
