@@ -64,15 +64,8 @@ class EmailController extends FrameworkBundleAdminController
             'send_email_to' => $configuration->get('PS_SHOP_EMAIL'),
         ]);
 
-        $isEmailLogsEnabled = $configuration->get('PS_LOG_EMAILS');
-
-        $presentedEmailLogsGrid = null;
-
-        if ($isEmailLogsEnabled) {
-            $emailLogsGridFactory = $this->get('prestashop.core.grid.factory.email_logs');
-            $emailLogsGrid = $emailLogsGridFactory->getGrid($filters);
-            $presentedEmailLogsGrid = $this->presentGrid($emailLogsGrid);
-        }
+        $emailLogsGrid = $this->get('prestashop.core.grid.factory.email_logs')->getGrid($filters);
+        $presentedEmailLogsGrid = $this->presentGrid($emailLogsGrid);
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Email/index.html.twig', [
             'emailConfigurationForm' => $emailConfigurationForm->createView(),
@@ -80,13 +73,15 @@ class EmailController extends FrameworkBundleAdminController
             'smtpMailMethod' => MailOption::METHOD_SMTP,
             'testEmailSendingForm' => $testEmailSendingForm->createView(),
             'emailLogsGrid' => $presentedEmailLogsGrid,
-            'isEmailLogsEnabled' => $isEmailLogsEnabled,
+            'isEmailLogsEnabled' => $configuration->get('PS_LOG_EMAILS'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
     }
 
     /**
+     * @deprecated since 8.0 and will be removed in next major. Use CommonController:searchGridAction instead
+     *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param Request $request

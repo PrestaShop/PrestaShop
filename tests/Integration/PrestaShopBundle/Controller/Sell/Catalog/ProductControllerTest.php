@@ -115,7 +115,9 @@ class ProductControllerTest extends GridControllerTestCase
     {
         /* @todo add rest of the tests, need for product form to be complete */
         return [
-            ['product[name]' => 'stProd'],
+            [
+                'product[name]' => 'stProd',
+            ],
             [
                 'product[id_product][min_field]' => $this->getTestEntity()->getId(),
                 'product[id_product][max_field]' => $this->getTestEntity()->getId(),

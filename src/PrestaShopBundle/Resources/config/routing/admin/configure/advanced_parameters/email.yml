@@ -10,7 +10,9 @@ admin_emails_search:
   path: /
   methods: [ POST ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmailController::searchAction'
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.email_logs
+    redirectRoute: admin_emails_index
     _legacy_controller: AdminEmails
     _legacy_link: AdminEmails:search
 
