@@ -10,23 +10,34 @@ class TaxRules extends BOBasePage {
     // Selectors
     // HEADER buttons
     this.addNewTaxRulesGroupLink = 'a#page-header-desc-tax_rules_group-new_tax_rules_group';
+
     // Form selectors
     this.gridForm = '#form-tax_rules_group';
     this.gridTableHeaderTitle = `${this.gridForm} .panel-heading`;
     this.gridTableNumberOfTitlesSpan = `${this.gridTableHeaderTitle} span.badge`;
     this.gridTable = '#table-tax_rules_group';
+
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
     this.filterColumn = filterBy => `${this.filterRow} [name='tax_rules_groupFilter_${filterBy}']`;
     this.filterSearchButton = '#submitFilterButtontax_rules_group';
     this.filterResetButton = `${this.filterRow} button[name='submitResettax_rules_group']`;
+
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
     this.editRowLink = row => `${this.tableRow(row)} a.edit`;
-    this.tableColumn = (row, column) => `${this.tableRow(row)} td:nth-child(${column})`;
+    this.tableBodyColumn = row => `${this.tableRow(row)} td`;
+
+    // Columns selectors
+    this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
+    this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
+    this.tableColumnActive = row => `${this.tableBodyColumn(row)}:nth-child(4) a`;
+
+    // Bulk actions selectors
     this.toggleDropDown = row => `${this.tableRow(row)} button[data-toggle='dropdown']`;
     this.deleteRowLink = row => `${this.tableRow(row)} a.delete`;
+
     // Confirmation modal
     this.deleteModalButtonYes = '#popup_ok';
   }
@@ -79,11 +90,34 @@ class TaxRules extends BOBasePage {
    * Get text column from table
    * @param page
    * @param row
-   * @param column
+   * @param columnName
    * @returns {Promise<string>}
    */
-  async getTextColumnFromTable(page, row, column) {
-    return this.getTextContent(page, this.tableColumn(row, column));
+  async getTextColumnFromTable(page, row, columnName) {
+    let columnSelector;
+
+    switch (columnName) {
+      case 'id_tax_rules_group':
+        columnSelector = this.tableColumnId(row);
+        break;
+
+      case 'name':
+        columnSelector = this.tableColumnName(row);
+        break;
+
+      case 'active':
+        columnSelector = this.tableColumnActive(row);
+        break;
+
+      default:
+        throw new Error(`Column ${columnName} was not found`);
+    }
+
+    if (columnName === 'active') {
+      return this.getAttributeContent(page, columnSelector, 'title');
+    }
+
+    return this.getTextContent(page, columnSelector);
   }
 
   /**
