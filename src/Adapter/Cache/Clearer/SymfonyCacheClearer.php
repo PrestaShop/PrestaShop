@@ -56,6 +56,14 @@ final class SymfonyCacheClearer implements CacheClearerInterface
         }
 
         register_shutdown_function(function () use ($kernel) {
+            // The cache may have been removed by Tools::clearSf2Cache, it happens during install
+            // process, in which case we don't run the cache:clear command because it is not only
+            // useless it will simply fail as the container caches classes have been removed
+            $cacheDir = _PS_ROOT_DIR_ . '/var/cache/' . _PS_ENV_ . '/';
+            if (!file_exists($cacheDir)) {
+                return;
+            }
+
             $application = new Application($kernel);
             $application->setAutoExit(false);
 
