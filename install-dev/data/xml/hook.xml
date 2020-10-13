@@ -2754,5 +2754,15 @@
       <title>Get Employee Image</title>
       <description>This hook is used to get the employee image</description>
     </hook>
+    <hook id="actionProductSearchProviderRunQueryBefore">
+      <name>actionProductSearchProviderRunQueryBefore</name>
+      <title>Runs an action before ProductSearchProviderInterface::RunQuery()</title>
+      <description>Required to modify an SQL query before executing it</description>
+    </hook>
+    <hook id="actionProductSearchProviderRunQueryAfter">
+      <name>actionProductSearchProviderRunQueryAfter</name>
+      <title>Runs an action after ProductSearchProviderInterface::RunQuery()</title>
+      <description>Required to return a previous state of an SQL query or/and to change a result of the SQL query after executing it</description>
+    </hook>
   </entities>
 </entity_hook>
