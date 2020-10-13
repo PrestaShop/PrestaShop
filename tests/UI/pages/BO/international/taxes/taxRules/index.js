@@ -40,6 +40,11 @@ class TaxRules extends BOBasePage {
 
     // Confirmation modal
     this.deleteModalButtonYes = '#popup_ok';
+
+    // Sort Selectors
+    this.tableHead = `${this.gridTable} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
   }
 
   /*
@@ -168,6 +173,52 @@ class TaxRules extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
     // Get successful message
     return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  // Sort methods
+  /**
+   * Get content from all rows
+   * @param page
+   * @param columnName
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(page, columnName) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable = [];
+
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumnFromTable(page, i, columnName);
+      await allRowsContentTable.push(rowContent);
+    }
+
+    return allRowsContentTable;
+  }
+
+  /**
+   * Sort table
+   * @param page
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page, sortBy, sortDirection) {
+    let columnSelector;
+
+    switch (sortBy) {
+      case 'id_tax_rules_group':
+        columnSelector = this.sortColumnDiv(2);
+        break;
+
+      case 'name':
+        columnSelector = this.sortColumnDiv(3);
+        break;
+
+      default:
+        throw new Error(`Column ${sortBy} was not found`);
+    }
+
+    const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
+    await this.clickAndWaitForNavigation(page, sortColumnButton);
   }
 }
 

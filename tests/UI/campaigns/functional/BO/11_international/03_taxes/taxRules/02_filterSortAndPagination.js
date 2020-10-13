@@ -139,4 +139,55 @@ describe('Filter, sort and pagination tax rules', async () => {
       });
     });
   });
+
+  // 2 - Sort tax rules table
+  describe('Sort tax rules table', async () => {
+    const sortTests = [
+      {
+        args: {
+          testIdentifier: 'sortByIdDesc', sortBy: 'id_tax_rules_group', sortDirection: 'down', isFloat: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'up',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'down',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByIdAsc', sortBy: 'id_tax_rules_group', sortDirection: 'up', isFloat: true,
+        },
+      },
+    ];
+
+    sortTests.forEach((test) => {
+      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
+        let nonSortedTable = await taxRulesPage.getAllRowsColumnContent(page, test.args.sortBy);
+
+        await taxRulesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+
+        let sortedTable = await taxRulesPage.getAllRowsColumnContent(page, test.args.sortBy);
+
+        if (test.args.isFloat) {
+          nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
+          sortedTable = await sortedTable.map(text => parseFloat(text));
+        }
+
+        const expectedResult = await taxRulesPage.sortArray(nonSortedTable, test.args.isFloat);
+
+        if (test.args.sortDirection === 'up') {
+          await expect(sortedTable).to.deep.equal(expectedResult);
+        } else {
+          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+        }
+      });
+    });
+  });
 });
