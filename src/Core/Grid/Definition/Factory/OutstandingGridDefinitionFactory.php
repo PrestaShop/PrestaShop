@@ -56,7 +56,7 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
      * @var ConfigurationInterface
      */
     private $configuration;
-    
+
     /**
      * @var array
      */
