@@ -272,3 +272,8 @@ services:
     arguments:
       - '@doctrine.orm.entity_manager'
       - '@translator'
+
+  prestashop.adapter.image_settings.generation_options.configuration:
+    class: 'PrestaShop\PrestaShop\Adapter\ImageType\GenerationOptionsConfiguration'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
