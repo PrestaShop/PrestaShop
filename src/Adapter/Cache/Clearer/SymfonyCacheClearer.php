@@ -59,13 +59,21 @@ final class SymfonyCacheClearer implements CacheClearerInterface
             $application = new Application($kernel);
             $application->setAutoExit(false);
 
+            // Clear cache
             $input = new ArrayInput([
                 'command' => 'cache:clear',
-                '--no-warmup',
+                '--no-warmup' => true,
+                '--env' => _PS_ENV_,
             ]);
 
             $output = new NullOutput();
             $application->run($input, $output);
+
+            // Reboot kernel
+            $realCacheDir = $kernel->getContainer()->getParameter('kernel.cache_dir');
+            $warmupDir = substr($realCacheDir, 0, -1) . ('_' === substr($realCacheDir, -1) ? '-' : '_');
+            $kernel->reboot($warmupDir);
+
             Hook::exec('actionClearSf2Cache');
         });
     }
