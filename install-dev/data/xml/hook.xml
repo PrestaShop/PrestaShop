@@ -16,6 +16,16 @@
       <title>Maintenance Page</title>
       <description>This hook displays new elements on the maintenance page</description>
     </hook>
+    <hook id="displayCartModalContent">
+      <name>displayCartModalContent</name>
+      <title>Content of Add-to-cart modal</title>
+      <description>This hook displays content in the middle of the window that appears after adding product to cart</description>
+    </hook>
+    <hook id="displayCartModalFooter">
+      <name>displayCartModalFooter</name>
+      <title>Bottom of Add-to-cart modal</title>
+      <description>This hook displays content in the bottom of window that appears after adding product to cart</description>
+    </hook>     
     <hook id="displayProductPageDrawer">
       <name>displayProductPageDrawer</name>
       <title>Product Page Drawer</title>
