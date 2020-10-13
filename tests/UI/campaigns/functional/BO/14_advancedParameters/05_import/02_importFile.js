@@ -23,7 +23,6 @@ let page;
 
 // Variable Used in the download / rename / upload test
 let sampleFilePath;
-const newPath = `./${sampleFile.args.type}.csv`;
 const sampleFile = {
   args:
     {
@@ -31,6 +30,7 @@ const sampleFile = {
       type: 'customers_import',
     },
 };
+const newPath = `./${sampleFile.args.type}.csv`;
 
 // Variables used for assertions
 const importModalTitle = 'Importing your data...';
