@@ -59,8 +59,7 @@ final class SymfonyCacheClearer implements CacheClearerInterface
         $application->setAutoExit(false);
 
         $input = new ArrayInput([
-            'command' => 'cache:clear',
-            '--no-warmup',
+            'command' => 'cache:pool:prune',
         ]);
 
         $output = new NullOutput();
