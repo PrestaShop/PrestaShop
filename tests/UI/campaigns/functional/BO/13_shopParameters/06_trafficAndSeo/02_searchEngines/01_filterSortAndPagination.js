@@ -17,7 +17,7 @@ const {searchEngines} = require('@data/demo/searchEngines');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_shopParameters_TrafficAndSeo_searchEngines_filterSortAndPagination';
+const baseContext = 'functional_BO_shopParameters_trafficAndSeo_searchEngines_filterSortAndPagination';
 
 let browserContext;
 let page;
