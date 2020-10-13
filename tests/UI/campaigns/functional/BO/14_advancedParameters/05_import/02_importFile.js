@@ -122,8 +122,8 @@ describe('Import customers.csv file', async () => {
 
       await dashboardPage.goToSubMenu(
         page,
-        dashboardPage.customersParentLink,
-        dashboardPage.customersLink,
+        importPage.customersParentLink,
+        importPage.customersLink,
       );
 
       await customersPage.closeSfToolBar(page);
