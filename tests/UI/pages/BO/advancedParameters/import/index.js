@@ -39,7 +39,7 @@ class Import extends BOBasePage {
   }
 
   /**
-   *
+   * Select the type of the file and add the upload it
    * @param page
    * @param dropdownValue
    * @param filePath
@@ -47,14 +47,13 @@ class Import extends BOBasePage {
    */
   async uploadSampleFile(page, dropdownValue, filePath) {
     await this.selectByVisibleText(page, this.fileTypeSelector, dropdownValue);
-    // await page.selectOption(this.fileTypeSelector, {value: dropdownValue});
     await page.setInputFiles(this.fileInputField, filePath);
 
     return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
-   *
+   * Click on the "Next step" button
    * @param page
    * @return {Promise<string>}
    */
@@ -65,7 +64,7 @@ class Import extends BOBasePage {
   }
 
   /**
-   *
+   * Confirm the upload by clicking on the "import" button
    * @param page
    * @return {Promise<string>}
    */
@@ -76,7 +75,7 @@ class Import extends BOBasePage {
   }
 
   /**
-   *
+   * Close at the end of the import
    * @param page
    * @return {Promise<boolean>}
    */
