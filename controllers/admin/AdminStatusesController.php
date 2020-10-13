@@ -123,15 +123,15 @@ class AdminStatusesControllerCore extends AdminController
             ],
         ];
     }
-    
+
     /**
-     * init all variables to render the order status list.
+     * Init all variables to render the order status list.
      *
-     * @deprecated renamed this to initOrderStatusList
+     * @deprecated Use `initOrderStatusList`
      */
     protected function initOrderStatutsList()
     {
-        return $this->initOrderStatusList();
+        $this->initOrderStatusList();
     }
 
     /**
