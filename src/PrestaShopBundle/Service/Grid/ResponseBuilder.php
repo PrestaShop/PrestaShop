@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Service\Grid;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactoryInterface;
+use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,22 +37,39 @@ use Symfony\Component\Routing\Router;
 
 class ResponseBuilder
 {
+    /** @var AdminFilterRepository */
+    private $adminFilterRepository;
+
+    /** @var int */
+    private $employeeId;
+
     /** @var GridFilterFormFactoryInterface */
     private $filterFormFactory;
 
     /** @var Router */
     private $router;
 
+    /** @var int */
+    private $shopId;
+
     /**
      * @param GridFilterFormFactoryInterface $filterFormFactory
      * @param Router $router
+     * @param AdminFilterRepository $adminFilterRepository
+     * @param int $shopId
      */
     public function __construct(
         GridFilterFormFactoryInterface $filterFormFactory,
-        Router $router
+        Router $router,
+        AdminFilterRepository $adminFilterRepository,
+        int $employeeId,
+        int $shopId
     ) {
+        $this->adminFilterRepository = $adminFilterRepository;
         $this->filterFormFactory = $filterFormFactory;
         $this->router = $router;
+        $this->employeeId = $employeeId;
+        $this->shopId = $shopId;
     }
 
     /**
@@ -79,6 +97,10 @@ class ResponseBuilder
 
         $redirectParams = [];
         if ($filtersForm->isSubmitted()) {
+            if ($this->checkIsFormDataEmpty($filtersForm->getData())) {
+                $this->resetPersistedFilter($filterId);
+            }
+
             $redirectParams = [
                 $filterId => [
                     'filters' => $filtersForm->getData(),
@@ -98,5 +120,49 @@ class ResponseBuilder
         $redirectUrl = $this->router->generate($redirectRoute, $redirectParams);
 
         return new RedirectResponse($redirectUrl, 302);
+    }
+
+    /**
+     * @param string $filterId
+     *
+     * @return void
+     */
+    private function resetPersistedFilter(string $filterId): void
+    {
+        if (empty($filterId)) {
+            return;
+        }
+        $adminFilter = $this->adminFilterRepository->findByEmployeeAndFilterId(
+            $this->employeeId,
+            $this->shopId,
+            $filterId
+        );
+        if (!$adminFilter) {
+            return;
+        }
+        $this->adminFilterRepository->unsetFilters($adminFilter);
+    }
+
+    /**
+     * Return true if array is empty (null values or empty array)
+     *
+     * @param array $formData
+     *
+     * @return bool
+     */
+    private function checkIsFormDataEmpty(array $formData): bool
+    {
+        foreach ($formData as $data) {
+            if (is_null($data)) {
+                continue;
+            }
+            if (is_array($data) && $this->checkIsFormDataEmpty($data)) {
+                continue;
+            }
+
+            return false;
+        }
+
+        return true;
     }
 }
