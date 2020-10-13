@@ -26,8 +26,12 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use Address;
 use AppKernel;
 use Cache;
+use Carrier;
+use Cart;
+use CartRule;
 use Category;
 use Context;
 use Employee;
@@ -36,6 +40,7 @@ use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
 use Pack;
 use Product;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use TaxManagerFactory;
 
 class CommonFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -117,6 +122,14 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @BeforeScenario @clear-cache-before-scenario
+     */
+    public static function clearCacheBeforeScenario()
+    {
+        self::clearCache();
+    }
+
+    /**
      * This hook can be used to flag a scenario for database hard reset
      *
      * @BeforeScenario @database-scenario
@@ -142,10 +155,15 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      */
     private static function clearCache(): void
     {
+        Address::resetStaticCache();
         Cache::clear();
-        Pack::resetStaticCache();
+        Carrier::resetStaticCache();
+        Cart::resetStaticCache();
+        CartRule::resetStaticCache();
         Category::resetStaticCache();
+        Pack::resetStaticCache();
         Product::resetStaticCache();
         Language::resetCache();
+        TaxManagerFactory::resetStaticCache();
     }
 }

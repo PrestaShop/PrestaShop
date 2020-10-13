@@ -339,6 +339,49 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then the :invoicePosition invoice from order :orderReference should have following shipping tax details:
+     *
+     * @param string $invoicePosition
+     * @param string $orderReference
+     * @param TableNode $table
+     */
+    public function checkInvoiceShippingTaxDetails(string $invoicePosition, string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $invoiceShippingData = $table->getColumnsHash();
+
+        $order = new Order($orderId);
+        $orderInvoice = $this->getInvoiceFromOrder($order, $invoicePosition);
+        $invoiceShippingTaxDetails = $orderInvoice->getShippingTaxesBreakdown($order);
+
+        Assert::assertLessThanOrEqual(
+            count($invoiceShippingTaxDetails),
+            count($invoiceShippingData),
+            sprintf(
+                'Invalid number of tax details, expected at least %d instead of %d',
+                count($invoiceShippingData),
+                count($invoiceShippingTaxDetails)
+            )
+        );
+
+        foreach ($invoiceShippingData as $invoiceShippingIndex => $invoiceShippingDetails) {
+            $shippingTaxDetails = $invoiceShippingTaxDetails[$invoiceShippingIndex];
+            foreach ($invoiceShippingDetails as $shippingField => $shippingValue) {
+                Assert::assertEquals(
+                    (float) $shippingValue,
+                    (float) $shippingTaxDetails[$shippingField],
+                    sprintf(
+                        'Invalid order tax field %s, expected %s instead of %s',
+                        $shippingField,
+                        $shippingValue,
+                        (float) $shippingTaxDetails[$shippingField]
+                    )
+                );
+            }
+        }
+    }
+
+    /**
      * @Then order :orderReference should have :expectedCount cart rule(s)
      *
      * @param string$orderReference

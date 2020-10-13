@@ -24,54 +24,38 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
+namespace PrestaShop\PrestaShop\Core\Domain\Configuration;
 
-/**
- * Shop identity
- */
-class ShopId
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+
+interface ShopConfigurationInterface extends ConfigurationInterface
 {
     /**
-     * @var int
-     */
-    private $shopId;
-
-    /**
-     * @param int $shopId
+     * @param string $key
+     * @param mixed|null $default
+     * @param ShopConstraint|null $shopConstraint
      *
-     * @throws ShopException
+     * @return mixed
      */
-    public function __construct(int $shopId)
-    {
-        $this->assertIsGreaterThanZero($shopId);
-
-        $this->shopId = $shopId;
-    }
+    public function get($key, $default = null, ShopConstraint $shopConstraint = null);
 
     /**
-     * @return int
-     */
-    public function getValue(): int
-    {
-        return $this->shopId;
-    }
-
-    /**
-     * @param int $shopId
+     * @param string $key
+     * @param mixed $value
+     * @param ShopConstraint|null $shopConstraint
      *
-     * @throws ShopException
+     * @return ShopConfigurationInterface
      */
-    private function assertIsGreaterThanZero(int $shopId): void
-    {
-        if (0 >= $shopId) {
-            throw new ShopException(
-                sprintf(
-                    'Shop id %s is invalid. Shop id must be number that is greater than zero.',
-                    var_export($shopId, true)
-                )
-            );
-        }
-    }
+    public function set($key, $value, ShopConstraint $shopConstraint = null);
+
+    /**
+     * @param string $key
+     * @param ShopConstraint|null $shopConstraint
+     *
+     * @return bool
+     */
+    public function has($key, ShopConstraint $shopConstraint = null);
 }

@@ -28,19 +28,21 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
+use Address;
 use Cache;
 use Carrier;
 use Cart;
 use CartRule;
-use Context;
 use Currency;
 use Order;
 use OrderCarrier;
 use OrderCartRule;
 use OrderDetail;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Cart\CartRuleData;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShopDatabaseException;
 use PrestaShopException;
@@ -51,16 +53,30 @@ use Validate;
 class OrderAmountUpdater
 {
     /**
-     * @var ConfigurationInterface
+     * @var ShopConfigurationInterface
      */
-    private $configuration;
+    private $shopConfiguration;
 
     /**
-     * @param ConfigurationInterface $configuration
+     * @var ContextStateManager
      */
-    public function __construct(ConfigurationInterface $configuration)
-    {
-        $this->configuration = $configuration;
+    private $contextStateManager;
+
+    /**
+     * @var array
+     */
+    private $orderConstraints = [];
+
+    /**
+     * @param ShopConfigurationInterface $shopConfiguration
+     * @param ContextStateManager $contextStateManager
+     */
+    public function __construct(
+        ShopConfigurationInterface $shopConfiguration,
+        ContextStateManager $contextStateManager
+    ) {
+        $this->shopConfiguration = $shopConfiguration;
+        $this->contextStateManager = $contextStateManager;
     }
 
     /**
@@ -75,7 +91,7 @@ class OrderAmountUpdater
     public function update(
         Order $order,
         Cart $cart,
-        ?int $orderInvoiceId
+        ?int $orderInvoiceId = null
     ): void {
         $this->cleanCaches();
 
@@ -123,7 +139,7 @@ class OrderAmountUpdater
         $order->total_shipping_tax_excl = $cart->getOrderTotal(false, Cart::ONLY_SHIPPING, $orderProducts, $carrierId);
         $order->total_shipping_tax_incl = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $orderProducts, $carrierId);
 
-        if (!$this->configuration->get('PS_ORDER_RECALCULATE_SHIPPING')) {
+        if (!$this->getOrderConfiguration('PS_ORDER_RECALCULATE_SHIPPING', $order)) {
             $shippingDiffTaxIncluded = $order->total_shipping_tax_incl - $totalShippingTaxIncluded;
             $shippingDiffTaxExcluded = $order->total_shipping_tax_excl - $totalShippingTaxExcluded;
 
@@ -136,14 +152,14 @@ class OrderAmountUpdater
             $order->total_paid_tax_excl -= $shippingDiffTaxExcluded;
         }
 
+        // Update carrier weight for shipping cost
+        $this->updateOrderCarrier($order, $cart);
+
         if (!$order->update()) {
             throw new OrderException('Could not update order invoice in database.');
         }
 
         $this->updateOrderInvoices($order, $cart, $computingPrecision);
-
-        // Update carrier weight for shipping cost
-        $this->updateOrderCarrier($order);
     }
 
     /**
@@ -166,11 +182,12 @@ class OrderAmountUpdater
 
     /**
      * @param Order $order
+     * @param Cart $cart
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    private function updateOrderCarrier(Order $order): void
+    private function updateOrderCarrier(Order $order, Cart $cart): void
     {
         $orderCarrier = new OrderCarrier((int) $order->getIdOrderCarrier());
 
@@ -180,7 +197,15 @@ class OrderAmountUpdater
             $orderCarrier->shipping_cost_tax_excl = (float) $order->total_shipping_tax_excl;
 
             if ($orderCarrier->update()) {
-                $order->weight = sprintf('%.3f ' . $this->configuration->get('PS_WEIGHT_UNIT'), $orderCarrier->weight);
+                $order->weight = sprintf('%.3f ' . $this->getOrderConfiguration('PS_WEIGHT_UNIT', $order), $orderCarrier->weight);
+            }
+        }
+
+        if (!$cart->isVirtualCart() && isset($order->id_carrier)) {
+            $carrier = new Carrier((int) $order->id_carrier, (int) $cart->id_lang);
+            if (null !== $carrier && Validate::isLoadedObject($carrier)) {
+                $taxAddressId = (int) $order->{$this->getOrderConfiguration('PS_TAX_ADDRESS_TYPE', $order)};
+                $order->carrier_tax_rate = $carrier->getTaxesRate(new Address($taxAddressId));
             }
         }
     }
@@ -198,8 +223,11 @@ class OrderAmountUpdater
     {
         $cartProducts = $cart->getProducts(true);
         foreach ($order->getCartProducts() as $orderProduct) {
-            $orderDetail = new OrderDetail($orderProduct['id_order_detail']);
+            $orderDetail = new OrderDetail($orderProduct['id_order_detail'], null, $this->contextStateManager->getContext());
             $cartProduct = $this->getProductFromCart($cartProducts, (int) $orderDetail->product_id, (int) $orderDetail->product_attribute_id);
+
+            // Update tax rules group as it might have changed
+            $orderDetail->id_tax_rules_group = $orderDetail->getTaxRulesGroupId();
 
             $unitPriceTaxExcl = (float) $cartProduct['price_with_reduction_without_tax'];
             $unitPriceTaxIncl = (float) $cartProduct['price_without_reduction'];
@@ -208,7 +236,7 @@ class OrderAmountUpdater
             $orderDetail->unit_price_tax_excl = $unitPriceTaxExcl;
             $orderDetail->unit_price_tax_incl = $unitPriceTaxIncl;
 
-            $roundType = $this->configuration->get('PS_ROUND_TYPE');
+            $roundType = $this->getOrderConfiguration('PS_ROUND_TYPE', $order);
             switch ($roundType) {
                 case Order::ROUND_TOTAL:
                     $orderDetail->total_price_tax_excl = $unitPriceTaxExcl * $orderDetail->product_quantity;
@@ -230,6 +258,13 @@ class OrderAmountUpdater
 
                     break;
             }
+
+            // Finally update taxes (order_detail_tax table) We don't use Order::updateOrderDetailTax because there
+            // it rely too much on order_detail_tax and there are two things it's not able to do
+            // - insert new order_detail_tax when no one was present
+            // - clean all order_detail_tax when they are not needed any more
+            // This should be fixed and refactored so that OrderDetail::saveTaxCalculator can really be depreciated
+            $orderDetail->updateTaxAmount($order);
 
             if (!$orderDetail->update()) {
                 throw new OrderException('An error occurred while editing the product line.');
@@ -279,7 +314,7 @@ class OrderAmountUpdater
         int $computingPrecision,
         ?int $orderInvoiceId
     ): void {
-        Context::getContext()->cart = $cart;
+        $this->contextStateManager->setCart($cart);
         CartRule::autoAddToCart();
         CartRule::autoRemoveFromCart();
 
@@ -298,6 +333,7 @@ class OrderAmountUpdater
                     $orderCartRule = new OrderCartRule($orderCartRuleData['id_order_cart_rule']);
                     $orderCartRule->id_order = $order->id;
                     $orderCartRule->name = $cartRule->name;
+                    $orderCartRule->free_shipping = $cartRule->free_shipping;
                     $orderCartRule->value = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxIncluded(), $computingPrecision);
                     $orderCartRule->value_tax_excl = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxExcluded(), $computingPrecision);
                     $orderCartRule->save();
@@ -330,6 +366,7 @@ class OrderAmountUpdater
             $orderCartRule->id_cart_rule = $cartRule->id;
             $orderCartRule->id_order_invoice = $orderInvoiceId ?? 0;
             $orderCartRule->name = $cartRule->name;
+            $orderCartRule->free_shipping = $cartRule->free_shipping;
             $orderCartRule->value = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxIncluded(), $computingPrecision);
             $orderCartRule->value_tax_excl = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxExcluded(), $computingPrecision);
             $orderCartRule->save();
@@ -395,6 +432,26 @@ class OrderAmountUpdater
                 $computingPrecision
             );
 
+            $totalShippingTaxIncluded = $invoice->total_shipping_tax_incl;
+            $totalShippingTaxExcluded = $invoice->total_shipping_tax_excl;
+
+            $invoice->total_shipping = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $currentInvoiceProducts, $carrierId);
+            $invoice->total_shipping_tax_excl = $cart->getOrderTotal(false, Cart::ONLY_SHIPPING, $currentInvoiceProducts, $carrierId);
+            $invoice->total_shipping_tax_incl = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $currentInvoiceProducts, $carrierId);
+
+            if (!$this->getOrderConfiguration('PS_ORDER_RECALCULATE_SHIPPING', $order)) {
+                $shippingDiffTaxIncluded = $invoice->total_shipping_tax_incl - $totalShippingTaxIncluded;
+                $shippingDiffTaxExcluded = $invoice->total_shipping_tax_excl - $totalShippingTaxExcluded;
+
+                $invoice->total_shipping = $totalShippingTaxIncluded;
+                $invoice->total_shipping_tax_incl = $totalShippingTaxIncluded;
+                $invoice->total_shipping_tax_excl = $totalShippingTaxExcluded;
+
+                $invoice->total_paid -= $shippingDiffTaxIncluded;
+                $invoice->total_paid_tax_incl -= $shippingDiffTaxIncluded;
+                $invoice->total_paid_tax_excl -= $shippingDiffTaxExcluded;
+            }
+
             if (!$invoice->update()) {
                 throw new OrderException('Could not update order invoice in database.');
             }
@@ -412,5 +469,34 @@ class OrderAmountUpdater
         $currency = new Currency((int) $cart->id_currency);
 
         return $computingPrecision->getPrecision((int) $currency->precision);
+    }
+
+    /**
+     * @param string $key
+     * @param Order $order
+     *
+     * @return mixed
+     */
+    private function getOrderConfiguration(string $key, Order $order)
+    {
+        return $this->shopConfiguration->get($key, null, $this->getOrderShopConstraint($order));
+    }
+
+    /**
+     * @param Order $order
+     *
+     * @return ShopConstraint
+     */
+    private function getOrderShopConstraint(Order $order): ShopConstraint
+    {
+        $constraintKey = $order->id_shop . '-' . $order->id_shop_group;
+        if (!isset($this->orderConstraints[$constraintKey])) {
+            $this->orderConstraints[$constraintKey] = new ShopConstraint(
+                (int) $order->id_shop,
+                (int) $order->id_shop_group
+            );
+        }
+
+        return $this->orderConstraints[$constraintKey];
     }
 }
