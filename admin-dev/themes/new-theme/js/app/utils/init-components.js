@@ -28,16 +28,21 @@ import TranslatableInput from '@js/components/translatable-input.js';
 import TinyMCEEditor from '@js/components/tinymce-editor.js';
 import TaggableField from '@js/components/taggable-field.js';
 import ChoiceTable from '@js/components/choice-table.js';
+import {EventEmitter} from '@components/event-emitter';
 
 const initPrestashopComponents = () => {
   window.prestashop = {...window.prestashop};
-  window.prestashop.instance = {...window.prestashop.instance};
+
+  if (!window.prestashop.instance) {
+    window.prestashop.instance = {};
+  }
 
   window.prestashop.component = {
     initComponents(components) {
       components.forEach((component) => {
         if (window.prestashop.component[component] === undefined) {
           console.error(`Failed to initialize PrestaShop component "${component}". This component doesn't exist.`);
+
           return;
         }
 
@@ -47,12 +52,15 @@ const initPrestashopComponents = () => {
           console.warn(
             `Failed to initialize PrestaShop component "${component}". This component is already initialized.`,
           );
+
           return;
         }
 
-
         window.prestashop.instance[componentInstanceName] = new window.prestashop.component[component]();
       });
+
+      // Send an event so external users can initiate their own components
+      EventEmitter.emit('PSComponentsInitiated');
     },
     // @todo: add all standard components in this list
     TranslatableField,
