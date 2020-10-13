@@ -64,7 +64,7 @@ class AdminStatusesControllerCore extends AdminController
     /**
      * init all variables to render the order status list.
      */
-    protected function initOrderStatusList()
+    protected function initOrderStatusList(): void
     {
         $this->table = 'order_state';
         $this->className = 'OrderState';
