@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductStockException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
 use Product;
@@ -87,7 +87,7 @@ class ProductStockUpdater extends AbstractObjectModelFiller
      * @param bool $addMovement
      *
      * @throws CoreException
-     * @throws ProductStockException
+     * @throws ProductStockConstraintException
      */
     public function update(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate, bool $addMovement = true): void
     {
@@ -106,22 +106,22 @@ class ProductStockUpdater extends AbstractObjectModelFiller
      * @param bool $addMovement
      *
      * @throws CoreException
-     * @throws ProductStockException
+     * @throws ProductStockConstraintException
      */
     private function updateClassicStock(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate, bool $addMovement): void
     {
         // Depends on stock is only available in advanced mode
         if (isset($propertiesToUpdate['depends_on_stock']) && $propertiesToUpdate['depends_on_stock']) {
-            throw new ProductStockException(
+            throw new ProductStockConstraintException(
                 'You cannot perform this action when PS_ADVANCED_STOCK_MANAGEMENT is disabled',
-                ProductStockException::ADVANCED_STOCK_MANAGEMENT_CONFIGURATION_DISABLED
+                ProductStockConstraintException::ADVANCED_STOCK_MANAGEMENT_CONFIGURATION_DISABLED
             );
         }
 
         if (isset($propertiesToUpdate['advanced_stock_management']) && $propertiesToUpdate['advanced_stock_management']) {
-            throw new ProductStockException(
+            throw new ProductStockConstraintException(
                 'You cannot perform this action when PS_ADVANCED_STOCK_MANAGEMENT is disabled',
-                ProductStockException::ADVANCED_STOCK_MANAGEMENT_CONFIGURATION_DISABLED
+                ProductStockConstraintException::ADVANCED_STOCK_MANAGEMENT_CONFIGURATION_DISABLED
             );
         }
 
@@ -141,7 +141,7 @@ class ProductStockUpdater extends AbstractObjectModelFiller
      * @param bool $addMovement
      *
      * @throws CoreException
-     * @throws ProductStockException
+     * @throws ProductStockConstraintException
      */
     private function updateAdvancedStock(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate, bool $addMovement): void
     {
@@ -149,9 +149,9 @@ class ProductStockUpdater extends AbstractObjectModelFiller
 
         if (isset($propertiesToUpdate['depends_on_stock'])) {
             if ($propertiesToUpdate['depends_on_stock'] && !$productHasAdvancedStock) {
-                throw new ProductStockException(
+                throw new ProductStockConstraintException(
                     'You cannot perform this action when advanced_stock_management is disabled on the product',
-                    ProductStockException::ADVANCED_STOCK_MANAGEMENT_PRODUCT_DISABLED
+                    ProductStockConstraintException::ADVANCED_STOCK_MANAGEMENT_PRODUCT_DISABLED
                 );
             }
 
@@ -221,7 +221,7 @@ class ProductStockUpdater extends AbstractObjectModelFiller
      * @param Product $product
      * @param array $propertiesToUpdate
      *
-     * @throws ProductStockException
+     * @throws ProductStockConstraintException
      */
     private function checkPackStockType(Product $product, array $propertiesToUpdate): void
     {
@@ -245,9 +245,9 @@ class ProductStockUpdater extends AbstractObjectModelFiller
             return;
         }
 
-        throw new ProductStockException(
+        throw new ProductStockConstraintException(
             'You cannot link your pack to product stock because one of them has no advanced stock enabled',
-            ProductStockException::INCOMPATIBLE_PACK_STOCK_TYPE
+            ProductStockConstraintException::INCOMPATIBLE_PACK_STOCK_TYPE
         );
     }
 }
