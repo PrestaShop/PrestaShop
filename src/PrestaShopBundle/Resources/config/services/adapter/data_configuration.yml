@@ -290,6 +290,11 @@ services:
     arguments:
       - '@prestashop.adapter.legacy.configuration'
 
+  prestashop.adapter.image_settings.generation_options.configuration:
+    class: 'PrestaShop\PrestaShop\Adapter\ImageType\GenerationOptionsConfiguration'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+
   prestashop.adapter.security.password_policy.configuration:
     class: 'PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration'
     arguments:
