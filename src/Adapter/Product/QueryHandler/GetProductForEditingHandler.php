@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Adapter\Product\Converter\OutOfStockTypeConverter;
 use PrestaShop\PrestaShop\Adapter\Product\Converter\PackStockTypeConverter;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductForEditingHandlerInterface;
@@ -48,6 +47,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStock;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractorException;
@@ -305,7 +305,7 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
                 OutOfStockTypeConverter::convertToValueObject((int) $stockAvailable->out_of_stock),
                 (int) $stockAvailable->quantity
             );
-        } catch (ProductStockException $e) {
+        } catch (StockAvailableNotFoundException $e) {
             // In case StockAvailable does not exist we can still use the Product fields
 
             return new ProductStock(
