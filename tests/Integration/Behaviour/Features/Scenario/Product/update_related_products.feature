@@ -27,7 +27,7 @@ Feature: Update product related products from Back Office (BO)
       | blackFramed | 10       | Color:Black |
     And product product1 should have no related products
     And product product2 type should be standard
-    Then product "product3" type should be pack
+    And product "product3" type should be pack
     And product product4 type should be combination
     When I set following related products to product product1:
       | product2          |
@@ -37,3 +37,16 @@ Feature: Update product related products from Back Office (BO)
       | product2          |
       | product3          |
       | product4          |
+    When I set following related products to product product1:
+      | product2          |
+      | product4          |
+    Then product product1 should have following related products:
+      | product2          |
+      | product4          |
+
+  Scenario: Remove all related products
+    Given product product1 should have following related products:
+      | product2          |
+      | product4          |
+    When I remove all related products from product product1
+    Then product product1 should have no related products

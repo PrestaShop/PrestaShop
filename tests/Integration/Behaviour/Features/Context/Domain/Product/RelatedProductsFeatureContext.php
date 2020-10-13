@@ -102,4 +102,19 @@ class RelatedProductsFeatureContext extends AbstractProductFeatureContext
 
         Assert::assertEquals($expectedIds, $actualIds, 'Unexpected related products');
     }
+
+    /**
+     * @When I remove all related products from product :productReference
+     *
+     * @param string $productReference
+     */
+    public function removeAllRelatedProducts(string $productReference)
+    {
+        $productId = $this->getSharedStorage()->get($productReference);
+        try {
+            $this->getCommandBus()->handle(new SetRelatedProductsCommand($productId, []));
+        } catch (DomainException $e) {
+            $this->setLastException($e);
+        }
+    }
 }
