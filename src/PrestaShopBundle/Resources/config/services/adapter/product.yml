@@ -247,6 +247,8 @@ services:
     prestashop.adapter.product.repository.product_repository:
         class: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository
         arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
             - '@prestashop.adapter.product.validate.product_validator'
 
     prestashop.adapter.product.validate.customization_field_validator:
