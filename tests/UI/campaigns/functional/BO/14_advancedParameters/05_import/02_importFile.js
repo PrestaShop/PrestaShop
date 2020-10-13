@@ -120,7 +120,7 @@ describe('Import customers.csv file', async () => {
     it('should go to customers page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await importPage.goToSubMenu(
         page,
         importPage.customersParentLink,
         importPage.customersLink,
