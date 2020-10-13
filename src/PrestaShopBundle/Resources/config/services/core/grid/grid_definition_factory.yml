@@ -20,11 +20,11 @@ services:
   prestashop.core.grid.definition.factory.email_logs:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\EmailLogsDefinitionFactory'
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    public: true
     arguments:
       - "@=service('router').generate('admin_common_reset_search', {'controller': 'email', 'action': 'index'})"
       - "@=service('router').generate('admin_emails_index')"
       - '@prestashop.core.form.choice_provider.language_by_id'
-    public: true
 
   prestashop.core.grid.definition.factory.request_sql:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\RequestSqlGridDefinitionFactory'
