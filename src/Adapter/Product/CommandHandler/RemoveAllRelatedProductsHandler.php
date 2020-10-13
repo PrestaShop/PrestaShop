@@ -26,18 +26,17 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Update;
+namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShopException;
-use Product;
+use PrestaShop\PrestaShop\Adapter\Product\Update\RelatedProductsUpdater;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllRelatedProductsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\RemoveAllRelatedProductsHandlerInterface;
 
 /**
- * Provides methods to update related products (a.k.a accessories)
+ * Handles @see RemoveAllRelatedProductsCommand using legacy object model
  */
-class RelatedProductsUpdater
+final class RemoveAllRelatedProductsHandler implements RemoveAllRelatedProductsHandlerInterface
 {
     /**
      * @var ProductRepository
@@ -45,39 +44,28 @@ class RelatedProductsUpdater
     private $productRepository;
 
     /**
+     * @var RelatedProductsUpdater
+     */
+    private $relatedProductsUpdater;
+
+    /**
      * @param ProductRepository $productRepository
+     * @param RelatedProductsUpdater $relatedProductsUpdater
      */
     public function __construct(
-        ProductRepository $productRepository
+        ProductRepository $productRepository,
+        RelatedProductsUpdater $relatedProductsUpdater
     ) {
         $this->productRepository = $productRepository;
+        $this->relatedProductsUpdater = $relatedProductsUpdater;
     }
 
     /**
-     * @param Product $product
-     * @param ProductId[] $relatedProductIds
+     * {@inheritdoc}
      */
-    public function set(Product $product, array $relatedProductIds): void
+    public function handle(RemoveAllRelatedProductsCommand $command): void
     {
-        try {
-            if (empty($relatedProductIds)) {
-                $product->deleteAccessories();
-
-                return;
-            }
-
-            $this->productRepository->assertProductsExists($relatedProductIds);
-            $ids = array_map(function (ProductId $productId): int {
-                return $productId->getValue();
-            }, $relatedProductIds);
-
-            $product->deleteAccessories();
-            $product->changeAccessories($ids);
-        } catch (PrestaShopException $e) {
-            throw new CoreException(sprintf(
-                'Error occurred when updating related products for product #%d',
-                $product->id
-            ));
-        }
+        $product = $this->productRepository->get($command->getProductId());
+        $this->relatedProductsUpdater->set($product, []);
     }
 }

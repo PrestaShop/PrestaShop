@@ -85,7 +85,7 @@ class ProductRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param int[] $productIds
+     * @param ProductId[] $productIds
      *
      * @throws ProductNotFoundException
      */
