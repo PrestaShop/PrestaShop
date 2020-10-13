@@ -95,14 +95,15 @@ class ProductRepository extends AbstractObjectModelRepository
         $ids = array_map(function (ProductId $productId): int {
             return $productId->getValue();
         }, $productIds);
+        $ids = array_unique($ids);
 
         $qb = $this->connection->createQueryBuilder();
         $qb->select('COUNT(id_product) as product_count')
             ->from($this->dbPrefix . 'product')
-            ->where('IN (:productIds)')
-            ->setParameter('productId', $ids, Connection::PARAM_INT_ARRAY);
+            ->where('id_product IN (:productIds)')
+            ->setParameter('productIds', $ids, Connection::PARAM_INT_ARRAY);
 
-        $results = $qb->execute()->fetchAll();
+        $results = $qb->execute()->fetch();
 
         if (!$results || (int) $results['product_count'] !== count($ids)) {
             throw new ProductNotFoundException('Some of products does not exist');
