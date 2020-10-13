@@ -31,12 +31,14 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShopException;
 use Product;
 
 /**
@@ -89,6 +91,7 @@ class ProductRepository extends AbstractObjectModelRepository
      */
     public function assertProductsExists(array $productIds): void
     {
+        //@todo: no shop association. Should it be checked here?
         $ids = array_map(function (ProductId $productId): int {
             return $productId->getValue();
         }, $productIds);
@@ -104,6 +107,31 @@ class ProductRepository extends AbstractObjectModelRepository
         if (!$results || (int) $results['product_count'] !== count($ids)) {
             throw new ProductNotFoundException('Some of products does not exist');
         }
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param LanguageId $languageId
+     *
+     * @return array<string, mixed>
+     *
+     * @throws CoreException
+     */
+    public function getRelatedProducts(ProductId $productId, LanguageId $languageId): array
+    {
+        $this->assertProductExists($productId);
+        $productIdValue = $productId->getValue();
+
+        try {
+            $accessories = Product::getAccessoriesLight($languageId->getValue(), $productIdValue);
+        } catch (PrestaShopException $e) {
+            throw new CoreException(sprintf(
+                'Error occurred when fetching related products for product #%d',
+                $productIdValue
+            ));
+        }
+
+        return $accessories;
     }
 
     /**
