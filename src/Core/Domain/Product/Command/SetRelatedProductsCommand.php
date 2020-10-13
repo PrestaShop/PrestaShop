@@ -83,8 +83,7 @@ class SetRelatedProductsCommand
             throw new RuntimeException(sprintf(
                 'Empty array of related products provided in %s. To remove all related products use %s.',
                 self::class,
-                //@todo: use class
-                'RemoveAllRelatedProductsCommand'
+                RemoveAllRelatedProductsCommand::class
             ));
         }
 
