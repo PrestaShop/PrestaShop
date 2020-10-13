@@ -33,7 +33,7 @@ use Pack;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductStockException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShopBundle\Api\QueryStockMovementParamsCollection;
 use PrestaShopBundle\Entity\Repository\StockMovementRepository;
 use RuntimeException;
@@ -147,8 +147,8 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
     public function assertStockManagementDisabledError(): void
     {
         $this->assertLastErrorIs(
-            ProductStockException::class,
-            ProductStockException::ADVANCED_STOCK_MANAGEMENT_CONFIGURATION_DISABLED
+            ProductStockConstraintException::class,
+            ProductStockConstraintException::ADVANCED_STOCK_MANAGEMENT_CONFIGURATION_DISABLED
         );
     }
 
@@ -158,8 +158,8 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
     public function assertStockManagementDisabledOnProductError(): void
     {
         $this->assertLastErrorIs(
-            ProductStockException::class,
-            ProductStockException::ADVANCED_STOCK_MANAGEMENT_PRODUCT_DISABLED
+            ProductStockConstraintException::class,
+            ProductStockConstraintException::ADVANCED_STOCK_MANAGEMENT_PRODUCT_DISABLED
         );
     }
 
@@ -169,8 +169,8 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
     public function assertIncompatiblePackStockTypeError(): void
     {
         $this->assertLastErrorIs(
-            ProductStockException::class,
-            ProductStockException::INCOMPATIBLE_PACK_STOCK_TYPE
+            ProductStockConstraintException::class,
+            ProductStockConstraintException::INCOMPATIBLE_PACK_STOCK_TYPE
         );
     }
 
@@ -180,8 +180,8 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
     public function assertInvalidOUtOfStockType(): void
     {
         $this->assertLastErrorIs(
-            ProductStockException::class,
-            ProductStockException::INVALID_OUT_OF_STOCK_TYPE
+            ProductStockConstraintException::class,
+            ProductStockConstraintException::INVALID_OUT_OF_STOCK_TYPE
         );
     }
 
