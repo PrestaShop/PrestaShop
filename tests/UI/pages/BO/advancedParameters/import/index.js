@@ -75,7 +75,7 @@ class Import extends BOBasePage {
   }
 
   /**
-   * Close at the end of the import
+   * Close modal at the end of the import
    * @param page
    * @return {Promise<boolean>}
    */
