@@ -544,7 +544,7 @@ class MailCore extends ObjectModel
                 $idShop
             );
             $templateVars['{order_slip_url}'] = Context::getContext()->link->getPageLink(
-                'order_slip',
+                'order-slip',
                 true,
                 $idLang,
                 null,
