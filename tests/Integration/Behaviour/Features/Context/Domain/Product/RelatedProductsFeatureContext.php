@@ -31,6 +31,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllRelatedProductsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetRelatedProductsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RelatedProduct;
@@ -112,7 +113,7 @@ class RelatedProductsFeatureContext extends AbstractProductFeatureContext
     {
         $productId = $this->getSharedStorage()->get($productReference);
         try {
-            $this->getCommandBus()->handle(new SetRelatedProductsCommand($productId, []));
+            $this->getCommandBus()->handle(new RemoveAllRelatedProductsCommand($productId));
         } catch (DomainException $e) {
             $this->setLastException($e);
         }
