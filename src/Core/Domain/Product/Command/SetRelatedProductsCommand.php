@@ -54,7 +54,7 @@ class SetRelatedProductsCommand
         int $productId,
         array $relatedProductIds
     ) {
-        $this->productId = $productId;
+        $this->productId = new ProductId($productId);
         $this->setRelatedProductIds($relatedProductIds);
     }
 

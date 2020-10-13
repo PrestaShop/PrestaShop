@@ -28,9 +28,12 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
+use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetRelatedProductsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RelatedProduct;
 
 class RelatedProductsFeatureContext extends AbstractProductFeatureContext
 {
@@ -51,5 +54,52 @@ class RelatedProductsFeatureContext extends AbstractProductFeatureContext
         } catch (DomainException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @When I set following related products to product :productReference:
+     *
+     * @param string $productReference
+     * @param TableNode $tableNode
+     */
+    public function setRelatedProducts(string $productReference, TableNode $tableNode): void
+    {
+        $productId = $this->getSharedStorage()->get($productReference);
+        $references = array_keys($tableNode->getRowsHash());
+        $relatedProductIds = [];
+
+        foreach ($references as $reference) {
+            $relatedProductIds[] = $this->getSharedStorage()->get($reference);
+        }
+
+        try {
+            $this->getCommandBus()->handle(new SetRelatedProductsCommand($productId, $relatedProductIds));
+        } catch (DomainException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then product :productReference should have following related products:
+     *
+     * @param string $productReference
+     * @param TableNode $tableNode
+     */
+    public function assertRelatedProducts(string $productReference, TableNode $tableNode)
+    {
+        $productId = $this->getSharedStorage()->get($productReference);
+
+        $expectedReferences = array_keys($tableNode->getRowsHash());
+        $actualRelatedProducts = $this->getQueryBus()->handle(new GetRelatedProducts($productId));
+
+        $expectedIds = array_map(function (string $reference): int {
+            return $this->getSharedStorage()->get($reference);
+        }, $expectedReferences);
+
+        $actualIds = array_map(function (RelatedProduct $relatedProduct): int {
+            return $relatedProduct->getProductId();
+        }, $actualRelatedProducts);
+
+        Assert::assertEquals($expectedIds, $actualIds, 'Unexpected related products');
     }
 }
