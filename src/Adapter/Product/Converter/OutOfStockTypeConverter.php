@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Converter;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\OutOfStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use Product as LegacyProduct;
 
 class OutOfStockTypeConverter

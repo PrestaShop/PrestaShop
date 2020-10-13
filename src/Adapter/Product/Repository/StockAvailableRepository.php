@@ -29,7 +29,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductStockException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotUpdateStockAvailableException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use StockAvailable;
@@ -43,7 +45,7 @@ class StockAvailableRepository extends AbstractObjectModelRepository
      */
     public function update(StockAvailable $stockAvailable): void
     {
-        $this->updateObjectModel($stockAvailable, ProductStockException::class, ProductStockException::CANNOT_SAVE_STOCK_AVAILABLE);
+        $this->updateObjectModel($stockAvailable, CannotUpdateStockAvailableException::class);
     }
 
     /**
@@ -77,8 +79,7 @@ class StockAvailableRepository extends AbstractObjectModelRepository
             throw new ProductStockException(sprintf(
                     'Cannot find StockAvailable for product %d',
                     $productId->getValue()
-                ),
-                ProductStockException::NOT_FOUND
+                )
             );
         }
 
@@ -91,18 +92,15 @@ class StockAvailableRepository extends AbstractObjectModelRepository
      * @return StockAvailable
      *
      * @throws CoreException
+     * @throws StockAvailableNotFoundException
      */
     private function getStockAvailable(int $stockAvailableId): StockAvailable
     {
-        /** @var StockAvailable $product */
-        $stockAvailable = $this->getObjectModel(
+        return $this->getObjectModel(
             $stockAvailableId,
             StockAvailable::class,
-            ProductStockException::class,
-            ProductStockException::NOT_FOUND
+            StockAvailableNotFoundException::class
         );
-
-        return $stockAvailable;
     }
 
     /**

@@ -26,9 +26,9 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception;
 
-class ProductStockException extends ProductException
+class ProductStockConstraintException extends ProductStockException
 {
     /**
      * Code is used when an advanced stock action is performed while
@@ -43,23 +43,13 @@ class ProductStockException extends ProductException
     const ADVANCED_STOCK_MANAGEMENT_PRODUCT_DISABLED = 20;
 
     /**
-     * Code is used the StockAvailable info for a product is not found in database
-     */
-    const NOT_FOUND = 30;
-
-    /**
      * Code is used when trying to link a pack stock with its product and one of them
      * has no advanced stock
      */
-    const INCOMPATIBLE_PACK_STOCK_TYPE = 40;
-
-    /**
-     * Code is sent when the StockAvailable object cannot be saved
-     */
-    const CANNOT_SAVE_STOCK_AVAILABLE = 50;
+    const INCOMPATIBLE_PACK_STOCK_TYPE = 30;
 
     /**
      * Code is sent when invalid out of stock type is used
      */
-    const INVALID_OUT_OF_STOCK_TYPE = 60;
+    const INVALID_OUT_OF_STOCK_TYPE = 40;
 }

@@ -26,9 +26,9 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductStockException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 
 class OutOfStockType
 {
@@ -61,7 +61,7 @@ class OutOfStockType
     /**
      * @param string $outOfStockType
      *
-     * @throws ProductStockException
+     * @throws ProductStockConstraintException
      */
     public function __construct(string $outOfStockType)
     {
@@ -79,18 +79,18 @@ class OutOfStockType
     /**
      * @param string $outOfStockType
      *
-     * @throws ProductStockException
+     * @throws ProductStockConstraintException
      */
     private function setOutOfStockType(string $outOfStockType): void
     {
         if (!in_array($outOfStockType, self::ALLOWED_OUT_OF_STOCK_TYPES)) {
-            throw new ProductStockException(
+            throw new ProductStockConstraintException(
                 sprintf(
                     'Cannot use product pack stock type %s, allowed values are: %s',
                     $outOfStockType,
                     implode(', ', self::ALLOWED_OUT_OF_STOCK_TYPES)
                 ),
-                ProductStockException::INVALID_OUT_OF_STOCK_TYPE
+                ProductStockConstraintException::INVALID_OUT_OF_STOCK_TYPE
             );
         }
 
