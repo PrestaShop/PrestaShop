@@ -53,6 +53,13 @@ class TaxRules extends BOBasePage {
     this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
     this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
+
+    // Bulk actions selectors
+    this.bulkActionBlock = 'div.bulk-actions';
+    this.bulkActionMenuButton = '#bulk_action_menu_tax_rules_group';
+    this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
+    this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
+    this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(7)`;
   }
 
   /*
@@ -272,6 +279,39 @@ class TaxRules extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
+  }
+
+  /* Bulk actions methods */
+  /**
+   * Select all rows
+   * @param page
+   * @return {Promise<void>}
+   */
+  async bulkSelectRows(page) {
+    await page.click(this.bulkActionMenuButton);
+
+    await Promise.all([
+      page.click(this.selectAllLink),
+      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+    ]);
+  }
+
+  /**
+   * Delete tax rules by bulk action
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async bulkDeleteTaxRules(page) {
+    this.dialogListener(page, true);
+    // Select all rows
+    await this.bulkSelectRows(page);
+
+    // Click on Button Bulk actions
+    await page.click(this.bulkActionMenuButton);
+
+    // Click on delete
+    await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 }
 

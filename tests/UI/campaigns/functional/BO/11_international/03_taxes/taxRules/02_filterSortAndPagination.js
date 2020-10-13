@@ -256,4 +256,44 @@ describe('Filter, sort and pagination tax rules', async () => {
       expect(paginationNumber).to.equal('1');
     });
   });
+
+  // 5 : Delete tax rules created with bulk actions
+  describe('Delete tax rules with Bulk Actions', async () => {
+    it('should filter list by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
+
+      await taxRulesPage.filterTable(
+        page,
+        'input',
+        'name',
+        'todelete',
+      );
+
+      const numberOfLinesAfterFilter = await taxRulesPage.getNumberOfElementInGrid(page);
+
+      for (let i = 1; i <= numberOfLinesAfterFilter; i++) {
+        const textColumn = await taxRulesPage.getTextColumnFromTable(
+          page,
+          i,
+          'name',
+        );
+
+        await expect(textColumn).to.contains('todelete');
+      }
+    });
+
+    it('should delete tax rules with Bulk Actions and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCarriers', baseContext);
+
+      const deleteTextResult = await taxRulesPage.bulkDeleteTaxRules(page);
+      await expect(deleteTextResult).to.be.contains(taxRulesPage.successfulMultiDeleteMessage);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
+
+      const numberOfLinesAfterReset = await taxRulesPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfLinesAfterReset).to.be.equal(numberOfTaxRules);
+    });
+  });
 });
