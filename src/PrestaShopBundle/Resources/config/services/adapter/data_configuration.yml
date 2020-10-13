@@ -285,3 +285,8 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Security\GeneralConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+
+  prestashop.adapter.image_settings.generation_options.configuration:
+    class: 'PrestaShop\PrestaShop\Adapter\ImageType\GenerationOptionsConfiguration'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
