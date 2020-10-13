@@ -28,8 +28,13 @@ let browserContext;
 let page;
 let numberOfTaxRules = 0;
 
-
-// Filter, sort and pagination tax rules in BO
+/*
+Filter tax rules table by id, name and enabled
+Sort table by id and name
+Create 16 new tax rules
+Test pagination next and previous
+Delete the created tax rules by bulk actions
+ */
 describe('Filter, sort and pagination tax rules', async () => {
   // before and after functions
   before(async function () {
@@ -188,6 +193,67 @@ describe('Filter, sort and pagination tax rules', async () => {
           await expect(sortedTable).to.deep.equal(expectedResult.reverse());
         }
       });
+    });
+  });
+
+  // 3 - Create 16 tax rules
+  const creationTests = new Array(16).fill(0, 0, 16);
+
+  creationTests.forEach((test, index) => {
+    describe(`Create tax rule n°${index + 1} in BO`, async () => {
+      const taxRuleData = new TaxRuleGroupFaker({name: `todelete${index}`});
+
+      it('should go to add new tax rule group page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToAddTaxRuleGroupPage${index}`, baseContext);
+
+        await taxRulesPage.goToAddNewTaxRulesGroupPage(page);
+
+        const pageTitle = await addTaxRulesPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(addTaxRulesPage.pageTitleCreate);
+      });
+
+      it('should create tax rule group and check result', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `createTaxRule${index}`, baseContext);
+
+        const textResult = await addTaxRulesPage.createEditTaxRulesGroup(page, taxRuleData);
+        await expect(textResult).to.contains(addTaxRulesPage.successfulCreationMessage);
+
+        await taxesPage.goToTaxRulesPage(page);
+
+        const numberOfLinesAfterCreation = await taxRulesPage.getNumberOfElementInGrid(page);
+        await expect(numberOfLinesAfterCreation).to.be.equal(numberOfTaxRules + 1 + index);
+      });
+    });
+  });
+
+  // 4 - Pagination
+  describe('Pagination next and previous', async () => {
+    it('should change the item number to 20 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
+
+      const paginationNumber = await taxRulesPage.selectPaginationLimit(page, '20');
+      expect(paginationNumber).to.equal('1');
+    });
+
+    it('should click on next', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
+
+      const paginationNumber = await taxRulesPage.paginationNext(page);
+      expect(paginationNumber).to.equal('2');
+    });
+
+    it('should click on previous', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
+
+      const paginationNumber = await taxRulesPage.paginationPrevious(page);
+      expect(paginationNumber).to.equal('1');
+    });
+
+    it('should change the item number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+
+      const paginationNumber = await taxRulesPage.selectPaginationLimit(page, '50');
+      expect(paginationNumber).to.equal('1');
     });
   });
 });
