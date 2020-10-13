@@ -67,6 +67,7 @@ class SearchEngines extends BOBasePage {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
+
     await this.waitForVisibleSelector(page, this.filterSearchButton, 2000);
   }
 
@@ -77,6 +78,7 @@ class SearchEngines extends BOBasePage {
    */
   async resetAndGetNumberOfLines(page) {
     await this.resetFilter(page);
+
     return this.getNumberOfElementInGrid(page);
   }
 
@@ -170,6 +172,7 @@ class SearchEngines extends BOBasePage {
       default:
         throw new Error(`Column ${sortBy} was not found`);
     }
+
     const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
     await this.clickAndWaitForNavigation(page, sortColumnButton);
   }
@@ -194,6 +197,7 @@ class SearchEngines extends BOBasePage {
   async selectPaginationLimit(page, number) {
     await page.click(this.paginationDropdownButton);
     await this.clickAndWaitForNavigation(page, this.paginationItems(number));
+
     return this.getPaginationLabel(page);
   }
 
@@ -204,6 +208,7 @@ class SearchEngines extends BOBasePage {
    */
   async paginationNext(page) {
     await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+
     return this.getPaginationLabel(page);
   }
 
@@ -214,6 +219,7 @@ class SearchEngines extends BOBasePage {
    */
   async paginationPrevious(page) {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+
     return this.getPaginationLabel(page);
   }
 }
