@@ -348,6 +348,7 @@ class Attributes extends BOBasePage {
       default:
         throw new Error(`Column ${sortBy} was not found`);
     }
+
     const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
     await this.clickAndWaitForNavigation(page, sortColumnButton);
   }
@@ -361,10 +362,12 @@ class Attributes extends BOBasePage {
   async getAllRowsColumnContent(page, columnName) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, i, columnName);
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 
@@ -377,6 +380,7 @@ class Attributes extends BOBasePage {
    */
   async openHelpSideBar(page) {
     await page.click(this.helpCardLink);
+
     return this.elementVisible(page, this.helpContainterBlock, 2000);
   }
 
@@ -388,6 +392,7 @@ class Attributes extends BOBasePage {
    */
   async closeHelpSideBar(page) {
     await page.click(this.helpCardLink);
+
     return this.elementNotVisible(page, this.helpContainterBlock, 2000);
   }
 
