@@ -46,25 +46,44 @@ class Import extends BOBasePage {
    * @return {Promise<string>}
    */
   async uploadSampleFile(page, dropdownValue, filePath) {
-    await page.selectOption(this.fileTypeSelector, {value: dropdownValue});
+    await page.selectByVisibleText(page, this.fileTypeSelector, dropdownValue);
+    // await page.selectOption(this.fileTypeSelector, {value: dropdownValue});
     await page.setInputFiles(this.fileInputField, filePath);
 
     return this.getTextContent(page, this.alertSuccessBlock);
   }
 
+  /**
+   *
+   * @param page
+   * @return {Promise<string>}
+   */
   async goToImportNextStep(page) {
     await page.click(this.nextStepButton);
+
     return this.getTextContent(page, this.importFileSecondStepPanelTitle);
   }
 
+  /**
+   *
+   * @param page
+   * @return {Promise<string>}
+   */
   async startFileImport(page) {
     await page.click(this.importButton);
+
     return this.getTextContent(page, this.importProgressModal);
   }
 
+  /**
+   *
+   * @param page
+   * @return {Promise<boolean>}
+   */
   async closeImportModal(page) {
     await this.waitForVisibleSelector(page, this.importProgressModalCloseButton);
     await this.clickAndWaitForNavigation(page, this.importProgressModalCloseButton);
+
     return this.elementVisible(page, this.fileTypeSelector, 1000);
   }
 }

@@ -20,15 +20,19 @@ const baseContext = 'functional_BO_advancedParameters_import_importFile';
 // Variables
 let browserContext;
 let page;
+
+// Variable Used in the download / rename / upload test
 let sampleFilePath;
+const newPath = `./${sampleFile.args.type}.csv`;
 const sampleFile = {
   args:
     {
+      dropdownValue: 'Customers',
       type: 'customers_import',
     },
 };
-const dropdownValue = '3';
-const newPath = `./${sampleFile.args.type}.csv`;
+
+// Variables used for assertions
 const importModalTitle = 'Importing your data...';
 const importPanelTitle = 'Match your data';
 const emailToCheck = 'Tiger.Lily@prestashop.com';
@@ -85,7 +89,8 @@ describe('Import customers.csv file', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'importFile', baseContext);
 
       await files.renameFile(sampleFilePath, newPath);
-      const uploadSuccessText = await importPage.uploadSampleFile(page, dropdownValue, newPath);
+
+      const uploadSuccessText = await importPage.uploadSampleFile(page, sampleFile.args.dropdownValue, newPath);
       await expect(uploadSuccessText).contain(sampleFile.args.type);
     });
 
