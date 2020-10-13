@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
+use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
@@ -44,15 +45,32 @@ use Product;
 class ProductRepository extends AbstractObjectModelRepository
 {
     /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * @var string
+     */
+    private $dbPrefix;
+
+    /**
      * @var ProductValidator
      */
     private $productValidator;
 
     /**
+     * @param Connection $connection
+     * @param string $dbPrefix
      * @param ProductValidator $productValidator
      */
-    public function __construct(ProductValidator $productValidator)
-    {
+    public function __construct(
+        Connection $connection,
+        string $dbPrefix,
+        ProductValidator $productValidator
+    ) {
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
         $this->productValidator = $productValidator;
     }
 
@@ -62,6 +80,30 @@ class ProductRepository extends AbstractObjectModelRepository
     public function assertProductExists(ProductId $productId): void
     {
         $this->assertObjectModelExists($productId->getValue(), 'product', ProductNotFoundException::class);
+    }
+
+    /**
+     * @param int[] $productIds
+     *
+     * @throws ProductNotFoundException
+     */
+    public function assertProductsExists(array $productIds): void
+    {
+        $ids = array_map(function (ProductId $productId): int {
+            return $productId->getValue();
+        }, $productIds);
+
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('COUNT(id_product) as product_count')
+            ->from($this->dbPrefix . 'product')
+            ->where('IN (:productIds)')
+            ->setParameter('productId', $ids, Connection::PARAM_INT_ARRAY);
+
+        $results = $qb->execute()->fetchAll();
+
+        if (!$results || (int) $results['product_count'] !== count($ids)) {
+            throw new ProductNotFoundException('Some of products does not exist');
+        }
     }
 
     /**

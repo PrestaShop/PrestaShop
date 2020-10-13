@@ -307,3 +307,17 @@ services:
             - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.adapter.supplier.repository.supplier_repository'
             - '@prestashop.adapter.product.repository.product_supplier_repository'
+
+    prestashop.adapter.product.update.related_products_updater:
+        class: PrestaShop\PrestaShop\Adapter\Product\Update\RelatedProductsUpdater
+        arguments:
+            - '@prestashop.adapter.product.repository.product_repository'
+
+    prestashop.adapter.product.command_handler.set_related_products_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetRelatedProductsHandler
+        arguments:
+            - '@prestashop.adapter.product.repository.product_repository'
+            - '@prestashop.adapter.product.update.related_products_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetRelatedProductsCommand
