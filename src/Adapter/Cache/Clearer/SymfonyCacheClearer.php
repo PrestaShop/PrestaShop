@@ -55,15 +55,18 @@ final class SymfonyCacheClearer implements CacheClearerInterface
             return;
         }
 
-        $application = new Application($kernel);
-        $application->setAutoExit(false);
+        register_shutdown_function(function () use ($kernel) {
+            $application = new Application($kernel);
+            $application->setAutoExit(false);
 
-        $input = new ArrayInput([
-            'command' => 'cache:pool:prune',
-        ]);
+            $input = new ArrayInput([
+                'command' => 'cache:clear',
+                '--no-warmup',
+            ]);
 
-        $output = new NullOutput();
-        $application->run($input, $output);
-        Hook::exec('actionClearSf2Cache');
+            $output = new NullOutput();
+            $application->run($input, $output);
+            Hook::exec('actionClearSf2Cache');
+        });
     }
 }
