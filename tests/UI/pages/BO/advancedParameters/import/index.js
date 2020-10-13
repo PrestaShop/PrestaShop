@@ -46,7 +46,7 @@ class Import extends BOBasePage {
    * @return {Promise<string>}
    */
   async uploadSampleFile(page, dropdownValue, filePath) {
-    await page.selectByVisibleText(page, this.fileTypeSelector, dropdownValue);
+    await this.selectByVisibleText(page, this.fileTypeSelector, dropdownValue);
     // await page.selectOption(this.fileTypeSelector, {value: dropdownValue});
     await page.setInputFiles(this.fileInputField, filePath);
 
