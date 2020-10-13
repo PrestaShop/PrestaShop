@@ -56,6 +56,11 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
      * @var ConfigurationInterface
      */
     private $configuration;
+    
+    /**
+     * @var array
+     */
+    private $risks;
 
     /**
      * @param HookDispatcherInterface $hookDispatcher
@@ -66,6 +71,10 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
         parent::__construct($hookDispatcher);
 
         $this->configuration = $configuration;
+        foreach (Risk::getRisks(Context::getContext()->language->id) as $risk) {
+            /* @var $risk Risk */
+            $this->risks[$risk->name] = $risk->id;
+        }
     }
 
     /**
@@ -165,12 +174,6 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
 
     protected function getFilters()
     {
-        $risks = [];
-        foreach (Risk::getRisks(Context::getContext()->language->id) as $risk) {
-            /* @var $risk Risk */
-            $risks[$risk->name] = $risk->id;
-        }
-
         return (new FilterCollection())
             ->add(
                 (new Filter('id_invoice', TextType::class))
@@ -214,7 +217,7 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
                     ->setAssociatedColumn('risk')
                     ->setTypeOptions([
                         'required' => false,
-                        'choices' => $risks,
+                        'choices' => $this->risks,
                     ])
             )
             ->add(
