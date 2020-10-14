@@ -468,15 +468,24 @@ services:
         arguments:
             - '@prestashop.adapter.product.repository.product_repository'
             - "@=service('prestashop.adapter.legacy.context').getContext().link"
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsToRelate
 
     prestashop.adapter.product.query.search_products_for_redirect_option_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\SearchProductsForRedirectOptionHandler
         arguments:
             - '@prestashop.adapter.product.repository.product_repository'
             - "@=service('prestashop.adapter.legacy.context').getContext().link"
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForRedirectOption
 
     prestashop.adapter.product.query.search_products_for_packing_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\SearchProductsForPackingHandler
         arguments:
             - '@prestashop.adapter.product.repository.product_repository'
             - "@=service('prestashop.adapter.legacy.context').getContext().link"
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForPacking
