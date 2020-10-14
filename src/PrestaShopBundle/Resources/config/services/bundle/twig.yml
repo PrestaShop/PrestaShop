@@ -34,6 +34,7 @@ services:
           - "%kernel.environment%"
           - "@prestashop.adapter.legacy.configuration"
           - "@prestashop.adapter.data_provider.currency"
+          - "@prestashop.core.query_bus"
         tags:
             - { name: twig.extension }
 

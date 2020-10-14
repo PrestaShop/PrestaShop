@@ -1,4 +1,5 @@
-{#**
+<?php
+/*
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,20 +22,26 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-<div id="non-responsive" class="js-non-responsive">
-  <h1>{{ 'Oh no!'|trans }}</h1>
-  <p class="mt-3">
-    {{ 'The mobile version of this page is not available yet.'|trans }}
-  </p>
-  <p class="mt-2">
-    {{ 'Please use a desktop computer to access this page, until is adapted to mobile.'|trans }}
-  </p>
-  <p class="mt-2">
-    {{ 'Thank you.'|trans }}
-  </p>
-  <a href="{{ default_tab_link }}" class="btn btn-primary py-1 mt-3">
-    <i class="material-icons">arrow_back</i>
-    {{ 'Back'|trans({}, 'Admin.Global') }}
-  </a>
-</div>
+ */
+
+class AdminBridgeLayoutControllerCore extends AdminController
+{
+    public function __construct()
+    {
+        parent::__construct('', 'new-theme');
+    }
+
+    public function display()
+    {
+    }
+
+    public function viewAccess($disable = false)
+    {
+        return true;
+    }
+
+    public function checkAccess()
+    {
+        return true;
+    }
+}

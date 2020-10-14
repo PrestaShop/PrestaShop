@@ -287,7 +287,7 @@ class LegacyContext
     public function getEmployeeCurrency()
     {
         if (null === $this->employeeCurrency && $this->getContext()->currency) {
-            $this->employeeCurrency = $this->getContext()->currency->sign;
+            $this->employeeCurrency = $this->getContext()->currency->symbol;
         }
 
         return $this->employeeCurrency;

@@ -21,3 +21,10 @@ _admin_improve_routing:
 _admin_errors:
     resource: "admin/_errors.yml"
     prefix: /errors
+
+_admin_legacy:
+    path: /{path}
+    defaults:
+        _controller: 'PrestaShopBundle\Controller\Admin\LegacyController::index'
+    requirements:
+        path: '.*'

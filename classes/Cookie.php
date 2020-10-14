@@ -71,6 +71,9 @@ class CookieCore
     /** @var bool */
     protected $_secure = false;
 
+    /** @var int */
+    public $last_activity;
+
     /**
      * Get data if the cookie exists and else initialize an new one.
      *

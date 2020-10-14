@@ -27,7 +27,7 @@
 <div class="header-toolbar d-print-none">
   <div class="container-fluid">
 
-    {#{% block pageBreadcrumb %}
+    {% block pageBreadcrumb %}
       <nav aria-label="Breadcrumb">
         <ol class="breadcrumb">
           {% if breadcrumbs2.container.name != '' %}
@@ -41,12 +41,12 @@
           {% endif %}
         </ol>
       </nav>
-    {% endblock %}#}
+    {% endblock %}
 
     <div class="title-row">
       {% block pageTitle %}
           <h1 class="title">
-            {% if title is iterable %}{{ title|last }}{% else %}{{ title }}{% endif %}
+            {% if layoutTitle is iterable %}{{ layoutTitle|last }}{% else %}{{ layoutTitle }}{% endif %}
           </h1>
       {% endblock %}
 
@@ -128,8 +128,8 @@
                 {% for level4 in level3.sub_tabs %}
                   {% if level4.active %}
         <li class="nav-item">
-          <a href="{{ level_4.href }}" id="subtab-{{ level_4.class_name }}" class="nav-link tab{% if level_4.current %} active current{% endif %}" data-submenu="{{ level_4.id_tab }}">
-            {{ level_4.name }}
+          <a href="{{ level4.href }}" id="subtab-{{ level4.class_name }}" class="nav-link tab{% if level4.current %} active current{% endif %}" data-submenu="{{ level4.id_tab }}">
+            {{ level4.name }}
             <span class="notification-container">
               <span class="notification-counter"></span>
             </span>

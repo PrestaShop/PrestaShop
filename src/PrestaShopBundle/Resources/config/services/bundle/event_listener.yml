@@ -110,3 +110,18 @@ services:
           - '@logger'
         tags:
           - { name: kernel.event_subscriber }
+
+    prestashop.bundle.event_listener.context_listener:
+        class: PrestaShopBundle\EventListener\ContextListener
+        arguments:
+            - '@prestashop.adapter.legacy.context'
+            - '@service_container'
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 15 }
+
+    prestashop.bundle.event_listener.session_listener:
+        class: PrestaShopBundle\EventListener\SessionListener
+        arguments:
+            - '@prestashop.adapter.legacy.context'
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 15 }

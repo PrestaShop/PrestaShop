@@ -184,10 +184,12 @@ abstract class ControllerCore
             $this->container = $this->buildContainer();
         }
 
-        $localeRepo = $this->get(self::SERVICE_LOCALE_REPOSITORY);
-        $this->context->currentLocale = $localeRepo->getLocale(
-            $this->context->language->getLocale()
-        );
+        if (null === $this->context->currentLocale) {
+            $localeRepo = $this->get(self::SERVICE_LOCALE_REPOSITORY);
+            $this->context->currentLocale = $localeRepo->getLocale(
+                $this->context->language->getLocale()
+            );
+        }
     }
 
     /**

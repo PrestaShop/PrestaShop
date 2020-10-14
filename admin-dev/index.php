@@ -25,8 +25,11 @@
  */
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+
+if (!defined('_PS_USE_NEW_LAYOUT')) {
+    define('_PS_USE_NEW_LAYOUT', false);
+}
 
 $timer_start = microtime(true);
 if (!defined('_PS_ADMIN_DIR_')) {
@@ -77,18 +80,7 @@ $kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
 $request = Request::createFromGlobals();
 Request::setTrustedProxies([], Request::HEADER_X_FORWARDED_ALL);
 
-try {
-    require_once __DIR__.'/../autoload.php';
-    $response = $kernel->handle($request, HttpKernelInterface::MASTER_REQUEST, false);
-    $response->send();
-    $kernel->terminate($request, $response);
-} catch (NotFoundHttpException $exception) {
-    define('ADMIN_LEGACY_CONTEXT', true);
-    // correct Apache charset (except if it's too late)
-    if (!headers_sent()) {
-        header('Content-Type: text/html; charset=utf-8');
-    }
-
-    // Prepare and trigger LEGACY admin dispatcher
-    Dispatcher::getInstance()->dispatch();
-}
+require_once __DIR__.'/../autoload.php';
+$response = $kernel->handle($request, HttpKernelInterface::MASTER_REQUEST, false);
+$response->send();
+$kernel->terminate($request, $response);

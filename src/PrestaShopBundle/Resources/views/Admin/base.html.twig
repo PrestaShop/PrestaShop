@@ -22,18 +22,20 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
+{% if layoutTitle is not defined %}{% set layoutTitle = breadcrumbs2.tab.name %}{% endif %}
 <!DOCTYPE html>
 <html lang="{{ iso }}">
 <head>
-  <link href="/prestashop+dev/admin-dev/themes/new-theme/public/theme.css" rel="stylesheet" type="text/css"/>
+  {# ToDo: check for dynamic header #}
   {% include ['@PrestaShop/Admin/header.html.twig'] %}
-  <script src="/prestashop+dev/admin-dev/themes/new-theme/public/main.bundle.js" type="application/javascript"></script>
+  {% block stylesheets %}{% endblock %}
+  {% block extra_stylesheets %}{% endblock %}
 </head>
 
 <body
-  class="lang-{{ iso }}{% if lang_is_rtl %} lang-rtl{% endif %} {{ smarty.get.controller|escape|lower }}{% if collapse_menu %} page-sidebar-closed{% endif %}"
-  {% if js_router_metadata.base_url %}data-base-url="{{ js_router_metadata.base_url }}"{% endif %}
-  {% if js_router_metadata.token %}data-token="{{ js_router_metadata.token }}"{% endif %}
+  class="lang-{{ iso }}{% if lang_is_rtl %} lang-rtl{% endif %} {{ controller_name|escape|lower }}{% if collapse_menu %} page-sidebar-closed{% endif %}"
+  data-base-url="{{ js_router_metadata.base_url }}"
+  data-token="{{ js_router_metadata.token }}"
 >
 
 {% if display_header %}
@@ -113,7 +115,10 @@
     {{ 'For security reasons, you must also delete the /install folder.'|trans({}, 'Admin.Login.Notification') }}
   </div>
   {% else %}
-    {% include ['@PrestaShop/Admin/Components/header_toolbar.html.twig'] %}
+    {# ToDo: dynamic header toolbar #}
+    {% if not lite_display %}
+      {% include ['@PrestaShop/Admin/Components/header_toolbar.html.twig'] %}
+    {% endif %}
     {% if modal_module_list %}{{ modal_module_list }}{% endif %}
 
   <div class="{% if display_header %}content-div{% endif %}{% if not page_header_toolbar %} -notoolbar{% endif %}{% if current_tab_level == 3 %} with-tabs{% endif %}">
@@ -129,7 +134,10 @@
 
     <div class="row ">
       <div class="col-sm-12">
+        {% block content_header %}{% endblock %}
         {% block content %}{% endblock %}
+        {% block content_footer %}{% endblock %}
+        {% block sidebar_right %}{% endblock %}
         {{ renderhook('displayAdminEndContent') }}
       </div>
     </div>
@@ -138,21 +146,19 @@
 </div>
 
 {% if not lite_display %}
-  {% include ['@PrestaShop/Admin/Components/non-responsive.html.twig'] %}
   <div class="mobile-layer"></div>
   {% if display_footer %}
     {% include ['@PrestaShop/Admin/footer.html.twig'] %}
   {% endif %}
 {% endif %}
 
-{% if php_errors %}
-  {% include ['@PrestaShop/Admin/Components/error.html.twig'] %}
-{% endif %}
-
 {% if not lite_display and modals %}
   <div class="bootstrap">{{ modals }}</div>
 {% endif %}
 
+{% block javascripts %}{% endblock %}
+{% block extra_javascripts %}{% endblock %}
+{% block translate_javascripts %}{% endblock %}
 </body>
 </html>
 
