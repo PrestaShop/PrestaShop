@@ -476,3 +476,10 @@ services:
             - '@prestashop.adapter.product.repository.product_repository'
             - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
             - "@=service('prestashop.adapter.legacy.context').getContext().link"
+
+    prestashop.adapter.product.query.search_products_for_packing_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\SearchProductsForPackingHandler
+        arguments:
+            - '@prestashop.adapter.product.repository.product_repository'
+            - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+            - "@=service('prestashop.adapter.legacy.context').getContext().link"

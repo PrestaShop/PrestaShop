@@ -86,7 +86,7 @@ final class SearchProductsToRelateHandler implements SearchProductsToRelateHandl
                 (int) $result['id_product'],
                 $result['name'],
                 $result['reference'],
-                $this->contextLink->getImageLink('product', $result['id_image'], 'small_default')
+                $this->contextLink->getImageLink($result['link_rewrite'], $result['id_image'], 'small_default')
             );
         }
 
