@@ -205,13 +205,15 @@
       </h3>
       <div class="card-block">
         <div class="card-text">
-          <p>
-            <strong>{{ 'Required parameters:'|trans }}</strong>
           {% if requirements.failRequired == false %}
-            <span class="text-success">{{ 'OK'|trans({}, 'Admin.Advparameters.Notification') }}</span>
-          </p>
+            <p>
+              <strong>{{ 'Required parameters:'|trans }}</strong>
+              <span class="text-success">{{ 'OK'|trans({}, 'Admin.Advparameters.Notification') }}</span>
+            </p>
           {% else %}
-            <span class="text-danger">{{ 'Please fix the following error(s)'|trans({}, 'Admin.Advparameters.Notification') }}</span>
+            <p>
+              <strong>{{ 'Required parameters:'|trans }}</strong>
+              <span class="text-danger">{{ 'Please fix the following error(s)'|trans({}, 'Admin.Advparameters.Notification') }}</span>
             </p>
             <ul>
               {% for key, value in requirements.testsRequired %}
@@ -222,13 +224,15 @@
             </ul>
           {% endif %}
           {% if requirements.failOptional is defined %}
-            <p>
-            <strong>{{ 'Optional parameters:'|trans }}</strong>
             {% if requirements.failOptional == false %}
-              <span class="text-success">{{ 'OK'|trans({}, 'Admin.Advparameters.Notification') }}</span>
+              <p>
+                <strong>{{ 'Optional parameters:'|trans }}</strong>
+                <span class="text-success">{{ 'OK'|trans({}, 'Admin.Advparameters.Notification') }}</span>
               </p>
             {% else %}
-              <span class="text-danger">{{ 'Please fix the following error(s)'|trans({}, 'Admin.Advparameters.Notification') }}</span>
+              <p>
+                <strong>{{ 'Optional parameters:'|trans }}</strong>
+                <span class="text-danger">{{ 'Please fix the following error(s)'|trans({}, 'Admin.Advparameters.Notification') }}</span>
               </p>
               <ul>
                 {% for key, value in requirements.testsOptional %}
