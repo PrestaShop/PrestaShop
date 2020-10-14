@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\TranslationToolsBundle\Translation\Dumper\XliffFileDumper;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\Util\Flattenizer;
+use PrestaShopBundle\Translation\Extractor\ThemeExtractorCache;
 use PrestaShopBundle\Translation\Extractor\ThemeExtractorInterface;
 use PrestaShopBundle\Translation\Provider\Factory\ProviderFactory;
 use PrestaShopBundle\Translation\Provider\TranslationFinder;
@@ -45,7 +46,7 @@ use Symfony\Component\Translation\MessageCatalogue;
 class ThemeExporter
 {
     /**
-     * @var ThemeExtractorInterface the theme extractor
+     * @var ThemeExtractorCache the theme extractor
      */
     private $themeExtractor;
 
@@ -84,7 +85,7 @@ class ThemeExporter
     private $providerFactory;
 
     public function __construct(
-        ThemeExtractorInterface $themeExtractor,
+        ThemeExtractorCache $themeExtractor,
         ThemeRepository $themeRepository,
         ProviderFactory $providerFactory,
         XliffFileDumper $dumper,

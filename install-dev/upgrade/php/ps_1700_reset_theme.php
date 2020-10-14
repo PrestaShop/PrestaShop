@@ -33,10 +33,11 @@ function ps_1700_reset_theme()
     if (null !== $container) {
         $themeManagerBuilder = $container->get('prestashop.core.addon.theme.theme_manager_builder');
     } else {
+        // SynfonyContainer not available, we won't have TranslationService nor ProviderFactory
         $themeManagerBuilder = new ThemeManagerBuilder(Context::getContext(), Db::getInstance());
     }
-    $theme = $themeManagerBuilder->build();
-    $theme->reset('classic');
+    $themeManager = $themeManagerBuilder->build();
+    $themeManager->reset('classic');
 
     return true;
 }
