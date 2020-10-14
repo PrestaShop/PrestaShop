@@ -30,7 +30,6 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllRelatedProductsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetRelatedProductsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts;
@@ -46,15 +45,12 @@ class RelatedProductsFeatureContext extends AbstractProductFeatureContext
     public function assertProductHasNoRelatedProducts(string $productReference): void
     {
         $productId = $this->getSharedStorage()->get($productReference);
-        try {
-            $relatedProducts = $this->getQueryBus()->handle(new GetRelatedProducts($productId, $this->getDefaultLangId()));
-            Assert::assertEmpty(
-                $relatedProducts,
-                sprintf('Product %s expected to have no related products', $productReference)
-            );
-        } catch (DomainException $e) {
-            $this->setLastException($e);
-        }
+        $relatedProducts = $this->getQueryBus()->handle(new GetRelatedProducts($productId, $this->getDefaultLangId()));
+
+        Assert::assertEmpty(
+            $relatedProducts,
+            sprintf('Product %s expected to have no related products', $productReference)
+        );
     }
 
     /**
@@ -73,11 +69,7 @@ class RelatedProductsFeatureContext extends AbstractProductFeatureContext
             $relatedProductIds[] = $this->getSharedStorage()->get($reference);
         }
 
-        try {
-            $this->getCommandBus()->handle(new SetRelatedProductsCommand($productId, $relatedProductIds));
-        } catch (DomainException $e) {
-            $this->setLastException($e);
-        }
+        $this->getCommandBus()->handle(new SetRelatedProductsCommand($productId, $relatedProductIds));
     }
 
     /**
@@ -112,10 +104,6 @@ class RelatedProductsFeatureContext extends AbstractProductFeatureContext
     public function removeAllRelatedProducts(string $productReference)
     {
         $productId = $this->getSharedStorage()->get($productReference);
-        try {
-            $this->getCommandBus()->handle(new RemoveAllRelatedProductsCommand($productId));
-        } catch (DomainException $e) {
-            $this->setLastException($e);
-        }
+        $this->getCommandBus()->handle(new RemoveAllRelatedProductsCommand($productId));
     }
 }
