@@ -194,9 +194,9 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
                     $this->getCheckoutSession()->getIdAddressDelivery()
                 );
 
-                 // if we just pushed the invoice address form, we are using another address for invoice
-                 // (param 'id_address_delivery' is only pushed in invoice address form)
-                 if (isset($requestParams['saveAddress']) && isset($requestParams['id_address_delivery'])) {
+                // if we just pushed the invoice address form, we are using another address for invoice
+                // (param 'id_address_delivery' is only pushed in invoice address form)
+                if (isset($requestParams['saveAddress'], $requestParams['id_address_delivery'])) {
                     $this->use_same_address = false;
                 }
             }
