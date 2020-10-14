@@ -582,6 +582,18 @@ class HookCore extends ObjectModel
                 return false;
             }
 
+            // check that hook listener is implemented by the module
+            $expectedHookListenerMethod = sprintf('hook%s', ucfirst($hook_name));
+            if (!method_exists($module_instance, $expectedHookListenerMethod)) {
+                $missingHookListenerErrorMsg = sprintf(
+                    'Hook with the name %s has been registered by %s, but the corresponding method %s has not been defined in the Module class.',
+                    $hook_name,
+                    get_class($module_instance),
+                    $expectedHookListenerMethod
+                );
+                throw new PrestaShopException($missingHookListenerErrorMsg);
+            }
+
             Hook::exec(
                 'actionModuleRegisterHookBefore',
                 [
