@@ -441,7 +441,7 @@ class AdminLoginControllerCore extends AdminController
                     $employee->update();
 
                     Hook::exec(
-                        'actionAdminLoginControllerResetBefore',
+                        'actionAdminLoginControllerResetAfter',
                         [
                             'controller' => $this,
                             'employee' => $employee,
