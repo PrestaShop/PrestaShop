@@ -61,7 +61,12 @@ class AdminLoginControllerCore extends AdminController
         Media::addJsDefL('one_error', $this->trans('There is one error.', [], 'Admin.Notifications.Error'));
         Media::addJsDefL('more_errors', $this->trans('There are several errors.', [], 'Admin.Notifications.Error'));
 
-        Hook::exec('actionAdminLoginControllerSetMedia');
+        Hook::exec(
+            'actionAdminLoginControllerSetMedia',
+            [
+                'controller' => $this,
+            ]
+        );
 
         // Specific Admin Theme
         $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/overrides.css', 'all', PHP_INT_MAX);
@@ -173,7 +178,12 @@ class AdminLoginControllerCore extends AdminController
 
     public function postProcess()
     {
-        Hook::exec('actionAdminLoginControllerBefore');
+        Hook::exec(
+            'actionAdminLoginControllerBefore',
+            [
+                'controller' => $this,
+            ]
+        );
 
         if (Tools::isSubmit('submitLogin')) {
             $this->processLogin();
