@@ -90,6 +90,8 @@ services:
       - '@prestashop.adapter.order.amount.updater'
       - '@prestashop.adapter.order.product_quantity.updater'
       - '@prestashop.adapter.context_state_manager'
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.stock_manager'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand

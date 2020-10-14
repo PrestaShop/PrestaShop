@@ -17,6 +17,7 @@ Feature: Order from Back Office (BO)
     And customer "testCustomer" has address in "US" country
     And shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     And there is a product in the catalog named "Test Product Gift Cart Rule" with a price of 15.0 and 100 items in stock
+    And the available stock for product "Test Product Gift Cart Rule" should be 100
     And I create an empty cart "dummy_cart" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
     And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
@@ -50,6 +51,7 @@ Feature: Order from Back Office (BO)
       | total_price_tax_incl        | 15.90 |
       | total_price_tax_excl        | 15.00 |
     And order "bo_order1" should have cart rule "CartRuleGiftProduct" with amount "$15.00"
+    And the available stock for product "Test Product Gift Cart Rule" should be 99
     When I remove cart rule "CartRuleGiftProduct" from order "bo_order1"
     Then order "bo_order1" should have 2 products in total
     And order "bo_order1" should have 0 invoices
@@ -66,6 +68,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
     And order "bo_order1" should contain 0 product "Test Product Gift Cart Rule"
+    And the available stock for product "Test Product Gift Cart Rule" should be 100
 
   Scenario: Add a product then add a discount with this product as a gift, and remove it from the order
     Given I add 1 products "Test Product Gift Cart Rule" to the cart "dummy_cart"
@@ -97,6 +100,7 @@ Feature: Order from Back Office (BO)
       | total_price_tax_incl        | 31.80 |
       | total_price_tax_excl        | 30.00 |
     And order "bo_order1" should have cart rule "CartRuleGiftProduct" with amount "$15.00"
+    And the available stock for product "Test Product Gift Cart Rule" should be 98
     When I remove cart rule "CartRuleGiftProduct" from order "bo_order1"
     Then order "bo_order1" should have 3 products in total
     And order "bo_order1" should have 0 invoices
@@ -119,3 +123,4 @@ Feature: Order from Back Office (BO)
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 15.90 |
       | total_price_tax_excl        | 15.00 |
+    And the available stock for product "Test Product Gift Cart Rule" should be 99
