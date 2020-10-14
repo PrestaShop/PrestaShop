@@ -512,6 +512,7 @@ class AdminShopControllerCore extends AdminController
         if (null !== $container) {
             $themeManagerBuilder = $container->get('prestashop.core.addon.theme.theme_manager_builder');
         } else {
+            // SynfonyContainer not available, we won't have TranslationService nor ProviderFactory
             $themeManagerBuilder = new ThemeManagerBuilder($this->context, Db::getInstance());
         }
 
@@ -601,13 +602,6 @@ class AdminShopControllerCore extends AdminController
         }
 
         if (!$obj->theme_name) {
-            $container = SymfonyContainer::getInstance();
-            if (null !== $container) {
-                $themeManagerBuilder = $container->get('prestashop.core.addon.theme.theme_manager_builder');
-            } else {
-                $themeManagerBuilder = new ThemeManagerBuilder($this->context, Db::getInstance());
-            }
-            $themes = $themeManagerBuilder->buildRepository()->getList();
             $theme = array_pop($themes);
             $theme_name = $theme->getName();
         } else {

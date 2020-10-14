@@ -196,6 +196,7 @@ class ModuleManagerBuilder
         if (null !== $sfContainer) {
             $themeManagerBuilder = $sfContainer->get('prestashop.core.addon.theme.theme_manager_builder');
         } else {
+            // SynfonyContainer not available, we won't have TranslationService nor ProviderFactory
             $themeManagerBuilder = new ThemeManagerBuilder(Context::getContext(), Db::getInstance());
         }
         $themeName = Context::getContext()->shop->theme_name;

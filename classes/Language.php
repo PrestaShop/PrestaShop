@@ -174,6 +174,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         if (null !== $container) {
             $themeManagerBuilder = $container->get('prestashop.core.addon.theme.theme_manager_builder');
         } else {
+            // SynfonyContainer not available, we won't have TranslationService nor ProviderFactory
             $themeManagerBuilder = new ThemeManagerBuilder(Context::getContext(), Db::getInstance());
         }
         foreach ($themeManagerBuilder->buildRepository()->getList() as $theme) {
