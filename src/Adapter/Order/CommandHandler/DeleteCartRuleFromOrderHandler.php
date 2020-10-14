@@ -38,12 +38,9 @@ use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
-use PrestaShop\PrestaShop\Adapter\StockManager;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\DeleteCartRuleFromOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
-use StockAvailable;
 use Validate;
 
 /**
@@ -67,34 +64,18 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
     private $orderProductQuantityUpdater;
 
     /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
-     * @var StockManager
-     */
-    private $stockManager;
-
-    /**
      * @param OrderAmountUpdater $orderAmountUpdater
      * @param ContextStateManager $contextStateManager
      * @param OrderProductQuantityUpdater $orderProductQuantityUpdater
-     * @param ConfigurationInterface $configuration
-     * @param StockManager $stockManager
      */
     public function __construct(
         OrderAmountUpdater $orderAmountUpdater,
         OrderProductQuantityUpdater $orderProductQuantityUpdater,
-        ContextStateManager $contextStateManager,
-        ConfigurationInterface $configuration,
-        StockManager $stockManager
+        ContextStateManager $contextStateManager
     ) {
         $this->orderAmountUpdater = $orderAmountUpdater;
         $this->orderProductQuantityUpdater = $orderProductQuantityUpdater;
         $this->contextStateManager = $contextStateManager;
-        $this->configuration = $configuration;
-        $this->stockManager = $stockManager;
     }
 
     /**
@@ -126,20 +107,20 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
             // If cart rule was a gift product we must update an OrderDetail manually
             $giftOrderDetail = $this->getGiftOrderDetail($order, $cartRule);
             if (null !== $giftOrderDetail) {
-                // The cart doesn't handle re-injecting the gift because as long as the order doesn't exists it's not
-                // supposed to Now that the order exists we must update it
-                $this->reInjectGiftOrderDetail($giftOrderDetail);
+                $newQuantity = ((int) $giftOrderDetail->product_quantity) - 1;
 
-                // To avoid the cart from removing the product twice (one has already been removed
-                // via removeCartRule) we pre-update the OrderDetail quantity
-                $giftOrderDetail->product_quantity = ((int) $giftOrderDetail->product_quantity) - 1;
-
+                /*
+                 * Note: we are lucky the stock updates happens smoothly, it was not re-injected by removing the CartRule
+                 * because Cart doesn't update the stock but it will while we update the OrderDetail Lucky
+                 * for us it's the same difference of 1 so it's all accurate in the end
+                 */
                 // This calls the OrderAmountUpdater internally so no need to perform both calls
                 $this->orderProductQuantityUpdater->update(
                     $order,
                     $giftOrderDetail,
-                    $giftOrderDetail->product_quantity,
-                    $giftOrderDetail->id_order_invoice != 0 ? new OrderInvoice($giftOrderDetail->id_order_invoice) : null
+                    $newQuantity,
+                    $giftOrderDetail->id_order_invoice != 0 ? new OrderInvoice($giftOrderDetail->id_order_invoice) : null,
+                    false
                 );
             } else {
                 $this->orderAmountUpdater->update($order, $cart, $orderCartRule->id_order_invoice);
@@ -188,33 +169,5 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
         }
 
         return null !== $giftOrderDetailId ? new OrderDetail($giftOrderDetailId) : null;
-    }
-
-    /**
-     * @param OrderDetail $orderDetail
-     */
-    private function reInjectGiftOrderDetail(OrderDetail $orderDetail): void
-    {
-        //@todo: this doesn't handle the advance stock management like it does in OrderProductQuantityUpdater:reinjectQuantity
-        StockAvailable::updateQuantity(
-            $orderDetail->product_id,
-            $orderDetail->product_attribute_id,
-            1,
-            $orderDetail->id_shop,
-            true,
-            [
-                'id_order' => $orderDetail->id_order,
-                'id_stock_mvt_reason' => $this->configuration->get('PS_STOCK_CUSTOMER_ORDER_REASON'),
-            ]
-        );
-
-        // sync all stock
-        $this->stockManager->updatePhysicalProductQuantity(
-            (int) $orderDetail->id_shop,
-            (int) $this->configuration->get('PS_OS_ERROR'),
-            (int) $this->configuration->get('PS_OS_CANCELED'),
-            null,
-            (int) $orderDetail->id_order
-        );
     }
 }

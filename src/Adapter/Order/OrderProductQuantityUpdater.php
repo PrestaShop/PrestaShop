@@ -90,6 +90,7 @@ class OrderProductQuantityUpdater
      * @param OrderDetail $orderDetail
      * @param int $newQuantity
      * @param OrderInvoice|null $orderInvoice
+     * @param bool $updateCart Used when you don't want to update the cart (CartRule removal for example)
      *
      * @return Order
      *
@@ -101,7 +102,8 @@ class OrderProductQuantityUpdater
         Order $order,
         OrderDetail $orderDetail,
         int $newQuantity,
-        ?OrderInvoice $orderInvoice
+        ?OrderInvoice $orderInvoice,
+        $updateCart = true
     ): Order {
         $cart = new Cart($order->id_cart);
 
@@ -119,7 +121,7 @@ class OrderProductQuantityUpdater
             // Perform deletion first, we don't want the OrderDetail to be saved with a quantity 0, this could lead to bugs
             if (0 === $newQuantity) {
                 // Product deletion
-                $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail);
+                $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, $updateCart);
                 $this->updateCustomizationOnProductDelete($order, $orderDetail, $oldQuantity);
             } else {
                 $this->assertValidProductQuantity($orderDetail, $newQuantity);
@@ -140,7 +142,9 @@ class OrderProductQuantityUpdater
                 }
 
                 // Update quantity on the cart and stock
-                $cart = $this->updateProductQuantity($cart, $orderDetail, $oldQuantity, $newQuantity);
+                if ($updateCart) {
+                    $cart = $this->updateProductQuantity($cart, $orderDetail, $oldQuantity, $newQuantity);
+                }
             }
 
             // Update product stocks

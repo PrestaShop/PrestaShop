@@ -66,8 +66,9 @@ class OrderProductRemover
     /**
      * @param Order $order
      * @param OrderDetail $orderDetail
+     * @param bool $updateCart Used when you don't want to update the cart (CartRule removal for example)
      */
-    public function deleteProductFromOrder(Order $order, OrderDetail $orderDetail)
+    public function deleteProductFromOrder(Order $order, OrderDetail $orderDetail, bool $updateCart = true)
     {
         $cart = new Cart($order->id_cart);
 
@@ -78,7 +79,9 @@ class OrderProductRemover
             $this->deleteCustomization($order, $orderDetail);
         }
 
-        $this->updateCart($cart, $orderDetail);
+        if ($updateCart) {
+            $this->updateCart($cart, $orderDetail);
+        }
 
         $this->deleteSpecificPrice($order, $orderDetail, $cart);
 
