@@ -52,6 +52,7 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
      * @var OrderAmountUpdater
      */
     private $orderAmountUpdater;
+
     /**
      * @var ContextStateManager
      */
@@ -74,6 +75,7 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
     ) {
         $this->orderAmountUpdater = $orderAmountUpdater;
         $this->orderProductQuantityUpdater = $orderProductQuantityUpdater;
+        $this->contextStateManager = $contextStateManager;
     }
 
     /**
@@ -105,13 +107,15 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
             // If cart rule was a gift product we must update an OrderDetail manually
             $giftOrderDetail = $this->getGiftOrderDetail($order, $cartRule);
             if (null !== $giftOrderDetail) {
-                $newQuantity = ((int) $giftOrderDetail->product_quantity) - 1;
+                // To avoid the cart from removing the product twice (one has already been removed
+                // via removeCartRule) we pre-update the OrderDetail quantity
+                $giftOrderDetail->product_quantity = ((int) $giftOrderDetail->product_quantity) - 1;
 
                 // This calls the OrderAmountUpdater internally so no need to perform both calls
                 $this->orderProductQuantityUpdater->update(
                     $order,
                     $giftOrderDetail,
-                    $newQuantity,
+                    $giftOrderDetail->product_quantity,
                     $giftOrderDetail->id_order_invoice != 0 ? new OrderInvoice($giftOrderDetail->id_order_invoice) : null
                 );
             } else {

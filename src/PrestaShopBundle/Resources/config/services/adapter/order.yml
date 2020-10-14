@@ -88,8 +88,8 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\DeleteCartRuleFromOrderHandler
     arguments:
       - '@prestashop.adapter.order.amount.updater'
-      - '@prestashop.adapter.context_state_manager'
       - '@prestashop.adapter.order.product_quantity.updater'
+      - '@prestashop.adapter.context_state_manager'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand

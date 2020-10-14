@@ -21,7 +21,7 @@ Feature: Order from Back Office (BO)
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
     And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
 
-  Scenario: Add discount with gift product to order, and remove it
+  Scenario: Add discount with gift product to cart, and remove it in the order
     Given I use a voucher "CartRuleGiftProduct" which provides a gift product "Test Product Gift Cart Rule" on the cart "dummy_cart"
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |
@@ -42,4 +42,80 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
+    And product "Test Product Gift Cart Rule" in order "bo_order1" has following details:
+      | product_quantity            | 1     |
+      | product_price               | 15.00 |
+      | unit_price_tax_incl         | 15.90 |
+      | unit_price_tax_excl         | 15.00 |
+      | total_price_tax_incl        | 15.90 |
+      | total_price_tax_excl        | 15.00 |
     And order "bo_order1" should have cart rule "CartRuleGiftProduct" with amount "$15.00"
+    When I remove cart rule "CartRuleGiftProduct" from order "bo_order1"
+    Then order "bo_order1" should have 2 products in total
+    And order "bo_order1" should have 0 invoices
+    And order "bo_order1" should have 0 cart rule
+    And order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    And order "bo_order1" should contain 0 product "Test Product Gift Cart Rule"
+
+  Scenario: Add a product then add a discount with this product as a gift, and remove it from the order
+    Given I add 1 products "Test Product Gift Cart Rule" to the cart "dummy_cart"
+    And I use a voucher "CartRuleGiftProduct" which provides a gift product "Test Product Gift Cart Rule" on the cart "dummy_cart"
+    And I add order "bo_order1" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    Then order "bo_order1" should have 4 products in total
+    And order "bo_order1" should have 0 invoices
+    And order "bo_order1" should have 1 cart rule
+    And order "bo_order1" should have following details:
+      | total_products           | 53.800 |
+      | total_products_wt        | 57.030 |
+      | total_discounts_tax_excl | 15.0   |
+      | total_discounts_tax_incl | 15.9   |
+      | total_paid_tax_excl      | 45.800 |
+      | total_paid_tax_incl      | 48.550 |
+      | total_paid               | 48.550 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    And product "Test Product Gift Cart Rule" in order "bo_order1" has following details:
+      | product_quantity            | 2     |
+      | product_price               | 15.00 |
+      | unit_price_tax_incl         | 15.90 |
+      | unit_price_tax_excl         | 15.00 |
+      | total_price_tax_incl        | 31.80 |
+      | total_price_tax_excl        | 30.00 |
+    And order "bo_order1" should have cart rule "CartRuleGiftProduct" with amount "$15.00"
+    When I remove cart rule "CartRuleGiftProduct" from order "bo_order1"
+    Then order "bo_order1" should have 3 products in total
+    And order "bo_order1" should have 0 invoices
+    And order "bo_order1" should have 0 cart rule
+    And order "bo_order1" should have following details:
+      | total_products           | 38.800 |
+      | total_products_wt        | 41.130 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 45.800 |
+      | total_paid_tax_incl      | 48.550 |
+      | total_paid               | 48.550 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    And product "Test Product Gift Cart Rule" in order "bo_order1" has following details:
+      | product_quantity            | 1     |
+      | product_price               | 15.00 |
+      | unit_price_tax_incl         | 15.90 |
+      | unit_price_tax_excl         | 15.00 |
+      | total_price_tax_incl        | 15.90 |
+      | total_price_tax_excl        | 15.00 |
