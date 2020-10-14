@@ -27,14 +27,14 @@
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Cart;
+use CartRule;
 use Currency;
 use Customer;
 use Order;
 use OrderCartRule;
-use PrestaShop\PrestaShop\Adapter\ContextStateManager;
-use CartRule;
 use OrderDetail;
 use OrderInvoice;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
@@ -103,8 +103,8 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
             $cart->removeCartRule($orderCartRule->id_cart_rule);
 
             // If cart rule was a gift product we must update an OrderDetail manually
-            if ($cartRule->gift_product) {
-                $giftOrderDetail = $this->getGiftOrderDetail($order, (int) $cartRule->gift_product, (int) $cartRule->gift_product_attribute);
+            $giftOrderDetail = $this->getGiftOrderDetail($order, $cartRule);
+            if (null !== $giftOrderDetail) {
                 $newQuantity = ((int) $giftOrderDetail->product_quantity) - 1;
 
                 // This calls the OrderAmountUpdater internally so no need to perform both calls
@@ -124,13 +124,15 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
 
     /**
      * @param Order $order
-     * @param int $productId
-     * @param int $productAttributeId
+     * @param CartRule $cartRule
      *
      * @return OrderDetail|null
      */
-    private function getGiftOrderDetail(Order $order, int $productId, int $productAttributeId): ?OrderDetail
+    private function getGiftOrderDetail(Order $order, CartRule $cartRule): ?OrderDetail
     {
+        $productId = (int) $cartRule->gift_product;
+        $productAttributeId = (int) $cartRule->gift_product_attribute;
+
         // First filter OrderDetails matching the gift
         $giftOrderDetails = [];
         foreach ($order->getOrderDetailList() as $orderDetail) {
