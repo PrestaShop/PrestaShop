@@ -329,6 +329,10 @@ class ProductRepository extends AbstractObjectModelRepository
      */
     public function searchByNameAndReference(string $query, int $langId, int $limit): array
     {
+        if ('' === $query) {
+            return [];
+        }
+
         //@todo: shop association not handled
         $qb = $this->connection->createQueryBuilder();
         $qb->select('p.id_product, p.reference, pl.name, i.id_image')
