@@ -376,6 +376,8 @@ class ProductRepository extends AbstractObjectModelRepository
         $qb = $this->connection->createQueryBuilder();
         $qb->select('pa.id_product_attribute, pa.reference, ag.id_attribute_group, pai.id_image, agl.name AS group_name, al.name AS attribute_name, a.id_attribute')
             ->from($this->dbPrefix . 'product_attribute', 'pa')
+            ->setParameter('langId', $langId)
+            ->setParameter('productId', $productId)
             ->leftJoin(
                 'pa',
                 $this->dbPrefix . 'product_attribute_combination',
