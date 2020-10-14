@@ -24,7 +24,7 @@
  *#}
 
 {% trans_default_domain "Admin.Shopparameters.Feature" %}
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+{% form_theme generalForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {% block order_preferences_general %}
 <div class="col-xl-10">
@@ -34,9 +34,7 @@
         </h3>
         <div class="card-block row">
             <div class="card-text">
-                {% block order_general_preferences_form_rest %}
-                  {{ form_rest(generalForm) }}
-                {% endblock %}
+              {{ form_widget(generalForm) }}
             </div>
         </div>
         <div class="card-footer">
