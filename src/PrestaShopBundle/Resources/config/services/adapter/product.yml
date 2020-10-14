@@ -462,3 +462,10 @@ services:
             - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.adapter.product.repository.stock_available_repository'
             - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_ADVANCED_STOCK_MANAGEMENT')"
+
+    prestashop.adapter.product.query.search_products_to_relate_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\SearchProductsToRelateHandler
+        arguments:
+            - '@prestashop.adapter.product.repository.product_repository'
+            - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+            - "@=service('prestashop.adapter.legacy.context').getContext().link"
