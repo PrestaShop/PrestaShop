@@ -124,3 +124,78 @@ Feature: Order from Back Office (BO)
       | total_price_tax_incl        | 15.90 |
       | total_price_tax_excl        | 15.00 |
     And the available stock for product "Test Product Gift Cart Rule" should be 99
+
+  Scenario: Add multiple order details contain the gift product, Then the one with at least 2 is updated
+    And I use a voucher "CartRuleGiftProduct" which provides a gift product "Test Product Gift Cart Rule" on the cart "dummy_cart"
+    And I add order "bo_order1" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    And I generate invoice for "bo_order1" order
+    And I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product Gift Cart Rule |
+      | amount        | 2                           |
+      | price         | 15.0                        |
+    Then order "bo_order1" should have 5 products in total
+    And order "bo_order1" should have 2 invoices
+    And order "bo_order1" should have 1 cart rule
+    And order "bo_order1" should have following details:
+      | total_products           | 68.800 |
+      | total_products_wt        | 72.930 |
+      # Total is not correct here because of bug from issue #20778 (discount amount applied twice), current is 30 should be 15
+#      | total_discounts_tax_excl | 15.0   |
+#      | total_discounts_tax_incl | 15.9   |
+#      | total_paid_tax_excl      | 60.800 |
+#      | total_paid_tax_incl      | 64.450 |
+#      | total_paid               | 64.450 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    And the product "Test Product Gift Cart Rule" in the first invoice from the order "bo_order1" should have the following details:
+      | product_quantity            | 1     |
+      | product_price               | 15.00 |
+      | unit_price_tax_incl         | 15.90 |
+      | unit_price_tax_excl         | 15.00 |
+      | total_price_tax_incl        | 15.90 |
+      | total_price_tax_excl        | 15.00 |
+    And the product "Test Product Gift Cart Rule" in the second invoice from the order "bo_order1" should have the following details:
+      | product_quantity            | 2     |
+      | product_price               | 15.00 |
+      | unit_price_tax_incl         | 15.90 |
+      | unit_price_tax_excl         | 15.00 |
+      | total_price_tax_incl        | 31.80 |
+      | total_price_tax_excl        | 30.00 |
+    # Discount is not correct here because of bug from issue #20778 (discount amount applied twice), current is 30 should be 15
+#    And order "bo_order1" should have cart rule "CartRuleGiftProduct" with amount "$15.00"
+    And the available stock for product "Test Product Gift Cart Rule" should be 97
+    When I remove cart rule "CartRuleGiftProduct" from order "bo_order1"
+    Then order "bo_order1" should have 4 products in total
+    And order "bo_order1" should have 2 invoices
+    And order "bo_order1" should have 0 cart rule
+    And order "bo_order1" should have following details:
+      | total_products           | 53.800 |
+      | total_products_wt        | 57.030 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 60.800 |
+      | total_paid_tax_incl      | 64.450 |
+      | total_paid               | 64.450 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    And the product "Test Product Gift Cart Rule" in the first invoice from the order "bo_order1" should have the following details:
+      | product_quantity            | 1     |
+      | product_price               | 15.00 |
+      | unit_price_tax_incl         | 15.90 |
+      | unit_price_tax_excl         | 15.00 |
+      | total_price_tax_incl        | 15.90 |
+      | total_price_tax_excl        | 15.00 |
+    And the product "Test Product Gift Cart Rule" in the second invoice from the order "bo_order1" should have the following details:
+      | product_quantity            | 1     |
+      | product_price               | 15.00 |
+      | unit_price_tax_incl         | 15.90 |
+      | unit_price_tax_excl         | 15.00 |
+      | total_price_tax_incl        | 15.90 |
+      | total_price_tax_excl        | 15.00 |
+    And the available stock for product "Test Product Gift Cart Rule" should be 98
