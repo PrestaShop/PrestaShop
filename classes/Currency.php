@@ -561,6 +561,10 @@ class CurrencyCore extends ObjectModel
             $id_lang = Configuration::get('PS_LANG_DEFAULT');
         }
 
+        if (!isset($this->symbol[$id_lang])) {
+            return '';
+        }
+
         return Tools::ucfirst($this->symbol[$id_lang]);
     }
 
