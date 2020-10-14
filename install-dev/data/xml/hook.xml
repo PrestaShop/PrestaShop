@@ -776,10 +776,71 @@
       <title>Manage elements added to the "prestashop" javascript object</title>
       <description>This hook allows you to customize the "prestashop" javascript object that is included in all front office pages</description>
     </hook>
-    <hook id="actionFrontControllerAfterInit">
-      <name>actionFrontControllerAfterInit</name>
+    <hook id="actionFrontControllerInitAfter">
+      <name>actionFrontControllerInitAfter</name>
       <title>Perform actions after front office controller initialization</title>
       <description>This hook is launched after the initialization of all front office controllers</description>
+    </hook>
+    <hook id="actionFrontControllerInitBefore">
+      <name>actionFrontControllerInitBefore</name>
+      <title>Perform actions before front office controller initialization</title>
+      <description>This hook is launched before the initialization of all front office controllers</description>
+    </hook>
+    <hook id="actionAdminControllerInitAfter">
+      <name>actionAdminControllerInitAfter</name>
+      <title>Perform actions after admin controller initialization</title>
+      <description>This hook is launched after the initialization of all admin controllers</description>
+    </hook>
+    <hook id="actionAdminControllerInitBefore">
+      <name>actionAdminControllerInitBefore</name>
+      <title>Perform actions before admin controller initialization</title>
+      <description>This hook is launched before the initialization of all admin controllers</description>
+    </hook>
+    <hook id="actionControllerInitAfter">
+      <name>actionControllerInitAfter</name>
+      <title>Perform actions after controller initialization</title>
+      <description>This hook is launched after the initialization of all controllers</description>
+    </hook>
+    <hook id="actionControllerInitBefore">
+      <name>actionControllerInitBefore</name>
+      <title>Perform actions before controller initialization</title>
+      <description>This hook is launched before the initialization of all controllers</description>
+    </hook>
+
+    <hook id="actionAdminLoginControllerBefore">
+      <name>actionAdminLoginControllerBefore</name>
+      <title>Perform actions before admin login controller initialization</title>
+      <description>This hook is launched before the initialization of the login controller</description>
+    </hook>
+    <hook id="actionAdminLoginControllerLoginBefore">
+      <name>actionAdminLoginControllerLoginBefore</name>
+      <title>Perform actions before admin login controller login action initialization</title>
+      <description>This hook is launched before the initialization of the login action in login controller</description>
+    </hook>
+    <hook id="actionAdminLoginControllerLoginAfter">
+      <name>actionAdminLoginControllerLoginAfter</name>
+      <title>Perform actions after admin login controller login action initialization</title>
+      <description>This hook is launched after the initialization of the login action in login controller</description>
+    </hook>
+    <hook id="actionAdminLoginControllerForgotBefore">
+      <name>actionAdminLoginControllerForgotBefore</name>
+      <title>Perform actions before admin login controller forgot action initialization</title>
+      <description>This hook is launched before the initialization of the forgot action in login controller</description>
+    </hook>
+    <hook id="actionAdminLoginControllerForgotAfter">
+      <name>actionAdminLoginControllerForgotAfter</name>
+      <title>Perform actions after admin login controller forgot action initialization</title>
+      <description>This hook is launched after the initialization of the forgot action in login controller</description>
+    </hook>
+    <hook id="actionAdminLoginControllerResetBefore">
+      <name>actionAdminLoginControllerResetBefore</name>
+      <title>Perform actions before admin login controller reset action initialization</title>
+      <description>This hook is launched before the initialization of the reset action in login controller</description>
+    </hook>
+    <hook id="actionAdminLoginControllerResetBefore">
+      <name>actionAdminLoginControllerResetBefore</name>
+      <title>Perform actions after admin login controller reset action initialization</title>
+      <description>This hook is launched after the initialization of the reset action in login controller</description>
     </hook>
     <hook id="actionAdministrationPageForm">
       <name>actionAdministrationPageForm</name>

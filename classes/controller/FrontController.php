@@ -255,6 +255,13 @@ class FrontControllerCore extends Controller
      */
     public function init()
     {
+        Hook::exec(
+            'actionFrontControllerInitBefore',
+            [
+                'controller' => $this,
+            ]
+        );
+
         /*
          * Globals are DEPRECATED as of version 1.5.0.1
          * Use the Context object to access objects instead.
@@ -465,7 +472,12 @@ class FrontControllerCore extends Controller
         $this->context->cart = $cart;
         $this->context->currency = $currency;
 
-        Hook::exec('actionFrontControllerAfterInit');
+        Hook::exec(
+            'actionFrontControllerInitAfter',
+            [
+                'controller' => $this,
+            ]
+        );
     }
 
     /**
