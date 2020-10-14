@@ -329,6 +329,7 @@ class ProductRepository extends AbstractObjectModelRepository
      */
     public function searchByNameAndReference(string $query, int $langId, int $limit): array
     {
+        //@todo: shop association not handled
         $qb = $this->connection->createQueryBuilder();
         $qb->select('p.id_product, p.reference, pl.name, i.id_image')
             ->from($this->dbPrefix . 'product', 'p')
@@ -349,6 +350,61 @@ class ProductRepository extends AbstractObjectModelRepository
             ->setParameter('searchQuery', '%' . $query . '%')
             ->setMaxResults($limit)
         ;
+
+        $results = $qb->execute()->fetchAll();
+
+        if (!$results) {
+            return [];
+        }
+
+        return $results;
+    }
+
+    /**
+     * @param int $productId
+     * @param int $langId
+     *
+     * @return array<string, mixed>
+     */
+    public function getCombinations(int $productId, int $langId): array
+    {
+        //@todo: shop association not handled
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('pa.id_product_attribute, pa.reference, ag.id_attribute_group, pai.id_image, agl.name AS group_name, al.name AS attribute_name, a.id_attribute')
+            ->from($this->dbPrefix . 'product_attribute', 'pa')
+            ->leftJoin(
+                'pa',
+                $this->dbPrefix . 'product_attribute_combination',
+                'pac',
+                'pac.id_product_attribute = pa.id_product_attribute'
+            )->leftJoin(
+                'pac',
+                $this->dbPrefix . 'attribute',
+                'a',
+                'a.id_attribute = pac.id_attribute'
+            )->leftJoin(
+                'a',
+                $this->dbPrefix . 'attribute_group',
+                'ag',
+                'ag.id_attribute_group = a.id_attribute_group'
+            )->leftJoin(
+                'ag',
+                $this->dbPrefix . 'attribute_lang',
+                'al',
+                'a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = :langId'
+            )->leftJoin(
+                'al',
+                $this->dbPrefix . 'attribute_group_lang',
+                'agl',
+                'ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = :langId'
+            )->leftJoin(
+                'pa',
+                $this->dbPrefix . 'product_attribute_image',
+                'pai',
+                'pai.id_product_attribute = pa.id_product_attribute'
+            )->where('pa.id_product = :productId')
+            ->groupBy('pa.id_product_attribute', 'ag.attribute_group')
+            ->orderBy('pa.id_product_attribute');
 
         $results = $qb->execute()->fetchAll();
 
