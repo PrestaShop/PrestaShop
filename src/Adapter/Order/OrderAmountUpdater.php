@@ -225,10 +225,6 @@ class OrderAmountUpdater
         foreach ($order->getCartProducts() as $orderProduct) {
             $orderDetail = new OrderDetail($orderProduct['id_order_detail'], null, $this->contextStateManager->getContext());
             $cartProduct = $this->getProductFromCart($cartProducts, (int) $orderDetail->product_id, (int) $orderDetail->product_attribute_id);
-            if (null === $cartProduct) {
-                $orderDetail->delete();
-                continue;
-            }
 
             // Update tax rules group as it might have changed
             $orderDetail->id_tax_rules_group = $orderDetail->getTaxRulesGroupId();
@@ -280,13 +276,15 @@ class OrderAmountUpdater
     /**
      * @param array $cartProducts
      * @param int $productId
-     * @param int|null $productAttributeId
+     * @param int $productAttributeId
      *
-     * @return array|null
+     * @return array
+     *
+     * @throws OrderException
      */
-    private function getProductFromCart(array $cartProducts, int $productId, int $productAttributeId): ?array
+    private function getProductFromCart(array $cartProducts, int $productId, int $productAttributeId): array
     {
-        return array_reduce($cartProducts, function ($carry, $item) use ($productId, $productAttributeId) {
+        $cartProduct = array_reduce($cartProducts, function ($carry, $item) use ($productId, $productAttributeId) {
             if (null !== $carry) {
                 return $carry;
             }
@@ -296,6 +294,13 @@ class OrderAmountUpdater
 
             return $productMatch && $combinationMatch ? $item : null;
         });
+
+        // This shouldn't happen, if it does something was not done before updating the Order (removing an OrderDetail maybe)
+        if (null === $cartProduct) {
+            throw new OrderException('Could not find the product in cart, meaning Order and Cart are not synced');
+        }
+
+        return $cartProduct;
     }
 
     /**
