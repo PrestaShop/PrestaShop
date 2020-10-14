@@ -184,7 +184,6 @@ class PreferencesType extends TranslatorAwareType
                 ])
             ->add(
                 'display_manufacturers', SwitchType::class, [
-                    'required' => false,
                     'label' => $this->trans('Display brands', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(
                         'Enable brands page on your front office even when its module is disabled.',
@@ -208,6 +207,7 @@ class PreferencesType extends TranslatorAwareType
                 ),
             ])
             ->add('shop_activity', ChoiceType::class, [
+                'required' => false,
                 'choices_as_values' => true,
                 'placeholder' => $this->trans('-- Please choose your main activity --', 'Install'),
                 'choices' => [
