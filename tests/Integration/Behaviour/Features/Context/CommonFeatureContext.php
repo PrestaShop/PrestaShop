@@ -34,6 +34,7 @@ use Cart;
 use CartRule;
 use Category;
 use Context;
+use Currency;
 use Employee;
 use Language;
 use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
@@ -164,6 +165,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         Pack::resetStaticCache();
         Product::resetStaticCache();
         Language::resetCache();
+        Currency::resetStaticCache();
         TaxManagerFactory::resetStaticCache();
     }
 }

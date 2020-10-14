@@ -30,8 +30,10 @@ use Cart;
 use CartRule;
 use Configuration;
 use Currency;
+use Customer;
 use Order;
 use OrderInvoice;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscountValueException;
@@ -52,13 +54,19 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
      * @var OrderAmountUpdater
      */
     private $orderAmountUpdater;
+    /**
+     * @var ContextStateManager
+     */
+    private $contextStateManager;
 
     /**
      * @param OrderAmountUpdater $orderAmountUpdater
+     * @param ContextStateManager $contextStateManager
      */
-    public function __construct(OrderAmountUpdater $orderAmountUpdater)
+    public function __construct(OrderAmountUpdater $orderAmountUpdater, ContextStateManager $contextStateManager)
     {
         $this->orderAmountUpdater = $orderAmountUpdater;
+        $this->contextStateManager = $contextStateManager;
     }
 
     /**
@@ -69,6 +77,30 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         $this->assertPercentCartRule($command);
         $order = $this->getOrder($command->getOrderId());
 
+        $this->contextStateManager
+            ->setCurrency(new Currency($order->id_currency))
+            ->setCustomer(new Customer($order->id_customer));
+
+        try {
+            $this->addCartRuleAndUpdateOrder($command, $order);
+        } finally {
+            $this->contextStateManager->restoreContext();
+        }
+    }
+
+    /**
+     * @param AddCartRuleToOrderCommand $command
+     * @param Order $order
+     *
+     * @return void
+     *
+     * @throws InvalidCartRuleDiscountValueException
+     * @throws OrderException
+     * @throws PrestaShopException
+     * @throws \PrestaShopDatabaseException
+     */
+    private function addCartRuleAndUpdateOrder(AddCartRuleToOrderCommand $command, Order $order): void
+    {
         $computingPrecision = new ComputingPrecision();
         $currency = new Currency((int) $order->id_currency);
         $precision = $computingPrecision->getPrecision($currency->precision);
@@ -95,6 +127,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         $cartRuleObj->quantity_per_user = 1;
         $cartRuleObj->active = 0;
         $cartRuleObj->highlight = 0;
+        $cartRuleObj->reduction_currency = (int) $order->id_currency;
 
         if ($command->getCartRuleType() === OrderDiscountType::DISCOUNT_PERCENT) {
             $cartRuleObj->reduction_percent = (float) (string) $command->getDiscountValue();
