@@ -225,6 +225,10 @@ class OrderAmountUpdater
         foreach ($order->getCartProducts() as $orderProduct) {
             $orderDetail = new OrderDetail($orderProduct['id_order_detail'], null, $this->contextStateManager->getContext());
             $cartProduct = $this->getProductFromCart($cartProducts, (int) $orderDetail->product_id, (int) $orderDetail->product_attribute_id);
+            if (null === $cartProduct) {
+                $orderDetail->delete();
+                continue;
+            }
 
             // Update tax rules group as it might have changed
             $orderDetail->id_tax_rules_group = $orderDetail->getTaxRulesGroupId();
@@ -278,9 +282,9 @@ class OrderAmountUpdater
      * @param int $productId
      * @param int|null $productAttributeId
      *
-     * @return array
+     * @return array|null
      */
-    private function getProductFromCart(array $cartProducts, int $productId, int $productAttributeId): array
+    private function getProductFromCart(array $cartProducts, int $productId, int $productAttributeId): ?array
     {
         return array_reduce($cartProducts, function ($carry, $item) use ($productId, $productAttributeId) {
             if (null !== $carry) {
