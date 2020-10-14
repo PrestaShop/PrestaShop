@@ -106,7 +106,12 @@ class ProductRepository extends AbstractObjectModelRepository
         $results = $qb->execute()->fetch();
 
         if (!$results || (int) $results['product_count'] !== count($ids)) {
-            throw new ProductNotFoundException('Some of products does not exist');
+            throw new ProductNotFoundException(
+                    sprintf(
+                        'Some of these products do not exist: %s',
+                        implode(',', $ids)
+                    )
+                );
         }
     }
 
