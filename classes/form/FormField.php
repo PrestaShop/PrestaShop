@@ -34,6 +34,9 @@ class FormFieldCore
     private $maxLength = null;
     private $errors = [];
     private $constraints = [];
+    /**
+     * @var string
+     */
     private $autocomplete = '';
 
     public function toArray()
