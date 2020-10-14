@@ -29,15 +29,23 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
+use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForRedirectOption;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForRedirectOption;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectTarget;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class UpdateSeoFeatureContext extends AbstractProductFeatureContext
 {
+    /**
+     * Key for shared storage, where previous search results are stored
+     */
+    const SEARCH_RESULTS_KEY = 'search_for_redirect_product';
+
     /**
      * @When I update product :productReference SEO information with following values:
      *
@@ -145,6 +153,64 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
             $productForEditing->getProductSeoOptions()->getRedirectTargetId(),
             'Product "%s" expected to have no redirect target'
         );
+    }
+
+    /**
+     * @When I search products for SEO redirect option in :iso language by phrase :searchPhrase
+     *
+     * @param string $iso
+     * @param string $searchPhrase
+     */
+    public function searchProductsForRedirect(string $iso, string $searchPhrase): void
+    {
+        $languageId = Language::getIdByIso($iso, true);
+        $searchResults = $this->getQueryBus()->handle(new SearchProductsForRedirectOption($searchPhrase, $languageId));
+
+        $this->getSharedStorage()->set(self::SEARCH_RESULTS_KEY, $searchResults);
+    }
+
+    /**
+     * @Then search results for product SEO redirect option should be the following:
+     */
+    public function assertSearchResults(TableNode $tableNode): void
+    {
+        $expectedDataRows = $tableNode->getColumnsHash();
+        $searchResults = $this->getSearchResults();
+        Assert::assertEquals(count($expectedDataRows), count($searchResults), 'Unexpected search results count');
+
+        foreach ($expectedDataRows as $key => $expectedDataRow) {
+            $productForRedirectOption = $searchResults[$key];
+
+            Assert::assertEquals(
+                $this->getSharedStorage()->get($expectedDataRow['product']),
+                $productForRedirectOption->getProductId(),
+                'Unexpected product id in search results'
+            );
+
+            Assert::assertEquals(
+                $this->getSharedStorage()->get($expectedDataRow['name']),
+                $productForRedirectOption->getName(),
+                'Unexpected product name in search results'
+            );
+
+            Assert::assertEquals(
+                $this->getSharedStorage()->get($expectedDataRow['reference']),
+                $productForRedirectOption->getReference(),
+                'Unexpected product name in search results'
+            );
+            //@todo: image is not asserted. How to?
+        }
+    }
+
+    /**
+     * @return ProductForRedirectOption[]
+     */
+    private function getSearchResults(): array
+    {
+        return $this->getSharedStorage()->exists(self::SEARCH_RESULTS_KEY) ?
+            $this->getSharedStorage()->get(self::SEARCH_RESULTS_KEY) :
+            []
+        ;
     }
 
     /**

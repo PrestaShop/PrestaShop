@@ -169,33 +169,32 @@ Feature: Update product SEO options from Back Office (BO)
 
   Scenario: Search product for seo redirect option by name
     Given I add product product3 with following information:
-      | name       | nice boots |
+      | name       | en-US:nice boots |
       | is_virtual | false      |
     And I update product product3 options with following information:
       | reference | 1234567 |
     And I add product product4 with following information:
-      | name       | nice pants |
+      | name       | en-US:nice pants |
       | is_virtual | false      |
     And I update product product4 options with following information:
       | reference | 1334567 |
     And I add product product5 with following information:
-      | name       | nice hat |
+      | name       | en-US:nice hat |
       | is_virtual | false    |
     And I update product product5 options with following information:
       | reference | 1344567 |
     And I add product product6 with following information:
-      | name       | nice scarf |
+      | name       | en-US:nice scarf |
       | is_virtual | false      |
     And I update product product6 options with following information:
       | reference | 1344567 |
     And I add product product7 with following information:
-      | name       | nice glasses |
+      | name       | en-US:nice glasses |
       | is_virtual | false        |
     And I update product product7 options with following information:
       | reference | 1345567 |
-    When I search products for SEO redirect option by phrase "nic"
+    When I search products for SEO redirect option in "en" language by phrase "nic"
     Then search results for product SEO redirect option should be the following:
-#    @todo how to test image?
       | product  | name         | reference |
       | product3 | nice boots   | 1234567   |
       | product4 | nice pants   | 1334567   |
