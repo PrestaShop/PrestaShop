@@ -47,7 +47,7 @@ class FormFieldCore
             'availableValues' => $this->getAvailableValues(),
             'maxLength' => $this->getMaxLength(),
             'errors' => $this->getErrors(),
-            'autocomplete' => $this->getAutocomplete(),
+            'autocomplete' => $this->getAutocompleteAttribute(),
         ];
     }
 
@@ -184,14 +184,14 @@ class FormFieldCore
         return $this->constraints;
     }
 
-    public function setAutocomplete($autocomplete)
+    public function setAutocompleteAttribute($autocomplete): FormFieldCore
     {
         $this->autocomplete = $autocomplete;
 
         return $this;
     }
 
-    public function getAutocomplete()
+    public function getAutocompleteAttribute(): string
     {
         return $this->autocomplete;
     }

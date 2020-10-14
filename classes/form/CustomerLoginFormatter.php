@@ -43,7 +43,7 @@ class CustomerLoginFormatterCore implements FormFormatterInterface
             'email' => (new FormField())
                 ->setName('email')
                 ->setType('email')
-                ->setAutocomplete('email')
+                ->setAutocompleteAttribute('email')
                 ->setRequired(true)
                 ->setLabel($this->translator->trans(
                     'Email',
@@ -54,7 +54,7 @@ class CustomerLoginFormatterCore implements FormFormatterInterface
             'password' => (new FormField())
                 ->setName('password')
                 ->setType('password')
-                ->setAutocomplete('current-password')
+                ->setAutocompleteAttribute('current-password')
                 ->setRequired(true)
                 ->setLabel($this->translator->trans(
                     'Password',
