@@ -2766,6 +2766,13 @@ class AdminControllerCore extends Controller
      */
     public function init()
     {
+        Hook::exec(
+            'actionAdminControllerInitAfter',
+            [
+                'controller' => $this,
+            ]
+        );
+
         parent::init();
 
         if (Tools::getValue('ajax')) {
@@ -2835,6 +2842,13 @@ class AdminControllerCore extends Controller
         $this->initModal();
         $this->initToolbarFlags();
         $this->initNotifications();
+        Hook::exec(
+            'actionAdminControllerInitBefore',
+            [
+                'controller' => $this,
+            ]
+        );
+
     }
 
     /**
