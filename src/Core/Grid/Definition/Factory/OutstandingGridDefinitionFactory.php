@@ -65,13 +65,14 @@ final class OutstandingGridDefinitionFactory extends AbstractGridDefinitionFacto
     /**
      * @param HookDispatcherInterface $hookDispatcher
      * @param ConfigurationInterface $configuration
+     * @param int $languageId
      */
-    public function __construct(HookDispatcherInterface $hookDispatcher, ConfigurationInterface $configuration)
+    public function __construct(HookDispatcherInterface $hookDispatcher, ConfigurationInterface $configuration, int $languageId)
     {
         parent::__construct($hookDispatcher);
 
         $this->configuration = $configuration;
-        foreach (Risk::getRisks(Context::getContext()->language->id) as $risk) {
+        foreach (Risk::getRisks($languageId) as $risk) {
             /* @var $risk Risk */
             $this->risks[$risk->name] = $risk->id;
         }
