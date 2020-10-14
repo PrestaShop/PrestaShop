@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetRelatedProductsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RelatedProduct;
@@ -42,20 +41,12 @@ final class GetRelatedProductsHandler implements GetRelatedProductsHandlerInterf
     private $productRepository;
 
     /**
-     * @var int
-     */
-    private $contextLangId;
-
-    /**
      * @param ProductRepository $productRepository
-     * @param int $contextLangId
      */
     public function __construct(
-        ProductRepository $productRepository,
-        int $contextLangId
+        ProductRepository $productRepository
     ) {
         $this->productRepository = $productRepository;
-        $this->contextLangId = $contextLangId;
     }
 
     /**
@@ -63,7 +54,7 @@ final class GetRelatedProductsHandler implements GetRelatedProductsHandlerInterf
      */
     public function handle(GetRelatedProducts $query): array
     {
-        $results = $this->productRepository->getRelatedProducts($query->getProductId(), new LanguageId($this->contextLangId));
+        $results = $this->productRepository->getRelatedProducts($query->getProductId(), $query->getLanguageId());
 
         $relatedProducts = [];
 

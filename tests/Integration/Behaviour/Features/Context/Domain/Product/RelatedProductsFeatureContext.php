@@ -47,7 +47,7 @@ class RelatedProductsFeatureContext extends AbstractProductFeatureContext
     {
         $productId = $this->getSharedStorage()->get($productReference);
         try {
-            $relatedProducts = $this->getQueryBus()->handle(new GetRelatedProducts($productId));
+            $relatedProducts = $this->getQueryBus()->handle(new GetRelatedProducts($productId, $this->getDefaultLangId()));
             Assert::assertEmpty(
                 $relatedProducts,
                 sprintf('Product %s expected to have no related products', $productReference)
@@ -91,7 +91,7 @@ class RelatedProductsFeatureContext extends AbstractProductFeatureContext
         $productId = $this->getSharedStorage()->get($productReference);
 
         $expectedReferences = array_keys($tableNode->getRowsHash());
-        $actualRelatedProducts = $this->getQueryBus()->handle(new GetRelatedProducts($productId));
+        $actualRelatedProducts = $this->getQueryBus()->handle(new GetRelatedProducts($productId, $this->getDefaultLangId()));
 
         $expectedIds = array_map(function (string $reference): int {
             return $this->getSharedStorage()->get($reference);

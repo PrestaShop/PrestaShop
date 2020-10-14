@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Query;
 
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
@@ -41,11 +42,20 @@ class GetRelatedProducts
     private $productId;
 
     /**
-     * @param int $productId
+     * @var LanguageId
      */
-    public function __construct(int $productId)
-    {
+    private $languageId;
+
+    /**
+     * @param int $productId
+     * @param int $languageId
+     */
+    public function __construct(
+        int $productId,
+        int $languageId
+    ) {
         $this->productId = new ProductId($productId);
+        $this->languageId = new LanguageId($languageId);
     }
 
     /**
@@ -54,5 +64,13 @@ class GetRelatedProducts
     public function getProductId(): ProductId
     {
         return $this->productId;
+    }
+
+    /**
+     * @return LanguageId
+     */
+    public function getLanguageId(): LanguageId
+    {
+        return $this->languageId;
     }
 }

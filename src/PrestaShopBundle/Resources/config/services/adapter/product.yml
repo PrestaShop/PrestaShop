@@ -328,7 +328,6 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetRelatedProductsHandler
         arguments:
             - '@prestashop.adapter.product.repository.product_repository'
-            - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts
