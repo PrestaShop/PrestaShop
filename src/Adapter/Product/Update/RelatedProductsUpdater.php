@@ -66,7 +66,7 @@ class RelatedProductsUpdater
                 return;
             }
 
-            $this->productRepository->assertProductsExists($relatedProductIds);
+            $this->productRepository->assertAllProductsExists($relatedProductIds);
             $ids = array_map(function (ProductId $productId): int {
                 return $productId->getValue();
             }, $relatedProductIds);

@@ -89,7 +89,7 @@ class ProductRepository extends AbstractObjectModelRepository
      *
      * @throws ProductNotFoundException
      */
-    public function assertProductsExists(array $productIds): void
+    public function assertAllProductsExists(array $productIds): void
     {
         //@todo: no shop association. Should it be checked here?
         $ids = array_map(function (ProductId $productId): int {
