@@ -135,6 +135,8 @@ class ThemeManager implements AddonManagerInterface
      * @param HookConfigurator $hookConfigurator
      * @param ThemeRepository $themeRepository
      * @param ImageTypeRepository $imageTypeRepository
+     * @param TranslationService|null $translationService
+     * @param ProviderFactory|null $translationProviderFactory
      */
     public function __construct(
         Shop $shop,
@@ -147,8 +149,8 @@ class ThemeManager implements AddonManagerInterface
         HookConfigurator $hookConfigurator,
         ThemeRepository $themeRepository,
         ImageTypeRepository $imageTypeRepository,
-        TranslationService $translationService,
-        ProviderFactory $translationProviderFactory
+        TranslationService $translationService = null,
+        ProviderFactory $translationProviderFactory = null
     ) {
         $this->translationFinder = new TranslationFinder();
         $this->shop = $shop;
@@ -534,15 +536,6 @@ class ThemeManager implements AddonManagerInterface
         foreach ($languages as $language) {
             $locale = $language['locale'];
 
-            // retrieve Lang doctrine entity
-            try {
-                $lang = $this->translationService->findLanguageByLocale($locale);
-            } catch (Exception $exception) {
-                PrestaShopLogger::addLog('ThemeManager->importTranslationToDatabase() - Locale ' . $locale . ' does not exists');
-
-                continue;
-            }
-
             // check if translation dir for this lang exists
             if (!is_dir($translationFolder . $locale)) {
                 continue;
@@ -559,7 +552,7 @@ class ThemeManager implements AddonManagerInterface
                 $allDomains = $this->getDefaultDomains($locale, $themeName);
 
                 // do the import
-                $this->handleImport($messageCatalog, $allDomains, $lang, $locale, $themeName);
+                $this->handleImport($messageCatalog, $allDomains, $locale, $themeName);
             } catch (FileNotFoundException $e) {
                 // if the directory is there but there are no files, do nothing
             }
@@ -609,12 +602,18 @@ class ThemeManager implements AddonManagerInterface
     /**
      * @param MessageCatalogue $messageCatalog
      * @param array $allDomains
-     * @param \PrestaShopBundle\Entity\Lang $lang
      * @param string $locale
      * @param string $themeName
      */
-    private function handleImport(MessageCatalogue $messageCatalog, $allDomains, $lang, $locale, $themeName)
+    private function handleImport(MessageCatalogue $messageCatalog, $allDomains, $locale, $themeName)
     {
+        // retrieve Lang doctrine entity
+        try {
+            $lang = $this->translationService->findLanguageByLocale($locale);
+        } catch (Exception $exception) {
+            PrestaShopLogger::addLog('ThemeManager->handleImport() - Locale ' . $locale . ' does not exists');
+            throw new \RuntimeException('Lang associated to locale ' . $locale . ' not found.');
+        }
         foreach ($messageCatalog->all() as $domain => $messages) {
             $domain = str_replace('.' . $locale, '', $domain);
 
