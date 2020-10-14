@@ -134,7 +134,7 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
         // First filter OrderDetails matching the gift
         $giftOrderDetails = [];
         foreach ($order->getOrderDetailList() as $orderDetail) {
-            if ((int) $orderDetail['product_id'] !== $productId || (int) $orderDetail['product_attrbute_id'] !== $productAttributeId) {
+            if ((int) $orderDetail['product_id'] !== $productId || (int) $orderDetail['product_attribute_id'] !== $productAttributeId) {
                 continue;
             }
             $giftOrderDetails[] = $orderDetail;
