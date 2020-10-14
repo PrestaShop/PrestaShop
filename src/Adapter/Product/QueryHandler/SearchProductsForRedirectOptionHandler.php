@@ -30,14 +30,14 @@ namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Link;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsToRelate;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\SearchProductsToRelateHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductToRelate;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForRedirectOption;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\SearchProductsForRedirectOptionHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForRedirectOption;
 
 /**
- * Handles @see SearchProductsToRelate query
+ * Handles @see SearchProductsForRedirectOption query
  */
-final class SearchProductsToRelateHandler implements SearchProductsToRelateHandlerInterface
+final class SearchProductsForRedirectOptionHandler implements SearchProductsForRedirectOptionHandlerInterface
 {
     /**
      * @var ProductRepository
@@ -72,7 +72,7 @@ final class SearchProductsToRelateHandler implements SearchProductsToRelateHandl
     /**
      * {@inheritdoc}
      */
-    public function handle(SearchProductsToRelate $query): array
+    public function handle(SearchProductsForRedirectOption $query): array
     {
         $results = $this->productRepository->searchByNameAndReference(
             $query->getPhrase(),
@@ -82,7 +82,7 @@ final class SearchProductsToRelateHandler implements SearchProductsToRelateHandl
 
         $productsToRelate = [];
         foreach ($results as $result) {
-            $productsToRelate[] = new ProductToRelate(
+            $productsToRelate[] = new ProductForRedirectOption(
                 (int) $result['id_product'],
                 $result['name'],
                 $result['reference'],

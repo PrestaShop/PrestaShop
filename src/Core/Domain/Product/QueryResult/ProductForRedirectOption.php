@@ -29,9 +29,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
 /**
- * Transfers product data when searched to add a related product
+ * Transfers product data when searched to add a redirect target
  */
-class ProductToRelate
+class ProductForRedirectOption
 {
     /**
      * @var int

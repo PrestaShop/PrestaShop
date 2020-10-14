@@ -26,80 +26,53 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Query;
 
 /**
- * Transfers product data when searched to add a related product
+ * Searches products to add as a redirect target
  */
-class ProductToRelate
+class SearchProductsForRedirectOption
 {
+    /**
+     * Default search results limit
+     */
+    const LIMIT_DEFAULT = 10;
+
+    /**
+     * @var string
+     */
+    private $phrase;
+
     /**
      * @var int
      */
-    private $productId;
+    private $limit;
 
     /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $reference;
-
-    /**
-     * @var string
-     */
-    private $coverImage;
-
-    /**
-     * @param int $productId
-     * @param string $name
-     * @param string $reference
-     * @param string $coverImage
+     * @param string $phrase
+     * @param int $limit
      */
     public function __construct(
-        int $productId,
-        string $name,
-        string $reference,
-        string $coverImage
+        string $phrase,
+        int $limit = self::LIMIT_DEFAULT
     ) {
-        $this->productId = $productId;
-        $this->name = $name;
-        $this->reference = $reference;
-        $this->coverImage = $coverImage;
+        $this->phrase = $phrase;
+        $this->limit = $limit;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhrase(): string
+    {
+        return $this->phrase;
     }
 
     /**
      * @return int
      */
-    public function getProductId(): int
+    public function getLimit(): int
     {
-        return $this->productId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getReference(): string
-    {
-        return $this->reference;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCoverImage(): string
-    {
-        return $this->coverImage;
+        return $this->limit;
     }
 }

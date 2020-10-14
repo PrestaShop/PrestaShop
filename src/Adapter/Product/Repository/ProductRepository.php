@@ -325,9 +325,9 @@ class ProductRepository extends AbstractObjectModelRepository
      * @param int $langId
      * @param int $limit
      *
-     * @return array
+     * @return array<string, mixed>
      */
-    public function searchProducts(string $query, int $langId, int $limit): array
+    public function searchByNameAndReference(string $query, int $langId, int $limit): array
     {
         $qb = $this->connection->createQueryBuilder();
         $qb->select('p.id_product, p.reference, pl.name, i.id_image')
