@@ -9,6 +9,9 @@ class OrderSettings extends BOBasePage {
     this.successfulUpdateMessage = 'Update successful';
 
     // Selectors
+    // SubTab
+    this.statusesTab = '#subtab-AdminStatuses';
+    // Form
     this.generalForm = '#configuration_form';
     this.enableFinalSummaryLabel = toggle => `${this.generalForm}`
       + ` label[for='form_general_enable_final_summary_${toggle}']`;
@@ -26,7 +29,7 @@ class OrderSettings extends BOBasePage {
     this.giftWrappingPriceInput = '#form_gift_options_gift_wrapping_price';
     this.giftWrappingTaxSelect = '#form_gift_options_gift_wrapping_tax_rules_group';
     this.recycledPackagingToggle = toggle => `${this.generalForm}`
-    + ` label[for='form_gift_options_offer_recyclable_pack_${toggle}']`;
+      + ` label[for='form_gift_options_offer_recyclable_pack_${toggle}']`;
     this.saveGiftOptionsFormButton = `${this.generalForm} div:nth-of-type(2) .card-footer button`;
   }
 
@@ -117,6 +120,15 @@ class OrderSettings extends BOBasePage {
     await page.click(this.recycledPackagingToggle(recyclePackagingStatus ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveGiftOptionsFormButton);
     return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /**
+   * Go to statuses page
+   * @param page
+   * @returns {Promise<void>}
+   */
+  async goToStatusesPage(page) {
+    await this.clickAndWaitForNavigation(page, this.statusesTab);
   }
 }
 
