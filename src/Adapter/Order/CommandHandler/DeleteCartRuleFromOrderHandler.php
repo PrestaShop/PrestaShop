@@ -32,8 +32,12 @@ use Customer;
 use Order;
 use OrderCartRule;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
+use CartRule;
+use OrderDetail;
+use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
+use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\DeleteCartRuleFromOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -54,13 +58,22 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
     private $contextStateManager;
 
     /**
+     * @var OrderProductQuantityUpdater
+     */
+    private $orderProductQuantityUpdater;
+
+    /**
      * @param OrderAmountUpdater $orderAmountUpdater
      * @param ContextStateManager $contextStateManager
+     * @param OrderProductQuantityUpdater $orderProductQuantityUpdater
      */
-    public function __construct(OrderAmountUpdater $orderAmountUpdater, ContextStateManager $contextStateManager)
-    {
+    public function __construct(
+        OrderAmountUpdater $orderAmountUpdater,
+        OrderProductQuantityUpdater $orderProductQuantityUpdater,
+        ContextStateManager $contextStateManager
+    ) {
         $this->orderAmountUpdater = $orderAmountUpdater;
-        $this->contextStateManager = $contextStateManager;
+        $this->orderProductQuantityUpdater = $orderProductQuantityUpdater;
     }
 
     /**
@@ -85,12 +98,66 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
 
         try {
             // Delete Order Cart Rule and update Order
+            $cartRule = new CartRule($orderCartRule->id_cart_rule);
             $orderCartRule->softDelete();
             $cart->removeCartRule($orderCartRule->id_cart_rule);
 
-            $this->orderAmountUpdater->update($order, $cart, $orderCartRule->id_order_invoice);
+            // If cart rule was a gift product we must update an OrderDetail manually
+            if ($cartRule->gift_product) {
+                $giftOrderDetail = $this->getGiftOrderDetail($order, (int) $cartRule->gift_product, (int) $cartRule->gift_product_attribute);
+                $newQuantity = ((int) $giftOrderDetail->product_quantity) - 1;
+
+                // This calls the OrderAmountUpdater internally so no need to perform both calls
+                $this->orderProductQuantityUpdater->update(
+                    $order,
+                    $giftOrderDetail,
+                    $newQuantity,
+                    $giftOrderDetail->id_order_invoice != 0 ? new OrderInvoice($giftOrderDetail->id_order_invoice) : null
+                );
+            } else {
+                $this->orderAmountUpdater->update($order, $cart, $orderCartRule->id_order_invoice);
+            }
         } finally {
             $this->contextStateManager->restoreContext();
         }
+    }
+
+    /**
+     * @param Order $order
+     * @param int $productId
+     * @param int $productAttributeId
+     *
+     * @return OrderDetail|null
+     */
+    private function getGiftOrderDetail(Order $order, int $productId, int $productAttributeId): ?OrderDetail
+    {
+        // First filter OrderDetails matching the gift
+        $giftOrderDetails = [];
+        foreach ($order->getOrderDetailList() as $orderDetail) {
+            if ((int) $orderDetail['product_id'] !== $productId || (int) $orderDetail['product_attrbute_id'] !== $productAttributeId) {
+                continue;
+            }
+            $giftOrderDetails[] = $orderDetail;
+        }
+
+        if (empty($giftOrderDetails)) {
+            return null;
+        }
+
+        $giftOrderDetailId = null;
+        // We try to find a row with at least 2 quantities
+        foreach ($giftOrderDetails as $giftOrderDetail) {
+            if ($giftOrderDetail['product_quantity'] > 1) {
+                $giftOrderDetailId = $giftOrderDetail['id_order_detail'];
+                break;
+            }
+        }
+
+        // By default use the first one as fallback
+        if (null === $giftOrderDetailId) {
+            $giftOrderDetailId = $giftOrderDetails[0]['id_order_detail'];
+        }
+
+        return null !== $giftOrderDetailId ? new OrderDetail($giftOrderDetailId) : null;
     }
 }
