@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Query;
 
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+
 /**
  * Search products to add into pack
  */
@@ -44,19 +46,27 @@ class SearchProductsForPacking
     private $phrase;
 
     /**
+     * @var LanguageId
+     */
+    private $languageId;
+
+    /**
      * @var int
      */
     private $limit;
 
     /**
      * @param string $phrase
+     * @param int $languageId
      * @param int $limit
      */
     public function __construct(
         string $phrase,
+        int $languageId,
         int $limit = self::LIMIT_DEFAULT
     ) {
         $this->phrase = $phrase;
+        $this->languageId = new LanguageId($languageId);
         $this->limit = $limit;
     }
 
@@ -66,6 +76,14 @@ class SearchProductsForPacking
     public function getPhrase(): string
     {
         return $this->phrase;
+    }
+
+    /**
+     * @return LanguageId
+     */
+    public function getLanguageId(): LanguageId
+    {
+        return $this->languageId;
     }
 
     /**

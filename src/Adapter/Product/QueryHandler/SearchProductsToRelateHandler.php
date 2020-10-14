@@ -45,27 +45,19 @@ final class SearchProductsToRelateHandler implements SearchProductsToRelateHandl
     private $productRepository;
 
     /**
-     * @var int
-     */
-    private $contextLangId;
-
-    /**
      * @var Link
      */
     private $contextLink;
 
     /**
      * @param ProductRepository $productRepository
-     * @param int $contextLangId
      * @param Link $contextLink
      */
     public function __construct(
         ProductRepository $productRepository,
-        int $contextLangId,
         Link $contextLink
     ) {
         $this->productRepository = $productRepository;
-        $this->contextLangId = $contextLangId;
         $this->contextLink = $contextLink;
     }
 
@@ -76,7 +68,7 @@ final class SearchProductsToRelateHandler implements SearchProductsToRelateHandl
     {
         $results = $this->productRepository->searchByNameAndReference(
             $query->getPhrase(),
-            $this->contextLangId,
+            $query->getLanguageId(),
             $query->getLimit()
         );
 

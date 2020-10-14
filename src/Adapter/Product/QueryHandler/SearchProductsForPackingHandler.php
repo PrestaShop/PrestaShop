@@ -31,9 +31,11 @@ namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 use Combination;
 use Link;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForPacking;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\SearchProductsForPackingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForPacking;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
  * Handles @see SearchProductsForPacking query
@@ -46,27 +48,19 @@ final class SearchProductsForPackingHandler implements SearchProductsForPackingH
     private $productRepository;
 
     /**
-     * @var int
-     */
-    private $contextLangId;
-
-    /**
      * @var Link
      */
     private $contextLink;
 
     /**
      * @param ProductRepository $productRepository
-     * @param int $contextLangId
      * @param Link $contextLink
      */
     public function __construct(
         ProductRepository $productRepository,
-        int $contextLangId,
         Link $contextLink
     ) {
         $this->productRepository = $productRepository;
-        $this->contextLangId = $contextLangId;
         $this->contextLink = $contextLink;
     }
 
@@ -77,19 +71,20 @@ final class SearchProductsForPackingHandler implements SearchProductsForPackingH
     {
         $products = $this->productRepository->searchByNameAndReference(
             $query->getPhrase(),
-            $this->contextLangId,
+            $query->getLanguageId(),
             $query->getLimit()
         );
 
-        return $this->formatProductsForPacking($products);
+        return $this->formatProductsForPacking($products, $query->getLanguageId());
     }
 
     /**
      * @param array $products
+     * @param LanguageId $languageId
      *
      * @return ProductForPacking[]
      */
-    private function formatProductsForPacking(array $products): array
+    private function formatProductsForPacking(array $products, LanguageId $languageId): array
     {
         $productsForPacking = [];
         $combinationsFeatureIsOn = (bool) Combination::isFeatureActive();
@@ -97,8 +92,8 @@ final class SearchProductsForPackingHandler implements SearchProductsForPackingH
         foreach ($products as $product) {
             if ($combinationsFeatureIsOn && $product['cache_default_attribute']) {
                 $combinations = $this->productRepository->getCombinations(
-                    (int) $product['id_product'],
-                    $this->contextLangId
+                    new ProductId((int) $product['id_product']),
+                    $languageId
                 );
 
                 if (!empty($combinations)) {

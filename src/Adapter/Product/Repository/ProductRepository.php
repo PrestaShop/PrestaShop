@@ -322,12 +322,12 @@ class ProductRepository extends AbstractObjectModelRepository
 
     /**
      * @param string $query
-     * @param int $langId
+     * @param LanguageId $languageId
      * @param int $limit
      *
      * @return array<string, mixed>
      */
-    public function searchByNameAndReference(string $query, int $langId, int $limit): array
+    public function searchByNameAndReference(string $query, LanguageId $languageId, int $limit): array
     {
         if ('' === $query) {
             return [];
@@ -348,7 +348,7 @@ class ProductRepository extends AbstractObjectModelRepository
                 'i',
                 'p.id_product = i.id_product AND i.cover = 1'
             )
-            ->setParameter('langId', $langId)
+            ->setParameter('langId', $languageId->getValue())
             ->where('pl.name LIKE :searchQuery')
             ->orWhere('p.reference LIKE :searchQuery')
             ->setParameter('searchQuery', '%' . $query . '%')
@@ -365,19 +365,19 @@ class ProductRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param int $productId
-     * @param int $langId
+     * @param ProductId $productId
+     * @param LanguageId $languageId
      *
      * @return array<string, mixed>
      */
-    public function getCombinations(int $productId, int $langId): array
+    public function getCombinations(ProductId $productId, LanguageId $languageId): array
     {
         //@todo: shop association not handled
         $qb = $this->connection->createQueryBuilder();
         $qb->select('pa.id_product_attribute, pa.reference, ag.id_attribute_group, pai.id_image, agl.name AS group_name, al.name AS attribute_name, a.id_attribute')
             ->from($this->dbPrefix . 'product_attribute', 'pa')
-            ->setParameter('langId', $langId)
-            ->setParameter('productId', $productId)
+            ->setParameter('langId', $languageId->getValue())
+            ->setParameter('productId', $productId->getValue())
             ->leftJoin(
                 'pa',
                 $this->dbPrefix . 'product_attribute_combination',
