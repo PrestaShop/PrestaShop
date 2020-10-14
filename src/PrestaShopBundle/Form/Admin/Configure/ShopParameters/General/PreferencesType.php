@@ -91,7 +91,6 @@ class PreferencesType extends TranslatorAwareType
 
         if ($this->isSecure) {
             $builder->add('enable_ssl', SwitchType::class, [
-                'required' => false,
                 'label' => $this->trans('Enable SSL', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans(
                     'If you own an SSL certificate for your shop\'s domain name, you can activate SSL encryption (https://) for customer account identification and order processing.',
@@ -102,7 +101,6 @@ class PreferencesType extends TranslatorAwareType
 
         $builder
             ->add('enable_ssl_everywhere', SwitchType::class, [
-                'required' => false,
                 'disabled' => !$isSslEnabled,
                 'label' => $this->trans(
                     'Enable SSL on all pages',
@@ -114,7 +112,6 @@ class PreferencesType extends TranslatorAwareType
                 ),
             ])
             ->add('enable_token', SwitchType::class, [
-                'required' => false,
                 'disabled' => !$this->isContextDependantOptionEnabled(),
                 'label' => $this->trans(
                     'Increase front office security',
@@ -126,7 +123,6 @@ class PreferencesType extends TranslatorAwareType
                 ),
             ])
             ->add('allow_html_iframes', SwitchType::class, [
-                'required' => false,
                 'label' => $this->trans(
                         'Allow iframes on HTML fields',
                         'Admin.Shopparameters.Feature'
@@ -137,7 +133,6 @@ class PreferencesType extends TranslatorAwareType
                 ),
             ])
             ->add('use_htmlpurifier', SwitchType::class, [
-                'required' => false,
                 'label' => $this->trans(
                         'Use HTMLPurifier Library',
                         'Admin.Shopparameters.Feature'
@@ -150,7 +145,6 @@ class PreferencesType extends TranslatorAwareType
             ->add(
                 'price_round_mode', ChoiceType::class, [
                     'placeholder' => false,
-                    'required' => false,
                     'choices_as_values' => true,
                     'choices' => [
                         'Round up away from zero, when it is half way there (recommended)' => $configuration->get('PS_ROUND_HALF_UP'),
@@ -168,7 +162,6 @@ class PreferencesType extends TranslatorAwareType
                 ])
             ->add('price_round_type', ChoiceType::class, [
                 'placeholder' => false,
-                'required' => false,
                 'choices_as_values' => true,
                 'choices' => [
                     'Round on each item' => Order::ROUND_ITEM,
@@ -183,7 +176,6 @@ class PreferencesType extends TranslatorAwareType
             ])
             ->add(
                 'display_suppliers', SwitchType::class, [
-                    'required' => false,
                     'label' => $this->trans('Display suppliers', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(
                         'Enable suppliers page on your front office even when its module is disabled.',
@@ -201,7 +193,6 @@ class PreferencesType extends TranslatorAwareType
                 ])
             ->add(
                 'display_best_sellers', SwitchType::class, [
-                    'required' => false,
                     'label' => $this->trans('Display best sellers', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(
                         'Enable best sellers page on your front office even when its respective module is disabled.',
@@ -209,7 +200,6 @@ class PreferencesType extends TranslatorAwareType
                     ),
                 ])
             ->add('multishop_feature_active', SwitchType::class, [
-                'required' => false,
                 'disabled' => !$this->isContextDependantOptionEnabled(),
                 'label' => $this->trans('Enable Multistore', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans(
@@ -218,7 +208,6 @@ class PreferencesType extends TranslatorAwareType
                 ),
             ])
             ->add('shop_activity', ChoiceType::class, [
-                'required' => false,
                 'choices_as_values' => true,
                 'placeholder' => $this->trans('-- Please choose your main activity --', 'Install'),
                 'choices' => [
