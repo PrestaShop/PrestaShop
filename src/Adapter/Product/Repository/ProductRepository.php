@@ -319,4 +319,43 @@ class ProductRepository extends AbstractObjectModelRepository
             sprintf('Failed to delete following products: "%s"', implode(', ', $failedIds))
         );
     }
+
+    /**
+     * @param string $query
+     * @param int $langId
+     * @param int $limit
+     *
+     * @return array
+     */
+    public function searchProducts(string $query, int $langId, int $limit): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('p.id_product, p.reference, pl.name, i.id_image')
+            ->from($this->dbPrefix . 'product', 'p')
+            ->leftJoin(
+                'p',
+                $this->dbPrefix . 'product_lang',
+                'pl',
+                'p.id_product = pl.id_product AND pl.id_lang = :langId'
+            )->innerJoin(
+                'p',
+                $this->dbPrefix . 'image',
+                'i',
+                'p.id_product = i.id_product AND i.cover = 1'
+            )
+            ->setParameter('langId', $langId)
+            ->where('pl.name LIKE :searchQuery')
+            ->orWhere('p.reference LIKE :searchQuery')
+            ->setParameter('searchQuery', '%' . $query . '%')
+            ->setMaxResults($limit)
+        ;
+
+        $results = $qb->execute()->fetchAll();
+
+        if (!$results) {
+            return [];
+        }
+
+        return $results;
+    }
 }
