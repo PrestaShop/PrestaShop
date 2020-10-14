@@ -463,6 +463,8 @@ services:
 
     form.type.localization_configuration:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalizationConfigurationType'
+        parent: 'form.type.translatable.aware'
+        public: true
         arguments:
             - '@=service("prestashop.core.form.choice_provider.language_by_id").getChoices()'
             - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
@@ -477,6 +479,20 @@ services:
         public: true
         arguments:
             - '@=service("prestashop.core.form.choice_provider.localization_pack_by_iso_code").getChoices()'
+        tags:
+            - { name: form.type }
+
+    form.type.localization.local_units:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalUnitsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.localization.advanced_configuration:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\AdvancedConfigurationType'
+        parent: 'form.type.translatable.aware'
+        public: true
         tags:
             - { name: form.type }
 
