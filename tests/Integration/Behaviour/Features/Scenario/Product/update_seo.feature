@@ -166,7 +166,6 @@ Feature: Update product SEO options from Back Office (BO)
     And product "product2" localized "meta_description" should be "en-US:product2 meta description;fr-FR:toolazytofindFRtrans meta desc1"
     And product "product2" localized "link_rewrite" should be "en-US:waterproof-boots;fr-FR:toolazytofindFRtrans-link-rewr"
 
-
   Scenario: Search product for seo redirect option by name
     Given I add product product3 with following information:
       | name       | en-US:nice boots |

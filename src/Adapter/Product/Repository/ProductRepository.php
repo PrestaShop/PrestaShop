@@ -335,14 +335,14 @@ class ProductRepository extends AbstractObjectModelRepository
 
         //@todo: shop association not handled
         $qb = $this->connection->createQueryBuilder();
-        $qb->select('p.id_product, p.reference, pl.name, i.id_image')
+        $qb->select('p.id_product, p.reference, pl.name, pl.link_rewrite, i.id_image')
             ->from($this->dbPrefix . 'product', 'p')
             ->leftJoin(
                 'p',
                 $this->dbPrefix . 'product_lang',
                 'pl',
                 'p.id_product = pl.id_product AND pl.id_lang = :langId'
-            )->innerJoin(
+            )->leftJoin(
                 'p',
                 $this->dbPrefix . 'image',
                 'i',

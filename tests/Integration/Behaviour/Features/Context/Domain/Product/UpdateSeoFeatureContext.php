@@ -171,6 +171,8 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
 
     /**
      * @Then search results for product SEO redirect option should be the following:
+     *
+     * @param TableNode $tableNode
      */
     public function assertSearchResults(TableNode $tableNode): void
     {
@@ -188,13 +190,13 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
             );
 
             Assert::assertEquals(
-                $this->getSharedStorage()->get($expectedDataRow['name']),
+                $expectedDataRow['name'],
                 $productForRedirectOption->getName(),
                 'Unexpected product name in search results'
             );
 
             Assert::assertEquals(
-                $this->getSharedStorage()->get($expectedDataRow['reference']),
+                $expectedDataRow['reference'],
                 $productForRedirectOption->getReference(),
                 'Unexpected product name in search results'
             );
