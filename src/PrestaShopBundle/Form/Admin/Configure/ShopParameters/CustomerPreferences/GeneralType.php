@@ -42,7 +42,6 @@ class GeneralType extends TranslatorAwareType
     {
         $builder
             ->add('redisplay_cart_at_login', SwitchType::class, [
-                'required' => false,
                 'label' => $this->trans(
                     'Re-display cart at login',
                     'Admin.Shopparameters.Feature'
@@ -53,7 +52,6 @@ class GeneralType extends TranslatorAwareType
                 ),
             ])
             ->add('send_email_after_registration', SwitchType::class, [
-                'required' => false,
                 'label' => $this->trans(
                     'Send an email after registration',
                     'Admin.Shopparameters.Feature'
@@ -64,7 +62,6 @@ class GeneralType extends TranslatorAwareType
                 ),
             ])
             ->add('password_reset_delay', TextWithUnitType::class, [
-                'required' => false,
                 'label' => $this->trans(
                     'Password reset delay',
                     'Admin.Shopparameters.Feature'
@@ -76,7 +73,6 @@ class GeneralType extends TranslatorAwareType
                 'unit' => $this->trans('minutes', 'Admin.Shopparameters.Feature'),
             ])
             ->add('enable_b2b_mode', SwitchType::class, [
-                'required' => false,
                 'label' => $this->trans(
                     'Enable B2B mode',
                     'Admin.Shopparameters.Feature'
@@ -87,7 +83,6 @@ class GeneralType extends TranslatorAwareType
                 ),
             ])
             ->add('ask_for_birthday', SwitchType::class, [
-                'required' => false,
                 'label' => $this->trans(
                     'Ask for birth date',
                     'Admin.Shopparameters.Feature'
@@ -98,7 +93,6 @@ class GeneralType extends TranslatorAwareType
                 ),
             ])
             ->add('enable_offers', SwitchType::class, [
-                'required' => false,
                 'label' => $this->trans(
                     'Enable partner offers',
                     'Admin.Shopparameters.Feature'
