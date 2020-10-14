@@ -26,49 +26,64 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
-
-use Pack;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetPackedProducts;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetPackedProductsHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\PackedProduct;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
 /**
- * Handles GetPackedProducts query using legacy object model
+ * Transfers related product data
  */
-final class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
+class RelatedProduct
 {
     /**
      * @var int
      */
-    private $defaultLangId;
+    private $productId;
 
     /**
-     * @param int $defaultLangId
+     * @var string
      */
-    public function __construct(int $defaultLangId)
-    {
-        $this->defaultLangId = $defaultLangId;
+    private $name;
+
+    /**
+     * @var string
+     */
+    private $reference;
+
+    /**
+     * @param int $productId
+     * @param string $name
+     * @param string $reference
+     */
+    public function __construct(
+        int $productId,
+        string $name,
+        string $reference
+    ) {
+        $this->productId = $productId;
+        $this->name = $name;
+        $this->reference = $reference;
     }
 
     /**
-     * {@inheritdoc}
+     * @return int
      */
-    public function handle(GetPackedProducts $query): array
+    public function getProductId(): int
     {
-        $packId = $query->getPackId()->getValue();
+        return $this->productId;
+    }
 
-        $packedItems = Pack::getItems($packId, $this->defaultLangId);
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
 
-        $packedProducts = [];
-        foreach ($packedItems as $packedItem) {
-            $packedProducts[] = new PackedProduct(
-                (int) $packedItem->id,
-                (int) $packedItem->pack_quantity,
-                (int) $packedItem->id_pack_product_attribute
-            );
-        }
-
-        return $packedProducts;
+    /**
+     * @return string
+     */
+    public function getReference(): string
+    {
+        return $this->reference;
     }
 }

@@ -26,49 +26,36 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
+namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use Pack;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetPackedProducts;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetPackedProductsHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\PackedProduct;
+use PrestaShop\PrestaShop\Adapter\Product\Update\RelatedProductsUpdater;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetRelatedProductsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\SetRelatedProductsHandlerInterface;
 
 /**
- * Handles GetPackedProducts query using legacy object model
+ * handles @see SetRelatedProductsCommand using legacy object models
  */
-final class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
+final class SetRelatedProductsHandler implements SetRelatedProductsHandlerInterface
 {
     /**
-     * @var int
+     * @var RelatedProductsUpdater
      */
-    private $defaultLangId;
+    private $relatedProductsUpdater;
 
     /**
-     * @param int $defaultLangId
+     * @param RelatedProductsUpdater $relatedProductsUpdater
      */
-    public function __construct(int $defaultLangId)
-    {
-        $this->defaultLangId = $defaultLangId;
+    public function __construct(
+        RelatedProductsUpdater $relatedProductsUpdater
+    ) {
+        $this->relatedProductsUpdater = $relatedProductsUpdater;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function handle(GetPackedProducts $query): array
+    public function handle(SetRelatedProductsCommand $command): void
     {
-        $packId = $query->getPackId()->getValue();
-
-        $packedItems = Pack::getItems($packId, $this->defaultLangId);
-
-        $packedProducts = [];
-        foreach ($packedItems as $packedItem) {
-            $packedProducts[] = new PackedProduct(
-                (int) $packedItem->id,
-                (int) $packedItem->pack_quantity,
-                (int) $packedItem->id_pack_product_attribute
-            );
-        }
-
-        return $packedProducts;
+        $this->relatedProductsUpdater->setRelatedProducts($command->getProductId(), $command->getRelatedProductIds());
     }
 }

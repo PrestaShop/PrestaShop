@@ -26,49 +26,33 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
-use Pack;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetPackedProducts;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetPackedProductsHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\PackedProduct;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Handles GetPackedProducts query using legacy object model
+ * Removes all related products from given product
  */
-final class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
+class RemoveAllRelatedProductsCommand
 {
     /**
-     * @var int
+     * @var ProductId
      */
-    private $defaultLangId;
+    private $productId;
 
     /**
-     * @param int $defaultLangId
+     * @param int $productId
      */
-    public function __construct(int $defaultLangId)
+    public function __construct(int $productId)
     {
-        $this->defaultLangId = $defaultLangId;
+        $this->productId = new ProductId($productId);
     }
 
     /**
-     * {@inheritdoc}
+     * @return ProductId
      */
-    public function handle(GetPackedProducts $query): array
+    public function getProductId(): ProductId
     {
-        $packId = $query->getPackId()->getValue();
-
-        $packedItems = Pack::getItems($packId, $this->defaultLangId);
-
-        $packedProducts = [];
-        foreach ($packedItems as $packedItem) {
-            $packedProducts[] = new PackedProduct(
-                (int) $packedItem->id,
-                (int) $packedItem->pack_quantity,
-                (int) $packedItem->id_pack_product_attribute
-            );
-        }
-
-        return $packedProducts;
+        return $this->productId;
     }
 }

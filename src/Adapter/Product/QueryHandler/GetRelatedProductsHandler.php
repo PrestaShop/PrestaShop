@@ -28,47 +28,44 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
-use Pack;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetPackedProducts;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetPackedProductsHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\PackedProduct;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetRelatedProductsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RelatedProduct;
 
-/**
- * Handles GetPackedProducts query using legacy object model
- */
-final class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
+final class GetRelatedProductsHandler implements GetRelatedProductsHandlerInterface
 {
     /**
-     * @var int
+     * @var ProductRepository
      */
-    private $defaultLangId;
+    private $productRepository;
 
     /**
-     * @param int $defaultLangId
+     * @param ProductRepository $productRepository
      */
-    public function __construct(int $defaultLangId)
-    {
-        $this->defaultLangId = $defaultLangId;
+    public function __construct(
+        ProductRepository $productRepository
+    ) {
+        $this->productRepository = $productRepository;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function handle(GetPackedProducts $query): array
+    public function handle(GetRelatedProducts $query): array
     {
-        $packId = $query->getPackId()->getValue();
+        $results = $this->productRepository->getRelatedProducts($query->getProductId(), $query->getLanguageId());
 
-        $packedItems = Pack::getItems($packId, $this->defaultLangId);
+        $relatedProducts = [];
 
-        $packedProducts = [];
-        foreach ($packedItems as $packedItem) {
-            $packedProducts[] = new PackedProduct(
-                (int) $packedItem->id,
-                (int) $packedItem->pack_quantity,
-                (int) $packedItem->id_pack_product_attribute
+        foreach ($results as $result) {
+            $relatedProducts[] = new RelatedProduct(
+                (int) $result['id_product'],
+                $result['name'],
+                $result['reference']
             );
         }
 
-        return $packedProducts;
+        return $relatedProducts;
     }
 }
