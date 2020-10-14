@@ -422,7 +422,7 @@ class TranslationController extends ApiController
     }
 
     /**
-     * @param $search
+     * @param string|array $search
      *
      * @return array
      */

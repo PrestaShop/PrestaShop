@@ -883,6 +883,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 if (null !== $container) {
                     $themeManagerBuilder = $container->get('prestashop.core.addon.theme.theme_manager_builder');
                 } else {
+                    // SynfonyContainer not available, we won't have TranslationService nor ProviderFactory
                     $themeManagerBuilder = new ThemeManagerBuilder($this->context, Db::getInstance());
                 }
                 $languages = Language::getLanguages();
