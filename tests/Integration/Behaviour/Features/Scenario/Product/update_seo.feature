@@ -37,8 +37,7 @@ Feature: Update product SEO options from Back Office (BO)
     And product "product2" localized "meta_description" should be "en-US:product2 meta description"
     And product "product2" localized "link_rewrite" should be "en-US:waterproof-boots"
     And product product2 should have following seo options:
-      | redirect_type   | 301-product |
-      | redirect_target | product1    |
+      | redirect_type | 301-product |
     When I update product product2 SEO information with following values:
       | redirect_type   | 302-product |
       | redirect_target |             |
@@ -106,25 +105,25 @@ Feature: Update product SEO options from Back Office (BO)
     When I update product product2 SEO information with following values:
       | redirect_type   | 301-product |
       | redirect_target | product1    |
-    And product product2 should have following seo options:
+    Then product product2 should have following seo options:
       | redirect_type   | 301-product |
       | redirect_target | product1    |
     When I update product product2 SEO information with following values:
       | redirect_type   | 302-product |
       | redirect_target | product1    |
-    And product product2 should have following seo options:
+    Then product product2 should have following seo options:
       | redirect_type   | 302-product |
       | redirect_target | product1    |
     When I update product product2 SEO information with following values:
       | redirect_type   | 301-category |
       | redirect_target | men          |
-    And product product2 should have following seo options:
+    Then product product2 should have following seo options:
       | redirect_type   | 301-category |
       | redirect_target | men          |
     When I update product product2 SEO information with following values:
       | redirect_type   | 302-category |
       | redirect_target | clothes      |
-    And product product2 should have following seo options:
+    Then product product2 should have following seo options:
       | redirect_type   | 302-category |
       | redirect_target | clothes      |
     And product "product2" localized "meta_title" should be "en-US:product2 meta title"
@@ -166,3 +165,40 @@ Feature: Update product SEO options from Back Office (BO)
     And product "product2" localized "meta_title" should be "en-US:metatitl prod1;fr-FR:toolazytofindFRtrans meta title1"
     And product "product2" localized "meta_description" should be "en-US:product2 meta description;fr-FR:toolazytofindFRtrans meta desc1"
     And product "product2" localized "link_rewrite" should be "en-US:waterproof-boots;fr-FR:toolazytofindFRtrans-link-rewr"
+
+
+  Scenario: Search product for seo redirect option by name
+    Given I add product product3 with following information:
+      | name       | nice boots |
+      | is_virtual | false      |
+    And I update product product3 options with following information:
+      | reference | 1234567 |
+    And I add product product4 with following information:
+      | name       | nice pants |
+      | is_virtual | false      |
+    And I update product product4 options with following information:
+      | reference | 1334567 |
+    And I add product product5 with following information:
+      | name       | nice hat |
+      | is_virtual | false    |
+    And I update product product5 options with following information:
+      | reference | 1344567 |
+    And I add product product6 with following information:
+      | name       | nice scarf |
+      | is_virtual | false      |
+    And I update product product6 options with following information:
+      | reference | 1344567 |
+    And I add product product7 with following information:
+      | name       | nice glasses |
+      | is_virtual | false        |
+    And I update product product7 options with following information:
+      | reference | 1345567 |
+    When I search products for SEO redirect option by phrase "nic"
+    Then search results for product SEO redirect option should be the following:
+#    @todo how to test image?
+      | product  | name         | reference |
+      | product3 | nice boots   | 1234567   |
+      | product4 | nice pants   | 1334567   |
+      | product5 | nice hat     | 1344567   |
+      | product6 | nice scarf   | 1344567   |
+      | product7 | nice glasses | 1345567   |
