@@ -39,7 +39,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\SetPackProductsHand
 final class SetPackProductsHandler extends AbstractProductHandler implements SetPackProductsHandlerInterface
 {
     /**
-     * @var ProductPackUpdater
+     * todo: explore following legacy comment in AdminProductsController::3313 :
+     *  Excluding downloadable products from packs because download from pack is not supported
+     *
+     * {@inheritdoc}
      */
     private $productPackUpdater;
 
