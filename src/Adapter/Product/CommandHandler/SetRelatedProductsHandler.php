@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\RelatedProductsUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetRelatedProductsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\SetRelatedProductsHandlerInterface;
@@ -39,24 +38,16 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\SetRelatedProductsH
 final class SetRelatedProductsHandler implements SetRelatedProductsHandlerInterface
 {
     /**
-     * @var ProductRepository
-     */
-    private $productRepository;
-
-    /**
      * @var RelatedProductsUpdater
      */
     private $relatedProductsUpdater;
 
     /**
-     * @param ProductRepository $productRepository
      * @param RelatedProductsUpdater $relatedProductsUpdater
      */
     public function __construct(
-        ProductRepository $productRepository,
         RelatedProductsUpdater $relatedProductsUpdater
     ) {
-        $this->productRepository = $productRepository;
         $this->relatedProductsUpdater = $relatedProductsUpdater;
     }
 
@@ -65,7 +56,6 @@ final class SetRelatedProductsHandler implements SetRelatedProductsHandlerInterf
      */
     public function handle(SetRelatedProductsCommand $command): void
     {
-        $product = $this->productRepository->get($command->getProductId());
-        $this->relatedProductsUpdater->set($product, $command->getRelatedProductIds());
+        $this->relatedProductsUpdater->setRelatedProducts($command->getProductId(), $command->getRelatedProductIds());
     }
 }
