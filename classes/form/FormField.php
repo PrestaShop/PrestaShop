@@ -187,7 +187,7 @@ class FormFieldCore
         return $this->constraints;
     }
 
-    public function setAutocompleteAttribute($autocomplete): FormFieldCore
+    public function setAutocompleteAttribute(string $autocomplete): FormFieldCore
     {
         $this->autocomplete = $autocomplete;
 
