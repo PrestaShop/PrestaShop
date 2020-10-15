@@ -2,6 +2,7 @@ require('module-alias/register');
 
 // Helpers to open and close browser
 const helper = require('@utils/helpers');
+const files = require('@utils/files');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
@@ -30,6 +31,8 @@ let numberOfOrderStatuses = 0;
 
 /*
 Filter order status
+Create 2 order statuses
+Pagination next and previous
  */
 describe('Filter, sort and pagination order status', async () => {
   // before and after functions
@@ -40,6 +43,12 @@ describe('Filter, sort and pagination order status', async () => {
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
+
+    /* Delete the generated images */
+    for (let i = 0; i <= 2; i++) {
+      await files.deleteFile(`todelete${i}.jpg`);
+    }
+
   });
 
   it('should login in BO', async function () {
@@ -75,7 +84,7 @@ describe('Filter, sort and pagination order status', async () => {
     await expect(numberOfOrderStatuses).to.be.above(0);
   });
 
-  // 1 - Filter order statuses
+  /*// 1 - Filter order statuses
   describe('Filter order statuses table', async () => {
     const tests = [
       {
@@ -174,9 +183,9 @@ describe('Filter, sort and pagination order status', async () => {
         await expect(numberOfLinesAfterReset).to.equal(numberOfOrderStatuses);
       });
     });
-  });
+  });*/
 
-  // 1 - Create 2 order statuses
+  // 2 - Create 2 order statuses
   const creationTests = new Array(2).fill(0, 0, 2);
 
   creationTests.forEach((test, index) => {
@@ -201,6 +210,37 @@ describe('Filter, sort and pagination order status', async () => {
         const numberOfLinesAfterCreation = await statusesPage.getNumberOfElementInGrid(page);
         await expect(numberOfLinesAfterCreation).to.be.equal(numberOfOrderStatuses + index + 1);
       });
+    });
+  });
+
+  // 3 - Pagination
+  describe('Pagination next and previous', async () => {
+    it('should change the item number to 20 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
+
+      const paginationNumber = await statusesPage.selectPaginationLimit(page, '20');
+      expect(paginationNumber).to.equal('1');
+    });
+
+    it('should click on next', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
+
+      const paginationNumber = await statusesPage.paginationNext(page);
+      expect(paginationNumber).to.equal('2');
+    });
+
+    it('should click on previous', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
+
+      const paginationNumber = await statusesPage.paginationPrevious(page);
+      expect(paginationNumber).to.equal('1');
+    });
+
+    it('should change the item number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+
+      const paginationNumber = await statusesPage.selectPaginationLimit(page, '50');
+      expect(paginationNumber).to.equal('1');
     });
   });
 });
