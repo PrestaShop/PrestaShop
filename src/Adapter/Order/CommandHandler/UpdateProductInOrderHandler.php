@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
-use Cart;
 use Configuration;
 use Exception;
 use Hook;
@@ -77,10 +76,6 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
     {
         try {
             $order = $this->getOrder($command->getOrderId());
-            $cart = Cart::getCartByOrderId($order->id);
-            if (!($cart instanceof Cart)) {
-                throw new OrderException('Cart linked to the order cannot be found.');
-            }
 
             $orderDetail = new OrderDetail($command->getOrderDetailId());
             $orderInvoice = null;
