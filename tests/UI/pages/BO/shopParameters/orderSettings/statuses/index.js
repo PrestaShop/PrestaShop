@@ -64,7 +64,7 @@ class Statuses extends BOBasePage {
   /* Filter methods */
 
   /**
-   * Get Number of image types
+   * Get Number of order statuses
    * @param page
    * @return {Promise<number>}
    */
@@ -91,6 +91,7 @@ class Statuses extends BOBasePage {
    */
   async resetAndGetNumberOfLines(page) {
     await this.resetFilter(page);
+
     return this.getNumberOfElementInGrid(page);
   }
 

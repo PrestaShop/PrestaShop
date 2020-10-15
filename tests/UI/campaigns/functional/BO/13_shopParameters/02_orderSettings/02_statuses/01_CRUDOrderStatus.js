@@ -221,7 +221,7 @@ describe('Create, read, update and delete order status in BO', async () => {
       await expect(textEmail).to.contains(editOrderStatusData.name);
     });
 
-    it('should delete image type', async function () {
+    it('should delete order status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteOrderStatus', baseContext);
 
       const textResult = await statusesPage.deleteOrderStatus(page, 1);
