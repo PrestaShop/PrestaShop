@@ -98,6 +98,7 @@ class Order extends BOBasePage {
           value: option.value,
         })),
     );
+
     options = await options.filter(option => statusName === option.textContent);
     return options.length !== 0;
   }
@@ -215,4 +216,5 @@ class Order extends BOBasePage {
     /* eslint-enable no-return-assign, no-param-reassign */
   }
 }
+
 module.exports = new Order();

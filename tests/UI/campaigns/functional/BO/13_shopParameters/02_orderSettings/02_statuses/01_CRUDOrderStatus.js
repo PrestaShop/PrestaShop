@@ -30,11 +30,12 @@ let browserContext;
 let page;
 let numberOfOrderStatuses = 0;
 
-const createOrderStatusData = new OrderStatusFaker({name: 'new_order_status'});
-const editOrderStatusData = new OrderStatusFaker({name: 'edit_order_status'});
+const createOrderStatusData = new OrderStatusFaker();
+const editOrderStatusData = new OrderStatusFaker({name: `edit_${createOrderStatusData.name}`});
 
 /*
 Create new order status
+View new status in order page
 Update order status
 Delete order status
  */
