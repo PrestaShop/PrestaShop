@@ -16,21 +16,21 @@ Feature: Order from Back Office (BO)
     And there is customer "testCustomer" with email "pub@prestashop.com"
     And customer "testCustomer" has address in "US" country
     And shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
-    And there is a product in the catalog named "Test Product Gift Cart Rule" with a price of 15.0 and 100 items in stock
-    And the available stock for product "Test Product Gift Cart Rule" should be 100
+    And there is a product in the catalog named "Test Product Gifted" with a price of 15.0 and 100 items in stock
+    And the available stock for product "Test Product Gifted" should be 100
     And I create an empty cart "dummy_cart" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
     And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
 
   Scenario: Add discount with gift product to cart, and remove it in the order
-    Given I use a voucher "CartRuleGiftProduct" which provides a gift product "Test Product Gift Cart Rule" on the cart "dummy_cart"
+    Given I use a voucher "CartRuleGiftProduct" which provides a gift product "Test Product Gifted" on the cart "dummy_cart"
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |
       | message             | test                       |
       | payment module name | dummy_payment              |
       | status              | Awaiting bank wire payment |
     Then order "bo_order1" should have 3 products in total
-    And order "bo_order1" should have 0 invoices
+    And order "bo_order1" should have 0 invoice
     And order "bo_order1" should have 1 cart rule
     And order "bo_order1" should have following details:
       | total_products           | 38.800 |
@@ -43,7 +43,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    And product "Test Product Gift Cart Rule" in order "bo_order1" has following details:
+    And product "Test Product Gifted" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 15.00 |
       | unit_price_tax_incl         | 15.90 |
@@ -51,10 +51,10 @@ Feature: Order from Back Office (BO)
       | total_price_tax_incl        | 15.90 |
       | total_price_tax_excl        | 15.00 |
     And order "bo_order1" should have cart rule "CartRuleGiftProduct" with amount "$15.00"
-    And the available stock for product "Test Product Gift Cart Rule" should be 99
+    And the available stock for product "Test Product Gifted" should be 99
     When I remove cart rule "CartRuleGiftProduct" from order "bo_order1"
     Then order "bo_order1" should have 2 products in total
-    And order "bo_order1" should have 0 invoices
+    And order "bo_order1" should have 0 invoice
     And order "bo_order1" should have 0 cart rule
     And order "bo_order1" should have following details:
       | total_products           | 23.800 |
@@ -67,19 +67,19 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    And order "bo_order1" should contain 0 product "Test Product Gift Cart Rule"
-    And the available stock for product "Test Product Gift Cart Rule" should be 100
+    And order "bo_order1" should contain 0 product "Test Product Gifted"
+    And the available stock for product "Test Product Gifted" should be 100
 
   Scenario: Add a product then add a discount with this product as a gift, and remove it from the order
-    Given I add 1 products "Test Product Gift Cart Rule" to the cart "dummy_cart"
-    And I use a voucher "CartRuleGiftProduct" which provides a gift product "Test Product Gift Cart Rule" on the cart "dummy_cart"
+    Given I add 1 products "Test Product Gifted" to the cart "dummy_cart"
+    And I use a voucher "CartRuleGiftProduct" which provides a gift product "Test Product Gifted" on the cart "dummy_cart"
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |
       | message             | test                       |
       | payment module name | dummy_payment              |
       | status              | Awaiting bank wire payment |
     Then order "bo_order1" should have 4 products in total
-    And order "bo_order1" should have 0 invoices
+    And order "bo_order1" should have 0 invoice
     And order "bo_order1" should have 1 cart rule
     And order "bo_order1" should have following details:
       | total_products           | 53.800 |
@@ -92,7 +92,7 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    And product "Test Product Gift Cart Rule" in order "bo_order1" has following details:
+    And product "Test Product Gifted" in order "bo_order1" has following details:
       | product_quantity            | 2     |
       | product_price               | 15.00 |
       | unit_price_tax_incl         | 15.90 |
@@ -100,10 +100,10 @@ Feature: Order from Back Office (BO)
       | total_price_tax_incl        | 31.80 |
       | total_price_tax_excl        | 30.00 |
     And order "bo_order1" should have cart rule "CartRuleGiftProduct" with amount "$15.00"
-    And the available stock for product "Test Product Gift Cart Rule" should be 98
+    And the available stock for product "Test Product Gifted" should be 98
     When I remove cart rule "CartRuleGiftProduct" from order "bo_order1"
     Then order "bo_order1" should have 3 products in total
-    And order "bo_order1" should have 0 invoices
+    And order "bo_order1" should have 0 invoice
     And order "bo_order1" should have 0 cart rule
     And order "bo_order1" should have following details:
       | total_products           | 38.800 |
@@ -116,17 +116,17 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    And product "Test Product Gift Cart Rule" in order "bo_order1" has following details:
+    And product "Test Product Gifted" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 15.90 |
       | total_price_tax_excl        | 15.00 |
-    And the available stock for product "Test Product Gift Cart Rule" should be 99
+    And the available stock for product "Test Product Gifted" should be 99
 
   Scenario: Add multiple order details contain the gift product, Then the one with at least 2 is updated
-    And I use a voucher "CartRuleGiftProduct" which provides a gift product "Test Product Gift Cart Rule" on the cart "dummy_cart"
+    And I use a voucher "CartRuleGiftProduct" which provides a gift product "Test Product Gifted" on the cart "dummy_cart"
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |
       | message             | test                       |
@@ -134,7 +134,7 @@ Feature: Order from Back Office (BO)
       | status              | Awaiting bank wire payment |
     And I generate invoice for "bo_order1" order
     And I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product Gift Cart Rule |
+      | name          | Test Product Gifted |
       | amount        | 2                           |
       | price         | 15.0                        |
     Then order "bo_order1" should have 5 products in total
@@ -152,14 +152,14 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    And the product "Test Product Gift Cart Rule" in the first invoice from the order "bo_order1" should have the following details:
+    And the product "Test Product Gifted" in the first invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 1     |
       | product_price               | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 15.90 |
       | total_price_tax_excl        | 15.00 |
-    And the product "Test Product Gift Cart Rule" in the second invoice from the order "bo_order1" should have the following details:
+    And the product "Test Product Gifted" in the second invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 2     |
       | product_price               | 15.00 |
       | unit_price_tax_incl         | 15.90 |
@@ -168,7 +168,7 @@ Feature: Order from Back Office (BO)
       | total_price_tax_excl        | 30.00 |
     # Discount is not correct here because of bug from issue #20778 (discount amount applied twice), current is 30 should be 15
 #    And order "bo_order1" should have cart rule "CartRuleGiftProduct" with amount "$15.00"
-    And the available stock for product "Test Product Gift Cart Rule" should be 97
+    And the available stock for product "Test Product Gifted" should be 97
     When I remove cart rule "CartRuleGiftProduct" from order "bo_order1"
     Then order "bo_order1" should have 4 products in total
     And order "bo_order1" should have 2 invoices
@@ -184,24 +184,24 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    And the product "Test Product Gift Cart Rule" in the first invoice from the order "bo_order1" should have the following details:
+    And the product "Test Product Gifted" in the first invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 1     |
       | product_price               | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 15.90 |
       | total_price_tax_excl        | 15.00 |
-    And the product "Test Product Gift Cart Rule" in the second invoice from the order "bo_order1" should have the following details:
+    And the product "Test Product Gifted" in the second invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 1     |
       | product_price               | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 15.90 |
       | total_price_tax_excl        | 15.00 |
-    And the available stock for product "Test Product Gift Cart Rule" should be 98
+    And the available stock for product "Test Product Gifted" should be 98
 
   Scenario: Add multiple order details that contain only one gift product, the first one is removed by default with the gift cart rule
-    And I use a voucher "CartRuleGiftProduct" which provides a gift product "Test Product Gift Cart Rule" on the cart "dummy_cart"
+    And I use a voucher "CartRuleGiftProduct" which provides a gift product "Test Product Gifted" on the cart "dummy_cart"
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |
       | message             | test                       |
@@ -209,7 +209,7 @@ Feature: Order from Back Office (BO)
       | status              | Awaiting bank wire payment |
     And I generate invoice for "bo_order1" order
     And I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product Gift Cart Rule |
+      | name          | Test Product Gifted |
       | amount        | 1                           |
       | price         | 15.0                        |
     Then order "bo_order1" should have 4 products in total
@@ -227,14 +227,14 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    And the product "Test Product Gift Cart Rule" in the first invoice from the order "bo_order1" should have the following details:
+    And the product "Test Product Gifted" in the first invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 1     |
       | product_price               | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 15.90 |
       | total_price_tax_excl        | 15.00 |
-    And the product "Test Product Gift Cart Rule" in the second invoice from the order "bo_order1" should have the following details:
+    And the product "Test Product Gifted" in the second invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 1     |
       | product_price               | 15.00 |
       | unit_price_tax_incl         | 15.90 |
@@ -243,7 +243,7 @@ Feature: Order from Back Office (BO)
       | total_price_tax_excl        | 15.00 |
     # Discount is not correct here because of bug from issue #20778 (discount amount applied twice), current is 30 should be 15
 #    And order "bo_order1" should have cart rule "CartRuleGiftProduct" with amount "$15.00"
-    And the available stock for product "Test Product Gift Cart Rule" should be 98
+    And the available stock for product "Test Product Gifted" should be 98
     When I remove cart rule "CartRuleGiftProduct" from order "bo_order1"
     Then order "bo_order1" should have 3 products in total
     And order "bo_order1" should have 2 invoices
@@ -259,12 +259,157 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    And the first invoice from order "bo_order1" should contain 0 product "Test Product Gift Cart Rule"
-    And the product "Test Product Gift Cart Rule" in the second invoice from the order "bo_order1" should have the following details:
+    And the first invoice from order "bo_order1" should contain 0 product "Test Product Gifted"
+    And the product "Test Product Gifted" in the second invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 1     |
       | product_price               | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 15.90 |
       | total_price_tax_excl        | 15.00 |
-    And the available stock for product "Test Product Gift Cart Rule" should be 99
+    And the available stock for product "Test Product Gifted" should be 99
+
+  Scenario: I have a cart rule that is associated to a product which adds a gift product, I add this product to cart and then I remove it
+    Given there is a product in the catalog named "Test Product With Auto Gift" with a price of 12.0 and 100 items in stock
+    And there is a cart rule named "MultiGiftAutoCartRule" that applies an amount discount of 1.0 with priority 1, quantity of 100 and quantity per user 100
+    And cart rule "MultiGiftAutoCartRule" has no discount code
+    And cart rule "MultiGiftAutoCartRule" is restricted to product "Test Product With Auto Gift"
+    And cart rule "MultiGiftAutoCartRule" offers free shipping
+    And cart rule "MultiGiftAutoCartRule" offers a gift product "Test Product Gifted"
+    And I add 1 products "Test Product With Auto Gift" to the cart "dummy_cart"
+    And I add order "bo_order1" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    Then order "bo_order1" should have 4 products in total
+    And order "bo_order1" should have 0 invoice
+    And order "bo_order1" should have 1 cart rule
+    And order "bo_order1" should have following details:
+      | total_products           | 50.800 |
+      | total_products_wt        | 53.850 |
+      | total_discounts_tax_excl | 23.00  |
+      | total_discounts_tax_incl | 24.38  |
+      | total_paid_tax_excl      | 34.800 |
+      | total_paid_tax_incl      | 36.890 |
+      | total_paid               | 36.890 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    And product "Test Product Gifted" in order "bo_order1" has following details:
+      | product_quantity            | 1     |
+      | product_price               | 15.00 |
+      | unit_price_tax_incl         | 15.90 |
+      | unit_price_tax_excl         | 15.00 |
+      | total_price_tax_incl        | 15.90 |
+      | total_price_tax_excl        | 15.00 |
+    And product "Test Product With Auto Gift" in order "bo_order1" has following details:
+      | product_quantity            | 1     |
+      | product_price               | 12.00 |
+      | unit_price_tax_incl         | 12.72 |
+      | unit_price_tax_excl         | 12.00 |
+      | total_price_tax_incl        | 12.72 |
+      | total_price_tax_excl        | 12.00 |
+    And order "bo_order1" should have cart rule "MultiGiftAutoCartRule" with amount "$23.00"
+    And the available stock for product "Test Product Gifted" should be 99
+    And the available stock for product "Test Product With Auto Gift" should be 99
+    When I remove product "Test Product With Auto Gift" from order "bo_order1"
+    Then order "bo_order1" should have 2 products in total
+    Then order "bo_order1" should contain 0 product "Test Product With Auto Gift"
+    Then order "bo_order1" should contain 0 product "Test Product Gifted"
+    Then order "bo_order1" should have 0 cart rule
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    And the available stock for product "Test Product With Auto Gift" should be 100
+  # Known issue
+#    And the available stock for product "Test Product Gifted" should be 100
+
+  @auto-gift
+  Scenario: I have a cart rule that is associated to a product which adds a gift product, I add this product to the order and then I remove it
+    Given there is a product in the catalog named "Test Product With Auto Gift" with a price of 12.0 and 100 items in stock
+    And there is a cart rule named "MultiGiftAutoCartRule" that applies an amount discount of 1.0 with priority 1, quantity of 100 and quantity per user 100
+    And cart rule "MultiGiftAutoCartRule" has no discount code
+    And cart rule "MultiGiftAutoCartRule" is restricted to product "Test Product With Auto Gift"
+    And cart rule "MultiGiftAutoCartRule" offers free shipping
+    And cart rule "MultiGiftAutoCartRule" offers a gift product "Test Product Gifted"
+    And I add order "bo_order1" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    Then order "bo_order1" should have 2 products in total
+    Then order "bo_order1" should have 0 cart rule
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product With Auto Gift |
+      | amount        | 1                           |
+      | price         | 12.00                       |
+#    Then order "bo_order1" should have 4 products in total
+    And order "bo_order1" should have 0 invoice
+    And order "bo_order1" should have 1 cart rule
+    And order "bo_order1" should have following details:
+      | total_products           | 50.800 |
+      | total_products_wt        | 53.850 |
+      | total_discounts_tax_excl | 23.00  |
+      | total_discounts_tax_incl | 24.38  |
+      | total_paid_tax_excl      | 34.800 |
+      | total_paid_tax_incl      | 36.890 |
+      | total_paid               | 36.890 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    And product "Test Product Gifted" in order "bo_order1" has following details:
+      | product_quantity            | 1     |
+      | product_price               | 15.00 |
+      | unit_price_tax_incl         | 15.90 |
+      | unit_price_tax_excl         | 15.00 |
+      | total_price_tax_incl        | 15.90 |
+      | total_price_tax_excl        | 15.00 |
+    And product "Test Product With Auto Gift" in order "bo_order1" has following details:
+      | product_quantity            | 1     |
+      | product_price               | 12.00 |
+      | unit_price_tax_incl         | 12.72 |
+      | unit_price_tax_excl         | 12.00 |
+      | total_price_tax_incl        | 12.72 |
+      | total_price_tax_excl        | 12.00 |
+    And order "bo_order1" should have cart rule "MultiGiftAutoCartRule" with amount "$23.00"
+    And the available stock for product "Test Product Gifted" should be 99
+    And the available stock for product "Test Product With Auto Gift" should be 99
+    When I remove product "Test Product With Auto Gift" from order "bo_order1"
+    Then order "bo_order1" should have 2 products in total
+    Then order "bo_order1" should contain 0 product "Test Product With Auto Gift"
+    Then order "bo_order1" should contain 0 product "Test Product Gifted"
+    Then order "bo_order1" should have 0 cart rule
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    And the available stock for product "Test Product With Auto Gift" should be 100
+  # Known issue
+#    And the available stock for product "Test Product Gifted" should be 100
