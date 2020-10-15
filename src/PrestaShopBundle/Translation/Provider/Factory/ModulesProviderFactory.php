@@ -84,7 +84,7 @@ class ModulesProviderFactory implements ProviderFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function build(TypeInterface $providerType): ProviderInterface
+    public function build($providerType): ProviderInterface
     {
         if (!$this->implements($providerType)) {
             throw new \RuntimeException(sprintf('Invalid provider type given: %s', get_class($providerType)));

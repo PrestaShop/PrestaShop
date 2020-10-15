@@ -53,4 +53,20 @@ class ThemesType implements TypeInterface
     {
         return $this->themeName;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFilenameFilters(): array
+    {
+        return [];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTranslationDomains(): array
+    {
+        return [];
+    }
 }
