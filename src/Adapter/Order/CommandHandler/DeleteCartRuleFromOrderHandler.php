@@ -106,7 +106,7 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
 
             // If cart rule was a gift product we must update an OrderDetail manually
             $giftOrderDetail = $this->getGiftOrderDetail($order, $cartRule);
-            if (null !== $giftOrderDetail) {
+            if ($giftOrderDetail instanceof OrderDetail) {
                 $newQuantity = ((int) $giftOrderDetail->product_quantity) - 1;
 
                 /*
@@ -119,7 +119,7 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
                     $order,
                     $giftOrderDetail,
                     $newQuantity,
-                    $giftOrderDetail->id_order_invoice != 0 ? new OrderInvoice($giftOrderDetail->id_order_invoice) : null,
+                    (int) $giftOrderDetail->id_order_invoice !== 0 ? new OrderInvoice((int) $giftOrderDetail->id_order_invoice) : null,
                     false
                 );
             } else {
