@@ -103,7 +103,7 @@ class OrderProductQuantityUpdater
         OrderDetail $orderDetail,
         int $newQuantity,
         ?OrderInvoice $orderInvoice,
-        $updateCart = true
+        bool $updateCart = true
     ): Order {
         $cart = new Cart($order->id_cart);
 
