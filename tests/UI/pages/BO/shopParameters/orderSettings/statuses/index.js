@@ -51,6 +51,11 @@ class Statuses extends BOBasePage {
     this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
     this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
+
+    // Sort Selectors
+    this.tableHead = `${this.gridTable} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
   }
 
   /* Header methods */
@@ -216,6 +221,39 @@ class Statuses extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
+  }
+
+  // Sort methods
+  /**
+   * Get content from all rows
+   * @param page
+   * @param columnName
+   * @param columnID
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(page, columnName, columnID) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable = [];
+
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumn(page, i, columnName, columnID);
+      await allRowsContentTable.push(rowContent);
+    }
+
+    return allRowsContentTable;
+  }
+
+  /**
+   * Sort table
+   * @param page
+   * @param sortBy, column to sort with
+   * @param columnID, id column
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page, sortBy, columnID, sortDirection) {
+    const sortColumnButton = `${this.sortColumnDiv(columnID)} i.icon-caret-${sortDirection}`;
+    await this.clickAndWaitForNavigation(page, sortColumnButton);
   }
 }
 

@@ -185,7 +185,68 @@ describe('Filter, sort and pagination order status', async () => {
     });
   });
 
-  // 2 - Create 2 order statuses
+  // 2 - Sort order statuses table
+  describe('Sort order statuses table', async () => {
+    const sortTests = [
+      {
+        args: {
+          testIdentifier: 'sortByIdDesc', sortBy: 'id_order_state', columnID: 1, sortDirection: 'down', isFloat: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByNameAsc', sortBy: 'name', columnID: 2, sortDirection: 'up',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByNameDesc', sortBy: 'name', columnID: 2, sortDirection: 'down',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByTemplateAsc', sortBy: 'template', columnID: 7, sortDirection: 'up',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByTemplateDesc', sortBy: 'template', columnID: 7, sortDirection: 'down',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByIdAsc', sortBy: 'id_order_state', columnID: 1, sortDirection: 'up', isFloat: true,
+        },
+      },
+    ];
+
+    sortTests.forEach((test) => {
+      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
+        let nonSortedTable = await statusesPage.getAllRowsColumnContent(page, test.args.sortBy, test.args.columnID);
+
+        await statusesPage.sortTable(page, test.args.sortBy, test.args.columnID, test.args.sortDirection);
+
+        let sortedTable = await statusesPage.getAllRowsColumnContent(page, test.args.sortBy, test.args.columnID);
+
+        if (test.args.isFloat) {
+          nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
+          sortedTable = await sortedTable.map(text => parseFloat(text));
+        }
+
+        const expectedResult = await statusesPage.sortArray(nonSortedTable, test.args.isFloat);
+
+        if (test.args.sortDirection === 'up') {
+          await expect(sortedTable).to.deep.equal(expectedResult);
+        } else {
+          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+        }
+      });
+    });
+  });
+
+  // 3 - Create 2 order statuses
   const creationTests = new Array(2).fill(0, 0, 2);
 
   creationTests.forEach((test, index) => {
@@ -213,7 +274,7 @@ describe('Filter, sort and pagination order status', async () => {
     });
   });
 
-  // 3 - Pagination
+  // 4 - Pagination
   describe('Pagination next and previous', async () => {
     it('should change the item number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
