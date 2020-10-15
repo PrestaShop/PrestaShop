@@ -56,6 +56,13 @@ class Statuses extends BOBasePage {
     this.tableHead = `${this.gridTable} thead`;
     this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
     this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+
+    // Bulk actions selectors
+    this.bulkActionBlock = 'div.bulk-actions';
+    this.bulkActionMenuButton = '#bulk_action_menu_order_state';
+    this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
+    this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
+    this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
   }
 
   /* Header methods */
@@ -254,6 +261,40 @@ class Statuses extends BOBasePage {
   async sortTable(page, sortBy, columnID, sortDirection) {
     const sortColumnButton = `${this.sortColumnDiv(columnID)} i.icon-caret-${sortDirection}`;
     await this.clickAndWaitForNavigation(page, sortColumnButton);
+  }
+
+  /* Bulk actions methods */
+  /**
+   * Select all rows
+   * @param page
+   * @return {Promise<void>}
+   */
+  async bulkSelectRows(page) {
+    await page.click(this.bulkActionMenuButton);
+
+    await Promise.all([
+      page.click(this.selectAllLink),
+      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+    ]);
+  }
+
+
+  /**
+   * Delete order statuses by bulk action
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async bulkDeleteOrderStatuses(page) {
+    this.dialogListener(page, true);
+    // Select all rows
+    await this.bulkSelectRows(page);
+
+    // Click on Button Bulk actions
+    await page.click(this.bulkActionMenuButton);
+
+    // Click on delete
+    await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 }
 

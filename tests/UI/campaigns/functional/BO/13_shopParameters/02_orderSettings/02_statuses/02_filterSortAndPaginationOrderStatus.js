@@ -48,7 +48,6 @@ describe('Filter, sort and pagination order status', async () => {
     for (let i = 0; i <= 2; i++) {
       await files.deleteFile(`todelete${i}.jpg`);
     }
-
   });
 
   it('should login in BO', async function () {
@@ -253,7 +252,7 @@ describe('Filter, sort and pagination order status', async () => {
     describe(`Create order status n°${index + 1} in BO`, async () => {
       const orderStatusData = new OrderStatusFaker({name: `todelete${index}`});
 
-      it('should go to add new tax rule group page', async function () {
+      it('should go to add new order status group page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddOrderStatusPage${index}`, baseContext);
 
         await statusesPage.goToNewOrderStatusPage(page);
@@ -302,6 +301,41 @@ describe('Filter, sort and pagination order status', async () => {
 
       const paginationNumber = await statusesPage.selectPaginationLimit(page, '50');
       expect(paginationNumber).to.equal('1');
+    });
+  });
+
+  // 5 : Delete order statuses created with bulk actions
+  describe('Delete order statuses with Bulk Actions', async () => {
+    it('should filter list by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
+
+      await statusesPage.filterTable(
+        page,
+        'input',
+        'name',
+        'todelete',
+      );
+
+      const numberOfLinesAfterFilter = await statusesPage.getNumberOfElementInGrid(page);
+
+      for (let i = 1; i <= numberOfLinesAfterFilter; i++) {
+        const textColumn = await statusesPage.getTextColumn(page, i, 'name', 3);
+        await expect(textColumn).to.contains('todelete');
+      }
+    });
+
+    it('should delete order statuses with Bulk Actions and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteStatus', baseContext);
+
+      const deleteTextResult = await statusesPage.bulkDeleteOrderStatuses(page);
+      await expect(deleteTextResult).to.be.contains(statusesPage.successfulMultiDeleteMessage);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
+
+      const numberOfLinesAfterReset = await statusesPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfLinesAfterReset).to.be.equal(numberOfOrderStatuses);
     });
   });
 });
