@@ -33,4 +33,19 @@ namespace PrestaShopBundle\Translation\Provider\Type;
  */
 interface TypeInterface
 {
+    /**
+     * Returns a list of patterns to filter catalogue files.
+     * Depends on the translation type.
+     *
+     * @return string[]
+     */
+    public function getFilenameFilters(): array;
+
+    /**
+     * Returns a list of patterns to filter translation domains.
+     * Depends on the translation type.
+     *
+     * @return string[]
+     */
+    public function getTranslationDomains(): array;
 }

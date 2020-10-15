@@ -41,9 +41,7 @@ interface ProviderFactoryInterface
     public function implements(TypeInterface $providerType): bool;
 
     /**
-     * @param TypeInterface $providerType
-     *
      * @return ProviderInterface
      */
-    public function build(TypeInterface $providerType): ProviderInterface;
+    public function build($providerType): ProviderInterface;
 }
