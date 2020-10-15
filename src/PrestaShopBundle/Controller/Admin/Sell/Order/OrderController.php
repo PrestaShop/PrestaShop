@@ -214,9 +214,11 @@ class OrderController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
      *
+     * @param Request $request
+     *
      * @return Response
      */
-    public function createAction()
+    public function createAction(Request $request)
     {
         /** @var MultistoreContextCheckerInterface $shopContextChecker */
         $shopContextChecker = $this->container->get('prestashop.adapter.shop.context');
@@ -240,6 +242,8 @@ class OrderController extends FrameworkBundleAdminController
             'currencies' => $currencies,
             'languages' => $languages,
             'summaryForm' => $summaryForm->createView(),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
             'recycledPackagingEnabled' => (bool) $configuration->get('PS_RECYCLABLE_PACK'),
             'giftSettingsEnabled' => (bool) $configuration->get('PS_GIFT_WRAPPING'),
         ]);
