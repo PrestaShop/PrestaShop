@@ -837,8 +837,8 @@
       <title>Perform actions before admin login controller reset action initialization</title>
       <description>This hook is launched before the initialization of the reset action in login controller</description>
     </hook>
-    <hook id="actionAdminLoginControllerResetBefore">
-      <name>actionAdminLoginControllerResetBefore</name>
+    <hook id="actionAdminLoginControllerResetAfter">
+      <name>actionAdminLoginControllerResetAfter</name>
       <title>Perform actions after admin login controller reset action initialization</title>
       <description>This hook is launched after the initialization of the reset action in login controller</description>
     </hook>
