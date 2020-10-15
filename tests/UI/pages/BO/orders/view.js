@@ -84,6 +84,25 @@ class Order extends BOBasePage {
   }
 
   /**
+   * Is status exist
+   * @param page
+   * @param statusName
+   * @returns {Promise<boolean>}
+   */
+  async isStatusExist(page, statusName) {
+    let options = await page.$$eval(
+      `${this.orderStatusesSelect} option`,
+      all => all.map(
+        option => ({
+          textContent: option.textContent,
+          value: option.value,
+        })),
+    );
+    options = await options.filter(option => statusName === option.textContent);
+    return options.length !== 0;
+  }
+
+  /**
    * Get document name
    * @param page
    * @param rowChild
