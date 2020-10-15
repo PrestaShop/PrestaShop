@@ -39,7 +39,7 @@ const initPrestashopComponents = () => {
 
   window.prestashop.component = {
     initComponents(components) {
-      components.forEach(component => {
+      components.forEach((component) => {
         if (window.prestashop.component[component] === undefined) {
           console.error(`Failed to initialize PrestaShop component "${component}". This component doesn't exist.`);
 
@@ -50,7 +50,7 @@ const initPrestashopComponents = () => {
 
         if (window.prestashop.instance[componentInstanceName] !== undefined) {
           console.warn(
-            `Failed to initialize PrestaShop component "${component}". This component is already initialized.`
+            `Failed to initialize PrestaShop component "${component}". This component is already initialized.`,
           );
 
           return;
@@ -68,7 +68,7 @@ const initPrestashopComponents = () => {
     TranslatableInput,
     TaggableField,
     ChoiceTable,
-    EventEmitter
+    EventEmitter,
   };
 };
 export default initPrestashopComponents;
