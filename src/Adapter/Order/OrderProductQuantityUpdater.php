@@ -163,6 +163,7 @@ class OrderProductQuantityUpdater
                     if ((int) $orderDetailData['product_id'] === $updatedProduct['id_product']
                         && (int) $orderDetailData['product_attribute_id'] === $updatedProduct['id_product_attribute']) {
                         $updatedOrderDetail = new OrderDetail($orderDetailData['id_order_detail']);
+                        break;
                     }
                 }
 
