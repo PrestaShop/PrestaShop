@@ -53,4 +53,20 @@ class ModulesType implements TypeInterface
     {
         return $this->moduleName;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFilenameFilters(): array
+    {
+        return [];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTranslationDomains(): array
+    {
+        return [];
+    }
 }
