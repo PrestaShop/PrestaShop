@@ -84,7 +84,7 @@ describe('Filter, sort and pagination order status', async () => {
     await expect(numberOfOrderStatuses).to.be.above(0);
   });
 
-  /*// 1 - Filter order statuses
+  // 1 - Filter order statuses
   describe('Filter order statuses table', async () => {
     const tests = [
       {
@@ -183,7 +183,7 @@ describe('Filter, sort and pagination order status', async () => {
         await expect(numberOfLinesAfterReset).to.equal(numberOfOrderStatuses);
       });
     });
-  });*/
+  });
 
   // 2 - Create 2 order statuses
   const creationTests = new Array(2).fill(0, 0, 2);
