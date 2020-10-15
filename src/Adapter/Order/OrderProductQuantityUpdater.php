@@ -186,8 +186,6 @@ class OrderProductQuantityUpdater
 
             $orderDetail->product_quantity = $newQuantity;
             $orderDetail->reduction_percent = 0;
-            // update taxes
-            $orderDetail->updateTaxAmount($order);
             $orderDetail->update();
 
             if ($orderDetail->id_customization > 0) {

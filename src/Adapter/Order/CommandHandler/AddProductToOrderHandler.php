@@ -171,9 +171,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
             StockAvailable::synchronize($product->id);
 
-            // Update Tax lines
-            $orderDetail->updateTaxAmount($order);
-
             // Update totals amount of order
             $this->orderAmountUpdater->update($order, $cart, (int) $orderDetail->id_order_invoice);
             Hook::exec('actionOrderEdited', ['order' => $order]);
@@ -349,6 +346,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     }
 
     /**
+     * @todo: Most of this method can be simplified, since OrderAmountUpdater computes everything
+     *        the invoice computation here should be removable, as well as $order->addCartRule
+     *
      * @param Order $order
      * @param Cart $cart
      * @param bool $isFreeShipping
