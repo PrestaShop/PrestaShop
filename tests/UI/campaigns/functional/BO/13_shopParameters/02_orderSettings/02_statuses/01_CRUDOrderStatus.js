@@ -135,10 +135,10 @@ describe('Create, read, update and delete order status in BO', async () => {
       await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
     });
 
-    it(`should check that the order status '${createOrderStatusData.name}' is visible`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkIsStatusVisible', baseContext);
+    it(`should check if the order status '${createOrderStatusData.name}' is visible`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkDoesStatusVisible', baseContext);
 
-      const isStatusExist = await viewOrderPage.isStatusExist(page, createOrderStatusData.name);
+      const isStatusExist = await viewOrderPage.doesStatusExist(page, createOrderStatusData.name);
       await expect(isStatusExist, 'Status does not exist').to.be.true;
     });
   });
