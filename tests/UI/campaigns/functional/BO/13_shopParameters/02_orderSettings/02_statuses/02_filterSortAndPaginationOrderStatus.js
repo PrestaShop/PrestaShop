@@ -30,9 +30,11 @@ let page;
 let numberOfOrderStatuses = 0;
 
 /*
-Filter order status
+Filter order status by : Id, Name, Send email to customer, Delivery, Invoice, email template
+Sort order status by : Id, Name, Email template
 Create 2 order statuses
 Pagination next and previous
+Delete by bulk actions
  */
 describe('Filter, sort and pagination order status', async () => {
   // before and after functions
