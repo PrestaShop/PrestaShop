@@ -30,6 +30,8 @@ namespace PrestaShopBundle\Translation\Loader;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use PrestaShopBundle\Entity\Lang;
+use PrestaShopBundle\Entity\Repository\LangRepository;
+use PrestaShopBundle\Entity\Repository\TranslationRepository;
 use PrestaShopBundle\Entity\Translation;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -64,11 +66,12 @@ class DatabaseTranslationReader
         $catalogue = new MessageCatalogue($locale);
 
         if (!array_key_exists($locale, $langs)) {
-            $langs[$locale] = $this->entityManager
-                ->getRepository('PrestaShopBundle:Lang')
-                ->findOneByLocale($locale);
+            /** @var LangRepository $langRepository */
+            $langRepository = $this->entityManager->getRepository('PrestaShopBundle:Lang');
+            $langs[$locale] = $langRepository->getOneByLocale($locale);
         }
 
+        /** @var TranslationRepository $translationRepository */
         $translationRepository = $this->entityManager
             ->getRepository('PrestaShopBundle:Translation');
 

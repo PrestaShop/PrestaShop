@@ -28,6 +28,7 @@
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Context;
+use Db;
 use Doctrine\Common\Cache\FilesystemCache;
 use GuzzleHttp\Client;
 use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
