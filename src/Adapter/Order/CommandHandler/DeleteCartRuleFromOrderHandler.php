@@ -141,33 +141,23 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
         $productId = (int) $cartRule->gift_product;
         $productAttributeId = (int) $cartRule->gift_product_attribute;
 
-        // First filter OrderDetails matching the gift
-        $giftOrderDetails = [];
+        $fallbackOrderDetailId = null;
+        $giftOrderDetailId = null;
         foreach ($order->getOrderDetailList() as $orderDetail) {
             if ((int) $orderDetail['product_id'] !== $productId || (int) $orderDetail['product_attribute_id'] !== $productAttributeId) {
                 continue;
             }
-            $giftOrderDetails[] = $orderDetail;
-        }
 
-        if (empty($giftOrderDetails)) {
-            return null;
-        }
+            // We try to find a row with at least 2 items
+            if ($orderDetail['product_quantity'] > 1) {
+                $giftOrderDetailId = $orderDetail['id_order_detail'];
 
-        $giftOrderDetailId = null;
-        // We try to find a row with at least 2 quantities
-        foreach ($giftOrderDetails as $giftOrderDetail) {
-            if ($giftOrderDetail['product_quantity'] > 1) {
-                $giftOrderDetailId = $giftOrderDetail['id_order_detail'];
-                break;
+                return new OrderDetail($giftOrderDetailId);
             }
+            // keep the first one for fallback
+            $fallbackOrderDetailId = $fallbackOrderDetailId ?? $orderDetail['id_order_detail'];
         }
 
-        // By default use the first one as fallback
-        if (null === $giftOrderDetailId) {
-            $giftOrderDetailId = $giftOrderDetails[0]['id_order_detail'];
-        }
-
-        return null !== $giftOrderDetailId ? new OrderDetail($giftOrderDetailId) : null;
+        return (null === $fallbackOrderDetailId) ? null : new OrderDetail($fallbackOrderDetailId);
     }
 }
