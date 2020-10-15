@@ -116,39 +116,7 @@ class OrderProductQuantityUpdater
         ;
 
         try {
-            $oldQuantity = (int) $orderDetail->product_quantity;
-
-            // Perform deletion first, we don't want the OrderDetail to be saved with a quantity 0, this could lead to bugs
-            if (0 === $newQuantity) {
-                // Product deletion
-                $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, $updateCart);
-                $this->updateCustomizationOnProductDelete($order, $orderDetail, $oldQuantity);
-            } else {
-                $this->assertValidProductQuantity($orderDetail, $newQuantity);
-                if (null !== $orderInvoice) {
-                    $orderDetail->id_order_invoice = $orderInvoice->id;
-                }
-
-                $orderDetail->product_quantity = $newQuantity;
-                $orderDetail->reduction_percent = 0;
-                // update taxes
-                $orderDetail->updateTaxAmount($order);
-                $orderDetail->update();
-
-                if ($orderDetail->id_customization > 0) {
-                    $customization = new Customization($orderDetail->id_customization);
-                    $customization->quantity = $newQuantity;
-                    $customization->save();
-                }
-
-                // Update quantity on the cart and stock
-                if ($updateCart) {
-                    $cart = $this->updateProductQuantity($cart, $orderDetail, $oldQuantity, $newQuantity);
-                }
-            }
-
-            // Update product stocks
-            $this->updateStocks($cart, $orderDetail, $oldQuantity, $newQuantity);
+            $this->updateOrderDetail($order, $cart, $orderDetail, $newQuantity, $orderInvoice, $updateCart);
 
             // Update prices on the order after cart rules are recomputed
             $this->orderAmountUpdater->update($order, $cart, null !== $orderInvoice ? (int) $orderInvoice->id : null);
@@ -157,6 +125,85 @@ class OrderProductQuantityUpdater
         }
 
         return $order;
+    }
+
+    /**
+     * @param Order $order
+     * @param Cart $cart
+     * @param OrderDetail $orderDetail
+     * @param int $newQuantity
+     * @param OrderInvoice|null $orderInvoice
+     * @param bool $updateCart
+     *
+     * @throws OrderException
+     * @throws ProductOutOfStockException
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    private function updateOrderDetail(
+        Order $order,
+        Cart $cart,
+        OrderDetail $orderDetail,
+        int $newQuantity,
+        ?OrderInvoice $orderInvoice,
+        bool $updateCart
+    ): void {
+        $oldQuantity = (int) $orderDetail->product_quantity;
+
+        // Perform deletion first, we don't want the OrderDetail to be saved with a quantity 0, this could lead to bugs
+        if (0 === $newQuantity) {
+            // Product deletion
+            $updatedProducts = $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, $updateCart);
+            $this->updateCustomizationOnProductDelete($order, $orderDetail, $oldQuantity);
+
+            $orderDetails = $order->getOrderDetailList();
+            foreach ($updatedProducts as $updatedProduct) {
+                $updatedOrderDetail = null;
+                foreach ($orderDetails as $orderDetailData) {
+                    if ((int) $orderDetailData['product_id'] === $updatedProduct['id_product']
+                        && (int) $orderDetailData['product_attribute_id'] === $updatedProduct['id_product_attribute']) {
+                        $updatedOrderDetail = new OrderDetail($orderDetailData['id_order_detail']);
+                    }
+                }
+
+                if (null !== $updatedOrderDetail) {
+                    $newUpdatedQuantity = (int) $updatedOrderDetail->product_quantity + $updatedProduct['delta_quantity'];
+                    $this->updateOrderDetail(
+                        $order,
+                        $cart,
+                        $updatedOrderDetail,
+                        $newUpdatedQuantity,
+                        $orderInvoice,
+                        false
+                    );
+                }
+            }
+        } else {
+            $this->assertValidProductQuantity($orderDetail, $newQuantity);
+            if (null !== $orderInvoice) {
+                $orderDetail->id_order_invoice = $orderInvoice->id;
+            }
+
+            $orderDetail->product_quantity = $newQuantity;
+            $orderDetail->reduction_percent = 0;
+            // update taxes
+            $orderDetail->updateTaxAmount($order);
+            $orderDetail->update();
+
+            if ($orderDetail->id_customization > 0) {
+                $customization = new Customization($orderDetail->id_customization);
+                $customization->quantity = $newQuantity;
+                $customization->save();
+            }
+
+            // Update quantity on the cart and stock
+            if ($updateCart) {
+                $cart = $this->updateProductQuantity($cart, $orderDetail, $oldQuantity, $newQuantity);
+            }
+        }
+
+        // Update product stocks
+        $this->updateStocks($cart, $orderDetail, $oldQuantity, $newQuantity);
     }
 
     /**

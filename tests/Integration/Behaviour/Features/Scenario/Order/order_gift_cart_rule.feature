@@ -330,10 +330,8 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
     And the available stock for product "Test Product With Auto Gift" should be 100
-  # Known issue
-#    And the available stock for product "Test Product Gifted" should be 100
+    And the available stock for product "Test Product Gifted" should be 100
 
-  @auto-gift
   Scenario: I have a cart rule that is associated to a product which adds a gift product, I add this product to the order and then I remove it
     Given there is a product in the catalog named "Test Product With Auto Gift" with a price of 12.0 and 100 items in stock
     And there is a cart rule named "MultiGiftAutoCartRule" that applies an amount discount of 1.0 with priority 1, quantity of 100 and quantity per user 100
@@ -363,7 +361,7 @@ Feature: Order from Back Office (BO)
       | name          | Test Product With Auto Gift |
       | amount        | 1                           |
       | price         | 12.00                       |
-#    Then order "bo_order1" should have 4 products in total
+    Then order "bo_order1" should have 4 products in total
     And order "bo_order1" should have 0 invoice
     And order "bo_order1" should have 1 cart rule
     And order "bo_order1" should have following details:
@@ -411,5 +409,69 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
     And the available stock for product "Test Product With Auto Gift" should be 100
-  # Known issue
-#    And the available stock for product "Test Product Gifted" should be 100
+    And the available stock for product "Test Product Gifted" should be 100
+
+  @auto-gift
+  Scenario: I remove a product with associated gift product, but this gift was already present in the cart
+    Given there is a product in the catalog named "Test Product With Auto Gift" with a price of 12.0 and 100 items in stock
+    And there is a cart rule named "MultiGiftAutoCartRule" that applies an amount discount of 1.0 with priority 1, quantity of 100 and quantity per user 100
+    And cart rule "MultiGiftAutoCartRule" has no discount code
+    And cart rule "MultiGiftAutoCartRule" is restricted to product "Test Product With Auto Gift"
+    And cart rule "MultiGiftAutoCartRule" offers free shipping
+    And cart rule "MultiGiftAutoCartRule" offers a gift product "Test Product Gifted"
+    And I add 1 products "Test Product Gifted" to the cart "dummy_cart"
+    And I add 1 products "Test Product With Auto Gift" to the cart "dummy_cart"
+    And I add order "bo_order1" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    Then order "bo_order1" should have 5 products in total
+    And order "bo_order1" should have 0 invoice
+    And order "bo_order1" should have 1 cart rule
+    And order "bo_order1" should have following details:
+      | total_products           | 65.800 |
+      | total_products_wt        | 69.750 |
+      | total_discounts_tax_excl | 23.00  |
+      | total_discounts_tax_incl | 24.38  |
+      | total_paid_tax_excl      | 49.800 |
+      | total_paid_tax_incl      | 52.790 |
+      | total_paid               | 52.790 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    And product "Test Product Gifted" in order "bo_order1" has following details:
+      | product_quantity            | 2     |
+      | product_price               | 15.00 |
+      | unit_price_tax_incl         | 15.90 |
+      | unit_price_tax_excl         | 15.00 |
+      | total_price_tax_incl        | 31.80 |
+      | total_price_tax_excl        | 30.00 |
+    And product "Test Product With Auto Gift" in order "bo_order1" has following details:
+      | product_quantity            | 1     |
+      | product_price               | 12.00 |
+      | unit_price_tax_incl         | 12.72 |
+      | unit_price_tax_excl         | 12.00 |
+      | total_price_tax_incl        | 12.72 |
+      | total_price_tax_excl        | 12.00 |
+    And order "bo_order1" should have cart rule "MultiGiftAutoCartRule" with amount "$23.00"
+    And the available stock for product "Test Product Gifted" should be 98
+    And the available stock for product "Test Product With Auto Gift" should be 99
+    When I remove product "Test Product With Auto Gift" from order "bo_order1"
+    Then order "bo_order1" should have 3 products in total
+    Then order "bo_order1" should contain 0 product "Test Product With Auto Gift"
+    Then order "bo_order1" should contain 1 product "Test Product Gifted"
+    Then order "bo_order1" should have 0 cart rule
+    Then order "bo_order1" should have following details:
+      | total_products           | 38.800 |
+      | total_products_wt        | 41.130 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 45.800 |
+      | total_paid_tax_incl      | 48.550 |
+      | total_paid               | 48.550 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    And the available stock for product "Test Product With Auto Gift" should be 100
+    And the available stock for product "Test Product Gifted" should be 99

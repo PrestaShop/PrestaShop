@@ -67,8 +67,10 @@ class OrderProductRemover
      * @param Order $order
      * @param OrderDetail $orderDetail
      * @param bool $updateCart Used when you don't want to update the cart (CartRule removal for example)
+     *
+     * @return array
      */
-    public function deleteProductFromOrder(Order $order, OrderDetail $orderDetail, bool $updateCart = true): void
+    public function deleteProductFromOrder(Order $order, OrderDetail $orderDetail, bool $updateCart = true): array
     {
         $cart = new Cart($order->id_cart);
 
@@ -79,8 +81,9 @@ class OrderProductRemover
             $this->deleteCustomization($order, $orderDetail);
         }
 
+        $updatedProducts = [];
         if ($updateCart) {
-            $this->updateCart($cart, $orderDetail);
+            $updatedProducts = $this->updateCart($cart, $orderDetail);
         }
 
         $this->deleteSpecificPrice($order, $orderDetail, $cart);
@@ -89,14 +92,19 @@ class OrderProductRemover
             $order,
             $orderDetail
         );
+
+        return $updatedProducts;
     }
 
     /**
      * @param Cart $cart
      * @param OrderDetail $orderDetail
+     *
+     * @return array
      */
-    private function updateCart(Cart $cart, OrderDetail $orderDetail)
+    private function updateCart(Cart $cart, OrderDetail $orderDetail): array
     {
+        $oldProducts = $cart->getProducts(true);
         $cart->updateQty(
             $orderDetail->product_quantity,
             $orderDetail->product_id,
@@ -104,7 +112,57 @@ class OrderProductRemover
             false,
             'down'
         );
-        $cart->update();
+        $newProducts = $cart->getProducts(true);
+
+        return $this->getUpdatedProducts($orderDetail, $newProducts, $oldProducts);
+    }
+
+    /**
+     * @param OrderDetail $orderDetail
+     * @param array $newProducts
+     * @param array $oldProducts
+     *
+     * @return array
+     */
+    private function getUpdatedProducts(OrderDetail $orderDetail, array $newProducts, array $oldProducts): array
+    {
+        $updatedProducts = [];
+        foreach ($oldProducts as $oldProduct) {
+            // The current OrderDetail has already been updated
+            $productMatch = $oldProduct['id_product'] == $orderDetail->product_id;
+            $combinationMatch = $oldProduct['id_product_attribute'] == $orderDetail->product_attribute_id;
+            if ($productMatch && $combinationMatch) {
+                continue;
+            }
+
+            // Then try and find the product in new products
+            $newProduct = array_reduce($newProducts, function ($carry, $item) use ($oldProduct) {
+                if (null !== $carry) {
+                    return $carry;
+                }
+
+                $productMatch = $item['id_product'] == $oldProduct['id_product'];
+                $combinationMatch = $item['id_product_attribute'] == $oldProduct['id_product_attribute'];
+
+                return $productMatch && $combinationMatch ? $item : null;
+            });
+
+            if (null === $newProduct) {
+                $deltaQuantity = -(int) $oldProduct['cart_quantity'];
+            } else {
+                $deltaQuantity = (int) $newProduct['cart_quantity'] - (int) $oldProduct['cart_quantity'];
+            }
+
+            if ($deltaQuantity) {
+                $updatedProducts[] = [
+                    'id_product' => (int) $oldProduct['id_product'],
+                    'id_product_attribute' => (int) $oldProduct['id_product_attribute'],
+                    'delta_quantity' => $deltaQuantity,
+                ];
+            }
+        }
+
+        return $updatedProducts;
     }
 
     /**
