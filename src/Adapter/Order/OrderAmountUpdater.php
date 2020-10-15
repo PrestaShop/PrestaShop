@@ -297,7 +297,7 @@ class OrderAmountUpdater
 
         // This shouldn't happen, if it does something was not done before updating the Order (removing an OrderDetail maybe)
         if (null === $cartProduct) {
-            throw new OrderException('Could not find the product in cart, meaning Order and Cart are not synced');
+            throw new OrderException('Could not find the product in cart, meaning Order and Cart are out of sync');
         }
 
         return $cartProduct;
