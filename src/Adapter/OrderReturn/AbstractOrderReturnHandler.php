@@ -75,7 +75,7 @@ abstract class AbstractOrderReturnHandler extends AbstractObjectModelHandler
      *
      * @param OrderReturnStateId $orderReturnStateId
      *
-     * @return OrderReturn
+     * @return OrderReturnState
      *
      * @throws OrderReturnException
      * @throws OrderReturnOrderStateConstraintException
