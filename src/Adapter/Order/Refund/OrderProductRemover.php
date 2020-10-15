@@ -68,7 +68,7 @@ class OrderProductRemover
      * @param OrderDetail $orderDetail
      * @param bool $updateCart Used when you don't want to update the cart (CartRule removal for example)
      */
-    public function deleteProductFromOrder(Order $order, OrderDetail $orderDetail, bool $updateCart = true)
+    public function deleteProductFromOrder(Order $order, OrderDetail $orderDetail, bool $updateCart = true): void
     {
         $cart = new Cart($order->id_cart);
 
