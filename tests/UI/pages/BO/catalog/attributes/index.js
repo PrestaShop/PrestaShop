@@ -10,6 +10,10 @@ class Attributes extends BOBasePage {
     this.alertSuccessBlockParagraph = '.alert-success';
     this.growlMessageBlock = '#growls .growl-message:last-of-type';
 
+    // Help card selectors
+    this.helpCardLink = '#toolbar-nav a.btn-help';
+    this.helpContainterBlock = '#help-container';
+
     // Header selectors
     this.addNewAttributeLink = '#page-header-desc-attribute_group-new_attribute_group';
     this.featuresSubtabLink = '#subtab-AdminFeatures';
@@ -344,6 +348,7 @@ class Attributes extends BOBasePage {
       default:
         throw new Error(`Column ${sortBy} was not found`);
     }
+
     const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
     await this.clickAndWaitForNavigation(page, sortColumnButton);
   }
@@ -357,11 +362,48 @@ class Attributes extends BOBasePage {
   async getAllRowsColumnContent(page, columnName) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, i, columnName);
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
+  }
+
+  // Help card methods
+  /**
+   * @override
+   * Open help side bar
+   * @param page
+   * @returns {Promise<boolean>}
+   */
+  async openHelpSideBar(page) {
+    await page.click(this.helpCardLink);
+
+    return this.elementVisible(page, this.helpContainterBlock, 2000);
+  }
+
+  /**
+   * @override
+   * Close help side bar
+   * @param page
+   * @returns {Promise<boolean>}
+   */
+  async closeHelpSideBar(page) {
+    await page.click(this.helpCardLink);
+
+    return this.elementNotVisible(page, this.helpContainterBlock, 2000);
+  }
+
+  /**
+   * @override
+   * Get help card URL
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async getHelpDocumentURL(page) {
+    return this.getAttributeContent(page, this.helpCardLink, 'href');
   }
 }
 
