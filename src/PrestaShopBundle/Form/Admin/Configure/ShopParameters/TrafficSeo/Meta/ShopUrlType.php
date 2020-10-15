@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -63,7 +62,7 @@ class ShopUrlType extends TranslatorAwareType
      */
     public function __construct(
         TranslatorInterface $translator,
-        array $locales,$isHostMode,
+        array $locales, $isHostMode,
         $isShopFeatureActive,
         $doesMainShopUrlExist
     ) {
