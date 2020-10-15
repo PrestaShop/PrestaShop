@@ -32,12 +32,7 @@ class Statuses extends BOBasePage {
     this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
-    this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnSendEmail = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
-    this.tableColumnDelivery = row => `${this.tableBodyColumn(row)}:nth-child(6)`;
-    this.tableColumnInvoice = row => `${this.tableBodyColumn(row)}:nth-child(7)`;
-    this.tableColumnTemplate = row => `${this.tableBodyColumn(row)}:nth-child(8)`;
+    this.tableColumn = (row, idColumn) => `${this.tableBodyColumn(row)}:nth-child(${idColumn})`;
 
     // Row actions selectors
     this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
@@ -129,41 +124,14 @@ class Statuses extends BOBasePage {
    * @param page
    * @param row
    * @param columnName
+   * @param idColumn
    * @return {Promise<string>}
    */
-  async getTextColumn(page, row, columnName) {
-    let columnSelector;
-
-    switch (columnName) {
-      case 'id_order_state':
-        columnSelector = this.tableColumnId(row);
-        break;
-
-      case 'name':
-        columnSelector = this.tableColumnName(row);
-        break;
-
-      case 'send_email':
-        columnSelector = this.tableColumnSendEmail(row);
-        break;
-
-      case 'delivery':
-        columnSelector = this.tableColumnDelivery(row);
-        break;
-
-      case 'invoice':
-        columnSelector = this.tableColumnInvoice(row);
-        break;
-
-      case 'template':
-        columnSelector = this.tableColumnTemplate(row);
-        break;
-
-      default:
-        throw new Error(`Column ${columnName} was not found`);
+  async getTextColumn(page, row, columnName, idColumn) {
+    if (columnName === 'send_email' || columnName === 'delivery' || columnName === 'invoice') {
+      return this.getAttributeContent(page, `${this.tableColumn(row, idColumn)} a`, 'title');
     }
-
-    return this.getTextContent(page, columnSelector);
+    return this.getTextContent(page, this.tableColumn(row, idColumn));
   }
 
   /**
