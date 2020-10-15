@@ -3363,8 +3363,8 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * @param $orderBy
-     * @param $orderDirection
+     * @param string|null $orderBy
+     * @param string|null $orderDirection
      *
      * @return string
      */
@@ -3379,7 +3379,7 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * @param $orderBy
+     * @param string|null $orderBy
      *
      * @return false|string
      */
@@ -3421,7 +3421,7 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * @param $orderDirection
+     * @param string|null $orderDirection
      *
      * @return string
      */
