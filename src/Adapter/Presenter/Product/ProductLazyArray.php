@@ -813,7 +813,10 @@ class ProductLazyArray extends AbstractLazyArray
         $show_price = $this->shouldShowPrice($settings, $product);
         $show_availability = $show_price && $settings->stock_management_enabled;
         $this->product['show_availability'] = $show_availability;
-        $product['quantity_wanted'] = $this->getQuantityWanted();
+
+        if (!isset($product['quantity_wanted'])) {
+            $product['quantity_wanted'] = $this->getQuantityWanted();
+        }
 
         if (isset($product['available_date'])) {
             $date = new DateTime($product['available_date']);
