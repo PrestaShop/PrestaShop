@@ -352,22 +352,22 @@ describe('Filter, sort and pagination catalog price rules', async () => {
       },
       {
         args: {
-          testIdentifier: 'sortByReductionAsc', sortBy: 'from', sortDirection: 'up',
+          testIdentifier: 'sortByDateFromAsc', sortBy: 'from', sortDirection: 'up',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByReductionDesc', sortBy: 'from', sortDirection: 'down',
+          testIdentifier: 'sortByDateFromDesc', sortBy: 'from', sortDirection: 'down',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByReductionAsc', sortBy: 'to', sortDirection: 'up',
+          testIdentifier: 'sortByDateToAsc', sortBy: 'to', sortDirection: 'up',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByReductionDesc', sortBy: 'to', sortDirection: 'down',
+          testIdentifier: 'sortByDateToDesc', sortBy: 'to', sortDirection: 'down',
         },
       },
       {
