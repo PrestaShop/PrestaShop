@@ -15,7 +15,7 @@ const addCatalogPriceRulePage = require('@pages/BO/catalog/discounts/catalogPric
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_catalog_discounts_catalogPriceRules_filterAndBulkActions';
+const baseContext = 'functional_BO_catalog_discounts_catalogPriceRules_filterSortAndPagination';
 
 // Import expect from chai
 const {expect} = require('chai');
@@ -47,16 +47,17 @@ const todayDate = `${year}-${month}-${day}`;
 // Date today format (mm/dd/yyyy)
 const todayDateToCheck = `${month}/${day}/${year}`;
 
-const firstPriceRule = new PriceRuleFaker({name: 'toDelete1', fromDate: todayDate, toDate: todayDate});
-const secondPriceRule = new PriceRuleFaker({name: 'toDelete2', fromDate: todayDate, toDate: todayDate});
-
+const priceRuleData = new PriceRuleFaker({fromDate: todayDate, toDate: todayDate});
 /*
-Create 2 catalog price rules
+Create 21 catalog price rules
 Filter catalog price rules by id, Name, Shop, Currency, Country, Group, From quantity, Reduction type,
 Reduction, Beginning, End
+Sort by Filter catalog price rules by id, Name, Shop, Currency, Country, Group, From quantity, Reduction type,
+Reduction, Beginning, End
+Pagination next and previous
 Delete created catalog price rules by bulk actions
  */
-describe('Filter, quick edit and bulk actions catalog price rules', async () => {
+describe('Filter, sort and pagination catalog price rules', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -95,29 +96,31 @@ describe('Filter, quick edit and bulk actions catalog price rules', async () => 
     await expect(pageTitle).to.contains(catalogPriceRulesPage.pageTitle);
   });
 
-  // 1 - Create 2 catalog price rules
-  describe('Create 2 catalog price rules', async () => {
-    [firstPriceRule, secondPriceRule]
-      .forEach((catalogPriceRuleToCreate, index) => {
-        it('should go to new catalog price rule page', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `goToNewCatalogPriceRule${index}`, baseContext);
+  // 1 - Create 21 catalog price rules
+  const creationTests = new Array(21).fill(0, 0, 21);
 
-          await catalogPriceRulesPage.goToAddNewCatalogPriceRulePage(page);
+  creationTests.forEach((test, index) => {
+    const priceRuleData = new PriceRuleFaker({name: `todelete${index}`, fromDate: todayDate, toDate: todayDate});
+    describe(`Create price rule n°${index + 1} in BO`, async () => {
+      it('should go to new catalog price rule page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToNewCatalogPriceRule${index}`, baseContext);
 
-          const pageTitle = await addCatalogPriceRulePage.getPageTitle(page);
-          await expect(pageTitle).to.contains(addCatalogPriceRulePage.pageTitle);
-        });
+        await catalogPriceRulesPage.goToAddNewCatalogPriceRulePage(page);
 
-        it('should create new catalog price rule', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `createCatalogPriceRule${index}`, baseContext);
-
-          const validationMessage = await addCatalogPriceRulePage.setCatalogPriceRule(page, catalogPriceRuleToCreate);
-          await expect(validationMessage).to.contains(catalogPriceRulesPage.successfulCreationMessage);
-
-          const numberOfCatalogPriceRulesAfterCreation = await catalogPriceRulesPage.getNumberOfElementInGrid(page);
-          await expect(numberOfCatalogPriceRulesAfterCreation).to.be.at.most(numberOfCatalogPriceRules + index + 1);
-        });
+        const pageTitle = await addCatalogPriceRulePage.getPageTitle(page);
+        await expect(pageTitle).to.contains(addCatalogPriceRulePage.pageTitle);
       });
+
+      it('should create new catalog price rule', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `createCatalogPriceRule${index}`, baseContext);
+
+        const validationMessage = await addCatalogPriceRulePage.setCatalogPriceRule(page, priceRuleData);
+        await expect(validationMessage).to.contains(catalogPriceRulesPage.successfulCreationMessage);
+
+        const numberOfCatalogPriceRulesAfterCreation = await catalogPriceRulesPage.getNumberOfElementInGrid(page);
+        await expect(numberOfCatalogPriceRulesAfterCreation).to.be.at.most(numberOfCatalogPriceRules + index + 1);
+      });
+    });
   });
 
   // 2 - Filter catalog price rules table
@@ -130,7 +133,7 @@ describe('Filter, quick edit and bulk actions catalog price rules', async () => 
       },
       {
         args: {
-          testIdentifier: 'filterName', filterType: 'input', filterBy: 'a!name', filterValue: firstPriceRule.name,
+          testIdentifier: 'filterName', filterType: 'input', filterBy: 'a!name', filterValue: priceRuleData.name,
         },
       },
       {
@@ -143,7 +146,7 @@ describe('Filter, quick edit and bulk actions catalog price rules', async () => 
           testIdentifier: 'filterCurrency',
           filterType: 'input',
           filterBy: 'cul!name',
-          filterValue: secondPriceRule.currency,
+          filterValue: priceRuleData.currency,
         },
       },
       {
@@ -151,12 +154,12 @@ describe('Filter, quick edit and bulk actions catalog price rules', async () => 
           testIdentifier: 'filterCountry',
           filterType: 'input',
           filterBy: 'cl!name',
-          filterValue: secondPriceRule.country,
+          filterValue: priceRuleData.country,
         },
       },
       {
         args: {
-          testIdentifier: 'filterGroup', filterType: 'input', filterBy: 'gl!name', filterValue: firstPriceRule.group,
+          testIdentifier: 'filterGroup', filterType: 'input', filterBy: 'gl!name', filterValue: priceRuleData.group,
         },
       },
       {
@@ -164,7 +167,7 @@ describe('Filter, quick edit and bulk actions catalog price rules', async () => 
           testIdentifier: 'filterFromQuantity',
           filterType: 'input',
           filterBy: 'from_quantity',
-          filterValue: firstPriceRule.fromQuantity,
+          filterValue: priceRuleData.fromQuantity,
         },
       },
       {
@@ -172,7 +175,7 @@ describe('Filter, quick edit and bulk actions catalog price rules', async () => 
           testIdentifier: 'filterReductionType',
           filterType: 'select',
           filterBy: 'a!reduction_type',
-          filterValue: secondPriceRule.reductionType,
+          filterValue: priceRuleData.reductionType,
         },
       },
       {
@@ -180,7 +183,7 @@ describe('Filter, quick edit and bulk actions catalog price rules', async () => 
           testIdentifier: 'filterReduction',
           filterType: 'input',
           filterBy: 'reduction',
-          filterValue: firstPriceRule.reduction,
+          filterValue: priceRuleData.reduction,
         },
       },
     ];
@@ -197,7 +200,7 @@ describe('Filter, quick edit and bulk actions catalog price rules', async () => 
         );
 
         const numberOfPriceRulesAfterFilter = await catalogPriceRulesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfPriceRulesAfterFilter).to.be.at.most(numberOfCatalogPriceRules + 2);
+        await expect(numberOfPriceRulesAfterFilter).to.be.at.most(numberOfCatalogPriceRules + 21);
 
         for (let row = 1; row <= numberOfPriceRulesAfterFilter; row++) {
           const textColumn = await catalogPriceRulesPage.getTextColumn(
@@ -214,7 +217,7 @@ describe('Filter, quick edit and bulk actions catalog price rules', async () => 
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfPriceRulesAfterReset = await catalogPriceRulesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfPriceRulesAfterReset).to.equal(numberOfCatalogPriceRules + 2);
+        await expect(numberOfPriceRulesAfterReset).to.equal(numberOfCatalogPriceRules + 21);
       });
     });
 
@@ -254,12 +257,184 @@ describe('Filter, quick edit and bulk actions catalog price rules', async () => 
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfPriceRulesAfterReset = await catalogPriceRulesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfPriceRulesAfterReset).to.equal(numberOfCatalogPriceRules + 2);
+        await expect(numberOfPriceRulesAfterReset).to.equal(numberOfCatalogPriceRules + 21);
       });
     });
   });
 
-  // 3 - Delete catalog price rules with bulk actions
+  // 3 - Sort Price rules table
+  describe('Sort price rules table', async () => {
+    const sortTests = [
+      {
+        args: {
+          testIdentifier: 'sortByIdDesc', sortBy: 'id_specific_price_rule', sortDirection: 'down', isFloat: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByNameAsc', sortBy: 'a!name', sortDirection: 'up',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByNameDesc', sortBy: 'a!name', sortDirection: 'down',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByShopAsc', sortBy: 's!name', sortDirection: 'up',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByShopDesc', sortBy: 's!name', sortDirection: 'down',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByCurrencyAsc', sortBy: 'cul!name', sortDirection: 'up',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByCurrencyDesc', sortBy: 'cul!name', sortDirection: 'down',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByCountryAsc', sortBy: 'cl!name', sortDirection: 'up',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByCountryDesc', sortBy: 'cl!name', sortDirection: 'down',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByGroupAsc', sortBy: 'gl!name', sortDirection: 'up',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByGroupDesc', sortBy: 'gl!name', sortDirection: 'down',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByFromQuantityAsc', sortBy: 'from_quantity', sortDirection: 'up',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByFromQuantityDesc', sortBy: 'from_quantity', sortDirection: 'down',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByReducingTypeAsc', sortBy: 'a!reduction_type', sortDirection: 'up',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByReductionTypeDesc', sortBy: 'a!reduction_type', sortDirection: 'down',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByReductionAsc', sortBy: 'reduction', sortDirection: 'up',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByReductionDesc', sortBy: 'reduction', sortDirection: 'down',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByReductionAsc', sortBy: 'from', sortDirection: 'up',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByReductionDesc', sortBy: 'from', sortDirection: 'down',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByReductionAsc', sortBy: 'to', sortDirection: 'up',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByReductionDesc', sortBy: 'to', sortDirection: 'down',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByIdAsc', sortBy: 'id_specific_price_rule', sortDirection: 'up', isFloat: true,
+        },
+      },
+    ];
+
+    sortTests.forEach((test) => {
+      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
+        let nonSortedTable = await catalogPriceRulesPage.getAllRowsColumnContent(page, test.args.sortBy);
+
+        await catalogPriceRulesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+
+        let sortedTable = await catalogPriceRulesPage.getAllRowsColumnContent(page, test.args.sortBy);
+
+        if (test.args.isFloat) {
+          nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
+          sortedTable = await sortedTable.map(text => parseFloat(text));
+        }
+
+        const expectedResult = await catalogPriceRulesPage.sortArray(nonSortedTable, test.args.isFloat);
+
+        if (test.args.sortDirection === 'up') {
+          await expect(sortedTable).to.deep.equal(expectedResult);
+        } else {
+          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+        }
+      });
+    });
+  });
+
+  // 4 - Pagination
+  describe('Pagination next and previous', async () => {
+    it('should change the item number to 20 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
+
+      const paginationNumber = await catalogPriceRulesPage.selectPaginationLimit(page, '20');
+      expect(paginationNumber).to.equal('1');
+    });
+
+    it('should click on next', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
+
+      const paginationNumber = await catalogPriceRulesPage.paginationNext(page);
+      expect(paginationNumber).to.equal('2');
+    });
+
+    it('should click on previous', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
+
+      const paginationNumber = await catalogPriceRulesPage.paginationPrevious(page);
+      expect(paginationNumber).to.equal('1');
+    });
+
+    it('should change the item number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+
+      const paginationNumber = await catalogPriceRulesPage.selectPaginationLimit(page, '50');
+      expect(paginationNumber).to.equal('1');
+    });
+  });
+
+  // 5 - Delete catalog price rules with bulk actions
   describe('Bulk delete catalog price rules', async () => {
     it('should bulk delete cart rules', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeletePriceRules', baseContext);
