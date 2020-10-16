@@ -489,12 +489,19 @@ class ShopCore extends ObjectModel
      */
     public function setTheme()
     {
+        $context = Context::getContext();
+        if ($context->shop && $context->shop->theme) {
+            $this->theme = $context->shop->theme;
+
+            return;
+        }
+
         $container = SymfonyContainer::getInstance();
         if (null !== $container) {
             $themeManagerBuilder = $container->get('prestashop.core.addon.theme.theme_manager_builder');
         } else {
             // SynfonyContainer not available, we won't have TranslationService nor ProviderFactory
-            $themeManagerBuilder = new ThemeManagerBuilder(Context::getContext(), Db::getInstance());
+            $themeManagerBuilder = new ThemeManagerBuilder($context, Db::getInstance());
         }
         $themeRepository = $themeManagerBuilder->buildRepository($this);
         if (empty($this->theme_name)) {
