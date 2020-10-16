@@ -415,7 +415,7 @@ class ManufacturerController extends FrameworkBundleAdminController
         return (new CsvResponse())
             ->setData($data)
             ->setHeadersData($headers)
-            ->setFileName('manufacturer_' . date('Y-m-d_His') . '.csv')
+            ->setFileName('brands_' . date('Y-m-d_His') . '.csv')
             ;
     }
 
