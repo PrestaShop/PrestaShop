@@ -179,7 +179,7 @@ describe('Create, read, update and delete order status in BO', async () => {
         createOrderStatusData.name,
       );
 
-      const textEmail = await statusesPage.getTextColumn(page, 1, 'name');
+      const textEmail = await statusesPage.getTextColumn(page, 1, 'name', 3);
       await expect(textEmail).to.contains(createOrderStatusData.name);
     });
 
@@ -217,7 +217,7 @@ describe('Create, read, update and delete order status in BO', async () => {
         editOrderStatusData.name,
       );
 
-      const textEmail = await statusesPage.getTextColumn(page, 1, 'name');
+      const textEmail = await statusesPage.getTextColumn(page, 1, 'name', 3);
       await expect(textEmail).to.contains(editOrderStatusData.name);
     });
 

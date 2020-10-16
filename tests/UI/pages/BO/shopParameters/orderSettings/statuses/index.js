@@ -32,12 +32,7 @@ class Statuses extends BOBasePage {
     this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
-    this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnSendEmail = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
-    this.tableColumnDelivery = row => `${this.tableBodyColumn(row)}:nth-child(6)`;
-    this.tableColumnInvoice = row => `${this.tableBodyColumn(row)}:nth-child(7)`;
-    this.tableColumnTemplate = row => `${this.tableBodyColumn(row)}:nth-child(8)`;
+    this.tableColumn = (row, idColumn) => `${this.tableBodyColumn(row)}:nth-child(${idColumn})`;
 
     // Row actions selectors
     this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
@@ -48,6 +43,26 @@ class Statuses extends BOBasePage {
 
     // Confirmation modal
     this.deleteModalButtonYes = '#popup_ok';
+
+    // Pagination selectors
+    this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
+    this.paginationDiv = `${this.gridForm} .pagination`;
+    this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
+    this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
+    this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
+    this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
+
+    // Sort Selectors
+    this.tableHead = `${this.gridTable} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+
+    // Bulk actions selectors
+    this.bulkActionBlock = 'div.bulk-actions';
+    this.bulkActionMenuButton = '#bulk_action_menu_order_state';
+    this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
+    this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
+    this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
   }
 
   /* Header methods */
@@ -129,41 +144,14 @@ class Statuses extends BOBasePage {
    * @param page
    * @param row
    * @param columnName
+   * @param idColumn
    * @return {Promise<string>}
    */
-  async getTextColumn(page, row, columnName) {
-    let columnSelector;
-
-    switch (columnName) {
-      case 'id_order_state':
-        columnSelector = this.tableColumnId(row);
-        break;
-
-      case 'name':
-        columnSelector = this.tableColumnName(row);
-        break;
-
-      case 'send_email':
-        columnSelector = this.tableColumnSendEmail(row);
-        break;
-
-      case 'delivery':
-        columnSelector = this.tableColumnDelivery(row);
-        break;
-
-      case 'invoice':
-        columnSelector = this.tableColumnInvoice(row);
-        break;
-
-      case 'template':
-        columnSelector = this.tableColumnTemplate(row);
-        break;
-
-      default:
-        throw new Error(`Column ${columnName} was not found`);
+  async getTextColumn(page, row, columnName, idColumn) {
+    if (columnName === 'send_email' || columnName === 'delivery' || columnName === 'invoice') {
+      return this.getAttributeContent(page, `${this.tableColumn(row, idColumn)} a`, 'title');
     }
-
-    return this.getTextContent(page, columnSelector);
+    return this.getTextContent(page, this.tableColumn(row, idColumn));
   }
 
   /**
@@ -194,6 +182,118 @@ class Statuses extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
 
     // Get successful message
+    return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /* Pagination methods */
+  /**
+   * Get pagination label
+   * @param page
+   * @return {Promise<string>}
+   */
+  getPaginationLabel(page) {
+    return this.getTextContent(page, this.paginationActiveLabel);
+  }
+
+  /**
+   * Select pagination limit
+   * @param page
+   * @param number
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page, number) {
+    await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
+    await this.clickAndWaitForNavigation(page, this.paginationItems(number));
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on next
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on previous
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  // Sort methods
+  /**
+   * Get content from all rows
+   * @param page
+   * @param columnName
+   * @param columnID
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(page, columnName, columnID) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable = [];
+
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumn(page, i, columnName, columnID);
+      await allRowsContentTable.push(rowContent);
+    }
+
+    return allRowsContentTable;
+  }
+
+  /**
+   * Sort table
+   * @param page
+   * @param sortBy, column to sort with
+   * @param columnID, id column
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page, sortBy, columnID, sortDirection) {
+    const sortColumnButton = `${this.sortColumnDiv(columnID)} i.icon-caret-${sortDirection}`;
+    await this.clickAndWaitForNavigation(page, sortColumnButton);
+  }
+
+  /* Bulk actions methods */
+  /**
+   * Select all rows
+   * @param page
+   * @return {Promise<void>}
+   */
+  async bulkSelectRows(page) {
+    await page.click(this.bulkActionMenuButton);
+
+    await Promise.all([
+      page.click(this.selectAllLink),
+      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+    ]);
+  }
+
+
+  /**
+   * Delete order statuses by bulk action
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async bulkDeleteOrderStatuses(page) {
+    this.dialogListener(page, true);
+    // Select all rows
+    await this.bulkSelectRows(page);
+
+    // Click on Button Bulk actions
+    await page.click(this.bulkActionMenuButton);
+
+    // Click on delete
+    await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
     return this.getTextContent(page, this.alertSuccessBlock);
   }
 }
