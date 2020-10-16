@@ -1,0 +1,28 @@
+name: Linter
+on: [push, pull_request]
+jobs:
+  yaml:
+    runs-on: ubuntu-latest
+    name: YAML Linter
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v1
+        with:
+          php-version: '7.3'
+          extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 0
+      -   name: Get Composer Cache Directory
+          id: composer-cache
+          run: |
+              echo "::set-output name=dir::$(composer config cache-files-dir)"
+      -   uses: actions/cache@v2
+          with:
+              path: ${{ steps.composer-cache.outputs.dir }}
+              key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+              restore-keys: |
+                  ${{ runner.os }}-composer-
+
+      - run: composer install --prefer-dist
+      - run: php bin/console lint:yaml src
