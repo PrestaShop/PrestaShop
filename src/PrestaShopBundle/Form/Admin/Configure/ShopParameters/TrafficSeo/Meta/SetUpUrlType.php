@@ -101,7 +101,7 @@ class SetUpUrlType extends TranslatorAwareType
 
         if (!$this->tools->isModRewriteActive()) {
             $friendlyUrlHelp .=
-                '</br>' . $this->trans(
+                '<br/>' . $this->trans(
                 'URL rewriting (mod_rewrite) is not active on your server, or it is not possible to check your server configuration. If you want to use Friendly URLs, you must activate this mod.',
                     'Admin.Shopparameters.Help'
             );
