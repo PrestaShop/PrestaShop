@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -69,7 +70,7 @@ class SetUpUrlType extends TranslatorAwareType
      * @param array $canonicalUrlChoices
      * @param bool $isHtaccessFileWritable
      * @param bool $isHostMode
-     * @param $tools
+     * @param Tools $tools
      */
     public function __construct(
         TranslatorInterface $translator,
