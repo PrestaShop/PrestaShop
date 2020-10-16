@@ -306,6 +306,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      *
      * @param Cart $cart
      * @param array $oldProducts
+     * @param array $newProducts
      * @param Product $product
      * @param Combination|null $combination
      * @param AddProductToOrderCommand $command
