@@ -662,6 +662,11 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function addProductAction(int $orderId, Request $request): Response
     {
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        $previousProducts = $orderForViewing->getProducts()->getProducts();
+
         $invoiceId = (int) $request->get('invoice_id');
         try {
             if ($invoiceId > 0) {
@@ -700,8 +705,11 @@ class OrderController extends FrameworkBundleAdminController
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
 
-        $products = $orderForViewing->getProducts()->getProducts();
-        $lastProduct = $products[array_key_last($products)];
+        $updatedProducts = $orderForViewing->getProducts()->getProducts();
+        $newProducts = [];
+        for ($i = count($previousProducts); $i < count($updatedProducts); ++$i) {
+            $newProducts[] = $updatedProducts[$i];
+        }
 
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
         $cancelProductForm = $formBuilder->getFormFor($orderId);
@@ -709,14 +717,19 @@ class OrderController extends FrameworkBundleAdminController
         $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
         $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
 
-        return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig', [
-            'orderForViewing' => $orderForViewing,
-            'product' => $lastProduct,
-            'isColumnLocationDisplayed' => $lastProduct->getLocation() !== '',
-            'isColumnRefundedDisplayed' => $lastProduct->getQuantityRefunded() > 0,
-            'cancelProductForm' => $cancelProductForm->createView(),
-            'orderCurrency' => $orderCurrency,
-        ]);
+        $addedGridRows = '';
+        foreach ($newProducts as $newProduct) {
+            $addedGridRows .= $this->renderView('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig', [
+                'orderForViewing' => $orderForViewing,
+                'product' => $newProduct,
+                'isColumnLocationDisplayed' => $newProduct->getLocation() !== '',
+                'isColumnRefundedDisplayed' => $newProduct->getQuantityRefunded() > 0,
+                'cancelProductForm' => $cancelProductForm->createView(),
+                'orderCurrency' => $orderCurrency,
+            ]);
+        }
+
+        return new Response($addedGridRows);
     }
 
     /**
