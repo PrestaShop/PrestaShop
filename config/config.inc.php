@@ -120,6 +120,10 @@ if (!isset($_SERVER['HTTP_HOST']) || empty($_SERVER['HTTP_HOST'])) {
 
 $context = Context::getContext();
 
+/* Get smarty */
+require_once $currentDir . '/smarty.config.inc.php';
+$context->smarty = $smarty;
+
 /* Initialize the current Shop */
 try {
     $context->shop = Shop::initialize();
@@ -211,10 +215,6 @@ if (!isset($language) || !Validate::isLoadedObject($language) || !$language->isA
 }
 
 $context->language = $language;
-
-/* Get smarty */
-require_once $currentDir . '/smarty.config.inc.php';
-$context->smarty = $smarty;
 
 if (!defined('_PS_ADMIN_DIR_')) {
     if (isset($cookie->id_customer) && (int) $cookie->id_customer) {
