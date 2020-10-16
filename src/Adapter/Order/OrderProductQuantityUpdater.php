@@ -156,6 +156,8 @@ class OrderProductQuantityUpdater
             $updatedProducts = $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, $updateCart);
             $this->updateCustomizationOnProductDelete($order, $orderDetail, $oldQuantity);
 
+            // Some products have been affected by the removal of the initial product (probably related to a CartRule)
+            // So we detect the changes that happened in the cart and apply them on the OrderDetail
             $orderDetails = $order->getOrderDetailList();
             foreach ($updatedProducts as $updatedProduct) {
                 $updatedOrderDetail = null;

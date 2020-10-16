@@ -118,6 +118,9 @@ class OrderProductRemover
     }
 
     /**
+     * Compares the cart products before and after the update to detect which one have had their
+     * quantity changed due to another product removal (to detect changes related to a CartRule)
+     *
      * @param OrderDetail $orderDetail
      * @param array $newProducts
      * @param array $oldProducts

@@ -233,6 +233,10 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     }
 
     /**
+     * When a product is added some other products may be affected (because of CartRule that would
+     * add some gift for example) So we detect which existent products may have been modified in the
+     * cart and update the related OrderDetail
+     *
      * @param Order $order
      * @param array $oldProducts
      * @param array $newProducts
@@ -296,8 +300,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     }
 
     /**
-     * This function extracts the newly added product from the cart and reformat the data in order to create a
-     * dedicated OrderDetail with appropriate amounts
+     * This function extracts the newly added product from the cart it detects the newly added products,
+     * for the one added via the command it reformats its quantity so that the created OrderDetail has
+     * the appropriate amount It can also detect other added products (like gift related to CartRule)
      *
      * @param Cart $cart
      * @param array $oldProducts
@@ -340,6 +345,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     }
 
     /**
+     * Find a specific product among the product array
+     *
      * @param array $productList
      * @param array $searchedProduct
      *
