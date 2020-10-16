@@ -52,7 +52,7 @@ const priceRuleData = new PriceRuleFaker({fromDate: todayDate, toDate: todayDate
 Create 21 catalog price rules
 Filter catalog price rules by id, Name, Shop, Currency, Country, Group, From quantity, Reduction type,
 Reduction, Beginning, End
-Sort by Filter catalog price rules by id, Name, Shop, Currency, Country, Group, From quantity, Reduction type,
+Sort catalog price rules by id, Name, Shop, Currency, Country, Group, From quantity, Reduction type,
 Reduction, Beginning, End
 Pagination next and previous
 Delete created catalog price rules by bulk actions
