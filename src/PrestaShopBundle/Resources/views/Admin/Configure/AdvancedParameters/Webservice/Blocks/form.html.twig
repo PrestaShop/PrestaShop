@@ -69,6 +69,15 @@
             'label': 'Shop association'|trans({}, 'Admin.Global')
           }) }}
         {% endif %}
+        
+        {{ ps.form_group_row(webserviceKeyForm.hosts_allowed, {}, {
+          'label': 'Hosts allowed'|trans({}, 'Admin.Advparameters.Feature'),
+          'help': 'Hosts allowed to access this webservice key. Please use a comma to separate them (e.g. www.prestashop.com,127.0.0.1).'|trans({}, 'Admin.Advparameters.Help')
+        }) }}
+
+        {{ ps.form_group_row(webserviceKeyForm.hosts_check, {}, {
+          'label': 'Enable hosts check'|trans({}, 'Admin.Global')
+        }) }}
 
         {% block webservice_key_form_rest %}
           {{ form_rest(webserviceKeyForm) }}
