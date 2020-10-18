@@ -57,6 +57,16 @@ class AddWebserviceKeyCommand
      * @var array
      */
     private $associatedShops;
+    
+    /**
+     * @var string
+     */
+    private $hosts_allowed;
+
+    /**
+     * @var bool
+     */
+    private $hosts_check;
 
     /**
      * @param string $key
@@ -64,19 +74,25 @@ class AddWebserviceKeyCommand
      * @param bool $status
      * @param array $permissions
      * @param int[] $associatedShops
+     * @param string $hosts_allowed
+     * @param bool $hosts_check
      */
     public function __construct(
         $key,
         $description,
         $status,
         array $permissions,
-        array $associatedShops
+        array $associatedShops,
+        string $hosts_allowed = null,
+        bool $hosts_check = false
     ) {
         $this->key = new Key($key);
         $this->description = $description;
         $this->status = $status;
         $this->permissions = $permissions;
         $this->associatedShops = $associatedShops;
+        $this->hosts_allowed = $hosts_allowed;
+        $this->hosts_check = $hosts_check;
     }
 
     /**
@@ -117,5 +133,21 @@ class AddWebserviceKeyCommand
     public function getAssociatedShops()
     {
         return $this->associatedShops;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getHostsAllowed()
+    {
+        return $this->hosts_allowed;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHostsCheck()
+    {
+        return $this->hosts_check;
     }
 }
