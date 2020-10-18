@@ -62,7 +62,7 @@ class EditableWebserviceKey
      * @var int[]
      */
     private $associatedShops;
-    
+
     /**
      * @var string
      */
@@ -150,7 +150,7 @@ class EditableWebserviceKey
     {
         return $this->associatedShops;
     }
-    
+
     /**
      * @return string|null
      */

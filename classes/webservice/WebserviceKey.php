@@ -33,10 +33,10 @@ class WebserviceKeyCore extends ObjectModel
 
     /** @var string Webservice Account description */
     public $description;
-    
+
     /** @var string Webservice Account hosts allowed */
     public $hosts_allowed;
-    
+
     /** @var string Webservice Account enable/disable hosts check */
     public $hosts_check;
 
@@ -191,7 +191,7 @@ class WebserviceKeyCore extends ObjectModel
 
         return $ok;
     }
-    
+
     /**
      * @param string $auth_key
      *
@@ -200,16 +200,15 @@ class WebserviceKeyCore extends ObjectModel
     public static function getWebServiceObjectFromKey($auth_key)
     {
         $id_account = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-			(new DbQuery())
-			  ->select('w.id_webservice_account')
-			  ->from('webservice_account', 'w')
-			  ->where('w.key = "' . pSQL($auth_key) . '"'),
-			  false
+            (new DbQuery())
+                ->select('w.id_webservice_account')
+                ->from('webservice_account', 'w')
+                ->where('w.key = "' . pSQL($auth_key) . '"'),
+              false
         );
-        
-        $WebServiceObject =  new WebserviceKey((int) $id_account);
-        
+
+        $WebServiceObject = new WebserviceKey((int) $id_account);
+
         return Validate::isLoadedObject($WebServiceObject) ? $WebServiceObject : null;
-        
     }
 }

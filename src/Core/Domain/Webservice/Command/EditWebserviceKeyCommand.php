@@ -63,7 +63,7 @@ class EditWebserviceKeyCommand
      * @var int[]|null
      */
     private $shopAssociation;
-    
+
     /**
      * @var string|null
      */
@@ -189,7 +189,7 @@ class EditWebserviceKeyCommand
 
         return $this;
     }
-    
+
     /**
      * @return string|null
      */

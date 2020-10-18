@@ -116,10 +116,10 @@ class WebserviceKeyType extends AbstractType
             ->add('hosts_allowed', TextareaType::class, [
                 'required' => false,
                 'empty_data' => '',
-                'attr' => array(
-                  'rows' => 5,
-                  'placeholder' => 'www.prestashop.com, 42.24.4.2,127.0.0.1,99.98.97.96',
-				)
+                'attr' => [
+                    'rows' => 5,
+                    'placeholder' => 'www.prestashop.com, 42.24.4.2,127.0.0.1,99.98.97.96',
+                ],
             ])
             ->add('hosts_check', SwitchType::class, [
                 'required' => false,

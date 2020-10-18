@@ -57,7 +57,7 @@ class AddWebserviceKeyCommand
      * @var array
      */
     private $associatedShops;
-    
+
     /**
      * @var string
      */
@@ -134,7 +134,7 @@ class AddWebserviceKeyCommand
     {
         return $this->associatedShops;
     }
-    
+
     /**
      * @return string
      */
