@@ -53,7 +53,9 @@ final class GetWebserviceKeyForEditingHandler implements GetWebserviceKeyForEdit
             $webserviceKey->description,
             $webserviceKey->active,
             WebserviceKey::getPermissionForAccount($webserviceKey->key),
-            $webserviceKey->getAssociatedShops()
+            $webserviceKey->getAssociatedShops(),
+            $webserviceKey->hosts_allowed,
+            $webserviceKey->hosts_check
         );
     }
 
