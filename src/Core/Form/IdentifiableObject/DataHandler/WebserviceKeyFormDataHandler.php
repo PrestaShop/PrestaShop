@@ -71,7 +71,9 @@ final class WebserviceKeyFormDataHandler implements FormDataHandlerInterface
             $data['description'],
             $data['status'],
             $data['permissions'],
-            $data['shop_association']
+            $data['shop_association'],
+            $data['hosts_allowed'],
+            $data['hosts_check']
         ));
 
         return $webserviceKeyId->getValue();
@@ -88,6 +90,8 @@ final class WebserviceKeyFormDataHandler implements FormDataHandlerInterface
             ->setDescription($data['description'])
             ->setStatus($data['status'])
             ->setPermissions($data['permissions'])
+            ->setHostsAllowed($data['hosts_allowed'])
+            ->setHostsCheck($data['hosts_check'])
         ;
 
         if (isset($data['shop_association'])) {
