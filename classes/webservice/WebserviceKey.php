@@ -33,6 +33,12 @@ class WebserviceKeyCore extends ObjectModel
 
     /** @var string Webservice Account description */
     public $description;
+    
+    /** @var string Webservice Account hosts allowed */
+    public $hosts_allowed;
+    
+    /** @var string Webservice Account enable/disable hosts check */
+    public $hosts_check;
 
     /**
      * @see ObjectModel::$definition
@@ -44,6 +50,8 @@ class WebserviceKeyCore extends ObjectModel
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'key' => ['type' => self::TYPE_STRING, 'required' => true, 'size' => 32],
             'description' => ['type' => self::TYPE_STRING],
+            'hosts_allowed' => ['type' => self::TYPE_STRING],
+            'hosts_check' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
         ],
     ];
 
@@ -182,5 +190,26 @@ class WebserviceKeyCore extends ObjectModel
         }
 
         return $ok;
+    }
+    
+    /**
+     * @param string $auth_key
+     *
+     * @return WebserviceKey|null
+     */
+    public static function getWebServiceObjectFromKey($auth_key)
+    {
+        $id_account = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+			(new DbQuery())
+			  ->select('w.id_webservice_account')
+			  ->from('webservice_account', 'w')
+			  ->where('w.key = "' . pSQL($auth_key) . '"'),
+			  false
+        );
+        
+        $WebServiceObject =  new WebserviceKey((int) $id_account);
+        
+        return Validate::isLoadedObject($WebServiceObject) ? $WebServiceObject : null;
+        
     }
 }
