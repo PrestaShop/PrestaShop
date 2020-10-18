@@ -431,6 +431,7 @@ abstract class PaymentModuleCore extends Module
 
                         $product_var_tpl = [
                             'id_product' => $product['id_product'],
+                            'id_product_attribute' => $product['id_product_attribute'],
                             'reference' => $product['reference'],
                             'name' => $product['name'] . (isset($product['attributes']) ? ' - ' . $product['attributes'] : ''),
                             'price' => Tools::getContextLocale($this->context)->formatPrice($product_price * $product['quantity'], $this->context->currency->iso_code),
