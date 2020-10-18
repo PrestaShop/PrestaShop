@@ -63,6 +63,16 @@ class EditWebserviceKeyCommand
      * @var int[]|null
      */
     private $shopAssociation;
+    
+    /**
+     * @var string|null
+     */
+    private $hosts_allowed;
+
+    /**
+     * @var bool|null
+     */
+    private $hosts_check;
 
     /**
      * @param int $webserviceKeyId
@@ -176,6 +186,46 @@ class EditWebserviceKeyCommand
     public function setShopAssociation(array $shopAssociation)
     {
         $this->shopAssociation = $shopAssociation;
+
+        return $this;
+    }
+    
+    /**
+     * @return string|null
+     */
+    public function getHostsAllowed()
+    {
+        return $this->hosts_allowed;
+    }
+
+    /**
+     * @param string $hosts_allowed
+     *
+     * @return self
+     */
+    public function setHostsAllowed($hosts_allowed)
+    {
+        $this->hosts_allowed = $hosts_allowed;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getHostsCheck()
+    {
+        return $this->hosts_check;
+    }
+
+    /**
+     * @param bool $hosts_check
+     *
+     * @return self
+     */
+    public function setHostsCheck($hosts_check)
+    {
+        $this->hosts_check = $hosts_check;
 
         return $this;
     }
