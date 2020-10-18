@@ -30,3 +30,6 @@ ALTER TABLE `PREFIX_hook` ADD `active` TINYINT(1) UNSIGNED DEFAULT 1 NOT NULL AF
 ALTER TABLE `PREFIX_orders` ADD COLUMN `note` TEXT AFTER `date_upd`;
 
 ALTER TABLE `PREFIX_currency` CHANGE `numeric_iso_code` `numeric_iso_code` varchar(3) NULL DEFAULT NULL;
+
+ALTER TABLE `PREFIX_webservice_account` ADD `hosts_allowed` TEXT NULL DEFAULT NULL AFTER `active`;
+ALTER TABLE `PREFIX_webservice_account` ADD `hosts_check` TINYINT(2) NOT NULL DEFAULT '0' AFTER `hosts_allowed`;
