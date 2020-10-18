@@ -62,6 +62,16 @@ class EditableWebserviceKey
      * @var int[]
      */
     private $associatedShops;
+    
+    /**
+     * @var string
+     */
+    private $hosts_allowed;
+
+    /**
+     * @var bool
+     */
+    private $hosts_check;
 
     /**
      * @param WebserviceKeyId $webserviceKeyId
@@ -70,6 +80,8 @@ class EditableWebserviceKey
      * @param bool $status
      * @param array $resourcePermissions
      * @param array $associatedShops
+     * @param string $hosts_allowed
+     * @param bool $hosts_check
      */
     public function __construct(
         WebserviceKeyId $webserviceKeyId,
@@ -77,7 +89,9 @@ class EditableWebserviceKey
         $description,
         $status,
         array $resourcePermissions,
-        array $associatedShops
+        array $associatedShops,
+        string $hosts_allowed = null,
+        bool $hosts_check = false
     ) {
         $this->webserviceKeyId = $webserviceKeyId;
         $this->key = $key;
@@ -85,6 +99,8 @@ class EditableWebserviceKey
         $this->status = $status;
         $this->resourcePermissions = $resourcePermissions;
         $this->associatedShops = $associatedShops;
+        $this->hosts_allowed = $hosts_allowed;
+        $this->hosts_check = $hosts_check;
     }
 
     /**
@@ -133,5 +149,21 @@ class EditableWebserviceKey
     public function getAssociatedShops()
     {
         return $this->associatedShops;
+    }
+    
+    /**
+     * @return string|null
+     */
+    public function getHostsAllowed()
+    {
+        return $this->hosts_allowed;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getHostsCheck()
+    {
+        return $this->hosts_check;
     }
 }
