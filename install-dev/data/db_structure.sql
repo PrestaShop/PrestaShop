@@ -2185,6 +2185,8 @@ CREATE TABLE `PREFIX_webservice_account` (
   `is_module` TINYINT(2) NOT NULL DEFAULT '0',
   `module_name` VARCHAR(50) NULL DEFAULT NULL,
   `active` tinyint(2) NOT NULL,
+  `hosts_allowed` TEXT NULL DEFAULT NULL,
+  `hosts_check` TINYINT(2) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_webservice_account`),
   KEY `key` (`key`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
