@@ -71,6 +71,8 @@ final class WebserviceKeyFormDataProvider implements FormDataProviderInterface
                 $editableWebserviceKey->getResourcePermissions()
             ),
             'shop_association' => $editableWebserviceKey->getAssociatedShops(),
+            'hosts_allowed' => $editableWebserviceKey->getHostsAllowed(),
+            'hosts_check' => $editableWebserviceKey->getHostsCheck(),
         ];
     }
 
