@@ -1895,6 +1895,8 @@ class WebserviceRequestCore
     /**
      * Check if client hostname/ip is allowed.
      *
+     * @param string $key
+     *
      * @return bool
      */
     protected function checkHostAllowed(string $key): bool
