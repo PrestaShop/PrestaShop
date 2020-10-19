@@ -197,7 +197,7 @@ class WebserviceKeyCore extends ObjectModel
      *
      * @return WebserviceKey|null
      */
-    public static function getWebServiceObjectFromKey($auth_key)
+    public static function getWebServiceObjectFromKey(string $auth_key): ?WebserviceKey
     {
         $id_account = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             (new DbQuery())
