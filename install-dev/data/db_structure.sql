@@ -1752,6 +1752,8 @@ CREATE TABLE `PREFIX_product_attribute` (
   `low_stock_threshold` int(10) NULL DEFAULT NULL,
   `low_stock_alert` TINYINT(1) NOT NULL DEFAULT 0,
   `available_date` date DEFAULT NULL,
+  `date_add` datetime NOT NULL,
+  `date_upd` datetime NOT NULL,
   PRIMARY KEY (`id_product_attribute`),
   KEY `product_attribute_product` (`id_product`),
   KEY `reference` (`reference`),
@@ -1777,6 +1779,8 @@ CREATE TABLE `PREFIX_product_attribute_shop` (
   `low_stock_threshold` int(10) NULL DEFAULT NULL,
   `low_stock_alert` TINYINT(1) NOT NULL DEFAULT 0,
   `available_date` date DEFAULT NULL,
+  `date_add` datetime NOT NULL,
+  `date_upd` datetime NOT NULL,
   PRIMARY KEY (
     `id_product_attribute`, `id_shop`
   ),

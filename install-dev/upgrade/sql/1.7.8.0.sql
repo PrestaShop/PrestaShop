@@ -30,3 +30,9 @@ ALTER TABLE `PREFIX_hook` ADD `active` TINYINT(1) UNSIGNED DEFAULT 1 NOT NULL AF
 ALTER TABLE `PREFIX_orders` ADD COLUMN `note` TEXT AFTER `date_upd`;
 
 ALTER TABLE `PREFIX_currency` CHANGE `numeric_iso_code` `numeric_iso_code` varchar(3) NULL DEFAULT NULL;
+
+ALTER TABLE `PREFIX_product_attribute` ADD `date_add` DATETIME NULL AFTER `available_date`;
+ALTER TABLE `PREFIX_product_attribute` ADD `date_upd` DATETIME NULL AFTER `date_add`;
+
+ALTER TABLE `PREFIX_product_attribute_shop` ADD `date_add` DATETIME NULL AFTER `available_date`;
+ALTER TABLE `PREFIX_product_attribute_shop` ADD `date_upd` DATETIME NULL AFTER `date_add`;

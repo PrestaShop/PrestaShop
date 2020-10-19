@@ -71,6 +71,12 @@ class CombinationCore extends ObjectModel
 
     public $available_date = '0000-00-00';
 
+    /** @var string Object creation date in mysql format Y-m-d */
+    public $date_add;
+
+    /** @var string Object last modification date in mysql format Y-m-d */
+    public $date_upd;
+
     /**
      * @see ObjectModel::$definition
      */
@@ -99,6 +105,8 @@ class CombinationCore extends ObjectModel
             'low_stock_alert' => ['type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'],
             'default_on' => ['type' => self::TYPE_BOOL, 'allow_null' => true, 'shop' => true, 'validate' => 'isBool'],
             'available_date' => ['type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDateFormat'],
+            'date_add' => ['type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDate'],
+            'date_upd' => ['type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDate'],
         ],
     ];
 
