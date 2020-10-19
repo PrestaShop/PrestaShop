@@ -120,7 +120,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
      *
      * @param int $idSpecificPrice
      *
-     * @return array
+     * @return Response|array
      */
     public function getUpdateFormAction($idSpecificPrice)
     {
@@ -264,7 +264,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     /**
      * @param string $dateAsString
      *
-     * @return JsonResponse|null If date is 0000-00-00 00:00:00, null is returned
+     * @return string|null If date is 0000-00-00 00:00:00, null is returned
      *
      * @throws \PrestaShopDatabaseExceptionCore if date is not valid
      */

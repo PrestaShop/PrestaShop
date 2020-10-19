@@ -478,7 +478,7 @@ class CurrencyCore extends ObjectModel
             Configuration::updateValue('PS_CURRENCY_DEFAULT', $result['id_currency']);
         }
 
-        $this->deleted = 1;
+        $this->deleted = true;
 
         // Remove currency restrictions
         $res = Db::getInstance()->delete('module_currency', 'id_currency = ' . (int) $this->id);
@@ -559,6 +559,10 @@ class CurrencyCore extends ObjectModel
         $id_lang = $this->id_lang;
         if (null === $id_lang) {
             $id_lang = Configuration::get('PS_LANG_DEFAULT');
+        }
+
+        if (!isset($this->symbol[$id_lang])) {
+            return '';
         }
 
         return Tools::ucfirst($this->symbol[$id_lang]);

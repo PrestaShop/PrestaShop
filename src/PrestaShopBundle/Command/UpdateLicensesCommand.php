@@ -104,7 +104,7 @@ class UpdateLicensesCommand extends Command
             $this->findAndCheckExtension($output, $extension);
         }
 
-        return;
+        return 0;
     }
 
     /**

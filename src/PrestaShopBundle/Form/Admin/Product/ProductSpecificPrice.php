@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use Currency;
-use Language;
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
@@ -52,7 +51,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ProductSpecificPrice extends CommonAbstractType
 {
     /**
-     * @var Context
+     * @var LegacyContext
      */
     public $context;
     /**
@@ -76,7 +75,7 @@ class ProductSpecificPrice extends CommonAbstractType
      */
     private $groups;
     /**
-     * @var array<int|Language>
+     * @var array<int|array>
      */
     public $locales;
     /**

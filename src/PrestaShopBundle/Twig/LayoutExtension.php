@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Twig;
 
+use Currency;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
@@ -97,6 +98,7 @@ class LayoutExtension extends \Twig_Extension implements GlobalsInterface
         return [
             'theme' => $this->context->getContext()->shop->theme,
             'default_currency' => $defaultCurrency,
+            'default_currency_symbol' => $defaultCurrency instanceof Currency ? $defaultCurrency->getSymbol() : null,
             'root_url' => $rootUrl,
             'js_translatable' => [],
         ];

@@ -48,7 +48,7 @@ class OrderDetailRefund
     private $productQuantity;
 
     /**
-     * @var float|null
+     * @var DecimalNumber|null
      */
     private $refundedAmount;
 

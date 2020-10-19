@@ -880,7 +880,7 @@ class ShopCore extends ObjectModel
      * @param int $shop_id Shop ID
      * @param bool $as_id
      *
-     * @return int Group ID
+     * @return int|array Group ID
      */
     public static function getGroupFromShop($shop_id, $as_id = true)
     {

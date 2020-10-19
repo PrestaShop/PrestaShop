@@ -39,7 +39,7 @@ class HookFinder
      * instance of specific classes.
      * Please note it must implement the function toArray().
      *
-     * @var string
+     * @var array<int, string>
      */
     protected $expectedInstanceClasses = [];
 

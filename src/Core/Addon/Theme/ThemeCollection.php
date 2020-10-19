@@ -215,7 +215,7 @@ class ThemeCollection implements ArrayAccess, Countable, IteratorAggregate
      *
      * @param int|string $key
      *
-     * @return bool true if the addon has been found and removed
+     * @return bool|null true if the addon has been found and removed
      */
     public function removeByKey($key)
     {

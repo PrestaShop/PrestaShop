@@ -338,7 +338,7 @@ final class ProductImportHandler extends AbstractImportHandler
 
         $category->id_shop_default = $this->isMultistoreEnabled ? (int) $this->currentContextShopId : 1;
         $category->name = $this->dataFormatter->createMultiLangField(trim($categoryName));
-        $category->active = 1;
+        $category->active = true;
         $category->id_parent = (int) ($parentCategoryId ? $parentCategoryId : $homeCategoryId);
         $category->link_rewrite = $this->dataFormatter->createMultiLangField(
             $this->dataFormatter->createFriendlyUrl($category->name[$defaultLanguageId])
@@ -656,7 +656,7 @@ final class ProductImportHandler extends AbstractImportHandler
                         $category = new Category();
                         $category->id = (int) $value;
                         $category->name = $this->dataFormatter->createMultiLangField($value);
-                        $category->active = 1;
+                        $category->active = true;
                         $category->id_parent = $homeCategoryId;
                         $category->link_rewrite = $this->dataFormatter->createMultiLangField(
                             $this->dataFormatter->createFriendlyUrl($category->name[$defaultLanguageId])

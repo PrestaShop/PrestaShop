@@ -63,7 +63,7 @@ class TranslatableType extends AbstractType
     private $saveFormLocaleChoice;
 
     /**
-     * @var string default form language ID
+     * @var int default form language ID
      */
     private $defaultFormLanguageId;
 

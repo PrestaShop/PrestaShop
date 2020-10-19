@@ -249,7 +249,7 @@ class LegacyContext
      * @param int|bool $id_shop Shop ID
      * @param bool $ids_only If true, returns an array of language IDs
      *
-     * @return array<int|Language> Languages
+     * @return array<int|array> Languages
      */
     public function getLanguages($active = true, $id_shop = false, $ids_only = false)
     {
@@ -287,7 +287,7 @@ class LegacyContext
     public function getEmployeeCurrency()
     {
         if (null === $this->employeeCurrency && $this->getContext()->currency) {
-            $this->employeeCurrency = $this->getContext()->currency->sign;
+            $this->employeeCurrency = $this->getContext()->currency;
         }
 
         return $this->employeeCurrency;

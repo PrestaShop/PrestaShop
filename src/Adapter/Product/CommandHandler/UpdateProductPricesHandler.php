@@ -124,7 +124,7 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
         }
 
         if (null !== $command->getWholesalePrice()) {
-            $product->wholesale_price = (float) (string) $command->getWholesalePrice();
+            $product->wholesale_price = (string) $command->getWholesalePrice();
             $this->validateField($product, 'wholesale_price', ProductConstraintException::INVALID_WHOLESALE_PRICE);
             $this->fieldsToUpdate['wholesale_price'] = true;
         }
