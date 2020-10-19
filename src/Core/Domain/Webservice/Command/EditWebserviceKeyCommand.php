@@ -211,9 +211,9 @@ class EditWebserviceKeyCommand
     }
 
     /**
-     * @return bool|null
+     * @return bool
      */
-    public function getHostsCheck()
+    public function getHostsCheck(): bool
     {
         return $this->hosts_check;
     }
