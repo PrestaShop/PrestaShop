@@ -223,7 +223,7 @@ class EditWebserviceKeyCommand
      *
      * @return self
      */
-    public function setHostsCheck($hosts_check)
+    public function setHostsCheck(bool $hosts_check): self
     {
         $this->hosts_check = $hosts_check;
 
