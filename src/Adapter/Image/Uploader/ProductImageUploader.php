@@ -51,6 +51,11 @@ final class ProductImageUploader extends AbstractImageUploader implements Produc
     private $productImagePathFactory;
 
     /**
+     * @var ProductImageRepository
+     */
+    private $productImageRepository;
+
+    /**
      * @var array
      */
     private $contextShopIdsList;
@@ -59,11 +64,6 @@ final class ProductImageUploader extends AbstractImageUploader implements Produc
      * @var int
      */
     private $contextShopId;
-
-    /**
-     * @var ProductImageRepository
-     */
-    private $productImageRepository;
 
     /**
      * @param UploadSizeConfigurationInterface $uploadSizeConfiguration
