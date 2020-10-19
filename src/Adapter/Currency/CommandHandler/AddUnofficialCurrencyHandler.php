@@ -87,7 +87,7 @@ final class AddUnofficialCurrencyHandler extends AbstractCurrencyHandler impleme
             $entity = $this->currencyDataProvider->getCurrencyByIsoCodeOrCreate($command->getIsoCode()->getValue());
 
             $entity->unofficial = true;
-            $entity->numeric_iso_code = '';
+            $entity->numeric_iso_code = null;
             if (null !== $command->getPrecision()) {
                 $entity->precision = $command->getPrecision()->getValue();
             }

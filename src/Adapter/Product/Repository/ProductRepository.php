@@ -119,11 +119,11 @@ class ProductRepository extends AbstractObjectModelRepository
      * @param ProductId $productId
      * @param LanguageId $languageId
      *
-     * @return array<string, string>
-     *                       e.g [
-     *                       ['id_product' => '1', 'name' => 'Product name', 'reference' => 'demo15'],
-     *                       ['id_product' => '2', 'name' => 'Product name2', 'reference' => 'demo16'],
-     *                       ]
+     * @return array<array<string, string>>
+     *                             e.g [
+     *                             ['id_product' => '1', 'name' => 'Product name', 'reference' => 'demo15'],
+     *                             ['id_product' => '2', 'name' => 'Product name2', 'reference' => 'demo16'],
+     *                             ]
      *
      * @throws CoreException
      */
