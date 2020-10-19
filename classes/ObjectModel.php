@@ -2155,6 +2155,14 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     }
 
     /**
+     * @return array|null
+     */
+    public function getFieldsToUpdate(): ?array
+    {
+        return $this->update_fields;
+    }
+
+    /**
      * Enables object caching.
      */
     public static function enableCache()

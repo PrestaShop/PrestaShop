@@ -40,6 +40,23 @@ use Product;
 class ProductValidator extends AbstractObjectModelValidator
 {
     /**
+     * This method is specific for product creation only.
+     *
+     * @param Product $product
+     *
+     * @throws CoreException
+     */
+    public function validateCreation(Product $product): void
+    {
+        $this->validateObjectModelLocalizedProperty(
+            $product,
+            'name',
+            ProductConstraintException::class,
+            ProductConstraintException::INVALID_NAME
+        );
+    }
+
+    /**
      * Validates Product object model properties using legacy validation
      *
      * @param Product $product
@@ -143,6 +160,10 @@ class ProductValidator extends AbstractObjectModelValidator
      */
     private function validateProductLocalizedProperty(Product $product, string $propertyName, int $errorCode = 0): void
     {
+        if (!$product->getFieldsToUpdate() || !array_key_exists($propertyName, $product->getFieldsToUpdate())) {
+            return;
+        }
+
         $this->validateObjectModelLocalizedProperty(
             $product,
             $propertyName,

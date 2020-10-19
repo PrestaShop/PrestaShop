@@ -36,8 +36,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotAddProductExceptio
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -180,9 +178,7 @@ class ProductRepository extends AbstractObjectModelRepository
      *
      * @return Product
      *
-     * @throws CoreException
-     * @throws ProductConstraintException
-     * @throws ProductException
+     * @throws CannotAddProductException
      */
     public function create(array $localizedNames, bool $isVirtual): Product
     {
@@ -192,7 +188,7 @@ class ProductRepository extends AbstractObjectModelRepository
         $product->name = $localizedNames;
         $product->is_virtual = $isVirtual;
 
-        $this->productValidator->validate($product);
+        $this->productValidator->validateCreation($product);
         $this->addObjectModel($product, CannotAddProductException::class);
         $product->addToCategories([$product->id_category_default]);
 

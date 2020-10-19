@@ -80,10 +80,6 @@ abstract class AbstractObjectModelValidator
     {
         $localizedValues = $objectModel->{$propertyName};
 
-        if (null === $localizedValues) {
-            return;
-        }
-
         try {
             foreach ($localizedValues as $langId => $value) {
                 if (true !== $objectModel->validateField($propertyName, $value, $langId)) {
