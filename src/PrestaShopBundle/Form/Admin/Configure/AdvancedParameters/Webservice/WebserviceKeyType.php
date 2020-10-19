@@ -118,7 +118,7 @@ class WebserviceKeyType extends AbstractType
                 'empty_data' => '',
                 'attr' => [
                     'rows' => 5,
-                    'placeholder' => 'www.prestashop.com, 42.24.4.2,127.0.0.1,99.98.97.96',
+                    'placeholder' => 'www.prestashop.com,42.24.4.2,127.0.0.1,99.98.97.96',
                 ],
             ])
             ->add('hosts_check', SwitchType::class, [
