@@ -1897,7 +1897,7 @@ class WebserviceRequestCore
      *
      * @return bool
      */
-    protected function checkHostAllowed($key)
+    protected function checkHostAllowed(string $key): bool
     {
         $WebServiceObject = WebserviceKey::getWebServiceObjectFromKey($key);
 
