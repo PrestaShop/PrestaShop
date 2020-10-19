@@ -858,12 +858,12 @@ class ToolsCore
      *
      * @deprecated since 1.7.4 use convertPriceToCurrency()
      *
-     * @param float $price Product price
+     * @param float|null $price Product price
      * @param object|array $currency Current currency object
      * @param bool $to_currency convert to currency or from currency to default currency
      * @param Context $context
      *
-     * @return float Price
+     * @return float|null Price
      */
     public static function convertPrice($price, $currency = null, $to_currency = true, Context $context = null)
     {

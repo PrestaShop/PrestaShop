@@ -832,7 +832,7 @@ class ShopCore extends ObjectModel
      *
      * @param int $shop_id
      *
-     * @return array
+     * @return array|bool
      */
     public static function getShop($shop_id)
     {

@@ -62,7 +62,7 @@ class ProfileId
     }
 
     /**
-     * @param int $profileId
+     * @param mixed $profileId
      *
      * @throws ProfileException
      */

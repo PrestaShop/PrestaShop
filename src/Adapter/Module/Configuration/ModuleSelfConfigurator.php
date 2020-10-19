@@ -285,7 +285,7 @@ class ModuleSelfConfigurator
      * Finds and returns filepath from a config key in the YML config file.
      * Can be a string of a value of "file" key.
      *
-     * @param array $data
+     * @param array|string $data
      *
      * @return string
      *

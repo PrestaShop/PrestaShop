@@ -41,7 +41,7 @@ interface LocaleDataLayerInterface
      *                           Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
      *                           eg: fr-FR, en-US
      *
-     * @return LocaleData The searched locale's CLDR data
+     * @return LocaleData|null The searched locale's CLDR data
      */
     public function read($localeCode);
 

@@ -185,7 +185,7 @@ class XmlLoader
                 $xml = $this->loadEntity($entity);
 
                 // Store entities dependencies (with field type="relation")
-                if ($xml->fields) {
+                if ($xml instanceof \SimpleXMLElement && isset($xml->fields, $xml->fields->field)) {
                     foreach ($xml->fields->field as $field) {
                         if ($field['relation'] && $field['relation'] != $entity) {
                             if (!isset($dependencies[(string) $field['relation']])) {
@@ -259,7 +259,7 @@ class XmlLoader
         $xml = $this->loadEntity($entity);
 
         // Read list of fields
-        if (!is_object($xml) || !$xml->fields) {
+        if (!$xml instanceof \SimpleXMLElement && !empty($xml->fields)) {
             throw new PrestashopInstallerException('List of fields not found for entity ' . $entity);
         }
 
@@ -407,13 +407,13 @@ class XmlLoader
      * @param string $entity Name of the entity to load (eg. 'tab')
      * @param string|null $iso Language in which to load said entity. If not found, will fall back to default language.
      *
-     * @return \SimpleXMLElement|void
+     * @return \SimpleXMLElement|null
      */
     protected function loadEntity($entity, $iso = null)
     {
         if (!isset($this->cache_xml_entity[$this->path_type][$entity][$iso])) {
             if (substr($entity, 0, 1) == '.' || substr($entity, 0, 1) == '_') {
-                return;
+                return null;
             }
 
             $path = $this->data_path . $entity . '.xml';
