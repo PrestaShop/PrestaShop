@@ -391,6 +391,7 @@ services:
         arguments:
             - '@prestashop.adapter.product.repository.product_repository'
 
+<<<<<<< HEAD
     prestashop.adapter.product.command_handler.duplicate_product_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DuplicateProductHandler
         arguments:
@@ -408,3 +409,9 @@ services:
             - '@prestashop.adapter.shop.context'
             - '@translator'
             - '@prestashop.core.util.string.string_modifier'
+
+    prestashop.adapter.product.command_handler.add_product_image_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddProductImageHandler
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductImageCommand
