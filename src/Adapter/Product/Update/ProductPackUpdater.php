@@ -82,7 +82,7 @@ class ProductPackUpdater
             $this->assertProductIsAvailableForPacking($productForPacking->getProductId()->getValue());
         }
 
-        $this->productPackRepository->removePackedProducts($packId);
+        $this->productPackRepository->removeAllProductsFromPack($packId);
 
         //reset cache_default_attribute
         $pack->setDefaultAttribute(CombinationId::NO_COMBINATION);

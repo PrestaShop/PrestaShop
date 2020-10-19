@@ -79,7 +79,7 @@ class ProductPackRepository
      * @throws CoreException
      * @throws ProductPackException
      */
-    public function removePackedProducts(PackId $packId): void
+    public function removeAllProductsFromPack(PackId $packId): void
     {
         $packIdValue = $packId->getValue();
 
