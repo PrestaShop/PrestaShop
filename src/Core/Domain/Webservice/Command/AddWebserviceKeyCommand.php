@@ -138,7 +138,7 @@ class AddWebserviceKeyCommand
     /**
      * @return string
      */
-    public function getHostsAllowed()
+    public function getHostsAllowed(): string
     {
         return $this->hosts_allowed;
     }
