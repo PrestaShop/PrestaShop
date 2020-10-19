@@ -81,7 +81,7 @@ final class AddWebserviceKeyHandler extends AbstractWebserviceKeyHandler impleme
         $webserviceKey->description = $command->getDescription();
         $webserviceKey->active = $command->getStatus();
         $webserviceKey->hosts_allowed = $command->getHostsAllowed();
-        $webserviceKey->hosts_check = (bool) $command->getHostsCheck();
+        $webserviceKey->hosts_check = $command->getHostsCheck();
 
         if (false === $webserviceKey->validateFields(false)) {
             throw new WebserviceConstraintException('One or more fields are invalid in WebserviceKey');
