@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Image;
+namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use Image;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
