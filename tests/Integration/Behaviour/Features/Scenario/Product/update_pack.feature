@@ -1,4 +1,4 @@
-# `./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-pack`
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-pack
 @reset-database-before-feature
 @clear-cache-after-feature
 @update-pack

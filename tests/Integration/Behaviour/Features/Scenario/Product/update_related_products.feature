@@ -17,7 +17,8 @@ Feature: Update product related products from Back Office (BO)
       | name       | en-US:lovely books package |
       | is_virtual | false                      |
     And I update pack "product3" with following product quantities:
-      | product2 | 5 |
+      | product  | quantity |
+      | product2 | 5        |
     And I add product "product4" with following information:
       | name       | en-US:Reading glasses |
       | is_virtual | false                 |
@@ -30,23 +31,23 @@ Feature: Update product related products from Back Office (BO)
     And product "product3" type should be pack
     And product product4 type should be combination
     When I set following related products to product product1:
-      | product2          |
-      | product3          |
-      | product4          |
+      | product2 |
+      | product3 |
+      | product4 |
     Then product product1 should have following related products:
-      | product2          |
-      | product3          |
-      | product4          |
+      | product2 |
+      | product3 |
+      | product4 |
     When I set following related products to product product1:
-      | product2          |
-      | product4          |
+      | product2 |
+      | product4 |
     Then product product1 should have following related products:
-      | product2          |
-      | product4          |
+      | product2 |
+      | product4 |
 
   Scenario: Remove all related products
     Given product product1 should have following related products:
-      | product2          |
-      | product4          |
+      | product2 |
+      | product4 |
     When I remove all related products from product product1
     Then product product1 should have no related products
