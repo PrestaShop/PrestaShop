@@ -7,6 +7,10 @@ class SearchEngines extends BOBasePage {
 
     this.pageTitle = 'Search Engines •';
 
+    // Header selectors
+    this.newSearchEngineLink = '#page-header-desc-search_engine-new_search_engine';
+    this.alertSuccessBlockParagraph = '.alert-success';
+
     // Form selectors
     this.gridForm = '#form-search_engine';
     this.gridTableHeaderTitle = `${this.gridForm} .panel-heading`;
@@ -38,6 +42,16 @@ class SearchEngines extends BOBasePage {
     this.tableColumnServer = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
     this.tableColumnGetVar = row => `${this.tableBodyColumn(row)}:nth-child(4)`;
 
+    // Row actions selectors
+    this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
+    this.tableColumnActionsEditLink = row => `${this.tableColumnActions(row)} a.edit`;
+    this.tableColumnActionsToggleButton = row => `${this.tableColumnActions(row)} button.dropdown-toggle`;
+    this.tableColumnActionsDropdownMenu = row => `${this.tableColumnActions(row)} .dropdown-menu`;
+    this.tableColumnActionsDeleteLink = row => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
+
+    // Confirmation modal
+    this.deleteModalButtonYes = '#popup_ok';
+
     // Pagination selectors
     this.paginationList = `${this.gridForm} .pagination`;
     this.paginationDropdownButton = `${this.paginationList} .dropdown-toggle`;
@@ -45,6 +59,16 @@ class SearchEngines extends BOBasePage {
     this.paginationActivePageLink = `${this.paginationList} li.active a`;
     this.paginationPreviousLink = `${this.paginationList} .icon-angle-left`;
     this.paginationNextLink = `${this.paginationList} .icon-angle-right`;
+  }
+
+  /* Header methods */
+  /**
+   * Go to new search engine page
+   * @param page
+   * @return {Promise<void>}
+   */
+  async goToNewSearchEnginePage(page) {
+    await this.clickAndWaitForNavigation(page, this.newSearchEngineLink);
   }
 
   /* Filter methods */
@@ -177,7 +201,38 @@ class SearchEngines extends BOBasePage {
     await this.clickAndWaitForNavigation(page, sortColumnButton);
   }
 
-  // Pagination methods
+  /**
+   * Go to edit search engine page
+   * @param page
+   * @param row
+   * @return {Promise<void>}
+   */
+  async goToEditSearchEnginePage(page, row) {
+    await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(row));
+  }
+
+  /**
+   * Delete search engine
+   * @param page
+   * @param row
+   * @return {Promise<string>}
+   */
+  async deleteSearchEngine(page, row) {
+    await Promise.all([
+      page.click(this.tableColumnActionsToggleButton(row)),
+      this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(row)),
+    ]);
+
+    await page.click(this.tableColumnActionsDeleteLink(row));
+
+    // Confirm delete action
+    await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
+
+    // Get successful message
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+  }
+
+  /* Pagination methods */
 
   /**
    * Get pagination label
