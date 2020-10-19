@@ -41,10 +41,10 @@ use Tag;
  */
 class TagRepository
 {
-    public function addTags(ProductId $productId, LanguageId $languageId, LocalizedTags $localizedTags): void
+    public function addTagsByLanguage(ProductId $productId, LocalizedTags $localizedTags): void
     {
         $productIdValue = $productId->getValue();
-        $langIdValue = $languageId->getValue();
+        $langIdValue = $localizedTags->getLanguageId()->getValue();
 
         try {
             // assign new tags to product
@@ -67,7 +67,7 @@ class TagRepository
      * @throws CannotUpdateProductException
      * @throws CoreException
      */
-    public function deleteTags(ProductId $productId): void
+    public function deleteAllTags(ProductId $productId): void
     {
         $productIdValue = $productId->getValue();
 
@@ -92,7 +92,7 @@ class TagRepository
      * @throws CannotUpdateProductException
      * @throws CoreException
      */
-    public function deleteTagsInLang(ProductId $productId, LanguageId $languageId): void
+    public function deleteTagsByLanguage(ProductId $productId, LanguageId $languageId): void
     {
         $productIdValue = $productId->getValue();
         $langIdValue = $languageId->getValue();

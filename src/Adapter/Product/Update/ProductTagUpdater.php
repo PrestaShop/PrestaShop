@@ -69,14 +69,14 @@ class ProductTagUpdater
 
         // delete all tags for product if array is empty
         if (empty($localizedTagsList)) {
-            $this->tagRepository->deleteTags($productId);
+            $this->tagRepository->deleteAllTags($productId);
 
             return;
         }
 
         foreach ($localizedTagsList as $localizedTags) {
             // delete all this product tags for this lang
-            $this->tagRepository->deleteTagsInLang($productId, $localizedTags->getLanguageId());
+            $this->tagRepository->deleteTagsByLanguage($productId, $localizedTags->getLanguageId());
 
             // empty tags means to delete all previous tags, which is already done above.
             if ($localizedTags->isEmpty()) {
@@ -84,7 +84,7 @@ class ProductTagUpdater
             }
 
             // assign new tags to product
-            $this->tagRepository->addTags($productId, $localizedTags->getLanguageId(), $localizedTags);
+            $this->tagRepository->addTagsByLanguage($productId, $localizedTags);
         }
     }
 }
