@@ -46,7 +46,7 @@ class SetProductTagsCommand
     /**
      * @var LocalizedTags[]
      */
-    private $localizedTagsList = [];
+    private $localizedTagsList;
 
     /**
      * @param int $productId
