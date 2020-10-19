@@ -10,7 +10,7 @@
       <trans-unit id="af342023e90ca45b0d69be497168ac56">
         <source>Unit discount</source>
         <target>Unit discount</target>
-        <note>Line: 1542</note>
+        <note>Line: 1554</note>
       </trans-unit>
     </body>
   </file>
@@ -19,12 +19,12 @@
       <trans-unit id="9dea4016dbcc290b773ab2fae678aaa8">
         <source>Items</source>
         <target>Items</target>
-        <note>Line: 1034</note>
+        <note>Line: 1048</note>
       </trans-unit>
       <trans-unit id="7d74f3b92b19da5e606d737d339a9679">
         <source>Item</source>
         <target>Item</target>
-        <note>Line: 1034</note>
+        <note>Line: 1048</note>
       </trans-unit>
     </body>
   </file>
