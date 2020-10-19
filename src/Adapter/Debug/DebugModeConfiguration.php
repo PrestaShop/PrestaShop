@@ -148,7 +148,7 @@ class DebugModeConfiguration implements DataConfigurationInterface
      *
      * @param bool $enableStatus
      *
-     * @return int|void Status of update
+     * @return int|null Status of update
      */
     private function updateDebugMode($enableStatus)
     {
@@ -157,5 +157,7 @@ class DebugModeConfiguration implements DataConfigurationInterface
         if ($enableStatus !== $currentDebugMode) {
             return (true === $enableStatus) ? $this->debugMode->enable() : $this->debugMode->disable();
         }
+
+        return null;
     }
 }

@@ -229,6 +229,6 @@ class ExchangeRateProvider
      */
     private function isValidXMLFeed(SimpleXMLElement $xmlFeed)
     {
-        return $xmlFeed && $xmlFeed->list && count($xmlFeed->list->currency) && $xmlFeed->source;
+        return !empty($xmlFeed->list->currency);
     }
 }

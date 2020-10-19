@@ -233,16 +233,12 @@ class ProductLazyArray extends AbstractLazyArray
                     'label' => $this->translator->trans('Used', [], 'Shop.Theme.Catalog'),
                     'schema_url' => 'https://schema.org/UsedCondition',
                 ];
-
-                break;
             case 'refurbished':
                 return [
                     'type' => 'refurbished',
                     'label' => $this->translator->trans('Refurbished', [], 'Shop.Theme.Catalog'),
                     'schema_url' => 'https://schema.org/RefurbishedCondition',
                 ];
-
-                break;
             default:
                 return false;
         }

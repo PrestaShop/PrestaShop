@@ -778,7 +778,7 @@ class AdminProductWrapper
         $id_product_download = ProductDownload::getIdFromIdProduct((int) $product->id, false);
         $download = new ProductDownload($id_product_download ? $id_product_download : null);
 
-        if ($download && !empty($download->filename)) {
+        if (!empty($download->filename)) {
             unlink(_PS_DOWNLOAD_DIR_ . $download->filename);
             Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'product_download` SET filename = "" WHERE `id_product_download` = ' . (int) $download->id);
         }
@@ -793,8 +793,7 @@ class AdminProductWrapper
     {
         $id_product_download = ProductDownload::getIdFromIdProduct((int) $product->id, false);
         $download = new ProductDownload($id_product_download ? $id_product_download : null);
-
-        if ($download) {
+        if (Validate::isLoadedObject($download)) {
             $download->delete(true);
         }
     }

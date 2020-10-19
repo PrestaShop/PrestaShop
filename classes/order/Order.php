@@ -2327,7 +2327,7 @@ class OrderCore extends ObjectModel
     /**
      * @since 1.5.0.4
      *
-     * @return OrderState or null if Order haven't a state
+     * @return OrderState|null null if Order haven't a state
      */
     public function getCurrentOrderState()
     {

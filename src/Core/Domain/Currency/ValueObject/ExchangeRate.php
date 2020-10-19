@@ -71,7 +71,7 @@ class ExchangeRate
     }
 
     /**
-     * @param float|int $exchangeRate
+     * @param mixed $exchangeRate
      *
      * @throws CurrencyConstraintException
      */

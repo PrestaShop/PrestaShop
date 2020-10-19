@@ -79,6 +79,11 @@ class ModuleManagerBuilder
     public static $cacheProvider = null;
 
     /**
+     * @var bool
+     */
+    private $isDebug;
+
+    /**
      * @return ModuleManagerBuilder|null
      */
     public static function getInstance()
@@ -145,8 +150,12 @@ class ModuleManagerBuilder
         return self::$modulesRepository;
     }
 
-    private function __construct()
+    /**
+     * @param bool $isDebug
+     */
+    private function __construct(bool $isDebug = _PS_MODE_DEV_)
     {
+        $this->isDebug = $isDebug;
         /**
          * If the Symfony container is available, it will be used for the other methods
          * build & buildRepository. No need to init manually all the dependancies.
@@ -187,10 +196,7 @@ class ModuleManagerBuilder
         self::$addonsDataProvider = new AddonsDataProvider($marketPlaceClient, self::$moduleZipManager);
 
         $kernelDir = realpath($this->getConfigDir() . '/../../var');
-        self::$addonsDataProvider->cacheDir = $kernelDir . '/cache/prod';
-        if (_PS_MODE_DEV_) {
-            self::$addonsDataProvider->cacheDir = $kernelDir . '/cache/dev';
-        }
+        self::$addonsDataProvider->cacheDir = $kernelDir . ($this->isDebug ? '/cache/dev' : '/cache/prod');
 
         self::$cacheProvider = new FilesystemCache(self::$addonsDataProvider->cacheDir . '/doctrine');
 
@@ -233,7 +239,7 @@ class ModuleManagerBuilder
     private function getSymfonyRouter()
     {
         // get the environment to load the good routing file
-        $routeFileName = _PS_MODE_DEV_ === true ? 'routing_dev.yml' : 'routing.yml';
+        $routeFileName = $this->isDebug === true ? 'routing_dev.yml' : 'routing.yml';
         $routesDirectory = $this->getConfigDir();
         $locator = new FileLocator([$routesDirectory]);
         $loader = new YamlFileLoader($locator);

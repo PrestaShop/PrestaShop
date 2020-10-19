@@ -72,7 +72,6 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
      */
     public function handle(AddOrderFromBackOfficeCommand $command)
     {
-        /** @var PaymentModule $paymentModule */
         $paymentModule = !Configuration::get('PS_CATALOG_MODE') ?
             Module::getInstanceByName($command->getPaymentModuleName()) :
             new BoOrderCore();
@@ -80,7 +79,7 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
         if (false === $paymentModule) {
             throw new OrderException(sprintf('Payment method "%s" does not exist.', $paymentModule));
         }
-
+        /** @var PaymentModule $paymentModule */
         $cart = new Cart($command->getCartId()->getValue());
 
         $this->assertAddressesAreNotDisabled($cart);
