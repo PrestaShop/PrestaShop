@@ -160,7 +160,7 @@ class EditableWebserviceKey
     }
 
     /**
-     * @return bool|null
+     * @return bool
      */
     public function getHostsCheck()
     {
