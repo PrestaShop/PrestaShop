@@ -65,14 +65,14 @@ class EditWebserviceKeyCommand
     private $shopAssociation;
 
     /**
-     * @var string|null
+     * @var string
      */
-    private $hosts_allowed;
+    private $hosts_allowed = '';
 
     /**
-     * @var bool|null
+     * @var bool
      */
-    private $hosts_check;
+    private $hosts_check = false;
 
     /**
      * @param int $webserviceKeyId
