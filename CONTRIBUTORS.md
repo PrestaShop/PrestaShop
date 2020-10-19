@@ -494,6 +494,7 @@ GitHub contributors:
 - montes
 - mplh
 - mRaigne
+- mushroot
 - MustangZhong
 - nache
 - natrim
@@ -677,6 +678,7 @@ GitHub contributors:
 - Stanislav Yordanov
 - Stefano Kowalke
 - Stephan Obadia
+- Stephane Decisy
 - Steven "SDF" Sulley
 - Steven Sulley
 - stickyrst
