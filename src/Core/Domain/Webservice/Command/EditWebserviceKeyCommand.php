@@ -203,7 +203,7 @@ class EditWebserviceKeyCommand
      *
      * @return self
      */
-    public function setHostsAllowed($hosts_allowed)
+    public function setHostsAllowed(string $hosts_allowed): self
     {
         $this->hosts_allowed = $hosts_allowed;
 
