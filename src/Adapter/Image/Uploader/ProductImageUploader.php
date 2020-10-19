@@ -31,17 +31,12 @@ namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 use ErrorException;
 use Hook;
 use Image;
-use ImageManager;
 use PrestaShop\PrestaShop\Adapter\Image\Exception\CannotUnlinkImageException;
 use PrestaShop\PrestaShop\Adapter\Product\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ProductImageUploaderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
-use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
-use PrestaShopException;
 
 final class ProductImageUploader extends AbstractImageUploader implements ProductImageUploaderInterface
 {
@@ -73,22 +68,23 @@ final class ProductImageUploader extends AbstractImageUploader implements Produc
     /**
      * @param UploadSizeConfigurationInterface $uploadSizeConfiguration
      * @param ProductImagePathFactory $productImagePathFactory
+     * @param ProductImageRepository $productImageRepository
      * @param array $contextShopIdsList
      * @param int $contextShopId
-     * @param ProductImageRepository $productImageRepository
      */
     public function __construct(
         UploadSizeConfigurationInterface $uploadSizeConfiguration,
         ProductImagePathFactory $productImagePathFactory,
+        ProductImageRepository $productImageRepository,
+        //@todo; how does context have shopIds & singe shopId ? Maybe we can clarify & harmonize it in MultistoreContextChecker?
         array $contextShopIdsList,
-        int $contextShopId,
-        ProductImageRepository $productImageRepository
+        int $contextShopId
     ) {
         $this->uploadSizeConfiguration = $uploadSizeConfiguration;
         $this->productImagePathFactory = $productImagePathFactory;
+        $this->productImageRepository = $productImageRepository;
         $this->contextShopIdsList = $contextShopIdsList;
         $this->contextShopId = $contextShopId;
-        $this->productImageRepository = $productImageRepository;
     }
 
     /**
@@ -97,14 +93,11 @@ final class ProductImageUploader extends AbstractImageUploader implements Produc
     public function upload(ImageId $imageId, string $filePath): void
     {
         $image = $this->productImageRepository->get($imageId);
-        $this->checkMemory($filePath);
         $this->productImagePathFactory->createDestinationDirectory($image);
-        $this->copyToDestination($filePath, $image);
 
-        $this->generateDifferentSizeImages(
-            $this->productImagePathFactory->getBasePath($image, false),
-            'products'
-        );
+        //@todo: this will unlink the image. Can we trust that the $filePath is in temp?
+        $this->uploadFromTemp($filePath, $this->productImagePathFactory->getBasePath($image, true));
+        $this->generateDifferentSizeImages($this->productImagePathFactory->getBasePath($image, false), 'products');
 
         Hook::exec('actionWatermark', ['id_image' => $image->id, 'id_product' => $image->id_product]);
         //@Todo: double-check multishop
@@ -139,37 +132,6 @@ final class ProductImageUploader extends AbstractImageUploader implements Produc
                     );
                 }
             }
-        }
-    }
-
-    /**
-     * @param string $tmpImageName
-     * @param Image $image
-     *
-     * @throws ImageOptimizationException
-     */
-    private function copyToDestination(string $tmpImageName, Image $image)
-    {
-        try {
-            if (!ImageManager::resize($tmpImageName, $this->productImagePathFactory->getBasePath($image, true))) {
-                throw new ImageOptimizationException('An error occurred while uploading the image. Check your directory permissions.');
-            }
-        } catch (PrestaShopException $e) {
-            throw new CoreException('Error occurred when trying to resize product images', 0, $e);
-        }
-    }
-
-    /**
-     * Evaluate the memory required to resize the image: if it's too much, you can't resize it.
-     *
-     * @param string $tmpImageName
-     *
-     * @throws MemoryLimitException
-     */
-    private function checkMemory(string $tmpImageName): void
-    {
-        if (!ImageManager::checkImageMemoryLimit($tmpImageName)) {
-            throw new MemoryLimitException('Due to memory limit restrictions, this image cannot be loaded. Increase your memory_limit value.');
         }
     }
 }
