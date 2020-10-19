@@ -26,15 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductAttachmentsCommand;
 
 /**
- * Defines contract for UpdateProductTagsHandler
+ * Defines contract to handle @see RemoveAllAssociatedProductAttachmentsCommand
  */
-interface UpdateProductTagsHandlerInterface
+interface RemoveAllAssociatedProductAttachmentsHandlerInterface
 {
     /**
-     * @param SetProductTagsCommand $command
+     * @param RemoveAllAssociatedProductAttachmentsCommand $command
      */
-    public function handle(SetProductTagsCommand $command): void;
+    public function handle(RemoveAllAssociatedProductAttachmentsCommand $command): void;
 }

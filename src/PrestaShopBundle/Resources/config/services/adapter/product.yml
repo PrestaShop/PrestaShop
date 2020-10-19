@@ -107,11 +107,23 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand
 
-    prestashop.adapter.product.command_handler.update_product_tags_handler:
-        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductTagsHandler
+    prestashop.adapter.product.command_handler.set_product_tags_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetProductTagsHandler
+        arguments:
+            - '@prestashop.adapter.product.repository.product_repository'
+            - '@prestashop.adapter.product.updater.product_tag_updater'
         tags:
             - name: tactician.handler
-              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTagsCommand
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand
+
+    prestashop.adapter.product.command_handler.remove_all_product_tags_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllProductTagsHandler
+        arguments:
+            - '@prestashop.adapter.product.repository.product_repository'
+            - '@prestashop.adapter.product.updater.product_tag_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllProductTagsCommand
 
     prestashop.adapter.product.command_handler.update_product_options_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductOptionsHandler
@@ -304,6 +316,15 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AssociateProductAttachmentCommand
 
+    prestashop.adapter.product.command_handler.remove_all_associated_product_attachments_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllAssociatedProductAttachmentsHandler
+        arguments:
+            - '@prestashop.adapter.product.update.product_attachment_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductAttachmentsCommand
+
+
     prestashop.adapter.product.validate.product_supplier_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\Validate\ProductSupplierValidator
         arguments:
@@ -351,3 +372,11 @@ services:
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllRelatedProductsCommand
+
+    prestashop.adapter.product.repository.tag_repository:
+        class: PrestaShop\PrestaShop\Adapter\Product\Repository\TagRepository
+
+    prestashop.adapter.product.updater.product_tag_updater:
+        class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductTagUpdater
+        arguments:
+            - '@prestashop.adapter.product.repository.tag_repository'

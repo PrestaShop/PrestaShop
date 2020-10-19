@@ -28,14 +28,15 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use RuntimeException;
 
 /**
- * Replaces previous product attachments association with the provided one.
+ * Updates product tags in provided languages
  */
-class SetAssociatedProductAttachmentsCommand
+class SetProductTagsCommand
 {
     /**
      * @var ProductId
@@ -43,18 +44,18 @@ class SetAssociatedProductAttachmentsCommand
     private $productId;
 
     /**
-     * @var AttachmentId[]
+     * @var LocalizedTags[]
      */
-    private $attachmentIds;
+    private $localizedTagsList;
 
     /**
      * @param int $productId
-     * @param int[] $attachmentIds
+     * @param array $localizedTags
      */
-    public function __construct(int $productId, array $attachmentIds)
+    public function __construct(int $productId, array $localizedTags)
     {
         $this->productId = new ProductId($productId);
-        $this->setAttachmentIds($attachmentIds);
+        $this->setLocalizedTagsList($localizedTags);
     }
 
     /**
@@ -66,28 +67,30 @@ class SetAssociatedProductAttachmentsCommand
     }
 
     /**
-     * @return AttachmentId[]
+     * @return LocalizedTags[]
      */
-    public function getAttachmentIds(): array
+    public function getLocalizedTagsList(): array
     {
-        return $this->attachmentIds;
+        return $this->localizedTagsList;
     }
 
     /**
-     * @param int[] $attachmentIds
+     * @param array[] $localizedTags key-value pairs where each key represents language id and value is the array of tags
+     *
+     * @throws ProductConstraintException
      */
-    private function setAttachmentIds(array $attachmentIds): void
+    private function setLocalizedTagsList(array $localizedTags): void
     {
-        if (empty($attachmentIds)) {
+        if (empty($localizedTags)) {
             throw new RuntimeException(sprintf(
-                'Empty array of product attachments provided in %s. To remove all product attachments use %s.',
+                'Empty array of product tags provided in %s. To remove all product tags use %s.',
                 self::class,
-                RemoveAllAssociatedProductAttachmentsCommand::class
+                RemoveAllProductTagsCommand::class
             ));
         }
 
-        foreach ($attachmentIds as $attachmentId) {
-            $this->attachmentIds[] = new AttachmentId($attachmentId);
+        foreach ($localizedTags as $langId => $tags) {
+            $this->localizedTagsList[] = new LocalizedTags($langId, $tags);
         }
     }
 }
