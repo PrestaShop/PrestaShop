@@ -139,7 +139,6 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
      */
     private function overrideWithSavedFilters(Filters $filters, $controller, $action)
     {
-        /** @var Filters $savedFilters */
         $savedFilters = $this->searchParameters->getFiltersFromRepository(
             $this->employee->getId(),
             $this->shopId,

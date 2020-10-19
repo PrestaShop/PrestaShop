@@ -808,7 +808,7 @@ abstract class ControllerCore
     /**
      * Gets the dependency container.
      *
-     * @return ContainerBuilder
+     * @return ContainerBuilder|null
      */
     public function getContainer()
     {

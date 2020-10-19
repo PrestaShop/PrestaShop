@@ -296,7 +296,7 @@ class EditCustomerCommand
     }
 
     /**
-     * @return bool
+     * @return bool|null
      */
     public function isNewsletterSubscribed()
     {
@@ -332,7 +332,7 @@ class EditCustomerCommand
     }
 
     /**
-     * @return bool
+     * @return bool|null
      */
     public function isPartnerOffersSubscribed()
     {

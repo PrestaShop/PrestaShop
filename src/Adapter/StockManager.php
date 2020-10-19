@@ -44,7 +44,7 @@ class StockManager implements StockInterface
      *
      * @param object $product
      * @param null $id_product_attribute
-     * @param null $id_shop
+     * @param int|null $id_shop
      *
      * @return StockAvailable
      */
@@ -178,7 +178,7 @@ class StockManager implements StockInterface
     /**
      * Instance a new StockAvailable.
      *
-     * @param null $stockAvailableId
+     * @param bool|int|null $stockAvailableId
      *
      * @return StockAvailable
      */

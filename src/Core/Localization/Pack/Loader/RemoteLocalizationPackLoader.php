@@ -77,11 +77,6 @@ final class RemoteLocalizationPackLoader extends AbstractLocalizationPackLoader
         $apiUrl = $this->configuration->get('_PS_API_URL_');
         $localizationPackUrl = sprintf('%s/localization/%s/%s.xml', $apiUrl, $this->version->getMajorVersion(), $countryIso);
 
-        $pack = $this->loadXml($localizationPackUrl);
-        if (false === $pack) {
-            return null;
-        }
-
-        return $pack;
+        return $this->loadXml($localizationPackUrl);
     }
 }
