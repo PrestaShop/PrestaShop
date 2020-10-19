@@ -28,13 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductPackUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllProductsFromPackCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\RemoveAllProductsFromPackHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackException;
-use PrestaShopException;
 
 /**
  * Handles @see RemoveAllProductsFromPackCommand using legacy object model
@@ -42,31 +39,24 @@ use PrestaShopException;
 final class RemoveAllProductsFromPackHandler extends AbstractProductHandler implements RemoveAllProductsFromPackHandlerInterface
 {
     /**
+     * @var ProductPackUpdater
+     */
+    private $productPackUpdater;
+
+    /**
+     * @param ProductPackUpdater $productPackUpdater
+     */
+    public function __construct(
+        ProductPackUpdater $productPackUpdater
+    ) {
+        $this->productPackUpdater = $productPackUpdater;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(RemoveAllProductsFromPackCommand $command): void
     {
-        $packId = $command->getPackId();
-        $pack = $this->getProduct($packId);
-
-        try {
-            if (false === Pack::deleteItems($pack->id)) {
-                throw new ProductPackException(
-                    sprintf('Failed removing all products from pack #%d', $pack->id),
-                    ProductPackException::FAILED_DELETING_PRODUCTS_FROM_PACK
-                );
-            }
-        } catch (PrestaShopException $e) {
-            throw new ProductPackException(
-                sprintf('Error occurred when trying to remove products from pack #%s', $pack->id),
-                0,
-                $e
-            );
-        } finally {
-            Pack::resetStaticCache();
-        }
-
-        //reset cache_default_attribute
-        $pack->setDefaultAttribute(CombinationId::NO_COMBINATION);
+        $this->productPackUpdater->setPackProducts($command->getPackId(), []);
     }
 }
