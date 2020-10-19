@@ -24,7 +24,7 @@ let page;
 let numberOfTaxRules = 0;
 
 const firstTaxRuleData = new TaxRuleFaker({name: 'toDelete1'});
-const secondTaxRuleData = new TaxRuleFaker({name: 'toDelete2', enabled: 'No'});
+const secondTaxRuleData = new TaxRuleFaker({name: 'toDelete2', enabledValue: false});
 
 // Create tax rules, Then disable / Enable and Delete with Bulk actions
 describe('Create Tax rules, Then disable / Enable and Delete with Bulk actions', async () => {
