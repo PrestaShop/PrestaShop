@@ -152,7 +152,7 @@ class EditableWebserviceKey
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getHostsAllowed(): string
     {
