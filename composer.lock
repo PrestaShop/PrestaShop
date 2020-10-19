@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "6b962cbfae2189f57005b04a942ab96b",
+    "content-hash": "e21eec7cf712a2fb9ec36e2881bfdf71",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -3707,16 +3707,16 @@
         },
         {
             "name": "prestashop/blockreassurance",
-            "version": "v4.1.1",
+            "version": "v5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/blockreassurance.git",
-                "reference": "13fb60d4944ed85e47001c30ad480b85196ebb81"
+                "reference": "ba730eb184e6e68b870b9f91f4a1f2a56518127a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/blockreassurance/zipball/13fb60d4944ed85e47001c30ad480b85196ebb81",
-                "reference": "13fb60d4944ed85e47001c30ad480b85196ebb81",
+                "url": "https://api.github.com/repos/PrestaShop/blockreassurance/zipball/ba730eb184e6e68b870b9f91f4a1f2a56518127a",
+                "reference": "ba730eb184e6e68b870b9f91f4a1f2a56518127a",
                 "shasum": ""
             },
             "require": {
@@ -3724,7 +3724,7 @@
                 "guzzlehttp/cache-subscriber": "^0.2.0",
                 "php": ">=5.6.0",
                 "prestashop/circuit-breaker": "^3.0.0",
-                "symfony/css-selector": "^3.4.0"
+                "symfony/css-selector": "^3.4 || ^4.4 || ^5.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^2.14",
@@ -3743,7 +3743,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -3753,7 +3753,7 @@
             ],
             "description": "PrestaShop module blockreassurance",
             "homepage": "https://github.com/PrestaShop/blockreassurance",
-            "time": "2019-10-04T13:12:35+00:00"
+            "time": "2020-07-17T14:12:46+00:00"
         },
         {
             "name": "prestashop/circuit-breaker",
@@ -3942,25 +3942,33 @@
         },
         {
             "name": "prestashop/dashtrends",
-            "version": "v2.0.2",
+            "version": "v2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/dashtrends.git",
-                "reference": "2bf59be367194f83454fbc5cbdc1499d6ad53c5e"
+                "reference": "da68ea81c2d0d13d9fd851934c75927fe222d5e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/dashtrends/zipball/2bf59be367194f83454fbc5cbdc1499d6ad53c5e",
-                "reference": "2bf59be367194f83454fbc5cbdc1499d6ad53c5e",
+                "url": "https://api.github.com/repos/PrestaShop/dashtrends/zipball/da68ea81c2d0d13d9fd851934c75927fe222d5e3",
+                "reference": "da68ea81c2d0d13d9fd851934c75927fe222d5e3",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4"
             },
+            "require-dev": {
+                "prestashop/php-dev-tools": "~3.0"
+            },
             "type": "prestashop-module",
+            "autoload": {
+                "classmap": [
+                    "dashtrends.php"
+                ]
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -3970,7 +3978,7 @@
             ],
             "description": "PrestaShop module dashtrends",
             "homepage": "https://github.com/PrestaShop/dashtrends",
-            "time": "2017-02-20T10:23:54+00:00"
+            "time": "2020-10-14T13:35:03+00:00"
         },
         {
             "name": "prestashop/decimal",
@@ -4263,25 +4271,34 @@
         },
         {
             "name": "prestashop/ps_checkpayment",
-            "version": "v2.0.4",
+            "version": "v2.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_checkpayment.git",
-                "reference": "22dc50a3155355d672d483bb94424a69de40020b"
+                "reference": "6239ecbe75c427f81536ed2df8b56421ab2fa9b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_checkpayment/zipball/22dc50a3155355d672d483bb94424a69de40020b",
-                "reference": "22dc50a3155355d672d483bb94424a69de40020b",
+                "url": "https://api.github.com/repos/PrestaShop/ps_checkpayment/zipball/6239ecbe75c427f81536ed2df8b56421ab2fa9b2",
+                "reference": "6239ecbe75c427f81536ed2df8b56421ab2fa9b2",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4"
             },
+            "require-dev": {
+                "prestashop/php-dev-tools": "~3.0"
+            },
             "type": "prestashop-module",
+            "autoload": {
+                "classmap": [
+                    "ps_checkpayment.php",
+                    "controllers/"
+                ]
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -4291,7 +4308,7 @@
             ],
             "description": "PrestaShop module ps_checkpayment",
             "homepage": "https://github.com/PrestaShop/ps_checkpayment",
-            "time": "2018-11-05T11:37:25+00:00"
+            "time": "2020-10-16T07:20:00+00:00"
         },
         {
             "name": "prestashop/ps_contactinfo",
@@ -5838,20 +5855,23 @@
         },
         {
             "name": "prestashop/welcome",
-            "version": "v6.0.0",
+            "version": "v6.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/welcome.git",
-                "reference": "a0ad26a5fdeb0311e1aea1a42be3d9c74e889a50"
+                "reference": "af55f914a8ecf1ba55ae40ad84ebd9c01944c66e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/welcome/zipball/a0ad26a5fdeb0311e1aea1a42be3d9c74e889a50",
-                "reference": "a0ad26a5fdeb0311e1aea1a42be3d9c74e889a50",
+                "url": "https://api.github.com/repos/PrestaShop/welcome/zipball/af55f914a8ecf1ba55ae40ad84ebd9c01944c66e",
+                "reference": "af55f914a8ecf1ba55ae40ad84ebd9c01944c66e",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0"
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "prestashop/php-dev-tools": "^3.4"
             },
             "type": "prestashop-module",
             "autoload": {
@@ -5872,7 +5892,7 @@
             ],
             "description": "Welcome module for PrestaShop helping the users to create products.",
             "homepage": "https://github.com/PrestaShop/welcome",
-            "time": "2019-05-02T15:48:46+00:00"
+            "time": "2020-10-19T13:11:06+00:00"
         },
         {
             "name": "psr/cache",
