@@ -83,7 +83,7 @@ class AddWebserviceKeyCommand
         $status,
         array $permissions,
         array $associatedShops,
-        string $hosts_allowed = null,
+        string $hosts_allowed = '',
         bool $hosts_check = false
     ) {
         $this->key = new Key($key);
