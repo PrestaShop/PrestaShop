@@ -304,7 +304,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      * for the one added via the command it reformats its quantity so that the created OrderDetail has
      * the appropriate amount It can also detect other added products (like gift related to CartRule)
      *
-     * @param Cart $cart
      * @param array $oldProducts
      * @param array $newProducts
      * @param Product $product

@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartDeliverySett
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\InvalidGiftMessageException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CannotDeleteCartRuleException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
 use PrestaShopException;
 use Symfony\Component\Translation\TranslatorInterface;
 use Validate;

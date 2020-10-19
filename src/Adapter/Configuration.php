@@ -332,9 +332,9 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     /**
      * @param ShopConstraint|null $shopConstraint
      *
-     * @return int|null
+     * @return bool
      */
-    private function isStrict(?ShopConstraint $shopConstraint): ?int
+    private function isStrict(?ShopConstraint $shopConstraint): bool
     {
         return null !== $shopConstraint ? $shopConstraint->isStrict() : false;
     }
