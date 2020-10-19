@@ -35,7 +35,6 @@ use Currency;
 use Customer;
 use Group;
 use Order;
-use OrderDetail;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Number\RoundModeConverter;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
