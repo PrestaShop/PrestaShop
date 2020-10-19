@@ -63,7 +63,7 @@ class ProductTagUpdater
      * @throws CannotUpdateProductException
      * @throws CoreException
      */
-    public function set(Product $product, array $localizedTagsList): void
+    public function setProductTags(Product $product, array $localizedTagsList): void
     {
         $productId = new ProductId((int) $product->id);
 
