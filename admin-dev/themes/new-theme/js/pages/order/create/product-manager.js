@@ -212,7 +212,7 @@ export default class ProductManager {
     }
 
     const $searchRequest = $.get(
-      this.router.generate('admin_products_search'),
+      this.router.generate('admin_orders_products_search'),
       params,
     );
     this.activeSearchRequest = $searchRequest;

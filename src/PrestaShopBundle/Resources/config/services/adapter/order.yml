@@ -24,6 +24,7 @@ services:
       - '@translator'
       - '@prestashop.adapter.context_state_manager'
       - '@prestashop.adapter.order.amount.updater'
+      - '@prestashop.adapter.order.product_quantity.updater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand
@@ -44,12 +45,16 @@ services:
 
   prestashop.adapter.order.command_handler.change_order_delivery_address_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\ChangeOrderDeliveryAddressHandler
+    arguments:
+        - '@prestashop.adapter.order.amount.updater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderDeliveryAddressCommand
 
   prestashop.adapter.order.command_handler.change_order_invoice_address_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\ChangeOrderInvoiceAddressHandler
+    arguments:
+        - '@prestashop.adapter.order.amount.updater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderInvoiceAddressCommand
@@ -74,6 +79,8 @@ services:
 
   prestashop.adapter.order.command_handler.update_order_shipping_details_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\UpdateOrderShippingDetailsHandler
+    arguments:
+        - '@prestashop.adapter.order.amount.updater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCommand
@@ -82,6 +89,8 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\DeleteCartRuleFromOrderHandler
     arguments:
       - '@prestashop.adapter.order.amount.updater'
+      - '@prestashop.adapter.order.product_quantity.updater'
+      - '@prestashop.adapter.context_state_manager'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand
@@ -90,6 +99,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\AddCartRuleToOrderHandler
     arguments:
       - '@prestashop.adapter.order.amount.updater'
+      - '@prestashop.adapter.context_state_manager'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand
@@ -246,6 +256,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.context_state_manager'
 
   prestashop.adapter.order.product_quantity.updater:
     class: PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater

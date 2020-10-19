@@ -165,7 +165,7 @@
       <trans-unit id="510f6a8fda6eb21f9ff01954e034a29a">
         <source>For security reasons, you cannot delete default order statuses.</source>
         <target>For security reasons, you cannot delete default order statuses.</target>
-        <note>Line: 642</note>
+        <note>Line: 652</note>
       </trans-unit>
     </body>
   </file>

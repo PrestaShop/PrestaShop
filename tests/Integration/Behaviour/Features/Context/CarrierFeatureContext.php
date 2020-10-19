@@ -411,4 +411,18 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
         // Reset cache so that the carrier becomes selectable
         Carrier::resetStaticCache();
     }
+
+    /**
+     * @Then I associate the tax rule group :taxRulesGroupReference to carrier :carrierReference
+     *
+     * @param string $taxRulesGroupReference
+     * @param string $carrierReference
+     */
+    public function associateCarrierTaxRulesGroup(string $taxRulesGroupReference, string $carrierReference)
+    {
+        $carrierId = SharedStorage::getStorage()->get($carrierReference);
+        $taxRulesGroupId = SharedStorage::getStorage()->get($taxRulesGroupReference);
+        $carrier = new Carrier($carrierId);
+        $carrier->setTaxRulesGroup($taxRulesGroupId);
+    }
 }

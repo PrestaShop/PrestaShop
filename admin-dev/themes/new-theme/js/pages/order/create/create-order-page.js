@@ -196,7 +196,7 @@ export default class CreateOrderPage {
   listenForCartEdit() {
     this.onCartAddressesChanged();
     this.onDeliveryOptionChanged();
-    this.onFreeShippingChanged();
+    this.onDeliverySettingChanged();
     this.addCartRuleToCart();
     this.removeCartRuleFromCart();
     this.onCartCurrencyChanged();
@@ -211,7 +211,25 @@ export default class CreateOrderPage {
     this.$container.on(
       'change',
       createOrderMap.freeShippingSwitch,
-      (e) => this.cartEditor.setFreeShipping(this.cartId, e.currentTarget.value),
+      (e) => this.cartEditor.updateDeliveryOptions(this.cartId),
+    );
+
+    this.$container.on(
+      'change',
+      createOrderMap.recycledPackagingSwitch,
+      (e) => this.cartEditor.updateDeliveryOptions(this.cartId),
+    );
+
+    this.$container.on(
+      'blur',
+      createOrderMap.giftMessageField,
+      (e) => this.cartEditor.updateDeliveryOptions(this.cartId),
+    );
+
+    this.$container.on(
+      'change',
+      createOrderMap.isAGiftSwitch,
+      (e) => this.cartEditor.updateDeliveryOptions(this.cartId),
     );
 
     this.$container.on(
@@ -310,12 +328,12 @@ export default class CreateOrderPage {
   }
 
   /**
-   * Listens for cart free shipping update event
+   * Listens for cart delivery setting update event
    *
    * @private
    */
-  onFreeShippingChanged() {
-    EventEmitter.on(eventMap.cartFreeShippingSet, (cartInfo) => {
+  onDeliverySettingChanged() {
+    EventEmitter.on(eventMap.cartDeliverySettingChanged, (cartInfo) => {
       this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
       this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
       this.summaryRenderer.render(cartInfo);

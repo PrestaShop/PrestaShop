@@ -7,7 +7,6 @@ class Product extends FOBasePage {
 
     // Selectors for product page
     this.productName = '#main h1[itemprop="name"]';
-    this.productPrice = '#main span[itemprop="price"]';
     this.productQuantity = '#quantity_wanted';
     this.productDescription = '#description';
     this.colorInput = color => `#group_2 li input[title=${color}]`;
@@ -24,11 +23,17 @@ class Product extends FOBasePage {
     this.metaLink = '#main > meta';
     // Product prices block
     this.productPricesBlock = 'div.product-prices';
+    this.discountAmountSpan = `${this.productPricesBlock} .discount.discount-amount`;
+    this.discountPercentageSpan = `${this.productPricesBlock} .discount.discount-percentage`;
+    this.regularPrice = `${this.productPricesBlock} .regular-price`;
+    this.productPrice = `${this.productPricesBlock} span[itemprop='price']`;
     this.taxShippingDeliveryBlock = `${this.productPricesBlock} div.tax-shipping-delivery-label`;
     this.deliveryInformationSpan = `${this.taxShippingDeliveryBlock} span.delivery-information`;
+    // Volume discounts table
     this.discountTable = '.table-product-discounts';
-    this.discountColumn = `${this.discountTable} th:nth-child(2)`;
-    this.discountValue = `${this.discountTable} td:nth-child(2)`;
+    this.quantityDiscountValue = `${this.discountTable} td:nth-child(1)`;
+    this.unitDiscountColumn = `${this.discountTable} th:nth-child(2)`;
+    this.unitDiscountValue = `${this.discountTable} td:nth-child(2)`;
   }
 
   /**
@@ -60,11 +65,15 @@ class Product extends FOBasePage {
         page.click(this.colorInput(attributeToChoose.color)),
       ]);
     }
-    if (quantity !== 1) {
+    if (quantity !== 1 && attributeToChoose !== '') {
       await this.setValue(page, this.productQuantity, attributeToChoose.quantity.toString());
+    } else if (quantity !== 1) {
+      await this.setValue(page, this.productQuantity, quantity.toString());
     }
+
     await this.waitForSelectorAndClick(page, this.addToCartButton);
     await this.waitForVisibleSelector(page, `${this.blockCartModal}[style*='display: block;']`);
+
     if (proceedToCheckout) {
       await this.waitForVisibleSelector(page, this.proceedToCheckoutButton);
       await this.clickAndWaitForNavigation(page, this.proceedToCheckoutButton);
@@ -72,6 +81,16 @@ class Product extends FOBasePage {
       await this.waitForSelectorAndClick(page, this.continueShoppingButton);
       await page.waitForSelector(this.continueShoppingButton, {hidden: true});
     }
+  }
+
+  /**
+   * Set quantity
+   * @param page
+   * @param quantity
+   * @returns {Promise<void>}
+   */
+  async setQuantity(page, quantity) {
+    await this.setValue(page, this.productQuantity, quantity);
   }
 
   /**
@@ -148,16 +167,43 @@ class Product extends FOBasePage {
    * @returns {Promise<string>}
    */
   getDiscountColumnTitle(page) {
-    return this.getTextContent(page, this.discountColumn);
+    return this.getTextContent(page, this.unitDiscountColumn);
   }
 
   /**
-   * Get discount value
+   * Get quantity discount value from volume discounts table
+   * @param page
+   * @returns {Promise<number>}
+   */
+  getQuantityDiscountValue(page) {
+    return this.getNumberFromText(page, this.quantityDiscountValue);
+  }
+
+  /**
+   * Get discount value from volume discounts table
    * @param page
    * @returns {Promise<string>}
    */
   getDiscountValue(page) {
-    return this.getTextContent(page, this.discountValue);
+    return this.getTextContent(page, this.unitDiscountValue);
+  }
+
+  /**
+   * Get discount amount
+   * @param page
+   * @returns {Promise<string>}
+   */
+  getDiscountAmount(page) {
+    return this.getTextContent(page, this.discountAmountSpan);
+  }
+
+  /**
+   * Get discount percentage
+   * @param page
+   * @returns {Promise<string>}
+   */
+  getDiscountPercentage(page) {
+    return this.getTextContent(page, this.discountPercentageSpan);
   }
 
   /**

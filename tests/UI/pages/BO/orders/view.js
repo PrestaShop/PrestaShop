@@ -84,6 +84,26 @@ class Order extends BOBasePage {
   }
 
   /**
+   * Does status exist
+   * @param page
+   * @param statusName
+   * @returns {Promise<boolean>}
+   */
+  async doesStatusExist(page, statusName) {
+    let options = await page.$$eval(
+      `${this.orderStatusesSelect} option`,
+      all => all.map(
+        option => ({
+          textContent: option.textContent,
+          value: option.value,
+        })),
+    );
+
+    options = await options.filter(option => statusName === option.textContent);
+    return options.length !== 0;
+  }
+
+  /**
    * Get document name
    * @param page
    * @param rowChild
@@ -196,4 +216,5 @@ class Order extends BOBasePage {
     /* eslint-enable no-return-assign, no-param-reassign */
   }
 }
+
 module.exports = new Order();

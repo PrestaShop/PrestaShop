@@ -63,6 +63,9 @@ export default class ShippingRenderer {
     this.renderDeliveryOptions(shipping.deliveryOptions, shipping.selectedCarrierId);
     this.renderTotalShipping(shipping.shippingPrice);
     this.renderFreeShippingSwitch(shipping.freeShipping);
+    this.renderRecycledPackagingSwitch(shipping.recycledPackaging);
+    this.renderGiftMessageField(shipping.giftMessage);
+    this.renderGiftSwitch(shipping.gift);
     this.showForm();
     this.showContainer();
   }
@@ -82,6 +85,45 @@ export default class ShippingRenderer {
         input.checked = !isFreeShipping;
       }
     });
+  }
+
+  /**
+   * @param useRecycledPackaging
+   *
+   * @private
+   */
+  renderRecycledPackagingSwitch(useRecycledPackaging) {
+    $(createOrderMap.recycledPackagingSwitch).each((key, input) => {
+      if (input.value === '1') {
+        input.checked = useRecycledPackaging;
+      } else {
+        input.checked = !useRecycledPackaging;
+      }
+    });
+  }
+
+  /**
+   * @param isAGift
+   *
+   * @private
+   */
+  renderGiftSwitch(isAGift) {
+    $(createOrderMap.isAGiftSwitch).each((key, input) => {
+      if (input.value === '1') {
+        input.checked = isAGift;
+      } else {
+        input.checked = !isAGift;
+      }
+    });
+  }
+
+  /**
+   * @param giftMessage
+   *
+   * @private
+   */
+  renderGiftMessageField(giftMessage) {
+    $(createOrderMap.giftMessageField).val(giftMessage);
   }
 
   /**

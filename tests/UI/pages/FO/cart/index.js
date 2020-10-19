@@ -8,13 +8,15 @@ class Cart extends FOBasePage {
     this.pageTitle = 'Cart';
 
     // Selectors for cart page
+    this.cartGridBlock = 'div.cart-grid';
     this.productItem = number => `#main li:nth-of-type(${number})`;
     this.productName = number => `${this.productItem(number)} div.product-line-info > a`;
     this.productPrice = number => `${this.productItem(number)} div.current-price > span`;
     this.productQuantity = number => `${this.productItem(number)} div.input-group input.js-cart-line-product-quantity`;
     this.proceedToCheckoutButton = '#main div.checkout a';
     this.disabledProceedToCheckoutButton = '#main div.checkout button.disabled';
-    this.cartTotalTTC = '.cart-summary-totals span.value';
+    this.subtotalDiscountValueSpan = '#cart-subtotal-discount span.value';
+    this.cartTotalATI = '.cart-summary-totals span.value';
     this.itemsNumber = '#cart-subtotal-products span.label.js-subtotal';
     this.alertWarning = '.checkout.cart-detailed-actions.card-block div.alert.alert-warning';
     this.promoCodeLink = '#main div.block-promo a[href=\'#promo-code\']';
@@ -74,12 +76,16 @@ class Cart extends FOBasePage {
   }
 
   /**
-   * Get price TTC
+   * Get All tax included price
    * @param page
    * @returns {Promise<number>}
    */
-  async getTTCPrice(page) {
-    return this.getPriceFromText(page, this.cartTotalTTC, 2000);
+  getATIPrice(page) {
+    return this.getPriceFromText(page, this.cartTotalATI, 2000);
+  }
+
+  getSubtotalDiscountValue(page) {
+    return this.getPriceFromText(page, this.subtotalDiscountValueSpan, 2000);
   }
 
   /**
@@ -115,7 +121,7 @@ class Cart extends FOBasePage {
    * @param code
    * @returns {Promise<void>}
    */
-  async setPromoCode(page, code) {
+  async addPromoCode(page, code) {
     await page.click(this.promoCodeLink);
     await this.setValue(page, this.promoInput, code);
     await page.click(this.addPromoCodeButton);

@@ -14,7 +14,7 @@ const addAttributePage = require('@pages/BO/catalog/attributes/addAttribute');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_shopParameters_catalog_attributesAndFeatures_attributes_bulkDeleteAttributes';
+const baseContext = 'functional_BO_catalog_attributesAndFeatures_attributes_bulkDeleteAttributes';
 
 // Import expect from chai
 const {expect} = require('chai');

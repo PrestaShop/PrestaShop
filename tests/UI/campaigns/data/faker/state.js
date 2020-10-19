@@ -5,7 +5,7 @@ const zones = Object.values(Zones).map(zone => zone.name);
 const countriesWithState = [
   'Argentina', 'Australia', 'Canada', 'India', 'Indonesia', 'Italy', 'Japan', 'Mexico', 'United States',
 ];
-const statesIsoCodes = ['IR', 'PK', 'RE', 'BV', 'ZM', 'HM', 'BS', 'SV'];
+const statesIsoCodes = ['IR', 'PK', 'BP', 'BV', 'ZM', 'ZL', 'HM', 'HL', 'BK'];
 
 module.exports = class State {
   constructor(stateToCreate = {}) {

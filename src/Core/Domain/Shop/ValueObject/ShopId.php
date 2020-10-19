@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 
 /**
  * Shop identity
@@ -40,10 +40,12 @@ class ShopId
 
     /**
      * @param int $shopId
+     *
+     * @throws ShopException
      */
-    public function __construct($shopId)
+    public function __construct(int $shopId)
     {
-        $this->assertIntegerIsGreaterThanZero($shopId);
+        $this->assertIsGreaterThanZero($shopId);
 
         $this->shopId = $shopId;
     }
@@ -51,18 +53,25 @@ class ShopId
     /**
      * @return int
      */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->shopId;
     }
 
     /**
      * @param int $shopId
+     *
+     * @throws ShopException
      */
-    private function assertIntegerIsGreaterThanZero($shopId)
+    private function assertIsGreaterThanZero(int $shopId): void
     {
-        if (!is_int($shopId) || 0 > $shopId) {
-            throw new OrderException(sprintf('Shop id %s is invalid. Shop id must be number that is greater than zero.', var_export($shopId, true)));
+        if (0 >= $shopId) {
+            throw new ShopException(
+                sprintf(
+                    'Shop id %s is invalid. Shop id must be number that is greater than zero.',
+                    var_export($shopId, true)
+                )
+            );
         }
     }
 }

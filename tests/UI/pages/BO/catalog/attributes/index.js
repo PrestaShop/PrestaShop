@@ -8,6 +8,11 @@ class Attributes extends BOBasePage {
     this.pageTitle = 'Attributes • ';
 
     this.alertSuccessBlockParagraph = '.alert-success';
+    this.growlMessageBlock = '#growls .growl-message:last-of-type';
+
+    // Help card selectors
+    this.helpCardLink = '#toolbar-nav a.btn-help';
+    this.helpContainterBlock = '#help-container';
 
     // Header selectors
     this.addNewAttributeLink = '#page-header-desc-attribute_group-new_attribute_group';
@@ -59,8 +64,9 @@ class Attributes extends BOBasePage {
     this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
 
     // Pagination selectors
-    this.paginationLabel = `${this.gridForm} .pagination`;
-    this.paginationDropdownButton = `${this.paginationLabel} .dropdown-toggle`;
+    this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
+    this.paginationDiv = `${this.gridForm} .pagination`;
+    this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
     this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
     this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
@@ -223,6 +229,23 @@ class Attributes extends BOBasePage {
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
+  /**
+   * Change attribute position
+   * @param page
+   * @param actualPosition
+   * @param newPosition
+   * @return {Promise<string>}
+   */
+  async changePosition(page, actualPosition, newPosition) {
+    await this.dragAndDrop(
+      page,
+      this.tableColumnPosition(actualPosition),
+      this.tableColumnPosition(newPosition),
+    );
+
+    return this.getTextContent(page, this.growlMessageBlock);
+  }
+
   /* Bulk actions methods */
   /**
    * Bulk delete attributes
@@ -263,7 +286,7 @@ class Attributes extends BOBasePage {
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
-    return this.getTextContent(page, 'ul.pagination.pull-right li.active a');
+    return this.getTextContent(page, this.paginationActiveLabel);
   }
 
   /**
@@ -274,7 +297,8 @@ class Attributes extends BOBasePage {
    */
   async selectPaginationLimit(page, number) {
     await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
-    await this.waitForSelectorAndClick(page, this.paginationItems(number));
+    await this.clickAndWaitForNavigation(page, this.paginationItems(number));
+
     return this.getPaginationLabel(page);
   }
 
@@ -285,6 +309,7 @@ class Attributes extends BOBasePage {
    */
   async paginationNext(page) {
     await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+
     return this.getPaginationLabel(page);
   }
 
@@ -295,9 +320,9 @@ class Attributes extends BOBasePage {
    */
   async paginationPrevious(page) {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+
     return this.getPaginationLabel(page);
   }
-
 
   /* Sort functions */
   /**
@@ -326,6 +351,7 @@ class Attributes extends BOBasePage {
       default:
         throw new Error(`Column ${sortBy} was not found`);
     }
+
     const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
     await this.clickAndWaitForNavigation(page, sortColumnButton);
   }
@@ -339,11 +365,48 @@ class Attributes extends BOBasePage {
   async getAllRowsColumnContent(page, columnName) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, i, columnName);
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
+  }
+
+  // Help card methods
+  /**
+   * @override
+   * Open help side bar
+   * @param page
+   * @returns {Promise<boolean>}
+   */
+  async openHelpSideBar(page) {
+    await page.click(this.helpCardLink);
+
+    return this.elementVisible(page, this.helpContainterBlock, 2000);
+  }
+
+  /**
+   * @override
+   * Close help side bar
+   * @param page
+   * @returns {Promise<boolean>}
+   */
+  async closeHelpSideBar(page) {
+    await page.click(this.helpCardLink);
+
+    return this.elementNotVisible(page, this.helpContainterBlock, 2000);
+  }
+
+  /**
+   * @override
+   * Get help card URL
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async getHelpDocumentURL(page) {
+    return this.getAttributeContent(page, this.helpCardLink, 'href');
   }
 }
 
