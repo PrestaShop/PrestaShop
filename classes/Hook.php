@@ -585,7 +585,7 @@ class HookCore extends ObjectModel
             }
 
             // check that hook listener is implemented by the module
-            if (_PS_MODE_DEV_ && !Hook::isHookCallableOn($module_instance, $hook_name) && !($module_instance instanceof WidgetInterface)) {
+            if (!Hook::isHookCallableOn($module_instance, $hook_name) && !($module_instance instanceof WidgetInterface)) {
                 $missingHookListenerErrorMsg = sprintf(
                     'Hook with the name %s has been registered by %s, but the corresponding method %s has not been defined in the Module class.',
                     $hook_name,
