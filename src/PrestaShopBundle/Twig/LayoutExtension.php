@@ -27,9 +27,13 @@
 namespace PrestaShopBundle\Twig;
 
 use Exception;
+use Link;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Layout\Query\GetLayoutVariables;
+use Tools;
 use Twig\Extension\GlobalsInterface;
 
 /**
@@ -49,6 +53,9 @@ class LayoutExtension extends \Twig_Extension implements GlobalsInterface
     /** @var CurrencyDataProvider */
     private $currencyDataProvider;
 
+    /** @var CommandBusInterface */
+    private $queryBus;
+
     /**
      * Constructor.
      *
@@ -58,17 +65,20 @@ class LayoutExtension extends \Twig_Extension implements GlobalsInterface
      * @param string $environment
      * @param Configuration $configuration
      * @param CurrencyDataProvider $currencyDataProvider
+     * @param CommandBusInterface $queryBus
      */
     public function __construct(
         LegacyContext $context,
         $environment,
         Configuration $configuration,
-        CurrencyDataProvider $currencyDataProvider
+        CurrencyDataProvider $currencyDataProvider,
+        CommandBusInterface $queryBus
     ) {
         $this->context = $context;
         $this->environment = $environment;
         $this->configuration = $configuration;
         $this->currencyDataProvider = $currencyDataProvider;
+        $this->queryBus = $queryBus;
     }
 
     /**
@@ -77,6 +87,21 @@ class LayoutExtension extends \Twig_Extension implements GlobalsInterface
      * @return array the base globals available in twig templates
      */
     public function getGlobals()
+    {
+        if (!defined('_PS_USE_NEW_LAYOUT') || false === _PS_USE_NEW_LAYOUT) {
+            return $this->getLegacyGlobals();
+        }
+
+        $variables = $this->queryBus->handle(new GetLayoutVariables());
+
+        // For modules that are using smarty already assigned variables
+        $controller = new \AdminBridgeLayoutControllerCore();
+        $controller->run();
+
+        return $variables;
+    }
+
+    private function getLegacyGlobals()
     {
         /*
          * As this is a twig extension we need to be very resilient and prevent it from crashing
@@ -124,6 +149,9 @@ class LayoutExtension extends \Twig_Extension implements GlobalsInterface
         return [
             new \Twig_SimpleFunction('getLegacyLayout', [$this, 'getLegacyLayout']),
             new \Twig_SimpleFunction('getAdminLink', [$this, 'getAdminLink']),
+            new \Twig_SimpleFunction('getAdminToken', [$this, 'getAdminLink']),
+            new \Twig_SimpleFunction('getQuickLink', [$this, 'getQuickLink']),
+            new \Twig_SimpleFunction('matchQuickLink', [$this, 'matchQuickLink']),
             new \Twig_SimpleFunction('youtube_link', [$this, 'getYoutubeLink']),
         ];
     }
@@ -246,6 +274,36 @@ EOF;
     public function getAdminLink($controllerName, $withToken = true, $extraParams = [])
     {
         return $this->context->getAdminLink($controllerName, $withToken, $extraParams);
+    }
+
+    /**
+     * @param string $tokenName
+     *
+     * @return bool|string
+     */
+    public function getAdminToken($tokenName)
+    {
+        return Tools::getAdminToken($tokenName);
+    }
+
+    /**
+     * @param string $url
+     *
+     * @return bool
+     */
+    public function matchQuickLink($url)
+    {
+        return $this->context->getContext()->link->matchQuickLink($url);
+    }
+
+    /**
+     * @param string $url
+     *
+     * @return string
+     */
+    public function getQuickLink($url)
+    {
+        return Link::getQuickLink($url);
     }
 
     /**

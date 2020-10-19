@@ -2792,37 +2792,6 @@ class AdminControllerCore extends Controller
             $this->context->link = new Link($protocol_link, $protocol_content);
         }
 
-        if (isset($_GET['logout'])) {
-            $this->context->employee->logout();
-        }
-        if (isset(Context::getContext()->cookie->last_activity)) {
-            if ($this->context->cookie->last_activity + self::AUTH_COOKIE_LIFETIME < time()) {
-                $this->context->employee->logout();
-            } else {
-                $this->context->cookie->last_activity = time();
-            }
-        }
-
-        if (
-            !$this->isAnonymousAllowed()
-            && (
-                $this->controller_name != 'AdminLogin'
-                && (
-                    !isset($this->context->employee)
-                    || !$this->context->employee->isLoggedBack()
-                )
-            )
-        ) {
-            if (isset($this->context->employee)) {
-                $this->context->employee->logout();
-            }
-            $email = false;
-            if (Tools::getValue('email') && Validate::isEmail(Tools::getValue('email'))) {
-                $email = Tools::getValue('email');
-            }
-            Tools::redirectAdmin($this->context->link->getAdminLink('AdminLogin') . ((!isset($_GET['logout']) && $this->controller_name != 'AdminNotFound' && Tools::getValue('controller')) ? '&redirect=' . $this->controller_name : '') . ($email ? '&email=' . $email : ''));
-        }
-
         // Set current index
         $current_index = 'index.php' . (($controller = Tools::getValue('controller')) ? '?controller=' . $controller : '');
         if ($back = Tools::getValue('back')) {
@@ -4833,10 +4802,8 @@ class AdminControllerCore extends Controller
      * Set if anonymous is allowed to run this controller
      *
      * @param bool $value
-     *
-     * @return bool
      */
-    protected function setAllowAnonymous($value)
+    public function setAllowAnonymous($value)
     {
         $this->allowAnonymous = (bool) $value;
     }
@@ -4846,7 +4813,7 @@ class AdminControllerCore extends Controller
      *
      * @return bool
      */
-    protected function isAnonymousAllowed()
+    public function isAnonymousAllowed()
     {
         return $this->allowAnonymous;
     }

@@ -77,6 +77,10 @@ class Admin
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
+        if ('_admin_legacy' === $event->getRequest()->attributes->get('_route')) {
+            return true;
+        }
+
         //if employee loggdin in legacy context, authenticate him into sf2 security context
         if (isset($this->legacyContext->employee) && $this->legacyContext->employee->isLoggedBack()) {
             $user = $this->userProvider->loadUserByUsername($this->legacyContext->employee->email);

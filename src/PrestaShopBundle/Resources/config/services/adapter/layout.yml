@@ -1,0 +1,17 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.layout.query_handler.get_layout_variables:
+    class: 'PrestaShop\PrestaShop\Adapter\Layout\QueryHandler\GetLayoutVariablesHandler'
+    arguments:
+        - '@prestashop.adapter.legacy.context'
+        - '@translator'
+        - '@prestashop.core.admin.tab.repository'
+        - '@prestashop.adapter.legacy.configuration'
+        - '@request_stack'
+        - '@security.csrf.token_manager'
+        - '@=service("prestashop.user_provider").getUsername()'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Layout\Query\GetLayoutVariables'
