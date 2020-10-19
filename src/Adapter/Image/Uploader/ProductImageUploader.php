@@ -32,15 +32,18 @@ use ErrorException;
 use Hook;
 use Image;
 use ImageManager;
-use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
+use PrestaShop\PrestaShop\Adapter\Image\Exception\CannotUnlinkImageException;
+use PrestaShop\PrestaShop\Adapter\Product\ProductImagePathFactory;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUnlinkImageException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ProductImageUploaderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
+use PrestaShopException;
 
-final class ProductImageUploader extends AbstractImageUploader
+final class ProductImageUploader extends AbstractImageUploader implements ProductImageUploaderInterface
 {
     /**
      * @var UploadSizeConfigurationInterface
@@ -63,43 +66,48 @@ final class ProductImageUploader extends AbstractImageUploader
     private $contextShopId;
 
     /**
+     * @var ProductImageRepository
+     */
+    private $productImageRepository;
+
+    /**
      * @param UploadSizeConfigurationInterface $uploadSizeConfiguration
      * @param ProductImagePathFactory $productImagePathFactory
      * @param array $contextShopIdsList
      * @param int $contextShopId
+     * @param ProductImageRepository $productImageRepository
      */
     public function __construct(
         UploadSizeConfigurationInterface $uploadSizeConfiguration,
         ProductImagePathFactory $productImagePathFactory,
         array $contextShopIdsList,
-        int $contextShopId
+        int $contextShopId,
+        ProductImageRepository $productImageRepository
     ) {
         $this->uploadSizeConfiguration = $uploadSizeConfiguration;
         $this->productImagePathFactory = $productImagePathFactory;
         $this->contextShopIdsList = $contextShopIdsList;
         $this->contextShopId = $contextShopId;
+        $this->productImageRepository = $productImageRepository;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function upload(
-        Image $image,
-        string $filePath,
-        string $format
-    ): void {
+    public function upload(ImageId $imageId, string $filePath): void
+    {
+        $image = $this->productImageRepository->get($imageId);
         $this->checkMemory($filePath);
         $this->productImagePathFactory->createDestinationDirectory($image);
         $this->copyToDestination($filePath, $image);
 
         $this->generateDifferentSizeImages(
             $this->productImagePathFactory->getBasePath($image, false),
-            'products',
-            $format
+            'products'
         );
 
         Hook::exec('actionWatermark', ['id_image' => $image->id, 'id_product' => $image->id_product]);
-        //@Todo: wait for multishop specs
+        //@Todo: double-check multishop
         $image->associateTo($this->contextShopIdsList);
         $this->deleteOldGeneratedImages($image);
     }
@@ -142,8 +150,12 @@ final class ProductImageUploader extends AbstractImageUploader
      */
     private function copyToDestination(string $tmpImageName, Image $image)
     {
-        if (!ImageManager::resize($tmpImageName, $this->productImagePathFactory->getBasePath($image, true))) {
-            throw new ImageOptimizationException('An error occurred while uploading the image. Check your directory permissions.');
+        try {
+            if (!ImageManager::resize($tmpImageName, $this->productImagePathFactory->getBasePath($image, true))) {
+                throw new ImageOptimizationException('An error occurred while uploading the image. Check your directory permissions.');
+            }
+        } catch (PrestaShopException $e) {
+            throw new CoreException('Error occurred when trying to resize product images', 0, $e);
         }
     }
 
@@ -159,27 +171,5 @@ final class ProductImageUploader extends AbstractImageUploader
         if (!ImageManager::checkImageMemoryLimit($tmpImageName)) {
             throw new MemoryLimitException('Due to memory limit restrictions, this image cannot be loaded. Increase your memory_limit value.');
         }
-    }
-
-    /**
-     * @param ImageId $imageId
-     *
-     * @return Image
-     *
-     * @throws ImageNotFoundException
-     */
-    private function loadImageEntity(ImageId $imageId): Image
-    {
-        $imageIdValue = $imageId->getValue();
-        $image = new Image($imageIdValue);
-
-        if ((int) $image->id !== $imageIdValue) {
-            throw new ImageNotFoundException(sprintf(
-                'Image entity with id #%s does not exist',
-                $imageIdValue
-            ));
-        }
-
-        return $image;
     }
 }
