@@ -116,9 +116,9 @@ describe('Create Tax rules, Then disable / Enable and Delete with Bulk actions',
       {args: {taxRule: secondTaxRuleData.name, action: 'enable', enabledValue: true}, expected: 'Enabled'},
     ];
 
-    tests.forEach((test) => {
+    tests.forEach((test, index) => {
       it('should filter list by name', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'filterTaxesToChangeStatus', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `filterTaxesToChangeStatus${index}`, baseContext);
 
         await taxRulesPage.filterTable(
           page,
