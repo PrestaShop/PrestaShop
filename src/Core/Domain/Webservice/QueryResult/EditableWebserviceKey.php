@@ -154,7 +154,7 @@ class EditableWebserviceKey
     /**
      * @return string|null
      */
-    public function getHostsAllowed()
+    public function getHostsAllowed(): string
     {
         return $this->hosts_allowed;
     }
