@@ -1,12 +1,11 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
+ * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -17,11 +16,12 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
@@ -110,17 +110,27 @@ abstract class AbstractImageUploader
     }
 
     /**
-     * Generates different size images
-     *
-     * @param int $id
-     * @param string $imageDir
+     * @deprecated use AbstractImageUploader::generateDifferentSizeImages() instead
+     */
+    protected function generateDifferentSize($id, $imageDir, $belongsTo, string $extension = 'jpg')
+    {
+        return $this->generateDifferentSizeImages(
+            $imageDir . $id,
+            $belongsTo,
+            $extension
+        );
+    }
+
+    /**
+     * @param string $path
      * @param string $belongsTo to whom the image belongs (for example 'suppliers' or 'categories')
+     * @param string $extension
      *
      * @return bool
      *
      * @throws ImageOptimizationException
      */
-    protected function generateDifferentSize($id, $imageDir, $belongsTo)
+    protected function generateDifferentSizeImages(string $path, string $belongsTo, string $extension = 'jpg'): bool
     {
         $resized = true;
 
@@ -128,7 +138,7 @@ abstract class AbstractImageUploader
             $imageTypes = ImageType::getImagesTypes($belongsTo);
 
             foreach ($imageTypes as $imageType) {
-                $resized &= $this->resize($id, $imageDir, $imageType);
+                $resized &= $this->resize($path, $imageType, $extension);
             }
         } catch (PrestaShopException $e) {
             throw new ImageOptimizationException('Unable to resize one or more of your pictures.');
@@ -144,29 +154,29 @@ abstract class AbstractImageUploader
     /**
      * Resizes the image depending from its type
      *
-     * @param int $id
-     * @param string $imageDir
+     * @param string $path
      * @param array $imageType
+     * @param string $extension
      *
      * @return bool
      */
-    private function resize($id, $imageDir, array $imageType)
+    private function resize(string $path, array $imageType, string $extension)
     {
-        $ext = '.jpg';
         $width = $imageType['width'];
         $height = $imageType['height'];
 
         if (Configuration::get('PS_HIGHT_DPI')) {
-            $ext = '2x.jpg';
+            $extension = '2x.' . $extension;
             $width *= 2;
             $height *= 2;
         }
 
         return ImageManager::resize(
-            $imageDir . $id . '.jpg',
-            $imageDir . $id . '-' . stripslashes($imageType['name']) . $ext,
+            $path . '.' . $extension,
+            $path . '-' . stripslashes($imageType['name']) . '.' . $extension,
             (int) $width,
-            (int) $height
+            (int) $height,
+            $extension
         );
     }
 }
