@@ -81,7 +81,7 @@ export default class CartEditor {
       useRecycledPackaging: useRecycledPackagingEnabled,
       giftMessage,
     }).then((cartInfo) => EventEmitter.emit(eventMap.cartDeliverySettingChanged, cartInfo))
-      .catch((response) => showErrorMessage(response.responseJSON.message));
+      .catch((response) => window.showErrorMessage(response.responseJSON.message));
   }
 
   /**

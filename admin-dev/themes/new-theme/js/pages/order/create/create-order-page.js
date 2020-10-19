@@ -211,25 +211,25 @@ export default class CreateOrderPage {
     this.$container.on(
       'change',
       createOrderMap.freeShippingSwitch,
-      (e) => this.cartEditor.updateDeliveryOptions(this.cartId),
+      () => this.cartEditor.updateDeliveryOptions(this.cartId),
     );
 
     this.$container.on(
       'change',
       createOrderMap.recycledPackagingSwitch,
-      (e) => this.cartEditor.updateDeliveryOptions(this.cartId),
-    );
-
-    this.$container.on(
-      'blur',
-      createOrderMap.giftMessageField,
-      (e) => this.cartEditor.updateDeliveryOptions(this.cartId),
+      () => this.cartEditor.updateDeliveryOptions(this.cartId),
     );
 
     this.$container.on(
       'change',
       createOrderMap.isAGiftSwitch,
-      (e) => this.cartEditor.updateDeliveryOptions(this.cartId),
+      () => this.cartEditor.updateDeliveryOptions(this.cartId),
+    );
+
+    this.$container.on(
+      'blur',
+      createOrderMap.giftMessageField,
+      () => this.cartEditor.updateDeliveryOptions(this.cartId),
     );
 
     this.$container.on(
