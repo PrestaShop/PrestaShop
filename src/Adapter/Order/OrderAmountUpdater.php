@@ -276,13 +276,13 @@ class OrderAmountUpdater
     /**
      * @param array $cartProducts
      * @param int $productId
-     * @param int|null $productAttributeId
+     * @param int $productAttributeId
      *
      * @return array
      */
     private function getProductFromCart(array $cartProducts, int $productId, int $productAttributeId): array
     {
-        return array_reduce($cartProducts, function ($carry, $item) use ($productId, $productAttributeId) {
+        $cartProduct = array_reduce($cartProducts, function ($carry, $item) use ($productId, $productAttributeId) {
             if (null !== $carry) {
                 return $carry;
             }
@@ -292,6 +292,13 @@ class OrderAmountUpdater
 
             return $productMatch && $combinationMatch ? $item : null;
         });
+
+        // This shouldn't happen, if it does something was not done before updating the Order (removing an OrderDetail maybe)
+        if (null === $cartProduct) {
+            throw new OrderException('Could not find the product in cart, meaning Order and Cart are out of sync');
+        }
+
+        return $cartProduct;
     }
 
     /**

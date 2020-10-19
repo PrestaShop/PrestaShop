@@ -27,13 +27,17 @@
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Cart;
+use CartRule;
 use Currency;
 use Customer;
 use Order;
 use OrderCartRule;
+use OrderDetail;
+use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
+use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\DeleteCartRuleFromOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -48,18 +52,29 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
      * @var OrderAmountUpdater
      */
     private $orderAmountUpdater;
+
     /**
      * @var ContextStateManager
      */
     private $contextStateManager;
 
     /**
+     * @var OrderProductQuantityUpdater
+     */
+    private $orderProductQuantityUpdater;
+
+    /**
      * @param OrderAmountUpdater $orderAmountUpdater
      * @param ContextStateManager $contextStateManager
+     * @param OrderProductQuantityUpdater $orderProductQuantityUpdater
      */
-    public function __construct(OrderAmountUpdater $orderAmountUpdater, ContextStateManager $contextStateManager)
-    {
+    public function __construct(
+        OrderAmountUpdater $orderAmountUpdater,
+        OrderProductQuantityUpdater $orderProductQuantityUpdater,
+        ContextStateManager $contextStateManager
+    ) {
         $this->orderAmountUpdater = $orderAmountUpdater;
+        $this->orderProductQuantityUpdater = $orderProductQuantityUpdater;
         $this->contextStateManager = $contextStateManager;
     }
 
@@ -85,12 +100,64 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
 
         try {
             // Delete Order Cart Rule and update Order
+            $cartRule = new CartRule($orderCartRule->id_cart_rule);
             $orderCartRule->softDelete();
             $cart->removeCartRule($orderCartRule->id_cart_rule);
 
-            $this->orderAmountUpdater->update($order, $cart, $orderCartRule->id_order_invoice);
+            // If cart rule was a gift product we must update an OrderDetail manually
+            $giftOrderDetail = $this->getGiftOrderDetail($order, $cartRule);
+            if ($giftOrderDetail instanceof OrderDetail) {
+                $newQuantity = ((int) $giftOrderDetail->product_quantity) - 1;
+
+                /*
+                 * Note: we are lucky the stock updates happens smoothly, it was not re-injected by removing the CartRule
+                 * because Cart doesn't update the stock but it will while we update the OrderDetail Lucky
+                 * for us it's the same difference of 1 so it's all accurate in the end
+                 */
+                // This calls the OrderAmountUpdater internally so no need to perform both calls
+                $this->orderProductQuantityUpdater->update(
+                    $order,
+                    $giftOrderDetail,
+                    $newQuantity,
+                    (int) $giftOrderDetail->id_order_invoice !== 0 ? new OrderInvoice((int) $giftOrderDetail->id_order_invoice) : null,
+                    false
+                );
+            } else {
+                $this->orderAmountUpdater->update($order, $cart, $orderCartRule->id_order_invoice);
+            }
         } finally {
             $this->contextStateManager->restoreContext();
         }
+    }
+
+    /**
+     * @param Order $order
+     * @param CartRule $cartRule
+     *
+     * @return OrderDetail|null
+     */
+    private function getGiftOrderDetail(Order $order, CartRule $cartRule): ?OrderDetail
+    {
+        $productId = (int) $cartRule->gift_product;
+        $productAttributeId = (int) $cartRule->gift_product_attribute;
+
+        $fallbackOrderDetailId = null;
+        $giftOrderDetailId = null;
+        foreach ($order->getOrderDetailList() as $orderDetail) {
+            if ((int) $orderDetail['product_id'] !== $productId || (int) $orderDetail['product_attribute_id'] !== $productAttributeId) {
+                continue;
+            }
+
+            // We try to find a row with at least 2 items
+            if ($orderDetail['product_quantity'] > 1) {
+                $giftOrderDetailId = $orderDetail['id_order_detail'];
+
+                return new OrderDetail($giftOrderDetailId);
+            }
+            // keep the first one for fallback
+            $fallbackOrderDetailId = $fallbackOrderDetailId ?? $orderDetail['id_order_detail'];
+        }
+
+        return (null === $fallbackOrderDetailId) ? null : new OrderDetail($fallbackOrderDetailId);
     }
 }
