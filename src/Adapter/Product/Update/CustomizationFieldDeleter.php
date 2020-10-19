@@ -42,7 +42,7 @@ use Product;
 /**
  * Deletes customization field/fields using legacy object models
  */
-final class CustomizationFieldDeleter
+class CustomizationFieldDeleter
 {
     /**
      * @var CustomizationFieldRepository

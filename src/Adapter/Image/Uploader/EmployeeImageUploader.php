@@ -29,12 +29,13 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 
 use Employee;
+use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Uploads employee logo image
  */
-final class EmployeeImageUploader extends AbstractImageUploader
+final class EmployeeImageUploader extends AbstractImageUploader implements ImageUploaderInterface
 {
     /**
      * @var string
