@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AddProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use Product;
 
 /**
  * Handles @see AddProductCommand using legacy object model
@@ -40,32 +39,16 @@ use Product;
 final class AddProductHandler implements AddProductHandlerInterface
 {
     /**
-     * @var int
-     */
-    private $defaultLangId;
-
-    /**
-     * @var int
-     */
-    private $defaultCategoryId;
-
-    /**
      * @var ProductRepository
      */
     private $productRepository;
 
     /**
-     * @param int $defaultLangId
-     * @param int $defaultCategoryId
      * @param ProductRepository $productRepository
      */
     public function __construct(
-        int $defaultLangId,
-        int $defaultCategoryId,
         ProductRepository $productRepository
     ) {
-        $this->defaultLangId = $defaultLangId;
-        $this->defaultCategoryId = $defaultCategoryId;
         $this->productRepository = $productRepository;
     }
 
@@ -74,14 +57,7 @@ final class AddProductHandler implements AddProductHandlerInterface
      */
     public function handle(AddProductCommand $command): ProductId
     {
-        $product = new Product();
-
-        $product->name = $command->getLocalizedNames();
-        $product->active = false;
-        $product->id_category_default = $this->defaultCategoryId;
-        $product->is_virtual = $command->isVirtual();
-
-        $this->productRepository->add($product);
+        $product = $this->productRepository->create($command->getLocalizedNames(), $command->isVirtual());
 
         return new ProductId((int) $product->id);
     }
