@@ -90,7 +90,7 @@ class EditableWebserviceKey
         $status,
         array $resourcePermissions,
         array $associatedShops,
-        string $hosts_allowed = null,
+        string $hosts_allowed = '',
         bool $hosts_check = false
     ) {
         $this->webserviceKeyId = $webserviceKeyId;
