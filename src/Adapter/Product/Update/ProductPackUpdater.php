@@ -73,7 +73,7 @@ class ProductPackUpdater
      * @throws ProductException
      * @throws ProductPackException
      */
-    public function set(PackId $packId, array $productsForPacking): void
+    public function setPackProducts(PackId $packId, array $productsForPacking): void
     {
         $pack = $this->productRepository->get($packId);
 

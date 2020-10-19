@@ -57,6 +57,6 @@ final class RemoveAllProductsFromPackHandler extends AbstractProductHandler impl
      */
     public function handle(RemoveAllProductsFromPackCommand $command): void
     {
-        $this->productPackUpdater->set($command->getPackId(), []);
+        $this->productPackUpdater->setPackProducts($command->getPackId(), []);
     }
 }

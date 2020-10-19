@@ -57,6 +57,6 @@ final class SetPackProductsHandler extends AbstractProductHandler implements Set
      */
     public function handle(SetPackProductsCommand $command): void
     {
-        $this->productPackUpdater->set($command->getPackId(), $command->getProducts());
+        $this->productPackUpdater->setPackProducts($command->getPackId(), $command->getProducts());
     }
 }
