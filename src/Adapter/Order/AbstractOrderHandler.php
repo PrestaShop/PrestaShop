@@ -262,7 +262,7 @@ abstract class AbstractOrderHandler
         $taxAddress = new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
         $taxManager = TaxManagerFactory::getManager($taxAddress, Product::getIdTaxRulesGroupByIdProduct((int) $product->id, Context::getContext()));
         $productTaxCalculator = $taxManager->getTaxCalculator();
-        $taxFactor = new Number((string) (1 + ($productTaxCalculator->getTotalRate() / 100)));
+        $taxFactor = new DecimalNumber((string) (1 + ($productTaxCalculator->getTotalRate() / 100)));
 
         $computedPriceTaxIncluded = $priceTaxExcluded->times($taxFactor);
         if ($computedPriceTaxIncluded->equals($priceTaxIncluded)) {
