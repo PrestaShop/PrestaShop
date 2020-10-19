@@ -45,11 +45,16 @@ use Symfony\Component\Routing\Exception\InvalidParameterException;
 class PagePreference implements AdminPagePreferenceInterface
 {
     /**
+     * @var bool
+     */
+    private $isDebug;
+
+    /**
      * @var SessionInterface
      */
     private $session;
 
-    public function __construct(SessionInterface $session)
+    public function __construct(SessionInterface $session, bool $isDebug = _PS_MODE_DEV_)
     {
         if ($session->isStarted()) {
             $this->session = $session;
@@ -57,6 +62,7 @@ class PagePreference implements AdminPagePreferenceInterface
             $sessionClass = get_class($session);
             $this->session = new $sessionClass(new PhpBridgeSessionStorage());
         }
+        $this->isDebug = $isDebug;
     }
 
     /**
@@ -93,7 +99,7 @@ class PagePreference implements AdminPagePreferenceInterface
     public function getTemporaryShouldAllowUseLegacyPage($page = null)
     {
         // Dev mode: always shown
-        if (_PS_MODE_DEV_) {
+        if ($this->isDebug) {
             return true;
         }
 

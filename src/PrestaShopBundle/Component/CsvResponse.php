@@ -38,7 +38,7 @@ class CsvResponse extends StreamedResponse
     const MODE_OFFSET = 2;
 
     /**
-     * @var array() CSV content
+     * @var array|callable CSV content
      */
     private $data;
 

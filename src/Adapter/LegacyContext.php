@@ -44,7 +44,7 @@ use Tab;
  */
 class LegacyContext
 {
-    /** @var Currency */
+    /** @var Currency|null */
     private $employeeCurrency;
 
     /** @var string Contains the base uri for mail themes (by default https://domain.com/mails/themes/). Used for mails assets. */
@@ -282,7 +282,7 @@ class LegacyContext
     /**
      * Returns Currency set for the current employee.
      *
-     * @return Currency
+     * @return Currency|null
      */
     public function getEmployeeCurrency()
     {

@@ -526,6 +526,7 @@ class ModuleController extends ModuleAbstractController
 
         $moduleManager = $this->get('prestashop.module.manager');
         $moduleZipManager = $this->get('prestashop.module.zip.manager');
+        $moduleName = '';
 
         try {
             $fileUploaded = $request->files->get('file_uploaded');
@@ -768,7 +769,7 @@ class ModuleController extends ModuleAbstractController
      *
      * @param array $pageVoter
      *
-     * @return void|JsonResponse
+     * @return JsonResponse|null
      */
     private function checkPermissions(array $pageVoter)
     {
@@ -784,12 +785,14 @@ class ModuleController extends ModuleAbstractController
                 ]
             );
         }
+
+        return null;
     }
 
     /**
      * @param string $pageVoter
      *
-     * @return JsonResponse|void
+     * @return JsonResponse|null
      */
     private function checkPermission($pageVoter)
     {
@@ -801,6 +804,8 @@ class ModuleController extends ModuleAbstractController
                 ]
             );
         }
+
+        return null;
     }
 
     /**

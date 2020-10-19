@@ -1323,7 +1323,7 @@ final class ProductImportHandler extends AbstractImportHandler
                 if ($product->depends_on_stock == 1) {
                     $stockManager = StockManagerFactory::getManager();
                     $price = str_replace(',', '.', $product->wholesale_price);
-                    if (!is_array($price) && $price == 0) {
+                    if ($price == 0) {
                         $price = 0.000001;
                     }
                     $price = round(floatval($price), 6);

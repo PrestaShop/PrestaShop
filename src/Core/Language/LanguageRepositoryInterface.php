@@ -57,7 +57,7 @@ interface LanguageRepositoryInterface
      *
      * @param string $locale
      *
-     * @return LanguageInterface
+     * @return LanguageInterface|null
      */
     public function getOneByLocaleOrIsoCode($locale);
 }

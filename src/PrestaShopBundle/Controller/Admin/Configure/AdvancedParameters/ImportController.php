@@ -368,7 +368,7 @@ class ImportController extends FrameworkBundleAdminController
      *
      * @param ImportDirectory $importDir
      *
-     * @return array|bool
+     * @return bool
      */
     private function checkImportDirectory(ImportDirectory $importDir)
     {

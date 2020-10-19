@@ -400,7 +400,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
                     $currency->iso_code
                 );
                 $numericAmount = $document->total_shipping_tax_incl;
-            } elseif (OrderDocumentType::CREDIT_SLIP) {
+            } elseif (OrderDocumentType::CREDIT_SLIP === $type) {
                 $number = sprintf(
                     '%s%06d',
                     Configuration::get('PS_CREDIT_SLIP_PREFIX', $this->contextLanguageId),

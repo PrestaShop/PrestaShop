@@ -1324,7 +1324,7 @@ class CartCore extends ObjectModel
      * @param bool $auto_add_cart_rule
      * @param bool $skipAvailabilityCheckOutOfStock
      *
-     * @return bool Whether the quantity has been successfully updated
+     * @return bool|int Whether the quantity has been successfully updated
      */
     public function updateQty(
         $quantity,
@@ -4033,7 +4033,7 @@ class CartCore extends ObjectModel
                 WHERE NOT EXISTS (SELECT 1 FROM ' . _DB_PREFIX_ . 'orders o WHERE o.`id_cart` = c.`id_cart`
                                     AND o.`id_customer` = ' . (int) $id_customer . ')
                 AND c.`id_customer` = ' . (int) $id_customer . '
-                AND c.`id_cart` = (SELECT `id_cart` FROM `' . _DB_PREFIX_ . 'cart` c2 WHERE c2.`id_customer` = ' . (int) $id_customer . ' ORDER BY `id_cart` DESC LIMIT 1) 
+                AND c.`id_cart` = (SELECT `id_cart` FROM `' . _DB_PREFIX_ . 'cart` c2 WHERE c2.`id_customer` = ' . (int) $id_customer . ' ORDER BY `id_cart` DESC LIMIT 1)
                 AND c.`id_guest` != 0
                     ' . Shop::addSqlRestriction(Shop::SHARE_ORDER, 'c') . '
                 ORDER BY c.`date_upd` DESC';
@@ -4312,7 +4312,7 @@ class CartCore extends ObjectModel
     /**
      * Duplicate this Cart in the database.
      *
-     * @return array Duplicated cart, with success bool
+     * @return array|bool Duplicated cart, with success bool
      */
     public function duplicate()
     {

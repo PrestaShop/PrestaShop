@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Adapter\Environment;
 class ModuleRepositoryFactory
 {
     /**
-     * @var self
+     * @var self|null
      */
     private static $instance;
 

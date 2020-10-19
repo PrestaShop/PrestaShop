@@ -104,13 +104,10 @@ final class GetNotificationLastElementsHandler implements GetNotificationLastEle
         switch ($type) {
             case 'customer':
                 return $this->configuration['show_notifs_new_customers'] ?: false;
-                break;
             case 'customer_message':
                 return $this->configuration['show_notifs_new_messages'] ?: false;
-                break;
             case 'order':
                 return $this->configuration['show_notifs_new_orders'] ?: false;
-                break;
         }
 
         return false;

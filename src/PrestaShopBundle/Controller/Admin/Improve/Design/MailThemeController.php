@@ -35,7 +35,6 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
@@ -298,7 +297,6 @@ class MailThemeController extends FrameworkBundleAdminController
 
         /** @var LanguageRepositoryInterface $languageRepository */
         $languageRepository = $this->get('prestashop.core.admin.lang.repository');
-        /** @var LanguageInterface $language */
         $language = $languageRepository->getOneByLocaleOrIsoCode($locale);
         if (null === $language) {
             throw new InvalidArgumentException(sprintf('Cannot find Language with locale or isoCode %s', $locale));
@@ -471,7 +469,6 @@ class MailThemeController extends FrameworkBundleAdminController
         if (empty($locale)) {
             $locale = $this->getContext()->language->locale;
         }
-        /** @var LanguageInterface $language */
         $language = $languageRepository->getOneByLocaleOrIsoCode($locale);
         if (null === $language) {
             throw new InvalidArgumentException(sprintf('Cannot find Language with locale or isoCode %s', $locale));
@@ -496,7 +493,6 @@ class MailThemeController extends FrameworkBundleAdminController
                 break;
             default:
                 throw new NotFoundHttpException(sprintf('Requested type %s is not managed, please use one of these: %s', $type, implode(',', [MailTemplateInterface::HTML_TYPE, MailTemplateInterface::TXT_TYPE])));
-                break;
         }
 
         return $renderedLayout;

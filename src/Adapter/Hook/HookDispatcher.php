@@ -140,10 +140,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
             if ($event instanceof RenderingHookEvent) {
                 $listenerName = $event->popListener() ?: $listener[1];
 
-                $eventContent = $event->popContent();
-                $this->renderingContent[$listenerName] = (!is_string($eventContent) || strlen($eventContent) > strlen($obContent))
-                    ? $eventContent
-                    : $obContent;
+                $this->renderingContent[$listenerName] = $event->popContent();
             }
             if ($event->isPropagationStopped()) {
                 $this->propagationStoppedCalledBy = $listener;

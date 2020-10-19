@@ -157,9 +157,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             throw new OrderException('Invalid price');
         }
 
-        if (!is_array($command->getQuantity())
-            && !Validate::isUnsignedInt($command->getQuantity())
-        ) {
+        if (!Validate::isUnsignedInt($command->getQuantity())) {
             throw new OrderException('Invalid quantity');
         }
 

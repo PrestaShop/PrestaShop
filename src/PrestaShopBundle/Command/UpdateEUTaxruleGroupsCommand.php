@@ -102,7 +102,7 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
             $localizationPack = @simplexml_load_file($localizationPackFile);
 
             // Some packs do not have taxes
-            if (!$localizationPack || !$localizationPack->taxes->tax) {
+            if (!($localizationPack instanceof SimpleXMLElement) || !isset($localizationPack->taxes->tax)) {
                 continue;
             }
 
@@ -195,7 +195,7 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
         $newTax = new SimpleXMLElement('<tax/>');
 
         $taxRulesGroups = $taxes->xpath('//taxRulesGroup[1]');
-        $insertBefore = $taxRulesGroups[0];
+        $insertBefore = $taxRulesGroups[0] ?? false;
 
         if (!$insertBefore) {
             return $this->output->writeln("<error>Could not find any `taxRulesGroup`, don't know where to append the tax.");

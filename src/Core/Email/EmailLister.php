@@ -62,7 +62,7 @@ class EmailLister
                 $tmp = explode('.', $mail->getFilename());
 
                 // Check for filename existence (left part) and if extension is html (right part)
-                if (($tmp === false || !isset($tmp[0])) || (isset($tmp[1]) && $tmp[1] !== 'html')) {
+                if (!isset($tmp[0]) || (isset($tmp[1]) && $tmp[1] !== 'html')) {
                     continue;
                 }
 
@@ -86,7 +86,7 @@ class EmailLister
         if (strpos($mail_name, '.') !== false) {
             $tmp = explode('.', $mail_name);
 
-            if ($tmp === false || !isset($tmp[0])) {
+            if (!isset($tmp[0])) {
                 return $mail_name;
             }
 

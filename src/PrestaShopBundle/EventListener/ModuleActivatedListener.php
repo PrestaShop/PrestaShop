@@ -117,12 +117,7 @@ class ModuleActivatedListener
             return;
         }
 
-        /** @var Module $module */
         $module = $this->moduleRepository->getModule($moduleActivated->getModuleName());
-        if (null === $module) {
-            return;
-        }
-
         if (!$module->isActive()) {
             $this->showNotificationMessage($moduleActivated);
             $url = $this->router->generate($moduleActivated->getRedirectRoute());

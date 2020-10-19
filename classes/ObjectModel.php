@@ -1095,7 +1095,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @param array $skip array of fields to skip
      * @param bool $human_errors if true, uses more descriptive, translatable error strings
      *
-     * @return true|string true or error message string
+     * @return bool|string true or error message string
      *
      * @throws PrestaShopException
      */

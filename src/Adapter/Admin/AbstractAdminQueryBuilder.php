@@ -117,7 +117,7 @@ abstract class AbstractAdminQueryBuilder
      * Format example for $order:
      * $order = array('name ASC', 'id_product DESC');
      *
-     * @param array<array<mixed>> $select
+     * @param array<string,array<string,string>|string> $select
      * @param array<mixed> $table
      * @param array<mixed> $where
      * @param array<string> $groupBy
@@ -135,7 +135,7 @@ abstract class AbstractAdminQueryBuilder
         // SELECT
         $s = [];
         foreach ($select as $alias => $field) {
-            $a = is_string($alias) ? ' AS `' . $alias . '`' : '';
+            $a = ' AS `' . $alias . '`';
             if (is_array($field)) {
                 if (isset($field['table'])) {
                     $s[] = ' ' . $field['table'] . '.`' . $field['field'] . '` ' . $a;

@@ -108,7 +108,7 @@ class TreeBuilder
     /**
      * Check if data contains search word.
      *
-     * @param string|array $search
+     * @param string|array|null $search
      * @param array $data
      *
      * @return bool
@@ -149,6 +149,7 @@ class TreeBuilder
             $tableisedDomain = Inflector::tableize($domain);
             // the third component of the domain may have underscores, so we need to limit pieces to 3
             $parts = explode('_', $tableisedDomain, 3);
+            /** @var array $subtree */
             $subtree = &$translationsTree;
 
             foreach ($parts as $part) {

@@ -42,7 +42,7 @@ final class SymfonyContainer
     /**
      * Get a singleton instance of SymfonyContainer.
      *
-     * @return ContainerInterface;
+     * @return ContainerInterface|null;
      */
     public static function getInstance()
     {

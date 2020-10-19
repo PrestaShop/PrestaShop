@@ -251,7 +251,7 @@ class AddManufacturerAddressCommand
     }
 
     /**
-     * @param int $value
+     * @param mixed $value
      *
      * @throws AddressConstraintException
      */

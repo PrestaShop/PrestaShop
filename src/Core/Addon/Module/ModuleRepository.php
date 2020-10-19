@@ -89,7 +89,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     private $modulePath;
 
     /**
-     * @var PrestaTrustChecker
+     * @var PrestaTrustChecker|null
      */
     private $prestaTrustChecker = null;
 
@@ -110,7 +110,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     /**
      * Optionnal Doctrine cache provider.
      *
-     * @var \Doctrine\Common\Cache\CacheProvider
+     * @var CacheProvider|null
      */
     private $cacheProvider;
 
@@ -458,7 +458,6 @@ class ModuleRepository implements ModuleRepositoryInterface
             $this->cache[$name]['disk']['filemtime'] === $current_filemtime
         ) {
             // OK, cache can be loaded and used directly
-
             $attributes = array_merge($attributes, $this->cache[$name]['attributes']);
             $disk = $this->cache[$name]['disk'];
         } else {

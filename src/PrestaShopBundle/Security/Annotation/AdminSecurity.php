@@ -50,7 +50,7 @@ class AdminSecurity extends Security
      *
      * @todo: Once the onboarding page is migrated, set default to his route name.
      *
-     * @var string
+     * @var string|null
      */
     protected $redirectRoute;
 
@@ -86,7 +86,7 @@ class AdminSecurity extends Security
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getRedirectRoute()
     {

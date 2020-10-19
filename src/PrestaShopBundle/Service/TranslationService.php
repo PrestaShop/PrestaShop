@@ -148,8 +148,8 @@ class TranslationService
      * @param string $locale
      * @param string $domain
      * @param string|null $theme
-     * @param null $search
-     * @param null $module
+     * @param string|null $search
+     * @param string|null $module
      *
      * @return array
      */
@@ -212,7 +212,7 @@ class TranslationService
     /**
      * Check if data contains search word.
      *
-     * @param string|array $search
+     * @param string|array|null $search
      * @param array $data
      *
      * @return bool
