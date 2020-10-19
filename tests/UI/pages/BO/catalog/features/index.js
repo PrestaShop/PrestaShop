@@ -9,7 +9,7 @@ class Features extends BOBasePage {
 
     // Help card selectors
     this.helpCardLink = '#toolbar-nav a.btn-help';
-    this.helpContainterBlock = '#help-container';
+    this.helpContainerBlock = '#help-container';
 
     // Form selectors
     this.gridForm = '#form-feature';
@@ -142,7 +142,7 @@ class Features extends BOBasePage {
   async openHelpSideBar(page) {
     await page.click(this.helpCardLink);
 
-    return this.elementVisible(page, this.helpContainterBlock, 2000);
+    return this.elementVisible(page, this.helpContainerBlock, 2000);
   }
 
   /**
@@ -154,7 +154,7 @@ class Features extends BOBasePage {
   async closeHelpSideBar(page) {
     await page.click(this.helpCardLink);
 
-    return this.elementNotVisible(page, this.helpContainterBlock, 2000);
+    return this.elementNotVisible(page, this.helpContainerBlock, 2000);
   }
 
   /**
