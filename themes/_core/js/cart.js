@@ -80,67 +80,63 @@ $(document).ready(() => {
 
   $body.on('click', '[data-button-action="add-to-cart"]', (event) => {
     event.preventDefault();
-    if (
-      $(prestashop.selectors.quantityWanted).val() > $('[data-stock]').data('stock') &&
-      $('[data-allow-oosp]').data('allow-oosp').length === 0
-    ) {
-      $('[data-button-action="add-to-cart"]').attr('disabled', 'disabled');
-    } else {
-      const $form = $(event.target.form);
-      const query = `${$form.serialize()}&add=1&action=update`;
-      const actionURL = $form.attr('action');
+    
+    $('[data-button-action="add-to-cart"]').prop('disabled', true);
+    
+    const $form = $(event.target.form);
+    const query = `${$form.serialize()}&add=1&action=update`;
+    const actionURL = $form.attr('action');
 
-      const isQuantityInputValid = ($input) => {
-        let validInput = true;
+    const isQuantityInputValid = ($input) => {
+      let validInput = true;
 
-        $input.each((index, input) => {
-          const $input = $(input);
-          const minimalValue = parseInt($input.attr('min'), 10);
-          if (minimalValue && $input.val() < minimalValue) {
-            onInvalidQuantity($input);
-            validInput = false;
-          }
-        });
+      $input.each((index, input) => {
+        const $input = $(input);
+        const minimalValue = parseInt($input.attr('min'), 10);
+        if (minimalValue && $input.val() < minimalValue) {
+          onInvalidQuantity($input);
+          validInput = false;
+        }
+      });
 
-        return validInput;
-      };
+      return validInput;
+    };
 
-      let onInvalidQuantity = ($input) => {
-        $input
-          .parents(prestashop.selectors.product.addToCart)
-          .first()
-          .find(prestashop.selectors.product.minimalQuantity)
-          .addClass('error');
-        $input.parent().find('label').addClass('error');
-      };
+    let onInvalidQuantity = ($input) => {
+      $input
+        .parents(prestashop.selectors.product.addToCart)
+        .first()
+        .find(prestashop.selectors.product.minimalQuantity)
+        .addClass('error');
+      $input.parent().find('label').addClass('error');
+    };
 
-      const $quantityInput = $form.find('input[min]');
-      if (!isQuantityInputValid($quantityInput)) {
-        onInvalidQuantity($quantityInput);
+    const $quantityInput = $form.find('input[min]');
+    if (!isQuantityInputValid($quantityInput)) {
+      onInvalidQuantity($quantityInput);
 
-        return;
-      }
-
-      $.post(actionURL, query, null, 'json')
-        .then((resp) => {
-          prestashop.emit('updateCart', {
-            reason: {
-              idProduct: resp.id_product,
-              idProductAttribute: resp.id_product_attribute,
-              idCustomization: resp.id_customization,
-              linkAction: 'add-to-cart',
-              cart: resp.cart,
-            },
-            resp,
-          });
-        })
-        .fail((resp) => {
-          prestashop.emit('handleError', {
-            eventType: 'addProductToCart',
-            resp,
-          });
-        });
+      return;
     }
+
+    $.post(actionURL, query, null, 'json')
+      .then((resp) => {
+        prestashop.emit('updateCart', {
+          reason: {
+            idProduct: resp.id_product,
+            idProductAttribute: resp.id_product_attribute,
+            idCustomization: resp.id_customization,
+            linkAction: 'add-to-cart',
+            cart: resp.cart,
+          },
+          resp,
+        });
+      })
+      .fail((resp) => {
+        prestashop.emit('handleError', {
+          eventType: 'addProductToCart',
+          resp,
+        });
+      });
   });
 
   $body.on('submit', '[data-link-action="add-voucher"]', (event) => {
