@@ -134,10 +134,11 @@ describe('Create Tax rules, Then disable / Enable and Delete with Bulk actions',
       it(`should ${test.args.action} tax rules with bulk actions and check Result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `bulk${test.args.action}`, baseContext);
 
-        const textResult = await taxRulesPage.changeEnabledColumnBulkActions(page, test.args.enabledValue);
-
         /* Successful message is not visible, skipping it */
-        //await expect(textResult).to.be.equal(taxRulesPage.successfulUpdateStatusMessage);
+        await taxRulesPage.changeEnabledColumnBulkActions(page, test.args.enabledValue);
+        // const textResult = await taxRulesPage.changeEnabledColumnBulkActions(page, test.args.enabledValue);
+
+        // await expect(textResult).to.be.equal(taxRulesPage.successfulUpdateStatusMessage);
 
         const numberOfElementInGrid = await taxRulesPage.getNumberOfElementInGrid(page);
 

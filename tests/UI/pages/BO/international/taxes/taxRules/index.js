@@ -332,7 +332,7 @@ class TaxRules extends BOBasePage {
     // Click to change status
     await this.clickAndWaitForNavigation(page, enable ? this.bulkEnableLink : this.bulkDisableLink);
     /* Successful message is not visible, skipping it */
-    //return this.getTextContent(page, this.alertSuccessBlock);
+    // return this.getTextContent(page, this.alertSuccessBlock);
   }
 }
 
