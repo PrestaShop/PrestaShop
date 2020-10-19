@@ -73,11 +73,7 @@ class UpdateTagsFeatureContext extends AbstractProductFeatureContext
     {
         $productId = $this->getSharedStorage()->get($productReference);
 
-        try {
-            $this->getCommandBus()->handle(new RemoveAllProductTagsCommand($productId));
-        } catch (ProductException $e) {
-            $this->setLastException($e);
-        }
+        $this->getCommandBus()->handle(new RemoveAllProductTagsCommand($productId));
     }
 
     /**

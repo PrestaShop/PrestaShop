@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssociateProductAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductAttachmentsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductAttachmentsCommand;
@@ -105,14 +104,10 @@ class UpdateAttachmentFeatureContext extends AbstractProductFeatureContext
             $attachmentIds[] = $this->getSharedStorage()->get($attachmentReference);
         }
 
-        try {
-            $this->getCommandBus()->handle(new SetAssociatedProductAttachmentsCommand(
-                $this->getSharedStorage()->get($productReference),
-                $attachmentIds
-            ));
-        } catch (DomainException $e) {
-            $this->setLastException($e);
-        }
+        $this->getCommandBus()->handle(new SetAssociatedProductAttachmentsCommand(
+            $this->getSharedStorage()->get($productReference),
+            $attachmentIds
+        ));
     }
 
     /**
@@ -122,12 +117,8 @@ class UpdateAttachmentFeatureContext extends AbstractProductFeatureContext
      */
     public function removeProductAttachmentsAssociation(string $productReference)
     {
-        try {
-            $this->getCommandBus()->handle(new RemoveAllAssociatedProductAttachmentsCommand(
-                $this->getSharedStorage()->get($productReference)
-            ));
-        } catch (DomainException $e) {
-            $this->setLastException($e);
-        }
+        $this->getCommandBus()->handle(new RemoveAllAssociatedProductAttachmentsCommand(
+            $this->getSharedStorage()->get($productReference)
+        ));
     }
 }
