@@ -415,3 +415,11 @@ services:
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductImageCommand
+
+    prestashop.adapter.product.repository.product_image_repository:
+        class: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductImageRepository
+
+    prestashop.adapter.product.product_image_path_factory:
+        class: PrestaShop\PrestaShop\Adapter\Product\ProductImagePathFactory
+        arguments:
+            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_LEGACY_IMAGES')"
