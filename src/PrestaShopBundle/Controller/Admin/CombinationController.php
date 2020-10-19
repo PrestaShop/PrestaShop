@@ -45,7 +45,7 @@ class CombinationController extends FrameworkBundleAdminController
         $response = new Response();
 
         $combinationIds = explode('-', $combinationIds);
-        if ($combinationIds === false || count($combinationIds) == 0) {
+        if (count($combinationIds) === 0) {
             return $response;
         }
 

@@ -273,14 +273,16 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
 
         switch ((int) $product->customizable) {
             case ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION:
-                return ProductCustomizationOptions::createAllowsCustomization($textFieldsCount, $fileFieldsCount);
+                $options = ProductCustomizationOptions::createAllowsCustomization($textFieldsCount, $fileFieldsCount);
                 break;
             case ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION:
-                return ProductCustomizationOptions::createRequiresCustomization($textFieldsCount, $fileFieldsCount);
+                $options = ProductCustomizationOptions::createRequiresCustomization($textFieldsCount, $fileFieldsCount);
                 break;
             default:
-                return ProductCustomizationOptions::createNotCustomizable();
+                $options = ProductCustomizationOptions::createNotCustomizable();
         }
+
+        return $options;
     }
 
     /**

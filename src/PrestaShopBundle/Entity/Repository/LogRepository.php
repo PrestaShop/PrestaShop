@@ -255,10 +255,6 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
             ->from($this->logTable, 'l')
             ->leftJoin('l', $employeeTable, 'e', 'l.id_employee = e.id_employee');
 
-        if (null === $searchCriteria) {
-            return $qb;
-        }
-
         $filters = $searchCriteria->getFilters();
         foreach ($filters as $filterName => $filterValue) {
             if (empty($filterValue)) {

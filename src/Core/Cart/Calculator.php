@@ -228,7 +228,7 @@ class Calculator
 
         $allowedMaxDiscount = $this->getRowTotalWithoutDiscount();
 
-        if (null !== $this->getFees()->getInitialShippingFees() && null !== $this->getFees()->getFinalShippingFees()) {
+        if (null !== $this->getFees()->getFinalShippingFees()) {
             $shippingDiscount = (new AmountImmutable())
                 ->add($this->getFees()->getInitialShippingFees())
                 ->sub($this->getFees()->getFinalShippingFees())

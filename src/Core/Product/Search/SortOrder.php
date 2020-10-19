@@ -220,7 +220,7 @@ class SortOrder
     }
 
     /**
-     * @return string|void Returns the order way using legacy prefix
+     * @return string Returns the order way using legacy prefix
      */
     private function getLegacyPrefix()
     {
@@ -233,12 +233,15 @@ class SortOrder
                 $this->setField('name');
 
                 return 'm.';
-            } else {
-                return 'p.';
             }
-        } elseif ($this->entity === 'manufacturer') {
+
+            return 'p.';
+        }
+        if ($this->entity === 'manufacturer') {
             return 'm.';
         }
+
+        return '';
     }
 
     /**

@@ -12,6 +12,7 @@
     "ext-intl": "*",
     "ext-json": "*",
     "ext-mbstring": "*",
+    "ext-simplexml": "*",
     "ext-zip": "*",
     "beberlei/doctrineextensions": "^1.0",
     "composer/ca-bundle": "^1.0",

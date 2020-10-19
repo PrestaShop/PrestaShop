@@ -125,12 +125,13 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
         }
 
         $hasKey = ConfigurationLegacy::hasKey($key, null, $shopGroupId);
-        if ($hasKey || $isStrict) {
-            return $hasKey ? ConfigurationLegacy::get($key, null, $shopGroupId) : null;
+        if ($hasKey) {
+            return ConfigurationLegacy::get($key, null, $shopGroupId);
         }
 
-        if ($hasKey = ConfigurationLegacy::hasKey($key) || $isStrict) {
-            return $hasKey ? ConfigurationLegacy::get($key) : null;
+        $hasKey = ConfigurationLegacy::hasKey($key);
+        if ($hasKey) {
+            return ConfigurationLegacy::get($key);
         }
 
         return $default;
@@ -180,7 +181,10 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $key
+     * @param ShopConstraint|null $shopConstraint
+     *
+     * @return bool
      */
     public function has($key, ShopConstraint $shopConstraint = null)
     {
@@ -194,7 +198,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
         }
 
         $hasKey = ConfigurationLegacy::hasKey($key, null, $shopGroupId);
-        if ($hasKey || $isStrict) {
+        if ($hasKey) {
             return $hasKey;
         }
 

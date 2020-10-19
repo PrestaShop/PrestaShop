@@ -103,12 +103,12 @@ class AdminModuleDataProvider implements ModuleInterface
     private $moduleProvider;
 
     /**
-     * @var CacheProvider
+     * @var CacheProvider|null
      */
     private $cacheProvider;
 
     /**
-     * @var Employee
+     * @var Employee|null
      */
     private $employee;
 
