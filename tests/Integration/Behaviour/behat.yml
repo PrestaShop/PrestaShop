@@ -2,19 +2,19 @@ default:
     suites:
         database:
             paths:
-                features: Features/Scenario/Database
+                - %paths.base%/Features/Scenario/Database
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\SqlManagerFeatureContext
         contact:
             paths:
-                features: Features/Scenario/Contact
+                - %paths.base%/Features/Scenario/Contact
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\ContactFeatureContext
         customer:
             paths:
-                features: Features/Scenario/Customer
+                - %paths.base%/Features/Scenario/Customer
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CustomerManagerFeatureContext
@@ -23,14 +23,14 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
         category:
             paths:
-                features: Features/Scenario/Category
+                - %paths.base%/Features/Scenario/Category
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CategoryFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CategoryFeatureContext
         cart:
             paths:
-                features: Features/Scenario/Cart
+                - %paths.base%/Features/Scenario/Cart
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
@@ -56,7 +56,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\EmployeeFeatureContext
         order:
             paths:
-                features: Features/Scenario/Order
+                - %paths.base%/Features/Scenario/Order
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CartRuleFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
@@ -88,7 +88,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\CurrencyFeatureContext
         currency:
             paths:
-                features: Features/Scenario/Currency
+                - %paths.base%/Features/Scenario/Currency
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
@@ -97,7 +97,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\CurrencyFeatureContext
         cldr:
             paths:
-                features: Features/Scenario/CLDR
+                - %paths.base%/Features/Scenario/CLDR
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
@@ -107,7 +107,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CLDRFeatureContext
         webservice:
             paths:
-                features: Features/Scenario/Webservice
+                - %paths.base%/Features/Scenario/Webservice
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
@@ -115,25 +115,25 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\WebserviceKeyFeatureContext
         tax:
             paths:
-                features: Features/Scenario/Tax
+                - %paths.base%/Features/Scenario/Tax
             contexts:
               - Tests\Integration\Behaviour\Features\Context\Domain\TaxFeatureContext
               - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
         manufacturer:
             paths:
-                features: Features/Scenario/Manufacturer
+                - %paths.base%/Features/Scenario/Manufacturer
             contexts:
               - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
               - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
         cms_page:
             paths:
-                features: Features/Scenario/CmsPage
+                - %paths.base%/Features/Scenario/CmsPage
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CmsPageFeatureContext
         cart_rule:
             paths:
-                features: Features/Scenario/CartRule
+                - %paths.base%/Features/Scenario/CartRule
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
@@ -141,7 +141,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\CartRuleFeatureContext
         meta:
             paths:
-                features: Features/Scenario/Meta
+                - %paths.base%/Features/Scenario/Meta
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
@@ -151,21 +151,21 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\MetaFeatureContext
         feature:
             paths:
-                features: Features/Scenario/Feature
+                - %paths.base%/Features/Scenario/Feature
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\FeatureFeatureContext
         order_message:
             paths:
-                features: Features/Scenario/OrderMessage
+                - %paths.base%/Features/Scenario/OrderMessage
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\OrderMessageContext
                 - Tests\Integration\Behaviour\Features\Context\OrderMessageContext
         misc:
             paths:
-              features: Features/Scenario/Misc
+              - %paths.base%/Features/Scenario/Misc
             contexts:
               - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
               - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
@@ -175,7 +175,7 @@ default:
               - Tests\Integration\Behaviour\Features\Context\Domain\ThemeMailTemplatesFeatureContext
         address:
             paths:
-              features: Features/Scenario/Address
+              - %paths.base%/Features/Scenario/Address
             contexts:
               - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
               - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
