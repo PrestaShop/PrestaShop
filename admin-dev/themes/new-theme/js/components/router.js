@@ -44,11 +44,11 @@ const {$} = window;
  */
 export default class Router {
   constructor() {
-    EventEmitter.on('updateRoutes', (customRoutes) => {
+    const addRoutes = (customRoutes) => {
       Object.assign(routes.routes, customRoutes);
-    });
+    };
 
-    EventEmitter.emit('beforeRoutes');
+    EventEmitter.emit('beforeRoutes', addRoutes);
 
     Routing.setData(routes);
     Routing.setBaseUrl(
