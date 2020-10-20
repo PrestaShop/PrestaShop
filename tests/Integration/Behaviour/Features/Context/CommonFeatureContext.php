@@ -124,6 +124,23 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @AfterFeature @clear-img-after-feature
+     */
+    public static function clearImgDir(): void
+    {
+        $filesToSkip = [
+            _PS_IMG_DIR_ . 'index.php',
+            _PS_IMG_DIR_ . '.htaccess',
+        ];
+
+        foreach (glob(_PS_IMG_DIR_ . '*') as $file) {
+            if (is_file($file) && !in_array($file, $filesToSkip)) {
+                unlink($file);
+            }
+        }
+    }
+
+    /**
      * @AfterFeature @clear-cache-after-feature
      */
     public static function clearCacheAfterFeature()
