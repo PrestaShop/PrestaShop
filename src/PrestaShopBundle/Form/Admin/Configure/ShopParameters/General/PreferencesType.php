@@ -104,7 +104,7 @@ class PreferencesType extends TranslatorAwareType
                 'disabled' => !$isSslEnabled,
                 'label' => $this->trans(
                     'Enable SSL on all pages',
-                    'Admin.Shopparameters.Help'
+                    'Admin.Shopparameters.Feature'
                 ),
                 'help' => $this->trans(
                     'When enabled, all the pages of your shop will be SSL-secured.',
