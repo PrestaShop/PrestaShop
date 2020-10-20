@@ -1258,7 +1258,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I change order :orderReference note to :internalNote
+     * @When /^I change order "(.*)" note to "(.*)"$/
      *
      * @param string $orderReference
      * @param string $internalNote
@@ -1270,7 +1270,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then order :orderReference note should be :internalNote
+     * @Then /^order "(.*)" note should be "(.*)"$/
      *
      * @param string $orderReference
      * @param string $internalNote

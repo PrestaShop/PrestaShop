@@ -69,6 +69,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\CartFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CategoryFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\OrderFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CarrierFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CountryFeatureContext
