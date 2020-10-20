@@ -126,7 +126,7 @@ describe('Create, update and delete order return status in BO', async () => {
       await expect(textEmail).to.contains(createOrderReturnStatusData.name);
     });
 
-    it('should go to edit order status page', async function () {
+    it('should go to edit order return status page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditOrderReturnStatusPage', baseContext);
 
       await statusesPage.gotoEditPage(page, 1, tableName);
