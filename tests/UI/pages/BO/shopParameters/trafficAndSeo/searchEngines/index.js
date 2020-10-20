@@ -301,7 +301,7 @@ class SearchEngines extends BOBasePage {
   }
 
   /**
-   * Delete Search engine by bulk action
+   * Delete Search engine by bulk actions
    * @param page
    * @returns {Promise<string>}
    */
