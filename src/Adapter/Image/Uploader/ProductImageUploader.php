@@ -93,21 +93,21 @@ class ProductImageUploader extends AbstractImageUploader
     {
         $productId = (int) $image->id_product;
 
-        $oldGeneratedImages = [
+        $cachedImages = [
             $this->productImagePathFactory->getCachedCover($productId, $this->contextShopId),
             $this->productImagePathFactory->getCachedThumbnail($productId),
         ];
 
-        foreach ($oldGeneratedImages as $oldImage) {
-            if (file_exists($oldImage)) {
+        foreach ($cachedImages as $cachedImage) {
+            if (file_exists($cachedImage)) {
                 try {
-                    unlink($oldImage);
+                    unlink($cachedImage);
                 } catch (ErrorException $e) {
                     //@todo: do we really need to fail on cached images deletion? It was suppressed in legacy
                     throw new CannotUnlinkImageException(
                         sprintf(
-                            'Failed to remove old generated image "%s"',
-                            $oldImage
+                            'Failed to remove cached image "%s"',
+                            $cachedImage
                         ),
                         0,
                         $e
