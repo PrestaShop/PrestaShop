@@ -1,4 +1,4 @@
-name: UI tests
+name: UI tests code checks
 
 on:
   pull_request:
@@ -10,9 +10,9 @@ defaults:
 
 jobs:
 
-  linter:
+  ESLint:
     runs-on: ubuntu-latest
-    name: Linter
+    name: ESLint
     if: contains(github.event.pull_request.labels.*.name, 'TE')
 
     steps:

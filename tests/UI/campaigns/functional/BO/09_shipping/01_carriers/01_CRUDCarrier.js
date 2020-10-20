@@ -35,7 +35,13 @@ let numberOfCarriers = 0;
 let carrierID = 0;
 
 const createCarrierData = new CarrierFaker({freeShipping: false, zoneID: 4, allZones: false});
-const editCarrierData = new CarrierFaker({freeShipping: false, allZones: true, enable: true});
+const editCarrierData = new CarrierFaker(
+  {
+    freeShipping: false,
+    rangeSup: 50,
+    allZones: true,
+    enable: true,
+  });
 
 /*
 Create new carrier

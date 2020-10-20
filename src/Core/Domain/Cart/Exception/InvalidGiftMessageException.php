@@ -23,49 +23,10 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Cart\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
-
-/**
- * Adds free shipping to cart when creating order from Back Office
- */
-class SetFreeShippingToCartCommand
+class InvalidGiftMessageException extends CartException
 {
-    /**
-     * @var CartId
-     */
-    private $cartId;
-
-    /**
-     * @var bool
-     */
-    private $allowFreeShipping;
-
-    /**
-     * @param int $cartId
-     * @param bool $allowFreeShipping
-     */
-    public function __construct(int $cartId, bool $allowFreeShipping)
-    {
-        $this->cartId = new CartId($cartId);
-        $this->allowFreeShipping = $allowFreeShipping;
-    }
-
-    /**
-     * @return CartId
-     */
-    public function getCartId(): CartId
-    {
-        return $this->cartId;
-    }
-
-    /**
-     * @return bool
-     */
-    public function allowFreeShipping(): bool
-    {
-        return $this->allowFreeShipping;
-    }
 }

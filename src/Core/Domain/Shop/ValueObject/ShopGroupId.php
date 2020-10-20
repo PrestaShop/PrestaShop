@@ -24,17 +24,53 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject;
 
-/**
- * Interface for service that set free shipping to cart
- */
-interface SetFreeShippingToCartHandlerInterface
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
+
+class ShopGroupId
 {
     /**
-     * @param SetFreeShippingToCartCommand $command
+     * @var int
      */
-    public function handle(SetFreeShippingToCartCommand $command);
+    private $shopGroupId;
+
+    /**
+     * @param int $shopGroupId
+     *
+     * @throws ShopException
+     */
+    public function __construct(int $shopGroupId)
+    {
+        $this->assertIsGreaterThanZero($shopGroupId);
+
+        $this->shopGroupId = $shopGroupId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue(): int
+    {
+        return $this->shopGroupId;
+    }
+
+    /**
+     * @param int $shopGroupId
+     *
+     * @throws ShopException
+     */
+    private function assertIsGreaterThanZero(int $shopGroupId): void
+    {
+        if (0 >= $shopGroupId) {
+            throw new ShopException(
+                sprintf(
+                    'Shop id %s is invalid. Shop id must be number that is greater than zero.',
+                    var_export($shopGroupId, true)
+                )
+            );
+        }
+    }
 }

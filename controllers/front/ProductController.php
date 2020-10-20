@@ -52,6 +52,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     protected $quantity_discounts;
     protected $adminNotifications = [];
 
+    /**
+     * @var bool
+     */
+    protected $isQuickView = false;
+
     public function canonicalRedirection($canonical_url = '')
     {
         if (Validate::isLoadedObject($this->product)) {
@@ -404,6 +409,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $productForTemplate = $this->getTemplateVarProduct();
         ob_end_clean();
         header('Content-Type: application/json');
+
+        $this->setQuickViewMode();
+
         $this->ajaxRender(Tools::jsonEncode([
             'quickview_html' => $this->render(
                 'catalog/_partials/quickview',
@@ -420,6 +428,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product = $this->getTemplateVarProduct();
         $minimalProductQuantity = $this->getProductMinimalQuantity($product);
         $isPreview = ('1' === Tools::getValue('preview'));
+        $isQuickView = ('1' === Tools::getValue('quickview'));
+
+        if ($isQuickView) {
+            $this->setQuickViewMode();
+        }
 
         ob_end_clean();
         header('Content-Type: application/json');
@@ -457,6 +470,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'id_product_attribute' => $product['id_product_attribute'],
             // We use the meta_title key because product_title is used for the title of the page
             'product_title' => $product['meta_title'],
+            'is_quick_view' => $isQuickView,
         ]));
     }
 
@@ -1334,5 +1348,25 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
 
         return false;
+    }
+
+    /**
+     * Return information whether we are or not in quick view mode.
+     *
+     * @return bool
+     */
+    public function isQuickView(): bool
+    {
+        return $this->isQuickView;
+    }
+
+    /**
+     * Set quick view mode.
+     *
+     * @param bool $enabled
+     */
+    public function setQuickViewMode(bool $enabled = true)
+    {
+        $this->isQuickView = $enabled;
     }
 }

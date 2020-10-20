@@ -73,7 +73,7 @@ export default class OrderProductAutocomplete {
       this.activeSearchRequest.abort();
     }
 
-    this.activeSearchRequest = $.get(this.router.generate('admin_products_search', params));
+    this.activeSearchRequest = $.get(this.router.generate('admin_orders_products_search', params));
     this.activeSearchRequest
       .then((response) => this.updateResults(response))
       .always(() => {

@@ -27,10 +27,12 @@
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Carrier;
+use Cart;
 use Customer;
 use Hook;
 use OrderCarrier;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\UpdateOrderShippingDetailsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -42,6 +44,19 @@ use Validate;
  */
 final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler implements UpdateOrderShippingDetailsHandlerInterface
 {
+    /**
+     * @var OrderAmountUpdater
+     */
+    private $orderAmountUpdater;
+
+    /**
+     * @param OrderAmountUpdater $orderAmountUpdater
+     */
+    public function __construct(OrderAmountUpdater $orderAmountUpdater)
+    {
+        $this->orderAmountUpdater = $orderAmountUpdater;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -65,10 +80,17 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
         //update carrier - ONLY if changed - then refresh shipping cost
         $oldCarrierId = (int) $orderCarrier->id_carrier;
         if ($oldCarrierId !== $carrierId) {
-            $order->id_carrier = (int) $carrierId;
-            $orderCarrier->id_carrier = (int) $carrierId;
+            $cart = Cart::getCartByOrderId($order->id);
+            $cart->setDeliveryOption([
+                (int) $cart->id_address_delivery => $this->formatLegacyDeliveryOptionFromCarrierId($carrierId),
+            ]);
+            $cart->save();
+
+            $orderCarrier->id_carrier = $carrierId;
             $orderCarrier->update();
-            $order->refreshShippingCost();
+
+            $order->id_carrier = $carrierId;
+            $this->orderAmountUpdater->update($order, $cart);
         }
 
         //load fresh order carrier because updated just before

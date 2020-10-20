@@ -24,7 +24,7 @@
  *}
 {block name='product_miniature_item'}
 <div itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-  <meta itemprop="position" content="{$position}" />
+  {if isset($position)}<meta itemprop="position" content="{$position}" />{/if}
   <article class="product-miniature js-product-miniature" data-id-product="{$product.id_product}" data-id-product-attribute="{$product.id_product_attribute}" itemprop="item" itemscope itemtype="http://schema.org/Product">
     <div class="thumbnail-container">
       {block name='product_thumbnail'}

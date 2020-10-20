@@ -7,6 +7,10 @@ class Features extends BOBasePage {
 
     this.pageTitle = 'Features • ';
 
+    // Help card selectors
+    this.helpCardLink = '#toolbar-nav a.btn-help';
+    this.helpContainerBlock = '#help-container';
+
     // Form selectors
     this.gridForm = '#form-feature';
     this.gridTableHeaderTitle = `${this.gridForm} .panel-heading`;
@@ -126,6 +130,41 @@ class Features extends BOBasePage {
    */
   async viewFeature(page, row) {
     await this.clickAndWaitForNavigation(page, this.tableColumnActionsViewLink(row));
+  }
+
+  /* Helper card methods */
+  /**
+   * @override
+   * Open help side bar
+   * @param page
+   * @returns {Promise<boolean>}
+   */
+  async openHelpSideBar(page) {
+    await page.click(this.helpCardLink);
+
+    return this.elementVisible(page, this.helpContainerBlock, 2000);
+  }
+
+  /**
+   * @override
+   * Close help side bar
+   * @param page
+   * @returns {Promise<boolean>}
+   */
+  async closeHelpSideBar(page) {
+    await page.click(this.helpCardLink);
+
+    return this.elementNotVisible(page, this.helpContainerBlock, 2000);
+  }
+
+  /**
+   * @override
+   * Get help card URL
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async getHelpDocumentURL(page) {
+    return this.getAttributeContent(page, this.helpCardLink, 'href');
   }
 }
 

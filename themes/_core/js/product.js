@@ -169,6 +169,7 @@ function updateProduct(event, eventType, updateUrl) {
       url: updateUrl + (updateUrl.indexOf('?') === -1 ? '?' : '&') + formSerialized + preview,
       method: 'POST',
       data: {
+        quickview: $('.modal.quickview.in').length,
         ajax: 1,
         action: 'refresh',
         quantity_wanted:

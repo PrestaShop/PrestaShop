@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
-use Cart;
 use Configuration;
 use Exception;
 use Hook;
@@ -47,7 +46,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockExcepti
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use Product;
 use StockAvailable;
-use Tools;
 use Validate;
 
 /**
@@ -78,8 +76,6 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
     {
         try {
             $order = $this->getOrder($command->getOrderId());
-            $cart = Cart::getCartByOrderId($order->id);
-            $computingPrecision = $this->getPrecisionFromCart($cart);
 
             $orderDetail = new OrderDetail($command->getOrderDetailId());
             $orderInvoice = null;
@@ -91,26 +87,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             $this->assertProductCanBeUpdated($command, $orderDetail, $order, $orderInvoice);
             $this->assertProductNotDuplicate($order, $orderDetail, $orderInvoice);
 
-            // @todo: use https://github.com/PrestaShop/decimal for price computations
-            // Update OrderDetail prices
-            $productQuantity = $command->getQuantity();
-            $unitProductPriceTaxIncl = (float) $command->getPriceTaxIncluded()->round($computingPrecision);
-            $unitProductPriceTaxExcl = (float) $command->getPriceTaxExcluded()->round($computingPrecision);
-
-            $orderDetail->unit_price_tax_incl = $unitProductPriceTaxIncl;
-            $orderDetail->unit_price_tax_excl = $unitProductPriceTaxExcl;
-            $orderDetail->total_price_tax_incl = Tools::ps_round($unitProductPriceTaxIncl * $productQuantity, $computingPrecision);
-            $orderDetail->total_price_tax_excl = Tools::ps_round($unitProductPriceTaxExcl * $productQuantity, $computingPrecision);
-            if (null !== $orderInvoice) {
-                $orderDetail->id_order_invoice = $orderInvoice->id;
-            }
-            if (!$orderDetail->save()) {
-                throw new OrderException('An error occurred while editing the product line.');
-            }
-
-            if (!($cart instanceof Cart)) {
-                throw new OrderException('Cart linked to the order cannot be found.');
-            }
+            // Update specific price if needed
             $product = $this->getProduct(new ProductId((int) $orderDetail->product_id), (int) $order->id_lang);
             $combination = $this->getCombination((int) $orderDetail->product_attribute_id);
 
@@ -122,15 +99,8 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
                 $combination
             );
 
-            // update order details
-            $this->updateOrderDetailsWithSameProduct(
-                $order,
-                $orderDetail,
-                $computingPrecision
-            );
-
-            // Update quantity and amounts
-            $order = $this->orderProductQuantityUpdater->update($order, $orderDetail, $productQuantity, $orderInvoice);
+            // Update invoice, quantity and amounts
+            $order = $this->orderProductQuantityUpdater->update($order, $orderDetail, $command->getQuantity(), $orderInvoice);
 
             Hook::exec('actionOrderEdited', ['order' => $order]);
         } catch (Exception $e) {
