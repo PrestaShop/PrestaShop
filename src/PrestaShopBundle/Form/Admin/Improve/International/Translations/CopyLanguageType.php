@@ -66,7 +66,7 @@ class CopyLanguageType extends TranslatorAwareType
         $builder
             ->add('from_language', ChoiceType::class, [
                 'label' => $this->trans(
-                    'From (Language and theme)',
+                    'From',
                     'Admin.Global'
                 ),
                 'help' => $this->trans(
@@ -79,7 +79,7 @@ class CopyLanguageType extends TranslatorAwareType
             ->add('from_theme', ChoiceType::class, [
                 'label' => false,
                 'help' => $this->trans(
-                    'Theme from which translations will be copied',
+                    'Theme from which translations will be copied.',
                     'Admin.International.Notification'
                 ),
                 'choices' => $this->themeChoices,
@@ -96,7 +96,7 @@ class CopyLanguageType extends TranslatorAwareType
             ->add('to_theme', ChoiceType::class, [
                 'label' => false,
                 'help' => $this->trans(
-                    'Theme to which translations will be copied',
+                    'Theme to which translations will be copied.',
                     'Admin.International.Notification'
                 ),
                 'choices' => $this->themeChoices,
