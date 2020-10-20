@@ -33,12 +33,10 @@ use Hook;
 use Image;
 use PrestaShop\PrestaShop\Adapter\Image\Exception\CannotUnlinkImageException;
 use PrestaShop\PrestaShop\Adapter\Product\ProductImagePathFactory;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\ProductImageUploaderInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 
-final class ProductImageUploader extends AbstractImageUploader implements ProductImageUploaderInterface
+//@todo: do we really need an interface? depends if we use it in controller or in command handler
+class ProductImageUploader extends AbstractImageUploader
 {
     /**
      * @var UploadSizeConfigurationInterface
@@ -51,16 +49,6 @@ final class ProductImageUploader extends AbstractImageUploader implements Produc
     private $productImagePathFactory;
 
     /**
-     * @var ProductImageRepository
-     */
-    private $productImageRepository;
-
-    /**
-     * @var array
-     */
-    private $contextShopIdsList;
-
-    /**
      * @var int
      */
     private $contextShopId;
@@ -68,40 +56,31 @@ final class ProductImageUploader extends AbstractImageUploader implements Produc
     /**
      * @param UploadSizeConfigurationInterface $uploadSizeConfiguration
      * @param ProductImagePathFactory $productImagePathFactory
-     * @param ProductImageRepository $productImageRepository
-     * @param array $contextShopIdsList
      * @param int $contextShopId
      */
     public function __construct(
         UploadSizeConfigurationInterface $uploadSizeConfiguration,
         ProductImagePathFactory $productImagePathFactory,
-        ProductImageRepository $productImageRepository,
-        //@todo; how does context have shopIds & singe shopId ? Maybe we can clarify & harmonize it in MultistoreContextChecker?
-        array $contextShopIdsList,
         int $contextShopId
     ) {
         $this->uploadSizeConfiguration = $uploadSizeConfiguration;
         $this->productImagePathFactory = $productImagePathFactory;
-        $this->productImageRepository = $productImageRepository;
-        $this->contextShopIdsList = $contextShopIdsList;
         $this->contextShopId = $contextShopId;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function upload(ImageId $imageId, string $filePath): void
+    public function upload(Image $image, string $filePath): void
     {
-        $image = $this->productImageRepository->get($imageId);
         $this->productImagePathFactory->createDestinationDirectory($image);
 
         //@todo: this will unlink the image. Can we trust that the $filePath is in temp?
         $this->uploadFromTemp($filePath, $this->productImagePathFactory->getBasePath($image, true));
         $this->generateDifferentSizeImages($this->productImagePathFactory->getBasePath($image, false), 'products');
 
-        Hook::exec('actionWatermark', ['id_image' => $image->id, 'id_product' => $image->id_product]);
-        //@Todo: double-check multishop
-        $image->associateTo($this->contextShopIdsList);
+        Hook::exec('actionWatermark', ['id_image' => (int) $image->id, 'id_product' => (int) $image->id_product]);
+        //@todo: moved multishop association from here to Repository when Image objModel is created
         $this->deleteOldGeneratedImages($image);
     }
 

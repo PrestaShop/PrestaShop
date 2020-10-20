@@ -32,6 +32,7 @@ use Image;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
@@ -39,6 +40,35 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
  */
 class ProductImageRepository extends AbstractObjectModelRepository
 {
+    /**
+     * @param ProductId $productId
+     * @param int[] $shopIds
+     *
+     * @return Image
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    public function create(ProductId $productId, array $shopIds): Image
+    {
+        $productIdValue = $productId->getValue();
+        $image = new \Image();
+        $image->id_product = $productIdValue;
+        $image->position = Image::getHighestPosition($productIdValue) + 1;
+
+        if (!Image::getCover($productIdValue)) {
+            $image->cover = 1;
+        } else {
+            $image->cover = 0;
+        }
+
+        //@todo: wrap in try catch
+        $image->add();
+        $image->associateTo($shopIds);
+
+        return $image;
+    }
+
     /**
      * @param ImageId $imageId
      *
