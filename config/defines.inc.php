@@ -135,8 +135,10 @@ define('_PS_TAASC_PATH_', _PS_TOOL_DIR_.'taasc/');
 define('_PS_TCPDF_PATH_', _PS_TOOL_DIR_.'tcpdf/');
 
 if (!defined('_PS_IMG_DIR_')) {
-    define('_PS_IMG_DIR_', _PS_ROOT_DIR_.'/img/');
+    $dir = (defined('_PS_IN_TEST_') && _PS_IN_TEST_) ? '/tests/Resources/img/' : '/img/';
+    define('_PS_IMG_DIR_', _PS_ROOT_DIR_.$dir);
 }
+
 if (!defined('_PS_HOST_MODE_')) {
     define('_PS_CORE_IMG_DIR_', _PS_CORE_DIR_.'/img/');
 } else {
