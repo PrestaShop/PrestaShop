@@ -9,21 +9,22 @@ class Statuses extends BOBasePage {
 
     // Header selectors
     this.newOrderStatusLink = '#page-header-desc-order_return_state-new_order_state';
+    this.newOrderReturnStatusLink = '#page-header-desc-order_return_state-new_order_return_state';
 
     // Selectors
     // Form selectors
-    this.gridForm = '#form-order_state';
-    this.gridTableHeaderTitle = `${this.gridForm} .panel-heading`;
-    this.gridTableNumberOfTitlesSpan = `${this.gridTableHeaderTitle} span.badge`;
+    this.gridForm = tableName => `#form-${tableName}_state`;
+    this.gridTableHeaderTitle = tableName => `${this.gridForm(tableName)} .panel-heading`;
+    this.gridTableNumberOfTitlesSpan = tableName => `${this.gridTableHeaderTitle(tableName)} span.badge`;
 
     // Table selectors
-    this.gridTable = '#table-order_state';
+    this.gridTable = tableName => `#table-${tableName}_state`;
 
     // Filter selectors
-    this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = filterBy => `${this.filterRow} [name='order_stateFilter_${filterBy}']`;
-    this.filterSearchButton = '#submitFilterButtonorder_state';
-    this.filterResetButton = 'button[name=\'submitResetorder_state\']';
+    this.filterRow = tableName => `${this.gridTable(tableName)} tr.filter`;
+    this.filterColumn = (tableName, filterBy) => `${this.filterRow(tableName)} [name='order_stateFilter_${filterBy}']`;
+    this.filterSearchButton = tableName => `#submitFilterButton${tableName}_state`;
+    this.filterResetButton = tableName => `button[name='submitReset${tableName}_state']`;
 
     // Table body selectors
     this.tableBody = `${this.gridTable} tbody`;
@@ -65,6 +66,8 @@ class Statuses extends BOBasePage {
     this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
   }
 
+  /* Statuses methods */
+
   /* Header methods */
 
   /**
@@ -76,38 +79,50 @@ class Statuses extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.newOrderStatusLink);
   }
 
+  /**
+   * Go to new orders return status page
+   * @param page
+   * @return {Promise<void>}
+   */
+  async goToNewOrderReturnStatusPage(page) {
+    await this.clickAndWaitForNavigation(page, this.newOrderReturnStatusLink);
+  }
+
   /* Filter methods */
 
   /**
    * Get Number of order statuses
    * @param page
+   * @param tableName
    * @return {Promise<number>}
    */
-  getNumberOfElementInGrid(page) {
-    return this.getNumberFromText(page, this.gridTableNumberOfTitlesSpan);
+  getNumberOfElementInGrid(page, tableName = 'order') {
+    return this.getNumberFromText(page, this.gridTableNumberOfTitlesSpan(tableName));
   }
 
   /**
    * Reset all filters
    * @param page
+   * @param tableName
    * @return {Promise<void>}
    */
-  async resetFilter(page) {
-    if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
-      await this.clickAndWaitForNavigation(page, this.filterResetButton);
+  async resetFilter(page, tableName = 'order') {
+    if (!(await this.elementNotVisible(page, this.filterResetButton(tableName), 2000))) {
+      await this.clickAndWaitForNavigation(page, this.filterResetButton(tableName));
     }
-    await this.waitForVisibleSelector(page, this.filterSearchButton, 2000);
+    await this.waitForVisibleSelector(page, this.filterSearchButton(tableName), 2000);
   }
 
   /**
    * Reset and get number of lines
    * @param page
+   * @param tableName
    * @return {Promise<number>}
    */
-  async resetAndGetNumberOfLines(page) {
-    await this.resetFilter(page);
+  async resetAndGetNumberOfLines(page, tableName = 'order') {
+    await this.resetFilter(page, tableName);
 
-    return this.getNumberOfElementInGrid(page);
+    return this.getNumberOfElementInGrid(page, tableName);
   }
 
   /**
@@ -277,7 +292,6 @@ class Statuses extends BOBasePage {
       page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
     ]);
   }
-
 
   /**
    * Delete order statuses by bulk action
