@@ -112,9 +112,11 @@ final class ProductImageUploader extends AbstractImageUploader implements Produc
      */
     private function deleteOldGeneratedImages(Image $image): void
     {
+        $productId = (int) $image->id_product;
+
         $oldGeneratedImages = [
-            _PS_TMP_IMG_DIR_ . 'product_' . (int) $image->id . '.jpg',
-            _PS_TMP_IMG_DIR_ . 'product_mini_' . (int) $image->id_product . '_' . $this->contextShopId . '.jpg',
+            $this->productImagePathFactory->getCachedCover($productId, $this->contextShopId),
+            $this->productImagePathFactory->getCachedThumbnail($productId),
         ];
 
         foreach ($oldGeneratedImages as $oldImage) {
@@ -122,6 +124,7 @@ final class ProductImageUploader extends AbstractImageUploader implements Produc
                 try {
                     unlink($oldImage);
                 } catch (ErrorException $e) {
+                    //@todo: do we really need to fail on cached images deletion? It was suppressed in legacy
                     throw new CannotUnlinkImageException(
                         sprintf(
                             'Failed to remove old generated image "%s"',
