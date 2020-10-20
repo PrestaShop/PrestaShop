@@ -128,6 +128,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public static function clearImgDir(): void
     {
+        //@todo: its not working because img/* directories permissions. Those are created with Image->createImgFolder()
         $filesToSkip = [
             _PS_IMG_DIR_ . 'index.php',
             _PS_IMG_DIR_ . '.htaccess',
