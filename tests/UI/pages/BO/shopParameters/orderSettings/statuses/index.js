@@ -186,15 +186,16 @@ class Statuses extends BOBasePage {
    * Delete order status from row
    * @param page
    * @param row
+   * @param tableName
    * @return {Promise<string>}
    */
-  async deleteOrderStatus(page, row) {
+  async deleteOrderStatus(page, row, tableName = 'order') {
     await Promise.all([
-      page.click(this.tableColumnActionsToggleButton(row)),
-      this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(row)),
+      page.click(this.tableColumnActionsToggleButton(tableName, row)),
+      this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(tableName, row)),
     ]);
 
-    await page.click(this.tableColumnActionsDeleteLink(row));
+    await page.click(this.tableColumnActionsDeleteLink(tableName, row));
 
     // Confirm delete action
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
