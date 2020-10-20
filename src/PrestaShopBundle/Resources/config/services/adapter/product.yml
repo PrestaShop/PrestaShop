@@ -370,7 +370,7 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts
 
-    prestashop.adapter.product.query_handler.remove_all_related_products_handler:
+    prestashop.adapter.product.command_handler.remove_all_related_products_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllRelatedProductsHandler
         arguments:
             - '@prestashop.adapter.product.update.related_products_updater'
@@ -390,3 +390,9 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductCategoryUpdater
         arguments:
             - '@prestashop.adapter.product.repository.product_repository'
+
+    prestashop.adapter.product.command_handler.duplicate_product_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DuplicateProductHandler
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand
