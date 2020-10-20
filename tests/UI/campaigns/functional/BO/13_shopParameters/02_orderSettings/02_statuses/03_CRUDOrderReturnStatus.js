@@ -2,7 +2,6 @@ require('module-alias/register');
 
 // Helpers to open and close browser
 const helper = require('@utils/helpers');
-const files = require('@utils/files');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
@@ -12,8 +11,6 @@ const dashboardPage = require('@pages/BO/dashboard');
 const orderSettingsPage = require('@pages/BO/shopParameters/orderSettings');
 const statusesPage = require('@pages/BO/shopParameters/orderSettings/statuses');
 const addOrderReturnStatusPage = require('@pages/BO/shopParameters/orderSettings/statuses/returnStatus/add');
-const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view');
 
 // Import data
 const OrderReturnStatusFaker = require('@data/faker/orderStatus');
@@ -36,11 +33,10 @@ const editOrderStatusData = new OrderReturnStatusFaker({name: `edit_${createOrde
 
 /*
 Create new order return status
-View new return status in order page
 Update order return status
 Delete order return status
  */
-describe('Create, read, update and delete order return status in BO', async () => {
+describe('Create, update and delete order return status in BO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -111,39 +107,7 @@ describe('Create, read, update and delete order return status in BO', async () =
     });
   });
 
-  // 2 - Check the new status in order page
-  /*describe('Check the existence of the new status in the order page', async () => {
-    it('should go to the orders page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
-
-      await statusesPage.goToSubMenu(
-        page,
-        statusesPage.ordersParentLink,
-        statusesPage.ordersLink,
-      );
-
-      const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
-    });
-
-    it('should go to the first order page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrderPage', baseContext);
-
-      await ordersPage.goToOrder(page, 1);
-
-      const pageTitle = await viewOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
-    });
-
-    it(`should check if the order status '${createOrderReturnStatusData.name}' is visible`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkDoesStatusVisible', baseContext);
-
-      const isStatusExist = await viewOrderPage.doesStatusExist(page, createOrderReturnStatusData.name);
-      await expect(isStatusExist, 'Status does not exist').to.be.true;
-    });
-  });*/
-
-  // 3 - Update order return status
+  // 2 - Update order return status
   describe('Update order return status created', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
@@ -182,7 +146,7 @@ describe('Create, read, update and delete order return status in BO', async () =
     });
   });
 
-  // 4 - Delete order return status
+  // 3 - Delete order return status
   describe('Delete order return status', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
