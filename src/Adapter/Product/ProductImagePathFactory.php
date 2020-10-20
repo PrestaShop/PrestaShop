@@ -74,4 +74,15 @@ class ProductImagePathFactory
             $image->id_product
         ));
     }
+
+    //@todo: make static?
+    public function getCachedCover(int $productId, int $shopId): string
+    {
+        return sprintf('%sproduct_mini_%s_%s.jpg', _PS_TMP_IMG_DIR_, $productId, $shopId);
+    }
+
+    public function getCachedThumbnail(int $productId): string
+    {
+        return sprintf('%sproduct_%s.jpg', _PS_TMP_IMG_DIR_, $productId);
+    }
 }
