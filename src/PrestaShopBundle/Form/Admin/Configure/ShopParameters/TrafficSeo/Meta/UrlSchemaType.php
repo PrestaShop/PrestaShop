@@ -152,7 +152,7 @@ class UrlSchemaType extends TranslatorAwareType
                 'Keywords: %keywords%',
                 'Admin.Shopparameters.Feature',
                 [
-                    '%keywords%' => implode(', ', $formattedKeyWords)
+                    '%keywords%' => implode(', ', $formattedKeyWords),
                 ]
         );
     }
