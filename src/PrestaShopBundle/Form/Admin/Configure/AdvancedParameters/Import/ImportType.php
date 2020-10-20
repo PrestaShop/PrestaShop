@@ -73,7 +73,7 @@ class ImportType extends TranslatorAwareType
             ->add('iso_lang', ChoiceType::class, [
                 'choices' => $this->getLocaleChoices(),
                 'label' => $this->trans('Language of the file', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('The locale must be installed ', 'Admin.Advparameters.Help'),
+                'help' => $this->trans('The locale must be installed ', 'Admin.Advparameters.Notification'),
             ])
             ->add('separator', TextType::class, [
                 'label' => $this->trans('Field separator', 'Admin.Advparameters.Feature'),
