@@ -81,7 +81,7 @@ class ProductImageUploader extends AbstractImageUploader
 
         Hook::exec('actionWatermark', ['id_image' => (int) $image->id, 'id_product' => (int) $image->id_product]);
         //@todo: moved multishop association from here to Repository when Image objModel is created
-        $this->deleteOldGeneratedImages($image);
+        $this->deleteCachedImages($image);
     }
 
     /**
@@ -89,7 +89,7 @@ class ProductImageUploader extends AbstractImageUploader
      *
      * @throws CannotUnlinkImageException
      */
-    private function deleteOldGeneratedImages(Image $image): void
+    private function deleteCachedImages(Image $image): void
     {
         $productId = (int) $image->id_product;
 
