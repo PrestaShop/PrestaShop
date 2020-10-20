@@ -115,7 +115,7 @@ class SetUpUrlType extends TranslatorAwareType
             ->add('accented_url', SwitchType::class, [
                 'label' => $this->trans('Accented URL', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans(
-                    'Enable this option if you want to allow accented characters in your friendly URLs. You should only activate this option if you are using non-latin characters ; for all the latin charsets, your SEO will be better without this option.',
+                    'Enable this option if you want to allow accented characters in your friendly URLs. You should only activate this option if you are using non-Latin characters; for all the Latin charsets, your SEO will be better without this option.',
                     'Admin.Shopparameters.Help'
                 ),
             ])
