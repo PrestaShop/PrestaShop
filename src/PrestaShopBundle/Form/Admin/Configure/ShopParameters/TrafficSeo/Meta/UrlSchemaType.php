@@ -148,12 +148,12 @@ class UrlSchemaType extends TranslatorAwareType
             }
         }
 
-        return sprintf(
-            $this->trans(
-                'Keywords: %s',
-                'Admin.Shopparameters.Feature'
-            ),
-            implode(', ', $formattedKeyWords)
+        return $this->trans(
+                'Keywords: %keywords%',
+                'Admin.Shopparameters.Feature',
+                [
+                    '%keywords%' => implode(', ', $formattedKeyWords)
+                ]
         );
     }
 }
