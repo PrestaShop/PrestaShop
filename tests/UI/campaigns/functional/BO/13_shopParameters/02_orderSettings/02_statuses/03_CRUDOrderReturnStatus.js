@@ -77,7 +77,7 @@ describe('Create, read, update and delete order return status in BO', async () =
     await expect(pageTitle).to.contains(statusesPage.pageTitle);
   });
 
-  it('should reset all filters and get number of order statuses', async function () {
+  it('should reset all filters and get number of order return statuses', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfOrderReturnStatuses = await statusesPage.resetAndGetNumberOfLines(page, tableName);
@@ -85,8 +85,8 @@ describe('Create, read, update and delete order return status in BO', async () =
   });
 
   // 1 - Create order return status
-  describe('Create order status', async () => {
-    it('should go to add new order status page', async function () {
+  describe('Create order return status', async () => {
+    it('should go to add new order return status page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddOrderReturnStatusPage', baseContext);
 
       await statusesPage.goToNewOrderReturnStatusPage(page);
@@ -95,7 +95,7 @@ describe('Create, read, update and delete order return status in BO', async () =
       await expect(pageTitle).to.contains(addOrderReturnStatusPage.pageTitleCreate);
     });
 
-    it('should create order status and check result', async function () {
+    it('should create order return status and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createOrderStatus', baseContext);
 
       await addOrderReturnStatusPage.setOrderReturnStatus(page, createOrderReturnStatusData);
@@ -143,8 +143,8 @@ describe('Create, read, update and delete order return status in BO', async () =
     });
   });*/
 
-  // 3 - Update order status
-  describe('Update order status created', async () => {
+  // 3 - Update order return status
+  describe('Update order return status created', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
 
@@ -163,7 +163,7 @@ describe('Create, read, update and delete order return status in BO', async () =
     });
 
     it('should go to edit order status page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToEditOrderStatusPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEditOrderReturnStatusPage', baseContext);
 
       await statusesPage.gotoEditPage(page, 1, tableName);
 
@@ -171,8 +171,8 @@ describe('Create, read, update and delete order return status in BO', async () =
       await expect(pageTitle).to.contains(addOrderReturnStatusPage.pageTitleEdit);
     });
 
-    it('should update order status', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
+    it('should update order return status', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updateOrderReturnStatus', baseContext);
 
       const textResult = await addOrderReturnStatusPage.setOrderReturnStatus(page, editOrderStatusData);
       await expect(textResult).to.contains(statusesPage.successfulUpdateMessage);
@@ -182,7 +182,7 @@ describe('Create, read, update and delete order return status in BO', async () =
     });
   });
 
-  // 4 - Delete order status
+  // 4 - Delete order return status
   /*describe('Delete order status', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
