@@ -183,31 +183,32 @@ describe('Create, read, update and delete order return status in BO', async () =
   });
 
   // 4 - Delete order return status
-  /*describe('Delete order status', async () => {
+  describe('Delete order return status', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
-      await statusesPage.resetFilter(page);
+      await statusesPage.resetFilter(page, tableName);
 
       await statusesPage.filterTable(
         page,
         'input',
         'name',
         editOrderStatusData.name,
+        tableName,
       );
 
-      const textEmail = await statusesPage.getTextColumn(page, 1, 'name', 3);
+      const textEmail = await statusesPage.getTextColumn(page, 1, 'name', 3, tableName);
       await expect(textEmail).to.contains(editOrderStatusData.name);
     });
 
-    it('should delete order status', async function () {
+    it('should delete order return status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteOrderStatus', baseContext);
 
-      const textResult = await statusesPage.deleteOrderStatus(page, 1);
+      const textResult = await statusesPage.deleteOrderStatus(page, 1, tableName);
       await expect(textResult).to.contains(statusesPage.successfulDeleteMessage);
 
-      const numberOfOrderReturnStatusesAfterDelete = await statusesPage.resetAndGetNumberOfLines(page);
+      const numberOfOrderReturnStatusesAfterDelete = await statusesPage.resetAndGetNumberOfLines(page, tableName);
       await expect(numberOfOrderReturnStatusesAfterDelete).to.be.equal(numberOfOrderReturnStatuses);
     });
-  });*/
+  });
 });
