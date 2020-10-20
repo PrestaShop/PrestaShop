@@ -51,35 +51,19 @@ class AddProductImageCommand
     private $pathName;
 
     /**
-     * @var int
-     */
-    private $fileSize;
-
-    /**
-     * @var string
-     */
-    private $mimeType;
-
-    /**
-     * @param ProductId $productId
+     * @param int $productId
      * @param string $originalName
      * @param string $pathName
-     * @param int $fileSize
-     * @param string $mimeType
      */
     public function __construct(
         int $productId,
         string $originalName,
-        string $pathName,
-        int $fileSize,
-        string $mimeType
+        string $pathName
     ) {
         $this->productId = new ProductId($productId);
         //@todo: assert file constraints or leave it to uploader?
         $this->originalName = $originalName;
         $this->pathName = $pathName;
-        $this->fileSize = $fileSize;
-        $this->mimeType = $mimeType;
     }
 
     /**
