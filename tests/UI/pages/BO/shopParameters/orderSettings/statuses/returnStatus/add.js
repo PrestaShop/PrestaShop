@@ -11,7 +11,7 @@ class AddOrderReturnStatus extends BOBasePage {
     // Form selectors
     this.nameInput = '#name_1';
     this.colorInput = '#color_0';
-    this.saveButton = '#submitAddorder_return_state';
+    this.saveButton = '#order_return_state_form_submit_btn';
   }
 
   /* Methods */
