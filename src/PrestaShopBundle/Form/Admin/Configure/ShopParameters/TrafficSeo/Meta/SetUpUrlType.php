@@ -113,7 +113,7 @@ class SetUpUrlType extends TranslatorAwareType
                 'help' => $friendlyUrlHelp,
             ])
             ->add('accented_url', SwitchType::class, [
-                'label' => $this->trans('Accented URL', 'Admin.Global'),
+                'label' => $this->trans('Accented URL', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans(
                     'Enable this option if you want to allow accented characters in your friendly URLs. You should only activate this option if you are using non-latin characters ; for all the latin charsets, your SEO will be better without this option.',
                     'Admin.Shopparameters.Help'
@@ -125,21 +125,21 @@ class SetUpUrlType extends TranslatorAwareType
                 [
                     'choices' => $this->canonicalUrlChoices,
                     'translation_domain' => false,
-                    'label' => $this->trans('Redirect to the canonical URL', 'Admin.Global'),
+                    'label' => $this->trans('Redirect to the canonical URL', 'Admin.Shopparameters.Feature'),
                 ]
             );
 
         if (!$this->isHostMode && $this->isHtaccessFileWritable && $this->doesMainShopUrlExist) {
             $builder
                 ->add('disable_apache_multiview', SwitchType::class, [
-                    'label' => $this->trans('Disable Apache\'s MultiViews option', 'Admin.Global'),
+                    'label' => $this->trans('Disable Apache\'s MultiViews option', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(
                         'Enable this option only if you have problems with URL rewriting.',
                         'Admin.Shopparameters.Help'
                     ),
                 ])
                 ->add('disable_apache_mod_security', SwitchType::class, [
-                    'label' => $this->trans('Disable Apache\'s mod_security module', 'Admin.Global'),
+                    'label' => $this->trans('Disable Apache\'s mod_security module', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(
                         'Some of PrestaShop\'s features might not work correctly with a specific configuration of Apache\'s mod_security module. We recommend to turn it off.',
                         'Admin.Shopparameters.Help'
