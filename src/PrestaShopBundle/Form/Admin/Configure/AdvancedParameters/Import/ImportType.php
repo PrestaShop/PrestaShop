@@ -101,6 +101,7 @@ class ImportType extends TranslatorAwareType
                     'class' => 'js-match-ref-form-group',
                 ],
                 'label' => $this->trans('Use product reference as key', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('If enabled, the product\'s reference number MUST be unique!', 'Admin.Advparameters.Help'),
             ])
             ->add('regenerate', SwitchType::class, [
                 'row_attr' => [
