@@ -184,7 +184,7 @@ default:
               - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
         supplier:
             paths:
-                features: Features/Scenario/Supplier
+                - %paths.base%/Features/Scenario/Supplier
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\SupplierFeatureContext
@@ -192,13 +192,13 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
         attachment:
             paths:
-                features: Features/Scenario/Attachment
+                - %paths.base%/Features/Scenario/Attachment
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\AttachmentFeatureContext
         product:
             paths:
-                features: Features/Scenario/Product
+                - %paths.base%/Features/Scenario/Product
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
