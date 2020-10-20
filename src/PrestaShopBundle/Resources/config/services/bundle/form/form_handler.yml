@@ -335,20 +335,7 @@ services:
               'shop_logos': 'PrestaShopBundle\Form\Admin\Improve\Design\Theme\ShopLogosType'
             - 'ShopLogo'
 
-  # Entity form handler
-    prestashop.admin.request_sql.form_handler:
-        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestFormHandler'
-        arguments:
-            - '@form.factory'
-            - '@prestashop.adapter.sql_manager.request_sql_form_data_validator'
-            - '@prestashop.bundle.form.admin.configure.advanced_parameters.request_sql.form_data_provider'
-
-    prestashop.bundle.form.admin.configure.advanced_parameters.request_sql.form_data_provider:
-        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestFormDataProvider'
-        arguments:
-            - '@prestashop.core.command_bus'
-            - '@prestashop.core.query_bus'
-
+    # Entity form handler
     prestashop.admin.tax_options.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
