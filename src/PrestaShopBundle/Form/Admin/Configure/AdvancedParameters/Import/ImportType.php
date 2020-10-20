@@ -97,7 +97,7 @@ class ImportType extends TranslatorAwareType
                 ),
             ])
             ->add('match_ref', SwitchType::class, [
-                'attr' => [
+                'row_attr' => [
                     'class' => 'js-match-ref-form-group',
                 ],
                 'label' => $this->trans('Use product reference as key', 'Admin.Advparameters.Feature'),
