@@ -15,7 +15,7 @@ const addSearchEnginePage = require('@pages/BO/shopParameters/trafficAndSeo/sear
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_shopParameters_TrafficAndSeo_searchEngines_bulkDelete';
+const baseContext = 'functional_BO_shopParameters_TrafficAndSeo_searchEngines_bulkActions';
 
 let browserContext;
 let page;
