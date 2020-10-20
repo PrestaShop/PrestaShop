@@ -61,6 +61,8 @@ class UpdateProductSeoCommand
      */
     private $redirectOption;
 
+    //@todo; where is $product->indexed prop?
+
     /**
      * @param int $productId
      */
