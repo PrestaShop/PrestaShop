@@ -51,7 +51,7 @@ class ImportType extends TranslatorAwareType
             ->add('csv', HiddenType::class)
             ->add('entity', ChoiceType::class, [
                 'label' => $this->trans('What do you want to import?', 'Admin.Advparameters.Feature'),
-                'attr' => [
+                'row_attr' => [
                     'class' => 'js-entity-select',
                 ],
                 'choices' => [
@@ -84,7 +84,7 @@ class ImportType extends TranslatorAwareType
                 'help' => $this->trans('e.g. ', 'Admin.Advparameters.Help') . ' Blouse; red.jpg, blue.jpg, green.jpg; 129.90',
             ])
             ->add('truncate', SwitchType::class, [
-                'attr' => [
+                'row_attr' => [
                     'class' => 'js-truncate-form-group',
                 ],
                 'label' => $this->trans(
@@ -103,13 +103,13 @@ class ImportType extends TranslatorAwareType
                 'label' => $this->trans('Use product reference as key', 'Admin.Advparameters.Feature'),
             ])
             ->add('regenerate', SwitchType::class, [
-                'attr' => [
+                'row_attr' => [
                     'class' => 'js-regenerate-form-group',
                 ],
                 'label' => $this->trans('Skip thumbnails regeneration', 'Admin.Advparameters.Feature'),
             ])
             ->add('forceIDs', SwitchType::class, [
-                'attr' => [
+                'row_attr' => [
                     'class' => 'js-force-ids-form-group',
                 ],
                 'label' => $this->trans('Force all ID numbers', 'Admin.Advparameters.Feature'),
