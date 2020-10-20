@@ -6,7 +6,7 @@ class AddOrderReturnStatus extends BOBasePage {
     super();
 
     this.pageTitleCreate = 'Statuses > Add new •';
-    this.pageTitleEdit = 'Statuses > Edit:';
+    this.pageTitleEdit = 'Statuses > Edit •';
 
     // Form selectors
     this.nameInput = '#name_1';
@@ -22,7 +22,7 @@ class AddOrderReturnStatus extends BOBasePage {
    * @param orderReturnStatusData
    * @return {Promise<string>}
    */
-  async setOrderStatus(page, orderReturnStatusData) {
+  async setOrderReturnStatus(page, orderReturnStatusData) {
     await this.setValue(page, this.nameInput, orderReturnStatusData.name);
 
     // Set color
