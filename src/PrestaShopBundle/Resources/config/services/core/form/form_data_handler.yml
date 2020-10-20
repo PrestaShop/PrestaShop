@@ -6,6 +6,8 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\SqlRequestFormDataHandler'
     arguments:
       - '@prestashop.core.command_bus'
+      - '@prestashop.adapter.sql_manager.request_sql_form_data_validator'
+      - '@translator'
 
   prestashop.core.form.identifiable_object.data_handler.customer_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CustomerFormDataHandler'
