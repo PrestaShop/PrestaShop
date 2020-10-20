@@ -46,22 +46,38 @@ $(document).ready(() => {
 
     $.post(getCartViewUrl, requestData)
       .then((resp) => {
-        $(prestashop.selectors.cart.detailedTotals).replaceWith(resp.cart_detailed_totals);
-        $(prestashop.selectors.cart.summaryItemsSubtotal).replaceWith(resp.cart_summary_items_subtotal);
-        $(prestashop.selectors.cart.summarySubTotalsContainer).replaceWith(resp.cart_summary_subtotals_container);
-        $(prestashop.selectors.cart.summaryProducts).replaceWith(resp.cart_summary_products);
-        $(prestashop.selectors.cart.summaryTotals).replaceWith(resp.cart_summary_totals);
-        $(prestashop.selectors.cart.detailedActions).replaceWith(resp.cart_detailed_actions);
+        $(prestashop.selectors.cart.detailedTotals).replaceWith(
+          resp.cart_detailed_totals,
+        );
+        $(prestashop.selectors.cart.summaryItemsSubtotal).replaceWith(
+          resp.cart_summary_items_subtotal,
+        );
+        $(prestashop.selectors.cart.summarySubTotalsContainer).replaceWith(
+          resp.cart_summary_subtotals_container,
+        );
+        $(prestashop.selectors.cart.summaryProducts).replaceWith(
+          resp.cart_summary_products,
+        );
+        $(prestashop.selectors.cart.summaryTotals).replaceWith(
+          resp.cart_summary_totals,
+        );
+        $(prestashop.selectors.cart.detailedActions).replaceWith(
+          resp.cart_detailed_actions,
+        );
         $(prestashop.selectors.cart.voucher).replaceWith(resp.cart_voucher);
         $(prestashop.selectors.cart.overview).replaceWith(resp.cart_detailed);
-        $(prestashop.selectors.cart.summaryTop).replaceWith(resp.cart_summary_top);
+        $(prestashop.selectors.cart.summaryTop).replaceWith(
+          resp.cart_summary_top,
+        );
 
         $(prestashop.selectors.cart.productCustomizationId).val(0);
 
-        $(prestashop.selectors.cart.lineProductQuantity).each((index, input) => {
-          const $input = $(input);
-          $input.attr('value', $input.val());
-        });
+        $(prestashop.selectors.cart.lineProductQuantity).each(
+          (index, input) => {
+            const $input = $(input);
+            $input.attr('value', $input.val());
+          },
+        );
 
         if ($(prestashop.selectors.checkout.cartPaymentStepRefresh).length) {
           // we get the refresh flag : on payment step we need to refresh page to be sure
@@ -91,10 +107,10 @@ $(document).ready(() => {
       let validInput = true;
 
       $input.each((index, input) => {
-        const $input = $(input);
-        const minimalValue = parseInt($input.attr('min'), 10);
-        if (minimalValue && $input.val() < minimalValue) {
-          onInvalidQuantity($input);
+        const $currentInput = $(input);
+        const minimalValue = parseInt($currentInput.attr('min'), 10);
+        if (minimalValue && $currentInput.val() < minimalValue) {
+          onInvalidQuantity($currentInput);
           validInput = false;
         }
       });
@@ -108,7 +124,10 @@ $(document).ready(() => {
         .first()
         .find(prestashop.selectors.product.minimalQuantity)
         .addClass('error');
-      $input.parent().find('label').addClass('error');
+      $input
+        .parent()
+        .find('label')
+        .addClass('error');
     };
 
     const $quantityInput = $form.find('input[min]');
@@ -146,16 +165,23 @@ $(document).ready(() => {
     const getCartViewUrl = $addVoucherForm.attr('action');
 
     if ($addVoucherForm.find('[name=action]').length === 0) {
-      $addVoucherForm.append($('<input>', {type: 'hidden', name: 'ajax', value: 1}));
+      $addVoucherForm.append(
+        $('<input>', {type: 'hidden', name: 'ajax', value: 1}),
+      );
     }
     if ($addVoucherForm.find('[name=action]').length === 0) {
-      $addVoucherForm.append($('<input>', {type: 'hidden', name: 'action', value: 'update'}));
+      $addVoucherForm.append(
+        $('<input>', {type: 'hidden', name: 'action', value: 'update'}),
+      );
     }
 
     $.post(getCartViewUrl, $addVoucherForm.serialize(), null, 'json')
       .then((resp) => {
         if (resp.hasError) {
-          $('.js-error').show().find('.js-error-text').text(resp.errors[0]);
+          $('.js-error')
+            .show()
+            .find('.js-error-text')
+            .text(resp.errors[0]);
 
           return;
         }

@@ -55,7 +55,7 @@ export function refreshCheckoutPage() {
   const queryParams = psGetRequestParameter();
   // we get the refresh flag : on payment step we need to refresh page to be sure
   // amount is correctly updated on payemnt modules
-  if (queryParams['updatedTransaction']) {
+  if (queryParams.updatedTransaction) {
     // this parameter is used to display some info message
     // already set : just refresh page
     window.location.reload();
@@ -64,10 +64,10 @@ export function refreshCheckoutPage() {
   }
 
   // not set : add it to the url
-  queryParams['updatedTransaction'] = 1;
+  queryParams.updatedTransaction = 1;
 
   const joined = Object.entries(queryParams)
     .map((v) => v.join('='))
     .join('&');
-  window.location.href = window.location.pathname + '?' + joined;
+  window.location.href = `${window.location.pathname}?${joined}`;
 }
