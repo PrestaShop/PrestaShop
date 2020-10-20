@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Image\Uploader\ProductImageUploader;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AddProductImageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
@@ -38,10 +40,45 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 final class AddProductImageHandler implements AddProductImageHandlerInterface
 {
     /**
+     * @var ProductImageUploader
+     */
+    private $productImageUploader;
+
+    /**
+     * @var ProductImageRepository
+     */
+    private $productImageRepository;
+
+    /**
+     * @var array
+     */
+    private $contextShopIds;
+
+    /**
+     * @param ProductImageUploader $productImageUploader
+     * @param ProductImageRepository $productImageRepository
+     * @param array $contextShopIds
+     */
+    public function __construct(
+        ProductImageUploader $productImageUploader,
+        ProductImageRepository $productImageRepository,
+        array $contextShopIds
+    ) {
+        $this->productImageUploader = $productImageUploader;
+        $this->productImageRepository = $productImageRepository;
+        $this->contextShopIds = $contextShopIds;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(AddProductImageCommand $command): ImageId
     {
-        // TODO: Implement handle() method.
+        $image = $this->productImageRepository->create($command->getProductId(), $this->contextShopIds);
+
+        //@todo: db transaction rollback if upload fails?
+        $this->productImageUploader->upload($image, $command->getPathName());
+
+        return new ImageId((int) $image->id);
     }
 }

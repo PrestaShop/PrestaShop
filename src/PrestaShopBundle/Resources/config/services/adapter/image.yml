@@ -36,6 +36,4 @@ services:
         arguments:
             - '@prestashop.core.configuration.upload_size_configuration'
             - '@prestashop.adapter.product.product_image_path_factory'
-            - '@prestashop.adapter.product.repository.product_image_repository'
-            - "@=service('prestashop.adapter.shop.context').getContextListShopID()"
             - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
