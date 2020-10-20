@@ -98,7 +98,7 @@ describe('Create, read, update and delete order return status in BO', async () =
     it('should create order status and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createOrderStatus', baseContext);
 
-      await addOrderReturnStatusPage.setOrderStatus(page, createOrderReturnStatusData);
+      await addOrderReturnStatusPage.setOrderReturnStatus(page, createOrderReturnStatusData);
 
       /* Successful message is not visible, skipping it */
       /* https://github.com/PrestaShop/PrestaShop/issues/21270 */
@@ -111,8 +111,8 @@ describe('Create, read, update and delete order return status in BO', async () =
     });
   });
 
-  /*// 2 - Check the new status in order page
-  describe('Check the existence of the new status in the order page', async () => {
+  // 2 - Check the new status in order page
+  /*describe('Check the existence of the new status in the order page', async () => {
     it('should go to the orders page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
@@ -141,52 +141,31 @@ describe('Create, read, update and delete order return status in BO', async () =
       const isStatusExist = await viewOrderPage.doesStatusExist(page, createOrderReturnStatusData.name);
       await expect(isStatusExist, 'Status does not exist').to.be.true;
     });
-  });
+  });*/
 
   // 3 - Update order status
   describe('Update order status created', async () => {
-    it('should go to \'Shop Parameters > Order Settings\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrderSettingsPageToUpdate', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.shopParametersParentLink,
-        dashboardPage.orderSettingsLink,
-      );
-
-      const pageTitle = await orderSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
-    });
-
-    it('should go to \'Statuses\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToStatusesPageToUpdate', baseContext);
-
-      await orderSettingsPage.goToStatusesPage(page);
-
-      const pageTitle = await statusesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(statusesPage.pageTitle);
-    });
-
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
 
-      await statusesPage.resetFilter(page);
+      await statusesPage.resetFilter(page, tableName);
 
       await statusesPage.filterTable(
         page,
         'input',
         'name',
         createOrderReturnStatusData.name,
+        tableName,
       );
 
-      const textEmail = await statusesPage.getTextColumn(page, 1, 'name', 3);
+      const textEmail = await statusesPage.getTextColumn(page, 1, 'name', 3, tableName);
       await expect(textEmail).to.contains(createOrderReturnStatusData.name);
     });
 
     it('should go to edit order status page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditOrderStatusPage', baseContext);
 
-      await statusesPage.gotoEditOrderStatusPage(page, 1);
+      await statusesPage.gotoEditPage(page, 1, tableName);
 
       const pageTitle = await addOrderReturnStatusPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addOrderReturnStatusPage.pageTitleEdit);
@@ -195,16 +174,16 @@ describe('Create, read, update and delete order return status in BO', async () =
     it('should update order status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const textResult = await addOrderReturnStatusPage.setOrderStatus(page, editOrderStatusData);
+      const textResult = await addOrderReturnStatusPage.setOrderReturnStatus(page, editOrderStatusData);
       await expect(textResult).to.contains(statusesPage.successfulUpdateMessage);
 
-      const numberOfOrderReturnStatusesAfterUpdate = await statusesPage.resetAndGetNumberOfLines(page);
+      const numberOfOrderReturnStatusesAfterUpdate = await statusesPage.resetAndGetNumberOfLines(page, tableName);
       await expect(numberOfOrderReturnStatusesAfterUpdate).to.be.equal(numberOfOrderReturnStatuses + 1);
     });
   });
 
   // 4 - Delete order status
-  describe('Delete order status', async () => {
+  /*describe('Delete order status', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 

@@ -22,25 +22,25 @@ class Statuses extends BOBasePage {
 
     // Filter selectors
     this.filterRow = tableName => `${this.gridTable(tableName)} tr.filter`;
-    this.filterColumn = (tableName, filterBy) => `${this.filterRow(tableName)} [name='order_stateFilter_${filterBy}']`;
+    this.filterColumn = (tableName, filterBy) => `${this.filterRow(tableName)} [name='${tableName}_stateFilter_${filterBy}']`;
     this.filterSearchButton = tableName => `#submitFilterButton${tableName}_state`;
     this.filterResetButton = tableName => `button[name='submitReset${tableName}_state']`;
 
     // Table body selectors
-    this.tableBody = `${this.gridTable} tbody`;
-    this.tableBodyRows = `${this.tableBody} tr`;
-    this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
-    this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
+    this.tableBody = tableName => `${this.gridTable(tableName)} tbody`;
+    this.tableBodyRows = tableName => `${this.tableBody(tableName)} tr`;
+    this.tableBodyRow = (tableName, row) => `${this.tableBodyRows(tableName)}:nth-child(${row})`;
+    this.tableBodyColumn = (tableName, row) => `${this.tableBodyRow(tableName, row)} td`;
 
     // Columns selectors
-    this.tableColumn = (row, idColumn) => `${this.tableBodyColumn(row)}:nth-child(${idColumn})`;
+    this.tableColumn = (tableName, row, idColumn) => `${this.tableBodyColumn(tableName, row)}:nth-child(${idColumn})`;
 
     // Row actions selectors
-    this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
-    this.tableColumnActionsEditLink = row => `${this.tableColumnActions(row)} a.edit`;
-    this.tableColumnActionsToggleButton = row => `${this.tableColumnActions(row)} button.dropdown-toggle`;
-    this.tableColumnActionsDropdownMenu = row => `${this.tableColumnActions(row)} .dropdown-menu`;
-    this.tableColumnActionsDeleteLink = row => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
+    this.tableColumnActions = (tableName, row) => `${this.tableBodyColumn(tableName, row)} .btn-group-action`;
+    this.tableColumnActionsEditLink = (tableName, row) => `${this.tableColumnActions(tableName, row)} a.edit`;
+    this.tableColumnActionsToggleButton = (tableName, row) => `${this.tableColumnActions(tableName, row)} button.dropdown-toggle`;
+    this.tableColumnActionsDropdownMenu = (tableName, row) => `${this.tableColumnActions(tableName, row)} .dropdown-menu`;
+    this.tableColumnActionsDeleteLink = (tableName, row) => `${this.tableColumnActionsDropdownMenu(tableName, row)} a.delete`;
 
     // Confirmation modal
     this.deleteModalButtonYes = '#popup_ok';
@@ -126,24 +126,25 @@ class Statuses extends BOBasePage {
   }
 
   /**
-   * Filter order statuses
+   * Filter table
    * @param page
    * @param filterType
    * @param filterBy
    * @param value
+   * @param tableName
    * @return {Promise<void>}
    */
-  async filterTable(page, filterType, filterBy, value) {
+  async filterTable(page, filterType, filterBy, value, tableName = 'order') {
     switch (filterType) {
       case 'input':
-        await this.setValue(page, this.filterColumn(filterBy), value.toString());
-        await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+        await this.setValue(page, this.filterColumn(tableName, filterBy), value.toString());
+        await this.clickAndWaitForNavigation(page, this.filterSearchButton(tableName));
         break;
 
       case 'select':
         await Promise.all([
           page.waitForNavigation({waitUntil: 'networkidle'}),
-          this.selectByVisibleText(page, this.filterColumn(filterBy), value ? 'Yes' : 'No'),
+          this.selectByVisibleText(page, this.filterColumn(tableName, filterBy), value ? 'Yes' : 'No'),
         ]);
         break;
 
@@ -160,23 +161,25 @@ class Statuses extends BOBasePage {
    * @param row
    * @param columnName
    * @param idColumn
+   * @param tableName
    * @return {Promise<string>}
    */
-  async getTextColumn(page, row, columnName, idColumn) {
+  async getTextColumn(page, row, columnName, idColumn, tableName = 'order') {
     if (columnName === 'send_email' || columnName === 'delivery' || columnName === 'invoice') {
-      return this.getAttributeContent(page, `${this.tableColumn(row, idColumn)} a`, 'title');
+      return this.getAttributeContent(page, `${this.tableColumn(tableName, row, idColumn)} a`, 'title');
     }
-    return this.getTextContent(page, this.tableColumn(row, idColumn));
+    return this.getTextContent(page, this.tableColumn(tableName, row, idColumn));
   }
 
   /**
-   * Go to edit order status page
+   * Go to edit page
    * @param page
    * @param row
+   * @param tableName
    * @return {Promise<void>}
    */
-  async gotoEditOrderStatusPage(page, row) {
-    await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(row));
+  async gotoEditPage(page, row, tableName = 'order') {
+    await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(tableName, row));
   }
 
   /**
