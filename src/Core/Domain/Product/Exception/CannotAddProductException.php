@@ -26,39 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
-
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AddProductHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
 
 /**
- * Handles @see AddProductCommand using legacy object model
+ * Thrown when new product creation fails
  */
-final class AddProductHandler implements AddProductHandlerInterface
+class CannotAddProductException extends ProductException
 {
-    /**
-     * @var ProductRepository
-     */
-    private $productRepository;
-
-    /**
-     * @param ProductRepository $productRepository
-     */
-    public function __construct(
-        ProductRepository $productRepository
-    ) {
-        $this->productRepository = $productRepository;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(AddProductCommand $command): ProductId
-    {
-        $product = $this->productRepository->create($command->getLocalizedNames(), $command->isVirtual());
-
-        return new ProductId((int) $product->id);
-    }
 }

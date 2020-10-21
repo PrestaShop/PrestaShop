@@ -32,6 +32,7 @@ use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotAddProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -62,18 +63,26 @@ class ProductRepository extends AbstractObjectModelRepository
     private $productValidator;
 
     /**
+     * @var int
+     */
+    private $defaultCategoryId;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param ProductValidator $productValidator
+     * @param int $defaultCategoryId
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
-        ProductValidator $productValidator
+        ProductValidator $productValidator,
+        int $defaultCategoryId
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->productValidator = $productValidator;
+        $this->defaultCategoryId = $defaultCategoryId;
     }
 
     /**
@@ -159,6 +168,29 @@ class ProductRepository extends AbstractObjectModelRepository
             Product::class,
             ProductNotFoundException::class
         );
+
+        return $product;
+    }
+
+    /**
+     * @param array<int, string> $localizedNames
+     * @param bool $isVirtual
+     *
+     * @return Product
+     *
+     * @throws CannotAddProductException
+     */
+    public function create(array $localizedNames, bool $isVirtual): Product
+    {
+        $product = new Product();
+        $product->active = false;
+        $product->id_category_default = $this->defaultCategoryId;
+        $product->name = $localizedNames;
+        $product->is_virtual = $isVirtual;
+
+        $this->productValidator->validateCreation($product);
+        $this->addObjectModel($product, CannotAddProductException::class);
+        $product->addToCategories([$product->id_category_default]);
 
         return $product;
     }
