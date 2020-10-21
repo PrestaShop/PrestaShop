@@ -52,10 +52,12 @@ Feature: Update product stock from Back Office (BO)
       | is_virtual | false                       |
     And product "product2" type should be standard
     When I update pack "productPack1" with following product quantities:
-      | product2        | 5                      |
+      | product  | quantity |
+      | product2 | 5        |
     Then product "productPack1" type should be pack
     And pack "productPack1" should contain products with following quantities:
-      | product2        | 5                      |
+      | product  | quantity |
+      | product2 | 5        |
     And product "productPack1" should have following stock information:
       | pack_stock_type | stock_type_default |
     When I update product "productPack1" stock with following information:
@@ -85,8 +87,9 @@ Feature: Update product stock from Back Office (BO)
       | is_virtual | false                       |
     And product "product3" type should be standard
     When I update pack "productPack1" with following product quantities:
-      | product2        | 5                      |
-      | product3        | 1                      |
+      | product  | quantity |
+      | product2 | 5        |
+      | product3 | 1        |
     Then product "productPack1" type should be pack
     # Can not depends on stock since default config depends on product
     Given shop configuration for "PS_PACK_STOCK_TYPE" is set to 1
