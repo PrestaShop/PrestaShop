@@ -666,6 +666,13 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.request_sql.sql_request_settings:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestSettingsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
     form.type.common.team.profile_choice:
         class: 'PrestaShopBundle\Form\Admin\Type\Common\Team\ProfileChoiceType'
         arguments:
