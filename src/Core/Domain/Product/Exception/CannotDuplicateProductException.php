@@ -33,5 +33,63 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
  */
 class CannotDuplicateProductException extends ProductException
 {
-    //@todo: codes for each duplication method
+    /**
+     * When product categories duplication fails
+     */
+    const FAILED_DUPLICATE_CATEGORIES = 10;
+
+    /**
+     * When product suppliers duplication fails
+     */
+    const FAILED_DUPLICATE_SUPPLIERS = 20;
+
+    /**
+     * When product attributes duplication fails
+     */
+    const FAILED_DUPLICATE_ATTRIBUTES = 30;
+
+    /**
+     * When product group reduction duplication fails
+     */
+    const FAILED_DUPLICATE_GROUP_REDUCTION = 40;
+
+    /**
+     * When product related product duplication fails
+     */
+    const FAILED_DUPLICATE_RELATED_PRODUCTS = 50;
+
+    /**
+     * When product features duplication fails
+     */
+    const FAILED_DUPLICATE_FEATURES = 60;
+
+    /**
+     * When product specific prices duplication fails
+     */
+    const FAILED_DUPLICATE_SPECIFIC_PRICES = 70;
+
+    /**
+     * When packed products duplication fails
+     */
+    const FAILED_DUPLICATE_PACKED_PRODUCTS = 80;
+
+    /**
+     * When product customization fields duplication fails
+     */
+    const FAILED_DUPLICATE_CUSTOMIZATION_FIELDS = 90;
+
+    /**
+     * When product tags duplication fails
+     */
+    const FAILED_DUPLICATE_TAGS = 100;
+
+    /**
+     * When product downloads duplication fails
+     */
+    const FAILED_DUPLICATE_DOWNLOADS = 110;
+
+    /**
+     * When product images duplication fails
+     */
+    const FAILED_DUPLICATE_IMAGES = 120;
 }

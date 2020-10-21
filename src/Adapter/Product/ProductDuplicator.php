@@ -159,14 +159,14 @@ class ProductDuplicator
         $this->duplicateCategories($oldProductId, $newProductId);
         $this->duplicateSuppliers($oldProductId, $newProductId);
         $combinationImages = $this->duplicateAttributes($oldProductId, $newProductId);
-        $this->duplicateReduction($oldProductId, $newProductId);
+        $this->duplicateGroupReduction($oldProductId, $newProductId);
         $this->duplicateRelatedProducts($oldProductId, $newProductId);
         $this->duplicateFeatures($oldProductId, $newProductId);
         $this->duplicateSpecificPrices($oldProductId, $newProductId);
         $this->duplicatePackedProducts($oldProductId, $newProductId);
         $this->duplicateCustomizationFields($oldProductId, $newProductId);
         $this->duplicateTags($oldProductId, $newProductId);
-        $this->duplicateDownload($oldProductId, $newProductId);
+        $this->duplicateDownloads($oldProductId, $newProductId);
         $this->duplicateImages($oldProductId, $newProductId, $combinationImages);
     }
 
@@ -183,7 +183,7 @@ class ProductDuplicator
         $this->duplicateRelation(
             [Category::class, 'duplicateProductCategories'],
             [$oldProductId, $newProductId],
-            0
+            CannotDuplicateProductException::FAILED_DUPLICATE_CATEGORIES
         );
     }
 
@@ -200,7 +200,7 @@ class ProductDuplicator
         $this->duplicateRelation(
             [Product::class, 'duplicateSuppliers'],
             [$oldProductId, $newProductId],
-            0
+            CannotDuplicateProductException::FAILED_DUPLICATE_SUPPLIERS
         );
     }
 
@@ -223,7 +223,7 @@ class ProductDuplicator
         $result = $this->duplicateRelation(
             [Product::class, 'duplicateAttributes'],
             [$oldProductId, $newProductId],
-            0
+            CannotDuplicateProductException::FAILED_DUPLICATE_ATTRIBUTES
         );
 
         if (!$result) {
@@ -240,13 +240,13 @@ class ProductDuplicator
      * @throws CannotDuplicateProductException
      * @throws CoreException
      */
-    private function duplicateReduction(int $oldProductId, int $newProductId): void
+    private function duplicateGroupReduction(int $oldProductId, int $newProductId): void
     {
         /* @see GroupReduction::duplicateReduction() */
         $this->duplicateRelation(
             [GroupReduction::class, 'duplicateReduction'],
             [$oldProductId, $newProductId],
-            0
+            CannotDuplicateProductException::FAILED_DUPLICATE_GROUP_REDUCTION
         );
     }
 
@@ -263,7 +263,7 @@ class ProductDuplicator
         $this->duplicateRelation(
             [Product::class, 'duplicateAccessories'],
             [$oldProductId, $newProductId],
-            0
+            CannotDuplicateProductException::FAILED_DUPLICATE_RELATED_PRODUCTS
         );
     }
 
@@ -280,7 +280,7 @@ class ProductDuplicator
         $this->duplicateRelation(
             [Product::class, 'duplicateFeatures'],
             [$oldProductId, $newProductId],
-            0
+            CannotDuplicateProductException::FAILED_DUPLICATE_FEATURES
         );
     }
 
@@ -297,7 +297,7 @@ class ProductDuplicator
         $this->duplicateRelation(
             [Product::class, 'duplicateSpecificPrices'],
             [$oldProductId, $newProductId],
-            0
+            CannotDuplicateProductException::FAILED_DUPLICATE_SPECIFIC_PRICES
         );
     }
 
@@ -314,7 +314,7 @@ class ProductDuplicator
         $this->duplicateRelation(
             [Pack::class, 'duplicate'],
             [$oldProductId, $newProductId],
-            0
+            CannotDuplicateProductException::FAILED_DUPLICATE_PACKED_PRODUCTS
         );
     }
 
@@ -331,7 +331,7 @@ class ProductDuplicator
         $this->duplicateRelation(
             [Product::class, 'duplicateCustomizationFields'],
             [$oldProductId, $newProductId],
-            0
+            CannotDuplicateProductException::FAILED_DUPLICATE_CUSTOMIZATION_FIELDS
         );
     }
 
@@ -348,7 +348,7 @@ class ProductDuplicator
         $this->duplicateRelation(
             [Product::class, 'duplicateTags'],
             [$oldProductId, $newProductId],
-            0
+            CannotDuplicateProductException::FAILED_DUPLICATE_TAGS
         );
     }
 
@@ -359,13 +359,32 @@ class ProductDuplicator
      * @throws CannotDuplicateProductException
      * @throws CoreException
      */
-    private function duplicateDownload(int $oldProductId, int $newProductId): void
+    private function duplicateDownloads(int $oldProductId, int $newProductId): void
     {
         /* @see Product::duplicateDownload() */
         $this->duplicateRelation(
             [Product::class, 'duplicateDownload'],
             [$oldProductId, $newProductId],
-            0
+            CannotDuplicateProductException::FAILED_DUPLICATE_DOWNLOADS
+        );
+    }
+
+    /**
+     * @param int $oldProductId
+     * @param int $newProductId
+     * @param array $combinationImages
+     *
+     * @throws CannotDuplicateProductException
+     * @throws CoreException
+     */
+    private function duplicateImages(int $oldProductId, int $newProductId, array $combinationImages): void
+    {
+        //@todo: add option of noImage in command
+        /* @see Image::duplicateProductImages() */
+        $this->duplicateRelation(
+            [Image::class, 'duplicateProductImages'],
+            [$oldProductId, $newProductId, $combinationImages],
+            CannotDuplicateProductException::FAILED_DUPLICATE_IMAGES
         );
     }
 
@@ -392,25 +411,6 @@ class ProductDuplicator
                 $e
             );
         }
-    }
-
-    /**
-     * @param int $oldProductId
-     * @param int $newProductId
-     * @param array $combinationImages
-     *
-     * @throws CannotDuplicateProductException
-     * @throws CoreException
-     */
-    public function duplicateImages(int $oldProductId, int $newProductId, array $combinationImages): void
-    {
-        //@todo: add option of noImage in command
-        /* @see Image::duplicateProductImages() */
-        $this->duplicateRelation(
-            [Image::class, 'duplicateProductImages'],
-            [$oldProductId, $newProductId, $combinationImages],
-            0
-        );
     }
 
     /**
