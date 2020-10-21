@@ -48,10 +48,9 @@ class ProductValidator extends AbstractObjectModelValidator
      */
     public function validateCreation(Product $product): void
     {
-        $this->validateObjectModelLocalizedProperty(
+        $this->validateProductLocalizedProperty(
             $product,
             'name',
-            ProductConstraintException::class,
             ProductConstraintException::INVALID_NAME
         );
     }
@@ -160,10 +159,6 @@ class ProductValidator extends AbstractObjectModelValidator
      */
     private function validateProductLocalizedProperty(Product $product, string $propertyName, int $errorCode = 0): void
     {
-        if (!$product->getFieldsToUpdate() || !array_key_exists($propertyName, $product->getFieldsToUpdate())) {
-            return;
-        }
-
         $this->validateObjectModelLocalizedProperty(
             $product,
             $propertyName,
