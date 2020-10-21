@@ -35,11 +35,14 @@ use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDuplicateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopException;
 use Product;
 use Search;
+use Shop;
+use ShopGroup;
 
 /**
  * Duplicates product
@@ -74,14 +77,20 @@ class ProductDuplicator
     }
 
     /**
-     * @param Product $product
+     * @param ProductId $productId
      *
-     * @return Product
+     * @return ProductId new product id
+     *
+     * @throws CannotDuplicateProductException
+     * @throws CannotUpdateProductException
+     * @throws CoreException
      */
-    public function duplicate(Product $product): Product
+    public function duplicate(ProductId $productId): ProductId
     {
         //@todo: don't forget controller hooks PrestaShopBundle\Controller\Admin\ProductController L1063
-        $oldProductId = (int) $product->id;
+        //@todo: add database transaction. blocked by PR #20518
+        $product = $this->productRepository->get($productId);
+        $oldProductId = $productId->getValue();
         $newProduct = $this->duplicateProduct($product);
         $newProductId = (int) $newProduct->id;
 
@@ -98,7 +107,7 @@ class ProductDuplicator
 
         $this->updateSearchIndexation($newProduct, $oldProductId);
 
-        return $newProduct;
+        return new ProductId((int) $newProduct->id);
     }
 
     /**
@@ -136,9 +145,19 @@ class ProductDuplicator
      */
     private function duplicateProduct(Product $product): Product
     {
+        if (empty($product->price) && Shop::getContext() == Shop::CONTEXT_GROUP) {
+            $shops = ShopGroup::getShopsFromGroup(Shop::getContextShopGroupID());
+            foreach ($shops as $shop) {
+                if ($product->isAssociatedToShop($shop['id_shop'])) {
+                    $product_price = new Product($product->id, false, null, $shop['id_shop']);
+                    $product->price = $product_price->price;
+                }
+            }
+        }
+
         unset($product->id, $product->id_product);
-        $product->indexed = 0;
-        $product->active = 0;
+        $product->indexed = false;
+        $product->active = false;
 
         $this->productRepository->add($product)->getValue();
 
