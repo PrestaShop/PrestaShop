@@ -2320,8 +2320,12 @@ class ProductCore extends ObjectModel
         $combinations = Db::getInstance()->executeS('SELECT pa.*, product_attribute_shop.*
                 FROM `' . _DB_PREFIX_ . 'product_attribute` pa
                 ' . Shop::addSqlAssociation('product_attribute', 'pa') . '
+                LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_combination` pac ON pac.`id_product_attribute`=pa.`id_product_attribute`
+                LEFT JOIN `' . _DB_PREFIX_ . 'attribute` a ON a.`id_attribute` = pac.`id_attribute`
+                LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group`
                 WHERE pa.`id_product` = ' . (int) $this->id . '
-                GROUP BY pa.`id_product_attribute`');
+                GROUP BY pa.`id_product_attribute`
+                ORDER BY ag.`position`,a.`position`');
 
         if (!$combinations) {
             return false;
@@ -2339,7 +2343,8 @@ class ProductCore extends ObjectModel
                 LEFT JOIN `' . _DB_PREFIX_ . 'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = ' . (int) $id_lang . ')
                 LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = ' . (int) $id_lang . ')
                 WHERE pac.id_product_attribute IN (' . implode(',', $product_attributes) . ')
-                GROUP BY pac.id_product_attribute');
+                GROUP BY pac.id_product_attribute
+                ORDER BY ag.`position`,a.`position`');
 
         foreach ($lang as $k => $row) {
             $combinations[$k]['attribute_designation'] = $row['attribute_designation'];
@@ -2392,7 +2397,7 @@ class ProductCore extends ObjectModel
                 LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = ' . (int) $id_lang . ')
                 WHERE pa.`id_product` = ' . (int) $this->id . '
                 GROUP BY pa.`id_product_attribute`' . ($groupByIdAttributeGroup ? ',ag.`id_attribute_group`' : '') . '
-                ORDER BY pa.`id_product_attribute`';
+                ORDER BY ag.`position`, a.`position` DESC';
 
         $res = Db::getInstance()->executeS($sql);
 
