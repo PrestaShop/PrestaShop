@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
 use Doctrine\DBAL\Connection;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
@@ -39,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductExcep
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
 use Product;
@@ -97,6 +99,34 @@ class ProductRepository extends AbstractObjectModelRepository
         $this->addObjectModel($product, ProductException::class);
 
         return new ProductId((int) $product->id);
+    }
+
+    /**
+     * Gets product price by provided shop
+     *
+     * @param ProductId $productId
+     * @param ShopId $shopId
+     *
+     * @return DecimalNumber|null
+     */
+    public function getPriceByShop(ProductId $productId, ShopId $shopId): ?DecimalNumber
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('price')
+            ->from($this->dbPrefix . 'product_shop')
+            ->where('id_product = :productId')
+            ->andWhere('id_shop = :shopId')
+            ->setParameter('productId', $productId->getValue())
+            ->setParameter('shopId', $shopId->getValue())
+        ;
+
+        $result = $qb->execute()->fetch();
+
+        if (!$result) {
+            return null;
+        }
+
+        return new DecimalNumber($result['price']);
     }
 
     /**
