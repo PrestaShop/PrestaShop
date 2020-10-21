@@ -120,7 +120,7 @@
             </select>
           </div>
         </div>
-        {% set numPages = (orderForViewing.products.products|length / paginationNum)|round(0, 'ceil') %}
+        {% set numPages = max(orderForViewing.products.products|length / paginationNum, 1)|round(0, 'ceil') %}
         <nav aria-label="Products Navigation"{% if orderForViewing.products.products|length <= paginationNum %} class="d-none"{% endif %} id="orderProductsNavPagination">
           <ul class="pagination" id="orderProductsTablePagination" data-num-per-page="{{ paginationNum }}" data-num-pages="{{ numPages }}">
             <li class="page-item disabled" id="orderProductsTablePaginationPrev">
