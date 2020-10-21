@@ -396,3 +396,10 @@ services:
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand
+
+    prestashop.adapter.product.product_duplicator:
+        class: PrestaShop\PrestaShop\Adapter\Product\ProductDuplicator
+        arguments:
+            - '@prestashop.adapter.product.repository.product_repository'
+            - '@prestashop.core.hook.dispatcher'
+            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_SEARCH_INDEXATION')"
