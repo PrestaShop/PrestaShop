@@ -111,13 +111,8 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public static function clearDownloads(): void
     {
-        $filesToSkip = [
-            _PS_DOWNLOAD_DIR_ . 'index.php',
-            _PS_DOWNLOAD_DIR_ . '.htaccess',
-        ];
-
         foreach (glob(_PS_DOWNLOAD_DIR_ . '*') as $file) {
-            if (is_file($file) && !in_array($file, $filesToSkip)) {
+            if (is_file($file)) {
                 unlink($file);
             }
         }
@@ -128,17 +123,33 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public static function clearImgDir(): void
     {
-        //@todo: its not working because img/* directories permissions. Those are created with Image->createImgFolder()
-        $filesToSkip = [
-            _PS_IMG_DIR_ . 'index.php',
-            _PS_IMG_DIR_ . '.htaccess',
-        ];
+        function unlinkFilesRecursively(string $recursiveDir = null): void
+        {
+            $startingDir = _PS_IMG_DIR_;
+            if ($recursiveDir) {
+                $startingDir = $recursiveDir . '/';
+            }
 
-        foreach (glob(_PS_IMG_DIR_ . '*') as $file) {
-            if (is_file($file) && !in_array($file, $filesToSkip)) {
-                unlink($file);
+            $dirs = [];
+            foreach (glob($startingDir . '*') as $file) {
+                if (is_dir($file)) {
+                    $dirs[] = $file;
+
+                    continue;
+                }
+
+                if (is_file($file)) {
+                    unlink($file);
+                }
+            }
+
+            foreach ($dirs as $dir) {
+                unlinkFilesRecursively($dir);
+                rmdir($dir);
             }
         }
+
+        unlinkFilesRecursively();
     }
 
     /**
