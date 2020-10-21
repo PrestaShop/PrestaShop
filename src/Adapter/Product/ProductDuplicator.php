@@ -36,8 +36,10 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDuplicateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShopException;
 use Product;
 use Search;
@@ -65,15 +67,23 @@ class ProductDuplicator
     private $isSearchIndexationOn;
 
     /**
+     * @var MultistoreContextCheckerInterface
+     */
+    private $multistoreContextChecker;
+
+    /**
      * @param ProductRepository $productRepository
      * @param HookDispatcherInterface $hookDispatcher
+     * @param MultistoreContextCheckerInterface $multistoreContextChecker
      */
     public function __construct(
         ProductRepository $productRepository,
-        HookDispatcherInterface $hookDispatcher
+        HookDispatcherInterface $hookDispatcher,
+        MultistoreContextCheckerInterface $multistoreContextChecker
     ) {
         $this->productRepository = $productRepository;
         $this->hookDispatcher = $hookDispatcher;
+        $this->multistoreContextChecker = $multistoreContextChecker;
     }
 
     /**
@@ -146,16 +156,7 @@ class ProductDuplicator
     private function duplicateProduct(Product $product): Product
     {
         //@todo: modify product name with prefix "copy of" ?
-        //@todo: cleanup this block
-        if (empty($product->price) && Shop::getContext() == Shop::CONTEXT_GROUP) {
-            $shops = ShopGroup::getShopsFromGroup(Shop::getContextShopGroupID());
-            foreach ($shops as $shop) {
-                if ($product->isAssociatedToShop($shop['id_shop'])) {
-                    $product_price = new Product($product->id, false, null, $shop['id_shop']);
-                    $product->price = $product_price->price;
-                }
-            }
-        }
+        $this->setPriceByShops($product);
 
         unset($product->id, $product->id_product);
         $product->indexed = false;
@@ -164,6 +165,47 @@ class ProductDuplicator
         $this->productRepository->add($product)->getValue();
 
         return $product;
+    }
+
+    /**
+     * @param Product $product
+     */
+    private function setPriceByShops(Product $product): void
+    {
+        if (!empty($product->price) || !$this->multistoreContextChecker->isGroupShopContext()) {
+            return;
+        }
+
+        foreach ($this->getContextShops() as $shop) {
+            $priceByShop = $this->productRepository->getPriceByShop(
+                new ProductId((int) $product->id),
+                new ShopId((int) $shop['id_shop'])
+            );
+
+            if (!$priceByShop) {
+                continue;
+            }
+
+            $product->price = (string) $priceByShop;
+        }
+    }
+
+    /**
+     * @return array<int, array<string, string>>
+     */
+    private function getContextShops(): array
+    {
+        try {
+            $shops = ShopGroup::getShopsFromGroup(Shop::getContextShopGroupID());
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                'Error occurred when trying to get context shop groups',
+                0,
+                $e
+            );
+        }
+
+        return $shops;
     }
 
     /**
