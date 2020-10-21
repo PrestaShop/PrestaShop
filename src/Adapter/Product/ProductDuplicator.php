@@ -33,7 +33,13 @@ use GroupReduction;
 use Image;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDuplicateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShopException;
 use Product;
+use Search;
 
 /**
  * Duplicates product
@@ -46,11 +52,25 @@ class ProductDuplicator
     private $productRepository;
 
     /**
-     * @param ProductRepository $productRepository
+     * @var HookDispatcherInterface
      */
-    public function __construct(ProductRepository $productRepository)
-    {
+    private $hookDispatcher;
+
+    /**
+     * @var bool
+     */
+    private $isSearchIndexationOn;
+
+    /**
+     * @param ProductRepository $productRepository
+     * @param HookDispatcherInterface $hookDispatcher
+     */
+    public function __construct(
+        ProductRepository $productRepository,
+        HookDispatcherInterface $hookDispatcher
+    ) {
         $this->productRepository = $productRepository;
+        $this->hookDispatcher = $hookDispatcher;
     }
 
     /**
@@ -60,29 +80,373 @@ class ProductDuplicator
      */
     public function duplicate(Product $product): Product
     {
+        //@todo: don't forget controller hooks PrestaShopBundle\Controller\Admin\ProductController L1063
         $oldProductId = (int) $product->id;
+        $newProduct = $this->duplicateProduct($product);
+        $newProductId = (int) $newProduct->id;
+
+        $this->duplicateRelations($newProductId, $oldProductId);
+
+        if ($product->hasAttributes()) {
+            $this->updateDefaultAttribute($newProductId, $oldProductId);
+        }
+
+        $this->hookDispatcher->dispatchWithParameters(
+            'actionProductAdd',
+            ['id_product_old' => $oldProductId, 'id_product' => $newProductId, 'product' => $newProduct]
+        );
+
+        $this->updateSearchIndexation($newProduct, $oldProductId);
+
+        return $newProduct;
+    }
+
+    /**
+     * @param Product $newProduct
+     * @param int $oldProductId
+     *
+     * @throws CannotUpdateProductException
+     */
+    private function updateSearchIndexation(Product $newProduct, int $oldProductId): void
+    {
+        if (!in_array($newProduct->visibility, ['both', 'search']) || !$this->isSearchIndexationOn) {
+            return;
+        }
+
+        try {
+            if (!Search::indexation(false, $newProduct->id)) {
+                throw new CannotUpdateProductException(
+                    sprintf('Cannot update search indexation when duplicating product %d', $oldProductId),
+                    CannotUpdateProductException::FAILED_UPDATE_SEARCH_INDEXATION
+                );
+            }
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf('Error occurred when duplicating product %d. Failed to update search indexation', $oldProductId),
+                0,
+                $e
+            );
+        }
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return Product the new product
+     */
+    private function duplicateProduct(Product $product): Product
+    {
         unset($product->id, $product->id_product);
         $product->indexed = 0;
         $product->active = 0;
-        $newProductId = $this->productRepository->add($product)->getValue();
 
-        if (Category::duplicateProductCategories($oldProductId, $newProductId)
-            && Product::duplicateSuppliers($oldProductId, $newProductId)
-            && ($combinationImages = Product::duplicateAttributes($oldProductId, $newProductId)) !== false
-            && GroupReduction::duplicateReduction($oldProductId, $newProductId)
-            && Product::duplicateAccessories($oldProductId, $newProductId)
-            && Product::duplicateFeatures($oldProductId, $newProductId)
-            && Product::duplicateSpecificPrices($oldProductId, $newProductId)
-            && Pack::duplicate($oldProductId, $newProductId)
-            && Product::duplicateCustomizationFields($oldProductId, $newProductId)
-            && Product::duplicateTags($oldProductId, $newProductId)
-            && Product::duplicateDownload($oldProductId, $newProductId)
-        ) {
-            if ($product->hasAttributes()) {
-                Product::updateDefaultAttribute($newProductId);
-            }
-            Image::duplicateProductImages($oldProductId, $newProductId, $combinationImages);
+        $this->productRepository->add($product)->getValue();
+
+        return $product;
+    }
+
+    /**
+     * Duplicates related product entities & associations
+     *
+     * @param int $oldProductId
+     * @param int $newProductId
+     *
+     * @throws CannotDuplicateProductException
+     * @throws CoreException
+     */
+    private function duplicateRelations(int $oldProductId, int $newProductId): void
+    {
+        $this->duplicateCategories($oldProductId, $newProductId);
+        $this->duplicateSuppliers($oldProductId, $newProductId);
+        $combinationImages = $this->duplicateAttributes($oldProductId, $newProductId);
+        $this->duplicateReduction($oldProductId, $newProductId);
+        $this->duplicateRelatedProducts($oldProductId, $newProductId);
+        $this->duplicateFeatures($oldProductId, $newProductId);
+        $this->duplicateSpecificPrices($oldProductId, $newProductId);
+        $this->duplicatePackedProducts($oldProductId, $newProductId);
+        $this->duplicateCustomizationFields($oldProductId, $newProductId);
+        $this->duplicateTags($oldProductId, $newProductId);
+        $this->duplicateDownload($oldProductId, $newProductId);
+        $this->duplicateImages($oldProductId, $newProductId, $combinationImages);
+    }
+
+    /**
+     * @param int $oldProductId
+     * @param int $newProductId
+     *
+     * @throws CannotDuplicateProductException
+     * @throws CoreException
+     */
+    private function duplicateCategories(int $oldProductId, int $newProductId): void
+    {
+        /* @see Category::duplicateProductCategories() */
+        $this->duplicateRelation(
+            [Category::class, 'duplicateProductCategories'],
+            [$oldProductId, $newProductId],
+            0
+        );
+    }
+
+    /**
+     * @param int $oldProductId
+     * @param int $newProductId
+     *
+     * @throws CannotDuplicateProductException
+     * @throws CoreException
+     */
+    private function duplicateSuppliers(int $oldProductId, int $newProductId): void
+    {
+        /* @see Product::duplicateSuppliers() */
+        $this->duplicateRelation(
+            [Product::class, 'duplicateSuppliers'],
+            [$oldProductId, $newProductId],
+            0
+        );
+    }
+
+    /**
+     * @param int $oldProductId
+     * @param int $newProductId
+     *
+     * @return array<string, array<int, array<int, int>>> combination images
+     *                       [
+     *                       'old' => [1 {id product attribute} => [0 {index} => 1 {id image}]]
+     *                       'new' => [2 {id product attribute} => [0 {index} => 3 {id image}]]
+     *                       ]
+     *
+     * @throws CannotDuplicateProductException
+     * @throws CoreException
+     */
+    private function duplicateAttributes(int $oldProductId, int $newProductId): array
+    {
+        /* @see Product::duplicateAttributes() */
+        $result = $this->duplicateRelation(
+            [Product::class, 'duplicateAttributes'],
+            [$oldProductId, $newProductId],
+            0
+        );
+
+        if (!$result) {
+            return [];
         }
-        //@todo: clean up and dont forget hooks in AdminProductsController L571 & PrestaShopBundle\Controller\Admin\ProductController L1063
+
+        return $result;
+    }
+
+    /**
+     * @param int $oldProductId
+     * @param int $newProductId
+     *
+     * @throws CannotDuplicateProductException
+     * @throws CoreException
+     */
+    private function duplicateReduction(int $oldProductId, int $newProductId): void
+    {
+        /* @see GroupReduction::duplicateReduction() */
+        $this->duplicateRelation(
+            [GroupReduction::class, 'duplicateReduction'],
+            [$oldProductId, $newProductId],
+            0
+        );
+    }
+
+    /**
+     * @param int $oldProductId
+     * @param int $newProductId
+     *
+     * @throws CannotDuplicateProductException
+     * @throws CoreException
+     */
+    private function duplicateRelatedProducts(int $oldProductId, int $newProductId): void
+    {
+        /* @see Product::duplicateAccessories() */
+        $this->duplicateRelation(
+            [Product::class, 'duplicateAccessories'],
+            [$oldProductId, $newProductId],
+            0
+        );
+    }
+
+    /**
+     * @param int $oldProductId
+     * @param int $newProductId
+     *
+     * @throws CannotDuplicateProductException
+     * @throws CoreException
+     */
+    private function duplicateFeatures(int $oldProductId, int $newProductId): void
+    {
+        /* @see Product::duplicateFeatures() */
+        $this->duplicateRelation(
+            [Product::class, 'duplicateFeatures'],
+            [$oldProductId, $newProductId],
+            0
+        );
+    }
+
+    /**
+     * @param int $oldProductId
+     * @param int $newProductId
+     *
+     * @throws CannotDuplicateProductException
+     * @throws CoreException
+     */
+    private function duplicateSpecificPrices(int $oldProductId, int $newProductId): void
+    {
+        /* @see Product::duplicateSpecificPrices() */
+        $this->duplicateRelation(
+            [Product::class, 'duplicateSpecificPrices'],
+            [$oldProductId, $newProductId],
+            0
+        );
+    }
+
+    /**
+     * @param int $oldProductId
+     * @param int $newProductId
+     *
+     * @throws CannotDuplicateProductException
+     * @throws CoreException
+     */
+    private function duplicatePackedProducts(int $oldProductId, int $newProductId): void
+    {
+        /* @see Pack::duplicate() */
+        $this->duplicateRelation(
+            [Pack::class, 'duplicate'],
+            [$oldProductId, $newProductId],
+            0
+        );
+    }
+
+    /**
+     * @param int $oldProductId
+     * @param int $newProductId
+     *
+     * @throws CannotDuplicateProductException
+     * @throws CoreException
+     */
+    private function duplicateCustomizationFields(int $oldProductId, int $newProductId): void
+    {
+        /* @see Product::duplicateCustomizationFields() */
+        $this->duplicateRelation(
+            [Product::class, 'duplicateCustomizationFields'],
+            [$oldProductId, $newProductId],
+            0
+        );
+    }
+
+    /**
+     * @param int $oldProductId
+     * @param int $newProductId
+     *
+     * @throws CannotDuplicateProductException
+     * @throws CoreException
+     */
+    private function duplicateTags(int $oldProductId, int $newProductId): void
+    {
+        /* @see Product::duplicateTags() */
+        $this->duplicateRelation(
+            [Product::class, 'duplicateTags'],
+            [$oldProductId, $newProductId],
+            0
+        );
+    }
+
+    /**
+     * @param int $oldProductId
+     * @param int $newProductId
+     *
+     * @throws CannotDuplicateProductException
+     * @throws CoreException
+     */
+    private function duplicateDownload(int $oldProductId, int $newProductId): void
+    {
+        /* @see Product::duplicateDownload() */
+        $this->duplicateRelation(
+            [Product::class, 'duplicateDownload'],
+            [$oldProductId, $newProductId],
+            0
+        );
+    }
+
+    /**
+     * @param int $newProductId
+     * @param int $oldProductId
+     *
+     * @throws CannotUpdateProductException
+     * @throws CoreException
+     */
+    private function updateDefaultAttribute(int $newProductId, int $oldProductId): void
+    {
+        try {
+            if (!Product::updateDefaultAttribute($newProductId)) {
+                throw new CannotUpdateProductException(
+                    sprintf('Failed to update default attribute when duplicating product %d', $oldProductId),
+                    CannotUpdateProductException::FAILED_UPDATE_DEFAULT_ATTRIBUTE
+                );
+            }
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf('Error occurred when trying to duplicate product #%d. Failed to update default attribute', $oldProductId),
+                0,
+                $e
+            );
+        }
+    }
+
+    /**
+     * @param int $oldProductId
+     * @param int $newProductId
+     * @param array $combinationImages
+     *
+     * @throws CannotDuplicateProductException
+     * @throws CoreException
+     */
+    public function duplicateImages(int $oldProductId, int $newProductId, array $combinationImages): void
+    {
+        //@todo: add option of noImage in command
+        /* @see Image::duplicateProductImages() */
+        $this->duplicateRelation(
+            [Image::class, 'duplicateProductImages'],
+            [$oldProductId, $newProductId, $combinationImages],
+            0
+        );
+    }
+
+    /**
+     * Wraps product relations duplication in try-catch
+     *
+     * @param array $staticCallback
+     * @param array $arguments
+     * @param int $errorCode
+     *
+     * @return array|null result of callback. If result is array then its returned, else null is returned
+     *
+     * @throws CannotDuplicateProductException
+     * @throws CoreException
+     */
+    private function duplicateRelation(array $staticCallback, array $arguments, int $errorCode): ?array
+    {
+        try {
+            $result = call_user_func($staticCallback, $arguments);
+
+            if (is_array($result)) {
+                return $result;
+            }
+
+            if (!$result) {
+                throw new CannotDuplicateProductException(
+                    sprintf('Cannot duplicate product. [%s] failed', implode('::', $staticCallback)),
+                    $errorCode
+                );
+            }
+
+            return null;
+        } catch (PrestaShopException $e) {
+            throw new CoreException(sprintf(
+                'Error occured when trying to duplicate product. Method [%s]',
+                implode('::', $staticCallback)
+            ));
+        }
     }
 }
