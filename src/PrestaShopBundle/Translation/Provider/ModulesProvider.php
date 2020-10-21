@@ -78,7 +78,7 @@ class ModulesProvider implements ProviderInterface
     private $moduleName;
 
     /**
-     * @var MessageCatalogue[]
+     * @var MessageCatalogueInterface[]
      */
     private $defaultCatalogueCache;
 
@@ -86,10 +86,6 @@ class ModulesProvider implements ProviderInterface
      * @var DatabaseTranslationReader
      */
     private $databaseReader;
-    /**
-     * @var string
-     */
-    private $moduleName;
 
     /**
      * @param DatabaseTranslationReader $databaseReader
