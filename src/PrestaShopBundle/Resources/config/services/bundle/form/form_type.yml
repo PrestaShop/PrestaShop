@@ -766,6 +766,16 @@ services:
         tags:
           - { name: form.type }
 
+    form.type.database.backup.backup_options:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Backup\BackupOptionsType'
+        parent: 'form.type.translatable.aware'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+        public: true
+        tags:
+            - { name: form.type }
+
+
     form.type.customer.required_fields:
         class: 'PrestaShopBundle\Form\Admin\Sell\Customer\RequiredFieldsType'
         arguments:
