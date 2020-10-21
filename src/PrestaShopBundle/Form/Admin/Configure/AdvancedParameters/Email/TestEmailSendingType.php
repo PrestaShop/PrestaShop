@@ -43,7 +43,7 @@ class TestEmailSendingType extends TranslatorAwareType
     {
         $builder
             ->add('send_email_to', EmailType::class, [
-                'label' => $this->trans('Send a test email to', 'Admin.Advparameters.Feature')
+                'label' => $this->trans('Send a test email to', 'Admin.Advparameters.Feature'),
             ])
             ->add('mail_method', HiddenType::class)
             ->add('smtp_server', HiddenType::class)
