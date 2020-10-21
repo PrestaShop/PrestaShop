@@ -155,7 +155,7 @@ class ProductDuplicator
      */
     private function duplicateProduct(Product $product): Product
     {
-        //@todo: modify product name with prefix "copy of" ?
+        $this->setName($product);
         $this->setPriceByShops($product);
 
         unset($product->id, $product->id_product);
@@ -165,6 +165,24 @@ class ProductDuplicator
         $this->productRepository->add($product)->getValue();
 
         return $product;
+    }
+
+    /**
+     * Sets new name for duplicated product by modifying the existing name with a new pattern
+     *
+     * @param Product $product
+     */
+    private function setName(Product $product): void
+    {
+        //@todo: would it be possible to transle it or is it ok that each lang will contain this generic pattern?
+        //@todo: make the pattern modifiable (add configuration) ?
+        $namePattern = 'copy of %s';
+
+        foreach ($product->name as $langKey => $oldName) {
+            $newName = sprintf($namePattern, $oldName);
+            $product->name[$langKey] = $newName;
+            //@todo: validate name if it is too long now. In that case, cut the name or throw exception?
+        }
     }
 
     /**
@@ -191,6 +209,8 @@ class ProductDuplicator
     }
 
     /**
+     * @todo: move this somewhere? add methods in MultistoreContextCheckerInterface?
+     *
      * @return array<int, array<string, string>>
      */
     private function getContextShops(): array
