@@ -82,7 +82,7 @@ class EmailConfigurationType extends TranslatorAwareType
             ->add('mail_method', ChoiceType::class, [
                 'attr' => [
                     'class' => 'js-email-method',
-                    'data-smtp-mail-method' => MailOption::METHOD_SMTP
+                    'data-smtp-mail-method' => MailOption::METHOD_SMTP,
                 ],
                 'label' => false,
                 'expanded' => true,
@@ -100,8 +100,8 @@ class EmailConfigurationType extends TranslatorAwareType
                 ],
             ])
             ->add('log_emails', SwitchType::class, [
-                    'label' => $this->trans('Log Emails', 'Admin.Advparameters.Feature'),
-                ]
+                'label' => $this->trans('Log Emails', 'Admin.Advparameters.Feature'),
+            ]
             )
             ->add('smtp_config', SmtpConfigurationType::class, [
                 'label' => false,
