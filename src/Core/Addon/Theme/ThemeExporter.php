@@ -72,7 +72,7 @@ class ThemeExporter
      *
      * @param Theme $theme
      *
-     * @return string Path to the exported zip file
+     * @return string|false Path to the exported zip file
      */
     public function export(Theme $theme)
     {

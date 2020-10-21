@@ -29,14 +29,7 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 
 function ps_1700_reset_theme()
 {
-    $container = SymfonyContainer::getInstance();
-    if (null !== $container) {
-        $themeManagerBuilder = $container->get('prestashop.core.addon.theme.theme_manager_builder');
-    } else {
-        // SynfonyContainer not available, we won't have TranslationService nor ProviderFactory
-        $themeManagerBuilder = new ThemeManagerBuilder(Context::getContext(), Db::getInstance());
-    }
-    $themeManager = $themeManagerBuilder->build();
+    $themeManager = (new ThemeManagerBuilder(Context::getContext(), Db::getInstance()))->build();
     $themeManager->reset('classic');
 
     return true;

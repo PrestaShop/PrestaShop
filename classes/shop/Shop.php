@@ -24,7 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 
@@ -496,14 +495,7 @@ class ShopCore extends ObjectModel
             return;
         }
 
-        $container = SymfonyContainer::getInstance();
-        if (null !== $container) {
-            $themeManagerBuilder = $container->get('prestashop.core.addon.theme.theme_manager_builder');
-        } else {
-            // SynfonyContainer not available, we won't have TranslationService nor ProviderFactory
-            $themeManagerBuilder = new ThemeManagerBuilder($context, Db::getInstance());
-        }
-        $themeRepository = $themeManagerBuilder->buildRepository($this);
+        $themeRepository = (new ThemeManagerBuilder($context, Db::getInstance()))->buildRepository($this);
         if (empty($this->theme_name)) {
             $this->theme_name = 'classic';
         }

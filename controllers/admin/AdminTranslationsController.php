@@ -26,7 +26,6 @@
 
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 
 class AdminTranslationsControllerCore extends AdminController
@@ -87,14 +86,10 @@ class AdminTranslationsControllerCore extends AdminController
 
         $this->link_lang_pack = str_replace('%ps_version%', _PS_VERSION_, $this->link_lang_pack);
 
-        $container = SymfonyContainer::getInstance();
-        if (null !== $container) {
-            $themeManagerBuilder = $container->get('prestashop.core.addon.theme.theme_manager_builder');
-        } else {
-            // SynfonyContainer not available, we won't have TranslationService nor ProviderFactory
-            $themeManagerBuilder = new ThemeManagerBuilder($this->context, Db::getInstance());
-        }
-        $this->themes = $themeManagerBuilder->buildRepository()->getList();
+        $this->themes = (SymfonyContainer::getInstance())
+            ->get('prestashop.core.addon.theme.theme_manager_builder')
+            ->buildRepository()
+            ->getList();
     }
 
     /*
