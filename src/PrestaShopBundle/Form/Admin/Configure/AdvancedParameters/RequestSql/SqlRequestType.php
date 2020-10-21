@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql;
 
-use PrestaShopBundle\Translation\TranslatorAwareTrait;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -36,10 +36,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 /**
  * Class RequestSqlType defines RequestSql entity form type.
  */
-class SqlRequestType extends AbstractType
+class SqlRequestType extends TranslatorAwareType
 {
-    use TranslatorAwareTrait;
-
     /**
      * {@inheritdoc}
      */
@@ -47,27 +45,32 @@ class SqlRequestType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
+                'label' => $this->trans('SQL query name', 'Admin.Advparameters.Feature'),
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
                             'The %s field is required.',
+                            'Admin.Notifications.Error',
                             [
-                                sprintf('"%s"', $this->trans('SQL query name', [], 'Admin.Advparameters.Feature')),
-                            ],
-                            'Admin.Notifications.Error'
+                                sprintf('"%s"', $this->trans('SQL query name', 'Admin.Advparameters.Feature')),
+                            ]
                         ),
                     ]),
                 ],
             ])
             ->add('sql', TextareaType::class, [
+                'label' => $this->trans('SQL query', 'Admin.Advparameters.Feature'),
+                'attr' => [
+                    'rows' => 10,
+                ],
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
                             'The %s field is required.',
+                            'Admin.Notifications.Error',
                             [
-                                sprintf('"%s"', $this->trans('SQL query', [], 'Admin.Advparameters.Feature')),
-                            ],
-                            'Admin.Notifications.Error'
+                                sprintf('"%s"', $this->trans('SQL query', 'Admin.Advparameters.Feature')),
+                            ]
                         ),
                     ]),
                 ],

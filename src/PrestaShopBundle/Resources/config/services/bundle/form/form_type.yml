@@ -761,8 +761,8 @@ services:
 
     form.type.database.sql_request:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestType'
-        calls:
-            - { method: setTranslator, arguments: ['@translator'] }
+        parent: 'form.type.translatable.aware'
+        public: true
         tags:
           - { name: form.type }
 
