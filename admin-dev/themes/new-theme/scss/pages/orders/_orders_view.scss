@@ -531,3 +531,9 @@ input#partial_refund_shipping {
 .discountList .btn:hover {
   color: $primary;
 }
+
+.discountList {
+  &-name {
+    max-width: 400px;
+  }
+}
