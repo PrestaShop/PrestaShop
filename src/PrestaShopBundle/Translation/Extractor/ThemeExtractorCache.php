@@ -43,7 +43,7 @@ use Symfony\Component\Translation\MessageCatalogue;
 class ThemeExtractorCache implements ThemeExtractorInterface
 {
     /**
-     * @var ThemeExtractor
+     * @var ThemeExtractorInterface
      */
     private $extractor;
 
