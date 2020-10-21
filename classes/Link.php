@@ -436,11 +436,12 @@ class LinkCore
 
         // Set available keywords
         $params = [];
-
         if (Validate::isLoadedObject($category)) {
             $params['id'] = $category->id;
         } elseif (is_array($category) && isset($category['id_category'])) {
             $params['id'] = $category['id_category'];
+        } elseif (is_int($category)) {
+            $params['id'] = $category;
         } elseif (ctype_digit($category)) {
             $params['id'] = (int) $category;
         } else {
