@@ -87,7 +87,7 @@ class ProductDuplicator
      */
     public function duplicate(ProductId $productId): ProductId
     {
-        //@todo: don't forget controller hooks PrestaShopBundle\Controller\Admin\ProductController L1063
+        //@todo: don't forget to add hooks from PrestaShopBundle\Controller\Admin\ProductController L1063 when new controller is implemented
         //@todo: add database transaction. blocked by PR #20518
         $product = $this->productRepository->get($productId);
         $oldProductId = $productId->getValue();
@@ -145,6 +145,8 @@ class ProductDuplicator
      */
     private function duplicateProduct(Product $product): Product
     {
+        //@todo: modify product name with prefix "copy of" ?
+        //@todo: cleanup this block
         if (empty($product->price) && Shop::getContext() == Shop::CONTEXT_GROUP) {
             $shops = ShopGroup::getShopsFromGroup(Shop::getContextShopGroupID());
             foreach ($shops as $shop) {
