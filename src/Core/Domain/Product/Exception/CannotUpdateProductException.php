@@ -85,4 +85,14 @@ class CannotUpdateProductException extends ProductException
      * When product attachments association update fails
      */
     const FAILED_UPDATE_ATTACHMENTS = 110;
+
+    /**
+     * When product default combination update fails
+     */
+    const FAILED_UPDATE_DEFAULT_ATTRIBUTE = 120;
+
+    /**
+     * When search indexation update for product fails
+     */
+    const FAILED_UPDATE_SEARCH_INDEXATION = 130;
 }
