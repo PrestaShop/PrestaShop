@@ -544,6 +544,13 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.email.smtp_configuration:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\SmtpConfigurationType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
     form.type.translations.modify:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType'
         parent: 'form.type.translatable.aware'
