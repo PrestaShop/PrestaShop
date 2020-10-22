@@ -28,12 +28,12 @@ let browserContext;
 let page;
 
 let numberOfCarriers = 0;
+
 /*
 Create 2 new carriers
 Quick edit (Enable/Disable)
-Quick edit (Enable/Disable/Delete)
+Bulk actions (Enable/Disable/Delete)
  */
-
 describe('Quick edit and bulk actions carriers', async () => {
   // before and after functions
   before(async function () {
