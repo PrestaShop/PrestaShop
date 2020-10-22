@@ -185,6 +185,126 @@ class ContextStateManagerTest extends TestCase
         $this->assertEquals(42, $context->language->id);
     }
 
+    public function testStashedState()
+    {
+        $context = $this->createContextMock([
+            'language' => $this->createContextFieldMock(Language::class, 42),
+        ]);
+        $this->assertEquals(42, $context->language->id);
+
+        $contextStateManager = new ContextStateManager($context);
+        $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 51));
+        $this->assertEquals(51, $context->language->id);
+
+        $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 69));
+        $this->assertEquals(69, $context->language->id);
+
+        $contextStateManager->stashContext();
+
+        $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 93));
+        $this->assertEquals(93, $context->language->id);
+
+        $contextStateManager->restoreContext();
+        $this->assertEquals(69, $context->language->id);
+
+        $contextStateManager->restoreContext();
+        $this->assertEquals(42, $context->language->id);
+    }
+
+    public function testMultipleStashedFields()
+    {
+        $context = $this->createContextMock([
+            'cart' => $this->createContextFieldMock(Cart::class, 42),
+            'country' => $this->createContextFieldMock(Country::class, 42),
+            'currency' => $this->createContextFieldMock(Currency::class, 42),
+            'customer' => $this->createContextFieldMock(Customer::class, 42),
+            'language' => $this->createContextFieldMock(Language::class, 42),
+        ]);
+        $this->assertEquals(42, $context->cart->id);
+        $this->assertEquals(42, $context->country->id);
+        $this->assertEquals(42, $context->currency->id);
+        $this->assertEquals(42, $context->customer->id);
+        $this->assertEquals(42, $context->language->id);
+
+        $contextStateManager = new ContextStateManager($context);
+        $contextStateManager
+            ->setCart($this->createContextFieldMock(Cart::class, 51))
+            ->setCurrency($this->createContextFieldMock(Currency::class, 51))
+            ->setCustomer($this->createContextFieldMock(Customer::class, 51))
+        ;
+
+        $this->assertEquals(51, $context->cart->id);
+        $this->assertEquals(42, $context->country->id);
+        $this->assertEquals(51, $context->currency->id);
+        $this->assertEquals(51, $context->customer->id);
+        $this->assertEquals(42, $context->language->id);
+
+        $contextStateManager->stashContext();
+
+        $contextStateManager
+            ->setCart($this->createContextFieldMock(Cart::class, 69))
+            ->setCurrency($this->createContextFieldMock(Currency::class, 69))
+        ;
+
+        $this->assertEquals(69, $context->cart->id);
+        $this->assertEquals(42, $context->country->id);
+        $this->assertEquals(69, $context->currency->id);
+        $this->assertEquals(51, $context->customer->id);
+        $this->assertEquals(42, $context->language->id);
+
+        $contextStateManager->restoreContext();
+
+        $this->assertEquals(51, $context->cart->id);
+        $this->assertEquals(42, $context->country->id);
+        $this->assertEquals(51, $context->currency->id);
+        $this->assertEquals(51, $context->customer->id);
+        $this->assertEquals(42, $context->language->id);
+
+        $contextStateManager->restoreContext();
+
+        $this->assertEquals(42, $context->cart->id);
+        $this->assertEquals(42, $context->country->id);
+        $this->assertEquals(42, $context->currency->id);
+        $this->assertEquals(42, $context->customer->id);
+        $this->assertEquals(42, $context->language->id);
+    }
+
+    public function testTooManyrestores()
+    {
+        $context = $this->createContextMock([
+            'language' => $this->createContextFieldMock(Language::class, 42),
+        ]);
+        $this->assertEquals(42, $context->language->id);
+
+        $contextStateManager = new ContextStateManager($context);
+        $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 51));
+        $this->assertEquals(51, $context->language->id);
+
+        $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 69));
+        $this->assertEquals(69, $context->language->id);
+
+        $contextStateManager->stashContext();
+
+        $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 93));
+        $this->assertEquals(93, $context->language->id);
+
+        $contextStateManager->restoreContext();
+        $this->assertEquals(69, $context->language->id);
+
+        $contextStateManager->restoreContext();
+        $this->assertEquals(42, $context->language->id);
+
+        // This removes all persisted states, but we always re-init one for future calls
+        $contextStateManager->restoreContext();
+        $this->assertEquals(42, $context->language->id);
+
+        $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 93));
+        $this->assertEquals(93, $context->language->id);
+
+        $contextStateManager->restoreContext();
+        $this->assertEquals(42, $context->language->id);
+    }
+
     /**
      * @param string $className
      * @param int $objectId

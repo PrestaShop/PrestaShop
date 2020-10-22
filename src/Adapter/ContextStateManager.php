@@ -53,7 +53,7 @@ final class ContextStateManager
     /**
      * @var array
      */
-    private $savedContextFields = [];
+    private $stashedContextsFields = [[]];
 
     /**
      * @param Context $context
@@ -153,9 +153,30 @@ final class ContextStateManager
      */
     public function restoreContext(): self
     {
-        foreach ($this->savedContextFields as $fieldName => $contextValue) {
+        $currentStashIndex = count($this->stashedContextsFields) - 1;
+        foreach ($this->stashedContextsFields[$currentStashIndex] as $fieldName => $contextValue) {
             $this->restoreContextField($fieldName);
         }
+        $this->popContext();
+
+        return $this;
+    }
+
+    /**
+     * Saves the current overridden fields in the context, allowing you to set new values to the
+     * current Context. Next time you call restoreContext only newly modified fields are restored
+     * so you end up in the same state as when you called stashContext.
+     *
+     * This is useful if several services use the ContextStateManager, this way if every service
+     * stashed the context before modifying it there is no risk of removing previous modifications
+     * when you restore the context because the different states have been stacked.
+     *
+     * @return $this
+     */
+    public function stashContext(): self
+    {
+        // Add a new empty layer
+        $this->stashedContextsFields[] = [];
 
         return $this;
     }
@@ -167,9 +188,10 @@ final class ContextStateManager
      */
     private function saveContextField(string $fieldName)
     {
+        $currentStashIndex = count($this->stashedContextsFields) - 1;
         // NOTE: array_key_exists important here, isset cannot be used because it would not detect if null is stored
-        if (!array_key_exists($fieldName, $this->savedContextFields)) {
-            $this->savedContextFields[$fieldName] = $this->context->$fieldName;
+        if (!array_key_exists($fieldName, $this->stashedContextsFields[$currentStashIndex])) {
+            $this->stashedContextsFields[$currentStashIndex][$fieldName] = $this->context->$fieldName;
         }
     }
 
@@ -180,10 +202,25 @@ final class ContextStateManager
      */
     private function restoreContextField(string $fieldName): void
     {
+        $currentStashIndex = count($this->stashedContextsFields) - 1;
         // NOTE: array_key_exists important here, isset cannot be used because it would not detect if null is stored
-        if (array_key_exists($fieldName, $this->savedContextFields)) {
-            $this->context->$fieldName = $this->savedContextFields[$fieldName];
-            unset($this->savedContextFields[$fieldName]);
+        if (array_key_exists($fieldName, $this->stashedContextsFields[$currentStashIndex])) {
+            $this->context->$fieldName = $this->stashedContextsFields[$currentStashIndex][$fieldName];
+            unset($this->stashedContextsFields[$currentStashIndex][$fieldName]);
+        }
+    }
+
+    /**
+     * Removes the last saved stashed context, in case this method is called too many times
+     * we always keep one layer available
+     */
+    private function popContext(): void
+    {
+        array_pop($this->stashedContextsFields);
+
+        // Always keep at least one layer (in case we pop too many)
+        if (empty($this->stashedContextsFields)) {
+            $this->stashedContextsFields[] = [];
         }
     }
 }
