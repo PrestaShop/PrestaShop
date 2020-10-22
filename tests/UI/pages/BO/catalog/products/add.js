@@ -206,7 +206,7 @@ class AddProduct extends BOBasePage {
    * Select, unselect checkbox
    * @param page
    * @param checkboxSelector, selector of checkbox
-   * @param valueWanted, true if we want to select checkBox, else otherwise
+   * @param valueWanted, true if we want to select checkBox, false otherwise
    * @return {Promise<void>}
    */
   async changeCheckboxValue(page, checkboxSelector, valueWanted = true) {
