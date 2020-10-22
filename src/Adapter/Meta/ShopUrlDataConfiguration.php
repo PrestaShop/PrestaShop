@@ -129,6 +129,6 @@ final class ShopUrlDataConfiguration implements DataConfigurationInterface
      */
     private function isValidUri($uri)
     {
-        return preg_match('#^(?:[~\-_\/&\.]|\w|%\d+|\s)+$#', $uri);
+        return preg_match('#^(?:[~\-_\/&\.\+]|\w|%\d+|\s)+$#', $uri);
     }
 }

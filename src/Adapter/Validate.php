@@ -135,4 +135,16 @@ class Validate
     {
         return ValidateLegacy::isLinkRewrite($value);
     }
+
+    /**
+     * Check for URL validity
+     *
+     * @param $value
+     *
+     * @return bool
+     */
+    public function isURL($value)
+    {
+        return ValidateLegacy::isUrl($value);
+    }
 }
