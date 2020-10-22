@@ -143,7 +143,7 @@ class Validate
      *
      * @return bool
      */
-    public function isURL($value)
+    public function isURL(string $value): bool
     {
         return ValidateLegacy::isUrl($value);
     }
