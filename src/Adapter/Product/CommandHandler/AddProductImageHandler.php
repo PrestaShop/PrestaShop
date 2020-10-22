@@ -75,7 +75,6 @@ final class AddProductImageHandler implements AddProductImageHandlerInterface
     public function handle(AddProductImageCommand $command): ImageId
     {
         $image = $this->productImageRepository->create($command->getProductId(), $this->contextShopIds);
-
         $this->productImageUploader->upload($image, $command->getPathName());
 
         return new ImageId((int) $image->id);
