@@ -177,7 +177,6 @@ describe('Filter, sort and pagination carriers', async () => {
           testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'down',
         },
       },
-
       {
         args: {
           testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'up',
