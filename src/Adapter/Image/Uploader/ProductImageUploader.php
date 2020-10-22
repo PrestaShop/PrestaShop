@@ -39,6 +39,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+/**
+ * Uploads product image to filesystem
+ */
 final class ProductImageUploader extends AbstractImageUploader implements ImageUploaderInterface
 {
     /**
@@ -85,12 +88,12 @@ final class ProductImageUploader extends AbstractImageUploader implements ImageU
     public function upload($imageId, UploadedFile $uploadedFile): void
     {
         $this->checkImageIsAllowedForUpload($uploadedFile);
-        $tmpPath = $this->createTemporaryImage($uploadedFile);
+        $tmpImage = $this->createTemporaryImage($uploadedFile);
 
         $image = $this->productImageRepository->get(new ImageId($imageId));
         $this->productImagePathFactory->createDestinationDirectory($image);
 
-        $this->uploadFromTemp($tmpPath, $this->productImagePathFactory->getBasePath($image, true));
+        $this->uploadFromTemp($tmpImage, $this->productImagePathFactory->getBasePath($image, true));
         $this->generateDifferentSizeImages($this->productImagePathFactory->getBasePath($image, false), 'products');
 
         Hook::exec('actionWatermark', ['id_image' => (int) $image->id, 'id_product' => (int) $image->id_product]);
