@@ -39,7 +39,6 @@ class Carriers extends BOBasePage {
     this.tableColumnActive = row => `${this.tableBodyColumn(row)}:nth-child(6) a`;
     this.enableColumnValidIcon = row => `${this.tableColumnActive(row)} i.icon-check`;
     this.tableColumnIsFree = row => `${this.tableBodyColumn(row)}:nth-child(7) a`;
-    this.tableColumnIsFreeIcon = row => `${this.tableColumnIsFree(row)}:nth-child(7) a`;
     this.tableColumnPosition = row => `${this.tableBodyColumn(row)}:nth-child(8)`;
 
     // Row actions selectors
@@ -70,6 +69,8 @@ class Carriers extends BOBasePage {
     this.bulkActionMenuButton = '#bulk_action_menu_carrier';
     this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
     this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
+    this.bulkEnableLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
+    this.bulkDisableLink = `${this.bulkActionDropdownMenu} li:nth-child(5)`;
     this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(7)`;
   }
 
@@ -343,6 +344,41 @@ class Carriers extends BOBasePage {
 
     // Return successful message
     return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /**
+   * Bulk enable/disable carriers
+   * @param page
+   * @param action
+   * @returns {Promise<unknown>}
+   */
+  async bulkEnableDisableCarriers(page, action) {
+    // Select all rows
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(page, this.selectAllLink),
+    ]);
+
+    await Promise.all([
+      page.click(this.selectAllLink),
+      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+    ]);
+
+    // Perform delete
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(page, this.bulkDeleteLink),
+    ]);
+
+    if (action === 'Enable') {
+      await this.clickAndWaitForNavigation(page, this.bulkEnableLink);
+    } else {
+      await this.clickAndWaitForNavigation(page, this.bulkDisableLink);
+    }
+
+    // not working, skipping it
+    // Return successful message
+    // return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
