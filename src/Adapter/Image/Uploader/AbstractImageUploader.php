@@ -45,7 +45,8 @@ use Tools;
 abstract class AbstractImageUploader
 {
     /**
-     * Check if image is allowed to be uploaded.
+     * @deprecated
+     * @see assertImageIsAllowedForUpload()
      *
      * @param UploadedFile $image
      *
@@ -53,16 +54,28 @@ abstract class AbstractImageUploader
      */
     protected function checkImageIsAllowedForUpload(UploadedFile $image)
     {
+        $this->assertImageIsAllowedForUpload($image->getPathname());
+    }
+
+    /**
+     * @param string $filePath
+     *
+     * @throws ImageUploadException
+     * @throws UploadedImageConstraintException
+     */
+    protected function assertImageIsAllowedForUpload(string $filePath): void
+    {
+        if (!is_file($filePath)) {
+            throw new ImageUploadException(sprintf('"%s" is not a file', $filePath));
+        }
+
         $maxFileSize = Tools::getMaxUploadSize();
 
-        if ($maxFileSize > 0 && $image->getSize() > $maxFileSize) {
+        if ($maxFileSize > 0 && filesize($filePath) > $maxFileSize) {
             throw new UploadedImageConstraintException(sprintf('Max file size allowed is "%s" bytes. Uploaded image size is "%s".', $maxFileSize, $image->getSize()), UploadedImageConstraintException::EXCEEDED_SIZE);
         }
 
-        if (!ImageManager::isRealImage($image->getPathname(), $image->getClientMimeType())
-            || !ImageManager::isCorrectImageFileExt($image->getClientOriginalName())
-            || preg_match('/\%00/', $image->getClientOriginalName()) // prevent null byte injection
-        ) {
+        if (!ImageManager::isRealImage($filePath, mime_content_type($filePath))) {
             throw new UploadedImageConstraintException(sprintf('Image format "%s", not recognized, allowed formats are: .gif, .jpg, .png', $image->getClientOriginalExtension()), UploadedImageConstraintException::UNRECOGNIZED_FORMAT);
         }
     }
