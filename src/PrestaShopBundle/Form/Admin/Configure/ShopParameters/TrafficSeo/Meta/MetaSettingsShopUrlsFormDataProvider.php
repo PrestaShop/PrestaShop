@@ -121,6 +121,14 @@ final class MetaSettingsShopUrlsFormDataProvider implements FormDataProviderInte
             );
         }
 
+        if (!$this->validate->isURL($data['physical_uri'])) {
+            $errors[] = $this->translator->trans(
+                'The Base URI is not valid.',
+                [],
+                'Admin.Notifications.Error'
+            );
+        }
+
         return $errors;
     }
 }
