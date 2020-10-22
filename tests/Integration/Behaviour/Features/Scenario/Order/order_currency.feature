@@ -251,3 +251,96 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | weight                 | 0.600 |
       | shipping_cost_tax_excl | 60.00  |
       | shipping_cost_tax_incl | 63.60  |
+
+    @currency-multi-gift
+    @reset-database-before-scenario
+    # We reset database before this scenario to be sure only default_carrier is enabled
+    Scenario: I add the product with associated gift when the order already has the gift
+      Given there is a product in the catalog named "Test Product With Auto Gift" with a price of 12.0 and 100 items in stock
+      And there is a product in the catalog named "Test Product Gifted" with a price of 15.0 and 100 items in stock
+      And there is a cart rule named "MultiGiftAutoCartRule" that applies an amount discount of 1.0 with priority 1, quantity of 100 and quantity per user 100
+      And cart rule "MultiGiftAutoCartRule" has no discount code
+      And cart rule "MultiGiftAutoCartRule" is restricted to product "Test Product With Auto Gift"
+      And cart rule "MultiGiftAutoCartRule" offers free shipping
+      And cart rule "MultiGiftAutoCartRule" offers a gift product "Test Product Gifted"
+      And I add products to order "bo_order1" with new invoice and the following products details:
+        | name          | Test Product Gifted |
+        | amount        | 1                   |
+        | price         | 150.0               |
+      Then order "bo_order1" should have 3 products in total
+      And order "bo_order1" should have 0 invoice
+      And order "bo_order1" should have 0 cart rule
+      And order "bo_order1" should have "default_carrier" as a carrier
+      And order "bo_order1" should have following details:
+        | total_products           | 388.00 |
+        | total_products_wt        | 411.28 |
+        | total_discounts_tax_excl | 0.0    |
+        | total_discounts_tax_incl | 0.0    |
+        | total_paid_tax_excl      | 458.00 |
+        | total_paid_tax_incl      | 485.48 |
+        | total_paid               | 485.48 |
+        | total_paid_real          | 0.0    |
+        | total_shipping_tax_excl  | 70.00  |
+        | total_shipping_tax_incl  | 74.20  |
+      And order "bo_order1" carrier should have following details:
+        | weight                 | 0.600 |
+        | shipping_cost_tax_excl | 70.00 |
+        | shipping_cost_tax_incl | 74.20 |
+      And product "Mug The best is yet to come" in order "bo_order1" has following details:
+        | product_quantity            | 2      |
+        | product_price               | 119.00 |
+        | unit_price_tax_incl         | 126.14 |
+        | unit_price_tax_excl         | 119.00 |
+        | total_price_tax_incl        | 252.28 |
+        | total_price_tax_excl        | 238.00 |
+      And product "Test Product Gifted" in order "bo_order1" has following details:
+        | product_quantity            | 1      |
+        | product_price               | 150.00 |
+        | unit_price_tax_incl         | 159.00 |
+        | unit_price_tax_excl         | 150.00 |
+        | total_price_tax_incl        | 159.00 |
+        | total_price_tax_excl        | 150.00 |
+      When I add products to order "bo_order1" with new invoice and the following products details:
+        | name          | Test Product With Auto Gift |
+        | amount        | 1                           |
+        | price         | 120.00                      |
+      Then order "bo_order1" should have 5 products in total
+      And order "bo_order1" should have 0 invoice
+      And order "bo_order1" should have 1 cart rule
+      And order "bo_order1" should have following details:
+        | total_products           | 658.00 |
+        | total_products_wt        | 697.48 |
+        | total_discounts_tax_excl | 230.0  |
+        | total_discounts_tax_incl | 243.80 |
+        | total_paid_tax_excl      | 498.00 |
+        | total_paid_tax_incl      | 527.88 |
+        | total_paid               | 527.88 |
+        | total_paid_real          | 0.0    |
+        | total_shipping_tax_excl  | 70.00  |
+        | total_shipping_tax_incl  | 74.20  |
+      And order "bo_order1" carrier should have following details:
+        | weight                 | 0.600 |
+        | shipping_cost_tax_excl | 70.00 |
+        | shipping_cost_tax_incl | 74.20 |
+      And order "bo_order1" should have cart rule "MultiGiftAutoCartRule" with amount "€230.00"
+      And product "Mug The best is yet to come" in order "bo_order1" has following details:
+        | product_quantity            | 2      |
+        | product_price               | 119.00 |
+        | unit_price_tax_incl         | 126.14 |
+        | unit_price_tax_excl         | 119.00 |
+        | total_price_tax_incl        | 252.28 |
+        | total_price_tax_excl        | 238.00 |
+      And product "Test Product Gifted" in order "bo_order1" has following details:
+        | product_quantity            | 2      |
+        | product_price               | 150.00 |
+        | unit_price_tax_incl         | 159.00 |
+        | unit_price_tax_excl         | 150.00 |
+        | total_price_tax_incl        | 318.00 |
+        | total_price_tax_excl        | 300.00 |
+      And product "Test Product With Auto Gift" in order "bo_order1" has following details:
+        | product_quantity            | 1      |
+        | product_price               | 120.00 |
+        | unit_price_tax_incl         | 127.20 |
+        | unit_price_tax_excl         | 120.00 |
+        | total_price_tax_incl        | 127.20 |
+        | total_price_tax_excl        | 120.00 |

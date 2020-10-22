@@ -133,6 +133,17 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * This hook can be used to flag a scenario for database hard reset
      *
+     * @BeforeScenario @reset-database-before-scenario
+     */
+    public static function cleanDatabaseHardPrepareScenario()
+    {
+        DatabaseCreator::restoreTestDB();
+        require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
+    }
+
+    /**
+     * This hook can be used to flag a scenario for database hard reset
+     *
      * @BeforeScenario @database-scenario
      */
     public function cleanDatabaseHardPrepare()
