@@ -4176,8 +4176,21 @@ class AdminControllerCore extends Controller
                 /** @var ObjectModel $object */
                 $object = new $this->className((int) $id);
                 $object->active = (int) $status;
-                $result &= $object->update();
+                $update_ok = $object->update();
+                $result &= $update_ok;
+
+                if (!$update_ok) {
+                    $this->errors[] = $this->trans('Can\'t update #%id% status', ['%id%' => (int) $id], 'Admin.Notifications.Error');
+                }
             }
+
+            if ($result) {
+                $this->redirect_after = self::$currentIndex . '&conf=5&token=' . $this->token;
+            }
+
+            $this->errors[] = $this->trans('An error occurred while updating the status.', [], 'Admin.Notifications.Error');
+        } else {
+            $this->errors[] = $this->trans('You must select at least one element to perform a bulk action.', [], 'Admin.Notifications.Error');
         }
 
         return $result;
