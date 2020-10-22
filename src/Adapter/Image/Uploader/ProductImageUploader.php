@@ -75,6 +75,7 @@ class ProductImageUploader extends AbstractImageUploader
      */
     public function upload(Image $image, string $filePath): void
     {
+        $this->assertImageIsAllowedForUpload($filePath);
         $this->productImagePathFactory->createDestinationDirectory($image);
 
         $this->uploadFromTemp($filePath, $this->productImagePathFactory->getBasePath($image, true));
