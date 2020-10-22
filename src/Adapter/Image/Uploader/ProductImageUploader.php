@@ -33,10 +33,13 @@ use Hook;
 use Image;
 use PrestaShop\PrestaShop\Adapter\Image\Exception\CannotUnlinkImageException;
 use PrestaShop\PrestaShop\Adapter\Product\ProductImagePathFactory;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
+use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-//@todo: do we really need an interface? depends if we use it in controller or in command handler
-class ProductImageUploader extends AbstractImageUploader
+final class ProductImageUploader extends AbstractImageUploader implements ImageUploaderInterface
 {
     /**
      * @var UploadSizeConfigurationInterface
@@ -54,33 +57,43 @@ class ProductImageUploader extends AbstractImageUploader
     private $contextShopId;
 
     /**
+     * @var ProductImageRepository
+     */
+    private $productImageRepository;
+
+    /**
      * @param UploadSizeConfigurationInterface $uploadSizeConfiguration
      * @param ProductImagePathFactory $productImagePathFactory
      * @param int $contextShopId
+     * @param ProductImageRepository $productImageRepository
      */
     public function __construct(
         UploadSizeConfigurationInterface $uploadSizeConfiguration,
         ProductImagePathFactory $productImagePathFactory,
-        int $contextShopId
+        int $contextShopId,
+        ProductImageRepository $productImageRepository
     ) {
         $this->uploadSizeConfiguration = $uploadSizeConfiguration;
         $this->productImagePathFactory = $productImagePathFactory;
         $this->contextShopId = $contextShopId;
+        $this->productImageRepository = $productImageRepository;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function upload(Image $image, string $filePath): void
+    public function upload($imageId, UploadedFile $uploadedFile): void
     {
+        $this->checkImageIsAllowedForUpload($uploadedFile);
+        $tmpPath = $this->createTemporaryImage($uploadedFile);
+
+        $image = $this->productImageRepository->get(new ImageId($imageId));
         $this->productImagePathFactory->createDestinationDirectory($image);
 
-        //@todo: this will unlink the image. Can we trust that the $filePath is in temp?
-        $this->uploadFromTemp($filePath, $this->productImagePathFactory->getBasePath($image, true));
+        $this->uploadFromTemp($tmpPath, $this->productImagePathFactory->getBasePath($image, true));
         $this->generateDifferentSizeImages($this->productImagePathFactory->getBasePath($image, false), 'products');
 
         Hook::exec('actionWatermark', ['id_image' => (int) $image->id, 'id_product' => (int) $image->id_product]);
-        //@todo: moved multishop association from here to Repository when Image objModel is created
         $this->deleteCachedImages($image);
     }
 
@@ -103,7 +116,6 @@ class ProductImageUploader extends AbstractImageUploader
                 try {
                     unlink($cachedImage);
                 } catch (ErrorException $e) {
-                    //@todo: do we really need to fail on cached images deletion? It was suppressed in legacy
                     throw new CannotUnlinkImageException(
                         sprintf(
                             'Failed to remove cached image "%s"',
