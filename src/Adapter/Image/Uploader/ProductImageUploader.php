@@ -35,7 +35,9 @@ use PrestaShop\PrestaShop\Adapter\Image\Exception\CannotUnlinkImageException;
 use PrestaShop\PrestaShop\Adapter\Product\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
 
-//@todo: do we really need an interface? depends if we use it in controller or in command handler
+/**
+ * Uploads product image to filesystem
+ */
 class ProductImageUploader extends AbstractImageUploader
 {
     /**
@@ -75,12 +77,10 @@ class ProductImageUploader extends AbstractImageUploader
     {
         $this->productImagePathFactory->createDestinationDirectory($image);
 
-        //@todo: this will unlink the image. Can we trust that the $filePath is in temp?
         $this->uploadFromTemp($filePath, $this->productImagePathFactory->getBasePath($image, true));
         $this->generateDifferentSizeImages($this->productImagePathFactory->getBasePath($image, false), 'products');
 
         Hook::exec('actionWatermark', ['id_image' => (int) $image->id, 'id_product' => (int) $image->id_product]);
-        //@todo: moved multishop association from here to Repository when Image objModel is created
         $this->deleteCachedImages($image);
     }
 
@@ -103,7 +103,6 @@ class ProductImageUploader extends AbstractImageUploader
                 try {
                     unlink($cachedImage);
                 } catch (ErrorException $e) {
-                    //@todo: do we really need to fail on cached images deletion? It was suppressed in legacy
                     throw new CannotUnlinkImageException(
                         sprintf(
                             'Failed to remove cached image "%s"',
