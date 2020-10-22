@@ -1374,6 +1374,10 @@ class AdminImportControllerCore extends AdminController
 
     protected function categoryImportOne($info, $default_language_id, $id_lang, $force_ids, $regenerate, $shop_is_feature_active, &$cat_moved, $validateOnly = false)
     {
+        if (!$force_ids) {
+            unset($info['id']);
+        }
+
         $tab_categ = [Configuration::get('PS_HOME_CATEGORY'), Configuration::get('PS_ROOT_CATEGORY')];
         if (isset($info['id']) && in_array((int) $info['id'], $tab_categ)) {
             $this->errors[] = $this->trans('The category ID must be unique. It can\'t be the same as the one for Root or Home category.', [], 'Admin.Advparameters.Notification');
@@ -1382,14 +1386,10 @@ class AdminImportControllerCore extends AdminController
         }
         AdminImportController::setDefaultValues($info);
 
+        $category = new Category();
+
         if ($force_ids && isset($info['id']) && (int) $info['id']) {
             $category = new Category((int) $info['id']);
-        } else {
-            if (isset($info['id']) && (int) $info['id'] && Category::existsInDatabase((int) $info['id'], 'category')) {
-                $category = new Category((int) $info['id']);
-            } else {
-                $category = new Category();
-            }
         }
 
         AdminImportController::arrayWalk($info, ['AdminImportController', 'fillInfo'], $category);
@@ -1401,7 +1401,7 @@ class AdminImportControllerCore extends AdminController
                 $this->errors[] = $this->trans(
                     'The category ID must be unique. It can\'t be the same as the one for the parent category (ID: %1$s).',
                     [
-                        !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null',
+                        isset($info['id']) && !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null',
                     ],
                     'Admin.Advparameters.Notification'
                 );
@@ -1522,7 +1522,7 @@ class AdminImportControllerCore extends AdminController
                         [],
                         'Admin.Advparameters.Notification'
                     ),
-                    !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null'
+                    isset($info['id']) && !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null'
                 );
 
                 return;
@@ -3064,16 +3064,16 @@ class AdminImportControllerCore extends AdminController
 
     protected function customerImportOne($info, $default_language_id, $id_lang, $shop_is_feature_active, $force_ids, $validateOnly = false)
     {
+        if (!$force_ids) {
+            unset($info['id']);
+        }
+
         AdminImportController::setDefaultValues($info);
+
+        $customer = new Customer();
 
         if ($force_ids && isset($info['id']) && (int) $info['id']) {
             $customer = new Customer((int) $info['id']);
-        } else {
-            if (array_key_exists('id', $info) && (int) $info['id'] && Customer::customerIdExistsStatic((int) $info['id'])) {
-                $customer = new Customer((int) $info['id']);
-            } else {
-                $customer = new Customer();
-            }
         }
 
         $customer_exist = false;
@@ -3259,7 +3259,7 @@ class AdminImportControllerCore extends AdminController
                     'Email address %1$s (ID: %2$s) cannot be validated.',
                     [
                         Tools::htmlentitiesUTF8($info['email']),
-                        !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null',
+                        isset($info['id']) && !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null',
                     ],
                     'Admin.Advparameters.Notification'
                 );
@@ -3319,16 +3319,16 @@ class AdminImportControllerCore extends AdminController
 
     protected function addressImportOne($info, $force_ids, $validateOnly = false)
     {
+        if (!$force_ids) {
+            unset($info['id']);
+        }
+
         AdminImportController::setDefaultValues($info);
+
+        $address = new Address();
 
         if ($force_ids && isset($info['id']) && (int) $info['id']) {
             $address = new Address((int) $info['id']);
-        } else {
-            if (array_key_exists('id', $info) && (int) $info['id'] && Address::addressExists((int) $info['id'])) {
-                $address = new Address((int) $info['id']);
-            } else {
-                $address = new Address();
-            }
         }
 
         AdminImportController::arrayWalk($info, ['AdminImportController', 'fillInfo'], $address);
@@ -3422,7 +3422,7 @@ class AdminImportControllerCore extends AdminController
                             [
                                 Tools::htmlentitiesUTF8($address->customer_email),
                                 Tools::htmlentitiesUTF8(Db::getInstance()->getMsgError()),
-                                !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null',
+                                isset($info['id']) && !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null',
                             ],
                             'Admin.Advparameters.Notification'
                         );
@@ -3432,7 +3432,7 @@ class AdminImportControllerCore extends AdminController
                             [
                                 Tools::htmlentitiesUTF8($address->customer_email),
                                 Tools::htmlentitiesUTF8(Db::getInstance()->getMsgError()),
-                                !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null',
+                                isset($info['id']) && !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null',
                             ],
                             'Admin.Advparameters.Notification'
                         );
@@ -3584,7 +3584,7 @@ class AdminImportControllerCore extends AdminController
                 $this->errors[] = sprintf(
                     $this->trans('%1$s (ID: %2$s) cannot be saved', [], 'Admin.Advparameters.Notification'),
                     Tools::htmlentitiesUTF8($info['alias']),
-                    !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null'
+                    isset($info['id']) && !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null'
                 );
             }
             if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
@@ -3638,16 +3638,16 @@ class AdminImportControllerCore extends AdminController
 
     protected function manufacturerImportOne($info, $shop_is_feature_active, $regenerate, $force_ids, $validateOnly = false)
     {
+        if (!$force_ids) {
+            unset($info['id']);
+        }
+
         AdminImportController::setDefaultValues($info);
+
+        $manufacturer = new Manufacturer();
 
         if ($force_ids && isset($info['id']) && (int) $info['id']) {
             $manufacturer = new Manufacturer((int) $info['id']);
-        } else {
-            if (array_key_exists('id', $info) && (int) $info['id'] && Manufacturer::existsInDatabase((int) $info['id'], 'manufacturer')) {
-                $manufacturer = new Manufacturer((int) $info['id']);
-            } else {
-                $manufacturer = new Manufacturer();
-            }
         }
 
         AdminImportController::arrayWalk($info, ['AdminImportController', 'fillInfo'], $manufacturer);
@@ -3698,7 +3698,7 @@ class AdminImportControllerCore extends AdminController
                 $this->errors[] = Db::getInstance()->getMsgError() . ' ' . sprintf(
                     $this->trans('%1$s (ID: %2$s) cannot be saved', [], 'Admin.Advparameters.Notification'),
                     !empty($info['name']) ? Tools::safeOutput($info['name']) : 'No Name',
-                    !empty($info['id']) ? Tools::safeOutput($info['id']) : 'No ID'
+                    isset($info['id']) && !empty($info['id']) ? Tools::safeOutput($info['id']) : 'No ID'
                 );
             }
             if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
@@ -3756,16 +3756,16 @@ class AdminImportControllerCore extends AdminController
 
     protected function supplierImportOne($info, $shop_is_feature_active, $regenerate, $force_ids, $validateOnly = false)
     {
+        if (!$force_ids) {
+            unset($info['id']);
+        }
+
         AdminImportController::setDefaultValues($info);
+
+        $supplier = new Supplier();
 
         if ($force_ids && isset($info['id']) && (int) $info['id']) {
             $supplier = new Supplier((int) $info['id']);
-        } else {
-            if (array_key_exists('id', $info) && (int) $info['id'] && Supplier::existsInDatabase((int) $info['id'], 'supplier')) {
-                $supplier = new Supplier((int) $info['id']);
-            } else {
-                $supplier = new Supplier();
-            }
         }
 
         AdminImportController::arrayWalk($info, ['AdminImportController', 'fillInfo'], $supplier);
@@ -3791,7 +3791,7 @@ class AdminImportControllerCore extends AdminController
                 $this->errors[] = Db::getInstance()->getMsgError() . ' ' . sprintf(
                     $this->trans('%1$s (ID: %2$s) cannot be saved', [], 'Admin.Advparameters.Notification'),
                     !empty($info['name']) ? Tools::safeOutput($info['name']) : 'No Name',
-                    !empty($info['id']) ? Tools::safeOutput($info['id']) : 'No ID'
+                    isset($info['id']) && !empty($info['id']) ? Tools::safeOutput($info['id']) : 'No ID'
                 );
             } elseif (!$validateOnly) {
                 // Associate supplier to group shop
@@ -3860,16 +3860,16 @@ class AdminImportControllerCore extends AdminController
 
     protected function aliasImportOne($info, $force_ids, $validateOnly = false)
     {
+        if (!$force_ids) {
+            unset($info['id']);
+        }
+
         AdminImportController::setDefaultValues($info);
+
+        $alias = new Alias();
 
         if ($force_ids && isset($info['id']) && (int) $info['id']) {
             $alias = new Alias((int) $info['id']);
-        } else {
-            if (array_key_exists('id', $info) && (int) $info['id'] && Alias::existsInDatabase((int) $info['id'], 'alias')) {
-                $alias = new Alias((int) $info['id']);
-            } else {
-                $alias = new Alias();
-            }
         }
 
         AdminImportController::arrayWalk($info, ['AdminImportController', 'fillInfo'], $alias);
@@ -3939,16 +3939,16 @@ class AdminImportControllerCore extends AdminController
 
     public function storeContactImportOne($info, $shop_is_feature_active, $regenerate, $force_ids, $validateOnly = false)
     {
+        if (!$force_ids) {
+            unset($info['id']);
+        }
+
         AdminImportController::setDefaultValues($info);
+
+        $store = new Store();
 
         if ($force_ids && isset($info['id']) && (int) $info['id']) {
             $store = new Store((int) $info['id']);
-        } else {
-            if (array_key_exists('id', $info) && (int) $info['id'] && Store::existsInDatabase((int) $info['id'], 'store')) {
-                $store = new Store((int) $info['id']);
-            } else {
-                $store = new Store();
-            }
         }
 
         AdminImportController::arrayWalk($info, ['AdminImportController', 'fillInfo'], $store);
@@ -4109,16 +4109,17 @@ class AdminImportControllerCore extends AdminController
 
     protected function supplyOrdersImportOne($info, $force_ids, $current_line, $validateOnly = false)
     {
+        if (!$force_ids) {
+            unset($info['id']);
+        }
+
         // sets default values if needed
         AdminImportController::setDefaultValues($info);
 
+        $supply_order = new SupplyOrder();
         // if an id is set, instanciates a supply order with this id if possible
-        if (array_key_exists('id', $info) && (int) $info['id'] && SupplyOrder::exists((int) $info['id'])) {
+        if (array_key_exists('id', $info) && (int) $info['id']) {
             $supply_order = new SupplyOrder((int) $info['id']);
-        } elseif (array_key_exists('reference', $info) && $info['reference'] && SupplyOrder::exists(pSQL($info['reference']))) {
-            $supply_order = SupplyOrder::getSupplyOrderByReference(pSQL($info['reference']));
-        } else { // new supply order
-            $supply_order = new SupplyOrder();
         }
 
         // gets parameters
