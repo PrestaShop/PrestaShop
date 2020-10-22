@@ -52,6 +52,13 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 70.00  |
       | total_shipping_tax_incl  | 74.20  |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2        |
+      | product_price               | 119.00   |
+      | unit_price_tax_incl         | 126.14   |
+      | unit_price_tax_excl         | 119.00   |
+      | total_price_tax_incl        | 252.28   |
+      | total_price_tax_excl        | 238.00   |
 
   Scenario: Add cart rule of type 'amount' to an order with secondary currency
     Given I add discount to order "bo_order1" with following details:
@@ -226,6 +233,72 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_shipping_tax_excl | 70.00    |
       | total_shipping_tax_incl | 74.20    |
 
+  Scenario: Change delivery address
+    Given I add new address to customer "testCustomer" with following details:
+      | Address alias    | test-customer-france-address |
+      | First name       | testFirstName                |
+      | Last name        | testLastName                 |
+      | Address          | 36 Avenue des Champs Elysees |
+      | City             | Paris                        |
+      | Country          | France                       |
+      | Postal code      | 75008                        |
+    And I change order "bo_order1" shipping address to "test-customer-france-address"
+    Then order "bo_order1" should have following details:
+      | total_products           | 238.00 |
+      | total_products_wt        | 238.00 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 308.00 |
+      | total_paid_tax_incl      | 308.00 |
+      | total_paid               | 308.00 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 70.00  |
+      | total_shipping_tax_incl  | 70.00  |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 0.600 |
+      | shipping_cost_tax_excl | 70.00 |
+      | shipping_cost_tax_incl | 70.00 |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2      |
+      | product_price               | 119.00 |
+      | unit_price_tax_incl         | 119.00 |
+      | unit_price_tax_excl         | 119.00 |
+      | total_price_tax_incl        | 238.00 |
+      | total_price_tax_excl        | 238.00 |
+
+  Scenario: Change invoice address
+    Given I add new address to customer "testCustomer" with following details:
+      | Address alias    | test-customer-france-address |
+      | First name       | testFirstName                |
+      | Last name        | testLastName                 |
+      | Address          | 36 Avenue des Champs Elysees |
+      | City             | Paris                        |
+      | Country          | France                       |
+      | Postal code      | 75008                        |
+    And I change order "bo_order1" invoice address to "test-customer-france-address"
+    Then order "bo_order1" should have following details:
+      | total_products           | 238.00 |
+      | total_products_wt        | 252.28 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 308.00 |
+      | total_paid_tax_incl      | 326.48 |
+      | total_paid               | 326.48 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 70.00  |
+      | total_shipping_tax_incl  | 74.20  |
+    And order "bo_order1" carrier should have following details:
+      | weight                 | 0.600 |
+      | shipping_cost_tax_excl | 70.00 |
+      | shipping_cost_tax_incl | 74.20 |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2      |
+      | product_price               | 119.00 |
+      | unit_price_tax_incl         | 126.14 |
+      | unit_price_tax_excl         | 119.00 |
+      | total_price_tax_incl        | 252.28 |
+      | total_price_tax_excl        | 238.00 |
+
   Scenario: Carrier change for an order with secondary currency
     Given a carrier "default_carrier" with name "My carrier" exists
     And a carrier "price_carrier" with name "My cheap carrier" exists
@@ -251,8 +324,14 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | weight                 | 0.600 |
       | shipping_cost_tax_excl | 60.00  |
       | shipping_cost_tax_incl | 63.60  |
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2        |
+      | product_price               | 119.00   |
+      | unit_price_tax_incl         | 126.14   |
+      | unit_price_tax_excl         | 119.00   |
+      | total_price_tax_incl        | 252.28   |
+      | total_price_tax_excl        | 238.00   |
 
-    @currency-multi-gift
     @reset-database-before-scenario
     # We reset database before this scenario to be sure only default_carrier is enabled
     Scenario: I add the product with associated gift when the order already has the gift
@@ -337,6 +416,46 @@ Feature: Multiple currencies for Order in Back Office (BO)
         | unit_price_tax_excl         | 150.00 |
         | total_price_tax_incl        | 318.00 |
         | total_price_tax_excl        | 300.00 |
+      And product "Test Product With Auto Gift" in order "bo_order1" has following details:
+        | product_quantity            | 1      |
+        | product_price               | 120.00 |
+        | unit_price_tax_incl         | 127.20 |
+        | unit_price_tax_excl         | 120.00 |
+        | total_price_tax_incl        | 127.20 |
+        | total_price_tax_excl        | 120.00 |
+      When I remove cart rule "MultiGiftAutoCartRule" from order "bo_order1"
+      Then order "bo_order1" should have 4 products in total
+      And order "bo_order1" should have 0 invoice
+      And order "bo_order1" should have 0 cart rule
+      And order "bo_order1" should have following details:
+        | total_products           | 508.00 |
+        | total_products_wt        | 538.48 |
+        | total_discounts_tax_excl | 0.00   |
+        | total_discounts_tax_incl | 0.00   |
+        | total_paid_tax_excl      | 578.00 |
+        | total_paid_tax_incl      | 612.68 |
+        | total_paid               | 612.68 |
+        | total_paid_real          | 0.0    |
+        | total_shipping_tax_excl  | 70.00  |
+        | total_shipping_tax_incl  | 74.20  |
+      And order "bo_order1" carrier should have following details:
+        | weight                 | 0.600 |
+        | shipping_cost_tax_excl | 70.00 |
+        | shipping_cost_tax_incl | 74.20 |
+      And product "Mug The best is yet to come" in order "bo_order1" has following details:
+        | product_quantity            | 2      |
+        | product_price               | 119.00 |
+        | unit_price_tax_incl         | 126.14 |
+        | unit_price_tax_excl         | 119.00 |
+        | total_price_tax_incl        | 252.28 |
+        | total_price_tax_excl        | 238.00 |
+      And product "Test Product Gifted" in order "bo_order1" has following details:
+        | product_quantity            | 1      |
+        | product_price               | 150.00 |
+        | unit_price_tax_incl         | 159.00 |
+        | unit_price_tax_excl         | 150.00 |
+        | total_price_tax_incl        | 159.00 |
+        | total_price_tax_excl        | 150.00 |
       And product "Test Product With Auto Gift" in order "bo_order1" has following details:
         | product_quantity            | 1      |
         | product_price               | 120.00 |
