@@ -228,10 +228,10 @@ class ProductCore extends ObjectModel
     /** @var string ENUM('both', 'catalog', 'search', 'none') front office visibility */
     public $visibility;
 
-    /** @var string Object creation date in mysql format Y-m-d */
+    /** @var string Object creation date in mysql format Y-m-d H:i:s */
     public $date_add;
 
-    /** @var string Object last modification date in mysql format Y-m-d */
+    /** @var string Object last modification date in mysql format Y-m-d H:i:s */
     public $date_upd;
 
     /** @var array Tags data */
