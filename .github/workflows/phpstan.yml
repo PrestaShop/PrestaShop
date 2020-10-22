@@ -3,7 +3,7 @@ on: [push, pull_request]
 jobs:
   phpstan:
     name: phpstan
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-18.04
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v1
