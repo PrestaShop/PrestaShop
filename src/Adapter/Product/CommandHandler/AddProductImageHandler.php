@@ -76,7 +76,6 @@ final class AddProductImageHandler implements AddProductImageHandlerInterface
     {
         $image = $this->productImageRepository->create($command->getProductId(), $this->contextShopIds);
 
-        //@todo: db transaction rollback if upload fails?
         $this->productImageUploader->upload($image, $command->getPathName());
 
         return new ImageId((int) $image->id);
