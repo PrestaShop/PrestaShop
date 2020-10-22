@@ -7,7 +7,7 @@ Feature: Cart calculation with tax
     Given I have an empty default cart
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country"country1" and zone "zone1"
+    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     When I select address "address1" in my cart
     Then my cart total should be 0.0 tax included
@@ -25,7 +25,7 @@ Feature: Cart calculation with tax
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country"country1" and zone "zone1"
+    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 4.0%
     Given there is a tax rule named "taxrule1"in country "country1" and state "state1" where tax "tax1" is applied
@@ -47,7 +47,7 @@ Feature: Cart calculation with tax
     Given there is a product in the catalog named "product5" with a price of 19.812 and 1000 items in stock
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country"country1" and zone "zone1"
+    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 6.0%
     Given there is a tax rule named "taxrule1"in country "country1" and state "state1" where tax "tax1" is applied
@@ -69,7 +69,7 @@ Feature: Cart calculation with tax
     Given there is a product in the catalog named "product5" with a price of 19.812 and 1000 items in stock
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country"country1" and zone "zone1"
+    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 0.0%
     Given there is a tax rule named "taxrule1"in country "country1" and state "state1" where tax "tax1" is applied
@@ -91,7 +91,7 @@ Feature: Cart calculation with tax
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country"country1" and zone "zone1"
+    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 4.0%
     Given there is a tax rule named "taxrule1"in country "country1" and state "state1" where tax "tax1" is applied
@@ -115,7 +115,7 @@ Feature: Cart calculation with tax
     Given there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country"country1" and zone "zone1"
+    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 4.0%
     Given there is a tax rule named "taxrule1"in country "country1" and state "state1" where tax "tax1" is applied
@@ -147,7 +147,7 @@ Feature: Cart calculation with tax
     Given there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country"country1" and zone "zone1"
+    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 4.0%
     Given there is a tax rule named "taxrule1"in country "country1" and state "state1" where tax "tax1" is applied

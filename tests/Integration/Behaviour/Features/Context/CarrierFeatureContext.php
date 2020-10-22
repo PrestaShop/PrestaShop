@@ -147,7 +147,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^there is a state named "(.+)" with iso code "(.+)" in country"(.+)" and zone "(.+)"$/
+     * @Given /^there is a state named "(.+)" with iso code "(.+)" in country "(.+)" and zone "(.+)"$/
      */
     public function createState($stateName, $stateIsoCode, $countryName, $zoneName)
     {
