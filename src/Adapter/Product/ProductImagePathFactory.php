@@ -31,6 +31,9 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 use Image;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 
+/**
+ * Responsible for product image paths in filesystem
+ */
 class ProductImagePathFactory
 {
     /**
@@ -47,6 +50,14 @@ class ProductImagePathFactory
         $this->isLegacyImageMode = $isLegacyImageMode;
     }
 
+    /**
+     * Returns base path for product image
+     *
+     * @param Image $image
+     * @param bool $withExtension returns path with extension (e.g. /image.jpg) if true and without (e.g. /image) if false
+     *
+     * @return string
+     */
     public function getBasePath(Image $image, bool $withExtension): string
     {
         if ($this->isLegacyImageMode) {
@@ -63,6 +74,11 @@ class ProductImagePathFactory
         return _PS_PROD_IMG_DIR_ . $path;
     }
 
+    /**
+     * @param Image $image
+     *
+     * @throws ImageUploadException
+     */
     public function createDestinationDirectory(Image $image): void
     {
         if ($this->isLegacyImageMode || $image->createImgFolder()) {
@@ -75,12 +91,22 @@ class ProductImagePathFactory
         ));
     }
 
-    //@todo: make static?
+    /**
+     * @param int $productId
+     * @param int $shopId
+     *
+     * @return string
+     */
     public function getCachedCover(int $productId, int $shopId): string
     {
         return sprintf('%sproduct_mini_%s_%s.jpg', _PS_TMP_IMG_DIR_, $productId, $shopId);
     }
 
+    /**
+     * @param int $productId
+     *
+     * @return string
+     */
     public function getCachedThumbnail(int $productId): string
     {
         return sprintf('%sproduct_%s.jpg', _PS_TMP_IMG_DIR_, $productId);
