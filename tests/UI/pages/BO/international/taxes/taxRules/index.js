@@ -60,6 +60,8 @@ class TaxRules extends BOBasePage {
     this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
     this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
     this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(7)`;
+    this.bulkEnableLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
+    this.bulkDisableLink = `${this.bulkActionDropdownMenu} li:nth-child(5)`;
   }
 
   /*
@@ -312,6 +314,25 @@ class TaxRules extends BOBasePage {
     // Click on delete
     await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
     return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /**
+   * Enable / disable tax rules by Bulk Actions
+   * @param page
+   * @param enable
+   * @returns {Promise<string>}
+   */
+  async changeEnabledColumnBulkActions(page, enable = true) {
+    // Select all rows
+    await this.bulkSelectRows(page);
+
+    // Click on Button Bulk actions
+    await page.click(this.bulkActionMenuButton);
+
+    // Click to change status
+    await this.clickAndWaitForNavigation(page, enable ? this.bulkEnableLink : this.bulkDisableLink);
+    /* Successful message is not visible, skipping it */
+    // return this.getTextContent(page, this.alertSuccessBlock);
   }
 }
 
