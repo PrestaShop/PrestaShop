@@ -47,7 +47,7 @@ class ProductImagePathFactory
         $this->isLegacyImageMode = $isLegacyImageMode;
     }
 
-    public function getBasePath(Image $image, bool $withExtension): string
+    public function getBasePath(Image $image): string
     {
         if ($this->isLegacyImageMode) {
             $path = $image->id_product . '-' . $image->id;
@@ -55,12 +55,7 @@ class ProductImagePathFactory
             $path = $image->getImgPath();
         }
 
-        //@todo: it seems that jpg is hardcoded. AdminProductsController:2836
-        if ($withExtension) {
-            $path .= sprintf('.%s', $image->image_format);
-        }
-
-        return _PS_PROD_IMG_DIR_ . $path;
+        return sprintf('%s%s.%s', _PS_PROD_IMG_DIR_, $path, $image->image_format);
     }
 
     public function createDestinationDirectory(Image $image): void
@@ -75,7 +70,6 @@ class ProductImagePathFactory
         ));
     }
 
-    //@todo: make static?
     public function getCachedCover(int $productId, int $shopId): string
     {
         return sprintf('%sproduct_mini_%s_%s.jpg', _PS_TMP_IMG_DIR_, $productId, $shopId);
