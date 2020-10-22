@@ -31,13 +31,13 @@ class Statuses extends BOBasePage {
     this.tableBody = tableName => `${this.gridTable(tableName)} tbody`;
     this.tableBodyRows = tableName => `${this.tableBody(tableName)} tr`;
     this.tableBodyRow = (tableName, row) => `${this.tableBodyRows(tableName)}:nth-child(${row})`;
-    this.tableBodyColumn = (tableName, row) => `${this.tableBodyRow(tableName, row)} td`;
+    this.tableBodyColumns = (tableName, row) => `${this.tableBodyRow(tableName, row)} td`;
 
     // Columns selectors
-    this.tableColumn = (tableName, row, idColumn) => `${this.tableBodyColumn(tableName, row)}:nth-child(${idColumn})`;
+    this.tableColumn = (tableName, row, column) => `${this.tableBodyColumns(tableName, row)}:nth-child(${column})`;
 
     // Row actions selectors
-    this.tableColumnActions = (tableName, row) => `${this.tableBodyColumn(tableName, row)}
+    this.tableColumnActions = (tableName, row) => `${this.tableBodyColumns(tableName, row)}
     .btn-group-action`;
     this.tableColumnActionsEditLink = (tableName, row) => `${this.tableColumnActions(tableName, row)} a.edit`;
     this.tableColumnActionsToggleButton = (tableName, row) => `${this.tableColumnActions(tableName, row)}
@@ -166,15 +166,15 @@ class Statuses extends BOBasePage {
    * @param page
    * @param row
    * @param columnName
-   * @param idColumn
+   * @param column
    * @param tableName
    * @return {Promise<string>}
    */
-  async getTextColumn(page, row, columnName, idColumn, tableName = 'order') {
+  async getTextColumn(page, row, columnName, column, tableName = 'order') {
     if (columnName === 'send_email' || columnName === 'delivery' || columnName === 'invoice') {
-      return this.getAttributeContent(page, `${this.tableColumn(tableName, row, idColumn)} a`, 'title');
+      return this.getAttributeContent(page, `${this.tableColumn(tableName, row, column)} a`, 'title');
     }
-    return this.getTextContent(page, this.tableColumn(tableName, row, idColumn));
+    return this.getTextContent(page, this.tableColumn(tableName, row, column));
   }
 
   /**
