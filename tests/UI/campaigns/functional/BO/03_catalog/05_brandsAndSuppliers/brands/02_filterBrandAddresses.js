@@ -10,9 +10,8 @@ const loginCommon = require('@commonTests/loginBO');
 const {demoAddresses} = require('@data/demo/brands');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const BrandsPage = require('@pages/BO/catalog/brands');
+const dashboardPage = require('@pages/BO/dashboard');
+const brandsPage = require('@pages/BO/catalog/brands');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -24,51 +23,42 @@ let browserContext;
 let page;
 let numberOfBrandsAddresses = 0;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    brandsPage: new BrandsPage(page),
-  };
-};
-
 // Filter And Quick Edit Addresses
 describe('Filter And Quick Edit Addresses', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   // Go to brands page
   it('should go to brands page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.catalogParentLink,
-      this.pageObjects.dashboardPage.brandsAndSuppliersLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.catalogParentLink,
+      dashboardPage.brandsAndSuppliersLink,
     );
 
-    await this.pageObjects.brandsPage.closeSfToolBar();
+    await brandsPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.brandsPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.brandsPage.pageTitle);
+    const pageTitle = await brandsPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(brandsPage.pageTitle);
   });
 
   it('should reset all filters and get Number of brands in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-    numberOfBrandsAddresses = await this.pageObjects.brandsPage.resetAndGetNumberOfLines('manufacturer_address');
+    numberOfBrandsAddresses = await brandsPage.resetAndGetNumberOfLines(page, 'manufacturer_address');
     await expect(numberOfBrandsAddresses).to.be.above(0);
   });
 
@@ -144,20 +134,22 @@ describe('Filter And Quick Edit Addresses', async () => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        await this.pageObjects.brandsPage.filterAddresses(
+        await brandsPage.filterAddresses(
+          page,
           test.args.filterType,
           test.args.filterBy,
           test.args.filterValue,
         );
 
-        const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid(
+        const numberOfBrandsAddressesAfterFilter = await brandsPage.getNumberOfElementInGrid(
+          page,
           'manufacturer_address',
         );
 
         await expect(numberOfBrandsAddressesAfterFilter).to.be.at.most(numberOfBrandsAddresses);
 
         for (let i = 1; i <= numberOfBrandsAddressesAfterFilter; i++) {
-          const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableAddresses(i, test.args.filterBy);
+          const textColumn = await brandsPage.getTextColumnFromTableAddresses(page, i, test.args.filterBy);
           await expect(textColumn).to.contains(test.args.filterValue);
         }
       });
@@ -165,7 +157,8 @@ describe('Filter And Quick Edit Addresses', async () => {
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines(
+        const numberOfBrandsAddressesAfterReset = await brandsPage.resetAndGetNumberOfLines(
+          page,
           'manufacturer_address',
         );
 

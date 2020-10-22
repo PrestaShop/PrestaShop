@@ -40,6 +40,7 @@ class ToolsCore
 {
     const CACERT_LOCATION = 'https://curl.haxx.se/ca/cacert.pem';
     const SERVICE_LOCALE_REPOSITORY = 'prestashop.core.localization.locale.repository';
+    public const CACHE_LIFETIME_SECONDS = 604800;
 
     protected static $file_exists_cache = [];
     protected static $_forceCompile;
@@ -49,6 +50,7 @@ class ToolsCore
     protected static $request;
     protected static $cldr_cache = [];
     protected static $colorBrightnessCalculator;
+    protected static $fallbackParameters = [];
 
     public static $round_mode = null;
 
@@ -524,8 +526,14 @@ class ToolsCore
 
         if (getenv('kernel.environment') === 'test' && self::$request instanceof Request) {
             $value = self::$request->request->get($key, self::$request->query->get($key, $default_value));
-        } else {
-            $value = (isset($_POST[$key]) ? $_POST[$key] : (isset($_GET[$key]) ? $_GET[$key] : $default_value));
+        } elseif (isset($_POST[$key]) || isset($_GET[$key])) {
+            $value = isset($_POST[$key]) ? $_POST[$key] : $_GET[$key];
+        } elseif (isset(static::$fallbackParameters[$key])) {
+            $value = static::$fallbackParameters[$key];
+        }
+
+        if (!isset($value)) {
+            $value = $default_value;
         }
 
         if (is_string($value)) {
@@ -1949,6 +1957,13 @@ class ToolsCore
         }
     }
 
+    /**
+     * @param $value
+     * @param $places
+     * @param int $mode
+     *
+     * @return false|float
+     */
     public static function math_round($value, $places, $mode = PS_ROUND_HALF_UP)
     {
         //If PHP_ROUND_HALF_UP exist (PHP 5.3) use it and pass correct mode value (PrestaShop define - 1)
@@ -2007,6 +2022,12 @@ class ToolsCore
         return $tmp_value;
     }
 
+    /**
+     * @param $value
+     * @param $mode
+     *
+     * @return float
+     */
     public static function round_helper($value, $mode)
     {
         if ($value >= 0.0) {
@@ -2703,8 +2724,25 @@ class ToolsCore
 	<FilesMatch \"\.(ttf|ttc|otf|eot|woff|woff2|svg)$\">
 		Header set Access-Control-Allow-Origin \"*\"
 	</FilesMatch>
-</IfModule>\n\n");
 
+    <FilesMatch \"\.pdf$\">
+      Header set Content-Disposition \"Attachment\"
+      Header set X-Content-Type-Options \"nosniff\"
+    </FilesMatch>
+</IfModule>\n\n");
+        fwrite($write_fd, '<Files composer.lock>
+    # Apache 2.2
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+
+    # Apache 2.4
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+</Files>
+');
         // Cache control
         if ($cache_control) {
             $cache_control = "<IfModule mod_expires.c>
@@ -2961,14 +2999,15 @@ FileETag none
     {
         return '<?php
 /**
- * 2007-' . date('Y') . ' PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -2977,12 +3016,11 @@ FileETag none
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-' . date('Y') . ' PrestaShop SA
- * @license   https://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
@@ -4398,13 +4436,55 @@ exit;
     public static function redirectToInstall()
     {
         if (file_exists(__DIR__ . '/../install')) {
-            header('Location: install/');
+            if (defined('_PS_ADMIN_DIR_')) {
+                header('Location: ../install/');
+            } else {
+                header('Location: install/');
+            }
         } elseif (file_exists(__DIR__ . '/../install-dev')) {
-            header('Location: install-dev/');
+            if (defined('_PS_ADMIN_DIR_')) {
+                header('Location: ../install-dev/');
+            } else {
+                header('Location: install-dev/');
+            }
         } else {
             die('Error: "install" directory is missing');
         }
         exit;
+    }
+
+    /**
+     * @param array $fallbackParameters
+     */
+    public static function setFallbackParameters(array $fallbackParameters): void
+    {
+        static::$fallbackParameters = $fallbackParameters;
+    }
+
+    /**
+     * @param string $file_to_refresh
+     * @param string $external_file
+     *
+     * @return bool
+     */
+    public static function refreshFile(string $file_to_refresh, string $external_file): bool
+    {
+        return (bool) static::copy($external_file, _PS_ROOT_DIR_ . $file_to_refresh);
+    }
+
+    /**
+     * @param string $file
+     * @param int $timeout
+     *
+     * @return bool
+     */
+    public static function isFileFresh(string $file, int $timeout = self::CACHE_LIFETIME_SECONDS): bool
+    {
+        if (($time = @filemtime(_PS_ROOT_DIR_ . $file)) && filesize(_PS_ROOT_DIR_ . $file) > 0) {
+            return (time() - $time) < $timeout;
+        }
+
+        return false;
     }
 }
 

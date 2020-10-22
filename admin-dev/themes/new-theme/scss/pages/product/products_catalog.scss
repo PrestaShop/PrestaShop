@@ -1,0 +1,82 @@
+// Config
+/* stylelint-disable */
+@import "@scss/config/_settings";
+@import "@scss/config/_keyframes";
+@import "@scss/config/_bootstrap";
+/* stylelint-enable */
+
+.products-catalog {
+  > .content {
+    margin-bottom: 20px;
+    background: #fff;
+    padding: {
+      top: $grid-gutter-width / 2;
+      bottom: $grid-gutter-width / 2;
+    }
+
+    .row {
+      align-items: center;
+    }
+  }
+
+  > .content:last-child {
+    margin-bottom: 0;
+  }
+
+  // actions at the top of the page
+  #catalog-actions {
+    align-items: start;
+
+    .row + .row {
+      padding-top: $grid-gutter-width / 2;
+    }
+  }
+
+  .icon-caret {
+    display: inline-block;
+    font-size: 0.625rem;
+    vertical-align: 0.0625rem;
+    cursor: pointer;
+
+    &.-current {
+      color: $primary;
+    }
+  }
+
+  table {
+    .form-control,
+    .select2 {
+      font-weight: 400;
+    }
+    .form-min-max {
+      display: inline-block;
+      width: 48%;
+    }
+    .action-enabled {
+      color: $brand-success;
+    }
+    .action-disabled {
+      color: $brand-danger;
+    }
+  }
+
+  .bulk-catalog {
+    .dropdown-item {
+      border: 0;
+    }
+  }
+
+  .dropdown-toggle.product-edit {
+    color: $gray-medium;
+    &::after {
+      content: "more_vert";
+    }
+  }
+}
+
+.emptycatalog-icon {
+  > .material-icons {
+    font-size: 12rem;
+    color: $gray-light;
+  }
+}

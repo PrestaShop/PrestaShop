@@ -81,7 +81,7 @@ class PageCore extends ObjectModel
 				FROM `' . _DB_PREFIX_ . 'page`
 				WHERE `id_page_type` = ' . (int) $pageTypeId . $where;
         $result = Db::getInstance()->getRow($sql);
-        if ($result['id_page']) {
+        if (!empty($result['id_page'])) {
             return $result['id_page'];
         }
 

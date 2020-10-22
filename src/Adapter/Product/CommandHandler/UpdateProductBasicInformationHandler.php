@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,30 +17,42 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductBasicInformationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use Product;
 
 /**
  * Handles command for product basic information update using legacy object model
  */
-final class UpdateProductBasicInformationHandler extends AbstractProductHandler implements UpdateProductBasicInformationHandlerInterface
+final class UpdateProductBasicInformationHandler implements UpdateProductBasicInformationHandlerInterface
 {
+    /**
+     * @var ProductRepository
+     */
+    private $productRepository;
+
+    /**
+     * @param ProductRepository $productRepository
+     */
+    public function __construct(
+        ProductRepository $productRepository
+    ) {
+        $this->productRepository = $productRepository;
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -47,61 +60,51 @@ final class UpdateProductBasicInformationHandler extends AbstractProductHandler 
      */
     public function handle(UpdateProductBasicInformationCommand $command): void
     {
-        $product = $this->getProduct($command->getProductId());
-        $this->fillUpdatableFieldsWithCommandData($product, $command);
-        $product->setFieldsToUpdate($this->fieldsToUpdate);
+        $product = $this->productRepository->get($command->getProductId());
+        $updatableProperties = $this->fillUpdatableProperties($product, $command);
 
-        if (empty($this->fieldsToUpdate)) {
+        if (empty($updatableProperties)) {
             return;
         }
 
-        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_BASIC_INFO);
+        $this->productRepository->partialUpdate($product, $updatableProperties, CannotUpdateProductException::FAILED_UPDATE_BASIC_INFO);
     }
 
     /**
      * @param Product $product
      * @param UpdateProductBasicInformationCommand $command
+     *
+     * @return array<string, mixed>
      */
-    private function fillUpdatableFieldsWithCommandData(
+    private function fillUpdatableProperties(
         Product $product,
         UpdateProductBasicInformationCommand $command
-    ): void {
+    ): array {
+        $updatableProperties = [];
+
         if (null !== $command->isVirtual()) {
             $product->is_virtual = $command->isVirtual();
-            $this->fieldsToUpdate['is_virtual'] = true;
+            $updatableProperties[] = 'is_virtual';
         }
 
         $localizedNames = $command->getLocalizedNames();
-        $localizedDescriptions = $command->getLocalizedDescriptions();
-        $localizedShortDescriptions = $command->getLocalizedShortDescriptions();
-
         if (null !== $localizedNames) {
             $product->name = $localizedNames;
-            $this->validateLocalizedField($product, 'name', ProductConstraintException::INVALID_NAME);
-            $this->setLocalizedFieldToUpdate('name', $localizedNames);
+            $updatableProperties['name'] = array_keys($localizedNames);
         }
 
+        $localizedDescriptions = $command->getLocalizedDescriptions();
         if (null !== $localizedDescriptions) {
             $product->description = $localizedDescriptions;
-            $this->validateLocalizedField($product, 'description', ProductConstraintException::INVALID_DESCRIPTION);
-            $this->setLocalizedFieldToUpdate('description', $localizedDescriptions);
+            $updatableProperties['description'] = array_keys($localizedDescriptions);
         }
 
+        $localizedShortDescriptions = $command->getLocalizedShortDescriptions();
         if (null !== $localizedShortDescriptions) {
             $product->description_short = $localizedShortDescriptions;
-            $this->validateLocalizedField($product, 'description_short', ProductConstraintException::INVALID_SHORT_DESCRIPTION);
-            $this->setLocalizedFieldToUpdate('description_short', $localizedShortDescriptions);
+            $updatableProperties['description_short'] = array_keys($localizedShortDescriptions);
         }
-    }
 
-    /**
-     * @param string $field
-     * @param array $localizedValues
-     */
-    private function setLocalizedFieldToUpdate(string $field, array $localizedValues): void
-    {
-        foreach ($localizedValues as $langId => $value) {
-            $this->fieldsToUpdate[$field][$langId] = true;
-        }
+        return $updatableProperties;
     }
 }

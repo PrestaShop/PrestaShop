@@ -139,7 +139,7 @@ class DebugMode
      *
      * @param string $value should be "true" or "false"
      *
-     * @return int the debug mode
+     * @return int|void Debug mode
      */
     private function updateDebugModeValueInCustomFile($value)
     {

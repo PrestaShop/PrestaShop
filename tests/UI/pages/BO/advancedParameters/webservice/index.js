@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class WebService extends BOBasePage {
-  constructor(page) {
-    super(page);
+class WebService extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Webservice •';
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
@@ -41,92 +41,101 @@ module.exports = class WebService extends BOBasePage {
 
   /**
    * Go to new webservice key page
+   * @param page
    * @returns {Promise<void>}
    */
-  async goToAddNewWebserviceKeyPage() {
-    await this.clickAndWaitForNavigation(this.addNewWebserviceLink);
+  async goToAddNewWebserviceKeyPage(page) {
+    await this.clickAndWaitForNavigation(page, this.addNewWebserviceLink);
   }
 
   /**
    * Get number of elements in grid
+   * @param page
    * @returns {Promise<number>}
    */
-  async getNumberOfElementInGrid() {
-    return this.getNumberFromText(this.webserviceGridTitle);
+  async getNumberOfElementInGrid(page) {
+    return this.getNumberFromText(page, this.webserviceGridTitle);
   }
 
   /**
    * Reset input filters
+   * @param page
    * @returns {Promise<number>}
    */
-  async resetAndGetNumberOfLines() {
-    if (await this.elementVisible(this.filterResetButton, 2000)) {
-      await this.clickAndWaitForNavigation(this.filterResetButton);
+  async resetAndGetNumberOfLines(page) {
+    if (await this.elementVisible(page, this.filterResetButton, 2000)) {
+      await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
-    return this.getNumberOfElementInGrid();
+    return this.getNumberOfElementInGrid(page);
   }
 
   /**
    * get text from a column from table
+   * @param page
    * @param row
    * @param column
    * @returns {Promise<string>}
    */
-  async getTextColumnFromTable(row, column) {
-    return this.getTextContent(this.webserviceListTableColumn(row, column));
+  async getTextColumnFromTable(page, row, column) {
+    return this.getTextContent(page, this.webserviceListTableColumn(row, column));
   }
 
   /**
    * Go to edit webservice key page
+   * @param page
    * @param row, row in table
    * @returns {Promise<void>}
    */
-  async goToEditWebservicePage(row) {
-    await this.clickAndWaitForNavigation(this.webserviceListTableEditLink(row));
+  async goToEditWebservicePage(page, row) {
+    await this.clickAndWaitForNavigation(page, this.webserviceListTableEditLink(row));
   }
 
   /**
    * Filter list of webservice
+   * @param page
    * @param filterType, input or select to choose method of filter
    * @param filterBy, column to filter
    * @param value, value to filter with
    * @returns {Promise<void>}
    */
-  async filterWebserviceTable(filterType, filterBy, value = '') {
+  async filterWebserviceTable(page, filterType, filterBy, value = '') {
     switch (filterType) {
       case 'input':
-        await this.setValue(this.webserviceFilterInput(filterBy), value.toString());
+        await this.setValue(page, this.webserviceFilterInput(filterBy), value.toString());
         break;
       case 'select':
-        await this.selectByVisibleText(this.webserviceFilterInput(filterBy), value ? 'Yes' : 'No');
+        await this.selectByVisibleText(page, this.webserviceFilterInput(filterBy), value ? 'Yes' : 'No');
         break;
       default:
       // Do nothing
     }
     // click on search
-    await this.clickAndWaitForNavigation(this.filterSearchButton);
+    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
 
   /**
    * Get Value of column displayed
+   * @param page
    * @param row, row in table
    * @returns {Promise<boolean>}
    */
-  async getToggleColumnValue(row) {
-    return this.elementVisible(this.webserviceListColumnValidIcon(row), 100);
+  async getToggleColumnValue(page, row) {
+    return this.elementVisible(page, this.webserviceListColumnValidIcon(row), 100);
   }
 
   /**
    * Quick edit toggle column value
+   * @param page
    * @param row, row in table
    * @param valueWanted, Value wanted in column
    * @returns {Promise<boolean>} return true if action is done, false otherwise
    */
-  async updateToggleColumnValue(row, valueWanted = true) {
-    await this.waitForVisibleSelector(this.webserviceListTableColumn(row, 'active'), 2000);
-    if (await this.getToggleColumnValue(row) !== valueWanted) {
-      await this.page.click(this.webserviceListTableColumn(row, 'active'));
+  async updateToggleColumnValue(page, row, valueWanted = true) {
+    await this.waitForVisibleSelector(page, this.webserviceListTableColumn(row, 'active'), 2000);
+    if (await this.getToggleColumnValue(page, row) !== valueWanted) {
+      await page.click(this.webserviceListTableColumn(row, 'active'));
       await this.waitForVisibleSelector(
+        page,
         (valueWanted ? this.webserviceListColumnValidIcon(row) : this.webserviceListColumnNotValidIcon(row)),
       );
       return true;
@@ -136,37 +145,45 @@ module.exports = class WebService extends BOBasePage {
 
   /**
    * Delete webservice key
+   * @param page
    * @param row, row in table
    * @returns {Promise<string>}
    */
-  async deleteWebserviceKey(row) {
+  async deleteWebserviceKey(page, row) {
     // Click on dropDown
     await Promise.all([
-      this.page.click(this.webserviceListTableToggleDropDown(row)),
-      this.waitForVisibleSelector(`${this.webserviceListTableToggleDropDown(row)}[aria-expanded='true']`),
+      page.click(this.webserviceListTableToggleDropDown(row)),
+      this.waitForVisibleSelector(
+        page,
+        `${this.webserviceListTableToggleDropDown(row)}[aria-expanded='true']`,
+      ),
     ]);
     // Click on delete
     await Promise.all([
-      this.page.click(this.webserviceListTableDeleteLink(row)),
-      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
+      page.click(this.webserviceListTableDeleteLink(row)),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
-    await this.confirmDeleteWebService();
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.confirmDeleteWebService(page);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
    * Confirm delete with in modal
+   * @param page
    * @return {Promise<void>}
    */
-  async confirmDeleteWebService() {
-    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
+  async confirmDeleteWebService(page) {
+    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
   }
 
   /**
    * Get validation message
+   * @param page
    * @returns {Promise<string>}
    */
-  getValidationMessage() {
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+  getValidationMessage(page) {
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
-};
+}
+
+module.exports = new WebService();

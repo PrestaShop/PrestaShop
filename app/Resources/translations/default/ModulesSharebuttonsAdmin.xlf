@@ -12,6 +12,11 @@
         <target>Displays social media sharing buttons (Twitter, Facebook, Google+ and Pinterest) on every product page.</target>
         <note>Line: 53</note>
       </trans-unit>
+      <trans-unit id="1f4dddadd70edd1d19bceb3a795b533f">
+        <source>Displays social media sharing buttons (Twitter, Facebook and Pinterest) on every product page.</source>
+        <target>Displays social media sharing buttons (Twitter, Facebook and Pinterest) on every product page.</target>
+        <note>Line: 53</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

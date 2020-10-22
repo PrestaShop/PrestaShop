@@ -10,10 +10,9 @@ const loginCommon = require('@commonTests/loginBO');
 const PageFaker = require('@data/faker/CMSpage');
 
 // Import pages
-const LoginPage = require('@pages/BO/login/index');
-const DashboardPage = require('@pages/BO/dashboard/index');
-const PagesPage = require('@pages/BO/design/pages/index');
-const AddPagePage = require('@pages/BO/design/pages/add');
+const dashboardPage = require('@pages/BO/dashboard/index');
+const pagesPage = require('@pages/BO/design/pages/index');
+const addPagePage = require('@pages/BO/design/pages/add');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -25,15 +24,6 @@ let browserContext;
 let page;
 let numberOfPages = 0;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    pagesPage: new PagesPage(page),
-    addPagePage: new AddPagePage(page),
-  };
-};
 /*
 Create 11 pages
 Paginate between pages
@@ -45,35 +35,35 @@ describe('Pagination and sort pages', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to \'Design > Pages\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCmsPagesPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.designParentLink,
-      this.pageObjects.dashboardPage.pagesLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.designParentLink,
+      dashboardPage.pagesLink,
     );
 
-    await this.pageObjects.pagesPage.closeSfToolBar();
+    await pagesPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
+    const pageTitle = await pagesPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(pagesPage.pageTitle);
   });
 
   it('should reset all filters and get number of pages in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfPages = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page');
+    numberOfPages = await pagesPage.resetAndGetNumberOfLines(page, 'cms_page');
     if (numberOfPages !== 0) {
       await expect(numberOfPages).to.be.above(0);
     }
@@ -89,22 +79,22 @@ describe('Pagination and sort pages', async () => {
       it('should go to add new page page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewPagePage${index}`, baseContext);
 
-        await this.pageObjects.pagesPage.goToAddNewPage();
-        const pageTitle = await this.pageObjects.addPagePage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.addPagePage.pageTitleCreate);
+        await pagesPage.goToAddNewPage(page);
+        const pageTitle = await addPagePage.getPageTitle(page);
+        await expect(pageTitle).to.contains(addPagePage.pageTitleCreate);
       });
 
       it('should create page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createPage${index}`, baseContext);
 
-        const textResult = await this.pageObjects.addPagePage.createEditPage(createPageData);
-        await expect(textResult).to.equal(this.pageObjects.pagesPage.successfulCreationMessage);
+        const textResult = await addPagePage.createEditPage(page, createPageData);
+        await expect(textResult).to.equal(pagesPage.successfulCreationMessage);
       });
 
       it('should check the pages number', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkPagesNumber${index}`, baseContext);
 
-        const numberOfPagesAfterCreation = await this.pageObjects.pagesPage.getNumberOfElementInGrid('cms_page');
+        const numberOfPagesAfterCreation = await pagesPage.getNumberOfElementInGrid(page, 'cms_page');
         await expect(numberOfPagesAfterCreation).to.be.equal(numberOfPages + 1 + index);
       });
     });
@@ -115,28 +105,28 @@ describe('Pagination and sort pages', async () => {
     it('should change the item number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-      const paginationNumber = await this.pageObjects.pagesPage.selectPagesPaginationLimit('10');
+      const paginationNumber = await pagesPage.selectPagesPaginationLimit(page, '10');
       expect(paginationNumber).to.contain('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await this.pageObjects.pagesPage.paginationPagesNext();
+      const paginationNumber = await pagesPage.paginationPagesNext(page);
       expect(paginationNumber).to.contain('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await this.pageObjects.pagesPage.paginationPagesPrevious();
+      const paginationNumber = await pagesPage.paginationPagesPrevious(page);
       expect(paginationNumber).to.contain('(page 1 / 2)');
     });
 
     it('should change the item number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber = await this.pageObjects.pagesPage.selectPagesPaginationLimit('50');
+      const paginationNumber = await pagesPage.selectPagesPaginationLimit(page, '50');
       expect(paginationNumber).to.contain('(page 1 / 1)');
     });
   });
@@ -180,16 +170,16 @@ describe('Pagination and sort pages', async () => {
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        let nonSortedTable = await this.pageObjects.pagesPage.getAllRowsColumnContentTableCmsPage(test.args.sortBy);
-        await this.pageObjects.pagesPage.sortTableCmsPage(test.args.sortBy, test.args.sortDirection);
+        let nonSortedTable = await pagesPage.getAllRowsColumnContentTableCmsPage(page, test.args.sortBy);
+        await pagesPage.sortTableCmsPage(page, test.args.sortBy, test.args.sortDirection);
 
-        let sortedTable = await this.pageObjects.pagesPage.getAllRowsColumnContentTableCmsPage(test.args.sortBy);
+        let sortedTable = await pagesPage.getAllRowsColumnContentTableCmsPage(page, test.args.sortBy);
         if (test.args.isFloat) {
           nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
 
-        const expectedResult = await this.pageObjects.pagesPage.sortArray(nonSortedTable, test.args.isFloat);
+        const expectedResult = await pagesPage.sortArray(nonSortedTable, test.args.isFloat);
         if (test.args.sortDirection === 'asc') {
           await expect(sortedTable).to.deep.equal(expectedResult);
         } else {
@@ -204,23 +194,23 @@ describe('Pagination and sort pages', async () => {
     it('should filter list by title', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
 
-      await this.pageObjects.pagesPage.filterTable('cms_page', 'input', 'meta_title', 'todelete');
+      await pagesPage.filterTable(page, 'cms_page', 'input', 'meta_title', 'todelete');
 
-      const textResult = await this.pageObjects.pagesPage.getTextColumnFromTableCmsPage(1, 'meta_title');
+      const textResult = await pagesPage.getTextColumnFromTableCmsPage(page, 1, 'meta_title');
       await expect(textResult).to.contains('todelete');
     });
 
     it('should delete pages with Bulk Actions and check Result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'BulkDelete', baseContext);
 
-      const deleteTextResult = await this.pageObjects.pagesPage.deleteWithBulkActions('cms_page');
-      await expect(deleteTextResult).to.be.equal(this.pageObjects.pagesPage.successfulMultiDeleteMessage);
+      const deleteTextResult = await pagesPage.deleteWithBulkActions(page, 'cms_page');
+      await expect(deleteTextResult).to.be.equal(pagesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
-      const numberOfPagesAfterFilter = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page');
+      const numberOfPagesAfterFilter = await pagesPage.resetAndGetNumberOfLines(page, 'cms_page');
       await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages);
     });
   });

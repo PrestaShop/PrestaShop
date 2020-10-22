@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddSqlRequestCommand;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 
 /**
  * Interface AddSqlRequestHandlerInterface defines contract for SqlRequest creation handler.
@@ -36,7 +37,7 @@ interface AddSqlRequestHandlerInterface
     /**
      * @param AddSqlRequestCommand $command
      *
-     * @return int Created SqlRequest id
+     * @return SqlRequestId
      */
     public function handle(AddSqlRequestCommand $command);
 }

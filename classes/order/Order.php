@@ -174,6 +174,11 @@ class OrderCore extends ObjectModel
     public $round_type;
 
     /**
+     * @var string internal order note, what is only available in BO
+     */
+    public $note = '';
+
+    /**
      * @see ObjectModel::$definition
      */
     public static $definition = [
@@ -225,6 +230,7 @@ class OrderCore extends ObjectModel
             'reference' => ['type' => self::TYPE_STRING],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'note' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'],
         ],
     ];
 
@@ -256,6 +262,7 @@ class OrderCore extends ObjectModel
                 'getter' => 'getWsShippingNumber',
                 'setter' => 'setWsShippingNumber',
             ],
+            'note' => [],
         ],
         'associations' => [
             'order_rows' => ['resource' => 'order_row', 'setter' => false, 'virtual_entity' => true,
@@ -601,8 +608,8 @@ class OrderCore extends ObjectModel
         $row['tax_calculator'] = $tax_calculator;
         $row['tax_rate'] = $tax_calculator->getTotalRate();
 
-        $row['product_price'] = Tools::ps_round($row['unit_price_tax_excl'], 2);
-        $row['product_price_wt'] = Tools::ps_round($row['unit_price_tax_incl'], 2);
+        $row['product_price'] = Tools::ps_round($row['unit_price_tax_excl'], Context::getContext()->getComputingPrecision());
+        $row['product_price_wt'] = Tools::ps_round($row['unit_price_tax_incl'], Context::getContext()->getComputingPrecision());
 
         $group_reduction = 1;
         if ($row['group_reduction'] > 0) {
@@ -818,7 +825,22 @@ class OrderCore extends ObjectModel
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
         SELECT *
         FROM `' . _DB_PREFIX_ . 'order_cart_rule` ocr
-        WHERE ocr.`id_order` = ' . (int) $this->id);
+        WHERE ocr.`deleted` = 0 AND ocr.`id_order` = ' . (int) $this->id);
+    }
+
+    /**
+     *  Return the list of all order cart rules, even the softy deleted ones
+     *
+     * @return array|false
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public function getDeletedCartRules()
+    {
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+        SELECT *
+        FROM `' . _DB_PREFIX_ . 'order_cart_rule` ocr
+        WHERE ocr.`deleted` = 1 AND ocr.`id_order` = ' . (int) $this->id);
     }
 
     public static function getDiscountsCustomer($id_customer, $id_cart_rule)
@@ -827,9 +849,9 @@ class OrderCore extends ObjectModel
         if (!Cache::isStored($cache_id)) {
             $result = (int) Db::getInstance()->getValue('
             SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'orders` o
-            LEFT JOIN ' . _DB_PREFIX_ . 'order_cart_rule ocr ON (ocr.id_order = o.id_order)
-            WHERE o.id_customer = ' . (int) $id_customer . '
-            AND ocr.id_cart_rule = ' . (int) $id_cart_rule);
+            LEFT JOIN `' . _DB_PREFIX_ . 'order_cart_rule` ocr ON (ocr.`id_order` = o.`id_order`)
+            WHERE o.`id_customer` = ' . (int) $id_customer . '
+            AND ocr.`deleted` = 0 AND ocr.`id_cart_rule` = ' . (int) $id_cart_rule);
             Cache::store($cache_id, $result);
 
             return $result;
@@ -1158,7 +1180,7 @@ class OrderCore extends ObjectModel
     {
         $id_order = (int) self::getIdByCartId((int) $id_cart);
 
-        return ($id_order > 0) ? new self($id_order) : null;
+        return ($id_order > 0) ? new static($id_order) : null;
     }
 
     /**
@@ -1673,7 +1695,7 @@ class OrderCore extends ObjectModel
      */
     public function setCurrentState($id_order_state, $id_employee = 0)
     {
-        if (empty($id_order_state)) {
+        if (empty($id_order_state) || (int) $id_order_state === (int) $this->current_state) {
             return false;
         }
         $history = new OrderHistory();
@@ -1881,10 +1903,16 @@ class OrderCore extends ObjectModel
         } else {
             $default_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
             if ($this->id_currency === $default_currency) {
-                $this->total_paid_real += Tools::ps_round(Tools::convertPrice($order_payment->amount, $this->id_currency, false), 2);
+                $this->total_paid_real += Tools::ps_round(
+                    Tools::convertPrice($order_payment->amount, $this->id_currency, false),
+                    Context::getContext()->getComputingPrecision()
+                );
             } else {
                 $amountInDefaultCurrency = Tools::convertPrice($order_payment->amount, $order_payment->id_currency, false);
-                $this->total_paid_real += Tools::ps_round(Tools::convertPrice($amountInDefaultCurrency, $this->id_currency, true), 2);
+                $this->total_paid_real += Tools::ps_round(
+                    Tools::convertPrice($amountInDefaultCurrency, $this->id_currency, true),
+                    Context::getContext()->getComputingPrecision()
+                );
             }
         }
 
@@ -2071,7 +2099,7 @@ class OrderCore extends ObjectModel
             }
         }
 
-        return Tools::ps_round($total, 2);
+        return Tools::ps_round($total, Context::getContext()->getComputingPrecision());
     }
 
     /**
@@ -2586,6 +2614,7 @@ class OrderCore extends ObjectModel
                     'total_tax_base' => $total_tax_base,
                     'unit_amount' => $unit_amount,
                     'total_amount' => $total_amount,
+                    'id_order_invoice' => $order_detail['id_order_invoice'],
                 ];
             }
         }

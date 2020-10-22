@@ -39,7 +39,18 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class Module implements ModuleInterface
 {
-    /** @var LegacyModule Module The instance of the legacy module */
+    const ACTION_INSTALL = 'install';
+    const ACTION_UNINSTALL = 'uninstall';
+    const ACTION_ENABLE = 'enable';
+    const ACTION_DISABLE = 'disable';
+    const ACTION_ENABLE_MOBILE = 'enable_mobile';
+    const ACTION_DISABLE_MOBILE = 'disable_mobile';
+    const ACTION_RESET = 'reset';
+    const ACTION_UPGRADE = 'upgrade';
+
+    /**
+     * @var LegacyModule Module The instance of the legacy module
+     */
     public $instance = null;
 
     /**
@@ -171,7 +182,7 @@ class Module implements ModuleInterface
     }
 
     /**
-     * @return legacyInstance|void
+     * @return LegacyModule|void
      *
      * @throws \Exception
      */
@@ -340,7 +351,7 @@ class Module implements ModuleInterface
             return false;
         }
 
-        return $this->instance->reset();
+        return is_callable([$this->instance, 'reset']) ? $this->instance->reset() : true;
     }
 
     /**
@@ -362,7 +373,7 @@ class Module implements ModuleInterface
     }
 
     /**
-     * @param $attribute
+     * @param string $attribute
      *
      * @return mixed
      */
@@ -372,8 +383,8 @@ class Module implements ModuleInterface
     }
 
     /**
-     * @param $attribute
-     * @param $value
+     * @param string $attribute
+     * @param mixed $value
      */
     public function set($attribute, $value)
     {
@@ -381,7 +392,7 @@ class Module implements ModuleInterface
     }
 
     /**
-     * @param $value
+     * @param string $value
      *
      * @return mixed|string
      */
@@ -465,7 +476,7 @@ class Module implements ModuleInterface
      *
      * @param int $moduleId Module id
      *
-     * @return Module instance
+     * @return Module|false
      */
     public function getInstanceById($moduleId)
     {

@@ -85,6 +85,14 @@ class TaxManagerFactoryCore
     }
 
     /**
+     * Reset static cache (mainly for test environment)
+     */
+    public static function resetStaticCache()
+    {
+        TaxManagerFactory::$cache_tax_manager = null;
+    }
+
+    /**
      * Create a unique identifier for the address.
      *
      * @param Address

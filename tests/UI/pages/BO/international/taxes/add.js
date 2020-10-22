@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class AddTax extends BOBasePage {
-  constructor(page) {
-    super(page);
+class AddTax extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitleCreate = 'Taxes •';
     this.pageTitleEdit = 'Edit: ';
@@ -24,34 +24,37 @@ module.exports = class AddTax extends BOBasePage {
 
   /**
    * Change language for input name
+   * @param page
    * @param lang
    * @return {Promise<void>}
    */
-  async changeInputLanguage(lang) {
+  async changeInputLanguage(page, lang) {
     await Promise.all([
-      this.page.click(this.inputLangDropdownButton),
-      this.waitForVisibleSelector(`${this.inputLangDropdownButton}[aria-expanded='true']`),
+      page.click(this.inputLangDropdownButton),
+      this.waitForVisibleSelector(page, `${this.inputLangDropdownButton}[aria-expanded='true']`),
     ]);
     await Promise.all([
-      this.page.click(this.inputLangChoiceSpan(lang)),
-      this.waitForVisibleSelector(`${this.inputLangDropdownButton}[aria-expanded='false']`),
+      page.click(this.inputLangChoiceSpan(lang)),
+      this.waitForVisibleSelector(page, `${this.inputLangDropdownButton}[aria-expanded='false']`),
     ]);
   }
 
   /**
    * Fill form for add/edit tax
+   * @param page
    * @param taxData
    * @returns {Promise<string>}
    */
-  async createEditTax(taxData) {
-    await this.changeInputLanguage('en');
-    await this.setValue(this.nameEnInput, taxData.name);
-    await this.changeInputLanguage('fr');
-    await this.setValue(this.nameFrInput, taxData.frName);
-    await this.setValue(this.rateInput, taxData.rate);
-    await this.page.click(this.enabledSwitchLabel(taxData.enabled ? 1 : 0));
+  async createEditTax(page, taxData) {
+    await this.changeInputLanguage(page, 'en');
+    await this.setValue(page, this.nameEnInput, taxData.name);
+    await this.changeInputLanguage(page, 'fr');
+    await this.setValue(page, this.nameFrInput, taxData.frName);
+    await this.setValue(page, this.rateInput, taxData.rate);
+    await page.click(this.enabledSwitchLabel(taxData.enabled ? 1 : 0));
     // Save Tax
-    await this.clickAndWaitForNavigation(this.saveTaxButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.clickAndWaitForNavigation(page, this.saveTaxButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
-};
+}
+module.exports = new AddTax();

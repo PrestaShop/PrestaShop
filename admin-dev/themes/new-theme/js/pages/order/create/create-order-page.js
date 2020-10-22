@@ -196,7 +196,7 @@ export default class CreateOrderPage {
   listenForCartEdit() {
     this.onCartAddressesChanged();
     this.onDeliveryOptionChanged();
-    this.onFreeShippingChanged();
+    this.onDeliverySettingChanged();
     this.addCartRuleToCart();
     this.removeCartRuleFromCart();
     this.onCartCurrencyChanged();
@@ -211,7 +211,25 @@ export default class CreateOrderPage {
     this.$container.on(
       'change',
       createOrderMap.freeShippingSwitch,
-      (e) => this.cartEditor.setFreeShipping(this.cartId, e.currentTarget.value),
+      () => this.cartEditor.updateDeliveryOptions(this.cartId),
+    );
+
+    this.$container.on(
+      'change',
+      createOrderMap.recycledPackagingSwitch,
+      () => this.cartEditor.updateDeliveryOptions(this.cartId),
+    );
+
+    this.$container.on(
+      'change',
+      createOrderMap.isAGiftSwitch,
+      () => this.cartEditor.updateDeliveryOptions(this.cartId),
+    );
+
+    this.$container.on(
+      'blur',
+      createOrderMap.giftMessageField,
+      () => this.cartEditor.updateDeliveryOptions(this.cartId),
     );
 
     this.$container.on(
@@ -240,7 +258,7 @@ export default class CreateOrderPage {
 
     this.$container.on('change', createOrderMap.listedProductUnitPriceInput, (e) => this.initProductChangePrice(e));
     this.$container.on('change', createOrderMap.listedProductQtyInput, (e) => this.initProductChangeQty(e));
-    this.$container.on('change', createOrderMap.addressSelect, () => this.nchangeCartAddresses());
+    this.$container.on('change', createOrderMap.addressSelect, () => this.changeCartAddresses());
     this.$container.on('click', createOrderMap.productRemoveBtn, (e) => this.initProductRemoveFromCart(e));
   }
 
@@ -290,7 +308,7 @@ export default class CreateOrderPage {
    */
   onCartAddressesChanged() {
     EventEmitter.on(eventMap.cartAddressesChanged, (cartInfo) => {
-      this.addressesRenderer.render(cartInfo.addresses);
+      this.addressesRenderer.render(cartInfo.addresses, cartInfo.cartId);
       this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
       this.summaryRenderer.render(cartInfo);
     });
@@ -303,18 +321,19 @@ export default class CreateOrderPage {
    */
   onDeliveryOptionChanged() {
     EventEmitter.on(eventMap.cartDeliveryOptionChanged, (cartInfo) => {
+      this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
       this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
       this.summaryRenderer.render(cartInfo);
     });
   }
 
   /**
-   * Listens for cart free shipping update event
+   * Listens for cart delivery setting update event
    *
    * @private
    */
-  onFreeShippingChanged() {
-    EventEmitter.on(eventMap.cartFreeShippingSet, (cartInfo) => {
+  onDeliverySettingChanged() {
+    EventEmitter.on(eventMap.cartDeliverySettingChanged, (cartInfo) => {
       this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
       this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
       this.summaryRenderer.render(cartInfo);
@@ -518,7 +537,7 @@ export default class CreateOrderPage {
    * @private
    */
   renderCartInfo(cartInfo) {
-    this.addressesRenderer.render(cartInfo.addresses);
+    this.addressesRenderer.render(cartInfo.addresses, cartInfo.cartId);
     this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
     this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
     this.productRenderer.cleanCartBlockAlerts();
@@ -577,7 +596,7 @@ export default class CreateOrderPage {
   refreshAddressesList(refreshCartAddresses) {
     const cartId = $(createOrderMap.cartBlock).data('cartId');
     $.get(this.router.generate('admin_carts_info', {cartId})).then((cartInfo) => {
-      this.addressesRenderer.render(cartInfo.addresses);
+      this.addressesRenderer.render(cartInfo.addresses, cartInfo.cartId);
 
       if (refreshCartAddresses) {
         this.changeCartAddresses();

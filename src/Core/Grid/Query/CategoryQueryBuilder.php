@@ -48,6 +48,13 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
     private $contextShopId;
 
     /**
+     * @var int|null
+     *
+     * Can be null for backward-compatibility
+     */
+    private $rootCategoryId;
+
+    /**
      * @var DoctrineSearchCriteriaApplicator
      */
     private $searchCriteriaApplicator;
@@ -70,6 +77,7 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
      * @param int $contextShopId
      * @param MultistoreContextCheckerInterface $multistoreContextChecker
      * @param FeatureInterface $multistoreFeature
+     * @param int|null $rootCategoryId
      */
     public function __construct(
         Connection $connection,
@@ -78,12 +86,14 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
         $contextLangId,
         $contextShopId,
         MultistoreContextCheckerInterface $multistoreContextChecker,
-        FeatureInterface $multistoreFeature
+        FeatureInterface $multistoreFeature,
+        $rootCategoryId = null
     ) {
         parent::__construct($connection, $dbPrefix);
 
         $this->contextLangId = $contextLangId;
         $this->contextShopId = $contextShopId;
+        $this->rootCategoryId = $rootCategoryId;
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
         $this->multistoreContextChecker = $multistoreContextChecker;
         $this->multistoreFeature = $multistoreFeature;
@@ -156,6 +166,12 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
+            // exclude root category from search results
+            if ($this->rootCategoryId !== null) {
+                $qb->andWhere('c.id_category != :root_category_id');
+                $qb->setParameter('root_category_id', $this->rootCategoryId);
+            }
+
             if ('name' === $filterName) {
                 $qb->andWhere("cl.name LIKE :$filterName");
                 $qb->setParameter($filterName, '%' . $filterValue . '%');
@@ -195,6 +211,10 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('id_category_parent' === $filterName) {
+                if ($this->isSearchRequestOnHomeCategory($filters)) {
+                    continue;
+                }
+
                 $qb->andWhere("c.id_parent = :$filterName");
                 $qb->setParameter($filterName, $filterValue);
 
@@ -207,5 +227,16 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
         }
 
         return $qb;
+    }
+
+    /**
+     * @param array $filters
+     *
+     * @return bool
+     */
+    private function isSearchRequestOnHomeCategory(array $filters)
+    {
+        return isset($filters['is_home_category'], $filters['is_search_request'])
+            && $filters['is_home_category'] === true && $filters['is_search_request'] === true;
     }
 }

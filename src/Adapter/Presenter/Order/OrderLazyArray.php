@@ -444,7 +444,7 @@ class OrderLazyArray extends AbstractLazyArray
             'color' => '',
             'unremovable' => '',
             'hidden' => '',
-            'logable' => '',
+            'loggable' => '',
             'delivery' => '',
             'shipped' => '',
             'paid' => '',

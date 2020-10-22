@@ -48,14 +48,17 @@ export default function () {
     $(document).on('click', formId, (e) => {
       e.preventDefault();
 
-      window.modalConfirmation.create(window.translate_javascripts['Are you sure to delete this?'], null, {
-        onContinue: () => {
-          $(e.target).parents('.media').remove();
+      window.modalConfirmation.create(
+        window.translate_javascripts['Are you sure you want to delete this item?'],
+        null,
+        {
+          onContinue: () => {
+            $(e.target).parents('.media').remove();
 
-          // Save current product after its related product has been removed
-          $('#submit').click();
-        },
-      }).show();
+            // Save current product after its related product has been removed
+            $('#submit').click();
+          },
+        }).show();
     });
 
     document[autocompleteSource] = new Bloodhound({

@@ -1,3 +1,4 @@
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s customer
 @reset-database-before-feature
 Feature: Customer Management
   PrestaShop allows BO users to manage customers in the Customers > Customers page

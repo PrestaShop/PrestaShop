@@ -89,6 +89,16 @@ services:
             - '@=service("prestashop.adapter.form.choice_provider.gender_by_id_choice_provider").getChoices()'
         public: true
 
+    prestashop.core.grid.definition.factory.customer.discount:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerDiscountGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
+    prestashop.core.grid.definition.factory.customer.address:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerAddressGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
     prestashop.core.grid.definition.factory.language:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LanguageGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
@@ -251,3 +261,13 @@ services:
         arguments:
             - '@=service("prestashop.adapter.legacy.context").getLanguage().date_format_lite'
         public: true
+
+    prestashop.core.grid.definition.factory.order_states:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderStatesGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      public: true
+
+    prestashop.core.grid.definition.factory.order_return_states:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderReturnStatesGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      public: true

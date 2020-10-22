@@ -3,8 +3,9 @@
 @import "~dropzone/dist/min/dropzone.min.css";
 @import "~magnific-popup/dist/magnific-popup.css";
 @import "~bourbon/app/assets/stylesheets/bourbon";
-@import "../node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css";
 @import "~perfect-scrollbar/css/perfect-scrollbar.css";
+@import "~eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css";
+@import "~bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css";
 @import "mixins/single_line_block";
 @import "mixins/notification_container";
 @import "mixins/notification_counter";
@@ -33,7 +34,9 @@
 @import "components/modulescards";
 @import "components/notifications";
 @import "components/datepicker";
+@import "components/colorpicker";
 @import "components/help_box";
+@import "components/hint_box";
 @import "components/ps_dropdown";
 @import "components/ps_number";
 @import "components/ps_radio";
@@ -54,10 +57,6 @@
 @import "components/timeline";
 
 // Pages specifics SCSS files
-@import "pages/product_page";
-@import "pages/products_catalog";
-@import "pages/translation_page";
-@import "pages/stock_page";
 @import "pages/invoices";
 @import "pages/meta";
 @import "pages/import_data";
@@ -66,11 +65,9 @@
 @import "pages/cms_page";
 @import "pages/employee";
 @import "pages/error";
-@import "pages/orders";
+@import "pages/order_states";
 @import "pages/attribute";
 @import "pages/customer_thread";
-@import "pages/orders_view";
-@import "pages/orders_create";
 
 // Main Layout
 @import "pages/modules";
@@ -144,7 +141,7 @@ span.twitter-typeahead {
 }
 
 table.table {
-  font-size: .8rem;
+  font-size: 0.8rem;
 }
 
 // Needed to override the default inline style of modal header in translations-app

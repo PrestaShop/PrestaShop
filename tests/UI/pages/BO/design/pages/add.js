@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class AddPage extends BOBasePage {
-  constructor(page) {
-    super(page);
+class AddPage extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitleCreate = 'Pages';
 
@@ -26,34 +26,38 @@ module.exports = class AddPage extends BOBasePage {
 
   /**
    * Fill form for add/edit page category
+   * @param page
    * @param pageData
    * @return {Promise<void>}
    */
-  async createEditPage(pageData) {
-    await this.setValue(this.titleInput, pageData.title);
-    await this.setValue(this.metaTitleInput, pageData.metaTitle);
-    await this.setValue(this.metaDescriptionInput, pageData.metaDescription);
-    await this.setValue(this.metaKeywordsInput, pageData.metaKeywords);
-    await this.setValueOnTinymceInput(this.pageContentIframe, pageData.content);
-    await this.page.click(this.indexation(pageData.indexation ? 1 : 0));
-    await this.page.click(this.displayed(pageData.displayed ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.savePageButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+  async createEditPage(page, pageData) {
+    await this.setValue(page, this.titleInput, pageData.title);
+    await this.setValue(page, this.metaTitleInput, pageData.metaTitle);
+    await this.setValue(page, this.metaDescriptionInput, pageData.metaDescription);
+    await this.setValue(page, this.metaKeywordsInput, pageData.metaKeywords);
+    await this.setValueOnTinymceInput(page, this.pageContentIframe, pageData.content);
+    await page.click(this.indexation(pageData.indexation ? 1 : 0));
+    await page.click(this.displayed(pageData.displayed ? 1 : 0));
+    await this.clickAndWaitForNavigation(page, this.savePageButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
    * Preview page in new tab
+   * @param page
    * @return page opened
    */
-  async previewPage() {
-    return this.openLinkWithTargetBlank(this.saveAndPreviewPageButton);
+  async previewPage(page) {
+    return this.openLinkWithTargetBlank(page, this.saveAndPreviewPageButton);
   }
 
   /**
    * Cancel page
+   * @param page
    * @return {Promise<void>}
    */
-  async cancelPage() {
-    await this.clickAndWaitForNavigation(this.cancelButton);
+  async cancelPage(page) {
+    await this.clickAndWaitForNavigation(page, this.cancelButton);
   }
-};
+}
+module.exports = new AddPage();

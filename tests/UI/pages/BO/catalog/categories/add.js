@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class AddCategory extends BOBasePage {
-  constructor(page) {
-    super(page);
+class AddCategory extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitleCreate = 'Add new';
     this.pageTitleEdit = 'Edit: ';
@@ -32,37 +32,41 @@ module.exports = class AddCategory extends BOBasePage {
 
   /**
    * Fill form for add/edit category
+   * @param page
    * @param categoryData
    * @returns {Promise<string>}
    */
-  async createEditCategory(categoryData) {
-    await this.setValue(this.nameInput, categoryData.name);
-    await this.page.click(this.displayed(categoryData.displayed ? 1 : 0));
-    await this.setValueOnTinymceInput(this.descriptionIframe, categoryData.description);
-    await this.generateAndUploadImage(this.categoryCoverImage, `${categoryData.name}.jpg`);
-    await this.setValue(this.metaTitleInput, categoryData.metaTitle);
-    await this.setValue(this.metaDescriptionTextarea, categoryData.metaDescription);
-    await this.page.click(this.selectAllGroupAccessCheckbox);
+  async createEditCategory(page, categoryData) {
+    await this.setValue(page, this.nameInput, categoryData.name);
+    await page.click(this.displayed(categoryData.displayed ? 1 : 0));
+    await this.setValueOnTinymceInput(page, this.descriptionIframe, categoryData.description);
+    await this.generateAndUploadImage(page, this.categoryCoverImage, `${categoryData.name}.jpg`);
+    await this.setValue(page, this.metaTitleInput, categoryData.metaTitle);
+    await this.setValue(page, this.metaDescriptionTextarea, categoryData.metaDescription);
+    await page.click(this.selectAllGroupAccessCheckbox);
     // Save Category
-    await this.clickAndWaitForNavigation(this.saveCategoryButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.clickAndWaitForNavigation(page, this.saveCategoryButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
    * Edit home category
+   * @param page
    * @param categoryData
    * @returns {Promise<string>}
    */
-  async editHomeCategory(categoryData) {
-    await this.setValue(this.rootCategoryNameInput, categoryData.name);
-    await this.page.click(this.rootCategoryDisplayed(categoryData.displayed ? 1 : 0));
-    await this.setValueOnTinymceInput(this.rootCategoryDescriptionIframe, categoryData.description);
-    await this.generateAndUploadImage(this.rootCategoryCoverImage, `${categoryData.name}.jpg`);
-    await this.setValue(this.rootCategoryMetaTitleInput, categoryData.metaTitle);
-    await this.setValue(this.rootCategoryMetaDescriptionTextarea, categoryData.metaDescription);
-    await this.page.click(this.selectAllGroupAccessCheckbox);
+  async editHomeCategory(page, categoryData) {
+    await this.setValue(page, this.rootCategoryNameInput, categoryData.name);
+    await page.click(this.rootCategoryDisplayed(categoryData.displayed ? 1 : 0));
+    await this.setValueOnTinymceInput(page, this.rootCategoryDescriptionIframe, categoryData.description);
+    await this.generateAndUploadImage(page, this.rootCategoryCoverImage, `${categoryData.name}.jpg`);
+    await this.setValue(page, this.rootCategoryMetaTitleInput, categoryData.metaTitle);
+    await this.setValue(page, this.rootCategoryMetaDescriptionTextarea, categoryData.metaDescription);
+    await page.click(this.selectAllGroupAccessCheckbox);
     // Save Category
-    await this.clickAndWaitForNavigation(this.saveCategoryButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.clickAndWaitForNavigation(page, this.saveCategoryButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
-};
+}
+
+module.exports = new AddCategory();

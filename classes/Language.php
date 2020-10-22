@@ -45,6 +45,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     const PACK_DOWNLOAD_TIMEOUT = 20;
 
+    /** @var int */
     public $id;
 
     /** @var string Name */
@@ -584,6 +585,9 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
             $modList = scandir(_PS_MODULE_DIR_, SCANDIR_SORT_NONE);
             foreach ($modList as $mod) {
+                if (!is_dir(_PS_MODULE_DIR_ . $mod)) {
+                    continue;
+                }
                 Tools::deleteDirectory(_PS_MODULE_DIR_ . $mod . '/mails/' . $this->iso_code);
                 $files = @scandir(_PS_MODULE_DIR_ . $mod . '/mails/', SCANDIR_SORT_NONE);
                 if (is_array($files) && count($files) <= 2) {
@@ -643,7 +647,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * @param int|false $id_shop Shop ID
      * @param bool $ids_only If true, returns an array of language IDs
      *
-     * @return array<int|Language> Language information
+     * @return array<int|array> Language information
      */
     public static function getLanguages($active = true, $id_shop = false, $ids_only = false)
     {
@@ -759,13 +763,16 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         $key = 'Language::getIdByIso_' . $iso_code;
         if ($no_cache || !Cache::isStored($key)) {
             $id_lang = Db::getInstance()->getValue('SELECT `id_lang` FROM `' . _DB_PREFIX_ . 'lang` WHERE `iso_code` = \'' . pSQL(strtolower($iso_code)) . '\'');
+            if (empty($id_lang)) {
+                return null;
+            }
 
             Cache::store($key, $id_lang);
 
-            return $id_lang ?: null;
+            return (int) $id_lang ?: null;
         }
 
-        return Cache::retrieve($key);
+        return (int) Cache::retrieve($key);
     }
 
     /**
@@ -981,6 +988,10 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 				LEFT JOIN `' . _DB_PREFIX_ . 'lang_shop` ls ON (l.id_lang = ls.id_lang)';
 
         $result = Db::getInstance()->executeS($sql);
+        if (!is_array($result)) {
+            // executeS method can return false
+            return;
+        }
 
         foreach ($result as $row) {
             $idLang = (int) $row['id_lang'];

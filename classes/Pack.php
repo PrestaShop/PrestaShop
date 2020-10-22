@@ -94,8 +94,8 @@ class PackCore extends Product
      * If $id_product_attribute specified, then will restrict search on the given combination,
      * else this method will match a product if at least one of all its combination is in a pack.
      *
-     * @param $id_product
-     * @param $id_product_attribute Optional combination of the product
+     * @param int $id_product
+     * @param int|bool $id_product_attribute Optional combination of the product
      *
      * @return bool
      */
@@ -291,7 +291,7 @@ class PackCore extends Product
 
             foreach ($items as $index => $item) {
                 $itemQuantity = Product::getQuantity($item->id, null, null, $cart, $idCustomization);
-                $nbPackAvailableForItem = floor($itemQuantity / $item->pack_quantity);
+                $nbPackAvailableForItem = (int) floor($itemQuantity / $item->pack_quantity);
 
                 // Initialize packQuantity with the first product quantity
                 // if pack decrement stock type is products only

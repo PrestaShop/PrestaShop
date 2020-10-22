@@ -85,9 +85,9 @@ class MediaServerConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param array $configuration
      *
-     * @todo: when PHP minimum version will be 7.1, use "FILTER_VALIDATE_DOMAIN" constraint.
+     * @return array<int, array<string, array|string>>|bool
      */
     public function validateConfiguration(array $configuration)
     {
@@ -128,16 +128,16 @@ class MediaServerConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * To be removed once the minimum version is PHP 7.1.
-     *
-     * @param $domainName
+     * @param string $domainName
      *
      * @return bool
      */
     private function isValidDomain($domainName)
     {
-        $ip = gethostbyname($domainName);
+        if (false !== filter_var($domainName, FILTER_VALIDATE_DOMAIN)) {
+            return false !== filter_var(gethostbyname($domainName), FILTER_VALIDATE_IP);
+        }
 
-        return false !== filter_var($ip, FILTER_VALIDATE_IP);
+        return false;
     }
 }

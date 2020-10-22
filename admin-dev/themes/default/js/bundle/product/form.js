@@ -79,10 +79,12 @@ $(document).ready(function() {
 function resetEditor() {
   const languageEditorsSelector = '.summary-description-container div.translation-field.active textarea.autoload_rte';
   $(languageEditorsSelector).each(function(index, textarea) {
-    const editor = tinyMCE.get(textarea.id);
-    if (editor) {
-      //Reset content to force refresh of editor
-      editor.setContent(editor.getContent());
+    if (window.tinyMCE) {
+      const editor = window.tinyMCE.get(textarea.id);
+      if (editor) {
+        //Reset content to force refresh of editor
+        editor.setContent(editor.getContent());
+      }
     }
   });
 }
@@ -396,7 +398,7 @@ var featuresCollection = (function() {
         e.preventDefault();
         var _this = $(this);
 
-        modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+        modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
           onContinue: function() {
             _this.closest('.product-feature').remove();
           }
@@ -876,7 +878,7 @@ var form = (function() {
       $('.product-footer .delete', elem).click(function(e) {
         e.preventDefault();
         var _this = $(this);
-        modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+        modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
           onContinue: function() {
             window.location = _this.attr('href');
           }
@@ -1016,7 +1018,7 @@ var customFieldCollection = (function() {
         e.preventDefault();
         var _this = $(this);
 
-        modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+        modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
           onContinue: function() {
             _this.parent().parent().parent().remove();
           }
@@ -1096,7 +1098,7 @@ var virtualProduct = (function() {
         e.preventDefault();
         var $deleteButton = $(this);
 
-        modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+        modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
           onContinue: function() {
             getOnDeleteVirtualProductFileHandler($deleteButton);
           }
@@ -1357,7 +1359,7 @@ var imagesProduct = (function() {
         success: function(file, response) {
           //manage error on uploaded file
           if (response.error !== 0) {
-            errorElem.append('<p>' + file.name + ': ' + response.error + '</p>');
+            errorElem.append($('<p></p>').text(file.name + ': ' + response.error));
             this.removeFile(file);
             return;
           }
@@ -1386,7 +1388,7 @@ var imagesProduct = (function() {
           }
 
           //append new error
-          errorElem.append('<p>' + file.name + ': ' + message + '</p>');
+          errorElem.append($('<p></p>').text(file.name + ': ' + message));
 
           //remove uploaded item
           this.removeFile(file);
@@ -1536,7 +1538,7 @@ var formImagesProduct = (function() {
       });
     },
     'delete': function(id) {
-      modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+      modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
         onContinue: function() {
           $.ajax({
             url: dropZoneElem.find('.dz-preview[data-id="' + id + '"]').attr('url-delete'),

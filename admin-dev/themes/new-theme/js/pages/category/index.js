@@ -38,19 +38,15 @@ import DeleteCategoryRowActionExtension
   from '@components/grid/extension/action/row/category/delete-category-row-action-extension';
 import DeleteCategoriesBulkActionExtension
   from '@components/grid/extension/action/bulk/category/delete-categories-bulk-action-extension';
-import TranslatableInput from '@components/translatable-input';
 import ChoiceTable from '@components/choice-table';
 import textToLinkRewriteCopier from '@components/text-to-link-rewrite-copier';
 import ChoiceTree from '@components/form/choice-tree';
 import FormSubmitButton from '@components/form-submit-button';
-import TaggableField from '@components/taggable-field';
 import FiltersSubmitButtonEnablerExtension
   from '@components/grid/extension/filters-submit-button-enabler-extension';
 import ShowcaseCard from '@components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
 import TextWithRecommendedLengthCounter from '@components/form/text-with-recommended-length-counter';
-import TranslatableField from '@components/translatable-field';
-import TinyMCEEditor from '@components/tinymce-editor';
 import Serp from '@app/utils/serp/index';
 
 const {$} = window;
@@ -75,9 +71,15 @@ $(() => {
   const showcaseCard = new ShowcaseCard('categoriesShowcaseCard');
   showcaseCard.addExtension(new ShowcaseCardCloseExtension());
 
-  new TranslatableField();
-  new TinyMCEEditor();
-  const translatorInput = new TranslatableInput();
+  window.prestashop.component.initComponents(
+    [
+      'TranslatableField',
+      'TinyMCEEditor',
+      'TranslatableInput',
+    ],
+  );
+
+  const translatorInput = window.prestashop.instance.translatableInput;
   new ChoiceTable();
   new TextWithRecommendedLengthCounter();
 
@@ -109,7 +111,7 @@ $(() => {
 
   new FormSubmitButton();
 
-  new TaggableField({
+  new window.prestashop.component.TaggableField({
     tokenFieldSelector: 'input.js-taggable-field',
     options: {
       createTokensOnBlur: true,

@@ -5,11 +5,11 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
+
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const CustomersPage = require('@pages/BO/customers');
-const AddCustomerPage = require('@pages/BO/customers/add');
+const dashboardPage = require('@pages/BO/dashboard');
+const customersPage = require('@pages/BO/customers');
+const addCustomerPage = require('@pages/BO/customers/add');
 
 // Import data
 const CustomerFaker = require('@data/faker/customer');
@@ -26,51 +26,41 @@ let numberOfCustomers = 0;
 const firstCustomerData = new CustomerFaker({firstName: 'todelete'});
 const secondCustomerData = new CustomerFaker({firstName: 'todelete'});
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    customersPage: new CustomersPage(page),
-    addCustomerPage: new AddCustomerPage(page),
-  };
-};
-
 // Create Customers, Then disable / Enable and Delete with Bulk actions
 describe('Create Customers, Then disable / Enable and Delete with Bulk actions', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to customers page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to customers page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.customersParentLink,
-      this.pageObjects.dashboardPage.customersLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.customersParentLink,
+      dashboardPage.customersLink,
     );
 
-    await this.pageObjects.customersPage.closeSfToolBar();
+    await customersPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.customersPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.customersPage.pageTitle);
+    const pageTitle = await customersPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(customersPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-    numberOfCustomers = await this.pageObjects.customersPage.resetAndGetNumberOfLines();
+    numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
     await expect(numberOfCustomers).to.be.above(0);
   });
 
@@ -84,18 +74,19 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
     tests.forEach((test, index) => {
       it('should go to add new customer page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddCustomerPage${index + 1}`, baseContext);
-        await this.pageObjects.customersPage.goToAddNewCustomerPage();
-        const pageTitle = await this.pageObjects.addCustomerPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.addCustomerPage.pageTitleCreate);
+
+        await customersPage.goToAddNewCustomerPage(page);
+        const pageTitle = await addCustomerPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
       });
 
       it('should create customer and check result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createCustomer${index + 1}`, baseContext);
 
-        const textResult = await this.pageObjects.addCustomerPage.createEditCustomer(test.args.customerToCreate);
-        await expect(textResult).to.equal(this.pageObjects.customersPage.successfulCreationMessage);
+        const textResult = await addCustomerPage.createEditCustomer(page, test.args.customerToCreate);
+        await expect(textResult).to.equal(customersPage.successfulCreationMessage);
 
-        const numberOfCustomersAfterCreation = await this.pageObjects.customersPage.getNumberOfElementInGrid();
+        const numberOfCustomersAfterCreation = await customersPage.getNumberOfElementInGrid(page);
         await expect(numberOfCustomersAfterCreation).to.be.equal(numberOfCustomers + index + 1);
       });
     });
@@ -105,13 +96,14 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
     it('should filter list by firstName', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkEdit', baseContext);
 
-      await this.pageObjects.customersPage.filterCustomers(
+      await customersPage.filterCustomers(
+        page,
         'input',
         'firstname',
         'todelete',
       );
 
-      const textResult = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(1, 'firstname');
+      const textResult = await customersPage.getTextColumnFromTableCustomers(page, 1, 'firstname');
       await expect(textResult).to.contains('todelete');
     });
 
@@ -124,17 +116,18 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
       it(`should ${test.args.action} customers with bulk actions and check Result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Customers`, baseContext);
 
-        const textResult = await this.pageObjects.customersPage.changeCustomersEnabledColumnBulkActions(
+        const textResult = await customersPage.changeCustomersEnabledColumnBulkActions(
+          page,
           test.args.enabledValue,
         );
 
-        await expect(textResult).to.be.equal(this.pageObjects.customersPage.successfulUpdateMessage);
+        await expect(textResult).to.be.equal(customersPage.successfulUpdateMessage);
 
-        const numberOfCustomersInGrid = await this.pageObjects.customersPage.getNumberOfElementInGrid();
+        const numberOfCustomersInGrid = await customersPage.getNumberOfElementInGrid(page);
         await expect(numberOfCustomersInGrid).to.be.at.least(2);
 
         for (let i = 1; i <= numberOfCustomersInGrid; i++) {
-          const textColumn = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(1, 'active');
+          const textColumn = await customersPage.getTextColumnFromTableCustomers(page, 1, 'active');
           await expect(textColumn).to.contains(test.expected);
         }
       });
@@ -146,27 +139,28 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
     it('should filter list by firstName', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
 
-      await this.pageObjects.customersPage.filterCustomers(
+      await customersPage.filterCustomers(
+        page,
         'input',
         'firstname',
         'todelete',
       );
 
-      const textResult = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(1, 'firstname');
+      const textResult = await customersPage.getTextColumnFromTableCustomers(page, 1, 'firstname');
       await expect(textResult).to.contains('todelete');
     });
 
     it('should delete customers with Bulk Actions and check Result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCustomers', baseContext);
 
-      const deleteTextResult = await this.pageObjects.customersPage.deleteCustomersBulkActions();
-      await expect(deleteTextResult).to.be.equal(this.pageObjects.customersPage.successfulMultiDeleteMessage);
+      const deleteTextResult = await customersPage.deleteCustomersBulkActions(page);
+      await expect(deleteTextResult).to.be.equal(customersPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkDelete', baseContext);
 
-      const numberOfCustomersAfterReset = await this.pageObjects.customersPage.resetAndGetNumberOfLines();
+      const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
       await expect(numberOfCustomersAfterReset).to.be.equal(numberOfCustomers);
     });
   });

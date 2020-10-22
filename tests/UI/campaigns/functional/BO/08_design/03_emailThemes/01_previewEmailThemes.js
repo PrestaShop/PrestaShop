@@ -7,10 +7,9 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const EmailThemesPage = require('@pages/BO/design/emailThemes');
-const PreviewEmailThemesPage = require('@pages/BO/design/emailThemes/preview');
+const dashboardPage = require('@pages/BO/dashboard');
+const emailThemesPage = require('@pages/BO/design/emailThemes');
+const previewEmailThemesPage = require('@pages/BO/design/emailThemes/preview');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -21,42 +20,34 @@ const baseContext = 'functional_BO_design_emailThemes_previewEmailThemes';
 let browserContext;
 let page;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    emailThemesPage: new EmailThemesPage(page),
-    previewEmailThemesPage: new PreviewEmailThemesPage(page),
-  };
-};
-
 describe('Preview Email themes classic and modern', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
-  // Login into BO and go to taxes page
-  loginCommon.loginBO();
+
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
+
   it('should go to design > email themes page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEmailThemesPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.designParentLink,
-      this.pageObjects.dashboardPage.emailThemeLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.designParentLink,
+      dashboardPage.emailThemeLink,
     );
 
-    await this.pageObjects.emailThemesPage.closeSfToolBar();
+    await emailThemesPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.emailThemesPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.emailThemesPage.pageTitle);
+    const pageTitle = await emailThemesPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(emailThemesPage.pageTitle);
   });
 
   describe('Preview email themes', async () => {
@@ -74,15 +65,15 @@ describe('Preview Email themes classic and modern', async () => {
           baseContext,
         );
 
-        await this.pageObjects.emailThemesPage.previewEmailTheme(test.args.emailThemeName);
+        await emailThemesPage.previewEmailTheme(page, test.args.emailThemeName);
 
-        const pageTitle = await this.pageObjects.emailThemesPage.getPageTitle();
+        const pageTitle = await emailThemesPage.getPageTitle(page);
 
         await expect(pageTitle).to.contains(
-          `${this.pageObjects.previewEmailThemesPage.pageTitle} ${test.args.emailThemeName}`,
+          `${previewEmailThemesPage.pageTitle} ${test.args.emailThemeName}`,
         );
 
-        const numberOfLayouts = await this.pageObjects.previewEmailThemesPage.getNumberOfLayoutInGrid();
+        const numberOfLayouts = await previewEmailThemesPage.getNumberOfLayoutInGrid(page);
         await expect(numberOfLayouts).to.equal(test.args.numberOfLayouts);
       });
 
@@ -94,9 +85,9 @@ describe('Preview Email themes classic and modern', async () => {
           baseContext,
         );
 
-        await this.pageObjects.previewEmailThemesPage.goBackToEmailThemesPage();
-        const pageTitle = await this.pageObjects.emailThemesPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.emailThemesPage.pageTitle);
+        await previewEmailThemesPage.goBackToEmailThemesPage(page);
+        const pageTitle = await emailThemesPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(emailThemesPage.pageTitle);
       });
     });
   });

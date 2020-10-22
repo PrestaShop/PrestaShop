@@ -6,12 +6,11 @@ const files = require('@utils/files');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const LocalizationPage = require('@pages/BO/international/localization');
-const LanguagesPage = require('@pages/BO/international/languages');
-const AddLanguagePage = require('@pages/BO/international/languages/add');
-const FOBasePage = require('@pages/FO/FObasePage');
+const dashboardPage = require('@pages/BO/dashboard');
+const localizationPage = require('@pages/BO/international/localization');
+const languagesPage = require('@pages/BO/international/languages');
+const addLanguagePage = require('@pages/BO/international/languages/add');
+const foHomePage = require('@pages/FO/home');
 
 // Import data
 const LanguageFaker = require('@data/faker/language');
@@ -28,18 +27,6 @@ const createLanguageData = new LanguageFaker({isoCode: 'de'});
 const editLanguageData = new LanguageFaker({isoCode: 'nl', status: false});
 let numberOfLanguages = 0;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    localizationPage: new LocalizationPage(page),
-    languagesPage: new LanguagesPage(page),
-    addLanguagePage: new AddLanguagePage(page),
-    foBasePage: new FOBasePage(page),
-  };
-};
-
 /*
 Create enabled language
 Verify that language exist in FO
@@ -52,8 +39,6 @@ describe('CRUD language', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
@@ -66,35 +51,37 @@ describe('CRUD language', async () => {
     ]);
   });
 
-  // Login into BO and go to languages page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to localization page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.internationalParentLink,
-      this.pageObjects.dashboardPage.localizationLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.internationalParentLink,
+      dashboardPage.localizationLink,
     );
 
-    await this.pageObjects.localizationPage.closeSfToolBar();
+    await localizationPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.localizationPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.localizationPage.pageTitle);
+    const pageTitle = await localizationPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(localizationPage.pageTitle);
   });
 
   it('should go to languages page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLanguagesPage', baseContext);
 
-    await this.pageObjects.localizationPage.goToSubTabLanguages();
-    const pageTitle = await this.pageObjects.languagesPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.languagesPage.pageTitle);
+    await localizationPage.goToSubTabLanguages(page);
+    const pageTitle = await languagesPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(languagesPage.pageTitle);
   });
 
   it('should reset all filters and get number of languages in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfLanguages = await this.pageObjects.languagesPage.resetAndGetNumberOfLines();
+    numberOfLanguages = await languagesPage.resetAndGetNumberOfLines(page);
     await expect(numberOfLanguages).to.be.above(0);
   });
 
@@ -102,18 +89,18 @@ describe('CRUD language', async () => {
     it('should go to add new language page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewLanguages', baseContext);
 
-      await this.pageObjects.languagesPage.goToAddNewLanguage();
-      const pageTitle = await this.pageObjects.addLanguagePage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.addLanguagePage.pageTitle);
+      await languagesPage.goToAddNewLanguage(page);
+      const pageTitle = await addLanguagePage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addLanguagePage.pageTitle);
     });
 
     it('should create new language', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createNewLanguages', baseContext);
 
-      const textResult = await this.pageObjects.addLanguagePage.createEditLanguage(createLanguageData);
-      await expect(textResult).to.to.contains(this.pageObjects.languagesPage.successfulCreationMessage);
+      const textResult = await addLanguagePage.createEditLanguage(page, createLanguageData);
+      await expect(textResult).to.to.contains(languagesPage.successfulCreationMessage);
 
-      const numberOfLanguagesAfterCreation = await this.pageObjects.languagesPage.getNumberOfElementInGrid();
+      const numberOfLanguagesAfterCreation = await languagesPage.getNumberOfElementInGrid(page);
       await expect(numberOfLanguagesAfterCreation).to.be.equal(numberOfLanguages + 1);
     });
 
@@ -121,15 +108,13 @@ describe('CRUD language', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedLanguageFO', baseContext);
 
       // View my shop and init pages
-      page = await this.pageObjects.languagesPage.viewMyShop();
-      this.pageObjects = await init();
+      page = await languagesPage.viewMyShop(page);
 
-      const isLanguageInFO = await this.pageObjects.foBasePage.languageExists(createLanguageData.isoCode);
+      const isLanguageInFO = await foHomePage.languageExists(page, createLanguageData.isoCode);
       await expect(isLanguageInFO, `${createLanguageData.name} was not found as a language in FO`).to.be.true;
 
       // Go back to BO
-      page = await this.pageObjects.foBasePage.closePage(browserContext, 0);
-      this.pageObjects = await init();
+      page = await foHomePage.closePage(browserContext, page, 0);
     });
   });
 
@@ -138,31 +123,31 @@ describe('CRUD language', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
 
       // Filter
-      await this.pageObjects.languagesPage.filterTable('input', 'name', createLanguageData.name);
+      await languagesPage.filterTable(page, 'input', 'name', createLanguageData.name);
 
       // Check number of languages
-      const numberOfLanguagesAfterFilter = await this.pageObjects.languagesPage.getNumberOfElementInGrid();
+      const numberOfLanguagesAfterFilter = await languagesPage.getNumberOfElementInGrid(page);
       await expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
 
-      const textColumn = await this.pageObjects.languagesPage.getTextColumnFromTable(1, 'name');
+      const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'name');
       await expect(textColumn).to.contains(createLanguageData.name);
     });
 
     it('should go to edit language page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditLanguagePage', baseContext);
 
-      await this.pageObjects.languagesPage.goToEditLanguage(1);
-      const pageTitle = await this.pageObjects.addLanguagePage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.addLanguagePage.pageEditTitle);
+      await languagesPage.goToEditLanguage(page, 1);
+      const pageTitle = await addLanguagePage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addLanguagePage.pageEditTitle);
     });
 
     it('should edit language', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editLanguage', baseContext);
 
-      const textResult = await this.pageObjects.addLanguagePage.createEditLanguage(editLanguageData);
-      await expect(textResult).to.to.contains(this.pageObjects.languagesPage.successfulUpdateMessage);
+      const textResult = await addLanguagePage.createEditLanguage(page, editLanguageData);
+      await expect(textResult).to.to.contains(languagesPage.successfulUpdateMessage);
 
-      const numberOfLanguagesAfterReset = await this.pageObjects.languagesPage.resetAndGetNumberOfLines();
+      const numberOfLanguagesAfterReset = await languagesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfLanguagesAfterReset).to.be.equal(numberOfLanguages + 1);
     });
 
@@ -170,16 +155,14 @@ describe('CRUD language', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedLanguageFO', baseContext);
 
       // View my shop and init pages
-      page = await this.pageObjects.languagesPage.viewMyShop();
-      this.pageObjects = await init();
+      page = await languagesPage.viewMyShop(page);
 
       // Check languages if FO
-      const isLanguageInFO = await this.pageObjects.foBasePage.languageExists(editLanguageData.isoCode);
+      const isLanguageInFO = await foHomePage.languageExists(page, editLanguageData.isoCode);
       await expect(isLanguageInFO, `${editLanguageData.name} was found as a language in FO`).to.be.false;
 
       // Go back to BO
-      page = await this.pageObjects.foBasePage.closePage(browserContext, 0);
-      this.pageObjects = await init();
+      page = await foHomePage.closePage(browserContext, page, 0);
     });
   });
 
@@ -188,27 +171,27 @@ describe('CRUD language', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
       // Filter
-      await this.pageObjects.languagesPage.filterTable('input', 'name', editLanguageData.name);
+      await languagesPage.filterTable(page, 'input', 'name', editLanguageData.name);
 
       // Check number of languages
-      const numberOfLanguagesAfterFilter = await this.pageObjects.languagesPage.getNumberOfElementInGrid();
+      const numberOfLanguagesAfterFilter = await languagesPage.getNumberOfElementInGrid(page);
       await expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
 
-      const textColumn = await this.pageObjects.languagesPage.getTextColumnFromTable(1, 'name');
+      const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'name');
       await expect(textColumn).to.contains(editLanguageData.name);
     });
 
     it('should delete language', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteLanguage', baseContext);
 
-      const textResult = await this.pageObjects.languagesPage.deleteLanguage(1);
-      await expect(textResult).to.to.contains(this.pageObjects.languagesPage.successfulDeleteMessage);
+      const textResult = await languagesPage.deleteLanguage(page, 1);
+      await expect(textResult).to.to.contains(languagesPage.successfulDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
-      const numberOfLanguagesAfterReset = await this.pageObjects.languagesPage.resetAndGetNumberOfLines();
+      const numberOfLanguagesAfterReset = await languagesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfLanguagesAfterReset).to.be.equal(numberOfLanguages);
     });
   });

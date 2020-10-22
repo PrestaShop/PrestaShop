@@ -54,7 +54,7 @@ final class ImportDataFormatter
     }
 
     /**
-     * @param $value
+     * @param string|int $value
      *
      * @return bool
      */

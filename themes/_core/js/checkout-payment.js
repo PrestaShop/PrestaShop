@@ -27,12 +27,12 @@ import prestashop from 'prestashop';
 
 class Payment {
   constructor() {
-    this.confirmationSelector = '#payment-confirmation';
-    this.conditionsSelector = '#conditions-to-approve';
-    this.conditionAlertSelector = '.js-alert-payment-conditions';
-    this.additionalInformatonSelector = '.js-additional-information';
-    this.optionsForm = '.js-payment-option-form';
-    this.termsCheckboxSelector = '#conditions-to-approve input[name="conditions_to_approve[terms-and-conditions]"]';
+    this.confirmationSelector = prestashop.selectors.checkout.confirmationSelector;
+    this.conditionsSelector = prestashop.selectors.checkout.conditionsSelector;
+    this.conditionAlertSelector = prestashop.selectors.checkout.conditionAlertSelector;
+    this.additionalInformatonSelector = prestashop.selectors.checkout.additionalInformatonSelector;
+    this.optionsForm = prestashop.selectors.checkout.optionsForm;
+    this.termsCheckboxSelector = prestashop.selectors.checkout.termsCheckboxSelector;
   }
 
   init() {
@@ -74,7 +74,7 @@ class Payment {
     });
 
     prestashop.emit('termsUpdated', {
-      isChecked: show
+      isChecked: show,
     });
 
     this.collapseOptions();
@@ -87,14 +87,14 @@ class Payment {
     $(`#${selectedOption}-additional-information`).show();
     $(`#pay-with-${selectedOption}-form`).show();
 
-    $('.js-payment-binary').hide();
+    $(prestashop.selectors.checkout.paymentBinary).hide();
 
     if ($(`#${selectedOption}`).hasClass('binary')) {
       var paymentOption = this.getPaymentOptionSelector(selectedOption);
       this.hideConfirmation();
       $(paymentOption).show();
 
-      document.querySelectorAll(`${paymentOption} button, ${paymentOption} input`).forEach(element => {
+      document.querySelectorAll(`${paymentOption} button, ${paymentOption} input`).forEach((element) => {
         if (show) {
           element.removeAttribute('disabled');
         } else {
@@ -125,8 +125,8 @@ class Payment {
     return `.js-payment-${moduleName}`;
   }
 
-  showNativeFormErrors () {
-    $(`input[name=payment-option], ${this.termsCheckboxSelector}`).each(function() {
+  showNativeFormErrors() {
+    $(`input[name=payment-option], ${this.termsCheckboxSelector}`).each(function () {
       this.reportValidity();
     });
   }
@@ -146,7 +146,7 @@ class Payment {
   }
 }
 
-export default function() {
+export default function () {
   let payment = new Payment();
   payment.init();
 

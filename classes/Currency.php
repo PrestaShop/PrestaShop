@@ -60,7 +60,7 @@ class CurrencyCore extends ObjectModel
     /**
      * Numeric ISO 4217 code of this currency.
      *
-     * @var string
+     * @var string|null
      */
     public $numeric_iso_code;
 
@@ -175,7 +175,7 @@ class CurrencyCore extends ObjectModel
         'multilang' => true,
         'fields' => [
             'iso_code' => ['type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3],
-            'numeric_iso_code' => ['type' => self::TYPE_STRING, 'validate' => 'isNumericIsoCode', 'size' => 3],
+            'numeric_iso_code' => ['type' => self::TYPE_STRING, 'allow_null' => true, 'validate' => 'isNumericIsoCode', 'size' => 3],
             'precision' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
             'conversion_rate' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true, 'shop' => true],
             'deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
@@ -197,8 +197,11 @@ class CurrencyCore extends ObjectModel
     protected $webserviceParameters = [
         'objectsNodeName' => 'currencies',
         'fields' => [
+            'names' => [
+                'getter' => 'getLocalizedNames',
+                'i18n' => true,
+            ],
             'name' => [
-                'setter' => false,
                 'getter' => 'getName',
                 'modifier' => [
                     'http_method' => WebserviceRequest::HTTP_POST | WebserviceRequest::HTTP_PUT,
@@ -206,11 +209,12 @@ class CurrencyCore extends ObjectModel
                 ],
             ],
             'symbol' => [
-                'setter' => false,
-                'getter' => 'getSymbol',
+                'getter' => 'getLocalizedSymbols',
+            ],
+            'iso_code' => [
                 'modifier' => [
                     'http_method' => WebserviceRequest::HTTP_POST | WebserviceRequest::HTTP_PUT,
-                    'modifier' => 'setSymbolForWebservice',
+                    'modifier' => 'setIsoCodeForWebService',
                 ],
             ],
         ],
@@ -297,24 +301,74 @@ class CurrencyCore extends ObjectModel
     public function getWebserviceParameters($ws_params_attribute_name = null)
     {
         $parameters = parent::getWebserviceParameters($ws_params_attribute_name);
-        // name & symbol are i18n fields but casted to single string in the constructor
-        // so we need to force the webservice to consider those fields as non-i18n fields.
-        // Also, in 1.7.5 the field symbol didn't exists and name wasn't an i18n field so in order
-        // to keep 1.7.6 backward compatible we need to make those fields non-i18n.
+        // name is an i18n field but is casted to single string in the constructor
+        // so we need to force the webservice to consider this field as non-i18n.
         $parameters['fields']['name']['i18n'] = false;
-        $parameters['fields']['symbol']['i18n'] = false;
+        $parameters['fields']['name']['required'] = true;
 
         return $parameters;
     }
 
+    /**
+     * If the field 'names' (localized names) is sent,
+     * it should be use instead of the field 'name' (non-localized).
+     * LocalizedNames is also updated to reflect the new information.
+     */
     public function setNameForWebservice()
     {
-        $this->name = $this->localizedNames;
+        if (!empty($this->names)) {
+            $this->name = $this->names;
+            if (is_array($this->names)) {
+                $this->localizedNames = $this->names;
+            } else {
+                foreach ($this->localizedNames as $lang => $name) {
+                    $this->localizedNames[$lang] = $this->names;
+                }
+            }
+        } else {
+            foreach ($this->localizedNames as $lang => $localizedName) {
+                $this->localizedNames[$lang] = $this->name;
+            }
+        }
     }
 
-    public function setSymbolForWebservice()
+    /**
+     * In 1.7.6, new fields have been introduced. To keep it backward compatible,
+     * we need to populate those fields with default values and they are all available
+     * using the ISO code through CLDR data.
+     */
+    public function setIsoCodeForWebService()
     {
-        $this->symbol = $this->localizedSymbols;
+        $container = Context::getContext()->container;
+        /** @var LocaleRepository $localeCldr */
+        $localeCldr = $container->get('prestashop.core.localization.cldr.locale_repository');
+        /** @var Configuration $configuration */
+        $configuration = $container->get('prestashop.adapter.legacy.configuration');
+        $languages = Language::getIDs();
+        $defaultLanguage = new Language($configuration->get('PS_LANG_DEFAULT'));
+        $locale = $localeCldr->getLocale($defaultLanguage->getLocale());
+        $currency = $locale->getCurrency($this->iso_code);
+        if (!empty($currency)) {
+            if (empty($this->numeric_iso_code)) {
+                $this->numeric_iso_code = $currency->getNumericIsoCode();
+                $this->iso_code_num = $this->numeric_iso_code;
+            }
+            if (empty($this->precision)) {
+                $this->precision = (int) $currency->getDecimalDigits();
+            }
+        }
+        if (empty($this->symbol)) {
+            $name = $this->name;
+            $this->refreshLocalizedCurrencyData($languages, $localeCldr);
+            $this->name = $name;
+        }
+        if (is_array($this->symbol)) {
+            $this->localizedSymbols = $this->symbol;
+        } else {
+            foreach ($this->localizedSymbols as $lang => $symbol) {
+                $this->localizedSymbols[$lang] = $this->symbol;
+            }
+        }
     }
 
     /**
@@ -417,12 +471,14 @@ class CurrencyCore extends ObjectModel
     {
         if ($this->id == Configuration::get('PS_CURRENCY_DEFAULT')) {
             $result = Db::getInstance()->getRow('SELECT `id_currency` FROM ' . _DB_PREFIX_ . 'currency WHERE `id_currency` != ' . (int) $this->id . ' AND `deleted` = 0');
-            if (!$result['id_currency']) {
+            if (empty($result['id_currency'])) {
                 return false;
             }
+
             Configuration::updateValue('PS_CURRENCY_DEFAULT', $result['id_currency']);
         }
-        $this->deleted = 1;
+
+        $this->deleted = true;
 
         // Remove currency restrictions
         $res = Db::getInstance()->delete('module_currency', 'id_currency = ' . (int) $this->id);
@@ -503,6 +559,10 @@ class CurrencyCore extends ObjectModel
         $id_lang = $this->id_lang;
         if (null === $id_lang) {
             $id_lang = Configuration::get('PS_LANG_DEFAULT');
+        }
+
+        if (!isset($this->symbol[$id_lang])) {
+            return '';
         }
 
         return Tools::ucfirst($this->symbol[$id_lang]);
@@ -830,13 +890,17 @@ class CurrencyCore extends ObjectModel
             $query = Currency::getIdByQuery($idShop, $includeDeleted);
             $query->where('iso_code = \'' . pSQL($isoCode) . '\'');
 
-            $result = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
+            if (empty($result)) {
+                return 0;
+            }
+
             Cache::store($cacheId, $result);
 
-            return $result;
+            return (int) $result;
         }
 
-        return Cache::retrieve($cacheId);
+        return (int) Cache::retrieve($cacheId);
     }
 
     /**

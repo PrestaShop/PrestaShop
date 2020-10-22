@@ -27,6 +27,7 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Gherkin\Node\TableNode;
 use Cache;
 use CartRule;
 use Configuration;
@@ -109,8 +110,14 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $this->createCartRule($cartRuleName, 0, $amount, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser);
     }
 
-    protected function createCartRule($cartRuleName, $percent, $amount, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser)
-    {
+    protected function createCartRule(
+        $cartRuleName,
+        $percent,
+        $amount,
+        $priority,
+        $cartRuleQuantity,
+        $cartRuleQuantityPerUser
+    ) {
         $cartRule = new CartRule();
         $cartRule->reduction_percent = $percent;
         $cartRule->reduction_amount = $amount;
@@ -226,9 +233,9 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^cart rule "(.+)" is applied on order$/
+     * @Given /^cart rule "(.+)" is applied on every order$/
      */
-    public function cartRuleIsRestrictedToOrder($cartRuleName)
+    public function cartRuleIsRestrictedToEveryOrder($cartRuleName)
     {
         $this->checkCartRuleWithNameExists($cartRuleName);
         $this->cartRules[$cartRuleName]->product_restriction = 0;
@@ -389,6 +396,39 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $cartRule = new CartRule($cartRules[$position - 1]['id_cart_rule']);
         if ($expectedValue != $cartRule->reduction_amount) {
             throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedValue, $cartRule->reduction_amount));
+        }
+    }
+
+    /**
+     * @Then the current cart should have the following contextual reductions:
+     *
+     * @param TableNode $table
+     */
+    public function checkCartRuleContextualValue(TableNode $table)
+    {
+        $contextualReductionValues = $table->getRowsHash();
+        $cartRules = $this->getCurrentCart()->getCartRules();
+
+        foreach ($cartRules as $currentCartRule) {
+            if (!isset($contextualReductionValues[$currentCartRule['description']])) {
+                throw new \RuntimeException(sprintf('Cart rule %s was not expected.', $currentCartRule['description']));
+            }
+
+            // float numbers are compared as string because float numbers seemingly equals can still be unequals.
+            if ((string) $currentCartRule['value_real'] !== (string) $contextualReductionValues[$currentCartRule['description']]) {
+                throw new \RuntimeException(
+                    sprintf(
+                        'Expects %s, got %s instead',
+                        $contextualReductionValues[$currentCartRule['description']],
+                        $currentCartRule['value_real']
+                    )
+                );
+            }
+            unset($contextualReductionValues[$currentCartRule['description']]);
+        }
+
+        if (!empty($contextualReductionValues)) {
+            throw new \RuntimeException(sprintf('The cart rule "%s" was not found', reset($contextualReductionValues)));
         }
     }
 }

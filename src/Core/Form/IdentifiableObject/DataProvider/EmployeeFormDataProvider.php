@@ -82,6 +82,7 @@ final class EmployeeFormDataProvider implements FormDataProviderInterface
             'active' => $editableEmployee->isActive(),
             'profile' => $editableEmployee->getProfileId(),
             'shop_association' => $editableEmployee->getShopAssociation(),
+            'has_enabled_gravatar' => $editableEmployee->hasEnabledGravatar(),
         ];
     }
 
@@ -92,6 +93,7 @@ final class EmployeeFormDataProvider implements FormDataProviderInterface
     {
         $data = [
             'active' => true,
+            'has_enabled_gravatar' => false,
         ];
 
         if ($this->isMultistoreFeatureActive) {

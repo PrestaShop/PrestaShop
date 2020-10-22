@@ -34,6 +34,8 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class Filters extends ParameterBag implements SearchCriteriaInterface
 {
+    const LIST_LIMIT = 10;
+
     /** @var string */
     protected $filterId = '';
 
@@ -61,7 +63,7 @@ class Filters extends ParameterBag implements SearchCriteriaInterface
     public static function getDefaults()
     {
         return [
-            'limit' => 10,
+            'limit' => self::LIST_LIMIT,
             'offset' => 0,
             'orderBy' => null,
             'sortOrder' => null,
@@ -99,6 +101,15 @@ class Filters extends ParameterBag implements SearchCriteriaInterface
     public function getLimit()
     {
         return $this->get('limit');
+    }
+
+    /**
+     * @param array $parameters
+     */
+    public function addFilter(array $parameters = [])
+    {
+        $filters = array_replace($this->getFilters(), $parameters);
+        $this->set('filters', $filters);
     }
 
     /**

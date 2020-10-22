@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
@@ -47,6 +46,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
     use DeleteActionTrait;
 
     /**
@@ -211,12 +211,7 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new BulkActionCollection())
             ->add(
-                (new SubmitBulkAction('delete_seo_urls'))
-                    ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                    ->setOptions([
-                        'submit_route' => 'admin_metas_delete_bulk',
-                        'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                    ])
+                $this->buildBulkDeleteAction('admin_metas_delete_bulk')
             );
     }
 }

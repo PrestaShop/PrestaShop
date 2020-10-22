@@ -1,27 +1,3 @@
-/**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- */
 const {DefaultAccount} = require('@data/demo/employees');
 
 
@@ -41,10 +17,11 @@ global.INSTALL = {
   URL: process.env.URL_INSTALL || `${global.FO.URL}install-dev/`,
   LANGUAGE: process.env.INSTALL_LANGUAGE || 'en',
   COUNTRY: process.env.INSTALL_COUNTRY || 'fr',
+  DB_SERVER: process.env.DB_SERVER || '127.0.0.1',
   DB_NAME: process.env.DB_NAME || 'prestashopdb',
   DB_USER: process.env.DB_USER || 'root',
   DB_PASSWD: process.env.DB_PASSWD || '',
-  SHOPNAME: process.env.SHOPNAME || 'Prestashop',
+  SHOPNAME: process.env.SHOPNAME || 'PrestaShop',
   PS_VERSION: process.env.PS_VERSION || '1.7.6.0',
 };
 
@@ -60,4 +37,7 @@ global.BROWSER = {
     timeout: 0,
     slowMo: parseInt(process.env.SLOWMO, 10) || 5,
   },
+  interceptErrors: JSON.parse(process.env.INTERCEPT_ERRORS || false),
 };
+
+global.GENERATE_FAILED_STEPS = process.env.GENERATE_FAILED_STEPS || false;

@@ -29,7 +29,7 @@
  */
 class TabCore extends ObjectModel
 {
-    /** @var string Displayed name */
+    /** @var string|array<string> Displayed name */
     public $name;
 
     /** @var string Class and file name */
@@ -688,11 +688,12 @@ class TabCore extends ObjectModel
     public static function getTabModulesList($idTab)
     {
         $modulesList = ['default_list' => [], 'slider_list' => []];
-        $xmlTabModulesList = false;
 
-        if (file_exists(_PS_ROOT_DIR_ . Module::CACHE_FILE_TAB_MODULES_LIST)) {
-            $xmlTabModulesList = @simplexml_load_file(_PS_ROOT_DIR_ . Module::CACHE_FILE_TAB_MODULES_LIST);
+        if (!Tools::isFileFresh(Module::CACHE_FILE_TAB_MODULES_LIST, Tools::CACHE_LIFETIME_SECONDS)) {
+            Tools::refreshFile(Module::CACHE_FILE_TAB_MODULES_LIST, _PS_TAB_MODULE_LIST_URL_);
         }
+
+        $xmlTabModulesList = @simplexml_load_file(_PS_ROOT_DIR_ . Module::CACHE_FILE_TAB_MODULES_LIST);
 
         $className = null;
         $displayType = 'default_list';

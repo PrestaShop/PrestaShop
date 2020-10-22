@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class AddWebserviceKey extends BOBasePage {
-  constructor(page) {
-    super(page);
+class AddWebserviceKey extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitleCreate = 'Webservice •';
     this.pageTitleEdit = 'Webservice •';
@@ -22,18 +22,25 @@ module.exports = class AddWebserviceKey extends BOBasePage {
 
   /**
    * Fill form for add/edit webservice key
+   * @param page
    * @param webserviceData
    * @param toGenerate
    * @returns {Promise<string>}
    */
-  async createEditWebservice(webserviceData, toGenerate = true) {
-    if (toGenerate) await this.page.click(this.generateButton);
-    else await this.setValue(this.webserviceKeyInput, webserviceData.key);
-    await this.setValue(this.keyDescriptionTextarea, webserviceData.keyDescription);
+  async createEditWebservice(page, webserviceData, toGenerate = true) {
+    if (toGenerate) {
+      await page.click(this.generateButton);
+    } else {
+      await this.setValue(page, this.webserviceKeyInput, webserviceData.key);
+    }
+
+    await this.setValue(page, this.keyDescriptionTextarea, webserviceData.keyDescription);
     // id = 1 if active = YES / 0 if active = NO
-    await this.page.click(this.statusSwitchLabel(webserviceData.status ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveButton);
-    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {state: 'visible'});
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await page.click(this.statusSwitchLabel(webserviceData.status ? 1 : 0));
+
+    await this.clickAndWaitForNavigation(page, this.saveButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
-};
+}
+
+module.exports = new AddWebserviceKey();

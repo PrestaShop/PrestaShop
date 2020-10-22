@@ -30,18 +30,19 @@ use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 
 class EmailLister
 {
+    /**
+     * @var FileSystem
+     */
     private $filesystem;
 
     public function __construct(FileSystem $fs)
     {
-        // Register dependencies
         $this->filesystem = $fs;
     }
 
     /**
      * Return the list of available mails.
      *
-     * @param null $lang
      * @param null $dir
      *
      * @return array|null

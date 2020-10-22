@@ -286,12 +286,12 @@ class AdminSuppliersControllerCore extends AdminController
                         [
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', [], 'Admin.Global'),
+                            'label' => $this->trans('Yes', [], 'Admin.Global'),
                         ],
                         [
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', [], 'Admin.Global'),
+                            'label' => $this->trans('No', [], 'Admin.Global'),
                         ],
                     ],
                 ],
@@ -351,7 +351,6 @@ class AdminSuppliersControllerCore extends AdminController
     public function initToolbar()
     {
         parent::initToolbar();
-        $this->addPageHeaderToolBarModulesListButton();
 
         if (empty($this->display) && $this->can_import) {
             $this->toolbar_btn['import'] = [
@@ -363,7 +362,6 @@ class AdminSuppliersControllerCore extends AdminController
 
     public function renderView()
     {
-        $this->initTabModuleList();
         $this->toolbar_title = $this->object->name;
         $products = $this->object->getProductsLite($this->context->language->id);
         $total_product = count($products);
@@ -541,7 +539,7 @@ class AdminSuppliersControllerCore extends AdminController
                 $id_address = Address::getAddressIdBySupplierId($obj->id);
                 $address = new Address($id_address);
                 if (Validate::isLoadedObject($address)) {
-                    $address->deleted = 1;
+                    $address->deleted = true;
                     $address->save();
                 }
 

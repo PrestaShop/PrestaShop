@@ -10,24 +10,14 @@ const loginCommon = require('@commonTests/loginBO');
 const testContext = require('@utils/testContext');
 
 // Importing pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const EmailPage = require('@pages/BO/advancedParameters/email');
+const dashboardPage = require('@pages/BO/dashboard');
+const emailPage = require('@pages/BO/advancedParameters/email');
 
 
 const baseContext = 'functional_BO_advancedParameters_email_sendTestEmail';
 
 let browserContext;
 let page;
-
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    emailPage: new EmailPage(page),
-  };
-};
 
 /*
 Send test email and check successful message
@@ -37,33 +27,33 @@ describe('Send test email', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to \'Advanced parameters > E-mail\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEmailPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.advancedParametersLink,
-      this.pageObjects.dashboardPage.emailLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.advancedParametersLink,
+      dashboardPage.emailLink,
     );
 
-    const pageTitle = await this.pageObjects.emailPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.emailPage.pageTitle);
+    const pageTitle = await emailPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(emailPage.pageTitle);
   });
 
   it('should check successful message after sending test email', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'sendTestEmail', baseContext);
 
-    const textResult = await this.pageObjects.emailPage.sendTestEmail(global.BO.EMAIL);
-    await expect(textResult).to.contains(this.pageObjects.emailPage.sendTestEmailSuccessfulMessage);
+    const textResult = await emailPage.sendTestEmail(page, global.BO.EMAIL);
+    await expect(textResult).to.contains(emailPage.sendTestEmailSuccessfulMessage);
   });
 });

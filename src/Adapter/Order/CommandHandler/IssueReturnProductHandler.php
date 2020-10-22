@@ -27,15 +27,17 @@
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Context;
+use Hook;
 use Order;
 use OrderCarrier;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundCalculator;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundSummary;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderSlipCreator;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\VoucherGenerator;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\CancellationActionType;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssueReturnProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\IssueReturnProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
@@ -103,7 +105,7 @@ class IssueReturnProductHandler extends AbstractOrderCommandHandler implements I
         }
 
         /** @var Order $order */
-        $order = $this->getOrderObject($command->getOrderId());
+        $order = $this->getOrder($command->getOrderId());
         if (!$order->hasBeenDelivered()) {
             throw new InvalidOrderStateException(
                 InvalidOrderStateException::DELIVERY_NOT_FOUND,
@@ -111,7 +113,7 @@ class IssueReturnProductHandler extends AbstractOrderCommandHandler implements I
             );
         }
 
-        $shippingRefundAmount = new Number((string) ($command->refundShippingCost() ? $order->total_shipping_tax_incl : 0));
+        $shippingRefundAmount = new DecimalNumber((string) ($command->refundShippingCost() ? $order->total_shipping_tax_incl : 0));
         /** @var OrderRefundSummary $orderRefundSummary */
         $orderRefundSummary = $this->orderRefundCalculator->computeOrderRefund(
             $order,
@@ -127,6 +129,7 @@ class IssueReturnProductHandler extends AbstractOrderCommandHandler implements I
             if ($command->restockRefundedProducts()) {
                 $this->reinjectQuantity($orderDetail, $productRefund['quantity']);
             }
+            Hook::exec('actionProductCancel', ['order' => $order, 'id_order_detail' => (int) $orderDetailId, 'action' => CancellationActionType::RETURN_PRODUCT], null, false, true, false, $order->id_shop);
         }
 
         // Update order carrier weight

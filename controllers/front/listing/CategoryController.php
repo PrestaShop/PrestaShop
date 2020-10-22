@@ -45,8 +45,6 @@ class CategoryControllerCore extends ProductListingFrontController
     {
         if (Validate::isLoadedObject($this->category)) {
             parent::canonicalRedirection($this->context->link->getCategoryLink($this->category));
-        } elseif ($canonicalURL) {
-            parent::canonicalRedirection($canonicalURL);
         }
     }
 
@@ -85,13 +83,16 @@ class CategoryControllerCore extends ProductListingFrontController
             $this->context->language->id
         );
 
-        if (!Validate::isLoadedObject($this->category) || !$this->category->active) {
-            Tools::redirect('index.php?controller=404');
-        }
-
         parent::init();
 
-        if (!$this->category->checkAccess($this->context->customer->id)) {
+        if (!Validate::isLoadedObject($this->category) || !$this->category->active) {
+            header('HTTP/1.1 404 Not Found');
+            header('Status: 404 Not Found');
+            $this->errors[] = $this->trans('This category does not exist.', [], 'Shop.Notifications.Error');
+            $this->setTemplate('errors/404');
+
+            return;
+        } elseif (!$this->category->checkAccess($this->context->customer->id)) {
             header('HTTP/1.1 403 Forbidden');
             header('Status: 403 Forbidden');
             $this->errors[] = $this->trans('You do not have access to this category.', [], 'Shop.Notifications.Error');

@@ -1024,32 +1024,32 @@
       <trans-unit id="a375d9230fd61b4a70ac109ab7b11082">
         <source>You cannot edit the SuperAdmin profile.</source>
         <target>You cannot edit the SuperAdmin profile.</target>
-        <note>Line: 345</note>
+        <note>Line: 344</note>
       </trans-unit>
       <trans-unit id="cd34716bc68eb08479ddf16f17b2580e">
         <source>The provided profile is invalid</source>
         <target>The provided profile is invalid</target>
-        <note>Line: 509</note>
+        <note>Line: 508</note>
       </trans-unit>
       <trans-unit id="f5d44b60e38b28d19549bb7a107654ca">
         <source>You cannot disable or delete your own account.</source>
         <target>You cannot disable or delete your own account.</target>
-        <note>Line: 493</note>
+        <note>Line: 492</note>
       </trans-unit>
       <trans-unit id="2450228823b8e17792cf687b8543b59d">
         <source>You cannot disable or delete the administrator account.</source>
         <target>You cannot disable or delete the administrator account.</target>
-        <note>Line: 487</note>
+        <note>Line: 486</note>
       </trans-unit>
       <trans-unit id="4220fb02fdc65e838a02a3b51c6f737f">
         <source>Your current password is invalid.</source>
         <target>Your current password is invalid.</target>
-        <note>Line: 537</note>
+        <note>Line: 536</note>
       </trans-unit>
       <trans-unit id="cfe45dd92c1b71a640ea19767578f38c">
         <source>The employee must be associated with at least one shop.</source>
         <target>The employee must be associated with at least one shop.</target>
-        <note>Line: 505</note>
+        <note>Line: 504</note>
       </trans-unit>
     </body>
   </file>
@@ -1058,17 +1058,17 @@
       <trans-unit id="af395851b27882221a6df82c727bca3e">
         <source>The import directory doesn't exist. Please check your file path.</source>
         <target>The import directory doesn't exist. Please check your file path.</target>
-        <note>Line: 376</note>
+        <note>Line: 379</note>
       </trans-unit>
       <trans-unit id="c775530fad852632f78395a11820ba23">
         <source>The import directory must be writable (CHMOD 755 / 777).</source>
         <target>The import directory must be writable (CHMOD 755 / 777).</target>
-        <note>Line: 388</note>
+        <note>Line: 391</note>
       </trans-unit>
       <trans-unit id="197f1953efd11637a634a7f9b269eac3">
         <source>To proceed, please upload a file first.</source>
         <target>To proceed, please upload a file first.</target>
-        <note>Line: 274</note>
+        <note>Line: 277</note>
       </trans-unit>
     </body>
   </file>

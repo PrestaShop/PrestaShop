@@ -1,17 +1,21 @@
 .customization-modal {
   .modal-content {
-    border-radius: 0;
     border: 1px solid $gray-lighter;
+    border-radius: 0;
+
     .modal-body {
       padding-top: 0;
+
       .product-customization-line {
         .label {
-          font-weight: bold;
+          font-weight: 600;
           text-align: right;
         }
-        padding-bottom: 0.9375rem;
+
         padding-top: 0.9375rem;
+        padding-bottom: 0.9375rem;
         border-bottom: 1px solid $gray-lighter;
+
         &:last-child {
           padding-bottom: 0;
           border-bottom: 0;

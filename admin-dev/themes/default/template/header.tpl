@@ -259,13 +259,13 @@
               <ul id="header_shop" class="shop-state">
                 <li class="dropdown">
                   <i class="material-icons">visibility</i>
-                  {$shop_list}
+                  <span>{$shop_list}</span>
                 </li>
               </ul>
             {else}
               <a id="header_shopname" class="shop-state" href="{$base_url|escape:'html':'UTF-8'}" target="_blank">
                 <i class="material-icons">visibility</i>
-                {l s='View my shop' d='Admin.Navigation.Header'}
+                <span>{l s='View my shop' d='Admin.Navigation.Header'}</span>
               </a>
             {/if}
           </li>
@@ -348,7 +348,7 @@
 
       {* Employee *}
       <ul id="header_employee_box" class="component">
-        <li id="employee_infos" class="dropdown hidden-xs">
+        <li id="employee_infos" class="dropdown">
           <a href="{$link->getAdminLink('AdminEmployees', true, [], ['id_employee' => $employee->id|intval, 'updateemployee' => 1])|escape:'html':'UTF-8'}"
              class="employee_name dropdown-toggle"
              data-toggle="dropdown"
@@ -400,8 +400,7 @@
       </div>
 {/if}
 
-      {hook h='displayAdminAfterHeader'}
-
+{hook h='displayAdminAfterHeader'}
 
 {* end display_header*}
 

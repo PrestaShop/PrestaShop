@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,36 +17,41 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
+use Customization;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductBasicInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCategoriesInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
+use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractorException;
 use Product;
 use Tag;
 
 /**
  * Handles the query GetEditableProduct using legacy ObjectModel
  */
-class GetProductForEditingHandler extends AbstractProductHandler implements GetProductForEditingHandlerInterface
+final class GetProductForEditingHandler extends AbstractProductHandler implements GetProductForEditingHandlerInterface
 {
     /**
      * @var NumberExtractor
@@ -71,10 +77,14 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
         return new ProductForEditing(
             (int) $product->id,
             (bool) $product->active,
+            $this->getCustomizationOptions($product),
             $this->getBasicInformation($product),
             $this->getCategoriesInformation($product),
             $this->getPricesInformation($product),
-            $this->getOptions($product)
+            $this->getOptions($product),
+            $this->getShippingInformation($product),
+            $this->getSeoOptions($product),
+            $product->getAssociatedAttachmentIds()
         );
     }
 
@@ -138,7 +148,7 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             $productTypeValue = ProductType::TYPE_VIRTUAL;
         } elseif (Pack::isPack($product->id)) {
             $productTypeValue = ProductType::TYPE_PACK;
-        } elseif (!empty($product->getAttributeCombinations())) {
+        } elseif ($product->hasCombinations()) {
             $productTypeValue = ProductType::TYPE_COMBINATION;
         } else {
             $productTypeValue = ProductType::TYPE_STANDARD;
@@ -165,7 +175,34 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             $product->upc,
             $product->ean13,
             $product->mpn,
-            $product->reference
+            $product->reference,
+            (int) $product->id_manufacturer
+        );
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return ProductShippingInformation
+     *
+     * @throws NumberExtractorException
+     */
+    private function getShippingInformation(Product $product): ProductShippingInformation
+    {
+        $carrierReferences = array_map(function ($carrier): int {
+            return (int) $carrier['id_reference'];
+        }, $product->getCarriers());
+
+        return new ProductShippingInformation(
+            $this->numberExtractor->extract($product, 'width'),
+            $this->numberExtractor->extract($product, 'height'),
+            $this->numberExtractor->extract($product, 'depth'),
+            $this->numberExtractor->extract($product, 'weight'),
+            $this->numberExtractor->extract($product, 'additional_shipping_cost'),
+            $carrierReferences,
+            (int) $product->additional_delivery_times,
+            $product->delivery_in_stock,
+            $product->delivery_out_stock
         );
     }
 
@@ -189,5 +226,47 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
         }
 
         return $localizedTagsList;
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return ProductCustomizationOptions
+     */
+    private function getCustomizationOptions(Product $product): ProductCustomizationOptions
+    {
+        if (!Customization::isFeatureActive()) {
+            return ProductCustomizationOptions::createNotCustomizable();
+        }
+
+        $textFieldsCount = (int) $product->text_fields;
+        $fileFieldsCount = (int) $product->uploadable_files;
+
+        switch ((int) $product->customizable) {
+            case ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION:
+                return ProductCustomizationOptions::createAllowsCustomization($textFieldsCount, $fileFieldsCount);
+                break;
+            case ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION:
+                return ProductCustomizationOptions::createRequiresCustomization($textFieldsCount, $fileFieldsCount);
+                break;
+            default:
+                return ProductCustomizationOptions::createNotCustomizable();
+        }
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return ProductSeoOptions
+     */
+    private function getSeoOptions(Product $product): ProductSeoOptions
+    {
+        return new ProductSeoOptions(
+            $product->meta_title,
+            $product->meta_description,
+            $product->link_rewrite,
+            $product->redirect_type,
+            (int) $product->id_type_redirected
+        );
     }
 }

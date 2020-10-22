@@ -1,9 +1,9 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
-module.exports = class OrderConfirmation extends FOBasePage {
-  constructor(page) {
-    super(page);
+class OrderConfirmation extends FOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Order confirmation';
     this.orderConfirmationCardTitle = 'Your order is confirmed';
@@ -19,17 +19,21 @@ module.exports = class OrderConfirmation extends FOBasePage {
      */
   /**
    * Check if final summary is visible
+   * @param page
    * @returns {boolean}
    */
-  isFinalSummaryVisible() {
-    return this.elementVisible(this.orderSummaryContent, 2000);
+  isFinalSummaryVisible(page) {
+    return this.elementVisible(page, this.orderSummaryContent, 2000);
   }
 
   /**
    * Get order confirmation card title
+   * @param page
    * @return {Promise<string>}
    */
-  getOrderConfirmationCardTitle() {
-    return this.getTextContent(this.orderConfirmationCardTitleH3);
+  getOrderConfirmationCardTitle(page) {
+    return this.getTextContent(page, this.orderConfirmationCardTitleH3);
   }
-};
+}
+
+module.exports = new OrderConfirmation();

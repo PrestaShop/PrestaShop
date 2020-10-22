@@ -31,8 +31,12 @@ if (!defined('_PS_MODE_DEV_')) {
 /* Compatibility warning */
 define('_PS_DISPLAY_COMPATIBILITY_WARNING_', true);
 if (_PS_MODE_DEV_ === true) {
+    $errorReportingLevel = E_ALL | E_STRICT;
+    if (_PS_DISPLAY_COMPATIBILITY_WARNING_ === false) {
+        $errorReportingLevel = $errorReportingLevel & ~E_DEPRECATED & ~E_USER_DEPRECATED;
+    }
     @ini_set('display_errors', 'on');
-    @error_reporting(E_ALL | E_STRICT);
+    @error_reporting($errorReportingLevel);
     define('_PS_DEBUG_SQL_', true);
 } else {
     @ini_set('display_errors', 'off');
@@ -97,7 +101,8 @@ define('_PS_CONFIG_DIR_', _PS_CORE_DIR_.'/config/');
 define('_PS_CUSTOM_CONFIG_FILE_', _PS_CONFIG_DIR_.'settings_custom.inc.php');
 define('_PS_CLASS_DIR_', _PS_CORE_DIR_.'/classes/');
 if (!defined('_PS_DOWNLOAD_DIR_')) {
-    define('_PS_DOWNLOAD_DIR_', _PS_ROOT_DIR_.'/download/');
+    $dir = (defined('_PS_IN_TEST_') && _PS_IN_TEST_) ? '/tests/Resources/download/' : '/download/';
+    define('_PS_DOWNLOAD_DIR_', _PS_ROOT_DIR_.$dir);
 }
 define('_PS_MAIL_DIR_', _PS_CORE_DIR_.'/mails/');
 if (!defined('_PS_MODULE_DIR_')) {
@@ -217,7 +222,7 @@ define('_PS_SMARTY_CONSOLE_OPEN_BY_URL_', 1);
 define('_PS_SMARTY_CONSOLE_OPEN_', 2);
 
 if (!defined('_PS_JQUERY_VERSION_')) {
-    define('_PS_JQUERY_VERSION_', '1.11.0');
+    define('_PS_JQUERY_VERSION_', '3.4.1');
 }
 
 define('_PS_CACHE_CA_CERT_FILE_', _PS_CACHE_DIR_.'cacert.pem');

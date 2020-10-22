@@ -27,6 +27,7 @@ import 'bootstrap/dist/js/bootstrap.min';
 import 'flexibility';
 import 'bootstrap-touchspin';
 import 'jquery-touchswipe';
+import './selectors';
 
 import './responsive';
 import './checkout';
@@ -48,7 +49,6 @@ import './lib/jquery.scrollbox.min';
 
 import './components/block-cart';
 import $ from 'jquery';
-import 'jquery-migrate';
 
 // "inherit" EventEmitter
 for (const i in EventEmitter.prototype) {

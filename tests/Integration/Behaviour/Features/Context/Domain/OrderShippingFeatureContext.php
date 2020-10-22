@@ -26,8 +26,10 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Order;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderDeliveryAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderInvoiceAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCarrierForViewing;
@@ -43,21 +45,20 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
      *
      * @param string $orderReference
      * @param string $trackingNumber
-     * @param string $carrier
+     * @param string $carrierReference
      */
     public function updateOrderTrackingNumberToAndCarrierTo(
-        string $orderReference, string $trackingNumber, string $carrier
+        string $orderReference, string $trackingNumber, string $carrierReference
     ) {
         $orderId = SharedStorage::getStorage()->get($orderReference);
+        $order = new Order($orderId);
 
-        $oldOrderCarrierId = $this->getCarrierId($carrier);
-        $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-        $newCarrierId = $this->getCarrierId($carrier);
+        $newCarrierId = SharedStorage::getStorage()->get($carrierReference);
 
         $this->getCommandBus()->handle(
             new UpdateOrderShippingDetailsCommand(
                 $orderId,
-                $oldOrderCarrierId,
+                $order->getIdOrderCarrier(),
                 $newCarrierId,
                 $trackingNumber
             )
@@ -166,6 +167,19 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I change order :orderReference invoice address to :orderInvoiceAddress
+     *
+     * @param string $orderReference
+     * @param string $orderInvoiceAddress
+     */
+    public function changeOrderInvoiceAddressTo(string $orderReference, string $orderInvoiceAddress)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $newInvoiceAddressId = (int) SharedStorage::getStorage()->get($orderInvoiceAddress);
+        $this->getCommandBus()->handle(new ChangeOrderInvoiceAddressCommand($orderId, $newInvoiceAddressId));
+    }
+
+    /**
      * @Then order :orderReference shipping address should be :orderShippingAddress
      *
      * @param string $orderReference
@@ -180,5 +194,22 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
         $orderShippingAddressId = $orderForViewing->getShippingAddress()->getAddressId();
         Assert::assertSame($expectedShippingAddressId, $orderShippingAddressId);
+    }
+
+    /**
+     * @Then order :orderReference invoice address should be :orderInvoiceAddress
+     *
+     * @param string $orderReference
+     * @param string $orderInvoiceAddress
+     */
+    public function orderInvoiceAddressShouldBe(string $orderReference, string $orderInvoiceAddress)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $expectedInvoiceAddressId = (int) SharedStorage::getStorage()->get($orderInvoiceAddress);
+
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $orderInvoiceAddressId = $orderForViewing->getInvoiceAddress()->getAddressId();
+        Assert::assertSame($expectedInvoiceAddressId, $orderInvoiceAddressId);
     }
 }

@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class AddContact extends BOBasePage {
-  constructor(page) {
-    super(page);
+class AddContact extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitleCreate = 'Contacts •';
     this.pageTitleEdit = 'Contacts •';
@@ -26,35 +26,39 @@ module.exports = class AddContact extends BOBasePage {
 
   /**
    * Change language for selectors
+   * @param page
    * @param lang
    * @return {Promise<void>}
    */
-  async changeLanguageForSelectors(lang = 'en') {
+  async changeLanguageForSelectors(page, lang = 'en') {
     await Promise.all([
-      this.page.click(this.pageTitleLangButton),
-      this.waitForVisibleSelector(`${this.pageTitleLangButton}[aria-expanded='true']`),
+      page.click(this.pageTitleLangButton),
+      this.waitForVisibleSelector(page, `${this.pageTitleLangButton}[aria-expanded='true']`),
     ]);
     await Promise.all([
-      this.page.click(this.pageTitleLangSpan(lang)),
-      this.waitForVisibleSelector(`${this.pageTitleLangButton}[aria-expanded='false']`),
+      page.click(this.pageTitleLangSpan(lang)),
+      this.waitForVisibleSelector(page, `${this.pageTitleLangButton}[aria-expanded='false']`),
     ]);
   }
 
   /**
    * Fill form for add/edit contact
+   * @param page
    * @param contactData
    * @returns {Promise<string>}
    */
-  async createEditContact(contactData) {
-    await this.setValue(this.titleInputEN, contactData.title);
-    await this.setValue(this.emailAddressInput, contactData.email);
-    await this.setValue(this.descriptionTextareaEN, contactData.description);
-    await this.changeLanguageForSelectors('fr');
-    await this.setValue(this.titleInputFR, contactData.title);
-    await this.setValue(this.descriptionTextareaFR, contactData.description);
-    await this.page.click(this.enableSaveMessagesLabel(contactData.saveMessage ? 1 : 0));
+  async createEditContact(page, contactData) {
+    await this.setValue(page, this.titleInputEN, contactData.title);
+    await this.setValue(page, this.emailAddressInput, contactData.email);
+    await this.setValue(page, this.descriptionTextareaEN, contactData.description);
+    await this.changeLanguageForSelectors(page, 'fr');
+    await this.setValue(page, this.titleInputFR, contactData.title);
+    await this.setValue(page, this.descriptionTextareaFR, contactData.description);
+    await page.click(this.enableSaveMessagesLabel(contactData.saveMessage ? 1 : 0));
     // Save Contact
-    await this.clickAndWaitForNavigation(this.saveContactButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.clickAndWaitForNavigation(page, this.saveContactButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
-};
+}
+
+module.exports = new AddContact();

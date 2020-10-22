@@ -38,6 +38,10 @@ export default class ReplaceFormatter {
    * @returns {array}
    */
   interpolate(message, values) {
+    if (!values) {
+      return [message];
+    }
+
     let msg = message;
     Object.keys(values).forEach((param) => {
       msg = msg.replace(param, values[param]);

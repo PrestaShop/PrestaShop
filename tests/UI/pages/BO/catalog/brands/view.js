@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class ViewBrand extends BOBasePage {
-  constructor(page) {
-    super(page);
+class ViewBrand extends BOBasePage {
+  constructor() {
+    super();
 
     // Selectors
     this.contentDiv = 'div.content-div';
@@ -20,19 +20,23 @@ module.exports = class ViewBrand extends BOBasePage {
    */
   /**
    * Get text from a column
+   * @param page
    * @param row, row in table
    * @param column, which column
    * @returns {Promise<string>}
    */
-  async getTextColumnFromTableAddresses(row, column) {
-    return this.getTextContent(this.addressesTableColumn(row, column));
+  async getTextColumnFromTableAddresses(page, row, column) {
+    return this.getTextContent(page, this.addressesTableColumn(row, column));
   }
 
   /**
    * Get number of addresses in grid
+   * @param page
    * @returns {Promise<number>}
    */
-  async getNumberOfAddressesInGrid() {
-    return this.getNumberFromText(this.addressesGridHeader);
+  async getNumberOfAddressesInGrid(page) {
+    return this.getNumberFromText(page, this.addressesGridHeader);
   }
-};
+}
+
+module.exports = new ViewBrand();

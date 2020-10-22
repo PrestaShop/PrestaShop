@@ -190,6 +190,7 @@ class StockManager
                 'id_product' => $product->id,
                 'id_product_attribute' => $id_product_attribute,
                 'quantity' => $stockAvailable->quantity,
+                'delta_quantity' => $delta_quantity,
             ]
         );
 
@@ -306,69 +307,71 @@ class StockManager
             '{last_qty}' => $lowStockThreshold,
             '{product}' => $productName,
         ];
-        // get emails on employees who have right to run stock page
-        $emails = [];
-        $employees = Employee::getEmployees();
-        foreach ($employees as $employeeData) {
+
+        // send email to every employee who have permission for this
+        foreach (Employee::getEmployees() as $employeeData) {
             $employee = new Employee($employeeData['id_employee']);
+
             if (Access::isGranted('ROLE_MOD_TAB_ADMINSTOCKMANAGEMENT_READ', $employee->id_profile)) {
-                $emails[] = $employee->email;
+                $templateVars['{firstname}'] = $employee->firstname;
+                $templateVars['{lastname}'] = $employee->lastname;
+
+                Mail::Send(
+                    $idLang,
+                    'productoutofstock',
+                    Mail::l('Product out of stock', $idLang),
+                    $templateVars,
+                    $employee->email,
+                    null,
+                    (string) $configuration['PS_SHOP_EMAIL'],
+                    (string) $configuration['PS_SHOP_NAME'],
+                    null,
+                    null,
+                    __DIR__ . '/mails/',
+                    false,
+                    $idShop
+                );
             }
-        }
-        // Send 1 email by merchant mail, because Mail::Send doesn't work with an array of recipients
-        foreach ($emails as $email) {
-            Mail::Send(
-                $idLang,
-                'productoutofstock',
-                Mail::l('Product out of stock', $idLang),
-                $templateVars,
-                $email,
-                null,
-                (string) $configuration['PS_SHOP_EMAIL'],
-                (string) $configuration['PS_SHOP_NAME'],
-                null,
-                null,
-                __DIR__ . '/mails/',
-                false,
-                $idShop
-            );
         }
     }
 
     /**
      * Public method to save a Movement.
      *
-     * @param $productId
-     * @param $productAttributeId
-     * @param $deltaQuantity
+     * @param int $productId
+     * @param int $productAttributeId
+     * @param int $deltaQuantity
      * @param array $params
      *
      * @return bool
      */
     public function saveMovement($productId, $productAttributeId, $deltaQuantity, $params = [])
     {
-        if ($deltaQuantity != 0) {
-            $stockMvt = $this->prepareMovement($productId, $productAttributeId, $deltaQuantity, $params);
-
-            if ($stockMvt) {
-                $sfContainer = SymfonyContainer::getInstance();
-                if (null !== $sfContainer) {
-                    $stockMvtRepository = $sfContainer->get('prestashop.core.api.stock_movement.repository');
-
-                    return $stockMvtRepository->saveStockMvt($stockMvt);
-                }
-            }
+        if ($deltaQuantity == 0) {
+            return false;
         }
 
-        return false;
+        $stockMvt = $this->prepareMovement($productId, $productAttributeId, $deltaQuantity, $params);
+        if (!$stockMvt) {
+            return false;
+        }
+
+        $sfContainer = SymfonyContainer::getInstance();
+        if (null === $sfContainer) {
+            return false;
+        }
+
+        $stockMvtRepository = $sfContainer->get('prestashop.core.api.stock_movement.repository');
+
+        return $stockMvtRepository->saveStockMvt($stockMvt);
     }
 
     /**
      * Prepare a Movement for registration.
      *
-     * @param $productId
-     * @param $productAttributeId
-     * @param $deltaQuantity
+     * @param int $productId
+     * @param int $productAttributeId
+     * @param int $deltaQuantity
      * @param array $params
      *
      * @return bool|StockMvt

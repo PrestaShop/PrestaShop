@@ -47,9 +47,9 @@ final class TaxQueryBuilder extends AbstractDoctrineQueryBuilder
 
     /**
      * @param Connection $connection
-     * @param $dbPrefix
+     * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
-     * @param $employeeIdLang
+     * @param int $employeeIdLang
      */
     public function __construct(
         Connection $connection,

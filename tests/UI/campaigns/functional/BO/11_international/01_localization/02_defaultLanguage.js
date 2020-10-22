@@ -6,10 +6,9 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const LocalizationPage = require('@pages/BO/international/localization');
-const HomePage = require('@pages/FO/home');
+const dashboardPage = require('@pages/BO/dashboard');
+const localizationPage = require('@pages/BO/international/localization');
+const homePage = require('@pages/FO/home');
 
 // Import Data
 const {Languages} = require('@data/demo/languages');
@@ -22,15 +21,6 @@ const baseContext = 'functional_BO_international_localization_defaultLanguage';
 let browserContext;
 let page;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    localizationPage: new LocalizationPage(page),
-    homePage: new HomePage(page),
-  };
-};
 describe('Update default language', async () => {
   const tests = [
     {args: {language: Languages.french.name, defaultBrowserLanguage: false, languageToCheck: 'Français'}},
@@ -45,31 +35,34 @@ describe('Update default language', async () => {
       before(async function () {
         browserContext = await helper.createBrowserContext(this.browser);
         page = await helper.newTab(browserContext);
-
-        this.pageObjects = await init();
       });
 
       after(async () => {
         await helper.closeBrowserContext(browserContext);
       });
-      loginCommon.loginBO();
+
+      it('should login in BO', async function () {
+        await loginCommon.loginBO(this, page);
+      });
 
       it('should go to \'International > localization\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToLocalizationPage_${index}`, baseContext);
 
-        await this.pageObjects.dashboardPage.goToSubMenu(
-          this.pageObjects.dashboardPage.internationalParentLink,
-          this.pageObjects.dashboardPage.localizationLink,
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.internationalParentLink,
+          dashboardPage.localizationLink,
         );
 
-        const pageTitle = await this.pageObjects.localizationPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.localizationPage.pageTitle);
+        const pageTitle = await localizationPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(localizationPage.pageTitle);
       });
 
       it('should set \'Default language\' and \'Set language from browser\'', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `setDEfaultLanguage_${index}`, baseContext);
 
-        const textResult = await this.pageObjects.localizationPage.setDefaultLanguage(
+        const textResult = await localizationPage.setDefaultLanguage(
+          page,
           test.args.language,
           test.args.defaultBrowserLanguage,
         );
@@ -84,8 +77,6 @@ describe('Update default language', async () => {
         before(async function () {
           browserContext = await helper.createBrowserContext(this.browser);
           page = await helper.newTab(browserContext);
-
-          this.pageObjects = await init();
         });
 
         after(async () => {
@@ -95,15 +86,15 @@ describe('Update default language', async () => {
         it('should open the shop page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `openShop_${index}`, baseContext);
 
-          await this.pageObjects.homePage.goTo(global.FO.URL);
-          const isHomePage = await this.pageObjects.homePage.isHomePage();
+          await homePage.goTo(page, global.FO.URL);
+          const isHomePage = await homePage.isHomePage(page);
           await expect(isHomePage).to.be.true;
         });
 
         it('should go to FO and check the language', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkLanguageInFO_${index}`, baseContext);
 
-          const defaultLanguage = await this.pageObjects.homePage.getShopLanguage();
+          const defaultLanguage = await homePage.getShopLanguage(page);
           expect(defaultLanguage).to.equal(test.args.languageToCheck);
         });
       });

@@ -64,8 +64,14 @@ class AdminStatusesControllerCore extends AdminController
     /**
      * init all variables to render the order status list.
      */
-    protected function initOrderStatutsList()
+    protected function initOrderStatusList(): void
     {
+        $this->table = 'order_state';
+        $this->className = 'OrderState';
+        $this->_defaultOrderBy = $this->identifier = 'id_order_state';
+        $this->list_id = 'order_state';
+        $this->deleted = true;
+        $this->_orderBy = null;
         $this->fields_list = [
             'id_order_state' => [
                 'title' => $this->trans('ID', [], 'Admin.Global'),
@@ -116,6 +122,16 @@ class AdminStatusesControllerCore extends AdminController
                 'title' => $this->trans('Email template', [], 'Admin.Shopparameters.Feature'),
             ],
         ];
+    }
+
+    /**
+     * Init all variables to render the order status list.
+     *
+     * @deprecated Use `initOrderStatusList`
+     */
+    protected function initOrderStatutsList()
+    {
+        $this->initOrderStatusList();
     }
 
     /**
@@ -220,7 +236,7 @@ class AdminStatusesControllerCore extends AdminController
                 'icon' => 'icon-trash',
             ],
         ];
-        $this->initOrderStatutsList();
+        $this->initOrderStatusList();
         $lists = parent::renderList();
 
         //init and render the second list
@@ -571,6 +587,7 @@ class AdminStatusesControllerCore extends AdminController
             $this->className = 'OrderReturnState';
             $this->table = 'order_return_state';
             $this->boxes = Tools::getValue('order_return_stateBox');
+            $this->deleted = false;
             parent::processBulkDelete();
         }
 
@@ -622,14 +639,24 @@ class AdminStatusesControllerCore extends AdminController
             if (!$order_state->isRemovable()) {
                 $this->errors[] = $this->trans('For security reasons, you cannot delete default order statuses.', [], 'Admin.Shopparameters.Notification');
             } else {
-                return $order_state->softDelete();
+                try {
+                    if (!$order_state->softDelete()) {
+                        throw new PrestaShopException('Error when soft deleting order status');
+                    }
+                } catch (PrestaShopException $e) { // see ObjectModel::softDelete too
+                    $this->errors[] = $this->trans('An error occurred during deletion.', [], 'Admin.Notifications.Error');
+
+                    return $order_state;
+                }
+
+                Tools::redirectAdmin(self::$currentIndex . '&conf=1&token=' . $this->token);
             }
         } elseif (Tools::isSubmit('submitBulkdelete' . $this->table)) {
             if (!$this->access('delete')) {
                 return;
             }
 
-            foreach (Tools::getValue($this->table . 'Box') as $selection) {
+            foreach (Tools::getValue($this->table . 'Box', []) as $selection) {
                 $order_state = new OrderState((int) $selection, $this->context->language->id);
                 if (!$order_state->isRemovable()) {
                     $this->errors[] = $this->trans('For security reasons, you cannot delete default order statuses.', [], 'Admin.Shopparameters.Notification');
@@ -649,7 +676,7 @@ class AdminStatusesControllerCore extends AdminController
     protected function filterToField($key, $filter)
     {
         if ($this->table == 'order_state') {
-            $this->initOrderStatutsList();
+            $this->initOrderStatusList();
         } elseif ($this->table == 'order_return_state') {
             $this->initOrdersReturnsList();
         }

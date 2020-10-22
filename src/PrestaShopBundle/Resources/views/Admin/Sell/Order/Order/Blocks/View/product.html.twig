@@ -52,7 +52,7 @@
     {% endif %}
   </td>
   <td class="cellProductUnitPrice">{{ product.unitPrice }}</td>
-  <td class="cellProductQuantity">
+  <td class="cellProductQuantity text-center">
     {% if product.quantity > 1 %}
       <span class="badge badge-secondary rounded-circle">{{ product.quantity }}</span>
     {% else %}
@@ -69,7 +69,7 @@
       {{ product.quantityRefunded }} ({{ product.amountRefunded }} {{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }})
     {% endif %}
   </td>
-  <td class="cellProductAvailableQuantity">{{ product.availableQuantity }}</td>
+  <td class="cellProductAvailableQuantity text-center">{{ product.availableQuantity }}</td>
   <td class="cellProductTotalPrice">{{ product.totalPrice }}</td>
   {% if orderForViewing.hasInvoice() %}
     <td>{{ product.orderInvoiceNumber }}</td>
@@ -83,6 +83,8 @@
         data-placement="top"
         data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
         data-order-detail-id="{{ product.orderDetailId }}"
+        data-product-id="{{ product.id }}"
+        data-combination-id="{{ product.combinationId }}"
         data-product-quantity="{{ product.quantity }}"
         data-product-price-tax-incl="{{ product.unitPriceTaxInclRaw }}"
         data-product-price-tax-excl="{{ product.unitPriceTaxExclRaw }}"
@@ -154,10 +156,14 @@
       {% if product.customizations.fileCustomizations %}
         <div class="d-flex flex-row flex-wrap">
           {% for customization in product.customizations.fileCustomizations %}
-            <div class="mr-4">
-              <p><strong>{{ customization.name }}</strong></p>
-              <p><img src="{{ customization.image }}" alt="{{ customization.name }}"></p>
-            </div>
+              <div class="mr-4">
+                <p><strong>{{ customization.name }}</strong></p>
+                <p>
+                  <a href="{{ path('admin_orders_display_customization_image', {'orderId': orderForViewing.id, 'type': customization.type, "name": customization.name, "value": customization.value})}}" download>
+                    <img src="{{ customization.image }}" alt="{{ customization.name }}">
+                  </a>
+                </p>
+              </div>
           {% endfor %}
         </div>
       {% endif %}

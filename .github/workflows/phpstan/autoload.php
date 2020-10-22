@@ -105,6 +105,7 @@ $constantsToDefine = [
     '_THEME_PROD_DIR_' => 'string',
     '_THEME_PROD_PIC_DIR_' => 'string',
     '_NEW_COOKIE_KEY_' => 'string',
+    '_MAIL_DIR_' => 'string',
 ];
 
 foreach ($constantsToDefine as $key => $value) {

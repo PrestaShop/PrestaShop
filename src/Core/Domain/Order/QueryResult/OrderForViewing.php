@@ -143,6 +143,11 @@ class OrderForViewing
     private $discounts;
 
     /**
+     * @var LinkedOrdersForViewing
+     */
+    private $linkedOrders;
+
+    /**
      * @var DateTimeImmutable
      */
     private $createdAt;
@@ -168,7 +173,7 @@ class OrderForViewing
     private $shopId;
 
     /**
-     * @var int
+     * @var bool
      */
     private $invoiceManagementIsEnabled;
 
@@ -176,6 +181,11 @@ class OrderForViewing
      * @var OrderSourcesForViewing
      */
     private $sources;
+
+    /**
+     * @var string
+     */
+    private $note;
 
     /**
      * @param int $orderId
@@ -207,6 +217,8 @@ class OrderForViewing
      * @param OrderPricesForViewing $prices
      * @param OrderDiscountsForViewing $discounts
      * @param OrderSourcesForViewing $sources
+     * @param LinkedOrdersForViewing $linkedOrders
+     * @param string $note
      */
     public function __construct(
         int $orderId,
@@ -237,7 +249,9 @@ class OrderForViewing
         OrderMessagesForViewing $messages,
         OrderPricesForViewing $prices,
         OrderDiscountsForViewing $discounts,
-        OrderSourcesForViewing $sources
+        OrderSourcesForViewing $sources,
+        LinkedOrdersForViewing $linkedOrders,
+        string $note = ''
     ) {
         $this->reference = $reference;
         $this->customer = $customer;
@@ -268,6 +282,8 @@ class OrderForViewing
         $this->shopId = $shopId;
         $this->invoiceManagementIsEnabled = $invoiceManagementIsEnabled;
         $this->sources = $sources;
+        $this->linkedOrders = $linkedOrders;
+        $this->note = $note;
     }
 
     /**
@@ -476,6 +492,14 @@ class OrderForViewing
     }
 
     /**
+     * @return LinkedOrdersForViewing
+     */
+    public function getLinkedOrders(): LinkedOrdersForViewing
+    {
+        return $this->linkedOrders;
+    }
+
+    /**
      * @return DateTimeImmutable
      */
     public function getCreatedAt(): DateTimeImmutable
@@ -520,5 +544,13 @@ class OrderForViewing
         }
 
         return $this->prices->getShippingRefundableAmountRaw()->isGreaterThanZero();
+    }
+
+    /**
+     * @return string
+     */
+    public function getNote(): string
+    {
+        return $this->note;
     }
 }

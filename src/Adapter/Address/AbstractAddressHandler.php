@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Address;
 use Address;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\InvalidAddressFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShopException;
 
@@ -75,6 +76,20 @@ abstract class AbstractAddressHandler
             return $address->delete();
         } catch (PrestaShopException $e) {
             throw new AddressException(sprintf('An error occurred when deleting Address object with id "%s".', $address->id));
+        }
+    }
+
+    /**
+     * @param Address $address
+     *
+     * @throws InvalidAddressFieldException
+     * @throws PrestaShopException
+     */
+    protected function validateAddress(Address $address): void
+    {
+        if (true !== ($validateResult = $address->validateFields(false, true))
+            || true !== ($validateResult = $address->validateFieldsLang(false, true))) {
+            throw new InvalidAddressFieldException(sprintf('Address fields contain invalid values: %s', $validateResult));
         }
     }
 }

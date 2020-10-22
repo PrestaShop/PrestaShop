@@ -1,27 +1,3 @@
-/**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- */
 const faker = require('faker');
 
 module.exports = class Product {
@@ -31,7 +7,7 @@ module.exports = class Product {
     this.status = productToCreate.status === undefined ? true : productToCreate.status;
     this.summary = productToCreate.summary === undefined ? faker.lorem.sentence() : productToCreate.summary;
     this.description = productToCreate.description === undefined ? faker.lorem.sentence() : productToCreate.description;
-    this.reference = faker.random.alphaNumeric(7);
+    this.reference = productToCreate.reference || faker.random.alphaNumeric(7);
     this.quantity = productToCreate.quantity === undefined
       ? faker.random.number({min: 1, max: 9})
       : productToCreate.quantity;
@@ -39,6 +15,10 @@ module.exports = class Product {
     this.combinations = productToCreate.combinations || {
       Color: ['White', 'Black'],
       Size: ['S', 'M'],
+    };
+    this.pack = productToCreate.pack || {
+      demo_1: faker.random.number({min: 10, max: 100}),
+      demo_2: faker.random.number({min: 10, max: 100}),
     };
     this.taxRule = productToCreate.taxRule || 'FR Taux standard (20%)';
     this.specificPrice = productToCreate.specificPrice || {

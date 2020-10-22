@@ -31,7 +31,7 @@
 		</div>
 	</div>
 {/if}
-{if isset($error)}
+{if !empty($error)}
   <div class="bootstrap">
     <div class="alert alert-danger">
       <button type="button" class="close" data-dismiss="alert">&times;</button>

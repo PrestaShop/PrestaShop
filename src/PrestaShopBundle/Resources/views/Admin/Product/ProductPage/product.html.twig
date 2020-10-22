@@ -24,6 +24,10 @@
  *#}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product.css') }}" type="text/css" media="all">
+{% endblock %}
+
 {% block content %}
 
   {% set hooks = renderhooksarray('displayAdminProductsExtra', { 'id_product': id_product }) %}
@@ -336,14 +340,13 @@
 "Form update success": "Settings updated."|trans({}, 'Admin.Notifications.Success'),
 "Form update errors": "Unable to update settings."|trans({}, 'Admin.Notifications.Error'),
 "Delete": "Delete"|trans({}, 'Admin.Actions'),
-"ToLargeFile": "The file is too large. Maximum size allowed is: [1]. The file you are trying to upload is [2]."|trans({}, 'Admin.Notifications.Error')|replace({ '[1]': '{{maxFilesize}}', '[2]': '{{filesize}}' }),
+"ToLargeFile": "The file is too large. Maximum size allowed is: [1] MB. The file you are trying to upload is [2] MB."|trans({}, 'Admin.Notifications.Error')|replace({ '[1]': '{{maxFilesize}}', '[2]': '{{filesize}}' }),
 "Drop images here": "Drop images here"|trans({}, 'Admin.Catalog.Feature'),
 "or select files": "or select files"|trans({}, 'Admin.Catalog.Feature'),
 "files recommandations": "Recommended size 800 x 800px for default theme."|trans({}, 'Admin.Catalog.Feature'),
 "files recommandations2": "JPG, GIF or PNG format."|trans({}, 'Admin.Catalog.Feature'),
 "Cover": "Cover"|trans({}, 'Admin.Catalog.Feature'),
-"Are you sure to delete this?": "Are you sure to delete this?"|trans({}, 'Admin.Notifications.Warning'),
-"This will delete the specific price. Do you wish to proceed?": "This will delete the specific price. Do you wish to proceed?"|trans({}, 'Admin.Catalog.Notification'),
+"Are you sure you want to delete this item?": "Are you sure you want to delete this item?"|trans({}, 'Admin.Notifications.Warning'),
 "Quantities": "Quantities"|trans({}, 'Admin.Catalog.Feature'),
 "Combinations": "Combinations"|trans({}, 'Admin.Catalog.Feature'),
 "Virtual product": "Virtual product"|trans({}, 'Admin.Catalog.Feature'),

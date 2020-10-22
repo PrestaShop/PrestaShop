@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Address\QueryResult;
 
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 
 /**
  * Transfers manufacturer address data for editing

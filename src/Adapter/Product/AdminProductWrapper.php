@@ -117,7 +117,7 @@ class AdminProductWrapper
      * @param object $product
      * @param array $combinationValues the posted values
      *
-     * @return AdminProductsController instance
+     * @return void
      */
     public function processProductAttribute($product, $combinationValues)
     {
@@ -191,12 +191,14 @@ class AdminProductWrapper
 
             // We need to reload the product because some other calls have modified the database
             // It's done just for the setAvailableDate to avoid side effects
+            Product::disableCache();
             $consistentProduct = new Product($product->id);
             if ($available_date = $combinationValues['available_date_attribute']) {
                 $consistentProduct->setAvailableDate($available_date);
             } else {
                 $consistentProduct->setAvailableDate();
             }
+            Product::enableCache();
         }
 
         if (isset($combinationValues['attribute_quantity'])) {
@@ -259,9 +261,9 @@ class AdminProductWrapper
      *
      * @param int $id_product
      * @param array $specificPriceValues the posted values
-     * @param int (optional) $id_specific_price if this is an update of an existing specific price, null else
+     * @param int|null $idSpecificPrice if this is an update of an existing specific price, null else
      *
-     * @return AdminProductsController instance
+     * @return AdminProductsController|array
      */
     public function processProductSpecificPrice($id_product, $specificPriceValues, $idSpecificPrice = null)
     {
@@ -405,7 +407,10 @@ class AdminProductWrapper
     public function getSpecificPricesList($product, $defaultCurrency, $shops, $currencies, $countries, $groups)
     {
         $content = [];
-        $specific_prices = SpecificPrice::getByProductId((int) $product->id);
+        $specific_prices = array_merge(
+            SpecificPrice::getByProductId((int) $product->id),
+            SpecificPrice::getByProductId(0)
+        );
 
         $tmp = [];
         foreach ($shops as $shop) {
@@ -519,7 +524,7 @@ class AdminProductWrapper
      *
      * @return SpecificPrice
      *
-     * @throws PrestaShopObjectNotFoundException
+     * @throws EntityNotFoundException
      */
     public function getSpecificPriceDataById($id)
     {
@@ -596,7 +601,7 @@ class AdminProductWrapper
      * @param object $product
      * @param array $data
      *
-     * @return bool
+     * @return array<int, int>
      */
     public function processProductCustomization($product, $data)
     {
@@ -719,7 +724,7 @@ class AdminProductWrapper
      * @param object $product
      * @param array $data
      *
-     * @return bool
+     * @return ProductDownload
      */
     public function updateDownloadProduct($product, $data)
     {
@@ -744,8 +749,8 @@ class AdminProductWrapper
             $download->date_expiration = $data['expiration_date'] ? $data['expiration_date'] . ' 23:59:59' : '';
             $download->nb_days_accessible = (int) $data['nb_days'];
             $download->nb_downloadable = (int) $data['nb_downloadable'];
-            $download->active = 1;
-            $download->is_shareable = 0;
+            $download->active = true;
+            $download->is_shareable = false;
 
             if (!$id_product_download) {
                 $download->save();
@@ -755,7 +760,7 @@ class AdminProductWrapper
         } else {
             if (!empty($id_product_download)) {
                 $download->date_expiration = date('Y-m-d H:i:s', time() - 1);
-                $download->active = 0;
+                $download->active = false;
                 $download->update();
             }
         }
@@ -868,7 +873,7 @@ class AdminProductWrapper
         $img = new Image((int) $idImage);
         if ($data['cover']) {
             Image::deleteCover((int) $img->id_product);
-            $img->cover = 1;
+            $img->cover = true;
         }
         $img->legend = $data['legend'];
         $img->update();
@@ -882,7 +887,7 @@ class AdminProductWrapper
      * @param object $product
      * @param bool $preview
      *
-     * @return string preview url
+     * @return string|bool Preview url
      */
     public function getPreviewUrl($product, $preview = true)
     {

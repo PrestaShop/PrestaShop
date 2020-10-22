@@ -86,7 +86,6 @@ ALTER TABLE `PREFIX_cms_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_g
 ALTER TABLE `PREFIX_cms_role` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_cms_role_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_cms_shop` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-ALTER TABLE `PREFIX_condition` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_configuration` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_configuration_kpi` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_configuration_kpi_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
@@ -107,6 +106,7 @@ ALTER TABLE `PREFIX_customer` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_g
 ALTER TABLE `PREFIX_customer_group` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_customer_message` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_customer_message_sync_imap` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+ALTER TABLE `PREFIX_customer_session` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_customer_thread` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_customization` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_customization_field` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
@@ -115,6 +115,7 @@ ALTER TABLE `PREFIX_customized_data` CONVERT TO CHARACTER SET utf8mb4 COLLATE ut
 ALTER TABLE `PREFIX_date_range` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_delivery` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_employee` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+ALTER TABLE `PREFIX_employee_session` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_employee_shop` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_feature` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_feature_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
@@ -277,10 +278,6 @@ ALTER TABLE `PREFIX_stock_mvt` CHANGE `employee_lastname` `employee_lastname` va
 ALTER TABLE `PREFIX_stock_mvt` CHANGE `employee_firstname` `employee_firstname` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL;
 ALTER TABLE `PREFIX_timezone` CHANGE `name` `name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
 ALTER TABLE `PREFIX_attribute_group` CHANGE `group_type` `group_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
-ALTER TABLE `PREFIX_condition` CHANGE `operator` `operator` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL;
-ALTER TABLE `PREFIX_condition` CHANGE `value` `value` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL;
-ALTER TABLE `PREFIX_condition` CHANGE `result` `result` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL;
-ALTER TABLE `PREFIX_condition` CHANGE `calculation_detail` `calculation_detail` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL;
 ALTER TABLE `PREFIX_search_word` CHANGE `word` `word` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
 ALTER TABLE `PREFIX_meta` CHANGE `page` `page` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
 ALTER TABLE `PREFIX_statssearch` CHANGE `keywords` `keywords` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
@@ -339,7 +336,6 @@ ALTER TABLE `PREFIX_cms_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_g
 ALTER TABLE `PREFIX_cms_role` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_cms_role_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_cms_shop` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-ALTER TABLE `PREFIX_condition` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_configuration` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_configuration_kpi` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_configuration_kpi_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
@@ -545,12 +541,26 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
   (NULL, 'displayBackOfficeOrderActions', 'Admin Order Actions', 'This hook displays content in the order view page after action buttons (or aliased to side column in migrated page)', '1'),
   (NULL, 'actionAdminAdminPreferencesControllerPostProcessBefore', 'On post-process in Admin Preferences', 'This hook is called on Admin Preferences post-process before processing the form', '1'),
   (NULL, 'displayAdditionalCustomerAddressFields', 'Display additional customer address fields', 'This hook allows to display extra field values added in an address form using hook ''additionalCustomerAddressFields''', '1'),
-  (NULL, 'displayAdminProductsExtra', 'Admin Product Extra Module Tab', 'This hook displays extra content in the Module tab on the product edit page', '1')
+  (NULL, 'displayAdminProductsExtra', 'Admin Product Extra Module Tab', 'This hook displays extra content in the Module tab on the product edit page', '1'),
+  (NULL, 'actionFrontControllerInitBefore', 'Perform actions before front office controller initialization', 'This hook is launched before the initialization of all front office controllers'),
+  (NULL, 'actionFrontControllerInitAfter', 'Perform actions after front office controller initialization', 'This hook is launched after the initialization of all front office controllers'),
+  (NULL, 'actionAdminControllerInitAfter', 'Perform actions after admin controller initialization', 'This hook is launched after the initialization of all admin controllers'),
+  (NULL, 'actionAdminControllerInitBefore', 'Perform actions before admin controller initialization', 'This hook is launched before the initialization of all admin controllers'),
+  (NULL, 'actionControllerInitAfter', 'Perform actions after controller initialization', 'This hook is launched after the initialization of all controllers'),
+  (NULL, 'actionControllerInitBefore', 'Perform actions before controller initialization', 'This hook is launched before the initialization of all controllers'),
+  (NULL, 'actionAdminLoginControllerBefore', 'Perform actions before admin login controller initialization', 'This hook is launched before the initialization of the login controller'),
+  (NULL, 'actionAdminLoginControllerLoginBefore', 'Perform actions before admin login controller login action initialization', 'This hook is launched before the initialization of the login action in login controller'),
+  (NULL, 'actionAdminLoginControllerLoginAfter', 'Perform actions after admin login controller login action initialization', 'This hook is launched after the initialization of the login action in login controller'),
+  (NULL, 'actionAdminLoginControllerForgotBefore', 'Perform actions before admin login controller forgot action initialization', 'This hook is launched before the initialization of the forgot action in login controller'),
+  (NULL, 'actionAdminLoginControllerForgotAfter', 'Perform actions after admin login controller forgot action initialization', 'This hook is launched after the initialization of the forgot action in login controller'),
+  (NULL, 'actionAdminLoginControllerResetBefore', 'Perform actions before admin login controller reset action initialization', 'This hook is launched before the initialization of the reset action in login controller'),
+  (NULL, 'actionAdminLoginControllerResetAfter', 'Perform actions after admin login controller reset action initialization', 'This hook is launched after the initialization of the reset action in login controller')
 ;
 
 INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES
   ('displayAdminOrderTop', 'displayInvoice'),
-  ('displayAdminOrderSide', 'displayBackOfficeOrderActions')
+  ('displayAdminOrderSide', 'displayBackOfficeOrderActions'),
+  ('actionFrontControllerInitAfter', 'actionFrontControllerAfterInit')
 ;
 
 /* Add refund amount on order detail, and fill new columns via data in order_slip_detail table */
@@ -598,6 +608,9 @@ UPDATE `PREFIX_order_cart_rule` SET `value` = RIGHT(`value`, 17) WHERE LENGTH(`v
 UPDATE `PREFIX_order_cart_rule` SET `value_tax_excl` = RIGHT(`value_tax_excl`, 17) WHERE LENGTH(`value_tax_excl`) > 17;
 ALTER TABLE `PREFIX_order_cart_rule` CHANGE `value` `value` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
 ALTER TABLE `PREFIX_order_cart_rule` CHANGE `value_tax_excl` `value_tax_excl` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
+
+/* add deleted field */
+ALTER TABLE `PREFIX_order_cart_rule` ADD `deleted` TINYINT(1) UNSIGNED NOT NULL;
 
 UPDATE
     `PREFIX_order_detail` `od`
@@ -847,3 +860,31 @@ VALUES (NULL, 'actionOrderMessageFormBuilderModifier', 'Modify order message ide
         'This hook allows to modify data which is about to be used in template for credit slip grid', '1'),
        (NULL, 'displayAfterTitleTag', 'After title tag', 'Use this hook to add content after title tag', '1')
 ;
+
+/* Update wrong hook names */
+UPDATE `PREFIX_hook_module` AS hm
+INNER JOIN `PREFIX_hook` AS hfrom ON hm.id_hook = hfrom.id_hook AND hfrom.name = 'actionAdministrationPageFormSave'
+INNER JOIN `PREFIX_hook` AS hto ON hto.name = 'actionAdministrationPageSave'
+SET hm.id_hook = hto.id_hook;
+DELETE FROM `PREFIX_hook` WHERE name = 'actionAdministrationPageFormSave';
+
+UPDATE `PREFIX_hook_module` AS hm
+INNER JOIN `PREFIX_hook` AS hfrom ON hm.id_hook = hfrom.id_hook AND hfrom.name = 'actionMaintenancePageFormSave'
+INNER JOIN `PREFIX_hook` AS hto ON hto.name = 'actionMaintenancePageSave'
+SET hm.id_hook = hto.id_hook;
+DELETE FROM `PREFIX_hook` WHERE name = 'actionMaintenancePageFormSave';
+
+UPDATE `PREFIX_hook_module` AS hm
+INNER JOIN `PREFIX_hook` AS hfrom ON hm.id_hook = hfrom.id_hook AND hfrom.name = 'actionPerformancePageFormSave'
+INNER JOIN `PREFIX_hook` AS hto ON hto.name = 'actionPerformancePageSave'
+SET hm.id_hook = hto.id_hook;
+DELETE FROM `PREFIX_hook` WHERE name = 'actionPerformancePageFormSave';
+
+UPDATE `PREFIX_hook_module` AS hm
+INNER JOIN `PREFIX_hook` AS hfrom ON hm.id_hook = hfrom.id_hook AND hfrom.name = 'actionFrontControllerAfterInit'
+INNER JOIN `PREFIX_hook` AS hto ON hto.name = 'actionFrontControllerInitAfter'
+SET hm.id_hook = hto.id_hook;
+DELETE FROM `PREFIX_hook` WHERE name = 'actionFrontControllerAfterInit';
+
+/* Update wrong hook alias */
+UPDATE `PREFIX_hook_alias` SET name = 'displayHeader', alias = 'Header' WHERE name = 'Header' AND alias = 'displayHeader';

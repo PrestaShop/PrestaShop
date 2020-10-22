@@ -7,11 +7,10 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const ProductSettingsPage = require('@pages/BO/shopParameters/productSettings');
-const HomePage = require('@pages/FO/home');
-const ProductPage = require('@pages/FO/product');
+const dashboardPage = require('@pages/BO/dashboard');
+const productSettingsPage = require('@pages/BO/shopParameters/productSettings');
+const homePage = require('@pages/FO/home');
+const productPage = require('@pages/FO/product');
 
 // Import data
 const ProductData = require('@data/FO/product');
@@ -23,17 +22,6 @@ const baseContext = 'functional_BO_shopParameters_productSetting_productsGeneral
 
 let browserContext;
 let page;
-
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    productSettingsPage: new ProductSettingsPage(page),
-    homePage: new HomePage(page),
-    productPage: new ProductPage(page),
-  };
-};
 
 /*
 Enable catalog mode / Disable show prices
@@ -47,29 +35,29 @@ describe('Enable/Disable catalog mode', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to product settings page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to \'Shop parameters > Product Settings\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.shopParametersParentLink,
-      this.pageObjects.dashboardPage.productSettingsLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.shopParametersParentLink,
+      dashboardPage.productSettingsLink,
     );
 
-    await this.pageObjects.productSettingsPage.closeSfToolBar();
+    await productSettingsPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.productSettingsPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.productSettingsPage.pageTitle);
+    const pageTitle = await productSettingsPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -85,8 +73,8 @@ describe('Enable/Disable catalog mode', async () => {
         `${test.args.actionCatalogMode}CatalogMode`,
         baseContext,
       );
-      const result = await this.pageObjects.productSettingsPage.changeCatalogModeStatus(test.args.enable);
-      await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
+      const result = await productSettingsPage.changeCatalogModeStatus(page, test.args.enable);
+      await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
     });
 
     if (test.args.enable) {
@@ -114,31 +102,31 @@ describe('Enable/Disable catalog mode', async () => {
             baseContext,
           );
 
-          const result = await this.pageObjects.productSettingsPage.setShowPricesStatus(showPrices.args.enable);
-          await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
+          const result = await productSettingsPage.setShowPricesStatus(page, showPrices.args.enable);
+          await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
         });
 
         it('should check product prices in the home page', async function () {
           await testContext.addContextItem(
             this,
             'testIdentifier',
-            `checkPricesInHomePage${this.pageObjects.productPage.uppercaseFirstCharacter(showPrices.args.action)}`,
+            `checkPricesInHomePage${productPage.uppercaseFirstCharacter(showPrices.args.action)}`,
             baseContext,
           );
 
-          page = await this.pageObjects.productSettingsPage.viewMyShop();
-          this.pageObjects = await init();
+          page = await productSettingsPage.viewMyShop(page);
 
-          await this.pageObjects.homePage.changeLanguage('en');
+          await homePage.changeLanguage(page, 'en');
 
-          const isPriceVisible = await this.pageObjects.homePage.isPriceVisible(1);
+          const isPriceVisible = await homePage.isPriceVisible(page, 1);
           await expect(isPriceVisible).to.equal(showPrices.args.enable);
         });
 
         it('should go to the first product page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToFirstProductPage${index}`, baseContext);
-          await this.pageObjects.homePage.goToProductPage(1);
-          const pageTitle = await this.pageObjects.productPage.getPageTitle();
+
+          await homePage.goToProductPage(page, 1);
+          const pageTitle = await productPage.getPageTitle(page);
           await expect(pageTitle.toUpperCase()).to.contains(ProductData.firstProductData.name);
         });
 
@@ -147,18 +135,17 @@ describe('Enable/Disable catalog mode', async () => {
             this,
             'testIdentifier',
             'checkPrice&AddToCartButton'
-              + `${this.pageObjects.productPage.uppercaseFirstCharacter(showPrices.args.action)}`,
+              + `${productPage.uppercaseFirstCharacter(showPrices.args.action)}`,
             baseContext,
           );
 
-          let isVisible = await this.pageObjects.productPage.isPriceDisplayed();
+          let isVisible = await productPage.isPriceDisplayed(page);
           await expect(isVisible).to.equal(showPrices.args.isPriceExist);
 
-          isVisible = await this.pageObjects.productPage.isAddToCartButtonDisplayed();
+          isVisible = await productPage.isAddToCartButtonDisplayed(page);
           await expect(isVisible).to.equal(showPrices.args.isAddToCartExist);
 
-          page = await this.pageObjects.productPage.closePage(browserContext, 0);
-          this.pageObjects = await init();
+          page = await productPage.closePage(browserContext, page, 0);
         });
       });
     } else {
@@ -170,20 +157,19 @@ describe('Enable/Disable catalog mode', async () => {
           baseContext,
         );
 
-        page = await this.pageObjects.productSettingsPage.viewMyShop();
-        this.pageObjects = await init();
+        page = await productSettingsPage.viewMyShop(page);
 
-        await this.pageObjects.homePage.changeLanguage('en');
+        await homePage.changeLanguage(page, 'en');
 
-        const isPriceVisible = await this.pageObjects.homePage.isPriceVisible(1);
+        const isPriceVisible = await homePage.isPriceVisible(page, 1);
         await expect(isPriceVisible).to.be.true;
       });
 
       it('should go to the first product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProductPage3', baseContext);
 
-        await this.pageObjects.homePage.goToProductPage(1);
-        const pageTitle = await this.pageObjects.productPage.getPageTitle();
+        await homePage.goToProductPage(page, 1);
+        const pageTitle = await productPage.getPageTitle(page);
         await expect(pageTitle.toUpperCase()).to.contains(ProductData.firstProductData.name);
       });
 
@@ -195,14 +181,13 @@ describe('Enable/Disable catalog mode', async () => {
           baseContext,
         );
 
-        let isVisible = await this.pageObjects.productPage.isPriceDisplayed();
+        let isVisible = await productPage.isPriceDisplayed(page);
         await expect(isVisible).to.be.true;
 
-        isVisible = await this.pageObjects.productPage.isAddToCartButtonDisplayed();
+        isVisible = await productPage.isAddToCartButtonDisplayed(page);
         await expect(isVisible).to.be.true;
 
-        page = await this.pageObjects.productPage.closePage(browserContext, 0);
-        this.pageObjects = await init();
+        page = await productPage.closePage(browserContext, page, 0);
       });
     }
   });

@@ -1,100 +1,131 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
-module.exports = class Cart extends FOBasePage {
-  constructor(page) {
-    super(page);
+class Cart extends FOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Cart';
 
     // Selectors for cart page
+    this.cartGridBlock = 'div.cart-grid';
     this.productItem = number => `#main li:nth-of-type(${number})`;
     this.productName = number => `${this.productItem(number)} div.product-line-info > a`;
     this.productPrice = number => `${this.productItem(number)} div.current-price > span`;
     this.productQuantity = number => `${this.productItem(number)} div.input-group input.js-cart-line-product-quantity`;
     this.proceedToCheckoutButton = '#main div.checkout a';
     this.disabledProceedToCheckoutButton = '#main div.checkout button.disabled';
-    this.cartTotalTTC = '.cart-summary-totals span.value';
+    this.subtotalDiscountValueSpan = '#cart-subtotal-discount span.value';
+    this.cartTotalATI = '.cart-summary-totals span.value';
     this.itemsNumber = '#cart-subtotal-products span.label.js-subtotal';
     this.alertWarning = '.checkout.cart-detailed-actions.card-block div.alert.alert-warning';
+    this.promoCodeLink = '#main div.block-promo a[href=\'#promo-code\']';
+    this.promoInput = '#promo-code input.promo-input';
+    this.addPromoCodeButton = '#promo-code button.btn-primary';
   }
 
   /**
    * Get Product detail from cart (product name, price, quantity)
+   * @param page
    * @param row, product row in cart
    * @returns {Promise<{quantity: (number), price: (string), name: (string)}>}
    */
-  async getProductDetail(row) {
+  async getProductDetail(page, row) {
     return {
-      name: await this.getTextContent(this.productName(row)),
-      price: await this.getTextContent(this.productPrice(row)),
-      quantity: parseFloat(await this.getAttributeContent(this.productQuantity(row), 'value')),
+      name: await this.getTextContent(page, this.productName(row)),
+      price: await this.getTextContent(page, this.productPrice(row)),
+      quantity: parseFloat(await this.getAttributeContent(page, this.productQuantity(row), 'value')),
     };
   }
 
   /**
    * Click on Proceed to checkout button
+   * @param page
    * @returns {Promise<void>}
    */
-  async clickOnProceedToCheckout() {
-    await this.waitForVisibleSelector(this.proceedToCheckoutButton);
-    await this.clickAndWaitForNavigation(this.proceedToCheckoutButton);
+  async clickOnProceedToCheckout(page) {
+    await this.waitForVisibleSelector(page, this.proceedToCheckoutButton);
+    await this.clickAndWaitForNavigation(page, this.proceedToCheckoutButton);
   }
 
   /**
    * To edit the product quantity
+   * @param page
    * @param productID
    * @param quantity
    * @returns {Promise<void>}
    */
-  async editProductQuantity(productID, quantity) {
-    await this.setValue(this.productQuantity(productID), quantity.toString());
+  async editProductQuantity(page, productID, quantity) {
+    await this.setValue(page, this.productQuantity(productID), quantity.toString());
     // click on price to see that its changed
-    await this.page.click(this.productPrice(productID));
+    await page.click(this.productPrice(productID));
   }
 
   /**
    * Get a number from text
+   * @param page
    * @param selector
    * @param timeout
    * @returns {Promise<number>}
    */
-  async getPriceFromText(selector, timeout = 0) {
-    await this.page.waitForTimeout(timeout);
-    const text = await this.getTextContent(selector);
+  async getPriceFromText(page, selector, timeout = 0) {
+    await page.waitForTimeout(timeout);
+    const text = await this.getTextContent(page, selector);
     const number = Number(text.replace(/[^0-9.-]+/g, ''));
     return parseFloat(number);
   }
 
   /**
-   * Get price TTC
+   * Get All tax included price
+   * @param page
    * @returns {Promise<number>}
    */
-  async getTTCPrice() {
-    return this.getPriceFromText(this.cartTotalTTC);
+  getATIPrice(page) {
+    return this.getPriceFromText(page, this.cartTotalATI, 2000);
+  }
+
+  getSubtotalDiscountValue(page) {
+    return this.getPriceFromText(page, this.subtotalDiscountValueSpan, 2000);
   }
 
   /**
    * Is proceed to checkout button disabled
+   * @param page
    * @returns {boolean}
    */
-  isProceedToCheckoutButtonDisabled() {
-    return this.elementVisible(this.disabledProceedToCheckoutButton, 1000);
+  isProceedToCheckoutButtonDisabled(page) {
+    return this.elementVisible(page, this.disabledProceedToCheckoutButton, 1000);
   }
 
   /**
    * Is alert warning for minimum purchase total visible
+   * @param page
    * @returns {boolean}
    */
-  isAlertWarningForMinimumPurchaseVisible() {
-    return this.elementVisible(this.alertWarning, 1000);
+  isAlertWarningForMinimumPurchaseVisible(page) {
+    return this.elementVisible(page, this.alertWarning, 1000);
   }
 
   /**
    * Get alert warning
+   * @param page
    * @returns {Promise<string>}
    */
-  getAlertWarning() {
-    return this.getTextContent(this.alertWarning);
+  getAlertWarning(page) {
+    return this.getTextContent(page, this.alertWarning);
   }
-};
+
+  /**
+   * Set promo code
+   * @param page
+   * @param code
+   * @returns {Promise<void>}
+   */
+  async addPromoCode(page, code) {
+    await page.click(this.promoCodeLink);
+    await this.setValue(page, this.promoInput, code);
+    await page.click(this.addPromoCodeButton);
+  }
+}
+
+module.exports = new Cart();

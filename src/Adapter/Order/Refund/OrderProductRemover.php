@@ -27,15 +27,17 @@
 namespace PrestaShop\PrestaShop\Adapter\Order\Refund;
 
 use Cart;
+use CartRule;
 use Configuration;
-use Context;
 use Db;
 use Order;
+use OrderCartRule;
 use OrderDetail;
 use OrderHistory;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DeleteCustomizedProductFromOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DeleteProductFromOrderException;
 use Psr\Log\LoggerInterface;
+use SpecificPrice;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class OrderProductRemover
@@ -64,201 +66,229 @@ class OrderProductRemover
     /**
      * @param Order $order
      * @param OrderDetail $orderDetail
-     * @param int $quantity
+     * @param bool $updateCart Used when you don't want to update the cart (CartRule removal for example)
+     *
+     * @return array
      */
-    public function deleteProductFromOrder(Order $order, OrderDetail $orderDetail, int $quantity)
+    public function deleteProductFromOrder(Order $order, OrderDetail $orderDetail, bool $updateCart = true): array
     {
-        if ((int) $orderDetail->id_customization > 0) {
-            $this->deleteCustomization($order, $orderDetail, $quantity);
-        }
-        $productPriceTaxExcl = $orderDetail->unit_price_tax_excl * $quantity;
-        $productPriceTaxIncl = $orderDetail->unit_price_tax_incl * $quantity;
-
         $cart = new Cart($order->id_cart);
-        $this->updateCart($cart, $orderDetail, $quantity);
 
-        $packageShippingCostTaxIncl = $cart->getPackageShippingCost(
-            $order->id_carrier,
-            true,
-            null,
-            $order->getCartProducts()
-        );
-        $packageShippingCostTaxExcl = $cart->getPackageShippingCost(
-            $order->id_carrier,
-            false,
-            null,
-            $order->getCartProducts()
-        );
+        // Important to remove order cart rule before the product is removed, so that cart rule can detect if it's applied on it
+        $this->deleteOrderCartRule($order, $orderDetail, $cart);
 
-        $shippingDiffTaxIncl = $order->total_shipping_tax_incl - $packageShippingCostTaxIncl;
-        $shippingDiffTaxExcl = $order->total_shipping_tax_excl - $packageShippingCostTaxExcl;
+        if ((int) $orderDetail->id_customization > 0) {
+            $this->deleteCustomization($order, $orderDetail);
+        }
 
-        $this->updateOrder(
+        $updatedProducts = [];
+        if ($updateCart) {
+            $updatedProducts = $this->updateCart($cart, $orderDetail);
+        }
+
+        $this->deleteSpecificPrice($order, $orderDetail, $cart);
+
+        $this->deleteOrderDetail(
             $order,
-            $productPriceTaxIncl,
-            $productPriceTaxExcl,
-            $shippingDiffTaxIncl,
-            $shippingDiffTaxExcl
+            $orderDetail
         );
 
-        $this->updateOrderDetail(
-            $order,
-            $orderDetail,
-            $quantity,
-            $productPriceTaxIncl,
-            $productPriceTaxExcl,
-            $shippingDiffTaxIncl,
-            $shippingDiffTaxExcl
-        );
-
-        $orderDetail->update();
-        $order->update();
+        return $updatedProducts;
     }
 
     /**
      * @param Cart $cart
      * @param OrderDetail $orderDetail
-     * @param int $quantity
+     *
+     * @return array
      */
-    private function updateCart(Cart $cart, OrderDetail $orderDetail, int $quantity)
+    private function updateCart(Cart $cart, OrderDetail $orderDetail): array
     {
+        $oldProducts = $cart->getProducts(true);
         $cart->updateQty(
-            $quantity,
+            $orderDetail->product_quantity,
             $orderDetail->product_id,
             $orderDetail->product_attribute_id,
             false,
             'down'
         );
-        $cart->update();
+        $newProducts = $cart->getProducts(true);
+
+        return $this->getUpdatedProducts($orderDetail, $newProducts, $oldProducts);
     }
 
     /**
-     * @param Order $order
-     * @param float $productPriceTaxIncl
-     * @param float $productPriceTaxExcl
-     * @param float $shippingDiffTaxIncl
-     * @param float $shippingDiffTaxExcl
+     * Compares the cart products before and after the update to detect which one have had their
+     * quantity changed due to another product removal (to detect changes related to a CartRule)
+     *
+     * @param OrderDetail $orderDetail
+     * @param array $newProducts
+     * @param array $oldProducts
+     *
+     * @return array
      */
-    private function updateOrder(
-        Order $order,
-        float $productPriceTaxIncl,
-        float $productPriceTaxExcl,
-        float $shippingDiffTaxIncl,
-        float $shippingDiffTaxExcl
-    ) {
-        $order->total_shipping -= $shippingDiffTaxIncl;
-        $order->total_shipping_tax_excl -= $shippingDiffTaxExcl;
-        $order->total_shipping_tax_incl -= $shippingDiffTaxIncl;
-        $order->total_products -= $productPriceTaxExcl;
-        $order->total_products_wt -= $productPriceTaxIncl;
-        $order->total_paid -= $productPriceTaxIncl + $shippingDiffTaxIncl;
-        $order->total_paid_tax_incl -= $productPriceTaxIncl + $shippingDiffTaxIncl;
-        $order->total_paid_tax_excl -= $productPriceTaxExcl + $shippingDiffTaxExcl;
-        $order->total_paid_real -= $productPriceTaxIncl + $shippingDiffTaxIncl;
+    private function getUpdatedProducts(OrderDetail $orderDetail, array $newProducts, array $oldProducts): array
+    {
+        $updatedProducts = [];
+        foreach ($oldProducts as $oldProduct) {
+            // The current OrderDetail has already been updated
+            $productMatch = $oldProduct['id_product'] == $orderDetail->product_id;
+            $combinationMatch = $oldProduct['id_product_attribute'] == $orderDetail->product_attribute_id;
+            if ($productMatch && $combinationMatch) {
+                continue;
+            }
 
-        $fields = [
-            'total_shipping',
-            'total_shipping_tax_excl',
-            'total_shipping_tax_incl',
-            'total_products',
-            'total_products_wt',
-            'total_paid',
-            'total_paid_tax_incl',
-            'total_paid_tax_excl',
-            'total_paid_real',
-        ];
+            // Then try and find the product in new products
+            $newProduct = array_reduce($newProducts, function ($carry, $item) use ($oldProduct) {
+                if (null !== $carry) {
+                    return $carry;
+                }
 
-        /* Prevent from floating precision issues */
-        foreach ($fields as $field) {
-            if ($order->{$field} < 0) {
-                $order->{$field} = 0;
+                $productMatch = $item['id_product'] == $oldProduct['id_product'];
+                $combinationMatch = $item['id_product_attribute'] == $oldProduct['id_product_attribute'];
+
+                return $productMatch && $combinationMatch ? $item : null;
+            });
+
+            if (null === $newProduct) {
+                $deltaQuantity = -(int) $oldProduct['cart_quantity'];
+            } else {
+                $deltaQuantity = (int) $newProduct['cart_quantity'] - (int) $oldProduct['cart_quantity'];
+            }
+
+            if ($deltaQuantity) {
+                $updatedProducts[] = [
+                    'id_product' => (int) $oldProduct['id_product'],
+                    'id_product_attribute' => (int) $oldProduct['id_product_attribute'],
+                    'delta_quantity' => $deltaQuantity,
+                ];
             }
         }
 
-        /* Prevent from floating precision issues */
-        foreach ($fields as $field) {
-            $order->{$field} = number_format(
-                $order->{$field},
-                Context::getContext()->getComputingPrecision(),
-                '.',
-                ''
-            );
-        }
+        return $updatedProducts;
     }
 
     /**
      * @param Order $order
      * @param OrderDetail $orderDetail
-     * @param int $quantity
-     * @param float $productPriceTaxIncl
-     * @param float $productPriceTaxExcl
-     * @param float $shippingDiffTaxIncl
-     * @param float $shippingDiffTaxExcl
      *
      * @throws DeleteProductFromOrderException
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
-    private function updateOrderDetail(
+    private function deleteOrderDetail(
+        Order $order,
+        OrderDetail $orderDetail
+    ) {
+        if (!$orderDetail->delete()) {
+            throw new DeleteProductFromOrderException('Could not delete order detail');
+        }
+        if (count($order->getProductsDetail()) == 0) {
+            $history = new OrderHistory();
+            $history->id_order = (int) $order->id;
+            $history->changeIdOrderState(Configuration::get('PS_OS_CANCELED'), $order);
+            if (!$history->addWithemail()) {
+                // email failure must not block order update process
+                $this->logger->warning(
+                    $this->translator->trans(
+                        'Order history email could not be sent, test your email configuration in the Advanced Parameters > E-mail section of your back office.',
+                        [],
+                        'Admin.Orderscustomers.Notification'
+                    )
+                );
+            }
+        }
+
+        $order->update();
+    }
+
+    /**
+     * @param Order $order
+     * @param OrderDetail $orderDetail
+     */
+    private function deleteCustomization(Order $order, OrderDetail $orderDetail)
+    {
+        if (!(int) $order->getCurrentState()) {
+            throw new DeleteCustomizedProductFromOrderException('Could not get a valid Order state before deletion');
+        }
+        if (!Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'customization` WHERE `id_customization` = ' . (int) $orderDetail->id_customization . ' AND `id_cart` = ' . (int) $order->id_cart . ' AND `id_product` = ' . (int) $orderDetail->product_id)) {
+            throw new DeleteCustomizedProductFromOrderException('Could not delete customization from database.');
+        }
+    }
+
+    /**
+     * The deleted OrderCartRule are ignored by CartRule:autoAdd and CartRule:autoRemove so it is not able to clean
+     * them when the product is removed, hence the discount could never be re applied. So we manually check and remove
+     * them.
+     *
+     * @param Order $order
+     * @param OrderDetail $orderDetail
+     * @param Cart $cart
+     */
+    private function deleteOrderCartRule(
         Order $order,
         OrderDetail $orderDetail,
-        int $quantity,
-        float $productPriceTaxIncl,
-        float $productPriceTaxExcl,
-        float $shippingDiffTaxIncl,
-        float $shippingDiffTaxExcl
-    ) {
-        $orderDetail->product_quantity -= (int) $quantity;
-        if ($orderDetail->product_quantity == 0) {
-            if (!$orderDetail->delete()) {
-                throw new DeleteProductFromOrderException('Could not delete order detail');
-            }
-            if (count($order->getProductsDetail()) == 0) {
-                $history = new OrderHistory();
-                $history->id_order = (int) $order->id;
-                $history->changeIdOrderState(Configuration::get('PS_OS_CANCELED'), $order);
-                if (!$history->addWithemail()) {
-                    // email failure must not block order update process
-                    $this->logger->warning(
-                        $this->translator->trans(
-                            'Order history email could not be sent, test your email configuration in the Advanced Parameters > E-mail section of your back office.',
-                            [],
-                            'Admin.Orderscustomers.Notification'
-                        )
-                    );
+        Cart $cart
+    ): void {
+        $orderCartRules = $order->getDeletedCartRules();
+        if (empty($orderCartRules)) {
+            return;
+        }
+
+        $removedOrderCartRules = [];
+        foreach ($orderCartRules as $orderCartRule) {
+            $cartRule = new CartRule($orderCartRule['id_cart_rule']);
+            $discountedProducts = $cartRule->checkProductRestrictionsFromCart($cart, true, true, true);
+            foreach ($discountedProducts as $discountedProduct) {
+                // The return value is the concatenation of productId and attributeId, but the attributeId is always replaced by 0
+                if ($discountedProduct === $orderDetail->product_id . '-0') {
+                    if (!in_array($orderCartRule['id_order_cart_rule'], $removedOrderCartRules)) {
+                        $removedOrderCartRules[] = $orderCartRule['id_order_cart_rule'];
+                    }
                 }
             }
+        }
 
-            $order->update();
-        } else {
-            $orderDetail->total_price_tax_incl -= $productPriceTaxIncl;
-            $orderDetail->total_price_tax_excl -= $productPriceTaxExcl;
-            $orderDetail->total_shipping_price_tax_incl -= $shippingDiffTaxIncl;
-            $orderDetail->total_shipping_price_tax_excl -= $shippingDiffTaxExcl;
+        foreach ($removedOrderCartRules as $removedOrderCartRuleId) {
+            $orderCartRule = new OrderCartRule($removedOrderCartRuleId);
+            $orderCartRule->delete();
         }
     }
 
     /**
      * @param Order $order
      * @param OrderDetail $orderDetail
-     * @param int $quantity
+     * @param Cart $cart
      */
-    private function deleteCustomization(Order $order, OrderDetail $orderDetail, int $quantity)
-    {
-        if (!(int) $order->getCurrentState()) {
-            throw new DeleteCustomizedProductFromOrderException('Could not get a valid Order state before deletion');
+    private function deleteSpecificPrice(
+        Order $order,
+        OrderDetail $orderDetail,
+        Cart $cart
+    ): void {
+        $productQuantity = $cart->getProductQuantity($orderDetail->product_id, $orderDetail->product_attribute_id);
+        if (!isset($productQuantity['quantity']) || (int) $productQuantity['quantity'] > 0) {
+            return;
         }
 
-        if ($order->hasBeenDelivered()) {
-            return Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'customization` SET `quantity_returned` = `quantity_returned` + ' . (int) $quantity . ' WHERE `id_customization` = ' . (int) $orderDetail->id_customization . ' AND `id_cart` = ' . (int) $order->id_cart . ' AND `id_product` = ' . (int) $orderDetail->product_id);
-        } elseif ($order->hasBeenPaid()) {
-            return Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'customization` SET `quantity_refunded` = `quantity_refunded` + ' . (int) $quantity . ' WHERE `id_customization` = ' . (int) $orderDetail->id_customization . ' AND `id_cart` = ' . (int) $order->id_cart . ' AND `id_product` = ' . (int) $orderDetail->product_id);
-        }
-        if (!Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'customization` SET `quantity` = `quantity` - ' . (int) $quantity . ' WHERE `id_customization` = ' . (int) $orderDetail->id_customization . ' AND `id_cart` = ' . (int) $order->id_cart . ' AND `id_product` = ' . (int) $orderDetail->product_id)) {
-            throw new DeleteCustomizedProductFromOrderException('Could not update customization quantity in database.');
-        }
-        if (!Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'customization` WHERE `quantity` = 0')) {
-            throw new DeleteCustomizedProductFromOrderException('Could not delete customization from database.');
+        // WARNING: DO NOT use SpecificPrice::getSpecificPrice as it filters out fields that are not in database
+        // hence it ignores the customer or cart restriction and results are biased
+        $existingSpecificPriceId = SpecificPrice::exists(
+            (int) $orderDetail->product_id,
+            (int) $orderDetail->product_attribute_id,
+            0,
+            0,
+            0,
+            $order->id_currency,
+            $order->id_customer,
+            SpecificPrice::ORDER_DEFAULT_FROM_QUANTITY,
+            SpecificPrice::ORDER_DEFAULT_DATE,
+            SpecificPrice::ORDER_DEFAULT_DATE,
+            false,
+            $order->id_cart
+        );
+        if (!empty($existingSpecificPriceId)) {
+            $specificPrice = new SpecificPrice($existingSpecificPriceId);
+            $specificPrice->delete();
         }
     }
 }

@@ -1,9 +1,9 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
-module.exports = class SearchResults extends FOBasePage {
-  constructor(page) {
-    super(page);
+class SearchResults extends FOBasePage {
+  constructor() {
+    super();
 
     // Selectors for search Results page
     this.productArticle = number => `#js-product-list .products div:nth-child(${number}) article`;
@@ -12,10 +12,13 @@ module.exports = class SearchResults extends FOBasePage {
 
   /**
    * Go to the product page
+   * @param page
    * @param id, product id
    * @returns {Promise<void>}
    */
-  async goToProductPage(id) {
-    await this.clickAndWaitForNavigation(this.productImg(id));
+  async goToProductPage(page, id) {
+    await this.clickAndWaitForNavigation(page, this.productImg(id));
   }
-};
+}
+
+module.exports = new SearchResults();

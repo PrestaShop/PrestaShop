@@ -195,6 +195,7 @@ admin_orders_generate_invoice:
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:generateInvoice
+    _legacy_controller: AdminOrders
   requirements:
     orderId: \d+
 
@@ -253,6 +254,8 @@ admin_orders_send_process_order_email:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:sendProcessOrderEmail
     _legacy_controller: AdminOrders
+  options:
+    expose: true
 
 admin_orders_add_product:
   path: /{orderId}/products
@@ -340,3 +343,47 @@ admin_orders_configure_product_pagination:
     _legacy_controller: AdminOrders
   options:
     expose: true
+
+admin_orders_display_customization_image:
+  path: /display-customization-image/{orderId}/{type}/{name}/{value}
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:displayCustomizationImage
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+    type: \d+
+    name: \w+
+    value: \w+
+
+admin_orders_product_prices:
+  path: /{orderId}/products/prices
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:getProductPrices
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
+admin_orders_products_search:
+    path: /products/search
+    methods: [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Order/Order:searchProducts
+        _legacy_controller: AdminOrders
+    options:
+        expose: true
+
+admin_orders_set_internal_note:
+  path: /{orderId}/set-internal-note
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:setInternalNote
+    _legacy_controller: AdminOrders
+    _legacy_link: AdminOrders:updateInternalNote
+    _legacy_parameters:
+      id_order: orderId
+  requirements:
+    orderId: \d+

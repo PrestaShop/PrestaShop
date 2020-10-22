@@ -40,6 +40,11 @@ class OrderProductForViewing implements JsonSerializable
     private $id;
 
     /**
+     * @var int
+     */
+    private $combinationId;
+
+    /**
      * @var string
      */
     private $location;
@@ -157,6 +162,7 @@ class OrderProductForViewing implements JsonSerializable
     /**
      * @param int $orderDetailId
      * @param int $id
+     * @param int $combinationId
      * @param string $name
      * @param string $reference
      * @param string $supplierReference
@@ -183,6 +189,7 @@ class OrderProductForViewing implements JsonSerializable
     public function __construct(
         ?int $orderDetailId,
         int $id,
+        int $combinationId,
         string $name,
         string $reference,
         string $supplierReference,
@@ -207,6 +214,7 @@ class OrderProductForViewing implements JsonSerializable
         ?OrderProductCustomizationsForViewing $customizations = null
     ) {
         $this->id = $id;
+        $this->combinationId = $combinationId;
         $this->name = $name;
         $this->reference = $reference;
         $this->supplierReference = $supplierReference;
@@ -250,6 +258,14 @@ class OrderProductForViewing implements JsonSerializable
     public function getId(): int
     {
         return $this->id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCombinationId(): int
+    {
+        return $this->combinationId;
     }
 
     /**

@@ -31,13 +31,13 @@ use PrestaShop\PrestaShop\Adapter\ServiceLocator;
  */
 class CustomerCore extends ObjectModel
 {
-    /** @var int $id Customer ID */
+    /** @var int Customer ID */
     public $id;
 
-    /** @var int $id_shop Shop ID */
+    /** @var int Shop ID */
     public $id_shop;
 
-    /** @var int $id_shop_group ShopGroup ID */
+    /** @var int ShopGroup ID */
     public $id_shop_group;
 
     /** @var string Secure key */
@@ -1274,7 +1274,13 @@ class CustomerCore extends ObjectModel
         }
 
         /* Customer is valid only if it can be load and if object password is the same as database one */
-        return $this->logged == 1 && $this->id && Validate::isUnsignedId($this->id) && Customer::checkPassword($this->id, $this->passwd);
+        return
+            $this->logged == 1
+            && $this->id
+            && Validate::isUnsignedId($this->id)
+            && Customer::checkPassword($this->id, $this->passwd)
+            && Context::getContext()->cookie->isSessionAlive()
+        ;
     }
 
     /**

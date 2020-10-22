@@ -112,7 +112,7 @@
       <trans-unit id="b24ce0cd392a5b0b8dedc66c25213594">
         <source>Free</source>
         <target>Free</target>
-        <note>Line: 513</note>
+        <note>Line: 521</note>
       </trans-unit>
       <trans-unit id="96b0141273eabab320119c467cdcaf17">
         <source>Total</source>
@@ -167,7 +167,7 @@
       <trans-unit id="2bd544f123f671c597c4b330ef05b5da">
         <source>A minimum shopping cart total of %amount% (tax excl.) is required to validate your order. Current cart total is %total% (tax excl.).</source>
         <target>A minimum shopping cart total of %amount% (tax excl.) is required to validate your order. Current cart total is %total% (tax excl.).</target>
-        <note>Line: 473</note>
+        <note>Line: 474</note>
       </trans-unit>
       <trans-unit id="40d906eb5dd9a2734d0c20c437e2ff68">
         <source>Discount(s)</source>

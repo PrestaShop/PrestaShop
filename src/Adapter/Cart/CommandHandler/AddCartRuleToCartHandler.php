@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
+use Cache;
 use Cart;
 use CartRule;
 use Context;
@@ -111,7 +112,12 @@ final class AddCartRuleToCartHandler extends AbstractCartHandler implements AddC
     private function validateCartRule(CartRule $cartRule, Cart $cart): ?string
     {
         Context::getContext()->cart = $cart;
+        $previousCartRules = $cart->getCartRules();
         $isValid = $cartRule->checkValidity(Context::getContext(), false, true);
+
+        foreach ($previousCartRules as $previousCartRule) {
+            Cache::clean('getContextualValue_' . $previousCartRule['id_discount'] . '_*');
+        }
 
         // if its valid, don't return any error message
         if (true === $isValid) {

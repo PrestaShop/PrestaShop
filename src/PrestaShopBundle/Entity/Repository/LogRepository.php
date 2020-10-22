@@ -38,8 +38,17 @@ use PrestaShop\PrestaShop\Core\Repository\RepositoryInterface;
  */
 class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterface
 {
+    /**
+     * @var Connection
+     */
     private $connection;
+    /**
+     * @var string
+     */
     private $databasePrefix;
+    /**
+     * @var string
+     */
     private $logTable;
 
     /**
@@ -172,7 +181,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
     /**
      * Get query that searches grid rows.
      *
-     * @param SearchCriteriaInterface|null $searchCriteria
+     * @param SearchCriteriaInterface $searchCriteria
      *
      * @return QueryBuilder
      */
@@ -191,7 +200,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
     /**
      * Get query that counts grid rows.
      *
-     * @param SearchCriteriaInterface|null $searchCriteria
+     * @param SearchCriteriaInterface $searchCriteria
      *
      * @return QueryBuilder
      */
@@ -206,7 +215,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
     /**
      * Build query body without select, sorting & limiting.
      *
-     * @param SearchCriteriaInterface|null $searchCriteria
+     * @param SearchCriteriaInterface $searchCriteria
      *
      * @return QueryBuilder
      */

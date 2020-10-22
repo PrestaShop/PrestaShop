@@ -421,6 +421,7 @@
         </div>
       </div>
     </div>
+    {{ block('form_help') }}
   {% endspaceless %}
 {% endblock date_picker_widget %}
 
@@ -551,9 +552,13 @@
 
 {% block form_errors -%}
   {% if errors|length > 0 -%}
-    <div class="alert alert-danger">
+    <div class="invalid-feedback-container">
+      <div class="d-inline-block text-danger align-top">
+        <i class="material-icons form-error-icon">error_outline</i>
+      </div>
+      <div class="d-inline-block">
       {%- if errors|length > 1 -%}
-        <ul class="alert-text">
+        <ul class="text-danger">
           {%- for error in errors -%}
             <li> {{
               error.messagePluralization is null
@@ -564,7 +569,7 @@
           {%- endfor -%}
         </ul>
       {%- else -%}
-        <div class="alert-text">
+        <div class="text-danger">
           {%- for error in errors -%}
             <p> {{
               error.messagePluralization is null
@@ -575,6 +580,7 @@
           {%- endfor -%}
         </div>
       {%- endif -%}
+      </div>
     </div>
   {%- endif %}
 {%- endblock form_errors %}

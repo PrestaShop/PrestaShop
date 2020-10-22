@@ -656,7 +656,7 @@ abstract class CacheCore
 
     /**
      * @param string $key
-     * @param string $value
+     * @param mixed $value
      */
     public static function store($key, $value)
     {

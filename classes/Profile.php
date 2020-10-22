@@ -34,7 +34,7 @@ class ProfileCore extends ObjectModel
         'class_name',
     ];
 
-    /** @var string Name */
+    /** @var array<string> Name */
     public $name;
 
     /**
@@ -128,7 +128,7 @@ class ProfileCore extends ObjectModel
      * @param int $idProfile Profile ID
      * @param string $type Type
      *
-     * @return bool
+     * @return array|false
      */
     public static function getProfileAccesses($idProfile, $type = 'id_tab')
     {

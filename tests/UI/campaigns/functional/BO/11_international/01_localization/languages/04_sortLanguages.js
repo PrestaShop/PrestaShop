@@ -5,10 +5,9 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const LocalizationPage = require('@pages/BO/international/localization');
-const LanguagesPage = require('@pages/BO/international/languages');
+const dashboardPage = require('@pages/BO/dashboard');
+const localizationPage = require('@pages/BO/international/localization');
+const languagesPage = require('@pages/BO/international/languages');
 
 // Import pages
 const testContext = require('@utils/testContext');
@@ -20,58 +19,48 @@ let browserContext;
 let page;
 let numberOfLanguages = 0;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    localizationPage: new LocalizationPage(page),
-    languagesPage: new LanguagesPage(page),
-  };
-};
-
 describe('Sort Languages', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to localization page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to localization page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.internationalParentLink,
-      this.pageObjects.dashboardPage.localizationLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.internationalParentLink,
+      dashboardPage.localizationLink,
     );
 
-    await this.pageObjects.localizationPage.closeSfToolBar();
+    await localizationPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.localizationPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.localizationPage.pageTitle);
+    const pageTitle = await localizationPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(localizationPage.pageTitle);
   });
 
   it('should go to languages page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLanguagesPage', baseContext);
 
-    await this.pageObjects.localizationPage.goToSubTabLanguages();
-    const pageTitle = await this.pageObjects.languagesPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.languagesPage.pageTitle);
+    await localizationPage.goToSubTabLanguages(page);
+    const pageTitle = await languagesPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(languagesPage.pageTitle);
   });
 
   it('should reset all filters and get number of languages in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfLanguages = await this.pageObjects.languagesPage.resetAndGetNumberOfLines();
+    numberOfLanguages = await languagesPage.resetAndGetNumberOfLines(page);
     await expect(numberOfLanguages).to.be.above(0);
   });
 
@@ -103,11 +92,11 @@ describe('Sort Languages', async () => {
       await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
       // Get non sorted elements
-      let nonSortedTable = await this.pageObjects.languagesPage.getAllRowsColumnContent(test.args.sortBy);
-      await this.pageObjects.languagesPage.sortTable(test.args.sortBy, test.args.sortDirection);
+      let nonSortedTable = await languagesPage.getAllRowsColumnContent(page, test.args.sortBy);
+      await languagesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
       // Get sorted elements
-      let sortedTable = await this.pageObjects.languagesPage.getAllRowsColumnContent(test.args.sortBy);
+      let sortedTable = await languagesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
       if (test.args.isFloat) {
         nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
@@ -115,7 +104,7 @@ describe('Sort Languages', async () => {
       }
 
       // Sort non sorted array
-      const expectedResult = await this.pageObjects.languagesPage.sortArray(nonSortedTable, test.args.isFloat);
+      const expectedResult = await languagesPage.sortArray(nonSortedTable, test.args.isFloat);
 
       if (test.args.sortDirection === 'asc') {
         await expect(sortedTable).to.deep.equal(expectedResult);

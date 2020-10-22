@@ -8,7 +8,7 @@ Feature: Update product price fields from Back Office (BO).
     Given I add product "product1" with following information:
       | name       | en-US:magic staff   |
       | is_virtual | false               |
-    And product "product1" should have following values:
+    And product product1 should have following prices information:
       | price              | 0           |
       | ecotax             | 0           |
       | tax rules group    |             |
@@ -26,7 +26,7 @@ Feature: Update product price fields from Back Office (BO).
       | wholesale_price    | 70              |
       | unit_price         | 900             |
       | unity              | bag of ten      |
-    Then product "product1" should have following values:
+    Then product product1 should have following prices information:
       | price              | 100.99          |
       | ecotax             | 0               |
       | tax rules group    | US-AL Rate (4%) |
@@ -38,7 +38,7 @@ Feature: Update product price fields from Back Office (BO).
       | unit_price_ratio   | 0.112211    |
 
     Scenario: I partially update product prices, providing only those values which I want to update
-      Given product "product1" has following values:
+      Given product product1 should have following prices information:
         | price              | 100.99          |
         | ecotax             | 0               |
         | tax rules group    | US-AL Rate (4%) |
@@ -50,7 +50,7 @@ Feature: Update product price fields from Back Office (BO).
         | unit_price_ratio   | 0.112211    |
       When I update product "product1" prices with following information:
         | price              | 200         |
-      Then product "product1" should have following values:
+      Then product product1 should have following prices information:
         | price              | 200             |
         | ecotax             | 0               |
         | tax rules group    | US-AL Rate (4%) |
@@ -63,7 +63,7 @@ Feature: Update product price fields from Back Office (BO).
       When I update product "product1" prices with following information:
         | ecotax              | 5.5            |
         | on_sale             | false          |
-      Then product "product1" should have following values:
+      Then product product1 should have following prices information:
         | price              | 200             |
         | ecotax             | 5.5             |
         | tax rules group    | US-AL Rate (4%) |
@@ -80,7 +80,7 @@ Feature: Update product price fields from Back Office (BO).
           | is_virtual | false             |
         And I update product "product2" prices with following information:
           | price           | 50           |
-        And product "product2" has following values:
+        And product product2 should have following prices information:
           | price           | 50           |
           | ecotax          | 0            |
           | wholesale_price | 0            |
@@ -102,12 +102,12 @@ Feature: Update product price fields from Back Office (BO).
         Given I add product "product3" with following information:
           | name       | en-US: black hat  |
           | is_virtual | false             |
-        And product "product3" has following values:
+        And product product3 should have following prices information:
           | price           | 0            |
           | unit_price      | 0            |
         When I update product "product3" prices with following information:
           | unit_price      | 300          |
-        Then product "product3" has following values:
+        Then product product3 should have following prices information:
           | price           | 0            |
           | unit_price      | 0            |
 
@@ -115,20 +115,20 @@ Feature: Update product price fields from Back Office (BO).
         Given I add product "product4" with following information:
           | name       | en-US: blue dress  |
           | is_virtual | false              |
-        And product "product4" has following values:
+        And product product4 should have following prices information:
           | price            | 0            |
           | unit_price       | 0            |
         When I update product "product4" prices with following information:
           | price            | 20           |
           | unit_price       | 500          |
-        Then product "product4" should have following values:
+        Then product product4 should have following prices information:
           | price            | 20           |
           | unit_price       | 500          |
           | unit_price_ratio | 0.04         |
         When I update product "product4" prices with following information:
           | price            | 0            |
           | unit_price       | 500          |
-        Then product "product4" should have following values:
+        Then product product4 should have following prices information:
           | price            | 0            |
           | unit_price       | 0            |
           | unit_price_ratio | 0            |
@@ -137,7 +137,7 @@ Feature: Update product price fields from Back Office (BO).
         Given I add product "product5" with following information:
           | name       | en-US: black tie     |
           | is_virtual | false                |
-        And product "product4" has following values:
+        And product product5 should have following prices information:
           | tax rules group |           |
         When I update product "product5" prices and apply non-existing tax rules group
         Then I should get error that product "tax rules group" is invalid

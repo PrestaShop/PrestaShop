@@ -101,13 +101,12 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         ]);
 
         try {
-            $this->lastException = null;
             /** @var CurrencyId $currencyId */
             $currencyId = $this->getCommandBus()->handle($command);
 
             SharedStorage::getStorage()->set($reference, new Currency($currencyId->getValue()));
         } catch (CoreException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -160,12 +159,11 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         }
 
         try {
-            $this->lastException = null;
             $this->getCommandBus()->handle($command);
 
             SharedStorage::getStorage()->set($reference, new Currency($currency->id));
         } catch (CoreException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -178,10 +176,9 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         $currency = SharedStorage::getStorage()->get($reference);
 
         try {
-            $this->lastException = null;
             $this->getCommandBus()->handle(new ToggleCurrencyStatusCommand((int) $currency->id));
         } catch (CannotDisableDefaultCurrencyException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -194,10 +191,9 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         $currency = SharedStorage::getStorage()->get($reference);
 
         try {
-            $this->lastException = null;
             $this->getCommandBus()->handle(new DeleteCurrencyCommand((int) $currency->id));
         } catch (CannotDeleteDefaultCurrencyException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -207,10 +203,9 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     public function getCurrencyReferenceData($currencyIsoCode)
     {
         try {
-            $this->lastException = null;
             $this->currencyData = $this->getCommandBus()->handle(new GetReferenceCurrency($currencyIsoCode));
         } catch (CurrencyException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 

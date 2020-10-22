@@ -25,6 +25,9 @@
  */
 class SpecificPriceCore extends ObjectModel
 {
+    const ORDER_DEFAULT_FROM_QUANTITY = 1;
+    const ORDER_DEFAULT_DATE = '0000-00-00 00:00:00';
+
     public $id_product;
     public $id_specific_price_rule = 0;
     public $id_cart = 0;
@@ -188,14 +191,15 @@ class SpecificPriceCore extends ObjectModel
         return false;
     }
 
-    public static function getByProductId($id_product, $id_product_attribute = false, $id_cart = false)
+    public static function getByProductId($id_product, $id_product_attribute = false, $id_cart = false, $id_price_rule = null)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT *
 			FROM `' . _DB_PREFIX_ . 'specific_price`
 			WHERE `id_product` = ' . (int) $id_product .
             ($id_product_attribute ? ' AND id_product_attribute = ' . (int) $id_product_attribute : '') . '
-			AND id_cart = ' . (int) $id_cart);
+			AND id_cart = ' . (int) $id_cart .
+            ($id_price_rule !== null ? ' AND id_specific_price_rule = ' . (int) $id_price_rule : ''));
     }
 
     public static function deleteByIdCart($id_cart, $id_product = false, $id_product_attribute = false)
@@ -279,7 +283,7 @@ class SpecificPriceCore extends ObjectModel
         $key_cache = __FUNCTION__ . '-' . $field_name . '-' . $threshold;
         $specific_list = [];
         if (!array_key_exists($key_cache, self::$_filterOutCache)) {
-            $query_count = 'SELECT COUNT(DISTINCT `' . $name . '`) FROM `' . _DB_PREFIX_ . 'specific_price` WHERE `' . $name . '` != 0';
+            $query_count = 'SELECT COUNT(*) FROM (SELECT DISTINCT `' . $name . '` FROM `' . _DB_PREFIX_ . 'specific_price` WHERE `' . $name . '` != 0 GROUP BY id_product ) AS counted';
             $specific_count = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query_count);
             if ($specific_count == 0) {
                 self::$_no_specific_values[$field_name] = true;
@@ -767,12 +771,16 @@ class SpecificPriceCore extends ObjectModel
      * @param string $from Date from which the specific price start. 0000-00-00 00:00:00 if no starting date
      * @param string $to Date from which the specific price end. 0000-00-00 00:00:00 if no ending date
      * @param bool $rule if a specific price rule (from specific_price_rule) was set or not
+     * @param int|null $id_cart if a specific cart was set or not (default: null no additional check is performed)
      *
      * @return int The specific rule id, 0 if no corresponding rule found
      */
-    public static function exists($id_product, $id_product_attribute, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, $rule = false)
+    public static function exists($id_product, $id_product_attribute, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, $rule = false, $id_cart = null)
     {
         $rule = ' AND `id_specific_price_rule`' . (!$rule ? '=0' : '!=0');
+        if (null !== $id_cart) {
+            $rule .= ' AND id_cart = ' . (int) $id_cart;
+        }
 
         return (int) Db::getInstance()->getValue('SELECT `id_specific_price`
 												FROM ' . _DB_PREFIX_ . 'specific_price

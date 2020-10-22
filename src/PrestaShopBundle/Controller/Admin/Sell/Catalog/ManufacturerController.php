@@ -248,7 +248,7 @@ class ManufacturerController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
      *
-     * @param $manufacturerId
+     * @param int|string $manufacturerId
      *
      * @return RedirectResponse
      */
@@ -415,7 +415,7 @@ class ManufacturerController extends FrameworkBundleAdminController
         return (new CsvResponse())
             ->setData($data)
             ->setHeadersData($headers)
-            ->setFileName('manufacturer_' . date('Y-m-d_His') . '.csv')
+            ->setFileName('brands_' . date('Y-m-d_His') . '.csv')
             ;
     }
 
@@ -690,7 +690,7 @@ class ManufacturerController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error'
             ),
             InvalidAddressFieldException::class => $this->trans(
-                'Address contains invalid field values',
+                'Address fields contain invalid values.',
                 'Admin.Notifications.Error'
             ),
         ];

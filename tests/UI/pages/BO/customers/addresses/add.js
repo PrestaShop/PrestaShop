@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class AddAddress extends BOBasePage {
-  constructor(page) {
-    super(page);
+class AddAddress extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitleCreate = 'Addresses •';
     this.pageTitleEdit = 'Edit •';
@@ -32,28 +32,31 @@ module.exports = class AddAddress extends BOBasePage {
 
   /**
    * Fill form for add/edit address
+   * @param page
    * @param addressData
    * @returns {Promise<string>}
    */
-  async createEditAddress(addressData) {
-    if (await this.elementVisible(this.customerEmailInput, 2000)) {
-      await this.setValue(this.customerEmailInput, addressData.email);
+  async createEditAddress(page, addressData) {
+    if (await this.elementVisible(page, this.customerEmailInput, 2000)) {
+      await this.setValue(page, this.customerEmailInput, addressData.email);
     }
-    await this.setValue(this.customerAddressdniInput, addressData.dni);
-    await this.setValue(this.customerAddressAliasInput, addressData.alias);
-    await this.setValue(this.customerAddressFirstNameInput, addressData.firstName);
-    await this.setValue(this.customerLastNameInput, addressData.lastName);
-    await this.setValue(this.customerAddressCompanyInput, addressData.company);
-    await this.setValue(this.customerAddressVatNumberInput, addressData.vatNumber);
-    await this.setValue(this.customerAddressInput, addressData.address);
-    await this.setValue(this.customerSecondAddressInput, addressData.secondAddress);
-    await this.setValue(this.customerAddressPostCodeInput, addressData.postalCode);
-    await this.setValue(this.customerAddressCityInput, addressData.city);
-    await this.selectByVisibleText(this.customerAddressCountrySelect, addressData.country);
-    await this.setValue(this.customerAddressPhoneInput, addressData.phone);
-    await this.setValue(this.customerAddressOtherInput, addressData.other);
+    await this.setValue(page, this.customerAddressdniInput, addressData.dni);
+    await this.setValue(page, this.customerAddressAliasInput, addressData.alias);
+    await this.setValue(page, this.customerAddressFirstNameInput, addressData.firstName);
+    await this.setValue(page, this.customerLastNameInput, addressData.lastName);
+    await this.setValue(page, this.customerAddressCompanyInput, addressData.company);
+    await this.setValue(page, this.customerAddressVatNumberInput, addressData.vatNumber);
+    await this.setValue(page, this.customerAddressInput, addressData.address);
+    await this.setValue(page, this.customerSecondAddressInput, addressData.secondAddress);
+    await this.setValue(page, this.customerAddressPostCodeInput, addressData.postalCode);
+    await this.setValue(page, this.customerAddressCityInput, addressData.city);
+    await this.selectByVisibleText(page, this.customerAddressCountrySelect, addressData.country);
+    await this.setValue(page, this.customerAddressPhoneInput, addressData.phone);
+    await this.setValue(page, this.customerAddressOtherInput, addressData.other);
     // Save address
-    await this.clickAndWaitForNavigation(this.saveAddressButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.clickAndWaitForNavigation(page, this.saveAddressButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
-};
+}
+
+module.exports = new AddAddress();

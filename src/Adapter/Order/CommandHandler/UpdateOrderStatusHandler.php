@@ -48,7 +48,7 @@ final class UpdateOrderStatusHandler extends AbstractOrderHandler implements Upd
      */
     public function handle(UpdateOrderStatusCommand $command)
     {
-        $order = $this->getOrderObject($command->getOrderId());
+        $order = $this->getOrder($command->getOrderId());
         $orderState = $this->getOrderStateObject($command->getNewOrderStatusId());
 
         $currentOrderState = $order->getCurrentOrderState();

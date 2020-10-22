@@ -7,9 +7,8 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Importing pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const GeneralPage = require('@pages/BO/shopParameters/general');
+const dashboardPage = require('@pages/BO/dashboard');
+const generalPage = require('@pages/BO/shopParameters/general');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -19,43 +18,34 @@ const baseContext = 'functional_BO_shopParameters_general_general_enableDisableM
 let browserContext;
 let page;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    generalPage: new GeneralPage(page),
-  };
-};
-
 describe('Enable/Disable multi store', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to general page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to \'Shop parameters > General\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToGeneralPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.shopParametersParentLink,
-      this.pageObjects.dashboardPage.shopParametersGeneralLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.shopParametersParentLink,
+      dashboardPage.shopParametersGeneralLink,
     );
 
-    await this.pageObjects.generalPage.closeSfToolBar();
+    await generalPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.generalPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.generalPage.pageTitle);
+    const pageTitle = await generalPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(generalPage.pageTitle);
   });
 
   const tests = [
@@ -67,16 +57,17 @@ describe('Enable/Disable multi store', async () => {
     it(`should ${test.args.action} multi store`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}MultiStore`, baseContext);
 
-      const result = await this.pageObjects.generalPage.setMultiStoreStatus(test.args.exist);
-      await expect(result).to.contains(this.pageObjects.generalPage.successfulUpdateMessage);
+      const result = await generalPage.setMultiStoreStatus(page, test.args.exist);
+      await expect(result).to.contains(generalPage.successfulUpdateMessage);
     });
 
     it('should check the existence of \'Advanced Parameters > Multistore\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToMultiStorePage_${index}`, baseContext);
 
-      const result = await this.pageObjects.generalPage.isSubmenuVisible(
-        this.pageObjects.generalPage.advancedParametersLink,
-        this.pageObjects.generalPage.multistoreLink,
+      const result = await generalPage.isSubmenuVisible(
+        page,
+        generalPage.advancedParametersLink,
+        generalPage.multistoreLink,
       );
 
       await expect(result).to.be.equal(test.args.exist);

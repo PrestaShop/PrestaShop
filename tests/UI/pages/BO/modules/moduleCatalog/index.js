@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class moduleCatalog extends BOBasePage {
-  constructor(page) {
-    super(page);
+class ModuleCatalog extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Module Catalog •';
     this.installMessageSuccessful = moduleTag => `Install action on module ${moduleTag} succeeded.`;
@@ -21,23 +21,27 @@ module.exports = class moduleCatalog extends BOBasePage {
 
   /**
    * Search Module in Page module Catalog
+   * @param page
    * @param moduleTag, Tag of Module
    * @param moduleName, Name of module
    * @return {Promise<void>}
    */
-  async searchModule(moduleTag, moduleName) {
-    await this.page.type(this.searchModuleTagInput, moduleTag);
-    await this.page.click(this.searchModuleButton);
-    await this.waitForVisibleSelector(this.moduleBloc(moduleName));
+  async searchModule(page, moduleTag, moduleName) {
+    await page.type(this.searchModuleTagInput, moduleTag);
+    await page.click(this.searchModuleButton);
+    await this.waitForVisibleSelector(page, this.moduleBloc(moduleName));
   }
 
   /**
    * Install Module and waiting for Successful massage
+   * @param page
    * @param moduleName, Name of module
    * @returns {Promise<string>}
    */
-  async installModule(moduleName) {
-    await this.page.click(this.installModuleButton(moduleName));
-    return this.getTextContent(this.growlMessageBlock);
+  async installModule(page, moduleName) {
+    await page.click(this.installModuleButton(moduleName));
+    return this.getTextContent(page, this.growlMessageBlock);
   }
-};
+}
+
+module.exports = new ModuleCatalog();

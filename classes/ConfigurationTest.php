@@ -251,6 +251,7 @@ class ConfigurationTestCore
         $dir = rtrim(_PS_ROOT_DIR_, '\\/') . DIRECTORY_SEPARATOR . trim($relative_dir, '\\/');
         if (!file_exists($dir) || !$dh = @opendir($dir)) {
             $full_report = sprintf('Directory %s does not exist or is not writable', $dir); // sprintf for future translation
+
             return false;
         }
         closedir($dh);
@@ -262,6 +263,7 @@ class ConfigurationTestCore
             }
         } elseif (!is_writable($dir)) {
             $full_report = sprintf('Directory %s is not writable', $dir); // sprintf for future translation
+
             return false;
         }
 

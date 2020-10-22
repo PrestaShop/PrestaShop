@@ -119,7 +119,7 @@ class FrontControllerCore extends Controller
     /** @var bool If true, forces display to maintenance page. */
     protected $maintenance = false;
 
-    /** @var string[] Adds excluded $_GET keys for redirection */
+    /** @var string[] Adds excluded `$_GET` keys for redirection */
     protected $redirectionExtraExcludedKeys = [];
 
     /**
@@ -256,6 +256,13 @@ class FrontControllerCore extends Controller
      */
     public function init()
     {
+        Hook::exec(
+            'actionFrontControllerInitBefore',
+            [
+                'controller' => $this,
+            ]
+        );
+
         /*
          * Globals are DEPRECATED as of version 1.5.0.1
          * Use the Context object to access objects instead.
@@ -469,7 +476,12 @@ class FrontControllerCore extends Controller
         $this->context->cart = $cart;
         $this->context->currency = $currency;
 
-        Hook::exec('actionFrontControllerAfterInit');
+        Hook::exec(
+            'actionFrontControllerInitAfter',
+            [
+                'controller' => $this,
+            ]
+        );
     }
 
     /**
@@ -499,6 +511,7 @@ class FrontControllerCore extends Controller
             'time' => time(),
             'static_token' => Tools::getToken(false),
             'token' => Tools::getToken(),
+            'debug' => _PS_MODE_DEV_,
         ];
 
         $modulesVariables = Hook::exec(
@@ -797,29 +810,7 @@ class FrontControllerCore extends Controller
 
         $match_url = rawurldecode(Tools::getCurrentUrlProtocolPrefix() . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
         if (!preg_match('/^' . Tools::pRegexp(rawurldecode($canonical_url), '/') . '([&?].*)?$/', $match_url)) {
-            $params = [];
-            $url_details = parse_url($canonical_url);
-
-            if (!empty($url_details['query'])) {
-                parse_str($url_details['query'], $query);
-                foreach ($query as $key => $value) {
-                    $params[Tools::safeOutput($key)] = Tools::safeOutput($value);
-                }
-            }
-            $excluded_key = ['isolang', 'id_lang', 'controller', 'fc', 'id_product', 'id_category', 'id_manufacturer', 'id_supplier', 'id_cms'];
-            $excluded_key = array_merge($excluded_key, $this->redirectionExtraExcludedKeys);
-            foreach ($_GET as $key => $value) {
-                if (!in_array($key, $excluded_key) && Validate::isUrl($key) && Validate::isUrl($value)) {
-                    $params[Tools::safeOutput($key)] = Tools::safeOutput($value);
-                }
-            }
-
-            $str_params = http_build_query($params, '', '&');
-            if (!empty($str_params)) {
-                $final_url = preg_replace('/^([^?]*)?.*$/', '$1', $canonical_url) . '?' . $str_params;
-            } else {
-                $final_url = preg_replace('/^([^?]*)?.*$/', '$1', $canonical_url);
-            }
+            $final_url = $this->sanitizeUrl($canonical_url);
 
             // Don't send any cookie
             Context::getContext()->cookie->disallowWriting();
@@ -1984,9 +1975,67 @@ class FrontControllerCore extends Controller
         }
 
         foreach ($languages as $lang) {
-            $alternativeLangs[$lang['language_code']] = $this->context->link->getLanguageLink($lang['id_lang']);
+            $langUrl = $this->context->link->getLanguageLink($lang['id_lang']);
+            $alternativeLangs[$lang['language_code']] = $this->sanitizeUrl($langUrl);
         }
 
         return $alternativeLangs;
+    }
+
+    /**
+     * Sanitize / Clean params of an URL
+     *
+     * @param string $url URL to clean
+     *
+     * @return string cleaned URL
+     */
+    protected function sanitizeUrl(string $url): string
+    {
+        $params = [];
+        $url_details = parse_url($url);
+
+        if (!empty($url_details['query'])) {
+            parse_str($url_details['query'], $query);
+            foreach ($query as $key => $value) {
+                $params[Tools::safeOutput($key)] = Tools::safeOutput($value);
+            }
+        }
+
+        $excluded_key = ['isolang', 'id_lang', 'controller', 'fc', 'id_product', 'id_category', 'id_manufacturer', 'id_supplier', 'id_cms'];
+        $excluded_key = array_merge($excluded_key, $this->redirectionExtraExcludedKeys);
+        foreach ($_GET as $key => $value) {
+            if (in_array($key, $excluded_key)
+                || !Validate::isUrl($key)
+                || !$this->validateInputAsUrl($value)
+            ) {
+                continue;
+            }
+
+            $params[Tools::safeOutput($key)] = is_array($value) ? array_walk_recursive($value, 'Tools::safeOutput') : Tools::safeOutput($value);
+        }
+
+        $str_params = http_build_query($params, '', '&');
+        $sanitizedUrl = preg_replace('/^([^?]*)?.*$/', '$1', $url) . (!empty($str_params) ? '?' . $str_params : '');
+
+        return $sanitizedUrl;
+    }
+
+    /**
+     * Validate data recursively to be sure it's URL compliant
+     *
+     * @return bool
+     */
+    protected function validateInputAsUrl($data): bool
+    {
+        if (is_array($data)) {
+            $returnStatement = true;
+            foreach ($data as $value) {
+                $returnStatement = $returnStatement && $this->validateInputAsUrl($value);
+            }
+
+            return $returnStatement;
+        }
+
+        return Validate::isUrl($data);
     }
 }

@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class Import extends BOBasePage {
-  constructor(page) {
-    super(page);
+class Import extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Import • ';
 
@@ -17,14 +17,16 @@ module.exports = class Import extends BOBasePage {
 
   /**
    * Click on simple file link to download it
+   * @param page
    * @param type
    * @return {Promise<void>}
    */
-  async downloadSampleFile(type) {
+  async downloadSampleFile(page, type) {
     const [download] = await Promise.all([
-      this.page.waitForEvent('download'),
-      await this.page.click(this.downloadSampleFileLink(type)),
+      page.waitForEvent('download'),
+      await page.click(this.downloadSampleFileLink(type)),
     ]);
     return download.path();
   }
-};
+}
+module.exports = new Import();

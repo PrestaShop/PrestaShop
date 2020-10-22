@@ -10,10 +10,9 @@ const loginCommon = require('@commonTests/loginBO');
 const BrandAddressFaker = require('@data/faker/brandAddress');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const BrandsPage = require('@pages/BO/catalog/brands');
-const AddBrandAddressPage = require('@pages/BO/catalog/brands/addresses/add');
+const dashboardPage = require('@pages/BO/dashboard');
+const brandsPage = require('@pages/BO/catalog/brands');
+const addBrandAddressPage = require('@pages/BO/catalog/brands/addresses/add');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -27,15 +26,6 @@ let numberOfBrandAddresses = 0;
 const firstAddressData = new BrandAddressFaker({firstName: 'AddressToDelete'});
 const secondAddressData = new BrandAddressFaker({firstName: 'AddressToDeleteTwo'});
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    brandsPage: new BrandsPage(page),
-    addBrandAddressPage: new AddBrandAddressPage(page),
-  };
-};
 
 // Create 2 brands, Enable, disable and delete with bulk actions
 describe('Create 2 brand Addresses and delete with bulk actions', async () => {
@@ -43,36 +33,36 @@ describe('Create 2 brand Addresses and delete with bulk actions', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to brands page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   // GO to Brands Page
   it('should go to brands page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.catalogParentLink,
-      this.pageObjects.dashboardPage.brandsAndSuppliersLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.catalogParentLink,
+      dashboardPage.brandsAndSuppliersLink,
     );
 
-    await this.pageObjects.brandsPage.closeSfToolBar();
+    await brandsPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.brandsPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.brandsPage.pageTitle);
+    const pageTitle = await brandsPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(brandsPage.pageTitle);
   });
 
   it('should reset all Addresses filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfBrandAddresses = await this.pageObjects.brandsPage.resetAndGetNumberOfLines('manufacturer_address');
+    numberOfBrandAddresses = await brandsPage.resetAndGetNumberOfLines(page, 'manufacturer_address');
     await expect(numberOfBrandAddresses).to.be.above(0);
   });
 
@@ -84,18 +74,19 @@ describe('Create 2 brand Addresses and delete with bulk actions', async () => {
       it('should go to new brand Address page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddAddressPage${index + 1}`, baseContext);
 
-        await this.pageObjects.brandsPage.goToAddNewBrandAddressPage();
-        const pageTitle = await this.pageObjects.addBrandAddressPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.addBrandAddressPage.pageTitle);
+        await brandsPage.goToAddNewBrandAddressPage(page);
+        const pageTitle = await addBrandAddressPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(addBrandAddressPage.pageTitle);
       });
 
       it('should create new brand Address', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createAddress${index + 1}`, baseContext);
 
-        const result = await this.pageObjects.addBrandAddressPage.createEditBrandAddress(addressToCreate);
-        await expect(result).to.equal(this.pageObjects.brandsPage.successfulCreationMessage);
+        const result = await addBrandAddressPage.createEditBrandAddress(page, addressToCreate);
+        await expect(result).to.equal(brandsPage.successfulCreationMessage);
 
-        const numberOfBrandAddressesAfterCreation = await this.pageObjects.brandsPage.getNumberOfElementInGrid(
+        const numberOfBrandAddressesAfterCreation = await brandsPage.getNumberOfElementInGrid(
+          page,
           'manufacturer_address',
         );
 
@@ -109,16 +100,17 @@ describe('Create 2 brand Addresses and delete with bulk actions', async () => {
     it('should filter Addresses list by firstName', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
-      await this.pageObjects.brandsPage.filterAddresses('input', 'firstname', 'AddressToDelete');
+      await brandsPage.filterAddresses(page, 'input', 'firstname', 'AddressToDelete');
 
-      const numberOfBrandAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid(
+      const numberOfBrandAddressesAfterFilter = await brandsPage.getNumberOfElementInGrid(
+        page,
         'manufacturer_address',
       );
 
       await expect(numberOfBrandAddressesAfterFilter).to.be.at.most(numberOfBrandAddresses);
 
       for (let i = 1; i <= numberOfBrandAddressesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableAddresses(i, 'firstname');
+        const textColumn = await brandsPage.getTextColumnFromTableAddresses(page, i, 'firstname');
         await expect(textColumn).to.contains('AddressToDelete');
       }
     });
@@ -126,14 +118,15 @@ describe('Create 2 brand Addresses and delete with bulk actions', async () => {
     it('should delete Addresses with Bulk Actions and check Result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteAddresses', baseContext);
 
-      const deleteTextResult = await this.pageObjects.brandsPage.deleteWithBulkActions('manufacturer_address');
-      await expect(deleteTextResult).to.be.equal(this.pageObjects.brandsPage.successfulDeleteMessage);
+      const deleteTextResult = await brandsPage.deleteWithBulkActions(page, 'manufacturer_address');
+      await expect(deleteTextResult).to.be.equal(brandsPage.successfulDeleteMessage);
     });
 
     it('should reset Addresses filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
-      const numberOfBrandAddressesAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines(
+      const numberOfBrandAddressesAfterReset = await brandsPage.resetAndGetNumberOfLines(
+        page,
         'manufacturer_address',
       );
 

@@ -32,13 +32,13 @@ use PrestaShop\PrestaShop\Core\Crypto\Hashing;
  */
 class EmployeeCore extends ObjectModel
 {
-    /** @var int $id Employee ID */
+    /** @var int Employee ID */
     public $id;
 
-    /** @var string Determine employee profile */
+    /** @var int Employee profile */
     public $id_profile;
 
-    /** @var string employee language */
+    /** @var int Employee language */
     public $id_lang;
 
     /** @var string Lastname */
@@ -53,7 +53,7 @@ class EmployeeCore extends ObjectModel
     /** @var string Password */
     public $passwd;
 
-    /** @var datetime Password */
+    /** @var string Password */
     public $last_passwd_gen;
 
     public $stats_date_from;
@@ -79,7 +79,7 @@ class EmployeeCore extends ObjectModel
     /** @var int employee desired screen width */
     public $bo_width;
 
-    /** @var bool, false */
+    /** @var bool */
     public $bo_menu = 1;
 
     /* Deprecated */
@@ -100,6 +100,11 @@ class EmployeeCore extends ObjectModel
 
     /** @var string token validity date for forgot password feature */
     public $reset_password_validity;
+
+    /**
+     * @var bool
+     */
+    public $has_enabled_gravatar = false;
 
     /**
      * @see ObjectModel::$definition
@@ -133,6 +138,7 @@ class EmployeeCore extends ObjectModel
             'id_last_customer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
             'reset_password_token' => ['type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 40, 'copy_post' => false],
             'reset_password_validity' => ['type' => self::TYPE_DATE, 'validate' => 'isDateOrNull', 'copy_post' => false],
+            'has_enabled_gravatar' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
         ],
     ];
 
@@ -456,8 +462,16 @@ class EmployeeCore extends ObjectModel
         if (!Cache::isStored('isLoggedBack' . $this->id)) {
             /* Employee is valid only if it can be load and if cookie password is the same as database one */
             $result = (
-                $this->id && Validate::isUnsignedId($this->id) && Context::getContext()->cookie && Employee::checkPassword($this->id, Context::getContext()->cookie->passwd)
-                    && (!isset(Context::getContext()->cookie->remote_addr) || Context::getContext()->cookie->remote_addr == ip2long(Tools::getRemoteAddr()) || !Configuration::get('PS_COOKIE_CHECKIP'))
+                $this->id
+                && Validate::isUnsignedId($this->id)
+                && Context::getContext()->cookie
+                && Context::getContext()->cookie->isSessionAlive()
+                && Employee::checkPassword($this->id, Context::getContext()->cookie->passwd)
+                && (
+                    !isset(Context::getContext()->cookie->remote_addr)
+                    || Context::getContext()->cookie->remote_addr == ip2long(Tools::getRemoteAddr())
+                    || !Configuration::get('PS_COOKIE_CHECKIP')
+                )
             );
             Cache::store('isLoggedBack' . $this->id, $result);
 
@@ -476,6 +490,7 @@ class EmployeeCore extends ObjectModel
             Context::getContext()->cookie->logout();
             Context::getContext()->cookie->write();
         }
+
         $this->id = null;
     }
 
@@ -584,7 +599,35 @@ class EmployeeCore extends ObjectModel
      */
     public function getImage()
     {
-        return Tools::getAdminImageUrl('prestashop-avatar.png');
+        $default = Tools::getAdminImageUrl('prestashop-avatar.png');
+        $imageUrl = '';
+
+        // Local Image
+        $imagePath = $this->image_dir . $this->id . '.jpg';
+        if (file_exists($imagePath)) {
+            $imageUrl = Context::getContext()->link->getMediaLink(
+                str_replace($this->image_dir, _THEME_EMPLOYEE_DIR_, $imagePath)
+            );
+        }
+
+        // Default Image
+        $imageUrl = $imageUrl ?? $default;
+
+        // Gravatar
+        if ($this->has_enabled_gravatar) {
+            $imageUrl = 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($this->email))) . '?d=' . urlencode($default);
+        }
+
+        // Hooks
+        Hook::exec(
+            'actionOverrideEmployeeImage',
+            [
+                'employee' => $this,
+                'imageUrl' => &$imageUrl,
+            ]
+        );
+
+        return $imageUrl;
     }
 
     /**
@@ -692,7 +735,7 @@ class EmployeeCore extends ObjectModel
     {
         $access = Profile::getProfileAccess($this->id_profile, Tab::getIdFromClassName($tab));
 
-        return $access[$action] == '1';
+        return is_array($access) && $access[$action] == '1';
     }
 
     /**

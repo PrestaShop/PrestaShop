@@ -10,9 +10,8 @@ const loginCommon = require('@commonTests/loginBO');
 const {Products} = require('@data/demo/products');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const StocksPage = require('@pages/BO/catalog/stocks');
+const dashboardPage = require('@pages/BO/dashboard');
+const stocksPage = require('@pages/BO/catalog/stocks');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -26,15 +25,6 @@ let page;
 let numberOfProducts = 0;
 const stocks = {};
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    stocksPage: new StocksPage(page),
-  };
-};
-
 /*
 Filter by Products demo_8
 Add and subtract quantity for all products in list and check result
@@ -44,35 +34,35 @@ describe('Bulk Edit Quantity', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to stocks page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to "Catalog>Stocks" page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.catalogParentLink,
-      this.pageObjects.dashboardPage.stocksLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.catalogParentLink,
+      dashboardPage.stocksLink,
     );
 
-    await this.pageObjects.stocksPage.closeSfToolBar();
+    await stocksPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.stocksPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.stocksPage.pageTitle);
+    const pageTitle = await stocksPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(stocksPage.pageTitle);
   });
 
   it('should get number of products in list', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProducts', baseContext);
 
-    numberOfProducts = await this.pageObjects.stocksPage.getTotalNumberOfProducts();
+    numberOfProducts = await stocksPage.getTotalNumberOfProducts(page);
     await expect(numberOfProducts).to.be.above(0);
   });
 
@@ -80,19 +70,19 @@ describe('Bulk Edit Quantity', async () => {
     it(`should filter by name '${Products.demo_8.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdateQuantities', baseContext);
 
-      await this.pageObjects.stocksPage.simpleFilter(Products.demo_8.name);
+      await stocksPage.simpleFilter(page, Products.demo_8.name);
 
-      const numberOfProductsAfterFilter = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
+      const numberOfProductsAfterFilter = await stocksPage.getNumberOfProductsFromList(page);
       await expect(numberOfProductsAfterFilter).to.be.at.most(numberOfProducts);
 
       for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
-        const textColumn = await this.pageObjects.stocksPage.getTextColumnFromTableStocks(i, 'name');
+        const textColumn = await stocksPage.getTextColumnFromTableStocks(page, i, 'name');
         await expect(textColumn).to.contains(Products.demo_8.name);
 
         // Get physical and available quantities of product
         stocks[`product${i}`] = {
-          physical: await this.pageObjects.stocksPage.getTextColumnFromTableStocks(i, 'physical'),
-          available: await this.pageObjects.stocksPage.getTextColumnFromTableStocks(i, 'available'),
+          physical: await stocksPage.getTextColumnFromTableStocks(page, i, 'physical'),
+          available: await stocksPage.getTextColumnFromTableStocks(page, i, 'available'),
         };
 
         await expect(stocks[`product${i}`].physical).to.be.above(0);
@@ -110,14 +100,14 @@ describe('Bulk Edit Quantity', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}ToQuantities`, baseContext);
 
         // Update quantity and check successful message
-        const updateMessage = await this.pageObjects.stocksPage.bulkEditQuantityWithInput(test.args.updateValue);
-        await expect(updateMessage).to.contains(this.pageObjects.stocksPage.successfulUpdateMessage);
+        const updateMessage = await stocksPage.bulkEditQuantityWithInput(page, test.args.updateValue);
+        await expect(updateMessage).to.contains(stocksPage.successfulUpdateMessage);
 
-        const numberOfProductsInList = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
+        const numberOfProductsInList = await stocksPage.getNumberOfProductsFromList(page);
 
         // Check physical and available quantities of product after update
         for (let i = 1; i <= numberOfProductsInList; i++) {
-          const quantityToCheck = await this.pageObjects.stocksPage.getStockQuantityForProduct(i);
+          const quantityToCheck = await stocksPage.getStockQuantityForProduct(page, i);
 
           await expect(quantityToCheck.physical).to.be.equal(stocks[`product${i}`].physical + test.args.updateValue);
           stocks[`product${i}`].physical = quantityToCheck.physical;
@@ -131,7 +121,7 @@ describe('Bulk Edit Quantity', async () => {
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterEditQuantities', baseContext);
 
-      const numberOfProductsAfterReset = await this.pageObjects.stocksPage.resetFilter();
+      const numberOfProductsAfterReset = await stocksPage.resetFilter(page);
       await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
     });
   });

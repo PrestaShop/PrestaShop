@@ -1,27 +1,3 @@
-/**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- */
 require('module-alias/register');
 const {DefaultAccount} = require('@data/demo/customer');
 
@@ -36,7 +12,7 @@ const loginBO = async function (page) {
 
   await Promise.all([
     page.click('#submit_login'),
-    page.waitForNavigation({waitUntil: 'load'}),
+    page.waitForNavigation({waitUntil: 'networkidle'}),
   ]);
 
   const block = await page.$('button.onboarding-button-shut-down');
@@ -59,7 +35,7 @@ const loginFO = async function (page) {
 
   await Promise.all([
     page.click('#submit-login'),
-    page.waitForNavigation('load'),
+    page.waitForNavigation('networkidle'),
   ]);
 };
 
@@ -157,13 +133,13 @@ module.exports = [
       {name: 'BO_module_manager', url: 'index.php/improve/modules/manage'},
       {name: 'BO_module_manager_alerts', url: 'index.php/improve/modules/alerts'},
       {name: 'BO_module_manager_updates', url: 'index.php/improve/modules/updates'},
-      {name: 'BO_module_catalog', url: 'index.php?controller=AdminPsMboModule'},
+      {name: 'BO_module_catalog', url: 'index.php/modules/addons/modules/catalog'},
       {name: 'BO_module_catalog_selection', url: 'index.php/improve/modules/addons-store'},
       {name: 'BO_theme_logo', url: 'index.php/improve/design/themes/'},
       {name: 'BO_add_theme', url: 'index.php/improve/design/themes/import'},
       {name: 'BO_homepage_configuration', url: 'index.php?controller=AdminPsThemeCustoConfiguration'},
       {name: 'BO_advanced_customization', url: 'index.php?controller=AdminPsThemeCustoAdvanced'},
-      {name: 'BO_theme_catalog', url: 'index.php?controller=AdminPsMboTheme'},
+      {name: 'BO_theme_catalog', url: 'index.php/modules/addons/themes/catalog'},
       {name: 'BO_email_theme', url: 'index.php/improve/design/mail_theme/'},
       {name: 'BO_pages', url: 'index.php/improve/design/cms-pages/'},
       {name: 'BO_add_page_category', url: 'index.php/improve/design/cms-pages/category/new'},

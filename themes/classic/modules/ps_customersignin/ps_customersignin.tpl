@@ -27,7 +27,7 @@
     {if $logged}
       <a
         class="logout hidden-sm-down"
-        href="{$logout_url}"
+        href="{$urls.actions.logout}"
         rel="nofollow"
       >
         <i class="material-icons">&#xE7FF;</i>
@@ -35,7 +35,7 @@
       </a>
       <a
         class="account"
-        href="{$my_account_url}"
+        href="{$urls.pages.my_account}"
         title="{l s='View my customer account' d='Shop.Theme.Customeraccount'}"
         rel="nofollow"
       >
@@ -44,7 +44,7 @@
       </a>
     {else}
       <a
-        href="{$my_account_url}"
+        href="{$urls.pages.my_account}"
         title="{l s='Log in to your customer account' d='Shop.Theme.Customeraccount'}"
         rel="nofollow"
       >

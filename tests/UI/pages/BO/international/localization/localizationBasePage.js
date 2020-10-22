@@ -2,8 +2,8 @@ require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
 module.exports = class LocalizationBasePage extends BOBasePage {
-  constructor(page) {
-    super(page);
+  constructor() {
+    super();
 
     this.localizationNavItemLink = '#subtab-AdminLocalization';
     this.languagesNavItemLink = '#subtab-AdminLanguages';
@@ -13,17 +13,19 @@ module.exports = class LocalizationBasePage extends BOBasePage {
   /* Header Methods */
   /**
    * Go to languages page
+   * @param page
    * @return {Promise<void>}
    */
-  async goToSubTabLanguages() {
-    await this.clickAndWaitForNavigation(this.languagesNavItemLink);
+  async goToSubTabLanguages(page) {
+    await this.clickAndWaitForNavigation(page, this.languagesNavItemLink);
   }
 
   /**
    * Go to currencies page
+   * @param page
    * @return {Promise<void>}
    */
-  async goToSubTabCurrencies() {
-    await this.clickAndWaitForNavigation(this.currenciesNavItemLink);
+  async goToSubTabCurrencies(page) {
+    await this.clickAndWaitForNavigation(page, this.currenciesNavItemLink);
   }
 };

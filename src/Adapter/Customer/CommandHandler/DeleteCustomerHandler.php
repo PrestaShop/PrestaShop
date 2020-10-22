@@ -55,7 +55,7 @@ final class DeleteCustomerHandler extends AbstractCustomerHandler implements Del
 
         // soft delete customer
         // in order to forbid signing in again
-        $customer->deleted = 1;
+        $customer->deleted = true;
         $customer->update();
     }
 }

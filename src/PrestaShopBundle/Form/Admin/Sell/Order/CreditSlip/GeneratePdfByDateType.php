@@ -26,30 +26,21 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip;
 
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Valid;
 
 /**
+ * Backwards compatibility break introduced in 1.7.8.0 due to extension of TranslationAwareType instead of using translator as dependency.
+ *
  * Defines form for generating Credit slip PDF
  */
-final class GeneratePdfByDateType extends CommonAbstractType
+final class GeneratePdfByDateType extends TranslatorAwareType
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -58,11 +49,14 @@ final class GeneratePdfByDateType extends CommonAbstractType
         $dateFormat = 'Y-m-d';
         $nowDate = (new \DateTime())->format($dateFormat);
 
-        $blankMessage = $this->translator->trans('This field is required', [], 'Admin.Notifications.Error');
-        $invalidDateMessage = $this->translator->trans('Invalid date format.', [], 'Admin.Notifications.Error');
+        $blankMessage = $this->trans('This field is required', 'Admin.Notifications.Error');
+        $invalidDateMessage = $this->trans('Invalid date format.', 'Admin.Notifications.Error');
+        $dateHintTrans = $this->trans('Format: 2011-12-31 (inclusive).', 'Admin.Global');
 
         $builder
             ->add('from', DatePickerType::class, [
+                'label' => $this->trans('From', 'Admin.Global'),
+                'help' => $dateHintTrans,
                 'data' => $nowDate,
                 'constraints' => [
                     new NotBlank([
@@ -75,6 +69,8 @@ final class GeneratePdfByDateType extends CommonAbstractType
                 ],
             ])
             ->add('to', DatePickerType::class, [
+                'label' => $this->trans('To', 'Admin.Global'),
+                'help' => $dateHintTrans,
                 'data' => $nowDate,
                 'constraints' => [
                     new NotBlank([

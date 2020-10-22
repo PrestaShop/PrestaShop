@@ -10,9 +10,8 @@ const loginCommon = require('@commonTests/loginBO');
 const {Products} = require('@data/demo/products');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const ProductsPage = require('@pages/BO/catalog/products/index');
+const dashboardPage = require('@pages/BO/dashboard');
+const productsPage = require('@pages/BO/catalog/products/index');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -25,49 +24,42 @@ let page;
 let numberOfProducts = 0;
 let filterValue = '';
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    productsPage: new ProductsPage(page),
-  };
-};
-
 // Filter Products
 describe('Filter Products', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to products page
-  loginCommon.loginBO();
+
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to "Catalog>products" page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.catalogParentLink,
-      this.pageObjects.dashboardPage.productsLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.catalogParentLink,
+      dashboardPage.productsLink,
     );
 
-    await this.pageObjects.productsPage.closeSfToolBar();
+    await productsPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.productsPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
+    const pageTitle = await productsPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(productsPage.pageTitle);
   });
 
   it('should reset all filters and get number of products', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
-    numberOfProducts = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
+
+    numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
     await expect(numberOfProducts).to.be.above(0);
   });
 
@@ -146,17 +138,18 @@ describe('Filter Products', async () => {
       it(`should filter by ${test.args.filterBy} ${filterValue}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        await this.pageObjects.productsPage.filterProducts(
+        await productsPage.filterProducts(
+          page,
           test.args.filterBy,
           test.args.filterValue,
           test.args.filterType,
         );
 
-        const numberOfProductsAfterFilter = await this.pageObjects.productsPage.getNumberOfProductsFromList();
+        const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
         await expect(numberOfProductsAfterFilter).to.within(0, numberOfProducts);
 
         for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
-          const textColumn = await this.pageObjects.productsPage.getTextColumn(test.args.filterBy, i);
+          const textColumn = await productsPage.getTextColumn(page, test.args.filterBy, i);
 
           if (test.expected !== undefined) {
             await expect(textColumn).to.equal(test.expected);
@@ -171,7 +164,7 @@ describe('Filter Products', async () => {
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfProductsAfterReset = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
+        const numberOfProductsAfterReset = await productsPage.resetAndGetNumberOfLines(page);
         await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
       });
     });
@@ -182,13 +175,13 @@ describe('Filter Products', async () => {
     it('should filter by Name \'Hummingbird printed sweater\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
-      await this.pageObjects.productsPage.filterProducts('name', Products.demo_3.name);
+      await productsPage.filterProducts(page, 'name', Products.demo_3.name);
 
-      const numberOfProductsAfterFilter = await this.pageObjects.productsPage.getNumberOfProductsFromList();
+      const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
       await expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
 
       for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
-        const textColumn = await this.pageObjects.productsPage.getProductNameFromList(i);
+        const textColumn = await productsPage.getProductNameFromList(page, i);
         await expect(textColumn).to.contains(Products.demo_3.name);
       }
     });
@@ -202,24 +195,26 @@ describe('Filter Products', async () => {
       it(`should ${productStatus.args.status} the product`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${productStatus.args.status}Product`, baseContext);
 
-        const isActionPerformed = await this.pageObjects.productsPage.updateToggleColumnValue(
+        const isActionPerformed = await productsPage.updateToggleColumnValue(
+          page,
           1,
           productStatus.args.enable,
         );
 
         if (isActionPerformed) {
-          const resultMessage = await this.pageObjects.productsPage.getTextContent(
-            this.pageObjects.productsPage.alertSuccessBlockParagraph,
+          const resultMessage = await productsPage.getTextContent(
+            page,
+            productsPage.alertSuccessBlockParagraph,
           );
 
           if (productStatus.args.enable) {
-            await expect(resultMessage).to.contains(this.pageObjects.productsPage.productActivatedSuccessfulMessage);
+            await expect(resultMessage).to.contains(productsPage.productActivatedSuccessfulMessage);
           } else {
-            await expect(resultMessage).to.contains(this.pageObjects.productsPage.productDeactivatedSuccessfulMessage);
+            await expect(resultMessage).to.contains(productsPage.productDeactivatedSuccessfulMessage);
           }
         }
 
-        const currentStatus = await this.pageObjects.productsPage.getToggleColumnValue(1);
+        const currentStatus = await productsPage.getToggleColumnValue(page, 1);
         await expect(currentStatus).to.be.equal(productStatus.args.enable);
       });
     });

@@ -305,3 +305,53 @@
     {{ self.form_group_row(form.shop_restriction_switch, vars, extraVars) }}
   {% endif %}
 {% endmacro %}
+
+{% macro language_dependant_select(form, vars, extraVars) %}
+  {% import '@PrestaShop/Admin/macros.html.twig' as self %}
+
+  {% set class = extraVars.class|default('') %}
+  {% set inputType = form.vars.block_prefixes.1|default('text') %}
+  {% set rowAttributes = extraVars.row_attr|default({}) %}
+  {% set attr = form.vars.attr %}
+  {% set attr = attr|merge({class: (attr.class|default('') ~ ' language_dependant_select')|trim}) %}
+  <div class="form-group row type-{{ inputType }} {{ class }}" {% for key, rowAttr in rowAttributes %} {{ key }}="{{ rowAttr }}"{% endfor %}>
+  {% set extraVars = extraVars|default({}) %}
+
+  {# renders label above the form field if set to true #}
+  {% set labelOnTop = false %}
+
+  {% if extraVars.label_on_top is defined %}
+    {% set labelOnTop = extraVars.label_on_top %}
+  {% endif %}
+
+  {% if extraVars.label is defined %}
+    {% set isRequired = form.vars.required|default(false) %}
+
+    {% if extraVars.required is defined %}
+      {% set isRequired = extraVars.required %}
+    {% endif %}
+
+    <label for="{{ form.vars.id }}" class="form-control-label {{ labelOnTop ? 'label-on-top col-12' : '' }}">
+      {% if isRequired %}
+        <span class="text-danger">*</span>
+      {% endif %}
+      {{ extraVars.label }}
+    </label>
+  {% endif %}
+
+  <div class="{{ 'col-sm-5' }}">
+    {{ self.form_widget_with_error(form, { 'attr': attr }, extraVars) }}
+  </div>
+  {% if extraVars.languages is defined and extraVars.languages is not empty %}
+  <div class="{{ 'col-sm-3' }}">
+    <select name="{{ form.vars.id ~'_language' }}" class="custom-select language_dependant_select_language">
+    {% if extraVars.languages is iterable %}
+      {% for language in extraVars.languages %}
+        <option value="{{ language.id }}">{{ language.value|raw }}</option>
+      {% endfor %}
+    {% endif %}
+    </select>
+  </div>
+  {% endif %}
+  </div>
+{% endmacro %}

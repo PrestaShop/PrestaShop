@@ -7,9 +7,8 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const MonitoringPage = require('@pages/BO/catalog/monitoring');
+const dashboardPage = require('@pages/BO/dashboard');
+const monitoringPage = require('@pages/BO/catalog/monitoring');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -19,60 +18,51 @@ const baseContext = 'functional_BO_catalog_monitoring_helpCard';
 let browserContext;
 let page;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    monitoringPage: new MonitoringPage(page),
-  };
-};
-
 // Check help card language in monitoring page
 describe('Help card in monitoring page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to monitoring page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to \'Catalog > Monitoring\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToMonitoringPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.catalogParentLink,
-      this.pageObjects.dashboardPage.monitoringLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.catalogParentLink,
+      dashboardPage.monitoringLink,
     );
 
-    await this.pageObjects.monitoringPage.closeSfToolBar();
+    await monitoringPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.monitoringPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.monitoringPage.pageTitle);
+    const pageTitle = await monitoringPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(monitoringPage.pageTitle);
   });
 
   it('should open the help side bar and check the document language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
 
-    const isHelpSidebarVisible = await this.pageObjects.monitoringPage.openHelpSideBar();
+    const isHelpSidebarVisible = await monitoringPage.openHelpSideBar(page);
     await expect(isHelpSidebarVisible).to.be.true;
 
-    const documentURL = await this.pageObjects.monitoringPage.getHelpDocumentURL();
+    const documentURL = await monitoringPage.getHelpDocumentURL(page);
     await expect(documentURL).to.contains('country=en');
   });
 
   it('should close the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
 
-    const isHelpSidebarClosed = await this.pageObjects.monitoringPage.closeHelpSideBar();
+    const isHelpSidebarClosed = await monitoringPage.closeHelpSideBar(page);
     await expect(isHelpSidebarClosed).to.be.true;
   });
 });

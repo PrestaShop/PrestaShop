@@ -137,7 +137,7 @@
                         <strong>{{ 'Mail method:'|trans }}</strong>
 
                         {% if system.isNativePHPmail %}
-                        {{ 'You are using the PHP mail() function.'|trans }}
+                        {{ 'You are using /usr/sbin/sendmail'|trans }}
                         {% else %}
                         {{ 'You are using your own SMTP parameters.'|trans }}</p>
                     <p>

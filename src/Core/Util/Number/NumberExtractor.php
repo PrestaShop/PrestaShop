@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,19 +17,18 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Util\Number;
 
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use ReflectionClass;
 use ReflectionException;
 use Symfony\Component\PropertyAccess\Exception\AccessException;
@@ -37,7 +37,7 @@ use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
- * Extracts numeric value as @var Number from given resource
+ * Extracts numeric value as @var DecimalNumber from given resource
  */
 class NumberExtractor
 {
@@ -73,11 +73,11 @@ class NumberExtractor
      * @param array|object $resource
      * @param string $propertyPath
      *
-     * @return Number
+     * @return DecimalNumber
      *
      * @throws NumberExtractorException
      */
-    public function extract($resource, string $propertyPath): Number
+    public function extract($resource, string $propertyPath): DecimalNumber
     {
         if (is_object($resource)) {
             $numberFromPublicProperty = $this->extractPublicPropertyFirst($resource, $propertyPath);
@@ -112,20 +112,20 @@ class NumberExtractor
             );
         }
 
-        return $this->toNumber($plainValue);
+        return $this->toDecimalNumber($plainValue);
     }
 
     /**
-     * Check if object contains provided public property and extract it as a Number, else return null
+     * Check if object contains provided public property and extract it as a DecimalNumber, else return null
      *
-     * @param $resource
+     * @param string|object $resource
      * @param string $property
      *
-     * @return Number|null
+     * @return DecimalNumber|null
      *
      * @throws ReflectionException
      */
-    private function extractPublicPropertyFirst($resource, string $property): ?Number
+    private function extractPublicPropertyFirst($resource, string $property): ?DecimalNumber
     {
         if (!property_exists($resource, $property)) {
             return null;
@@ -137,28 +137,28 @@ class NumberExtractor
             return null;
         }
 
-        return $this->toNumber($resource->{$property});
+        return $this->toDecimalNumber($resource->{$property});
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      *
-     * @return Number
+     * @return DecimalNumber
      *
      * @throws NumberExtractorException
      */
-    private function toNumber($value): Number
+    private function toDecimalNumber($value): DecimalNumber
     {
         if (!is_numeric($value)) {
             throw new NumberExtractorException(
                 sprintf(
-                    'Only numeric values can be converted to Number. Got "%s"',
+                    'Only numeric values can be converted to DecimalNumber. Got "%s"',
                     $value
                 ),
                 NumberExtractorException::NON_NUMERIC_PROPERTY
             );
         }
 
-        return new Number((string) $value);
+        return new DecimalNumber((string) $value);
     }
 }

@@ -7,7 +7,7 @@ about: For questions about using PrestaShop
 We use GitHub issues only to discuss about bugs in the PrestaShop project and new features.
 
 If you have questions about using PrestaShop, you might find the answer here:
-- User's guide: http://doc.prestashop.com/display/PS17/User+Guide
+- User's guide: https://doc.prestashop.com/display/PS17/User+Guide
 - Developer documentation: https://devdocs.prestashop.com/
 
 If you need help with your shop or third-party modules, please consider the PrestaShop Company support plans: https://www.prestashop.com/support

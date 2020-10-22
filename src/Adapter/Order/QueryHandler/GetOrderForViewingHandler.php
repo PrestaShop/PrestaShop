@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Adapter\Order\QueryHandler;
 
 use Address;
 use Carrier;
-use CartRule;
 use Configuration;
 use ConnectionsSource;
 use Context;
@@ -42,16 +41,18 @@ use Order;
 use OrderInvoice;
 use OrderPayment;
 use OrderSlip;
-use PrestaShop\Decimal\Number;
+use OrderState;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderDocumentType;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderForViewingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderProductsForViewingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\LinkedOrderForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\LinkedOrdersForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCarrierForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDiscountForViewing;
@@ -76,7 +77,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderSourceForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderSourcesForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderStatusForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
-use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use State;
@@ -122,7 +122,6 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
     private $getOrderProductsForViewingHandler;
 
     /**
-     * @param ImageTagSourceParserInterface $imageTagSourceParser
      * @param TranslatorInterface $translator
      * @param int $contextLanguageId
      * @param Locale $locale
@@ -193,26 +192,10 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $this->getOrderMessages($order),
             $this->getOrderPrices($order),
             $this->getOrderDiscounts($order),
-            $this->getOrderSources($order)
+            $this->getOrderSources($order),
+            $this->getLinkedOrders($order),
+            (string) $order->note
         );
-    }
-
-    /**
-     * @param OrderId $orderId
-     *
-     * @return Order
-     *
-     * @throws OrderNotFoundException
-     */
-    private function getOrder(OrderId $orderId): Order
-    {
-        $order = new Order($orderId->getValue());
-
-        if ($order->id !== $orderId->getValue()) {
-            throw new OrderNotFoundException($orderId, sprintf('Order with id "%s" was not found.', $orderId->getValue()));
-        }
-
-        return $order;
     }
 
     /**
@@ -707,13 +690,13 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         $taxesAmount = $order->total_paid_tax_incl - $order->total_paid_tax_excl;
 
         return new OrderPricesForViewing(
-            new Number((string) $productsPrice),
-            new Number((string) $discountsAmount),
-            new Number((string) $wrappingPrice),
-            new Number((string) $shippingPrice),
-            new Number((string) $shippingRefundable),
-            new Number((string) $taxesAmount),
-            new Number((string) $totalAmount),
+            new DecimalNumber((string) $productsPrice),
+            new DecimalNumber((string) $discountsAmount),
+            new DecimalNumber((string) $wrappingPrice),
+            new DecimalNumber((string) $shippingPrice),
+            new DecimalNumber((string) $shippingRefundable),
+            new DecimalNumber((string) $taxesAmount),
+            new DecimalNumber((string) $totalAmount),
             Tools::displayPrice($productsPrice, $currency),
             Tools::displayPrice($discountsAmount, $currency),
             Tools::displayPrice($wrappingPrice, $currency),
@@ -740,20 +723,10 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
 
         foreach ($discounts as $discount) {
             $discountAmount = $isTaxIncluded ? $discount['value'] : $discount['value_tax_excl'];
-
-            $cartRule = new CartRule((int) $discount['id_cart_rule']);
-            if ((int) $cartRule->reduction_currency !== $order->id_currency) {
-                $discountAmount = Tools::convertPriceFull(
-                    $discountAmount,
-                    new Currency((int) $cartRule->reduction_currency),
-                    new Currency((int) $order->id_currency)
-                );
-            }
-
             $discountsForViewing[] = new OrderDiscountForViewing(
                 (int) $discount['id_order_cart_rule'],
                 $discount['name'],
-                new Number((string) $discountAmount),
+                new DecimalNumber((string) $discountAmount),
                 Tools::displayPrice($discountAmount, $currency)
             );
         }
@@ -781,6 +754,37 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         }
 
         return new OrderSourcesForViewing($sources);
+    }
+
+    /**
+     * @return LinkedOrdersForViewing
+     */
+    private function getLinkedOrders(Order $order): LinkedOrdersForViewing
+    {
+        $brothersData = $order->getBrother();
+        $brothers = [];
+        /** @var Order $brotherItem */
+        foreach ($brothersData as $brotherItem) {
+            $isTaxExcluded = !$this->isTaxIncludedInOrder($brotherItem);
+
+            $currency = new Currency($brotherItem->id_currency);
+
+            if ($isTaxExcluded) {
+                $totalAmount = $this->locale->formatPrice($brotherItem->total_paid_tax_excl, $currency->iso_code);
+            } else {
+                $totalAmount = $this->locale->formatPrice($brotherItem->total_paid_tax_incl, $currency->iso_code);
+            }
+
+            $orderState = new OrderState($brotherItem->current_state);
+
+            $brothers[] = new LinkedOrderForViewing(
+                $brotherItem->id,
+                $orderState->name[$this->context->language->getId()],
+                $totalAmount
+            );
+        }
+
+        return new LinkedOrdersForViewing($brothers);
     }
 
     /**

@@ -7,6 +7,7 @@ $finder = PhpCsFixer\Finder::create()->in([
     __DIR__.'/classes',
     __DIR__.'/controllers',
     __DIR__.'/tests',
+    __DIR__.'/tools/profiling',
 ]);
 
 return PhpCsFixer\Config::create()

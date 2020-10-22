@@ -80,7 +80,7 @@ class Email
     /**
      * Check that email is not an empty string
      *
-     * @param $email
+     * @param string $email
      *
      * @throws DomainConstraintException
      */

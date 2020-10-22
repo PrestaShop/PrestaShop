@@ -48,12 +48,20 @@
           'label': 'Last name'|trans({}, 'Admin.Global')
         }) }}
 
+        {{ ps.form_group_row(employeeForm.avatarUrl, {}, {
+          'label': 'Avatar'|trans({}, 'Admin.Global')
+        }) }}
+
         <div class="form-group row">
           <label class="form-control-label"></label>
           <div class="col-sm">
             <img class="img-thumbnail clickable-avatar" src="{{ avatarUrl }}" alt="">
           </div>
         </div>
+
+        {{ ps.form_group_row(employeeForm.has_enabled_gravatar, {}, {
+          'label': 'Enable gravatar'|trans({}, 'Admin.Global')
+        }) }}
 
         {{ ps.form_group_row(employeeForm.email, {}, {
           'label': 'Email address'|trans({}, 'Admin.Global')

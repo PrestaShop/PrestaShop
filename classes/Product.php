@@ -30,8 +30,9 @@ define('_CUSTOMIZE_FILE_', 0);
 // Deprecated since 1.5.0.1 use Product::CUSTOMIZE_TEXTFIELD
 define('_CUSTOMIZE_TEXTFIELD_', 1);
 
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Product\ProductInterface;
 
 class ProductCore extends ObjectModel
@@ -97,10 +98,10 @@ class ProductCore extends ObjectModel
     /** @var array|int|null Will be filled by reference by priceCalculation() */
     public $specificPrice = 0;
 
-    /** @var float Additional shipping cost */
+    /** @var string Additional shipping cost */
     public $additional_shipping_cost = 0;
 
-    /** @var float Wholesale Price in euros */
+    /** @var string Wholesale Price in euros */
     public $wholesale_price = 0;
 
     /** @var bool on_sale */
@@ -124,7 +125,11 @@ class ProductCore extends ObjectModel
     /** @var string Reference */
     public $reference;
 
-    /** @var string Supplier Reference */
+    /**
+     * @var string Supplier Reference
+     *
+     * @deprecated since 1.7.7.0
+     */
     public $supplier_reference;
 
     /** @var string Location */
@@ -160,7 +165,9 @@ class ProductCore extends ObjectModel
     /** @var string|array Meta description or array of meta description by id_lang */
     public $meta_description;
 
-    /** @var string|array Meta keywords or array of meta keywords by id_lang */
+    /**
+     * @deprecated
+     */
     public $meta_keywords;
 
     /** @var string|array Meta title or array of meta title by id_lang */
@@ -191,9 +198,9 @@ class ProductCore extends ObjectModel
     /**
      * @var string Redirection type
      *
-     * @see ProductInterface
+     * @see RedirectType
      */
-    public $redirect_type = '';
+    public $redirect_type = RedirectType::TYPE_NOT_FOUND;
 
     /**
      * @var int Product identifier or Category identifier depends on redirect_type
@@ -221,10 +228,10 @@ class ProductCore extends ObjectModel
     /** @var string ENUM('both', 'catalog', 'search', 'none') front office visibility */
     public $visibility;
 
-    /** @var string Object creation date in mysql format Y-m-d */
+    /** @var string Object creation date in mysql format Y-m-d H:i:s */
     public $date_add;
 
-    /** @var string Object last modification date in mysql format Y-m-d */
+    /** @var string Object last modification date in mysql format Y-m-d H:i:s */
     public $date_upd;
 
     /** @var array Tags data */
@@ -304,7 +311,7 @@ class ProductCore extends ObjectModel
     public $cache_default_attribute;
 
     /**
-     * @var string If product is populated, this property contain the rewrite link of the default category
+     * @var string|string[] If product is populated, this property contain the rewrite link of the default category
      */
     public $category;
 
@@ -330,7 +337,7 @@ class ProductCore extends ObjectModel
      *
      * Long description for delivery in-stock product information.
      *
-     * @var string
+     * @var string[]
      */
     public $delivery_in_stock;
 
@@ -339,7 +346,7 @@ class ProductCore extends ObjectModel
      *
      * Long description for delivery out-stock product information.
      *
-     * @var string
+     * @var string[]
      */
     public $delivery_out_stock;
 
@@ -644,8 +651,8 @@ class ProductCore extends ObjectModel
     {
         parent::__construct($id_product, $id_lang, $id_shop);
 
-        $unitPriceRatio = new Number((string) $this->unit_price_ratio);
-        $price = new Number((string) $this->price);
+        $unitPriceRatio = new DecimalNumber((string) $this->unit_price_ratio);
+        $price = new DecimalNumber((string) $this->price);
 
         if ($unitPriceRatio->isGreaterThanZero()) {
             $this->unit_price = (float) (string) $price->dividedBy($unitPriceRatio);
@@ -693,7 +700,9 @@ class ProductCore extends ObjectModel
     {
         $fields = parent::getFieldsShop();
         if (null === $this->update_fields || (!empty($this->update_fields['price']) && !empty($this->update_fields['unit_price']))) {
-            $fields['unit_price_ratio'] = (float) $this->unit_price > 0 ? $this->price / $this->unit_price : 0;
+            if ($this->unit_price !== null) {
+                $fields['unit_price_ratio'] = (float) $this->unit_price > 0 ? $this->price / $this->unit_price : 0;
+            }
         }
         $fields['unity'] = pSQL($this->unity);
 
@@ -1077,6 +1086,22 @@ class ProductCore extends ObjectModel
         Db::getInstance()->update('product', [
             'is_virtual' => (bool) $is_virtual,
         ], 'id_product = ' . (int) $id_product);
+    }
+
+    /**
+     * @see ObjectModel::resetStaticCache()
+     *
+     * reset static cache (eg unit testing purpose).
+     */
+    public static function resetStaticCache()
+    {
+        static::$loaded_classes = [];
+        static::$productPropertiesCache = [];
+        static::$_cacheFeatures = [];
+        static::$_frontFeaturesCache = [];
+        static::$_prices = [];
+        static::$_pricesLevel2 = [];
+        static::$_incat = [];
     }
 
     /**
@@ -4745,6 +4770,7 @@ class ProductCore extends ObjectModel
             WHERE pa.`id_product` = ' . (int) $id_product_old
         );
         $combinations = [];
+        $product_supplier_keys = [];
 
         foreach ($result as $row) {
             $id_product_attribute_old = (int) $row['id_product_attribute'];
@@ -4799,6 +4825,14 @@ class ProductCore extends ObjectModel
             AND `id_product` = ' . (int) $id_product_old);
 
             foreach ($result3 as $row3) {
+                $current_supplier_key = $id_product_new . '_' . $id_product_attribute_new . '_' . $row3['id_supplier'];
+
+                if (in_array($current_supplier_key, $product_supplier_keys)) {
+                    continue;
+                }
+
+                $product_supplier_keys[] = $current_supplier_key;
+
                 unset($row3['id_product_supplier']);
                 $row3['id_product'] = $id_product_new;
                 $row3['id_product_attribute'] = $id_product_attribute_new;
@@ -5346,6 +5380,17 @@ class ProductCore extends ObjectModel
             $cache_key .= '-pack' . $row['id_product_pack'];
         }
 
+        if (!isset($row['cover_image_id'])) {
+            $cover = static::getCover($row['id_product']);
+            if (isset($cover['id_image'])) {
+                $row['cover_image_id'] = $cover['id_image'];
+            }
+        }
+
+        if (isset($row['cover_image_id'])) {
+            $cache_key .= '-cover' . (int) $row['cover_image_id'];
+        }
+
         if (isset(self::$productPropertiesCache[$cache_key])) {
             return array_merge($row, self::$productPropertiesCache[$cache_key]);
         }
@@ -5381,7 +5426,7 @@ class ProductCore extends ObjectModel
         );
 
         if (self::$_taxCalculationMethod == PS_TAX_EXC) {
-            $row['price_tax_exc'] = Tools::ps_round($row['price_tax_exc'], 2);
+            $row['price_tax_exc'] = Tools::ps_round($row['price_tax_exc'], Context::getContext()->getComputingPrecision());
             $row['price'] = Product::getPriceStatic(
                 (int) $row['id_product'],
                 true,
@@ -5532,13 +5577,6 @@ class ProductCore extends ObjectModel
 
         $row['ecotax_rate'] = (float) Tax::getProductEcotaxRate($context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 
-        if (!isset($row['cover_image_id'])) {
-            $cover = static::getCover($row['id_product']);
-            if (isset($cover['id_image'])) {
-                $row['cover_image_id'] = $cover['id_image'];
-            }
-        }
-
         Hook::exec('actionGetProductPropertiesAfter', [
             'id_lang' => $id_lang,
             'product' => &$row,
@@ -5557,6 +5595,12 @@ class ProductCore extends ObjectModel
         } else {
             $row['unit_price'] = 0.0;
         }
+
+        Hook::exec('actionGetProductPropertiesAfterUnitPrice', [
+            'id_lang' => $id_lang,
+            'product' => &$row,
+            'context' => $context,
+        ]);
 
         self::$productPropertiesCache[$cache_key] = $row;
 
@@ -5666,6 +5710,28 @@ class ProductCore extends ObjectModel
         LEFT JOIN ' . _DB_PREFIX_ . 'attachment a ON a.id_attachment = pa.id_attachment
         LEFT JOIN ' . _DB_PREFIX_ . 'attachment_lang al ON (a.id_attachment = al.id_attachment AND al.id_lang = ' . (int) $id_lang . ')
         WHERE pa.id_product = ' . (int) $id_product);
+    }
+
+    /**
+     * @return int[]
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public function getAssociatedAttachmentIds(): array
+    {
+        $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+            SELECT id_attachment
+            FROM ' . _DB_PREFIX_ . 'product_attachment
+            WHERE id_product = ' . (int) $this->id
+        );
+
+        if (!$results) {
+            return [];
+        }
+
+        return array_map(function (array $result): int {
+            return (int) $result['id_attachment'];
+        }, $results);
     }
 
     /**
@@ -6130,6 +6196,56 @@ class ProductCore extends ObjectModel
             SELECT `id_customization_field`, `type`, `required`
             FROM `' . _DB_PREFIX_ . 'customization_field`
             WHERE `id_product` = ' . (int) $this->id);
+    }
+
+    /**
+     * @return array
+     */
+    public function getNonDeletedCustomizationFieldIds()
+    {
+        if (!Customization::isFeatureActive()) {
+            return [];
+        }
+
+        $results = Db::getInstance()->executeS('
+            SELECT `id_customization_field`
+            FROM `' . _DB_PREFIX_ . 'customization_field`
+            WHERE `is_deleted` = 0
+            AND `id_product` = ' . (int) $this->id
+        );
+
+        return array_map(function ($result) {
+            return (int) $result['id_customization_field'];
+        }, $results);
+    }
+
+    /**
+     * @param int $fieldType |null
+     *
+     * @return int
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public function countCustomizationFields(?int $fieldType = null): int
+    {
+        $query = '
+            SELECT COUNT(`id_customization_field`) as customizations_count
+            FROM `' . _DB_PREFIX_ . 'customization_field`
+            WHERE `is_deleted` = 0
+            AND `id_product` = ' . (int) $this->id
+        ;
+
+        if (null !== $fieldType) {
+            $query .= sprintf(' AND type = %d', $fieldType);
+        }
+
+        $results = Db::getInstance()->executeS($query);
+
+        if (empty($results)) {
+            return 0;
+        }
+
+        return (int) reset($results)['customizations_count'];
     }
 
     /**
@@ -7931,5 +8047,62 @@ class ProductCore extends ObjectModel
         }
 
         return $return;
+    }
+
+    /**
+     * Update default supplier data
+     *
+     * @param int $idSupplier
+     * @param float $wholesalePrice
+     * @param string $supplierReference
+     *
+     * @return bool
+     */
+    public function updateDefaultSupplierData(int $idSupplier, string $supplierReference, float $wholesalePrice): bool
+    {
+        if (!$this->id) {
+            return false;
+        }
+
+        $sql = 'UPDATE `' . _DB_PREFIX_ . 'product` ' .
+             'SET ' .
+             'id_supplier = %d, ' .
+             'supplier_reference = "%s", ' .
+             'wholesale_price = "%s" ' .
+             'WHERE id_product = %d';
+
+        return Db::getInstance()->execute(
+            sprintf(
+                $sql,
+                $idSupplier,
+                pSQL($supplierReference),
+                $wholesalePrice,
+                $this->id
+            )
+        );
+    }
+
+    /**
+     * Get Product ecotax
+     *
+     * @param int $precision
+     * @param bool $include_tax
+     * @param bool $formated
+     *
+     * @return ecotax
+     */
+    public function getEcotax($precision = null, $include_tax = true, $formated = false)
+    {
+        $context = Context::getContext();
+        $currency = $context->currency;
+        $precision = $precision ?? $currency->precision;
+        $ecotax_rate = $include_tax ? (float) Tax::getProductEcotaxRate() : 0;
+        $ecotax = Tools::ps_round(
+            (float) $this->ecotax * (1 + $ecotax_rate / 100),
+            $precision,
+            null
+        );
+
+        return $formated ? $context->getCurrentLocale()->formatPrice($ecotax, $currency->iso_code) : $ecotax;
     }
 }

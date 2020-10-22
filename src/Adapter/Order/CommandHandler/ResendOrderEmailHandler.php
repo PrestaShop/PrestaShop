@@ -46,7 +46,7 @@ final class ResendOrderEmailHandler extends AbstractOrderCommandHandler implemen
      */
     public function handle(ResendOrderEmailCommand $command): void
     {
-        $order = $this->getOrderObject($command->getOrderId());
+        $order = $this->getOrder($command->getOrderId());
         $orderState = new OrderState($command->getOrderStatusId());
 
         if (!Validate::isLoadedObject($orderState)) {

@@ -55,7 +55,11 @@ if (!file_exists(_PS_ROOT_DIR_ . '/app/config/parameters.yml') && !file_exists(_
 
 require_once $currentDir . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
-/* Improve PHP configuration on Windows */
+/*
+ * Improve PHP configuration on Windows
+ *
+ * @deprecated since 1.7.8.0
+ */
 if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
     Windows::improveFilesytemPerformances();
 }
@@ -75,9 +79,12 @@ if (is_file(_PS_CUSTOM_CONFIG_FILE_)) {
 }
 
 if (_PS_DEBUG_PROFILING_) {
+    include_once _PS_TOOL_DIR_ . 'profiling/Profiler.php';
     include_once _PS_TOOL_DIR_ . 'profiling/Controller.php';
     include_once _PS_TOOL_DIR_ . 'profiling/ObjectModel.php';
     include_once _PS_TOOL_DIR_ . 'profiling/Db.php';
+    include_once _PS_TOOL_DIR_ . 'profiling/Hook.php';
+    include_once _PS_TOOL_DIR_ . 'profiling/Module.php';
     include_once _PS_TOOL_DIR_ . 'profiling/Tools.php';
 }
 

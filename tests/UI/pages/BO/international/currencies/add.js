@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class AddCurrency extends BOBasePage {
-  constructor(page) {
-    super(page);
+class AddCurrency extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Currencies • ';
 
@@ -13,6 +13,7 @@ module.exports = class AddCurrency extends BOBasePage {
     this.currencyNameInput = id => `#currency_names_${id}`;
     this.isoCodeInput = '#currency_iso_code';
     this.exchangeRateInput = '#currency_exchange_rate';
+    this.precisionInput = '#currency_precision';
     this.statusSwitch = id => `label[for='currency_active_${id}']`;
     this.saveButton = '#save-button';
 
@@ -26,45 +27,75 @@ module.exports = class AddCurrency extends BOBasePage {
 
   /**
    * Add official currency
+   * @param page
    * @param currencyData, currency to add
    * @returns {Promise<string>}, successful text message that appears
    */
-  async addOfficialCurrency(currencyData) {
+  async addOfficialCurrency(page, currencyData) {
     // Select currency
-    await this.page.selectOption(this.currencySelect, currencyData.isoCode);
-    await this.waitForVisibleSelector(`${this.currencyLoadingModal}.show`);
+    await page.selectOption(this.currencySelect, currencyData.isoCode);
+    await this.waitForVisibleSelector(page, `${this.currencyLoadingModal}.show`);
     // Waiting for currency to be loaded : 10 sec max
     // To check if modal still exist
     let displayed = false;
     for (let i = 0; i < 50 && !displayed; i++) {
       /* eslint-env browser */
-      displayed = await this.page.evaluate(
+      displayed = await page.evaluate(
         selector => window.getComputedStyle(document.querySelector(selector))
           .getPropertyValue('display') === 'none',
         this.currencyLoadingModal,
       );
-      await this.page.waitForTimeout(200);
+      await page.waitForTimeout(200);
     }
 
-    await this.page.click(this.statusSwitch(currencyData.enabled ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await page.click(this.statusSwitch(currencyData.enabled ? 1 : 0));
+    await this.clickAndWaitForNavigation(page, this.saveButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
    * Create unofficial currency
+   * @param page
    * @param currencyData
    * @returns {Promise<string>}
    */
-  async createUnOfficialCurrency(currencyData) {
-    if (!(await this.isCheckboxSelected(this.alternativeCurrencyCheckBox))) {
-      await this.page.$eval(`${this.alternativeCurrencyCheckBox} + i`, el => el.click());
+  async createUnOfficialCurrency(page, currencyData) {
+    if (!(await this.isCheckboxSelected(page, this.alternativeCurrencyCheckBox))) {
+      await page.$eval(`${this.alternativeCurrencyCheckBox} + i`, el => el.click());
     }
-    await this.setValue(this.currencyNameInput(1), currencyData.name);
-    await this.setValue(this.isoCodeInput, currencyData.isoCode);
-    await this.setValue(this.exchangeRateInput, currencyData.exchangeRate.toString());
-    await this.page.click(this.statusSwitch(currencyData.enabled ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    await this.setValue(page, this.currencyNameInput(1), currencyData.name);
+    await this.setValue(page, this.isoCodeInput, currencyData.isoCode);
+    await this.setValue(page, this.exchangeRateInput, currencyData.exchangeRate.toString());
+    await page.click(this.statusSwitch(currencyData.enabled ? 1 : 0));
+    await this.clickAndWaitForNavigation(page, this.saveButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
-};
+
+  /**
+   * Update exchange rate
+   * @param page
+   * @param value
+   * @returns {Promise<string>}
+   */
+  async updateExchangeRate(page, value) {
+    await this.setValue(page, this.exchangeRateInput, value.toString());
+    await this.clickAndWaitForNavigation(page, this.saveButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Set precision for a currency
+   * @param page
+   * @param value
+   * @return {Promise<string>}
+   */
+  async setCurrencyPrecision(page, value = 2) {
+    await this.setValue(page, this.precisionInput, value.toString());
+
+    // Save new value
+    await this.clickAndWaitForNavigation(page, this.saveButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+  }
+}
+
+module.exports = new AddCurrency();

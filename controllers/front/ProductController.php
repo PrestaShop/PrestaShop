@@ -52,6 +52,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     protected $quantity_discounts;
     protected $adminNotifications = [];
 
+    /**
+     * @var bool
+     */
+    protected $isQuickView = false;
+
     public function canonicalRedirection($canonical_url = '')
     {
         if (Validate::isLoadedObject($this->product)) {
@@ -99,7 +104,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
 
         if (!Validate::isLoadedObject($this->product)) {
-            Tools::redirect('index.php?controller=404');
+            header('HTTP/1.1 404 Not Found');
+            header('Status: 404 Not Found');
+            $this->errors[] = $this->trans('This product is no longer available.', [], 'Shop.Notifications.Error');
+            $this->setTemplate('errors/404');
         } else {
             $this->canonicalRedirection();
             /*
@@ -401,6 +409,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $productForTemplate = $this->getTemplateVarProduct();
         ob_end_clean();
         header('Content-Type: application/json');
+
+        $this->setQuickViewMode();
+
         $this->ajaxRender(Tools::jsonEncode([
             'quickview_html' => $this->render(
                 'catalog/_partials/quickview',
@@ -417,6 +428,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product = $this->getTemplateVarProduct();
         $minimalProductQuantity = $this->getProductMinimalQuantity($product);
         $isPreview = ('1' === Tools::getValue('preview'));
+        $isQuickView = ('1' === Tools::getValue('quickview'));
+
+        if ($isQuickView) {
+            $this->setQuickViewMode();
+        }
 
         ob_end_clean();
         header('Content-Type: application/json');
@@ -452,7 +468,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'product_minimal_quantity' => $minimalProductQuantity,
             'product_has_combinations' => !empty($this->combinations),
             'id_product_attribute' => $product['id_product_attribute'],
-            'product_title' => $product['title'],
+            // We use the meta_title key because product_title is used for the title of the page
+            'product_title' => $product['meta_title'],
+            'is_quick_view' => $isQuickView,
         ]));
     }
 
@@ -790,6 +808,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $this->context->smarty->assign([
                 'category' => $this->category,
                 'subCategories' => $sub_categories,
+                'subcategories' => $sub_categories,
                 'id_category_current' => (int) $this->category->id,
                 'id_category_parent' => (int) $this->category->id_parent,
                 'return_category_name' => Tools::safeOutput($this->category->getFieldByLang('name')),
@@ -1028,6 +1047,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product['quantity_wanted'] = $this->getRequiredQuantity($product);
         $product['extraContent'] = $extraContentFinder->addParams(['product' => $this->product])->present();
         $product['ecotax'] = Tools::convertPrice((float) $product['ecotax'], $this->context->currency, true, $this->context);
+        $product['ecotax_tax_inc'] = $product['ecotax_tax_inc'];
 
         $product_full = Product::getProductProperties($this->context->language->id, $product, $this->context);
 
@@ -1246,6 +1266,14 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     public function getTemplateVarPage()
     {
         $page = parent::getTemplateVarPage();
+
+        if (!Validate::isLoadedObject($this->product)) {
+            $page['title'] = $this->trans('The page you are looking for was not found.', [], 'Shop.Theme.Global');
+            $page['page_name'] = 'pagenotfound';
+
+            return $page;
+        }
+
         $page['body_classes']['product-id-' . $this->product->id] = true;
         $page['body_classes']['product-' . $this->product->name] = true;
         $page['body_classes']['product-id-category-' . $this->product->id_category_default] = true;
@@ -1320,5 +1348,25 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
 
         return false;
+    }
+
+    /**
+     * Return information whether we are or not in quick view mode.
+     *
+     * @return bool
+     */
+    public function isQuickView(): bool
+    {
+        return $this->isQuickView;
+    }
+
+    /**
+     * Set quick view mode.
+     *
+     * @param bool $enabled
+     */
+    public function setQuickViewMode(bool $enabled = true)
+    {
+        $this->isQuickView = $enabled;
     }
 }

@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-/**
+/*
  * @deprecated This const is deprecated you should use the configuration variable instead Configuration::get('PS_SEARCH_MAX_WORD_LENGTH')
  */
 define('PS_SEARCH_MAX_WORD_LENGTH', 30);

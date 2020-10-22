@@ -7,15 +7,13 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const OrderSettingsPage = require('@pages/BO/shopParameters/orderSettings');
-const ProductPage = require('@pages/FO/product');
-const FOBasePage = require('@pages/FO/FObasePage');
-const HomePage = require('@pages/FO/home');
-const CartPage = require('@pages/FO/cart');
-const CheckoutPage = require('@pages/FO/checkout');
-const FOLoginPage = require('@pages/FO/login');
+const dashboardPage = require('@pages/BO/dashboard');
+const orderSettingsPage = require('@pages/BO/shopParameters/orderSettings');
+const productPage = require('@pages/FO/product');
+const homePage = require('@pages/FO/home');
+const cartPage = require('@pages/FO/cart');
+const checkoutPage = require('@pages/FO/checkout');
+const foLoginPage = require('@pages/FO/login');
 
 // Import data
 const {DefaultAccount} = require('@data/demo/customer');
@@ -29,49 +27,34 @@ const baseContext = 'functional_BO_shopParameters_orderSettings_giftOptions';
 let browserContext;
 let page;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    orderSettingsPage: new OrderSettingsPage(page),
-    productPage: new ProductPage(page),
-    foBasePage: new FOBasePage(page),
-    homePage: new HomePage(page),
-    cartPage: new CartPage(page),
-    checkoutPage: new CheckoutPage(page),
-    foLoginPage: new FOLoginPage(page),
-  };
-};
-
 describe('Update gift options ', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to Shop Parameters > Order Settings page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to \'Shop Parameters > Order Settings\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrderSettingsPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.shopParametersParentLink,
-      this.pageObjects.dashboardPage.orderSettingsLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.shopParametersParentLink,
+      dashboardPage.orderSettingsLink,
     );
 
-    await this.pageObjects.orderSettingsPage.closeSfToolBar();
+    await orderSettingsPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.orderSettingsPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.orderSettingsPage.pageTitle);
+    const pageTitle = await orderSettingsPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -146,14 +129,15 @@ describe('Update gift options ', async () => {
             baseContext,
           );
 
-          const result = await this.pageObjects.orderSettingsPage.setGiftOptions(
+          const result = await orderSettingsPage.setGiftOptions(
+            page,
             test.args.wantedStatus,
             test.args.price,
             test.args.tax,
             test.args.isRecyclablePackage,
           );
 
-          await expect(result).to.contains(this.pageObjects.orderSettingsPage.successfulUpdateMessage);
+          await expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
         },
       );
 
@@ -166,13 +150,12 @@ describe('Update gift options ', async () => {
         );
 
         // Go to FO
-        page = await this.pageObjects.orderSettingsPage.viewMyShop();
-        this.pageObjects = await init();
+        page = await orderSettingsPage.viewMyShop(page);
 
         // Change FO language
-        await this.pageObjects.homePage.changeLanguage('en');
+        await homePage.changeLanguage(page, 'en');
 
-        const isHomePage = await this.pageObjects.homePage.isHomePage();
+        const isHomePage = await homePage.isHomePage(page);
         await expect(isHomePage, 'Fail to open FO home page').to.be.true;
       });
 
@@ -184,10 +167,10 @@ describe('Update gift options ', async () => {
           baseContext,
         );
 
-        await this.pageObjects.homePage.goToLoginPage();
+        await homePage.goToLoginPage(page);
 
-        const pageTitle = await this.pageObjects.foLoginPage.getPageTitle();
-        await expect(pageTitle, 'Fail to open FO login page').to.contains(this.pageObjects.foLoginPage.pageTitle);
+        const pageTitle = await foLoginPage.getPageTitle(page);
+        await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
       });
 
       it('should sign in with default customer', async function () {
@@ -198,8 +181,8 @@ describe('Update gift options ', async () => {
           baseContext,
         );
 
-        await this.pageObjects.foLoginPage.customerLogin(DefaultAccount);
-        const isCustomerConnected = await this.pageObjects.foLoginPage.isCustomerConnected();
+        await foLoginPage.customerLogin(page, DefaultAccount);
+        const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
         await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
       });
 
@@ -211,19 +194,19 @@ describe('Update gift options ', async () => {
           baseContext,
         );
 
-        await this.pageObjects.foLoginPage.goToHomePage();
+        await foLoginPage.goToHomePage(page);
 
         // Go to the fourth product page
-        await this.pageObjects.homePage.goToProductPage(4);
+        await homePage.goToProductPage(page, 4);
 
         // Add the product to the cart
-        await this.pageObjects.productPage.addProductToTheCart();
+        await productPage.addProductToTheCart(page);
 
         // Proceed to checkout the shopping cart
-        await this.pageObjects.cartPage.clickOnProceedToCheckout();
+        await cartPage.clickOnProceedToCheckout(page);
 
         // Address step - Go to delivery step
-        const isStepAddressComplete = await this.pageObjects.checkoutPage.goToDeliveryStep();
+        const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
         await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
       });
 
@@ -235,7 +218,7 @@ describe('Update gift options ', async () => {
           baseContext,
         );
 
-        const isGiftCheckboxVisible = await this.pageObjects.checkoutPage.isGiftCheckboxVisible();
+        const isGiftCheckboxVisible = await checkoutPage.isGiftCheckboxVisible(page);
 
         await expect(
           isGiftCheckboxVisible,
@@ -252,7 +235,7 @@ describe('Update gift options ', async () => {
             baseContext,
           );
 
-          const giftPrice = await this.pageObjects.checkoutPage.getGiftPrice();
+          const giftPrice = await checkoutPage.getGiftPrice(page);
 
           await expect(giftPrice, 'Gift price is incorrect').to.equal(
             test.args.price === 0 ? 'Free'
@@ -273,7 +256,7 @@ describe('Update gift options ', async () => {
             baseContext,
           );
 
-          const isRecyclableCheckboxVisible = await this.pageObjects.checkoutPage.isRecyclableCheckboxVisible();
+          const isRecyclableCheckboxVisible = await checkoutPage.isRecyclableCheckboxVisible(page);
 
           await expect(
             isRecyclableCheckboxVisible,
@@ -289,10 +272,10 @@ describe('Update gift options ', async () => {
           baseContext,
         );
 
-        await this.pageObjects.checkoutPage.goToHomePage();
-        await this.pageObjects.homePage.logout();
+        await checkoutPage.goToHomePage(page);
+        await homePage.logout(page);
 
-        const isCustomerConnected = await this.pageObjects.homePage.isCustomerConnected();
+        const isCustomerConnected = await homePage.isCustomerConnected(page);
         await expect(isCustomerConnected, 'Customer should be disconnected').to.be.false;
       });
 
@@ -304,11 +287,10 @@ describe('Update gift options ', async () => {
           baseContext,
         );
 
-        page = await this.pageObjects.checkoutPage.closePage(browserContext, 0);
-        this.pageObjects = await init();
+        page = await checkoutPage.closePage(browserContext, page, 0);
 
-        const pageTitle = await this.pageObjects.orderSettingsPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.orderSettingsPage.pageTitle);
+        const pageTitle = await orderSettingsPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
       });
     });
   });

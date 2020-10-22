@@ -7,14 +7,13 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const ProductSettingsPage = require('@pages/BO/shopParameters/productSettings');
-const ProductsPage = require('@pages/BO/catalog/products');
-const AddProductPage = require('@pages/BO/catalog/products/add');
-const FOProductPage = require('@pages/FO/product');
-const FOHomePage = require('@pages/FO/home');
-const SearchResultsPage = require('@pages/FO/searchResults');
+const dashboardPage = require('@pages/BO/dashboard');
+const productSettingsPage = require('@pages/BO/shopParameters/productSettings');
+const productsPage = require('@pages/BO/catalog/products');
+const addProductPage = require('@pages/BO/catalog/products/add');
+const foProductPage = require('@pages/FO/product');
+const foHomePage = require('@pages/FO/home');
+const searchResultsPage = require('@pages/FO/searchResults');
 
 // Import data
 const ProductFaker = require('@data/faker/product');
@@ -29,56 +28,43 @@ let browserContext;
 let page;
 const productData = new ProductFaker({type: 'Standard product', quantity: 0});
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    productSettingsPage: new ProductSettingsPage(page),
-    productsPage: new ProductsPage(page),
-    addProductPage: new AddProductPage(page),
-    foProductPage: new FOProductPage(page),
-    foHomePage: new FOHomePage(page),
-    searchResultsPage: new SearchResultsPage(page),
-  };
-};
-
 describe('Enable delivery time out-of-stocks products', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   describe('Create a product', async () => {
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-      await this.pageObjects.dashboardPage.goToSubMenu(
-        this.pageObjects.dashboardPage.catalogParentLink,
-        this.pageObjects.dashboardPage.productsLink,
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.catalogParentLink,
+        dashboardPage.productsLink,
       );
 
-      await this.pageObjects.productsPage.closeSfToolBar();
+      await productsPage.closeSfToolBar(page);
 
-      const pageTitle = await this.pageObjects.productsPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
+      const pageTitle = await productsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should go to create product page and create a product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
-      await this.pageObjects.productsPage.goToAddProductPage();
-      const validationMessage = await this.pageObjects.addProductPage.createEditBasicProduct(productData);
-      await expect(validationMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
+      await productsPage.goToAddProductPage(page);
+      const validationMessage = await addProductPage.createEditBasicProduct(page, productData);
+      await expect(validationMessage).to.equal(addProductPage.settingUpdatedMessage);
     });
   });
 
@@ -86,13 +72,14 @@ describe('Enable delivery time out-of-stocks products', async () => {
     it('should go to \'Shop parameters > Product Settings\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage', baseContext);
 
-      await this.pageObjects.addProductPage.goToSubMenu(
-        this.pageObjects.addProductPage.shopParametersParentLink,
-        this.pageObjects.addProductPage.productSettingsLink,
+      await addProductPage.goToSubMenu(
+        page,
+        addProductPage.shopParametersParentLink,
+        addProductPage.productSettingsLink,
       );
 
-      const pageTitle = await this.pageObjects.productSettingsPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.productSettingsPage.pageTitle);
+      const pageTitle = await productSettingsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
     });
 
     const tests = [
@@ -104,34 +91,34 @@ describe('Enable delivery time out-of-stocks products', async () => {
         it(`should ${test.args.action} delivery time of out-of-stock products in BO`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}StockManagement`, baseContext);
 
-          await this.pageObjects.productSettingsPage.setAllowOrderingOutOfStockStatus(test.args.enable);
+          await productSettingsPage.setAllowOrderingOutOfStockStatus(page, test.args.enable);
 
-          const result = await this.pageObjects.productSettingsPage.setDeliveryTimeOutOfStock(
+          const result = await productSettingsPage.setDeliveryTimeOutOfStock(
+            page,
             test.args.deliveryTimeText,
           );
 
-          await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
+          await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
         });
 
         it('should view my shop', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
-          page = await this.pageObjects.productSettingsPage.viewMyShop();
-          this.pageObjects = await init();
+          page = await productSettingsPage.viewMyShop(page);
 
-          await this.pageObjects.foHomePage.changeLanguage('en');
+          await foHomePage.changeLanguage(page, 'en');
 
-          const isFoHomePage = await this.pageObjects.foHomePage.isHomePage();
+          const isFoHomePage = await foHomePage.isHomePage(page);
           await expect(isFoHomePage, 'Fail to open FO home page').to.be.true;
         });
 
         it('should check delivery time block visibility', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `deliveryTimeBlockVisible${index}`, baseContext);
 
-          await this.pageObjects.foHomePage.searchProduct(productData.name);
-          await this.pageObjects.searchResultsPage.goToProductPage(1);
+          await foHomePage.searchProduct(page, productData.name);
+          await searchResultsPage.goToProductPage(page, 1);
 
-          const isDeliveryTimeBlockVisible = await this.pageObjects.foProductPage.isDeliveryInformationVisible();
+          const isDeliveryTimeBlockVisible = await foProductPage.isDeliveryInformationVisible(page);
           await expect(isDeliveryTimeBlockVisible).to.equal(test.args.enable);
         });
 
@@ -139,7 +126,7 @@ describe('Enable delivery time out-of-stocks products', async () => {
           it('should check delivery time text', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `deliveryTimeBlockText${index}`, baseContext);
 
-            const deliveryTimeText = await this.pageObjects.foProductPage.getDeliveryInformationText();
+            const deliveryTimeText = await foProductPage.getDeliveryInformationText(page);
             await expect(deliveryTimeText).to.equal(test.args.deliveryTimeText);
           });
         }
@@ -147,11 +134,10 @@ describe('Enable delivery time out-of-stocks products', async () => {
         it('should go back to BO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
-          page = await this.pageObjects.foProductPage.closePage(browserContext, 0);
-          this.pageObjects = await init();
+          page = await foProductPage.closePage(browserContext, page, 0);
 
-          const pageTitle = await this.pageObjects.productSettingsPage.getPageTitle();
-          await expect(pageTitle).to.contains(this.pageObjects.productSettingsPage.pageTitle);
+          const pageTitle = await productSettingsPage.getPageTitle(page);
+          await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
         });
       });
     });
@@ -161,27 +147,28 @@ describe('Enable delivery time out-of-stocks products', async () => {
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToDeleteProduct', baseContext);
 
-      await this.pageObjects.productSettingsPage.goToSubMenu(
-        this.pageObjects.productSettingsPage.catalogParentLink,
-        this.pageObjects.productSettingsPage.productsLink,
+      await productSettingsPage.goToSubMenu(
+        page,
+        productSettingsPage.catalogParentLink,
+        productSettingsPage.productsLink,
       );
 
-      const pageTitle = await this.pageObjects.productsPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
+      const pageTitle = await productsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should delete product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-      const deleteTextResult = await this.pageObjects.productsPage.deleteProduct(productData);
-      await expect(deleteTextResult).to.equal(this.pageObjects.productsPage.productDeletedSuccessfulMessage);
+      const deleteTextResult = await productsPage.deleteProduct(page, productData);
+      await expect(deleteTextResult).to.equal(productsPage.productDeletedSuccessfulMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
 
-      await this.pageObjects.productsPage.resetFilterCategory();
-      const numberOfProducts = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
+      await productsPage.resetFilterCategory(page);
+      const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
       await expect(numberOfProducts).to.be.above(0);
     });
   });

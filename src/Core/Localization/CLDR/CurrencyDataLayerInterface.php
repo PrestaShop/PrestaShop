@@ -63,7 +63,7 @@ interface CurrencyDataLayerInterface
      * When reading data, if nothing is found then it will try to read in the lower data layer
      * When writing data, the data will also be written in the lower data layer.
      *
-     * @param currencyDataLayerInterface $lowerLayer
+     * @param CurrencyDataLayerInterface $lowerLayer
      *                                               The lower data layer
      *
      * @return self

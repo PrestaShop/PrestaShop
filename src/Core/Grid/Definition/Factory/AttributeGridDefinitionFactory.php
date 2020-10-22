@@ -30,9 +30,9 @@ use PrestaShop\PrestaShop\Core\AttributeGroup\AttributeGroupViewDataProviderInte
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\ModalOptions;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
@@ -46,12 +46,15 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Defines grid for attributes group > attributes list
  */
 final class AttributeGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
+    use DeleteActionTrait;
+
     const GRID_ID = 'attribute';
 
     /**
@@ -157,22 +160,16 @@ final class AttributeGridDefinitionFactory extends AbstractFilterableGridDefinit
                         ],
                     ])
                     )
-                    ->add((new SubmitRowAction('delete'))
-                    ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                    ->setIcon('delete')
-                    ->setOptions([
-                        'route' => 'admin_attributes_delete',
-                        'route_param_name' => 'attributeGroupId',
-                        'route_param_field' => 'id_attribute_group',
-                        'extra_route_params' => [
-                            'attributeId' => 'id_attribute',
-                        ],
-                        'confirm_message' => $this->trans(
-                            'Delete selected item?',
-                            [],
-                            'Admin.Notifications.Warning'
-                        ),
-                    ])
+                    ->add(
+                        $this->buildDeleteAction(
+                            'admin_attributes_delete',
+                            'attributeGroupId',
+                            'id_attribute_group',
+                            Request::METHOD_DELETE,
+                             [
+                                 'attributeId' => 'id_attribute',
+                             ]
+                        )
                     ),
             ])
         );
@@ -280,16 +277,20 @@ final class AttributeGridDefinitionFactory extends AbstractFilterableGridDefinit
     protected function getBulkActions()
     {
         return (new BulkActionCollection())
-            ->add(
-                (new SubmitBulkAction('delete_selection'))
-                    ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                    ->setOptions([
-                        'submit_route' => 'admin_attributes_bulk_delete',
-                        'route_params' => [
-                            'attributeGroupId' => $this->attributeGroupId,
-                        ],
-                        'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                    ])
+            ->add((new SubmitBulkAction('delete_selection'))
+            ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+            ->setOptions([
+                'submit_route' => 'admin_attributes_bulk_delete',
+                'route_params' => [
+                    'attributeGroupId' => $this->attributeGroupId,
+                ],
+                'confirm_message' => $this->trans('Are you sure you want to delete the selected item(s)?', [], 'Admin.Global'),
+                'modal_options' => new ModalOptions([
+                    'title' => $this->trans('Delete selection', [], 'Admin.Actions'),
+                    'confirm_button_label' => $this->trans('Delete', [], 'Admin.Actions'),
+                    'confirm_button_class' => 'btn-danger',
+                ]),
+            ])
             );
     }
 }

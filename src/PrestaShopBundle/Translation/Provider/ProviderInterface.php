@@ -28,6 +28,7 @@
 namespace PrestaShopBundle\Translation\Provider;
 
 use Symfony\Component\Translation\MessageCatalogue;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
  * Define contract to retrieve translations.
@@ -59,7 +60,7 @@ interface ProviderInterface
     public function getLocale();
 
     /**
-     * @return MessageCatalogue A provider must return a MessageCatalogue
+     * @return MessageCatalogueInterface A provider must return a MessageCatalogue
      */
     public function getMessageCatalogue();
 

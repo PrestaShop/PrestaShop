@@ -41,6 +41,7 @@ use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
 use PrestaShopBundle\Service\Grid\ControllerResponseBuilder;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
+use ReflectionClass;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -75,7 +76,7 @@ class CommonController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @throws TypeException
+     * @return JsonResponse
      */
     public function notificationsAckAction(Request $request)
     {
@@ -214,12 +215,12 @@ class CommonController extends FrameworkBundleAdminController
      */
     public function recommendedModulesAction($domain, $limit = 0, $randomize = 0)
     {
+        /** @var RecommendedModules $recommendedModules */
         $recommendedModules = $this->get('prestashop.data_provider.modules.recommended');
-        /** @var $recommendedModules RecommendedModules */
         $moduleIdList = $recommendedModules->getRecommendedModuleIdList($domain, ($randomize == 1));
 
+        /** @var AdminModuleDataProvider $modulesProvider */
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
-        /** @var $modulesProvider AdminModuleDataProvider */
         $modulesRepository = ModuleManagerBuilder::getInstance()->buildRepository();
 
         $modules = [];
@@ -249,7 +250,7 @@ class CommonController extends FrameworkBundleAdminController
     /**
      * Render a right sidebar with content from an URL.
      *
-     * @param $url
+     * @param string $url
      * @param string $title
      * @param string $footer
      *
@@ -318,10 +319,10 @@ class CommonController extends FrameworkBundleAdminController
     /**
      * Specific action to render a specific field twice.
      *
-     * @param $formName the form name
-     * @param $formType the form type FQCN
-     * @param $fieldName the field name
-     * @param $fieldData the field data
+     * @param string $formName the form name
+     * @param string $formType the form type FQCN
+     * @param string $fieldName the field name
+     * @param array $fieldData the field data
      *
      * @return Response
      */
@@ -363,36 +364,35 @@ class CommonController extends FrameworkBundleAdminController
         /** @var GridDefinitionFactoryInterface $definitionFactory */
         $definitionFactory = $this->get($gridDefinitionFactoryServiceId);
 
-        if ($definitionFactory instanceof FilterableGridDefinitionFactoryInterface) {
-            /** @var ResponseBuilder $responseBuilder */
-            $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+        $filterId = null;
 
-            return $responseBuilder->buildSearchResponse(
-                $definitionFactory,
-                $request,
-                $definitionFactory->getFilterId(),
-                $redirectRoute,
-                $redirectQueryParamsToKeep
-            );
+        if ($definitionFactory instanceof FilterableGridDefinitionFactoryInterface) {
+            $filterId = $definitionFactory->getFilterId();
+        } elseif ($definitionFactory instanceof AbstractGridDefinitionFactory) {
+            // for backward compatibility for AbstractGridDefinitionFactory
+            // using ::GRID_ID (that has been replaced by AbstractFilterableGridDefinitionFactory)
+            $reflect = new ReflectionClass($definitionFactory);
+            if (array_key_exists('GRID_ID', $reflect->getConstants())) {
+                /* @phpstan-ignore-next-line Check of constant is done with ReflectionClass */
+                $filterId = $definitionFactory::GRID_ID;
+            }
         }
 
-        // for backward compatibility with AbstractGridDefinitionFactory
-        // replaced by AbstractFilterableGridDefinitionFactory
-        if ($definitionFactory instanceof AbstractGridDefinitionFactory) {
+        if (null !== $filterId) {
             /** @var ResponseBuilder $responseBuilder */
             $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
 
             return $responseBuilder->buildSearchResponse(
                 $definitionFactory,
                 $request,
-                $definitionFactory->getDefinition()->getId(),
+                $filterId,
                 $redirectRoute,
                 $redirectQueryParamsToKeep
             );
         }
 
         // Legacy grid definition which use controller/action as filter keys (and no scope for parameters)
-        /** @var ControllerResponseBuilder $responseBuilder */
+        /** @var ControllerResponseBuilder $controllerResponseBuilder */
         $controllerResponseBuilder = $this->get('prestashop.bundle.grid.controller_response_builder');
 
         return $controllerResponseBuilder->buildSearchResponse(

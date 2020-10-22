@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class AddPageCategory extends BOBasePage {
-  constructor(page) {
-    super(page);
+class AddPageCategory extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitleCreate = 'Pages';
 
@@ -23,17 +23,19 @@ module.exports = class AddPageCategory extends BOBasePage {
 
   /**
    * Fill form for add/edit page category
+   * @param page
    * @param pageCategoryData
    * @returns {Promise<string>}
    */
-  async createEditPageCategory(pageCategoryData) {
-    await this.setValue(this.nameInput, pageCategoryData.name);
-    await this.page.click(this.displayed(pageCategoryData.displayed ? 1 : 0));
-    await this.setValue(this.descriptionIframe, pageCategoryData.description);
-    await this.setValue(this.metaTitleInput, pageCategoryData.metaTitle);
-    await this.setValue(this.metaDescriptionInput, pageCategoryData.metaDescription);
-    await this.setValue(this.metaKeywordsInput, pageCategoryData.metaKeywords);
-    await this.clickAndWaitForNavigation(this.saveCategoryButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+  async createEditPageCategory(page, pageCategoryData) {
+    await this.setValue(page, this.nameInput, pageCategoryData.name);
+    await page.click(this.displayed(pageCategoryData.displayed ? 1 : 0));
+    await this.setValue(page, this.descriptionIframe, pageCategoryData.description);
+    await this.setValue(page, this.metaTitleInput, pageCategoryData.metaTitle);
+    await this.setValue(page, this.metaDescriptionInput, pageCategoryData.metaDescription);
+    await this.setValue(page, this.metaKeywordsInput, pageCategoryData.metaKeywords);
+    await this.clickAndWaitForNavigation(page, this.saveCategoryButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
-};
+}
+module.exports = new AddPageCategory();

@@ -430,6 +430,48 @@ class DbMySQLiCore extends Db
     }
 
     /**
+     * Tries to connect to the database and select content (checking select privileges).
+     *
+     * @param string $server
+     * @param string $user
+     * @param string $pwd
+     * @param string $db
+     * @param string $prefix
+     * @param string|null $engine Table engine
+     *
+     * @return bool|string True, false or error
+     */
+    public static function checkSelectPrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
+    {
+        $link = @new mysqli($server, $user, $pwd, $db);
+        if (mysqli_connect_error()) {
+            return false;
+        }
+
+        if ($engine === null) {
+            $engine = 'MyISAM';
+        }
+
+        // Create a table
+        $link->query('
+		CREATE TABLE `' . $prefix . 'test` (
+			`test` tinyint(1) unsigned NOT NULL
+		) ENGINE=' . $engine);
+
+        // Select content
+        $result = $link->query('SELECT * FROM `' . $prefix . 'test`');
+
+        // Drop the table
+        $link->query('DROP TABLE `' . $prefix . 'test`');
+
+        if (!$result) {
+            return $link->error;
+        }
+
+        return true;
+    }
+
+    /**
      * Try a connection to the database and set names to UTF-8.
      *
      * @see Db::checkEncoding()

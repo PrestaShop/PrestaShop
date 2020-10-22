@@ -41,8 +41,6 @@ interface ImporterInterface
      * @param ImportConfigInterface $importConfig
      * @param ImportRuntimeConfigInterface $runtimeConfig
      * @param ImportHandlerInterface $importHandler
-     *
-     * @return
      */
     public function import(
         ImportConfigInterface $importConfig,

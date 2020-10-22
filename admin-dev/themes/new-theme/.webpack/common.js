@@ -84,6 +84,9 @@ module.exports = {
     order_message_form: './js/pages/order_message/form',
     order_message: './js/pages/order_message',
     order_preferences: './js/pages/order-preferences',
+    order_states_form: './js/pages/order-states/form',
+    order_states: './js/pages/order-states',
+    order_return_states_form: './js/pages/order-return-states/form',
     order_view: './js/pages/order/view.js',
     payment_preferences: './js/pages/payment-preferences',
     product_page: './js/product-page/index',
@@ -99,7 +102,11 @@ module.exports = {
     translation_settings: './js/pages/translation-settings',
     translations: './js/app/pages/translations',
     webservice: './js/pages/webservice',
-    theme: ['./scss/theme.scss'],
+    theme: './scss/theme.scss',
+    orders: './scss/pages/orders/orders.scss',
+    product: './scss/pages/product/product_page.scss',
+    product_catalog: './scss/pages/product/products_catalog.scss',
+    stock_page: './scss/pages/stock/stock_page.scss',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
@@ -173,6 +180,10 @@ module.exports = {
       },
       {
         test: /bootstrap-datetimepicker\.js/,
+        loader: 'imports-loader?define=>false&exports=>false&this=>window',
+      },
+      {
+        test: /bootstrap-colorpicker\.js/,
         loader: 'imports-loader?define=>false&exports=>false&this=>window',
       },
       {

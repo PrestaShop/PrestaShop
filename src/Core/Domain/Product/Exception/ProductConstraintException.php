@@ -120,4 +120,69 @@ class ProductConstraintException extends ProductException
      * When product tag value is invalid
      */
     const INVALID_TAG = 180;
+
+    /**
+     * When product additional time notes type is invalid
+     */
+    const INVALID_ADDITIONAL_TIME_NOTES_TYPE = 190;
+
+    /**
+     * When product width is invalid
+     */
+    const INVALID_WIDTH = 200;
+
+    /**
+     * When product height is invalid
+     */
+    const INVALID_HEIGHT = 210;
+
+    /**
+     * When product depth is invalid
+     */
+    const INVALID_DEPTH = 220;
+
+    /**
+     * When product weight is invalid
+     */
+    const INVALID_WEIGHT = 230;
+
+    /**
+     * When product additional shipping cost is invalid
+     */
+    const INVALID_ADDITIONAL_SHIPPING_COST = 240;
+
+    /**
+     * When product delivery time in stock notes are invalid
+     */
+    const INVALID_DELIVERY_TIME_IN_STOCK_NOTES = 250;
+
+    /**
+     * When product delivery time out of stock notes are invalid
+     */
+    const INVALID_DELIVERY_TIME_OUT_OF_STOCK_NOTES = 260;
+
+    /**
+     * When product redirect type is invalid
+     */
+    const INVALID_REDIRECT_TYPE = 270;
+
+    /**
+     * When product redirect target
+     */
+    const INVALID_REDIRECT_TARGET = 280;
+
+    /**
+     * When product meta description is invalid
+     */
+    const INVALID_META_DESCRIPTION = 290;
+
+    /**
+     * When product meta title is invalid
+     */
+    const INVALID_META_TITLE = 300;
+
+    /**
+     * When product link rewrite is invalid
+     */
+    const INVALID_LINK_REWRITE = 310;
 }

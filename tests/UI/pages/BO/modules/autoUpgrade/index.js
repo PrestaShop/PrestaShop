@@ -2,9 +2,9 @@ require('module-alias/register');
 // Using BOBasePage
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class autoUpgrade extends BOBasePage {
-  constructor(page) {
-    super(page);
+class AutoUpgrade extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = '1-Click Upgrade > 1-Click Upgrade •';
     this.expectedStepsDoneForUpgradeTable = [
@@ -31,36 +31,41 @@ module.exports = class autoUpgrade extends BOBasePage {
 
   /**
    * Select the channel from where to do the upgrade
+   * @param page
    * @param upgradeChannelValue, value to select
    * @return {Promise<void>}
    */
-  async chooseUpgradeChannel(upgradeChannelValue) {
-    if (await this.elementVisible(this.showExpertModeButton)) {
-      await this.page.click(this.showExpertModeButton);
+  async chooseUpgradeChannel(page, upgradeChannelValue) {
+    if (await this.elementVisible(page, this.showExpertModeButton)) {
+      await page.click(this.showExpertModeButton);
     }
-    await this.waitForVisibleSelector(this.channelSelect);
-    await this.page.selectOption(this.channelSelect, upgradeChannelValue);
-    await this.clickAndWaitForNavigation(this.updateChannelSaveButton);
+    await this.waitForVisibleSelector(page, this.channelSelect);
+    await page.selectOption(page, this.channelSelect, upgradeChannelValue);
+    await this.clickAndWaitForNavigation(page, this.updateChannelSaveButton);
   }
 
   /**
    * Select the channel from where to do the upgrade,
    * Upgrade Prestashop
    * And check successful message and that all steps are passed
+   * @param page
    * @param upgradeChannelValue, value to select
    * @return {Promise<*>}
    */
-  async upgradePrestashop(upgradeChannelValue) {
-    await this.chooseUpgradeChannel(upgradeChannelValue);
-    await this.waitForVisibleSelector(this.upgradePrestashopNowButton);
-    this.page.on('response', async (response) => {
+  async upgradePrestashop(page, upgradeChannelValue) {
+    await this.chooseUpgradeChannel(page, upgradeChannelValue);
+    await this.waitForVisibleSelector(page, this.upgradePrestashopNowButton);
+    page.on('response', async (response) => {
       if (await response.url().endsWith('ajax-upgradetab.php') && await response.status() === 200) {
         const jsonResponse = await response.json();
         await this.actualStepsDoneForUpgradeTable.push(jsonResponse.next);
       }
     });
-    await this.page.click(this.upgradePrestashopNowButton);
-    await this.waitForVisibleSelector(this.upgradeResultMessageBloc, 300000);
+    await page.click(this.upgradePrestashopNowButton);
+    await this.waitForVisibleSelector(page, this.upgradeResultMessageBloc, 300000);
     return this.actualStepsDoneForUpgradeTable;
   }
-};
+}
+
+
+module.exports = new AutoUpgrade();

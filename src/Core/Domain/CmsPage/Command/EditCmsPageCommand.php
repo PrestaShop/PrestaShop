@@ -140,7 +140,7 @@ class EditCmsPageCommand
     }
 
     /**
-     * @param string[]|null $localizedTitle
+     * @param string[] $localizedTitle
      *
      * @return self
      */
@@ -160,7 +160,7 @@ class EditCmsPageCommand
     }
 
     /**
-     * @param string[]|null $localizedMetaTitle
+     * @param string[] $localizedMetaTitle
      *
      * @return self
      */
@@ -180,7 +180,7 @@ class EditCmsPageCommand
     }
 
     /**
-     * @param string[]|null $localizedMetaDescription
+     * @param string[] $localizedMetaDescription
      *
      * @return self
      */
@@ -200,7 +200,7 @@ class EditCmsPageCommand
     }
 
     /**
-     * @param string[]|null $LocalizedMetaKeyword
+     * @param string[] $LocalizedMetaKeyword
      *
      * @return self
      */
@@ -220,7 +220,7 @@ class EditCmsPageCommand
     }
 
     /**
-     * @param string[]|null $localizedFriendlyUrl
+     * @param string[] $localizedFriendlyUrl
      *
      * @return self
      */
@@ -240,7 +240,7 @@ class EditCmsPageCommand
     }
 
     /**
-     * @param string[]|null $localizedContent
+     * @param string[] $localizedContent
      *
      * @return self
      */
@@ -304,7 +304,7 @@ class EditCmsPageCommand
      *
      * @return self
      */
-    public function setShopAssociation(array $shopAssociation)
+    public function setShopAssociation(array $shopAssociation = null)
     {
         $this->shopAssociation = $shopAssociation;
 

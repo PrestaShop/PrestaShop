@@ -7,9 +7,8 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const ContactsPage = require('@pages/BO/shopParameters/contact/index');
+const dashboardPage = require('@pages/BO/dashboard');
+const contactsPage = require('@pages/BO/shopParameters/contact/index');
 
 // Import data
 const {Contacts} = require('@data/demo/contacts');
@@ -23,50 +22,41 @@ let browserContext;
 let page;
 let numberOfContacts = 0;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    contactsPage: new ContactsPage(page),
-  };
-};
-
 // Filter Contacts
 describe('Filter Contacts', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to contact page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to \'Shop parameters>Contact\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToContactsPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.shopParametersParentLink,
-      this.pageObjects.dashboardPage.contactLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.shopParametersParentLink,
+      dashboardPage.contactLink,
     );
 
-    await this.pageObjects.contactsPage.closeSfToolBar();
+    await contactsPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.contactsPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.contactsPage.pageTitle);
+    const pageTitle = await contactsPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(contactsPage.pageTitle);
   });
 
   it('should reset all filters and get number of contacts in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfContacts = await this.pageObjects.contactsPage.resetAndGetNumberOfLines();
+    numberOfContacts = await contactsPage.resetAndGetNumberOfLines(page);
     await expect(numberOfContacts).to.be.above(0);
   });
 
@@ -90,16 +80,18 @@ describe('Filter Contacts', async () => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
 
-        await this.pageObjects.contactsPage.filterContacts(
+        await contactsPage.filterContacts(
+          page,
           test.args.filterBy,
           test.args.filterValue,
         );
 
-        const numberOfContactsAfterFilter = await this.pageObjects.contactsPage.getNumberOfElementInGrid();
+        const numberOfContactsAfterFilter = await contactsPage.getNumberOfElementInGrid(page);
         await expect(numberOfContactsAfterFilter).to.be.at.most(numberOfContacts);
 
         for (let i = 1; i <= numberOfContactsAfterFilter; i++) {
-          const textColumn = await this.pageObjects.contactsPage.getTextColumnFromTableContacts(
+          const textColumn = await contactsPage.getTextColumnFromTableContacts(
+            page,
             i,
             test.args.filterBy,
           );
@@ -111,7 +103,7 @@ describe('Filter Contacts', async () => {
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfContactsAfterReset = await this.pageObjects.contactsPage.resetAndGetNumberOfLines();
+        const numberOfContactsAfterReset = await contactsPage.resetAndGetNumberOfLines(page);
         await expect(numberOfContactsAfterReset).to.equal(numberOfContacts);
       });
     });

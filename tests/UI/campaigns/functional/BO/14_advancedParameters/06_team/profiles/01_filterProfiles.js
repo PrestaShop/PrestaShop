@@ -7,14 +7,9 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login/index');
-const DashboardPage = require('@pages/BO/dashboard/index');
-const EmployeesPage = require('@pages/BO/advancedParameters/team/index');
-const ProfilesPage = require('@pages/BO/advancedParameters/team/profiles/index');
-const AddProfilePage = require('@pages/BO/advancedParameters/team/profiles/add');
-const ProductsPage = require('@pages/BO/catalog/products/index');
-const OrdersPage = require('@pages/BO/orders/index');
-const FOBasePage = require('@pages/FO/FObasePage');
+const dashboardPage = require('@pages/BO/dashboard/index');
+const employeesPage = require('@pages/BO/advancedParameters/team/index');
+const profilesPage = require('@pages/BO/advancedParameters/team/profiles/index');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -26,62 +21,48 @@ let page;
 
 let numberOfProfiles = 0;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    employeesPage: new EmployeesPage(page),
-    profilesPage: new ProfilesPage(page),
-    addProfilePage: new AddProfilePage(page),
-    productsPage: new ProductsPage(page),
-    ordersPage: new OrdersPage(page),
-    foBasePage: new FOBasePage(page),
-  };
-};
-
 describe('Filter profiles', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to "Advanced parameters>Team" page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to "Advanced parameters>Team" page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedParamsPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.advancedParametersLink,
-      this.pageObjects.dashboardPage.teamLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.advancedParametersLink,
+      dashboardPage.teamLink,
     );
 
-    await this.pageObjects.employeesPage.closeSfToolBar();
+    await employeesPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.employeesPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.employeesPage.pageTitle);
+    const pageTitle = await employeesPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(employeesPage.pageTitle);
   });
 
   it('should go to "Profiles" page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProfilesPage', baseContext);
 
-    await this.pageObjects.employeesPage.goToProfilesPage();
-    const pageTitle = await this.pageObjects.profilesPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.profilesPage.pageTitle);
+    await employeesPage.goToProfilesPage(page);
+    const pageTitle = await profilesPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(profilesPage.pageTitle);
   });
 
   it('should reset all filters and get number of profiles', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfProfiles = await this.pageObjects.profilesPage.resetAndGetNumberOfLines();
+    numberOfProfiles = await profilesPage.resetAndGetNumberOfLines(page);
     await expect(numberOfProfiles).to.be.above(0);
   });
 
@@ -104,17 +85,18 @@ describe('Filter profiles', async () => {
       it(`should filter list by ${test.args.filterBy}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
 
-        await this.pageObjects.profilesPage.filterProfiles(
+        await profilesPage.filterProfiles(
+          page,
           test.args.filterType,
           test.args.filterBy,
           test.args.filterValue,
         );
 
-        const numberOfProfilesAfterFilter = await this.pageObjects.profilesPage.getNumberOfElementInGrid();
+        const numberOfProfilesAfterFilter = await profilesPage.getNumberOfElementInGrid(page);
         await expect(numberOfProfilesAfterFilter).to.be.at.most(numberOfProfiles);
 
         for (let i = 1; i <= numberOfProfilesAfterFilter; i++) {
-          const textName = await this.pageObjects.profilesPage.getTextColumnFromTable(i, test.args.filterBy);
+          const textName = await profilesPage.getTextColumnFromTable(page, i, test.args.filterBy);
           await expect(textName).to.contains(test.args.filterValue);
         }
       });
@@ -122,7 +104,7 @@ describe('Filter profiles', async () => {
       it('should reset filter', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfProfilesAfterDelete = await this.pageObjects.profilesPage.resetAndGetNumberOfLines();
+        const numberOfProfilesAfterDelete = await profilesPage.resetAndGetNumberOfLines(page);
         await expect(numberOfProfilesAfterDelete).to.be.equal(numberOfProfiles);
       });
     });

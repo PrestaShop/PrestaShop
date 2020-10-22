@@ -24,7 +24,7 @@
  *}
 {block name='product_miniature_item'}
 <div itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-  <meta itemprop="position" content="{$position}" />
+  {if isset($position)}<meta itemprop="position" content="{$position}" />{/if}
   <article class="product-miniature js-product-miniature" data-id-product="{$product.id_product}" data-id-product-attribute="{$product.id_product_attribute}" itemprop="item" itemscope itemtype="http://schema.org/Product">
     <div class="thumbnail-container">
       {block name='product_thumbnail'}
@@ -33,12 +33,13 @@
             <img
               src="{$product.cover.bySize.home_default.url}"
               alt="{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}"
+              loading="lazy"
               data-full-size-image-url="{$product.cover.large.url}"
               />
           </a>
         {else}
           <a href="{$product.url}" class="thumbnail product-thumbnail">
-            <img src="{$urls.no_picture_image.bySize.home_default.url}" />
+            <img src="{$urls.no_picture_image.bySize.home_default.url}" loading="lazy" />
           </a>
         {/if}
       {/block}

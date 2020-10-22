@@ -285,7 +285,7 @@ class AdminFilter
      *
      * Filters input data to keep only Product catalog filters, and encode it.
      *
-     * @param $filter
+     * @param array $filter
      *
      * @return AdminFilter tis object for fluent chaining
      */
@@ -303,7 +303,7 @@ class AdminFilter
     /**
      * Sanitize filter parameters.
      *
-     * @param $filter
+     * @param array $filter
      *
      * @return mixed
      */

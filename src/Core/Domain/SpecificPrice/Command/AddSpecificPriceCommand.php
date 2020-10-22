@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command;
 
 use DateTime;
 use Exception;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceConstraintException;
@@ -55,7 +55,7 @@ class AddSpecificPriceCommand
     private $includeTax;
 
     /**
-     * @var Number
+     * @var DecimalNumber
      */
     private $price;
 
@@ -92,7 +92,7 @@ class AddSpecificPriceCommand
     /**
      * @var int|null
      */
-    private $cartRuleId;
+    private $catalogPriceRuleId;
 
     /**
      * @var int|null
@@ -140,7 +140,7 @@ class AddSpecificPriceCommand
         $this->productId = new ProductId($productId);
         $this->reduction = new Reduction($reductionType, $reductionValue);
         $this->includeTax = $includeTax;
-        $this->price = new Number((string) $price);
+        $this->price = new DecimalNumber((string) $price);
         $this->fromQuantity = $fromQuantity;
     }
 
@@ -169,9 +169,9 @@ class AddSpecificPriceCommand
     }
 
     /**
-     * @return Number
+     * @return DecimalNumber
      */
-    public function getPrice(): Number
+    public function getPrice(): DecimalNumber
     {
         return $this->price;
     }
@@ -282,18 +282,38 @@ class AddSpecificPriceCommand
 
     /**
      * @return int|null
+     *
+     * @deprecated use getCatalogPriceRuleId() instead. (wrong naming used in migration process)
      */
     public function getCartRuleId(): ?int
     {
-        return $this->cartRuleId;
+        return $this->catalogPriceRuleId;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getCatalogPriceRuleId(): ?int
+    {
+        return $this->catalogPriceRuleId;
     }
 
     /**
      * @param int $cartRuleId
+     *
+     * @deprecated use setCatalogPriceRuleId() instead. (wrong naming used in migration process)
      */
     public function setCartRuleId(int $cartRuleId): void
     {
-        $this->cartRuleId = $cartRuleId;
+        $this->catalogPriceRuleId = $cartRuleId;
+    }
+
+    /**
+     * @param int $catalogPriceRuleId
+     */
+    public function setCatalogPriceRuleId(int $catalogPriceRuleId): void
+    {
+        $this->catalogPriceRuleId = $catalogPriceRuleId;
     }
 
     /**

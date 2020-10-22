@@ -22,41 +22,45 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import $ from 'jquery'
-import prestashop from 'prestashop'
-import { refreshCheckoutPage } from './common';
+import $ from 'jquery';
+import prestashop from 'prestashop';
+import {refreshCheckoutPage} from './common';
 
 export default function () {
   let $body = $('body');
-  let deliveryFormSelector = '#js-delivery';
-  let summarySelector = '#js-checkout-summary';
-  let deliveryStepSelector = '#checkout-delivery-step';
-  let editDeliveryButtonSelector = '.js-edit-delivery';
+  let deliveryFormSelector = prestashop.selectors.checkout.deliveryFormSelector;
+  let summarySelector = prestashop.selectors.checkout.summarySelector;
+  let deliveryStepSelector = prestashop.selectors.checkout.deliveryStepSelector;
+  let editDeliveryButtonSelector = prestashop.selectors.checkout.editDeliveryButtonSelector;
 
   let updateDeliveryForm = (event) => {
     let $deliveryMethodForm = $(deliveryFormSelector);
     let requestData = $deliveryMethodForm.serialize();
     let $inputChecked = $(event.currentTarget);
-    let $newDeliveryOption = $inputChecked.parents(".delivery-option");
+    let $newDeliveryOption = $inputChecked.parents(prestashop.selectors.checkout.deliveryOption);
 
-    $.post($deliveryMethodForm.data('url-update'), requestData).then((resp) => {
-      $(summarySelector).replaceWith(resp.preview);
+    $.post($deliveryMethodForm.data('url-update'), requestData)
+      .then((resp) => {
+        $(summarySelector).replaceWith(resp.preview);
 
+        if ($(prestashop.selectors.checkout.cartPaymentStepRefresh).length) {
+          // we get the refresh flag : on payment step we need to refresh page to be sure
+          // amount is correctly updated on payment modules
+          refreshCheckoutPage();
+        }
 
-      if ($('.js-cart-payment-step-refresh').length) {
-        // we get the refresh flag : on payment step we need to refresh page to be sure
-        // amount is correctly updated on payment modules
-        refreshCheckoutPage();
-      }
-
-      prestashop.emit('updatedDeliveryForm', {
-        dataForm: $deliveryMethodForm.serializeArray(),
-        deliveryOption: $newDeliveryOption,
-        resp: resp
+        prestashop.emit('updatedDeliveryForm', {
+          dataForm: $deliveryMethodForm.serializeArray(),
+          deliveryOption: $newDeliveryOption,
+          resp: resp,
+        });
+      })
+      .fail((resp) => {
+        prestashop.trigger('handleError', {
+          eventType: 'updateDeliveryOptions',
+          resp: resp,
+        });
       });
-    }).fail((resp) => {
-      prestashop.trigger('handleError', {eventType: 'updateDeliveryOptions', resp: resp})
-    });
   };
 
   $body.on('change', deliveryFormSelector + ' input', updateDeliveryForm);

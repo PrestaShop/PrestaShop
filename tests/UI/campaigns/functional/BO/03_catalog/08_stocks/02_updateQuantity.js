@@ -10,10 +10,9 @@ const loginCommon = require('@commonTests/loginBO');
 const {Products} = require('@data/demo/products');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const StocksPage = require('@pages/BO/catalog/stocks');
-const MovementsPage = require('@pages/BO/catalog/stocks/movements');
+const dashboardPage = require('@pages/BO/dashboard');
+const stocksPage = require('@pages/BO/catalog/stocks');
+const movementsPage = require('@pages/BO/catalog/stocks/movements');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -27,50 +26,40 @@ let numberOfProducts = 0;
 
 const productStock = Products.demo_18;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    stocksPage: new StocksPage(page),
-    movementsPage: new MovementsPage(page),
-  };
-};
-
 // Update Quantity
 describe('Update Quantity', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to stocks page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to "Catalog>Stocks" page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.catalogParentLink,
-      this.pageObjects.dashboardPage.stocksLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.catalogParentLink,
+      dashboardPage.stocksLink,
     );
 
-    await this.pageObjects.stocksPage.closeSfToolBar();
-    const pageTitle = await this.pageObjects.stocksPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.stocksPage.pageTitle);
+    await stocksPage.closeSfToolBar(page);
+    const pageTitle = await stocksPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(stocksPage.pageTitle);
   });
 
   it('should get number of products in list', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProducts', baseContext);
 
-    numberOfProducts = await this.pageObjects.stocksPage.getTotalNumberOfProducts();
+    numberOfProducts = await stocksPage.getTotalNumberOfProducts(page);
     await expect(numberOfProducts).to.be.above(0);
   });
 
@@ -89,18 +78,18 @@ describe('Update Quantity', async () => {
       it(`should filter by name '${productStock.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterStocks${test.args.action}`, baseContext);
 
-        await this.pageObjects.stocksPage.simpleFilter(productStock.name);
+        await stocksPage.simpleFilter(page, productStock.name);
 
-        const numberOfProductsAfterFilter = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
+        const numberOfProductsAfterFilter = await stocksPage.getNumberOfProductsFromList(page);
         await expect(numberOfProductsAfterFilter).to.be.at.most(numberOfProducts);
 
-        const textColumn = await this.pageObjects.stocksPage.getTextColumnFromTableStocks(1, 'name');
+        const textColumn = await stocksPage.getTextColumnFromTableStocks(page, 1, 'name');
         await expect(textColumn).to.contains(productStock.name);
 
         // Get physical and available quantities of product
         productStock.stocks = {
-          physical: await this.pageObjects.stocksPage.getTextColumnFromTableStocks(1, 'physical'),
-          available: await this.pageObjects.stocksPage.getTextColumnFromTableStocks(1, 'available'),
+          physical: await stocksPage.getTextColumnFromTableStocks(page, 1, 'physical'),
+          available: await stocksPage.getTextColumnFromTableStocks(page, 1, 'available'),
         };
 
         await expect(productStock.stocks.physical).to.be.above(0);
@@ -111,11 +100,11 @@ describe('Update Quantity', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}ToQuantity`, baseContext);
 
         // Update Quantity and check successful message
-        const updateMessage = await this.pageObjects.stocksPage.updateRowQuantityWithInput(1, test.args.updateValue);
-        await expect(updateMessage).to.contains(this.pageObjects.stocksPage.successfulUpdateMessage);
+        const updateMessage = await stocksPage.updateRowQuantityWithInput(page, 1, test.args.updateValue);
+        await expect(updateMessage).to.contains(stocksPage.successfulUpdateMessage);
 
         // Check physical and available quantities of product after update
-        const quantityToCheck = await this.pageObjects.stocksPage.getStockQuantityForProduct(1);
+        const quantityToCheck = await stocksPage.getStockQuantityForProduct(page, 1);
 
         await expect(quantityToCheck.physical).to.be.equal(productStock.stocks.physical + test.args.updateValue);
         productStock.stocks.physical = quantityToCheck.physical;
@@ -132,24 +121,25 @@ describe('Update Quantity', async () => {
           baseContext,
         );
 
-        await this.pageObjects.stocksPage.goToSubTabMovements();
-        const pageTitle = await this.pageObjects.movementsPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.movementsPage.pageTitle);
+        await stocksPage.goToSubTabMovements(page);
+        const pageTitle = await movementsPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(movementsPage.pageTitle);
       });
 
       it(`should filter by product name '${productStock.name}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterMovements${test.args.action}`, baseContext);
 
-        await this.pageObjects.movementsPage.simpleFilter(productStock.name);
+        await movementsPage.simpleFilter(page, productStock.name);
 
-        const numberOfMovements = await this.pageObjects.movementsPage.getNumberOfElementInGrid();
+        const numberOfMovements = await movementsPage.getNumberOfElementInGrid(page);
         await expect(numberOfMovements).to.be.at.least(1);
 
-        const productName = await this.pageObjects.movementsPage.getTextColumnFromTable(numberOfMovements, 'name');
+        const productName = await movementsPage.getTextColumnFromTable(page, numberOfMovements, 'name');
         await expect(productName).to.equal(productStock.name);
 
         // Check movement quantity
-        const movementQuantity = await this.pageObjects.movementsPage.getTextColumnFromTable(
+        const movementQuantity = await movementsPage.getTextColumnFromTable(
+          page,
           numberOfMovements,
           'quantity',
         );
@@ -160,15 +150,15 @@ describe('Update Quantity', async () => {
       it('should go back to stocks page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `gotoStocksPageAfter${test.args.action}`, baseContext);
 
-        await this.pageObjects.movementsPage.goToSubTabStocks();
-        const pageTitle = await this.pageObjects.stocksPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.stocksPage.pageTitle);
+        await movementsPage.goToSubTabStocks(page);
+        const pageTitle = await stocksPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(stocksPage.pageTitle);
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `resetFilterStocks${test.args.action}`, baseContext);
 
-        const numberOfProductsAfterReset = await this.pageObjects.stocksPage.resetFilter();
+        const numberOfProductsAfterReset = await stocksPage.resetFilter(page);
         await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
       });
     });

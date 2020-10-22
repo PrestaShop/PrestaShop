@@ -30,6 +30,7 @@ use DateTime;
 use Exception;
 use Module;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
+use PrestaShop\PrestaShop\Adapter\Module\Module as ModuleAdapter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
@@ -56,7 +57,7 @@ class ModuleController extends ModuleAbstractController
     const CONTROLLER_NAME = 'ADMINMODULESSF';
 
     /**
-     * @AdminSecurity("is_granted(['read', 'create', 'update', 'delete'], 'ADMINMODULESSF_')")
+     * @AdminSecurity("is_granted(['read'], 'ADMINMODULESSF_')")
      *
      * @return Response
      */
@@ -85,9 +86,7 @@ class ModuleController extends ModuleAbstractController
     /**
      * Controller responsible for displaying "Catalog Module Grid" section of Module management pages with ajax.
      *
-     * @AdminSecurity("is_granted(['read', 'create', 'update', 'delete'], 'ADMINMODULESSF_')")
-     *
-     * @param Request $request
+     * @AdminSecurity("is_granted(['read'], 'ADMINMODULESSF_')")
      *
      * @return Response
      */
@@ -143,7 +142,7 @@ class ModuleController extends ModuleAbstractController
     }
 
     /**
-     * @AdminSecurity("is_granted(['read', 'create', 'update', 'delete'], 'ADMINMODULESSF_')")
+     * @AdminSecurity("is_granted(['read'], 'ADMINMODULESSF_')")
      *
      * @param Request $request
      *
@@ -259,9 +258,9 @@ class ModuleController extends ModuleAbstractController
     }
 
     /**
-     * @AdminSecurity("is_granted(['read', 'create', 'update', 'delete'], 'ADMINMODULESSF_')")
+     * @AdminSecurity("is_granted(['read'], 'ADMINMODULESSF_')")
      *
-     * @param Request $request
+     * @param int $moduleId
      *
      * @return Response
      */
@@ -349,14 +348,28 @@ class ModuleController extends ModuleAbstractController
      */
     public function moduleAction(Request $request)
     {
-        $deniedAccess = $this->checkPermissions(
-            [
-                PageVoter::LEVEL_READ,
-                PageVoter::LEVEL_UPDATE,
-                PageVoter::LEVEL_CREATE,
-                PageVoter::LEVEL_DELETE,
-            ]
-        );
+        $action = $request->get('action');
+
+        switch ($action) {
+            case ModuleAdapter::ACTION_UPGRADE:
+            case ModuleAdapter::ACTION_RESET:
+            case ModuleAdapter::ACTION_ENABLE:
+            case ModuleAdapter::ACTION_DISABLE:
+            case ModuleAdapter::ACTION_ENABLE_MOBILE:
+            case ModuleAdapter::ACTION_DISABLE_MOBILE:
+                $deniedAccess = $this->checkPermission(PageVoter::UPDATE);
+                break;
+            case ModuleAdapter::ACTION_INSTALL:
+                $deniedAccess = $this->checkPermission(PageVoter::CREATE);
+                break;
+            case ModuleAdapter::ACTION_UNINSTALL:
+                $deniedAccess = $this->checkPermission(PageVoter::DELETE);
+                break;
+
+            default:
+                $deniedAccess = null;
+        }
+
         if (null !== $deniedAccess) {
             return $deniedAccess;
         }
@@ -365,16 +378,11 @@ class ModuleController extends ModuleAbstractController
             return $this->getDisabledFunctionalityResponse($request);
         }
 
-        $action = $request->get('action');
         $module = $request->get('module_name');
         $moduleManager = $this->container->get('prestashop.module.manager');
         $moduleManager->setActionParams($request->request->get('actionParams', []));
         $moduleRepository = $this->container->get('prestashop.core.admin.module.repository');
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-        // Get accessed module object
-        $moduleAccessed = $moduleRepository->getModule($module);
-        // Get accessed module DB Id
-        $moduleAccessedId = (int) $moduleAccessed->database->get('id');
         $response = [$module => []];
 
         if (!method_exists($moduleManager, $action)) {
@@ -464,6 +472,10 @@ class ModuleController extends ModuleAbstractController
                 ]
             );
 
+            // Get accessed module object
+            $moduleAccessed = $moduleRepository->getModule($module);
+            // Get accessed module DB Id
+            $moduleAccessedId = (int) $moduleAccessed->database->get('id');
             $logger = $this->container->get('logger');
             $logger->error($response[$module]['msg'], ['object_type' => 'Module', 'object_id' => $moduleAccessedId]);
         }
@@ -775,6 +787,23 @@ class ModuleController extends ModuleAbstractController
     }
 
     /**
+     * @param string $pageVoter
+     *
+     * @return JsonResponse|void
+     */
+    private function checkPermission($pageVoter)
+    {
+        if (!$this->isGranted($pageVoter, self::CONTROLLER_NAME)) {
+            return new JsonResponse(
+                [
+                    'status' => false,
+                    'msg' => $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error'),
+                ]
+            );
+        }
+    }
+
+    /**
      * Get categories and its modules.
      *
      * @param array $modules List of installed modules
@@ -783,8 +812,9 @@ class ModuleController extends ModuleAbstractController
      */
     private function getCategories(AdminModuleDataProvider $modulesProvider, array $modules)
     {
-        /** @var CategoriesProvider */
-        $categories = $this->get('prestashop.categories_provider')->getCategoriesMenu($modules);
+        /** @var CategoriesProvider $categoriesProvider */
+        $categoriesProvider = $this->get('prestashop.categories_provider');
+        $categories = $categoriesProvider->getCategoriesMenu($modules);
 
         foreach ($categories['categories']->subMenu as $category) {
             $collection = AddonsCollection::createFrom($category->modules);

@@ -1,27 +1,37 @@
-/**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- */
 module.exports = {
-  countries: ['France', 'Netherlands', 'United Kingdom', 'Germany'],
+  countries:
+    {
+      france: {
+        id: 8,
+        name: 'France',
+        isoCode: 'FR',
+        callPrefix: 33,
+        zone: 'Europe',
+        status: true,
+      },
+      netherlands: {
+        id: 13,
+        name: 'Netherlands',
+        isoCode: 'NL',
+        callPrefix: 31,
+        zone: 'Europe',
+        status: false,
+      },
+      unitedKingdom: {
+        id: 17,
+        name: 'United Kingdom',
+        isoCode: 'GB',
+        callPrefix: 44,
+        zone: 'Europe',
+        status: false,
+      },
+      germany: {
+        id: 1,
+        name: 'Germany',
+        isoCode: 'DE',
+        callPrefix: 49,
+        zone: 'Europe',
+        status: false,
+      },
+    },
 };

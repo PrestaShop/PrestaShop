@@ -60,8 +60,8 @@ final class LanguageActivator implements LanguageActivatorInterface
     {
         $lang = new Language((int) $langId);
 
-        if ((int) $lang->active !== (int) $status) {
-            $lang->active = (int) $status;
+        if ($lang->active !== $status) {
+            $lang->active = $status;
             $lang->save();
         }
     }

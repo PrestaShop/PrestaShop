@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class AddSQLQuery extends BOBasePage {
-  constructor(page) {
-    super(page);
+class AddSQLQuery extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'SQL Manager';
 
@@ -19,13 +19,16 @@ module.exports = class AddSQLQuery extends BOBasePage {
 
   /**
    * Fill form for add/edit sql query
+   * @param page
    * @param sqlQueryData
    * @returns {Promise<string>}
    */
-  async createEditSQLQuery(sqlQueryData) {
-    await this.setValue(this.sqlQueryNameInput, sqlQueryData.name);
-    await this.setValue(this.sqlQueryTextArea, sqlQueryData.sqlQuery);
-    await this.clickAndWaitForNavigation(this.saveButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+  async createEditSQLQuery(page, sqlQueryData) {
+    await this.setValue(page, this.sqlQueryNameInput, sqlQueryData.name);
+    await this.setValue(page, this.sqlQueryTextArea, sqlQueryData.sqlQuery);
+    await this.clickAndWaitForNavigation(page, this.saveButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
-};
+}
+
+module.exports = new AddSQLQuery();

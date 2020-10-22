@@ -46,7 +46,7 @@ interface FeatureInterface
     public function disable();
 
     /**
-     * @param $status bool
+     * @param bool $status
      */
     public function update($status);
 }
