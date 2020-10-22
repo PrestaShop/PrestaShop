@@ -31,7 +31,10 @@ namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 use ErrorException;
 use Hook;
 use Image;
+use ImageType;
 use PrestaShop\PrestaShop\Adapter\Image\Exception\CannotUnlinkImageException;
+use PrestaShop\PrestaShop\Adapter\Image\ImageGenerator;
+use PrestaShop\PrestaShop\Adapter\Image\ImageValidator;
 use PrestaShop\PrestaShop\Adapter\Product\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
 
@@ -56,18 +59,26 @@ class ProductImageUploader extends AbstractImageUploader
     private $contextShopId;
 
     /**
+     * @var ImageGenerator
+     */
+    private $imageGenerator;
+
+    /**
      * @param UploadSizeConfigurationInterface $uploadSizeConfiguration
      * @param ProductImagePathFactory $productImagePathFactory
      * @param int $contextShopId
+     * @param ImageGenerator $imageGenerator
      */
     public function __construct(
         UploadSizeConfigurationInterface $uploadSizeConfiguration,
         ProductImagePathFactory $productImagePathFactory,
-        int $contextShopId
+        int $contextShopId,
+        ImageGenerator $imageGenerator
     ) {
         $this->uploadSizeConfiguration = $uploadSizeConfiguration;
         $this->productImagePathFactory = $productImagePathFactory;
         $this->contextShopId = $contextShopId;
+        $this->imageGenerator = $imageGenerator;
     }
 
     /**
@@ -75,11 +86,14 @@ class ProductImageUploader extends AbstractImageUploader
      */
     public function upload(Image $image, string $filePath): void
     {
-        $this->assertImageIsAllowedForUpload($filePath);
+        $imageValidator = new ImageValidator($filePath);
+        $imageValidator->assertImageIsAllowedForUpload();
+        $imageValidator->assertImageTypeIsSupported(['jpeg', 'gif', 'png', 'jpg']);
         $this->productImagePathFactory->createDestinationDirectory($image);
 
-        $this->uploadFromTemp($filePath, $this->productImagePathFactory->getBasePath($image, true));
-        $this->generateDifferentSizeImages($this->productImagePathFactory->getBasePath($image, false), 'products');
+        $destinationPath = $this->productImagePathFactory->getBasePath($image);
+        $this->uploadFromTemp($filePath, $destinationPath);
+        $this->imageGenerator->generateImagesByTypes($destinationPath, ImageType::getImagesTypes('products'));
 
         Hook::exec('actionWatermark', ['id_image' => (int) $image->id, 'id_product' => (int) $image->id_product]);
         $this->deleteCachedImages($image);
