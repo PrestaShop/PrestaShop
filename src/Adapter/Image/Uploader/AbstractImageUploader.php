@@ -106,7 +106,6 @@ abstract class AbstractImageUploader
             throw new ImageOptimizationException('An error occurred while uploading the image. Check your directory permissions.');
         }
 
-        //@todo: should we care about tempfile deletion? shouldn't we leave it for garbage collector?
         unlink($temporaryImageName);
     }
 
