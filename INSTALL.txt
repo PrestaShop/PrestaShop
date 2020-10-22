@@ -63,7 +63,7 @@ Here is the content of this archive:
 From there on, follow these instructions:
 
 1. Upload at least index.php and prestashop.zip on your web server.
-2. From your web browser, go to the folder where index.php and prestashop.zip have been uploaded and browse index.html. The Zip archive should unzip automatically.
+2. From your web browser, go to the folder where index.php and prestashop.zip have been uploaded and browse index.php. The Zip archive should unzip automatically.
 3. You are redirected to the PrestaShop installer. Follow the instructions.
 
 After PrestaShop has successfuly been installed, delete the /install/ folder from your server.
