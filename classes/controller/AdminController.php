@@ -4186,9 +4186,9 @@ class AdminControllerCore extends Controller
 
             if ($result) {
                 $this->redirect_after = self::$currentIndex . '&conf=5&token=' . $this->token;
+            } else {
+                $this->errors[] = $this->trans('An error occurred while updating the status.', [], 'Admin.Notifications.Error');
             }
-
-            $this->errors[] = $this->trans('An error occurred while updating the status.', [], 'Admin.Notifications.Error');
         } else {
             $this->errors[] = $this->trans('You must select at least one element to perform a bulk action.', [], 'Admin.Notifications.Error');
         }
