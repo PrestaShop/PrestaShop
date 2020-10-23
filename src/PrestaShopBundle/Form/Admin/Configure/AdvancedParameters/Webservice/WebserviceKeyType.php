@@ -143,7 +143,7 @@ class WebserviceKeyType extends TranslatorAwareType
 
         if ($this->isMultistoreFeatureUsed) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
-                'label' => $this->trans('Shop association', 'Admin.Global')
+                'label' => $this->trans('Shop association', 'Admin.Global'),
             ]);
 
             $builder->get('shop_association')->addModelTransformer(new CallbackTransformer(
