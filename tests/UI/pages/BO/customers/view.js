@@ -11,35 +11,45 @@ class ViewCustomer extends BOBasePage {
     // Selectors
     // Personnel information
     this.personnalInformationDiv = '.customer-personal-informations-card';
-    this.personnalInformationEditButton = `${this.personnalInformationDiv} a[data-original-title='Edit']`;
+    this.personnalInformationEditButton = `${this.personnalInformationDiv} a.edit-link`;
+
     // Orders
     this.ordersDiv = '.customer-orders-card';
-    this.ordersViewButton = row => `${this.ordersDiv} tr:nth-child(${row}) a[data-original-title='View'] i`;
+    this.ordersViewButton = row => `${this.ordersDiv} tr:nth-child(${row}) a.grid-view-row-link i`;
+
     // Carts
     this.cartsDiv = '.customer-carts-card';
-    this.cartsViewButton = row => `${this.cartsDiv} tr:nth-child(${row}) a[data-original-title='View'] i`;
+    this.cartsViewButton = row => `${this.cartsDiv} tr:nth-child(${row}) a.grid-view-row-link i`;
+
     // Viewed products
     this.viewedProductsDiv = '.customer-viewed-products-card';
+
     // Private note
-    this.privateNoteDiv = '.customer-private-note-card';
     this.privateNoteTextArea = '#private_note_note';
-    this.privateNoteSaveButton = `${this.privateNoteDiv} .btn-primary`;
+    this.privateNoteSaveButton = '#save-private-note';
+
     // Messages
     this.messagesDiv = '.customer-messages-card';
+
     // Vouchers
     this.vouchersDiv = '.customer-discounts-card';
-    this.voucherEditButton = `${this.vouchersDiv} a[data-original-title='Edit']`;
+    this.voucherEditButton = `${this.vouchersDiv} a.grid-edit-row-link`;
     this.voucherToggleDropdown = `${this.vouchersDiv} a[data-toggle='dropdown']`;
-    this.voucherDeleteButton = `${this.vouchersDiv} .dropdown-menu a`;
+    this.voucherDeleteButton = `${this.vouchersDiv} .dropdown-menu a.grid-delete-row-link`;
+
     // Last emails
     this.lastEmailsDiv = '.customer-sent-emails-card';
+
     // Last connections
     this.lastConnectionsDiv = '.customer-last-connections-card';
+
     // Groups
     this.groupsDiv = '.customer-groups-card';
+
     // Addresses
     this.addressesDiv = '.customer-addresses-card';
-    this.addressesEditButton = row => `${this.addressesDiv} tr:nth-child(${row}) a[data-original-title='Edit'] i`;
+    this.addressesEditButton = row => `${this.addressesDiv} tr:nth-child(${row}) a.grid-edit-row-link i`;
+
     // Purchased products
     this.purchasedProductsDiv = '.customer-bought-products-card';
   }
