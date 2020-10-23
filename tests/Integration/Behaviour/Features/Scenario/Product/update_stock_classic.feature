@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-stock-classic
 @reset-database-before-feature
+@clear-cache-before-feature
 @update-stock
 @update-stock-classic
 Feature: Update product stock from Back Office (BO)
