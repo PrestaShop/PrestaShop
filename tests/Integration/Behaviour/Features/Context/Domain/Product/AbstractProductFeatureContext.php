@@ -187,6 +187,10 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             'pack_stock_type' => 'stock.packStockType',
             'out_of_stock_type' => 'stock.outOfStockType',
             'quantity' => 'stock.quantity',
+            'minimal_quantity' => 'stock.minimalQuantity',
+            'location' => 'stock.location',
+            'low_stock_threshold' => 'stock.lowStockThreshold',
+            'low_stock_alert' => 'stock.lowStockAlert',
         ];
 
         $propertyAccessor = PropertyAccess::createPropertyAccessor();

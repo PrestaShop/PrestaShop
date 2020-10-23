@@ -303,7 +303,11 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
                 $stockAvailable->depends_on_stock,
                 PackStockTypeConverter::convertToValueObject((int) $product->pack_stock_type),
                 OutOfStockTypeConverter::convertToValueObject((int) $stockAvailable->out_of_stock),
-                (int) $stockAvailable->quantity
+                (int) $stockAvailable->quantity,
+                (int) $product->minimal_quantity,
+                $stockAvailable->location,
+                (int) $product->low_stock_threshold,
+                (bool) $product->low_stock_alert
             );
         } catch (StockAvailableNotFoundException $e) {
             // In case StockAvailable does not exist we can still use the Product fields
@@ -313,7 +317,11 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
                 $product->depends_on_stock,
                 PackStockTypeConverter::convertToValueObject((int) $product->pack_stock_type),
                 OutOfStockTypeConverter::convertToValueObject((int) $product->out_of_stock),
-                (int) $product->quantity
+                (int) $product->quantity,
+                (int) $product->minimal_quantity,
+                $product->location,
+                (int) $product->low_stock_threshold,
+                (bool) $product->low_stock_alert
             );
         }
     }
