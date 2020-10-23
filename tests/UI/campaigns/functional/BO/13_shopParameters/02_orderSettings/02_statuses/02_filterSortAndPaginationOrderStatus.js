@@ -170,7 +170,14 @@ describe('Filter, sort and pagination order status', async () => {
         await expect(numberOfLinesAfterFilter).to.be.at.most(numberOfOrderStatuses);
 
         for (let row = 1; row <= numberOfLinesAfterFilter; row++) {
-          const textColumn = await statusesPage.getTextColumn(page, tableName, row, test.args.filterBy, test.args.idColumn);
+          const textColumn = await statusesPage.getTextColumn(
+            page,
+            tableName,
+            row,
+            test.args.filterBy,
+            test.args.idColumn,
+          );
+
           if (test.expected !== undefined) {
             await expect(textColumn).to.contains(test.expected);
           } else {
@@ -227,11 +234,21 @@ describe('Filter, sort and pagination order status', async () => {
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        let nonSortedTable = await statusesPage.getAllRowsColumnContent(page, tableName, test.args.sortBy, test.args.columnID);
+        let nonSortedTable = await statusesPage.getAllRowsColumnContent(
+          page,
+          tableName,
+          test.args.sortBy,
+          test.args.columnID,
+        );
 
         await statusesPage.sortTable(page, tableName, test.args.sortBy, test.args.columnID, test.args.sortDirection);
 
-        let sortedTable = await statusesPage.getAllRowsColumnContent(page, tableName, test.args.sortBy, test.args.columnID);
+        let sortedTable = await statusesPage.getAllRowsColumnContent(
+          page,
+          tableName,
+          test.args.sortBy,
+          test.args.columnID,
+        );
 
         if (test.args.isFloat) {
           nonSortedTable = await nonSortedTable.map(text => parseFloat(text));

@@ -168,7 +168,7 @@ describe('Create, update and delete order return status in BO', async () => {
     it('should delete order return status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteOrderStatus', baseContext);
 
-      const textResult = await statusesPage.deleteOrderStatus(page, tableName,1);
+      const textResult = await statusesPage.deleteOrderStatus(page, tableName, 1);
       await expect(textResult).to.contains(statusesPage.successfulDeleteMessage);
 
       const numberOfOrderReturnStatusesAfterDelete = await statusesPage.resetAndGetNumberOfLines(page, tableName);

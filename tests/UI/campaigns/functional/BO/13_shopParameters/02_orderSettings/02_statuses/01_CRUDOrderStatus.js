@@ -188,7 +188,7 @@ describe('Create, read, update and delete order status in BO', async () => {
     it('should go to edit order status page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditOrderStatusPage', baseContext);
 
-      await statusesPage.gotoEditPage(page, tableName,1);
+      await statusesPage.gotoEditPage(page, tableName, 1);
 
       const pageTitle = await addOrderStatusPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addOrderStatusPage.pageTitleEdit);
@@ -227,7 +227,7 @@ describe('Create, read, update and delete order status in BO', async () => {
     it('should delete order status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteOrderStatus', baseContext);
 
-      const textResult = await statusesPage.deleteOrderStatus(page, tableName,1);
+      const textResult = await statusesPage.deleteOrderStatus(page, tableName, 1);
       await expect(textResult).to.contains(statusesPage.successfulDeleteMessage);
 
       const numberOfOrderStatusesAfterDelete = await statusesPage.resetAndGetNumberOfLines(page, tableName);
