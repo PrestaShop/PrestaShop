@@ -4296,12 +4296,16 @@ class ProductCore extends ObjectModel
 
     /**
      * @param array $products
-     * @param bool $have_stock
+     * @param bool $have_stock, Deprecated use Product::getAttributesColorList(array $products)
      *
      * @return array|false
      */
     public static function getAttributesColorList(array $products, $have_stock = true)
     {
+        if (1 < \func_num_args()) { 
+            trigger_error('$have_stock parameter is deprecated and will be removed in a future release', E_USER_DEPRECATED);    
+        }
+        
         if (!count($products)) {
             return [];
         }
