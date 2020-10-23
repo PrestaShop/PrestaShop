@@ -81,6 +81,10 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         $this->assertStringProperty($productForEditing, $data, 'pack_stock_type');
         $this->assertStringProperty($productForEditing, $data, 'out_of_stock_type');
         $this->assertNumberProperty($productForEditing, $data, 'quantity');
+        $this->assertNumberProperty($productForEditing, $data, 'minimal_quantity');
+        $this->assertStringProperty($productForEditing, $data, 'location');
+        $this->assertNumberProperty($productForEditing, $data, 'low_stock_threshold');
+        $this->assertBoolProperty($productForEditing, $data, 'low_stock_alert');
 
         // Assertions checking isset() can hide some errors if it doesn't find array key,
         // to make sure all provided fields were checked we need to unset every asserted field
@@ -221,6 +225,26 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         if (isset($data['add_movement'])) {
             $command->setAddMovement(PrimitiveUtils::castStringBooleanIntoBoolean($data['add_movement']));
             unset($data['add_movement']);
+        }
+
+        if (isset($data['minimal_quantity'])) {
+            $command->setMinimalQuantity((int) $data['minimal_quantity']);
+            unset($data['minimal_quantity']);
+        }
+
+        if (isset($data['location'])) {
+            $command->setLocation($data['location']);
+            unset($data['location']);
+        }
+
+        if (isset($data['low_stock_threshold'])) {
+            $command->setLowStockThreshold((int) $data['low_stock_threshold']);
+            unset($data['low_stock_threshold']);
+        }
+
+        if (isset($data['low_stock_alert'])) {
+            $command->setLowStockAlert(PrimitiveUtils::castStringBooleanIntoBoolean($data['low_stock_alert']));
+            unset($data['low_stock_alert']);
         }
 
         return $data;

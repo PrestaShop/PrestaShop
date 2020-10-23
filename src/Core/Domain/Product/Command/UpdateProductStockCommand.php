@@ -86,7 +86,7 @@ class UpdateProductStockCommand
     private $lowStockThreshold;
 
     /**
-     * @var int|null
+     * @var bool|null
      */
     private $lowStockAlert;
 
@@ -291,19 +291,19 @@ class UpdateProductStockCommand
     }
 
     /**
-     * @return int|null
+     * @return bool|null
      */
-    public function getLowStockAlert(): ?int
+    public function getLowStockAlert(): ?bool
     {
         return $this->lowStockAlert;
     }
 
     /**
-     * @param int $lowStockAlert
+     * @param bool $lowStockAlert
      *
      * @return UpdateProductStockCommand
      */
-    public function setLowStockAlert(int $lowStockAlert): UpdateProductStockCommand
+    public function setLowStockAlert(bool $lowStockAlert): UpdateProductStockCommand
     {
         $this->lowStockAlert = $lowStockAlert;
 
