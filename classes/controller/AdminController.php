@@ -4176,10 +4176,10 @@ class AdminControllerCore extends Controller
                 /** @var ObjectModel $object */
                 $object = new $this->className((int) $id);
                 $object->active = (int) $status;
-                $update_ok = $object->update();
-                $result &= $update_ok;
+                $isUpdated = (bool) $object->update();
+                $result &= $isUpdated;
 
-                if (!$update_ok) {
+                if (!$isUpdated) {
                     $this->errors[] = $this->trans('Can\'t update #%id% status', ['%id%' => (int) $id], 'Admin.Notifications.Error');
                 }
             }
