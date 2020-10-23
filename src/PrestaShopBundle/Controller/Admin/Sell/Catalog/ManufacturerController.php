@@ -77,19 +77,19 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class ManufacturerController extends FrameworkBundleAdminController
 {
-
     /**
      * @var Filesystem
      */
     public $fs;
 
-
+    /**
+     * ManufacturerController constructor.
+     */
     public function __construct()
     {
         parent::__construct();
         $this->fs = new Filesystem();
     }
-
 
     /**
      * Show manufacturers listing page.
