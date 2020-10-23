@@ -333,6 +333,7 @@ services:
     prestashop.adapter.product.command_handler.update_product_stock_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductStockHandler
         arguments:
+            - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.adapter.product.repository.stock_available_repository'
             - '@prestashop.adapter.product.update.product_stock_updater'
         tags:
