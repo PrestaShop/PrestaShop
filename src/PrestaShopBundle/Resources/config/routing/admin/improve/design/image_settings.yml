@@ -6,6 +6,14 @@ admin_image_settings_index:
         _legacy_controller: AdminImages
         _legacy_link: AdminImages
 
+admin_image_settings_save_options:
+    path: /save-options
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\Design\ImageSettings:saveOptions'
+        _legacy_controller: AdminImages
+        _legacy_link: AdminImages:submitOptionsimage_type
+
 admin_image_settings_search:
     path: /
     methods: POST
