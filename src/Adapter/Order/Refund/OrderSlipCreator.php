@@ -207,7 +207,7 @@ class OrderSlipCreator
         $orderSlip->partial = 0;
 
         if ($shipping_cost > 0) {
-            $orderSlip->shipping_cost = true;
+            $orderSlip->shipping_cost = 1;
             $carrier = new Carrier((int) $order->id_carrier);
             // @todo: define if we use invoice or delivery address, or we use configuration PS_TAX_ADDRESS_TYPE
             $address = Address::initialize($order->id_address_delivery, false);
@@ -220,7 +220,7 @@ class OrderSlipCreator
                 $orderSlip->{'total_shipping_tax_' . $inc_or_ex_2} = $orderSlip->{'total_shipping_tax_' . $inc_or_ex_1};
             }
         } else {
-            $orderSlip->shipping_cost = false;
+            $orderSlip->shipping_cost = 0;
         }
 
         $orderSlip->amount = 0;

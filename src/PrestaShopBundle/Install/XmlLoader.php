@@ -407,7 +407,7 @@ class XmlLoader
      * @param string $entity Name of the entity to load (eg. 'tab')
      * @param string|null $iso Language in which to load said entity. If not found, will fall back to default language.
      *
-     * @return \SimpleXMLElement
+     * @return \SimpleXMLElement|void
      */
     protected function loadEntity($entity, $iso = null)
     {

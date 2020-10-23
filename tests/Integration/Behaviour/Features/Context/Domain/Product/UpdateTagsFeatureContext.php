@@ -31,7 +31,8 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use Language;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTagsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllProductTagsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags as LocalizedTagsDto;
 use RuntimeException;
@@ -57,10 +58,22 @@ class UpdateTagsFeatureContext extends AbstractProductFeatureContext
         }
 
         try {
-            $this->getCommandBus()->handle(new UpdateProductTagsCommand($productId, $localizedTagsList));
+            $this->getCommandBus()->handle(new SetProductTagsCommand($productId, $localizedTagsList));
         } catch (ProductException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @When I remove all product :productReference tags
+     *
+     * @param string $productReference
+     */
+    public function removeAllTags(string $productReference)
+    {
+        $productId = $this->getSharedStorage()->get($productReference);
+
+        $this->getCommandBus()->handle(new RemoveAllProductTagsCommand($productId));
     }
 
     /**

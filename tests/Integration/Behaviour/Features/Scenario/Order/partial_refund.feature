@@ -834,7 +834,7 @@ Feature: Refund Order from Back Office (BO)
       | name         | State tax |
       | rate         | 10        |
       | is_enabled   | true      |
-    And I add tax rule group for tax "state-tax" with following conditions:
+    And I add the tax rule group "state-tax-group" for the tax "state-tax" with the following conditions:
       | name         | US-FL Rate (10%) |
       | country      | US               |
       | state        | FL               |

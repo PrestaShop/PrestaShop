@@ -81,7 +81,7 @@
       <trans-unit id="79f062391903591d68e514a400e136cf">
         <source>The status has been updated successfully.</source>
         <target>The status has been updated successfully.</target>
-        <note>Line: 719</note>
+        <note>Line: 729</note>
       </trans-unit>
     </body>
   </file>
@@ -206,7 +206,7 @@
       <trans-unit id="4a6c326f3ec43e638da38a44a21b5eb7">
         <source>Comment successfully added.</source>
         <target>Comment successfully added.</target>
-        <note>Line: 1189</note>
+        <note>Line: 1215</note>
       </trans-unit>
     </body>
   </file>

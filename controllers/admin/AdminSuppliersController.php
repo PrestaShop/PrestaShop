@@ -351,7 +351,6 @@ class AdminSuppliersControllerCore extends AdminController
     public function initToolbar()
     {
         parent::initToolbar();
-        $this->addPageHeaderToolBarModulesListButton();
 
         if (empty($this->display) && $this->can_import) {
             $this->toolbar_btn['import'] = [
@@ -363,7 +362,6 @@ class AdminSuppliersControllerCore extends AdminController
 
     public function renderView()
     {
-        $this->initTabModuleList();
         $this->toolbar_title = $this->object->name;
         $products = $this->object->getProductsLite($this->context->language->id);
         $total_product = count($products);
@@ -541,7 +539,7 @@ class AdminSuppliersControllerCore extends AdminController
                 $id_address = Address::getAddressIdBySupplierId($obj->id);
                 $address = new Address($id_address);
                 if (Validate::isLoadedObject($address)) {
-                    $address->deleted = 1;
+                    $address->deleted = true;
                     $address->save();
                 }
 

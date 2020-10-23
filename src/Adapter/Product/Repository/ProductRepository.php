@@ -28,14 +28,18 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
+use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotAddProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShopException;
 use Product;
 
 /**
@@ -44,16 +48,41 @@ use Product;
 class ProductRepository extends AbstractObjectModelRepository
 {
     /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * @var string
+     */
+    private $dbPrefix;
+
+    /**
      * @var ProductValidator
      */
     private $productValidator;
 
     /**
-     * @param ProductValidator $productValidator
+     * @var int
      */
-    public function __construct(ProductValidator $productValidator)
-    {
+    private $defaultCategoryId;
+
+    /**
+     * @param Connection $connection
+     * @param string $dbPrefix
+     * @param ProductValidator $productValidator
+     * @param int $defaultCategoryId
+     */
+    public function __construct(
+        Connection $connection,
+        string $dbPrefix,
+        ProductValidator $productValidator,
+        int $defaultCategoryId
+    ) {
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
         $this->productValidator = $productValidator;
+        $this->defaultCategoryId = $defaultCategoryId;
     }
 
     /**
@@ -62,6 +91,66 @@ class ProductRepository extends AbstractObjectModelRepository
     public function assertProductExists(ProductId $productId): void
     {
         $this->assertObjectModelExists($productId->getValue(), 'product', ProductNotFoundException::class);
+    }
+
+    /**
+     * @param ProductId[] $productIds
+     *
+     * @throws ProductNotFoundException
+     */
+    public function assertAllProductsExists(array $productIds): void
+    {
+        //@todo: no shop association. Should it be checked here?
+        $ids = array_map(function (ProductId $productId): int {
+            return $productId->getValue();
+        }, $productIds);
+        $ids = array_unique($ids);
+
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('COUNT(id_product) as product_count')
+            ->from($this->dbPrefix . 'product')
+            ->where('id_product IN (:productIds)')
+            ->setParameter('productIds', $ids, Connection::PARAM_INT_ARRAY);
+
+        $results = $qb->execute()->fetch();
+
+        if (!$results || (int) $results['product_count'] !== count($ids)) {
+            throw new ProductNotFoundException(
+                    sprintf(
+                        'Some of these products do not exist: %s',
+                        implode(',', $ids)
+                    )
+                );
+        }
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param LanguageId $languageId
+     *
+     * @return array<array<string, string>>
+     *                             e.g [
+     *                             ['id_product' => '1', 'name' => 'Product name', 'reference' => 'demo15'],
+     *                             ['id_product' => '2', 'name' => 'Product name2', 'reference' => 'demo16'],
+     *                             ]
+     *
+     * @throws CoreException
+     */
+    public function getRelatedProducts(ProductId $productId, LanguageId $languageId): array
+    {
+        $this->assertProductExists($productId);
+        $productIdValue = $productId->getValue();
+
+        try {
+            $accessories = Product::getAccessoriesLight($languageId->getValue(), $productIdValue);
+        } catch (PrestaShopException $e) {
+            throw new CoreException(sprintf(
+                'Error occurred when fetching related products for product #%d',
+                $productIdValue
+            ));
+        }
+
+        return $accessories;
     }
 
     /**
@@ -79,6 +168,29 @@ class ProductRepository extends AbstractObjectModelRepository
             Product::class,
             ProductNotFoundException::class
         );
+
+        return $product;
+    }
+
+    /**
+     * @param array<int, string> $localizedNames
+     * @param bool $isVirtual
+     *
+     * @return Product
+     *
+     * @throws CannotAddProductException
+     */
+    public function create(array $localizedNames, bool $isVirtual): Product
+    {
+        $product = new Product();
+        $product->active = false;
+        $product->id_category_default = $this->defaultCategoryId;
+        $product->name = $localizedNames;
+        $product->is_virtual = $isVirtual;
+
+        $this->productValidator->validateCreation($product);
+        $this->addObjectModel($product, CannotAddProductException::class);
+        $product->addToCategories([$product->id_category_default]);
 
         return $product;
     }

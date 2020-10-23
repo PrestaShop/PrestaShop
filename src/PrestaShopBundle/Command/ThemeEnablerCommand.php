@@ -91,6 +91,6 @@ final class ThemeEnablerCommand extends ContainerAwareCommand
 
         $io->success(sprintf('Theme "%s" enabled with success.', $theme));
 
-        return;
+        return 0;
     }
 }

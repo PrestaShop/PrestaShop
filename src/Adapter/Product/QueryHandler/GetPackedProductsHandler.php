@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\PackedProduct;
 /**
  * Handles GetPackedProducts query using legacy object model
  */
-class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
+final class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
 {
     /**
      * @var int

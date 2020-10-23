@@ -85,8 +85,7 @@ services:
     prestashop.adapter.product.command_handler.add_product_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddProductHandler
         arguments:
-            - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
-            - '@=service("prestashop.adapter.legacy.context").getContext().shop.id_category'
+            - '@prestashop.adapter.product.repository.product_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand
@@ -94,7 +93,7 @@ services:
     prestashop.adapter.product.command_handler.update_product_basic_information_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductBasicInformationHandler
         arguments:
-            - '@prestashop.adapter.product.product_repository'
+            - '@prestashop.adapter.product.repository.product_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand
@@ -107,29 +106,54 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand
 
-    prestashop.adapter.product.command_handler.update_product_tags_handler:
-        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductTagsHandler
+    prestashop.adapter.product.command_handler.set_product_tags_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetProductTagsHandler
+        arguments:
+            - '@prestashop.adapter.product.repository.product_repository'
+            - '@prestashop.adapter.product.updater.product_tag_updater'
         tags:
             - name: tactician.handler
-              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTagsCommand
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand
+
+    prestashop.adapter.product.command_handler.remove_all_product_tags_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllProductTagsHandler
+        arguments:
+            - '@prestashop.adapter.product.repository.product_repository'
+            - '@prestashop.adapter.product.updater.product_tag_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllProductTagsCommand
 
     prestashop.adapter.product.command_handler.update_product_options_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductOptionsHandler
         arguments:
-            - '@prestashop.adapter.product.product_repository'
+            - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.adapter.manufacturer.repository.manufacturer_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand
 
+    prestashop.adapter.product.repository.product_pack_repository:
+        class: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductPackRepository
+
+    prestashop.adapter.product.update.product_pack_updater:
+        class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductPackUpdater
+        arguments:
+            - '@prestashop.adapter.product.repository.product_repository'
+            - '@prestashop.adapter.product.repository.product_pack_repository'
+
     prestashop.adapter.product.command_handler.set_pack_products_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetPackProductsHandler
+        arguments:
+            - '@prestashop.adapter.product.update.product_pack_updater'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetPackProductsCommand
 
     prestashop.adapter.product.command_handler.remove_all_products_from_pack_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllProductsFromPackHandler
+        arguments:
+            - '@prestashop.adapter.product.update.product_pack_updater'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllProductsFromPackCommand
@@ -151,8 +175,8 @@ services:
     prestashop.adapter.product.query_handler.get_product_customization_fields_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductCustomizationFieldsHandler
         arguments:
-            - '@prestashop.adapter.product.customization_field_repository'
-            - '@prestashop.adapter.product.product_repository'
+            - '@prestashop.adapter.product.repository.customization_field_repository'
+            - '@prestashop.adapter.product.repository.product_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields
@@ -160,7 +184,7 @@ services:
     prestashop.adapter.product.command_handler.set_product_customization_fields_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetProductCustomizationFieldsHandler
         arguments:
-            - '@prestashop.adapter.product.product_repository'
+            - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.adapter.product.update.product_customization_field_updater'
         tags:
             - name: tactician.handler
@@ -170,7 +194,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllCustomizationFieldsFromProductHandler
         arguments:
             - '@prestashop.adapter.product.update.customization_field_deleter'
-            - '@prestashop.adapter.product.product_repository'
+            - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.adapter.product.update.product_customization_field_updater'
         tags:
             - name: tactician.handler
@@ -178,6 +202,8 @@ services:
 
     prestashop.adapter.product.command_handler.update_product_shipping_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductShippingHandler
+        arguments:
+            - '@prestashop.adapter.product.repository.product_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductShippingCommand
@@ -209,7 +235,7 @@ services:
         arguments:
             - '@prestashop.adapter.product.repository.product_supplier_repository'
             - '@prestashop.adapter.product.update.product_supplier_updater'
-            - '@prestashop.adapter.product.product_repository'
+            - '@prestashop.adapter.product.repository.product_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand
@@ -223,34 +249,37 @@ services:
     prestashop.adapter.product.update.customization_field_deleter:
         class: PrestaShop\PrestaShop\Adapter\Product\Update\CustomizationFieldDeleter
         arguments:
-            - '@prestashop.adapter.product.customization_field_repository'
-            - '@prestashop.adapter.product.product_repository'
+            - '@prestashop.adapter.product.repository.customization_field_repository'
+            - '@prestashop.adapter.product.repository.product_repository'
 
     prestashop.adapter.product.update.product_customization_field_updater:
         class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductCustomizationFieldUpdater
         arguments:
-            - '@prestashop.adapter.product.customization_field_repository'
+            - '@prestashop.adapter.product.repository.customization_field_repository'
             - '@prestashop.adapter.product.update.customization_field_deleter'
-            - '@prestashop.adapter.product.product_repository'
+            - '@prestashop.adapter.product.repository.product_repository'
 
     prestashop.adapter.product.update.product_attachment_updater:
         class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductAttachmentUpdater
         arguments:
-            - '@prestashop.adapter.product.product_repository'
+            - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.adapter.attachment.attachment_repository'
 
     prestashop.adapter.product.validate.product_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator
 
-    prestashop.adapter.product.product_repository:
+    prestashop.adapter.product.repository.product_repository:
         class: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository
         arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
             - '@prestashop.adapter.product.validate.product_validator'
+            - '@=service("prestashop.adapter.legacy.context").getContext().shop.id_category'
 
     prestashop.adapter.product.validate.customization_field_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\Validate\CustomizationFieldValidator
 
-    prestashop.adapter.product.customization_field_repository:
+    prestashop.adapter.product.repository.customization_field_repository:
         class: PrestaShop\PrestaShop\Adapter\Product\Repository\CustomizationFieldRepository
         arguments:
             - '@prestashop.adapter.product.validate.customization_field_validator'
@@ -258,7 +287,7 @@ services:
     prestashop.adapter.product.command_handler.delete_product_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DeleteProductHandler
         arguments:
-            - '@prestashop.adapter.product.product_repository'
+            - '@prestashop.adapter.product.repository.product_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand
@@ -266,7 +295,7 @@ services:
     prestashop.adapter.product.command_handler.bulk_delete_product_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\BulkDeleteProductHandler
         arguments:
-            - '@prestashop.adapter.product.product_repository'
+            - '@prestashop.adapter.product.repository.product_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand
@@ -287,10 +316,19 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AssociateProductAttachmentCommand
 
+    prestashop.adapter.product.command_handler.remove_all_associated_product_attachments_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllAssociatedProductAttachmentsHandler
+        arguments:
+            - '@prestashop.adapter.product.update.product_attachment_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductAttachmentsCommand
+
+
     prestashop.adapter.product.validate.product_supplier_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\Validate\ProductSupplierValidator
         arguments:
-            - '@prestashop.adapter.product.product_repository'
+            - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.adapter.supplier.repository.supplier_repository'
             - '@prestashop.adapter.currency.repository.currency_repository'
 
@@ -302,6 +340,43 @@ services:
     prestashop.adapter.product.update.product_supplier_updater:
         class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater
         arguments:
-            - '@prestashop.adapter.product.product_repository'
+            - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.adapter.supplier.repository.supplier_repository'
             - '@prestashop.adapter.product.repository.product_supplier_repository'
+
+    prestashop.adapter.product.update.related_products_updater:
+        class: PrestaShop\PrestaShop\Adapter\Product\Update\RelatedProductsUpdater
+        arguments:
+            - '@prestashop.adapter.product.repository.product_repository'
+
+    prestashop.adapter.product.command_handler.set_related_products_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetRelatedProductsHandler
+        arguments:
+            - '@prestashop.adapter.product.update.related_products_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetRelatedProductsCommand
+
+    prestashop.adapter.product.query_handler.get_related_products_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetRelatedProductsHandler
+        arguments:
+            - '@prestashop.adapter.product.repository.product_repository'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts
+
+    prestashop.adapter.product.query_handler.remove_all_related_products_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllRelatedProductsHandler
+        arguments:
+            - '@prestashop.adapter.product.update.related_products_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllRelatedProductsCommand
+
+    prestashop.adapter.product.repository.tag_repository:
+        class: PrestaShop\PrestaShop\Adapter\Product\Repository\TagRepository
+
+    prestashop.adapter.product.updater.product_tag_updater:
+        class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductTagUpdater
+        arguments:
+            - '@prestashop.adapter.product.repository.tag_repository'

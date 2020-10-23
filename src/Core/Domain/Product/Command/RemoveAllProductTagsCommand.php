@@ -28,14 +28,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Updates product tags in provided languages
+ * Removes all Tags for product
  */
-class UpdateProductTagsCommand
+class RemoveAllProductTagsCommand
 {
     /**
      * @var ProductId
@@ -43,18 +41,11 @@ class UpdateProductTagsCommand
     private $productId;
 
     /**
-     * @var LocalizedTags[]
-     */
-    private $localizedTagsList;
-
-    /**
      * @param int $productId
-     * @param array $localizedTags
      */
-    public function __construct(int $productId, array $localizedTags)
+    public function __construct(int $productId)
     {
         $this->productId = new ProductId($productId);
-        $this->setLocalizedTagsList($localizedTags);
     }
 
     /**
@@ -63,25 +54,5 @@ class UpdateProductTagsCommand
     public function getProductId(): ProductId
     {
         return $this->productId;
-    }
-
-    /**
-     * @return LocalizedTags[]
-     */
-    public function getLocalizedTagsList(): array
-    {
-        return $this->localizedTagsList;
-    }
-
-    /**
-     * @param array[] $localizedTags key-value pairs where each key represents language id and value is the array of tags
-     *
-     * @throws ProductConstraintException
-     */
-    private function setLocalizedTagsList(array $localizedTags): void
-    {
-        foreach ($localizedTags as $langId => $tags) {
-            $this->localizedTagsList[] = new LocalizedTags($langId, $tags);
-        }
     }
 }

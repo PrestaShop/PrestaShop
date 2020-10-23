@@ -170,6 +170,11 @@ body#checkout {
       margin-bottom: $small-space;
       background: $gray-lighter;
       border: 3px solid transparent;
+
+      > header {
+        min-height: 11.7rem;
+      }
+
       &.selected {
         background: #fff;
         border: $brand-primary 3px solid;

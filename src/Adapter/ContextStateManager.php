@@ -64,6 +64,14 @@ final class ContextStateManager
     }
 
     /**
+     * @return Context
+     */
+    public function getContext(): Context
+    {
+        return $this->context;
+    }
+
+    /**
      * Sets context cart and saves previous value
      *
      * @param Cart|null $cart

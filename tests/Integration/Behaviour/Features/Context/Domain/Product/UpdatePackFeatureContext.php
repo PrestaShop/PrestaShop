@@ -30,6 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllProductsFromPackCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetPackProductsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
@@ -48,13 +49,14 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
      */
     public function updateProductPack(string $packReference, TableNode $table)
     {
-        $data = $table->getRowsHash();
+        $data = $table->getColumnsHash();
 
         $products = [];
-        foreach ($data as $productReference => $quantity) {
+        foreach ($data as $row) {
             $products[] = [
-                'product_id' => $this->getSharedStorage()->get($productReference),
-                'quantity' => (int) $quantity,
+                'product_id' => $this->getSharedStorage()->get($row['product']),
+                'quantity' => (int) $row['quantity'],
+                'combination_id' => $this->getExpectedCombinationId($row),
             ];
         }
 
@@ -90,14 +92,17 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
      */
     public function assertPackContents(string $packReference, TableNode $table)
     {
-        $data = $table->getRowsHash();
+        $data = $table->getColumnsHash();
         $packId = $this->getSharedStorage()->get($packReference);
         $packedProducts = $this->getQueryBus()->handle(new GetPackedProducts($packId));
         $notExistingProducts = [];
 
-        foreach ($data as $productReference => $quantity) {
-            $expectedQty = (int) $quantity;
+        foreach ($data as $row) {
+            $productReference = $row['product'];
+            $expectedQty = (int) $row['quantity'];
             $expectedPackedProductId = $this->getSharedStorage()->get($productReference);
+            $expectedCombinationId = $this->getExpectedCombinationId($row);
+
             $foundProduct = false;
 
             /**
@@ -105,13 +110,18 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
              * @var PackedProduct $packedProduct
              */
             foreach ($packedProducts as $key => $packedProduct) {
-                //@todo: check && combination id when asserting combinations.
                 if ($packedProduct->getProductId() === $expectedPackedProductId) {
                     $foundProduct = true;
                     Assert::assertEquals(
                         $expectedQty,
                         $packedProduct->getQuantity(),
                         sprintf('Unexpected quantity of packed product "%s"', $productReference)
+                    );
+
+                    Assert::assertEquals(
+                        $expectedCombinationId,
+                        $packedProduct->getCombinationId(),
+                        sprintf('Unexpected packed product "%s" combination', $productReference)
                     );
 
                     //unset asserted product to check if there was any excessive actual products after loops
@@ -121,23 +131,25 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
             }
 
             if (!$foundProduct) {
-                $notExistingProducts[$productReference] = $quantity;
+                if ($expectedCombinationId) {
+                    $notExistingProducts[$productReference][$row['combination']] = $expectedQty;
+                } else {
+                    $notExistingProducts[$productReference] = $expectedQty;
+                }
             }
         }
 
         if (!empty($notExistingProducts)) {
             throw new RuntimeException(sprintf(
                 'Failed to find following packed products: %s',
-                implode(',', array_keys($notExistingProducts))
+                var_export($notExistingProducts, true)
             ));
         }
 
         if (!empty($packedProducts)) {
             throw new RuntimeException(sprintf(
                 'Following packed products were not expected: %s',
-                implode(',', array_map(function ($packedProduct) {
-                    return $packedProduct->name;
-                }, $packedProducts))
+                var_export($packedProducts, true)
             ));
         }
     }
@@ -162,5 +174,19 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
             ProductPackException::class,
             ProductPackException::CANNOT_ADD_PACK_INTO_PACK
         );
+    }
+
+    /**
+     * @param array<string, string> $dataRow
+     *
+     * @return int
+     */
+    private function getExpectedCombinationId(array $dataRow): int
+    {
+        if (isset($dataRow['combination']) && '' !== $dataRow['combination']) {
+            return $this->getSharedStorage()->get($dataRow['combination']);
+        }
+
+        return CombinationId::NO_COMBINATION;
     }
 }

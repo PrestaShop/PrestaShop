@@ -91,15 +91,6 @@ admin_product_image_delete:
     requirements:
         idImage: \d+
 
-admin_products_search:
-  path: /search
-  methods: [GET]
-  defaults:
-    _controller: PrestaShopBundle:Admin/Product:searchProducts
-    _legacy_controller: AdminProducts
-  options:
-    expose: true
-
 admin_product_toggle_status:
   path:     /{productId}/toggle-status
   methods:  [POST]

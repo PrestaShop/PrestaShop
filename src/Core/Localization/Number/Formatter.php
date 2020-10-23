@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Number;
 
 use InvalidArgumentException as SPLInvalidArgumentException;
-use PrestaShop\Decimal\Number as DecimalNumber;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\Decimal\Operation\Rounding;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberInterface as NumberSpecification;
@@ -72,11 +72,11 @@ class Formatter
     /**
      * Create a number formatter instance.
      *
-     * @param int $roundingMode
-     *                          The wanted rounding mode when formatting numbers
-     *                          Cf. PrestaShop\Decimal\Operation\Rounding::ROUND_* values
-     * @param string $numberingSystem
-     *                                Numbering system to use when formatting numbers. @see http://cldr.unicode.org/translation/numbering-systems
+     * @param string $roundingMode The wanted rounding mode when formatting numbers
+     *                             Cf. PrestaShop\Decimal\Operation\Rounding::ROUND_* values
+     * @param string $numberingSystem Numbering system to use when formatting numbers
+     *
+     *                             @see http://cldr.unicode.org/translation/numbering-systems
      */
     public function __construct($roundingMode, $numberingSystem)
     {

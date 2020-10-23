@@ -17,7 +17,7 @@ const {Attribute} = require('@data/faker/attributeAndValue');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_shopParameters_catalog_attributesAndFeatures_attributes_sortAndPagination';
+const baseContext = 'functional_BO_catalog_attributesAndFeatures_attributes_sortAndPagination';
 
 // Import expect from chai
 const {expect} = require('chai');

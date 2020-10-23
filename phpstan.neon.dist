@@ -1,12 +1,13 @@
 parameters:
-	level: 2
+	level: 3
 	bootstrapFiles:
 		- .github/workflows/phpstan/autoload.php
 	paths:
 		- src
 	ignoreErrors:
-		- '#^Unsafe usage of new static\(\)\.$#'
 		- '#^Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition\:\:#'
+		- '#^Property ContextCore::\$smarty \(Smarty\) does not accept null\.#'
+		- '#^Unsafe usage of new static\(\)\.$#'
 	universalObjectCratesClasses:
 		- Cookie
 		- ObjectModel

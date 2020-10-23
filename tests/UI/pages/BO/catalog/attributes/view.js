@@ -8,6 +8,7 @@ class ViewAttribute extends BOBasePage {
     this.pageTitle = 'Attributes >';
 
     this.alertSuccessBlockParagraph = '.alert-success';
+    this.growlMessageBlock = '#growls .growl-message:last-of-type';
 
     // Header selectors
     this.addNewValueLink = '#page-header-desc-attribute-new_value';
@@ -177,6 +178,23 @@ class ViewAttribute extends BOBasePage {
    */
   async backToAttributesList(page) {
     await this.clickAndWaitForNavigation(page, this.backToListLink);
+  }
+
+  /**
+   * Change value position
+   * @param page
+   * @param actualPosition
+   * @param newPosition
+   * @return {Promise<string>}
+   */
+  async changePosition(page, actualPosition, newPosition) {
+    await this.dragAndDrop(
+      page,
+      this.tableColumnPosition(actualPosition),
+      this.tableColumnPosition(newPosition),
+    );
+
+    return this.getTextContent(page, this.growlMessageBlock);
   }
 }
 

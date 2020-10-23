@@ -52,7 +52,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     const HAS_ONE = 1;
     const HAS_MANY = 2;
 
-    /** @var int Object ID */
+    /** @var int|null Object ID */
     public $id;
 
     /** @var int Language ID */
@@ -907,7 +907,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         if (!array_key_exists('deleted', get_object_vars($this))) {
             throw new PrestaShopException('Property "deleted" is missing in object model ' . get_class($this));
         }
-        $this->deleted = 1;
+        $this->deleted = true;
 
         return $this->update();
     }
@@ -2152,6 +2152,14 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     public function setFieldsToUpdate(?array $fields)
     {
         $this->update_fields = $fields;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getFieldsToUpdate(): ?array
+    {
+        return $this->update_fields;
     }
 
     /**

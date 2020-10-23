@@ -41,7 +41,7 @@ final class AttachmentQueryBuilder extends AbstractDoctrineQueryBuilder
     private $searchCriteriaApplicator;
 
     /**
-     * @var int
+     * @var string
      */
     private $employeeIdLang;
 

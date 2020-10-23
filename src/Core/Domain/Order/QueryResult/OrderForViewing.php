@@ -173,7 +173,7 @@ class OrderForViewing
     private $shopId;
 
     /**
-     * @var int
+     * @var bool
      */
     private $invoiceManagementIsEnabled;
 

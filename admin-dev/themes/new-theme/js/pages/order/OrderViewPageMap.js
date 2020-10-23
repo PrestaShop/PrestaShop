@@ -80,6 +80,7 @@ export default {
   productsTablePaginationNumberSelector: '#orderProductsTablePaginationNumberSelector',
   productsTableRow: (productId) => `#orderProduct_${productId}`,
   productsTableRowEdited: (productId) => `#editOrderProduct_${productId}`,
+  productsTableRows: 'tr.cellProduct',
   productsCellLocation: 'tr .cellProductLocation',
   productsCellRefunded: 'tr .cellProductRefunded',
   productsCellLocationDisplayed: 'tr:not(.d-none) .cellProductLocation',

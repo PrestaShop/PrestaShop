@@ -71,7 +71,7 @@ final class UpdateCartCarrierHandler extends AbstractCartHandler implements Upda
         ;
 
         $cart->setDeliveryOption([
-            $cart->id_address_delivery => $this->formatLegacyDeliveryOptionFromCarrierId($command->getNewCarrierId()),
+            (int) $cart->id_address_delivery => $this->formatLegacyDeliveryOptionFromCarrierId($command->getNewCarrierId()),
         ]);
 
         $cart->update();
@@ -114,6 +114,6 @@ final class UpdateCartCarrierHandler extends AbstractCartHandler implements Upda
      */
     private function formatLegacyDeliveryOptionFromCarrierId(int $carrierId): string
     {
-        return sprintf('%s,', $carrierId);
+        return sprintf('%d,', $carrierId);
     }
 }

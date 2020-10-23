@@ -51,8 +51,15 @@ class StockAvailableCore extends ObjectModel
     /** @var bool determine if the available stock value depends on physical stock */
     public $depends_on_stock = false;
 
-    /** @var bool determine if a product is out of stock - it was previously in Product class */
-    public $out_of_stock = false;
+    /**
+     * Determine if a product is out of stock - it was previously in Product class
+     *  - O Deny orders
+     *  - 1 Allow orders
+     *  - 2 Use global setting
+     *
+     * @var int
+     */
+    public $out_of_stock = 0;
 
     /** @var string the location of the stock for this product / combination */
     public $location = '';

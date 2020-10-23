@@ -28,12 +28,12 @@
       <trans-unit id="ffd818d6203d29bd38114292a759cb7d">
         <source>You cannot set a negative position, the minimum for a position is 0.</source>
         <target>You cannot set a negative position, the minimum for a position is 0.</target>
-        <note>Line: 6158</note>
+        <note>Line: 6162</note>
       </trans-unit>
       <trans-unit id="b945599a5e11b76711dad5f1d7eba181">
         <source>You cannot set a position greater than the total number of products in the category, minus 1 (position numbering starts at 0).</source>
         <target>You cannot set a position greater than the total number of products in the category, minus 1 (position numbering starts at 0).</target>
-        <note>Line: 6167</note>
+        <note>Line: 6171</note>
       </trans-unit>
     </body>
   </file>
@@ -510,12 +510,12 @@
       <trans-unit id="df1124d59279d11c66e179b7c4e6d9e8">
         <source>You do not have permission to add suppliers.</source>
         <target>You do not have permission to add suppliers.</target>
-        <note>Line: 469</note>
+        <note>Line: 467</note>
       </trans-unit>
       <trans-unit id="216083c0ecc41612e3355db66a1d2042">
         <source>The address is not correct. Please make sure all of the required fields are completed.</source>
         <target>The address is not correct. Please make sure all of the required fields are completed.</target>
-        <note>Line: 521</note>
+        <note>Line: 519</note>
       </trans-unit>
     </body>
   </file>
@@ -691,47 +691,47 @@
       <trans-unit id="f4158fa3500ce1523a52bee74971f5f2">
         <source>Product(s) successfully activated.</source>
         <target>Product(s) successfully activated.</target>
-        <note>Line: 767</note>
+        <note>Line: 763</note>
       </trans-unit>
       <trans-unit id="25b325c47f9b5f88d7820b079bafa02e">
         <source>Product(s) successfully deactivated.</source>
         <target>Product(s) successfully deactivated.</target>
-        <note>Line: 796</note>
+        <note>Line: 792</note>
       </trans-unit>
       <trans-unit id="01996897996faf465514bdf1091b6d4d">
         <source>Product(s) successfully deleted.</source>
         <target>Product(s) successfully deleted.</target>
-        <note>Line: 825</note>
+        <note>Line: 821</note>
       </trans-unit>
       <trans-unit id="290ed9aa59dd098c9e112c4f9770407d">
         <source>Product(s) successfully duplicated.</source>
         <target>Product(s) successfully duplicated.</target>
-        <note>Line: 854</note>
+        <note>Line: 850</note>
       </trans-unit>
       <trans-unit id="c1746190e47d69ea7f0db7f098de7cab">
         <source>Products successfully sorted.</source>
         <target>Products successfully sorted.</target>
-        <note>Line: 958</note>
+        <note>Line: 954</note>
       </trans-unit>
       <trans-unit id="7bdb2828f248bbd55bba16dcc63223d9">
         <source>Product successfully deleted.</source>
         <target>Product successfully deleted.</target>
-        <note>Line: 1046</note>
+        <note>Line: 1042</note>
       </trans-unit>
       <trans-unit id="85d8f7e3038017826a8215396b96865b">
         <source>Product successfully duplicated.</source>
         <target>Product successfully duplicated.</target>
-        <note>Line: 1072</note>
+        <note>Line: 1068</note>
       </trans-unit>
       <trans-unit id="98434b0cd2f3cf08418ea1f0a9c55f0a">
         <source>Product successfully activated.</source>
         <target>Product successfully activated.</target>
-        <note>Line: 1098</note>
+        <note>Line: 1094</note>
       </trans-unit>
       <trans-unit id="fd1d6d9c7d146c9f81572224bae86951">
         <source>Product successfully deactivated.</source>
         <target>Product successfully deactivated.</target>
-        <note>Line: 1124</note>
+        <note>Line: 1120</note>
       </trans-unit>
     </body>
   </file>
@@ -831,7 +831,7 @@
       <trans-unit id="2cb44aa56605e05e0b912131875edcb7">
         <source>There are not enough products in stock.</source>
         <target>There are not enough products in stock.</target>
-        <note>Line: 572</note>
+        <note>Line: 580</note>
       </trans-unit>
     </body>
   </file>
@@ -840,7 +840,7 @@
       <trans-unit id="4fce600d4fc0429af2f5bc5861eefb3e">
         <source>Selected products were successfully canceled.</source>
         <target>Selected products were successfully canceled.</target>
-        <note>Line: 1493</note>
+        <note>Line: 1524</note>
       </trans-unit>
     </body>
   </file>

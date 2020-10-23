@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Combination;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
@@ -146,8 +146,8 @@ class CombinationDataProvider
             $attribute_unity_price_impact = -1;
         }
 
-        $finalPrice = (new Number((string) $product->price))
-            ->plus(new Number((string) $combination['price']))
+        $finalPrice = (new DecimalNumber((string) $product->price))
+            ->plus(new DecimalNumber((string) $combination['price']))
             ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
 
         return [

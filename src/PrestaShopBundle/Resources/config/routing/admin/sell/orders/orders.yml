@@ -367,6 +367,15 @@ admin_orders_product_prices:
   options:
     expose: true
 
+admin_orders_products_search:
+    path: /products/search
+    methods: [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Order/Order:searchProducts
+        _legacy_controller: AdminOrders
+    options:
+        expose: true
+
 admin_orders_set_internal_note:
   path: /{orderId}/set-internal-note
   methods: [POST]

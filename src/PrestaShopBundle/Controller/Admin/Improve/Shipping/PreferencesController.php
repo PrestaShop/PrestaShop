@@ -31,6 +31,7 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Controller responsible of "Improve > Shipping > Preferences" page.
@@ -44,7 +45,7 @@ class PreferencesController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @return array Template parameters
+     * @return Response
      */
     public function indexAction(Request $request)
     {

@@ -244,7 +244,7 @@ class Calculator
     }
 
     /**
-     * @param \CartCore $cart
+     * @param Cart $cart
      *
      * @return Calculator
      */

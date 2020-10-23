@@ -71,7 +71,11 @@ class AddCarrier extends BOBasePage {
     }
     await this.selectByVisibleText(page, this.taxRuleSelect, carrierData.taxRule);
     await this.selectByVisibleText(page, this.rangeBehaviorSelect, carrierData.outOfRangeBehavior);
-    await this.setValue(page, this.rangeSupInput, carrierData.rangeSup);
+
+    // Set range sup only if free shipping is disabled
+    if (!carrierData.freeShipping) {
+      await this.setValue(page, this.rangeSupInput, carrierData.rangeSup);
+    }
 
     if (carrierData.allZones) {
       await page.click(this.allZonesRadioButton);

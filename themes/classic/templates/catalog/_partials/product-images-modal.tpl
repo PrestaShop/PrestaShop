@@ -28,14 +28,14 @@
       <div class="modal-body">
         {assign var=imagesCount value=$product.images|count}
         <figure>
-          {if $product.cover}
+          {if $product.default_image}
             <img
               class="js-modal-product-cover product-cover-modal"
-              width="{$product.cover.large.width}"
-              src="{$product.cover.large.url}"
-              {if !empty($product.cover.legend)}
-                alt="{$product.cover.legend}"
-                title="{$product.cover.legend}"
+              width="{$product.default_image.bySize.large_default.width}"
+              src="{$product.default_image.bySize.large_default.url}"
+              {if !empty($product.default_image.legend)}
+                alt="{$product.default_image.legend}"
+                title="{$product.default_image.legend}"
               {else}
                 alt="{$product.name}"
               {/if}

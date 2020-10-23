@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use RuntimeException;
 
 /**
  * Replaces previous product attachments association with the provided one.
@@ -44,7 +45,7 @@ class SetAssociatedProductAttachmentsCommand
     /**
      * @var AttachmentId[]
      */
-    private $attachmentIds = [];
+    private $attachmentIds;
 
     /**
      * @param int $productId
@@ -77,6 +78,14 @@ class SetAssociatedProductAttachmentsCommand
      */
     private function setAttachmentIds(array $attachmentIds): void
     {
+        if (empty($attachmentIds)) {
+            throw new RuntimeException(sprintf(
+                'Empty array of product attachments provided in %s. To remove all product attachments use %s.',
+                self::class,
+                RemoveAllAssociatedProductAttachmentsCommand::class
+            ));
+        }
+
         foreach ($attachmentIds as $attachmentId) {
             $this->attachmentIds[] = new AttachmentId($attachmentId);
         }

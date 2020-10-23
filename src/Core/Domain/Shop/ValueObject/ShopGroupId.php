@@ -24,48 +24,53 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Cart\Command;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
+namespace PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject;
 
-/**
- * Adds free shipping to cart when creating order from Back Office
- */
-class SetFreeShippingToCartCommand
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
+
+class ShopGroupId
 {
     /**
-     * @var CartId
+     * @var int
      */
-    private $cartId;
+    private $shopGroupId;
 
     /**
-     * @var bool
+     * @param int $shopGroupId
+     *
+     * @throws ShopException
      */
-    private $allowFreeShipping;
-
-    /**
-     * @param int $cartId
-     * @param bool $allowFreeShipping
-     */
-    public function __construct(int $cartId, bool $allowFreeShipping)
+    public function __construct(int $shopGroupId)
     {
-        $this->cartId = new CartId($cartId);
-        $this->allowFreeShipping = $allowFreeShipping;
+        $this->assertIsGreaterThanZero($shopGroupId);
+
+        $this->shopGroupId = $shopGroupId;
     }
 
     /**
-     * @return CartId
+     * @return int
      */
-    public function getCartId(): CartId
+    public function getValue(): int
     {
-        return $this->cartId;
+        return $this->shopGroupId;
     }
 
     /**
-     * @return bool
+     * @param int $shopGroupId
+     *
+     * @throws ShopException
      */
-    public function allowFreeShipping(): bool
+    private function assertIsGreaterThanZero(int $shopGroupId): void
     {
-        return $this->allowFreeShipping;
+        if (0 >= $shopGroupId) {
+            throw new ShopException(
+                sprintf(
+                    'Shop id %s is invalid. Shop id must be number that is greater than zero.',
+                    var_export($shopGroupId, true)
+                )
+            );
+        }
     }
 }
