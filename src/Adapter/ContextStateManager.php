@@ -45,7 +45,7 @@ use Language;
  */
 final class ContextStateManager
 {
-    const MANAGED_FIELDS = [
+    private const MANAGED_FIELDS = [
         'cart',
         'country',
         'currency',
