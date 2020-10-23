@@ -3584,7 +3584,7 @@ class AdminImportControllerCore extends AdminController
                 $this->errors[] = sprintf(
                     $this->trans('%1$s (ID: %2$s) cannot be saved', [], 'Admin.Advparameters.Notification'),
                     Tools::htmlentitiesUTF8($info['alias']),
-                    isset($info['id']) && !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null'
+                    !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null'
                 );
             }
             if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
