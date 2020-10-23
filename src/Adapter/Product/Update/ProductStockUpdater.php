@@ -192,6 +192,9 @@ class ProductStockUpdater extends AbstractObjectModelFiller
         $this->fillProperty($product, 'location', $propertiesToUpdate);
         $this->fillProperty($product, 'low_stock_threshold', $propertiesToUpdate);
         $this->fillProperty($product, 'low_stock_alert', $propertiesToUpdate);
+        $this->fillProperty($product, 'available_date', $propertiesToUpdate);
+        $this->fillLocalizedProperty($product, 'available_now', $propertiesToUpdate);
+        $this->fillLocalizedProperty($product, 'available_later', $propertiesToUpdate);
         $this->fillProperty($stockAvailable, 'depends_on_stock', $propertiesToUpdate);
         $this->fillProperty($stockAvailable, 'out_of_stock', $propertiesToUpdate);
         $this->fillProperty($stockAvailable, 'location', $propertiesToUpdate);
