@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use Exception;
@@ -48,7 +50,7 @@ class ShopController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function searchAction(Request $request)
+    public function searchAction(Request $request): JsonResponse
     {
         $searchTerm = $request->query->get('shop_name_search');
 
@@ -69,7 +71,7 @@ class ShopController extends FrameworkBundleAdminController
      *
      * @return string
      */
-    private function getErrorMessage(Exception $e)
+    private function getErrorMessage(Exception $e): string
     {
         return $this->getFallbackErrorMessage(
             get_class($e),
