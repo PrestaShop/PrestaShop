@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Customization;
+use DateTime;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Converter\OutOfStockTypeConverter;
@@ -307,7 +308,10 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
                 (int) $product->minimal_quantity,
                 $stockAvailable->location,
                 (int) $product->low_stock_threshold,
-                (bool) $product->low_stock_alert
+                (bool) $product->low_stock_alert,
+                $product->available_now,
+                $product->available_later,
+                new DateTime($product->available_date)
             );
         } catch (StockAvailableNotFoundException $e) {
             // In case StockAvailable does not exist we can still use the Product fields
@@ -321,7 +325,10 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
                 (int) $product->minimal_quantity,
                 $product->location,
                 (int) $product->low_stock_threshold,
-                (bool) $product->low_stock_alert
+                (bool) $product->low_stock_alert,
+                $product->available_now,
+                $product->available_later,
+                new DateTime($product->available_date)
             );
         }
     }
