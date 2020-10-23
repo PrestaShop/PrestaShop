@@ -185,7 +185,7 @@ class ContextStateManagerTest extends TestCase
         $this->assertEquals(42, $context->language->id);
     }
 
-    public function testStashedState()
+    public function testSavedContexts()
     {
         $context = $this->createContextMock([
             'language' => $this->createContextFieldMock(Language::class, 42),
@@ -209,9 +209,21 @@ class ContextStateManagerTest extends TestCase
 
         $contextStateManager->restorePreviousContext();
         $this->assertEquals(42, $context->language->id);
+
+        // If several sets have been called, the state returns to the value that was saved
+        $contextStateManager->saveCurrentContext();
+
+        $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 51));
+        $this->assertEquals(51, $context->language->id);
+
+        $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 69));
+        $this->assertEquals(69, $context->language->id);
+
+        $contextStateManager->restorePreviousContext();
+        $this->assertEquals(42, $context->language->id);
     }
 
-    public function testMultipleStashedFields()
+    public function testMultipleSavedContextFieds()
     {
         $context = $this->createContextMock([
             'cart' => $this->createContextFieldMock(Cart::class, 42),
@@ -269,7 +281,7 @@ class ContextStateManagerTest extends TestCase
         $this->assertEquals(42, $context->language->id);
     }
 
-    public function testTooManyrestores()
+    public function testTooManyRestore()
     {
         $context = $this->createContextMock([
             'language' => $this->createContextFieldMock(Language::class, 42),
