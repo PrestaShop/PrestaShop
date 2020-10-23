@@ -3422,7 +3422,7 @@ class AdminImportControllerCore extends AdminController
                             [
                                 Tools::htmlentitiesUTF8($address->customer_email),
                                 Tools::htmlentitiesUTF8(Db::getInstance()->getMsgError()),
-                                isset($info['id']) && !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null',
+                                !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null',
                             ],
                             'Admin.Advparameters.Notification'
                         );
