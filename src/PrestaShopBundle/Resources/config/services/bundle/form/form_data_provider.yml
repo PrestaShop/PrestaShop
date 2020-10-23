@@ -277,3 +277,9 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\CreditSlipOptionsFormDataProvider'
         arguments:
             - '@prestashop.core.credit_slip.credit_slip_options.configuration'
+
+    prestashop.admin.improve.design.image_settings.image_generation_options_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\ImageGenerationOptionsDataProvider'
+        arguments:
+            - '@prestashop.adapter.image_settings.generation_options.configuration'
+            - '@translator'
