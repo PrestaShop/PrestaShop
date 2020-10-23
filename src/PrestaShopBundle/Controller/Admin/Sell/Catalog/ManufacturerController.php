@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
+use ImageType;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\BulkDeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
@@ -65,15 +66,31 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Manages "Sell > Catalog > Brands & Suppliers > Brands" page
  */
 class ManufacturerController extends FrameworkBundleAdminController
 {
+
+    /**
+     * @var Filesystem
+     */
+    public $fs;
+
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->fs = new Filesystem();
+    }
+
+
     /**
      * Show manufacturers listing page.
      *
@@ -267,32 +284,57 @@ class ManufacturerController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
+    /**
+     * Deletes manufacturer cover image.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this.",
+     *     redirectRoute="admin_manufacturers_edit",
+     *     redirectQueryParamsToKeep={"manufacturerId"}
+     * )
+     *
+     * @param Request $request
+     * @param int $manufacturerId
+     *
+     * @return RedirectResponse
+     */
     public function deleteCoverImageAction(Request $request, $manufacturerId)
     {
-        dump($request);
-        die($manufacturerId);
-
         if (!$this->isCsrfTokenValid('delete-cover-thumbnail', $request->request->get('_csrf_token'))) {
             return $this->redirectToRoute('admin_security_compromised', [
                 'uri' => $this->generateUrl('admin_manufacturers_edit', [
-                    'manufacturerId' => $categoryId,
+                    'manufacturerId' => $manufacturerId,
                 ], UrlGeneratorInterface::ABSOLUTE_URL),
             ]);
         }
 
         try {
-            $this->getCommandBus()->handle(new DeleteCategoryCoverImageCommand((int) $categoryId));
+            $imageTypes = ImageType::getImagesTypes('manufacturers');
+            $imageTypeFormat = '%s%s-%s.jpg';
+            $imageFormat = '%s%s.jpg';
+            foreach ($imageTypes as $imageType) {
+                $path = sprintf($imageTypeFormat, _PS_MANU_IMG_DIR_, $manufacturerId, stripslashes($imageType['name']));
+                if ($this->fs->exists($path)) {
+                    printf('file %s exist => to delete', $path);
+                    $this->fs->remove($path);
+                }
+            }
+            $imagePath = sprintf($imageFormat, _PS_MANU_IMG_DIR_, $manufacturerId);
+            if ($this->fs->exists($imagePath)) {
+                $this->fs->remove($imagePath);
+            }
 
             $this->addFlash(
                 'success',
                 $this->trans('The image was successfully deleted.', 'Admin.Notifications.Success')
             );
-        } catch (CategoryException $e) {
+        } catch (ManufacturerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_categories_edit', [
-            'categoryId' => $categoryId,
+        return $this->redirectToRoute('admin_manufacturers_edit', [
+            'manufacturerId' => $manufacturerId,
         ]);
     }
 
