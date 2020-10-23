@@ -980,6 +980,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                         return $elem['quantity'] > 0;
                     }
                 );
+            } else {
+                $availableProductAttributes = $productCombinations;
             }
 
             $availableProductAttribute = array_filter(
