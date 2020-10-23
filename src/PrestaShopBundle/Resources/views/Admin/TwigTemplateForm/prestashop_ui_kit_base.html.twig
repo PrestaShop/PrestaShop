@@ -814,7 +814,11 @@
 
 {% block generatable_text_widget %}
   <div class="input-group">
-    {{- block('form_widget') -}}
+    {% if compound %}
+      {{- block('form_widget_compound') -}}
+    {% else %}
+      {{- block('form_widget_simple') -}}
+    {% endif %}
     <span class="input-group-btn ml-1">
       <button class="btn btn-outline-secondary js-generator-btn"
               type="button"
@@ -825,6 +829,7 @@
       </button>
    </span>
   </div>
+  {{ block('form_help') }}
 {% endblock generatable_text_widget %}
 
 {% block text_with_recommended_length_widget %}
