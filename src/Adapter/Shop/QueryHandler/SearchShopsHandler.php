@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\Shop\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops;
@@ -53,7 +55,7 @@ final class SearchShopsHandler implements SearchShopsHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(SearchShops $query)
+    public function handle(SearchShops $query): array
     {
         $searchTerm = $query->getSearchTerm();
         $shopList = $this->shopRepository->findBySearchTerm($searchTerm);
