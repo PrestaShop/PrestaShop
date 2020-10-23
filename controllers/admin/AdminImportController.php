@@ -3259,7 +3259,7 @@ class AdminImportControllerCore extends AdminController
                     'Email address %1$s (ID: %2$s) cannot be validated.',
                     [
                         Tools::htmlentitiesUTF8($info['email']),
-                        isset($info['id']) && !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null',
+                        !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null',
                     ],
                     'Admin.Advparameters.Notification'
                 );
