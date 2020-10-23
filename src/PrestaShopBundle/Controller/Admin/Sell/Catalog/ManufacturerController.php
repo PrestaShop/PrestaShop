@@ -316,7 +316,6 @@ class ManufacturerController extends FrameworkBundleAdminController
             foreach ($imageTypes as $imageType) {
                 $path = sprintf($imageTypeFormat, _PS_MANU_IMG_DIR_, $manufacturerId, stripslashes($imageType['name']));
                 if ($this->fs->exists($path)) {
-                    printf('file %s exist => to delete', $path);
                     $this->fs->remove($path);
                 }
             }
