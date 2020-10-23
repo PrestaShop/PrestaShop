@@ -62,6 +62,7 @@ class SearchShops
 
     /**
      * @param string $searchTerm
+     *
      * @throws ShopException
      */
     private function assertSearchTermNotEmpty(string $searchTerm): void
