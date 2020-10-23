@@ -5100,8 +5100,6 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * @param Cart $cart
-     *
      * @return Country
      *
      * @throws \PrestaShopDatabaseException

@@ -75,7 +75,7 @@ final class UpdateCartCarrierHandler extends AbstractCartHandler implements Upda
         ]);
 
         $cart->update();
-        $this->contextStateManager->restoreContext();
+        $this->contextStateManager->restorePreviousContext();
     }
 
     /**

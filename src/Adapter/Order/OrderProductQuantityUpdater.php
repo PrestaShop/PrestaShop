@@ -106,7 +106,7 @@ class OrderProductQuantityUpdater
         $cart = new Cart($order->id_cart);
 
         $this->contextStateManager
-            ->stashContext()
+            ->saveCurrentContext()
             ->setCart($cart)
             ->setCurrency(new Currency($cart->id_currency))
             ->setCustomer(new Customer($cart->id_customer))
@@ -120,7 +120,7 @@ class OrderProductQuantityUpdater
             // Update prices on the order after cart rules are recomputed
             $this->orderAmountUpdater->update($order, $cart, null !== $orderInvoice ? (int) $orderInvoice->id : null);
         } finally {
-            $this->contextStateManager->restoreContext();
+            $this->contextStateManager->restorePreviousContext();
         }
 
         return $order;

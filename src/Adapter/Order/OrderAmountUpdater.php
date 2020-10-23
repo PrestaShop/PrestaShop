@@ -98,7 +98,7 @@ class OrderAmountUpdater
         $this->cleanCaches();
 
         $this->contextStateManager
-            ->stashContext()
+            ->saveCurrentContext()
             ->setCart($cart)
             ->setCurrency(new Currency($cart->id_currency))
             ->setCustomer(new Customer($cart->id_customer))
@@ -129,7 +129,7 @@ class OrderAmountUpdater
 
             $this->updateOrderInvoices($order, $cart, $computingPrecision);
         } finally {
-            $this->contextStateManager->restoreContext();
+            $this->contextStateManager->restorePreviousContext();
         }
     }
 

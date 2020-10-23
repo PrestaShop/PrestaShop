@@ -52,7 +52,7 @@ class ContextStateManagerTest extends TestCase
         $contextStateManager->setCart($this->createContextFieldMock(Cart::class, 69));
         $this->assertEquals(69, $context->cart->id);
 
-        $contextStateManager->restoreContext();
+        $contextStateManager->restorePreviousContext();
         $this->assertEquals(42, $context->cart->id);
     }
 
@@ -70,7 +70,7 @@ class ContextStateManagerTest extends TestCase
         $contextStateManager->setCountry($this->createContextFieldMock(Country::class, 69));
         $this->assertEquals(69, $context->country->id);
 
-        $contextStateManager->restoreContext();
+        $contextStateManager->restorePreviousContext();
         $this->assertEquals(42, $context->country->id);
     }
 
@@ -88,7 +88,7 @@ class ContextStateManagerTest extends TestCase
         $contextStateManager->setCurrency($this->createContextFieldMock(Currency::class, 69));
         $this->assertEquals(69, $context->currency->id);
 
-        $contextStateManager->restoreContext();
+        $contextStateManager->restorePreviousContext();
         $this->assertEquals(42, $context->currency->id);
     }
 
@@ -106,7 +106,7 @@ class ContextStateManagerTest extends TestCase
         $contextStateManager->setCustomer($this->createContextFieldMock(Customer::class, 69));
         $this->assertEquals(69, $context->customer->id);
 
-        $contextStateManager->restoreContext();
+        $contextStateManager->restorePreviousContext();
         $this->assertEquals(42, $context->customer->id);
     }
 
@@ -124,7 +124,7 @@ class ContextStateManagerTest extends TestCase
         $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 69));
         $this->assertEquals(69, $context->language->id);
 
-        $contextStateManager->restoreContext();
+        $contextStateManager->restorePreviousContext();
         $this->assertEquals(42, $context->language->id);
     }
 
@@ -142,7 +142,7 @@ class ContextStateManagerTest extends TestCase
         $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 69));
         $this->assertEquals(69, $context->language->id);
 
-        $contextStateManager->restoreContext();
+        $contextStateManager->restorePreviousContext();
         $this->assertNull($context->language);
     }
 
@@ -176,7 +176,7 @@ class ContextStateManagerTest extends TestCase
         $this->assertEquals(51, $context->customer->id);
         $this->assertEquals(51, $context->language->id);
 
-        $contextStateManager->restoreContext();
+        $contextStateManager->restorePreviousContext();
 
         $this->assertEquals(42, $context->cart->id);
         $this->assertEquals(42, $context->country->id);
@@ -199,15 +199,15 @@ class ContextStateManagerTest extends TestCase
         $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 69));
         $this->assertEquals(69, $context->language->id);
 
-        $contextStateManager->stashContext();
+        $contextStateManager->saveCurrentContext();
 
         $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 93));
         $this->assertEquals(93, $context->language->id);
 
-        $contextStateManager->restoreContext();
+        $contextStateManager->restorePreviousContext();
         $this->assertEquals(69, $context->language->id);
 
-        $contextStateManager->restoreContext();
+        $contextStateManager->restorePreviousContext();
         $this->assertEquals(42, $context->language->id);
     }
 
@@ -239,7 +239,7 @@ class ContextStateManagerTest extends TestCase
         $this->assertEquals(51, $context->customer->id);
         $this->assertEquals(42, $context->language->id);
 
-        $contextStateManager->stashContext();
+        $contextStateManager->saveCurrentContext();
 
         $contextStateManager
             ->setCart($this->createContextFieldMock(Cart::class, 69))
@@ -252,7 +252,7 @@ class ContextStateManagerTest extends TestCase
         $this->assertEquals(51, $context->customer->id);
         $this->assertEquals(42, $context->language->id);
 
-        $contextStateManager->restoreContext();
+        $contextStateManager->restorePreviousContext();
 
         $this->assertEquals(51, $context->cart->id);
         $this->assertEquals(42, $context->country->id);
@@ -260,7 +260,7 @@ class ContextStateManagerTest extends TestCase
         $this->assertEquals(51, $context->customer->id);
         $this->assertEquals(42, $context->language->id);
 
-        $contextStateManager->restoreContext();
+        $contextStateManager->restorePreviousContext();
 
         $this->assertEquals(42, $context->cart->id);
         $this->assertEquals(42, $context->country->id);
@@ -283,25 +283,25 @@ class ContextStateManagerTest extends TestCase
         $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 69));
         $this->assertEquals(69, $context->language->id);
 
-        $contextStateManager->stashContext();
+        $contextStateManager->saveCurrentContext();
 
         $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 93));
         $this->assertEquals(93, $context->language->id);
 
-        $contextStateManager->restoreContext();
+        $contextStateManager->restorePreviousContext();
         $this->assertEquals(69, $context->language->id);
 
-        $contextStateManager->restoreContext();
+        $contextStateManager->restorePreviousContext();
         $this->assertEquals(42, $context->language->id);
 
         // This removes all persisted states, but we always re-init one for future calls
-        $contextStateManager->restoreContext();
+        $contextStateManager->restorePreviousContext();
         $this->assertEquals(42, $context->language->id);
 
         $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 93));
         $this->assertEquals(93, $context->language->id);
 
-        $contextStateManager->restoreContext();
+        $contextStateManager->restorePreviousContext();
         $this->assertEquals(42, $context->language->id);
     }
 

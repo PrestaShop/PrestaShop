@@ -191,7 +191,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $this->orderAmountUpdater->update($order, $cart, null !== $invoice ? (int) $invoice->id : null);
             Hook::exec('actionOrderEdited', ['order' => $order]);
         } finally {
-            $this->contextStateManager->restoreContext();
+            $this->contextStateManager->restorePreviousContext();
         }
     }
 

@@ -45,6 +45,14 @@ use Language;
  */
 final class ContextStateManager
 {
+    const MANAGE_CONTEXT_FIELDS = [
+        'cart',
+        'country',
+        'currency',
+        'language',
+        'customer',
+    ];
+
     /**
      * @var Context
      */
@@ -53,7 +61,7 @@ final class ContextStateManager
     /**
      * @var array
      */
-    private $stashedContextsFields = [[]];
+    private $contextFieldsStack = [[]];
 
     /**
      * @param Context $context
@@ -151,13 +159,13 @@ final class ContextStateManager
      *
      * @return self
      */
-    public function restoreContext(): self
+    public function restorePreviousContext(): self
     {
-        $currentStashIndex = count($this->stashedContextsFields) - 1;
-        foreach ($this->stashedContextsFields[$currentStashIndex] as $fieldName => $contextValue) {
+        $currentStashIndex = array_key_last($this->contextFieldsStack);
+        foreach (array_keys($this->contextFieldsStack[$currentStashIndex]) as $fieldName) {
             $this->restoreContextField($fieldName);
         }
-        $this->popContext();
+        $this->removeLastSavedContext();
 
         return $this;
     }
@@ -173,10 +181,15 @@ final class ContextStateManager
      *
      * @return $this
      */
-    public function stashContext(): self
+    public function saveCurrentContext(): self
     {
+        // Saves all the fields that have not been overridden
+        foreach (self::MANAGE_CONTEXT_FIELDS as $contextField) {
+            $this->saveContextField($contextField);
+        }
+
         // Add a new empty layer
-        $this->stashedContextsFields[] = [];
+        $this->contextFieldsStack[] = [];
 
         return $this;
     }
@@ -188,10 +201,10 @@ final class ContextStateManager
      */
     private function saveContextField(string $fieldName)
     {
-        $currentStashIndex = count($this->stashedContextsFields) - 1;
+        $currentStashIndex = array_key_last($this->contextFieldsStack);
         // NOTE: array_key_exists important here, isset cannot be used because it would not detect if null is stored
-        if (!array_key_exists($fieldName, $this->stashedContextsFields[$currentStashIndex])) {
-            $this->stashedContextsFields[$currentStashIndex][$fieldName] = $this->context->$fieldName;
+        if (!array_key_exists($fieldName, $this->contextFieldsStack[$currentStashIndex])) {
+            $this->contextFieldsStack[$currentStashIndex][$fieldName] = $this->context->$fieldName;
         }
     }
 
@@ -202,11 +215,11 @@ final class ContextStateManager
      */
     private function restoreContextField(string $fieldName): void
     {
-        $currentStashIndex = count($this->stashedContextsFields) - 1;
+        $currentStashIndex = array_key_last($this->contextFieldsStack);
         // NOTE: array_key_exists important here, isset cannot be used because it would not detect if null is stored
-        if (array_key_exists($fieldName, $this->stashedContextsFields[$currentStashIndex])) {
-            $this->context->$fieldName = $this->stashedContextsFields[$currentStashIndex][$fieldName];
-            unset($this->stashedContextsFields[$currentStashIndex][$fieldName]);
+        if (array_key_exists($fieldName, $this->contextFieldsStack[$currentStashIndex])) {
+            $this->context->$fieldName = $this->contextFieldsStack[$currentStashIndex][$fieldName];
+            unset($this->contextFieldsStack[$currentStashIndex][$fieldName]);
         }
     }
 
@@ -214,13 +227,13 @@ final class ContextStateManager
      * Removes the last saved stashed context, in case this method is called too many times
      * we always keep one layer available
      */
-    private function popContext(): void
+    private function removeLastSavedContext(): void
     {
-        array_pop($this->stashedContextsFields);
+        array_pop($this->contextFieldsStack);
 
-        // Always keep at least one layer (in case we pop too many)
-        if (empty($this->stashedContextsFields)) {
-            $this->stashedContextsFields[] = [];
+        // Always keep at least one layer (in case we remove too many)
+        if (empty($this->contextFieldsStack)) {
+            $this->contextFieldsStack[] = [];
         }
     }
 }
