@@ -1,5 +1,5 @@
 admin_shops_search:
-  path: /search
+  path: /search/{searchTerm}
   methods: [GET]
   defaults:
     _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Shop:search'

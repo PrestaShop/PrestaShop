@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -44,18 +43,16 @@ class ShopController extends FrameworkBundleAdminController
     /**
      * Search for shops by query.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
+     * @AdminSecurity("is_granted('read', 'AdminOrders')")
      *
-     * @param Request $request
+     * @param string $searchTerm
      *
      * @return JsonResponse
      */
-    public function searchAction(Request $request): JsonResponse
+    public function searchAction(string $searchTerm): JsonResponse
     {
-        $searchTerm = $request->query->get('shop_name_search');
-
         try {
-            $shops = $this->getQueryBus()->handle(new SearchShops($searchTerm));
+            $shops = $this->getQueryBus()->handle(new SearchShops((string) $searchTerm));
         } catch (Exception $e) {
             return $this->json(
                 ['message' => $this->getErrorMessage($e)],

@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops;
 use RuntimeException;
 use Shop;
+use ShopGroup;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
 
 class ShopFeatureContext extends AbstractDomainFeatureContext
@@ -86,16 +87,17 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given I add a shop :reference with name :shopName
+     * @Given I add a shop :reference with name :shopName for the group :shopGroupName
      *
      * @param string $reference
      * @param string $shopName
+     * @param string $shopGroupName
      */
-    public function addShop(string $reference, string $shopName): void
+    public function addShop(string $reference, string $shopName, string $shopGroupName): void
     {
         $shop = new Shop();
         $shop->active = true;
-        $shop->id_shop_group = 1;
+        $shop->id_shop_group = ShopGroup::getIdByName($shopGroupName);
         $shop->id_category = 2;
         $shop->theme_name = _THEME_NAME_;
         $shop->name = $shopName;
@@ -138,17 +140,8 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
         foreach ($expectedShops as $key => $currentExpectedShop) {
             $wasCurrentExpectedShopFound = false;
             foreach ($foundShops as $currentFoundShop) {
-                if ($currentExpectedShop['id'] == $currentFoundShop['id']) {
+                if ($currentExpectedShop['name'] == $currentFoundShop['name']) {
                     $wasCurrentExpectedShopFound = true;
-                    Assert::assertEquals(
-                        $currentExpectedShop['name'],
-                        $currentFoundShop['name'],
-                        sprintf(
-                            'Expected and found shops don\'t have the same name (%s and %s)',
-                            $currentExpectedShop['name'],
-                            $currentFoundShop['name']
-                        )
-                    );
                     Assert::assertEquals(
                         $currentExpectedShop['group_name'],
                         $currentFoundShop['group_name'],
@@ -163,9 +156,9 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
             }
             if (!$wasCurrentExpectedShopFound) {
                 throw new RuntimeException(sprintf(
-                    'Expected shop with name %s and id %s was not found',
+                    'Expected shop with name %s in shop group %s was not found',
                     $currentExpectedShop['name'],
-                    $currentExpectedShop['id']
+                    $currentExpectedShop['group_name']
                 ));
             }
         }
