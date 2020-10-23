@@ -55,18 +55,46 @@ class ProductStock
      */
     private $quantity;
 
+    /**
+     * @var int
+     */
+    private $minimalQuantity;
+
+    /**
+     * @var string
+     */
+    private $location;
+
+    /**
+     * @var int
+     */
+    private $lowStockThreshold;
+
+    /**
+     * @var bool
+     */
+    private $lowStockAlert;
+
     public function __construct(
         bool $useAdvancedStockManagement,
         bool $dependsOnStock,
         string $packStockType,
         string $outOfStockType,
-        int $quantity
+        int $quantity,
+        int $minimalQuantity,
+        string $location,
+        int $lowStockThreshold,
+        bool $lowStockAlert
     ) {
         $this->useAdvancedStockManagement = $useAdvancedStockManagement;
         $this->dependsOnStock = $dependsOnStock;
         $this->packStockType = $packStockType;
         $this->outOfStockType = $outOfStockType;
         $this->quantity = $quantity;
+        $this->minimalQuantity = $minimalQuantity;
+        $this->location = $location;
+        $this->lowStockThreshold = $lowStockThreshold;
+        $this->lowStockAlert = $lowStockAlert;
     }
 
     /**
@@ -107,5 +135,37 @@ class ProductStock
     public function getQuantity(): int
     {
         return $this->quantity;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMinimalQuantity(): int
+    {
+        return $this->minimalQuantity;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocation(): string
+    {
+        return $this->location;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLowStockThreshold(): int
+    {
+        return $this->lowStockThreshold;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasLowStockAlert(): bool
+    {
+        return $this->lowStockAlert;
     }
 }

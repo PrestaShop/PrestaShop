@@ -115,7 +115,7 @@ Feature: Update product stock from Back Office (BO)
       | physical_quantity | 9  |
       | sign              | -1 |
 
-  Scenario: I update product quantity
+  Scenario: I update product quantity specifying if movement must be added or not
     Given I add product "product1" with following information:
       | name       | en-US:Presta camera |
       | is_virtual | false               |
@@ -133,3 +133,23 @@ Feature: Update product stock from Back Office (BO)
     And product "product1" last stock movement has following details:
       | physical_quantity | 9  |
       | sign              | -1 |
+
+  Scenario: I update product simple stock fields
+    Given I add product "product1" with following information:
+      | name       | en-US:Presta camera |
+      | is_virtual | false               |
+    And product "product1" should have following stock information:
+      | minimal_quantity    | 1     |
+      | location            |       |
+      | low_stock_threshold | 0     |
+      | low_stock_alert     | false |
+    When I update product "product1" stock with following information:
+      | minimal_quantity    | 12   |
+      | location            | dtc  |
+      | low_stock_threshold | 42   |
+      | low_stock_alert     | true |
+    And product "product1" should have following stock information:
+      | minimal_quantity    | 12   |
+      | location            | dtc  |
+      | low_stock_threshold | 42   |
+      | low_stock_alert     | true |
