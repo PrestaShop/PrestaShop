@@ -47,9 +47,41 @@
             </div>
           </div>
         </div>
+        <div class="form-group row">
+          <label class="form-control-label">
+            {{ form_label(copyLanguageForm.from_language) }}
+          </label>
+          <div class="col-sm">
+            <div class="input-group">
+              {{ form_errors(copyLanguageForm.from_language) }}
+              {{ form_widget(copyLanguageForm.from_language) }}
 
-        {{ form_widget(copyLanguageForm) }}
+              {{ form_errors(copyLanguageForm.from_theme) }}
+              {{ form_widget(copyLanguageForm.from_theme) }}
+            </div>
+            <small class="form-text">
+              {{ 'Language files must be complete to allow copying of translations.'|trans({}, 'Admin.International.Notification') }}
+            </small>
+          </div>
+        </div>
 
+        <div class="form-group row">
+          <label class="form-control-label">
+            {{ form_label(copyLanguageForm.to_language) }}
+          </label>
+          <div class="col-sm">
+            <div class="input-group">
+              {{ form_errors(copyLanguageForm.to_language) }}
+              {{ form_widget(copyLanguageForm.to_language) }}
+
+              {{ form_errors(copyLanguageForm.to_theme) }}
+              {{ form_widget(copyLanguageForm.to_theme) }}
+            </div>
+          </div>
+        </div>
+        {{ form_rest(copyLanguageForm) }}
+      </div>
+    </div>
         <div class="card-footer">
       <div class="d-flex justify-content-end">
         <button class="btn btn-primary">

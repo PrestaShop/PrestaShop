@@ -69,19 +69,11 @@ class CopyLanguageType extends TranslatorAwareType
                     'From',
                     'Admin.Global'
                 ),
-                'help' => $this->trans(
-                    'Language files must be complete to allow copying of translations.',
-                    'Admin.International.Notification'
-                ),
                 'choices' => $localeChoices,
                 'choice_translation_domain' => false,
             ])
             ->add('from_theme', ChoiceType::class, [
                 'label' => false,
-                'help' => $this->trans(
-                    'Theme from which translations will be copied.',
-                    'Admin.International.Notification'
-                ),
                 'choices' => $this->themeChoices,
                 'choice_translation_domain' => false,
             ])
@@ -95,10 +87,6 @@ class CopyLanguageType extends TranslatorAwareType
             ])
             ->add('to_theme', ChoiceType::class, [
                 'label' => false,
-                'help' => $this->trans(
-                    'Theme to which translations will be copied.',
-                    'Admin.International.Notification'
-                ),
                 'choices' => $this->themeChoices,
                 'choice_translation_domain' => false,
             ]);

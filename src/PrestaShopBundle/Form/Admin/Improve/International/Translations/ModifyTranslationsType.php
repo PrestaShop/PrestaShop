@@ -91,7 +91,7 @@ class ModifyTranslationsType extends TranslatorAwareType
             ->add('translation_type', ChoiceType::class, [
                 'label' => $this->trans('Type of translation', 'Admin.International.Feature'),
                 'attr' => [
-                    'class' => 'js-translation-type'
+                    'class' => 'js-translation-type',
                 ],
                 'choices' => $this->translationTypeChoices,
                 'choice_translation_domain' => false,
@@ -102,7 +102,7 @@ class ModifyTranslationsType extends TranslatorAwareType
                     'class' => 'js-email-form-group d-none',
                 ],
                 'attr' => [
-                    'class' => 'js-email-content-type'
+                    'class' => 'js-email-content-type',
                 ],
                 'choices' => $this->emailContentTypeChoices,
                 'choice_translation_domain' => false,
