@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
+use DateTime;
+
 class ProductStock
 {
     /**
@@ -75,6 +77,21 @@ class ProductStock
      */
     private $lowStockAlert;
 
+    /**
+     * @var string[] key value pairs where key is the id of language
+     */
+    private $localizedAvailableNowLabels;
+
+    /**
+     * @var string[] key value pairs where key is the id of language
+     */
+    private $localizedAvailableLaterLabels;
+
+    /**
+     * @var DateTime
+     */
+    private $availableDate;
+
     public function __construct(
         bool $useAdvancedStockManagement,
         bool $dependsOnStock,
@@ -84,7 +101,10 @@ class ProductStock
         int $minimalQuantity,
         string $location,
         int $lowStockThreshold,
-        bool $lowStockAlert
+        bool $lowStockAlert,
+        array $localizedAvailableNowLabels,
+        array $localizedAvailableLaterLabels,
+        DateTime $availableDate
     ) {
         $this->useAdvancedStockManagement = $useAdvancedStockManagement;
         $this->dependsOnStock = $dependsOnStock;
@@ -95,6 +115,9 @@ class ProductStock
         $this->location = $location;
         $this->lowStockThreshold = $lowStockThreshold;
         $this->lowStockAlert = $lowStockAlert;
+        $this->localizedAvailableNowLabels = $localizedAvailableNowLabels;
+        $this->localizedAvailableLaterLabels = $localizedAvailableLaterLabels;
+        $this->availableDate = $availableDate;
     }
 
     /**
@@ -167,5 +190,29 @@ class ProductStock
     public function hasLowStockAlert(): bool
     {
         return $this->lowStockAlert;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedAvailableNowLabels(): array
+    {
+        return $this->localizedAvailableNowLabels;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedAvailableLaterLabels(): array
+    {
+        return $this->localizedAvailableLaterLabels;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getAvailableDate(): DateTime
+    {
+        return $this->availableDate;
     }
 }

@@ -152,6 +152,28 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
     }
 
     /**
+     * @param ProductForEditing $productForEditing
+     * @param array $data
+     * @param string $propertyName
+     */
+    protected function assertDateProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
+    {
+        if (isset($data[$propertyName])) {
+            $expectedValue = PrimitiveUtils::castElementInType($data[$propertyName], PrimitiveUtils::TYPE_DATETIME);
+            $actualValue = $this->extractValueFromProductForEditing($productForEditing, $propertyName);
+            $formattedExpectedDate = $expectedValue->format('Y-m-d');
+            $formattedActualDate = $actualValue->format('Y-m-d');
+            Assert::assertEquals(
+                $formattedExpectedDate,
+                $formattedActualDate,
+                sprintf('Expected %s "%s". Got "%s".', $propertyName, $formattedExpectedDate, $formattedActualDate)
+            );
+
+            unset($data[$propertyName]);
+        }
+    }
+
+    /**
      * Extracts corresponding field value from ProductForEditing DTO
      *
      * @param ProductForEditing $productForEditing
@@ -191,6 +213,9 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             'location' => 'stock.location',
             'low_stock_threshold' => 'stock.lowStockThreshold',
             'low_stock_alert' => 'stock.lowStockAlert',
+            'available_now_labels' => 'stock.localizedAvailableNowLabels',
+            'available_later_labels' => 'stock.localizedAvailableLaterLabels',
+            'available_date' => 'stock.availableDate',
         ];
 
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
