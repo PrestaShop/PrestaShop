@@ -231,3 +231,9 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\RelatedProductsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStatusFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\DuplicateProductFeatureContext
+        shop:
+            paths:
+                - %paths.base%/Features/Scenario/Shop
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
