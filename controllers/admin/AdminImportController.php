@@ -1522,7 +1522,7 @@ class AdminImportControllerCore extends AdminController
                         [],
                         'Admin.Advparameters.Notification'
                     ),
-                    isset($info['id']) && !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null'
+                    !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null'
                 );
 
                 return;
