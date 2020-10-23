@@ -31,7 +31,7 @@ class AddPage extends BOBasePage {
    * @return {Promise<void>}
    */
   async createEditPage(page, pageData) {
-    //Fill form
+    // Fill form
     await this.setValue(page, this.titleInput, pageData.title);
     await this.setValue(page, this.metaTitleInput, pageData.metaTitle);
     await this.setValue(page, this.metaDescriptionInput, pageData.metaDescription);
