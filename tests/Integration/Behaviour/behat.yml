@@ -254,3 +254,9 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\GenerateCombinationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationOptionsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationPricesFeatureContext
+        shop:
+            paths:
+                - %paths.base%/Features/Scenario/Shop
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
