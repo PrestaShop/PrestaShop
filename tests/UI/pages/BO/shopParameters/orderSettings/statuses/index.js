@@ -102,7 +102,7 @@ class Statuses extends BOBasePage {
    * @param tableName
    * @return {Promise<number>}
    */
-  getNumberOfElementInGrid(page, tableName = 'order') {
+  getNumberOfElementInGrid(page, tableName) {
     return this.getNumberFromText(page, this.gridTableNumberOfTitlesSpan(tableName));
   }
 
@@ -112,7 +112,7 @@ class Statuses extends BOBasePage {
    * @param tableName
    * @return {Promise<void>}
    */
-  async resetFilter(page, tableName = 'order') {
+  async resetFilter(page, tableName) {
     if (!(await this.elementNotVisible(page, this.filterResetButton(tableName), 2000))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton(tableName));
     }
@@ -125,7 +125,7 @@ class Statuses extends BOBasePage {
    * @param tableName
    * @return {Promise<number>}
    */
-  async resetAndGetNumberOfLines(page, tableName = 'order') {
+  async resetAndGetNumberOfLines(page, tableName) {
     await this.resetFilter(page, tableName);
 
     return this.getNumberOfElementInGrid(page, tableName);
@@ -134,13 +134,13 @@ class Statuses extends BOBasePage {
   /**
    * Filter table
    * @param page
+   * @param tableName
    * @param filterType
    * @param filterBy
    * @param value
-   * @param tableName
    * @return {Promise<void>}
    */
-  async filterTable(page, filterType, filterBy, value, tableName = 'order') {
+  async filterTable(page, tableName, filterType, filterBy, value) {
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(tableName, filterBy), value.toString());
@@ -164,13 +164,13 @@ class Statuses extends BOBasePage {
   /**
    * Get text from column in table
    * @param page
+   * @param tableName
    * @param row
    * @param columnName
    * @param column
-   * @param tableName
    * @return {Promise<string>}
    */
-  async getTextColumn(page, row, columnName, column, tableName = 'order') {
+  async getTextColumn(page, tableName, row, columnName, column) {
     if (columnName === 'send_email' || columnName === 'delivery' || columnName === 'invoice') {
       return this.getAttributeContent(page, `${this.tableColumn(tableName, row, column)} a`, 'title');
     }
@@ -180,22 +180,22 @@ class Statuses extends BOBasePage {
   /**
    * Go to edit page
    * @param page
-   * @param row
    * @param tableName
+   * @param row
    * @return {Promise<void>}
    */
-  async gotoEditPage(page, row, tableName = 'order') {
+  async gotoEditPage(page, tableName, row) {
     await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(tableName, row));
   }
 
   /**
    * Delete order status from row
    * @param page
-   * @param row
    * @param tableName
+   * @param row
    * @return {Promise<string>}
    */
-  async deleteOrderStatus(page, row, tableName = 'order') {
+  async deleteOrderStatus(page, tableName, row) {
     await Promise.all([
       page.click(this.tableColumnActionsToggleButton(tableName, row)),
       this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(tableName, row)),
@@ -217,18 +217,18 @@ class Statuses extends BOBasePage {
    * @param tableName
    * @return {Promise<string>}
    */
-  getPaginationLabel(page, tableName = 'order') {
+  getPaginationLabel(page, tableName) {
     return this.getTextContent(page, this.paginationActiveLabel(tableName));
   }
 
   /**
    * Select pagination limit
    * @param page
-   * @param number
    * @param tableName
+   * @param number
    * @returns {Promise<string>}
    */
-  async selectPaginationLimit(page, number, tableName = 'order') {
+  async selectPaginationLimit(page, tableName, number) {
     await this.waitForSelectorAndClick(page, this.paginationDropdownButton(tableName));
     await this.clickAndWaitForNavigation(page, this.paginationItems(tableName, number));
 
@@ -241,7 +241,7 @@ class Statuses extends BOBasePage {
    * @param tableName
    * @returns {Promise<string>}
    */
-  async paginationNext(page, tableName = 'order') {
+  async paginationNext(page, tableName) {
     await this.clickAndWaitForNavigation(page, this.paginationNextLink(tableName));
 
     return this.getPaginationLabel(page, tableName);
@@ -253,7 +253,7 @@ class Statuses extends BOBasePage {
    * @param tableName
    * @returns {Promise<string>}
    */
-  async paginationPrevious(page, tableName = 'order') {
+  async paginationPrevious(page, tableName) {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink(tableName));
 
     return this.getPaginationLabel(page, tableName);
@@ -263,17 +263,17 @@ class Statuses extends BOBasePage {
   /**
    * Get content from all rows
    * @param page
+   * @param tableName
    * @param columnName
    * @param columnID
-   * @param tableName
    * @return {Promise<[]>}
    */
-  async getAllRowsColumnContent(page, columnName, columnID, tableName = 'order') {
+  async getAllRowsColumnContent(page, tableName, columnName, columnID) {
     const rowsNumber = await this.getNumberOfElementInGrid(page, tableName);
     const allRowsContentTable = [];
 
     for (let i = 1; i <= rowsNumber; i++) {
-      const rowContent = await this.getTextColumn(page, i, columnName, columnID, tableName);
+      const rowContent = await this.getTextColumn(page, tableName, i, columnName, columnID);
       await allRowsContentTable.push(rowContent);
     }
 
@@ -283,13 +283,13 @@ class Statuses extends BOBasePage {
   /**
    * Sort table
    * @param page
+   * @param tableName
    * @param sortBy, column to sort with
    * @param columnID, id column
    * @param sortDirection, asc or desc
-   * @param tableName
    * @return {Promise<void>}
    */
-  async sortTable(page, sortBy, columnID, sortDirection, tableName = 'order') {
+  async sortTable(page, tableName, sortBy, columnID, sortDirection) {
     const sortColumnButton = `${this.sortColumnDiv(tableName, columnID)} i.icon-caret-${sortDirection}`;
     await this.clickAndWaitForNavigation(page, sortColumnButton);
   }
@@ -301,7 +301,7 @@ class Statuses extends BOBasePage {
    * @param tableName
    * @return {Promise<void>}
    */
-  async bulkSelectRows(page, tableName = 'order') {
+  async bulkSelectRows(page, tableName) {
     await page.click(this.bulkActionMenuButton(tableName));
 
     await Promise.all([
@@ -316,7 +316,7 @@ class Statuses extends BOBasePage {
    * @param tableName
    * @returns {Promise<string>}
    */
-  async bulkDeleteOrderStatuses(page, tableName = 'order') {
+  async bulkDeleteOrderStatuses(page, tableName) {
     this.dialogListener(page, true);
     // Select all rows
     await this.bulkSelectRows(page, tableName);
