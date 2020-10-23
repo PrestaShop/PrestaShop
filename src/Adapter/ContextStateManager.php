@@ -45,7 +45,7 @@ use Language;
  */
 final class ContextStateManager
 {
-    const MANAGE_CONTEXT_FIELDS = [
+    const MANAGED_FIELDS = [
         'cart',
         'country',
         'currency',
@@ -184,7 +184,7 @@ final class ContextStateManager
     public function saveCurrentContext(): self
     {
         // Saves all the fields that have not been overridden
-        foreach (self::MANAGE_CONTEXT_FIELDS as $contextField) {
+        foreach (self::MANAGED_FIELDS as $contextField) {
             $this->saveContextField($contextField);
         }
 
