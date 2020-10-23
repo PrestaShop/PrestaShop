@@ -278,12 +278,6 @@ abstract class PaymentModuleCore extends Module
             $order_list = [];
             $order_detail_list = [];
 
-            do {
-                $reference = Order::generateReference();
-            } while (Order::getByReference($reference)->count());
-
-            $this->currentOrderReference = $reference;
-
             $cart_total_paid = (float) Tools::ps_round(
                 (float) $this->context->cart->getOrderTotal(true, Cart::BOTH),
                 Context::getContext()->getComputingPrecision()
@@ -324,6 +318,8 @@ abstract class PaymentModuleCore extends Module
                 $id_order_state = Configuration::get('PS_OS_ERROR');
             }
 
+            // For backward compatibility
+            $reference = null;
             foreach ($package_list as $id_address => $packageByAddress) {
                 foreach ($packageByAddress as $id_package => $package) {
                     $orderData = $this->createOrderFromCart(
@@ -979,7 +975,6 @@ abstract class PaymentModuleCore extends Module
         $order->id_currency = $currency->id;
         $order->id_lang = (int) $cart->id_lang;
         $order->id_cart = (int) $cart->id;
-        $order->reference = $reference;
         $order->id_shop = (int) $context->shop->id;
         $order->id_shop_group = (int) $context->shop->id_shop_group;
 
@@ -1056,6 +1051,14 @@ abstract class PaymentModuleCore extends Module
         if ($debug) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Order is about to be added', 1, null, 'Cart', (int) $cart->id, true);
         }
+
+        if (is_null($reference)) {
+            do {
+                $reference = Order::generateReference();
+            } while (Order::getByReference($reference)->count());
+            $this->currentOrderReference = $reference;
+        }
+        $order->reference = $reference;
 
         // Creating order
         $result = $order->add();
