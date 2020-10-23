@@ -105,6 +105,18 @@ admin_manufacturers_export:
     _legacy_controller: AdminManufacturers
     _legacy_link: AdminManufacturers:exportmanufacturer
 
+admin_manufacturer_delete_cover_image:
+    path: /{manufacturerId}/delete-cover-image
+    methods: [GET, POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:deleteCoverImage'
+        _legacy_controller: AdminManufacturers
+        _legacy_link: AdminManufacturers:deleteImage
+        _legacy_parameters:
+            id_manufacturer: manufacturerId
+    requirements:
+        manufacturerId: \d+
+
 #
 # Address routes
 #

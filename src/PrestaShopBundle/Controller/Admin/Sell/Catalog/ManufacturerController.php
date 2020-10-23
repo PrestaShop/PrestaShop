@@ -267,6 +267,35 @@ class ManufacturerController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
+    public function deleteCoverImageAction(Request $request, $manufacturerId)
+    {
+        dump($request);
+        die($manufacturerId);
+
+        if (!$this->isCsrfTokenValid('delete-cover-thumbnail', $request->request->get('_csrf_token'))) {
+            return $this->redirectToRoute('admin_security_compromised', [
+                'uri' => $this->generateUrl('admin_manufacturers_edit', [
+                    'manufacturerId' => $categoryId,
+                ], UrlGeneratorInterface::ABSOLUTE_URL),
+            ]);
+        }
+
+        try {
+            $this->getCommandBus()->handle(new DeleteCategoryCoverImageCommand((int) $categoryId));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The image was successfully deleted.', 'Admin.Notifications.Success')
+            );
+        } catch (CategoryException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_categories_edit', [
+            'categoryId' => $categoryId,
+        ]);
+    }
+
     /**
      * Deletes manufacturers on bulk action
      *
