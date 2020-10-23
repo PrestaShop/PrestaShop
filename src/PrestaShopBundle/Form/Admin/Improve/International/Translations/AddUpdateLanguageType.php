@@ -65,7 +65,7 @@ class AddUpdateLanguageType extends TranslatorAwareType
             'label' => $this->trans('Please select the language you want to add or update', 'Admin.International.Feature'),
             'attr' => [
                 'data-minimumResultsForSearch' => '7',
-                'data-toggle' => 'select2'
+                'data-toggle' => 'select2',
             ],
             'choices' => [
                 $this->trans('Update a language', 'Admin.International.Feature') => $this->getLocaleChoices(),
