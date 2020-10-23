@@ -49,7 +49,7 @@ class ShopRepository extends \Doctrine\ORM\EntityRepository
      *
      * @return array
      */
-    public function findBySearchTerm(string $searchTerm)
+    public function findBySearchTerm(string $searchTerm): array
     {
         $qb = $this->createQueryBuilder('s')
             ->select(['s', 'sg'])
