@@ -86,7 +86,7 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
      */
     public function handle(GetProductForEditing $query): ProductForEditing
     {
-        $product = $this->getFullProduct($query->getProductId());
+        $product = $this->getProduct($query->getProductId());
 
         return new ProductForEditing(
             (int) $product->id,
