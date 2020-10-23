@@ -116,20 +116,20 @@ describe('Create, update and delete order return status in BO', async () => {
 
       await statusesPage.filterTable(
         page,
+        tableName,
         'input',
         'name',
         createOrderReturnStatusData.name,
-        tableName,
       );
 
-      const textEmail = await statusesPage.getTextColumn(page, 1, 'name', 3, tableName);
+      const textEmail = await statusesPage.getTextColumn(page, tableName, 1, 'name', 3);
       await expect(textEmail).to.contains(createOrderReturnStatusData.name);
     });
 
     it('should go to edit order return status page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditOrderReturnStatusPage', baseContext);
 
-      await statusesPage.gotoEditPage(page, 1, tableName);
+      await statusesPage.gotoEditPage(page, tableName, 1);
 
       const pageTitle = await addOrderReturnStatusPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addOrderReturnStatusPage.pageTitleEdit);
@@ -155,20 +155,20 @@ describe('Create, update and delete order return status in BO', async () => {
 
       await statusesPage.filterTable(
         page,
+        tableName,
         'input',
         'name',
         editOrderStatusData.name,
-        tableName,
       );
 
-      const textEmail = await statusesPage.getTextColumn(page, 1, 'name', 3, tableName);
+      const textEmail = await statusesPage.getTextColumn(page, tableName, 1, 'name', 3);
       await expect(textEmail).to.contains(editOrderStatusData.name);
     });
 
     it('should delete order return status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteOrderStatus', baseContext);
 
-      const textResult = await statusesPage.deleteOrderStatus(page, 1, tableName);
+      const textResult = await statusesPage.deleteOrderStatus(page, tableName,1);
       await expect(textResult).to.contains(statusesPage.successfulDeleteMessage);
 
       const numberOfOrderReturnStatusesAfterDelete = await statusesPage.resetAndGetNumberOfLines(page, tableName);
