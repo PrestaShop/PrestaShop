@@ -172,12 +172,12 @@ final class ContextStateManager
 
     /**
      * Saves the current overridden fields in the context, allowing you to set new values to the
-     * current Context. Next time you call restoreContext only newly modified fields are restored
-     * so you end up in the same state as when you called stashContext.
+     * current Context. Next time you call restorePreviousContext the context will be refilled with
+     * the values that were saved during this call.
      *
      * This is useful if several services use the ContextStateManager, this way if every service
-     * stashed the context before modifying it there is no risk of removing previous modifications
-     * when you restore the context because the different states have been stacked.
+     * saved the context before modifying it there is no risk of removing previous modifications
+     * when you restore the context, because the different states have been stacked.
      *
      * @return $this
      */
