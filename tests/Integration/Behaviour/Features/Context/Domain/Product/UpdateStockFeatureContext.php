@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
+use DateTime;
 use Pack;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockCommand;
@@ -85,6 +86,7 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         $this->assertStringProperty($productForEditing, $data, 'location');
         $this->assertNumberProperty($productForEditing, $data, 'low_stock_threshold');
         $this->assertBoolProperty($productForEditing, $data, 'low_stock_alert');
+        $this->assertDateProperty($productForEditing, $data, 'available_date');
 
         // Assertions checking isset() can hide some errors if it doesn't find array key,
         // to make sure all provided fields were checked we need to unset every asserted field
@@ -245,6 +247,21 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         if (isset($data['low_stock_alert'])) {
             $command->setLowStockAlert(PrimitiveUtils::castStringBooleanIntoBoolean($data['low_stock_alert']));
             unset($data['low_stock_alert']);
+        }
+
+        if (isset($data['available_now_labels'])) {
+            $command->setLocalizedAvailableNowLabels($this->parseLocalizedArray($data['available_now_labels']));
+            unset($data['available_now_labels']);
+        }
+
+        if (isset($data['available_later_labels'])) {
+            $command->setLocalizedAvailableLaterLabels($this->parseLocalizedArray($data['available_later_labels']));
+            unset($data['available_later_labels']);
+        }
+
+        if (isset($data['available_date'])) {
+            $command->setAvailableDate(new DateTime($data['available_date']));
+            unset($data['available_date']);
         }
 
         return $data;

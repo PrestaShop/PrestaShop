@@ -93,7 +93,7 @@ class UpdateProductStockHandler extends AbstractProductHandler implements Update
         $formattedCommand = [];
 
         if (null !== $command->getAvailableDate()) {
-            $formattedCommand['available_date'] = $command->getAvailableDate();
+            $formattedCommand['available_date'] = $command->getAvailableDate()->format('Y-m-d');
         }
         if (null !== $command->getLocalizedAvailableLaterLabels()) {
             $formattedCommand['available_later'] = $command->getLocalizedAvailableLaterLabels();
