@@ -1510,3 +1510,13 @@ services:
       public: true
       tags:
         - { name: form.type }
+
+    form.type.improve.design.image_settings.image_generation_options_type:
+      class: 'PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\ImageGenerationOptionsType'
+      parent: 'form.type.translatable.aware'
+      public: true
+      arguments:
+        - '@=service("prestashop.adapter.shop.context").isAllShopContext()'
+        - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+      tags:
+        - { name: form.type }
