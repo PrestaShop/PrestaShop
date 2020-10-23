@@ -283,10 +283,11 @@
             'updated': translations.updated,
           };
 
-          if (json.missing.length || json.updated.length)
-            $('#changedFiles').html('<div class="alert alert-warning" role="alert"><p class="alert-text">'+ translations.changesDetected +'</p></div>');
-          else
-            $('#changedFiles').html('<div class="alert alert-success" role="alert"><p class="alert-text">'+ translations.noChangeDetected +'</p></div>');
+          if (json.missing.length || json.updated.length) {
+            $('#changedFiles').html('<div class="alert alert-warning" role="alert"><p class="alert-text">' + translations.changesDetected + '</p></div>');
+          } else {
+            $('#changedFiles').html('<div class="alert alert-success" role="alert"><p class="alert-text">' + translations.noChangeDetected + '</p></div>');
+          }
 
           $.each(tab, function(key, lang) {
             if (json[key].length) {
