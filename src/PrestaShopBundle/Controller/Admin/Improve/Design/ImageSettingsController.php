@@ -65,11 +65,48 @@ class ImageSettingsController extends FrameworkBundleAdminController
         $gridFactory = $this->get('prestashop.core.grid.factory.image_type');
         $grid = $gridFactory->getGrid($filters);
 
+        $generationSettingsForm = $this->get('prestashop.admin.image_settings.image_generation_options.form_handler')->getForm();
+
         return $this->render('@PrestaShop/Admin/Improve/Design/ImageSettings/index.html.twig', [
             'imageTypeGrid' => $this->presentGrid($grid),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'generationSettingsForm' => $generationSettingsForm->createView(),
         ]);
+    }
+
+    /**
+     * Process image generation options configuration form.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_image_settings_index"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function saveOptionsAction(Request $request): RedirectResponse
+    {
+        $generationSettingsFormHandler = $this->get('prestashop.admin.image_settings.image_generation_options.form_handler');
+
+        $generationSettingsForm = $generationSettingsFormHandler->getForm();
+        $generationSettingsForm->handleRequest($request);
+
+        if ($generationSettingsForm->isSubmitted()) {
+            $errors = $generationSettingsFormHandler->save($generationSettingsForm->getData());
+
+            if (empty($errors)) {
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_image_settings_index');
+            }
+
+            $this->flashErrors($errors);
+        }
+
+        return $this->redirectToRoute('admin_image_settings_index');
     }
 
     /**
@@ -203,7 +240,7 @@ class ImageSettingsController extends FrameworkBundleAdminController
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
         } catch (ImageTypeException $exception) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $this->addFlash('error', $this->getErrorMessageForException($exception, $this->getErrorMessages()));
         }
 
         return $this->redirectToRoute('admin_image_settings_index');
