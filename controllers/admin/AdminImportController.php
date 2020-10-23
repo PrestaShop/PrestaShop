@@ -1401,7 +1401,7 @@ class AdminImportControllerCore extends AdminController
                 $this->errors[] = $this->trans(
                     'The category ID must be unique. It can\'t be the same as the one for the parent category (ID: %1$s).',
                     [
-                        isset($info['id']) && !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null',
+                        !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null',
                     ],
                     'Admin.Advparameters.Notification'
                 );
