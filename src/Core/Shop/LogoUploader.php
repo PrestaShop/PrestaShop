@@ -39,7 +39,7 @@ use Tools;
 class LogoUploader
 {
     /**
-     * @var Shop The shop
+     * @var Shop
      */
     private $shop;
 

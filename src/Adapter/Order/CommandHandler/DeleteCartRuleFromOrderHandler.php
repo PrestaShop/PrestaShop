@@ -126,7 +126,7 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
                 $this->orderAmountUpdater->update($order, $cart, $orderCartRule->id_order_invoice);
             }
         } finally {
-            $this->contextStateManager->restoreContext();
+            $this->contextStateManager->restorePreviousContext();
         }
     }
 

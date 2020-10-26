@@ -34,6 +34,8 @@ use Carrier;
 use Cart;
 use CartRule;
 use Currency;
+use Customer;
+use Language;
 use Order;
 use OrderCarrier;
 use OrderCartRule;
@@ -95,15 +97,67 @@ class OrderAmountUpdater
     ): void {
         $this->cleanCaches();
 
-        // @todo: use https://github.com/PrestaShop/decimal for price computations
-        $computingPrecision = $this->getPrecisionFromCart($cart);
+        $this->contextStateManager
+            ->saveCurrentContext()
+            ->setCart($cart)
+            ->setCurrency(new Currency($cart->id_currency))
+            ->setCustomer(new Customer($cart->id_customer))
+            ->setLanguage(new Language($cart->id_lang))
+            ->setCountry($cart->getTaxCountry())
+        ;
 
-        // Update order details (if quantity or product price have been modified)
-        $this->updateOrderDetails($order, $cart, $computingPrecision);
+        try {
+            // @todo: use https://github.com/PrestaShop/decimal for price computations
+            $computingPrecision = $this->getPrecisionFromCart($cart);
 
-        // Recalculate cart rules and Fix differences between cart's cartRules and order's cartRules
-        $this->updateOrderCartRules($order, $cart, $computingPrecision, $orderInvoiceId);
+            // Update order details (if quantity or product price have been modified)
+            $this->updateOrderDetails($order, $cart, $computingPrecision);
 
+            // Recalculate cart rules and Fix differences between cart's cartRules and order's cartRules
+            $this->updateOrderCartRules($order, $cart, $computingPrecision, $orderInvoiceId);
+
+            // Update order totals
+            $this->updateOrderTotals($order, $cart, $computingPrecision);
+
+            // Update carrier weight for shipping cost
+            $this->updateOrderCarrier($order, $cart);
+
+            // Order::update is called after previous functions so that we only call it once
+            if (!$order->update()) {
+                throw new OrderException('Could not update order invoice in database.');
+            }
+
+            $this->updateOrderInvoices($order, $cart, $computingPrecision);
+        } finally {
+            $this->contextStateManager->restorePreviousContext();
+        }
+    }
+
+    /**
+     * There are many caches among legacy classes that can store previous prices
+     * we need to clean them to make sure the price is completely up to date
+     */
+    private function cleanCaches(): void
+    {
+        // For many intermediate computations
+        Cart::resetStaticCache();
+
+        // For discount computation
+        CartRule::resetStaticCache();
+        Cache::clean('getContextualValue_*');
+
+        // For shipping costs
+        Carrier::resetStaticCache();
+        Cache::clean('getPackageShippingCost_*');
+    }
+
+    /**
+     * @param Order $order
+     * @param Cart $cart
+     * @param int $computingPrecision
+     */
+    private function updateOrderTotals(Order $order, Cart $cart, int $computingPrecision): void
+    {
         $orderProducts = $order->getCartProducts();
 
         $carrierId = $order->id_carrier;
@@ -151,33 +205,6 @@ class OrderAmountUpdater
             $order->total_paid_tax_incl -= $shippingDiffTaxIncluded;
             $order->total_paid_tax_excl -= $shippingDiffTaxExcluded;
         }
-
-        // Update carrier weight for shipping cost
-        $this->updateOrderCarrier($order, $cart);
-
-        if (!$order->update()) {
-            throw new OrderException('Could not update order invoice in database.');
-        }
-
-        $this->updateOrderInvoices($order, $cart, $computingPrecision);
-    }
-
-    /**
-     * There are many caches among legacy classes that can store previous prices
-     * we need to clean them to make sure the price is completely up to date
-     */
-    private function cleanCaches(): void
-    {
-        // For many intermediate computations
-        Cart::resetStaticCache();
-
-        // For discount computation
-        CartRule::resetStaticCache();
-        Cache::clean('getContextualValue_*');
-
-        // For shipping costs
-        Carrier::resetStaticCache();
-        Cache::clean('getPackageShippingCost_*');
     }
 
     /**
@@ -322,7 +349,6 @@ class OrderAmountUpdater
         int $computingPrecision,
         ?int $orderInvoiceId
     ): void {
-        $this->contextStateManager->setCart($cart);
         CartRule::autoAddToCart();
         CartRule::autoRemoveFromCart();
 

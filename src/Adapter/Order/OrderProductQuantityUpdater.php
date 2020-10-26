@@ -28,11 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
-use Address;
 use Cart;
 use Configuration;
 use Context;
-use Country;
 use Currency;
 use Customer;
 use Customization;
@@ -108,11 +106,12 @@ class OrderProductQuantityUpdater
         $cart = new Cart($order->id_cart);
 
         $this->contextStateManager
+            ->saveCurrentContext()
             ->setCart($cart)
             ->setCurrency(new Currency($cart->id_currency))
             ->setCustomer(new Customer($cart->id_customer))
             ->setLanguage(new Language($cart->id_lang))
-            ->setCountry($this->getTaxCountry($cart))
+            ->setCountry($cart->getTaxCountry())
         ;
 
         try {
@@ -121,7 +120,7 @@ class OrderProductQuantityUpdater
             // Update prices on the order after cart rules are recomputed
             $this->orderAmountUpdater->update($order, $cart, null !== $orderInvoice ? (int) $orderInvoice->id : null);
         } finally {
-            $this->contextStateManager->restoreContext();
+            $this->contextStateManager->restorePreviousContext();
         }
 
         return $order;
@@ -449,23 +448,6 @@ class OrderProductQuantityUpdater
         if (!Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'customization` WHERE `quantity` = 0')) {
             throw new OrderException('Could not delete customization from database.');
         }
-    }
-
-    /**
-     * @param Cart $cart
-     *
-     * @return Country
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
-     */
-    private function getTaxCountry(Cart $cart): Country
-    {
-        $taxAddressType = Configuration::get('PS_TAX_ADDRESS_TYPE');
-        $taxAddressId = property_exists($cart, $taxAddressType) ? $cart->{$taxAddressType} : $cart->id_address_delivery;
-        $taxAddress = new Address($taxAddressId);
-
-        return new Country($taxAddress->id_country);
     }
 
     /**

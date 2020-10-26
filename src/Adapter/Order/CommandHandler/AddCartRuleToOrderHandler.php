@@ -84,7 +84,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         try {
             $this->addCartRuleAndUpdateOrder($command, $order);
         } finally {
-            $this->contextStateManager->restoreContext();
+            $this->contextStateManager->restorePreviousContext();
         }
     }
 
