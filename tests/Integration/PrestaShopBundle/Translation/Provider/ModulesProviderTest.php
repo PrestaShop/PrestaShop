@@ -160,7 +160,7 @@ class ModulesProviderTest extends KernelTestCase
         $this->catalogueVerifier->assertCataloguesMatch($legacyCatalogue, $expected);
     }
 
-    public function provideTestCases()
+    public function provideTestCases(): array
     {
         return [
             'French' => [
@@ -223,7 +223,7 @@ class ModulesProviderTest extends KernelTestCase
     /**
      * @return string
      */
-    private function getBuiltInModuleDirectory()
+    private function getBuiltInModuleDirectory(): string
     {
         return __DIR__ . '/../../../../Resources/modules';
     }
@@ -231,7 +231,7 @@ class ModulesProviderTest extends KernelTestCase
     /**
      * @return string
      */
-    private function getDefaultModuleDirectory()
+    private function getDefaultModuleDirectory(): string
     {
         return __DIR__ . '/../../../../Resources';
     }

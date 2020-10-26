@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Translation\Provider;
 
+use Language;
 use PrestaShopBundle\Translation\Provider\CoreProvider;
 use PrestaShopBundle\Translation\Provider\Type\CoreDomainType;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -46,7 +47,6 @@ class CoreDomainProviderTest extends KernelTestCase
     protected function setUp()
     {
         self::bootKernel();
-        $container = self::$kernel->getContainer();
         $resourcesDir = __DIR__ . '/../../../../Resources/translations';
         $databaseContent = [
             [
@@ -79,9 +79,9 @@ class CoreDomainProviderTest extends KernelTestCase
             $type->getTranslationDomains()
         );
 
-        $langId = \Language::getIdByIso('fr', true);
+        $langId = Language::getIdByIso('fr', true);
         if (!$langId) {
-            $lang = new \Language();
+            $lang = new Language();
             $lang->locale = 'fr-FR';
             $lang->iso_code = 'fr';
             $lang->name = 'Français';
@@ -146,7 +146,7 @@ class CoreDomainProviderTest extends KernelTestCase
 
     protected function tearDown()
     {
-        $langId = \Language::getIdByIso('fr', true);
+        $langId = Language::getIdByIso('fr', true);
         if ($langId) {
             \Db::getInstance()->execute(
                 'DELETE FROM `' . _DB_PREFIX_ . 'lang` WHERE id_lang = ' . $langId
