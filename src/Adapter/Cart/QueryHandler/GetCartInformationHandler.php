@@ -142,7 +142,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             $addresses ? $this->extractShippingFromLegacySummary($cart, $legacySummary) : null
         );
 
-        $this->contextStateManager->restoreContext();
+        $this->contextStateManager->restorePreviousContext();
 
         return $result;
     }

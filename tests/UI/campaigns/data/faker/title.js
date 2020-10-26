@@ -8,7 +8,7 @@ module.exports = class Title {
     this.name = (titleToCreate.name || faker.random.word()).substring(0, 19);
     this.frName = titleToCreate.frName || this.name;
     this.gender = titleToCreate.gender || faker.random.arrayElement(genders);
-    this.imageName = titleToCreate.imageName || `${this.name}.png`;
+    this.imageName = titleToCreate.imageName || faker.system.commonFileName('png');
     this.imageWidth = titleToCreate.imageWidth || 16;
     this.imageHeight = titleToCreate.imageHeight || 16;
   }
