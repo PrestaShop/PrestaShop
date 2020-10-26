@@ -13,7 +13,7 @@ const tagsPage = require('@pages/BO/shopParameters/search/tags');
 const addTagPage = require('@pages/BO/shopParameters/search/tags/add');
 
 // Import data
-const tagFaker = require('@data/faker/tag');
+const TagFaker = require('@data/faker/tag');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -29,8 +29,8 @@ let page;
 
 let numberOfTags = 0;
 
-const createTagData = new tagFaker();
-const editTagData = new tagFaker();
+const createTagData = new TagFaker({language: 'English (English)'});
+const editTagData = new TagFaker({language: 'Français (French)'});
 
 /*
 Create new tag
@@ -70,55 +70,40 @@ describe('Create, update and delete tag in BO', async () => {
 
     await searchPage.goToTagsPage(page);
 
+    numberOfTags = await tagsPage.getNumberOfElementInGrid(page);
+
     const pageTitle = await tagsPage.getPageTitle(page);
     await expect(pageTitle).to.contains(tagsPage.pageTitle);
   });
 
-  it('should reset all filters and get number of tags in BO', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
-
-    numberOfTags = await tagsPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfTags).to.be.above(0);
-  });
-
   // 1 - Create tag
-  /*describe('Create tag in BO', async () => {
+  describe('Create tag in BO', async () => {
     it('should go to add new tag page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAddtagPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddTagPage', baseContext);
 
-      await tagsPage.goToAddNewtagPage(page);
-      const pageTitle = await addtagPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addtagPage.pageTitleCreate);
+      await tagsPage.goToAddNewTagPage(page);
+
+      const pageTitle = await addTagPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addTagPage.pageTitleCreate);
     });
 
     it('should create tag and check result', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createtag', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'createTag', baseContext);
 
-      const textResult = await addtagPage.createEdittag(page, createTagData);
+      const textResult = await addTagPage.setTag(page, createTagData);
       await expect(textResult).to.contains(tagsPage.successfulCreationMessage);
 
-      const numbertagsAfterCreation = await tagsPage.getNumberOfElementInGrid(page);
-      await expect(numbertagsAfterCreation).to.be.equal(numberOfTags + 1);
+      const numberOfElementAfterCreation = await tagsPage.getNumberOfElementInGrid(page);
+      await expect(numberOfElementAfterCreation).to.be.equal(numberOfTags + 1);
     });
 
-    it('should filter list by name and get the new tag ID', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterToCheckNewtag', baseContext);
+    it('should reset all filters and get number of tags in BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-      await tagsPage.resetFilter(page);
-
-      await tagsPage.filterTable(
-        page,
-        'input',
-        'name',
-        createTagData.name,
-      );
-
-      tagID = await tagsPage.getTextColumn(page, 1, 'id_tag');
-
-      const name = await tagsPage.getTextColumn(page, 1, 'name');
-      await expect(name).to.contains(createTagData.name);
+      numberOfTags = await tagsPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfTags).to.be.above(0);
     });
-  });*/
+  });
 
   /*// 2 - Update tag
   describe('Update tag created', async () => {
@@ -151,14 +136,14 @@ describe('Create, update and delete tag in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEdittagPage', baseContext);
 
       await tagsPage.gotoEdittagPage(page, 1);
-      const pageTitle = await addtagPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addtagPage.pageTitleEdit);
+      const pageTitle = await addTagPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addTagPage.pageTitleEdit);
     });
 
     it('should update tag', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updatetag', baseContext);
 
-      const textResult = await addtagPage.createEdittag(page, editTagData);
+      const textResult = await addTagPage.createEdittag(page, editTagData);
       await expect(textResult).to.contains(tagsPage.successfulUpdateMessage);
 
       const numberOfTagsAfterUpdate = await tagsPage.resetAndGetNumberOfLines(page);
