@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 use ErrorException;
 use Hook;
 use Image;
+use ImageManagerCore;
 use ImageType;
 use PrestaShop\PrestaShop\Adapter\Image\Exception\CannotUnlinkImageException;
 use PrestaShop\PrestaShop\Adapter\Image\ImageGenerator;
@@ -94,8 +95,8 @@ class ProductImageUploader extends AbstractImageUploader
      */
     public function upload(Image $image, string $filePath): void
     {
-        $this->imageValidator->assertFileFitsInSystemLimits($filePath);
-        $this->imageValidator->assertIsValidImage($filePath);
+        $this->imageValidator->assertFileUploadLimits($filePath);
+        $this->imageValidator->assertIsValidImageType($filePath);
 
         $this->productImagePathFactory->createDestinationDirectory($image);
         $destinationPath = $this->productImagePathFactory->getBasePath($image);
