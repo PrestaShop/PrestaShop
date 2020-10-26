@@ -138,11 +138,6 @@
         <target>Image is too large (%1$d kB). Maximum allowed: %2$d kB</target>
         <note>Line: 497</note>
       </trans-unit>
-      <trans-unit id="198dabd328b3e93b2eec2f6d76ab3eb1">
-        <source>Error while uploading image; please change your server's settings. (Error code: %s)</source>
-        <target>Error while uploading image; please change your server's settings. (Error code: %s)</target>
-        <note>Line: 480</note>
-      </trans-unit>
       <trans-unit id="da819cb8d5fcace59e5ec77b43b12b0a">
         <source>Error while uploading image; please change your server's settings.</source>
         <target>Error while uploading image; please change your server's settings.</target>
@@ -825,6 +820,15 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
         <source>Fatal error: The module directory does not exist.</source>
         <target>Fatal error: The module directory does not exist.</target>
         <note>Line: 2172</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockreassurance/controllers/admin/AdminBlockListingController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="198dabd328b3e93b2eec2f6d76ab3eb1">
+        <source>Error while uploading image; please change your server's settings. (Error code: %s)</source>
+        <target>Error while uploading image; please change your server's settings. (Error code: %s)</target>
+        <note>Line: 198</note>
       </trans-unit>
     </body>
   </file>
