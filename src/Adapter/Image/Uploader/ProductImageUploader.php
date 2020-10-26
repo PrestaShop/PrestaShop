@@ -64,21 +64,29 @@ class ProductImageUploader extends AbstractImageUploader
     private $imageGenerator;
 
     /**
+     * @var ImageValidator
+     */
+    private $imageValidator;
+
+    /**
      * @param UploadSizeConfigurationInterface $uploadSizeConfiguration
      * @param ProductImagePathFactory $productImagePathFactory
      * @param int $contextShopId
      * @param ImageGenerator $imageGenerator
+     * @param ImageValidator $imageValidator
      */
     public function __construct(
         UploadSizeConfigurationInterface $uploadSizeConfiguration,
         ProductImagePathFactory $productImagePathFactory,
         int $contextShopId,
-        ImageGenerator $imageGenerator
+        ImageGenerator $imageGenerator,
+        ImageValidator $imageValidator
     ) {
         $this->uploadSizeConfiguration = $uploadSizeConfiguration;
         $this->productImagePathFactory = $productImagePathFactory;
         $this->contextShopId = $contextShopId;
         $this->imageGenerator = $imageGenerator;
+        $this->imageValidator = $imageValidator;
     }
 
     /**
@@ -86,11 +94,10 @@ class ProductImageUploader extends AbstractImageUploader
      */
     public function upload(Image $image, string $filePath): void
     {
-        $imageValidator = new ImageValidator($filePath);
-        $imageValidator->assertImageIsAllowedForUpload();
-        $imageValidator->assertImageTypeIsSupported(['jpeg', 'gif', 'png', 'jpg']);
-        $this->productImagePathFactory->createDestinationDirectory($image);
+        $this->imageValidator->assertFileFitsInSystemLimits($filePath);
+        $this->imageValidator->assertIsValidImage($filePath);
 
+        $this->productImagePathFactory->createDestinationDirectory($image);
         $destinationPath = $this->productImagePathFactory->getBasePath($image);
         $this->uploadFromTemp($filePath, $destinationPath);
         $this->imageGenerator->generateImagesByTypes($destinationPath, ImageType::getImagesTypes('products'));
