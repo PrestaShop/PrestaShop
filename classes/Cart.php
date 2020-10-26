@@ -5098,4 +5098,19 @@ class CartCore extends ObjectModel
 
         return $products;
     }
+
+    /**
+     * @return Country
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    public function getTaxCountry(): Country
+    {
+        $taxAddressType = Configuration::get('PS_TAX_ADDRESS_TYPE');
+        $taxAddressId = property_exists($this, $taxAddressType) ? $this->{$taxAddressType} : $this->id_address_delivery;
+        $taxAddress = new Address($taxAddressId);
+
+        return new Country($taxAddress->id_country);
+    }
 }

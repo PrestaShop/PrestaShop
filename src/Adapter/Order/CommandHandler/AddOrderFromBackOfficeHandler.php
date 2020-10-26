@@ -120,7 +120,7 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
         } catch (Exception $e) {
             throw new OrderException('Failed to add order. ' . $e->getMessage(), 0, $e);
         } finally {
-            $this->contextStateManager->restoreContext();
+            $this->contextStateManager->restorePreviousContext();
         }
 
         if (!$paymentModule->currentOrder) {

@@ -71,7 +71,7 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
         try {
             $this->updateProductQuantityInCart($cart, $command);
         } finally {
-            $this->contextStateManager->restoreContext();
+            $this->contextStateManager->restorePreviousContext();
         }
     }
 

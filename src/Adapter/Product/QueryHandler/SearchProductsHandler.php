@@ -137,7 +137,7 @@ final class SearchProductsHandler extends AbstractOrderHandler implements Search
             }
         }
 
-        $this->contextStateManager->restoreContext();
+        $this->contextStateManager->restorePreviousContext();
 
         return $foundProducts;
     }

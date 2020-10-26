@@ -38,7 +38,6 @@ use Configuration;
 use Context;
 use Currency;
 use Customer;
-use Exception;
 use Hook;
 use Order;
 use OrderCarrier;
@@ -191,12 +190,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             // Update totals amount of order
             $this->orderAmountUpdater->update($order, $cart, null !== $invoice ? (int) $invoice->id : null);
             Hook::exec('actionOrderEdited', ['order' => $order]);
-        } catch (Exception $e) {
-            $this->contextStateManager->restoreContext();
-            throw $e;
+        } finally {
+            $this->contextStateManager->restorePreviousContext();
         }
-
-        $this->contextStateManager->restoreContext();
     }
 
     /**
