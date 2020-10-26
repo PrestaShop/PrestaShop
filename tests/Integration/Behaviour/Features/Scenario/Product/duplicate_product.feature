@@ -86,3 +86,4 @@ Feature: Duplicate product from Back Office (BO).
       | file_name   | app_icon.png           |
     And I associate attachment "att1" with product product1
 #todo: add specific prices & priorities, test combinations, packs
+    When I duplicate product product1 to a copy_of_product1
