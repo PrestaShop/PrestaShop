@@ -44,3 +44,4 @@ services:
             - '@prestashop.adapter.product.product_image_path_factory'
             - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
             - "@prestashop.adapter.image.image_generator"
+            - "@prestashop.core.hook.dispatcher"

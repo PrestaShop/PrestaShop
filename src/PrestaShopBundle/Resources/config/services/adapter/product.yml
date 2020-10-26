@@ -428,3 +428,4 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductImagePathFactory
         arguments:
             - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_LEGACY_IMAGES')"
+            - !php/const _PS_TMP_IMG_DIR_

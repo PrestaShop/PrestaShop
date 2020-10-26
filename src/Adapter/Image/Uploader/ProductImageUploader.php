@@ -29,13 +29,13 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 
 use ErrorException;
-use Hook;
 use Image;
 use ImageType;
 use PrestaShop\PrestaShop\Adapter\Image\Exception\CannotUnlinkImageException;
 use PrestaShop\PrestaShop\Adapter\Image\ImageGenerator;
 use PrestaShop\PrestaShop\Adapter\Product\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 
 /**
  * Uploads product image to filesystem
@@ -63,21 +63,29 @@ class ProductImageUploader extends AbstractImageUploader
     private $imageGenerator;
 
     /**
+     * @var HookDispatcherInterface
+     */
+    private $hookDispatcher;
+
+    /**
      * @param UploadSizeConfigurationInterface $uploadSizeConfiguration
      * @param ProductImagePathFactory $productImagePathFactory
      * @param int $contextShopId
      * @param ImageGenerator $imageGenerator
+     * @param HookDispatcherInterface $hookDispatcher
      */
     public function __construct(
         UploadSizeConfigurationInterface $uploadSizeConfiguration,
         ProductImagePathFactory $productImagePathFactory,
         int $contextShopId,
-        ImageGenerator $imageGenerator
+        ImageGenerator $imageGenerator,
+        HookDispatcherInterface $hookDispatcher
     ) {
         $this->uploadSizeConfiguration = $uploadSizeConfiguration;
         $this->productImagePathFactory = $productImagePathFactory;
         $this->contextShopId = $contextShopId;
         $this->imageGenerator = $imageGenerator;
+        $this->hookDispatcher = $hookDispatcher;
     }
 
     /**
@@ -90,7 +98,11 @@ class ProductImageUploader extends AbstractImageUploader
         $this->uploadFromTemp($filePath, $destinationPath);
         $this->imageGenerator->generateImagesByTypes($destinationPath, ImageType::getImagesTypes('products'));
 
-        Hook::exec('actionWatermark', ['id_image' => (int) $image->id, 'id_product' => (int) $image->id_product]);
+        $this->hookDispatcher->dispatchWithParameters(
+            'actionWatermark',
+            ['id_image' => (int) $image->id, 'id_product' => (int) $image->id_product]
+        );
+
         $this->deleteCachedImages($image);
     }
 
