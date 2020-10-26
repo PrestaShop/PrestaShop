@@ -31,11 +31,9 @@ namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 use ErrorException;
 use Hook;
 use Image;
-use ImageManagerCore;
 use ImageType;
 use PrestaShop\PrestaShop\Adapter\Image\Exception\CannotUnlinkImageException;
 use PrestaShop\PrestaShop\Adapter\Image\ImageGenerator;
-use PrestaShop\PrestaShop\Adapter\Image\ImageValidator;
 use PrestaShop\PrestaShop\Adapter\Product\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
 
@@ -65,29 +63,21 @@ class ProductImageUploader extends AbstractImageUploader
     private $imageGenerator;
 
     /**
-     * @var ImageValidator
-     */
-    private $imageValidator;
-
-    /**
      * @param UploadSizeConfigurationInterface $uploadSizeConfiguration
      * @param ProductImagePathFactory $productImagePathFactory
      * @param int $contextShopId
      * @param ImageGenerator $imageGenerator
-     * @param ImageValidator $imageValidator
      */
     public function __construct(
         UploadSizeConfigurationInterface $uploadSizeConfiguration,
         ProductImagePathFactory $productImagePathFactory,
         int $contextShopId,
-        ImageGenerator $imageGenerator,
-        ImageValidator $imageValidator
+        ImageGenerator $imageGenerator
     ) {
         $this->uploadSizeConfiguration = $uploadSizeConfiguration;
         $this->productImagePathFactory = $productImagePathFactory;
         $this->contextShopId = $contextShopId;
         $this->imageGenerator = $imageGenerator;
-        $this->imageValidator = $imageValidator;
     }
 
     /**
@@ -95,9 +85,6 @@ class ProductImageUploader extends AbstractImageUploader
      */
     public function upload(Image $image, string $filePath): void
     {
-        $this->imageValidator->assertFileUploadLimits($filePath);
-        $this->imageValidator->assertIsValidImageType($filePath);
-
         $this->productImagePathFactory->createDestinationDirectory($image);
         $destinationPath = $this->productImagePathFactory->getBasePath($image);
         $this->uploadFromTemp($filePath, $destinationPath);

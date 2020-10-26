@@ -415,6 +415,7 @@ services:
         arguments:
             - '@prestashop.adapter.image.uploader.product_image_uploader'
             - '@prestashop.adapter.product.repository.product_image_repository'
+            - "@prestashop.adapter.image.image_validator"
             - "@=service('prestashop.adapter.shop.context').getContextListShopID()"
         tags:
             - name: tactician.handler

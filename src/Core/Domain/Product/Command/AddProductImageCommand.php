@@ -43,27 +43,18 @@ class AddProductImageCommand
     /**
      * @var string
      */
-    private $originalName;
-
-    /**
-     * @var string
-     */
-    private $pathName;
+    private $filePath;
 
     /**
      * @param int $productId
-     * @param string $originalName
      * @param string $pathName
      */
     public function __construct(
         int $productId,
-        string $originalName,
         string $pathName
     ) {
         $this->productId = new ProductId($productId);
-        //@todo: assert file constraints or leave it to uploader?
-        $this->originalName = $originalName;
-        $this->pathName = $pathName;
+        $this->filePath = $pathName;
     }
 
     /**
@@ -77,32 +68,8 @@ class AddProductImageCommand
     /**
      * @return string
      */
-    public function getOriginalName(): string
+    public function getFilePath(): string
     {
-        return $this->originalName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPathName(): string
-    {
-        return $this->pathName;
-    }
-
-    /**
-     * @return int
-     */
-    public function getFileSize(): int
-    {
-        return $this->fileSize;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMimeType(): string
-    {
-        return $this->mimeType;
+        return $this->filePath;
     }
 }
