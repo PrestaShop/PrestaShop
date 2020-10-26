@@ -31,8 +31,8 @@ use ImageManager;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
-use PrestaShopException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
+use PrestaShopException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
