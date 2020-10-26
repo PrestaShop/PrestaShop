@@ -117,7 +117,7 @@ class ThemeExtractorCacheTest extends TestCase
         self::$filesystem->remove(self::$tempDir);
     }
 
-    private function getMockTheme($themeName)
+    private function getMockTheme($themeName): Theme
     {
         $mock = $this->createMock(Theme::class);
         $mock->method('getName')->willReturn($themeName);
@@ -148,8 +148,9 @@ class ThemeExtractorCacheTest extends TestCase
 
     /**
      * @param string[] $domains
+     * @param string $directory
      */
-    private function assertDomainFilesExistInCache(array $domains, $directory)
+    private function assertDomainFilesExistInCache(array $domains, string $directory)
     {
         $files = (new Finder())->files('*.xlf')->in($directory);
 
