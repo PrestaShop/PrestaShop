@@ -32,6 +32,7 @@ use ImageManager;
 use PrestaShopException;
 use Shop;
 use Tools;
+use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
 
 /**
  * Class LogoUploader used to manage upload of Shop logos and favicon.
@@ -97,7 +98,7 @@ class LogoUploader
         $files = empty($files) ? $_FILES : $files;
 
         if (isset($files[$fieldName]['tmp_name'], $files[$fieldName]['tmp_name'], $files[$fieldName]['size'])) {
-            if ($error = ImageManager::validateUpload($files[$fieldName], Tools::getMaxUploadSize())) {
+            if ($error = ImageManager::validateUpload($files[$fieldName], Tools::getMaxUploadSize(), ShopLogoSettings::AVAILABLE_LOGO_IMAGE_EXTENSIONS)) {
                 throw new PrestaShopException($error);
             }
             $tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS');
