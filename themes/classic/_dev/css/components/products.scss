@@ -796,6 +796,10 @@
       padding: 1.875rem;
     }
   }
+
+  .product-images > li.thumb-container > .thumb:not(.selected) {
+    border: none;
+  }
 }
 
 @include media-breakpoint-down(sm) {
