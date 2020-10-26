@@ -82,7 +82,7 @@ $(document).ready(() => {
         }
       });
     }
-    qv.find(prestashop.selectors.quantityWanted).TouchSpin({
+    qv.find(prestashop.themeSelectors.quantityWanted).TouchSpin({
       verticalbuttons: true,
       verticalupclass: 'material-icons touchspin-up',
       verticaldownclass: 'material-icons touchspin-down',

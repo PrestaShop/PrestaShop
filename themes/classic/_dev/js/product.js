@@ -37,7 +37,7 @@ $(document).ready(function () {
     coverImage();
     if (event && event.product_minimal_quantity) {
       const minimalProductQuantity = parseInt(event.product_minimal_quantity, 10);
-      const quantityInputSelector = prestashop.selectors.quantityWanted;
+      const quantityInputSelector = prestashop.themeSelectors.quantityWanted;
       let quantityInput = $(quantityInputSelector);
 
       // @see http://www.virtuosoft.eu/code/bootstrap-touchspin/ about Bootstrap TouchSpin
@@ -94,7 +94,7 @@ $(document).ready(function () {
   }
 
   function createProductSpin() {
-    const $quantityInput = $(prestashop.selectors.quantityWanted);
+    const $quantityInput = $(prestashop.themeSelectors.quantityWanted);
 
     $quantityInput.TouchSpin({
       verticalbuttons: true,
@@ -113,7 +113,7 @@ $(document).ready(function () {
       }
     });
 
-    $('body').on('change keyup', prestashop.selectors.quantityWanted, (e) => {
+    $('body').on('change keyup', prestashop.themeSelectors.quantityWanted, (e) => {
       if ($quantityInput.val() !== '') {
         $(e.currentTarget).trigger('touchspin.stopspin');
         prestashop.emit('updateProduct', {
