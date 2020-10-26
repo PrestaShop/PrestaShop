@@ -59,7 +59,6 @@ class ImageValidator
 
     /**
      * @param string $filePath
-     *
      * @param array $allowedMimeTypes
      *
      * @throws ImageUploadException
