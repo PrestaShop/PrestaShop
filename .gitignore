@@ -85,6 +85,11 @@ tests-legacy/resources/modules/ps_emailalerts/
 tests-legacy/resources/modules/ps_emailsubscription/mails/
 tests-legacy/resources/modules/referralprogram/
 
+tests/Resources/img/l/*
+!tests/Resources/img/l/.gitkeep
+tests/Resources/img/p/*
+!tests/Resources/img/p/.gitkeep
+
 /admin-dev/autoupgrade/*
 !/admin-dev/autoupgrade/index.php
 !/admin-dev/autoupgrade/backup/index.php

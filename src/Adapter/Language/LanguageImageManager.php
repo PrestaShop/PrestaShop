@@ -40,9 +40,14 @@ class LanguageImageManager
     const IMG_PATH = _PS_IMG_DIR_ . '/l/';
 
     /**
+     * Path were source images are stored
+     */
+    const IMG_SOURCE_PATH = _PS_IMG_SOURCE_DIR_ . '/l/';
+
+    /**
      * Path where flags are stored
      */
-    const FLAGS_SOURCE = _PS_IMG_DIR_ . 'flags/%s.jpg';
+    const FLAGS_SOURCE = _PS_IMG_SOURCE_DIR_ . 'flags/%s.jpg';
 
     /**
      * Path where flags are copied to
@@ -52,7 +57,7 @@ class LanguageImageManager
     /**
      * Default flag
      */
-    const FALLBACK_FLAG_SOURCE = self::IMG_PATH . 'none.jpg';
+    const FALLBACK_FLAG_SOURCE = self::IMG_SOURCE_PATH . 'none.jpg';
 
     const IMAGE_DIRECTORIES = [
         _PS_CAT_IMG_DIR_,
@@ -115,7 +120,7 @@ class LanguageImageManager
 
         foreach (static::IMAGE_DIRECTORIES as $destinationDir) {
             foreach ($filesToCopy as $sourceFile => $newFile) {
-                @copy(static::IMG_PATH . $sourceFile, $destinationDir . $newFile);
+                @copy(static::IMG_SOURCE_PATH . $sourceFile, $destinationDir . $newFile);
             }
         }
     }
