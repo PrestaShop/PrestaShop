@@ -46,7 +46,6 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
 
         $this->getCommandBus()->handle(new AddProductImageCommand(
             $this->getSharedStorage()->get($productReference),
-            $fileName,
             $pathName
         ));
     }
