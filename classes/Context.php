@@ -63,7 +63,7 @@ class ContextCore
     /** @var AdminController|FrontController */
     public $controller;
 
-    /** @var string $override_controller_name_for_translations */
+    /** @var string */
     public $override_controller_name_for_translations;
 
     /** @var Language */
