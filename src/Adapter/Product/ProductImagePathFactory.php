@@ -39,12 +39,20 @@ class ProductImagePathFactory
     private $isLegacyImageMode;
 
     /**
+     * @var string
+     */
+    private $temporaryImgDir;
+
+    /**
      * @param bool $isLegacyImageMode
+     * @param string $temporaryImgDir
      */
     public function __construct(
-        bool $isLegacyImageMode
+        bool $isLegacyImageMode,
+        string $temporaryImgDir
     ) {
         $this->isLegacyImageMode = $isLegacyImageMode;
+        $this->temporaryImgDir = $temporaryImgDir;
     }
 
     public function getBasePath(Image $image): string
@@ -72,11 +80,11 @@ class ProductImagePathFactory
 
     public function getCachedCover(int $productId, int $shopId): string
     {
-        return sprintf('%sproduct_mini_%s_%s.jpg', _PS_TMP_IMG_DIR_, $productId, $shopId);
+        return sprintf('%sproduct_mini_%s_%s.jpg', $this->temporaryImgDir, $productId, $shopId);
     }
 
     public function getCachedThumbnail(int $productId): string
     {
-        return sprintf('%sproduct_%s.jpg', _PS_TMP_IMG_DIR_, $productId);
+        return sprintf('%sproduct_%s.jpg', $this->temporaryImgDir, $productId);
     }
 }
