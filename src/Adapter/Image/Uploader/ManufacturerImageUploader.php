@@ -26,10 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 
+use Configuration;
 use ImageManager;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
+use PrestaShopException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -63,6 +65,58 @@ final class ManufacturerImageUploader extends AbstractImageUploader implements I
             throw new ImageOptimizationException('An error occurred while uploading the image. Check your directory permissions.');
         }
 
-        $this->generateDifferentSizeImages(_PS_MANU_IMG_DIR_ . $manufacturerId, 'manufacturers');
+        $this->generateDifferentSizeImages($manufacturerId);
+    }
+
+    /**
+     * @param int $manufacturerId
+     *
+     * @return bool
+     */
+    private function generateDifferentSizeImages($manufacturerId)
+    {
+        $resized = true;
+        $generateHighDpiImages = (bool) Configuration::get('PS_HIGHT_DPI');
+
+        try {
+            /* Generate images with different size */
+            if (count($_FILES) &&
+                file_exists(_PS_MANU_IMG_DIR_ . $manufacturerId . '.jpg')
+            ) {
+                $imageTypes = ImageType::getImagesTypes('manufacturers');
+
+                foreach ($imageTypes as $imageType) {
+                    $resized &= ImageManager::resize(
+                        _PS_MANU_IMG_DIR_ . $manufacturerId . '.jpg',
+                        _PS_MANU_IMG_DIR_ . $manufacturerId . '-' . stripslashes($imageType['name']) . '.jpg',
+                        (int) $imageType['width'],
+                        (int) $imageType['height']
+                    );
+
+                    if ($generateHighDpiImages) {
+                        $resized &= ImageManager::resize(
+                            _PS_MANU_IMG_DIR_ . $manufacturerId . '.jpg',
+                            _PS_MANU_IMG_DIR_ . $manufacturerId . '-' . stripslashes($imageType['name']) . '2x.jpg',
+                            (int) $imageType['width'] * 2,
+                            (int) $imageType['height'] * 2
+                        );
+                    }
+                }
+
+                $currentLogo = _PS_TMP_IMG_DIR_ . 'manufacturer_mini_' . $manufacturerId . '.jpg';
+
+                if ($resized && file_exists($currentLogo)) {
+                    unlink($currentLogo);
+                }
+            }
+        } catch (PrestaShopException $e) {
+            throw new ImageOptimizationException('Unable to resize one or more of your pictures.');
+        }
+
+        if (!$resized) {
+            throw new ImageOptimizationException('Unable to resize one or more of your pictures.');
+        }
+
+        return $resized;
     }
 }
