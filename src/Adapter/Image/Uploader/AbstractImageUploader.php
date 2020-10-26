@@ -45,37 +45,22 @@ use Tools;
 abstract class AbstractImageUploader
 {
     /**
-     * @deprecated
-     * @see assertImageIsAllowedForUpload()
-     *
      * @param UploadedFile $image
      *
      * @throws UploadedImageConstraintException
      */
     protected function checkImageIsAllowedForUpload(UploadedFile $image)
     {
-        $this->assertImageIsAllowedForUpload($image->getPathname());
-    }
-
-    /**
-     * @param string $filePath
-     *
-     * @throws ImageUploadException
-     * @throws UploadedImageConstraintException
-     */
-    protected function assertImageIsAllowedForUpload(string $filePath): void
-    {
-        if (!is_file($filePath)) {
-            throw new ImageUploadException(sprintf('"%s" is not a file', $filePath));
-        }
-
         $maxFileSize = Tools::getMaxUploadSize();
 
-        if ($maxFileSize > 0 && filesize($filePath) > $maxFileSize) {
+        if ($maxFileSize > 0 && $image->getSize() > $maxFileSize) {
             throw new UploadedImageConstraintException(sprintf('Max file size allowed is "%s" bytes. Uploaded image size is "%s".', $maxFileSize, $image->getSize()), UploadedImageConstraintException::EXCEEDED_SIZE);
         }
 
-        if (!ImageManager::isRealImage($filePath, mime_content_type($filePath))) {
+        if (!ImageManager::isRealImage($image->getPathname(), $image->getClientMimeType())
+            || !ImageManager::isCorrectImageFileExt($image->getClientOriginalName())
+            || preg_match('/\%00/', $image->getClientOriginalName()) // prevent null byte injection
+        ) {
             throw new UploadedImageConstraintException(sprintf('Image format "%s", not recognized, allowed formats are: .gif, .jpg, .png', $image->getClientOriginalExtension()), UploadedImageConstraintException::UNRECOGNIZED_FORMAT);
         }
     }
@@ -125,25 +110,7 @@ abstract class AbstractImageUploader
     /**
      * @deprecated use AbstractImageUploader::generateDifferentSizeImages() instead
      */
-    protected function generateDifferentSize($id, $imageDir, $belongsTo, string $extension = 'jpg')
-    {
-        return $this->generateDifferentSizeImages(
-            $imageDir . $id,
-            $belongsTo,
-            $extension
-        );
-    }
-
-    /**
-     * @param string $path
-     * @param string $belongsTo to whom the image belongs (for example 'suppliers' or 'categories')
-     * @param string $extension
-     *
-     * @return bool
-     *
-     * @throws ImageOptimizationException
-     */
-    protected function generateDifferentSizeImages(string $path, string $belongsTo, string $extension = 'jpg'): bool
+    protected function generateDifferentSize($id, $imageDir, $belongsTo)
     {
         $resized = true;
 
@@ -151,12 +118,11 @@ abstract class AbstractImageUploader
             $imageTypes = ImageType::getImagesTypes($belongsTo);
 
             foreach ($imageTypes as $imageType) {
-                $resized &= $this->resize($path, $imageType, $extension);
+                $resized &= $this->resize($id, $imageDir, $imageType);
             }
         } catch (PrestaShopException $e) {
             throw new ImageOptimizationException('Unable to resize one or more of your pictures.');
         }
-
         if (!$resized) {
             throw new ImageOptimizationException('Unable to resize one or more of your pictures.');
         }
@@ -165,31 +131,31 @@ abstract class AbstractImageUploader
     }
 
     /**
-     * Resizes the image depending from its type
+     * Resizes the image depending on its type
      *
-     * @param string $path
+     * @param int $id
+     * @param string $imageDir
      * @param array $imageType
-     * @param string $extension
      *
      * @return bool
      */
-    private function resize(string $path, array $imageType, string $extension)
+    private function resize($id, $imageDir, array $imageType)
     {
+        $ext = '.jpg';
         $width = $imageType['width'];
         $height = $imageType['height'];
 
         if (Configuration::get('PS_HIGHT_DPI')) {
-            $extension = '2x.' . $extension;
+            $ext = '2x.jpg';
             $width *= 2;
             $height *= 2;
         }
 
         return ImageManager::resize(
-            $path . '.' . $extension,
-            $path . '-' . stripslashes($imageType['name']) . '.' . $extension,
+            $imageDir . $id . '.jpg',
+            $imageDir . $id . '-' . stripslashes($imageType['name']) . $ext,
             (int) $width,
-            (int) $height,
-            $extension
+            (int) $height
         );
     }
 }
