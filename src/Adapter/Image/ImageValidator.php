@@ -43,12 +43,13 @@ class ImageValidator
      * @throws ImageUploadException
      * @throws UploadedImageConstraintException
      */
-    public function assertFileFitsInSystemLimits(string $filePath): void
+    public function assertFileUploadLimits(string $filePath): void
     {
         $maxFileSize = Tools::getMaxUploadSize();
+        $size = filesize($filePath);
 
-        if ($maxFileSize > 0 && filesize($filePath) > $maxFileSize) {
-            throw new UploadedImageConstraintException(sprintf('Max file size allowed is "%s" bytes. Uploaded image size is "%s".', $maxFileSize, $image->getSize()), UploadedImageConstraintException::EXCEEDED_SIZE);
+        if ($maxFileSize > 0 && $size > $maxFileSize) {
+            throw new UploadedImageConstraintException(sprintf('Max file size allowed is "%s" bytes. Uploaded image size is "%s".', $maxFileSize, $size), UploadedImageConstraintException::EXCEEDED_SIZE);
         }
 
         if (!ImageManager::checkImageMemoryLimit($filePath)) {
@@ -59,18 +60,24 @@ class ImageValidator
     /**
      * @param string $filePath
      *
+     * @param array $allowedMimeTypes
+     *
      * @throws ImageUploadException
      * @throws UploadedImageConstraintException
      */
-    public function assertIsValidImage(string $filePath): void
+    public function assertIsValidImageType(string $filePath, array $allowedMimeTypes = null): void
     {
+        if (!$allowedMimeTypes) {
+            $allowedMimeTypes = ImageManagerCore::MIME_TYPE_SUPPORTED;
+        }
+
         if (!is_file($filePath)) {
             throw new ImageUploadException(sprintf('"%s" is not a file', $filePath));
         }
 
         $mime = mime_content_type($filePath);
-        if (!ImageManager::isRealImage($filePath, mime_content_type($filePath))) {
-            throw new UploadedImageConstraintException(sprintf('Image mime type "%s" is not allowed, allowed Types are: %s', $mime, ImageManagerCore::MIME_TYPE_SUPPORTED), UploadedImageConstraintException::UNRECOGNIZED_FORMAT);
+        if (!ImageManager::isRealImage($filePath, mime_content_type($filePath), $allowedMimeTypes)) {
+            throw new UploadedImageConstraintException(sprintf('Image type "%s" is not allowed, allowed Types are: %s', $mime, implode(',', $allowedMimeTypes)), UploadedImageConstraintException::UNRECOGNIZED_FORMAT);
         }
     }
 }
