@@ -103,6 +103,11 @@ tests-legacy/resources/modules/ps_categorytree
 tests-legacy/resources/modules/ps_facetedsearch
 tests-legacy/resources/modules/ps_sharebuttons
 
+tests/Resources/img/l/*
+!tests/Resources/img/l/.gitkeep
+tests/Resources/img/p/*
+!tests/Resources/img/p/.gitkeep
+
 /admin-dev/autoupgrade/*
 !/admin-dev/autoupgrade/index.php
 !/admin-dev/autoupgrade/backup/index.php
