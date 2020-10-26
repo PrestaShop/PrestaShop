@@ -34,6 +34,9 @@ services:
     prestashop.adapter.image.image_generator:
         class: 'PrestaShop\PrestaShop\Adapter\Image\ImageGenerator'
 
+    prestashop.adapter.image.image_validator:
+        class: 'PrestaShop\PrestaShop\Adapter\Image\ImageValidator'
+
     prestashop.adapter.image.uploader.product_image_uploader:
         class: 'PrestaShop\PrestaShop\Adapter\Image\Uploader\ProductImageUploader'
         arguments:
@@ -41,3 +44,4 @@ services:
             - '@prestashop.adapter.product.product_image_path_factory'
             - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
             - "@prestashop.adapter.image.image_generator"
+            - "@prestashop.adapter.image.image_validator"

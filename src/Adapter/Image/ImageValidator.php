@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Image;
 
 use ImageManager;
+use ImageManagerCore;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
@@ -37,79 +38,39 @@ use Tools;
 class ImageValidator
 {
     /**
-     * @var string
-     */
-    private $filePath;
-
-    /**
-     * @param string $filePath
-     */
-    public function __construct(string $filePath)
-    {
-        $this->assertIsImage($filePath);
-        $this->filePath = $filePath;
-    }
-
-    /**
      * @param string $filePath
      *
      * @throws ImageUploadException
      * @throws UploadedImageConstraintException
      */
-    public function assertImageIsAllowedForUpload(): void
+    public function assertFileFitsInSystemLimits(string $filePath): void
     {
         $maxFileSize = Tools::getMaxUploadSize();
 
-        if ($maxFileSize > 0 && filesize($this->filePath) > $maxFileSize) {
+        if ($maxFileSize > 0 && filesize($filePath) > $maxFileSize) {
             throw new UploadedImageConstraintException(sprintf('Max file size allowed is "%s" bytes. Uploaded image size is "%s".', $maxFileSize, $image->getSize()), UploadedImageConstraintException::EXCEEDED_SIZE);
         }
 
-        if (!ImageManager::checkImageMemoryLimit($this->filePath)) {
+        if (!ImageManager::checkImageMemoryLimit($filePath)) {
             throw new MemoryLimitException('Cannot upload image due to memory restrictions');
         }
     }
 
     /**
-     * @param array $supportedExtensions
-     *
-     * @throws ImageUploadException
-     */
-    public function assertImageTypeIsSupported(array $supportedExtensions): void
-    {
-        $mime = ImageManager::getMimeType($this->filePath);
-
-        //@todo: add other exceptions?
-        if (!$mime) {
-            throw new ImageUploadException(
-                sprintf('Cannot recognize image type. Supported types are: %s', implode(',', $supportedExtensions))
-            );
-        }
-
-        $extension = str_replace('image/', '', $mime);
-
-        if (!in_array($extension, $supportedExtensions)) {
-            throw new ImageUploadException(sprintf(
-                'Unsupported image type "%s". Supported types are: %s',
-                $extension,
-                implode(',', $supportedExtensions)
-            ));
-        }
-    }
-
-    /**
      * @param string $filePath
      *
      * @throws ImageUploadException
      * @throws UploadedImageConstraintException
      */
-    private function assertIsImage(string $filePath): void
+    public function assertIsValidImage(string $filePath): void
     {
         if (!is_file($filePath)) {
             throw new ImageUploadException(sprintf('"%s" is not a file', $filePath));
         }
 
+        $mime = mime_content_type($filePath);
         if (!ImageManager::isRealImage($filePath, mime_content_type($filePath))) {
-            throw new UploadedImageConstraintException(sprintf('Image format "%s", not recognized, allowed formats are: .gif, .jpg, .png', $image->getClientOriginalExtension()), UploadedImageConstraintException::UNRECOGNIZED_FORMAT);
+            throw new UploadedImageConstraintException(sprintf('Image mime type "%s" is not allowed, allowed Types are: %s', $mime, ImageManagerCore::MIME_TYPE_SUPPORTED), UploadedImageConstraintException::UNRECOGNIZED_FORMAT);
         }
     }
 }
