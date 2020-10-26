@@ -50,7 +50,7 @@ class TranslationApiTreeBuilderTest extends TestCase
         $this->assertSame($expectedTree, $tree);
     }
 
-    public function provideTestCases()
+    public function provideTestCases(): array
     {
         return  [
             [
@@ -168,7 +168,7 @@ class TranslationApiTreeBuilderTest extends TestCase
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|Router
      */
-    private function buildFakeRouter()
+    private function buildFakeRouter(): Router
     {
         $mock = $this->createMock(Router::class);
         $mock->method('generate')

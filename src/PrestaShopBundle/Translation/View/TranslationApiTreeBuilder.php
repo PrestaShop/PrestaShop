@@ -87,8 +87,13 @@ class TranslationApiTreeBuilder
      *
      * @return array
      */
-    public function buildDomainTreeForApi(array $translationArray, $locale, $theme = null, $search = null, $module = null)
-    {
+    public function buildDomainTreeForApi(
+        array $translationArray,
+        string $locale,
+        ?string $theme = null,
+        ?string $search = null,
+        ?string $module = null
+    ): array {
         $this->locale = $locale;
         $this->theme = $theme;
         $this->search = $search;
@@ -110,8 +115,11 @@ class TranslationApiTreeBuilder
      *
      * @return array API subtree
      */
-    private function recursivelyBuildApiTree($metadataSubtree, $subtreeName = null, $fullSubtreeName = null)
-    {
+    private function recursivelyBuildApiTree(
+        array $metadataSubtree,
+        ?string $subtreeName = null,
+        ?string $fullSubtreeName = null
+    ): array {
         $current = [];
         if ($subtreeName !== null) {
             $current['name'] = $subtreeName;
@@ -144,7 +152,7 @@ class TranslationApiTreeBuilder
      *
      * @return string URL path
      */
-    private function getRoute($fullName)
+    private function getRoute(string $fullName): string
     {
         $routeParams = [
             'locale' => $this->locale,
@@ -163,11 +171,11 @@ class TranslationApiTreeBuilder
     /**
      * Builds a metadata tree with aggregate information per subdomain
      *
-     * @param array[] $translationsArray
+     * @param array $translationsArray
      *
-     * @return array[] Metadata tree
+     * @return array Metadata tree
      */
-    private function buildDomainMetadataTree(array $translationsArray)
+    private function buildDomainMetadataTree(array $translationsArray): array
     {
         return $this->treeBuilder->buildDomainMetadataTree($translationsArray);
     }
