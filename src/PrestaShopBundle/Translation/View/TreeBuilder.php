@@ -90,7 +90,7 @@ class TreeBuilder
      *
      * @return array
      */
-    public function buildDomainMetadataTree($catalogue)
+    public function buildDomainMetadataTree(array $catalogue): array
     {
         // template for initializing metadata
         $emptyMeta = [
@@ -109,6 +109,10 @@ class TreeBuilder
             // start at the root
             $subtree = &$tree;
             $currentSubdomainName = '';
+
+            if (false === $parts) {
+                continue;
+            }
 
             foreach ($parts as $partNumber => $part) {
                 $subdomainPartName = ucfirst($part);
@@ -143,7 +147,7 @@ class TreeBuilder
      *
      * @return array Array of [sum of count, sum of missing_translations]
      */
-    private function updateCounters(array &$subtree)
+    private function updateCounters(array &$subtree): array
     {
         foreach ($subtree as $key => $values) {
             if ($key === '__metadata') {
@@ -167,12 +171,11 @@ class TreeBuilder
     /**
      * @param string $domain
      *
-     * @return string[]
+     * @return false|string[]
      */
     private function splitDomain($domain)
     {
-        $tableizedDomain = Inflector::tableize($domain);
         // the third component of the domain may have underscores, so we need to limit pieces to 3
-        return explode('_', $tableizedDomain, 3);
+        return explode('_', Inflector::tableize($domain), 3);
     }
 }

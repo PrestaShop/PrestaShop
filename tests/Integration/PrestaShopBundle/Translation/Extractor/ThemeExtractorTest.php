@@ -69,7 +69,7 @@ class ThemeExtractorTest extends KernelTestCase
         $this->themeExtractor = null;
     }
 
-    private function getFakeTheme()
+    private function getFakeTheme(): Theme
     {
         $configFile = self::THEME_DIRECTORY . '/config/theme.yml';
         $config = Yaml::parse(file_get_contents($configFile));
