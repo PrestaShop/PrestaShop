@@ -26,6 +26,8 @@
 
 namespace LegacyTests\Integration\PrestaShopBundle\Controller\Api;
 
+use Language;
+
 /**
  * @group api
  * @group translation
@@ -36,9 +38,9 @@ class TranslationControllerTest extends ApiTestCase
     {
         parent::setUp();
 
-        $langId = \Language::getIdByIso('fr', true);
+        $langId = Language::getIdByIso('fr', true);
         if (!$langId) {
-            $lang = new \Language();
+            $lang = new Language();
             $lang->locale = 'fr-FR';
             $lang->language_code = 'fr-FR';
             $lang->iso_code = 'fr';
@@ -428,7 +430,7 @@ class TranslationControllerTest extends ApiTestCase
 
     protected function tearDown()
     {
-        $langId = \Language::getIdByIso('fr', true);
+        $langId = Language::getIdByIso('fr', true);
         if ($langId) {
             \Db::getInstance()->execute(
                 'DELETE FROM `' . _DB_PREFIX_ . 'lang` WHERE id_lang = ' . $langId

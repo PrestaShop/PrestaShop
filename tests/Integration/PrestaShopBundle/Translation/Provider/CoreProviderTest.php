@@ -324,7 +324,7 @@ class CoreProviderTest extends TestCase
         }
     }
 
-    public function provideLoadsCustomizedTranslationsFromDatabase()
+    public function provideLoadsCustomizedTranslationsFromDatabase(): array
     {
         return [
             'back' => [
@@ -385,7 +385,7 @@ class CoreProviderTest extends TestCase
         ];
     }
 
-    private function getBackDatabaseContent()
+    private function getBackDatabaseContent(): array
     {
         return [
             [
@@ -405,7 +405,7 @@ class CoreProviderTest extends TestCase
         ];
     }
 
-    private function getCoreFrontDatabaseContent()
+    private function getCoreFrontDatabaseContent(): array
     {
         return [
             [
@@ -425,7 +425,7 @@ class CoreProviderTest extends TestCase
         ];
     }
 
-    private function getMailsBodyDatabaseContent()
+    private function getMailsBodyDatabaseContent(): array
     {
         return [
             [
@@ -445,7 +445,7 @@ class CoreProviderTest extends TestCase
         ];
     }
 
-    private function getMailsDatabaseContent()
+    private function getMailsDatabaseContent(): array
     {
         return [
             [
@@ -465,7 +465,7 @@ class CoreProviderTest extends TestCase
         ];
     }
 
-    private function getOthersDatabaseContent()
+    private function getOthersDatabaseContent(): array
     {
         return [
             [

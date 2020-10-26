@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Translation\Provider;
 
+use Language;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationReader;
 use PrestaShopBundle\Translation\Provider\CoreProvider;
 use PrestaShopBundle\Translation\Provider\Factory\ProviderFactory;
@@ -37,11 +38,12 @@ use PrestaShopBundle\Translation\Provider\Type\BackType;
 use PrestaShopBundle\Translation\Provider\Type\CoreFrontType;
 use PrestaShopBundle\Translation\Provider\Type\ModulesType;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class TranslationsCatalogueProviderTest extends KernelTestCase
 {
     /**
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface|null
+     * @var ContainerInterface|null
      */
     private $container;
 
@@ -72,9 +74,9 @@ class TranslationsCatalogueProviderTest extends KernelTestCase
         ];
         $this->databaseReader = new MockDatabaseTranslationReader($databaseContent);
 
-        $langId = \Language::getIdByIso('fr', true);
+        $langId = Language::getIdByIso('fr', true);
         if (!$langId) {
-            $lang = new \Language();
+            $lang = new Language();
             $lang->locale = 'fr-FR';
             $lang->iso_code = 'fr';
             $lang->name = 'Français';
@@ -295,7 +297,7 @@ class TranslationsCatalogueProviderTest extends KernelTestCase
 
     protected function tearDown()
     {
-        $langId = \Language::getIdByIso('fr', true);
+        $langId = Language::getIdByIso('fr', true);
         if ($langId) {
             \Db::getInstance()->execute(
                 'DELETE FROM `' . _DB_PREFIX_ . 'lang` WHERE id_lang = ' . $langId
@@ -307,7 +309,7 @@ class TranslationsCatalogueProviderTest extends KernelTestCase
     /**
      * @return string
      */
-    private function getBuiltInModuleDirectory()
+    private function getBuiltInModuleDirectory(): string
     {
         return __DIR__ . '/../../../../Resources/modules';
     }
@@ -315,7 +317,7 @@ class TranslationsCatalogueProviderTest extends KernelTestCase
     /**
      * @return string
      */
-    private function getDefaultTranslationsDirectory()
+    private function getDefaultTranslationsDirectory(): string
     {
         return __DIR__ . '/../../../../Resources/translations';
     }

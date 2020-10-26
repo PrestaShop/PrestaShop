@@ -191,7 +191,7 @@ class ThemeProviderTest extends KernelTestCase
         $this->assertSame($expectedCatalogue, $catalogue->all());
     }
 
-    public function provideFixturesForExtractDefaultCatalogue()
+    public function provideFixturesForExtractDefaultCatalogue(): array
     {
         $extractedMessages = [
             'SomeDomain' => [
@@ -262,7 +262,7 @@ class ThemeProviderTest extends KernelTestCase
     /**
      * @return ThemeRepository
      */
-    private function buildThemeRepository()
+    private function buildThemeRepository(): ThemeRepository
     {
         $configuration = $this->createMock(Configuration::class);
 
@@ -287,7 +287,7 @@ class ThemeProviderTest extends KernelTestCase
      *
      * @return MessageCatalogue
      */
-    private function buildCatalogueFromMessages(array $messages)
+    private function buildCatalogueFromMessages(array $messages): MessageCatalogue
     {
         $catalogue = new MessageCatalogue(ThemeExtractorInterface::DEFAULT_LOCALE);
         foreach ($messages as $domain => $domainMessages) {

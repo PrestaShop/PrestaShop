@@ -48,7 +48,7 @@ class TreeBuilderTest extends TestCase
         $this->assertSame($expectedTree, $tree);
     }
 
-    public function provideTestCases()
+    public function provideTestCases(): array
     {
         return [
             [
