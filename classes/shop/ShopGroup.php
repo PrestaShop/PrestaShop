@@ -171,7 +171,8 @@ class ShopGroupCore extends ObjectModel
             FROM ' . _DB_PREFIX_ . 'shop
             WHERE name = "' . pSQL($name) . '"
             AND id_shop_group = ' . (int) $this->id . '
-            ' . ($id_shop ? 'AND id_shop != ' . (int) $id_shop : '')
+            ' . ($id_shop ? 'AND id_shop != ' . (int) $id_shop : ''),
+            false
         );
     }
 }

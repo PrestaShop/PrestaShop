@@ -587,7 +587,7 @@ class CustomerCore extends ObjectModel
         FROM `' . _DB_PREFIX_ . 'customer`
         WHERE `email` = \'' . pSQL($email) . '\'
         ' . Shop::addSqlRestriction(Shop::SHARE_CUSTOMER) . '
-        ' . ($ignoreGuest ? ' AND `is_guest` = 0' : ''));
+        ' . ($ignoreGuest ? ' AND `is_guest` = 0' : ''), false);
 
         return $returnId ? (int) $result : (bool) $result;
     }

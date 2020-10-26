@@ -7096,7 +7096,7 @@ class ProductCore extends ObjectModel
         $row = Db::getInstance()->getRow('
         SELECT `reference`
         FROM `' . _DB_PREFIX_ . 'product` p
-        WHERE p.reference = "' . pSQL($reference) . '"');
+        WHERE p.reference = "' . pSQL($reference) . '"', false);
 
         return isset($row['reference']);
     }
