@@ -1124,8 +1124,8 @@ class Install extends AbstractInstall
             }
         } else {
             $xml_loader = new XmlLoader();
-            $xml_loader->setTranslator($this->translator);
         }
+        $xml_loader->setTranslator($this->translator);
 
         // Install XML data (data/xml/ folder)
         $xml_loader->setFixturesPath($fixtures_path);
