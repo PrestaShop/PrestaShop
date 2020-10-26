@@ -1,9 +1,9 @@
 const faker = require('faker');
-const {products} = require('@data/demo/products');
-const {languages} = require('@data/demo/languages');
+const {Products} = require('@data/demo/products');
+const {Languages} = require('@data/demo/languages');
 
-const productsNames = Object.values(products).map(product => product.name);
-const LanguagesNames = Object.values(languages).map(language => language.name);
+const productsNames = Object.values(Products).map(product => product.name);
+const LanguagesNames = Object.values(Languages).map(language => language.name);
 
 module.exports = class Supplier {
   constructor(tagsToCreate = {}) {

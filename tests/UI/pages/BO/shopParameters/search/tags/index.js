@@ -12,7 +12,7 @@ class Tags extends BOBasePage {
     this.addNewTagLink = '#page-header-desc-tag-new_tag';
 
     // Form selectors
-    this.gridForm = '#sql_form_tag';
+    this.gridForm = '#form-tag';
     this.gridTableHeaderTitle = `${this.gridForm} .panel-heading`;
     this.gridTableNumberOfTitlesSpan = `${this.gridTableHeaderTitle} span.badge`;
 
@@ -59,6 +59,15 @@ class Tags extends BOBasePage {
   async resetAndGetNumberOfLines(page) {
     await this.resetFilter(page);
     return this.getNumberOfElementInGrid(page);
+  }
+
+  /**
+   * Go to add new tag page
+   * @param page
+   * @returns {Promise<void>}
+   */
+  async goToAddNewTagPage(page) {
+    await this.clickAndWaitForNavigation(page, this.addNewTagLink);
   }
 }
 
