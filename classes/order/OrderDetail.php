@@ -149,7 +149,7 @@ class OrderDetailCore extends ObjectModel
      */
     public $tax_rate;
 
-    /** @var float $tax_computation_method * */
+    /** @var float */
     public $tax_computation_method;
 
     /** @var int Id tax rules group */

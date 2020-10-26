@@ -118,7 +118,7 @@ class FrontControllerCore extends Controller
     /** @var bool If true, forces display to maintenance page. */
     protected $maintenance = false;
 
-    /** @var string[] Adds excluded $_GET keys for redirection */
+    /** @var string[] Adds excluded `$_GET` keys for redirection */
     protected $redirectionExtraExcludedKeys = [];
 
     /**

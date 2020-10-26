@@ -29,12 +29,12 @@
  */
 class CombinationCore extends ObjectModel
 {
-    /** @var int $id_product Product ID */
+    /** @var int Product ID */
     public $id_product;
 
     public $reference;
 
-    /** @var string $supplier_reference */
+    /** @var string */
     public $supplier_reference;
 
     public $location;

@@ -140,7 +140,7 @@ class CartCore extends ObjectModel
         ],
     ];
 
-    /** @var array $webserviceParameters Web service parameters */
+    /** @var array Web service parameters */
     protected $webserviceParameters = [
         'fields' => [
             'id_address_delivery' => ['xlink_resource' => 'addresses'],

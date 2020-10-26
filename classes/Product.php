@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-/**
+/*
  * @deprecated 1.5.0.1
  */
 define('_CUSTOMIZE_FILE_', 0);
