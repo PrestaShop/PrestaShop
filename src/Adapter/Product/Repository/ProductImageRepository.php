@@ -30,10 +30,13 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
 use Image;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShopException;
 
 /**
  * Provides access to product Image data source
@@ -56,15 +59,24 @@ class ProductImageRepository extends AbstractObjectModelRepository
         $image->id_product = $productIdValue;
         $image->position = Image::getHighestPosition($productIdValue) + 1;
 
-        if (!Image::getCover($productIdValue)) {
-            $image->cover = 1;
-        } else {
-            $image->cover = 0;
-        }
+        $image->cover = !Image::getCover($productIdValue);
 
-        //@todo: wrap in try catch
-        $image->add();
-        $image->associateTo($shopIds);
+        $this->addObjectModel($image, CannotAddProductImageException::class);
+
+        try {
+            if (!$image->associateTo($shopIds)) {
+                throw new ProductImageException(sprintf(
+                    'Failed to associate product image #%d with shops',
+                    $image->id
+                ));
+            }
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf('Error occurred when trying to associate image #%d with shops', $image->id),
+                0,
+                $e
+            );
+        }
 
         return $image;
     }
