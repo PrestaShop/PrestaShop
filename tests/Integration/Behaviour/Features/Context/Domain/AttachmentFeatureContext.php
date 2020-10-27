@@ -33,6 +33,7 @@ use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShopException;
 use RuntimeException;
+use Tests\Resources\DummyFileUploader;
 
 class AttachmentFeatureContext extends AbstractDomainFeatureContext
 {
@@ -105,15 +106,10 @@ class AttachmentFeatureContext extends AbstractDomainFeatureContext
      */
     private function uploadDummyFile(string $fileName): string
     {
-        $source = _PS_ROOT_DIR_ . '/tests/Resources/dummyFile/' . $fileName;
-
-        if (!is_file($source)) {
-            throw new RuntimeException('%s is not a file', $source);
-        }
+        $file = DummyFileUploader::upload($fileName);
 
         $destination = _PS_DOWNLOAD_DIR_ . $fileName;
-        copy($source, $destination);
-        chmod($destination, 0644);
+        copy($file, $destination);
 
         return $destination;
     }
