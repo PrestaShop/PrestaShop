@@ -46,9 +46,8 @@ jobs:
 
       - name: FrontOffice Theme `classic`
         run: cd ./themes/ && npm install && npm run lint && cd ./classic/_dev && npm install && npm run lint
-
-  yamllint:
-    name: YAML Lint
+  yamllint_sf:
+    name: YAML Lint (Symfony Check)
     runs-on: ubuntu-latest
     steps:
       -   name: Setup PHP
@@ -85,7 +84,29 @@ jobs:
 
       -   name: Run Lint Yaml on `.t9n.yml`
           run: php bin/console lint:yaml .t9n.yml
+  yamllint:
+      name: YAML Lint (YamlLint Check)
+      runs-on: ubuntu-latest
+      steps:
+          -   uses: actions/setup-python@v2
+              with:
+                python-version: '3.x'
+          -   name: Install YAMLLint
+              run: |
+                  pip install --user yamllint
+          -   uses: actions/checkout@v2
 
+          -   name: yamllint on `src`
+              run: yamllint -c .github/workflows/yamllint/.yamllint.yml src
+
+          -   name: yamllint on `app`
+              run: yamllint -c .github/workflows/yamllint/.yamllint.yml app
+
+          -   name: yamllint on `themes`
+              run: yamllint -c .github/workflows/yamllint/.yamllint.yml themes
+
+          -   name: yamllint on `.t9n.yml`
+              run: yamllint -c .github/workflows/yamllint/.yamllint.yml .t9n.yml
   twiglint:
       name: Twig Lint
       runs-on: ubuntu-latest

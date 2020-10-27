@@ -9,13 +9,13 @@ services:
       - !php/const \PrestaShop\PrestaShop\Adapter\News\NewsDataProvider::CLOSED_TIMEOUT_SECONDS
       - !php/const \PrestaShop\PrestaShop\Adapter\News\NewsDataProvider::OPEN_THRESHOLD_SECONDS
     calls:
-      - ['setStrippedFailures', [!php/const \PrestaShop\PrestaShop\Adapter\News\NewsDataProvider::OPEN_ALLOWED_FAILURES]]
-      - ['setStrippedTimeout', [!php/const \PrestaShop\PrestaShop\Adapter\News\NewsDataProvider::OPEN_TIMEOUT_SECONDS]]
-      - ['setStorage', ['@prestashop.core.circuit_breaker.storage']]
+      - [ 'setStrippedFailures', [ !php/const \PrestaShop\PrestaShop\Adapter\News\NewsDataProvider::OPEN_ALLOWED_FAILURES ] ]
+      - [ 'setStrippedTimeout', [ !php/const \PrestaShop\PrestaShop\Adapter\News\NewsDataProvider::OPEN_TIMEOUT_SECONDS ] ]
+      - [ 'setStorage', [ '@prestashop.core.circuit_breaker.storage' ] ]
 
   prestashop.adapter.news.circuit_breaker:
     class: 'PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface'
-    factory: ["@prestashop.core.circuit_breaker.advanced_factory", create]
+    factory: [ "@prestashop.core.circuit_breaker.advanced_factory", create ]
     arguments:
       - "@prestashop.adapter.news.circuit_breaker.settings"
 
