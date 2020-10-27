@@ -29,10 +29,10 @@ namespace PrestaShop\PrestaShop\Core\Shop;
 use Configuration;
 use Context;
 use ImageManager;
+use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
 use PrestaShopException;
 use Shop;
 use Tools;
-use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
 
 /**
  * Class LogoUploader used to manage upload of Shop logos and favicon.
