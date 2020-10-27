@@ -379,7 +379,7 @@ class SqlManagerController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_sql_requests_index');
         }
 
-        $stream  = new Stream($exportedFile->getPathname());
+        $stream = new Stream($exportedFile->getPathname());
         $response = new BinaryFileResponse($stream);
         $response->setCharset($sqlRequestSettings->getFileEncoding());
         $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $exportedFile->getFilename());
