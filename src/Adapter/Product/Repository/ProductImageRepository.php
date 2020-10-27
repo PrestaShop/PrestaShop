@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
+use Doctrine\DBAL\Connection;
 use Image;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
@@ -44,6 +45,28 @@ use PrestaShopException;
 class ProductImageRepository extends AbstractObjectModelRepository
 {
     /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * @var string
+     */
+    private $dbPrefix;
+
+    /**
+     * @param Connection $connection
+     * @param string $dbPrefix
+     */
+    public function __construct(
+        Connection $connection,
+        string $dbPrefix
+    ) {
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
+    }
+
+    /**
      * @param ProductId $productId
      * @param int[] $shopIds
      *
@@ -58,7 +81,6 @@ class ProductImageRepository extends AbstractObjectModelRepository
         $image = new \Image();
         $image->id_product = $productIdValue;
         $image->position = Image::getHighestPosition($productIdValue) + 1;
-
         $image->cover = !Image::getCover($productIdValue);
 
         $this->addObjectModel($image, CannotAddProductImageException::class);
@@ -79,6 +101,39 @@ class ProductImageRepository extends AbstractObjectModelRepository
         }
 
         return $image;
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return Image[]
+     *
+     * @throws CoreException
+     */
+    public function getImages(ProductId $productId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+
+        //@todo: multishop not handled
+        $results = $qb->select('id_image')
+            ->from($this->dbPrefix . 'image', 'i')
+            ->where('i.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+            ->execute()
+            ->fetchAll()
+        ;
+
+        if (!$results) {
+            return [];
+        }
+
+        $images = [];
+        foreach ($results as $result) {
+            $imageId = new ImageId((int) $result['id_image']);
+            $images[] = $this->get($imageId);
+        }
+
+        return $images;
     }
 
     /**
