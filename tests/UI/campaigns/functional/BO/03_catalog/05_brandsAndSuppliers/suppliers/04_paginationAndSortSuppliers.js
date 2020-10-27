@@ -89,6 +89,7 @@ describe('Pagination and sort suppliers', async () => {
       it('should create supplier and check result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createSupplier${index}`, baseContext);
 
+        await files.generateImage(createSupplierData.logo);
         const result = await addSupplierPage.createEditSupplier(page, createSupplierData);
         await expect(result).to.equal(suppliersPage.successfulCreationMessage);
 

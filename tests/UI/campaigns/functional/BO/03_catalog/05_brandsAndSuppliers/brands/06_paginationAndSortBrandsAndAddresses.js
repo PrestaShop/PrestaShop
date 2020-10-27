@@ -91,6 +91,7 @@ describe('Pagination and sort brands and addresses', async () => {
       it('should create brand and check result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createBrand${index}`, baseContext);
 
+        await files.generateImage(createBrandData.logo);
         const result = await addBrandPage.createEditBrand(page, createBrandData);
         await expect(result).to.equal(brandsPage.successfulCreationMessage);
 
