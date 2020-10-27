@@ -1,6 +1,6 @@
 admin_categories_index:
     path: /{categoryId}
-    methods: [GET, POST]
+    methods: [ GET, POST ]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\CategoryController::indexAction
         _legacy_controller: AdminCategories
@@ -13,7 +13,7 @@ admin_categories_index:
 
 admin_categories_search:
     path: /search
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
         _legacy_controller: AdminCategories
@@ -25,7 +25,7 @@ admin_categories_search:
 
 admin_categories_bulk_enable_status:
     path: /bulk-status-enable
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\CategoryController::bulkEnableStatusAction
         _legacy_controller: AdminCategories
@@ -33,7 +33,7 @@ admin_categories_bulk_enable_status:
 
 admin_categories_bulk_disable_status:
     path: /bulk-status-disable
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\CategoryController::bulkDisableStatusAction
         _legacy_controller: AdminCategories
@@ -41,7 +41,7 @@ admin_categories_bulk_disable_status:
 
 admin_categories_toggle_status:
     path: /{categoryId}/toggle-status
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\CategoryController::toggleStatusAction
         _legacy_controller: AdminCategories
@@ -51,7 +51,7 @@ admin_categories_toggle_status:
 
 admin_categories_bulk_delete:
     path: /bulk-delete
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\CategoryController::bulkDeleteAction
         _legacy_controller: AdminCategories
@@ -59,7 +59,7 @@ admin_categories_bulk_delete:
 
 admin_categories_delete:
     path: /delete
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\CategoryController::deleteAction
         _legacy_controller: AdminCategories
@@ -67,15 +67,15 @@ admin_categories_delete:
 
 admin_categories_export:
     path: /export
-    methods: [GET]
+    methods: [ GET ]
     defaults:
-      _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\CategoryController::exportAction
-      _legacy_controller: AdminCategories
-      _legacy_link: AdminCategories:exportcategory
+        _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\CategoryController::exportAction
+        _legacy_controller: AdminCategories
+        _legacy_link: AdminCategories:exportcategory
 
 admin_categories_create:
     path: /new
-    methods: [GET, POST]
+    methods: [ GET, POST ]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\CategoryController::createAction
         _legacy_controller: AdminCategories
@@ -83,7 +83,7 @@ admin_categories_create:
 
 admin_categories_create_root:
     path: /new-root
-    methods: [GET, POST]
+    methods: [ GET, POST ]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\CategoryController::createRootAction
         _legacy_controller: AdminCategories
@@ -93,7 +93,7 @@ admin_categories_create_root:
 
 admin_categories_edit:
     path: /{categoryId}/edit
-    methods: [GET, POST]
+    methods: [ GET, POST ]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\CategoryController::editAction
         _legacy_controller: AdminCategories
@@ -105,7 +105,7 @@ admin_categories_edit:
 
 admin_categories_edit_root:
     path: /{categoryId}/edit-root
-    methods: [GET, POST]
+    methods: [ GET, POST ]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\CategoryController::editRootAction
         _legacy_controller: AdminCategories
@@ -117,7 +117,7 @@ admin_categories_edit_root:
 
 admin_categories_delete_cover_image:
     path: /{categoryId}/delete-cover-image
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\CategoryController::deleteCoverImageAction
         _legacy_controller: AdminCategories
@@ -129,7 +129,7 @@ admin_categories_delete_cover_image:
 
 admin_categories_delete_menu_thumbnail:
     path: /{categoryId}/menu-thumbnails/{menuThumbnailId}/delete
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\CategoryController::deleteMenuThumbnailAction
         _legacy_controller: AdminCategories
@@ -142,7 +142,7 @@ admin_categories_delete_menu_thumbnail:
 
 admin_categories_update_position:
     path: /update-positions
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\CategoryController::updatePositionAction
         _legacy_controller: AdminCategories
@@ -150,7 +150,7 @@ admin_categories_update_position:
 
 admin_categories_get_categories_tree:
     path: /tree
-    methods: [GET]
+    methods: [ GET ]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\CategoryController::getCategoriesTreeAction
         _legacy_controller: AdminCategories

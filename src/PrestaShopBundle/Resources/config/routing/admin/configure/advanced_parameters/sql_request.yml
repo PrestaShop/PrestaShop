@@ -1,6 +1,6 @@
 admin_sql_requests_index:
     path: /
-    methods: [GET]
+    methods: [ GET ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SqlManagerController::indexAction'
         _legacy_controller: AdminRequestSql
@@ -8,7 +8,7 @@ admin_sql_requests_index:
 
 admin_sql_requests_search:
     path: /
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
         gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.request_sql
@@ -18,7 +18,7 @@ admin_sql_requests_search:
 
 admin_sql_requests_process_settings:
     path: /process-settings
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SqlManagerController::processFormAction'
         _legacy_controller: AdminRequestSql
@@ -26,7 +26,7 @@ admin_sql_requests_process_settings:
 
 admin_sql_requests_create:
     path: /new
-    methods: [GET, POST]
+    methods: [ GET, POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SqlManagerController::createAction'
         _legacy_controller: AdminRequestSql
@@ -34,7 +34,7 @@ admin_sql_requests_create:
 
 admin_sql_requests_edit:
     path: /{sqlRequestId}/edit
-    methods: [GET, POST]
+    methods: [ GET, POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SqlManagerController::editAction'
         _legacy_controller: AdminRequestSql
@@ -46,7 +46,7 @@ admin_sql_requests_edit:
 
 admin_sql_requests_delete:
     path: /{sqlRequestId}/delete
-    methods: [GET, DELETE]
+    methods: [ GET, DELETE ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SqlManagerController::deleteAction'
         _legacy_controller: AdminRequestSql
@@ -58,7 +58,7 @@ admin_sql_requests_delete:
 
 admin_sql_requests_delete_bulk:
     path: /delete-bulk
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SqlManagerController::deleteBulkAction'
         _legacy_controller: AdminRequestSql
@@ -66,7 +66,7 @@ admin_sql_requests_delete_bulk:
 
 admin_sql_requests_table_columns:
     path: /tables/{mySqlTableName}/columns
-    methods: [GET]
+    methods: [ GET ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SqlManagerController::ajaxTableColumnsAction'
         _legacy_controller: AdminRequestSql
@@ -76,7 +76,7 @@ admin_sql_requests_table_columns:
 
 admin_sql_requests_view:
     path: /{sqlRequestId}/view
-    methods: [GET]
+    methods: [ GET ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SqlManagerController::viewAction'
         _legacy_controller: AdminRequestSql
@@ -88,7 +88,7 @@ admin_sql_requests_view:
 
 admin_sql_requests_export:
     path: /{sqlRequestId}/export
-    methods: [GET]
+    methods: [ GET ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SqlManagerController::exportAction'
         _legacy_controller: AdminRequestSql

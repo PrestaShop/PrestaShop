@@ -1,6 +1,6 @@
 admin_modules_positions:
     path: /
-    methods: [GET]
+    methods: [ GET ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\PositionsController::indexAction'
         _legacy_controller: AdminModulesPositions
@@ -8,7 +8,7 @@ admin_modules_positions:
 
 admin_modules_positions_unhook:
     path: /unhook
-    methods: [POST,GET]
+    methods: [ POST, GET ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\PositionsController::unhookAction'
         _legacy_controller: AdminModulesPositions
@@ -16,7 +16,7 @@ admin_modules_positions_unhook:
 
 admin_modules_positions_toggle_status:
     path: /toggle-status
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\PositionsController::toggleStatusAction'
         _legacy_controller: AdminModulesPositions

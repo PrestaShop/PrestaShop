@@ -10,6 +10,5 @@ services:
     prestashop.core.language.language_default_fonts_catalog:
         class: 'PrestaShop\PrestaShop\Core\Language\LanguageDefaultFontsCatalog'
         arguments:
-            -
-                'fa': 'Tahoma'
-                'ar': 'Tahoma'
+            - 'fa': 'Tahoma'
+              'ar': 'Tahoma'

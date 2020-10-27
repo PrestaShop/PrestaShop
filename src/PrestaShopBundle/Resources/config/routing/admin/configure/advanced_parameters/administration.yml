@@ -1,6 +1,6 @@
 admin_administration:
     path: /
-    methods: [GET]
+    methods: [ GET ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AdministrationController::indexAction'
         _legacy_controller: AdminAdminPreferences
@@ -8,7 +8,7 @@ admin_administration:
 
 admin_administration_general_save:
     path: /general
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AdministrationController::processGeneralFormAction'
         _legacy_controller: AdminAdminPreferences
@@ -16,14 +16,14 @@ admin_administration_general_save:
 
 admin_administration_upload_quota_save:
     path: /upload-quota
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AdministrationController::processUploadQuotaFormAction'
         _legacy_controller: AdminAdminPreferences
 
 admin_administration_notifications_save:
     path: /notifications
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AdministrationController::processNotificationsFormAction'
         _legacy_controller: AdminAdminPreferences

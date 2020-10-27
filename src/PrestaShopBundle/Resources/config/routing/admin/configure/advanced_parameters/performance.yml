@@ -1,6 +1,6 @@
 admin_performance:
     path: /
-    methods: [GET]
+    methods: [ GET ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\PerformanceController::indexAction'
         _legacy_controller: AdminPerformance
@@ -8,7 +8,7 @@ admin_performance:
 
 admin_performance_smarty_save:
     path: /smarty
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\PerformanceController::processSmartyFormAction'
         _legacy_controller: AdminPerformance
@@ -16,7 +16,7 @@ admin_performance_smarty_save:
 
 admin_performance_debug_mode_save:
     path: /debug-mode
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\PerformanceController::processDebugModeFormAction'
         _legacy_controller: AdminPerformance
@@ -24,7 +24,7 @@ admin_performance_debug_mode_save:
 
 admin_performance_optional_features_save:
     path: /optional-features
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\PerformanceController::processOptionalFeaturesFormAction'
         _legacy_controller: AdminPerformance
@@ -32,7 +32,7 @@ admin_performance_optional_features_save:
 
 admin_performance_combine_compress_cache_save:
     path: /combine-compress-cache
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\PerformanceController::processCombineCompressCacheFormAction'
         _legacy_controller: AdminPerformance
@@ -40,7 +40,7 @@ admin_performance_combine_compress_cache_save:
 
 admin_performance_media_servers_save:
     path: /media-servers
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\PerformanceController::processMediaServersFormAction'
         _legacy_controller: AdminPerformance
@@ -48,7 +48,7 @@ admin_performance_media_servers_save:
 
 admin_performance_caching_save:
     path: /caching
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\PerformanceController::processCachingFormAction'
         _legacy_controller: AdminPerformance
@@ -57,7 +57,7 @@ admin_performance_caching_save:
 
 admin_clear_cache:
     path: /clear-cache
-    methods: [GET]
+    methods: [ GET ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\PerformanceController::clearCacheAction'
         _legacy_controller: AdminPerformance
@@ -65,7 +65,7 @@ admin_clear_cache:
 
 admin_servers:
     path: /memcache/servers
-    methods: [GET]
+    methods: [ GET ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\MemcacheServerController::listAction'
         _legacy_controller: AdminPerformance
@@ -73,7 +73,7 @@ admin_servers:
 
 admin_servers_add:
     path: /memcache/servers
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\MemcacheServerController::addAction'
         _legacy_controller: AdminPerformance
@@ -82,7 +82,7 @@ admin_servers_add:
 
 admin_servers_delete:
     path: /memcache/servers
-    methods: [DELETE]
+    methods: [ DELETE ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\MemcacheServerController::deleteAction'
         _legacy_controller: AdminPerformance
@@ -91,7 +91,7 @@ admin_servers_delete:
 
 admin_servers_test:
     path: /memcache/servers/test
-    methods: [GET]
+    methods: [ GET ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\MemcacheServerController::testAction'
         _legacy_controller: AdminPerformance

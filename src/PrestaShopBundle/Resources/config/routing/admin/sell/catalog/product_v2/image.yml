@@ -1,6 +1,6 @@
 admin_products_v2_get_images:
     path: /{productId}/images
-    methods: [GET]
+    methods: [ GET ]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ImageController::getImagesAction
         _legacy_controller: AdminProducts
@@ -15,7 +15,7 @@ admin_products_v2_get_images:
 
 admin_products_v2_add_image:
     path: /images/add
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ImageController::addImageAction
         _legacy_controller: AdminProducts
@@ -28,7 +28,7 @@ admin_products_v2_add_image:
 
 admin_products_v2_update_image:
     path: /images/{productImageId}/update
-    methods: [PATCH]
+    methods: [ PATCH ]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ImageController::updateImageAction
         _legacy_controller: AdminProducts
@@ -43,7 +43,7 @@ admin_products_v2_update_image:
 
 admin_products_v2_delete_image:
     path: /images/{productImageId}/delete
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ImageController::deleteImageAction
         _legacy_controller: AdminProducts

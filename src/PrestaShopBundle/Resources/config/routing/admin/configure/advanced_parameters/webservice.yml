@@ -26,7 +26,7 @@ admin_webservice_save_settings:
 
 admin_webservice_keys_create:
     path: /new
-    methods: [GET, POST]
+    methods: [ GET, POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\WebserviceController::createAction'
         _legacy_controller: AdminWebservice
@@ -34,7 +34,7 @@ admin_webservice_keys_create:
 
 admin_webservice_keys_edit:
     path: /{webserviceKeyId}/edit
-    methods: [GET, POST]
+    methods: [ GET, POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\WebserviceController::editAction'
         _legacy_controller: AdminWebservice
@@ -46,7 +46,7 @@ admin_webservice_keys_edit:
 
 admin_webservice_keys_delete:
     path: /{webserviceKeyId}/delete
-    methods: [DELETE, POST]
+    methods: [ DELETE, POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\WebserviceController::deleteAction'
         _legacy_controller: AdminWebservice
@@ -54,7 +54,7 @@ admin_webservice_keys_delete:
         _legacy_parameters:
             id_webservice_account: webserviceKeyId
     requirements:
-      webserviceKeyId: \d+
+        webserviceKeyId: \d+
 
 admin_webservice_keys_bulk_delete:
     path: /bulk-delete

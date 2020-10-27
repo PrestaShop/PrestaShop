@@ -1,5 +1,5 @@
 imports:
-  - { resource: ./common.yml }
+    - { resource: ./common.yml }
 
 services:
     _defaults:
@@ -10,14 +10,14 @@ services:
 
     prestashop.adapter.shop_information:
         class: 'PrestaShop\PrestaShop\Adapter\Shop\ShopInformation'
-        arguments: ['@prestashop.adapter.legacy.context']
+        arguments: [ '@prestashop.adapter.legacy.context' ]
 
     prestashop.adapter.mailing_information:
         class: 'PrestaShop\PrestaShop\Adapter\Mail\MailingInformation'
 
     prestashop.adapter.check_requirements:
         class: 'PrestaShop\PrestaShop\Adapter\Requirement\CheckRequirements'
-        arguments: ['@translator']
+        arguments: [ '@translator' ]
 
     prestashop.adapter.system_information:
         class: 'PrestaShop\PrestaShop\Adapter\System\SystemInformation'
@@ -45,11 +45,11 @@ services:
 
     prestashop.adapter.memcache_server.manager:
         class: 'PrestaShop\PrestaShop\Adapter\Cache\MemcacheServerManager'
-        arguments: ['@database_connection', '%database_prefix%']
+        arguments: [ '@database_connection', '%database_prefix%' ]
 
     prestashop.adapter.php_parameters:
         class: 'PrestaShop\PrestaShop\Adapter\Configuration\PhpParameters'
-        arguments: ['%kernel.root_dir%/config/parameters.php']
+        arguments: [ '%kernel.root_dir%/config/parameters.php' ]
 
     prestashop.adapter.legacy.kpi_configuration:
         class: PrestaShop\PrestaShop\Adapter\Configuration\KpiConfiguration
@@ -71,7 +71,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\LegacyHookSubscriber
 
     prestashop.adapter.legacy.block.helper.subscriber:
-            class: PrestaShop\PrestaShop\Adapter\Admin\LegacyBlockHelperSubscriber
+        class: PrestaShop\PrestaShop\Adapter\Admin\LegacyBlockHelperSubscriber
 
     prestashop.adapter.stock_manager:
         class: PrestaShop\PrestaShop\Adapter\StockManager
@@ -87,7 +87,7 @@ services:
 
     prestashop.adapter.image_manager:
         class: PrestaShop\PrestaShop\Adapter\ImageManager
-        arguments: ["@prestashop.adapter.legacy.context"]
+        arguments: [ "@prestashop.adapter.legacy.context" ]
 
     prestashop.core.module.updater:
         class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater

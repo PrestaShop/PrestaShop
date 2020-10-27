@@ -1,6 +1,6 @@
 admin_emails_index:
     path: /
-    methods: [GET]
+    methods: [ GET ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmailController::indexAction'
         _legacy_controller: AdminEmails
@@ -8,7 +8,7 @@ admin_emails_index:
 
 admin_emails_search:
     path: /
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmailController::searchAction'
         _legacy_controller: AdminEmails
@@ -16,7 +16,7 @@ admin_emails_search:
 
 admin_emails_save_options_get:
     path: /options
-    methods: [GET]
+    methods: [ GET ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmailController::indexAction'
         _legacy_controller: AdminEmails
@@ -24,7 +24,7 @@ admin_emails_save_options_get:
 
 admin_emails_save_options:
     path: /options
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmailController::saveOptionsAction'
         _legacy_controller: AdminEmails
@@ -32,7 +32,7 @@ admin_emails_save_options:
 
 admin_emails_send_test:
     path: /send-testing-email
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmailController::sendTestAction'
         _legacy_controller: AdminEmails
@@ -41,7 +41,7 @@ admin_emails_send_test:
 
 admin_emails_delete_bulk:
     path: /delete-bulk
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmailController::deleteBulkAction'
         _legacy_controller: AdminEmails
@@ -49,7 +49,7 @@ admin_emails_delete_bulk:
 
 admin_emails_delete_all:
     path: /delete-all
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmailController::deleteAllAction'
         _legacy_controller: AdminEmails
@@ -57,7 +57,7 @@ admin_emails_delete_all:
 
 admin_emails_delete:
     path: /delete/{mailId}
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmailController::deleteAction'
         _legacy_controller: AdminEmails

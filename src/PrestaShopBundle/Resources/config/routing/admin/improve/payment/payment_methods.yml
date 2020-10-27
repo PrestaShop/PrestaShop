@@ -1,6 +1,6 @@
 admin_payment_methods:
     path: /payment_methods
-    methods: [GET]
+    methods: [ GET ]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\Improve\Payment\PaymentMethodsController::indexAction
         _legacy_controller: AdminPayment

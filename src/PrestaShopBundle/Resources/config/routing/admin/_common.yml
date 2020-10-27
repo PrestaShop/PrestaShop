@@ -1,22 +1,22 @@
 admin_common_notifications:
-    path:     /notifications
-    methods:  [POST]
+    path: /notifications
+    methods: [ POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\CommonController::notificationsAction'
         _legacy_controller: AdminCommon
         _legacy_link: AdminCommon
     options:
-      expose: true
+        expose: true
 
 admin_common_notifications_ack:
-    path:     /notifications/ack
-    methods:  [POST]
+    path: /notifications/ack
+    methods: [ POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\CommonController::notificationsAckAction'
 
 admin_common_pagination:
-    path:     /pagination/{offset}/{limit}/{total}/{view}
-    methods:  [GET]
+    path: /pagination/{offset}/{limit}/{total}/{view}
+    methods: [ GET ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\CommonController::paginationAction'
         offset: 0
@@ -30,8 +30,8 @@ admin_common_pagination:
         view: full|quicknav
 
 admin_common_recommended_modules:
-    path:     /recommended_modules/{domain}/{limit}/{randomize}
-    methods:  [GET]
+    path: /recommended_modules/{domain}/{limit}/{randomize}
+    methods: [ GET ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\CommonController::recommendedModulesAction'
         limit: 0
@@ -42,7 +42,7 @@ admin_common_recommended_modules:
 
 admin_common_sidebar:
     path: /sidebar/{url}/{title}/{footer}
-    methods: [GET]
+    methods: [ GET ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\CommonController::renderSidebarAction'
         title: ''
@@ -50,15 +50,15 @@ admin_common_sidebar:
 
 admin_common_reset_search:
     path: /reset_search/{controller}/{action}
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\CommonController::resetSearchAction'
         filterId: ''
 
 admin_common_reset_search_by_filter_id:
-  path: /reset_search/{filterId}
-  methods: [POST]
-  defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\CommonController::resetSearchAction'
-    controller: ''
-    action: ''
+    path: /reset_search/{filterId}
+    methods: [ POST ]
+    defaults:
+        _controller: 'PrestaShopBundle\Controller\Admin\CommonController::resetSearchAction'
+        controller: ''
+        action: ''

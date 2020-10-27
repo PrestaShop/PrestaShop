@@ -45,4 +45,3 @@ services:
             - '@prestashop.module.manager'
         tags:
             - 'console.command'
-

@@ -1,6 +1,6 @@
 admin_backups_index:
     path: /
-    methods: [GET]
+    methods: [ GET ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\BackupController::indexAction'
         _legacy_controller: 'AdminBackup'
@@ -8,7 +8,7 @@ admin_backups_index:
 
 admin_backups_save_options:
     path: /
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\BackupController::saveOptionsAction'
         _legacy_controller: 'AdminBackup'
@@ -16,7 +16,7 @@ admin_backups_save_options:
 
 admin_backups_create:
     path: /new
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\BackupController::createAction'
         _legacy_controller: 'AdminBackup'
@@ -24,21 +24,21 @@ admin_backups_create:
 
 admin_backups_download_view:
     path: /view/{downloadFileName}
-    methods: [GET]
+    methods: [ GET ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\BackupController::downloadViewAction'
         _legacy_controller: 'AdminBackup'
 
 admin_backup_download:
     path: /download/{downloadFileName}
-    methods: [GET]
+    methods: [ GET ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\BackupController::downloadContentAction'
         _legacy_controller: 'AdminBackup'
 
 admin_backups_delete:
     path: /{deleteFileName}
-    methods: [DELETE, POST]
+    methods: [ DELETE, POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\BackupController::deleteAction'
         _legacy_controller: 'AdminBackup'
@@ -48,7 +48,7 @@ admin_backups_delete:
 
 admin_backups_bulk_delete:
     path: /bulk-delete/
-    methods: [POST]
+    methods: [ POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\BackupController::bulkDeleteAction'
         _legacy_controller: 'AdminBackup'

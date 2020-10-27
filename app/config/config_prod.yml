@@ -1,13 +1,13 @@
 imports:
     - { resource: config.yml }
 
-#framework:
+# framework:
 #    validation:
 #        cache: validator.mapping.cache.apc
 #    serializer:
 #        cache: serializer.mapping.cache.apc
 
-#doctrine:
+# doctrine:
 #    orm:
 #        metadata_cache_driver: apc
 #        result_cache_driver: apc
@@ -16,15 +16,15 @@ imports:
 monolog:
     handlers:
         main:
-            type:         fingers_crossed
+            type: fingers_crossed
             action_level: error
-            handler:      nested
+            handler: nested
         nested:
-            type:  stream
-            path:  '%env(PS_LOG_OUTPUT)%'
+            type: stream
+            path: '%env(PS_LOG_OUTPUT)%'
             level: debug
         console:
-            type:  console
+            type: console
 
 doctrine:
     orm:

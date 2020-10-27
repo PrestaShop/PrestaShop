@@ -13,29 +13,29 @@ services:
             - "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"
             - "@doctrine.cache.provider"
         calls:
-            - [setPrestaTrustChecker, ['@prestashop.adapter.module.prestatrust.checker']]
+            - [ setPrestaTrustChecker, [ '@prestashop.adapter.module.prestatrust.checker' ] ]
 
     prestashop.core.addon.theme.repository:
         class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository
         arguments:
-          - "@prestashop.adapter.legacy.configuration"
-          - "@filesystem"
-          - "@=service('prestashop.adapter.legacy.context').getContext().shop"
+            - "@prestashop.adapter.legacy.configuration"
+            - "@filesystem"
+            - "@=service('prestashop.adapter.legacy.context').getContext().shop"
 
     prestashop.core.addon.theme.exporter:
         class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeExporter
         arguments:
-          - "@prestashop.adapter.legacy.configuration"
-          - "@filesystem"
-          - "@prestashop.core.admin.lang.repository"
-          - "@prestashop.translation.theme.exporter"
+            - "@prestashop.adapter.legacy.configuration"
+            - "@filesystem"
+            - "@prestashop.core.admin.lang.repository"
+            - "@prestashop.translation.theme.exporter"
 
 
     prestashop.core.addon.theme.theme_validator:
         class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeValidator
         arguments:
-          - '@translator'
-          - '@prestashop.adapter.legacy.configuration'
+            - '@translator'
+            - '@prestashop.adapter.legacy.configuration'
 
     prestashop.core.addon.theme.theme_manager_builder:
         class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder
@@ -46,7 +46,7 @@ services:
 
     prestashop.core.addon.theme.theme_manager:
         class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager
-        factory: ['@prestashop.core.addon.theme.theme_manager_builder', 'build']
+        factory: [ '@prestashop.core.addon.theme.theme_manager_builder', 'build' ]
 
     prestashop.core.addon.theme.theme.page_layouts_customizer:
         class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemePageLayoutsCustomizer

@@ -18,7 +18,7 @@ admin_search_engines_search:
 
 admin_search_engines_create:
     path: /new
-    methods: [GET, POST]
+    methods: [ GET, POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchEnginesController::createAction'
         _legacy_controller: AdminSearchEngines
@@ -26,7 +26,7 @@ admin_search_engines_create:
 
 admin_search_engines_edit:
     path: /{searchEngineId}/edit
-    methods: [GET, POST]
+    methods: [ GET, POST ]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchEnginesController::editAction'
         _legacy_controller: AdminSearchEngines

@@ -1,7 +1,7 @@
 # @todo: what should be proper naming for this? can it be indexAction even though it returns only json?
 admin_products_combinations:
     path: /{productId}/combinations
-    methods: [GET]
+    methods: [ GET ]
     options:
         expose: true
     defaults:
@@ -10,7 +10,7 @@ admin_products_combinations:
 
 admin_products_combinations_ids:
     path: /{productId}/combinations/ids
-    methods: [GET]
+    methods: [ GET ]
     options:
         expose: true
     defaults:
@@ -19,7 +19,7 @@ admin_products_combinations_ids:
 
 admin_products_combinations_update_combination_from_listing:
     path: /combinations/{combinationId}/update-combination-from-listing
-    methods: [PATCH]
+    methods: [ PATCH ]
     options:
         expose: true
     defaults:
@@ -30,7 +30,7 @@ admin_products_combinations_update_combination_from_listing:
 
 admin_products_combinations_edit_combination:
     path: /combinations/{combinationId}/edit
-    methods: [GET, POST]
+    methods: [ GET, POST ]
     options:
         expose: true
     defaults:
@@ -41,7 +41,7 @@ admin_products_combinations_edit_combination:
 
 admin_products_combinations_delete_combination:
     path: /combinations/{combinationId}/delete
-    methods: [DELETE]
+    methods: [ DELETE ]
     options:
         expose: true
     defaults:
@@ -52,7 +52,7 @@ admin_products_combinations_delete_combination:
 
 admin_products_attribute_groups:
     path: /{productId}/attribute-groups
-    methods: [GET]
+    methods: [ GET ]
     options:
         expose: true
     defaults:
@@ -61,7 +61,7 @@ admin_products_attribute_groups:
 
 admin_all_attribute_groups:
     path: /all-attribute-groups
-    methods: [GET]
+    methods: [ GET ]
     options:
         expose: true
     defaults:
@@ -70,7 +70,7 @@ admin_all_attribute_groups:
 
 admin_products_combinations_generate:
     path: /generate-combinations/{productId}
-    methods: [POST]
+    methods: [ POST ]
     options:
         expose: true
     defaults:

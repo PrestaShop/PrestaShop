@@ -22,9 +22,9 @@ services:
             - '@prestashop.core.localization.currency.repository'
 
     prestashop.core.localization.locale.context_locale:
-        factory: ['@prestashop.core.localization.locale.repository', 'getLocale']
+        factory: [ '@prestashop.core.localization.locale.repository', 'getLocale' ]
         class: PrestaShop\PrestaShop\Core\Localization\Locale
-        arguments: ['@=service("prestashop.adapter.legacy.context").getContext().language.getLocale()']
+        arguments: [ '@=service("prestashop.adapter.legacy.context").getContext().language.getLocale()' ]
 
     prestashop.core.localization.currency.repository:
         class: PrestaShop\PrestaShop\Core\Localization\Currency\Repository
@@ -48,7 +48,7 @@ services:
         arguments:
             - '@prestashop.core.localization.cldr.cache.adapter'
         calls:
-            - [ 'setLowerLayer', ["@prestashop.core.localization.cldr.datalayer.locale_reference"]]
+            - [ 'setLowerLayer', [ "@prestashop.core.localization.cldr.datalayer.locale_reference" ] ]
 
     prestashop.core.localization.cldr.datalayer.locale_reference:
         class: PrestaShop\PrestaShop\Core\Localization\CLDR\DataLayer\LocaleReference
@@ -71,14 +71,14 @@ services:
         arguments:
             - '@prestashop.core.localization.cache.adapter'
         calls:
-            - [ 'setLowerLayer', ["@prestashop.core.localization.currency.middleware.database"]]
+            - [ 'setLowerLayer', [ "@prestashop.core.localization.currency.middleware.database" ] ]
 
     prestashop.core.localization.currency.middleware.database:
         class: PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyDatabase
         arguments:
             - '@prestashop.adapter.data_provider.currency'
         calls:
-            - [ 'setLowerLayer', ["@prestashop.core.localization.currency.middleware.reference"]]
+            - [ 'setLowerLayer', [ "@prestashop.core.localization.currency.middleware.reference" ] ]
 
     prestashop.core.localization.currency.middleware.reference:
         class: PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyReference

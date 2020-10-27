@@ -2,8 +2,8 @@ services:
     prestashop.bundle.routing.module_route_loader:
         class: 'PrestaShopBundle\Routing\YamlModuleLoader'
         arguments:
-          - '@=service("prestashop.adapter.module.repository.module_repository").getActiveModulesPaths()'
-        tags: [routing.loader]
+            - '@=service("prestashop.adapter.module.repository.module_repository").getActiveModulesPaths()'
+        tags: [ routing.loader ]
 
     prestashop.bundle.routing.converter.legacy_url_converter:
         class: 'PrestaShopBundle\Routing\Converter\LegacyUrlConverter'
@@ -35,21 +35,21 @@ services:
     prestashop.bundle.routing.converter.routing_cache_key_generator:
         class: 'PrestaShopBundle\Routing\Converter\RoutingCacheKeyGenerator'
         arguments:
-            - ["%kernel.project_dir%/src/PrestaShopBundle/Resources/config/routing/admin"]
+            - [ "%kernel.project_dir%/src/PrestaShopBundle/Resources/config/routing/admin" ]
             - '@=service("prestashop.adapter.module.repository.module_repository").getActiveModulesPaths()'
             - '%kernel.environment%'
 
     prestashop.bundle.routing.linter.security_annotation_linter:
         class: 'PrestaShopBundle\Routing\Linter\SecurityAnnotationLinter'
         arguments:
-          - '@annotation_reader'
+            - '@annotation_reader'
         public: true
 
     prestashop.bundle.routing.linter.naming_convention_linter:
         class: 'PrestaShopBundle\Routing\Linter\NamingConventionLinter'
 
     prestashop.bundle.routing.linter.legacy_link_linter:
-      class: 'PrestaShopBundle\Routing\Linter\LegacyLinkLinter'
+        class: 'PrestaShopBundle\Routing\Linter\LegacyLinkLinter'
 
     prestashop.bundle.routing.linter.admin_route_provider:
         class: 'PrestaShopBundle\Routing\Linter\AdminRouteProvider'

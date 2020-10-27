@@ -16,7 +16,7 @@ parameters:
     env(PS_LOG_OUTPUT): "%kernel.logs_dir%/%kernel.environment%.log"
     mail_themes_uri: "/mails/themes"
     mail_themes_dir: "%kernel.project_dir%%mail_themes_uri%"
-    modules_translation_paths: []
+    modules_translation_paths: [ ]
 
 # Autowires Core controllers
 services:
@@ -24,8 +24,8 @@ services:
         resource: "%kernel.root_dir%/../src/PrestaShopBundle/Controller/*"
         exclude: "%kernel.root_dir%/../src/PrestaShopBundle/Controller/Api"
         tags:
-          - 'controller.service_arguments'
-          - !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG
+            - 'controller.service_arguments'
+            - !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG
 
     logger:
         alias: monolog.logger
@@ -35,30 +35,30 @@ framework:
     assets:
         version: !php/const \AppKernel::VERSION
 
-    #esi:             ~
-    secret:          "%secret%"
+    # esi: ~
+    secret: "%secret%"
     translator:
-        fallbacks: ["default"]
+        fallbacks: [ "default" ]
         paths: "%modules_translation_paths%"
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
         strict_requirements: ~
-    form:            ~
+    form: ~
     csrf_protection: ~
-    validation:      { enable_annotations: true }
-    serializer:      { enable_annotations: true }
-    default_locale:  "%locale%"
-    trusted_hosts:   ~
+    validation: { enable_annotations: true }
+    serializer: { enable_annotations: true }
+    default_locale: "%locale%"
+    trusted_hosts: ~
     session:
-        handler_id:  ~
-    fragments:       ~
+        handler_id: ~
+    fragments: ~
     http_method_override: true
     cache:
         pools:
             '%cache.driver%':
-                 adapter: '%cache.adapter%'
+                adapter: '%cache.adapter%'
 
-# Monolog configuration #
+# Monolog configuration
 monolog:
     handlers:
         main:
@@ -69,12 +69,12 @@ monolog:
             type: service
             id: prestashop.handler.log
             level: warning
-            channels: [app]
+            channels: [ app ]
 
 # Twig Configuration
 twig:
-    autoescape:       "name"
-    debug:            "%kernel.debug%"
+    autoescape: "name"
+    debug: "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     exception_controller: null
     form_themes:
@@ -94,10 +94,10 @@ twig:
 # Swiftmailer Configuration
 swiftmailer:
     transport: "%mailer_transport%"
-    host:      "%mailer_host%"
-    username:  "%mailer_user%"
-    password:  "%mailer_password%"
-    spool:     { type: memory }
+    host: "%mailer_host%"
+    username: "%mailer_user%"
+    password: "%mailer_password%"
+    spool: { type: memory }
 
 # Guzzle configuration
 eight_points_guzzle:

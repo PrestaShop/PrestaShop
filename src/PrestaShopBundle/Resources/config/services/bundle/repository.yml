@@ -4,19 +4,19 @@ services:
 
     prestashop.module_kernel.repository:
         class: 'PrestaShopBundle\Kernel\ModuleRepository'
-        arguments: ['@doctrine.dbal.default_connection', '%database_prefix%']
+        arguments: [ '@doctrine.dbal.default_connection', '%database_prefix%' ]
 
     prestashop.core.admin.tab.repository:
         class: PrestaShopBundle\Entity\Repository\TabRepository
-        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
         arguments:
             - PrestaShopBundle\Entity\Tab
 
     prestashop.core.admin.shop.repository:
         class: 'PrestaShopBundle\Entity\Repository\ShopRepository'
-        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
         arguments:
-        - 'PrestaShopBundle\Entity\Shop'
+            - 'PrestaShopBundle\Entity\Shop'
 
     prestashop.core.admin.shop_group.repository:
         class: 'PrestaShopBundle\Entity\Repository\ShopGroupRepository'
@@ -26,13 +26,13 @@ services:
 
     prestashop.core.admin.translation.repository:
         class: PrestaShopBundle\Entity\Repository\TranslationRepository
-        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
         arguments:
             - PrestaShopBundle\Entity\Translation
 
     prestashop.core.admin.lang.repository:
         class: PrestaShopBundle\Entity\Repository\LangRepository
-        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
         arguments:
             - PrestaShopBundle\Entity\Lang
 
@@ -105,10 +105,10 @@ services:
             - '%database_prefix%'
 
     prestashop.bundle.repository.module:
-            class: PrestaShopBundle\Entity\Repository\ModuleRepository
-            arguments:
-                - '@doctrine.dbal.default_connection'
-                - '%database_prefix%'
+        class: PrestaShopBundle\Entity\Repository\ModuleRepository
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
 
     prestashop.core.admin.request_sql.repository:
         class: PrestaShopBundle\Entity\Repository\RequestSqlRepository
@@ -118,7 +118,7 @@ services:
 
     prestashop.core.admin.admin_filter.repository:
         class: PrestaShopBundle\Entity\Repository\AdminFilterRepository
-        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
         arguments:
             - PrestaShopBundle\Entity\AdminFilter
 
@@ -130,6 +130,6 @@ services:
 
     prestashop.core.admin.attribute_group.repository:
         class: PrestaShopBundle\Entity\Repository\AttributeGroupRepository
-        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
         arguments:
             - PrestaShopBundle\Entity\AttributeGroup

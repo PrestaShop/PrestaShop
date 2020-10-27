@@ -1,13 +1,13 @@
 api_stock_list_movements:
     path: /
-    methods: [GET]
+    methods: [ GET ]
     defaults:
         _controller: prestashop.core.api.stock_movement.controller:listMovementsAction
         _legacy_controller: AdminStockManagement
 
 api_stock_product_list_movements:
     path: /product/{productId}
-    methods: [GET]
+    methods: [ GET ]
     defaults:
         _controller: prestashop.core.api.stock_movement.controller:listMovementsAction
         _legacy_controller: AdminStockManagement
@@ -16,7 +16,7 @@ api_stock_product_list_movements:
 
 api_stock_list_movements_employees:
     path: /employees
-    methods: [GET]
+    methods: [ GET ]
     defaults:
         _controller: prestashop.core.api.stock_movement.controller:listMovementsEmployeesAction
         _legacy_controller: AdminStockManagement
@@ -24,7 +24,7 @@ api_stock_list_movements_employees:
 
 api_stock_list_movements_types:
     path: /types
-    methods: [GET]
+    methods: [ GET ]
     defaults:
         _controller: prestashop.core.api.stock_movement.controller:listMovementsTypesAction
         _legacy_controller: AdminStockManagement

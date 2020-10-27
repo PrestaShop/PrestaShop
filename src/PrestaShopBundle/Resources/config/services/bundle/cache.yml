@@ -26,4 +26,4 @@ services:
         arguments:
             - "@kernel"
         calls:
-            - [addCacheClear, []]
+            - [ addCacheClear, [ ] ]

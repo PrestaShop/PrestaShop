@@ -2,13 +2,13 @@ services:
     _defaults:
         public: true
 
-#    Command handlers
+    #    Command handlers
 
     prestashop.adapter.cms_page_category.command_handler.abstract_cms_page_category_handler:
         class: PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler\AbstractCmsPageCategoryHandler
         abstract: true
         arguments:
-          - '@validator'
+            - '@validator'
 
     prestashop.adapter.cms_page_category.command_handler.delete_cms_page_category_handler:
         class: PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler\DeleteCmsPageCategoryHandler
@@ -52,11 +52,11 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler\EditCmsPageCategoryHandler'
         parent: 'prestashop.adapter.cms_page_category.command_handler.abstract_cms_page_category_handler'
         tags:
-          - name: tactician.handler
-            command: PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\EditCmsPageCategoryCommand
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\EditCmsPageCategoryCommand
         public: true
 
-  # Query handlers
+    # Query handlers
 
     prestashop.adapter.cms_page.query_handler.get_cms_page_categories_for_breadcrumbs:
         class: PrestaShop\PrestaShop\Adapter\CMS\PageCategory\QueryHandler\GetCmsPageCategoriesForBreadcrumbHandler
@@ -75,20 +75,20 @@ services:
     prestashop.adapter.cms_page.query_handler.get_cms_page_category_for_editing:
         class: PrestaShop\PrestaShop\Adapter\CMS\PageCategory\QueryHandler\GetCmsPageCategoryForEditingHandler
         tags:
-          - name: tactician.handler
-            command: PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoryForEditing
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoryForEditing
 
     prestashop.adapter.cms_page.categories_provider:
         class: 'PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CategoriesProvider'
         arguments:
-          - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
-          - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+            - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+            - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
 
     prestashop.adapter.cms_page.query_handler.get_cms_page_category_name_for_listing:
         class: PrestaShop\PrestaShop\Adapter\CMS\PageCategory\QueryHandler\GetCmsPageCategoryNameForListingHandler
         arguments:
-          - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
-          - '@request_stack'
+            - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+            - '@request_stack'
         tags:
-          - name: tactician.handler
-            command: PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoryNameForListing
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoryNameForListing

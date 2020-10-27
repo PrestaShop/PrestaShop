@@ -2,8 +2,8 @@ services:
     _defaults:
         public: true
 
-    #SECURITY
-    #@todo: is this service used?
+    # SECURITY
+    # @todo: is this service used?
     prestashop.adapter.security.admin:
         class: "%AdapterSecurityAdminClass%"
         arguments:
@@ -15,4 +15,4 @@ services:
 
     prestashop.adapter.legacy_context_loader:
         class: 'PrestaShop\PrestaShop\Adapter\LegacyContextLoader'
-        arguments: ['@=service("prestashop.adapter.legacy.context").getContext()']
+        arguments: [ '@=service("prestashop.adapter.legacy.context").getContext()' ]

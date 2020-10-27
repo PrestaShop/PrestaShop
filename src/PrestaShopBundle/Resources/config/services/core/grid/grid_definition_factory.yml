@@ -8,7 +8,7 @@ services:
         arguments:
             - '@prestashop.core.hook.dispatcher'
         calls:
-            - [setTranslator, ['@translator']]
+            - [ setTranslator, [ '@translator' ] ]
 
     prestashop.core.grid.definition.factory.logs:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LogGridDefinitionFactory'
@@ -210,7 +210,7 @@ services:
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         public: true
         arguments:
-          - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
+            - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
 
     prestashop.core.grid.definition.factory.catalog_price_rule:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CatalogPriceRuleGridDefinitionFactory'
@@ -250,14 +250,14 @@ services:
         public: true
 
     prestashop.core.grid.definition.factory.tax_rules_group:
-      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TaxRulesGroupGridDefinitionFactory'
-      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-      public: true
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TaxRulesGroupGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
 
     prestashop.core.grid.definition.factory.address:
-      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AddressGridDefinitionFactory'
-      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-      public: true
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AddressGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
 
     prestashop.core.grid.definition.factory.credit_slip:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CreditSlipGridDefinitionFactory'
@@ -267,14 +267,14 @@ services:
         public: true
 
     prestashop.core.grid.definition.factory.order_states:
-      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderStatesGridDefinitionFactory'
-      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-      public: true
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderStatesGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
 
     prestashop.core.grid.definition.factory.order_return_states:
-      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderReturnStatesGridDefinitionFactory'
-      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-      public: true
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderReturnStatesGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
 
     prestashop.core.grid.definition.factory.outstanding:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OutstandingGridDefinitionFactory'
@@ -291,9 +291,9 @@ services:
         public: true
 
     prestashop.core.grid.definition.factory.zone:
-      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ZoneGridDefinitionFactory'
-      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-      public: true
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ZoneGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
 
     prestashop.core.grid.definition.factory.search_engines:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\SearchEngineGridDefinitionFactory'
