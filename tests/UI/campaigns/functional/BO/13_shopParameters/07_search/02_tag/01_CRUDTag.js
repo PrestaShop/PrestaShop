@@ -14,6 +14,8 @@ const addTagPage = require('@pages/BO/shopParameters/search/tags/add');
 
 // Import data
 const TagFaker = require('@data/faker/tag');
+const {Languages} = require('@data/demo/languages');
+const {Products} = require('@data/demo/products');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -26,11 +28,10 @@ const {expect} = require('chai');
 // Browser and tab
 let browserContext;
 let page;
-
 let numberOfTags = 0;
 
-const createTagData = new TagFaker({language: 'English (English)'});
-const editTagData = new TagFaker({language: 'Français (French)'});
+const createTagData = new TagFaker({language: Languages.english.name});
+const editTagData = new TagFaker({language: Languages.french.name, products: Products.demo_1.nameFr});
 
 /*
 Create new tag
@@ -96,80 +97,31 @@ describe('Create, update and delete tag in BO', async () => {
       const numberOfElementAfterCreation = await tagsPage.getNumberOfElementInGrid(page);
       await expect(numberOfElementAfterCreation).to.be.equal(numberOfTags + 1);
     });
-
-    it('should reset all filters and get number of tags in BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
-
-      numberOfTags = await tagsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfTags).to.be.above(0);
-    });
   });
 
-  /*// 2 - Update tag
+  // 2 - Update tag
   describe('Update tag created', async () => {
-    it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'firstGoBackToBO', baseContext);
-
-      page = await checkoutPage.closePage(browserContext, page, 0);
-
-      const pageTitle = await tagsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(tagsPage.pageTitle);
-    });
-
-    it('should filter list by name', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
-
-      await tagsPage.resetFilter(page);
-
-      await tagsPage.filterTable(
-        page,
-        'input',
-        'name',
-        createTagData.name,
-      );
-
-      const textEmail = await tagsPage.getTextColumn(page, 1, 'name');
-      await expect(textEmail).to.contains(createTagData.name);
-    });
-
     it('should go to edit tag page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToEdittagPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEditTagPage', baseContext);
 
-      await tagsPage.gotoEdittagPage(page, 1);
+      await tagsPage.gotoEditTagPage(page, 1);
+
       const pageTitle = await addTagPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addTagPage.pageTitleEdit);
     });
 
     it('should update tag', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updatetag', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'updateTag', baseContext);
 
-      const textResult = await addTagPage.createEdittag(page, editTagData);
+      const textResult = await addTagPage.setTag(page, editTagData);
       await expect(textResult).to.contains(tagsPage.successfulUpdateMessage);
 
-      const numberOfTagsAfterUpdate = await tagsPage.resetAndGetNumberOfLines(page);
+      const numberOfTagsAfterUpdate = await tagsPage.getNumberOfElementInGrid(page);
       await expect(numberOfTagsAfterUpdate).to.be.equal(numberOfTags + 1);
-    });
-
-    it('should filter list by name and get the edited tag ID', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterToCheckEditedtag', baseContext);
-
-      await tagsPage.resetFilter(page);
-
-      await tagsPage.filterTable(
-        page,
-        'input',
-        'name',
-        editTagData.name,
-      );
-
-      tagID = await tagsPage.getTextColumn(page, 1, 'id_tag');
-
-      const name = await tagsPage.getTextColumn(page, 1, 'name');
-      await expect(name).to.contains(editTagData.name);
     });
   });
 
-  // 3 - Delete tag
+  /*// 3 - Delete tag
   describe('Delete tag', async () => {
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'secondGoBackToBO', baseContext);

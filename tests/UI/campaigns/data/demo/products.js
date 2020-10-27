@@ -3,6 +3,7 @@ module.exports = {
     demo_1: {
       id: 1,
       name: 'Hummingbird printed t-shirt',
+      nameFr: 'T-shirt imprimé colibri',
       reference: 'demo_1',
       category: 'Men',
       price: 23.90,
@@ -13,6 +14,7 @@ module.exports = {
     demo_3: {
       id: 2,
       name: 'Hummingbird printed sweater',
+      nameFr: 'Pull imprimé colibri',
       reference: 'demo_3',
       category: 'Women',
       price: 35.90,
@@ -22,6 +24,7 @@ module.exports = {
     demo_5: {
       id: 4,
       name: 'The adventure begins Framed poster',
+      nameFr: 'Affiche encadrée The adventure begins',
       reference: 'demo_5',
       category: 'Art',
       price: 29.00,
@@ -31,6 +34,7 @@ module.exports = {
     demo_6: {
       id: 3,
       name: 'The best is yet to come\' Framed poster',
+      nameFr: 'Affiche encadrée The best is yet to come',
       reference: 'demo_6',
       category: 'Art',
       price: 29.00,
@@ -40,6 +44,7 @@ module.exports = {
     demo_8: {
       id: 16,
       name: 'Mountain fox notebook',
+      nameFr: 'Carnet de notes Renard',
       reference: 'demo_18',
       category: 'Stationery',
       price: 15.48,
@@ -49,6 +54,7 @@ module.exports = {
     demo_13: {
       id: 8,
       name: 'Mug Today is a good day',
+      nameFr: 'Mug Today is a good day',
       reference: 'demo_13',
       category: 'Home Accessories',
       price: 14.28,
@@ -58,6 +64,7 @@ module.exports = {
     demo_14: {
       id: 19,
       name: 'Customizable mug',
+      nameFr: 'Mug personnalisable',
       reference: 'demo_14',
       category: 'Home Accessories',
       price: 13.90,
@@ -67,6 +74,7 @@ module.exports = {
     demo_18: {
       id: 12,
       name: 'Mountain fox - Vector graphics',
+      nameFr: 'Illustration vectorielle Renard',
       reference: 'demo_18',
       category: 'Art',
       price: 9,
