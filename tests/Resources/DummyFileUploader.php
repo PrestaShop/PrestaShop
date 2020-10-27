@@ -26,28 +26,54 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
+namespace Tests\Resources;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductImageCommand;
 use RuntimeException;
-use Tests\Resources\DummyFileUploader;
 
-class ProductImageFeatureContext extends AbstractProductFeatureContext
+/**
+ * Mimics user file uploads
+ */
+class DummyFileUploader
 {
     /**
-     * @When I add new product :productReference image :fileName
-     *
-     * @param string $productReference
-     * @param string $fileName
+     * Prefix for temporary files that are used as a replacement for http upload
      */
-    public function uploadImage(string $productReference, string $fileName)
-    {
-        //@todo: behats database contains empty ImageType.
-        $pathName = DummyFileUploader::upload($fileName);
+    const UPLOADED_TMP_FILE_PREFIX = 'ps_upload_test_';
 
-        $this->getCommandBus()->handle(new AddProductImageCommand(
-            $this->getSharedStorage()->get($productReference),
-            $pathName
-        ));
+    /**
+     * Uploads dummy file to temporary dir to mimic http file upload
+     *
+     * @param string $dummyFilename
+     *
+     * @return string destination pathname
+     */
+    public static function upload(string $dummyFilename): string
+    {
+        $source = static::getDummyFilesPath() . $dummyFilename;
+
+        if (!is_file($source)) {
+            throw new RuntimeException('file "%s" not found', $source);
+        }
+
+        $destination = static::createTempFilename();
+        copy($source, $destination);
+
+        return $destination;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getDummyFilesPath(): string
+    {
+        return _PS_ROOT_DIR_ . '/tests/Resources/dummyFile/';
+    }
+
+    /**
+     * @return string
+     */
+    private static function createTempFilename(): string
+    {
+        return tempnam(sys_get_temp_dir(), static::UPLOADED_TMP_FILE_PREFIX);
     }
 }

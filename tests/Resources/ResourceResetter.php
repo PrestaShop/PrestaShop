@@ -26,28 +26,43 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
+namespace Tests\Resources;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductImageCommand;
-use RuntimeException;
-use Tests\Resources\DummyFileUploader;
+use Symfony\Component\Filesystem\Filesystem;
 
-class ProductImageFeatureContext extends AbstractProductFeatureContext
+/**
+ * @todo: better name?
+ */
+class ResourceResetter
 {
     /**
-     * @When I add new product :productReference image :fileName
-     *
-     * @param string $productReference
-     * @param string $fileName
+     * Name for directory of test images in system tmp dir
      */
-    public function uploadImage(string $productReference, string $fileName)
-    {
-        //@todo: behats database contains empty ImageType.
-        $pathName = DummyFileUploader::upload($fileName);
+    const BACKUP_TEST_IMG_DIR = 'ps_backup_test_img';
 
-        $this->getCommandBus()->handle(new AddProductImageCommand(
-            $this->getSharedStorage()->get($productReference),
-            $pathName
-        ));
+    /**
+     * Backs up test images directory to allow resetting their original state later in tests
+     */
+    public static function backupImages(): void
+    {
+        (new Filesystem())->mirror(_PS_IMG_DIR_, static::getBackupTestImgDir());
+    }
+
+    /**
+     * Resets test images directory to initial state
+     */
+    public static function resetImages(): void
+    {
+        (new Filesystem())->mirror(static::getBackupTestImgDir(), _PS_IMG_DIR_);
+    }
+
+    /**
+     * Provide test img directory path, in which initial dummy images state should be saved
+     *
+     * @return string
+     */
+    public static function getBackupTestImgDir(): string
+    {
+        return sys_get_temp_dir() . DIRECTORY_SEPARATOR . static::BACKUP_TEST_IMG_DIR;
     }
 }

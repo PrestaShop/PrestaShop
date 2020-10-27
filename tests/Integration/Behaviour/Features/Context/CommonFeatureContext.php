@@ -43,6 +43,8 @@ use Product;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use TaxManagerFactory;
+use Tests\Resources\ResourcePathProvider;
+use Tests\Resources\ResourceResetter;
 
 class CommonFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -124,8 +126,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public static function resetImgDir(): void
     {
-        $fs = new Filesystem();
-        $fs->mirror(DatabaseCreator::getBackupTestImgDir(), _PS_IMG_DIR_);
+        ResourceResetter::resetImages();
     }
 
     /**
