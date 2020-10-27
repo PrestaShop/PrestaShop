@@ -31,7 +31,7 @@ let page;
 let numberOfTags = 0;
 
 const createTagData = new TagFaker({language: Languages.english.name});
-const editTagData = new TagFaker({language: Languages.french.name, products: Products.demo_1.nameFr});
+const editTagData = new TagFaker({language: Languages.french.name});
 
 /*
 Create new tag
@@ -121,41 +121,16 @@ describe('Create, update and delete tag in BO', async () => {
     });
   });
 
-  /*// 3 - Delete tag
+  // 3 - Delete tag
   describe('Delete tag', async () => {
-    it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'secondGoBackToBO', baseContext);
-
-      page = await checkoutPage.closePage(browserContext, page, 0);
-
-      const pageTitle = await tagsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(tagsPage.pageTitle);
-    });
-
-    it('should filter list by name', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterForDelete', baseContext);
-
-      await tagsPage.resetFilter(page);
-
-      await tagsPage.filterTable(
-        page,
-        'input',
-        'name',
-        editTagData.name,
-      );
-
-      const textEmail = await tagsPage.getTextColumn(page, 1, 'name');
-      await expect(textEmail).to.contains(editTagData.name);
-    });
-
     it('should delete tag', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deletetag', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteTag', baseContext);
 
-      const textResult = await tagsPage.deletetag(page, 1);
+      const textResult = await tagsPage.deleteTag(page, 1);
       await expect(textResult).to.contains(tagsPage.successfulDeleteMessage);
 
-      const numberOfTagsAfterDelete = await tagsPage.resetAndGetNumberOfLines(page);
+      const numberOfTagsAfterDelete = await tagsPage.getNumberOfElementInGrid(page);
       await expect(numberOfTagsAfterDelete).to.be.equal(numberOfTags);
     });
-  });*/
+  });
 });
