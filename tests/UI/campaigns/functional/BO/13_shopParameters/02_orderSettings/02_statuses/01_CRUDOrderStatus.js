@@ -44,6 +44,12 @@ describe('Create, read, update and delete order status in BO', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+
+    // Create images
+    await Promise.all([
+      files.generateImage(`${createOrderStatusData.name}.jpg`),
+      files.generateImage(`${editOrderStatusData.name}.jpg`),
+    ]);
   });
 
   after(async () => {
