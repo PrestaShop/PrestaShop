@@ -30,7 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Context;
 use PHPUnit\Framework\Assert;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
@@ -125,8 +125,8 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
     protected function assertNumberProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
     {
         if (isset($data[$propertyName])) {
-            $expectedValue = new Number((string) $data[$propertyName]);
-            $actualValue = new Number((string) $this->extractValueFromProductForEditing($productForEditing, $propertyName));
+            $expectedValue = new DecimalNumber((string) $data[$propertyName]);
+            $actualValue = new DecimalNumber((string) $this->extractValueFromProductForEditing($productForEditing, $propertyName));
 
             Assert::assertTrue(
                 $expectedValue->equals($actualValue),
