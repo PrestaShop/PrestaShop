@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductImageCommand;
-use RuntimeException;
 use Tests\Resources\DummyFileUploader;
 
 class ProductImageFeatureContext extends AbstractProductFeatureContext
@@ -40,7 +39,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param string $fileName
      */
-    public function uploadImage(string $productReference, string $fileName)
+    public function uploadImage(string $productReference, string $fileName): void
     {
         //@todo: behats database contains empty ImageType.
         $pathName = DummyFileUploader::upload($fileName);
@@ -49,5 +48,15 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
             $this->getSharedStorage()->get($productReference),
             $pathName
         ));
+    }
+
+    /**
+     * @Then product :productReference should have no images
+     *
+     * @param string $productReference
+     */
+    public function assertProductHasNoImages(string $productReference): void
+    {
+        //@todo: query for product images?
     }
 }

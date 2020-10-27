@@ -41,9 +41,7 @@ use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
 use Pack;
 use Product;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use TaxManagerFactory;
-use Tests\Resources\ResourcePathProvider;
 use Tests\Resources\ResourceResetter;
 
 class CommonFeatureContext extends AbstractPrestaShopFeatureContext
