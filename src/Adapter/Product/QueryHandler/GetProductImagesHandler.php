@@ -28,8 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
+use Image;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductImagesHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductImage;
 
 /**
  * Handles @see GetProductImages query
@@ -37,10 +40,48 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductImagesHandl
 final class GetProductImagesHandler implements GetProductImagesHandlerInterface
 {
     /**
+     * @var ProductImageRepository
+     */
+    private $productImageRepository;
+
+    /**
+     * @param ProductImageRepository $productImageRepository
+     */
+    public function __construct(
+        ProductImageRepository $productImageRepository
+    ) {
+        $this->productImageRepository = $productImageRepository;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(GetProductImages $query): array
     {
-        // TODO: Implement handle() method.
+        //@todo: optimize. add pagination options to query?
+        $images = $this->productImageRepository->getImages($query->getProductId());
+
+        return $this->formatImages($images);
+    }
+
+    /**
+     * @param Image[] $images
+     *
+     * @return ProductImage[]
+     */
+    private function formatImages(array $images): array
+    {
+        $productImages = [];
+
+        foreach ($images as $image) {
+            $productImages[] = new ProductImage(
+                (int) $image->id,
+                (bool) $image->cover,
+                $image->legend,
+                $image->getImgPath()
+            );
+        }
+
+        return $productImages;
     }
 }

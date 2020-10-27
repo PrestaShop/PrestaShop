@@ -423,6 +423,9 @@ services:
 
     prestashop.adapter.product.repository.product_image_repository:
         class: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductImageRepository
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
 
     prestashop.adapter.product.product_image_path_factory:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductImagePathFactory
@@ -432,6 +435,8 @@ services:
 
     prestashop.adapter.product.query_handler.get_product_images_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductImagesHandler
+        arguments:
+            - '@prestashop.adapter.product.repository.product_image_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductImages
