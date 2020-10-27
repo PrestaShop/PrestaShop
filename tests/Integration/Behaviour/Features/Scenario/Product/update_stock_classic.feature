@@ -8,7 +8,10 @@ Feature: Update product stock from Back Office (BO)
   I need to be able to update product stock from BO
 
   Background:
-    Given shop configuration for "PS_ADVANCED_STOCK_MANAGEMENT" is set to 0
+    Given shop "shop1" with name "test_shop" exists
+    # Single shop context is required to modify product quantity
+    And single shop shop1 context is loaded
+    And shop configuration for "PS_ADVANCED_STOCK_MANAGEMENT" is set to 0
 
   Scenario: I update product stock management
     Given I add product "product1" with following information:
