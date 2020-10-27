@@ -11,5 +11,5 @@ Feature: Add product image from Back Office (BO)
       | name       | en-US:bottle of beer |
       | is_virtual | false                |
     And product "product1" type should be standard
-#todo    And product "product1" should have no images
+    And product "product1" should have no images
     When I add new product "product1" image "app_icon.png"
