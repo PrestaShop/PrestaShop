@@ -12,4 +12,7 @@ Feature: Add product image from Back Office (BO)
       | is_virtual | false                |
     And product "product1" type should be standard
     And product "product1" should have no images
-    When I add new product "product1" image "app_icon.png"
+    When I add new product "product1" image "image1" named "app_icon.png"
+    Then product "product1" should have following images:
+      | image reference | is cover | legend | position |
+      | image1          | true     | en-US: | 1        |
