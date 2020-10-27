@@ -34,6 +34,12 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+
+    // Create categories images
+    await Promise.all([
+      files.generateImage(`${firstCategoryData.name}.jpg`),
+      files.generateImage(`${secondCategoryData.name}.jpg`),
+    ]);
   });
 
   after(async () => {
