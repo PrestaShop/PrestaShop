@@ -38,11 +38,12 @@ class GetProductImages
     private $productId;
 
     /**
-     * @param ProductId $productId
+     * @param int $productId
      */
-    public function __construct(ProductId $productId)
-    {
-        $this->productId = $productId;
+    public function __construct(
+        int $productId
+    ) {
+        $this->productId = new ProductId($productId);
     }
 
     /**
