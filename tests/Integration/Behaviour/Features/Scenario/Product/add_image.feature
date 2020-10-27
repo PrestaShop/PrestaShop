@@ -1,7 +1,7 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags add-image
 @reset-database-before-feature
 @clear-cache-after-feature
-@clear-img-after-feature
+@reset-img-after-feature
 @add-image
 Feature: Add product image from Back Office (BO)
   As an employee I need to be able to add new product image
