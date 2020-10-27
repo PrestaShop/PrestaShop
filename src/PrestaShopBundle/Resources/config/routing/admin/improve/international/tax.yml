@@ -1,6 +1,6 @@
 admin_taxes_index:
   path: /
-  methods: [GET]
+  methods: [ GET ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\TaxController::indexAction'
     _legacy_controller: AdminTaxes
@@ -26,7 +26,7 @@ admin_taxes_search:
 
 admin_taxes_create:
   path: /new
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\TaxController::createAction'
     _legacy_controller: AdminTaxes
@@ -34,7 +34,7 @@ admin_taxes_create:
 
 admin_taxes_edit:
   path: /{taxId}/edit
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\TaxController::editAction'
     _legacy_controller: AdminTaxes
@@ -70,7 +70,7 @@ admin_taxes_toggle_status:
 
 admin_taxes_bulk_enable_status:
   path: /bulk-enable-status
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\TaxController::bulkEnableStatusAction'
     _legacy_controller: AdminTaxes
@@ -78,7 +78,7 @@ admin_taxes_bulk_enable_status:
 
 admin_taxes_bulk_disable_status:
   path: /bulk-disable-status
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\TaxController::bulkDisableStatusAction'
     _legacy_controller: AdminTaxes
@@ -86,7 +86,7 @@ admin_taxes_bulk_disable_status:
 
 admin_taxes_bulk_delete:
   path: /bulk-delete
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\TaxController::bulkDeleteAction'
     _legacy_controller: AdminTaxes

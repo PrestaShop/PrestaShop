@@ -1,6 +1,6 @@
 admin_languages_index:
   path: /
-  methods: [GET]
+  methods: [ GET ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\LanguageController::indexAction'
     _legacy_controller: AdminLanguages
@@ -8,7 +8,7 @@ admin_languages_index:
 
 admin_languages_search:
   path: /
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.language
@@ -20,7 +20,7 @@ admin_languages_search:
 
 admin_languages_create:
   path: /new
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\LanguageController::createAction'
     _legacy_controller: AdminLanguages
@@ -28,7 +28,7 @@ admin_languages_create:
 
 admin_languages_edit:
   path: /{languageId}/edit
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\LanguageController::editAction'
     _legacy_controller: AdminLanguages
@@ -38,7 +38,7 @@ admin_languages_edit:
 
 admin_languages_delete:
   path: /{languageId}/delete
-  methods: [POST, DELETE]
+  methods: [ POST, DELETE ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\LanguageController::deleteAction'
     _legacy_controller: AdminLanguages
@@ -48,7 +48,7 @@ admin_languages_delete:
 
 admin_languages_bulk_delete:
   path: /bulk-delete
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\LanguageController::bulkDeleteAction'
     _legacy_controller: AdminLanguages
@@ -56,7 +56,7 @@ admin_languages_bulk_delete:
 
 admin_languages_toggle_status:
   path: /{languageId}/toggle-status
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\LanguageController::toggleStatusAction'
     _legacy_controller: AdminLanguages
@@ -64,7 +64,7 @@ admin_languages_toggle_status:
 
 admin_languages_bulk_toggle_status:
   path: /bulk-toggle-status/{status}
-  methods: [POST]
+  methods: [ POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\LanguageController::bulkToggleStatusAction'
     _legacy_controller: AdminLanguages
