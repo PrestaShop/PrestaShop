@@ -49,7 +49,7 @@ class ThemeExtractor implements ThemeExtractorInterface
     /**
      * {@inheritdoc}
      */
-    public function extract(Theme $theme, $locale = self::DEFAULT_LOCALE, $forceRefresh = false)
+    public function extract(Theme $theme, string $locale = self::DEFAULT_LOCALE, bool $forceRefresh = false): MessageCatalogue
     {
         $catalogue = new MessageCatalogue($locale);
 
@@ -70,7 +70,7 @@ class ThemeExtractor implements ThemeExtractorInterface
      *
      * @return MessageCatalogue
      */
-    private function normalize(MessageCatalogue $catalogue)
+    private function normalize(MessageCatalogue $catalogue): MessageCatalogue
     {
         $newCatalogue = new MessageCatalogue($catalogue->getLocale());
 
@@ -94,7 +94,7 @@ class ThemeExtractor implements ThemeExtractorInterface
      *
      * @return string
      */
-    private function normalizeDomain($domain)
+    private function normalizeDomain(string $domain): string
     {
         return strtr($domain, ['.' => '']);
     }

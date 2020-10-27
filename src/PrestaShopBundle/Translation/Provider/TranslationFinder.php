@@ -88,7 +88,7 @@ class TranslationFinder
      *
      * @throws FileNotFoundException
      */
-    private function getTranslationFilesFromPath($paths, $pattern): Finder
+    private function getTranslationFilesFromPath($paths, string $pattern): Finder
     {
         $finder = new Finder();
 
