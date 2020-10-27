@@ -36,17 +36,35 @@ class ProductImage
     private $imageId;
 
     /**
+     * @var bool
+     */
+    private $cover;
+
+    /**
+     * @var array
+     */
+    private $localizedLegends;
+
+    /**
      * @var string
      */
     private $path;
 
     /**
      * @param int $imageId
+     * @param bool $cover
+     * @param array $localizedLegends
      * @param string $path
      */
-    public function __construct(int $imageId, string $path)
-    {
+    public function __construct(
+        int $imageId,
+        bool $cover,
+        array $localizedLegends,
+        string $path
+    ) {
         $this->imageId = $imageId;
+        $this->cover = $cover;
+        $this->localizedLegends = $localizedLegends;
         $this->path = $path;
     }
 
@@ -56,6 +74,22 @@ class ProductImage
     public function getImageId(): int
     {
         return $this->imageId;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCover(): bool
+    {
+        return $this->cover;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLocalizedLegends(): array
+    {
+        return $this->localizedLegends;
     }
 
     /**
