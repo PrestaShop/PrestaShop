@@ -108,6 +108,9 @@ class LogoUploader
             }
 
             $fileExtension = ($fieldName == 'PS_STORES_ICON') ? '.gif' : '.jpg';
+            if (in_array($files[$fieldName]['type'], ['image/svg+xml', 'image/svg'])) {
+                $fileExtension = '.svg';
+            }
             $logoName = $this->getLogoName($logoPrefix, $fileExtension);
 
             if ($fieldName == 'PS_STORES_ICON') {
@@ -115,7 +118,11 @@ class LogoUploader
                     throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop icon %s.', $logoName));
                 }
             } else {
-                if (!@ImageManager::resize($tmpName, _PS_IMG_DIR_ . $logoName)) {
+                if (in_array($files[$fieldName]['type'], ['image/svg+xml', 'image/svg'])) {
+                    if (!copy($tmpName, _PS_IMG_DIR_ . $logoName)) {
+                        throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop logo %s.', $logoName));
+                    }
+                } elseif (!@ImageManager::resize($tmpName, _PS_IMG_DIR_ . $logoName)) {
                     throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop logo %s.', $logoName));
                 }
             }
