@@ -15,7 +15,6 @@ const addTagPage = require('@pages/BO/shopParameters/search/tags/add');
 // Import data
 const TagFaker = require('@data/faker/tag');
 const {Languages} = require('@data/demo/languages');
-const {Products} = require('@data/demo/products');
 
 // Import test context
 const testContext = require('@utils/testContext');

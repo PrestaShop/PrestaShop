@@ -24,7 +24,6 @@ class Search extends BOBasePage {
   async goToTagsPage(page) {
     await this.clickAndWaitForNavigation(page, this.tagsTabLink);
   }
-
 }
 
 module.exports = new Search();
