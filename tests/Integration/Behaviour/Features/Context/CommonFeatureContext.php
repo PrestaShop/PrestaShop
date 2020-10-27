@@ -41,6 +41,7 @@ use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
 use Pack;
 use Product;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use TaxManagerFactory;
 
 class CommonFeatureContext extends AbstractPrestaShopFeatureContext
@@ -119,37 +120,12 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @AfterFeature @clear-img-after-feature
+     * @AfterFeature @reset-img-after-feature
      */
-    public static function clearImgDir(): void
+    public static function resetImgDir(): void
     {
-        function unlinkFilesRecursively(string $recursiveDir = null): void
-        {
-            $startingDir = _PS_IMG_DIR_;
-            if ($recursiveDir) {
-                $startingDir = $recursiveDir . '/';
-            }
-
-            $dirs = [];
-            foreach (glob($startingDir . '*') as $file) {
-                if (is_dir($file)) {
-                    $dirs[] = $file;
-
-                    continue;
-                }
-
-                if (is_file($file)) {
-                    unlink($file);
-                }
-            }
-
-            foreach ($dirs as $dir) {
-                unlinkFilesRecursively($dir);
-                rmdir($dir);
-            }
-        }
-
-        unlinkFilesRecursively();
+        $fs = new Filesystem();
+        $fs->mirror(DatabaseCreator::getBackupTestImgDir(), _PS_IMG_DIR_);
     }
 
     /**
