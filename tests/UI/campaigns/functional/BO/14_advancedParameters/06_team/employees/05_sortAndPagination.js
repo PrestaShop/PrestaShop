@@ -67,7 +67,6 @@ describe('Sort and pagination employees', async () => {
   });
 
   // 1 : Create 20 employees
-
   const tests = new Array(20).fill(0, 0, 20);
 
   tests.forEach((test, index) => {
@@ -91,6 +90,36 @@ describe('Sort and pagination employees', async () => {
         const numberOfEmployeesAfterCreation = await employeesPage.getNumberOfElementInGrid(page);
         await expect(numberOfEmployeesAfterCreation).to.be.equal(numberOfEmployees + index + 1);
       });
+    });
+  });
+
+  // 3 : Delete employee with bulk actions
+  describe('Delete employees with Bulk Actions', async () => {
+    it('should filter list by email', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
+
+      await employeesPage.filterEmployees(
+        page,
+        'input',
+        'firstname',
+        'toDelete',
+      );
+
+      const textEmail = await employeesPage.getTextColumnFromTable(page, 1, 'email');
+      await expect(textEmail).to.contains('toDelete');
+    });
+    it('should delete employees with Bulk Actions and check Result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteEmployee', baseContext);
+
+      const deleteTextResult = await employeesPage.deleteBulkActions(page);
+      await expect(deleteTextResult).to.be.equal(employeesPage.successfulMultiDeleteMessage);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
+
+      const numberOfEmployeesAfterDelete = await employeesPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfEmployeesAfterDelete).to.be.equal(numberOfEmployees);
     });
   });
 });
