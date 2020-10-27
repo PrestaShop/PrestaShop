@@ -1,0 +1,15 @@
+name: Linter
+on: [push, pull_request]
+jobs:
+  yaml:
+    runs-on: ubuntu-latest
+    name: Linter
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Linter YAML
+        uses: ibiqlik/action-yamllint@v1
+        with:
+          file_or_dir: app/ src/ themes/ .t9n.yml
+          config_file: .github/workflows/yamllint/.yamllint.yml
