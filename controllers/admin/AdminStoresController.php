@@ -333,7 +333,7 @@ class AdminStoresControllerCore extends AdminController
             $langs = Language::getLanguages(false);
             /* Cleaning fields */
             foreach ($_POST as $kp => $vp) {
-                if (is_string($kp)) {
+                if (is_string($vp)) {
                     $_POST[$kp] = trim($vp);
                 }
                 if ('hours' === $kp) {
