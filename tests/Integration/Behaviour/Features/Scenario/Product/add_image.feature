@@ -16,3 +16,4 @@ Feature: Add product image from Back Office (BO)
     Then product "product1" should have following images:
       | image reference | is cover | legend | position |
       | image1          | true     | en-US: | 1        |
+#todo: assert image types (which is not present in dummy database), assert combination & pack images
