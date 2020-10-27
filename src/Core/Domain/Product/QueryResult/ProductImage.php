@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
+/**
+ * Transfers product image data
+ */
 class ProductImage
 {
     /**
@@ -39,6 +42,11 @@ class ProductImage
      * @var bool
      */
     private $cover;
+
+    /**
+     * @var int
+     */
+    private $position;
 
     /**
      * @var array
@@ -53,17 +61,20 @@ class ProductImage
     /**
      * @param int $imageId
      * @param bool $cover
+     * @param int $position
      * @param array $localizedLegends
      * @param string $path
      */
     public function __construct(
         int $imageId,
         bool $cover,
+        int $position,
         array $localizedLegends,
         string $path
     ) {
         $this->imageId = $imageId;
         $this->cover = $cover;
+        $this->position = $position;
         $this->localizedLegends = $localizedLegends;
         $this->path = $path;
     }
@@ -90,6 +101,14 @@ class ProductImage
     public function getLocalizedLegends(): array
     {
         return $this->localizedLegends;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPosition(): int
+    {
+        return $this->position;
     }
 
     /**
