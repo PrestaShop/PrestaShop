@@ -145,7 +145,7 @@ class ProductStockUpdater extends AbstractObjectModelFiller
      */
     private function updateAdvancedStock(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate, bool $addMovement): void
     {
-        $productHasAdvancedStock = isset($propertiesToUpdate['advanced_stock_management']) ? $propertiesToUpdate['advanced_stock_management'] : $product->advanced_stock_management;
+        $productHasAdvancedStock = $propertiesToUpdate['advanced_stock_management'] ?? $product->advanced_stock_management;
 
         if (isset($propertiesToUpdate['depends_on_stock'])) {
             if ($propertiesToUpdate['depends_on_stock'] && !$productHasAdvancedStock) {

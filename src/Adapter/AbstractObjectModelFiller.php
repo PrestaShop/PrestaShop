@@ -63,7 +63,7 @@ class AbstractObjectModelFiller
      * @param string $propertyName
      * @param array $properties
      */
-    protected function fillLocalizedProperty(ObjectModel $objectModel, string $propertyName, array $properties)
+    protected function fillLocalizedProperty(ObjectModel $objectModel, string $propertyName, array $properties): void
     {
         if (!array_key_exists($propertyName, $properties)) {
             return;
