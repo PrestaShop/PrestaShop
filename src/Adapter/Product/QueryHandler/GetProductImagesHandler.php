@@ -77,8 +77,9 @@ final class GetProductImagesHandler implements GetProductImagesHandlerInterface
             $productImages[] = new ProductImage(
                 (int) $image->id,
                 (bool) $image->cover,
+                (int) $image->position,
                 $image->legend,
-                $image->getImgPath()
+                sprintf('%s.%s', $image->getImgPath(), $image->image_format)
             );
         }
 
