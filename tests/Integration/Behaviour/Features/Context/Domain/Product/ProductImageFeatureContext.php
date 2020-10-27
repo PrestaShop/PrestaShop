@@ -28,7 +28,11 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
+use Behat\Gherkin\Node\TableNode;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductImages;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductImage;
 use Tests\Resources\DummyFileUploader;
 
 class ProductImageFeatureContext extends AbstractProductFeatureContext
@@ -57,6 +61,33 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      */
     public function assertProductHasNoImages(string $productReference): void
     {
-        //@todo: query for product images?
+        Assert::assertEmpty(
+            $this->getProductImages($productReference),
+            sprintf('No images expected for product "%s"', $productReference)
+        );
+    }
+
+    /**
+     * @Then product :productReference should have following images:
+     *
+     * @param string $productReference
+     * @param TableNode $tableNode
+     */
+    public function assertProductImages(string $productReference, TableNode $tableNode): void
+    {
+        $images = $this->getProductImages($productReference);
+        //@todo: how to assert images if uploaded ones doesn't have original name?
+    }
+
+    /**
+     * @param string $productReference
+     *
+     * @return ProductImage[]
+     */
+    private function getProductImages(string $productReference): array
+    {
+        return $this->getQueryBus()->handle(new GetProductImages(
+            $this->getSharedStorage()->get($productReference)
+        ));
     }
 }
