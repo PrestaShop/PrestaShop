@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
+use PrestaShopBundle\Exception\NotImplementedException;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\Provider\Factory\ProviderFactory;
 use PrestaShopBundle\Translation\Provider\TranslationFinder;
@@ -566,8 +567,10 @@ class ThemeManager implements AddonManagerInterface
      * @param string $themeName
      *
      * @return array
+     *
+     * @throws NotImplementedException
      */
-    private function getDefaultDomains(string $locale, string $themeName)
+    private function getDefaultDomains(string $locale, string $themeName): array
     {
         /** @var \PrestaShopBundle\Translation\Provider\ThemeProvider $themeProvider */
         $themeProvider = $this->translationProviderFactory->build(
@@ -605,8 +608,12 @@ class ThemeManager implements AddonManagerInterface
      * @param string $locale
      * @param string $themeName
      */
-    private function handleImport(MessageCatalogue $messageCatalog, $allDomains, $locale, $themeName)
-    {
+    private function handleImport(
+        MessageCatalogue $messageCatalog,
+        array $allDomains,
+        string $locale,
+        string $themeName
+    ): void {
         // retrieve Lang doctrine entity
         try {
             $lang = $this->translationService->findLanguageByLocale($locale);

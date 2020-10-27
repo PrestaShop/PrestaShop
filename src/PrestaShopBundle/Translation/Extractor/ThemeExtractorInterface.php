@@ -24,8 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-declare(strict_types=1);
-
 namespace PrestaShopBundle\Translation\Extractor;
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
@@ -47,5 +45,5 @@ interface ThemeExtractorInterface
      *
      * @return MessageCatalogue
      */
-    public function extract(Theme $theme, $locale = self::DEFAULT_LOCALE, $forceRefresh = false);
+    public function extract(Theme $theme, string $locale = self::DEFAULT_LOCALE, bool $forceRefresh = false): MessageCatalogue;
 }

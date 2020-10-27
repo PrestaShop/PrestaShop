@@ -71,7 +71,7 @@ class ThemeExtractorCache implements ThemeExtractorInterface
     /**
      * {@inheritdoc}
      */
-    public function extract(Theme $theme, $locale = self::DEFAULT_LOCALE, $forceRefresh = false)
+    public function extract(Theme $theme, string $locale = self::DEFAULT_LOCALE, bool $forceRefresh = false): MessageCatalogue
     {
         if (!$forceRefresh && $this->cacheIsFresh($theme)) {
             return $this->loadFromCache($theme, $locale);
@@ -88,7 +88,7 @@ class ThemeExtractorCache implements ThemeExtractorInterface
      *
      * @return bool
      */
-    private function cacheIsFresh(Theme $theme)
+    private function cacheIsFresh(Theme $theme): bool
     {
         // @todo: improve this method by fingerprinting files then refreshing cache only when they change
 
@@ -106,7 +106,7 @@ class ThemeExtractorCache implements ThemeExtractorInterface
      *
      * @return MessageCatalogue
      */
-    private function loadFromCache(Theme $theme, $locale)
+    private function loadFromCache(Theme $theme, string $locale): MessageCatalogue
     {
         $cacheFiles = $this->getCacheFiles($this->getCachedFilesPath($theme));
         $xliffFileLoader = new XliffFileLoader();
@@ -130,7 +130,7 @@ class ThemeExtractorCache implements ThemeExtractorInterface
      *
      * @return string
      */
-    public function getCachedFilesPath(Theme $theme)
+    public function getCachedFilesPath(Theme $theme): string
     {
         return implode(
             DIRECTORY_SEPARATOR,
@@ -150,7 +150,7 @@ class ThemeExtractorCache implements ThemeExtractorInterface
      *
      * @return string
      */
-    public function getTemporaryFilesPath(Theme $theme)
+    public function getTemporaryFilesPath(Theme $theme): string
     {
         return implode(
             DIRECTORY_SEPARATOR,
@@ -167,7 +167,7 @@ class ThemeExtractorCache implements ThemeExtractorInterface
      * @param Theme $theme
      * @param MessageCatalogue $catalogue
      */
-    private function updateCache(Theme $theme, MessageCatalogue $catalogue)
+    private function updateCache(Theme $theme, MessageCatalogue $catalogue): void
     {
         $path = $this->getCachedFilesPath($theme);
 
@@ -189,7 +189,7 @@ class ThemeExtractorCache implements ThemeExtractorInterface
      *
      * @return Finder
      */
-    private function getCacheFiles($directory)
+    private function getCacheFiles(string $directory): Finder
     {
         return (new Finder())->files()->name('*.xlf')->in($directory);
     }

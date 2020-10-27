@@ -124,7 +124,7 @@ class ModifyTranslationsType extends TranslatorAwareType
      *
      * @return array
      */
-    private function filterThemeChoices(array $themeChoices)
+    private function filterThemeChoices(array $themeChoices): array
     {
         if (array_key_exists(ThemeProvider::DEFAULT_THEME_NAME, $themeChoices)) {
             unset($themeChoices[ThemeProvider::DEFAULT_THEME_NAME]);

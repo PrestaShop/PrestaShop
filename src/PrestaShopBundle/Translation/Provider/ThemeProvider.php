@@ -110,7 +110,7 @@ class ThemeProvider implements ProviderInterface
         $this->databaseReader = $databaseReader;
         $this->themeName = $themeName;
 
-        $this->validateTheme();
+        $this->assertThemeIsValid();
     }
 
     /**
@@ -121,13 +121,11 @@ class ThemeProvider implements ProviderInterface
      * @param bool $refreshCache [default=false] Force cache to be refreshed
      *
      * @return MessageCatalogueInterface
-     *
-     * @throws FileNotFoundException
      */
     public function getDefaultCatalogue(
         string $locale,
         bool $empty = true,
-        $refreshCache = false
+        bool $refreshCache = false
     ): MessageCatalogueInterface {
         // Extracts wordings from the theme's templates
         $defaultCatalogue = $this->themeExtractor->extract($this->theme, $locale, $refreshCache);
@@ -186,7 +184,7 @@ class ThemeProvider implements ProviderInterface
     /**
      * Check if theme is registered in DB and set class property
      */
-    private function validateTheme()
+    private function assertThemeIsValid(): void
     {
         try {
             $this->theme = $this->themeRepository->getInstanceByName($this->themeName);
