@@ -23,6 +23,8 @@ let browserContext;
 let page;
 let numberOfEmployees = 0;
 
+const employeeData = new EmployeeFaker();
+
 /*
 Create 20 employees
 Sort employee list
@@ -70,7 +72,7 @@ describe('Sort and pagination employees', async () => {
   const tests = new Array(20).fill(0, 0, 20);
 
   tests.forEach((test, index) => {
-    const employeeData = new EmployeeFaker({firstName: `toDelete`});
+    const employeeToCreate = new EmployeeFaker({email: `${employeeData.email}${index}`});
     describe(`Create employee n°${index + 1} in BO`, async () => {
       it('should go to add new employee page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewEmployeePage${index + 1}`, baseContext);
@@ -84,11 +86,60 @@ describe('Sort and pagination employees', async () => {
       it('should create employee', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createEmployee${index + 1}`, baseContext);
 
-        const textResult = await addEmployeePage.createEditEmployee(page, employeeData);
+        const textResult = await addEmployeePage.createEditEmployee(page, employeeToCreate);
         await expect(textResult).to.equal(employeesPage.successfulCreationMessage);
 
         const numberOfEmployeesAfterCreation = await employeesPage.getNumberOfElementInGrid(page);
         await expect(numberOfEmployeesAfterCreation).to.be.equal(numberOfEmployees + index + 1);
+      });
+    });
+  });
+
+  // 2 : Sort employees list
+  const sortTests = [
+    {
+      args: {
+        testIdentifier: 'sortByIDDesc', sortBy: 'id_employee', sortDirection: 'desc', isFloat: true,
+      },
+    },
+    {args: {testIdentifier: 'sortByFirstNameDesc', sortBy: 'firstname', sortDirection: 'desc'}},
+    {args: {testIdentifier: 'sortByFirstNameAsc', sortBy: 'firstname', sortDirection: 'asc'}},
+    {args: {testIdentifier: 'sortByLastNameDesc', sortBy: 'lastname', sortDirection: 'desc'}},
+    {args: {testIdentifier: 'sortByLastNameAsc', sortBy: 'lastname', sortDirection: 'asc'}},
+    {args: {testIdentifier: 'sortByEmailDesc', sortBy: 'email', sortDirection: 'desc'}},
+    {args: {testIdentifier: 'sortByEmailAsc', sortBy: 'email', sortDirection: 'asc'}},
+    {args: {testIdentifier: 'sortByProfileDesc', sortBy: 'profile', sortDirection: 'desc'}},
+    {args: {testIdentifier: 'sortByProfileAsc', sortBy: 'profile', sortDirection: 'asc'}},
+    {args: {testIdentifier: 'sortByActiveDesc', sortBy: 'active', sortDirection: 'desc'}},
+    {args: {testIdentifier: 'sortByActiveAsc', sortBy: 'active', sortDirection: 'asc'}},
+    {
+      args: {
+        testIdentifier: 'sortByIDAsc', sortBy: 'id_employee', sortDirection: 'asc', isFloat: true,
+      },
+    },
+  ];
+  describe('Sort employee', async () => {
+    sortTests.forEach((test) => {
+      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
+        let nonSortedTable = await employeesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        await employeesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+
+        let sortedTable = await employeesPage.getAllRowsColumnContent(page, test.args.sortBy);
+
+        if (test.args.isFloat) {
+          nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
+          sortedTable = await sortedTable.map(text => parseFloat(text));
+        }
+
+        const expectedResult = await employeesPage.sortArray(nonSortedTable, test.args.isFloat);
+
+        if (test.args.sortDirection === 'asc') {
+          await expect(sortedTable).to.deep.equal(expectedResult);
+        } else {
+          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+        }
       });
     });
   });
@@ -101,13 +152,14 @@ describe('Sort and pagination employees', async () => {
       await employeesPage.filterEmployees(
         page,
         'input',
-        'firstname',
-        'toDelete',
+        'email',
+        employeeData.email,
       );
 
       const textEmail = await employeesPage.getTextColumnFromTable(page, 1, 'email');
-      await expect(textEmail).to.contains('toDelete');
+      await expect(textEmail).to.contains(employeeData.email);
     });
+
     it('should delete employees with Bulk Actions and check Result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteEmployee', baseContext);
 
