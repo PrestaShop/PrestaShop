@@ -52,7 +52,7 @@ class TranslationApiTreeBuilder
     private $theme;
 
     /**
-     * @var string|null
+     * @var array|null
      */
     private $search;
 
@@ -82,7 +82,7 @@ class TranslationApiTreeBuilder
      * @param array[] $translationArray
      * @param string $locale
      * @param string|null $theme
-     * @param string|null $search
+     * @param array|null $search
      * @param string|null $module
      *
      * @return array
@@ -91,7 +91,7 @@ class TranslationApiTreeBuilder
         array $translationArray,
         string $locale,
         ?string $theme = null,
-        ?string $search = null,
+        ?array $search = null,
         ?string $module = null
     ): array {
         $this->locale = $locale;

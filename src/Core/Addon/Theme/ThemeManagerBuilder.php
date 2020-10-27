@@ -67,16 +67,11 @@ class ThemeManagerBuilder
         $this->context = $context;
         $this->db = $db;
         $this->themeValidator = $themeValidator;
-        if (null === $translationService) {
+        if (null === $translationService || null === $providerFactory) {
             $container = SymfonyContainer::getInstance();
             if (null !== $container) {
-                $translationService = $container->get('prestashop.service.translation');
-            }
-        }
-        if (null === $providerFactory) {
-            $container = SymfonyContainer::getInstance();
-            if (null !== $container) {
-                $providerFactory = $container->get('prestashop.translation.provider_factory');
+                $translationService = $translationService ?? $container->get('prestashop.service.translation');
+                $providerFactory = $providerFactory ?? $container->get('prestashop.translation.provider_factory');
             }
         }
         $this->translationService = $translationService;
