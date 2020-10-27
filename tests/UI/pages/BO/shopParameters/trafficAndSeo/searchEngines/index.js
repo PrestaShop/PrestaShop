@@ -59,6 +59,13 @@ class SearchEngines extends BOBasePage {
     this.paginationActivePageLink = `${this.paginationList} li.active a`;
     this.paginationPreviousLink = `${this.paginationList} .icon-angle-left`;
     this.paginationNextLink = `${this.paginationList} .icon-angle-right`;
+
+    // Bulk actions selectors
+    this.bulkActionBlock = 'div.bulk-actions';
+    this.bulkActionMenuButton = '#bulk_action_menu_search_engine';
+    this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
+    this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
+    this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
   }
 
   /* Header methods */
@@ -276,6 +283,39 @@ class SearchEngines extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
+  }
+
+  /* Bulk actions methods */
+  /**
+   * Select all rows
+   * @param page
+   * @return {Promise<void>}
+   */
+  async bulkSelectRows(page) {
+    await page.click(this.bulkActionMenuButton);
+
+    await Promise.all([
+      page.click(this.selectAllLink),
+      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+    ]);
+  }
+
+  /**
+   * Delete Search engine by bulk actions
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async bulkDeleteSearchEngine(page) {
+    this.dialogListener(page, true);
+    // Select all rows
+    await this.bulkSelectRows(page);
+
+    // Click on Button Bulk actions
+    await page.click(this.bulkActionMenuButton);
+
+    // Click on delete
+    await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 }
 
