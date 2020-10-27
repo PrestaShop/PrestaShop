@@ -30,17 +30,12 @@ use Context;
 use Doctrine\DBAL\DBALException;
 use PrestaShopBundle\Install\DatabaseDump;
 use PrestaShopBundle\Install\Install;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
+use Tests\Resources\ResourceResetter;
 use Tab;
 
 class DatabaseCreator
 {
-    /**
-     * Name for directory of test images in system tmp dir
-     */
-    const TEST_IMG_DIR = 'ps_test_img';
-
     /**
      * Create the initialize database used for test
      */
@@ -80,19 +75,7 @@ class DatabaseCreator
         $install->installModules();
 
         DatabaseDump::create();
-
-        // Backs up test images directory to allow resetting their original state later in tests
-        (new Filesystem())->mirror(_PS_IMG_DIR_, static::getBackupTestImgDir());
-    }
-
-    /**
-     * Provide test img directory path, in which initial dummy images state should be saved
-     *
-     * @return string
-     */
-    public static function getBackupTestImgDir(): string
-    {
-        return sys_get_temp_dir() . DIRECTORY_SEPARATOR . static::TEST_IMG_DIR;
+        ResourceResetter::backupImages();
     }
 
     /**
