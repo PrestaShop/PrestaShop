@@ -7,7 +7,7 @@ const LanguagesNames = Object.values(Languages).map(language => language.name);
 
 module.exports = class Supplier {
   constructor(tagsToCreate = {}) {
-    this.name = tagsToCreate.name || faker.lorem.word();
+    this.name = tagsToCreate.name || `new_tag_${faker.lorem.word()}`;
     this.language = tagsToCreate.language || faker.random.arrayElement(LanguagesNames);
     this.products = tagsToCreate.products || faker.random.arrayElement(productsNames);
   }

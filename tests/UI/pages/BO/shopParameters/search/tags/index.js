@@ -38,6 +38,9 @@ class Tags extends BOBasePage {
     this.tableColumnActionsDropdownMenu = row => `${this.tableColumnActions(row)} .dropdown-menu`;
     this.tableColumnActionsDeleteLink = row => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
 
+    // Confirmation modal
+    this.deleteModalButtonYes = '#popup_ok';
+
     // Columns selectors
     this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
     this.tableColumnLanguage = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
@@ -157,6 +160,27 @@ class Tags extends BOBasePage {
     }
 
     return this.getTextContent(page, columnSelector);
+  }
+
+  /**
+   * Delete tag from row
+   * @param page
+   * @param row
+   * @return {Promise<string>}
+   */
+  async deleteTag(page, row) {
+    await Promise.all([
+      page.click(this.tableColumnActionsToggleButton(row)),
+      this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(row)),
+    ]);
+
+    await page.click(this.tableColumnActionsDeleteLink(row));
+
+    // Confirm delete action
+    await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
+
+    // Get successful message
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 }
 
