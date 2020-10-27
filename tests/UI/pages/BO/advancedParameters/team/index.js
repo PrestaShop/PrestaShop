@@ -44,14 +44,20 @@ class Employees extends BOBasePage {
     this.tableHead = `${this.employeeGridPanel} thead`;
     this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
     this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    // Pages selectors
+    this.paginationLimitSelect = '#paginator_select_page_limit';
+    this.paginationLabel = `${this.employeesListForm} .col-form-label`;
+    this.paginationNextLink = `${this.employeesListForm} #pagination_next_url`;
+    this.paginationPreviousLink = `${this.employeesListForm} [aria-label='Previous']`;
   }
 
   /*
   Methods
    */
 
+  // Header methods
   /**
-   * Go to new Page Employee page
+   * Go to new Employee page
    * @param page
    * @returns {Promise<void>}
    */
@@ -59,6 +65,17 @@ class Employees extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.addNewEmployeeLink);
   }
 
+  // Tab methods
+  /**
+   * Go to Profiles page
+   * @param page
+   * @returns {Promise<void>}
+   */
+  async goToProfilesPage(page) {
+    await this.clickAndWaitForNavigation(page, this.profilesTab);
+  }
+
+  // Columns methods
   /**
    * Get number of elements in grid
    * @param page
@@ -179,7 +196,7 @@ class Employees extends BOBasePage {
   }
 
   /**
-   * Confirm delete with in modal
+   * Confirm delete in modal
    * @param page
    * @return {Promise<void>}
    */
@@ -235,15 +252,6 @@ class Employees extends BOBasePage {
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
-  /**
-   * Go to Profiles page
-   * @param page
-   * @returns {Promise<void>}
-   */
-  async goToProfilesPage(page) {
-    await this.clickAndWaitForNavigation(page, this.profilesTab);
-  }
-
   // Sort methods
   /**
    * Get content from all rows
@@ -282,6 +290,41 @@ class Employees extends BOBasePage {
     }
 
     await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
+  }
+
+  // Pagination methods
+  /**
+   * Select pagination limit
+   * @param page
+   * @param number
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page, number) {
+    await this.selectByVisibleText(page, this.paginationLimitSelect, number);
+
+    return this.getTextContent(page, this.paginationLabel);
+  }
+
+  /**
+   * Pagination next
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+
+    return this.getTextContent(page, this.paginationLabel);
+  }
+
+  /**
+   * Pagination previous
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+
+    return this.getTextContent(page, this.paginationLabel);
   }
 }
 

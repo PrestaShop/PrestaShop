@@ -69,7 +69,7 @@ describe('Sort and pagination employees', async () => {
   });
 
   // 1 : Create 20 employees
-  const tests = new Array(20).fill(0, 0, 20);
+  const tests = new Array(10).fill(0, 0, 10);
 
   tests.forEach((test, index) => {
     const employeeToCreate = new EmployeeFaker({email: `${employeeData.email}${index}`});
@@ -144,7 +144,38 @@ describe('Sort and pagination employees', async () => {
     });
   });
 
-  // 3 : Delete employee with bulk actions
+  // 3 : Test pagination
+  describe('Pagination next and previous', async () => {
+    it('should change the item number to 10 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
+
+      const paginationNumber = await employeesPage.selectPaginationLimit(page, '10');
+      expect(paginationNumber).to.contain('(page 1 / 2)');
+    });
+
+    it('should click on next', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
+
+      const paginationNumber = await employeesPage.paginationNext(page);
+      expect(paginationNumber).to.contain('(page 2 / 2)');
+    });
+
+    it('should click on previous', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
+
+      const paginationNumber = await employeesPage.paginationPrevious(page);
+      expect(paginationNumber).to.contain('(page 1 / 2)');
+    });
+
+    it('should change the item number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+
+      const paginationNumber = await employeesPage.selectPaginationLimit(page, '50');
+      expect(paginationNumber).to.contain('(page 1 / 1)');
+    });
+  });
+
+  // 4 : Delete employee with bulk actions
   describe('Delete employees with Bulk Actions', async () => {
     it('should filter list by email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
