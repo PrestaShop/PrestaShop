@@ -112,6 +112,10 @@
     {% endblock %}
 
     <hr>
+    {{ form_row(importForm.iso_lang) }}
+    {{ form_row(importForm.separator) }}
+    {{ form_row(importForm.multiple_value_separator) }}
+    <hr>
     {{ form_widget(importForm) }}
   </div>
   <div class="card-footer">
