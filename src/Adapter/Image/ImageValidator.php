@@ -35,6 +35,9 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use Tools;
 
+/**
+ * Responsible for validating image before upload
+ */
 class ImageValidator
 {
     /**
