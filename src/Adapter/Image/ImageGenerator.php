@@ -54,6 +54,8 @@ class ImageGenerator
                 $resized &= $this->resize($imagePath, $imageType);
             }
         } catch (PrestaShopException $e) {
+            //@todo: this exception extends generic Exception and is in Uploader ns.
+            //@todo: could it extend new Core/Image/ImageException? this would introduce BC break. (make the same with other Uploader/Exception's ?)
             throw new ImageOptimizationException('Unable to resize one or more of your pictures.');
         }
 
@@ -65,10 +67,9 @@ class ImageGenerator
     }
 
     /**
-     * Resizes the image depending from its type
+     * Resizes the image depending on its type
      *
      * @param string $filePath
-     * @param string $destinationDir
      * @param array $imageType
      *
      * @return bool
