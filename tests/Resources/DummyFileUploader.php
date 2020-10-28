@@ -66,7 +66,7 @@ class DummyFileUploader
      */
     public static function getDummyFilesPath(): string
     {
-        return _PS_ROOT_DIR_ . '/tests/Resources/dummyFile/';
+        return __DIR__ . '/dummyFile/';
     }
 
     /**
