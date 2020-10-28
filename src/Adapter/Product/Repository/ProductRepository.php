@@ -168,6 +168,7 @@ class ProductRepository extends AbstractObjectModelRepository
             Product::class,
             ProductNotFoundException::class
         );
+        $product->loadStockData();
 
         return $product;
     }

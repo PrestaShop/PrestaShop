@@ -28,13 +28,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
-use Pack;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelFiller;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
@@ -64,21 +63,29 @@ class ProductStockUpdater extends AbstractObjectModelFiller
     private $stockAvailableRepository;
 
     /**
+     * @var ProductValidator
+     */
+    private $productValidator;
+
+    /**
      * @param ConfigurationInterface $configuration
      * @param StockManager $stockManager
      * @param ProductRepository $productRepository
      * @param StockAvailableRepository $stockAvailableRepository
+     * @param ProductValidator $productValidator
      */
     public function __construct(
         ConfigurationInterface $configuration,
         StockManager $stockManager,
         ProductRepository $productRepository,
-        StockAvailableRepository $stockAvailableRepository
+        StockAvailableRepository $stockAvailableRepository,
+        ProductValidator $productValidator
     ) {
         $this->configuration = $configuration;
         $this->stockManager = $stockManager;
         $this->productRepository = $productRepository;
         $this->stockAvailableRepository = $stockAvailableRepository;
+        $this->productValidator = $productValidator;
     }
 
     /**
@@ -107,31 +114,12 @@ class ProductStockUpdater extends AbstractObjectModelFiller
      * @param bool $addMovement
      *
      * @throws CoreException
-     * @throws ProductStockConstraintException
      */
     private function updateClassicStock(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate, bool $addMovement): void
     {
-        // Depends on stock is only available in advanced mode
-        if (isset($propertiesToUpdate['depends_on_stock']) && $propertiesToUpdate['depends_on_stock']) {
-            throw new ProductStockConstraintException(
-                'You cannot perform this action when PS_ADVANCED_STOCK_MANAGEMENT is disabled',
-                ProductStockConstraintException::ADVANCED_STOCK_MANAGEMENT_CONFIGURATION_DISABLED
-            );
-        }
-
-        if (isset($propertiesToUpdate['advanced_stock_management']) && $propertiesToUpdate['advanced_stock_management']) {
-            throw new ProductStockConstraintException(
-                'You cannot perform this action when PS_ADVANCED_STOCK_MANAGEMENT is disabled',
-                ProductStockConstraintException::ADVANCED_STOCK_MANAGEMENT_CONFIGURATION_DISABLED
-            );
-        }
-
-        $propertiesToUpdate['depends_on_stock'] = false;
-        $propertiesToUpdate['advanced_stock_management'] = false;
-
         $this->fillProperties($product, $stockAvailable, $propertiesToUpdate, $addMovement);
 
-        $this->productRepository->partialUpdate($product, $product->getFieldsToUpdate(), CannotUpdateProductException::FAILED_UPDATE_STOCK);
+        $this->productRepository->partialUpdate($product, $product->getFieldsToUpdate() ?: [], CannotUpdateProductException::FAILED_UPDATE_STOCK);
         $this->stockAvailableRepository->update($stockAvailable);
     }
 
@@ -146,31 +134,12 @@ class ProductStockUpdater extends AbstractObjectModelFiller
      */
     private function updateAdvancedStock(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate, bool $addMovement): void
     {
-        $productHasAdvancedStock = $propertiesToUpdate['advanced_stock_management'] ?? $product->advanced_stock_management;
-
-        if (isset($propertiesToUpdate['depends_on_stock'])) {
-            if ($propertiesToUpdate['depends_on_stock'] && !$productHasAdvancedStock) {
-                throw new ProductStockConstraintException(
-                    'You cannot perform this action when advanced_stock_management is disabled on the product',
-                    ProductStockConstraintException::ADVANCED_STOCK_MANAGEMENT_PRODUCT_DISABLED
-                );
-            }
-
-            $this->checkPackStockType($product, $propertiesToUpdate);
-        }
-        if (!$productHasAdvancedStock) {
-            $propertiesToUpdate['depends_on_stock'] = false;
-        }
-        if (isset($propertiesToUpdate['pack_stock_type'])) {
-            $this->checkPackStockType($product, $propertiesToUpdate);
-        }
-
         $this->fillProperties($product, $stockAvailable, $propertiesToUpdate, $addMovement);
 
-        $this->productRepository->partialUpdate($product, $product->getFieldsToUpdate(), CannotUpdateProductException::FAILED_UPDATE_STOCK);
+        $this->productRepository->partialUpdate($product, $product->getFieldsToUpdate() ?: [], CannotUpdateProductException::FAILED_UPDATE_STOCK);
         $this->stockAvailableRepository->update($stockAvailable);
 
-        if (isset($propertiesToUpdate['depends_on_stock']) && $propertiesToUpdate['depends_on_stock']) {
+        if ($product->depends_on_stock) {
             StockAvailable::synchronize($product->id);
         }
     }
@@ -185,8 +154,6 @@ class ProductStockUpdater extends AbstractObjectModelFiller
      */
     private function fillProperties(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate, bool $addMovement): void
     {
-        $this->fillProperty($product, 'depends_on_stock', $propertiesToUpdate);
-        $this->fillProperty($product, 'advanced_stock_management', $propertiesToUpdate);
         $this->fillProperty($product, 'pack_stock_type', $propertiesToUpdate);
         $this->fillProperty($product, 'out_of_stock', $propertiesToUpdate);
         $this->fillProperty($product, 'minimal_quantity', $propertiesToUpdate);
@@ -196,7 +163,7 @@ class ProductStockUpdater extends AbstractObjectModelFiller
         $this->fillProperty($product, 'available_date', $propertiesToUpdate);
         $this->fillLocalizedProperty($product, 'available_now', $propertiesToUpdate);
         $this->fillLocalizedProperty($product, 'available_later', $propertiesToUpdate);
-        $this->fillProperty($stockAvailable, 'depends_on_stock', $propertiesToUpdate);
+        $stockAvailable->depends_on_stock = (bool) $product->depends_on_stock;
         $this->fillProperty($stockAvailable, 'out_of_stock', $propertiesToUpdate);
         $this->fillProperty($stockAvailable, 'location', $propertiesToUpdate);
 
@@ -224,39 +191,5 @@ class ProductStockUpdater extends AbstractObjectModelFiller
         if ($addMovement && 0 !== $deltaQuantity) {
             $this->stockManager->saveMovement($stockAvailable->id_product, $stockAvailable->id_product_attribute, $deltaQuantity);
         }
-    }
-
-    /**
-     * @param Product $product
-     * @param array $propertiesToUpdate
-     *
-     * @throws ProductPackConstraintException
-     */
-    private function checkPackStockType(Product $product, array $propertiesToUpdate): void
-    {
-        $dependsOnStock = isset($propertiesToUpdate['depends_on_stock']) ? $propertiesToUpdate['depends_on_stock'] : $product->depends_on_stock;
-        // If the product doesn't depend on stock or is not a Pack no problem
-        if (!$dependsOnStock || !Pack::isPack($product->id)) {
-            return;
-        }
-
-        // Get pack stock type (or default configuration if needed)
-        $packStockType = $product->pack_stock_type;
-        if (isset($propertiesToUpdate['pack_stock_type'])) {
-            $packStockType = $propertiesToUpdate['pack_stock_type'];
-        }
-        if ($packStockType === Pack::STOCK_TYPE_DEFAULT) {
-            $packStockType = (int) $this->configuration->get('PS_PACK_STOCK_TYPE');
-        }
-
-        // Either the pack has its own stock, or else ALL products from the pack must depend on the stock as well
-        if ($packStockType === Pack::STOCK_TYPE_PACK_ONLY || Pack::allUsesAdvancedStockManagement($product->id)) {
-            return;
-        }
-
-        throw new ProductPackConstraintException(
-            'You cannot link your pack to product stock because one of them has no advanced stock enabled',
-            ProductPackConstraintException::INCOMPATIBLE_STOCK_TYPE
-        );
     }
 }
