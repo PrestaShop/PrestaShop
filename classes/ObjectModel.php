@@ -2155,24 +2155,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     }
 
     /**
-     * Set a list of specific fields to update
-     * array(field1 => true, field2 => false,
-     * langfield1 => array(1 => true, 2 => false)).
-     *
-     * These updates are merged with previously set ones.
-     *
-     * @param array<string, bool|array<int, bool>> $fields
-     */
-    public function addFieldsToUpdate(array $fields): void
-    {
-        if (null === $this->update_fields) {
-            $this->update_fields = [];
-        }
-
-        $this->update_fields = array_merge($this->update_fields, $fields);
-    }
-
-    /**
      * @return array<string, bool|array<int, bool>>|null
      */
     public function getFieldsToUpdate(): ?array
