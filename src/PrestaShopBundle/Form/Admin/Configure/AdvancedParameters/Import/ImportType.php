@@ -33,6 +33,7 @@ use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -119,7 +120,8 @@ class ImportType extends TranslatorAwareType
             ->add('sendemail', SwitchType::class, [
                 'label' => $this->trans('Send notification email', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('Sends an email to let you know your import is complete. It can be useful when handling large files, as the import may take some time.', 'Admin.Advparameters.Help'),
-            ]);
+            ])
+            ->add('submitImportFile', SubmitType::class);
 
         $builder->get('entity')
             ->addModelTransformer(new CallbackTransformer(

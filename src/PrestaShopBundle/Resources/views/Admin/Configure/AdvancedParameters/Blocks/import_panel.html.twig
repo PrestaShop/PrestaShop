@@ -73,6 +73,7 @@
         <div class="col">
           {{ form_errors(importForm.file) }}
           {{ form_widget(importForm.file, {'attr': {'class': 'js-import-file', 'data-max-file-upload-size': maxFileUploadSize }}) }}
+          {% set submitTypeWidget = form_widget(importForm.submitImportFile) %}
         </div>
         <div class="col">
           <span>{{ 'or'|trans({}, 'Admin.Global') }}</span>
