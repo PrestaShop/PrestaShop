@@ -185,4 +185,24 @@ class ProductConstraintException extends ProductException
      * When product link rewrite is invalid
      */
     const INVALID_LINK_REWRITE = 310;
+
+    /**
+     * When product minimal quantity is invalid
+     */
+    const INVALID_MINIMAL_QUANTITY = 320;
+
+    /**
+     * When product location is invalid
+     */
+    const INVALID_LOCATION = 330;
+
+    /**
+     * When product available later labels are invalid
+     */
+    const INVALID_AVAILABLE_LATER = 340;
+
+    /**
+     * When product available now labels are is invalid
+     */
+    const INVALID_AVAILABLE_NOW = 350;
 }

@@ -62,6 +62,7 @@ class ProductValidator extends AbstractObjectModelValidator
      *
      * @throws ProductConstraintException
      * @throws ProductException
+     * @throws CoreException
      */
     public function validate(Product $product): void
     {
@@ -69,6 +70,7 @@ class ProductValidator extends AbstractObjectModelValidator
         $this->validateBasicInfo($product);
         $this->validateOptions($product);
         $this->validateShipping($product);
+        $this->validateStock($product);
         //@todo; more properties when refactoring other handlers to use updater/validator
     }
 
@@ -131,6 +133,23 @@ class ProductValidator extends AbstractObjectModelValidator
         $this->validateProductProperty($product, 'additional_delivery_times');
         $this->validateProductLocalizedProperty($product, 'delivery_in_stock', ProductConstraintException::INVALID_DELIVERY_TIME_IN_STOCK_NOTES);
         $this->validateProductLocalizedProperty($product, 'delivery_out_stock', ProductConstraintException::INVALID_DELIVERY_TIME_OUT_OF_STOCK_NOTES);
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @throws ProductConstraintException
+     */
+    private function validateStock(Product $product): void
+    {
+        $this->validateProductProperty($product, 'quantity');
+        $this->validateProductProperty($product, 'low_stock_threshold');
+        $this->validateProductProperty($product, 'low_stock_alert');
+        $this->validateProductProperty($product, 'available_date');
+        $this->validateProductProperty($product, 'minimal_quantity', ProductConstraintException::INVALID_MINIMAL_QUANTITY);
+        $this->validateProductProperty($product, 'location', ProductConstraintException::INVALID_LOCATION);
+        $this->validateProductLocalizedProperty($product, 'available_later', ProductConstraintException::INVALID_AVAILABLE_LATER);
+        $this->validateProductLocalizedProperty($product, 'available_now', ProductConstraintException::INVALID_AVAILABLE_NOW);
     }
 
     /**

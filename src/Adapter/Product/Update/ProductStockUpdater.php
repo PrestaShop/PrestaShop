@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
@@ -229,7 +230,7 @@ class ProductStockUpdater extends AbstractObjectModelFiller
      * @param Product $product
      * @param array $propertiesToUpdate
      *
-     * @throws ProductStockConstraintException
+     * @throws ProductPackConstraintException
      */
     private function checkPackStockType(Product $product, array $propertiesToUpdate): void
     {
@@ -253,9 +254,9 @@ class ProductStockUpdater extends AbstractObjectModelFiller
             return;
         }
 
-        throw new ProductStockConstraintException(
+        throw new ProductPackConstraintException(
             'You cannot link your pack to product stock because one of them has no advanced stock enabled',
-            ProductStockConstraintException::INCOMPATIBLE_PACK_STOCK_TYPE
+            ProductPackConstraintException::INCOMPATIBLE_STOCK_TYPE
         );
     }
 }
