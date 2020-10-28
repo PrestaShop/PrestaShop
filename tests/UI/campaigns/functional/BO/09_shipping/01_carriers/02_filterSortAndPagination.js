@@ -79,7 +79,7 @@ describe('Filter, sort and pagination carriers', async () => {
             testIdentifier: 'filterById',
             filterType: 'input',
             filterBy: 'id_carrier',
-            filterValue: Carriers[3].id,
+            filterValue: Carriers.cheapCarrier.id,
           },
       },
       {
@@ -88,7 +88,7 @@ describe('Filter, sort and pagination carriers', async () => {
             testIdentifier: 'filterByName',
             filterType: 'input',
             filterBy: 'name',
-            filterValue: Carriers[1].name,
+            filterValue: Carriers.default.name,
           },
       },
       {
@@ -97,7 +97,7 @@ describe('Filter, sort and pagination carriers', async () => {
             testIdentifier: 'filterByDelay',
             filterType: 'input',
             filterBy: 'delay',
-            filterValue: Carriers[0].delay,
+            filterValue: Carriers.default.delay,
           },
       },
       {
@@ -106,7 +106,7 @@ describe('Filter, sort and pagination carriers', async () => {
             testIdentifier: 'filterByStatus',
             filterType: 'select',
             filterBy: 'active',
-            filterValue: true,
+            filterValue: Carriers.default.status,
           },
         expected: 'Enabled',
       },
@@ -116,7 +116,7 @@ describe('Filter, sort and pagination carriers', async () => {
             testIdentifier: 'filterByFreeShipping',
             filterType: 'select',
             filterBy: 'is_free',
-            filterValue: false,
+            filterValue: Carriers.lightCarrier.freeShipping,
           },
         expected: 'Disabled',
       },
@@ -126,7 +126,7 @@ describe('Filter, sort and pagination carriers', async () => {
             testIdentifier: 'filterByPosition',
             filterType: 'input',
             filterBy: 'a!position',
-            filterValue: Carriers[3].position,
+            filterValue: Carriers.lightCarrier.position,
           },
       },
     ];

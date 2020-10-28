@@ -1,14 +1,14 @@
 module.exports = {
-  Carriers: [
-    {
+  Carriers: {
+    default: {
       id: 1,
-      name: 'prestashop',
+      name: global.INSTALL.SHOPNAME,
       delay: 'Pick up in-store',
       status: true,
       freeShipping: true,
       position: 1,
     },
-    {
+    myCarrier: {
       id: 2,
       name: 'My carrier',
       delay: 'Pick up in-store',
@@ -16,7 +16,7 @@ module.exports = {
       freeShipping: false,
       position: 2,
     },
-    {
+    cheapCarrier: {
       id: 3,
       name: 'My cheap carrier',
       delay: 'Buy more to pay less!',
@@ -24,7 +24,7 @@ module.exports = {
       freeShipping: false,
       position: 3,
     },
-    {
+    lightCarrier: {
       id: 4,
       name: 'My light carrier',
       delay: 'The lighter the cheaper!',
@@ -32,5 +32,5 @@ module.exports = {
       freeShipping: false,
       position: 4,
     },
-  ],
+  },
 };
