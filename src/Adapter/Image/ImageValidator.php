@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Image;
 
 use ImageManager;
 use ImageManagerCore;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageFileNotFoundException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
@@ -89,12 +90,12 @@ class ImageValidator
         }
 
         if (!is_file($filePath)) {
-            throw new ImageUploadException(sprintf('"%s" is not a file', $filePath));
+            throw new ImageFileNotFoundException(sprintf('Image file "%s" not found', $filePath));
         }
 
         $mime = mime_content_type($filePath);
         if (!ImageManager::isRealImage($filePath, mime_content_type($filePath), $allowedMimeTypes)) {
-            throw new UploadedImageConstraintException(sprintf('Image type "%s" is not allowed, allowed Types are: %s', $mime, implode(',', $allowedMimeTypes)), UploadedImageConstraintException::UNRECOGNIZED_FORMAT);
+            throw new UploadedImageConstraintException(sprintf('Image type "%s" is not allowed, allowed types are: %s', $mime, implode(',', $allowedMimeTypes)), UploadedImageConstraintException::UNRECOGNIZED_FORMAT);
         }
     }
 }
