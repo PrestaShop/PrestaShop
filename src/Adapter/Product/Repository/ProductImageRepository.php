@@ -73,15 +73,15 @@ class ProductImageRepository extends AbstractObjectModelRepository
      *
      * @return Image
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws CoreException
+     * @throws ProductImageException
+     * @throws CannotAddProductImageException
      */
     public function create(ProductId $productId, array $shopIds): Image
     {
         $productIdValue = $productId->getValue();
-        $image = new \Image();
+        $image = new Image();
         $image->id_product = $productIdValue;
-        $image->position = Image::getHighestPosition($productIdValue) + 1;
         $image->cover = !Image::getCover($productIdValue);
 
         $this->addObjectModel($image, CannotAddProductImageException::class);
