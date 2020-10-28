@@ -76,7 +76,7 @@ class ImageGenerator
      *
      * @return bool
      */
-    private function resize(string $filePath, ImageType $imageType): bool
+    protected function resize(string $filePath, ImageType $imageType): bool
     {
         $fileExtension = pathinfo($filePath, PATHINFO_EXTENSION);
 
