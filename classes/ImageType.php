@@ -43,16 +43,16 @@ class ImageTypeCore extends ObjectModel
     /** @var bool Apply to products */
     public $products;
 
-    /** @var int Apply to categories */
+    /** @var bool Apply to categories */
     public $categories;
 
-    /** @var int Apply to manufacturers */
+    /** @var bool Apply to manufacturers */
     public $manufacturers;
 
-    /** @var int Apply to suppliers */
+    /** @var bool Apply to suppliers */
     public $suppliers;
 
-    /** @var int Apply to store */
+    /** @var bool Apply to store */
     public $stores;
 
     /**
