@@ -37,6 +37,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductExcep
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
 use Product;
@@ -92,7 +95,6 @@ class ProductStockUpdater extends AbstractObjectModelFiller
 
     /**
      * @param Product $product
-     * @param StockAvailable $stockAvailable
      * @param array $propertiesToUpdate
      * @param bool $addMovement
      *
@@ -100,9 +102,11 @@ class ProductStockUpdater extends AbstractObjectModelFiller
      * @throws ProductConstraintException
      * @throws ProductPackConstraintException
      * @throws ProductStockConstraintException
+     * @throws ProductStockException
      */
-    public function update(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate, bool $addMovement = true): void
+    public function update(Product $product, array $propertiesToUpdate, bool $addMovement = true): void
     {
+        $stockAvailable = $this->getStockAvailable($product);
         $this->productRepository->partialUpdate($product, $propertiesToUpdate, CannotUpdateProductException::FAILED_UPDATE_STOCK);
 
         // It is very important to update StockAvailable after product, because the validation is performed in ProductRepository::partialUpdate
@@ -115,12 +119,13 @@ class ProductStockUpdater extends AbstractObjectModelFiller
     }
 
     /**
-     * Filling the object is the same for classic and advanced use cases
-     *
      * @param Product $product
      * @param StockAvailable $stockAvailable
      * @param array $propertiesToUpdate
      * @param bool $addMovement
+     *
+     * @throws CoreException
+     * @throws ProductStockException
      */
     private function updateStockAvailable(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate, bool $addMovement): void
     {
@@ -168,5 +173,23 @@ class ProductStockUpdater extends AbstractObjectModelFiller
         }
 
         return true;
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return StockAvailable
+     *
+     * @throws CoreException
+     * @throws ProductStockException
+     */
+    private function getStockAvailable(Product $product): StockAvailable
+    {
+        $productId = new ProductId($product->id);
+        try {
+            return $this->stockAvailableRepository->get($productId);
+        } catch (StockAvailableNotFoundException $e) {
+            return $this->stockAvailableRepository->create($productId);
+        }
     }
 }

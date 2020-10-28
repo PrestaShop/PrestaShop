@@ -79,10 +79,9 @@ class UpdateProductStockHandler extends AbstractProductHandler implements Update
     public function handle(UpdateProductStockCommand $command): void
     {
         $product = $this->productRepository->get($command->getProductId());
-        $stockAvailable = $this->stockAvailableRepository->getOrCreate($command->getProductId());
 
         $propertiesToUpdate = $this->fillUpdatableProperties($product, $command);
-        $this->productStockUpdater->update($product, $stockAvailable, $propertiesToUpdate, $command->addMovement());
+        $this->productStockUpdater->update($product, $propertiesToUpdate, $command->addMovement());
     }
 
     /**

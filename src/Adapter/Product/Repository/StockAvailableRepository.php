@@ -29,8 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotAddStockAvailableException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotUpdateStockAvailableException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -54,48 +54,19 @@ class StockAvailableRepository extends AbstractObjectModelRepository
      * @return StockAvailable
      *
      * @throws CoreException
-     */
-    public function getOrCreate(ProductId $productId): StockAvailable
-    {
-        $stockAvailableId = StockAvailable::getStockAvailableIdByProductId($productId->getValue());
-        if ($stockAvailableId <= 0) {
-            return $this->createStockAvailable($productId);
-        }
-
-        return $this->getStockAvailable($stockAvailableId);
-    }
-
-    /**
-     * @param ProductId $productId
-     *
-     * @return StockAvailable
-     *
-     * @throws CoreException
+     * @throws StockAvailableNotFoundException
      */
     public function get(ProductId $productId): StockAvailable
     {
         $stockAvailableId = StockAvailable::getStockAvailableIdByProductId($productId->getValue());
         if ($stockAvailableId <= 0) {
-            throw new ProductStockException(sprintf(
+            throw new StockAvailableNotFoundException(sprintf(
                     'Cannot find StockAvailable for product %d',
                     $productId->getValue()
                 )
             );
         }
 
-        return $this->getStockAvailable($stockAvailableId);
-    }
-
-    /**
-     * @param int $stockAvailableId
-     *
-     * @return StockAvailable
-     *
-     * @throws CoreException
-     * @throws StockAvailableNotFoundException
-     */
-    private function getStockAvailable(int $stockAvailableId): StockAvailable
-    {
         return $this->getObjectModel(
             $stockAvailableId,
             StockAvailable::class,
@@ -107,8 +78,11 @@ class StockAvailableRepository extends AbstractObjectModelRepository
      * @param ProductId $productId
      *
      * @return StockAvailable
+     *
+     * @throws CoreException
+     * @throws StockAvailableNotFoundException
      */
-    private function createStockAvailable(ProductId $productId): StockAvailable
+    public function create(ProductId $productId): StockAvailable
     {
         $stockAvailable = new StockAvailable();
         $stockAvailable->id_product = $productId->getValue();
@@ -116,6 +90,7 @@ class StockAvailableRepository extends AbstractObjectModelRepository
         StockAvailable::addSqlShopParams($shopParams);
         $stockAvailable->id_shop = $shopParams['id_shop'] ?? 0;
         $stockAvailable->id_shop_group = $shopParams['id_shop_group'] ?? 0;
+        $this->addObjectModel($stockAvailable, CannotAddStockAvailableException::class);
 
         return $stockAvailable;
     }
