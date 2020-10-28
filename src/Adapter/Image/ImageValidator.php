@@ -67,7 +67,7 @@ class ImageValidator
         $size = filesize($filePath);
 
         if ($this->maxUploadSize > 0 && $size > $this->maxUploadSize) {
-            throw new UploadedImageConstraintException(sprintf('Max file size allowed is "%s" bytes. Uploaded image size is "%s".', $maxFileSize, $size), UploadedImageConstraintException::EXCEEDED_SIZE);
+            throw new UploadedImageConstraintException(sprintf('Max file size allowed is "%s" bytes. Uploaded image size is "%s".', $this->maxUploadSize, $size), UploadedImageConstraintException::EXCEEDED_SIZE);
         }
 
         if (!ImageManager::checkImageMemoryLimit($filePath)) {
