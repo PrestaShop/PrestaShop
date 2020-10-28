@@ -88,6 +88,7 @@ module.exports = class BOBasePage extends CommonPage {
     // Shipping
     this.shippingLink = '#subtab-AdminParentShipping';
     this.carriersLink = '#subtab-AdminCarriers';
+    this.shippingPreferencesLink = '#subtab-AdminShipping';
 
     // Payment
     this.paymentParentLink = '#subtab-AdminParentPayment';
