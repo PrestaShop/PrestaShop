@@ -287,9 +287,6 @@ class ManufacturerController extends FrameworkBundleAdminController
      */
     public function deleteCoverImageAction(Request $request, $manufacturerId)
     {
-        /**
-         * @var Filesystem
-         */
         $fs = new Filesystem();
         if (!$this->isCsrfTokenValid('delete-cover-thumbnail', $request->request->get('_csrf_token'))) {
             return $this->redirectToRoute('admin_security_compromised', [
