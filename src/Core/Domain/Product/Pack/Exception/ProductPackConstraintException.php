@@ -52,5 +52,5 @@ class ProductPackConstraintException extends ProductPackException
      * Code is used when trying to link a pack stock with its product and one of them
      * has no advanced stock
      */
-    const INCOMPATIBLE_STOCK_TYPE = 30;
+    const INCOMPATIBLE_STOCK_TYPE = 40;
 }
