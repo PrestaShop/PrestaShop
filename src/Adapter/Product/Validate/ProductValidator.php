@@ -32,7 +32,6 @@ use Pack;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -74,9 +73,10 @@ class ProductValidator extends AbstractObjectModelValidator
      *
      * @param Product $product
      *
-     * @throws ProductConstraintException
-     * @throws ProductException
      * @throws CoreException
+     * @throws ProductConstraintException
+     * @throws ProductPackConstraintException
+     * @throws ProductStockConstraintException
      */
     public function validate(Product $product): void
     {

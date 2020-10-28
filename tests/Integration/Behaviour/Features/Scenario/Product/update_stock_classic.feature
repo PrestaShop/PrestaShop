@@ -18,24 +18,24 @@ Feature: Update product stock from Back Office (BO)
       | name       | en-US:Presta camera |
       | is_virtual | false               |
     And product "product1" should have following stock information:
-      | use_advanced_stock_management | 0           |
+      | use_advanced_stock_management | false |
     When I update product "product1" stock with following information:
-      | use_advanced_stock_management | 1           |
+      | use_advanced_stock_management | true |
     And I should get error that stock management is disabled
     Then product "product1" should have following stock information:
-      | use_advanced_stock_management | 0           |
+      | use_advanced_stock_management | false |
 
   Scenario: I update product depends on stock
     Given I add product "product1" with following information:
       | name       | en-US:Presta camera |
       | is_virtual | false               |
     And product "product1" should have following stock information:
-      | depends_on_stock | 0           |
+      | depends_on_stock | false |
     When I update product "product1" stock with following information:
-      | depends_on_stock | 1           |
+      | depends_on_stock | true |
     And I should get error that stock management is disabled
     Then product "product1" should have following stock information:
-      | depends_on_stock | 0           |
+      | depends_on_stock | false |
 
   Scenario: I update product pack stock type
     Given I add product "productPack1" with following information:

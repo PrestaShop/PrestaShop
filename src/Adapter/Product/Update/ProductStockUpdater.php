@@ -34,6 +34,8 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
@@ -95,51 +97,19 @@ class ProductStockUpdater extends AbstractObjectModelFiller
      * @param bool $addMovement
      *
      * @throws CoreException
+     * @throws ProductConstraintException
+     * @throws ProductPackConstraintException
      * @throws ProductStockConstraintException
      */
     public function update(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate, bool $addMovement = true): void
     {
+        $this->productRepository->partialUpdate($product, $propertiesToUpdate, CannotUpdateProductException::FAILED_UPDATE_STOCK);
+
+        // It is very important to update StockAvailable after product, because the validation is performed in ProductRepository::partialUpdate
+        $this->updateStockAvailable($product, $stockAvailable, $propertiesToUpdate, $addMovement);
+
         $advancedStockEnabled = (bool) $this->configuration->get('PS_ADVANCED_STOCK_MANAGEMENT');
-        if ($advancedStockEnabled) {
-            $this->updateAdvancedStock($product, $stockAvailable, $propertiesToUpdate, $addMovement);
-        } else {
-            $this->updateClassicStock($product, $stockAvailable, $propertiesToUpdate, $addMovement);
-        }
-    }
-
-    /**
-     * @param Product $product
-     * @param StockAvailable $stockAvailable
-     * @param array $propertiesToUpdate
-     * @param bool $addMovement
-     *
-     * @throws CoreException
-     */
-    private function updateClassicStock(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate, bool $addMovement): void
-    {
-        $this->fillProperties($product, $stockAvailable, $propertiesToUpdate, $addMovement);
-
-        $this->productRepository->partialUpdate($product, $product->getFieldsToUpdate() ?: [], CannotUpdateProductException::FAILED_UPDATE_STOCK);
-        $this->stockAvailableRepository->update($stockAvailable);
-    }
-
-    /**
-     * @param Product $product
-     * @param StockAvailable $stockAvailable
-     * @param array $propertiesToUpdate
-     * @param bool $addMovement
-     *
-     * @throws CoreException
-     * @throws ProductStockConstraintException
-     */
-    private function updateAdvancedStock(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate, bool $addMovement): void
-    {
-        $this->fillProperties($product, $stockAvailable, $propertiesToUpdate, $addMovement);
-
-        $this->productRepository->partialUpdate($product, $product->getFieldsToUpdate() ?: [], CannotUpdateProductException::FAILED_UPDATE_STOCK);
-        $this->stockAvailableRepository->update($stockAvailable);
-
-        if ($product->depends_on_stock) {
+        if ($advancedStockEnabled && $product->depends_on_stock) {
             StockAvailable::synchronize($product->id);
         }
     }
@@ -152,23 +122,28 @@ class ProductStockUpdater extends AbstractObjectModelFiller
      * @param array $propertiesToUpdate
      * @param bool $addMovement
      */
-    private function fillProperties(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate, bool $addMovement): void
+    private function updateStockAvailable(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate, bool $addMovement): void
     {
-        $this->fillProperty($product, 'pack_stock_type', $propertiesToUpdate);
-        $this->fillProperty($product, 'out_of_stock', $propertiesToUpdate);
-        $this->fillProperty($product, 'minimal_quantity', $propertiesToUpdate);
-        $this->fillProperty($product, 'location', $propertiesToUpdate);
-        $this->fillProperty($product, 'low_stock_threshold', $propertiesToUpdate);
-        $this->fillProperty($product, 'low_stock_alert', $propertiesToUpdate);
-        $this->fillProperty($product, 'available_date', $propertiesToUpdate);
-        $this->fillLocalizedProperty($product, 'available_now', $propertiesToUpdate);
-        $this->fillLocalizedProperty($product, 'available_later', $propertiesToUpdate);
-        $stockAvailable->depends_on_stock = (bool) $product->depends_on_stock;
-        $this->fillProperty($stockAvailable, 'out_of_stock', $propertiesToUpdate);
-        $this->fillProperty($stockAvailable, 'location', $propertiesToUpdate);
+        $stockUpdateRequired = false;
+        if (in_array('depends_on_stock', $propertiesToUpdate)) {
+            $stockAvailable->depends_on_stock = (bool) $product->depends_on_stock;
+            $stockUpdateRequired = true;
+        }
+        if (in_array('out_of_stock', $propertiesToUpdate)) {
+            $stockAvailable->out_of_stock = (int) $product->out_of_stock;
+            $stockUpdateRequired = true;
+        }
+        if (in_array('location', $propertiesToUpdate)) {
+            $stockAvailable->location = $product->location;
+            $stockUpdateRequired = true;
+        }
 
         // Quantity is handled separately as it is also related to Stock movements
-        $this->updateQuantity($product, $stockAvailable, $propertiesToUpdate, $addMovement);
+        $stockUpdateRequired |= $this->updateQuantity($product, $stockAvailable, $propertiesToUpdate, $addMovement);
+
+        if ($stockUpdateRequired) {
+            $this->stockAvailableRepository->update($stockAvailable);
+        }
     }
 
     /**
@@ -176,20 +151,22 @@ class ProductStockUpdater extends AbstractObjectModelFiller
      * @param StockAvailable $stockAvailable
      * @param array $propertiesToUpdate
      * @param bool $addMovement
+     *
+     * @return bool
      */
-    private function updateQuantity(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate, bool $addMovement): void
+    private function updateQuantity(Product $product, StockAvailable $stockAvailable, array $propertiesToUpdate, bool $addMovement): bool
     {
-        if (!isset($propertiesToUpdate['quantity'])) {
-            return;
+        if (!in_array('quantity', $propertiesToUpdate)) {
+            return false;
         }
 
-        $deltaQuantity = (int) $propertiesToUpdate['quantity'] - $stockAvailable->quantity;
-
-        $this->fillProperty($product, 'quantity', $propertiesToUpdate);
-        $this->fillProperty($stockAvailable, 'quantity', $propertiesToUpdate);
+        $deltaQuantity = (int) (int) $product->quantity - $stockAvailable->quantity;
+        $stockAvailable->quantity = (int) $product->quantity;
 
         if ($addMovement && 0 !== $deltaQuantity) {
             $this->stockManager->saveMovement($stockAvailable->id_product, $stockAvailable->id_product_attribute, $deltaQuantity);
         }
+
+        return true;
     }
 }
