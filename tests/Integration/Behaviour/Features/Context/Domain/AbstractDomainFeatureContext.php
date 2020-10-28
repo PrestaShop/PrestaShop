@@ -67,7 +67,6 @@ abstract class AbstractDomainFeatureContext implements Context
         $this->cleanLastException();
 
         if (TestResult::FAILED === $scope->getTestResult()->getResultCode() && null !== $e) {
-
             throw new RuntimeException(sprintf('Might be related to the last exception: %s: %s Use -vvv for additional stack trace info', get_class($e), $e->getMessage()), 0, $e);
         }
     }

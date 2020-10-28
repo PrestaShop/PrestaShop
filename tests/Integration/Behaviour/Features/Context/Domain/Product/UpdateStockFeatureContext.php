@@ -34,6 +34,7 @@ use Pack;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShopBundle\Api\QueryStockMovementParamsCollection;
 use PrestaShopBundle\Entity\Repository\StockMovementRepository;
@@ -175,15 +176,26 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
     public function assertIncompatiblePackStockTypeError(): void
     {
         $this->assertLastErrorIs(
-            ProductStockConstraintException::class,
-            ProductStockConstraintException::INCOMPATIBLE_PACK_STOCK_TYPE
+            ProductPackConstraintException::class,
+            ProductPackConstraintException::INCOMPATIBLE_STOCK_TYPE
+        );
+    }
+
+    /**
+     * @Then I should get error that pack stock type is invalid
+     */
+    public function assertInvalidPackStockType(): void
+    {
+        $this->assertLastErrorIs(
+            ProductPackConstraintException::class,
+            ProductPackConstraintException::INVALID_STOCK_TYPE
         );
     }
 
     /**
      * @Then I should get error that out of stock type is invalid
      */
-    public function assertInvalidOUtOfStockType(): void
+    public function assertInvalidOutOfStockType(): void
     {
         $this->assertLastErrorIs(
             ProductStockConstraintException::class,
