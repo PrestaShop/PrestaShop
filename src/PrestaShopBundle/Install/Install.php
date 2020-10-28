@@ -864,9 +864,9 @@ class Install extends AbstractInstall
             $modules = [
                 'contactform',
                 'dashactivity',
+                'dashtrends',
                 'dashgoals',
                 'dashproducts',
-                'dashtrends',
                 'graphnvd3',
                 'gridhtml',
                 'gsitemap',
