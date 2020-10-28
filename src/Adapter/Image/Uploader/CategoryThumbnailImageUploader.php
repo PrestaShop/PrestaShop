@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 
 use ImageManager;
 use ImageType;
-use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
+use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;

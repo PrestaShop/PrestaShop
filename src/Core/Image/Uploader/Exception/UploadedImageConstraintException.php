@@ -26,9 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Image\Uploader\Exception;
 
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Image\Exception\ImageException;
 
-class UploadedImageConstraintException extends CoreException
+class UploadedImageConstraintException extends ImageException
 {
     const EXCEEDED_SIZE = 1;
     const UNRECOGNIZED_FORMAT = 2;
