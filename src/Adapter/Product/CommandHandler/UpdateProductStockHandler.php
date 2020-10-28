@@ -32,26 +32,20 @@ use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Converter\OutOfStockTypeConverter;
 use PrestaShop\PrestaShop\Adapter\Product\Converter\PackStockTypeConverter;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductStockUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductStockHandlerInterface;
 use Product;
 
 /**
- * @internal
+ * Handles @see UpdateProductStockCommand using legacy object model
  */
-class UpdateProductStockHandler extends AbstractProductHandler implements UpdateProductStockHandlerInterface
+final class UpdateProductStockHandler extends AbstractProductHandler implements UpdateProductStockHandlerInterface
 {
     /**
      * @var ProductRepository
      */
     private $productRepository;
-
-    /**
-     * @var StockAvailableRepository
-     */
-    private $stockAvailableRepository;
 
     /**
      * @var ProductStockUpdater
@@ -60,16 +54,13 @@ class UpdateProductStockHandler extends AbstractProductHandler implements Update
 
     /**
      * @param ProductRepository $productRepository
-     * @param StockAvailableRepository $stockAvailableRepository
      * @param ProductStockUpdater $productStockUpdater
      */
     public function __construct(
         ProductRepository $productRepository,
-        StockAvailableRepository $stockAvailableRepository,
         ProductStockUpdater $productStockUpdater
     ) {
         $this->productRepository = $productRepository;
-        $this->stockAvailableRepository = $stockAvailableRepository;
         $this->productStockUpdater = $productStockUpdater;
     }
 
@@ -124,10 +115,6 @@ class UpdateProductStockHandler extends AbstractProductHandler implements Update
             $product->quantity = $command->getQuantity();
             $updatableProperties[] = 'quantity';
         }
-        if (null !== $command->dependsOnStock()) {
-            $product->depends_on_stock = $command->dependsOnStock();
-            $updatableProperties[] = 'depends_on_stock';
-        }
         if (null !== $command->getAvailableDate()) {
             $product->available_date = $command->getAvailableDate()->format('Y-m-d');
             $updatableProperties[] = 'available_date';
@@ -144,6 +131,10 @@ class UpdateProductStockHandler extends AbstractProductHandler implements Update
             $updatableProperties['available_now'] = array_keys($localizedNowLabels);
         }
 
+        if (null !== $command->dependsOnStock()) {
+            $product->depends_on_stock = $command->dependsOnStock();
+            $updatableProperties[] = 'depends_on_stock';
+        }
         if (null !== $command->useAdvancedStockManagement()) {
             $product->advanced_stock_management = $command->useAdvancedStockManagement();
             $updatableProperties[] = 'advanced_stock_management';
