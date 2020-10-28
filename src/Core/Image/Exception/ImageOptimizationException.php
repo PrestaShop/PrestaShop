@@ -24,11 +24,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Image\Uploader\Exception;
+namespace PrestaShop\PrestaShop\Core\Image\Exception;
 
 /**
  * Class ImageOptimizationException is thrown when resizing, cutting or optimizing image fails.
  */
-class ImageOptimizationException extends \Exception
+class ImageOptimizationException extends ImageException
 {
 }
