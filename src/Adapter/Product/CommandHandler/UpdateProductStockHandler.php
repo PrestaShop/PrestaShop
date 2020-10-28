@@ -97,43 +97,54 @@ class UpdateProductStockHandler extends AbstractProductHandler implements Update
     ): array {
         $updatableProperties = [];
 
-        $formattedCommand = [];
-
-        if (null !== $command->getAvailableDate()) {
-            $formattedCommand['available_date'] = $command->getAvailableDate()->format('Y-m-d');
-        }
-        if (null !== $command->getLocalizedAvailableLaterLabels()) {
-            $formattedCommand['available_later'] = $command->getLocalizedAvailableLaterLabels();
-        }
-        if (null !== $command->getLocalizedAvailableNowLabels()) {
-            $formattedCommand['available_now'] = $command->getLocalizedAvailableNowLabels();
-        }
         if (null !== $command->getLocation()) {
-            $formattedCommand['location'] = $command->getLocation();
+            $product->location = $command->getLocation();
+            $updatableProperties[] = 'location';
         }
         if (null !== $command->getLowStockAlert()) {
-            $formattedCommand['low_stock_alert'] = $command->getLowStockAlert();
+            $product->low_stock_alert = $command->getLowStockAlert();
+            $updatableProperties[] = 'low_stock_alert';
         }
         if (null !== $command->getLowStockThreshold()) {
-            $formattedCommand['low_stock_threshold'] = $command->getLowStockThreshold();
+            $product->low_stock_threshold = $command->getLowStockThreshold();
+            $updatableProperties[] = 'low_stock_threshold';
         }
         if (null !== $command->getMinimalQuantity()) {
-            $formattedCommand['minimal_quantity'] = $command->getMinimalQuantity();
+            $product->minimal_quantity = $command->getMinimalQuantity();
+            $updatableProperties[] = 'minimal_quantity';
         }
         if (null !== $command->getOutOfStockType()) {
-            $formattedCommand['out_of_stock'] = OutOfStockTypeConverter::convertToLegacy($command->getOutOfStockType()->getValue());
+            $product->out_of_stock = OutOfStockTypeConverter::convertToLegacy($command->getOutOfStockType()->getValue());
+            $updatableProperties[] = 'out_of_stock';
         }
         if (null !== $command->getPackStockType()) {
-            $formattedCommand['pack_stock_type'] = PackStockTypeConverter::convertToLegacy($command->getPackStockType()->getValue());
+            $product->pack_stock_type = PackStockTypeConverter::convertToLegacy($command->getPackStockType()->getValue());
+            $updatableProperties[] = 'pack_stock_type';
         }
         if (null !== $command->getQuantity()) {
-            $formattedCommand['quantity'] = $command->getQuantity();
+            $product->quantity = $command->getQuantity();
+            $updatableProperties[] = 'quantity';
         }
-
         if (null !== $command->dependsOnStock()) {
             $product->depends_on_stock = $command->dependsOnStock();
             $updatableProperties[] = 'depends_on_stock';
         }
+        if (null !== $command->getAvailableDate()) {
+            $product->available_date = $command->getAvailableDate()->format('Y-m-d');
+            $updatableProperties[] = 'available_date';
+        }
+
+        $localizedLaterLabels = $command->getLocalizedAvailableLaterLabels();
+        if (null !== $localizedLaterLabels) {
+            $product->available_later = $localizedLaterLabels;
+            $updatableProperties['available_later'] = array_keys($localizedLaterLabels);
+        }
+        $localizedNowLabels = $command->getLocalizedAvailableNowLabels();
+        if (null !== $localizedNowLabels) {
+            $product->available_now = $localizedNowLabels;
+            $updatableProperties['available_now'] = array_keys($localizedNowLabels);
+        }
+
         if (null !== $command->useAdvancedStockManagement()) {
             $product->advanced_stock_management = $command->useAdvancedStockManagement();
             $updatableProperties[] = 'advanced_stock_management';
@@ -144,6 +155,6 @@ class UpdateProductStockHandler extends AbstractProductHandler implements Update
             }
         }
 
-        return $formattedCommand;
+        return $updatableProperties;
     }
 }
