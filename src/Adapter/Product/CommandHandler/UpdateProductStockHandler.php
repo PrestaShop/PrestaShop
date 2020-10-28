@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductStockUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductStockHandlerInterface;
+use Product;
 
 /**
  * @internal
@@ -80,16 +81,22 @@ class UpdateProductStockHandler extends AbstractProductHandler implements Update
         $product = $this->productRepository->get($command->getProductId());
         $stockAvailable = $this->stockAvailableRepository->getOrCreate($command->getProductId());
 
-        $this->productStockUpdater->update($product, $stockAvailable, $this->formatCommandToArray($command), $command->addMovement());
+        $propertiesToUpdate = $this->fillUpdatableProperties($product, $command);
+        $this->productStockUpdater->update($product, $stockAvailable, $propertiesToUpdate, $command->addMovement());
     }
 
     /**
+     * @param Product $product
      * @param UpdateProductStockCommand $command
      *
      * @return array
      */
-    private function formatCommandToArray(UpdateProductStockCommand $command): array
-    {
+    private function fillUpdatableProperties(
+        Product $product,
+        UpdateProductStockCommand $command
+    ): array {
+        $updatableProperties = [];
+
         $formattedCommand = [];
 
         if (null !== $command->getAvailableDate()) {
@@ -122,11 +129,19 @@ class UpdateProductStockHandler extends AbstractProductHandler implements Update
         if (null !== $command->getQuantity()) {
             $formattedCommand['quantity'] = $command->getQuantity();
         }
+
         if (null !== $command->dependsOnStock()) {
-            $formattedCommand['depends_on_stock'] = $command->dependsOnStock();
+            $product->depends_on_stock = $command->dependsOnStock();
+            $updatableProperties[] = 'depends_on_stock';
         }
         if (null !== $command->useAdvancedStockManagement()) {
-            $formattedCommand['advanced_stock_management'] = $command->useAdvancedStockManagement();
+            $product->advanced_stock_management = $command->useAdvancedStockManagement();
+            $updatableProperties[] = 'advanced_stock_management';
+            // When advanced stock is disabled depend_on_stock must be disabled automatically
+            if (!$product->advanced_stock_management && !in_array('depends_on_stock', $updatableProperties)) {
+                $product->depends_on_stock = false;
+                $updatableProperties[] = 'depends_on_stock';
+            }
         }
 
         return $formattedCommand;
