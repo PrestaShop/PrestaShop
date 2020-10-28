@@ -32,9 +32,6 @@ import SubmitBulkActionExtension from '../../components/grid/extension/submit-bu
 import SortingExtension from '../../components/grid/extension/sorting-extension';
 import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
 import ColumnTogglingExtension from '../../components/grid/extension/column-toggling-extension';
-import ChoiceTree from '../../components/form/choice-tree';
-import GeneratableInput from '../../components/generatable-input';
-import MultipleChoiceTable from '../../components/multiple-choice-table';
 import PermissionsRowSelector from './permissions-row-selector';
 import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
 
