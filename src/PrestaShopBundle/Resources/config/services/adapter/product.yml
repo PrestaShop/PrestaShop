@@ -273,6 +273,8 @@ services:
 
     prestashop.adapter.product.validate.product_validator:
         class: PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
 
     prestashop.adapter.product.repository.product_repository:
         class: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository
@@ -460,3 +462,4 @@ services:
             - '@prestashop.core.stock.stock_manager'
             - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.adapter.product.repository.stock_available_repository'
+            - '@prestashop.adapter.product.validate.product_validator'
