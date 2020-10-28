@@ -16,4 +16,10 @@ Feature: Add product image from Back Office (BO)
     Then product "product1" should have following images:
       | image reference | is cover | legend | position |
       | image1          | true     | en-US: | 1        |
+    When I add new product "product1" image "image2" named "logo.jpg"
+    Then product "product1" should have following images:
+      | image reference | is cover | legend | position |
+      | image1          | true     | en-US: | 1        |
+      | image2          | false    | en-US: | 2        |
+
 #todo: assert image types (which is not present in dummy database), assert combination & pack images
