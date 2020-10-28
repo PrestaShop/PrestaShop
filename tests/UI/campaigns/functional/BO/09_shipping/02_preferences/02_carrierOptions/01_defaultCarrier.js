@@ -73,7 +73,7 @@ describe('Update default carrier and check it in FO', async () => {
   carriersNames.forEach((carrierName, index) => {
     describe(`Set default carrier to '${carrierName}' and check result in FO`, async () => {
       it(`should set default carrier to ${carrierName} in BO`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToPreferencesPage', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `setDefaultCarrier${index}`, baseContext);
 
         const textResult = await preferencesPage.setDefaultCarrier(page, carrierName);
         await expect(textResult).to.contain(preferencesPage.successfulUpdateMessage);
