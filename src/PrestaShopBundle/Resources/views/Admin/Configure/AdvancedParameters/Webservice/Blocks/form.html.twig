@@ -33,6 +33,17 @@
     </h3>
     <div class="card-block row">
       <div class="card-text">
+        {{ form_row(webserviceKeyForm.key) }}
+        {{ form_row(webserviceKeyForm.description) }}
+        {{ form_row(webserviceKeyForm.status) }}
+        <div class="form-group row mb-0">
+        <label class="form-control-label"></label>
+        <div class="col-sm mb-0">
+          <div class="alert alert-info" role="alert">
+            <p class="alert-text">{{ 'Set the resource permissions for this key:'|trans({}, 'Admin.Advparameters.Feature') }}</p>
+          </div>
+        </div>
+      </div>
         {{ form_widget(webserviceKeyForm) }}
       </div>
     </div>
