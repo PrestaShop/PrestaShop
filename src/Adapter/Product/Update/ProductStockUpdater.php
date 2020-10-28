@@ -28,10 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
-use PrestaShop\PrestaShop\Adapter\AbstractObjectModelFiller;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
@@ -45,7 +43,7 @@ use PrestaShop\PrestaShop\Core\Stock\StockManager;
 use Product;
 use StockAvailable;
 
-class ProductStockUpdater extends AbstractObjectModelFiller
+class ProductStockUpdater
 {
     /**
      * @var ConfigurationInterface
@@ -68,29 +66,21 @@ class ProductStockUpdater extends AbstractObjectModelFiller
     private $stockAvailableRepository;
 
     /**
-     * @var ProductValidator
-     */
-    private $productValidator;
-
-    /**
      * @param ConfigurationInterface $configuration
      * @param StockManager $stockManager
      * @param ProductRepository $productRepository
      * @param StockAvailableRepository $stockAvailableRepository
-     * @param ProductValidator $productValidator
      */
     public function __construct(
         ConfigurationInterface $configuration,
         StockManager $stockManager,
         ProductRepository $productRepository,
-        StockAvailableRepository $stockAvailableRepository,
-        ProductValidator $productValidator
+        StockAvailableRepository $stockAvailableRepository
     ) {
         $this->configuration = $configuration;
         $this->stockManager = $stockManager;
         $this->productRepository = $productRepository;
         $this->stockAvailableRepository = $stockAvailableRepository;
-        $this->productValidator = $productValidator;
     }
 
     /**

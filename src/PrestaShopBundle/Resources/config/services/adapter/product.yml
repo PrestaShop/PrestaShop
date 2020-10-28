@@ -336,7 +336,6 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductStockHandler
         arguments:
             - '@prestashop.adapter.product.repository.product_repository'
-            - '@prestashop.adapter.product.repository.stock_available_repository'
             - '@prestashop.adapter.product.update.product_stock_updater'
         tags:
             - name: tactician.handler
@@ -462,4 +461,3 @@ services:
             - '@prestashop.core.stock.stock_manager'
             - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.adapter.product.repository.stock_available_repository'
-            - '@prestashop.adapter.product.validate.product_validator'
