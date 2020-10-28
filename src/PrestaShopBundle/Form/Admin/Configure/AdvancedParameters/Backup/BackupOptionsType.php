@@ -53,8 +53,7 @@ class BackupOptionsType extends TranslatorAwareType
         TranslatorInterface $translator,
         array $locales,
         $configuration
-    )
-    {
+    ) {
         parent::__construct($translator, $locales);
         $this->configuration = $configuration;
     }
