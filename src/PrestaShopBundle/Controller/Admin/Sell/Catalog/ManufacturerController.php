@@ -77,19 +77,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class ManufacturerController extends FrameworkBundleAdminController
 {
-    /**
-     * @var Filesystem
-     */
-    public $fs;
-
-    /**
-     * ManufacturerController constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->fs = new Filesystem();
-    }
 
     /**
      * Show manufacturers listing page.
@@ -301,6 +288,10 @@ class ManufacturerController extends FrameworkBundleAdminController
      */
     public function deleteCoverImageAction(Request $request, $manufacturerId)
     {
+        /**
+         * @var Filesystem
+         */
+        $fs = new Filesystem();
         if (!$this->isCsrfTokenValid('delete-cover-thumbnail', $request->request->get('_csrf_token'))) {
             return $this->redirectToRoute('admin_security_compromised', [
                 'uri' => $this->generateUrl('admin_manufacturers_edit', [
@@ -315,13 +306,13 @@ class ManufacturerController extends FrameworkBundleAdminController
             $imageFormat = '%s%s.jpg';
             foreach ($imageTypes as $imageType) {
                 $path = sprintf($imageTypeFormat, _PS_MANU_IMG_DIR_, $manufacturerId, stripslashes($imageType['name']));
-                if ($this->fs->exists($path)) {
-                    $this->fs->remove($path);
+                if ($fs->exists($path)) {
+                    $fs->remove($path);
                 }
             }
             $imagePath = sprintf($imageFormat, _PS_MANU_IMG_DIR_, $manufacturerId);
-            if ($this->fs->exists($imagePath)) {
-                $this->fs->remove($imagePath);
+            if ($fs->exists($imagePath)) {
+                $fs->remove($imagePath);
             }
 
             $this->addFlash(
