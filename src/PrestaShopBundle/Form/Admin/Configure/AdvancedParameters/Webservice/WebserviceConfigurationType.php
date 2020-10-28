@@ -48,7 +48,7 @@ class WebserviceConfigurationType extends TranslatorAwareType
         $enableWebservicesHelp .= '<br/> 1. ';
         $enableWebservicesHelp .= $this->trans(
             'Check that URL rewriting is available on this server.',
-            'Check that URL rewriting is available on this server.'
+            'Admin.Advparameters.Help'
         );
         $enableWebservicesHelp .= '<br/> 2. ';
         $enableWebservicesHelp .= $this->trans(

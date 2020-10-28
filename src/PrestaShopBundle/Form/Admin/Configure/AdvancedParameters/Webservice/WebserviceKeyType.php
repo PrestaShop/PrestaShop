@@ -118,7 +118,7 @@ class WebserviceKeyType extends TranslatorAwareType
             ])
             ->add('permissions', MaterialMultipleChoiceTableType::class, [
                 'label' => $this->trans('Permissions', 'Admin.Advparameters.Feature'),
-                'table_label' => $this->trans('Resource', 'Admin.Advparameters.Feature'),
+                'table_label' => $this->trans('Resource', 'Admin.Global'),
                 'required' => false,
                 'choices' => $this->resourceChoices,
                 'multiple_choices' => $this->getPermissionChoicesForResources(),
