@@ -30,15 +30,19 @@ namespace PrestaShop\PrestaShop\Adapter\Image;
 
 use Configuration;
 use ImageManager;
+use ImageType;
 use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShopException;
 
+/**
+ * Responsible for resizing images based on provided types
+ */
 class ImageGenerator
 {
     /**
      * @param string $imagePath
-     * @param array $imageTypes
+     * @param ImageType[] $imageTypes
      *
      * @return bool
      *
@@ -68,11 +72,11 @@ class ImageGenerator
      * Resizes the image depending on its type
      *
      * @param string $filePath
-     * @param array $imageType
+     * @param ImageType $imageType
      *
      * @return bool
      */
-    private function resize(string $filePath, array $imageType): bool
+    private function resize(string $filePath, ImageType $imageType): bool
     {
         $fileExtension = pathinfo($filePath, PATHINFO_EXTENSION);
 
@@ -83,8 +87,8 @@ class ImageGenerator
         //@todo: hardcoded extension as it was in legacy code. Changing it would be a huge BC break.
         //@todo: in future we should consider using extension by mimeType
         $destinationExtension = 'jpg';
-        $width = $imageType['width'];
-        $height = $imageType['height'];
+        $width = $imageType->width;
+        $height = $imageType->height;
 
         if (Configuration::get('PS_HIGHT_DPI')) {
             $destinationExtension = '2x.' . $destinationExtension;
@@ -95,8 +99,8 @@ class ImageGenerator
         return ImageManager::resize(
             $filePath,
             sprintf('%s-%s.%s', rtrim($filePath, $fileExtension), stripslashes($imageType['name']), $destinationExtension),
-            (int) $width,
-            (int) $height,
+            $width,
+            $height,
             $destinationExtension
         );
     }
