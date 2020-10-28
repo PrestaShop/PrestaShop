@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Image;
 
 use Configuration;
 use ImageManager;
-use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
+use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShopException;
 
@@ -54,8 +54,6 @@ class ImageGenerator
                 $resized &= $this->resize($imagePath, $imageType);
             }
         } catch (PrestaShopException $e) {
-            //@todo: this exception extends generic Exception and is in Uploader ns.
-            //@todo: could it extend new Core/Image/ImageException? this would introduce BC break. (make the same with other Uploader/Exception's ?)
             throw new ImageOptimizationException('Unable to resize one or more of your pictures.');
         }
 
