@@ -543,7 +543,7 @@ class ManufacturerCore extends ObjectModel
 			SELECT `id_manufacturer`
 			FROM ' . _DB_PREFIX_ . 'manufacturer m
 			WHERE m.`id_manufacturer` = ' . (int) $idManufacturer,
-			false
+            false
         );
 
         return isset($row['id_manufacturer']);
