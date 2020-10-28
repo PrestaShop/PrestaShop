@@ -77,7 +77,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class ManufacturerController extends FrameworkBundleAdminController
 {
-
     /**
      * Show manufacturers listing page.
      *
