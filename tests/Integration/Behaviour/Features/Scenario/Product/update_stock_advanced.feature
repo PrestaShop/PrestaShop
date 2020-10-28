@@ -76,6 +76,11 @@ Feature: Update product stock from Back Office (BO)
       | pack_stock_type | stock_type_both |
     Then product "productPack1" should have following stock information:
       | pack_stock_type | stock_type_both |
+    When I update product "productPack1" stock with following information:
+      | pack_stock_type | invalid |
+    Then I should get error that pack stock type is invalid
+    And product "productPack1" should have following stock information:
+      | pack_stock_type | stock_type_both |
 
   Scenario: I update product pack stock type which depends on stock
     Given I add product "productPack1" with following information:
@@ -248,3 +253,39 @@ Feature: Update product stock from Back Office (BO)
       | available_date         | 1969-07-16         |
     And product "product1" localized "available_now_labels" should be "en-US:get it now"
     And product "product1" localized "available_later_labels" should be "en-US:too late bro"
+
+
+  Scenario: When I use invalid values update is not authorized
+    Given I add product "product1" with following information:
+      | name       | en-US:Presta camera |
+      | is_virtual | false               |
+    And product "product1" should have following stock information:
+      | quantity                      | 0          |
+      | minimal_quantity              | 1          |
+      | location                      |            |
+      | low_stock_threshold           | 0          |
+      | low_stock_alert               | false      |
+      | available_date                | 0000-00-00 |
+    And product "product1" localized "available_now_labels" should be "en-US:"
+    And product "product1" localized "available_later_labels" should be "en-US:"
+    When I update product "product1" stock with following information:
+      | minimal_quantity | -1 |
+    Then I should get error that product minimal_quantity is invalid
+    When I update product "product1" stock with following information:
+      | location | ssf> |
+    Then I should get error that product location is invalid
+    When I update product "product1" stock with following information:
+      | available_now_labels | en-US:get it now <3 |
+    Then I should get error that product available_now_labels is invalid
+    When I update product "product1" stock with following information:
+      | available_later_labels | en-US:too late bro<3 |
+    Then I should get error that product available_later_labels is invalid
+    And product "product1" should have following stock information:
+      | quantity                      | 0          |
+      | minimal_quantity              | 1          |
+      | location                      |            |
+      | low_stock_threshold           | 0          |
+      | low_stock_alert               | false      |
+      | available_date                | 0000-00-00 |
+    And product "product1" localized "available_now_labels" should be "en-US:"
+    And product "product1" localized "available_later_labels" should be "en-US:"

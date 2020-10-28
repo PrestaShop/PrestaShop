@@ -43,13 +43,7 @@ class ProductStockConstraintException extends ProductStockException
     const ADVANCED_STOCK_MANAGEMENT_PRODUCT_DISABLED = 20;
 
     /**
-     * Code is used when trying to link a pack stock with its product and one of them
-     * has no advanced stock
-     */
-    const INCOMPATIBLE_PACK_STOCK_TYPE = 30;
-
-    /**
      * Code is sent when invalid out of stock type is used
      */
-    const INVALID_OUT_OF_STOCK_TYPE = 40;
+    const INVALID_OUT_OF_STOCK_TYPE = 30;
 }
