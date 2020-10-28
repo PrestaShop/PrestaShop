@@ -67,11 +67,14 @@ class StockAvailableRepository extends AbstractObjectModelRepository
             );
         }
 
-        return $this->getObjectModel(
+        /** @var StockAvailable $stockAvailable */
+        $stockAvailable = $this->getObjectModel(
             $stockAvailableId,
             StockAvailable::class,
             StockAvailableNotFoundException::class
         );
+
+        return $stockAvailable;
     }
 
     /**
