@@ -73,7 +73,6 @@
         <div class="col">
           {{ form_errors(importForm.file) }}
           {{ form_widget(importForm.file, {'attr': {'class': 'js-import-file', 'data-max-file-upload-size': maxFileUploadSize }}) }}
-          {% set submitTypeWidget = form_widget(importForm.submitImportFile) %}
         </div>
         <div class="col">
           <span>{{ 'or'|trans({}, 'Admin.Global') }}</span>
@@ -116,6 +115,8 @@
     {{ form_row(importForm.separator) }}
     {{ form_row(importForm.multiple_value_separator) }}
     <hr>
+    {# This is done so importForm.submitImportFile is not rendered, as it's defined via plain HTML instead #}
+    {% set uselessVariable = form_widget(importForm.submitImportFile) %}
     {{ form_widget(importForm) }}
   </div>
   <div class="card-footer">
