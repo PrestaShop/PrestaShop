@@ -41,6 +41,22 @@ use Tools;
 class ImageValidator
 {
     /**
+     * @var int
+     */
+    private $maxUploadSize;
+
+    /**
+     * @param int|null $maxUploadSize
+     */
+    public function __construct(?int $maxUploadSize = null)
+    {
+        if (null === $maxUploadSize) {
+            $maxUploadSize = Tools::getMaxUploadSize();
+        }
+        $this->maxUploadSize = $maxUploadSize;
+    }
+
+    /**
      * @param string $filePath
      *
      * @throws ImageUploadException
@@ -48,10 +64,9 @@ class ImageValidator
      */
     public function assertFileUploadLimits(string $filePath): void
     {
-        $maxFileSize = Tools::getMaxUploadSize();
         $size = filesize($filePath);
 
-        if ($maxFileSize > 0 && $size > $maxFileSize) {
+        if ($this->maxUploadSize > 0 && $size > $this->maxUploadSize) {
             throw new UploadedImageConstraintException(sprintf('Max file size allowed is "%s" bytes. Uploaded image size is "%s".', $maxFileSize, $size), UploadedImageConstraintException::EXCEEDED_SIZE);
         }
 
