@@ -45,7 +45,7 @@ class ImageValidatorTest extends TestCase
 
     public function setUp()
     {
-        require_once '../../bootstrap.php';
+        require_once __DIR__ . '/../../bootstrap.php';
         $this->imageValidator = new ImageValidator();
     }
 
