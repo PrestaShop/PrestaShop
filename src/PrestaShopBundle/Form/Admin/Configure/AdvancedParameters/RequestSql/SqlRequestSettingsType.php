@@ -41,7 +41,6 @@ class SqlRequestSettingsType extends TranslatorAwareType
         $builder
             ->add('default_file_encoding', ChoiceType::class, [
                 'label' => $this->trans('Select your default file encoding', 'Admin.Advparameters.Feature'),
-                'required' => false,
                 'choices' => [
                     CharsetEncoding::UTF_8 => CharsetEncoding::UTF_8,
                     CharsetEncoding::ISO_8859_1 => CharsetEncoding::ISO_8859_1,
