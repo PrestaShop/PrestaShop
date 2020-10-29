@@ -749,6 +749,13 @@ services:
         tags:
             - { name: form.type }
 
+    prestashop.bundle.form.admin.sell.customer.transfer_guest_account:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Customer\TransferGuestAccountType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
     prestashop.bundle.form.admin.sell.customer.customer:
         class: 'PrestaShopBundle\Form\Admin\Sell\Customer\CustomerType'
         parent: 'form.type.translatable.aware'
