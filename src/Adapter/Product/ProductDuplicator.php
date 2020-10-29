@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
+use PrestaShop\PrestaShop\Core\Util\String\StringModifierInterface;
 use PrestaShopException;
 use Product;
 use Search;
@@ -79,21 +80,29 @@ class ProductDuplicator
     private $translator;
 
     /**
+     * @var StringModifierInterface
+     */
+    private $stringModifier;
+
+    /**
      * @param ProductRepository $productRepository
      * @param HookDispatcherInterface $hookDispatcher
      * @param MultistoreContextCheckerInterface $multistoreContextChecker
      * @param TranslatorInterface $translator
+     * @param StringModifierInterface $stringModifier
      */
     public function __construct(
         ProductRepository $productRepository,
         HookDispatcherInterface $hookDispatcher,
         MultistoreContextCheckerInterface $multistoreContextChecker,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        StringModifierInterface $stringModifier
     ) {
         $this->productRepository = $productRepository;
         $this->hookDispatcher = $hookDispatcher;
         $this->multistoreContextChecker = $multistoreContextChecker;
         $this->translator = $translator;
+        $this->stringModifier = $stringModifier;
     }
 
     /**
@@ -188,7 +197,7 @@ class ProductDuplicator
 
         foreach ($product->name as $langKey => $oldName) {
             $newName = sprintf($namePattern, $oldName);
-            $product->name[$langKey] = $this->assureThatNameLengthIsValid($newName);
+            $product->name[$langKey] = $this->stringModifier->cutEnd($newName, ProductSettings::MAX_NAME_LENGTH);
         }
     }
 
