@@ -124,7 +124,7 @@ class ImportType extends TranslatorAwareType
                 'help' => $this->trans('Sends an email to let you know your import is complete. It can be useful when handling large files, as the import may take some time.', 'Admin.Advparameters.Help'),
             ])
             ->add('submitImportFile', SubmitType::class, [
-                'label' => $this->trans('Next step', 'Admin.Advparameters.Feature')
+                'label' => $this->trans('Next step', 'Admin.Advparameters.Feature'),
             ]);
 
         $builder->get('entity')
