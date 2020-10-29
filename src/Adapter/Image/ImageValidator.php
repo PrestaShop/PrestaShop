@@ -51,10 +51,7 @@ class ImageValidator
      */
     public function __construct(?int $maxUploadSize = null)
     {
-        if (null === $maxUploadSize) {
-            $maxUploadSize = Tools::getMaxUploadSize();
-        }
-        $this->maxUploadSize = $maxUploadSize;
+        $this->maxUploadSize = $maxUploadSize ?: Tools::getMaxUploadSize();
     }
 
     /**
