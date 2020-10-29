@@ -189,3 +189,80 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0     |
       | total_shipping_tax_excl  | 2.0     |
       | total_shipping_tax_incl  | 2.42    |
+
+  Scenario: I update product price with small difference
+    Given order "bo_order1" does not have any invoices
+    And product "Test Product With Odd Tax" in order "bo_order1" has following details:
+      | product_quantity            | 70     |
+      | product_price               | 7.80   |
+      | original_product_price      | 7.80   |
+      | unit_price_tax_incl         | 9.438  |
+      | unit_price_tax_excl         | 7.80   |
+      | total_price_tax_excl        | 546.00 |
+      | total_price_tax_incl        | 660.66 |
+    And order "bo_order1" should have 70 products in total
+    And order "bo_order1" should have following details:
+      | total_products           | 546.00 |
+      | total_products_wt        | 660.66 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 548.00 |
+      | total_paid_tax_incl      | 663.08 |
+      | total_paid               | 663.08 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 2.0    |
+      | total_shipping_tax_incl  | 2.42   |
+    # Edit with two values that match (with computed tax values)
+    When I edit product "Test Product With Odd Tax" to order "bo_order1" with following products details:
+      | amount         | 80     |
+      | price          | 7.85   |
+      | price_tax_incl | 9.4985 |
+    Then product "Test Product With Odd Tax" in order "bo_order1" should have specific price 7.85
+    And product "Test Product With Odd Tax" in order "bo_order1" has following details:
+      | product_quantity            | 80     |
+      | product_price               | 7.85   |
+      | original_product_price      | 7.80   |
+      | unit_price_tax_incl         | 9.4985 |
+      | unit_price_tax_excl         | 7.85   |
+      | total_price_tax_excl        | 628.00 |
+      | total_price_tax_incl        | 759.88 |
+    And order "bo_order1" should have 80 products in total
+    And order "bo_order1" should have following details:
+      | total_products           | 628.00 |
+      | total_products_wt        | 759.88 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 630.00 |
+      | total_paid_tax_incl      | 762.30 |
+      | total_paid               | 762.30 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 2.0    |
+      | total_shipping_tax_incl  | 2.42   |
+    # Edit with values that are not strictly equals, but price tax excluded is not different from the catalog price
+    # so no specific price is computed
+    When I edit product "Test Product With Odd Tax" to order "bo_order1" with following products details:
+      | amount         | 80   |
+      | price          | 7.85 |
+      | price_tax_incl | 9.50 |
+    Then product "Test Product With Odd Tax" in order "bo_order1" should have specific price 7.851239
+    # product_price is computed for backward compatibility which is why it is rounded
+    And product "Test Product With Odd Tax" in order "bo_order1" has following details:
+      | product_quantity            | 80       |
+      | product_price               | 7.851239 |
+      | original_product_price      | 7.80     |
+      | unit_price_tax_incl         | 9.499999 |
+      | unit_price_tax_excl         | 7.851239 |
+      | total_price_tax_excl        | 628.10   |
+      | total_price_tax_incl        | 760.00   |
+    And order "bo_order1" should have 80 products in total
+    And order "bo_order1" should have following details:
+      | total_products           | 628.10 |
+      | total_products_wt        | 760.00 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 630.10 |
+      | total_paid_tax_incl      | 762.42 |
+      | total_paid               | 762.42 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 2.0    |
+      | total_shipping_tax_incl  | 2.42   |
