@@ -52,6 +52,7 @@ class SwitchType extends AbstractType
             'multiple' => false,
             'expanded' => false,
             'disabled' => false,
+            'required' => false,
             'choice_translation_domain' => self::TRANS_DOMAIN,
         ]);
         $resolver->setAllowedTypes('disabled', 'bool');
