@@ -13,6 +13,7 @@ module.exports = {
     document: true,
     navigator: false,
     window: true,
+    prestashop: true,
   },
   parserOptions: {
     parser: 'babel-eslint',
