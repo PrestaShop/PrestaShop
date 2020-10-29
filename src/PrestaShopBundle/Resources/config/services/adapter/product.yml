@@ -393,6 +393,8 @@ services:
 
     prestashop.adapter.product.command_handler.duplicate_product_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DuplicateProductHandler
+        arguments:
+            - '@prestashop.adapter.product.product_duplicator'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand
@@ -403,3 +405,4 @@ services:
             - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.core.hook.dispatcher'
             - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_SEARCH_INDEXATION')"
+            - '@translator'
