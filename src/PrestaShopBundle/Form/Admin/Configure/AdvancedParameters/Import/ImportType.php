@@ -51,7 +51,7 @@ class ImportType extends TranslatorAwareType
         $builder
             ->add('csv', HiddenType::class)
             ->add('entity', ChoiceType::class, [
-                'required' => false,
+                'required' => true,
                 'label' => $this->trans('What do you want to import?', 'Admin.Advparameters.Feature'),
                 'row_attr' => [
                     'class' => 'js-entity-select',
@@ -73,7 +73,7 @@ class ImportType extends TranslatorAwareType
                 'label' => $this->trans('Select a file to import', 'Admin.Advparameters.Feature'),
             ])
             ->add('iso_lang', ChoiceType::class, [
-                'required' => false,
+                'required' => true,
                 'choices' => $this->getLocaleChoices(),
                 'label' => $this->trans('Language of the file', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('The locale must be installed', 'Admin.Advparameters.Notification'),
@@ -123,7 +123,9 @@ class ImportType extends TranslatorAwareType
                 'label' => $this->trans('Send notification email', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('Sends an email to let you know your import is complete. It can be useful when handling large files, as the import may take some time.', 'Admin.Advparameters.Help'),
             ])
-            ->add('submitImportFile', SubmitType::class);
+            ->add('submitImportFile', SubmitType::class, [
+                'label' => $this->trans('Next step', 'Admin.Advparameters.Feature')
+            ]);
 
         $builder->get('entity')
             ->addModelTransformer(new CallbackTransformer(

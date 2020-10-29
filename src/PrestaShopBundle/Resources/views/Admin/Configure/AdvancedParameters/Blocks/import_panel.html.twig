@@ -115,14 +115,16 @@
     {{ form_row(importForm.separator) }}
     {{ form_row(importForm.multiple_value_separator) }}
     <hr>
+    {{ form_label(importForm.submitImportFile) }}
+
     {# This is done so importForm.submitImportFile is not rendered, as it's defined via plain HTML instead #}
-    {% set uselessVariable = form_widget(importForm.submitImportFile) %}
+    {% do importForm.submitImportFile.setRendered %}
     {{ form_widget(importForm) }}
   </div>
   <div class="card-footer">
     <div class="d-flex justify-content-end">
-      <button class="btn btn-primary" name="submitImportFile">
-        {{ 'Next step'|trans({}, 'Admin.Advparameters.Feature') }}
+      <button class="btn btn-primary" name="{{ importForm.submitImportFile.vars.name }}">
+        {{ importForm.submitImportFile.vars.label }}
         <i class="material-icons">navigate_next</i>
       </button>
     </div>
