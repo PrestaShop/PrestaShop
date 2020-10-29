@@ -87,6 +87,7 @@ class ProductDuplicator
     /**
      * @param ProductRepository $productRepository
      * @param HookDispatcherInterface $hookDispatcher
+     * @param bool $isSearchIndexationOn
      * @param MultistoreContextCheckerInterface $multistoreContextChecker
      * @param TranslatorInterface $translator
      * @param StringModifierInterface $stringModifier
@@ -94,12 +95,14 @@ class ProductDuplicator
     public function __construct(
         ProductRepository $productRepository,
         HookDispatcherInterface $hookDispatcher,
+        bool $isSearchIndexationOn,
         MultistoreContextCheckerInterface $multistoreContextChecker,
         TranslatorInterface $translator,
         StringModifierInterface $stringModifier
     ) {
         $this->productRepository = $productRepository;
         $this->hookDispatcher = $hookDispatcher;
+        $this->isSearchIndexationOn = $isSearchIndexationOn;
         $this->multistoreContextChecker = $multistoreContextChecker;
         $this->translator = $translator;
         $this->stringModifier = $stringModifier;
@@ -123,7 +126,7 @@ class ProductDuplicator
         $newProduct = $this->duplicateProduct($product);
         $newProductId = (int) $newProduct->id;
 
-        $this->duplicateRelations($newProductId, $oldProductId);
+        $this->duplicateRelations($oldProductId, $newProductId);
 
         if ($product->hasAttributes()) {
             $this->updateDefaultAttribute($newProductId, $oldProductId);
@@ -199,25 +202,6 @@ class ProductDuplicator
             $newName = sprintf($namePattern, $oldName);
             $product->name[$langKey] = $this->stringModifier->cutEnd($newName, ProductSettings::MAX_NAME_LENGTH);
         }
-    }
-
-    /**
-     * Shortens product name if it became too long after modifying its pattern
-     *
-     * @param string $name
-     *
-     * @return string
-     */
-    private function assureThatNameLengthIsValid(string $name): string
-    {
-        $length = strlen($name);
-
-        if ($length > ProductSettings::MAX_NAME_LENGTH) {
-            // cut symbols difference from the end of the name
-            substr($name, 0, ProductSettings::MAX_NAME_LENGTH - $length);
-        }
-
-        return $name;
     }
 
     /**
@@ -581,7 +565,7 @@ class ProductDuplicator
     private function duplicateRelation(array $staticCallback, array $arguments, int $errorCode): ?array
     {
         try {
-            $result = call_user_func($staticCallback, $arguments);
+            $result = call_user_func($staticCallback, ...$arguments);
 
             if (is_array($result)) {
                 return $result;

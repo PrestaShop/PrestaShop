@@ -34,6 +34,9 @@ class DuplicateProductFeatureContext extends AbstractProductFeatureContext
 {
     /**
      * @When I duplicate product :productReference to a :newProductReference
+     *
+     * @param string $productReference
+     * @param string $newProductReference
      */
     public function duplicate(string $productReference, string $newProductReference): void
     {
@@ -42,10 +45,5 @@ class DuplicateProductFeatureContext extends AbstractProductFeatureContext
         ));
 
         $this->getSharedStorage()->set($newProductReference, $newProductId->getValue());
-    }
-
-    public function assertDuplicatedProduct(): void
-    {
-        //@todo: how do I assert duplicated product props? The Issue - product properties are dissolved & asserted each in separated contexts
     }
 }
