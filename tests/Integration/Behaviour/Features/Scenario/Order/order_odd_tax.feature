@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-odd-tax
 @reset-database-before-feature
+@clear-cache-before-feature
 @order-odd-tax
 Feature: Order from Back Office (BO)
   In order to manage orders for FO customers
@@ -248,7 +249,7 @@ Feature: Order from Back Office (BO)
     # product_price is computed for backward compatibility which is why it is rounded
     And product "Test Product With Odd Tax" in order "bo_order1" has following details:
       | product_quantity            | 80       |
-      | product_price               | 7.851239 |
+      | product_price               | 7.85     |
       | original_product_price      | 7.80     |
       | unit_price_tax_incl         | 9.499999 |
       | unit_price_tax_excl         | 7.851239 |
@@ -263,6 +264,34 @@ Feature: Order from Back Office (BO)
       | total_paid_tax_excl      | 630.10 |
       | total_paid_tax_incl      | 762.42 |
       | total_paid               | 762.42 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 2.0    |
+      | total_shipping_tax_incl  | 2.42   |
+    # Edit with values that are not strictly equals, but price tax excluded is not different from the catalog price
+    # so no specific price is computed
+    When I edit product "Test Product With Odd Tax" to order "bo_order1" with following products details:
+      | amount         | 80   |
+      | price          | 7.44 |
+      | price_tax_incl | 9.00 |
+    Then product "Test Product With Odd Tax" in order "bo_order1" should have specific price 7.438016
+    # product_price is computed for backward compatibility which is why it is rounded
+    And product "Test Product With Odd Tax" in order "bo_order1" has following details:
+      | product_quantity            | 80       |
+      | product_price               | 7.44     |
+      | original_product_price      | 7.80     |
+      | unit_price_tax_incl         | 8.999999 |
+      | unit_price_tax_excl         | 7.438016 |
+      | total_price_tax_excl        | 595.04   |
+      | total_price_tax_incl        | 720.00   |
+    And order "bo_order1" should have 80 products in total
+    And order "bo_order1" should have following details:
+      | total_products           | 595.04 |
+      | total_products_wt        | 720.00 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 597.04 |
+      | total_paid_tax_incl      | 722.42 |
+      | total_paid               | 722.42 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 2.0    |
       | total_shipping_tax_incl  | 2.42   |

@@ -207,6 +207,7 @@ abstract class AbstractOrderHandler
         $productSpecificPrice = $this->getProductSpecificPriceInOrder($product, $order, $combination);
         $productOriginalPrice = $this->getProductRegularPrice($product, $order, $combination);
 
+        // If provided price is equal to catalog price no need to have specific price
         if ($productOriginalPrice->equals($priceTaxExcluded)) {
             // Product specific price is not useful any more we can delete it
             if (null !== $productSpecificPrice) {
@@ -216,8 +217,8 @@ abstract class AbstractOrderHandler
             return;
         }
 
-        // If price tax excluded and price tax included don't match exactly, we use the price included as a base to recompute
-        // the price excluded, this avoids decimal differences
+        // If price tax excluded and price tax included don't match exactly, we use the price tax included as a base to recompute
+        // the price tax excluded, this gives us more precision and decimals which avoids offset in later computing (totals)
         $precisePriceTaxExcluded = $this->getPrecisePriceTaxExcluded($priceTaxIncluded, $priceTaxExcluded, $order, $product);
         if (null !== $productSpecificPrice) {
             $productSpecificPrice->price = (float) (string) $precisePriceTaxExcluded;
