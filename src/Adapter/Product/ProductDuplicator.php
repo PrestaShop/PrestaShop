@@ -274,6 +274,7 @@ class ProductDuplicator
         $this->duplicateSpecificPrices($oldProductId, $newProductId);
         $this->duplicatePackedProducts($oldProductId, $newProductId);
         $this->duplicateCustomizationFields($oldProductId, $newProductId);
+        $this->duplicatePrices($oldProductId, $newProductId);
         $this->duplicateTags($oldProductId, $newProductId);
         $this->duplicateTaxes($oldProductId, $newProductId);
         $this->duplicateDownloads($oldProductId, $newProductId);
@@ -452,6 +453,23 @@ class ProductDuplicator
      * @throws CannotDuplicateProductException
      * @throws CoreException
      */
+    private function duplicatePrices(int $oldProductId, int $newProductId): void
+    {
+        /* @see Product::duplicatePrices() */
+        $this->duplicateRelation(
+            [Product::class, 'duplicatePrices'],
+            [$oldProductId, $newProductId],
+            CannotDuplicateProductException::FAILED_DUPLICATE_PRICES
+        );
+    }
+
+    /**
+     * @param int $oldProductId
+     * @param int $newProductId
+     *
+     * @throws CannotDuplicateProductException
+     * @throws CoreException
+     */
     private function duplicateTags(int $oldProductId, int $newProductId): void
     {
         /* @see Product::duplicateTags() */
@@ -506,7 +524,6 @@ class ProductDuplicator
      */
     private function duplicateImages(int $oldProductId, int $newProductId, array $combinationImages): void
     {
-        //@todo: add option of noImage in command
         /* @see Image::duplicateProductImages() */
         $this->duplicateRelation(
             [Image::class, 'duplicateProductImages'],
