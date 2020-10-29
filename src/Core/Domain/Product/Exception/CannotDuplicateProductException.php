@@ -97,4 +97,9 @@ class CannotDuplicateProductException extends ProductException
      * When product taxes duplication fails
      */
     const FAILED_DUPLICATE_TAXES = 130;
+
+    /**
+     * When product prices duplication fails
+     */
+    const FAILED_DUPLICATE_PRICES = 140;
 }
