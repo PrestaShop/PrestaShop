@@ -46,9 +46,9 @@ class TransferGuestAccountType extends TranslatorAwareType
             ->add('id_customer', HiddenType::class)
             ->add('transfer_guest_account', SubmitType::class, [
                 'attr' => [
-                    'class' => 'btn-sm btn-primary'
+                    'class' => 'btn-sm btn-primary',
                 ],
                 'label' => $this->trans('Transform to a customer account', 'Admin.Orderscustomers.Feature'),
-        ]);
+            ]);
     }
 }

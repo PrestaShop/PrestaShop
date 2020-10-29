@@ -114,7 +114,7 @@ class CustomerType extends TranslatorAwareType
                 'expanded' => true,
                 'required' => false,
                 'placeholder' => null,
-                'label' => $this->trans('Social title', 'Admin.Global')
+                'label' => $this->trans('Social title', 'Admin.Global'),
             ])
             ->add('first_name', TextType::class, [
                 'label' => $this->trans('First name', 'First name'),
@@ -158,7 +158,6 @@ class CustomerType extends TranslatorAwareType
                             'This field cannot be longer than %limit% characters',
                             'Admin.Notifications.Error',
                             ['%limit%' => LastName::MAX_LENGTH]
-
                         ),
                     ]),
                     new CustomerName([
@@ -166,7 +165,6 @@ class CustomerType extends TranslatorAwareType
                             'The %s field is invalid.',
                             'Admin.Notifications.Error',
                             [sprintf('"%s"', $this->trans('Last name', 'Admin.Global'))]
-
                         ),
                     ]),
                 ],
@@ -276,7 +274,7 @@ class CustomerType extends TranslatorAwareType
                     'constraints' => [
                         new Type([
                             'type' => 'alnum',
-                            'message' => $this->trans('This field is invalid','Admin.Notifications.Error'),
+                            'message' => $this->trans('This field is invalid', 'Admin.Notifications.Error'),
                         ]),
                     ],
                 ])
