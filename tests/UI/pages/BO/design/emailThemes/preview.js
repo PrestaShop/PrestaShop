@@ -8,6 +8,7 @@ class PreviewEmailTheme extends BOBasePage {
     this.pageTitle = 'Preview Theme';
 
     // Selectors
+    this.layoutBody = 'body pre';
     this.emailThemeTable = 'table.grid-table';
     this.tableBody = `${this.emailThemeTable} tbody`;
     this.tableRows = `${this.tableBody} tr`;
@@ -76,6 +77,15 @@ class PreviewEmailTheme extends BOBasePage {
     ]);
 
     return newPage;
+  }
+
+  /**
+   * Get text from view layout page
+   * @param page
+   * @return {Promise<string>}
+   */
+  getTextFromViewLayoutPage(page) {
+    return this.getTextContent(page, this.layoutBody);
   }
 }
 

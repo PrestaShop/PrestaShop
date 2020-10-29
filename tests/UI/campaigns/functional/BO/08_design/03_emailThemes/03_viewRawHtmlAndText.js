@@ -69,25 +69,54 @@ describe('View raw html and text and check result', async () => {
     );
   });
 
-  describe('View raw html and text', async () => {
+  describe('View raw html', async () => {
+    let newPage;
     it('should view raw html and check its URL', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewRawHtml', baseContext);
 
-      const newPage = await previewEmailThemesPage.viewRawHtml(page, 1);
+      newPage = await previewEmailThemesPage.viewRawHtml(page, 1);
       await expect(newPage.url())
         .to.contain(emailThemeName)
         .and.to.contain('raw')
         .and.to.contain('.html');
     });
 
+    it('should get text from page and check email format', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkRawHtmlText', baseContext);
+
+      const pageText = await previewEmailThemesPage.getTextFromViewLayoutPage(newPage);
+      await expect(pageText)
+        .to.contain(global.FO.URL)
+        .and.to.contain('<html')
+        .and.to.contain('<body')
+        .and.to.contain('</body>')
+        .and.to.contain('</html>');
+    });
+
+    after(() => newPage.close());
+  });
+
+  describe('View raw text', async () => {
+    let newPage;
     it('should view raw text and check its URL', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewRawText', baseContext);
 
-      const newPage = await previewEmailThemesPage.viewRawText(page, 1);
+      newPage = await previewEmailThemesPage.viewRawText(page, 1);
       await expect(newPage.url())
         .to.contain(emailThemeName)
         .and.to.contain('raw')
         .and.to.contain('.txt');
     });
+
+    it('should get text from page and check format', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkRawTextPage', baseContext);
+
+      const pageText = await previewEmailThemesPage.getTextFromViewLayoutPage(newPage);
+      await expect(pageText)
+        .to.contain(global.FO.URL)
+        .and.to.contain('Hi');
+    });
+
+    after(() => newPage.close());
   });
 });
