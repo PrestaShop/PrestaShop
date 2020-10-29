@@ -406,3 +406,4 @@ services:
             - '@prestashop.core.hook.dispatcher'
             - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_SEARCH_INDEXATION')"
             - '@translator'
+            - '@prestashop.core.util.string.string_modifier'
