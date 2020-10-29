@@ -51,8 +51,8 @@ final class StringModifier implements StringModifierInterface
         $length = strlen($string);
 
         if ($length > $expectedLength) {
-            // cut symbols difference from the end of the name
-            substr($string, 0, $expectedLength - $length);
+            // cut symbols difference from the end of the string
+            $string = substr($string, 0, $expectedLength - $length);
         }
 
         return $string;
