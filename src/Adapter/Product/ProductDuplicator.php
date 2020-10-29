@@ -35,6 +35,7 @@ use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDuplicateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -45,6 +46,7 @@ use Product;
 use Search;
 use Shop;
 use ShopGroup;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Duplicates product
@@ -72,18 +74,26 @@ class ProductDuplicator
     private $multistoreContextChecker;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @param ProductRepository $productRepository
      * @param HookDispatcherInterface $hookDispatcher
      * @param MultistoreContextCheckerInterface $multistoreContextChecker
+     * @param TranslatorInterface $translator
      */
     public function __construct(
         ProductRepository $productRepository,
         HookDispatcherInterface $hookDispatcher,
-        MultistoreContextCheckerInterface $multistoreContextChecker
+        MultistoreContextCheckerInterface $multistoreContextChecker,
+        TranslatorInterface $translator
     ) {
         $this->productRepository = $productRepository;
         $this->hookDispatcher = $hookDispatcher;
         $this->multistoreContextChecker = $multistoreContextChecker;
+        $this->translator = $translator;
     }
 
     /**
@@ -174,15 +184,31 @@ class ProductDuplicator
      */
     private function setName(Product $product): void
     {
-        //@todo: would it be possible to transle it or is it ok that each lang will contain this generic pattern?
-        //@todo: make the pattern modifiable (add configuration) ?
-        $namePattern = 'copy of %s';
+        $namePattern = $this->translator->trans('copy of %s', [], 'Admin.Catalog.Feature');
 
         foreach ($product->name as $langKey => $oldName) {
             $newName = sprintf($namePattern, $oldName);
-            $product->name[$langKey] = $newName;
-            //@todo: validate name if it is too long now. In that case, cut the name or throw exception?
+            $product->name[$langKey] = $this->assureThatNameLengthIsValid($newName);
         }
+    }
+
+    /**
+     * Shortens product name if it became too long after modifying its pattern
+     *
+     * @param string $name
+     *
+     * @return string
+     */
+    private function assureThatNameLengthIsValid(string $name): string
+    {
+        $length = strlen($name);
+
+        if ($length > ProductSettings::MAX_NAME_LENGTH) {
+            // cut symbols difference from the end of the name
+            substr($name, 0, ProductSettings::MAX_NAME_LENGTH - $length);
+        }
+
+        return $name;
     }
 
     /**
