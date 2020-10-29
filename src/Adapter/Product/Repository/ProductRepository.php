@@ -37,7 +37,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotAddProductExceptio
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -95,8 +94,7 @@ class ProductRepository extends AbstractObjectModelRepository
      */
     public function add(Product $product): ProductId
     {
-        //@todo: CannotAddProductException in another pr #21110;
-        $this->addObjectModel($product, ProductException::class);
+        $this->addObjectModel($product, CannotAddProductException::class);
 
         return new ProductId((int) $product->id);
     }
