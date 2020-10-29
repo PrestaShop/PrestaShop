@@ -92,4 +92,9 @@ class CannotDuplicateProductException extends ProductException
      * When product images duplication fails
      */
     const FAILED_DUPLICATE_IMAGES = 120;
+
+    /**
+     * When product taxes duplication fails
+     */
+    const FAILED_DUPLICATE_TAXES = 130;
 }

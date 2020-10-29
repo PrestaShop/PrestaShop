@@ -275,6 +275,7 @@ class ProductDuplicator
         $this->duplicatePackedProducts($oldProductId, $newProductId);
         $this->duplicateCustomizationFields($oldProductId, $newProductId);
         $this->duplicateTags($oldProductId, $newProductId);
+        $this->duplicateTaxes($oldProductId, $newProductId);
         $this->duplicateDownloads($oldProductId, $newProductId);
         $this->duplicateImages($oldProductId, $newProductId, $combinationImages);
     }
@@ -458,6 +459,23 @@ class ProductDuplicator
             [Product::class, 'duplicateTags'],
             [$oldProductId, $newProductId],
             CannotDuplicateProductException::FAILED_DUPLICATE_TAGS
+        );
+    }
+
+    /**
+     * @param int $oldProductId
+     * @param int $newProductId
+     *
+     * @throws CannotDuplicateProductException
+     * @throws CoreException
+     */
+    private function duplicateTaxes(int $oldProductId, int $newProductId): void
+    {
+        /* @see Product::duplicateTaxes() */
+        $this->duplicateRelation(
+            [Product::class, 'duplicateTaxes'],
+            [$oldProductId, $newProductId],
+            CannotDuplicateProductException::FAILED_DUPLICATE_TAXES
         );
     }
 
