@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s shop --tags search-shops
 @reset-database-before-feature
+@clear-cache-before-feature
 @search-shops
 
 Feature: Search shops given a search term (BO)
