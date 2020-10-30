@@ -32,3 +32,8 @@ Feature: Add basic product from Back Office (BO)
       | is_virtual | false             |
     Then I should get error that product name is invalid
 
+  Scenario: I add a product with symbol in its name
+    When I add product "product3" with following information:
+      | name       | en-US:Shirt - Dom & Jquery |
+      | is_virtual | false             |
+    And product "product3" localized "name" should be "en-US:Shirt - Dom & Jquery"
