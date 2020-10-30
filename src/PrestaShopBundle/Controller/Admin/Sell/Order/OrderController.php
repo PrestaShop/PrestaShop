@@ -1487,6 +1487,48 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
+     * @param int $orderId
+     *
+     * @return Response
+     */
+    public function getProductsListAction(int $orderId): Response
+    {
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
+        $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
+
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
+        $backOfficeOrderButtons = new ActionsBarButtonsCollection();
+
+        $this->dispatchHook(
+            'actionGetAdminOrderButtons', [
+            'controller' => $this,
+            'id_order' => $orderId,
+            'actions_bar_buttons_collection' => $backOfficeOrderButtons,
+        ]);
+
+        $cancelProductForm = $formBuilder->getFormFor($orderId);
+
+        $paginationNum = (int) $this->configuration->get('PS_ORDER_PRODUCTS_NB_PER_PAGE', self::DEFAULT_PRODUCTS_NUMBER);
+        $paginationNumOptions = self::PRODUCTS_PAGINATION_OPTIONS;
+        if (!in_array($paginationNum, $paginationNumOptions)) {
+            $paginationNumOptions[] = $paginationNum;
+        }
+        sort($paginationNumOptions);
+
+        return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product_list.html.twig', [
+            'orderForViewing' => $orderForViewing,
+            'cancelProductForm' => $cancelProductForm->createView(),
+            'orderCurrency' => $orderCurrency,
+            'paginationNum' => $paginationNum,
+        ]);
+    }
+
+    /**
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     message="You do not have permission to generate this."
