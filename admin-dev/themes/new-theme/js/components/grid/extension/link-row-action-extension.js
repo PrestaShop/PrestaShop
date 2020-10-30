@@ -67,13 +67,26 @@ export default class LinkRowActionExtension {
         const $rowAction = $(this);
         const $parentCell = $rowAction.closest('td');
 
-        const clickableCells = $('td.clickable', $parentRow)
-          .not($parentCell);
-        clickableCells.addClass('cursor-pointer').click(() => {
-          const confirmMessage = $rowAction.data('confirm-message');
+        const clickableCells = $('td.clickable', $parentRow).not($parentCell);
+        let isDragging = false;
+        clickableCells.addClass('cursor-pointer').mousedown(() => {
+          $(window).mousemove(() => {
+            isDragging = true;
+            $(window).unbind('mousemove');
+          });
+        });
 
-          if (!confirmMessage.length || window.confirm(confirmMessage)) {
-            document.location = $rowAction.attr('href');
+        clickableCells.mouseup(() => {
+          const wasDragging = isDragging;
+          isDragging = false;
+          $(window).unbind('mousemove');
+
+          if (!wasDragging) {
+            const confirmMessage = $rowAction.data('confirm-message');
+
+            if (!confirmMessage.length || window.confirm(confirmMessage)) {
+              document.location = $rowAction.attr('href');
+            }
           }
         });
       });
