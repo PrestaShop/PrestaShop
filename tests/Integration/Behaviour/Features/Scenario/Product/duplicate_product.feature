@@ -2,6 +2,7 @@
 @reset-database-before-feature
 @duplicate-product
 @clear-downloads-after-feature
+@clear-cache-before-scenario
 Feature: Duplicate product from Back Office (BO).
   As an employee I want to be able to duplicate product
 
@@ -17,12 +18,14 @@ Feature: Duplicate product from Back Office (BO).
     Given language "language1" with locale "en-US" exists
     And language with iso code "en" is the default one
     And language "language2" with locale "fr-FR" exists
+    And carrier carrier1 named "ecoCarrier" exists
+    And carrier carrier2 named "Fast carry" exists
     Given I add product "product1" with following information:
       | name       | en-US:smart sunglasses ;fr-FR:lunettes de soleil |
-      | is_virtual | false                                           |
+      | is_virtual | false                                            |
     And I add product "product2" with following information:
       | name       | en-US:Reading glasses ;fr-FR:lunettes |
-      | is_virtual | false                                |
+      | is_virtual | false                                 |
     And I update product "product1" basic information with following values:
       | description       | en-US:nice sunglasses ;fr-FR:belles lunettes                    |
       | description_short | en-US:Simple & nice sunglasses;fr-FR:lunettes simples et belles |
@@ -49,26 +52,26 @@ Feature: Duplicate product from Back Office (BO).
       | tax rules group | US-AL Rate (4%) |
       | on_sale         | true            |
       | wholesale_price | 70              |
-      | unit_price      | 900             |
+      | unit_price      | 500             |
       | unity           | bag of ten      |
     And I update product product1 SEO information with following values:
-      | meta_title       | en-US:SUNGLASSES meta title                       |
+      | meta_title       | en-US:SUNGLASSES meta title                        |
       | meta_description | en-US:Its so smart, almost magical ;fr-FR:lel joke |
       | link_rewrite     | en-US:smart-sunglasses ;fr-FR:lunettes-de-soleil   |
-      | redirect_type    | 301-product                                       |
-      | redirect_target  | product2                                          |
+      | redirect_type    | 301-product                                        |
+      | redirect_target  | product2                                           |
     And carrier carrier1 named "ecoCarrier" exists
     And carrier carrier2 named "Fast carry" exists
     And I update product product1 shipping information with following values:
-      | width                            | 10.5                                                 |
-      | height                           | 6                                                    |
-      | depth                            | 7                                                    |
-      | weight                           | 0.5                                                  |
-      | additional_shipping_cost         | 12                                                   |
-      | delivery time notes type         | specific                                             |
+      | width                            | 10.5                                                  |
+      | height                           | 6                                                     |
+      | depth                            | 7                                                     |
+      | weight                           | 0.5                                                   |
+      | additional_shipping_cost         | 12                                                    |
+      | delivery time notes type         | specific                                              |
       | delivery time in stock notes     | en-US:product in stock ;fr-FR:en stock                |
       | delivery time out of stock notes | en-US:product out of stock ;fr-FR:En rupture de stock |
-      | carriers                         | [carrier1,carrier2]                                  |
+      | carriers                         | [carrier1,carrier2]                                   |
     And I add new supplier supplier1 with following properties:
       | name             | my supplier 1            |
       | address          | Donelaicio st. 1         |
@@ -86,12 +89,12 @@ Feature: Duplicate product from Back Office (BO).
     And I set following related products to product product1:
       | product2 |
     And I update product product1 with following customization fields:
-      | reference    | type | name                                                                      | is required |
+      | reference    | type | name                                                                       | is required |
       | customField1 | text | en-US:text on top of left lense ;fr-FR:texte en haut de la lentille gauche | true        |
     And I add new attachment "att1" with following properties:
       | description | en-US:puffin photo nr1 ;fr-FR:macareux |
       | name        | en-US:puffin ;fr-FR:macareux           |
-      | file_name   | app_icon.png                          |
+      | file_name   | app_icon.png                           |
     And I associate attachment "att1" with product product1
 #todo: add specific prices & priorities, test combinations, packs
     When I duplicate product product1 to a copy_of_product1
@@ -117,15 +120,19 @@ Feature: Duplicate product from Back Office (BO).
       | reference           | ref1              |
     And manufacturer "studioDesign" should be assigned to product copy_of_product1
     And product "copy_of_product1" localized "tags" should be "en-US:smart,glasses,sunglasses,men ;fr-FR:lunettes,bien,soleil"
+    And product copy_of_product1 should have following suppliers:
+      | product supplier reference     | currency | price tax excluded |
+      | my first supplier for product1 | USD      | 10                 |
     And product copy_of_product1 should have following prices information:
       | price            | 100.00          |
       | ecotax           | 0               |
       | tax rules group  | US-AL Rate (4%) |
       | on_sale          | true            |
-      | wholesale_price  | 70              |
-      | unit_price       | 900             |
+      # wholesale_price = 10, because of assigned product supplier 'price tax excluded'.
+      | wholesale_price  | 10              |
+      | unit_price       | 500             |
       | unity            | bag of ten      |
-      | unit_price_ratio | 0.111111        |
+      | unit_price_ratio | 0.2             |
     And product "copy_of_product1" localized "meta_title" should be "en-US:SUNGLASSES meta title"
     And product "copy_of_product1" localized "meta_description" should be "en-US:Its so smart, almost magical ;fr-FR:lel joke"
     And product "copy_of_product1" localized "link_rewrite" should be "en-US:smart-sunglasses ;fr-FR:lunettes-de-soleil"
@@ -134,21 +141,18 @@ Feature: Duplicate product from Back Office (BO).
       | redirect_target | product2    |
     And product copy_of_product1 redirect target should be product2
     And product "copy_of_product1" should have following shipping information:
-      | width                            | 10.5                                                 |
-      | height                           | 6                                                    |
-      | depth                            | 7                                                    |
-      | weight                           | 0.5                                                  |
-      | additional_shipping_cost         | 12                                                   |
-      | delivery time notes type         | specific                                             |
+      | width                            | 10.5                                                  |
+      | height                           | 6                                                     |
+      | depth                            | 7                                                     |
+      | weight                           | 0.5                                                   |
+      | additional_shipping_cost         | 12                                                    |
+      | delivery time notes type         | specific                                              |
       | delivery time in stock notes     | en-US:product in stock ;fr-FR:en stock                |
       | delivery time out of stock notes | en-US:product out of stock ;fr-FR:En rupture de stock |
-      | carriers                         | [carrier1,carrier2]                                  |
-    And product copy_of_product1 should have following suppliers:
-      | product supplier reference     | currency | price tax excluded |
-      | my first supplier for product1 | USD      | 10                 |
+      | carriers                         | [carrier1,carrier2]                                   |
     And product copy_of_product1 should have following related products:
       | product2 |
     And product copy_of_product1 should have following customization fields:
-      | reference    | type | name                                                                      | is required |
+      | reference    | type | name                                                                       | is required |
       | customField1 | text | en-US:text on top of left lense ;fr-FR:texte en haut de la lentille gauche | true        |
     And product copy_of_product1 should have following attachments associated: "[att1]"
