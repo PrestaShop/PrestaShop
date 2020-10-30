@@ -395,5 +395,9 @@
 	path = modules/gt_extra_fields
 	url = https://github.com/greentic/gt_extra_fields.git
 	branch = master
+[submodule "modules/gtmarketplace"]
+	path = modules/gtmarketplace
+	url = https://git.greentic.net/marketplace/gtmarketplace.git
+	branch = master
 
 
