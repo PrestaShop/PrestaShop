@@ -180,13 +180,10 @@ class ProductDuplicator
         $this->setName($product);
         $this->setPriceByShops($product);
 
-        unset($product->id, $product->id_product);
         $product->indexed = false;
         $product->active = false;
 
-        $this->productRepository->add($product)->getValue();
-
-        return $product;
+        return $this->productRepository->duplicate($product);
     }
 
     /**
