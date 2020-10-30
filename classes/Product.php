@@ -4302,10 +4302,10 @@ class ProductCore extends ObjectModel
      */
     public static function getAttributesColorList(array $products, $have_stock = true)
     {
-        if (1 < \func_num_args()) { 
-            trigger_error('$have_stock parameter is deprecated and will be removed in a future release', E_USER_DEPRECATED);    
+        if (1 < \func_num_args()) {
+            trigger_error('$have_stock parameter is deprecated and will be removed in a future release', E_USER_DEPRECATED);
         }
-        
+
         if (!count($products)) {
             return [];
         }
