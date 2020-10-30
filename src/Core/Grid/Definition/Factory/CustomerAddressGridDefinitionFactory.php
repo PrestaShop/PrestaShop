@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\ViewOptionsCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 
 /**
  * Class CustomerAddressGridDefinitionFactory defines customer's addresses grid structure.
@@ -43,6 +44,17 @@ final class CustomerAddressGridDefinitionFactory extends AbstractGridDefinitionF
     use DeleteActionTrait;
 
     const GRID_ID = 'customer_address';
+
+    /**
+     * @var string
+     */
+    private $backUrl;
+
+    public function __construct(HookDispatcherInterface $hookDispatcher, string $backUrl)
+    {
+        parent::__construct($hookDispatcher);
+        $this->backUrl = $backUrl;
+    }
 
     /**
      * {@inheritdoc}
@@ -120,13 +132,18 @@ final class CustomerAddressGridDefinitionFactory extends AbstractGridDefinitionF
                                 'route' => 'admin_addresses_edit',
                                 'route_param_name' => 'addressId',
                                 'route_param_field' => 'id_address',
+                                'extra_route_params' => [
+                                    'back' => $this->backUrl,
+                                ],
                             ])
                     )
                     ->add(
                         $this->buildDeleteAction(
                             'admin_addresses_delete',
                             'addressId',
-                            'id_address'
+                            'id_address',
+                            'POST',
+                            ['back' => $this->backUrl]
                         )
                     ),
             ])
