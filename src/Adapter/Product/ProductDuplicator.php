@@ -270,6 +270,7 @@ class ProductDuplicator
         $this->duplicateDownloads($oldProductId, $newProductId);
         $this->duplicateImages($oldProductId, $newProductId, $combinationImages);
         //@todo: carriers duplication missing (whole shipping)
+        //@todo: product_attachment association duplication missing
     }
 
     /**
