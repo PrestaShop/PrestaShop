@@ -36,7 +36,10 @@ use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotAddProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDuplicateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -88,16 +91,26 @@ class ProductRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * Duplicates product entity without relations
+     *
      * @param Product $product
      *
-     * @return ProductId
+     * @return Product
+     *
+     * @throws CoreException
+     * @throws CannotDuplicateProductException
+     * @throws ProductConstraintException
+     * @throws ProductException
      */
-    public function add(Product $product): ProductId
+    public function duplicate(Product $product): Product
     {
-        $this->productValidator->validate($product);
-        $this->addObjectModel($product, CannotAddProductException::class);
+        unset($product->id, $product->id_product);
 
-        return new ProductId((int) $product->id);
+        $this->productValidator->validateCreation($product);
+        $this->productValidator->validate($product);
+        $this->addObjectModel($product, CannotDuplicateProductException::class);
+
+        return $product;
     }
 
     /**
