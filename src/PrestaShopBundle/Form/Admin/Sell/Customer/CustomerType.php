@@ -293,7 +293,7 @@ class CustomerType extends TranslatorAwareType
                     ),
                     'scale' => 6,
                     'required' => false,
-                    'invalid_message' => $this->trans('This field is invalid', 'Admin.Notifications.Error'),
+                    'invalid_message' => $this->trans('This field is invalid.', 'Admin.Notifications.Error'),
                 ])
                 ->add('max_payment_days', IntegerType::class, [
                     'label' => $this->trans('Maximum number of payment days', 'Admin.Orderscustomers.Feature'),
