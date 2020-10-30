@@ -117,7 +117,7 @@ class CustomerType extends TranslatorAwareType
                 'label' => $this->trans('Social title', 'Admin.Global'),
             ])
             ->add('first_name', TextType::class, [
-                'label' => $this->trans('First name', 'First name'),
+                'label' => $this->trans('First name', 'Admin.Global'),
                 'help' => $this->trans(
                     'Only letters and the dot (.) character, followed by a space, are allowed.',
                     'Admin.Orderscustomers.Help'
@@ -214,7 +214,7 @@ class CustomerType extends TranslatorAwareType
                 'input' => 'string',
             ])
             ->add('is_enabled', SwitchType::class, [
-                'label' => $this->trans('Enabled', 'Admin.Orderscustomers.Feature'),
+                'label' => $this->trans('Enabled', 'Admin.Global'),
                 'help' => $this->trans(
                     'Enable or disable customer login.',
                     'Admin.Orderscustomers.Help'
@@ -249,7 +249,7 @@ class CustomerType extends TranslatorAwareType
                     ),
                     $this->trans(
                         'Only the discount for the selected group will be applied to this customer.',
-                        'Admin'
+                        'Admin.Orderscustomers.Help'
                     )
                 ),
                 'required' => false,
