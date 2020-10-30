@@ -121,7 +121,7 @@ class ImportType extends TranslatorAwareType
             ])
             ->add('sendemail', SwitchType::class, [
                 'label' => $this->trans('Send notification email', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('Sends an email to let you know your import is complete. It can be useful when handling large files, as the import may take some time.', 'Admin.Advparameters.Help'),
+                'help' => $this->trans('Receive an email when the import is complete. It can be useful when handling large files, as the import may take some time.', 'Admin.Advparameters.Help'),
             ])
             ->add('submitImportFile', SubmitType::class, [
                 'label' => $this->trans('Next step', 'Admin.Advparameters.Feature'),
