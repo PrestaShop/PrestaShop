@@ -269,6 +269,7 @@ class ProductDuplicator
         $this->duplicateTaxes($oldProductId, $newProductId);
         $this->duplicateDownloads($oldProductId, $newProductId);
         $this->duplicateImages($oldProductId, $newProductId, $combinationImages);
+        //@todo: carriers duplication missing (whole shipping)
     }
 
     /**
