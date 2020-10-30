@@ -1447,6 +1447,24 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
+     * @param int $orderId
+     *
+     * @return JsonResponse
+     */
+    public function getProductsAction(int $orderId): JsonResponse
+    {
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $orderForViewingProducts = $orderForViewing->getProducts();
+
+        return $this->json([
+            'products' => $orderForViewingProducts->getProducts(),
+        ]);
+    }
+
+    /**
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     message="You do not have permission to generate this."
