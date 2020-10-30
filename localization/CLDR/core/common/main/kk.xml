@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2019 Unicode, Inc.
+<!-- Copyright © 1991-2020 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
@@ -44,7 +44,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="awa">авадхи тілі</language>
 			<language type="ay">аймара тілі</language>
 			<language type="az">әзірбайжан тілі</language>
-			<language type="az" alt="short">әзірбайжан тілі</language>
 			<language type="ba">башқұрт тілі</language>
 			<language type="ban">бали тілі</language>
 			<language type="bas">баса тілі</language>
@@ -119,6 +118,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="eu">баск тілі</language>
 			<language type="ewo">эвондо тілі</language>
 			<language type="fa">парсы тілі</language>
+			<language type="fa_AF" draft="contributed">дари тілі</language>
 			<language type="ff">фула тілі</language>
 			<language type="fi">фин тілі</language>
 			<language type="fil">филиппин тілі</language>
@@ -445,9 +445,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<script type="Hang">хангыл жазуы</script>
 			<script type="Hani">қытай жазуы</script>
 			<script type="Hans">жеңілдетілген қытай иероглифы</script>
-			<script type="Hans" alt="stand-alone">жеңілдетілген қытай иероглифы</script>
 			<script type="Hant">дәстүрлі қытай иероглифы</script>
-			<script type="Hant" alt="stand-alone">дәстүрлі қытай иероглифы</script>
 			<script type="Hebr">иврит жазуы</script>
 			<script type="Hira">хирагана жазуы</script>
 			<script type="Hrkt">хирагана немесе катакана</script>
@@ -555,7 +553,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="CG" alt="variant">Конго Республикасы</territory>
 			<territory type="CH">Швейцария</territory>
 			<territory type="CI">Кот-д’Ивуар</territory>
-			<territory type="CI" alt="variant">Кот-д’Ивуар</territory>
 			<territory type="CK">Кук аралдары</territory>
 			<territory type="CL">Чили</territory>
 			<territory type="CM">Камерун</territory>
@@ -596,7 +593,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="FR">Франция</territory>
 			<territory type="GA">Габон</territory>
 			<territory type="GB">Ұлыбритания</territory>
-			<territory type="GB" alt="short">Ұлыбритания</territory>
 			<territory type="GD">Гренада</territory>
 			<territory type="GE">Грузия</territory>
 			<territory type="GF">Француз Гвианасы</territory>
@@ -738,13 +734,12 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="SX">Синт-Мартен</territory>
 			<territory type="SY">Сирия</territory>
 			<territory type="SZ">Свазиленд</territory>
-			<territory type="SZ" alt="variant">Свазиленд</territory>
 			<territory type="TA">Тристан-да-Кунья</territory>
 			<territory type="TC">Теркс және Кайкос аралдары</territory>
 			<territory type="TD">Чад</territory>
 			<territory type="TF">Францияның оңтүстік аймақтары</territory>
 			<territory type="TG">Того</territory>
-			<territory type="TH">Тайланд</territory>
+			<territory type="TH">Таиланд</territory>
 			<territory type="TJ">Тәжікстан</territory>
 			<territory type="TK">Токелау</territory>
 			<territory type="TL">Тимор-Лесте</territory>
@@ -3245,9 +3240,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<zone type="Europe/Kaliningrad">
 				<exemplarCity>Калининград</exemplarCity>
 			</zone>
-			<zone type="Europe/Simferopol">
-				<exemplarCity>Симферополь</exemplarCity>
-			</zone>
 			<zone type="Europe/Moscow">
 				<exemplarCity>Мәскеу</exemplarCity>
 			</zone>
@@ -3442,6 +3434,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</zone>
 			<zone type="Europe/Kiev">
 				<exemplarCity>Киев</exemplarCity>
+			</zone>
+			<zone type="Europe/Simferopol">
+				<exemplarCity>Симферополь</exemplarCity>
 			</zone>
 			<zone type="Europe/Zaporozhye">
 				<exemplarCity>Запорожье</exemplarCity>
@@ -4219,7 +4214,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</metazone>
 			<metazone type="Norfolk">
 				<long>
-					<standard>Норфолк аралы уақыты</standard>
+					<generic draft="contributed">Норфолк аралы уақыты</generic>
+					<standard draft="contributed">Норфолк аралы стандартты уақыты</standard>
+					<daylight draft="contributed">Норфолк аралы жазғы уақыты</daylight>
 				</long>
 			</metazone>
 			<metazone type="Noronha">
@@ -5695,15 +5692,107 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 	</numbers>
 	<units>
 		<unitLength type="long">
+			<compoundUnit type="10p-1">
+				<unitPrefixPattern>{0} дециметр</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-2">
+				<unitPrefixPattern>{0} сантиметр</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-3">
+				<unitPrefixPattern>{0} миллиметр</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-6">
+				<unitPrefixPattern>{0} микрометр</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-9">
+				<unitPrefixPattern>{0} нанометр</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-12">
+				<unitPrefixPattern>{0} пикометр</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-15">
+				<unitPrefixPattern>{0} фемтометр</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-18">
+				<unitPrefixPattern>{0} аттометр</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-21">
+				<unitPrefixPattern>{0} зептометр</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-24">
+				<unitPrefixPattern>{0} йоктометр</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p1">
+				<unitPrefixPattern>{0} декаметр</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p2">
+				<unitPrefixPattern>{0} гектометр</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p3">
+				<unitPrefixPattern>{0} километр</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p6">
+				<unitPrefixPattern>{0} мегаметр</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p9">
+				<unitPrefixPattern>{0} гигаметр</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p12">
+				<unitPrefixPattern>{0} тераметр</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p15">
+				<unitPrefixPattern>{0} петаметр</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p18">
+				<unitPrefixPattern>{0} эксаметр</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p21">
+				<unitPrefixPattern>{0} зеттаметр</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p24">
+				<unitPrefixPattern>{0} йоттаметр</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p1">
+				<unitPrefixPattern draft="contributed">киби{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p2">
+				<unitPrefixPattern draft="contributed">меби{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p3">
+				<unitPrefixPattern draft="contributed">гиби{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p4">
+				<unitPrefixPattern draft="contributed">теби{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p5">
+				<unitPrefixPattern draft="contributed">пеби{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p6">
+				<unitPrefixPattern draft="contributed">эксби{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p7">
+				<unitPrefixPattern draft="contributed">зеби{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p8">
+				<unitPrefixPattern draft="contributed">йоби{0}</unitPrefixPattern>
+			</compoundUnit>
 			<compoundUnit type="per">
 				<compoundUnitPattern>{0}/{1}</compoundUnitPattern>
+			</compoundUnit>
+			<compoundUnit type="power2">
+				<compoundUnitPattern1 count="one">шаршы {0}</compoundUnitPattern1>
+				<compoundUnitPattern1 count="other">квадрат {0}</compoundUnitPattern1>
+			</compoundUnit>
+			<compoundUnit type="power3">
+				<compoundUnitPattern1 count="one">текше {0}</compoundUnitPattern1>
+				<compoundUnitPattern1 count="other">текше {0}</compoundUnitPattern1>
 			</compoundUnit>
 			<unit type="acceleration-g-force">
 				<displayName>гравитациялық күш</displayName>
 				<unitPattern count="one">{0} гравитациялық күш</unitPattern>
 				<unitPattern count="other">{0} гравитациялық күш</unitPattern>
 			</unit>
-			<unit type="acceleration-meter-per-second-squared">
+			<unit type="acceleration-meter-per-square-second">
 				<displayName>метр/шаршы секунд</displayName>
 				<unitPattern count="one">{0} метр/шаршы секунд</unitPattern>
 				<unitPattern count="other">{0} метр/шаршы секунд</unitPattern>
@@ -5803,7 +5892,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} миллимоль/литр</unitPattern>
 				<unitPattern count="other">{0} миллимоль/литр</unitPattern>
 			</unit>
-			<unit type="concentr-part-per-million">
+			<unit type="concentr-permillion">
 				<displayName>миллиондық үлес</displayName>
 				<unitPattern count="one">{0} миллиондық үлес</unitPattern>
 				<unitPattern count="other">{0} миллиондық үлес</unitPattern>
@@ -5833,7 +5922,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} литр/километр</unitPattern>
 				<unitPattern count="other">{0} литр/километр</unitPattern>
 			</unit>
-			<unit type="consumption-liter-per-100kilometers">
+			<unit type="consumption-liter-per-100-kilometer">
 				<displayName>литр/100 километр</displayName>
 				<unitPattern count="one">{0} литр/100 километр</unitPattern>
 				<unitPattern count="other">{0} литр/100 километр</unitPattern>
@@ -6031,9 +6120,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0} британдық жылу бірлігі</unitPattern>
 			</unit>
 			<unit type="energy-therm-us">
-				<displayName draft="provisional">америка термі</displayName>
-				<unitPattern count="one" draft="provisional">{0} америка термі</unitPattern>
-				<unitPattern count="other" draft="provisional">{0} америка термі</unitPattern>
+				<displayName>америка термі</displayName>
+				<unitPattern count="one">{0} америка термі</unitPattern>
+				<unitPattern count="other">{0} америка термі</unitPattern>
 			</unit>
 			<unit type="force-pound-force">
 				<displayName>фунт-күш</displayName>
@@ -6099,6 +6188,16 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>нүкте/дюйм</displayName>
 				<unitPattern count="one">{0} нүкте/дюйм</unitPattern>
 				<unitPattern count="other">{0} нүкте/дюйм</unitPattern>
+			</unit>
+			<unit type="graphics-dot">
+				<displayName draft="contributed">нүкте</displayName>
+				<unitPattern count="one">{0} нүкте</unitPattern>
+				<unitPattern count="other">{0} нүкте</unitPattern>
+			</unit>
+			<unit type="length-earth-radius">
+				<displayName draft="contributed">Жер радиусы</displayName>
+				<unitPattern count="one" draft="contributed">{0} Жер радиусы</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} Жер радиусы</unitPattern>
 			</unit>
 			<unit type="length-kilometer">
 				<displayName>километр</displayName>
@@ -6180,6 +6279,16 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} астрономиялық бірлік</unitPattern>
 				<unitPattern count="other">{0} астрономиялық бірлік</unitPattern>
 			</unit>
+			<unit type="length-furlong">
+				<displayName draft="contributed">фурлонг</displayName>
+				<unitPattern count="one" draft="contributed">{0} фурлонг</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} фурлонг</unitPattern>
+			</unit>
+			<unit type="length-fathom">
+				<displayName draft="contributed">фатом</displayName>
+				<unitPattern count="one" draft="contributed">{0} фатом</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} фатом</unitPattern>
+			</unit>
 			<unit type="length-nautical-mile">
 				<displayName>теңіз милясы</displayName>
 				<unitPattern count="one">{0} теңіз милясы</unitPattern>
@@ -6204,6 +6313,16 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>люкс</displayName>
 				<unitPattern count="one">{0} люкс</unitPattern>
 				<unitPattern count="other">{0} люкс</unitPattern>
+			</unit>
+			<unit type="light-candela">
+				<displayName draft="contributed">кандела</displayName>
+				<unitPattern count="one" draft="contributed">{0} кандела</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} кандела</unitPattern>
+			</unit>
+			<unit type="light-lumen">
+				<displayName draft="contributed">люмен</displayName>
+				<unitPattern count="one" draft="contributed">{0} люмен</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} люмен</unitPattern>
 			</unit>
 			<unit type="light-solar-luminosity">
 				<displayName>Күн жарықтығы</displayName>
@@ -6242,6 +6361,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} тонна</unitPattern>
 				<unitPattern count="other">{0} тонна</unitPattern>
 			</unit>
+			<unit type="mass-stone">
+				<displayName draft="contributed">стоун</displayName>
+				<unitPattern count="one" draft="contributed">{0} стоун</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} стоун</unitPattern>
+			</unit>
 			<unit type="mass-pound">
 				<displayName>фунт</displayName>
 				<unitPattern count="one">{0} фунт</unitPattern>
@@ -6279,6 +6403,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} Күн массасы</unitPattern>
 				<unitPattern count="other">{0} Күн массасы</unitPattern>
 			</unit>
+			<unit type="mass-grain">
+				<displayName draft="contributed">гран</displayName>
+				<unitPattern count="one" draft="contributed">{0} гран</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} гран</unitPattern>
+			</unit>
 			<unit type="power-gigawatt">
 				<displayName>гигаватт</displayName>
 				<unitPattern count="one">{0} гигаватт</unitPattern>
@@ -6309,17 +6438,17 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} ат күші</unitPattern>
 				<unitPattern count="other">{0} ат күші</unitPattern>
 			</unit>
-			<unit type="pressure-millimeter-of-mercury">
+			<unit type="pressure-millimeter-ofhg">
 				<displayName>миллиметр сынап бағанасы</displayName>
 				<unitPattern count="one">{0} миллиметр сынап бағанасы</unitPattern>
 				<unitPattern count="other">{0} миллиметр сынап бағанасы</unitPattern>
 			</unit>
-			<unit type="pressure-pound-per-square-inch">
+			<unit type="pressure-pound-force-per-square-inch">
 				<displayName>фунт/шаршы дюйм</displayName>
 				<unitPattern count="one">{0} фунт/шаршы дюйм</unitPattern>
 				<unitPattern count="other">{0} фунт/шаршы дюйм</unitPattern>
 			</unit>
-			<unit type="pressure-inch-hg">
+			<unit type="pressure-inch-ofhg">
 				<displayName>дюйм сынап бағанасы</displayName>
 				<unitPattern count="one">{0} дюйм сынап бағанасы</unitPattern>
 				<unitPattern count="other">{0} дюйм сынап бағанасы</unitPattern>
@@ -6399,7 +6528,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} кельвин</unitPattern>
 				<unitPattern count="other">{0} кельвин</unitPattern>
 			</unit>
-			<unit type="torque-pound-foot">
+			<unit type="torque-pound-force-foot">
 				<displayName>фунт-фут</displayName>
 				<unitPattern count="one">{0} фунт-фут</unitPattern>
 				<unitPattern count="other">{0} фунт-фут</unitPattern>
@@ -6492,6 +6621,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} aкро-фут</unitPattern>
 				<unitPattern count="other">{0} aкро-фут</unitPattern>
 			</unit>
+			<unit type="volume-bushel">
+				<displayName draft="contributed">бушель</displayName>
+				<unitPattern count="one" draft="contributed">{0} бушель</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} бушель</unitPattern>
+			</unit>
 			<unit type="volume-gallon">
 				<displayName>галлон</displayName>
 				<unitPattern count="one">{0} галлон</unitPattern>
@@ -6544,6 +6678,41 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} баррель</unitPattern>
 				<unitPattern count="other">{0} баррель</unitPattern>
 			</unit>
+			<unit type="volume-dessert-spoon">
+				<displayName draft="contributed">десерт қасығы</displayName>
+				<unitPattern count="one" draft="contributed">{0} десерт қасығы</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} десерт қасығы</unitPattern>
+			</unit>
+			<unit type="volume-dessert-spoon-imperial">
+				<displayName draft="contributed">британдық десерт қасығы</displayName>
+				<unitPattern count="one" draft="contributed">{0} британдық десерт қасығы</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} британдық десерт қасығы</unitPattern>
+			</unit>
+			<unit type="volume-drop">
+				<displayName draft="contributed">тамшы</displayName>
+				<unitPattern count="one" draft="contributed">{0} тамшы</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} тамшы</unitPattern>
+			</unit>
+			<unit type="volume-dram">
+				<displayName draft="contributed">драхма</displayName>
+				<unitPattern count="one" draft="contributed">{0} драхма</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} драхма</unitPattern>
+			</unit>
+			<unit type="volume-jigger">
+				<displayName draft="contributed">джиггер</displayName>
+				<unitPattern count="one" draft="contributed">{0} джиггер</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} джиггер</unitPattern>
+			</unit>
+			<unit type="volume-pinch">
+				<displayName draft="contributed">шөкім</displayName>
+				<unitPattern count="one" draft="contributed">{0} шөкім</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} шөкім</unitPattern>
+			</unit>
+			<unit type="volume-quart-imperial">
+				<displayName draft="contributed">британдық кварта</displayName>
+				<unitPattern count="one" draft="contributed">{0} британдық кварта</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} британдық кварта</unitPattern>
+			</unit>
 			<coordinateUnit>
 				<displayName>негізгі бағыт</displayName>
 				<coordinateUnitPattern type="east">{0} шығыс</coordinateUnitPattern>
@@ -6553,6 +6722,90 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</coordinateUnit>
 		</unitLength>
 		<unitLength type="short">
+			<compoundUnit type="10p-1">
+				<unitPrefixPattern>{0} дм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-2">
+				<unitPrefixPattern>{0} см</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-3">
+				<unitPrefixPattern>{0} мм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-6">
+				<unitPrefixPattern>{0} мкм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-9">
+				<unitPrefixPattern>{0} нм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-12">
+				<unitPrefixPattern>{0} пм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-15">
+				<unitPrefixPattern>{0} фм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-18">
+				<unitPrefixPattern>{0} ам</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-21">
+				<unitPrefixPattern>{0} зм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-24">
+				<unitPrefixPattern>{0} йм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p1">
+				<unitPrefixPattern>{0} дам</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p2">
+				<unitPrefixPattern>{0} гм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p3">
+				<unitPrefixPattern>{0} км</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p6">
+				<unitPrefixPattern>{0} Мм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p9">
+				<unitPrefixPattern>{0} Гм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p12">
+				<unitPrefixPattern>{0} Тм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p15">
+				<unitPrefixPattern>{0} Пм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p18">
+				<unitPrefixPattern>{0} Эм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p21">
+				<unitPrefixPattern>{0} Зм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p24">
+				<unitPrefixPattern>{0} Йм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p1">
+				<unitPrefixPattern draft="contributed">Ки{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p2">
+				<unitPrefixPattern draft="contributed">Ми{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p3">
+				<unitPrefixPattern draft="contributed">Ги{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p4">
+				<unitPrefixPattern draft="contributed">Ти{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p5">
+				<unitPrefixPattern draft="contributed">Пи{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p6">
+				<unitPrefixPattern draft="contributed">Эи{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p7">
+				<unitPrefixPattern draft="contributed">Зи{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p8">
+				<unitPrefixPattern draft="contributed">Йи{0}</unitPrefixPattern>
+			</compoundUnit>
 			<compoundUnit type="per">
 				<compoundUnitPattern>{0}/{1}</compoundUnitPattern>
 			</compoundUnit>
@@ -6561,7 +6814,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} G</unitPattern>
 				<unitPattern count="other">{0} G</unitPattern>
 			</unit>
-			<unit type="acceleration-meter-per-second-squared">
+			<unit type="acceleration-meter-per-square-second">
 				<displayName>метр/сек²</displayName>
 				<unitPattern count="one">{0} м/с²</unitPattern>
 				<unitPattern count="other">{0} м/с²</unitPattern>
@@ -6661,7 +6914,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} ммоль/л</unitPattern>
 				<unitPattern count="other">{0} ммоль/л</unitPattern>
 			</unit>
-			<unit type="concentr-part-per-million">
+			<unit type="concentr-permillion">
 				<displayName>ppm</displayName>
 				<unitPattern count="one">{0} ppm</unitPattern>
 				<unitPattern count="other">{0} ppm</unitPattern>
@@ -6691,7 +6944,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} л/км</unitPattern>
 				<unitPattern count="other">{0} л/км</unitPattern>
 			</unit>
-			<unit type="consumption-liter-per-100kilometers">
+			<unit type="consumption-liter-per-100-kilometer">
 				<displayName>л/100 км</displayName>
 				<unitPattern count="one">{0} л/100 км</unitPattern>
 				<unitPattern count="other">{0} л/100 км</unitPattern>
@@ -6889,7 +7142,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0} Btu</unitPattern>
 			</unit>
 			<unit type="energy-therm-us">
-				<displayName draft="provisional">америка термі</displayName>
+				<displayName>америка термі</displayName>
 				<unitPattern count="one">{0} амер. термі</unitPattern>
 				<unitPattern count="other">{0} амер. термі</unitPattern>
 			</unit>
@@ -6947,6 +7200,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>нүкте/дюйм</displayName>
 				<unitPattern count="one">{0} нүкте/дюйм</unitPattern>
 				<unitPattern count="other">{0} нүкте/дюйм</unitPattern>
+			</unit>
+			<unit type="graphics-dot">
+				<displayName draft="contributed">нүкте</displayName>
+				<unitPattern count="one" draft="contributed">{0} нүкте</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} нүкте</unitPattern>
 			</unit>
 			<unit type="length-kilometer">
 				<displayName>км</displayName>
@@ -7028,6 +7286,16 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} а.б.</unitPattern>
 				<unitPattern count="other">{0} а.б.</unitPattern>
 			</unit>
+			<unit type="length-furlong">
+				<displayName draft="contributed">фурлонг</displayName>
+				<unitPattern count="one" draft="contributed">{0} фурлонг</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} фурлонг</unitPattern>
+			</unit>
+			<unit type="length-fathom">
+				<displayName draft="contributed">фатом</displayName>
+				<unitPattern count="one" draft="contributed">{0} fth</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} fth</unitPattern>
+			</unit>
 			<unit type="length-nautical-mile">
 				<displayName>nmi</displayName>
 				<unitPattern count="one">{0} nmi</unitPattern>
@@ -7040,8 +7308,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</unit>
 			<unit type="length-point">
 				<displayName>пункт</displayName>
-				<unitPattern count="one">{0} ұпай</unitPattern>
-				<unitPattern count="other">{0} ұпай</unitPattern>
+				<unitPattern count="one">{0} пункт</unitPattern>
+				<unitPattern count="other">{0} пункт</unitPattern>
 			</unit>
 			<unit type="length-solar-radius">
 				<displayName>R☉</displayName>
@@ -7052,6 +7320,16 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>люкс</displayName>
 				<unitPattern count="one">{0} лк</unitPattern>
 				<unitPattern count="other">{0} лк</unitPattern>
+			</unit>
+			<unit type="light-candela">
+				<displayName draft="contributed">Кд</displayName>
+				<unitPattern count="one" draft="contributed">{0} Кд</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} Кд</unitPattern>
+			</unit>
+			<unit type="light-lumen">
+				<displayName draft="contributed">лм</displayName>
+				<unitPattern count="one" draft="contributed">{0} лм</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} лм</unitPattern>
 			</unit>
 			<unit type="light-solar-luminosity">
 				<displayName>L☉</displayName>
@@ -7090,6 +7368,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} тн</unitPattern>
 				<unitPattern count="other">{0} тн</unitPattern>
 			</unit>
+			<unit type="mass-stone">
+				<displayName draft="contributed">стоун</displayName>
+				<unitPattern count="one" draft="contributed">{0} стоун</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} стоун</unitPattern>
+			</unit>
 			<unit type="mass-pound">
 				<displayName>фунт</displayName>
 				<unitPattern count="one">{0} фунт</unitPattern>
@@ -7127,6 +7410,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} M☉</unitPattern>
 				<unitPattern count="other">{0} M☉</unitPattern>
 			</unit>
+			<unit type="mass-grain">
+				<displayName draft="contributed">гран</displayName>
+				<unitPattern count="one" draft="contributed">{0} гран</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} гран</unitPattern>
+			</unit>
 			<unit type="power-gigawatt">
 				<displayName>ГВт</displayName>
 				<unitPattern count="one">{0} ГВт</unitPattern>
@@ -7157,17 +7445,17 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} а. к.</unitPattern>
 				<unitPattern count="other">{0} а. к.</unitPattern>
 			</unit>
-			<unit type="pressure-millimeter-of-mercury">
+			<unit type="pressure-millimeter-ofhg">
 				<displayName>мм с.б.</displayName>
 				<unitPattern count="one">{0} мм с.б.</unitPattern>
 				<unitPattern count="other">{0} мм с.б.</unitPattern>
 			</unit>
-			<unit type="pressure-pound-per-square-inch">
+			<unit type="pressure-pound-force-per-square-inch">
 				<displayName>psi</displayName>
 				<unitPattern count="one">{0} psi</unitPattern>
 				<unitPattern count="other">{0} psi</unitPattern>
 			</unit>
-			<unit type="pressure-inch-hg">
+			<unit type="pressure-inch-ofhg">
 				<displayName>дюйм сынап бағанасы</displayName>
 				<unitPattern count="one">{0} дюйм с.б.</unitPattern>
 				<unitPattern count="other">{0} дюйм с.б.</unitPattern>
@@ -7247,7 +7535,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} К</unitPattern>
 				<unitPattern count="other">{0} К</unitPattern>
 			</unit>
-			<unit type="torque-pound-foot">
+			<unit type="torque-pound-force-foot">
 				<displayName>lbf⋅ft</displayName>
 				<unitPattern count="one">{0} lbf⋅ft</unitPattern>
 				<unitPattern count="other">{0} lbf⋅ft</unitPattern>
@@ -7339,6 +7627,10 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} aкро-фут</unitPattern>
 				<unitPattern count="other">{0} aкро-фут</unitPattern>
 			</unit>
+			<unit type="volume-bushel">
+				<unitPattern count="one" draft="contributed">{0} bu</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} bu</unitPattern>
+			</unit>
 			<unit type="volume-gallon">
 				<displayName>гал.</displayName>
 				<unitPattern count="one">{0} гал.</unitPattern>
@@ -7391,6 +7683,41 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} bbl</unitPattern>
 				<unitPattern count="other">{0} bbl</unitPattern>
 			</unit>
+			<unit type="volume-dessert-spoon">
+				<displayName draft="contributed">дес. қас.</displayName>
+				<unitPattern count="one" draft="contributed">{0} дес. қас.</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} дес. қас.</unitPattern>
+			</unit>
+			<unit type="volume-dessert-spoon-imperial">
+				<displayName draft="contributed">брит. дес. қас.</displayName>
+				<unitPattern count="one" draft="contributed">{0} брит. дес. қас.</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} брит. дес. қас.</unitPattern>
+			</unit>
+			<unit type="volume-drop">
+				<displayName draft="contributed">тамшы</displayName>
+				<unitPattern count="one" draft="contributed">{0} тамшы</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} тамшы</unitPattern>
+			</unit>
+			<unit type="volume-dram">
+				<displayName draft="contributed">сұйық драхма</displayName>
+				<unitPattern count="one" draft="contributed">{0} сұй. драхма</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} сұй. драхма</unitPattern>
+			</unit>
+			<unit type="volume-jigger">
+				<displayName draft="contributed">джиггер</displayName>
+				<unitPattern count="one" draft="contributed">{0} джиггер</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} джиггер</unitPattern>
+			</unit>
+			<unit type="volume-pinch">
+				<displayName draft="contributed">шөкім</displayName>
+				<unitPattern count="one" draft="contributed">{0} шөкім</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} шөкім</unitPattern>
+			</unit>
+			<unit type="volume-quart-imperial">
+				<displayName draft="contributed">брит. кварта</displayName>
+				<unitPattern count="one" draft="contributed">{0} брит. кварта</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} брит. кварта</unitPattern>
+			</unit>
 			<coordinateUnit>
 				<displayName>бағыт</displayName>
 				<coordinateUnitPattern type="east">{0} Ш</coordinateUnitPattern>
@@ -7400,6 +7727,90 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</coordinateUnit>
 		</unitLength>
 		<unitLength type="narrow">
+			<compoundUnit type="10p-1">
+				<unitPrefixPattern>{0} дм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-2">
+				<unitPrefixPattern>{0} см</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-3">
+				<unitPrefixPattern>{0} мм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-6">
+				<unitPrefixPattern>{0} мкм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-9">
+				<unitPrefixPattern>{0} нм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-12">
+				<unitPrefixPattern>{0} пм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-15">
+				<unitPrefixPattern>{0} фм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-18">
+				<unitPrefixPattern>{0} ам</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-21">
+				<unitPrefixPattern>{0} зм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-24">
+				<unitPrefixPattern>{0} йм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p1">
+				<unitPrefixPattern>{0} дам</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p2">
+				<unitPrefixPattern>{0} гм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p3">
+				<unitPrefixPattern>{0} км</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p6">
+				<unitPrefixPattern>{0} Мм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p9">
+				<unitPrefixPattern>{0} Гм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p12">
+				<unitPrefixPattern>{0} Тм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p15">
+				<unitPrefixPattern>{0} Пм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p18">
+				<unitPrefixPattern>{0} Эм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p21">
+				<unitPrefixPattern>{0} Зм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p24">
+				<unitPrefixPattern>{0} Йм</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p1">
+				<unitPrefixPattern draft="contributed">Ки{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p2">
+				<unitPrefixPattern draft="contributed">Ми{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p3">
+				<unitPrefixPattern draft="contributed">Ги{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p4">
+				<unitPrefixPattern draft="contributed">Ти{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p5">
+				<unitPrefixPattern draft="contributed">Пи{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p6">
+				<unitPrefixPattern draft="contributed">Эи{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p7">
+				<unitPrefixPattern draft="contributed">Зи{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p8">
+				<unitPrefixPattern draft="contributed">Йи{0}</unitPrefixPattern>
+			</compoundUnit>
 			<compoundUnit type="per">
 				<compoundUnitPattern>{0}/{1}</compoundUnitPattern>
 			</compoundUnit>
@@ -7448,7 +7859,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0}%</unitPattern>
 				<unitPattern count="other">{0}%</unitPattern>
 			</unit>
-			<unit type="consumption-liter-per-100kilometers">
+			<unit type="consumption-liter-per-100-kilometer">
 				<displayName>л/100 км</displayName>
 				<unitPattern count="one">{0} л/100 км</unitPattern>
 				<unitPattern count="other">{0} л/100 км</unitPattern>
@@ -7567,7 +7978,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} ат күші</unitPattern>
 				<unitPattern count="other">{0} ат күші</unitPattern>
 			</unit>
-			<unit type="pressure-inch-hg">
+			<unit type="pressure-inch-ofhg">
 				<unitPattern count="one">{0} inHg</unitPattern>
 				<unitPattern count="other">{0} inHg</unitPattern>
 			</unit>
@@ -7685,6 +8096,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<characterLabelPattern type="scripts">жазулар — {0}</characterLabelPattern>
 		<characterLabelPattern type="strokes" count="one">{0} сызық</characterLabelPattern>
 		<characterLabelPattern type="strokes" count="other">{0} сызық</characterLabelPattern>
+		<characterLabelPattern type="subscript" draft="contributed">жол асты таңба {0}</characterLabelPattern>
+		<characterLabelPattern type="superscript" draft="contributed">жол үсті таңба {0}</characterLabelPattern>
 		<characterLabel type="activities">әрекет</characterLabel>
 		<characterLabel type="african_scripts">Африка жазулары</characterLabel>
 		<characterLabel type="american_scripts">Америка жазулары</characterLabel>
