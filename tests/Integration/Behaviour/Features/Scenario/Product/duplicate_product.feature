@@ -1,6 +1,7 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags duplicate-product
 @reset-database-before-feature
 @duplicate-product
+@clear-downloads-after-feature
 Feature: Duplicate product from Back Office (BO).
   As an employee I want to be able to duplicate product
 
