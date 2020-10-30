@@ -313,6 +313,17 @@ admin_orders_get_payments:
   options:
     expose: true
 
+admin_orders_get_products:
+  path: /{orderId}/products
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:getProductsList
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
 admin_orders_get_invoices:
   path: /{orderId}/invoices
   methods: [GET]
