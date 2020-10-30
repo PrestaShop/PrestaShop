@@ -42,6 +42,7 @@ class BackUrlProvider
     {
         $backUrl = $request->query->get('back');
 
-        return urldecode($backUrl);
+        // convert '+' to its url code so it doesn't get decoded as a space character
+        return urldecode(str_replace('+', '%2B', $backUrl));
     }
 }
