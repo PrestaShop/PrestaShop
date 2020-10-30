@@ -93,6 +93,7 @@ export default class OrderViewPage {
       this.orderProductRenderer.updateNumProducts(numProducts - 1);
       this.orderPricesRefresher.refresh(event.orderId);
       this.orderPaymentsRefresher.refresh(event.orderId);
+      this.refreshProductsList(event.orderId);
       this.orderDiscountsRefresher.refresh(event.orderId);
       this.orderDocumentsRefresher.refresh(event.orderId);
     });
@@ -346,5 +347,17 @@ export default class OrderViewPage {
 
   getActivePage() {
     return $(OrderViewPageMap.productsTablePagination).find('.active span').get(0);
+  }
+
+  refreshProductsList(orderId) {
+    $.ajax(this.router.generate('admin_orders_get_products', {orderId})).then((response) => {
+      // Delete previous product lines
+      $(OrderViewPageMap.productsTable).find(OrderViewPageMap.productsTableRows).remove();
+
+      $(OrderViewPageMap.productsTable + ' tbody').prepend(response);
+
+      this.listenForProductDelete();
+      this.listenForProductEdit();
+    });
   }
 }
