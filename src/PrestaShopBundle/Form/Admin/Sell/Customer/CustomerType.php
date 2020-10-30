@@ -124,7 +124,7 @@ class CustomerType extends TranslatorAwareType
                 ),
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->trans('This field cannot be empty', 'Admin.Notifications.Error'),
+                        'message' => $this->trans('This field cannot be empty.', 'Admin.Notifications.Error'),
                     ]),
                     new Length([
                         'max' => FirstName::MAX_LENGTH,
@@ -150,7 +150,7 @@ class CustomerType extends TranslatorAwareType
                 ),
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->trans('This field cannot be empty', 'Admin.Notifications.Error'),
+                        'message' => $this->trans('This field cannot be empty.', 'Admin.Notifications.Error'),
                     ]),
                     new Length([
                         'max' => LastName::MAX_LENGTH,
@@ -173,10 +173,10 @@ class CustomerType extends TranslatorAwareType
                 'label' => $this->trans('Email', 'Admin.Global'),
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->trans('This field cannot be empty', 'Admin.Notifications.Error'),
+                        'message' => $this->trans('This field cannot be empty.', 'Admin.Notifications.Error'),
                     ]),
                     new Email([
-                        'message' => $this->trans('This field is invalid', 'Admin.Notifications.Error'),
+                        'message' => $this->trans('This field is invalid.', 'Admin.Notifications.Error'),
                     ]),
                 ],
             ])
@@ -274,7 +274,7 @@ class CustomerType extends TranslatorAwareType
                     'constraints' => [
                         new Type([
                             'type' => 'alnum',
-                            'message' => $this->trans('This field is invalid', 'Admin.Notifications.Error'),
+                            'message' => $this->trans('This field is invalid.', 'Admin.Notifications.Error'),
                         ]),
                     ],
                 ])
