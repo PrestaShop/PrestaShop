@@ -305,7 +305,7 @@ class CustomerType extends TranslatorAwareType
                         )
                     ),
                     'required' => false,
-                    'invalid_message' => $this->trans('This field is invalid', 'Admin.Notifications.Error'),
+                    'invalid_message' => $this->trans('This field is invalid.', 'Admin.Notifications.Error'),
                 ])
                 ->add('risk_id', ChoiceType::class, [
                     'label' => $this->trans('Risk rating', 'Admin.Orderscustomers.Feature'),
