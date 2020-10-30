@@ -24,7 +24,7 @@
  *#}
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+{% form_theme importThemeForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {% set layoutTitle = 'Theme & Logo'|trans({}, 'Admin.Navigation.Menu') ~ ' > ' ~ 'Theme'|trans({}, 'Admin.Design.Feature') %}
 {% set layoutHeaderToolbarBtn = {
@@ -54,10 +54,7 @@
               </h3>
               <div class="card-block row">
                 <div class="card-text">
-                  {{ ps.form_group_row(importThemeForm.import_from_computer, {}, {
-                    label: 'Zip file'|trans({}, 'Admin.Design.Feature'),
-                    help: 'Browse your computer files and select the Zip file for your new theme.'|trans({}, 'Admin.Design.Help')
-                  }) }}
+                  {{ form_row(importThemeForm.import_from_computer) }}
                 </div>
               </div>
               <div class="card-footer">
@@ -79,10 +76,7 @@
               </h3>
               <div class="card-block row">
                 <div class="card-text">
-                  {{ ps.form_group_row(importThemeForm.import_from_web, {}, {
-                    label: 'Archive URL'|trans({}, 'Admin.Design.Feature'),
-                    help: 'Indicate the complete URL to an online Zip file that contains your new theme. For instance, "http://example.com/files/theme.zip".'|trans({}, 'Admin.Design.Help')
-                  }) }}
+                  {{ form_row(importThemeForm.import_from_web) }}
                 </div>
               </div>
               <div class="card-footer">
@@ -104,10 +98,7 @@
               </h3>
               <div class="card-block row">
                 <div class="card-text">
-                  {{ ps.form_group_row(importThemeForm.import_from_ftp, {}, {
-                    label: 'Select the archive'|trans({}, 'Admin.Design.Feature'),
-                    help: 'This selector lists the Zip files that you uploaded in the \'/themes\' folder.'|trans({}, 'Admin.Design.Help')
-                  }) }}
+                  {{ form_row(importThemeForm.import_from_ftp) }}
                 </div>
               </div>
               <div class="card-footer">
