@@ -111,7 +111,7 @@ class Tags extends BOBasePage {
         await this.selectByVisibleText(page, this.filterColumn(filterBy), value);
         break;
       default:
-      // Do nothing
+        throw new Error(`${filterBy} was not found as a filter`);
     }
     // click on search
     await this.clickAndWaitForNavigation(page, this.filterSearchButton);
