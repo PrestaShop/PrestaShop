@@ -49,6 +49,11 @@ final class LogDataFactory implements GridDataFactoryInterface
     private $translator;
 
     /**
+     * @var string
+     */
+    private $defaultEmptyData;
+
+    /**
      * @param GridDataFactoryInterface $dataFactory
      */
     public function __construct(
@@ -57,6 +62,7 @@ final class LogDataFactory implements GridDataFactoryInterface
     ) {
         $this->dataFactory = $dataFactory;
         $this->translator = $translator;
+        $this->defaultEmptyData = $this->translator->trans('---', [], 'Admin.Global');
     }
 
     /**
@@ -86,15 +92,22 @@ final class LogDataFactory implements GridDataFactoryInterface
     {
         foreach ($records as $key => $record) {
             $records[$key]['shop_name'] = $this->ShopContextFormated($record);
-            $records[$key]['language'] = $records[$key]['language'] ?? '---';
+            $records[$key]['language'] = $records[$key]['language'] ?? $this->defaultEmptyData;
         }
 
         return $records;
     }
 
+    /**
+     * Format shop context for grid.
+     *
+     * @param array $record
+     *
+     * @return string
+     */
     private function ShopContextFormated(array $record): string
     {
-        $shop_name = '--';
+        $shop_name = $this->defaultEmptyData;
 
         if ($record['in_all_shop']) {
             $shop_name = $this->translator->trans('All shops', [], 'Admin.Global');

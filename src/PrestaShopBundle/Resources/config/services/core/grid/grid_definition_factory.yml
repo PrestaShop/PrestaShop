@@ -16,7 +16,6 @@ services:
         arguments:
             - "@=service('router').generate('admin_common_reset_search', {'controller': 'logs', 'action': 'index'})"
             - "@=service('router').generate('admin_logs_index')"
-            - '@=service("prestashop.adapter.multistore_feature").isActive()'
         public: true
 
     prestashop.core.grid.definition.factory.email_logs:

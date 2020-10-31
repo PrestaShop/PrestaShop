@@ -59,11 +59,6 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $redirectionUrl;
 
     /**
-     * @var bool
-     */
-    private $isMultistoreFeatureEnabled;
-
-    /**
      * LogGridDefinitionFactory constructor.
      *
      * @param HookDispatcherInterface $hookDispatcher
@@ -73,13 +68,11 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
         $resetActionUrl,
-        $redirectionUrl,
-        $isMultistoreFeatureEnabled
+        $redirectionUrl
     ) {
         parent::__construct($hookDispatcher);
         $this->resetActionUrl = $resetActionUrl;
         $this->redirectionUrl = $redirectionUrl;
-        $this->isMultistoreFeatureEnabled = $isMultistoreFeatureEnabled;
     }
 
     /**
@@ -148,6 +141,20 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
+                (new DataColumn('shop_name'))
+                    ->setName($this->trans('Shop context', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'shop_name',
+                    ])
+            )
+            ->add(
+                (new DataColumn('language'))
+                    ->setName($this->trans('Language', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'language',
+                    ])
+            )
+            ->add(
                 (new DataColumn('error_code'))
                     ->setName($this->trans('Error code', [], 'Admin.Advparameters.Feature'))
                     ->setOptions([
@@ -166,20 +173,6 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new ActionColumn('actions'))
                     ->setName($this->trans('Actions', [], 'Admin.Global'))
             );
-
-        if ($this->isMultistoreFeatureEnabled) {
-            $columns
-                ->addAfter('object_id',
-                    (new DataColumn('shop_name'))
-                        ->setName($this->trans('Shop context', [], 'Admin.Global'))
-                        ->setOptions(['field' => 'shop_name'])
-                )
-                ->addAfter('shop_name',
-                    (new DataColumn('language'))
-                        ->setName($this->trans('Language', [], 'Admin.Global'))
-                        ->setOptions(['field' => 'language'])
-                );
-        }
 
         return $columns;
     }
