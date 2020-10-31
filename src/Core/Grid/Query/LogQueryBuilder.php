@@ -227,6 +227,7 @@ final class LogQueryBuilder extends AbstractDoctrineQueryBuilder
         if ($includeFirstname) {
             return 'CONCAT(e.`firstname`, \' \', e.`lastname`)';
         }
+
         return 'CONCAT(LEFT(e.`firstname`, 1), \'. \', e.`lastname`)';
     }
 }
