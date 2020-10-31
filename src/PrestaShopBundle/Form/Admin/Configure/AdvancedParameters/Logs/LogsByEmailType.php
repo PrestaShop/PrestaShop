@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs;
 
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Form\Admin\Type\LogSeverityChoiceType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -44,7 +44,6 @@ final class LogsByEmailType extends TranslatorAwareType
     {
         $builder
             ->add('logs_by_email', LogSeverityChoiceType::class, [
-                'label' => true,
                 'placeholder' => $this->trans(
                     '---',
                     'Admin.Global'
@@ -59,7 +58,6 @@ final class LogsByEmailType extends TranslatorAwareType
                 ),
             ])
             ->add('logs_email_receivers', TextType::class, [
-                'label' => true,
                 'label' => $this->trans(
                     'Send emails to',
                     'Admin.Advparameters.Feature'
