@@ -52,7 +52,7 @@
           <div class="card-block row">
             <div class="card-text">
               <div class="form-group row">
-                {% set helptip_severity = 'Leave empty if you do not want to receive any emails.'|trans({}, 'Admin.Advparameters.Help') ~ ' ' ~ 'Put in the following fields the recipients of these emails.'|trans({}, 'Admin.Advparameters.Help') %}
+                {% set helptip_severity = 'Leave empty to disable log alerts by email.'|trans({}, 'Admin.Advparameters.Help') ~ ' ' ~ 'Or enter the recipients of these emails in the following field.'|trans({}, 'Admin.Advparameters.Help') %}
                 {{ ps.label_with_help(('Minimum severity level'|trans), helptip_severity, 'form-control-label') }}
                 <div class="col-sm">
                   {{ form_errors(logsByEmailForm.logs_by_email) }}
