@@ -81,7 +81,7 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('wa.`id_webservice_account`, wa.`key`, wa.`description`, wa.`active`')
+        $qb->select('wa.`id_webservice_account`, wa.`key`, wa.`description`, wa.`active`, wa.hosts_check')
             ->orderBy(
                 $this->getModifiedOrderBy($searchCriteria->getOrderBy()),
                 $searchCriteria->getOrderWay()
@@ -129,6 +129,7 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
         $sqlFilters = (new SqlFilters())
             ->addFilter('key', 'wa.key', SqlFilters::WHERE_LIKE)
             ->addFilter('active', 'wa.active', SqlFilters::WHERE_STRICT)
+            ->addFilter('hosts_check', 'wa.hosts_check', SqlFilters::WHERE_STRICT)
             ->addFilter('description', 'wa.description', SqlFilters::WHERE_LIKE)
         ;
 

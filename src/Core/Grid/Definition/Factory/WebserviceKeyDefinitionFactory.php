@@ -141,6 +141,16 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
+                (new ToggleColumn('hosts_check'))
+                    ->setName($this->trans('Hosts check', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'hosts_check',
+                        'primary_field' => 'id_webservice_account',
+                        'route' => 'admin_webservice_keys_toggle_hostscheck',
+                        'route_param_name' => 'webserviceKeyId',
+                    ])
+            )
+            ->add(
                 (new ActionColumn('actions'))
                     ->setName($this->trans('Actions', [], 'Admin.Global'))
                     ->setOptions([
@@ -201,6 +211,15 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
                         'choice_translation_domain' => false,
                     ])
                     ->setAssociatedColumn('active')
+            )
+            ->add(
+                (new Filter('hosts_check', ChoiceType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'choices' => $this->statusChoices,
+                        'choice_translation_domain' => false,
+                    ])
+                    ->setAssociatedColumn('hosts_check')
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))

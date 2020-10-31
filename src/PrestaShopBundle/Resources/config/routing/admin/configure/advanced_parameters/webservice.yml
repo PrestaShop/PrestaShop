@@ -74,6 +74,17 @@ admin_webservice_keys_toggle_status:
     requirements:
         webserviceKeyId: \d+
 
+admin_webservice_keys_toggle_hostscheck:
+    path: /{webserviceKeyId}/toggle-hostscheck
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:toggleHostsCheck'
+        _legacy_controller: AdminWebservice
+        _legacy_parameters:
+            id_webservice_account: webserviceKeyId
+    requirements:
+        webserviceKeyId: \d+
+
 admin_webservice_keys_bulk_enable:
     path: /bulk-enable
     methods: POST

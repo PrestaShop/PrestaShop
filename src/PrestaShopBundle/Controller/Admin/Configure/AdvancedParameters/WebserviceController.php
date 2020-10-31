@@ -303,6 +303,33 @@ class WebserviceController extends FrameworkBundleAdminController
     }
 
     /**
+     * Enable/Disable hosts check.
+     *
+     * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     *
+     * @param int $webserviceKeyId
+     *
+     * @return RedirectResponse
+     */
+    public function toggleHostsCheckAction($webserviceKeyId)
+    {
+        $hostsCheckModifier = $this->get('prestashop.adapter.webservice.webservice_key_hostscheck_modifier');
+        $errors = $hostsCheckModifier->toggleHostsCheck($webserviceKeyId);
+
+        if (!empty($errors)) {
+            $this->flashErrors($errors);
+        } else {
+            $this->addFlash(
+                'success',
+                $this->trans('Update successful', 'Admin.Notifications.Success')
+            );
+        }
+
+        return $this->redirectToRoute('admin_webservice_keys_index');
+    }
+
+    /**
      * Process the Webservice configuration form.
      *
      * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
