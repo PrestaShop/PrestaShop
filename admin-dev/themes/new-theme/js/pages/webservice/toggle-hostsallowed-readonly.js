@@ -36,10 +36,10 @@ export default class ToggleHostsAllowedReadonly {
     self.$hostsAllowed = $('#webservice_key_hosts_allowed');
     self.$hostsCheckIsEnable = Boolean(Number(self.$hostsCheck.filter(':checked').val()));
     self.$hostsAllowed.prop('readonly', !self.$hostsCheckIsEnable);
-    
+
     self.$hostsCheck.on('change', (event) => {
-		self.$hostsCheckIsEnable = Boolean(Number($(event.currentTarget).val()));
-		self.$hostsAllowed.prop('readonly', !self.$hostsCheckIsEnable);
+      self.$hostsCheckIsEnable = Boolean(Number($(event.currentTarget).val()));
+      self.$hostsAllowed.prop('readonly', !self.$hostsCheckIsEnable);
     });
 
     return {};
