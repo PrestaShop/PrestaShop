@@ -37,7 +37,7 @@ class WebserviceKeyCore extends ObjectModel
     /** @var string Webservice Account hosts allowed */
     public $hosts_allowed;
 
-    /** @var string Webservice Account enable/disable hosts check */
+    /** @var bool Webservice Account enable/disable hosts check */
     public $hosts_check;
 
     /**
