@@ -120,7 +120,7 @@ final class LogDataFactory implements GridDataFactoryInterface
 
         if (!$record['id_shop'] && $record['id_shop_group']) {
             $shop_name = $this->translator->trans('Shop group', [], 'Admin.Global');
-            $shop_name .= ' ' . $record['shop_group_name'] . '(id : ' . $record['id_shop_group'] . ')';
+            $shop_name .= ' ' . $record['shop_group_name'] . ' (id : ' . $record['id_shop_group'] . ')';
         }
 
         return $shop_name;
