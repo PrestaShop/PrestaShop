@@ -105,7 +105,7 @@ final class LogDataFactory implements GridDataFactoryInterface
      *
      * @return string
      */
-    private function ShopContextFormated(array $record): string
+    private function ShopContextFormatted(array $record): string
     {
         $shop_name = $this->defaultEmptyData;
 
