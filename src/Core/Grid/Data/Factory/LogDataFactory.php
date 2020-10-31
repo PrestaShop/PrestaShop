@@ -91,7 +91,7 @@ final class LogDataFactory implements GridDataFactoryInterface
     private function modifyRecords(array $records): array
     {
         foreach ($records as $key => $record) {
-            $records[$key]['shop_name'] = $this->ShopContextFormated($record);
+            $records[$key]['shop_name'] = $this->ShopContextFormatted($record);
             $records[$key]['language'] = $records[$key]['language'] ?? $this->defaultEmptyData;
         }
 
