@@ -183,6 +183,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
      * Get query that searches grid rows.
      *
      * @param SearchCriteriaInterface $searchCriteria
+     *
      * @deprecated deprecated since 1.7.8.0
      * @see LogQueryBuilder::getSearchQueryBuilder
      *
@@ -206,6 +207,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
      * Get query that counts grid rows.
      *
      * @param SearchCriteriaInterface $searchCriteria
+     *
      * @deprecated deprecated since 1.7.8.0
      * @see LogQueryBuilder::getCountQueryBuilder
      *
@@ -225,6 +227,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
      * Build query body without select, sorting & limiting.
      *
      * @param SearchCriteriaInterface $searchCriteria
+     *
      * @deprecated deprecated since 1.7.8.0
      * @see LogQueryBuilder::buildGridQuery
      *
