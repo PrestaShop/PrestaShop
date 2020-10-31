@@ -31,6 +31,7 @@ use Cart;
 use Context;
 use Customer;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateProductQuantityInCartHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
@@ -47,11 +48,45 @@ use Product;
 final class UpdateProductQuantityInCartHandler extends AbstractCartHandler implements UpdateProductQuantityInCartHandlerInterface
 {
     /**
+     * @var ContextStateManager
+     */
+    private $contextStateManager;
+
+    /**
+     * @param ContextStateManager $contextStateManager
+     */
+    public function __construct(ContextStateManager $contextStateManager)
+    {
+        $this->contextStateManager = $contextStateManager;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(UpdateProductQuantityInCartCommand $command)
     {
         $cart = $this->getCart($command->getCartId());
+        $this->contextStateManager->setCart($cart);
+
+        try {
+            $this->updateProductQuantityInCart($cart, $command);
+        } finally {
+            $this->contextStateManager->restorePreviousContext();
+        }
+    }
+
+    /**
+     * @param Cart $cart
+     * @param UpdateProductQuantityInCartCommand $command
+     *
+     * @throws CartConstraintException
+     * @throws CartException
+     * @throws ProductException
+     * @throws ProductNotFoundException
+     * @throws ProductOutOfStockException
+     */
+    private function updateProductQuantityInCart(Cart $cart, UpdateProductQuantityInCartCommand $command): void
+    {
         $previousQty = $this->findPreviousQuantityInCart($cart, $command);
         $qtyDiff = abs($command->getNewQuantity() - $previousQty);
 

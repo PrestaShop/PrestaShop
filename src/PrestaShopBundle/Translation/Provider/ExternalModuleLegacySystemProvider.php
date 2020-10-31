@@ -43,22 +43,22 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 class ExternalModuleLegacySystemProvider extends AbstractProvider implements UseDefaultCatalogueInterface, SearchProviderInterface, UseModuleInterface
 {
     /**
-     * @var SearchProviderInterface|ModuleProvider the module provider
+     * @var ModuleProvider Module provider
      */
     private $moduleProvider;
 
     /**
-     * @var LoaderInterface the translation loader from legacy files
+     * @var LoaderInterface Translation loader from legacy files
      */
     private $legacyFileLoader;
 
     /**
-     * @var LegacyModuleExtractorInterface the extractor
+     * @var LegacyModuleExtractorInterface Extractor
      */
     private $legacyModuleExtractor;
 
     /**
-     * @var string the module name
+     * @var string Module name
      */
     private $moduleName;
 
@@ -72,7 +72,7 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
         $resourceDirectory,
         LoaderInterface $legacyFileLoader,
         LegacyModuleExtractorInterface $legacyModuleExtractor,
-        SearchProviderInterface $moduleProvider
+        ModuleProvider $moduleProvider
     ) {
         $this->moduleProvider = $moduleProvider;
         $this->legacyFileLoader = $legacyFileLoader;

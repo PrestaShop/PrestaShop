@@ -31,7 +31,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use Cache;
 use PHPUnit\Framework\Assert;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
@@ -177,7 +177,7 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
 
         foreach ($numberPriceFields as $field) {
             if (isset($expectedPrices[$field])) {
-                $expectedNumber = new Number((string) $expectedPrices[$field]);
+                $expectedNumber = new DecimalNumber((string) $expectedPrices[$field]);
                 $actualNumber = $propertyAccessor->getValue($actualPrices, $field);
 
                 if (!$expectedNumber->equals($actualNumber)) {

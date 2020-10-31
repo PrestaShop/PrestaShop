@@ -17,10 +17,11 @@ global.INSTALL = {
   URL: process.env.URL_INSTALL || `${global.FO.URL}install-dev/`,
   LANGUAGE: process.env.INSTALL_LANGUAGE || 'en',
   COUNTRY: process.env.INSTALL_COUNTRY || 'fr',
+  DB_SERVER: process.env.DB_SERVER || '127.0.0.1',
   DB_NAME: process.env.DB_NAME || 'prestashopdb',
   DB_USER: process.env.DB_USER || 'root',
   DB_PASSWD: process.env.DB_PASSWD || '',
-  SHOPNAME: process.env.SHOPNAME || 'Prestashop',
+  SHOPNAME: process.env.SHOPNAME || 'PrestaShop',
   PS_VERSION: process.env.PS_VERSION || '1.7.6.0',
 };
 
@@ -38,3 +39,5 @@ global.BROWSER = {
   },
   interceptErrors: JSON.parse(process.env.INTERCEPT_ERRORS || false),
 };
+
+global.GENERATE_FAILED_STEPS = process.env.GENERATE_FAILED_STEPS || false;

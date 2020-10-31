@@ -30,7 +30,7 @@ use CartRule;
 use Configuration;
 use Currency;
 use DateTime;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\CartRule\LegacyDiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
@@ -602,7 +602,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         if (null !== $amount) {
             $builder->setAmountDiscount(
                 new MoneyAmountCondition(
-                    new Money(new Number((string) $amount), new CurrencyId($amountCurrencyId)),
+                    new Money(new DecimalNumber((string) $amount), new CurrencyId($amountCurrencyId)),
                     !$amountTaxIncluded
                 )
             );
@@ -617,9 +617,9 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
 
     private function areNumbersEqual($number1, $number2): bool
     {
-        $number1 = new Number((string) $number1);
+        $number1 = new DecimalNumber((string) $number1);
 
-        return $number1->equals(new Number((string) $number2));
+        return $number1->equals(new DecimalNumber((string) $number2));
     }
 
     /**

@@ -174,6 +174,11 @@ class OrderCore extends ObjectModel
     public $round_type;
 
     /**
+     * @var string internal order note, what is only available in BO
+     */
+    public $note = '';
+
+    /**
      * @see ObjectModel::$definition
      */
     public static $definition = [
@@ -225,6 +230,7 @@ class OrderCore extends ObjectModel
             'reference' => ['type' => self::TYPE_STRING],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'note' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'],
         ],
     ];
 
@@ -256,6 +262,7 @@ class OrderCore extends ObjectModel
                 'getter' => 'getWsShippingNumber',
                 'setter' => 'setWsShippingNumber',
             ],
+            'note' => [],
         ],
         'associations' => [
             'order_rows' => ['resource' => 'order_row', 'setter' => false, 'virtual_entity' => true,
@@ -601,8 +608,8 @@ class OrderCore extends ObjectModel
         $row['tax_calculator'] = $tax_calculator;
         $row['tax_rate'] = $tax_calculator->getTotalRate();
 
-        $row['product_price'] = Tools::ps_round($row['unit_price_tax_excl'], 2);
-        $row['product_price_wt'] = Tools::ps_round($row['unit_price_tax_incl'], 2);
+        $row['product_price'] = Tools::ps_round($row['unit_price_tax_excl'], Context::getContext()->getComputingPrecision());
+        $row['product_price_wt'] = Tools::ps_round($row['unit_price_tax_incl'], Context::getContext()->getComputingPrecision());
 
         $group_reduction = 1;
         if ($row['group_reduction'] > 0) {
@@ -1896,10 +1903,16 @@ class OrderCore extends ObjectModel
         } else {
             $default_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
             if ($this->id_currency === $default_currency) {
-                $this->total_paid_real += Tools::ps_round(Tools::convertPrice($order_payment->amount, $this->id_currency, false), 2);
+                $this->total_paid_real += Tools::ps_round(
+                    Tools::convertPrice($order_payment->amount, $this->id_currency, false),
+                    Context::getContext()->getComputingPrecision()
+                );
             } else {
                 $amountInDefaultCurrency = Tools::convertPrice($order_payment->amount, $order_payment->id_currency, false);
-                $this->total_paid_real += Tools::ps_round(Tools::convertPrice($amountInDefaultCurrency, $this->id_currency, true), 2);
+                $this->total_paid_real += Tools::ps_round(
+                    Tools::convertPrice($amountInDefaultCurrency, $this->id_currency, true),
+                    Context::getContext()->getComputingPrecision()
+                );
             }
         }
 
@@ -2086,7 +2099,7 @@ class OrderCore extends ObjectModel
             }
         }
 
-        return Tools::ps_round($total, 2);
+        return Tools::ps_round($total, Context::getContext()->getComputingPrecision());
     }
 
     /**

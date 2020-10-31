@@ -88,8 +88,6 @@ class ModuleController extends ModuleAbstractController
      *
      * @AdminSecurity("is_granted(['read'], 'ADMINMODULESSF_')")
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function manageAction()
@@ -262,7 +260,7 @@ class ModuleController extends ModuleAbstractController
     /**
      * @AdminSecurity("is_granted(['read'], 'ADMINMODULESSF_')")
      *
-     * @param Request $request
+     * @param int $moduleId
      *
      * @return Response
      */
@@ -385,10 +383,6 @@ class ModuleController extends ModuleAbstractController
         $moduleManager->setActionParams($request->request->get('actionParams', []));
         $moduleRepository = $this->container->get('prestashop.core.admin.module.repository');
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-        // Get accessed module object
-        $moduleAccessed = $moduleRepository->getModule($module);
-        // Get accessed module DB Id
-        $moduleAccessedId = (int) $moduleAccessed->database->get('id');
         $response = [$module => []];
 
         if (!method_exists($moduleManager, $action)) {
@@ -478,6 +472,10 @@ class ModuleController extends ModuleAbstractController
                 ]
             );
 
+            // Get accessed module object
+            $moduleAccessed = $moduleRepository->getModule($module);
+            // Get accessed module DB Id
+            $moduleAccessedId = (int) $moduleAccessed->database->get('id');
             $logger = $this->container->get('logger');
             $logger->error($response[$module]['msg'], ['object_type' => 'Module', 'object_id' => $moduleAccessedId]);
         }
@@ -791,7 +789,7 @@ class ModuleController extends ModuleAbstractController
     /**
      * @param string $pageVoter
      *
-     * @return JsonResponse
+     * @return JsonResponse|void
      */
     private function checkPermission($pageVoter)
     {
@@ -814,8 +812,9 @@ class ModuleController extends ModuleAbstractController
      */
     private function getCategories(AdminModuleDataProvider $modulesProvider, array $modules)
     {
-        /** @var CategoriesProvider */
-        $categories = $this->get('prestashop.categories_provider')->getCategoriesMenu($modules);
+        /** @var CategoriesProvider $categoriesProvider */
+        $categoriesProvider = $this->get('prestashop.categories_provider');
+        $categories = $categoriesProvider->getCategoriesMenu($modules);
 
         foreach ($categories['categories']->subMenu as $category) {
             $collection = AddonsCollection::createFrom($category->modules);

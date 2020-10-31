@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 
 /**
  * Holds information about product prices
@@ -36,12 +36,12 @@ use PrestaShop\Decimal\Number;
 class ProductPricesInformation
 {
     /**
-     * @var Number
+     * @var DecimalNumber
      */
     private $price;
 
     /**
-     * @var Number
+     * @var DecimalNumber
      */
     private $ecotax;
 
@@ -56,12 +56,12 @@ class ProductPricesInformation
     private $onSale;
 
     /**
-     * @var Number
+     * @var DecimalNumber
      */
     private $wholesalePrice;
 
     /**
-     * @var Number
+     * @var DecimalNumber
      */
     private $unitPrice;
 
@@ -71,29 +71,29 @@ class ProductPricesInformation
     private $unity;
 
     /**
-     * @var Number
+     * @var DecimalNumber
      */
     private $unitPriceRatio;
 
     /**
-     * @param Number $price
-     * @param Number $ecotax
+     * @param DecimalNumber $price
+     * @param DecimalNumber $ecotax
      * @param int $taxRulesGroupId
      * @param bool $onSale
-     * @param Number $wholesalePrice
-     * @param Number $unitPrice
+     * @param DecimalNumber $wholesalePrice
+     * @param DecimalNumber $unitPrice
      * @param string $unity
-     * @param Number $unitPriceRatio
+     * @param DecimalNumber $unitPriceRatio
      */
     public function __construct(
-        Number $price,
-        Number $ecotax,
+        DecimalNumber $price,
+        DecimalNumber $ecotax,
         int $taxRulesGroupId,
         bool $onSale,
-        Number $wholesalePrice,
-        Number $unitPrice,
+        DecimalNumber $wholesalePrice,
+        DecimalNumber $unitPrice,
         string $unity,
-        Number $unitPriceRatio
+        DecimalNumber $unitPriceRatio
     ) {
         $this->price = $price;
         $this->ecotax = $ecotax;
@@ -106,17 +106,17 @@ class ProductPricesInformation
     }
 
     /**
-     * @return Number
+     * @return DecimalNumber
      */
-    public function getPrice(): Number
+    public function getPrice(): DecimalNumber
     {
         return $this->price;
     }
 
     /**
-     * @return Number
+     * @return DecimalNumber
      */
-    public function getEcotax(): Number
+    public function getEcotax(): DecimalNumber
     {
         return $this->ecotax;
     }
@@ -138,17 +138,17 @@ class ProductPricesInformation
     }
 
     /**
-     * @return Number
+     * @return DecimalNumber
      */
-    public function getWholesalePrice(): Number
+    public function getWholesalePrice(): DecimalNumber
     {
         return $this->wholesalePrice;
     }
 
     /**
-     * @return Number
+     * @return DecimalNumber
      */
-    public function getUnitPrice(): Number
+    public function getUnitPrice(): DecimalNumber
     {
         return $this->unitPrice;
     }
@@ -162,9 +162,9 @@ class ProductPricesInformation
     }
 
     /**
-     * @return Number
+     * @return DecimalNumber
      */
-    public function getUnitPriceRatio(): Number
+    public function getUnitPriceRatio(): DecimalNumber
     {
         return $this->unitPriceRatio;
     }

@@ -132,7 +132,7 @@ class TaxOptionsType extends TranslatorAwareType
                     'Ecotax',
                     'Admin.International.Feature'),
                 'help' => $this->trans(
-                    'Define the ecotax (e.g. French ecotax: 19.6%).',
+                    'Define the ecotax (e.g. French ecotax: 20%).',
                     'Admin.International.Help'),
                 'choices' => $this->taxRuleGroupChoiceProvider->getChoices(),
             ]);

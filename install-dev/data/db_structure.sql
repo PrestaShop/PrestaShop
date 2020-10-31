@@ -1268,6 +1268,7 @@ CREATE TABLE `PREFIX_orders` (
   `valid` int(1) unsigned NOT NULL DEFAULT '0',
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
+  `note` text,
   PRIMARY KEY (`id_order`),
   KEY `reference` (`reference`),
   KEY `id_customer` (`id_customer`),

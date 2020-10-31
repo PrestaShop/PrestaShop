@@ -9,6 +9,9 @@ class OrderSettings extends BOBasePage {
     this.successfulUpdateMessage = 'Update successful';
 
     // Selectors
+    // SubTab
+    this.statusesTab = '#subtab-AdminStatuses';
+    // Form
     this.generalForm = '#configuration_general_form';
     this.enableFinalSummaryLabel = toggle => `${this.generalForm}`
       + ` label[for='general_enable_final_summary_${toggle}']`;
@@ -118,6 +121,15 @@ class OrderSettings extends BOBasePage {
     await page.click(this.recycledPackagingToggle(recyclePackagingStatus ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveGiftOptionsFormButton);
     return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /**
+   * Go to statuses page
+   * @param page
+   * @returns {Promise<void>}
+   */
+  async goToStatusesPage(page) {
+    await this.clickAndWaitForNavigation(page, this.statusesTab);
   }
 }
 

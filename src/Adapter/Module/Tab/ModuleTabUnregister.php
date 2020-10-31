@@ -72,7 +72,7 @@ class ModuleTabUnregister
      *
      * This is done automatically as part of the module uninstallation.
      *
-     * @return bool returns true if the module tabs were successfully uninstalled, false if any of them failed to do so
+     * @return void
      */
     public function unregisterTabs(Module $module)
     {

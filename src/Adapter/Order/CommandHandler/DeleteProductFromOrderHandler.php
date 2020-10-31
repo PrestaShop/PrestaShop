@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 use Cart;
 use Currency;
 use Customer;
-use Exception;
 use Hook;
 use Order;
 use OrderDetail;
@@ -102,12 +101,9 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
             );
 
             Hook::exec('actionOrderEdited', ['order' => $order]);
-        } catch (Exception $e) {
-            $this->contextStateManager->restoreContext();
-            throw $e;
+        } finally {
+            $this->contextStateManager->restorePreviousContext();
         }
-
-        $this->contextStateManager->restoreContext();
     }
 
     /**

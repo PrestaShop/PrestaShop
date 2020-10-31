@@ -42,9 +42,26 @@ class Countries extends BOBasePage {
     this.editRowLink = row => `${this.tableRow(row)} a.edit`;
 
     // Bulk Actions
-    this.bulkActionsToggleButton = `${this.gridForm} button.dropdown-toggle`;
-    this.selectAllRowsLabel = `${this.gridForm} a[onclick*='checkDelBoxes']`;
-    this.bulkActionsDeleteButton = `${this.gridForm} a[onclick*='Delete']`;
+    this.bulkActionBlock = 'div.bulk-actions';
+    this.bulkActionMenuButton = `${this.gridForm} button.dropdown-toggle`;
+    this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
+    this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
+    this.bulkEnableLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
+    this.bulkDisableLink = `${this.bulkActionDropdownMenu} li:nth-child(5)`;
+    this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(7)`;
+
+    // Sort Selectors
+    this.tableHead = `${this.gridTable} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+
+    // Pagination selectors
+    this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
+    this.paginationDiv = `${this.gridForm} .pagination`;
+    this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
+    this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
+    this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
+    this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
   }
 
   /*
@@ -195,21 +212,166 @@ class Countries extends BOBasePage {
   }
 
   /**
-   * Delete country
+   * Get content from all rows
+   * @param page
+   * @param columnName
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(page, columnName) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable = [];
+    for (let i = 1; i <= rowsNumber; i++) {
+      let rowContent = await this.getTextColumnFromTable(page, i, columnName);
+
+      if (rowContent === '-') {
+        rowContent = '0';
+      }
+
+      await allRowsContentTable.push(rowContent);
+    }
+    return allRowsContentTable;
+  }
+
+  /* Bulk actions methods */
+
+  /**
+   * Select all rows
+   * @param page
+   * @return {Promise<void>}
+   */
+  async bulkSelectRows(page) {
+    await page.click(this.bulkActionMenuButton);
+
+    await Promise.all([
+      page.click(this.selectAllLink),
+      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+    ]);
+  }
+
+  /**
+   * Delete countries by bulk action
    * @param page
    * @returns {Promise<string>}
    */
-  async deleteCountryByBulkActions(page) {
+  async deleteCountriesByBulkActions(page) {
     this.dialogListener(page, true);
+    // Select all rows
+    await this.bulkSelectRows(page);
+
     // Click on Button Bulk actions
-    await page.click(this.bulkActionsToggleButton);
-    // Click on Select All
-    await page.click(this.selectAllRowsLabel);
-    // Click on Button Bulk actions
-    await page.click(this.bulkActionsToggleButton);
+    await page.click(this.bulkActionMenuButton);
+
     // Click on delete
-    await page.click(this.bulkActionsDeleteButton);
+    await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
     return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /**
+   * Bulk set status
+   * @param page
+   * @param wantedStatus
+   * @return {Promise<void>}
+   */
+  async bulkSetStatus(page, wantedStatus) {
+    // Select all rows
+    await this.bulkSelectRows(page);
+
+    // Set status
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(page, this.bulkEnableLink),
+    ]);
+
+    await this.clickAndWaitForNavigation(
+      page,
+      wantedStatus ? this.bulkEnableLink : this.bulkDisableLink,
+    );
+  }
+
+  /* Sort table method */
+
+  /**
+   * Sort table
+   * @param page
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page, sortBy, sortDirection) {
+    let columnSelector;
+
+    switch (sortBy) {
+      case 'id_country':
+        columnSelector = this.sortColumnDiv(2);
+        break;
+
+      case 'b!name':
+        columnSelector = this.sortColumnDiv(3);
+        break;
+
+      case 'iso_code':
+        columnSelector = this.sortColumnDiv(4);
+        break;
+
+      case 'call_prefix':
+        columnSelector = this.sortColumnDiv(5);
+        break;
+
+      case 'z!id_zone':
+        columnSelector = this.sortColumnDiv(6);
+        break;
+
+      default:
+        throw new Error(`Column ${sortBy} was not found`);
+    }
+
+    const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
+    await this.clickAndWaitForNavigation(page, sortColumnButton);
+  }
+
+  /* Pagination methods */
+  /**
+   * Get pagination label
+   * @param page
+   * @return {Promise<string>}
+   */
+  getPaginationLabel(page) {
+    return this.getTextContent(page, this.paginationActiveLabel);
+  }
+
+  /**
+   * Select pagination limit
+   * @param page
+   * @param number
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page, number) {
+    await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
+    await this.clickAndWaitForNavigation(page, this.paginationItems(number));
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on next
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on previous
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+
+    return this.getPaginationLabel(page);
   }
 }
 

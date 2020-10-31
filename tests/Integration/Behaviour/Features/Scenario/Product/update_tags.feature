@@ -30,3 +30,8 @@ Feature: Update product tags from Back Office (BO)
       | tags       | en-US:#<{ |
     Then I should get error that product tag is invalid
     And product "product3" localized "tags" should be "en-US:mechanic,watch; fr-FR:montre"
+
+  Scenario: Remove all product tags
+    Given product "product3" localized "tags" should be "en-US:mechanic,watch; fr-FR:montre"
+    When I remove all product "product3" tags
+    Then product "product3" localized "tags" should be "en-US: ;fr-FR:"

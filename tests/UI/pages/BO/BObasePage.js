@@ -34,6 +34,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.creditSlipsLink = '#subtab-AdminSlip';
     // Delivery slips
     this.deliverySlipslink = '#subtab-AdminDeliverySlip';
+    // Shopping carts
+    this.shoppingCartsLink = '#subtab-AdminCarts';
 
     // Catalog
     this.catalogParentLink = 'li#subtab-AdminCatalog';
@@ -82,6 +84,10 @@ module.exports = class BOBasePage extends CommonPage {
     this.imageSettingsLink = '#subtab-AdminImages';
     // Link widget
     this.linkWidgetLink = '#subtab-AdminLinkWidget';
+
+    // Shipping
+    this.shippingLink = '#subtab-AdminParentShipping';
+    this.carriersLink = '#subtab-AdminCarriers';
 
     // Payment
     this.paymentParentLink = '#subtab-AdminParentPayment';

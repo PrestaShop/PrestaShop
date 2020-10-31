@@ -57,6 +57,19 @@ class States extends BOBasePage {
     this.bulkEnableLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
     this.bulkDisableLink = `${this.bulkActionDropdownMenu} li:nth-child(5)`;
     this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(7)`;
+
+    // Sort Selectors
+    this.tableHead = `${this.gridTable} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+
+    // Pagination selectors
+    this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
+    this.paginationDiv = `${this.gridForm} .pagination`;
+    this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
+    this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
+    this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
+    this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
   }
 
   /* Header methods */
@@ -228,6 +241,24 @@ class States extends BOBasePage {
     return this.getTextContent(page, this.alertSuccessBlock);
   }
 
+  /**
+   * Get content from all rows
+   * @param page
+   * @param columnName
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(page, columnName) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable = [];
+
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumn(page, i, columnName);
+      await allRowsContentTable.push(rowContent);
+    }
+
+    return allRowsContentTable;
+  }
+
   /* Bulk actions methods */
 
   /**
@@ -285,5 +316,92 @@ class States extends BOBasePage {
       wantedStatus ? this.bulkEnableLink : this.bulkDisableLink,
     );
   }
+
+  /* Sort table method */
+
+  /**
+   * Sort table
+   * @param page
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page, sortBy, sortDirection) {
+    let columnSelector;
+
+    switch (sortBy) {
+      case 'id_state':
+        columnSelector = this.sortColumnDiv(2);
+        break;
+
+      case 'a!name':
+        columnSelector = this.sortColumnDiv(3);
+        break;
+
+      case 'iso_code':
+        columnSelector = this.sortColumnDiv(4);
+        break;
+
+      case 'z!id_zone':
+        columnSelector = this.sortColumnDiv(5);
+        break;
+
+      case 'cl!id_country':
+        columnSelector = this.sortColumnDiv(6);
+        break;
+
+      default:
+        throw new Error(`Column ${sortBy} was not found`);
+    }
+
+    const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
+    await this.clickAndWaitForNavigation(page, sortColumnButton);
+  }
+
+  /* Pagination methods */
+  /**
+   * Get pagination label
+   * @param page
+   * @return {Promise<string>}
+   */
+  getPaginationLabel(page) {
+    return this.getTextContent(page, this.paginationActiveLabel);
+  }
+
+  /**
+   * Select pagination limit
+   * @param page
+   * @param number
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page, number) {
+    await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
+    await this.clickAndWaitForNavigation(page, this.paginationItems(number));
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on next
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on previous
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+
+    return this.getPaginationLabel(page);
+  }
 }
+
 module.exports = new States();

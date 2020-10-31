@@ -34,7 +34,7 @@ interface ImportHandlerFinderInterface
     /**
      * Find the proper import handler for given entity type.
      *
-     * @param $importEntityType
+     * @param int $importEntityType
      *
      * @return ImportHandlerInterface
      */

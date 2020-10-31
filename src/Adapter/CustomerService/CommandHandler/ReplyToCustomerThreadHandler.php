@@ -101,7 +101,7 @@ final class ReplyToCustomerThreadHandler implements ReplyToCustomerThreadHandler
         $customerMessage = new CustomerMessage();
         $customerMessage->id_employee = (int) $this->context->employee->id;
         $customerMessage->id_customer_thread = $customerThread->id;
-        $customerMessage->ip_address = (int) ip2long(Tools::getRemoteAddr());
+        $customerMessage->ip_address = (string) (int) ip2long(Tools::getRemoteAddr());
         $customerMessage->message = $replyMessage;
 
         if (false === $customerMessage->validateField('message', $customerMessage->message)) {

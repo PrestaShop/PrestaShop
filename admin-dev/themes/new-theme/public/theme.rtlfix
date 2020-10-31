@@ -70,3 +70,8 @@
   transform: scaleX(-1);
   animation: showcase-img-appearance-rtl .4s;
 }
+
+/* Align order status dropdown correctly */
+.adminorders .dropdown-menu {
+  right: inherit;
+}

@@ -48,7 +48,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted(['read'], 'ADMINPRODUCTS_')")
      *
-     * @param $idProduct The product ID
+     * @param string|int $idProduct The product ID
      *
      * @return JsonResponse
      */
@@ -120,7 +120,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
      *
      * @param int $idSpecificPrice
      *
-     * @return array
+     * @return Response|array
      */
     public function getUpdateFormAction($idSpecificPrice)
     {
@@ -166,7 +166,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted(['create', 'update'], 'ADMINPRODUCTS_')")
      *
-     * @param int idSpecificPrice
+     * @param int $idSpecificPrice
      * @param Request $request
      *
      * @return JsonResponse
@@ -264,7 +264,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     /**
      * @param string $dateAsString
      *
-     * @return JsonResponse|null If date is 0000-00-00 00:00:00, null is returned
+     * @return string|null If date is 0000-00-00 00:00:00, null is returned
      *
      * @throws \PrestaShopDatabaseExceptionCore if date is not valid
      */

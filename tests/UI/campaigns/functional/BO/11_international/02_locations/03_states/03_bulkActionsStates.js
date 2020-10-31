@@ -26,8 +26,8 @@ let page;
 let numberOfStates = 0;
 
 const statesToCreate = [
-  new StateFaker({name: 'todelete1'}),
-  new StateFaker({name: 'todelete2'}),
+  new StateFaker({name: 'todelete1', isoCode: 'HM'}),
+  new StateFaker({name: 'todelete2', isoCode: 'BV'}),
 ];
 
 describe('Create 2 states then enable, disable and delete by bulk actions', async () => {

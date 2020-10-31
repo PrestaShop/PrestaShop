@@ -333,6 +333,32 @@ class CartCore extends ObjectModel
     }
 
     /**
+     * Update the Delivery Address ID of the Cart.
+     *
+     * @param int $currentAddressId Current Address ID to change
+     * @param int $newAddressId New Address ID
+     */
+    public function updateDeliveryAddressId(int $currentAddressId, int $newAddressId)
+    {
+        if (!isset($this->id_address_delivery) || (int) $this->id_address_delivery === $currentAddressId) {
+            $this->id_address_delivery = $newAddressId;
+            $this->update();
+        }
+
+        $sql = 'UPDATE `' . _DB_PREFIX_ . 'cart_product`
+        SET `id_address_delivery` = ' . $newAddressId . '
+        WHERE  `id_cart` = ' . (int) $this->id . '
+            AND `id_address_delivery` = ' . $currentAddressId;
+        Db::getInstance()->execute($sql);
+
+        $sql = 'UPDATE `' . _DB_PREFIX_ . 'customization`
+            SET `id_address_delivery` = ' . $newAddressId . '
+            WHERE  `id_cart` = ' . (int) $this->id . '
+                AND `id_address_delivery` = ' . $currentAddressId;
+        Db::getInstance()->execute($sql);
+    }
+
+    /**
      * Deletes current Cart from the database.
      *
      * @return bool True if delete was successful
@@ -431,7 +457,7 @@ class CartCore extends ObjectModel
         if ($cart_vat_amount == 0 || $cartAmountTaxExcluded == 0) {
             return 0;
         } else {
-            return Tools::ps_round($cart_vat_amount / $cartAmountTaxExcluded, 3);
+            return Tools::ps_round($cart_vat_amount / $cartAmountTaxExcluded, Tax::TAX_DEFAULT_PRECISION);
         }
     }
 
@@ -2915,23 +2941,14 @@ class CartCore extends ObjectModel
             $order_by_price = !Configuration::get('PS_CARRIER_DEFAULT_SORT');
         }
         if (null === $order_way) {
-            $order_way = Configuration::get('PS_CARRIER_DEFAULT_ORDER');
+            $order_way = Configuration::get('PS_CARRIER_DEFAULT_ORDER') ? 1 : -1;
         }
 
         if ($order_by_price) {
-            if ($order_way) {
-                return ($option1['total_price_with_tax'] < $option2['total_price_with_tax']) * 2 - 1;
-            } else {
-                // return -1 or 1
-                return ($option1['total_price_with_tax'] >= $option2['total_price_with_tax']) * 2 - 1;
-            }
-        } elseif ($order_way) {
-            // return -1 or 1
-            return ($option1['position'] < $option2['position']) * 2 - 1;
-        } else {
-            // return -1 or 1
-            return ($option1['position'] >= $option2['position']) * 2 - 1;
+            return $option1['total_price_with_tax'] < $option2['total_price_with_tax'] ? $order_way : -$order_way;
         }
+
+        return $option1['position'] < $option2['position'] ? $order_way : -$order_way;
     }
 
     /**
@@ -3634,7 +3651,7 @@ class CartCore extends ObjectModel
             }
         }
 
-        $shipping_cost = (float) Tools::ps_round((float) $shipping_cost, 2);
+        $shipping_cost = (float) Tools::ps_round((float) $shipping_cost, Context::getContext()->getComputingPrecision());
         Cache::store($cache_id, $shipping_cost);
 
         return $shipping_cost;
@@ -5077,5 +5094,20 @@ class CartCore extends ObjectModel
         $this->mergeGiftsProductsQuantity();
 
         return $products;
+    }
+
+    /**
+     * @return Country
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    public function getTaxCountry(): Country
+    {
+        $taxAddressType = Configuration::get('PS_TAX_ADDRESS_TYPE');
+        $taxAddressId = property_exists($this, $taxAddressType) ? $this->{$taxAddressType} : $this->id_address_delivery;
+        $taxAddress = new Address($taxAddressId);
+
+        return new Country($taxAddress->id_country);
     }
 }

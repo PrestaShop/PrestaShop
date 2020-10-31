@@ -49,7 +49,7 @@ class EditOrderAddressCommand extends AbstractEditAddressCommand
     private $orderId;
 
     /**
-     * @var
+     * @var string
      */
     private $addressType;
 
@@ -77,7 +77,7 @@ class EditOrderAddressCommand extends AbstractEditAddressCommand
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getAddressType()
     {

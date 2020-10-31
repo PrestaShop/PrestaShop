@@ -30,7 +30,7 @@ use Context;
 use Hook;
 use Order;
 use OrderCarrier;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundCalculator;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundSummary;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundUpdater;
@@ -119,7 +119,7 @@ class IssueStandardRefundHandler extends AbstractOrderCommandHandler implements 
             );
         }
 
-        $shippingRefundAmount = new Number((string) ($command->refundShippingCost() ? $order->total_shipping_tax_incl : 0));
+        $shippingRefundAmount = new DecimalNumber((string) ($command->refundShippingCost() ? $order->total_shipping_tax_incl : 0));
         /** @var OrderRefundSummary $orderRefundSummary */
         $orderRefundSummary = $this->orderRefundCalculator->computeOrderRefund(
             $order,

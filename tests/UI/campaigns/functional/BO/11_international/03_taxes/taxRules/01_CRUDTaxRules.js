@@ -109,7 +109,7 @@ describe('Create, Update and Delete Tax rule in BO', async () => {
         taxRuleDataToCreate.name,
       );
 
-      const textName = await taxRulesPage.getTextColumnFromTable(page, 1, 3);
+      const textName = await taxRulesPage.getTextColumnFromTable(page, 1, 'name');
       await expect(textName).to.contains(taxRuleDataToCreate.name);
     });
 
@@ -158,7 +158,7 @@ describe('Create, Update and Delete Tax rule in BO', async () => {
         taxRuleDataToEdit.name,
       );
 
-      const textName = await taxRulesPage.getTextColumnFromTable(page, 1, 3);
+      const textName = await taxRulesPage.getTextColumnFromTable(page, 1, 'name');
       await expect(textName).to.contains(taxRuleDataToEdit.name);
     });
 

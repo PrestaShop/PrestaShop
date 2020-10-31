@@ -51,7 +51,7 @@ use Tag;
 /**
  * Handles the query GetEditableProduct using legacy ObjectModel
  */
-class GetProductForEditingHandler extends AbstractProductHandler implements GetProductForEditingHandlerInterface
+final class GetProductForEditingHandler extends AbstractProductHandler implements GetProductForEditingHandlerInterface
 {
     /**
      * @var NumberExtractor
@@ -83,7 +83,8 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             $this->getPricesInformation($product),
             $this->getOptions($product),
             $this->getShippingInformation($product),
-            $this->getSeoOptions($product)
+            $this->getSeoOptions($product),
+            $product->getAssociatedAttachmentIds()
         );
     }
 

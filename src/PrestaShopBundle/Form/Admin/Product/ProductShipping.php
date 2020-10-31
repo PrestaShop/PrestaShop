@@ -56,7 +56,7 @@ class ProductShipping extends CommonAbstractType
      */
     public $legacyContext;
     /**
-     * @var array<int|Language>
+     * @var array<int|array>
      */
     public $locales;
     /**

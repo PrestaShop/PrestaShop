@@ -63,7 +63,7 @@ class WebserviceRequestCore
      *
      * @var string
      */
-    protected $_docUrl = 'http://doc.prestashop.com/display/PS16/Using+the+PrestaShop+Web+Service';
+    protected $_docUrl = 'https://devdocs.prestashop.com/1.7/webservice';
 
     /**
      * Set if the authentication key was checked.

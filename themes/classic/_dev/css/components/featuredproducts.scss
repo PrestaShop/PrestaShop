@@ -26,7 +26,7 @@ $product-description-height: 70px;
   .thumbnail-container {
     position: relative;
     width: $thumbnail-size;
-    height: 318px;
+    height: auto;
     margin-bottom: 1.563rem;
     background: #fff;
     @include box-shadow();
@@ -35,6 +35,7 @@ $product-description-height: 70px;
     &:focus {
       .highlighted-informations {
         bottom: 5.5rem;
+        top: calc(250px - 4.4rem);
 
         &::after {
           opacity: 1;
@@ -42,6 +43,7 @@ $product-description-height: 70px;
 
         &.no-variants {
           bottom: 4.2rem;
+          top: calc(250px - 3.125rem);
         }
       }
 
@@ -60,7 +62,7 @@ $product-description-height: 70px;
       position: relative;
       height: calc(100% - #{$product-description-height});
       img {
-        position: absolute;
+        position: relative;
         top: 0;
         right: 0;
         bottom: 0;
@@ -107,12 +109,13 @@ $product-description-height: 70px;
     bottom: 1.25rem;
     z-index: 2;
     width: $thumbnail-size;
-    height: 3.125rem;
+    height: auto;
     padding-top: 0.625rem;
     text-align: center;
     background: #fff;
     box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2);
-    transition: bottom 0.3s;
+    top: $thumbnail-size;
+    transition: top 0.3s, bottom 0.3s;
 
     .quick-view {
       font-size: $base-font-size;
@@ -125,12 +128,14 @@ $product-description-height: 70px;
   }
 
   .product-description {
-    position: absolute;
+    position: relative;
+    overflow: hidden;
     bottom: 0;
     z-index: 3;
     width: $thumbnail-size;
-    height: $product-description-height;
+    height: auto;
     background: #fff;
+    padding-bottom: .7rem;
   }
 
   .product-miniature {

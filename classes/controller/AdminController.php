@@ -283,7 +283,7 @@ class AdminControllerCore extends Controller
     /** @var array Ids of the rows selected */
     protected $boxes;
 
-    /** @var string Do not automatically select * anymore but select only what is necessary */
+    /** @var bool Do not automatically select * anymore but select only what is necessary */
     protected $explicitSelect = false;
 
     /** @var string Add fields into data query to display list */
@@ -415,6 +415,12 @@ class AdminControllerCore extends Controller
     /** @var float @var */
     public $timer_start;
 
+    /** @var bool */
+    protected static $is_prestashop_up = true;
+
+    /** @var array */
+    protected $translationsTab = [];
+
     public function __construct($forceControllerName = '', $default_theme_name = 'default')
     {
         global $timer_start;
@@ -532,7 +538,6 @@ class AdminControllerCore extends Controller
             $this->shopLinkType = '';
         }
 
-        //$this->base_template_folder = _PS_BO_ALL_THEMES_DIR_.$this->bo_theme.'/template';
         $this->override_folder = Tools::toUnderscoreCase(substr($this->controller_name, 5)) . '/';
         // Get the name of the folder containing the custom tpl files
         $this->tpl_folder = Tools::toUnderscoreCase(substr($this->controller_name, 5)) . '/';
@@ -560,7 +565,7 @@ class AdminControllerCore extends Controller
             $this->context->mode = Context::MODE_STD;
         }
 
-        //* Check if logged employee has access to AdminImport controller */
+        /* Check if logged employee has access to AdminImport controller */
         $import_access = Profile::getProfileAccess($this->context->employee->id_profile, Tab::getIdFromClassName('AdminImport'));
         if (is_array($import_access) && isset($import_access['view']) && $import_access['view'] == 1) {
             $this->can_import = true;
@@ -1118,7 +1123,7 @@ class AdminControllerCore extends Controller
                         $this->errors[] = $this->trans('Unable to delete associated images.', [], 'Admin.Notifications.Error');
                     }
 
-                    $object->deleted = 1;
+                    $object->deleted = true;
                     if ($res = $object->update()) {
                         $this->redirect_after = self::$currentIndex . '&conf=1&token=' . $this->token;
                     }
@@ -1250,7 +1255,7 @@ class AdminControllerCore extends Controller
                         $object_new = $object->duplicateObject();
                         if (Validate::isLoadedObject($object_new)) {
                             // Update old object to deleted
-                            $object->deleted = 1;
+                            $object->deleted = true;
                             $object->update();
 
                             // Update new object with post values
@@ -1635,8 +1640,6 @@ class AdminControllerCore extends Controller
             $this->page_header_toolbar_title = $this->toolbar_title[count($this->toolbar_title) - 1];
         }
 
-        $this->addPageHeaderToolBarModulesListButton();
-
         $this->context->smarty->assign('help_link', 'https://help.prestashop.com/' . Language::getIsoById($this->context->employee->id_lang) . '/doc/'
             . Tools::getValue('controller') . '?version=' . _PS_VERSION_ . '&country=' . Language::getIsoById($this->context->employee->id_lang));
     }
@@ -1707,7 +1710,6 @@ class AdminControllerCore extends Controller
                     ];
                 }
         }
-        $this->addToolBarModulesListButton();
     }
 
     /**
@@ -2775,6 +2777,12 @@ class AdminControllerCore extends Controller
      */
     public function init()
     {
+        Hook::exec(
+            'actionAdminControllerInitBefore',
+            [
+                'controller' => $this,
+            ]
+        );
         parent::init();
 
         if (Tools::getValue('ajax')) {
@@ -2844,6 +2852,12 @@ class AdminControllerCore extends Controller
         $this->initModal();
         $this->initToolbarFlags();
         $this->initNotifications();
+        Hook::exec(
+            'actionAdminControllerInitAfter',
+            [
+                'controller' => $this,
+            ]
+        );
     }
 
     /**
@@ -2964,7 +2978,7 @@ class AdminControllerCore extends Controller
                 $this->errors[] = $this->trans('You do not have permission to delete this.', [], 'Admin.Notifications.Error');
             }
         } elseif ((isset($_GET['status' . $this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier)) {
-            /* Change object statuts (active, inactive) */
+            /* Change object status (active, inactive) */
             if ($this->access('edit')) {
                 $this->action = 'status';
             } else {
@@ -4056,7 +4070,7 @@ class AdminControllerCore extends Controller
                     $to_delete = new $this->className((int) $id);
                     $delete_ok = true;
                     if ($this->deleted) {
-                        $to_delete->deleted = 1;
+                        $to_delete->deleted = true;
                         if (!$to_delete->update()) {
                             $result = false;
                             $delete_ok = false;
@@ -4273,6 +4287,8 @@ class AdminControllerCore extends Controller
     }
 
     /**
+     * @deprecated Since 1.7.7 Use Tools::isFileFresh instead
+     *
      * @param string $file
      * @param int $timeout
      *
@@ -4280,17 +4296,12 @@ class AdminControllerCore extends Controller
      */
     public function isFresh($file, $timeout = 604800)
     {
-        if (($time = @filemtime(_PS_ROOT_DIR_ . $file)) && filesize(_PS_ROOT_DIR_ . $file) > 0) {
-            return (time() - $time) < $timeout;
-        }
-
-        return false;
+        return Tools::isFileFresh($file, $timeout);
     }
 
-    /** @var bool */
-    protected static $is_prestashop_up = true;
-
     /**
+     * @deprecated Since 1.7.7 Use Tools::refreshFile instead
+     *
      * @param string $file_to_refresh
      * @param string $external_file
      *
@@ -4298,12 +4309,7 @@ class AdminControllerCore extends Controller
      */
     public function refresh($file_to_refresh, $external_file)
     {
-        if (self::$is_prestashop_up && $content = Tools::file_get_contents($external_file)) {
-            return (bool) file_put_contents(_PS_ROOT_DIR_ . $file_to_refresh, $content);
-        }
-        self::$is_prestashop_up = false;
-
-        return false;
+        return Tools::refreshFile($file_to_refresh, $external_file);
     }
 
     /**
@@ -4357,9 +4363,6 @@ class AdminControllerCore extends Controller
             unset($obj);
         }
     }
-
-    /** @var array */
-    protected $translationsTab = [];
 
     /**
      * Display modules list.
@@ -4731,7 +4734,7 @@ class AdminControllerCore extends Controller
     /**
      * Return the type of authorization on module page.
      *
-     * @return int(integer)
+     * @return int
      */
     public function authorizationLevel()
     {

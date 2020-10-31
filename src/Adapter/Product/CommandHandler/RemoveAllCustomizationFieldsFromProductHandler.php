@@ -28,11 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\ProductProvider;
-use PrestaShop\PrestaShop\Adapter\Product\ProductUpdater;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Update\CustomizationFieldDeleter;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductCustomizationFieldUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCustomizationFieldsFromProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\RemoveAllCustomizationFieldsFromProductHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationFieldDeleterInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 
 /**
@@ -41,33 +41,33 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\Customiz
 final class RemoveAllCustomizationFieldsFromProductHandler implements RemoveAllCustomizationFieldsFromProductHandlerInterface
 {
     /**
-     * @var CustomizationFieldDeleterInterface
+     * @var CustomizationFieldDeleter
      */
     private $customizationFieldDeleter;
 
     /**
-     * @var ProductProvider
+     * @var ProductRepository
      */
-    private $productProvider;
+    private $productRepository;
 
     /**
-     * @var ProductUpdater
+     * @var ProductCustomizationFieldUpdater
      */
-    private $productUpdater;
+    private $productCustomizationFieldUpdater;
 
     /**
-     * @param CustomizationFieldDeleterInterface $customizationFieldDeleter
-     * @param ProductProvider $productProvider
-     * @param ProductUpdater $productUpdater
+     * @param CustomizationFieldDeleter $customizationFieldDeleter
+     * @param ProductRepository $productRepository
+     * @param ProductCustomizationFieldUpdater $productCustomizationFieldUpdater
      */
     public function __construct(
-        CustomizationFieldDeleterInterface $customizationFieldDeleter,
-        ProductProvider $productProvider,
-        ProductUpdater $productUpdater
+        CustomizationFieldDeleter $customizationFieldDeleter,
+        ProductRepository $productRepository,
+        ProductCustomizationFieldUpdater $productCustomizationFieldUpdater
     ) {
         $this->customizationFieldDeleter = $customizationFieldDeleter;
-        $this->productProvider = $productProvider;
-        $this->productUpdater = $productUpdater;
+        $this->productRepository = $productRepository;
+        $this->productCustomizationFieldUpdater = $productCustomizationFieldUpdater;
     }
 
     /**
@@ -75,13 +75,13 @@ final class RemoveAllCustomizationFieldsFromProductHandler implements RemoveAllC
      */
     public function handle(RemoveAllCustomizationFieldsFromProductCommand $command): void
     {
-        $product = $this->productProvider->get($command->getProductId());
+        $product = $this->productRepository->get($command->getProductId());
 
         $customizationFieldIds = array_map(function (array $field): CustomizationFieldId {
             return new CustomizationFieldId((int) $field['id_customization_field']);
         }, $product->getCustomizationFieldIds());
 
         $this->customizationFieldDeleter->bulkDelete($customizationFieldIds);
-        $this->productUpdater->refreshProductCustomizabilityProperties($product);
+        $this->productCustomizationFieldUpdater->refreshProductCustomizability($product);
     }
 }

@@ -175,7 +175,7 @@ module.exports = class CommonPage {
     // Delete text from input before typing
     await page.press(selector, 'Delete');
     if (value !== null) {
-      await page.type(selector, value);
+      await page.type(selector, value.toString());
     }
   }
 
@@ -235,7 +235,8 @@ module.exports = class CommonPage {
           value: option.value,
         })),
     );
-    options = await options.filter(option => textValue === option.textContent);
+
+    options = await options.filter(option => textValue === option.textContent.trim());
     if (options.length !== 0) {
       const elementValue = await options[0].value;
       await page.selectOption(selector, elementValue);

@@ -36,7 +36,7 @@ prestashop.selectors = {
     refresh: '.product-refresh',
     miniature: '.js-product-miniature',
     minimalQuantity: '.product-minimal-quantity',
-    addToCart: '.product-add-to-cart',
+    addToCart: '.quickview .product-add-to-cart, .page-product:not(.modal-open) .row .product-add-to-cart, .page-product:not(.modal-open) .product-container .product-add-to-cart',
     prices:
       '.quickview .product-prices, .page-product:not(.modal-open) .row .product-prices, .page-product:not(.modal-open) .product-container .product-prices',
     customization:

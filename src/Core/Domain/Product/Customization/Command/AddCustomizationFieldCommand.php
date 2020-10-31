@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
  * Adds customization field to a product
+ *
+ * @todo: this command along with update/deleteCustimizationField can be removed, because we only have a usecase for Set & RemoveAll
  */
 class AddCustomizationFieldCommand
 {

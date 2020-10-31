@@ -303,7 +303,6 @@ crashlytics-build.properties
 
 ### NetBeans ###
 nbproject/
-/build/
 nbbuild/
 dist/
 nbdist/
