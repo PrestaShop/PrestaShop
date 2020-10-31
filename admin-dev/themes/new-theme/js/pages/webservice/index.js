@@ -37,6 +37,7 @@ import GeneratableInput from '../../components/generatable-input';
 import MultipleChoiceTable from '../../components/multiple-choice-table';
 import PermissionsRowSelector from './permissions-row-selector';
 import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
+import ToggleHostsAllowedReadonly from './toggle-hostsallowed-readonly';
 
 const {$} = window;
 
@@ -64,4 +65,5 @@ $(() => {
   generatableInput.attachOn('.js-generator-btn');
 
   new PermissionsRowSelector();
+  new ToggleHostsAllowedReadonly();
 });
