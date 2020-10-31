@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs;
 
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Form\Admin\Type\LogSeverityChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -35,7 +35,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * This form class generates the "Logs by email" form in Logs page.
  */
-final class LogsByEmailType extends CommonAbstractType
+final class LogsByEmailType extends TranslatorAwareType
 {
     /**
      * {@inheritdoc}
@@ -45,10 +45,29 @@ final class LogsByEmailType extends CommonAbstractType
         $builder
             ->add('logs_by_email', LogSeverityChoiceType::class, [
                 'label' => true,
-                'placeholder' => '---',
+                'placeholder' => $this->trans(
+                    '---',
+                    'Admin.Global'
+                ),
+                'label' => $this->trans(
+                    'Minimum severity level',
+                    'Admin.Advparameters.Feature'
+                ),
+                'help' => $this->trans(
+                    'Leave empty to disable log alerts by email or enter the recipients of these emails in the following field.',
+                    'Admin.Advparameters.Help'
+                ),
             ])
             ->add('logs_email_receivers', TextType::class, [
                 'label' => true,
+                'label' => $this->trans(
+                    'Send emails to',
+                    'Admin.Advparameters.Feature'
+                ),
+                'help' => $this->trans(
+                    'Log alerts will be sent to these emails. Please use a comma to separate them (e.g. pub@prestashop.com, anonymous@psgdpr.com).',
+                    'Admin.Advparameters.Help'
+                ),
             ]);
     }
 
