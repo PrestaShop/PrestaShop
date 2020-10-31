@@ -159,7 +159,7 @@ final class LogQueryBuilder extends AbstractDoctrineQueryBuilder
      *
      * @param QueryBuilder $queryBuilder
      */
-    private function appendEmployeQuery(QueryBuilder $queryBuilder): void
+    private function appendEmployeeQuery(QueryBuilder $queryBuilder): void
     {
         $queryBuilder
             ->addSelect($this->getEmployeField(false) . ' as employee, e.email')
