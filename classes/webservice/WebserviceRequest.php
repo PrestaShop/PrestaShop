@@ -813,7 +813,7 @@ class WebserviceRequestCore
                         $this->setError(401, 'No permission for this authentication key', 21);
                     }
 
-                    if (!$this->checkHostAllowed($this->_key)) {
+                    if (!$this->checkHostAllowed($this->_key, Tools::getRemoteAddr())) {
                         $this->setError(503, 'No permission for this host authentication', 666);
                     }
                 }
@@ -1896,14 +1896,21 @@ class WebserviceRequestCore
      * Check if client hostname/ip is allowed.
      *
      * @param string $key
+     * @param string $clientIp remote client IP
      *
      * @return bool
      */
-    protected function checkHostAllowed(string $key): bool
+    protected function checkHostAllowed(string $key, string $clientIp): bool
     {
+        $clientIp = trim($clientIp);
+
+        if (!filter_var($clientIp, FILTER_VALIDATE_IP)) {
+            return false;
+        }
+
         $WebServiceObject = WebserviceKey::getWebServiceObjectFromKey($key);
 
-        if (!$WebServiceObject) {
+        if (null === $WebServiceObject) {
             return false;
         }
 
@@ -1912,8 +1919,7 @@ class WebserviceRequestCore
         }
 
         $hostsAllowed = array_map('trim', explode(',', $WebServiceObject->hosts_allowed));
-        $hostIp = Tools::getRemoteAddr();
-        $hostName = gethostbyaddr($hostIp);
+        $hostName = gethostbyaddr($clientIp);
 
         return in_array($hostIp, $hostsAllowed) || in_array($hostName, $hostsAllowed);
     }

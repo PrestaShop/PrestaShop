@@ -113,16 +113,20 @@ class WebserviceKeyType extends AbstractType
                 'scrollable' => false,
                 'headers_to_disable' => ['all'],
             ])
+            ->add('hosts_check', SwitchType::class, [
+                'required' => false,
+            ])
             ->add('hosts_allowed', TextareaType::class, [
                 'required' => false,
                 'empty_data' => '',
                 'attr' => [
                     'rows' => 5,
-                    'placeholder' => 'www.prestashop.com,42.24.4.2,127.0.0.1,99.98.97.96',
+                    'placeholder' => $this->trans(
+                        'www.prestashop.com,42.24.4.2,127.0.0.1,99.98.97.96',
+                        [],
+                        'Admin.Advparameters.Help'
+                    ),
                 ],
-            ])
-            ->add('hosts_check', SwitchType::class, [
-                'required' => false,
             ])
         ;
 
