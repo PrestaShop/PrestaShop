@@ -90,7 +90,7 @@ final class LogQueryBuilder extends AbstractDoctrineQueryBuilder
 
     private function applyAssociatedQueries(QueryBuilder $queryBuilder): void
     {
-        $this->appendEmployeQuery($queryBuilder);
+        $this->appendEmployeeQuery($queryBuilder);
         $this->appendShopQuery($queryBuilder);
         $this->appendLangQuery($queryBuilder);
         $this->appendShopGroupQuery($queryBuilder);
