@@ -162,7 +162,7 @@ final class LogQueryBuilder extends AbstractDoctrineQueryBuilder
     private function appendEmployeeQuery(QueryBuilder $queryBuilder): void
     {
         $queryBuilder
-            ->addSelect($this->getEmployeField(false) . ' as employee, e.email')
+            ->addSelect($this->getEmployeeField(false) . ' as employee, e.email')
             ->leftJoin('lg', $this->dbPrefix . 'employee', 'e', 'e.id_employee = lg.id_employee')
         ;
     }
