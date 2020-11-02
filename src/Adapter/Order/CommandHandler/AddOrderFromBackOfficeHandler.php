@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddOrderFromBackOffic
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use Shop;
 use Validate;
 
 /**
@@ -89,6 +90,7 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
             ->setCustomer(new Customer($cart->id_customer))
             ->setLanguage(new Language($cart->id_lang))
             ->setCountry($this->getTaxCountry($cart))
+            ->setShop(new Shop($cart->id_shop))
         ;
 
         $translator = Context::getContext()->getTranslator();

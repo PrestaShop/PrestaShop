@@ -139,6 +139,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             ->setCurrency(new Currency($order->id_currency))
             ->setCustomer(new Customer($order->id_customer))
             ->setCart($cart)
+            ->setShop(new Shop($order->id_shop))
         ;
 
         $this->computingPrecision = $this->getPrecisionFromCart($cart);

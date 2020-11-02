@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\AddCartRuleToCartHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
+use Shop;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -80,7 +81,9 @@ final class AddCartRuleToCartHandler extends AbstractCartHandler implements AddC
             ->setCart($cart)
             ->setCurrency(new Currency($cart->id_currency))
             ->setLanguage(new Language($cart->id_lang))
-            ->setCustomer(new Customer($cart->id_customer));
+            ->setCustomer(new Customer($cart->id_customer))
+            ->setShop(new Shop($cart->id_shop))
+        ;
 
         $errorMessage = $this->validateCartRule($cartRule, $cart);
 

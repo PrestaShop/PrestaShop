@@ -106,7 +106,9 @@ final class SearchProductsHandler extends AbstractOrderHandler implements Search
     public function handle(SearchProducts $query): array
     {
         $currency = $this->currencyDataProvider->getCurrencyByIsoCode($query->getAlphaIsoCode()->getValue());
-        $this->contextStateManager->setCurrency($currency);
+        $this->contextStateManager
+            ->setCurrency($currency)
+        ;
 
         try {
             $foundProducts = $this->searchProducts($query, $currency);

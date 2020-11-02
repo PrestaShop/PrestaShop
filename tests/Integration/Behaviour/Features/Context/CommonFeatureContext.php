@@ -102,7 +102,6 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         self::rebootKernel();
     }
 
-
     /**
      * Return PrestaShop Symfony services container
      *
