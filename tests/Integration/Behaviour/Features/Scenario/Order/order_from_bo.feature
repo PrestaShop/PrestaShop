@@ -307,7 +307,7 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should have 2 products in total
     And order "bo_order1" should contain 0 product "Test Added Product"
     And cart of order "bo_order1" should contain 0 product "Test Added Product"
-    And the available stock for product "Test Added Product" should be 98
+    And the available stock for product "Test Added Product" should be 100
     And order "bo_order1" should have following details:
       | total_products           | 23.800 |
       | total_products_wt        | 25.230 |
