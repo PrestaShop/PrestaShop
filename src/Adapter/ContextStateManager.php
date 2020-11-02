@@ -34,6 +34,7 @@ use Country;
 use Currency;
 use Customer;
 use Language;
+use Shop;
 
 /**
  * Allows manipulating context state.
@@ -51,6 +52,8 @@ final class ContextStateManager
         'currency',
         'language',
         'customer',
+        'shop',
+        'shopContext',
     ];
 
     /**
@@ -155,6 +158,25 @@ final class ContextStateManager
     }
 
     /**
+     * Sets context shop and saves previous value
+     *
+     * @param Shop|null $shop
+     * @param int $shopContextType
+     *
+     * @return $this
+     *
+     * @throws \PrestaShopException
+     */
+    public function setShop(?Shop $shop, int $shopContextType = Shop::CONTEXT_SHOP): self
+    {
+        $this->saveContextField('shop');
+        $this->context->shop = $shop;
+        Shop::setContext(Shop::CONTEXT_SHOP, null !== $shop ? $shop->id : null);
+
+        return $this;
+    }
+
+    /**
      * Restores context to a state before changes
      *
      * @return self
@@ -204,7 +226,12 @@ final class ContextStateManager
         $currentStashIndex = array_key_last($this->contextFieldsStack);
         // NOTE: array_key_exists important here, isset cannot be used because it would not detect if null is stored
         if (!array_key_exists($fieldName, $this->contextFieldsStack[$currentStashIndex])) {
-            $this->contextFieldsStack[$currentStashIndex][$fieldName] = $this->context->$fieldName;
+            if ('shop' === $fieldName) {
+                $this->contextFieldsStack[$currentStashIndex]['shop'] = $this->context->$fieldName;
+                $this->contextFieldsStack[$currentStashIndex]['shopContext'] = Shop::getContext();
+            } else {
+                $this->contextFieldsStack[$currentStashIndex][$fieldName] = $this->context->$fieldName;
+            }
         }
     }
 
@@ -218,6 +245,18 @@ final class ContextStateManager
         $currentStashIndex = array_key_last($this->contextFieldsStack);
         // NOTE: array_key_exists important here, isset cannot be used because it would not detect if null is stored
         if (array_key_exists($fieldName, $this->contextFieldsStack[$currentStashIndex])) {
+            if ('shop' === $fieldName) {
+                $shop = $this->contextFieldsStack[$currentStashIndex][$fieldName];
+                $shopId = $shop instanceof Shop ? $shop->id : null;
+                $shopContext = $this->contextFieldsStack[$currentStashIndex]['shopContext'];
+                if (null !== $shopContext) {
+                    Shop::setContext(
+                        $shopContext,
+                        $shopId
+                    );
+                }
+                unset($this->contextFieldsStack[$currentStashIndex]['shopContext']);
+            }
             $this->context->$fieldName = $this->contextFieldsStack[$currentStashIndex][$fieldName];
             unset($this->contextFieldsStack[$currentStashIndex][$fieldName]);
         }
