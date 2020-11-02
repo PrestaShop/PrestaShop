@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use Configuration;
 use RuntimeException;
 use Shop;
 
@@ -53,7 +54,7 @@ class ShopFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function singleShopContextIsLoaded()
     {
-        Shop::setContext(Shop::CONTEXT_SHOP);
+        Shop::setContext(Shop::CONTEXT_SHOP, Configuration::get('PS_SHOP_DEFAULT'));
     }
 
     /**
