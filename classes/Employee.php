@@ -95,7 +95,7 @@ class EmployeeCore extends ObjectModel
     public $id_last_customer_message;
     public $id_last_customer;
 
-    /** @var string Unique token for forgot passsword feature */
+    /** @var string Unique token for forgot password feature */
     public $reset_password_token;
 
     /** @var string token validity date for forgot password feature */
