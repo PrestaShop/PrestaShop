@@ -289,7 +289,11 @@ class OrderProductQuantityUpdater
                 $orderDetail->product_attribute_id,
                 $deltaQuantity,
                 $cart->id_shop,
-                true
+                true,
+                [
+                    'id_order' => $orderDetail->id_order,
+                    'id_stock_mvt_reason' => Configuration::get('PS_STOCK_CUSTOMER_RETURN_REASON'),
+                ]
             );
         } else {
             // Decrease product quantity. Reinject quantity in stock
