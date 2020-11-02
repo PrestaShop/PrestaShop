@@ -113,15 +113,26 @@ Feature: Order from Back Office (BO)
     Then there is duplicated cart "duplicated_dummy_cart" for cart dummy_cart
 
   Scenario: Add product to an existing Order without invoice without free shipping and new invoice
-    Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
+    Given there is a product in the catalog named "Test Added Product" with a price of 15.0 and 100 items in stock
+    And order with reference "bo_order1" does not contain product "Test Added Product"
+    And the available stock for product "Test Added Product" should be 100
     When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Mug Today is a good day |
-      | amount        | 2                       |
-      | price         | 16                      |
-    Then order "bo_order1" should contain 2 products "Mug Today is a good day"
-    And product "Mug Today is a good day" in order "bo_order1" should have specific price 16.0
+      | name          | Test Added Product |
+      | amount        | 2                  |
+      | price         | 16                 |
+    Then order "bo_order1" should contain 2 products "Test Added Product"
+    And product "Test Added Product" in order "bo_order1" should have specific price 16.0
+    And the available stock for product "Test Added Product" should be 98
     And order "bo_order1" should have 4 products in total
     And order "bo_order1" should have 0 invoices
+    And product "Test Added Product" in order "bo_order1" has following details:
+      | product_quantity            | 2     |
+      | product_price               | 16.00 |
+      | original_product_price      | 15.00 |
+      | unit_price_tax_excl         | 16.00 |
+      | unit_price_tax_incl         | 16.96 |
+      | total_price_tax_excl        | 32.00 |
+      | total_price_tax_incl        | 33.92 |
     And order "bo_order1" should have following details:
       | total_products           | 55.80 |
       | total_products_wt        | 59.15 |
@@ -260,15 +271,26 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should contain 0 products "Mug Today is a good day"
 
   Scenario: Delete product from order
-    Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
+    Given there is a product in the catalog named "Test Added Product" with a price of 15.0 and 100 items in stock
+    And order with reference "bo_order1" does not contain product "Test Added Product"
+    And the available stock for product "Test Added Product" should be 100
     When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Mug Today is a good day |
-      | amount        | 2                       |
-      | price         | 16                      |
-    Then order "bo_order1" should contain 2 products "Mug Today is a good day"
-    And product "Mug Today is a good day" in order "bo_order1" should have specific price 16.0
+      | name          | Test Added Product |
+      | amount        | 2                  |
+      | price         | 16                 |
+    Then order "bo_order1" should contain 2 products "Test Added Product"
+    And product "Test Added Product" in order "bo_order1" should have specific price 16.0
+    And the available stock for product "Test Added Product" should be 98
     And order "bo_order1" should have 4 products in total
     And order "bo_order1" should have 0 invoices
+    And product "Test Added Product" in order "bo_order1" has following details:
+      | product_quantity            | 2     |
+      | product_price               | 16.00 |
+      | original_product_price      | 15.00 |
+      | unit_price_tax_excl         | 16.00 |
+      | unit_price_tax_incl         | 16.96 |
+      | total_price_tax_excl        | 32.00 |
+      | total_price_tax_incl        | 33.92 |
     And order "bo_order1" should have following details:
       | total_products           | 55.80 |
       | total_products_wt        | 59.15 |
@@ -280,12 +302,13 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0   |
       | total_shipping_tax_excl  | 7.0   |
       | total_shipping_tax_incl  | 7.42  |
-    When I remove product "Mug Today is a good day" from order "bo_order1"
-    Then product "Mug Today is a good day" in order "bo_order1" should have no specific price
+    When I remove product "Test Added Product" from order "bo_order1"
+    Then product "Test Added Product" in order "bo_order1" should have no specific price
     And order "bo_order1" should have 2 products in total
-    And order "bo_order1" should contain 0 product "Mug Today is a good day"
-    And cart of order "bo_order1" should contain 0 product "Mug Today is a good day"
-    Then order "bo_order1" should have following details:
+    And order "bo_order1" should contain 0 product "Test Added Product"
+    And cart of order "bo_order1" should contain 0 product "Test Added Product"
+    And the available stock for product "Test Added Product" should be 98
+    And order "bo_order1" should have following details:
       | total_products           | 23.800 |
       | total_products_wt        | 25.230 |
       | total_discounts_tax_excl | 0.0    |
