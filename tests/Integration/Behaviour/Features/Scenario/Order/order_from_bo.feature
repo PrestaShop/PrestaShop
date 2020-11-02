@@ -91,6 +91,17 @@ Feature: Order from Back Office (BO)
       | payment_method | Payments by check   |
       | transaction_id | test123             |
       | amount         | $6.00               |
+    And order "bo_order1" should have following details:
+      | total_products           | 23.80 |
+      | total_products_wt        | 25.23 |
+      | total_discounts_tax_excl | 0.000 |
+      | total_discounts_tax_incl | 0.000 |
+      | total_paid_tax_excl      | 30.80 |
+      | total_paid_tax_incl      | 32.65 |
+      | total_paid               | 32.65 |
+      | total_paid_real          | 6.0   |
+      | total_shipping_tax_excl  | 7.0   |
+      | total_shipping_tax_incl  | 7.42  |
 
   Scenario: Change order state to Delivered to be able to add valid invoice to new Payment
     When order "bo_order1" has 0 payments
@@ -108,7 +119,20 @@ Feature: Order from Back Office (BO)
       | amount        | 2                       |
       | price         | 16                      |
     Then order "bo_order1" should contain 2 products "Mug Today is a good day"
-    Then order "bo_order1" should have 0 invoices
+    And product "Mug Today is a good day" in order "bo_order1" should have specific price 16.0
+    And order "bo_order1" should have 4 products in total
+    And order "bo_order1" should have 0 invoices
+    And order "bo_order1" should have following details:
+      | total_products           | 55.80 |
+      | total_products_wt        | 59.15 |
+      | total_discounts_tax_excl | 0.000 |
+      | total_discounts_tax_incl | 0.000 |
+      | total_paid_tax_excl      | 62.80 |
+      | total_paid_tax_incl      | 66.57 |
+      | total_paid               | 66.57 |
+      | total_paid_real          | 0.0   |
+      | total_shipping_tax_excl  | 7.0   |
+      | total_shipping_tax_incl  | 7.42  |
 
   # This test validates the out of stock behaviour and a bug that occured when a specific price had been set
   Scenario: Add product with specific price without stock, get error, allow out of stock order and retry, it should work (no unicity error)
@@ -162,7 +186,19 @@ Feature: Order from Back Office (BO)
       | amount        | 2                       |
       | price         | 16                      |
     Then order "bo_order1" should contain 2 products "Mug Today is a good day"
-    Then order "bo_order1" should have 2 invoices
+    And product "Mug Today is a good day" in order "bo_order1" should have specific price 16.0
+    And order "bo_order1" should have 2 invoices
+    And order "bo_order1" should have following details:
+      | total_products           | 55.80 |
+      | total_products_wt        | 59.15 |
+      | total_discounts_tax_excl | 0.000 |
+      | total_discounts_tax_incl | 0.000 |
+      | total_paid_tax_excl      | 62.80 |
+      | total_paid_tax_incl      | 66.57 |
+      | total_paid               | 66.57 |
+      | total_paid_real          | 32.65 |
+      | total_shipping_tax_excl  | 7.0   |
+      | total_shipping_tax_incl  | 7.42  |
 
   Scenario: Add product to an existing Order with invoice with free shipping to last invoice
     Given I update order "bo_order1" status to "Payment accepted"
@@ -173,7 +209,18 @@ Feature: Order from Back Office (BO)
       | amount        | 2                       |
       | price         | 16                      |
     Then order "bo_order1" should contain 2 products "Mug Today is a good day"
-    Then order "bo_order1" should have 1 invoice
+    And order "bo_order1" should have 1 invoice
+    And order "bo_order1" should have following details:
+      | total_products           | 55.80 |
+      | total_products_wt        | 59.15 |
+      | total_discounts_tax_excl | 0.000 |
+      | total_discounts_tax_incl | 0.000 |
+      | total_paid_tax_excl      | 62.80 |
+      | total_paid_tax_incl      | 66.57 |
+      | total_paid               | 66.57 |
+      | total_paid_real          | 32.65 |
+      | total_shipping_tax_excl  | 7.0   |
+      | total_shipping_tax_incl  | 7.42  |
 
   Scenario: Add product with negative quantity is forbidden
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
@@ -215,15 +262,27 @@ Feature: Order from Back Office (BO)
   Scenario: Update product in order
     When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
       | amount        | 3                       |
-      | price         | 12                      |
+      | price         | 11.90                   |
     Then order "bo_order1" should contain 3 products "Mug The best is yet to come"
+    And product "Mug The best is yet to come" in order "bo_order1" should have no specific price
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
-      | product_quantity            | 3  |
-      | product_price               | 12 |
-      | unit_price_tax_incl         | 12.72 |
-      | unit_price_tax_excl         | 12 |
-      | total_price_tax_incl        | 38.16 |
-      | total_price_tax_excl        | 36 |
+      | product_quantity            | 3      |
+      | product_price               | 11.90  |
+      | unit_price_tax_incl         | 12.614 |
+      | unit_price_tax_excl         | 11.90  |
+      | total_price_tax_incl        | 37.84  |
+      | total_price_tax_excl        | 35.70  |
+    Then order "bo_order1" should have following details:
+      | total_products           | 35.700 |
+      | total_products_wt        | 37.840 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 42.7   |
+      | total_paid_tax_incl      | 45.260 |
+      | total_paid               | 45.260 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
 
   Scenario: Update product in order with zero quantity is forbidden
     When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
@@ -238,6 +297,17 @@ Feature: Order from Back Office (BO)
       | unit_price_tax_excl         | 11.9   |
       | total_price_tax_incl        | 25.230000 |
       | total_price_tax_excl        | 23.8   |
+    And order "bo_order1" should have following details:
+      | total_products           | 23.80 |
+      | total_products_wt        | 25.23 |
+      | total_discounts_tax_excl | 0.000 |
+      | total_discounts_tax_incl | 0.000 |
+      | total_paid_tax_excl      | 30.80 |
+      | total_paid_tax_incl      | 32.65 |
+      | total_paid               | 32.65 |
+      | total_paid_real          | 0.0   |
+      | total_shipping_tax_excl  | 7.0   |
+      | total_shipping_tax_incl  | 7.42  |
 
   Scenario: Update product in order with negative quantity is forbidden
     When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
@@ -250,8 +320,19 @@ Feature: Order from Back Office (BO)
       | product_price               | 11.9   |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.9   |
-      | total_price_tax_incl        | 25.230000 |
+      | total_price_tax_incl        | 25.23  |
       | total_price_tax_excl        | 23.8   |
+    And order "bo_order1" should have following details:
+      | total_products           | 23.80 |
+      | total_products_wt        | 25.23 |
+      | total_discounts_tax_excl | 0.000 |
+      | total_discounts_tax_incl | 0.000 |
+      | total_paid_tax_excl      | 30.80 |
+      | total_paid_tax_incl      | 32.65 |
+      | total_paid               | 32.65 |
+      | total_paid_real          | 0.0   |
+      | total_shipping_tax_excl  | 7.0   |
+      | total_shipping_tax_incl  | 7.42  |
 
   Scenario: Add different combinations of the same product
     Given there is a product in the catalog named "My Product" with a price of 10.00 and 200 items in stock
