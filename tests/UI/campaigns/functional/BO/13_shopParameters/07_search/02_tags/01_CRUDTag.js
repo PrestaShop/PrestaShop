@@ -19,7 +19,7 @@ const {Languages} = require('@data/demo/languages');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_shopParameters_tags_CRUDTag';
+const baseContext = 'functional_BO_shopParameters_search_tags_CRUDTag';
 
 // Import expect from chai
 const {expect} = require('chai');
