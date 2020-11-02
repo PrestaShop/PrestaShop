@@ -112,7 +112,7 @@ Feature: Order from Back Office (BO)
     When I duplicate order "bo_order1" cart "dummy_cart" with reference "duplicated_dummy_cart"
     Then there is duplicated cart "duplicated_dummy_cart" for cart dummy_cart
 
-  Scenario: Add product to an existing Order without invoice with free shipping and new invoice
+  Scenario: Add product to an existing Order without invoice without free shipping and new invoice
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Mug Today is a good day |
@@ -177,7 +177,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
-  Scenario: Add product to an existing Order with invoice with free shipping to new invoice
+  Scenario: Add product to an existing Order with invoice without free shipping to new invoice
     Given I update order "bo_order1" status to "Payment accepted"
     And order "bo_order1" should have 1 invoice
     And order with reference "bo_order1" does not contain product "Mug Today is a good day"
@@ -200,7 +200,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0   |
       | total_shipping_tax_incl  | 7.42  |
 
-  Scenario: Add product to an existing Order with invoice with free shipping to last invoice
+  Scenario: Add product to an existing Order with invoice without free shipping to last invoice
     Given I update order "bo_order1" status to "Payment accepted"
     And order "bo_order1" should have 1 invoice
     And order with reference "bo_order1" does not contain product "Mug Today is a good day"
@@ -258,6 +258,44 @@ Feature: Order from Back Office (BO)
       | price         | 16                      |
     Then I should get error that product is out of stock
     Then order "bo_order1" should contain 0 products "Mug Today is a good day"
+
+  Scenario: Delete product from order
+    Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Mug Today is a good day |
+      | amount        | 2                       |
+      | price         | 16                      |
+    Then order "bo_order1" should contain 2 products "Mug Today is a good day"
+    And product "Mug Today is a good day" in order "bo_order1" should have specific price 16.0
+    And order "bo_order1" should have 4 products in total
+    And order "bo_order1" should have 0 invoices
+    And order "bo_order1" should have following details:
+      | total_products           | 55.80 |
+      | total_products_wt        | 59.15 |
+      | total_discounts_tax_excl | 0.000 |
+      | total_discounts_tax_incl | 0.000 |
+      | total_paid_tax_excl      | 62.80 |
+      | total_paid_tax_incl      | 66.57 |
+      | total_paid               | 66.57 |
+      | total_paid_real          | 0.0   |
+      | total_shipping_tax_excl  | 7.0   |
+      | total_shipping_tax_incl  | 7.42  |
+    When I remove product "Mug Today is a good day" from order "bo_order1"
+    Then product "Mug Today is a good day" in order "bo_order1" should have no specific price
+    And order "bo_order1" should have 2 products in total
+    And order "bo_order1" should contain 0 product "Mug Today is a good day"
+    And cart of order "bo_order1" should contain 0 product "Mug Today is a good day"
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
 
   Scenario: Update product in order
     When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
@@ -359,7 +397,7 @@ Feature: Order from Back Office (BO)
     When I generate invoice for "bo_order1" order
     Then order "bo_order1" should have invoice
 
-  Scenario: Add gift order from Back Office with free shipping
+  Scenario: Add gift order from Back Office without free shipping
     And I create an empty cart "dummy_cart2" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart2"
     And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart2"
