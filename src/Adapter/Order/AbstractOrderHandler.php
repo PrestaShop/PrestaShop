@@ -290,20 +290,7 @@ abstract class AbstractOrderHandler
     ): ?SpecificPrice {
         // WARNING: DO NOT use SpecificPrice::getSpecificPrice as it filters out fields that are not in database
         // hence it ignores the customer or cart restriction and results are biased
-        $existingSpecificPriceId = SpecificPrice::exists(
-            $product->id,
-            $combination ? $combination->id : 0,
-            0,
-            0,
-            0,
-            $order->id_currency,
-            $order->id_customer,
-            SpecificPrice::ORDER_DEFAULT_FROM_QUANTITY,
-            SpecificPrice::ORDER_DEFAULT_DATE,
-            SpecificPrice::ORDER_DEFAULT_DATE,
-            false,
-            $order->id_cart
-        );
+        $existingSpecificPriceId = $order->getProductSpecificPriceId($product->id, $combination ? $combination->id : 0);
 
         if (empty($existingSpecificPriceId)) {
             return null;
