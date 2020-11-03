@@ -44,6 +44,15 @@ class SqlManager extends BOBasePage {
     this.paginationLabel = `${this.sqlQueryGridPanel} .col-form-label`;
     this.paginationNextLink = `${this.sqlQueryGridPanel} #pagination_next_url`;
     this.paginationPreviousLink = `${this.sqlQueryGridPanel} [aria-label='Previous']`;
+
+    // Bulk Actions
+    this.selectAllRowsDiv = `${this.sqlQueryListForm} tr.column-filters .grid_bulk_action_select_all`;
+    this.bulkActionsToggleButton = `${this.sqlQueryListForm} button.dropdown-toggle`;
+    this.bulkActionsDeleteButton = `${this.sqlQueryListForm} #sql_request_grid_bulk_action_delete_selection`;
+
+    // Modal Dialog
+    this.deleteModal = '#sql_request-grid-confirm-modal.show';
+    this.modalDeleteButton = `${this.deleteModal} button.btn-confirm-submit`;
   }
 
   /* Header Methods */
@@ -283,6 +292,34 @@ class SqlManager extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Delete all sql queries with Bulk Actions
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async deleteWithBulkActions(page) {
+    // Click on Select All
+    await Promise.all([
+      page.$eval(this.selectAllRowsDiv, el => el.click()),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
+    ]);
+
+    // Click on Button Bulk actions
+    await Promise.all([
+      page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
+    ]);
+
+    // Click on delete and wait for modal
+    await Promise.all([
+      page.click(this.bulkActionsDeleteButton),
+      this.waitForVisibleSelector(page, this.deleteModal),
+    ]);
+    await this.clickAndWaitForNavigation(page, this.modalDeleteButton);
+
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 }
 

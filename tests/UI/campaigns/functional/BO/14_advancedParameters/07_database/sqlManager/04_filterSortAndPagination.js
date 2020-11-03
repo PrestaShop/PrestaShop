@@ -13,7 +13,6 @@ const addSqlQueryPage = require('@pages/BO/advancedParameters/database/sqlManage
 
 // Import data
 const SQLQueryFaker = require('@data/faker/sqlQuery');
-const {Tables} = require('@data/demo/sqlTables');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -162,7 +161,7 @@ describe('Filter, sort and pagination SQL manager', async () => {
       },
     ];
 
-    tests.forEach((test) => {
+    tests.forEach((test, index) => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
@@ -178,7 +177,7 @@ describe('Filter, sort and pagination SQL manager', async () => {
       });
 
       it('should reset all filters', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `resetFilterAfter${test.args.filterValue}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `resetFilter${index}`, baseContext);
 
         numberOfSQLQueries = await sqlManagerPage.resetAndGetNumberOfLines(page);
         await expect(numberOfSQLQueries).to.be.above(0);
@@ -240,6 +239,36 @@ describe('Filter, sort and pagination SQL manager', async () => {
           await expect(sortedTable).to.deep.equal(expectedResult.reverse());
         }
       });
+    });
+  });
+
+  // 5 - Delete created SQL queries by bulk actions
+  describe('Delete sql queries with Bulk Actions', async () => {
+    it('should filter list by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
+
+      await sqlManagerPage.filterSQLQuery(
+        page,
+        'name',
+        'todelete',
+      );
+
+      const textResult = await sqlManagerPage.getTextColumnFromTable(page, 1, 'name');
+      await expect(textResult).to.contains('todelete');
+    });
+
+    it('should delete categories with Bulk Actions and check Result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'bulkDelete', baseContext);
+
+      const deleteTextResult = await sqlManagerPage.deleteWithBulkActions(page);
+      await expect(deleteTextResult).to.be.equal(sqlManagerPage.successfulMultiDeleteMessage);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
+
+      const numberOfLinesAfterReset = await sqlManagerPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfLinesAfterReset).to.equal(numberOfSQLQueries - 11);
     });
   });
 });
