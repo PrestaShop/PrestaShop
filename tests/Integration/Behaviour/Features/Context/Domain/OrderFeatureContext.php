@@ -234,7 +234,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
         /** @var OrderProductForViewing[] $products */
         $products = $orderForViewing->getProducts()->getProducts();
-        foreach ($products as $product) {
+        foreach (array_reverse($products) as $product) {
             if ($product->getId() == $productId) {
                 $orderDetailId = $product->getOrderDetailId();
                 break;
