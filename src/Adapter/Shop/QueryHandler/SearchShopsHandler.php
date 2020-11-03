@@ -58,10 +58,6 @@ final class SearchShopsHandler implements SearchShopsHandlerInterface
      */
     public function handle(SearchShops $query): array
     {
-        if (function_exists('apc_clear_cache')) {
-            apc_clear_cache();
-        }
-
         $searchTerm = $query->getSearchTerm();
         $shopList = $this->shopRepository->findBySearchTerm($searchTerm);
         $shopListCompare = Shop::searchTest($searchTerm);
