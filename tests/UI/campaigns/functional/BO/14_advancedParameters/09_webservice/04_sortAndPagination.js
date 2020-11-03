@@ -97,6 +97,65 @@ describe('Sort and pagination web service keys', async () => {
     });
   });
 
+  // 2 - Pagination
+  describe('Pagination next and previous', async () => {
+    it('should change the item number to 10 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
+
+      const paginationNumber = await webservicePage.selectPaginationLimit(page, '10');
+      expect(paginationNumber).to.contains('(page 1 / 2)');
+    });
+
+    it('should click on next', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
+
+      const paginationNumber = await webservicePage.paginationNext(page);
+      expect(paginationNumber).to.contains('(page 2 / 2)');
+    });
+
+    it('should click on previous', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
+
+      const paginationNumber = await webservicePage.paginationPrevious(page);
+      expect(paginationNumber).to.contains('(page 1 / 2)');
+    });
+
+    it('should change the item number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+
+      const paginationNumber = await webservicePage.selectPaginationLimit(page, '50');
+      expect(paginationNumber).to.contains('(page 1 / 1)');
+    });
+  });
+
+  // 4 - Sort webservice keys table
+  describe('Sort webservice keys table', async () => {
+    const sortTests = [
+      {args: {testIdentifier: 'sortByKeyDesc', sortBy: 'key', sortDirection: 'desc'}},
+      {args: {testIdentifier: 'sortByEnabledAsc', sortBy: 'active', sortDirection: 'asc'}},
+      {args: {testIdentifier: 'sortByEnabledDesc', sortBy: 'active', sortDirection: 'desc'}},
+      {args: {testIdentifier: 'sortByKeyAsc', sortBy: 'key', sortDirection: 'asc'}},
+    ];
+
+    sortTests.forEach((test) => {
+      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
+        const nonSortedTable = await webservicePage.getAllRowsColumnContent(page, test.args.sortBy);
+        await webservicePage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+
+        const sortedTable = await webservicePage.getAllRowsColumnContent(page, test.args.sortBy);
+        const expectedResult = await webservicePage.sortArray(nonSortedTable, test.args.isFloat);
+
+        if (test.args.sortDirection === 'asc') {
+          await expect(sortedTable).to.deep.equal(expectedResult);
+        } else {
+          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+        }
+      });
+    });
+  });
+
   // 4 - Delete webservice keys by bulk actions
   describe('Delete the created webservice keys by bulk actions', async () => {
     it('should filter list by key description', async function () {
