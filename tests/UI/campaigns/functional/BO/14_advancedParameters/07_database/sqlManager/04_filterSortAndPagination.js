@@ -17,7 +17,7 @@ const SQLQueryFaker = require('@data/faker/sqlQuery');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_advancedParams_database_sqlManager_filterSortAndPagination';
+const baseContext = 'functional_BO_advancedParameters_database_sqlManager_filterSortAndPagination';
 
 // Import expect from chai
 const {expect} = require('chai');
