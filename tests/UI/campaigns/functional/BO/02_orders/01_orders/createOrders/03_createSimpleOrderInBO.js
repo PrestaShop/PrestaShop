@@ -55,7 +55,14 @@ let browserContext;
 let page;
 
 /*
-Go to
+Go to create order page
+Search and choose a customer
+Add products to cart
+Choose address for delivery and invoice
+Choose payment status
+Set order status and save the order
+Check order status from view order page
+Check order total price from view order page
  */
 describe('Create simple order in BO', async () => {
   before(async function () {
