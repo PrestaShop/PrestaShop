@@ -101,7 +101,7 @@ class ImageGenerator
             sprintf('%s-%s%s', rtrim($filePath, $fileExtension), stripslashes($imageType->name), $destinationExtension),
             $width,
             $height,
-            $destinationExtension
+            trim(mime_content_type($filePath), 'image/')
         );
     }
 }
