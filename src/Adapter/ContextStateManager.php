@@ -246,20 +246,28 @@ final class ContextStateManager
         // NOTE: array_key_exists important here, isset cannot be used because it would not detect if null is stored
         if (array_key_exists($fieldName, $this->contextFieldsStack[$currentStashIndex])) {
             if ('shop' === $fieldName) {
-                $shop = $this->contextFieldsStack[$currentStashIndex][$fieldName];
-                $shopId = $shop instanceof Shop ? $shop->id : null;
-                $shopContext = $this->contextFieldsStack[$currentStashIndex]['shopContext'];
-                if (null !== $shopContext) {
-                    Shop::setContext(
-                        $shopContext,
-                        $shopId
-                    );
-                }
-                unset($this->contextFieldsStack[$currentStashIndex]['shopContext']);
+                $this->restoreShopContext($currentStashIndex);
             }
             $this->context->$fieldName = $this->contextFieldsStack[$currentStashIndex][$fieldName];
             unset($this->contextFieldsStack[$currentStashIndex][$fieldName]);
         }
+    }
+
+    /**
+     * Restore the ShopContext, this is used when Shop has been overridden, we need to
+     * restore context->shop of course But also the static fields in Shop class
+     *
+     * @param int $currentStashIndex
+     */
+    private function restoreShopContext(int $currentStashIndex): void
+    {
+        $shop = $this->contextFieldsStack[$currentStashIndex]['shop'];
+        $shopId = $shop instanceof Shop ? $shop->id : null;
+        $shopContext = $this->contextFieldsStack[$currentStashIndex]['shopContext'];
+        if (null !== $shopContext) {
+            Shop::setContext($shopContext, $shopId);
+        }
+        unset($this->contextFieldsStack[$currentStashIndex]['shopContext']);
     }
 
     /**
