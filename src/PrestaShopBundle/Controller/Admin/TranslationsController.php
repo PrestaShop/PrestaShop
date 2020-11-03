@@ -75,7 +75,7 @@ class TranslationsController extends FrameworkBundleAdminController
         $langRepository = $this->get('prestashop.core.admin.lang.repository');
         $locale = $langRepository->getLocaleByIsoCode($isoCode);
 
-        $themeExporter = $this->get('prestashop.translation.theme.exporter');
+        $themeExporter = $this->get('prestashop.translation.exporter.theme');
         $zipFile = $themeExporter->createZipArchive($themeName, $locale, _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR);
 
         $response = new BinaryFileResponse($zipFile);
@@ -207,7 +207,7 @@ class TranslationsController extends FrameworkBundleAdminController
             $langRepository = $this->get('prestashop.core.admin.lang.repository');
             $locale = $langRepository->getLocaleByIsoCode($isoCode);
 
-            $themeExporter = $this->get('prestashop.translation.theme.exporter');
+            $themeExporter = $this->get('prestashop.translation.exporter.theme');
             $zipFile = $themeExporter->createZipArchive($themeName, $locale, _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR);
 
             $response = new BinaryFileResponse($zipFile);

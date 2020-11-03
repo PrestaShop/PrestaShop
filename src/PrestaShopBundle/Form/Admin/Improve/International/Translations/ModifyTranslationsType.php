@@ -99,7 +99,7 @@ class ModifyTranslationsType extends TranslatorAwareType
             ])
             ->add('theme', ChoiceType::class, [
                 'choices' => [$noTheme => 0] +
-                $this->filterThemeChoices($this->themeChoices),
+                $this->excludeDefaultThemeFromChoices($this->themeChoices),
                 'choice_attr' => [
                     $noTheme => [
                         'class' => 'js-no-theme',
@@ -124,7 +124,7 @@ class ModifyTranslationsType extends TranslatorAwareType
      *
      * @return array
      */
-    private function filterThemeChoices(array $themeChoices): array
+    private function excludeDefaultThemeFromChoices(array $themeChoices): array
     {
         if (array_key_exists(ThemeProvider::DEFAULT_THEME_NAME, $themeChoices)) {
             unset($themeChoices[ThemeProvider::DEFAULT_THEME_NAME]);
