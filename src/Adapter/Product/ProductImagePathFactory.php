@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use Image;
-use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 
 class ProductImagePathFactory
 {
@@ -69,23 +68,6 @@ class ProductImagePathFactory
         }
 
         return sprintf('%s%s.%s', _PS_PROD_IMG_DIR_, $path, $image->image_format);
-    }
-
-    /**
-     * @param Image $image
-     *
-     * @throws ImageUploadException
-     */
-    public function createDestinationDirectory(Image $image): void
-    {
-        if ($this->isLegacyImageMode || $image->createImgFolder()) {
-            return;
-        }
-
-        throw new ImageUploadException(sprintf(
-            'Error occurred when trying to create directory for product #%s image',
-            $image->id_product
-        ));
     }
 
     /**
