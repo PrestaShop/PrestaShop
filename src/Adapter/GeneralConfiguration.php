@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use Cookie;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use Tools;
 
 /**
  * Manages the configuration data about general options.
@@ -57,6 +58,10 @@ class GeneralConfiguration implements DataConfigurationInterface
     {
         return [
             'check_modules_update' => $this->configuration->getBoolean('PRESTASTORE_LIVE'),
+            'check_modules_stability_channel' => $this->configuration->get(
+                'ADDONS_API_MODULE_CHANNEL',
+                Tools::ADDONS_API_MODULE_CHANNEL_STABLE
+            ),
             'check_ip_address' => $this->configuration->getBoolean('PS_COOKIE_CHECKIP'),
             'front_cookie_lifetime' => $this->configuration->get('PS_COOKIE_LIFETIME_FO'),
             'back_cookie_lifetime' => $this->configuration->get('PS_COOKIE_LIFETIME_BO'),
@@ -80,6 +85,7 @@ class GeneralConfiguration implements DataConfigurationInterface
                 ];
             } else {
                 $this->configuration->set('PRESTASTORE_LIVE', (bool) $configuration['check_modules_update']);
+                $this->configuration->set('ADDONS_API_MODULE_CHANNEL', $configuration['check_modules_stability_channel']);
                 $this->configuration->set('PS_COOKIE_CHECKIP', (bool) $configuration['check_ip_address']);
                 $this->configuration->set('PS_COOKIE_LIFETIME_FO', (int) $configuration['front_cookie_lifetime']);
                 $this->configuration->set('PS_COOKIE_LIFETIME_BO', (int) $configuration['back_cookie_lifetime']);
@@ -106,6 +112,9 @@ class GeneralConfiguration implements DataConfigurationInterface
         ) && in_array(
             $configuration['cookie_samesite'],
             Cookie::SAMESITE_AVAILABLE_VALUES
+        ) && in_array(
+            $configuration['check_modules_stability_channel'],
+            Tools::ADDONS_API_MODULE_CHANNELS
         );
     }
 
