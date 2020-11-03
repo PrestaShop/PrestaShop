@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCo
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\InvalidGiftMessageException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\MinimalQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
@@ -593,6 +594,13 @@ class CartController extends FrameworkBundleAdminController
             InvalidGiftMessageException::class => $this->trans(
                 'Gift message not valid',
                 'Admin.Notifications.Error'
+            ),
+            MinimalQuantityException::class => $this->trans(
+                'You must add a minimum quantity of %d',
+                'Admin.Orderscustomers.Notification',
+                [
+                    $e->getMinimalQuantity(),
+                ]
             ),
         ];
     }
