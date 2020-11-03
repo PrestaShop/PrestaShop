@@ -132,4 +132,57 @@ describe('Filter, sort and pagination SQL manager', async () => {
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
+
+  // 3 - Filter SQL manager table
+  describe('Filter SQL manager table', async () => {
+    const tests = [
+      {
+        args: {
+          testIdentifier: 'filterById',
+          filterType: 'input',
+          filterBy: 'id_request_sql',
+          filterValue: 5,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'filterByName',
+          filterType: 'input',
+          filterBy: 'name',
+          filterValue: 'todelete5',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'filterBySqlQuery',
+          filterType: 'input',
+          filterBy: 'sql',
+          filterValue: 'select * from ps_alias',
+        },
+      },
+    ];
+
+    tests.forEach((test) => {
+      it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
+        await sqlManagerPage.filterSQLQuery(page, test.args.filterBy, test.args.filterValue);
+
+        const numberOfLinesAfterFilter = await sqlManagerPage.getNumberOfElementInGrid(page);
+        await expect(numberOfLinesAfterFilter).to.be.at.most(numberOfSQLQueries);
+
+        for (let row = 1; row <= numberOfLinesAfterFilter; row++) {
+          const textColumn = await sqlManagerPage.getTextColumnFromTable(page, row, test.args.filterBy);
+          await expect(textColumn).to.contains(test.args.filterValue);
+        }
+      });
+
+      it('should reset all filters', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `resetFilterAfter${test.args.filterValue}`, baseContext);
+
+        numberOfSQLQueries = await sqlManagerPage.resetAndGetNumberOfLines(page);
+        await expect(numberOfSQLQueries).to.be.above(0);
+      });
+    });
+  });
 });
