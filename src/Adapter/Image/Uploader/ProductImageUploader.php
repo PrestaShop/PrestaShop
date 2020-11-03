@@ -122,12 +122,13 @@ class ProductImageUploader extends AbstractImageUploader
      */
     private function createDestinationDirectory(Image $image): void
     {
+        //@todo: refactor this to some new service which relies on ImagePathFactory & uses symfony Filesystem
         if ($this->isLegacyImageMode || $image->createImgFolder()) {
             return;
         }
 
         throw new ImageUploadException(sprintf(
-            'Error occurred when trying to create directory for product #%s image',
+            'Error occurred when trying to create directory for product #%d image',
             $image->id_product
         ));
     }
