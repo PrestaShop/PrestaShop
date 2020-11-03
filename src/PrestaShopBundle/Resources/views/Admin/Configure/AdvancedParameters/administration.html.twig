@@ -44,6 +44,16 @@
                 </div>
               </div>
               <div class="form-group row">
+                {{ ps.label_with_help(
+                    ('Addons API stability channel'|trans({}, 'Admin.Advparameters.Feature')),
+                    ('Choose a stability level for the modules downloaded from Addons Marketplace. All zips pushed on Addons are in stable state unless stated otherwise.'|trans({}, 'Admin.Advparameters.Help'))
+                ) }}
+                <div class="col-sm">
+                  {{ form_errors(generalForm.check_modules_stability_channel) }}
+                  {{ form_widget(generalForm.check_modules_stability_channel) }}
+                </div>
+              </div>
+              <div class="form-group row">
                 {{ ps.label_with_help(("Check the cookie's IP address"|trans), ('Check the IP address of the cookie in order to prevent your cookie from being stolen.'|trans({}, 'Admin.Advparameters.Help'))) }}
                 <div class="col-sm">
                   {{ form_errors(generalForm.check_ip_address) }}
