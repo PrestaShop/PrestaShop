@@ -11,6 +11,7 @@ class WebService extends BOBasePage {
     // Selectors
     // Header links
     this.addNewWebserviceLink = '#page-header-desc-configuration-add[title=\'Add new webservice key\']';
+
     // List of webservices
     this.webserviceGridPanel = '#webservice_key_grid_panel';
     this.webserviceGridTitle = `${this.webserviceGridPanel} h3.card-header-title`;
@@ -26,13 +27,24 @@ class WebService extends BOBasePage {
     } i.grid-toggler-icon-valid`;
     this.webserviceListColumnNotValidIcon = row => `${this.webserviceListTableColumn(row, 'active')
     } i.grid-toggler-icon-not-valid`;
+
     // Filters
     this.webserviceFilterInput = filterBy => `${this.webserviceListForm} #webservice_key_${filterBy}`;
     this.filterSearchButton = `${this.webserviceListForm} .grid-search-button`;
     this.filterResetButton = `${this.webserviceListForm} .grid-reset-button`;
+
     // Delete modal
     this.confirmDeleteModal = '#webservice_key-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
+
+    // Bulk Actions
+    this.selectAllRowsDiv = `${this.webserviceListForm} tr.column-filters .grid_bulk_action_select_all`;
+    this.bulkActionsToggleButton = `${this.webserviceListForm} button.dropdown-toggle`;
+    this.bulkActionsDeleteButton = `${this.webserviceListForm} #webservice_key_grid_bulk_action_delete_selection`;
+
+    // Modal Dialog
+    this.deleteModal = '#webservice_key-grid-confirm-modal.show';
+    this.modalDeleteButton = `${this.deleteModal} button.btn-confirm-submit`;
   }
 
   /*
@@ -182,6 +194,34 @@ class WebService extends BOBasePage {
    * @returns {Promise<string>}
    */
   getValidationMessage(page) {
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Delete all sql queries with Bulk Actions
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async deleteWithBulkActions(page) {
+    // Click on Select All
+    await Promise.all([
+      page.$eval(this.selectAllRowsDiv, el => el.click()),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
+    ]);
+
+    // Click on Button Bulk actions
+    await Promise.all([
+      page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
+    ]);
+
+    // Click on delete and wait for modal
+    await Promise.all([
+      page.click(this.bulkActionsDeleteButton),
+      this.waitForVisibleSelector(page, this.deleteModal),
+    ]);
+    await this.clickAndWaitForNavigation(page, this.modalDeleteButton);
+
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 }

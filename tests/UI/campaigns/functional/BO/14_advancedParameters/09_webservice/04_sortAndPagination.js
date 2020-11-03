@@ -74,7 +74,7 @@ describe('Sort and pagination web service keys', async () => {
 
   creationTests.forEach((test, index) => {
     describe(`Create webservice key n°${index + 1} in BO`, async () => {
-      const webserviceData = new WebserviceFaker({name: `todelete${index}`});
+      const webserviceData = new WebserviceFaker({keyDescription: `todelete${index}`});
 
       it('should go to add new webservice key page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewWebserviceKeyPage_${index}`, baseContext);
@@ -94,6 +94,37 @@ describe('Sort and pagination web service keys', async () => {
         const numberOfWebserviceKeysAfterCreation = await webservicePage.getNumberOfElementInGrid(page);
         await expect(numberOfWebserviceKeysAfterCreation).to.be.equal(numberOfWebserviceKeys + 1 + index);
       });
+    });
+  });
+
+  // 4 - Delete webservice keys by bulk actions
+  describe('Delete the created webservice keys by bulk actions', async () => {
+    it('should filter list by key description', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterAfterUpdate', baseContext);
+
+      await webservicePage.filterWebserviceTable(
+        page,
+        'input',
+        'description',
+        'todelete',
+      );
+
+      const key = await webservicePage.getTextColumnFromTable(page, 1, 'description');
+      await expect(key).to.contains('todelete');
+    });
+
+    it('should delete webservice keys created', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteWebserviceKey', baseContext);
+
+      const textResult = await webservicePage.deleteWithBulkActions(page);
+      await expect(textResult).to.equal(webservicePage.successfulMultiDeleteMessage);
+    });
+
+    it('should reset filter and check the number of webservice keys', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
+
+      const numberOfElement = await webservicePage.resetAndGetNumberOfLines(page);
+      await expect(numberOfElement).to.be.equal(numberOfWebserviceKeys);
     });
   });
 });
