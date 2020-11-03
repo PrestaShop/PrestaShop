@@ -136,7 +136,7 @@ class TranslationController extends ApiController
             );
 
             foreach ($catalog['data'] as $message) {
-                if (empty($message['xlf']) && empty($message['db'])) {
+                if (empty($message['xliff']) && empty($message['database'])) {
                     ++$catalog['info']['total_missing_translations'];
                 }
             }
