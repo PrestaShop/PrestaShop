@@ -1004,6 +1004,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      *
      * @param string $orderReference
      * @param string $productName
+     * @param TableNode $table
      */
     public function checkProductDetailsWithReference(string $orderReference, string $productName, TableNode $table)
     {
