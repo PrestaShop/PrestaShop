@@ -108,7 +108,15 @@ abstract class AbstractImageUploader
     }
 
     /**
-     * @deprecated use AbstractImageUploader::generateDifferentSizeImages() instead
+     * Generates different size images
+     *
+     * @param int $id
+     * @param string $imageDir
+     * @param string $belongsTo to whom the image belongs (for example 'suppliers' or 'categories')
+     *
+     * @return bool
+     *
+     * @throws ImageOptimizationException
      */
     protected function generateDifferentSize($id, $imageDir, $belongsTo)
     {
