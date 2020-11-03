@@ -33,6 +33,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Tools;
 
 class GeneralType extends TranslatorAwareType
 {
@@ -49,6 +50,10 @@ class GeneralType extends TranslatorAwareType
             ->add('check_modules_update', SwitchType::class, [
                 'label' => $this->trans('Automatically check for module updates', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('New modules and updates are displayed on the modules page.', 'Admin.Advparameters.Help'),
+            ])
+            ->add('check_modules_stability_channel', ChoiceType::class, [
+                'required' => true,
+                'choices' => $this->getStabilityChannelsValues(),
             ])
             ->add('check_ip_address', SwitchType::class, [
                 'label' => $this->trans('Check the cookie\'s IP address', 'Admin.Advparameters.Feature'),
@@ -85,5 +90,32 @@ class GeneralType extends TranslatorAwareType
     public function getBlockPrefix()
     {
         return 'administration_general_block';
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function getStabilityChannelsValues(): array
+    {
+        $values = [];
+        foreach (Tools::ADDONS_API_MODULE_CHANNELS as $key) {
+            $values[$key] = $this->getStabilityChannelsValue($key);
+        }
+
+        return $values;
+    }
+
+    private function getStabilityChannelsValue(string $value): string
+    {
+        switch ($value) {
+            case Tools::ADDONS_API_MODULE_CHANNEL_ALPHA:
+                return $this->trans('Alpha', 'Admin.Advparameters.Feature');
+            case Tools::ADDONS_API_MODULE_CHANNEL_BETA:
+                return $this->trans('Beta', 'Admin.Advparameters.Feature');
+            case Tools::ADDONS_API_MODULE_CHANNEL_STABLE:
+                return $this->trans('Stable', 'Admin.Advparameters.Feature');
+        }
+
+        return $value;
     }
 }

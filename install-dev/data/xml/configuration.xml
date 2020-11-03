@@ -868,5 +868,8 @@ Country</value>
     <configuration id="PS_SHOW_LABEL_OOS_LISTING_PAGES" name="PS_SHOW_LABEL_OOS_LISTING_PAGES">
       <value>1</value>
     </configuration>
+    <configuration id="ADDONS_API_MODULE_CHANNEL" name="ADDONS_API_MODULE_CHANNEL">
+      <value>stable</value>
+    </configuration>
   </entities>
 </entity_configuration>
