@@ -31,29 +31,70 @@ namespace Tests\Resources;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * @todo: better name?
+ * Backups and reverts testable resources to its initial state.
  */
 class ResourceResetter
 {
     /**
+     * @var Filesystem|null
+     */
+    private $filesystem;
+
+    /**
+     * @var string|null
+     */
+    private $backupRootDir;
+
+    /**
+     * @param Filesystem|null $filesystem
+     * @param string|null $backupRootDir
+     */
+    public function __construct(
+        ?Filesystem $filesystem = null,
+        ?string $backupRootDir = null
+    ) {
+        $this->filesystem = $filesystem ?: new Filesystem();
+        $this->backupRootDir = $backupRootDir ?: sys_get_temp_dir();
+    }
+
+    /**
      * Name for directory of test images in system tmp dir
      */
     const BACKUP_TEST_IMG_DIR = 'ps_backup_test_img';
+    const BACKUP_TEST_DOWNLOADS_DIR = 'ps_backup_test_download';
 
     /**
      * Backs up test images directory to allow resetting their original state later in tests
      */
-    public static function backupImages(): void
+    public function backupImages(): void
     {
-        (new Filesystem())->mirror(_PS_IMG_DIR_, static::getBackupTestImgDir());
+        $this->filesystem->mirror(_PS_IMG_DIR_, $this->getBackupTestImgDir());
+    }
+
+    /**
+     * Backs up test downloads directory to allow resetting their original state later in tests
+     */
+    public function backupDownloads(): void
+    {
+        $this->filesystem->mirror(_PS_DOWNLOAD_DIR_, $this->getBackupTestDownloadsDir());
     }
 
     /**
      * Resets test images directory to initial state
      */
-    public static function resetImages(): void
+    public function resetImages(): void
     {
-        (new Filesystem())->mirror(static::getBackupTestImgDir(), _PS_IMG_DIR_);
+        $this->filesystem->remove(_PS_IMG_DIR_);
+        $this->filesystem->mirror($this->getBackupTestImgDir(), _PS_IMG_DIR_);
+    }
+
+    /**
+     * Resets test images directory to initial state
+     */
+    public function resetDownloads(): void
+    {
+        $this->filesystem->remove(_PS_DOWNLOAD_DIR_);
+        $this->filesystem->mirror($this->getBackupTestDownloadsDir(), _PS_DOWNLOAD_DIR_);
     }
 
     /**
@@ -61,8 +102,18 @@ class ResourceResetter
      *
      * @return string
      */
-    public static function getBackupTestImgDir(): string
+    public function getBackupTestImgDir(): string
     {
-        return sys_get_temp_dir() . DIRECTORY_SEPARATOR . static::BACKUP_TEST_IMG_DIR;
+        return $this->backupRootDir . DIRECTORY_SEPARATOR . static::BACKUP_TEST_IMG_DIR;
+    }
+
+    /**
+     * Provide test downloads directory path, in which initial downloads state should be saved
+     *
+     * @return string
+     */
+    public function getBackupTestDownloadsDir(): string
+    {
+        return $this->backupRootDir . DIRECTORY_SEPARATOR . static::BACKUP_TEST_DOWNLOADS_DIR;
     }
 }

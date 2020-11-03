@@ -75,7 +75,10 @@ class DatabaseCreator
         $install->installModules();
 
         DatabaseDump::create();
-        ResourceResetter::backupImages();
+
+        $resourceResetter = new ResourceResetter();
+        $resourceResetter->backupImages();
+        $resourceResetter->backupDownloads();
     }
 
     /**

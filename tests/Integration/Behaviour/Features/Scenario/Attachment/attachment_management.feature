@@ -1,7 +1,7 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s attachment
 @reset-database-before-feature
-@clear-downloads-after-feature
 @clear-cache-after-feature
+@reset-downloads-after-feature
 Feature: Manage attachment from Back Office (BO)
   As an employee I want to be able to add, update and delete attachments
 

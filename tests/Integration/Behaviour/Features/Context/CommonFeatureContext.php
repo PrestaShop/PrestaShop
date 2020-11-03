@@ -108,15 +108,11 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @AfterFeature @clear-downloads-after-feature
+     * @AfterFeature @reset-downloads-after-feature
      */
-    public static function clearDownloads(): void
+    public static function resetDownloads(): void
     {
-        foreach (glob(_PS_DOWNLOAD_DIR_ . '*') as $file) {
-            if (is_file($file)) {
-                unlink($file);
-            }
-        }
+        (new ResourceResetter())->resetDownloads();
     }
 
     /**
@@ -124,7 +120,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public static function resetImgDir(): void
     {
-        ResourceResetter::resetImages();
+        (new ResourceResetter())->resetImages();
     }
 
     /**
