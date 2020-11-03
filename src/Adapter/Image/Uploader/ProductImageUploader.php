@@ -117,7 +117,7 @@ class ProductImageUploader extends AbstractImageUploader
 
         $cachedImages = [
             $this->productImagePathFactory->getCachedCover($productId, $this->contextShopId),
-            $this->productImagePathFactory->getCachedThumbnail($productId),
+            $this->productImagePathFactory->getHelperThumbnail($productId),
         ];
 
         foreach ($cachedImages as $cachedImage) {

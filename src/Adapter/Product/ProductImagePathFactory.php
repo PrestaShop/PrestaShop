@@ -55,6 +55,11 @@ class ProductImagePathFactory
         $this->temporaryImgDir = $temporaryImgDir;
     }
 
+    /**
+     * @param Image $image
+     *
+     * @return string
+     */
     public function getBasePath(Image $image): string
     {
         if ($this->isLegacyImageMode) {
@@ -66,6 +71,11 @@ class ProductImagePathFactory
         return sprintf('%s%s.%s', _PS_PROD_IMG_DIR_, $path, $image->image_format);
     }
 
+    /**
+     * @param Image $image
+     *
+     * @throws ImageUploadException
+     */
     public function createDestinationDirectory(Image $image): void
     {
         if ($this->isLegacyImageMode || $image->createImgFolder()) {
@@ -78,12 +88,23 @@ class ProductImagePathFactory
         ));
     }
 
+    /**
+     * @param int $productId
+     *
+     * @return string
+     */
     public function getCachedCover(int $productId): string
     {
         return sprintf('%sproduct_%d.jpg', $this->temporaryImgDir, $productId);
     }
 
-    public function getCachedThumbnail(int $productId, int $shopId): string
+    /**
+     * @param int $productId
+     * @param int $shopId
+     *
+     * @return string
+     */
+    public function getHelperThumbnail(int $productId, int $shopId): string
     {
         return sprintf('%sproduct_mini_%d_%d.jpg', $this->temporaryImgDir, $productId, $shopId);
     }
