@@ -179,12 +179,12 @@ describe('sort and pagination shopping carts', async () => {
       },
       {
         args: {
-          testIdentifier: 'sortByOrderIDAsc', sortBy: 'status', sortDirection: 'up',
+          testIdentifier: 'sortByOrderIDAsc', sortBy: 'status', sortDirection: 'up', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByOrderIDDesc', sortBy: 'status', sortDirection: 'down',
+          testIdentifier: 'sortByOrderIDDesc', sortBy: 'status', sortDirection: 'down', isFloat: true,
         },
       },
       /* Sort by carrier not working, skipping it
