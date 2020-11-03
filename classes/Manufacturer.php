@@ -484,9 +484,13 @@ class ManufacturerCore extends ObjectModel
 				WHERE p.`id_manufacturer` = ' . (int) $idManufacturer . '
 				' . ($active ? ' AND product_shop.`active` = 1' : '') . '
 				' . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '') . '
-				GROUP BY p.id_product
+				GROUP BY p.id_product';
+
+        if ($orderBy !== 'price') {
+            $sql .= '
 				ORDER BY ' . $alias . '`' . bqSQL($orderBy) . '` ' . pSQL($orderWay) . '
 				LIMIT ' . (((int) $p - 1) * (int) $n) . ',' . (int) $n;
+        }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
@@ -494,8 +498,9 @@ class ManufacturerCore extends ObjectModel
             return false;
         }
 
-        if ($orderBy == 'price') {
+        if ($orderBy === 'price') {
             Tools::orderbyPrice($result, $orderWay);
+            $result = array_slice($result, (int) (($p - 1) * $n), (int) $n);
         }
 
         return Product::getProductsProperties($idLang, $result);

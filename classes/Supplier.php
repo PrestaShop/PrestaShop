@@ -391,9 +391,13 @@ class SupplierCore extends ObjectModel
 				WHERE ps.`id_supplier` = ' . (int) $idSupplier . '
 					' . ($active ? ' AND product_shop.`active` = 1' : '') . '
 					' . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '') . '
-				GROUP BY ps.id_product
-				ORDER BY ' . $alias . pSQL($orderBy) . ' ' . pSQL($orderWay) . '
+				GROUP BY ps.id_product';
+
+        if ($orderBy !== 'price') {
+            $sql .= '
+				ORDER BY ' . $alias . '`' . pSQL($orderBy) . '` ' . pSQL($orderWay) . '
 				LIMIT ' . (((int) $p - 1) * (int) $n) . ',' . (int) $n;
+        }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
 
@@ -401,8 +405,9 @@ class SupplierCore extends ObjectModel
             return false;
         }
 
-        if ($orderBy == 'price') {
+        if ($orderBy === 'price') {
             Tools::orderbyPrice($result, $orderWay);
+            $result = array_slice($result, (int) (($p - 1) * $n), (int) $n);
         }
 
         return Product::getProductsProperties($idLang, $result);

@@ -2979,8 +2979,10 @@ class ProductCore extends ObjectModel
             WHERE cp.`id_product` = p.`id_product`)');
         }
 
-        $sql->orderBy((isset($order_by_prefix) ? pSQL($order_by_prefix) . '.' : '') . '`' . pSQL($order_by) . '` ' . pSQL($order_way));
-        $sql->limit($nb_products, (int) (($page_number - 1) * $nb_products));
+        if ($order_by !== 'price') {
+            $sql->orderBy((isset($order_by_prefix) ? pSQL($order_by_prefix) . '.' : '') . '`' . pSQL($order_by) . '` ' . pSQL($order_way));
+            $sql->limit($nb_products, (int) (($page_number - 1) * $nb_products));
+        }
 
         if (Combination::isFeatureActive()) {
             $sql->select('product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute');
@@ -2994,8 +2996,9 @@ class ProductCore extends ObjectModel
             return false;
         }
 
-        if ($order_by == 'price') {
+        if ($order_by === 'price') {
             Tools::orderbyPrice($result, $order_way);
+            $result = array_slice($result, (int) (($nb_products - 1) * $page_number), (int) $page_number);
         }
         $products_ids = [];
         foreach ($result as $row) {
@@ -3256,9 +3259,13 @@ class ProductCore extends ObjectModel
         AND product_shop.`show_price` = 1
         ' . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '') . '
         ' . ((!$beginning && !$ending) ? ' AND p.`id_product` IN (' . ((is_array($tab_id_product) && count($tab_id_product)) ? implode(', ', $tab_id_product) : 0) . ')' : '') . '
-        ' . $sql_groups . '
-        ORDER BY ' . (isset($order_by_prefix) ? pSQL($order_by_prefix) . '.' : '') . pSQL($order_by) . ' ' . pSQL($order_way) . '
-        LIMIT ' . (int) (($page_number - 1) * $nb_products) . ', ' . (int) $nb_products;
+        ' . $sql_groups;
+
+        if ($order_by != 'price') {
+            $sql .= '
+				ORDER BY ' . (isset($order_by_prefix) ? pSQL($order_by_prefix) . '.' : '') . pSQL($order_by) . ' ' . pSQL($order_way) . '
+				LIMIT ' . (int) (($page_number - 1) * $nb_products) . ', ' . (int) $nb_products;
+        }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
@@ -3266,8 +3273,9 @@ class ProductCore extends ObjectModel
             return false;
         }
 
-        if ($order_by == 'price') {
+        if ($order_by === 'price') {
             Tools::orderbyPrice($result, $order_way);
+            $result = array_slice($result, (int) (($page_number - 1) * $nb_products), (int) $nb_products);
         }
 
         return Product::getProductsProperties($id_lang, $result);
