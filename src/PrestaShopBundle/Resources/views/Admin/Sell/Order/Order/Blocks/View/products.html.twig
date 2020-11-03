@@ -41,6 +41,9 @@
   </div>
 
   <div class="card-body">
+    <div class="spinner-order-products-container" id="orderProductsLoading">
+      <div class="spinner spinner-primary"></div>
+    </div>
     {% set formOptions = {
       'attr': {
         'data-order-id': orderForViewing.id,
