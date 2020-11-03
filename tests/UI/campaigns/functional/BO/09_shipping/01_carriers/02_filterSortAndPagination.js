@@ -88,7 +88,7 @@ describe('Filter, sort and pagination carriers', async () => {
             testIdentifier: 'filterByName',
             filterType: 'input',
             filterBy: 'name',
-            filterValue: Carriers.default.name,
+            filterValue: Carriers.myCarrier.name,
           },
       },
       {
