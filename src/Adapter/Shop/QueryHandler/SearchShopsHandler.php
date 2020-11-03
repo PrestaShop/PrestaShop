@@ -58,8 +58,9 @@ final class SearchShopsHandler implements SearchShopsHandlerInterface
      */
     public function handle(SearchShops $query): array
     {
-        $cacheDriver = new \Doctrine\Common\Cache\ArrayCache();
-        $deleted = $cacheDriver->deleteAll();
+        if (function_exists('apc_clear_cache')) {
+            apc_clear_cache();
+        }
 
         $searchTerm = $query->getSearchTerm();
         $shopList = $this->shopRepository->findBySearchTerm($searchTerm);
