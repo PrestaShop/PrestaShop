@@ -341,4 +341,20 @@ module.exports = class CommonPage {
   uppercaseFirstCharacter(word) {
     return `${word[0].toUpperCase()}${word.slice(1)}`;
   }
+
+  /**
+   * Get a float price from text
+   * @param page
+   * @param selector
+   * @param timeout
+   * @returns {Promise<number>}
+   */
+  async getPriceFromText(page, selector, timeout = 0) {
+    await page.waitForTimeout(timeout);
+    const text = await this.getTextContent(page, selector);
+
+    const number = Number(text.replace(/[^0-9.-]+/g, ''));
+
+    return parseFloat(number);
+  }
 };
