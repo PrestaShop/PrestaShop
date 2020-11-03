@@ -17,6 +17,7 @@ class Order extends BOBasePage {
     this.editProductQuantityInput = `${this.orderProductsEditRowTable} input.editProductQuantity`;
     this.UpdateProductButton = `${this.orderProductsEditRowTable} button.productEditSaveBtn`;
     this.partialRefundButton = 'button.partial-refund-display';
+    this.orderTotalPriceSpan = '#orderTotal';
     // Status tab
     this.orderStatusesSelect = '#update_order_status_action_input';
     this.updateStatusButton = '#update_order_status_action_btn';
@@ -101,6 +102,15 @@ class Order extends BOBasePage {
 
     options = await options.filter(option => statusName === option.textContent);
     return options.length !== 0;
+  }
+
+  /**
+   * Get total price from products tab
+   * @param page
+   * @return {Promise<number>}
+   */
+  getOrderTotalPrice(page) {
+    return this.getPriceFromText(page, this.orderTotalPriceSpan);
   }
 
   /**
