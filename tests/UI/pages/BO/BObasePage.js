@@ -119,6 +119,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.contactLink = '#subtab-AdminParentStores';
     // traffic and SEO
     this.trafficAndSeoLink = '#subtab-AdminParentMeta';
+    // Search
+    this.searchLink = '#subtab-AdminParentSearchConf';
 
     // Advanced Parameters
     this.advancedParametersLink = '#subtab-AdminAdvancedParameters';
