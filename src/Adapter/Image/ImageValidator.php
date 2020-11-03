@@ -91,7 +91,7 @@ class ImageValidator
         }
 
         $mime = mime_content_type($filePath);
-        if (!ImageManager::isRealImage($filePath, mime_content_type($filePath), $allowedMimeTypes)) {
+        if (!ImageManager::isRealImage($filePath, $mime, $allowedMimeTypes)) {
             throw new UploadedImageConstraintException(sprintf('Image type "%s" is not allowed, allowed types are: %s', $mime, implode(',', $allowedMimeTypes)), UploadedImageConstraintException::UNRECOGNIZED_FORMAT);
         }
     }
