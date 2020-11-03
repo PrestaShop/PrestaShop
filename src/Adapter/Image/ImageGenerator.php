@@ -86,19 +86,19 @@ class ImageGenerator
 
         //@todo: hardcoded extension as it was in legacy code. Changing it would be a huge BC break.
         //@todo: in future we should consider using extension by mimeType
-        $destinationExtension = 'jpg';
+        $destinationExtension = '.jpg';
         $width = $imageType->width;
         $height = $imageType->height;
 
         if (Configuration::get('PS_HIGHT_DPI')) {
-            $destinationExtension = '2x.' . $destinationExtension;
+            $destinationExtension = '2x' . $destinationExtension;
             $width *= 2;
             $height *= 2;
         }
 
         return ImageManager::resize(
             $filePath,
-            sprintf('%s-%s.%s', rtrim($filePath, $fileExtension), stripslashes($imageType->name), $destinationExtension),
+            sprintf('%s-%s%s', rtrim($filePath, $fileExtension), stripslashes($imageType->name), $destinationExtension),
             $width,
             $height,
             $destinationExtension
