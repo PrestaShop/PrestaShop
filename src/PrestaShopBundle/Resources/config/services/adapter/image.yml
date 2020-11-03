@@ -45,3 +45,4 @@ services:
             - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
             - "@prestashop.adapter.image.image_generator"
             - "@prestashop.core.hook.dispatcher"
+            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_LEGACY_IMAGES')"
