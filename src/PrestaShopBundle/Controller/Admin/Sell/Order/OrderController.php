@@ -673,7 +673,10 @@ class OrderController extends FrameworkBundleAdminController
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
 
-        $previousProducts = $orderForViewing->getProducts()->getProducts();
+        $previousProducts = [];
+        foreach ($orderForViewing->getProducts()->getProducts() as $orderProductForViewing) {
+            $previousProducts[$orderProductForViewing->getOrderDetailId()] = $orderProductForViewing;
+        }
 
         $invoiceId = (int) $request->get('invoice_id');
         try {
@@ -713,10 +716,15 @@ class OrderController extends FrameworkBundleAdminController
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
 
-        $updatedProducts = $orderForViewing->getProducts()->getProducts();
+        $updatedProducts = [];
+        foreach ($orderForViewing->getProducts()->getProducts() as $orderProductForViewing) {
+            $updatedProducts[$orderProductForViewing->getOrderDetailId()] = $orderProductForViewing;
+        }
         $newProducts = [];
-        for ($i = count($previousProducts); $i < count($updatedProducts); ++$i) {
-            $newProducts[] = $updatedProducts[$i];
+        foreach (array_keys($updatedProducts) as $productKey) {
+            if (!in_array($productKey, array_keys($previousProducts), true)) {
+                $newProducts[] = $updatedProducts[$productKey];
+            }
         }
 
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
