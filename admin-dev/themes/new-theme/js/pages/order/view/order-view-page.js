@@ -167,9 +167,9 @@ export default class OrderViewPage {
       this.orderDocumentsRefresher.refresh(event.orderId);
       this.orderProductRenderer.moveProductPanelToOriginalPosition();
 
-      // Move to last page to see the added product
+      // Move to first page to see the added product
       EventEmitter.emit(OrderViewEventMap.productListPaginated, {
-        numPage: newPagesNum
+        numPage: 1
       });
     });
   }
@@ -350,14 +350,24 @@ export default class OrderViewPage {
   }
 
   refreshProductsList(orderId) {
-    $.ajax(this.router.generate('admin_orders_get_products', {orderId})).then((response) => {
-      // Delete previous product lines
-      $(OrderViewPageMap.productsTable).find(OrderViewPageMap.productsTableRows).remove();
+    const $loadingSpinner = $(OrderViewPageMap.productsPanel).find('.spinner-order-products-container#orderProductsLoading');
+    $loadingSpinner.show();
 
-      $(OrderViewPageMap.productsTable + ' tbody').prepend(response);
+    $.ajax(this.router.generate('admin_orders_get_products', {orderId}))
+        .done((response) => {
+          // Delete previous product lines
+          $(OrderViewPageMap.productsTable).find(OrderViewPageMap.productsTableRows).remove();
 
-      this.listenForProductDelete();
-      this.listenForProductEdit();
-    });
+          $(OrderViewPageMap.productsTable + ' tbody').prepend(response);
+
+          $loadingSpinner.hide();
+
+          this.listenForProductDelete();
+          this.listenForProductEdit();
+        })
+        .fail(errors => {
+          location.reload();
+        })
+    ;
   }
 }

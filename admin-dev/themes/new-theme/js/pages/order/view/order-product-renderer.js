@@ -38,7 +38,7 @@ export default class OrderProductRenderer {
     if ($productRow.length > 0) {
       $productRow.html($(newRow).html());
     } else {
-      $(OrderViewPageMap.productAddRow).before($(newRow).hide().fadeIn());
+      $(OrderViewPageMap.productsTableRows).first().before($(newRow).hide().fadeIn());
     }
   }
 
