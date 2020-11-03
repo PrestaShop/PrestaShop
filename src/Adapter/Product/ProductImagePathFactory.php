@@ -78,13 +78,13 @@ class ProductImagePathFactory
         ));
     }
 
-    public function getCachedCover(int $productId, int $shopId): string
+    public function getCachedCover(int $productId): string
     {
-        return sprintf('%sproduct_mini_%s_%s.jpg', $this->temporaryImgDir, $productId, $shopId);
+        return sprintf('%sproduct_%d.jpg', $this->temporaryImgDir, $productId);
     }
 
-    public function getCachedThumbnail(int $productId): string
+    public function getCachedThumbnail(int $productId, int $shopId): string
     {
-        return sprintf('%sproduct_%s.jpg', $this->temporaryImgDir, $productId);
+        return sprintf('%sproduct_mini_%d_%d.jpg', $this->temporaryImgDir, $productId, $shopId);
     }
 }
