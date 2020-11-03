@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Adapter\Product\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Image\Exception\CannotUnlinkImageException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 
 /**
  * Uploads product image to filesystem
@@ -68,24 +69,32 @@ class ProductImageUploader extends AbstractImageUploader
     private $hookDispatcher;
 
     /**
+     * @var bool
+     */
+    private $isLegacyImageMode;
+
+    /**
      * @param UploadSizeConfigurationInterface $uploadSizeConfiguration
      * @param ProductImagePathFactory $productImagePathFactory
      * @param int $contextShopId
      * @param ImageGenerator $imageGenerator
      * @param HookDispatcherInterface $hookDispatcher
+     * @param bool $isLegacyImageMode
      */
     public function __construct(
         UploadSizeConfigurationInterface $uploadSizeConfiguration,
         ProductImagePathFactory $productImagePathFactory,
         int $contextShopId,
         ImageGenerator $imageGenerator,
-        HookDispatcherInterface $hookDispatcher
+        HookDispatcherInterface $hookDispatcher,
+        bool $isLegacyImageMode
     ) {
         $this->uploadSizeConfiguration = $uploadSizeConfiguration;
         $this->productImagePathFactory = $productImagePathFactory;
         $this->contextShopId = $contextShopId;
         $this->imageGenerator = $imageGenerator;
         $this->hookDispatcher = $hookDispatcher;
+        $this->isLegacyImageMode = $isLegacyImageMode;
     }
 
     /**
@@ -93,7 +102,7 @@ class ProductImageUploader extends AbstractImageUploader
      */
     public function upload(Image $image, string $filePath): void
     {
-        $this->productImagePathFactory->createDestinationDirectory($image);
+        $this->createDestinationDirectory($image);
         $destinationPath = $this->productImagePathFactory->getBasePath($image);
         $this->uploadFromTemp($filePath, $destinationPath);
         $this->imageGenerator->generateImagesByTypes($destinationPath, ImageType::getImagesTypes('products'));
@@ -109,6 +118,23 @@ class ProductImageUploader extends AbstractImageUploader
     /**
      * @param Image $image
      *
+     * @throws ImageUploadException
+     */
+    private function createDestinationDirectory(Image $image): void
+    {
+        if ($this->isLegacyImageMode || $image->createImgFolder()) {
+            return;
+        }
+
+        throw new ImageUploadException(sprintf(
+            'Error occurred when trying to create directory for product #%s image',
+            $image->id_product
+        ));
+    }
+
+    /**
+     * @param Image $image
+     *
      * @throws CannotUnlinkImageException
      */
     private function deleteCachedImages(Image $image): void
@@ -116,8 +142,8 @@ class ProductImageUploader extends AbstractImageUploader
         $productId = (int) $image->id_product;
 
         $cachedImages = [
-            $this->productImagePathFactory->getCachedCover($productId, $this->contextShopId),
-            $this->productImagePathFactory->getHelperThumbnail($productId),
+            $this->productImagePathFactory->getHelperThumbnail($productId, $this->contextShopId),
+            $this->productImagePathFactory->getCachedCover($productId),
         ];
 
         foreach ($cachedImages as $cachedImage) {
