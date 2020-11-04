@@ -76,7 +76,7 @@ class CombinationCreator
 
     /**
      * @param ProductId $productId
-     * @param array<int, array<int, int> $groupedAttributeIds
+     * @param array<int, array<int, int>> $groupedAttributeIds
      *
      * @todo: multistore
      *

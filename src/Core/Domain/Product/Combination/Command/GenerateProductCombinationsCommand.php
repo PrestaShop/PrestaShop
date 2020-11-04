@@ -45,7 +45,7 @@ class GenerateProductCombinationsCommand
     private $productId;
 
     /**
-     * @var array
+     * @var array<int, array<int>>
      */
     private $groupedAttributeIds;
 
