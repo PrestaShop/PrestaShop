@@ -46,6 +46,10 @@ class WebService extends BOBasePage {
     this.selectAllRowsDiv = `${this.webserviceListForm} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.webserviceListForm} button.dropdown-toggle`;
     this.bulkActionsDeleteButton = `${this.webserviceListForm} #webservice_key_grid_bulk_action_delete_selection`;
+    this.bulkActionsEnableButton = `${this.webserviceListForm} 
+    #webservice_key_grid_bulk_action_webservice_enable_selection`;
+    this.bulkActionsDisableButton = `${this.webserviceListForm} 
+    #webservice_key_grid_bulk_action_webservice_disable_selection`;
 
     // Modal Dialog
     this.deleteModal = '#webservice_key-grid-confirm-modal.show';
@@ -234,6 +238,32 @@ class WebService extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.modalDeleteButton);
 
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Enable / disable by Bulk Actions
+   * @param page
+   * @param enable
+   * @returns {Promise<string>}
+   */
+  async enableDisableByColumnBulkActions(page, enable = true) {
+    // Click on Select All
+    await Promise.all([
+      page.$eval(this.selectAllRowsDiv, el => el.click()),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
+    ]);
+
+    // Click on Button Bulk actions
+    await Promise.all([
+      page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
+    ]);
+
+    // Click on enable/Disable and wait for modal
+    await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
+
+    // Validation message not displayed, skipping it
+    // return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
   /**
