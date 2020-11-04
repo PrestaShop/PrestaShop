@@ -220,7 +220,7 @@ class ProductDuplicator
                 continue;
             }
 
-            $product->price = (string) $priceByShop;
+            $product->price = (float) (string) $priceByShop;
         }
     }
 
