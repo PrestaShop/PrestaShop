@@ -243,7 +243,7 @@ class CombinationDataProvider
      * @param int[] $combinationIds
      * @param LanguageId $langId
      *
-     * @return array<int, array<string, mixed>>
+     * @return array<int, array<int, mixed>>
      */
     public function getAttributesInfoByCombinationIds(array $combinationIds, LanguageId $langId): array
     {
