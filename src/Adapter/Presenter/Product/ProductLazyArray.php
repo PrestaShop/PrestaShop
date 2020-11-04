@@ -105,15 +105,13 @@ class ProductLazyArray extends AbstractLazyArray
         $this->translator = $translator;
 
         $this->fillImages(
-            $settings,
             $product,
             $language
         );
 
         $this->addPriceInformation(
             $settings,
-            $product,
-            $language
+            $product
         );
 
         $this->addQuantityInformation(
@@ -431,6 +429,7 @@ class ProductLazyArray extends AbstractLazyArray
         $flags = [];
 
         $show_price = $this->shouldShowPrice($this->settings, $this->product);
+        $show_out_of_stock = $this->shouldShowOutOfStockLabel($this->product);
 
         if ($show_price && $this->product['online_only']) {
             $flags['online-only'] = [
@@ -476,6 +475,13 @@ class ProductLazyArray extends AbstractLazyArray
             $flags['pack'] = [
                 'type' => 'pack',
                 'label' => $this->translator->trans('Pack', [], 'Shop.Theme.Catalog'),
+            ];
+        }
+
+        if ($show_out_of_stock) {
+            $flags['out_of_stock'] = [
+                'type' => 'out_of_stock',
+                'label' => Configuration::get('PS_LABEL_OOS_PRODUCTS_BOD', $this->language->getId()),
             ];
         }
 
@@ -565,7 +571,7 @@ class ProductLazyArray extends AbstractLazyArray
     private function shouldShowPrice(
         ProductPresentationSettings $settings,
         array $product
-    ) {
+    ): bool {
         return $settings->shouldShowPrice() && (bool) $product['show_price'];
     }
 
@@ -574,18 +580,56 @@ class ProductLazyArray extends AbstractLazyArray
      *
      * @param array $product
      *
-     * @return mixed
+     * @return bool
      */
-    private function shouldShowAddToCartButton($product)
+    private function shouldShowAddToCartButton($product): bool
     {
         return (bool) $product['available_for_order'];
     }
 
-    private function fillImages(
-        ProductPresentationSettings $settings,
-        array $product,
-        Language $language
-    ) {
+    /**
+     * @param array $product
+     *
+     * @return bool
+     */
+    private function shouldShowOutOfStockLabel(array $product): bool
+    {
+        if (!(bool) Configuration::get('PS_SHOW_LABEL_OOS_LISTING_PAGES')) {
+            return false;
+        }
+        // Displayed only if the order of out of stock product is denied.
+        if ($product['out_of_stock'] == 1
+            || ($product['out_of_stock'] == 2 && (bool) Configuration::get('PS_ORDER_OUT_OF_STOCK'))) {
+            return false;
+        }
+
+        if ($product['id_product_attribute']) {
+            // Displayed only if all combinations are out of stock (stock is <= 0)
+            $product = new Product($product['id_product']);
+            if (!is_object($product) || !((bool) $product->id)) {
+                return false;
+            }
+            foreach ($product->getAttributesResume($this->language->getId()) as $combination) {
+                if ($combination['quantity'] > 0) {
+                    return false;
+                }
+            }
+        } else {
+            // Displayed only if the product stock is <= 0
+            if ($product['quantity'] > 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param array $product
+     * @param Language $language
+     */
+    private function fillImages(array $product, Language $language): void
+    {
         // Get all product images, including potential cover
         $productImages = $this->imageRetriever->getAllProductImages(
             $product,
@@ -650,11 +694,12 @@ class ProductLazyArray extends AbstractLazyArray
         return (0 === count($filteredImages)) ? $images : $filteredImages;
     }
 
-    private function addPriceInformation(
-        ProductPresentationSettings $settings,
-        array $product,
-        Language $language
-    ) {
+    /**
+     * @param ProductPresentationSettings $settings
+     * @param array $product
+     */
+    private function addPriceInformation(ProductPresentationSettings $settings, array $product): void
+    {
         $this->product['has_discount'] = false;
         $this->product['discount_type'] = null;
         $this->product['discount_percentage'] = null;
