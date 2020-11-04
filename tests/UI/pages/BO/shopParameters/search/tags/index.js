@@ -59,6 +59,13 @@ class Tags extends BOBasePage {
     this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
     this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
+
+    // Bulk actions selectors
+    this.bulkActionBlock = 'div.bulk-actions';
+    this.bulkActionMenuButton = '#bulk_action_menu_tag';
+    this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
+    this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
+    this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
   }
 
   /*
@@ -283,6 +290,39 @@ class Tags extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
+  }
+
+  /* Bulk actions methods */
+  /**
+   * Bulk delete tags
+   * @param page
+   * @return {Promise<string>}
+   */
+  async bulkDelete(page) {
+    // To confirm bulk delete action with dialog
+    this.dialogListener(page, true);
+
+    // Select all rows
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(page, this.selectAllLink),
+    ]);
+
+    await Promise.all([
+      page.click(this.selectAllLink),
+      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+    ]);
+
+    // Perform delete
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(page, this.bulkDeleteLink),
+    ]);
+
+    await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
+
+    // Return successful message
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 }
 

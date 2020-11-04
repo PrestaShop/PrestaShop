@@ -237,4 +237,27 @@ describe('Filter, sort and pagination tag in BO', async () => {
       expect(paginationNumber).to.equal('1');
     });
   });
+
+  // 5 : Delete tags created by bulk actions
+  describe('Delete tags with Bulk Actions', async () => {
+    it('should filter list by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
+
+      await tagsPage.filterTable(page, 'a!name', 'todelete');
+
+      const numberOfLinesAfterFilter = await tagsPage.getNumberOfElementInGrid(page);
+
+      for (let i = 1; i <= numberOfLinesAfterFilter; i++) {
+        const textColumn = await tagsPage.getTextColumn(page, i, 'a!name');
+        await expect(textColumn).to.contains('todelete');
+      }
+    });
+
+    it('should tags with Bulk Actions and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteTags', baseContext);
+
+      const deleteTextResult = await tagsPage.bulkDelete(page);
+      await expect(deleteTextResult).to.be.contains(tagsPage.successfulMultiDeleteMessage);
+    });
+  });
 });
