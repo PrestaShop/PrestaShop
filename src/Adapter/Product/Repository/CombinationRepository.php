@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -164,10 +165,26 @@ class CombinationRepository extends AbstractObjectModelRepository
 
     /**
      * @param CombinationId $combinationId
+     *
+     * @throws CoreException
+     */
+    public function assertCombinationsExists(CombinationId $combinationId): void
+    {
+        $this->assertObjectModelExists(
+            $combinationId->getValue(),
+            'product_attribute',
+            CombinationNotFoundException::class
+        );
+    }
+
+    /**
+     * @param CombinationId $combinationId
      * @param int[] $attributeIds
      */
     public function saveProductAttributeAssociation(CombinationId $combinationId, array $attributeIds): void
     {
+        $this->assertCombinationsExists($combinationId);
+
         $attributesList = [];
         foreach ($attributeIds as $attributeId) {
             $attributesList[] = [
