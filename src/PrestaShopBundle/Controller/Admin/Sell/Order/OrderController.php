@@ -720,12 +720,8 @@ class OrderController extends FrameworkBundleAdminController
         foreach ($orderForViewing->getProducts()->getProducts() as $orderProductForViewing) {
             $updatedProducts[$orderProductForViewing->getOrderDetailId()] = $orderProductForViewing;
         }
-        $newProducts = [];
-        foreach (array_keys($updatedProducts) as $productKey) {
-            if (!in_array($productKey, array_keys($previousProducts), true)) {
-                $newProducts[] = $updatedProducts[$productKey];
-            }
-        }
+
+        $newProducts = array_diff_key($updatedProducts, $previousProducts);
 
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
         $cancelProductForm = $formBuilder->getFormFor($orderId);
