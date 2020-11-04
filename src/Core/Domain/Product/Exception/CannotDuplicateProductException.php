@@ -107,4 +107,9 @@ class CannotDuplicateProductException extends ProductException
      * When product carriers duplication fails
      */
     const FAILED_DUPLICATE_CARRIERS = 150;
+
+    /**
+     * When product attachment association duplication fails
+     */
+    const FAILED_DUPLICATE_ATTACHMENT_ASSOCIATION = 160;
 }
