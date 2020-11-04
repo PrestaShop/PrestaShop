@@ -103,7 +103,7 @@ describe('Filter, sort and pagination tag in BO', async () => {
     });
   });
 
-  // 1 - Filter tags
+  // 2 - Filter tags
   describe('Filter tags table', async () => {
     const tests = [
       {args: {testIdentifier: 'filterById', filterBy: 'id_tag', filterValue: 5}},
@@ -132,6 +132,77 @@ describe('Filter, sort and pagination tag in BO', async () => {
 
         const numberOfLinesAfterReset = await tagsPage.resetAndGetNumberOfLines(page);
         await expect(numberOfLinesAfterReset).to.equal(numberOfTags + 21);
+      });
+    });
+  });
+
+  // 3 - Sort tags table
+  describe('Sort tags table', async () => {
+    const sortTests = [
+      {
+        args: {
+          testIdentifier: 'sortByIdDesc', sortBy: 'id_tag', sortDirection: 'down', isFloat: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByLanguageAsc', sortBy: 'l!name', sortDirection: 'up',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByLanguageDesc', sortBy: 'l!name', sortDirection: 'down',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByNameAsc', sortBy: 'a!name', sortDirection: 'up',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByNameDesc', sortBy: 'a!name', sortDirection: 'down',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByProductAsc', sortBy: 'products', sortDirection: 'up', isFloat: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByProductDesc', sortBy: 'products', sortDirection: 'down', isFloat: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByIdAsc', sortBy: 'id_tag', sortDirection: 'up', isFloat: true,
+        },
+      },
+    ];
+
+    sortTests.forEach((test) => {
+      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
+        let nonSortedTable = await tagsPage.getAllRowsColumnContent(page, test.args.sortBy);
+
+        await tagsPage.sortTable(page, test.args.sortBy,test.args.sortDirection);
+
+        let sortedTable = await tagsPage.getAllRowsColumnContent(page, test.args.sortBy);
+
+        if (test.args.isFloat) {
+          nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
+          sortedTable = await sortedTable.map(text => parseFloat(text));
+        }
+
+        const expectedResult = await tagsPage.sortArray(nonSortedTable, test.args.isFloat);
+
+        if (test.args.sortDirection === 'up') {
+          await expect(sortedTable).to.deep.equal(expectedResult);
+        } else {
+          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+        }
       });
     });
   });
