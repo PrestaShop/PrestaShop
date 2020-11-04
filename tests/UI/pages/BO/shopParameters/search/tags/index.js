@@ -44,8 +44,8 @@ class Tags extends BOBasePage {
     // Columns selectors
     this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
     this.tableColumnLanguage = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
-    this.tableColumnProducts = row => `${this.tableBodyColumn(row)}:nth-child(6)`;
+    this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(4)`;
+    this.tableColumnProducts = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
   }
 
   /*
@@ -97,22 +97,12 @@ class Tags extends BOBasePage {
   /**
    * Filter Table
    * @param page
-   * @param filterType, input / Select
    * @param filterBy, which column
    * @param value, value to put in filter
    * @return {Promise<void>}
    */
-  async filterTable(page, filterType, filterBy, value = '') {
-    switch (filterType) {
-      case 'input':
-        await this.setValue(page, this.filterColumn(filterBy), value);
-        break;
-      case 'select':
-        await this.selectByVisibleText(page, this.filterColumn(filterBy), value);
-        break;
-      default:
-        throw new Error(`${filterBy} was not found as a filter`);
-    }
+  async filterTable(page, filterBy, value = '') {
+    await this.setValue(page, this.filterColumn(filterBy), value);
     // click on search
     await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }

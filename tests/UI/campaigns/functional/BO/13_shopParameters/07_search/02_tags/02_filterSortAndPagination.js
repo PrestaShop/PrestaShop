@@ -102,4 +102,38 @@ describe('Filter, sort and pagination tag in BO', async () => {
       });
     });
   });
+
+  // 1 - Filter tags
+  describe('Filter tags table', async () => {
+    const tests = [
+      {args: {testIdentifier: 'filterById', filterBy: 'id_tag', filterValue: 5}},
+      {args: {testIdentifier: 'filterByLanguage', filterBy: 'l!name', filterValue: Languages.english.name}},
+      {args: {testIdentifier: 'filterByName', filterBy: 'a!name', filterValue: 'todelete10'}},
+      {args: {testIdentifier: 'filterByProducts', filterBy: 'products', filterValue: 0}},
+    ];
+
+    tests.forEach((test) => {
+      it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
+        await tagsPage.filterTable(page, test.args.filterBy, test.args.filterValue);
+
+        const numberOfLinesAfterFilter = await tagsPage.getNumberOfElementInGrid(page);
+        await expect(numberOfLinesAfterFilter).to.be.at.most(numberOfTags + 21);
+
+        for (let row = 1; row <= numberOfLinesAfterFilter; row++) {
+          const textColumn = await tagsPage.getTextColumn(page, row, test.args.filterBy);
+          await expect(textColumn).to.contains(test.args.filterValue);
+        }
+      });
+
+      it('should reset all filters', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
+
+        const numberOfLinesAfterReset = await tagsPage.resetAndGetNumberOfLines(page);
+        await expect(numberOfLinesAfterReset).to.equal(numberOfTags + 21);
+      });
+    });
+  });
+
 });
