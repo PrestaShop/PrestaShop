@@ -131,9 +131,7 @@ class CombinationCreator
 
         $addedCombinationIds = [];
         foreach ($generatedCombinations as $generatedCombination) {
-            $combinationExists = $product->productAttributeExists($generatedCombination, false, null, true);
-
-            if ($combinationExists) {
+            if ($product->productAttributeExists($generatedCombination, false, null, true)) {
                 continue;
             }
 
