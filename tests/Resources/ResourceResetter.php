@@ -104,7 +104,7 @@ class ResourceResetter
      */
     public function getBackupTestImgDir(): string
     {
-        return $this->backupRootDir . DIRECTORY_SEPARATOR . static::BACKUP_TEST_IMG_DIR;
+        return $this->backupRootDir . DIRECTORY_SEPARATOR . self::BACKUP_TEST_IMG_DIR;
     }
 
     /**
@@ -114,6 +114,6 @@ class ResourceResetter
      */
     public function getBackupTestDownloadsDir(): string
     {
-        return $this->backupRootDir . DIRECTORY_SEPARATOR . static::BACKUP_TEST_DOWNLOADS_DIR;
+        return $this->backupRootDir . DIRECTORY_SEPARATOR . self::BACKUP_TEST_DOWNLOADS_DIR;
     }
 }
