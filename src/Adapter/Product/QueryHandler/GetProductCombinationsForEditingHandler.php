@@ -108,12 +108,14 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
             $combinationAttributesInformation = [];
 
             foreach ($attributesInformationByCombinationId[$combinationId] as $attributesInfo) {
-                $combinationAttributesInformation[] = new CombinationAttributeInformation(
-                    (int) $attributesInfo['id_attribute_group'],
-                    $attributesInfo['attribute_group_name'],
-                    (int) $attributesInfo['id_attribute'],
-                    $attributesInfo['attribute_name']
-                );
+                foreach ($attributesInfo as $attributeInfo) {
+                    $combinationAttributesInformation[] = new CombinationAttributeInformation(
+                        (int) $attributeInfo['id_attribute_group'],
+                        $attributeInfo['attribute_group_name'],
+                        (int) $attributeInfo['id_attribute'],
+                        $attributeInfo['attribute_name']
+                    );
+                }
             }
 
             $combinationsForEditing[] = new CombinationForEditing(
