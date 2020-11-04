@@ -1128,6 +1128,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             Context::getContext()->currency->precision
         );
 
+        $product_full['oos_show_label_listing_pages'] = (bool) Configuration::get('PS_SHOW_LABEL_OOS_LISTING_PAGES');
+
         $presenter = $this->getProductPresenter();
 
         return $presenter->present(
