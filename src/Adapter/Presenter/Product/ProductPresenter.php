@@ -29,6 +29,8 @@ namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 use Hook;
 use Language;
 use Link;
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
@@ -37,6 +39,16 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class ProductPresenter
 {
+    /**
+     * @var Configuration
+     */
+    protected $configuration;
+
+    /**
+     * @var HookManager
+     */
+    protected $hookManager;
+
     /**
      * @var ImageRetriever
      */
@@ -67,13 +79,17 @@ class ProductPresenter
         Link $link,
         PriceFormatter $priceFormatter,
         ProductColorsRetriever $productColorsRetriever,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        HookManager $hookManager = null,
+        Configuration $configuration = null
     ) {
         $this->imageRetriever = $imageRetriever;
         $this->link = $link;
         $this->priceFormatter = $priceFormatter;
         $this->productColorsRetriever = $productColorsRetriever;
         $this->translator = $translator;
+        $this->hookManager = $hookManager ?? new HookManager();
+        $this->configuration = $configuration ?? new Configuration();
     }
 
     public function present(
@@ -89,7 +105,9 @@ class ProductPresenter
             $this->link,
             $this->priceFormatter,
             $this->productColorsRetriever,
-            $this->translator
+            $this->translator,
+            $this->hookManager,
+            $this->configuration
         );
 
         Hook::exec('actionPresentProduct',
