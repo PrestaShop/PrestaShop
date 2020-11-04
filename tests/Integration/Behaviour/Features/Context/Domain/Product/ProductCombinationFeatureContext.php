@@ -32,7 +32,6 @@ use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetProductCombinationsForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -84,8 +83,7 @@ class ProductCombinationFeatureContext extends AbstractProductFeatureContext
             'Unexpected combinations count'
         );
 
-        /** @var CombinationForEditing $combinationForEditing */
-        foreach ($combinationsForEditing as $key => $combinationForEditing) {
+        foreach ($combinationsForEditing->getCombinations() as $key => $combinationForEditing) {
             Assert::assertEquals(
                 $dataRows[$key]['combination name'],
                 $combinationForEditing->getCombinationName(),
