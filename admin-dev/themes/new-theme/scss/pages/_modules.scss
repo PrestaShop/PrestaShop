@@ -175,69 +175,6 @@
   }
 }
 
-/**
- * Module list
- */
-
-.module-item-list {
-  .container-fluid {
-    padding: {
-      top: $grid-gutter-width / 2;
-      bottom: $grid-gutter-width / 2;
-    }
-
-    background-color: #fff;
-  }
-  + :nth-child(even) {
-    .container-fluid {
-      background-color: #f5f8f9 !important;
-    }
-  }
-
-  .module-item-wrapper-list {
-    @media (max-width: 33.9em) {
-      text-align: center;
-    }
-
-    .module-logo-thumb-list {
-      max-width: 64px;
-      height: 64px;
-      margin: 0 auto;
-      @media (max-width: 33.9em) {
-        height: auto;
-        max-height: 64px;
-      }
-      img {
-        width: 100%;
-        max-width: 40px;
-        margin-bottom: 0.5em;
-      }
-    }
-    .module-name-list {
-      margin: 0;
-      font-weight: bolder;
-      color: $gray-dark;
-    }
-    .module-version-author-list {
-      overflow: hidden;
-      font-weight: 600;
-      color: $gray-medium;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      b {
-        font-weight: 600;
-        color: $gray-dark;
-      }
-    }
-
-    .module-quick-action-list {
-      > [class^="module-star-ranking-"] {
-        display: none;
-      }
-    }
-  }
-}
-
 .badges-container {
   min-height: 30px;
   font-size: 0.9rem;
