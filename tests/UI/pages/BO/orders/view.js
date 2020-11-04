@@ -8,9 +8,15 @@ class Order extends BOBasePage {
     this.pageTitle = 'Order';
     this.partialRefundValidationMessage = 'A partial refund was successfully created.';
 
-    // Order page
+    // Customer card
+    this.shippingAddressBlock = '#addressShipping';
+    this.invoiceAddressBlock = '#addressInvoice';
+
+    // Order card
     this.orderProductsTable = '#orderProductsTable';
     this.orderProductsRowTable = row => `${this.orderProductsTable} tbody tr:nth-child(${row})`;
+    this.orderProductsTableNameColumn = row => `${this.orderProductsRowTable(row)} td.cellProductName`;
+    this.orderProductsTableNameNameParagraph = row => `${this.orderProductsTableNameColumn(row)} p.productName`;
     this.editProductButton = row => `${this.orderProductsRowTable(row)} button.js-order-product-edit-btn`;
     this.productQuantitySpan = row => `${this.orderProductsRowTable(row)} td.cellProductQuantity span`;
     this.orderProductsEditRowTable = `${this.orderProductsTable} tbody tr.editProductRow`;
@@ -18,15 +24,18 @@ class Order extends BOBasePage {
     this.UpdateProductButton = `${this.orderProductsEditRowTable} button.productEditSaveBtn`;
     this.partialRefundButton = 'button.partial-refund-display';
     this.orderTotalPriceSpan = '#orderTotal';
-    // Status tab
+
+    // Status card
     this.orderStatusesSelect = '#update_order_status_action_input';
     this.updateStatusButton = '#update_order_status_action_btn';
-    // Document tab
+
+    // Documents card
     this.documentTab = 'a#orderDocumentsTab';
     this.documentsTableDiv = '#orderDocumentsTabContent';
     this.documentsTableRow = row => `${this.documentsTableDiv} table tbody tr:nth-child(${row})`;
     this.documentNumberLink = row => `${this.documentsTableRow(row)} td:nth-child(3) a`;
     this.documentName = row => `${this.documentsTableRow(row)} td:nth-child(2)`;
+
     // Refund form
     this.refundProductQuantity = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_quantity']`;
     this.refundProductAmount = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_amount']`;
@@ -37,6 +46,34 @@ class Order extends BOBasePage {
   /*
   Methods
    */
+
+  /**
+   * Get shipping address from customer card
+   * @param page
+   * @return {Promise<string>}
+   */
+  getShippingAddress(page) {
+    return this.getTextContent(page, this.shippingAddressBlock);
+  }
+
+  /**
+   * Get invoice address from customer card
+   * @param page
+   * @return {Promise<string>}
+   */
+  getInvoiceAddress(page) {
+    return this.getTextContent(page, this.invoiceAddressBlock);
+  }
+
+  /**
+   * Get product name from products table
+   * @param page
+   * @param row
+   * @return {Promise<string>}
+   */
+  getProductNameFromTable(page, row) {
+    return this.getTextContent(page, this.orderProductsTableNameNameParagraph(row));
+  }
 
   /**
    * Modify the product quantity

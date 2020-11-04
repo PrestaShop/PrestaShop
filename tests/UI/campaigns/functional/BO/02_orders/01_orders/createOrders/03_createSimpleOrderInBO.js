@@ -25,6 +25,9 @@ const {Statuses} = require('@data/demo/orderStatuses');
 // Carriers
 const {Carriers} = require('@data/demo/carriers');
 
+// Addresses
+const addresses = require('@data/demo/address');
+
 // Order to make data
 const orderToMake = {
   customer: DefaultAccount,
@@ -33,6 +36,7 @@ const orderToMake = {
   ],
   deliveryAddress: 'Mon adresse',
   invoiceAddress: 'Mon adresse',
+  addressValue: addresses.second,
   deliveryOption: {
     name: `${Carriers[1].name} - ${Carriers[1].delay}`,
     freeShipping: true,
@@ -120,6 +124,41 @@ describe('Create simple order in BO', async () => {
 
       const totalPrice = await viewOrderPage.getOrderTotalPrice(page);
       await expect(totalPrice).to.equal(orderToMake.totalPrice);
+    });
+
+    it('should check order shipping address after creation', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkShippingAddress', baseContext);
+
+      const shippingAddress = await viewOrderPage.getShippingAddress(page);
+      await expect(shippingAddress)
+        .to.contain(orderToMake.addressValue.firstName)
+        .and.to.contain(orderToMake.addressValue.lastName)
+        .and.to.contain(orderToMake.addressValue.address)
+        .and.to.contain(orderToMake.addressValue.zipCode)
+        .and.to.contain(orderToMake.addressValue.city)
+        .and.to.contain(orderToMake.addressValue.country);
+    });
+
+    it('should check order invoice address after creation', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkInvoiceAddress', baseContext);
+
+      const invoiceAddress = await viewOrderPage.getInvoiceAddress(page);
+      await expect(invoiceAddress)
+        .to.contain(orderToMake.addressValue.firstName)
+        .and.to.contain(orderToMake.addressValue.lastName)
+        .and.to.contain(orderToMake.addressValue.address)
+        .and.to.contain(orderToMake.addressValue.zipCode)
+        .and.to.contain(orderToMake.addressValue.city)
+        .and.to.contain(orderToMake.addressValue.country);
+    });
+
+    it('should check products names in cart list', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkProductsNames', baseContext);
+
+      for (let i = 1; i <= orderToMake.products.length; i++) {
+        const productName = await viewOrderPage.getProductNameFromTable(page, i);
+        await expect(productName).to.contain(orderToMake.products[i - 1].value.name);
+      }
     });
   });
 });
