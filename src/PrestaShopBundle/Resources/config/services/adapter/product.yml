@@ -484,6 +484,7 @@ services:
         arguments:
             - '@doctrine.dbal.default_connection'
             - '%database_prefix%'
+            - '@prestashop.adapter.attribute.repository.attribute_repository'
 
     prestashop.adapter.product.create.combination_creator:
         class: PrestaShop\PrestaShop\Adapter\Product\Create\CombinationCreator

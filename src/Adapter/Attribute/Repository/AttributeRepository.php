@@ -70,9 +70,9 @@ class AttributeRepository extends AbstractObjectModelRepository
         }
 
         $qb = $this->connection->createQueryBuilder();
-        $qb->select('COUNT id_attribute AS total')
+        $qb->select('COUNT(id_attribute) AS total')
             ->from($this->dbPrefix . 'attribute')
-            ->where('IN (:idsList)')
+            ->where('id_attribute IN (:idsList)')
             ->setParameter('idsList', $attributeIds, Connection::PARAM_INT_ARRAY)
         ;
 
