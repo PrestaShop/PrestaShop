@@ -40,7 +40,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationC
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Product\Generator\CombinationGeneratorInterface;
-use PrestaShopDatabaseException;
 use PrestaShopException;
 use Product;
 use SpecificPriceRule;
@@ -147,8 +146,6 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
         $newCombination->id_product = $productId;
         $newCombination->default_on = 0;
 
-        $this->dbInstance->beginTransaction();
-
         try {
             if (!$newCombination->add()) {
                 throw new CannotAddCombinationException(sprintf(
@@ -161,11 +158,8 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
 
             $this->saveProductAttributeAssociation($combinationId, $generatedCombination);
         } catch (Exception $e) {
-            $this->dbInstance->rollback();
             throw $e;
         }
-
-        $this->dbInstance->commit();
 
         return new CombinationId($combinationId);
     }
