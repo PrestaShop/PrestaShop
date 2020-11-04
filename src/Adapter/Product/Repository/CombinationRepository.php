@@ -193,7 +193,7 @@ class CombinationRepository extends AbstractObjectModelRepository
      * @param int[] $attributeIds
      * @param int $langId
      *
-     * @return array<int, array<string, mixed>>
+     * @return array<int, array<int, mixed>>
      */
     private function getAttributesInformation(array $attributeIds, int $langId): array
     {
