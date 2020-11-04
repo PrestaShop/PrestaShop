@@ -162,12 +162,7 @@ describe('Sort, pagination and bulk actionsweb service keys', async () => {
     it('should filter list by key description', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterAfterSort', baseContext);
 
-      await webservicePage.filterWebserviceTable(
-        page,
-        'input',
-        'description',
-        'todelete',
-      );
+      await webservicePage.filterWebserviceTable(page, 'input', 'description', 'todelete');
 
       const key = await webservicePage.getTextColumnFromTable(page, 1, 'description');
       await expect(key).to.contains('todelete');
@@ -195,12 +190,7 @@ describe('Sort, pagination and bulk actionsweb service keys', async () => {
     it('should filter list by key description', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterAfterEnableDisable', baseContext);
 
-      await webservicePage.filterWebserviceTable(
-        page,
-        'input',
-        'description',
-        'todelete',
-      );
+      await webservicePage.filterWebserviceTable(page, 'input', 'description', 'todelete');
 
       const key = await webservicePage.getTextColumnFromTable(page, 1, 'description');
       await expect(key).to.contains('todelete');
