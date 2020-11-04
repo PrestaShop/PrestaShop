@@ -33,6 +33,7 @@ use Db;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
@@ -59,15 +60,23 @@ class CombinationRepository extends AbstractObjectModelRepository
     private $dbPrefix;
 
     /**
+     * @var AttributeRepository
+     */
+    private $attributeRepository;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
+     * @param AttributeRepository $attributeRepository
      */
     public function __construct(
         Connection $connection,
-        string $dbPrefix
+        string $dbPrefix,
+        AttributeRepository $attributeRepository
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
+        $this->attributeRepository = $attributeRepository;
     }
 
     /**
@@ -168,7 +177,7 @@ class CombinationRepository extends AbstractObjectModelRepository
      *
      * @throws CoreException
      */
-    public function assertCombinationsExists(CombinationId $combinationId): void
+    public function assertCombinationExists(CombinationId $combinationId): void
     {
         $this->assertObjectModelExists(
             $combinationId->getValue(),
@@ -183,7 +192,8 @@ class CombinationRepository extends AbstractObjectModelRepository
      */
     public function saveProductAttributeAssociation(CombinationId $combinationId, array $attributeIds): void
     {
-        $this->assertCombinationsExists($combinationId);
+        $this->assertCombinationExists($combinationId);
+        $this->attributeRepository->assertAllAttributesExist($attributeIds);
 
         $attributesList = [];
         foreach ($attributeIds as $attributeId) {
