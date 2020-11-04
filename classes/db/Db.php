@@ -203,25 +203,6 @@ abstract class DbCore
     abstract public function getBestEngine();
 
     /**
-     * Starts transaction
-     *
-     * @return bool true on success or false on failure
-     */
-    abstract public function beginTransaction(): bool;
-
-    /**
-     * Commits transaction
-     *
-     * @return bool true on success or false on failure
-     */
-    abstract public function commit(): bool;
-
-    /**
-     * Rollbacks transaction
-     */
-    abstract public function rollback(): bool;
-
-    /**
      * Returns database object instance.
      *
      * @param bool $master Decides whether the connection to be returned by the master server or the slave server
