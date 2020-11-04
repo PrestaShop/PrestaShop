@@ -86,14 +86,6 @@
   {% if orderForViewing.shipping.carrierModuleInfo %}
     {{ orderForViewing.shipping.carrierModuleInfo|raw }}
   {% endif %}
-
-  {% if orderForViewing.shipping.recycledPackaging %}
-    <span class="badge badge-success">{{ 'Recycled packaging'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
-  {% endif %}
-
-  {% if orderForViewing.shipping.giftWrapping %}
-    <span class="badge badge-success">{{ 'Gift wrapping'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
-  {% endif %}
 {% else %}
   <p class="text-center mb-0">
     {{ 'Shipping does not apply to virtual orders'|trans({}, 'Admin.Orderscustomers.Feature') }}
