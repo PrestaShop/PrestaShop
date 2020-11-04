@@ -8,15 +8,15 @@ Feature: Generate attribute combinations for product in Back Office (BO)
 
   Background:
     Given language with iso code "en" is the default one
-    And attribute group "size" named "Size" in en language exists
-    And attribute group "color" named "Color" in en language exists
-    And attribute "s" named "S" in en language exists
-    And attribute "m" named "M" in en language exists
-    And attribute "l" named "L" in en language exists
-    And attribute "white" named "White" in en language exists
-    And attribute "black" named "Black" in en language exists
-    And attribute "blue" named "Blue" in en language exists
-    And attribute "red" named "Red" in en language exists
+    And attribute group "Size" named "Size" in en language exists
+    And attribute group "Color" named "Color" in en language exists
+    And attribute "S" named "S" in en language exists
+    And attribute "M" named "M" in en language exists
+    And attribute "L" named "L" in en language exists
+    And attribute "White" named "White" in en language exists
+    And attribute "Black" named "Black" in en language exists
+    And attribute "Blue" named "Blue" in en language exists
+    And attribute "Red" named "Red" in en language exists
 
   Scenario: Generate product combinations
     When I add product "product1" with following information:
@@ -24,13 +24,14 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | is_virtual | false                   |
     Then product product1 type should be standard
     When I generate combinations for product product1 using following attributes:
-      | size       | [s,m]               |
-      | color      | [white,black,blue]  |
+      | Size  | [S,M]              |
+      | Color | [White,Black,Blue] |
     Then product product1 should have following combinations:
-      | combination name                 |
-      | Size - S, Color - White          |
-      | Size - S, Color - Black          |
-      | Size - S, Color - Blue           |
-      | Size - M, Color - White          |
-      | Size - M, Color - Black          |
-      | Size - M, Color - Blue           |
+      | combination name        | attributes           |
+      | Size - S, Color - White | [Size:S,Color:White] |
+      | Size - S, Color - Black | [Size:S,Color:Black] |
+      | Size - S, Color - Blue  | [Size:S,Color:Blue]  |
+      | Size - M, Color - White | [Size:M,Color:White] |
+      | Size - M, Color - Black | [Size:M,Color:Black] |
+      | Size - M, Color - Blue  | [Size:M,Color:Blue]  |
+#@todo: test pagination. comment: https://github.com/PrestaShop/PrestaShop/pull/20518#discussion_r517391210
