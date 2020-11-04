@@ -28,21 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use Combination;
-use Db;
-use Exception;
-use Iterator;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Adapter\Product\Create\CombinationCreator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\GenerateProductCombinationsHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Product\Generator\CombinationGeneratorInterface;
-use PrestaShopException;
-use Product;
-use SpecificPriceRule;
 
 /**
  * Handles @see GenerateProductCombinationsCommand using legacy object model
@@ -50,140 +39,24 @@ use SpecificPriceRule;
 final class GenerateProductCombinationsHandler extends AbstractProductHandler implements GenerateProductCombinationsHandlerInterface
 {
     /**
-     * @var CombinationGeneratorInterface
+     * @var CombinationCreator
      */
-    private $combinationGenerator;
+    private $combinationCreator;
 
     /**
-     * @var Db
-     */
-    private $dbInstance;
-
-    /**
-     * @param CombinationGeneratorInterface $combinationGenerator
+     * @param CombinationCreator $combinationCreator
      */
     public function __construct(
-        CombinationGeneratorInterface $combinationGenerator
+        CombinationCreator $combinationCreator
     ) {
-        $this->combinationGenerator = $combinationGenerator;
-        $this->dbInstance = Db::getInstance();
+        $this->combinationCreator = $combinationCreator;
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @todo: multistore
      */
     public function handle(GenerateProductCombinationsCommand $command): array
     {
-        $product = $this->getProduct($command->getProductId());
-        $generatedCombinations = $this->combinationGenerator->generate($command->getGroupedAttributeIds());
-
-        // avoid applying specificPrice on each combination.
-        SpecificPriceRule::disableAnyApplication();
-
-        $combinationIds = $this->addCombinations($product, $generatedCombinations);
-
-        Product::updateDefaultAttribute($product->id);
-        SpecificPriceRule::enableAnyApplication();
-        // apply all specific price rules at once after all the combinations are generated
-        SpecificPriceRule::applyAllRules([$product->id]);
-
-        return $combinationIds;
-    }
-
-    /**
-     * @param Product $product
-     * @param Iterator $generatedCombinations
-     *
-     * @return CombinationId[]
-     *
-     * @throws CombinationException
-     */
-    private function addCombinations(Product $product, Iterator $generatedCombinations): array
-    {
-        $productId = (int) $product->id;
-        $product->setAvailableDate();
-
-        $addedCombinationIds = [];
-        foreach ($generatedCombinations as $generatedCombination) {
-            $combinationExists = $product->productAttributeExists($generatedCombination, false, null, true);
-
-            if ($combinationExists) {
-                continue;
-            }
-
-            try {
-                $addedCombinationIds[] = $this->addCombination($productId, $generatedCombination);
-            } catch (PrestaShopException $e) {
-                throw new CombinationException(
-                    sprintf(
-                        'Error occurred when trying to add combination for product #%d. Combination: %s',
-                        $productId,
-                        var_export($generatedCombination, true)
-                    ),
-                    $e
-                );
-            }
-        }
-
-        return $addedCombinationIds;
-    }
-
-    /**
-     * @param int $productId
-     * @param int[] $generatedCombination
-     *
-     * @return CombinationId
-     *
-     * @throws CannotAddCombinationException
-     * @throws PrestaShopException
-     * @throws CombinationConstraintException
-     */
-    private function addCombination(int $productId, array $generatedCombination): CombinationId
-    {
-        $newCombination = new Combination();
-        $newCombination->id_product = $productId;
-        $newCombination->default_on = 0;
-
-        try {
-            if (!$newCombination->add()) {
-                throw new CannotAddCombinationException(sprintf(
-                    'Failed adding new combination for product #%d. Combination: %s',
-                    $productId,
-                    var_export($generatedCombination, true)
-                ));
-            }
-            $combinationId = (int) $newCombination->id;
-
-            $this->saveProductAttributeAssociation($combinationId, $generatedCombination);
-        } catch (Exception $e) {
-            throw $e;
-        }
-
-        return new CombinationId($combinationId);
-    }
-
-    /**
-     * @param int $combinationId
-     * @param array $attributeIds
-     */
-    private function saveProductAttributeAssociation(int $combinationId, array $attributeIds): void
-    {
-        $attributesList = [];
-        foreach ($attributeIds as $attributeId) {
-            $attributesList[] = [
-                'id_product_attribute' => $combinationId,
-                'id_attribute' => $attributeId,
-            ];
-        }
-
-        try {
-            if (!$this->dbInstance->insert('product_attribute_combination', $attributesList)) {
-                throw new CannotAddCombinationException('Failed saving product-combination associations');
-            }
-        } catch (PrestaShopException $e) {
-            throw new CannotAddCombinationException('Failed saving product-combination associations', 0, $e);
-        }
+        return $this->combinationCreator->createCombinations($command->getProductId(), $command->getGroupedAttributeIds());
     }
 }
