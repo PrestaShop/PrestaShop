@@ -82,7 +82,7 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
 
     /**
      * @param array $combinations
-     * @param array<int, CombinationForEditing> $attributesInformationByCombinationId
+     * @param array<int, array<int, mixed>> $attributesInformationByCombinationId
      * @param int $totalCombinationsCount
      *
      * @return CombinationListForEditing
