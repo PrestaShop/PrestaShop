@@ -26,70 +26,68 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception\AttributeConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\ValueObject\AttributeId;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\AttributeGroupConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\GroupedAttributeIds;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\ValueObject\AttributeGroupId;
 
 /**
- * Generates attribute combinations for product
+ * Combines value objects into a valid structure for generating combinations
  */
-class GenerateProductCombinationsCommand
+class GroupedAttributeIds
 {
     /**
-     * @var ProductId
+     * @var AttributeGroupId
      */
-    private $productId;
+    private $attributeGroupId;
 
     /**
-     * @var GroupedAttributeIds[]
+     * @var AttributeId[]
      */
-    private $groupedAttributeIdsList;
+    private $attributeIds = [];
 
     /**
-     * @param int $productId
-     * @param array<int, array<int>> $groupedAttributeIds key-value pairs where key is the attribute group id and value is the list of that group attribute ids
-     */
-    public function __construct(
-        int $productId,
-        array $groupedAttributeIds
-    ) {
-        $this->setGroupedAttributeIdsList($groupedAttributeIds);
-        $this->productId = new ProductId($productId);
-    }
-
-    /**
-     * @return ProductId
-     */
-    public function getProductId(): ProductId
-    {
-        return $this->productId;
-    }
-
-    /**
-     * @return array
-     */
-    public function getGroupedAttributeIdsList(): array
-    {
-        return $this->groupedAttributeIdsList;
-    }
-
-    /**
-     * @param array $groupedAttributeIds
+     * @param int $attributeGroupId
+     * @param array $attributeIds
      *
      * @throws AttributeConstraintException
      * @throws AttributeGroupConstraintException
      */
-    private function setGroupedAttributeIdsList(array $groupedAttributeIds): void
+    public function __construct(
+        int $attributeGroupId,
+        array $attributeIds
+    ) {
+        $this->attributeGroupId = new AttributeGroupId($attributeGroupId);
+        $this->setAttributeIds($attributeIds);
+    }
+
+    /**
+     * @return AttributeGroupId
+     */
+    public function getAttributeGroupId(): AttributeGroupId
     {
-        $groupedAttributeIdsList = [];
+        return $this->attributeGroupId;
+    }
 
-        foreach ($groupedAttributeIds as $groupId => $attributeIdValues) {
-            $groupedAttributeIdsList[] = new GroupedAttributeIds($groupId, $attributeIdValues);
+    /**
+     * @return AttributeId[]
+     */
+    public function getAttributeIds(): array
+    {
+        return $this->attributeIds;
+    }
+
+    /**
+     * @param int[] $attributeIds
+     *
+     * @throws AttributeConstraintException
+     */
+    private function setAttributeIds(array $attributeIds): void
+    {
+        foreach ($attributeIds as $attributeId) {
+            $this->attributeIds = new AttributeId($attributeId);
         }
-
-        $this->groupedAttributeIdsList = $groupedAttributeIdsList;
     }
 }
