@@ -270,7 +270,7 @@ class ProductDuplicator
         $this->duplicateDownloads($oldProductId, $newProductId);
         $this->duplicateImages($oldProductId, $newProductId, $combinationImages);
         $this->duplicateCarriers($oldProductId, $newProductId);
-        //@todo: product_attachment association duplication missing
+        $this->duplicateAttachmentAssociation($oldProductId, $newProductId);
     }
 
     /**
@@ -538,6 +538,23 @@ class ProductDuplicator
             [Product::class, 'duplicateCarriers'],
             [$oldProductId, $newProductId],
             CannotDuplicateProductException::FAILED_DUPLICATE_CARRIERS
+        );
+    }
+
+    /**
+     * @param int $oldProductId
+     * @param int $newProductId
+     *
+     * @throws CannotDuplicateProductException
+     * @throws CoreException
+     */
+    private function duplicateAttachmentAssociation(int $oldProductId, int $newProductId): void
+    {
+        /* @see Product::duplicateAttachmentAssociation() */
+        $this->duplicateRelation(
+            [Product::class, 'duplicateAttachmentAssociation'],
+            [$oldProductId, $newProductId],
+            CannotDuplicateProductException::FAILED_DUPLICATE_ATTACHMENT_ASSOCIATION
         );
     }
 

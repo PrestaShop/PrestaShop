@@ -5318,6 +5318,32 @@ class ProductCore extends ObjectModel
     }
 
     /**
+     * Associates attachments from old product onto a newly duplicated product.
+     *
+     * @param int $oldProductId Old Product identifier
+     * @param int $newProductId New Product identifier
+     *
+     * @return bool
+     */
+    public static function duplicateAttachmentAssociation(int $oldProductId, int $newProductId): bool
+    {
+        $oldProductAttachments = Db::getInstance()->executeS('
+            SELECT *
+            FROM `' . _DB_PREFIX_ . 'product_attachment`
+            WHERE `id_product` = ' . (int) $oldProductId
+        );
+
+        foreach ($oldProductAttachments as $row) {
+            $row['id_product'] = $newProductId;
+            if (!Db::getInstance()->insert('product_attachment', $row)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Get the link of the product page of this product.
      *
      * @param Context|null $context
