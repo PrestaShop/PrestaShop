@@ -746,8 +746,10 @@ class ShopCore extends ObjectModel
         );
         */
 
-        $sql = "SELECT * FROM %s  WHERE s.name LIKE '%%%s%%'";
-        $sql = sprintf($sql, _DB_PREFIX_ . 'shop s', $searchTerm);
+        /*$sql = "SELECT * FROM %s  WHERE s.name LIKE '%%%s%%'";
+        $sql = sprintf($sql, _DB_PREFIX_ . 'shop s', $searchTerm); */
+
+        $sql = "SELECT * FROM " . _DB_PREFIX_ . 'shop_group sg';
 
         $results = Db::getInstance()->executeS($sql);
 
