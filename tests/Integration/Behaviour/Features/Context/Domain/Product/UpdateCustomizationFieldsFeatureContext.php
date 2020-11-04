@@ -34,7 +34,6 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCustomizationFieldsFromProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
@@ -283,18 +282,6 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
             CustomizationFieldConstraintException::class,
             CustomizationFieldConstraintException::INVALID_NAME
         );
-    }
-
-    /**
-     * @param string $productReference
-     *
-     * @return CustomizationField[]
-     */
-    private function getProductCustomizationFields(string $productReference): array
-    {
-        return $this->getQueryBus()->handle(new GetProductCustomizationFields(
-            $this->getSharedStorage()->get($productReference)
-        ));
     }
 
     /**
