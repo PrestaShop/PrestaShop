@@ -87,7 +87,7 @@ class GroupedAttributeIds
     private function setAttributeIds(array $attributeIds): void
     {
         foreach ($attributeIds as $attributeId) {
-            $this->attributeIds = new AttributeId($attributeId);
+            $this->attributeIds[] = new AttributeId($attributeId);
         }
     }
 }
