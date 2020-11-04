@@ -149,8 +149,7 @@ Feature: Duplicate product from Back Office (BO).
       | delivery time notes type         | specific                                              |
       | delivery time in stock notes     | en-US:product in stock ;fr-FR:en stock                |
       | delivery time out of stock notes | en-US:product out of stock ;fr-FR:En rupture de stock |
-#    todo: duplicate carriers (was not duplicated in legacy)
-#      | carriers                         | [carrier1,carrier2]                                   |
+      | carriers                         | [carrier1,carrier2]                                   |
     And product copy_of_product1 should have following related products:
       | product2 |
 #    todo: customization fields are created with new id, so previous reference cannot be asserted

@@ -5291,6 +5291,33 @@ class ProductCore extends ObjectModel
     }
 
     /**
+     * Adds carriers from old product onto a newly duplicated product.
+     *
+     * @param int $oldProductId Old Product identifier
+     * @param int $newProductId New Product identifier
+     *
+     * @return bool
+     */
+    public static function duplicateCarriers(int $oldProductId, int $newProductId): bool
+    {
+        //@todo: this will copy carriers from all shops. todo - Handle multishop according context & specifications.
+        $oldProductCarriers = Db::getInstance()->executeS('
+            SELECT *
+            FROM `' . _DB_PREFIX_ . 'product_carrier`
+            WHERE `id_product` = ' . (int) $oldProductId
+        );
+
+        foreach ($oldProductCarriers as $row) {
+            $row['id_product'] = $newProductId;
+            if (!Db::getInstance()->insert('product_carrier', $row)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Get the link of the product page of this product.
      *
      * @param Context|null $context

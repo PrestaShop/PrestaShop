@@ -269,7 +269,7 @@ class ProductDuplicator
         $this->duplicateTaxes($oldProductId, $newProductId);
         $this->duplicateDownloads($oldProductId, $newProductId);
         $this->duplicateImages($oldProductId, $newProductId, $combinationImages);
-        //@todo: carriers duplication missing (whole shipping)
+        $this->duplicateCarriers($oldProductId, $newProductId);
         //@todo: product_attachment association duplication missing
     }
 
@@ -521,6 +521,23 @@ class ProductDuplicator
             [Image::class, 'duplicateProductImages'],
             [$oldProductId, $newProductId, $combinationImages],
             CannotDuplicateProductException::FAILED_DUPLICATE_IMAGES
+        );
+    }
+
+    /**
+     * @param int $oldProductId
+     * @param int $newProductId
+     *
+     * @throws CannotDuplicateProductException
+     * @throws CoreException
+     */
+    private function duplicateCarriers(int $oldProductId, int $newProductId): void
+    {
+        /* @see Product::duplicateCarriers() */
+        $this->duplicateRelation(
+            [Product::class, 'duplicateCarriers'],
+            [$oldProductId, $newProductId],
+            CannotDuplicateProductException::FAILED_DUPLICATE_CARRIERS
         );
     }
 
