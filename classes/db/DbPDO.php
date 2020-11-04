@@ -500,21 +500,6 @@ class DbPDOCore extends Db
         return $value;
     }
 
-    public function beginTransaction(): bool
-    {
-        return $this->link->beginTransaction();
-    }
-
-    public function commit(): bool
-    {
-        return $this->link->commit();
-    }
-
-    public function rollback(): bool
-    {
-        return $this->link->rollBack();
-    }
-
     /**
      * Try a connection to the database and set names to UTF-8.
      *
