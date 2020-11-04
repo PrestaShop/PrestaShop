@@ -146,8 +146,8 @@ class CombinationRepository extends AbstractObjectModelRepository
     {
         $attributeCombinationAssociations = $this->getAttributeCombinationAssociations($combinationIds);
 
-        $attributeIds = array_unique(array_map(function ($attributeByCombination) {
-            return $attributeByCombination['id_attribute'];
+        $attributeIds = array_unique(array_map(function (array $attributeByCombination): int {
+            return (int) $attributeByCombination['id_attribute'];
         }, $attributeCombinationAssociations));
 
         $attributesInfoByAttributeId = $this->getAttributesInformation($attributeIds, $langId->getValue());
@@ -156,7 +156,7 @@ class CombinationRepository extends AbstractObjectModelRepository
         foreach ($attributeCombinationAssociations as $attributeCombinationAssociation) {
             $combinationId = (int) $attributeCombinationAssociation['id_product_attribute'];
             $attributeId = (int) $attributeCombinationAssociation['id_attribute'];
-            $attributesInfoByCombinationId[$combinationId] = $attributesInfoByAttributeId[$attributeId];
+            $attributesInfoByCombinationId[$combinationId][] = $attributesInfoByAttributeId[$attributeId];
         }
 
         return $attributesInfoByCombinationId;
