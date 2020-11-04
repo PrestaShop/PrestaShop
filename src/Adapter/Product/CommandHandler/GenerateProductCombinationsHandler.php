@@ -36,9 +36,11 @@ use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\GenerateProductCombinationsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Product\Generator\CombinationGeneratorInterface;
+use PrestaShopDatabaseException;
 use PrestaShopException;
 use Product;
 use SpecificPriceRule;
@@ -137,8 +139,7 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
      *
      * @throws CannotAddCombinationException
      * @throws PrestaShopException
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException
+     * @throws CombinationConstraintException
      */
     private function addCombination(int $productId, array $generatedCombination): CombinationId
     {
