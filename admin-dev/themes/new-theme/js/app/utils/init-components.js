@@ -68,6 +68,7 @@ const initPrestashopComponents = () => {
     TranslatableInput,
     TaggableField,
     ChoiceTable,
+    EventEmitter,
   };
 };
 export default initPrestashopComponents;
