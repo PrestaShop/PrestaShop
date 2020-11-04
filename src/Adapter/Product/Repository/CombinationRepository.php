@@ -30,7 +30,10 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
 use Combination;
 use Db;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
@@ -43,6 +46,28 @@ use PrestaShopException;
 class CombinationRepository extends AbstractObjectModelRepository
 {
     /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * @var string
+     */
+    private $dbPrefix;
+
+    /**
+     * @param Connection $connection
+     * @param string $dbPrefix
+     */
+    public function __construct(
+        Connection $connection,
+        string $dbPrefix
+    ) {
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
+    }
+
+    /**
      * @param Combination $combination
      *
      * @return CombinationId
@@ -52,9 +77,75 @@ class CombinationRepository extends AbstractObjectModelRepository
      */
     public function add(Combination $combination): CombinationId
     {
+        //@todo: validation?
         $id = $this->addObjectModel($combination, CannotAddCombinationException::class);
 
         return new CombinationId($id);
+    }
+
+    /**
+     * @param int $productId
+     * @param int $limit
+     * @param int $offset
+     * @param array $filters
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function getProductCombinations(int $productId, ?int $limit = null, ?int $offset = null, array $filters = []): array
+    {
+        $qb = $this->getCombinationsQueryBuilder($productId, $filters)
+            ->select('pa.*')
+            ->setParameter('productId', $productId)
+        ;
+
+        if ($offset) {
+            $qb->setFirstResult($offset);
+        }
+
+        if ($limit) {
+            $qb->setMaxResults($limit);
+        }
+
+        return  $qb->execute()->fetchAll();
+    }
+
+    /**
+     * @param int $productId
+     * @param array $filters
+     *
+     * @return int
+     */
+    public function getTotalCombinationsCount(int $productId, array $filters = []): int
+    {
+        $qb = $this->getCombinationsQueryBuilder($productId, $filters)->select('COUNT(pa.id_product_attribute) AS total_combinations');
+
+        return (int) $qb->execute()->fetch()['total_combinations'];
+    }
+
+    /**
+     * @param int[] $combinationIds
+     * @param LanguageId $langId
+     *
+     * @return array<int, array<int, mixed>>
+     */
+    public function getAttributesInfoByCombinationIds(array $combinationIds, LanguageId $langId): array
+    {
+        $attributeCombinationAssociations = $this->getAttributeCombinationAssociations($combinationIds);
+
+        $attributeIds = array_unique(array_map(function ($attributeByCombination) {
+            return $attributeByCombination['id_attribute'];
+        }, $attributeCombinationAssociations));
+
+        $attributesInfoByAttributeId = $this->getAttributesInformation($attributeIds, $langId->getValue());
+
+        $attributesInfoByCombinationId = [];
+        foreach ($attributeCombinationAssociations as $attributeCombinationAssociation) {
+            $combinationId = (int) $attributeCombinationAssociation['id_product_attribute'];
+            $attributeId = (int) $attributeCombinationAssociation['id_attribute'];
+            $attributesInfoByCombinationId[$combinationId] = $attributesInfoByAttributeId[$attributeId];
+        }
+
+        return $attributesInfoByCombinationId;
     }
 
     /**
@@ -78,5 +169,85 @@ class CombinationRepository extends AbstractObjectModelRepository
         } catch (PrestaShopException $e) {
             throw new CannotAddCombinationException('Error occurred when saving product-combination associations', 0, $e);
         }
+    }
+
+    /**
+     * @param int[] $combinationIds
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function getAttributeCombinationAssociations(array $combinationIds): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('pac.id_attribute')
+            ->addSelect('pac.id_product_attribute')
+            ->from($this->dbPrefix . 'product_attribute_combination', 'pac')
+            ->where($qb->expr()->in('pac.id_product_attribute', ':combinationIds'))
+            ->setParameter('combinationIds', $combinationIds, Connection::PARAM_INT_ARRAY)
+        ;
+
+        return $qb->execute()->fetchAll();
+    }
+
+    /**
+     * @param int[] $attributeIds
+     * @param int $langId
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function getAttributesInformation(array $attributeIds, int $langId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('a.id_attribute')
+            ->addSelect('ag.id_attribute_group')
+            ->addSelect('al.name AS attribute_name')
+            ->addSelect('agl.name AS attribute_group_name')
+            ->from($this->dbPrefix . 'attribute', 'a')
+            ->leftJoin(
+                'a',
+                $this->dbPrefix . 'attribute_lang',
+                'al',
+                'a.id_attribute = al.id_attribute AND al.id_lang = :langId'
+            )->leftJoin(
+                'a',
+                $this->dbPrefix . 'attribute_group',
+                'ag',
+                'a.id_attribute_group = ag.id_attribute_group'
+            )->leftJoin(
+                'ag',
+                $this->dbPrefix . 'attribute_group_lang',
+                'agl',
+                'agl.id_attribute_group = ag.id_attribute_group AND agl.id_lang = :langId'
+            )->where($qb->expr()->in('a.id_attribute', ':attributeIds'))
+            ->setParameter('attributeIds', $attributeIds, Connection::PARAM_INT_ARRAY)
+            ->setParameter('langId', $langId)
+        ;
+
+        $attributesInfo = $qb->execute()->fetchAll();
+
+        $attributesInfoByAttributeId = [];
+        foreach ($attributesInfo as $attributeInfo) {
+            $attributesInfoByAttributeId[(int) $attributeInfo['id_attribute']][] = $attributeInfo;
+        }
+
+        return $attributesInfoByAttributeId;
+    }
+
+    /**
+     * @param int $productId
+     * @param array $filters
+     *
+     * @return QueryBuilder
+     */
+    private function getCombinationsQueryBuilder(int $productId, array $filters): QueryBuilder
+    {
+        //@todo: filters are not handled.
+        $qb = $this->connection->createQueryBuilder();
+        $qb->from($this->dbPrefix . 'product_attribute', 'pa')
+            ->where('pa.id_product = :productId')
+            ->setParameter('productId', $productId)
+        ;
+
+        return $qb;
     }
 }

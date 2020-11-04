@@ -481,6 +481,9 @@ services:
 
     prestashop.adapter.product.repository.combination_repository:
         class: PrestaShop\PrestaShop\Adapter\Product\Repository\CombinationRepository
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
 
     prestashop.adapter.product.create.combination_creator:
         class: PrestaShop\PrestaShop\Adapter\Product\Create\CombinationCreator
@@ -500,7 +503,7 @@ services:
     prestashop.adapter.product.query_handler.get_product_combinations_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductCombinationsForEditingHandler
         arguments:
-            - '@prestashop.adapter.data_provider.combination'
+            - '@prestashop.adapter.product.repository.combination_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetProductCombinationsForEditing
