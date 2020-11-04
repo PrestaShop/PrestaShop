@@ -736,7 +736,7 @@ class ShopCore extends ObjectModel
 
     public static function searchTest($searchTerm)
     {
-        $sql = "SELECT * FROM %s INNER JOIN %s ON s.id_shop_group = sg.id_shop_group WHERE s.deleted = 0 AND s.active = 1 AND s.name LIKE '%%%s%%'";
+        /*$sql = "SELECT * FROM %s INNER JOIN %s ON s.id_shop_group = sg.id_shop_group WHERE s.deleted = 0 AND s.active = 1 AND s.name LIKE '%%%s%%'";
 
         $sql = sprintf(
             $sql,
@@ -744,6 +744,10 @@ class ShopCore extends ObjectModel
             _DB_PREFIX_ . 'shop_group sg',
             $searchTerm
         );
+        */
+
+        $sql = "SELECT * FROM %s  WHERE s.name LIKE '%%%s%%'";
+        $sql = sprintf($sql, _DB_PREFIX_ . 'shop s', $searchTerm);
 
         $results = Db::getInstance()->executeS($sql);
 
