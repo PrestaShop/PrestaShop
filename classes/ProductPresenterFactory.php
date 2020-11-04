@@ -23,6 +23,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShop\PrestaShop\Adapter\Configuration as AdapterConfiguration;
+use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductPresenter;
@@ -96,7 +99,9 @@ class ProductPresenterFactoryCore
             $this->context->link,
             new PriceFormatter(),
             new ProductColorsRetriever(),
-            $this->context->getTranslator()
+            $this->context->getTranslator(),
+            new HookManager(),
+            new AdapterConfiguration()
         );
     }
 }
