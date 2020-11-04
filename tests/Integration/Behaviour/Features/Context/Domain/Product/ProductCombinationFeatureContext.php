@@ -32,6 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetProductCombinationsForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -89,18 +90,70 @@ class ProductCombinationFeatureContext extends AbstractProductFeatureContext
                 $combinationForEditing->getCombinationName(),
                 'Unexpected combination'
             );
+
+            $expectedAttributesInfo = $this->parseAttributesInfo($dataRows[$key]['attributes']);
+            Assert::assertEquals(
+                count($expectedAttributesInfo),
+                count($combinationForEditing->getAttributesInformation()),
+                'Unexpected attributes count in combination'
+            );
+
+            foreach ($combinationForEditing->getAttributesInformation() as $index => $actualAttributesInfo) {
+                Assert::assertEquals(
+                    $actualAttributesInfo->getAttributeGroupId(),
+                    $expectedAttributesInfo[$index]->getAttributeGroupId(),
+                    'Unexpected attribute group id'
+                );
+                Assert::assertEquals(
+                    $actualAttributesInfo->getAttributeGroupName(),
+                    $expectedAttributesInfo[$index]->getAttributeGroupName(),
+                    'Unexpected attribute group name'
+                );
+                Assert::assertEquals(
+                    $actualAttributesInfo->getAttributeId(),
+                    $expectedAttributesInfo[$index]->getAttributeId(),
+                    'Unexpected attribute id'
+                );
+                Assert::assertEquals(
+                    $actualAttributesInfo->getAttributeName(),
+                    $expectedAttributesInfo[$index]->getAttributeName(),
+                    'Unexpected attribute name'
+                );
+            }
         }
     }
 
     /**
-     * @param array $tableData
+     * @param string $combinationDataRow
+     *
+     * @return CombinationAttributeInformation[]
+     */
+    private function parseAttributesInfo(string $combinationDataRow): array
+    {
+        $combinationDataRow = PrimitiveUtils::castStringArrayIntoArray($combinationDataRow);
+        $combinationAttributesInfo = [];
+        foreach ($combinationDataRow as $attributesInfo) {
+            $attributeInfo = explode(':', $attributesInfo);
+            $combinationAttributesInfo[] = new CombinationAttributeInformation(
+                $this->getSharedStorage()->get($attributeInfo[0]),
+                $attributeInfo[0],
+                $this->getSharedStorage()->get($attributeInfo[1]),
+                $attributeInfo[1]
+            );
+        }
+
+        return $combinationAttributesInfo;
+    }
+
+    /**
+     * @param array $groupedReferences
      *
      * @return array
      */
-    private function parseGroupedAttributeIds(array $tableData): array
+    private function parseGroupedAttributeIds(array $groupedReferences): array
     {
         $groupedAttributeIds = [];
-        foreach ($tableData as $attributeGroupReference => $attributeReferences) {
+        foreach ($groupedReferences as $attributeGroupReference => $attributeReferences) {
             $attributeIds = [];
             foreach (PrimitiveUtils::castStringArrayIntoArray($attributeReferences) as $attributeReference) {
                 $attributeIds[] = $this->getSharedStorage()->get($attributeReference);
