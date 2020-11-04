@@ -102,4 +102,9 @@ class CannotDuplicateProductException extends ProductException
      * When product prices duplication fails
      */
     const FAILED_DUPLICATE_PRICES = 140;
+
+    /**
+     * When product carriers duplication fails
+     */
+    const FAILED_DUPLICATE_CARRIERS = 150;
 }
