@@ -27,9 +27,9 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Combination;
-use PrestaShop\Decimal\DecimalNumber;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
