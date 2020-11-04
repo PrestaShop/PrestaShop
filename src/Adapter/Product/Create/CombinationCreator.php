@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationE
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\GroupedAttributeIds;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Product\Generator\CombinationGeneratorInterface;
 use Product;
 use SpecificPriceRule;
@@ -152,9 +153,14 @@ class CombinationCreator
         $newCombination = new Combination();
         $newCombination->id_product = $productId;
         $newCombination->default_on = 0;
-
         $combinationId = $this->combinationRepository->add($newCombination);
-        $this->combinationRepository->saveProductAttributeAssociation($combinationId, $generatedCombination);
+
+        try {
+            $this->combinationRepository->saveProductAttributeAssociation($combinationId, $generatedCombination);
+        } catch (CoreException $e) {
+            $this->combinationRepository->delete($newCombination);
+            throw $e;
+        }
 
         return $combinationId;
     }

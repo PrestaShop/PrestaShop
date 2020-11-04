@@ -35,6 +35,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -81,6 +82,17 @@ class CombinationRepository extends AbstractObjectModelRepository
         $id = $this->addObjectModel($combination, CannotAddCombinationException::class);
 
         return new CombinationId($id);
+    }
+
+    /**
+     * @param Combination $combination
+     * @param int $errorCode
+     *
+     * @throws CoreException
+     */
+    public function delete(Combination $combination, int $errorCode = 0): void
+    {
+        $this->deleteObjectModel($combination, CannotDeleteCombinationException::class, $errorCode);
     }
 
     /**
@@ -167,7 +179,7 @@ class CombinationRepository extends AbstractObjectModelRepository
                 throw new CannotAddCombinationException('Failed saving product-combination associations');
             }
         } catch (PrestaShopException $e) {
-            throw new CannotAddCombinationException('Error occurred when saving product-combination associations', 0, $e);
+            throw new CoreException('Error occurred when saving product-combination associations', 0, $e);
         }
     }
 
