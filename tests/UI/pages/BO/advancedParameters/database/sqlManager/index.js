@@ -4,13 +4,13 @@ const BOBasePage = require('@pages/BO/BObasePage');
 class SqlManager extends BOBasePage {
   constructor() {
     super();
-
     this.pageTitle = 'SQL Manager •';
     this.successfulDeleteMessage = 'Successful deletion';
 
     // Header Selectors
     this.addNewSQLQueryButton = '#page-header-desc-configuration-add';
     this.dbBackupSubTabLink = '#subtab-AdminBackup';
+
     // List of SQL query
     this.sqlQueryGridPanel = '#sql_request_grid_panel';
     this.sqlQueryGridTitle = `${this.sqlQueryGridPanel} h3.card-header-title`;
@@ -24,6 +24,7 @@ class SqlManager extends BOBasePage {
     this.sqlQueryListTableEditLink = row => `${this.sqlQueryListTableColumnActions(row)} a.grid-edit-row-link`;
     this.sqlQueryListTableDeleteLink = row => `${this.sqlQueryListTableColumnActions(row)} a.grid-delete-row-link`;
     this.sqlQueryListTableExportLink = row => `${this.sqlQueryListTableColumnActions(row)} a[href*='/export']`;
+
     // Filters
     this.filterInput = filterBy => `${this.sqlQueryListForm} #sql_request_${filterBy}`;
     this.filterSearchButton = `${this.sqlQueryListForm} .grid-search-button`;
@@ -32,6 +33,26 @@ class SqlManager extends BOBasePage {
     // Delete modal
     this.confirmDeleteModal = '#sql_request-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
+
+    // Sort Selectors
+    this.tableHead = `${this.sqlQueryListForm} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+
+    // Pagination selectors
+    this.paginationLimitSelect = '#paginator_select_page_limit';
+    this.paginationLabel = `${this.sqlQueryGridPanel} .col-form-label`;
+    this.paginationNextLink = `${this.sqlQueryGridPanel} #pagination_next_url`;
+    this.paginationPreviousLink = `${this.sqlQueryGridPanel} [aria-label='Previous']`;
+
+    // Bulk Actions
+    this.selectAllRowsDiv = `${this.sqlQueryListForm} tr.column-filters .grid_bulk_action_select_all`;
+    this.bulkActionsToggleButton = `${this.sqlQueryListForm} button.dropdown-toggle`;
+    this.bulkActionsDeleteButton = `${this.sqlQueryListForm} #sql_request_grid_bulk_action_delete_selection`;
+
+    // Modal Dialog
+    this.deleteModal = '#sql_request-grid-confirm-modal.show';
+    this.modalDeleteButton = `${this.deleteModal} button.btn-confirm-submit`;
   }
 
   /* Header Methods */
@@ -105,6 +126,24 @@ class SqlManager extends BOBasePage {
    */
   getTextColumnFromTable(page, row, column) {
     return this.getTextContent(page, this.sqlQueryListTableColumn(row, column));
+  }
+
+  /**
+   * Get content from all rows
+   * @param page
+   * @param column
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(page, column) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable = [];
+
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumnFromTable(page, i, column);
+      await allRowsContentTable.push(rowContent);
+    }
+
+    return allRowsContentTable;
   }
 
   /**
@@ -185,6 +224,102 @@ class SqlManager extends BOBasePage {
    */
   async confirmDeleteSQLQuery(page) {
     await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+  }
+
+  /* Sort functions */
+  /**
+   * Sort table by clicking on column name
+   * @param page
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page, sortBy, sortDirection) {
+    const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+
+    let i = 0;
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
+      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      i += 1;
+    }
+
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
+  }
+
+  /* Pagination methods */
+  /**
+   * Get pagination label
+   * @param page
+   * @return {Promise<string>}
+   */
+  getPaginationLabel(page) {
+    return this.getTextContent(page, this.paginationLabel);
+  }
+
+  /**
+   * Select pagination limit
+   * @param page
+   * @param number
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page, number) {
+    await Promise.all([
+      this.selectByVisibleText(page, this.paginationLimitSelect, number),
+      page.waitForNavigation({waitUntil: 'networkidle'}),
+    ]);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on next
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on previous
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Delete all sql queries with Bulk Actions
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async deleteWithBulkActions(page) {
+    // Click on Select All
+    await Promise.all([
+      page.$eval(this.selectAllRowsDiv, el => el.click()),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
+    ]);
+
+    // Click on Button Bulk actions
+    await Promise.all([
+      page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
+    ]);
+
+    // Click on delete and wait for modal
+    await Promise.all([
+      page.click(this.bulkActionsDeleteButton),
+      this.waitForVisibleSelector(page, this.deleteModal),
+    ]);
+    await this.clickAndWaitForNavigation(page, this.modalDeleteButton);
+
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 }
 
