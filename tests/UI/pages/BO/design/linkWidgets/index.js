@@ -17,7 +17,7 @@ class LinkWidgets extends BOBasePage {
     this.actionsColumn = (hookName, row) => `${this.tableRow(hookName, row)} td.column-actions`;
     this.dropdownToggleButton = (hookName, row) => `${this.actionsColumn(hookName, row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = (hookName, row) => `${this.actionsColumn(hookName, row)} div.dropdown-menu`;
-    this.deleteRowLink = (hookName, row) => `${this.dropdownToggleMenu(hookName, row)} a[data-url*='/delete']`;
+    this.deleteRowLink = (hookName, row) => `${this.dropdownToggleMenu(hookName, row)} a.grid-delete-row-link`;
   }
 
   /* Header methods */
