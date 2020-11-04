@@ -60,8 +60,8 @@ final class SearchShopsHandler implements SearchShopsHandlerInterface
     {
         $searchTerm = $query->getSearchTerm();
         $shopList = $this->shopRepository->findBySearchTerm($searchTerm);
-        $shopListCompare = Shop::searchTest($searchTerm);
-        var_dump($shopListCompare);
+        $groupShops = Shop::searchTest($searchTerm);
+        var_dump($groupShops);
         var_dump($shopList); exit;
         $result = [];
 
