@@ -80,6 +80,8 @@ describe('Pagination and sort brands and addresses', async () => {
     describe(`Create brand n°${index + 1} in BO`, async () => {
       const createBrandData = new BrandFaker({name: `todelete${index}`});
 
+      before(() => files.generateImage(createBrandData.logo));
+
       it('should go to add new brand page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewBrandPage${index}`, baseContext);
 

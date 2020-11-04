@@ -271,6 +271,8 @@ describe('Filter, sort and pagination order status', async () => {
 
   creationTests.forEach((test, index) => {
     describe(`Create order status n°${index + 1} in BO`, async () => {
+      before(() => files.generateImage(`todelete${index}.jpg`));
+
       const orderStatusData = new OrderStatusFaker({name: `todelete${index}`});
 
       it('should go to add new order status group page', async function () {
@@ -291,6 +293,8 @@ describe('Filter, sort and pagination order status', async () => {
         const numberOfLinesAfterCreation = await statusesPage.getNumberOfElementInGrid(page, tableName);
         await expect(numberOfLinesAfterCreation).to.be.equal(numberOfOrderStatuses + index + 1);
       });
+
+      after(() => files.deleteFile(`todelete${index}.jpg`));
     });
   });
 

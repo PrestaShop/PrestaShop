@@ -36,6 +36,12 @@ describe('Filter, Quick edit and bulk actions suppliers', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+
+    // Generate logos
+    await Promise.all([
+      files.generateImage(firstSupplierData.logo),
+      files.generateImage(secondSupplierData.logo),
+    ]);
   });
 
   after(async () => {

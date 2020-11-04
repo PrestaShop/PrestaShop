@@ -341,4 +341,16 @@ module.exports = class CommonPage {
   uppercaseFirstCharacter(word) {
     return `${word[0].toUpperCase()}${word.slice(1)}`;
   }
+
+  /**
+   * Upload file in input type=file selector
+   * @param page
+   * @param selector
+   * @param filePath
+   * @return {Promise<void>}
+   */
+  async uploadFile(page, selector, filePath) {
+    const input = await page.$(selector);
+    await input.setInputFiles(filePath);
+  }
 };

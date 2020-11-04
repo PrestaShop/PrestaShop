@@ -55,6 +55,12 @@ describe('Create, update and delete carrier in BO', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+
+    // Create images
+    await Promise.all([
+      files.generateImage(`${createCarrierData.name}.jpg`),
+      files.generateImage(`${editCarrierData.name}.jpg`),
+    ]);
   });
 
   after(async () => {

@@ -40,7 +40,7 @@ class AddCategory extends BOBasePage {
     await this.setValue(page, this.nameInput, categoryData.name);
     await page.click(this.displayed(categoryData.displayed ? 1 : 0));
     await this.setValueOnTinymceInput(page, this.descriptionIframe, categoryData.description);
-    await this.generateAndUploadImage(page, this.categoryCoverImage, `${categoryData.name}.jpg`);
+    await this.uploadFile(page, this.categoryCoverImage, `${categoryData.name}.jpg`);
     await this.setValue(page, this.metaTitleInput, categoryData.metaTitle);
     await this.setValue(page, this.metaDescriptionTextarea, categoryData.metaDescription);
     await page.click(this.selectAllGroupAccessCheckbox);
@@ -59,7 +59,7 @@ class AddCategory extends BOBasePage {
     await this.setValue(page, this.rootCategoryNameInput, categoryData.name);
     await page.click(this.rootCategoryDisplayed(categoryData.displayed ? 1 : 0));
     await this.setValueOnTinymceInput(page, this.rootCategoryDescriptionIframe, categoryData.description);
-    await this.generateAndUploadImage(page, this.rootCategoryCoverImage, `${categoryData.name}.jpg`);
+    await this.uploadFile(page, this.rootCategoryCoverImage, `${categoryData.name}.jpg`);
     await this.setValue(page, this.rootCategoryMetaTitleInput, categoryData.metaTitle);
     await this.setValue(page, this.rootCategoryMetaDescriptionTextarea, categoryData.metaDescription);
     await page.click(this.selectAllGroupAccessCheckbox);
