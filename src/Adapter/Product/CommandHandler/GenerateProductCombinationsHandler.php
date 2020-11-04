@@ -57,6 +57,6 @@ final class GenerateProductCombinationsHandler extends AbstractProductHandler im
      */
     public function handle(GenerateProductCombinationsCommand $command): array
     {
-        return $this->combinationCreator->createCombinations($command->getProductId(), $command->getGroupedAttributeIds());
+        return $this->combinationCreator->createCombinations($command->getProductId(), $command->getGroupedAttributeIdsList());
     }
 }

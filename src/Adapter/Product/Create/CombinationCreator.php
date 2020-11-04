@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\GroupedAttributeIds;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Product\Generator\CombinationGeneratorInterface;
 use Product;
@@ -76,16 +77,15 @@ class CombinationCreator
 
     /**
      * @param ProductId $productId
-     * @param array<int, array<int, int>> $groupedAttributeIds
-     *
-     * @todo: multistore
+     * @param GroupedAttributeIds[] $groupedAttributeIdsList
      *
      * @return CombinationId[]
+     *@todo: multistore
      */
-    public function createCombinations(ProductId $productId, array $groupedAttributeIds): array
+    public function createCombinations(ProductId $productId, array $groupedAttributeIdsList): array
     {
         $product = $this->productRepository->get($productId);
-        $generatedCombinations = $this->combinationGenerator->generate($groupedAttributeIds);
+        $generatedCombinations = $this->combinationGenerator->generate($this->formatScalarValues($groupedAttributeIdsList));
 
         // avoid applying specificPrice on each combination.
         SpecificPriceRule::disableAnyApplication();
@@ -98,6 +98,23 @@ class CombinationCreator
         SpecificPriceRule::applyAllRules([$product->id]);
 
         return $combinationIds;
+    }
+
+    /**
+     * @param GroupedAttributeIds[] $groupedAttributeIdsList
+     *
+     * @return array<int, array<int, int>>
+     */
+    private function formatScalarValues(array $groupedAttributeIdsList): array
+    {
+        $groupedIdsList = [];
+        foreach ($groupedAttributeIdsList as $groupedAttributeIds) {
+            foreach ($groupedAttributeIds->getAttributeIds() as $attributeId) {
+                $groupedIdsList[$groupedAttributeIds->getAttributeGroupId()->getValue()][] = $attributeId->getValue();
+            }
+        }
+
+        return $groupedIdsList;
     }
 
     /**
