@@ -28,8 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
-use PrestaShop\PrestaShop\Adapter\CombinationDataProvider;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetProductCombinationsForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetProductCombinationsForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationAttributeInformation;
@@ -42,16 +42,17 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\Combinatio
 final class GetProductCombinationsForEditingHandler extends AbstractProductHandler implements GetProductCombinationsForEditingHandlerInterface
 {
     /**
-     * @var CombinationDataProvider
+     * @var CombinationRepository
      */
-    private $combinationDataProvider;
+    private $combinationRepository;
 
     /**
-     * @param CombinationDataProvider $combinationDataProvider
+     * @param CombinationRepository $combinationRepository
      */
-    public function __construct(CombinationDataProvider $combinationDataProvider)
-    {
-        $this->combinationDataProvider = $combinationDataProvider;
+    public function __construct(
+        CombinationRepository $combinationRepository
+    ) {
+        $this->combinationRepository = $combinationRepository;
     }
 
     /**
@@ -61,13 +62,13 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
     {
         $product = $this->getProduct($query->getProductId());
         $productId = (int) $product->id;
-        $combinations = $this->combinationDataProvider->getProductCombinations($productId, $query->getLimit(), $query->getOffset());
+        $combinations = $this->combinationRepository->getProductCombinations($productId, $query->getLimit(), $query->getOffset());
 
         $combinationIds = array_map(function ($combination): int {
             return (int) $combination['id_product_attribute'];
         }, $combinations);
 
-        $attributesInformation = $this->combinationDataProvider->getAttributesInfoByCombinationIds(
+        $attributesInformation = $this->combinationRepository->getAttributesInfoByCombinationIds(
             $combinationIds,
             $query->getLanguageId()
         );
@@ -75,7 +76,7 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
         return $this->formatCombinationsForEditing(
             $combinations,
             $attributesInformation,
-            $this->combinationDataProvider->getTotalCombinationsCount($productId)
+            $this->combinationRepository->getTotalCombinationsCount($productId)
         );
     }
 
