@@ -38,7 +38,7 @@ const orderToMake = {
   invoiceAddress: 'Mon adresse',
   addressValue: addresses.second,
   deliveryOption: {
-    name: `${Carriers[1].name} - ${Carriers[1].delay}`,
+    name: `${Carriers.default.name} - ${Carriers.default.delay}`,
     freeShipping: true,
   },
   paymentMethod: 'Payments by check',
