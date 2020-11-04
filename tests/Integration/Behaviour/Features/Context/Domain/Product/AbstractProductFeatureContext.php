@@ -30,6 +30,8 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Context;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
@@ -52,6 +54,18 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
 
         return $this->getQueryBus()->handle(new GetProductForEditing(
             $productId
+        ));
+    }
+
+    /**
+     * @param string $productReference
+     *
+     * @return CustomizationField[]
+     */
+    protected function getProductCustomizationFields(string $productReference): array
+    {
+        return $this->getQueryBus()->handle(new GetProductCustomizationFields(
+            $this->getSharedStorage()->get($productReference)
         ));
     }
 
