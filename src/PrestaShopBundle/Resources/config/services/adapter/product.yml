@@ -504,6 +504,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductCombinationsForEditingHandler
         arguments:
             - '@prestashop.adapter.product.repository.combination_repository'
+            - '@prestashop.adapter.product.repository.product_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetProductCombinationsForEditing

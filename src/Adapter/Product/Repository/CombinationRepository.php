@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCom
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
 
@@ -96,18 +97,17 @@ class CombinationRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param int $productId
+     * @param ProductId $productId
      * @param int $limit
      * @param int $offset
      * @param array $filters
      *
      * @return array<int, array<string, mixed>>
      */
-    public function getProductCombinations(int $productId, ?int $limit = null, ?int $offset = null, array $filters = []): array
+    public function getProductCombinations(ProductId $productId, ?int $limit = null, ?int $offset = null, array $filters = []): array
     {
         $qb = $this->getCombinationsQueryBuilder($productId, $filters)
             ->select('pa.*')
-            ->setParameter('productId', $productId)
         ;
 
         if ($offset) {
@@ -122,14 +122,16 @@ class CombinationRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param int $productId
+     * @param ProductId $productId
      * @param array $filters
      *
      * @return int
      */
-    public function getTotalCombinationsCount(int $productId, array $filters = []): int
+    public function getTotalCombinationsCount(ProductId $productId, array $filters = []): int
     {
-        $qb = $this->getCombinationsQueryBuilder($productId, $filters)->select('COUNT(pa.id_product_attribute) AS total_combinations');
+        $qb = $this->getCombinationsQueryBuilder($productId, $filters)
+            ->select('COUNT(pa.id_product_attribute) AS total_combinations')
+        ;
 
         return (int) $qb->execute()->fetch()['total_combinations'];
     }
@@ -246,18 +248,18 @@ class CombinationRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param int $productId
+     * @param ProductId $productId
      * @param array $filters
      *
      * @return QueryBuilder
      */
-    private function getCombinationsQueryBuilder(int $productId, array $filters): QueryBuilder
+    private function getCombinationsQueryBuilder(ProductId $productId, array $filters): QueryBuilder
     {
         //@todo: filters are not handled.
         $qb = $this->connection->createQueryBuilder();
         $qb->from($this->dbPrefix . 'product_attribute', 'pa')
             ->where('pa.id_product = :productId')
-            ->setParameter('productId', $productId)
+            ->setParameter('productId', $productId->getValue())
         ;
 
         return $qb;

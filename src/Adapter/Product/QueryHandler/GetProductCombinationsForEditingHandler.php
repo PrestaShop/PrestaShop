@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetProductCombinationsForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetProductCombinationsForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationAttributeInformation;
@@ -47,12 +48,20 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
     private $combinationRepository;
 
     /**
+     * @var ProductRepository
+     */
+    private $productRepository;
+
+    /**
      * @param CombinationRepository $combinationRepository
+     * @param ProductRepository $productRepository
      */
     public function __construct(
-        CombinationRepository $combinationRepository
+        CombinationRepository $combinationRepository,
+        ProductRepository $productRepository
     ) {
         $this->combinationRepository = $combinationRepository;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -60,8 +69,8 @@ final class GetProductCombinationsForEditingHandler extends AbstractProductHandl
      */
     public function handle(GetProductCombinationsForEditing $query): CombinationListForEditing
     {
-        $product = $this->getProduct($query->getProductId());
-        $productId = (int) $product->id;
+        $productId = $query->getProductId();
+        $this->productRepository->assertProductExists($productId);
         $combinations = $this->combinationRepository->getProductCombinations($productId, $query->getLimit(), $query->getOffset());
 
         $combinationIds = array_map(function ($combination): int {
