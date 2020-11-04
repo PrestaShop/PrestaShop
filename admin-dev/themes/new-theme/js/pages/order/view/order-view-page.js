@@ -136,31 +136,10 @@ export default class OrderViewPage {
     });
 
     EventEmitter.on(OrderViewEventMap.productAddedToOrder, (event) => {
-      const $tablePagination = $(OrderViewPageMap.productsTablePagination);
-      const numRowsPerPage = $tablePagination.data('numPerPage');
-      const initialNumProducts = parseInt($(OrderViewPageMap.productsCount).html(), 10);
-
-      this.orderProductRenderer.addOrUpdateProductToList(
-        $(`#${$(event.newRow).find('tr').attr('id')}`),
-        event.newRow
-      );
-      this.listenForProductDelete();
-      this.listenForProductEdit();
-      this.resetToolTips();
-
-      const newNumProducts = $(OrderViewPageMap.productsTableRows).length;
-      const initialPagesNum = Math.max(Math.ceil(initialNumProducts / numRowsPerPage), 1);
-      const newPagesNum = Math.ceil(newNumProducts / numRowsPerPage);
-
-      // Update pagination
-      if (newPagesNum > initialPagesNum) {
-        this.orderProductRenderer.paginationAddPage(newPagesNum);
-      }
-
-      this.orderProductRenderer.updateNumProducts(newNumProducts);
       this.orderProductRenderer.resetAddRow();
       this.orderPricesRefresher.refreshProductPrices(event.orderId);
       this.orderPricesRefresher.refresh(event.orderId);
+      this.refreshProductsList(event.orderId);
       this.orderPaymentsRefresher.refresh(event.orderId);
       this.orderDiscountsRefresher.refresh(event.orderId);
       this.orderInvoicesRefresher.refresh(event.orderId);
@@ -353,6 +332,10 @@ export default class OrderViewPage {
     const $loadingSpinner = $(OrderViewPageMap.productsPanel).find('.spinner-order-products-container#orderProductsLoading');
     $loadingSpinner.show();
 
+    const $tablePagination = $(OrderViewPageMap.productsTablePagination);
+    const numRowsPerPage = $tablePagination.data('numPerPage');
+    const initialNumProducts = parseInt($(OrderViewPageMap.productsCount).html(), 10);
+
     $.ajax(this.router.generate('admin_orders_get_products', {orderId}))
         .done((response) => {
           // Delete previous product lines
@@ -364,6 +347,18 @@ export default class OrderViewPage {
 
           this.listenForProductDelete();
           this.listenForProductEdit();
+          this.resetToolTips();
+
+          const newNumProducts = $(OrderViewPageMap.productsTableRows).length;
+          const initialPagesNum = Math.max(Math.ceil(initialNumProducts / numRowsPerPage), 1);
+          const newPagesNum = Math.ceil(newNumProducts / numRowsPerPage);
+
+          this.orderProductRenderer.updateNumProducts(newNumProducts);
+
+          // Update pagination
+          if (newPagesNum > initialPagesNum) {
+            this.orderProductRenderer.paginationAddPage(newPagesNum);
+          }
         })
         .fail(errors => {
           location.reload();
