@@ -50,6 +50,9 @@ final class AttributeGroupId
     }
 
     /**
+     * @deprecated
+     * @see getValue()
+     *
      * @return int
      */
     public function getAttributeGroupId()
@@ -66,16 +69,6 @@ final class AttributeGroupId
     }
 
     /**
-     * @param $value
-     *
-     * @return bool
-     */
-    public static function isValid($value): bool
-    {
-        return is_int($value) && 0 < $value;
-    }
-
-    /**
      * Validates that the value is integer and is greater than zero
      *
      * @param int $value
@@ -84,13 +77,8 @@ final class AttributeGroupId
      */
     private function assertIsIntegerGreaterThanZero($value)
     {
-        if (self::isValid($value)) {
-            return;
+        if (!is_int($value) || 0 >= $value) {
+            throw new AttributeGroupConstraintException(sprintf('Invalid attribute group id "%s".', var_export($value, true)), AttributeGroupConstraintException::INVALID_ID);
         }
-
-        throw new AttributeGroupConstraintException(
-            sprintf('Invalid attribute group id "%s".', var_export($value, true)),
-            AttributeGroupConstraintException::INVALID_ID
-        );
     }
 }
