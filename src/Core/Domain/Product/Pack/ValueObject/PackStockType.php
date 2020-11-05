@@ -35,22 +35,22 @@ class PackStockType
     /**
      * Stock type: only based on pack quantity
      */
-    const STOCK_TYPE_PACK_ONLY = 'stock_type_pack_only';
+    const STOCK_TYPE_PACK_ONLY = 0;
 
     /**
      * Stock type: only based on products quantity
      */
-    const STOCK_TYPE_PRODUCTS_ONLY = 'stock_type_products_only';
+    const STOCK_TYPE_PRODUCTS_ONLY = 1;
 
     /**
      * Stock type: based on products and pack quantity
      */
-    const STOCK_TYPE_BOTH = 'stock_type_both';
+    const STOCK_TYPE_BOTH = 2;
 
     /**
      * Stock type: based on configuration default value
      */
-    const STOCK_TYPE_DEFAULT = 'stock_type_default';
+    const STOCK_TYPE_DEFAULT = 3;
 
     const ALLOWED_PACK_STOCK_TYPES = [
         self::STOCK_TYPE_PACK_ONLY,
@@ -60,34 +60,34 @@ class PackStockType
     ];
 
     /**
-     * @var string
+     * @var int
      */
     private $value;
 
     /**
-     * @param string $value
+     * @param int $value
      *
      * @throws ProductPackConstraintException
      */
-    public function __construct(string $value)
+    public function __construct(int $value)
     {
         $this->setStockType($value);
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getValue(): string
+    public function getValue(): int
     {
         return $this->value;
     }
 
     /**
-     * @param string $stockType
+     * @param int $stockType
      *
      * @throws ProductPackConstraintException
      */
-    private function setStockType(string $stockType): void
+    private function setStockType(int $stockType): void
     {
         if (!in_array($stockType, self::ALLOWED_PACK_STOCK_TYPES)) {
             throw new ProductPackConstraintException(

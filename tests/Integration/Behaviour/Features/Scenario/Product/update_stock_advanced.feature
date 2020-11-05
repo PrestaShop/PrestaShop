@@ -63,24 +63,24 @@ Feature: Update product stock from Back Office (BO)
       | product  | quantity |
       | product2 | 5        |
     And product "productPack1" should have following stock information:
-      | pack_stock_type | stock_type_default |
+      | pack_stock_type | default |
     When I update product "productPack1" stock with following information:
-      | pack_stock_type | stock_type_pack_only |
+      | pack_stock_type | pack_only |
     Then product "productPack1" should have following stock information:
-      | pack_stock_type | stock_type_pack_only |
+      | pack_stock_type | pack_only |
     When I update product "productPack1" stock with following information:
-      | pack_stock_type | stock_type_products_only |
+      | pack_stock_type | products_only |
     Then product "productPack1" should have following stock information:
-      | pack_stock_type | stock_type_products_only |
+      | pack_stock_type | products_only |
     When I update product "productPack1" stock with following information:
-      | pack_stock_type | stock_type_both |
+      | pack_stock_type | both |
     Then product "productPack1" should have following stock information:
-      | pack_stock_type | stock_type_both |
+      | pack_stock_type | both |
     When I update product "productPack1" stock with following information:
       | pack_stock_type | invalid |
     Then I should get error that pack stock type is invalid
     And product "productPack1" should have following stock information:
-      | pack_stock_type | stock_type_both |
+      | pack_stock_type | both |
 
   Scenario: I update product pack stock type which depends on stock
     Given I add product "productPack1" with following information:
@@ -116,17 +116,17 @@ Feature: Update product stock from Back Office (BO)
     When I update product "productPack1" stock with following information:
       | use_advanced_stock_management | true                 |
       | depends_on_stock              | true                 |
-      | pack_stock_type               | stock_type_pack_only |
+      | pack_stock_type               | pack_only |
     Then product "productPack1" should have following stock information:
       | use_advanced_stock_management | true                 |
       | depends_on_stock              | true                 |
-      | pack_stock_type               | stock_type_pack_only |
+      | pack_stock_type               | pack_only |
     # If pack depends on product or both it is still not possible
     When I update product "productPack1" stock with following information:
-      | pack_stock_type               | stock_type_products_only |
+      | pack_stock_type               | products_only |
     And I should get error that pack stock type is incompatible
     When I update product "productPack1" stock with following information:
-      | pack_stock_type               | stock_type_both |
+      | pack_stock_type               | both |
     And I should get error that pack stock type is incompatible
     # Unless all the pack's products have advanced stock management
     When I update product "product2" stock with following information:
@@ -134,7 +134,7 @@ Feature: Update product stock from Back Office (BO)
     Then product "product2" should have following stock information:
       | use_advanced_stock_management | true                 |
     When I update product "productPack1" stock with following information:
-      | pack_stock_type               | stock_type_products_only |
+      | pack_stock_type               | products_only |
     And I should get error that pack stock type is incompatible
     # I said ALL of them
     When I update product "product3" stock with following information:
@@ -142,19 +142,19 @@ Feature: Update product stock from Back Office (BO)
     Then product "product3" should have following stock information:
       | use_advanced_stock_management | true                 |
     When I update product "productPack1" stock with following information:
-      | pack_stock_type               | stock_type_products_only |
+      | pack_stock_type               | products_only |
     Then product "productPack1" should have following stock information:
-      | pack_stock_type | stock_type_products_only |
+      | pack_stock_type | products_only |
     # Of course stock type on both works as well
     When I update product "productPack1" stock with following information:
-      | pack_stock_type               | stock_type_both |
+      | pack_stock_type               | both |
     Then product "productPack1" should have following stock information:
-      | pack_stock_type | stock_type_both |
+      | pack_stock_type | both |
     # We can even switch back to default configuration
     When I update product "productPack1" stock with following information:
-      | pack_stock_type               | stock_type_default |
+      | pack_stock_type               | default |
     Then product "productPack1" should have following stock information:
-      | pack_stock_type | stock_type_default |
+      | pack_stock_type | default |
 
   Scenario: I update product out of stock
     Given I add product "product1" with following information:
