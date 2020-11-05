@@ -84,7 +84,7 @@ class ImportType extends TranslatorAwareType
             ])
             ->add('multiple_value_separator', TextType::class, [
                 'label' => $this->trans('Multiple value separator', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('e.g. ', 'Admin.Advparameters.Help') . ' Blouse; red.jpg, blue.jpg, green.jpg; 129.90',
+                'help' => $this->trans('e.g. Blouse; red.jpg, blue.jpg, green.jpg; 129.90 ', 'Admin.Advparameters.Help'), 
             ])
             ->add('truncate', SwitchType::class, [
                 'row_attr' => [
