@@ -333,7 +333,7 @@ class AdminStoresControllerCore extends AdminController
             $langs = Language::getLanguages(false);
             /* Cleaning fields */
             foreach ($_POST as $kp => $vp) {
-                if (!in_array($kp, ['checkBoxShopGroupAsso_store', 'checkBoxShopAsso_store', 'hours'])) {
+                if (is_string($vp)) {
                     $_POST[$kp] = trim($vp);
                 }
                 if ('hours' === $kp) {
