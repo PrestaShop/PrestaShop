@@ -36,6 +36,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use StockAvailable;
 
+/**
+ * Methods to handle StockAvailable data storage
+ */
 class StockAvailableRepository extends AbstractObjectModelRepository
 {
     /**

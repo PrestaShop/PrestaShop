@@ -30,6 +30,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 
+/**
+ * Thrown when some product packing actions fails, also base exception of Product/Pack subdomain
+ */
 class ProductPackException extends ProductException
 {
     /**

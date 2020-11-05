@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception;
 
+/**
+ * Thrown when product stock constraints are violated
+ */
 class ProductStockConstraintException extends ProductStockException
 {
     /**

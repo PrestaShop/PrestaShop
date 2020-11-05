@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception;
 
+/**
+ * Thrown when StockAvailable update fails
+ */
 class CannotUpdateStockAvailableException extends ProductStockException
 {
 }
