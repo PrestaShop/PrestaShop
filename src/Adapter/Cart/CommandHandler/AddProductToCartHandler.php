@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
+use Cart;
+use CartRule;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddProductToCartCommand;
@@ -86,7 +88,9 @@ final class AddProductToCartHandler extends AbstractCartHandler implements AddPr
         $cart = $this->getCart($command->getCartId());
         $product = $cart->getProductQuantity($productIdValue, $combinationId, $customizationId);
 
-        $quantity = $command->getQuantity() + (int) $product['quantity'];
+        $cartQuantity = (int) $product['quantity'] - $this->getProductGiftedQuantity($cart, $productIdValue, $combinationId);
+
+        $quantity = $command->getQuantity() + $cartQuantity;
         $this->assertQuantityIsPositiveInt($quantity);
 
         $this->updateProductQuantityInCartHandler->handle(new UpdateProductQuantityInCartCommand(
@@ -111,5 +115,32 @@ final class AddProductToCartHandler extends AbstractCartHandler implements AddPr
                 CartConstraintException::INVALID_QUANTITY
             );
         }
+    }
+
+    /**
+     * Returns the number of gifts for a product.
+     *
+     * @param Cart $cart
+     * @param int $productId
+     * @param int $combinationId
+     *
+     * @return int
+     */
+    private function getProductGiftedQuantity(Cart $cart, int $productId, int $combinationId): int
+    {
+        $giftedQuantity = 0;
+        $giftCartRules = $cart->getCartRules(CartRule::FILTER_ACTION_GIFT, false);
+        if (count($giftCartRules) > 0) {
+            foreach ($giftCartRules as $giftCartRule) {
+                if (
+                    $productId == $giftCartRule['gift_product'] &&
+                    $combinationId == $giftCartRule['gift_product_attribute']
+                ) {
+                    ++$giftedQuantity;
+                }
+            }
+        }
+
+        return $giftedQuantity;
     }
 }
