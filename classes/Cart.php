@@ -1092,9 +1092,11 @@ class CartCore extends ObjectModel
             ORDER BY ag.`position` ASC, a.`position` ASC'
         );
 
+        $colon = Context::getContext()->getTranslator()->trans(': ', [], 'Shop.Pdf');
         foreach ($result as $row) {
-            self::$_attributesLists[$row['id_product_attribute'] . '-' . $id_lang]['attributes'] .= $row['public_group_name'] . ' : ' . $row['attribute_name'] . $separator . ' ';
-            self::$_attributesLists[$row['id_product_attribute'] . '-' . $id_lang]['attributes_small'] .= $row['attribute_name'] . $separator . ' ';
+            $key = $row['id_product_attribute'] . '-' . $id_lang;
+            self::$_attributesLists[$key]['attributes'] .= $row['public_group_name'] . $colon . $row['attribute_name'] . $separator . ' ';
+            self::$_attributesLists[$key]['attributes_small'] .= $row['attribute_name'] . $separator . ' ';
         }
 
         foreach ($pa_implode as $id_product_attribute) {
