@@ -18,7 +18,7 @@ const OrderReturnStatusFaker = require('@data/faker/orderStatus');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_shopParameters_orderSettings_statuses_CRUDOrderReturnStatus';
+const baseContext = 'functional_BO_shopParameters_orderSettings_statuses_returnStatuses_CRUDOrderReturnStatus';
 
 // Import expect from chai
 const {expect} = require('chai');
