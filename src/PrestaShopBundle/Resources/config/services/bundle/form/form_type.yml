@@ -999,6 +999,7 @@ services:
             - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
             - '@translator'
             - '@=service("prestashop.adapter.multistore_feature").isActive()'
+            - '@router'
             - "@=service('prestashop.adapter.legacy.context').getLanguages()"
         tags:
           - { name: form.type }
