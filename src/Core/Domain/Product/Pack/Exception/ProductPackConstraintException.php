@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception;
 
 /**
- * Thrown when some product packing actions fails
+ * Thrown when product packing constraints are violated
  */
 class ProductPackConstraintException extends ProductPackException
 {

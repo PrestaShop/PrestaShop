@@ -30,6 +30,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 
+/**
+ * Holds value of out of stock type
+ */
 class OutOfStockType
 {
     /**
