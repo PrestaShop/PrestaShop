@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Validate;
 
 use Pack;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
@@ -43,13 +42,25 @@ use Product;
 class ProductValidator extends AbstractObjectModelValidator
 {
     /**
-     * @var ConfigurationInterface
+     * @var bool
      */
-    private $configuration;
+    private $advancedStockEnabled;
 
-    public function __construct(ConfigurationInterface $configuration)
-    {
-        $this->configuration = $configuration;
+    /**
+     * @var int
+     */
+    private $defaultPackStockType;
+
+    /**
+     * @param bool $advancedStockEnabled
+     * @param int $defaultPackStockType
+     */
+    public function __construct(
+        bool $advancedStockEnabled,
+        int $defaultPackStockType
+    ) {
+        $this->advancedStockEnabled = $advancedStockEnabled;
+        $this->defaultPackStockType = $defaultPackStockType;
     }
 
     /**
@@ -158,8 +169,7 @@ class ProductValidator extends AbstractObjectModelValidator
      */
     private function validateStock(Product $product): void
     {
-        $advancedStockEnabled = (bool) $this->configuration->get('PS_ADVANCED_STOCK_MANAGEMENT');
-        if ($advancedStockEnabled) {
+        if ($this->advancedStockEnabled) {
             $this->validateAdvancedStock($product);
         } else {
             $this->validateClassicStock($product);
@@ -230,7 +240,7 @@ class ProductValidator extends AbstractObjectModelValidator
         // Get pack stock type (or default configuration if needed)
         $packStockType = $product->pack_stock_type;
         if ($packStockType === Pack::STOCK_TYPE_DEFAULT) {
-            $packStockType = (int) $this->configuration->get('PS_PACK_STOCK_TYPE');
+            $packStockType = $this->defaultPackStockType;
         }
 
         // Either the pack has its own stock, or else ALL products from the pack must depend on the stock as well
