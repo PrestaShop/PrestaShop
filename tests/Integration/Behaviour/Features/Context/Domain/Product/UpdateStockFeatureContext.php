@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShopBundle\Api\QueryStockMovementParamsCollection;
 use PrestaShopBundle\Entity\Repository\StockMovementRepository;
 use RuntimeException;
@@ -78,14 +79,18 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         $productForEditing = $this->getProductForEditing($productReference);
         $data = $table->getRowsHash();
 
+        if (isset($data['out_of_stock_type'])) {
+            $data['out_of_stock_type'] = $this->convertOutOfStockToInt($data['out_of_stock_type']);
+        }
+
         $this->assertBoolProperty($productForEditing, $data, 'use_advanced_stock_management');
         $this->assertBoolProperty($productForEditing, $data, 'depends_on_stock');
         $this->assertStringProperty($productForEditing, $data, 'pack_stock_type');
-        $this->assertStringProperty($productForEditing, $data, 'out_of_stock_type');
-        $this->assertNumberProperty($productForEditing, $data, 'quantity');
-        $this->assertNumberProperty($productForEditing, $data, 'minimal_quantity');
+        $this->assertIntegerProperty($productForEditing, $data, 'out_of_stock_type');
+        $this->assertIntegerProperty($productForEditing, $data, 'quantity');
+        $this->assertIntegerProperty($productForEditing, $data, 'minimal_quantity');
         $this->assertStringProperty($productForEditing, $data, 'location');
-        $this->assertNumberProperty($productForEditing, $data, 'low_stock_threshold');
+        $this->assertIntegerProperty($productForEditing, $data, 'low_stock_threshold');
         $this->assertBoolProperty($productForEditing, $data, 'low_stock_alert');
         $this->assertDateProperty($productForEditing, $data, 'available_date');
 
@@ -227,7 +232,7 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         }
 
         if (isset($data['out_of_stock_type'])) {
-            $command->setOutOfStockType($data['out_of_stock_type']);
+            $command->setOutOfStockType($this->convertOutOfStockToInt($data['out_of_stock_type']));
             unset($data['out_of_stock_type']);
         }
 
@@ -277,5 +282,22 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         }
 
         return $data;
+    }
+
+    /**
+     * @param string $outOfStock
+     *
+     * @return int
+     */
+    private function convertOutOfStockToInt(string $outOfStock): int
+    {
+        $intValues = [
+            'default' => OutOfStockType::OUT_OF_STOCK_DEFAULT,
+            'available' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
+            'not_available' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
+            'invalid' => 42,
+        ];
+
+        return $intValues[$outOfStock];
     }
 }

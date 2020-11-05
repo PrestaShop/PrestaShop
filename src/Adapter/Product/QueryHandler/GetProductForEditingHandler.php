@@ -30,7 +30,6 @@ use Customization;
 use DateTime;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Adapter\Product\Converter\OutOfStockTypeConverter;
 use PrestaShop\PrestaShop\Adapter\Product\Converter\PackStockTypeConverter;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
@@ -303,7 +302,7 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
                 $product->advanced_stock_management,
                 $stockAvailable->depends_on_stock,
                 PackStockTypeConverter::convertToValueObject((int) $product->pack_stock_type),
-                OutOfStockTypeConverter::convertToValueObject((int) $stockAvailable->out_of_stock),
+                (int) $stockAvailable->out_of_stock,
                 (int) $stockAvailable->quantity,
                 (int) $product->minimal_quantity,
                 $stockAvailable->location,
@@ -320,7 +319,7 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
                 $product->advanced_stock_management,
                 $product->depends_on_stock,
                 PackStockTypeConverter::convertToValueObject((int) $product->pack_stock_type),
-                OutOfStockTypeConverter::convertToValueObject((int) $product->out_of_stock),
+                (int) $product->out_of_stock,
                 (int) $product->quantity,
                 (int) $product->minimal_quantity,
                 $product->location,
