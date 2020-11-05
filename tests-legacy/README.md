@@ -11,6 +11,13 @@ So they have been moved in this folder in order to clean `tests` directory where
 a new test structure will be created.
 
 ### Here are the rules if you need to modify a file in this folder. Only allowed changes are:
+
 - Minor update of a test after a behavior has been modified into PrestaShop project (example: new constructor argument)
 - If it requires a major update, the test must be rewritten to fit the new test structure. Then the legacy test in this
 folder is deleted and the refactored version is added in `tests` folder
+
+### Run
+
+```bash
+$ vendor/bin/phpunit -c tests-legacy/phpunit.xml
+```

@@ -454,6 +454,44 @@ class ToolsCoreTest extends TestCase
         $this->assertSame($expectedResult, Tools::ceilf($value, $precision));
     }
 
+    /**
+     * @param string $serverVar
+     * @param string $expectedAddress
+     *
+     * @dataProvider getServerHeaders
+     */
+    public function testGetRemoteAddr(array $serverVar, string $expectedAddress)
+    {
+        foreach ($serverVar as $key => $value) {
+            $_SERVER[$key] = $value;
+        }
+
+        $this->assertEquals(Tools::getRemoteAddr(), $expectedAddress);
+
+        foreach ($serverVar as $key => $value) {
+            unset($_SERVER[$key]);
+        }
+    }
+
+    public function getServerHeaders()
+    {
+        return
+            [
+                [
+                    ["HTTP_X_FORWARDED_FOR" => "1.2.3.4,5.6.7.8", "REMOTE_ADDR" => "5.6.7.8"],
+                    '5.6.7.8'
+                ],
+                [
+                    ["REMOTE_ADDR" => "1.2.3.4"],
+                    '1.2.3.4'
+                ],
+                [
+                    ["HTTP_X_FORWARDED_FOR" => "1.2.3.4,10.2.3.4", "REMOTE_ADDR" => "10.2.3.4"],
+                    '1.2.3.4'
+                ],
+            ];
+    }
+
     public function getRoundingHelperSamples()
     {
         return [
