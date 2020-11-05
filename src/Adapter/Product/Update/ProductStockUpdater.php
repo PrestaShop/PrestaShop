@@ -43,6 +43,9 @@ use PrestaShop\PrestaShop\Core\Stock\StockManager;
 use Product;
 use StockAvailable;
 
+/**
+ * Updates settings related to Product stock
+ */
 class ProductStockUpdater
 {
     /**
@@ -155,7 +158,7 @@ class ProductStockUpdater
             return false;
         }
 
-        $deltaQuantity = (int) (int) $product->quantity - $stockAvailable->quantity;
+        $deltaQuantity = (int) $product->quantity - (int) $stockAvailable->quantity;
         $stockAvailable->quantity = (int) $product->quantity;
 
         if ($addMovement && 0 !== $deltaQuantity) {
