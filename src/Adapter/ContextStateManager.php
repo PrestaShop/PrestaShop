@@ -160,18 +160,17 @@ final class ContextStateManager
     /**
      * Sets context shop and saves previous value
      *
-     * @param Shop|null $shop
-     * @param int $shopContextType
+     * @param Shop $shop
      *
      * @return $this
      *
      * @throws \PrestaShopException
      */
-    public function setShop(?Shop $shop, int $shopContextType = Shop::CONTEXT_SHOP): self
+    public function setShop(Shop $shop): self
     {
         $this->saveContextField('shop');
         $this->context->shop = $shop;
-        Shop::setContext(Shop::CONTEXT_SHOP, null !== $shop ? $shop->id : null);
+        Shop::setContext(Shop::CONTEXT_SHOP, $shop->id);
 
         return $this;
     }

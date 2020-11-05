@@ -165,7 +165,7 @@ namespace Tests\Unit\Adapter {
             $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
         }
 
-        public function testShopStateGroup()
+        public function testShopStateAll()
         {
             $context = $this->createContextMock([
                 'shop' => $this->createContextFieldMock(Shop::class, 42),
@@ -200,6 +200,43 @@ namespace Tests\Unit\Adapter {
             $this->assertEquals(null, Shop::getContextShopID());
             $this->assertEquals(null, Shop::getContextShopGroupID());
             $this->assertEquals(Shop::CONTEXT_ALL, Shop::getContext());
+        }
+
+        public function testShopStateGroup()
+        {
+            $context = $this->createContextMock([
+                'shop' => $this->createContextFieldMock(Shop::class, 42),
+            ]);
+            Shop::setContext(Shop::CONTEXT_GROUP, 42);
+            $this->assertEquals(42, $context->shop->id);
+            $this->assertEquals(null, Shop::getContextShopID());
+            $this->assertEquals(42, Shop::getContextShopGroupID());
+            $this->assertEquals(Shop::CONTEXT_GROUP, Shop::getContext());
+
+            $contextStateManager = new ContextStateManager($context);
+            $contextStateManager->setShop($this->createContextFieldMock(Shop::class, 51));
+            $this->assertEquals(51, $context->shop->id);
+            $this->assertEquals(51, Shop::getContextShopID());
+            $this->assertEquals(51, Shop::getContextShopGroupID());
+            $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
+
+            $contextStateManager->setShop($this->createContextFieldMock(Shop::class, 69));
+            $this->assertEquals(69, $context->shop->id);
+            $this->assertEquals(69, Shop::getContextShopID());
+            $this->assertEquals(69, Shop::getContextShopGroupID());
+            $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
+
+            $contextStateManager->restorePreviousContext();
+            $this->assertEquals(42, $context->shop->id);
+            $this->assertEquals(null, Shop::getContextShopID());
+            $this->assertEquals(42, Shop::getContextShopGroupID());
+            $this->assertEquals(Shop::CONTEXT_GROUP, Shop::getContext());
+
+            $contextStateManager->restorePreviousContext();
+            $this->assertEquals(42, $context->shop->id);
+            $this->assertEquals(null, Shop::getContextShopID());
+            $this->assertEquals(42, Shop::getContextShopGroupID());
+            $this->assertEquals(Shop::CONTEXT_GROUP, Shop::getContext());
         }
 
         public function testNullField()
