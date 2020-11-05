@@ -30,6 +30,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 
+/**
+ * Base exception for Product/Stock subdomain
+ */
 class ProductStockException extends ProductException
 {
 }

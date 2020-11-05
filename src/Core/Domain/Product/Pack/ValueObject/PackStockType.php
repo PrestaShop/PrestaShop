@@ -30,6 +30,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 
+/**
+ * Holds value of pack stock type
+ */
 class PackStockType
 {
     /**
