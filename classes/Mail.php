@@ -298,7 +298,7 @@ class MailCore extends ObjectModel
 
         if (is_array($to) && isset($to)) {
             foreach ($to as $key => $addr) {
-                $addr = trim($addr);
+                $addr = strtolower(trim($addr));
                 if (!Validate::isEmail($addr)) {
                     self::dieOrLog($die, 'Error: invalid e-mail address');
 
@@ -316,9 +316,10 @@ class MailCore extends ObjectModel
                           self::mimeEncode($addrName);
                 $message->addTo(self::toPunycode($addr), $addrName);
             }
-            $toPlugin = $to[0];
+            $toPlugin = strtolower($to[0]);
         } else {
             /* Simple recipient, one address */
+            $to = strtolower($to);
             $toPlugin = $to;
             $toName = (($toName == null || $toName == $to) ? '' : self::mimeEncode($toName));
             $message->addTo(self::toPunycode($to), $toName);
