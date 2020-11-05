@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationFi
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use Product;
+use Shop;
 
 /**
  * Handles products search using legacy object model
@@ -109,6 +110,12 @@ final class SearchProductsHandler extends AbstractOrderHandler implements Search
         $this->contextStateManager
             ->setCurrency($currency)
         ;
+        if (null !== $query->getOrderId()) {
+            $order = $this->getOrder($query->getOrderId());
+            $this->contextStateManager
+                ->setShop(new Shop($order->id_shop))
+            ;
+        }
 
         try {
             $foundProducts = $this->searchProducts($query, $currency);
