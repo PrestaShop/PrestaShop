@@ -599,24 +599,29 @@ class EmployeeCore extends ObjectModel
      */
     public function getImage()
     {
-        $default = Tools::getAdminImageUrl('prestashop-avatar.png');
-        $imageUrl = '';
+        $defaultSystem = Tools::getAdminImageUrl('pr/default.jpg');
+        $imageUrl = null;
+
+        // Default from Profile
+        $profile = new Profile($this->id_profile);
+        $defaultProfile = (int) $profile->id === (int) $this->id_profile ? $profile->getProfileImage() : null;
+        $imageUrl = $imageUrl ?? $defaultProfile;
+
+        // Gravatar
+        if ($this->has_enabled_gravatar) {
+            $imageUrl = $imageUrl ?? 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($this->email))) . '?d=' . urlencode($defaultSystem);
+        }
 
         // Local Image
         $imagePath = $this->image_dir . $this->id . '.jpg';
         if (file_exists($imagePath)) {
-            $imageUrl = Context::getContext()->link->getMediaLink(
+            $imageUrl = $imageUrl ?? Context::getContext()->link->getMediaLink(
                 str_replace($this->image_dir, _THEME_EMPLOYEE_DIR_, $imagePath)
             );
         }
 
-        // Default Image
-        $imageUrl = $imageUrl ?? $default;
-
-        // Gravatar
-        if ($this->has_enabled_gravatar) {
-            $imageUrl = 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($this->email))) . '?d=' . urlencode($default);
-        }
+        // Default from System
+        $imageUrl = $imageUrl ?? $defaultSystem;
 
         // Hooks
         Hook::exec(
