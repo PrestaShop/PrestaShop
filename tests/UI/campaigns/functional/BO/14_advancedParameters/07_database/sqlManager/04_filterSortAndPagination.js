@@ -167,9 +167,8 @@ describe('Filter, sort and pagination SQL manager', async () => {
 
         await sqlManagerPage.filterSQLQuery(page, test.args.filterBy, test.args.filterValue);
 
+        // Can't check number of element in grid could be 0 for id or more for other filters
         const numberOfLinesAfterFilter = await sqlManagerPage.getNumberOfElementInGrid(page);
-        await expect(numberOfLinesAfterFilter).to.be.at.most(numberOfSQLQueries);
-
         for (let row = 1; row <= numberOfLinesAfterFilter; row++) {
           const textColumn = await sqlManagerPage.getTextColumnFromTable(page, row, test.args.filterBy);
           await expect(textColumn).to.contains(test.args.filterValue);
