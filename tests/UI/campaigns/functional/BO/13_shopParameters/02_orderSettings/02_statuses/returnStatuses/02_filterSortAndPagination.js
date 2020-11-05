@@ -2,7 +2,6 @@ require('module-alias/register');
 
 // Helpers to open and close browser
 const helper = require('@utils/helpers');
-const files = require('@utils/files');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
