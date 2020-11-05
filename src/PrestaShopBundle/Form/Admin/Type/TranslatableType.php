@@ -199,7 +199,7 @@ class TranslatableType extends TranslatorAwareType
     private function getErrorsByLocale(FormView $view, FormInterface $form, array $locales)
     {
         if (count($locales) <= 1) {
-            return;
+            return null;
         }
 
         $formErrors = $form->getErrors(true);
