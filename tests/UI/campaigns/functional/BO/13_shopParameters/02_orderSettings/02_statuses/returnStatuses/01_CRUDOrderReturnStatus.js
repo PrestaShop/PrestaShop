@@ -13,7 +13,7 @@ const statusesPage = require('@pages/BO/shopParameters/orderSettings/statuses');
 const addOrderReturnStatusPage = require('@pages/BO/shopParameters/orderSettings/statuses/returnStatus/add');
 
 // Import data
-const OrderReturnStatusFaker = require('@data/faker/orderStatus');
+const OrderReturnStatusFaker = require('@data/faker/orderReturnStatus');
 
 // Import test context
 const testContext = require('@utils/testContext');

@@ -15,7 +15,7 @@ const addOrderReturnStatusPage = require('@pages/BO/shopParameters/orderSettings
 
 // Import data
 const {ReturnStatuses} = require('@data/demo/orderReturnStatuses');
-const OrderReturnStatusFaker = require('@data/faker/orderStatus');
+const OrderReturnStatusFaker = require('@data/faker/orderReturnStatus');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -144,7 +144,7 @@ describe('Filter, sort and pagination order return status', async () => {
   });
 
   // 2 - Sort order return statuses table
-  describe('Sort order retuen statuses table', async () => {
+  describe('Sort order return statuses table', async () => {
     const sortTests = [
       {
         args: {
@@ -201,6 +201,67 @@ describe('Filter, sort and pagination order return status', async () => {
           await expect(sortedTable).to.deep.equal(expectedResult.reverse());
         }
       });
+    });
+  });
+
+  // 3 - Create 16 order return statuses
+  const creationTests = new Array(16).fill(0, 0, 16);
+
+  creationTests.forEach((test, index) => {
+    describe(`Create order return status n°${index + 1} in BO`, async () => {
+      const orderReturnStatusData = new OrderReturnStatusFaker({name: `todelete${index}`});
+
+      it('should go to add new order status group page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToAddOrderReturnStatusPage${index}`, baseContext);
+
+        await statusesPage.goToNewOrderReturnStatusPage(page);
+
+        const pageTitle = await addOrderReturnStatusPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(addOrderReturnStatusPage.pageTitleCreate);
+      });
+
+      it('should create order status and check result', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `createOrderReturnStatus${index}`, baseContext);
+
+        await addOrderReturnStatusPage.setOrderReturnStatus(page, orderReturnStatusData);
+        /* Successful message is not visible, skipping it */
+        /* https://github.com/PrestaShop/PrestaShop/issues/21270 */
+        // await expect(textResult).to.contains(statusesPage.successfulCreationMessage);
+
+        const numberOfLinesAfterCreation = await statusesPage.getNumberOfElementInGrid(page, tableName);
+        await expect(numberOfLinesAfterCreation).to.be.equal(numberOfOrderReturnStatuses + index + 1);
+      });
+    });
+  });
+
+  // 4 - Pagination
+  describe('Pagination next and previous', async () => {
+    it('should change the item number to 20 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
+
+      const paginationNumber = await statusesPage.selectPaginationLimit(page, tableName, '20');
+      expect(paginationNumber).to.equal('1');
+    });
+
+    it('should click on next', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
+
+      const paginationNumber = await statusesPage.paginationNext(page, tableName);
+      expect(paginationNumber).to.equal('2');
+    });
+
+    it('should click on previous', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
+
+      const paginationNumber = await statusesPage.paginationPrevious(page, tableName);
+      expect(paginationNumber).to.equal('1');
+    });
+
+    it('should change the item number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+
+      const paginationNumber = await statusesPage.selectPaginationLimit(page, tableName, '50');
+      expect(paginationNumber).to.equal('1');
     });
   });
 });
