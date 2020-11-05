@@ -139,8 +139,17 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
         foreach ($expectedShops as $key => $currentExpectedShop) {
             $wasCurrentExpectedShopFound = false;
             foreach ($foundShops as $currentFoundShop) {
-                if ($currentExpectedShop['name'] == $currentFoundShop['name']) {
+                if ($currentExpectedShop['id'] == $currentFoundShop['id']) {
                     $wasCurrentExpectedShopFound = true;
+                    Assert::assertEquals(
+                        $currentExpectedShop['name'],
+                        $currentFoundShop['name'],
+                        sprintf(
+                            'Expected and found shops don\'t have the same name (%s and %s)',
+                            $currentExpectedShop['name'],
+                            $currentFoundShop['name']
+                        )
+                    );
                     Assert::assertEquals(
                         $currentExpectedShop['group_name'],
                         $currentFoundShop['group_name'],
@@ -155,9 +164,9 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
             }
             if (!$wasCurrentExpectedShopFound) {
                 throw new RuntimeException(sprintf(
-                    'Expected shop with name %s in shop group %s was not found',
+                    'Expected shop with name %s and id %s was not found',
                     $currentExpectedShop['name'],
-                    $currentExpectedShop['group_name']
+                    $currentExpectedShop['id']
                 ));
             }
         }

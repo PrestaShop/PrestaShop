@@ -734,6 +734,16 @@ class ShopCore extends ObjectModel
         }
     }
 
+    public static function debugShops(string $searchTerm)
+    {
+        $sql = "SELECT * FROM %s  WHERE s.name LIKE '%%%s%%'";
+        $sql = sprintf($sql, _DB_PREFIX_ . 'shop s', $searchTerm);
+
+        $results = Db::getInstance()->executeS($sql);
+
+        return $results;
+    }
+
     public static function getCompleteListOfShopsID()
     {
         $cache_id = 'Shop::getCompleteListOfShopsID';
