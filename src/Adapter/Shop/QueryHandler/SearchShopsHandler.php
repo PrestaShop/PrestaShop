@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Shop\QueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops;
 use PrestaShop\PrestaShop\Core\Domain\Shop\QueryHandler\SearchShopsHandlerInterface;
 use PrestaShopBundle\Entity\Repository\ShopRepository;
-use Shop;
 
 /**
  * Responsible for getting shops for a given search term.
@@ -60,9 +59,6 @@ final class SearchShopsHandler implements SearchShopsHandlerInterface
     {
         $searchTerm = $query->getSearchTerm();
         $shopList = $this->shopRepository->findBySearchTerm($searchTerm);
-        $groupShops = Shop::searchTest($searchTerm);
-        var_dump($groupShops);
-        var_dump($shopList); exit;
         $result = [];
 
         foreach ($shopList as $shop) {

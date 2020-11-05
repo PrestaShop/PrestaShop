@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops;
 use RuntimeException;
 use Shop;
+use ShopGroup;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
 
 class ShopFeatureContext extends AbstractDomainFeatureContext
@@ -85,16 +86,17 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given I add a shop :reference with name :shopName
+     * @Given I add a shop :reference with name :shopName for the group :shopGroupName
      *
      * @param string $reference
      * @param string $shopName
+     * @param string $shopGroupName
      */
-    public function addShop(string $reference, string $shopName): void
+    public function addShop(string $reference, string $shopName, string $shopGroupName): void
     {
         $shop = new Shop();
         $shop->active = true;
-        $shop->id_shop_group = 1;
+        $shop->id_shop_group = ShopGroup::getIdByName($shopGroupName);
         $shop->id_category = 2;
         $shop->theme_name = _THEME_NAME_;
         $shop->name = $shopName;
