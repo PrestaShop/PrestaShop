@@ -106,6 +106,7 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
                 sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
             );
 
+            // Unset the checked field from array so we can validate they havel all been asserted
             unset($data[$propertyName]);
         }
     }
@@ -127,6 +128,7 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
                 sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
             );
 
+            // Unset the checked field from array so we can validate they havel all been asserted
             unset($data[$propertyName]);
         }
     }
@@ -147,6 +149,7 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
                 sprintf('Expected %s %s. Got %s.', $propertyName, (string) $expectedValue, (string) $actualValue)
             );
 
+            // Unset the checked field from array so we can validate they havel all been asserted
             unset($data[$propertyName]);
         }
     }
@@ -169,6 +172,7 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
                 sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
             );
 
+            // Unset the checked field from array so we can validate they havel all been asserted
             unset($data[$propertyName]);
         }
     }
@@ -191,6 +195,7 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
                 sprintf('Expected %s "%s". Got "%s".', $propertyName, $formattedExpectedDate, $formattedActualDate)
             );
 
+            // Unset the checked field from array so we can validate they havel all been asserted
             unset($data[$propertyName]);
         }
     }
