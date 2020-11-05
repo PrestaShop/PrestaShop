@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Context;
+use DateTimeInterface;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
@@ -99,8 +100,11 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
     {
         if (isset($data[$propertyName])) {
             $expectedValue = PrimitiveUtils::castStringBooleanIntoBoolean($data[$propertyName]);
+            // Don't cast on purpose, the value should already be typed as bool
             $actualValue = $this->extractValueFromProductForEditing($productForEditing, $propertyName);
-            Assert::assertEquals(
+
+            // Use assertSame (not assertEquals) to check value AND type
+            Assert::assertSame(
                 $expectedValue,
                 $actualValue,
                 sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
@@ -120,9 +124,11 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
     {
         if (isset($data[$propertyName])) {
             $expectedValue = $data[$propertyName];
+            // Don't cast on purpose, the value should already be typed as string
             $actualValue = $this->extractValueFromProductForEditing($productForEditing, $propertyName);
 
-            Assert::assertEquals(
+            // Use assertSame (not assertEquals) to check value AND type
+            Assert::assertSame(
                 $expectedValue,
                 $actualValue,
                 sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
@@ -142,7 +148,8 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
     {
         if (isset($data[$propertyName])) {
             $expectedValue = new DecimalNumber((string) $data[$propertyName]);
-            $actualValue = new DecimalNumber((string) $this->extractValueFromProductForEditing($productForEditing, $propertyName));
+            // Don't cast on purpose, the value should already be typed as DecimalNumber
+            $actualValue = $this->extractValueFromProductForEditing($productForEditing, $propertyName);
 
             Assert::assertTrue(
                 $expectedValue->equals($actualValue),
@@ -166,7 +173,8 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             // Don't cast on purpose, the value should already be typed as int
             $actualValue = $this->extractValueFromProductForEditing($productForEditing, $propertyName);
 
-            Assert::assertEquals(
+            // Use assertSame (not assertEquals) to check value AND type
+            Assert::assertSame(
                 $expectedValue,
                 $actualValue,
                 sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
@@ -187,9 +195,13 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
         if (isset($data[$propertyName])) {
             $expectedValue = PrimitiveUtils::castElementInType($data[$propertyName], PrimitiveUtils::TYPE_DATETIME);
             $actualValue = $this->extractValueFromProductForEditing($productForEditing, $propertyName);
+            if (!($actualValue instanceof DateTimeInterface)) {
+                throw new RuntimeException(sprintf('Unexpected type %s, expected DateTimeInterface', get_class($actualValue)));
+            }
+
             $formattedExpectedDate = $expectedValue->format('Y-m-d');
             $formattedActualDate = $actualValue->format('Y-m-d');
-            Assert::assertEquals(
+            Assert::assertSame(
                 $formattedExpectedDate,
                 $formattedActualDate,
                 sprintf('Expected %s "%s". Got "%s".', $propertyName, $formattedExpectedDate, $formattedActualDate)
