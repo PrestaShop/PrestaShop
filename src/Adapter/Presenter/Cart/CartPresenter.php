@@ -31,6 +31,7 @@ use CartRule;
 use Configuration;
 use Context;
 use Country;
+use Db;
 use Hook;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
@@ -166,6 +167,12 @@ class CartPresenter implements PresenterInterface
             $rawProduct['total_wt'] :
             $rawProduct['total']
         );
+
+        if (0 < $rawProduct['id_product_attribute']) {
+            $rawProduct['cover_image_id'] = $this->getCoverImageForCombination(
+                (int) $rawProduct['id_product_attribute']
+            );
+        }
 
         $rawProduct['quantity_wanted'] = $rawProduct['cart_quantity'];
 
@@ -677,5 +684,20 @@ class CartPresenter implements PresenterInterface
         }
 
         return $attributesArray;
+    }
+
+    /**
+     * Gets proper cover for a specific variant of product
+     *
+     * @param int $idProductAttribute
+     *
+     * @return int Cover image id
+     */
+    private function getCoverImageForCombination($idProductAttribute)
+    {
+        return (int) Db::getInstance()->getValue('
+            SELECT `id_image` FROM `' . _DB_PREFIX_ . 'product_attribute_image`
+            WHERE `id_product_attribute` = ' . $idProductAttribute
+        );
     }
 }
