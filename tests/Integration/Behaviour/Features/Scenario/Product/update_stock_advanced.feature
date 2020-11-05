@@ -161,19 +161,19 @@ Feature: Update product stock from Back Office (BO)
       | name       | en-US:Presta camera |
       | is_virtual | false               |
     And product "product1" should have following stock information:
-      | out_of_stock_type | out_of_stock_default |
+      | out_of_stock_type | default |
     When I update product "product1" stock with following information:
-      | out_of_stock_type | out_of_stock_available |
+      | out_of_stock_type | available |
     Then product "product1" should have following stock information:
-      | out_of_stock_type | out_of_stock_available |
+      | out_of_stock_type | available |
     When I update product "product1" stock with following information:
-      | out_of_stock_type | out_of_stock_not_available |
+      | out_of_stock_type | not_available |
     Then product "product1" should have following stock information:
-      | out_of_stock_type | out_of_stock_not_available |
+      | out_of_stock_type | not_available |
     When I update product "product1" stock with following information:
-      | out_of_stock_type | out_of_stock_default |
+      | out_of_stock_type | default |
     Then product "product1" should have following stock information:
-      | out_of_stock_type | out_of_stock_default |
+      | out_of_stock_type | default |
     When I update product "product1" stock with following information:
       | out_of_stock_type | invalid |
     Then I should get error that out of stock type is invalid
@@ -183,7 +183,7 @@ Feature: Update product stock from Back Office (BO)
       | name       | en-US:eBook |
       | is_virtual | true        |
     Then product "product1" should have following stock information:
-      | out_of_stock_type | out_of_stock_available |
+      | out_of_stock_type | available |
 
   Scenario: I update product quantity
     Given I add product "product1" with following information:

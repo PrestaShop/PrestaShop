@@ -33,19 +33,19 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstr
 class OutOfStockType
 {
     /**
-     * Product is available for order even when out of stock.
-     */
-    const OUT_OF_STOCK_AVAILABLE = 'out_of_stock_available';
-
-    /**
      * Product is not available for order when out of stock.
      */
-    const OUT_OF_STOCK_NOT_AVAILABLE = 'out_of_stock_not_available';
+    const OUT_OF_STOCK_NOT_AVAILABLE = 0;
+
+    /**
+     * Product is available for order even when out of stock.
+     */
+    const OUT_OF_STOCK_AVAILABLE = 1;
 
     /**
      * Product availability when out of stock is define by shop settings.
      */
-    const OUT_OF_STOCK_DEFAULT = 'out_of_stock_default';
+    const OUT_OF_STOCK_DEFAULT = 2;
 
     const ALLOWED_OUT_OF_STOCK_TYPES = [
         self::OUT_OF_STOCK_AVAILABLE,
@@ -54,34 +54,34 @@ class OutOfStockType
     ];
 
     /**
-     * @var string
+     * @var int
      */
     private $value;
 
     /**
-     * @param string $outOfStockType
+     * @param int $outOfStockType
      *
      * @throws ProductStockConstraintException
      */
-    public function __construct(string $outOfStockType)
+    public function __construct(int $outOfStockType)
     {
         $this->setOutOfStockType($outOfStockType);
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getValue(): string
+    public function getValue(): int
     {
         return $this->value;
     }
 
     /**
-     * @param string $outOfStockType
+     * @param int $outOfStockType
      *
      * @throws ProductStockConstraintException
      */
-    private function setOutOfStockType(string $outOfStockType): void
+    private function setOutOfStockType(int $outOfStockType): void
     {
         if (!in_array($outOfStockType, self::ALLOWED_OUT_OF_STOCK_TYPES)) {
             throw new ProductStockConstraintException(

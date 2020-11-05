@@ -217,13 +217,13 @@ class UpdateProductStockCommand
     }
 
     /**
-     * @param string $outOfStockType
+     * @param int $outOfStockType
      *
      * @return $this
      *
      * @throws ProductStockConstraintException
      */
-    public function setOutOfStockType(string $outOfStockType): UpdateProductStockCommand
+    public function setOutOfStockType(int $outOfStockType): UpdateProductStockCommand
     {
         $this->outOfStockType = new OutOfStockType($outOfStockType);
 
