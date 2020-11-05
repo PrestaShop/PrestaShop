@@ -17,7 +17,7 @@ const WebserviceFaker = require('@data/faker/webservice');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_modules_advancedParameters_webservice_sortAndPagination';
+const baseContext = 'functional_BO_modules_advancedParameters_webservice_sortPaginationAndBulkActions';
 
 let browserContext;
 let page;
@@ -28,9 +28,10 @@ let numberOfWebserviceKeys = 0;
 Create 11 webservice keys
 Pagination next and previous
 Sort SQL queries by : key, enabled
+Enable/Disable by bulk actions
 Delete by bulk actions
  */
-describe('Sort and pagination web service keys', async () => {
+describe('Sort, pagination and bulk actionsweb service keys', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -128,7 +129,7 @@ describe('Sort and pagination web service keys', async () => {
     });
   });
 
-  // 4 - Sort webservice keys table
+  // 3 - Sort webservice keys table
   describe('Sort webservice keys table', async () => {
     const sortTests = [
       {args: {testIdentifier: 'sortByKeyDesc', sortBy: 'key', sortDirection: 'desc'}},
@@ -156,17 +157,40 @@ describe('Sort and pagination web service keys', async () => {
     });
   });
 
-  // 4 - Delete webservice keys by bulk actions
+  // 4 - Enable/Disable webservice keys by bulk actions
+  describe('Enable/Disable the created webservice keys by bulk actions', async () => {
+    it('should filter list by key description', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterAfterSort', baseContext);
+
+      await webservicePage.filterWebserviceTable(page, 'input', 'description', 'todelete');
+
+      const key = await webservicePage.getTextColumnFromTable(page, 1, 'description');
+      await expect(key).to.contains('todelete');
+    });
+
+    const tests = [
+      {args: {action: 'disable', enabledValue: false}, expected: 'clear'},
+      {args: {action: 'enable', enabledValue: true}, expected: 'check'},
+    ];
+
+    tests.forEach((test) => {
+      it(`should ${test.args.action} with bulk actions and check Result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}WebserviceKey`, baseContext);
+
+        await webservicePage.enableDisableByColumnBulkActions(page, test.args.enabledValue);
+
+        // Validation message not displayed, skipping it https://github.com/PrestaShop/PrestaShop/issues/21745
+        // await expect(textResult).to.be.equal(webservicePage.successfulUpdateStatusMessage);
+      });
+    });
+  });
+
+  // 5 - Delete webservice keys by bulk actions
   describe('Delete the created webservice keys by bulk actions', async () => {
     it('should filter list by key description', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterAfterUpdate', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterAfterEnableDisable', baseContext);
 
-      await webservicePage.filterWebserviceTable(
-        page,
-        'input',
-        'description',
-        'todelete',
-      );
+      await webservicePage.filterWebserviceTable(page, 'input', 'description', 'todelete');
 
       const key = await webservicePage.getTextColumnFromTable(page, 1, 'description');
       await expect(key).to.contains('todelete');
