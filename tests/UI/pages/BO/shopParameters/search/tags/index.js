@@ -38,14 +38,34 @@ class Tags extends BOBasePage {
     this.tableColumnActionsDropdownMenu = row => `${this.tableColumnActions(row)} .dropdown-menu`;
     this.tableColumnActionsDeleteLink = row => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
 
+    // Sort Selectors
+    this.tableHead = `${this.gridTable} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+
     // Confirmation modal
     this.deleteModalButtonYes = '#popup_ok';
 
     // Columns selectors
     this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
     this.tableColumnLanguage = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
-    this.tableColumnProducts = row => `${this.tableBodyColumn(row)}:nth-child(6)`;
+    this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(4)`;
+    this.tableColumnProducts = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
+
+    // Pagination selectors
+    this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
+    this.paginationDiv = `${this.gridForm} .pagination`;
+    this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
+    this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
+    this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
+    this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
+
+    // Bulk actions selectors
+    this.bulkActionBlock = 'div.bulk-actions';
+    this.bulkActionMenuButton = '#bulk_action_menu_tag';
+    this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
+    this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
+    this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
   }
 
   /*
@@ -97,22 +117,12 @@ class Tags extends BOBasePage {
   /**
    * Filter Table
    * @param page
-   * @param filterType, input / Select
    * @param filterBy, which column
    * @param value, value to put in filter
    * @return {Promise<void>}
    */
-  async filterTable(page, filterType, filterBy, value = '') {
-    switch (filterType) {
-      case 'input':
-        await this.setValue(page, this.filterColumn(filterBy), value);
-        break;
-      case 'select':
-        await this.selectByVisibleText(page, this.filterColumn(filterBy), value);
-        break;
-      default:
-        throw new Error(`${filterBy} was not found as a filter`);
-    }
+  async filterTable(page, filterBy, value = '') {
+    await this.setValue(page, this.filterColumn(filterBy), value);
     // click on search
     await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
@@ -180,6 +190,138 @@ class Tags extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
 
     // Get successful message
+    return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  // Sort methods
+  /**
+   * Get content from all rows
+   * @param page
+   * @param columnName
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(page, columnName) {
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable = [];
+
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumn(page, i, columnName);
+      await allRowsContentTable.push(rowContent);
+    }
+
+    return allRowsContentTable;
+  }
+
+
+  /**
+   * Sort table by clicking on column name
+   * @param page
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(page, sortBy, sortDirection) {
+    let columnSelector;
+
+    switch (sortBy) {
+      case 'id_tag':
+        columnSelector = this.sortColumnDiv(2);
+        break;
+
+      case 'l!name':
+        columnSelector = this.sortColumnDiv(3);
+        break;
+
+      case 'a!name':
+        columnSelector = this.sortColumnDiv(4);
+        break;
+
+      case 'products':
+        columnSelector = this.sortColumnDiv(5);
+        break;
+
+      default:
+        throw new Error(`Column ${sortBy} was not found`);
+    }
+    const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
+    await this.clickAndWaitForNavigation(page, sortColumnButton);
+  }
+
+  /* Pagination methods */
+  /**
+   * Get pagination label
+   * @param page
+   * @return {Promise<string>}
+   */
+  getPaginationLabel(page) {
+    return this.getTextContent(page, this.paginationActiveLabel);
+  }
+
+  /**
+   * Select pagination limit
+   * @param page
+   * @param number
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page, number) {
+    await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
+    await this.clickAndWaitForNavigation(page, this.paginationItems(number));
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on next
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on previous
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /* Bulk actions methods */
+  /**
+   * Bulk delete tags
+   * @param page
+   * @return {Promise<string>}
+   */
+  async bulkDelete(page) {
+    // To confirm bulk delete action with dialog
+    this.dialogListener(page, true);
+
+    // Select all rows
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(page, this.selectAllLink),
+    ]);
+
+    await Promise.all([
+      page.click(this.selectAllLink),
+      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+    ]);
+
+    // Perform delete
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(page, this.bulkDeleteLink),
+    ]);
+
+    await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
+
+    // Return successful message
     return this.getTextContent(page, this.alertSuccessBlock);
   }
 }
