@@ -169,9 +169,12 @@ class CartPresenter implements PresenterInterface
         );
 
         if (0 < $rawProduct['id_product_attribute']) {
-            $rawProduct['cover_image_id'] = $this->getCoverImageForCombination(
+            $coverImageForCombination = $this->getCoverImageForCombination(
                 (int) $rawProduct['id_product_attribute']
             );
+            if ($coverImageForCombination) {
+                $rawProduct['cover_image_id'] = $coverImageForCombination;
+            }
         }
 
         $rawProduct['quantity_wanted'] = $rawProduct['cart_quantity'];

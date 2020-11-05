@@ -607,7 +607,7 @@ class ProductLazyArray extends AbstractLazyArray
         }
 
         // Get generic product image, used for product listing
-        if (isset($product['cover_image_id'])) {
+        if (isset($product['cover_image_id']) && (int) $product['cover_image_id'] > 0) {
             // First try to find cover in product images
             foreach ($productImages as $productImage) {
                 if ($productImage['id_image'] == $product['cover_image_id']) {
