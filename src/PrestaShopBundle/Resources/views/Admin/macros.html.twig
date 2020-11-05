@@ -142,11 +142,6 @@
     {% endfor %}
 
     {#iterating over child errors because errors can be nested#}
-    {% for child in form.children %}
-      {% for error in child.vars.errors %}
-        {% set errors = errors|merge([error.message]) %}
-      {% endfor %}
-    {% endfor %}
   {% endif %}
 
   {% if errors|length > 0 %}

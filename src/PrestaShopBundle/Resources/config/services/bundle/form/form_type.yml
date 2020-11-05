@@ -704,6 +704,8 @@ services:
 
     form.type.common.translatable:
         class: 'PrestaShopBundle\Form\Admin\Type\TranslatableType'
+        parent: 'form.type.translatable.aware'
+        public: true
         arguments:
             - "@=service('prestashop.adapter.legacy.context').getAvailableLanguages()"
             - '@router.default'
