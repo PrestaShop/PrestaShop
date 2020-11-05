@@ -54,24 +54,24 @@ Feature: Update product stock from Back Office (BO)
       | product  | quantity |
       | product2 | 5        |
     And product "productPack1" should have following stock information:
-      | pack_stock_type | stock_type_default |
+      | pack_stock_type | default |
     When I update product "productPack1" stock with following information:
-      | pack_stock_type | stock_type_pack_only |
+      | pack_stock_type | pack_only |
     Then product "productPack1" should have following stock information:
-      | pack_stock_type | stock_type_pack_only |
+      | pack_stock_type | pack_only |
     When I update product "productPack1" stock with following information:
-      | pack_stock_type | stock_type_products_only |
+      | pack_stock_type | products_only |
     Then product "productPack1" should have following stock information:
-      | pack_stock_type | stock_type_products_only |
+      | pack_stock_type | products_only |
     When I update product "productPack1" stock with following information:
-      | pack_stock_type | stock_type_both |
+      | pack_stock_type | both |
     Then product "productPack1" should have following stock information:
-      | pack_stock_type | stock_type_both |
+      | pack_stock_type | both |
     When I update product "productPack1" stock with following information:
       | pack_stock_type | invalid |
     Then I should get error that pack stock type is invalid
     And product "productPack1" should have following stock information:
-      | pack_stock_type | stock_type_both |
+      | pack_stock_type | both |
 
   Scenario: I update product out of stock
     Given I add product "product1" with following information:

@@ -23,6 +23,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
+
 class PackCore extends Product
 {
     /**
@@ -30,28 +33,28 @@ class PackCore extends Product
      *
      * @var string
      */
-    const STOCK_TYPE_PACK_ONLY = 0;
+    const STOCK_TYPE_PACK_ONLY = PackStockType::STOCK_TYPE_PACK_ONLY;
 
     /**
      * Only decrement pack products quantities.
      *
      * @var string
      */
-    const STOCK_TYPE_PRODUCTS_ONLY = 1;
+    const STOCK_TYPE_PRODUCTS_ONLY = PackStockType::STOCK_TYPE_PRODUCTS_ONLY;
 
     /**
      * Decrement pack quantity and pack products quantities.
      *
      * @var string
      */
-    const STOCK_TYPE_PACK_BOTH = 2;
+    const STOCK_TYPE_PACK_BOTH = PackStockType::STOCK_TYPE_BOTH;
 
     /**
      * Use pack quantity default setting.
      *
      * @var string
      */
-    const STOCK_TYPE_DEFAULT = 3;
+    const STOCK_TYPE_DEFAULT = PackStockType::STOCK_TYPE_DEFAULT;
 
     protected static $cachePackItems = [];
     protected static $cacheIsPack = [];

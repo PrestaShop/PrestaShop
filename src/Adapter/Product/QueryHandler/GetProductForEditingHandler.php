@@ -24,13 +24,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Customization;
 use DateTime;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Adapter\Product\Converter\PackStockTypeConverter;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
@@ -299,9 +300,9 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
             $stockAvailable = $this->stockAvailableRepository->get(new ProductId($product->id));
 
             return new ProductStock(
-                $product->advanced_stock_management,
-                $stockAvailable->depends_on_stock,
-                PackStockTypeConverter::convertToValueObject((int) $product->pack_stock_type),
+                (bool) $product->advanced_stock_management,
+                (bool) $stockAvailable->depends_on_stock,
+                (int) $product->pack_stock_type,
                 (int) $stockAvailable->out_of_stock,
                 (int) $stockAvailable->quantity,
                 (int) $product->minimal_quantity,
@@ -316,9 +317,9 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
             // In case StockAvailable does not exist we can still use the Product fields
 
             return new ProductStock(
-                $product->advanced_stock_management,
-                $product->depends_on_stock,
-                PackStockTypeConverter::convertToValueObject((int) $product->pack_stock_type),
+                (bool) $product->advanced_stock_management,
+                (bool) $product->depends_on_stock,
+                (int) $product->pack_stock_type,
                 (int) $product->out_of_stock,
                 (int) $product->quantity,
                 (int) $product->minimal_quantity,
