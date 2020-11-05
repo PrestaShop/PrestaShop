@@ -118,15 +118,9 @@ class CombinationRepository extends AbstractObjectModelRepository
     {
         $qb = $this->getCombinationsQueryBuilder($productId, $filters)
             ->select('pa.*')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
         ;
-
-        if ($offset) {
-            $qb->setFirstResult($offset);
-        }
-
-        if ($limit) {
-            $qb->setMaxResults($limit);
-        }
 
         return  $qb->execute()->fetchAll();
     }
