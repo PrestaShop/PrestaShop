@@ -11,7 +11,7 @@ module.exports = {
     myCarrier: {
       id: 2,
       name: 'My carrier',
-      delay: 'Pick up in-store',
+      delay: 'Delivery next day!',
       status: true,
       freeShipping: false,
       position: 2,
