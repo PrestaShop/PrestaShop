@@ -148,7 +148,11 @@ describe('Filter, sort and pagination order return status', async () => {
     const sortTests = [
       {
         args: {
-          testIdentifier: 'sortByIdDesc', sortBy: 'id_order_return_state', columnID: 1, sortDirection: 'down', isFloat: true,
+          testIdentifier: 'sortByIdDesc',
+          sortBy: 'id_order_return_state',
+          columnID: 1,
+          sortDirection: 'down',
+          isFloat: true,
         },
       },
       {
@@ -163,7 +167,11 @@ describe('Filter, sort and pagination order return status', async () => {
       },
       {
         args: {
-          testIdentifier: 'sortByIdAsc', sortBy: 'id_order_return_state', columnID: 1, sortDirection: 'up', isFloat: true,
+          testIdentifier: 'sortByIdAsc',
+          sortBy: 'id_order_return_state',
+          columnID: 1,
+          sortDirection: 'up',
+          isFloat: true,
         },
       },
     ];
@@ -262,6 +270,34 @@ describe('Filter, sort and pagination order return status', async () => {
 
       const paginationNumber = await statusesPage.selectPaginationLimit(page, tableName, '50');
       expect(paginationNumber).to.equal('1');
+    });
+  });
+
+  // 5 : Delete order retuen statuses created with bulk actions
+  describe('Delete order return statuses with Bulk Actions', async () => {
+    it('should filter list by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
+
+      await statusesPage.filterTable(page, tableName, 'input', 'name', 'todelete');
+      const numberOfLinesAfterFilter = await statusesPage.getNumberOfElementInGrid(page, tableName);
+
+      for (let i = 1; i <= numberOfLinesAfterFilter; i++) {
+        const textColumn = await statusesPage.getTextColumn(page, tableName, i, 'name', 3);
+        await expect(textColumn).to.contains('todelete');
+      }
+    });
+
+    it('should delete order return statuses with Bulk Actions and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteStatus', baseContext);
+
+      const deleteTextResult = await statusesPage.bulkDeleteOrderStatuses(page, tableName);
+      await expect(deleteTextResult).to.be.contains(statusesPage.successfulMultiDeleteMessage);
+    });
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
+
+      const numberOfLinesAfterReset = await statusesPage.resetAndGetNumberOfLines(page, tableName);
+      await expect(numberOfLinesAfterReset).to.be.equal(numberOfOrderReturnStatuses);
     });
   });
 });
