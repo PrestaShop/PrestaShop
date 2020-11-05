@@ -35,10 +35,16 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetProductCombin
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class ProductCombinationFeatureContext extends AbstractProductFeatureContext
 {
+    /**
+     * Pattern for saving product combinations limit in shared storage
+     */
+    const COMBINATION_LIMIT_KEY_PATTERN = 'product_%s_combinations_limit';
+
     /**
      * @When I generate combinations for product :productReference using following attributes:
      *
@@ -61,26 +67,66 @@ class ProductCombinationFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @When I limit product :productReference combinations per page to :limit
+     *
+     * @param string $productReference
+     * @param int $limit
+     */
+    public function setCombinationsPerPageLimit(string $productReference, int $limit): void
+    {
+        $this->getSharedStorage()->set($this->getCombinationLimitKey($productReference), $limit);
+    }
+
+    /**
+     * @Then I should see following combinations of product :productReference in page :page:
+     *
+     * @param string $productReference
+     * @param int $page
+     * @param TableNode $dataTable
+     */
+    public function assertCombinationsPage(string $productReference, int $page, TableNode $dataTable): void
+    {
+        $limitKey = $this->getCombinationLimitKey($productReference);
+
+        if (!$this->getSharedStorage()->exists($limitKey)) {
+            throw new RuntimeException('Set limit of results first to be able to test pagination');
+        }
+
+        $limit = $this->getSharedStorage()->get($limitKey);
+        $offset = (1 === $page) ? 0 : ($page - 1) * $limit;
+        $this->assertCombinations($productReference, $dataTable->getColumnsHash(), $limit, $offset);
+    }
+
+    /**
      * @Then product :productReference should have following combinations:
      *
      * @param string $productReference
      * @param TableNode $table
      */
-    public function assertProductCombinations(string $productReference, TableNode $table): void
+    public function assertAllProductCombinations(string $productReference, TableNode $table): void
     {
-        $dataRows = $table->getColumnsHash();
-        $expectedCombinationsCount = count($dataRows);
+        $this->assertCombinations($productReference, $table->getColumnsHash());
+    }
 
+    /**
+     * @param string $productReference
+     * @param array $dataRows
+     * @param int|null $limit
+     * @param int|null $offset
+     */
+    private function assertCombinations(string $productReference, array $dataRows, ?int $limit = null, ?int $offset = null): void
+    {
         /** @var CombinationListForEditing $combinationsForEditing */
         $combinationsForEditing = $this->getQueryBus()->handle(new GetProductCombinationsForEditing(
             $this->getSharedStorage()->get($productReference),
             $this->getDefaultLangId(),
-            $expectedCombinationsCount
+            $limit,
+            $offset
         ));
 
         Assert::assertEquals(
             count($combinationsForEditing->getCombinations()),
-            $expectedCombinationsCount,
+            count($dataRows),
             'Unexpected combinations count'
         );
 
@@ -121,6 +167,18 @@ class ProductCombinationFeatureContext extends AbstractProductFeatureContext
                 );
             }
         }
+    }
+
+    /**
+     * Builds key for shared storage to save/retrieve current limit of combinations results
+     *
+     * @param string $productReference
+     *
+     * @return string
+     */
+    private function getCombinationLimitKey(string $productReference): string
+    {
+        return sprintf(self::COMBINATION_LIMIT_KEY_PATTERN, $productReference);
     }
 
     /**

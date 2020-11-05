@@ -34,4 +34,26 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | Size - M, Color - White | [Size:M,Color:White] |
       | Size - M, Color - Black | [Size:M,Color:Black] |
       | Size - M, Color - Blue  | [Size:M,Color:Blue]  |
-#@todo: test pagination. comment: https://github.com/PrestaShop/PrestaShop/pull/20518#discussion_r517391210
+
+  Scenario: Product combinations pagination returns correct results
+    Given product product1 should have following combinations:
+      | combination name        | attributes           |
+      | Size - S, Color - White | [Size:S,Color:White] |
+      | Size - S, Color - Black | [Size:S,Color:Black] |
+      | Size - S, Color - Blue  | [Size:S,Color:Blue]  |
+      | Size - M, Color - White | [Size:M,Color:White] |
+      | Size - M, Color - Black | [Size:M,Color:Black] |
+      | Size - M, Color - Blue  | [Size:M,Color:Blue]  |
+    When I limit product product1 combinations per page to 2
+    Then I should see following combinations of product product1 in page 1:
+      | combination name        | attributes           |
+      | Size - S, Color - White | [Size:S,Color:White] |
+      | Size - S, Color - Black | [Size:S,Color:Black] |
+    And I should see following combinations of product product1 in page 2:
+      | combination name        | attributes           |
+      | Size - S, Color - Blue  | [Size:S,Color:Blue]  |
+      | Size - M, Color - White | [Size:M,Color:White] |
+    And I should see following combinations of product product1 in page 3:
+      | combination name        | attributes           |
+      | Size - M, Color - Black | [Size:M,Color:Black] |
+      | Size - M, Color - Blue  | [Size:M,Color:Blue]  |
