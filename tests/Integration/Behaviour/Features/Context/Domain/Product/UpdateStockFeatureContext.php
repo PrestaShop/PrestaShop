@@ -35,6 +35,7 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShopBundle\Api\QueryStockMovementParamsCollection;
@@ -81,6 +82,9 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
 
         if (isset($data['out_of_stock_type'])) {
             $data['out_of_stock_type'] = $this->convertOutOfStockToInt($data['out_of_stock_type']);
+        }
+        if (isset($data['pack_stock_type'])) {
+            $data['pack_stock_type'] = $this->convertPackStockTypeToInt($data['pack_stock_type']);
         }
 
         $this->assertBoolProperty($productForEditing, $data, 'use_advanced_stock_management');
@@ -227,7 +231,7 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         if (isset($data['pack_stock_type'])) {
             // If pack is involved we clear the cache because its products settings might have changed
             Pack::resetStaticCache();
-            $command->setPackStockType($data['pack_stock_type']);
+            $command->setPackStockType($this->convertPackStockTypeToInt($data['pack_stock_type']));
             unset($data['pack_stock_type']);
         }
 
@@ -295,6 +299,24 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
             'default' => OutOfStockType::OUT_OF_STOCK_DEFAULT,
             'available' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
             'not_available' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
+            'invalid' => 42,
+        ];
+
+        return $intValues[$outOfStock];
+    }
+
+    /**
+     * @param string $outOfStock
+     *
+     * @return int
+     */
+    private function convertPackStockTypeToInt(string $outOfStock): int
+    {
+        $intValues = [
+            'default' => PackStockType::STOCK_TYPE_DEFAULT,
+            'products_only' => PackStockType::STOCK_TYPE_PRODUCTS_ONLY,
+            'pack_only' => PackStockType::STOCK_TYPE_PACK_ONLY,
+            'both' => PackStockType::STOCK_TYPE_BOTH,
             'invalid' => 42,
         ];
 

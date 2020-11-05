@@ -43,12 +43,12 @@ class ProductStock
     private $dependsOnStock;
 
     /**
-     * @var string
+     * @var int
      */
     private $packStockType;
 
     /**
-     * @var string
+     * @var int
      */
     private $outOfStockType;
 
@@ -95,8 +95,8 @@ class ProductStock
     public function __construct(
         bool $useAdvancedStockManagement,
         bool $dependsOnStock,
-        string $packStockType,
-        string $outOfStockType,
+        int $packStockType,
+        int $outOfStockType,
         int $quantity,
         int $minimalQuantity,
         string $location,
@@ -137,17 +137,17 @@ class ProductStock
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getPackStockType(): string
+    public function getPackStockType(): int
     {
         return $this->packStockType;
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getOutOfStockType(): string
+    public function getOutOfStockType(): int
     {
         return $this->outOfStockType;
     }

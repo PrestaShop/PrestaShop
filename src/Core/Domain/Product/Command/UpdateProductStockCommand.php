@@ -175,13 +175,13 @@ class UpdateProductStockCommand
     }
 
     /**
-     * @param string $packStockType
+     * @param int $packStockType
      *
      * @return UpdateProductStockCommand
      *
      * @throws ProductPackConstraintException
      */
-    public function setPackStockType(string $packStockType): UpdateProductStockCommand
+    public function setPackStockType(int $packStockType): UpdateProductStockCommand
     {
         $this->packStockType = new PackStockType($packStockType);
 

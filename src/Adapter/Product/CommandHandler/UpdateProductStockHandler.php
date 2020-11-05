@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Adapter\Product\Converter\PackStockTypeConverter;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductStockUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockCommand;
@@ -107,7 +106,7 @@ final class UpdateProductStockHandler extends AbstractProductHandler implements 
             $updatableProperties[] = 'out_of_stock';
         }
         if (null !== $command->getPackStockType()) {
-            $product->pack_stock_type = PackStockTypeConverter::convertToLegacy($command->getPackStockType()->getValue());
+            $product->pack_stock_type = $command->getPackStockType()->getValue();
             $updatableProperties[] = 'pack_stock_type';
         }
         if (null !== $command->getQuantity()) {
