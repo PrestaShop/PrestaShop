@@ -1282,7 +1282,7 @@ class AdminControllerCore extends Controller
                         $parent_id = (int) Tools::getValue('id_parent', 1);
                         // Specific back redirect
                         if ($back = Tools::getValue('back')) {
-                            $this->redirect_after = urldecode($back) . '&conf=4';
+                            $this->redirect_after = urldecode(str_replace('+', '%2B', $back)) . '&conf=4';
                         }
                         // Save and stay on same form
                         // @todo on the to following if, we may prefer to avoid override redirect_after previous value
@@ -2521,7 +2521,7 @@ class AdminControllerCore extends Controller
             $helper->tpl_vars = $this->getTemplateFormVars();
             $helper->show_cancel_button = (isset($this->show_form_cancel_button)) ? $this->show_form_cancel_button : ($this->display == 'add' || $this->display == 'edit');
 
-            $back = urldecode(Tools::getValue('back', ''));
+            $back = urldecode(str_replace('+', '%2B', Tools::getValue('back', '')));
             if (empty($back)) {
                 $back = self::$currentIndex . '&token=' . $this->token;
             }
