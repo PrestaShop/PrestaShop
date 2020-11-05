@@ -543,6 +543,14 @@ class MailCore extends ObjectModel
                 false,
                 $idShop
             );
+            $templateVars['{order_slip_url}'] = Context::getContext()->link->getPageLink(
+                'order-slip',
+                true,
+                $idLang,
+                null,
+                false,
+                $idShop
+            );
             $templateVars['{color}'] = Tools::safeOutput(Configuration::get('PS_MAIL_COLOR', null, null, $idShop));
             // Get extra template_vars
             $extraTemplateVars = [];
