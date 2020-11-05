@@ -168,7 +168,7 @@ describe('Filter, sort and pagination SQL manager', async () => {
         await sqlManagerPage.filterSQLQuery(page, test.args.filterBy, test.args.filterValue);
 
         const numberOfLinesAfterFilter = await sqlManagerPage.getNumberOfElementInGrid(page);
-        await expect(numberOfLinesAfterFilter).to.be.at.most(numberOfSQLQueries);
+        await expect(numberOfLinesAfterFilter).to.be.at.most(numberOfSQLQueries + 11);
 
         for (let row = 1; row <= numberOfLinesAfterFilter; row++) {
           const textColumn = await sqlManagerPage.getTextColumnFromTable(page, row, test.args.filterBy);

@@ -43,11 +43,6 @@ describe('Quick edit and bulk actions carriers', async () => {
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
-
-    /* Delete the generated images */
-    for (let i = 0; i <= 2; i++) {
-      await files.deleteFile(`todelete${i}.jpg`);
-    }
   });
 
   it('should login in BO', async function () {
@@ -79,6 +74,8 @@ describe('Quick edit and bulk actions carriers', async () => {
 
   creationTests.forEach((test, index) => {
     describe(`Create carrier n°${index + 1} in BO`, async () => {
+      before(() => files.generateImage(`todelete${index}.jpg`));
+
       const carrierData = new CarrierFaker({name: `todelete${index}`});
 
       it('should go to add new carrier page', async function () {
@@ -98,6 +95,8 @@ describe('Quick edit and bulk actions carriers', async () => {
         const numberOfCarriersAfterCreation = await carriersPage.getNumberOfElementInGrid(page);
         await expect(numberOfCarriersAfterCreation).to.be.equal(numberOfCarriers + 1 + index);
       });
+
+      after(() => files.deleteFile(`todelete${index}.jpg`));
     });
   });
 
