@@ -80,7 +80,7 @@ class ImportType extends TranslatorAwareType
             ])
             ->add('separator', TextType::class, [
                 'label' => $this->trans('Field separator', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('e.g. ', 'Admin.Advparameters.Help') . ' 1; Blouse; 129.90; 5',
+                'help' => $this->trans('e.g. 1; Blouse; 129.90; 5', 'Admin.Advparameters.Help'),
             ])
             ->add('multiple_value_separator', TextType::class, [
                 'label' => $this->trans('Multiple value separator', 'Admin.Advparameters.Feature'),
