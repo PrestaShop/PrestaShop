@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
-use DateTime;
+use DateTimeInterface;
 
 class ProductStock
 {
@@ -88,7 +88,7 @@ class ProductStock
     private $localizedAvailableLaterLabels;
 
     /**
-     * @var DateTime
+     * @var DateTimeInterface
      */
     private $availableDate;
 
@@ -104,7 +104,7 @@ class ProductStock
         bool $lowStockAlert,
         array $localizedAvailableNowLabels,
         array $localizedAvailableLaterLabels,
-        DateTime $availableDate
+        DateTimeInterface $availableDate
     ) {
         $this->useAdvancedStockManagement = $useAdvancedStockManagement;
         $this->dependsOnStock = $dependsOnStock;
@@ -209,9 +209,9 @@ class ProductStock
     }
 
     /**
-     * @return DateTime
+     * @return DateTimeInterface
      */
-    public function getAvailableDate(): DateTime
+    public function getAvailableDate(): DateTimeInterface
     {
         return $this->availableDate;
     }
