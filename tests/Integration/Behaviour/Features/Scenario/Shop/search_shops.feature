@@ -16,20 +16,20 @@ Feature: Search shops given a search term (BO)
   Scenario: I search for existing shops
     When I search for shops with the term "test"
     Then I should get the following shop results:
-      | name             | id   | group_name |
-      | test_shop        | 1    | Default    |
-      | test_second_shop | 2    | Default    |
-      | test_third_shop  | 3    | Default    |
+      | name             | group_name |
+      | test_shop        | Default    |
+      | test_second_shop | Default    |
+      | test_third_shop  | Default    |
     When I search for shops with the term "second"
     Then I should get the following shop results:
-      | name             | id   | group_name |
-      | test_second_shop | 2    | Default    |
+      | name             | group_name |
+      | test_second_shop | Default    |
     When I search for shops with the term "third"
     Then I should get the following shop results:
-      | name            | id   | group_name |
-      | test_third_shop | 3    | Default    |
+      | name            | group_name |
+      | test_third_shop | Default    |
     When I search for shops with the term "doesnt_exist"
     Then I should get the following shop results:
-      | name            | id   | group_name |
+      | name            | group_name |
     When I search for shops with the term " "
     Then I should get a ShopException
