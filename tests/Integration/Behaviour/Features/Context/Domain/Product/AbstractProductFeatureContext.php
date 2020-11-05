@@ -156,6 +156,28 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
      * @param array $data
      * @param string $propertyName
      */
+    protected function assertIntegerProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
+    {
+        if (isset($data[$propertyName])) {
+            $expectedValue = (int) $data[$propertyName];
+            // Don't cast on purpose, the value should already be typed as int
+            $actualValue = $this->extractValueFromProductForEditing($productForEditing, $propertyName);
+
+            Assert::assertEquals(
+                $expectedValue,
+                $actualValue,
+                sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
+            );
+
+            unset($data[$propertyName]);
+        }
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     * @param array $data
+     * @param string $propertyName
+     */
     protected function assertDateProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
     {
         if (isset($data[$propertyName])) {
