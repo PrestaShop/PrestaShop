@@ -10,8 +10,8 @@ Feature: Search shops given a search term (BO)
   Background:
     Given multiple shop context is loaded
     Given shop "shop1" with name "test_shop" exists
-    Given I add a shop "shop2" with name "test_second_shop"
-    Given I add a shop "shop3" with name "test_third_shop"
+    Given I add a shop "shop2" with name "test_second_shop" for the group "Default"
+    Given I add a shop "shop3" with name "test_third_shop" for the group "Default"
 
   Scenario: I search for existing shops
     When I search for shops with the term "test"

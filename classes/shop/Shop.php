@@ -734,28 +734,6 @@ class ShopCore extends ObjectModel
         }
     }
 
-    public static function searchTest($searchTerm)
-    {
-        /*$sql = "SELECT * FROM %s INNER JOIN %s ON s.id_shop_group = sg.id_shop_group WHERE s.deleted = 0 AND s.active = 1 AND s.name LIKE '%%%s%%'";
-
-        $sql = sprintf(
-            $sql,
-            _DB_PREFIX_ . 'shop s',
-            _DB_PREFIX_ . 'shop_group sg',
-            $searchTerm
-        );
-        */
-
-        /*$sql = "SELECT * FROM %s  WHERE s.name LIKE '%%%s%%'";
-        $sql = sprintf($sql, _DB_PREFIX_ . 'shop s', $searchTerm); */
-
-        $sql = "SELECT * FROM " . _DB_PREFIX_ . 'shop_group sg';
-
-        $results = Db::getInstance()->executeS($sql);
-
-        return $results;
-    }
-
     public static function getCompleteListOfShopsID()
     {
         $cache_id = 'Shop::getCompleteListOfShopsID';
