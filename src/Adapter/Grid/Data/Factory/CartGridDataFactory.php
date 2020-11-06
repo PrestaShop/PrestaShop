@@ -157,7 +157,7 @@ final class CartGridDataFactory implements GridDataFactoryInterface
             throw new CartException('cart shop id is not set');
         }
         $record['shop_name'] = Context::getContext()->shop->getShops()[$cart->id_shop]['name'];
-        $this->contextStateManager->restoreContext();
+        $this->contextStateManager->restorePreviousContext();
 
         return $record;
     }
