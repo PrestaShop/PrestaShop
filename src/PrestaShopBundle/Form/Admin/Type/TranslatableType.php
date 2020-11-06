@@ -107,7 +107,6 @@ class TranslatableType extends TranslatorAwareType
     {
         foreach ($options['locales'] as $locale) {
             $typeOptions = $options['options'];
-
             $typeOptions['label'] = $locale['iso_code'];
 
             if (!isset($typeOptions['required'])) {
