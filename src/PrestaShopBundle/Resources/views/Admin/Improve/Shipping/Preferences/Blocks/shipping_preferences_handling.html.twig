@@ -24,6 +24,7 @@
  *#}
 
 {% trans_default_domain "Admin.Shipping.Feature" %}
+{% form_theme handlingForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {% block shipping_preferences_handling %}
   <div class="col-xl-10">
@@ -47,30 +48,7 @@
               </div>
             </div>
           </div>
-
-          <div class="form-group row">
-            <label class="form-control-label">{{ 'Handling charges'|trans }}</label>
-            <div class="col-sm">
-              {{ form_errors(handlingForm.shipping_handling_charges) }}
-              {{ form_widget(handlingForm.shipping_handling_charges) }}
-            </div>
-          </div>
-
-          <div class="form-group row">
-            <label class="form-control-label">{{ 'Free shipping starts at'|trans }}</label>
-            <div class="col-sm">
-              {{ form_errors(handlingForm.free_shipping_price) }}
-              {{ form_widget(handlingForm.free_shipping_price) }}
-            </div>
-          </div>
-
-          <div class="form-group row">
-            <label class="form-control-label">{{ 'Free shipping starts at'|trans }}</label>
-            <div class="col-sm">
-              {{ form_errors(handlingForm.free_shipping_weight) }}
-              {{ form_widget(handlingForm.free_shipping_weight) }}
-            </div>
-          </div>
+          {{ form_widget(handlingForm) }}
         </div>
       </div>
       <div class="card-footer">

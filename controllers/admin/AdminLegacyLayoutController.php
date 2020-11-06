@@ -101,6 +101,14 @@ class AdminLegacyLayoutControllerCore extends AdminController
     }
 
     /**
+     * This helps avoiding handling legacy processes when in Symfony Controllers.
+     * Otherwise when using POST action to render form you sometimes get an exception.
+     */
+    public function initProcess()
+    {
+    }
+
+    /**
      * @param bool $isNewTheme
      */
     public function setMedia($isNewTheme = false)

@@ -35,6 +35,8 @@ use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * Class generates "Handling" form
@@ -71,16 +73,40 @@ class HandlingType extends TranslatorAwareType
                 'suffix' => $this->trans('(tax excl.)', 'Admin.Global'),
                 'required' => false,
                 'empty_data' => '0',
+                'constraints' => [
+                    new GreaterThanOrEqual(['value' => '0']),
+                    new Type(['type' => 'numeric']),
+                ],
+                'label' => $this->trans(
+                    'Handling charges',
+                    'Admin.Shipping.Feature'
+                ),
             ])
             ->add('free_shipping_price', MoneyType::class, [
                 'currency' => $defaultCurrency->iso_code,
                 'required' => false,
                 'empty_data' => '0',
+                'constraints' => [
+                    new GreaterThanOrEqual(['value' => 0]),
+                    new Type(['type' => 'numeric']),
+                ],
+                'label' => $this->trans(
+                    'Free shipping starts at',
+                    'Admin.Shipping.Feature'
+                ),
             ])
             ->add('free_shipping_weight', TextWithUnitType::class, [
                 'unit' => $weightUnit,
                 'required' => false,
                 'empty_data' => '0',
+                'label' => $this->trans(
+                    'Free shipping starts at',
+                    'Admin.Shipping.Feature'
+                ),
+                'constraints' => [
+                    new GreaterThanOrEqual(['value' => 0]),
+                    new Type(['type' => 'numeric']),
+                ],
             ]);
     }
 
