@@ -197,6 +197,7 @@ default:
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\AttachmentFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
         product:
             paths:
                 - %paths.base%/Features/Scenario/Product
