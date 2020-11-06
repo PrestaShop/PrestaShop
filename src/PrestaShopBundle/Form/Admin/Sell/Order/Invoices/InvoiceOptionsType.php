@@ -41,6 +41,7 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\GreaterThan;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 
 /**
  * Class InvoiceOptionsType generates "Invoice options" form
@@ -122,7 +123,7 @@ class InvoiceOptionsType extends TranslatorAwareType
             ->add('invoice_number', NumberType::class, [
                 'required' => false,
                 'constraints' => [
-                    new GreaterThan(
+                    new GreaterThanOrEqual(
                         [
                             'value' => $this->nextInvoiceNumber,
                             'message' => $this->trans(
