@@ -50,8 +50,14 @@ describe('Sort and pagination cart rules', async () => {
 
     const pageTitle = await cartRulesPage.getPageTitle(page);
     await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+  });
 
-    numberOfCartRules = await cartRulesPage.getNumberOfElementInGrid(page);
+
+  it('should reset and get number of cart rules', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
+
+    numberOfCartRules = await cartRulesPage.resetAndGetNumberOfLines(page);
+    await expect(numberOfCartRules).to.be.at.least(0);
   });
 
   // 1 - create 21 cart rules
