@@ -120,6 +120,7 @@ final class CustomerAddressGridDefinitionFactory extends AbstractGridDefinitionF
                                 'route' => 'admin_addresses_edit',
                                 'route_param_name' => 'addressId',
                                 'route_param_field' => 'id_address',
+                                'clickable_row' => true,
                             ])
                     )
                     ->add(

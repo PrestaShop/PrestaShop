@@ -44,7 +44,7 @@
     {% if customerAddressGrid.data.records_total > 0 %}
       <div class="row">
         <div class="col">
-          {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': customerAddressGrid} %}
+          {% include '@PrestaShop/Admin/Common/Grid/grid.html.twig' with {'grid': customerAddressGrid} %}
         </div>
       </div>
     {% else %}

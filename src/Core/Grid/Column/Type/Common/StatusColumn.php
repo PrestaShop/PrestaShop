@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,28 +22,42 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% set class = 'btn tooltip-link js-link-row-action' %}
+namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
 
-{% if attributes.class is defined %}
-  {% set class = class ~ ' ' ~ attributes.class %}
-{% endif %}
+use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-<a class="{{ class }} grid-{{ action.name|lower|replace({' ': '-'}) }}-row-link"
-   href="{{ getAdminLink('AdminCartRules', true, {'id_cart_rule': record[action.options.id_cart_rule], 'addcart_rule': 1, 'back': app.request.uri}) }}"
-  {% if attributes.tooltip_name %}
-    data-toggle="pstooltip"
-    data-placement="top"
-    data-original-title="{{ action.name }}"
-  {% endif %}
-   data-confirm-message
-   data-clickable-row="1"
->
-  {% if action.icon is not empty %}
-    <i class="material-icons">{{ action.icon }}</i>
-  {% endif %}
-  {% if not attributes.tooltip_name %}
-    {{ action.name }}
-  {% endif %}
-</a>
+/**
+ * Class Column defines most simple column in the grid that renders raw data.
+ */
+final class StatusColumn extends AbstractColumn
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getType()
+    {
+        return 'status';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+
+        $resolver
+            ->setRequired([
+                'field',
+            ])
+            ->setDefaults([
+                'clickable' => true,
+            ])
+            ->setAllowedTypes('field', 'string')
+            ->setAllowedTypes('clickable', 'bool')
+        ;
+    }
+}
