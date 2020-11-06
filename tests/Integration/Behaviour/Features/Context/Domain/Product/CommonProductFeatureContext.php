@@ -33,24 +33,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
-use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\CombinationDetails;
 use Tests\Integration\Behaviour\Features\Context\Util\ProductCombinationFactory;
 
 class CommonProductFeatureContext extends AbstractProductFeatureContext
 {
-    /**
-     * @var CharacterCleaner
-     */
-    private $characterCleaner;
-
-    /** @BeforeScenario */
-    public function before()
-    {
-        $this->characterCleaner = $this->getContainer()->get('prestashop.core.string.character_cleaner');
-    }
-
     /**
      * @Given product :productReference has following combinations:
      *
