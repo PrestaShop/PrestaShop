@@ -1431,7 +1431,7 @@ class CartCore extends ObjectModel
 
             if ($operator == 'up') {
                 $updateQuantity = '+ ' . $quantity;
-                $newProductQuantity = $productQuantity - $quantity;
+                $newProductQuantity = ($productQuantity + $cartProductQuantity['quantity']) - $quantity;
 
                 if ($newProductQuantity < 0 && !$availableOutOfStock && !$skipAvailabilityCheckOutOfStock) {
                     return false;
