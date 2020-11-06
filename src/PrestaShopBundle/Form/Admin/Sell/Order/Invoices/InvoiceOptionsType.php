@@ -96,7 +96,7 @@ class InvoiceOptionsType extends TranslatorAwareType
             ->add('invoice_prefix', TranslatableType::class, [
                 'options' => [
                     'constraints' => [
-                        new NoTags,
+                        new NoTags(),
                     ],
                 ],
                 'required' => false,
@@ -128,7 +128,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                             'message' => $this->trans(
                                 'Invalid invoice number.',
                                 'Admin.Orderscustomers.Notification'
-                            )
+                            ),
                         ]
                     ),
                     new GreaterThan(
@@ -137,7 +137,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                             'message' => $this->trans(
                                 'Invalid invoice number.',
                                 'Admin.Orderscustomers.Notification'
-                            )
+                            ),
                         ]
                     ),
                 ],
@@ -147,7 +147,7 @@ class InvoiceOptionsType extends TranslatorAwareType
             ->add('legal_free_text', TranslatableType::class, [
                 'options' => [
                     'constraints' => [
-                        new NoTags,
+                        new NoTags(),
                     ],
                 ],
                 'required' => false,
@@ -158,7 +158,7 @@ class InvoiceOptionsType extends TranslatorAwareType
             ->add('footer_text', TranslatableType::class, [
                 'options' => [
                     'constraints' => [
-                        new NoTags,
+                        new NoTags(),
                     ],
                 ],
                 'required' => false,
