@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDuplicateProductEx
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
@@ -150,7 +151,12 @@ class ProductDuplicator
      */
     private function updateSearchIndexation(Product $newProduct, int $oldProductId): void
     {
-        if (!in_array($newProduct->visibility, ['both', 'search']) || !$this->isSearchIndexationOn) {
+        $productIsVisibleInSearch = in_array(
+            $newProduct->visibility,
+            [ProductVisibility::VISIBLE_EVERYWHERE, ProductVisibility::VISIBLE_IN_SEARCH]
+        );
+
+        if (!$this->isSearchIndexationOn || !$productIsVisibleInSearch) {
             return;
         }
 
