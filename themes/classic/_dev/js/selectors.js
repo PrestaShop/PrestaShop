@@ -30,6 +30,7 @@ prestashop.themeSelectors = {
     activeTabs: '.tabs .nav-link.active',
     imagesModal: '.js-product-images-modal',
     thumb: '.js-thumb',
+    thumbContainer: '.thumb-container',
     arrows: '.js-arrows',
     selected: '.selected',
     modalProductCover: '.js-modal-product-cover',
