@@ -199,7 +199,9 @@ class CartRules extends BOBasePage {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
-    await this.waitForVisibleSelector(page, this.filterSearchButton, 2000);
+
+    // No search button displayed if only one element in table
+    await this.waitForVisibleSelector(page, this.gridTableNumberOfTitlesSpan, 2000);
   }
 
   /**
