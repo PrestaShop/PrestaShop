@@ -29,10 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -47,15 +44,16 @@ class InvoicesController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response|null Template parameters
+     *
      * @throws \Exception
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
-     *
      */
     public function indexAction(Request $request)
     {
         $byDateForm = $this->get('prestashop.admin.order.invoices.by_date.form_handler')->getForm();
         $byStatusForm = $this->get('prestashop.admin.order.invoices.by_status.form_handler')->getForm();
         $optionsForm = $this->get('prestashop.admin.order.invoices.options.form_handler')->getForm();
+
         return $this->renderForm($byDateForm, $byStatusForm, $optionsForm, $request);
     }
 
@@ -97,7 +95,6 @@ class InvoicesController extends FrameworkBundleAdminController
     {
         $byStatusFormHandler = $this->get('prestashop.admin.order.invoices.by_status.form_handler');
 
-        ;
         $byDateForm = $this->get('prestashop.admin.order.invoices.by_date.form_handler')->getForm();
         $optionsForm = $this->get('prestashop.admin.order.invoices.options.form_handler')->getForm();
         $byStatusForm = $this->processForm($byStatusFormHandler, $request);
@@ -175,6 +172,7 @@ class InvoicesController extends FrameworkBundleAdminController
                 $this->redirectToRoute('admin_order_invoices');
             }
         }
+
         return $form;
     }
 
