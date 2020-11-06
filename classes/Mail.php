@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Email\SwiftCommentDeletePlugin;
+
 /**
  * Class MailCore.
  */
@@ -559,6 +561,7 @@ class MailCore extends ObjectModel
             );
             $templateVars = array_merge($templateVars, $extraTemplateVars);
             $swift->registerPlugin(new Swift_Plugins_DecoratorPlugin([self::toPunycode($toPlugin) => $templateVars]));
+            $swift->registerPlugin(new SwiftCommentDeletePlugin());
             if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
                 $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT
             ) {

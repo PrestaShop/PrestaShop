@@ -246,12 +246,14 @@
                                   <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%">
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                                        <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:left;color:#363A41;"><span class="label">{{ 'Order:'|trans({}, 'Emails.Body', locale)|raw }}</span> {order_name} {{ 'Placed on'|trans({}, 'Emails.Body', locale)|raw }} {date}</div>
+                                        <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:left;color:#363A41;">
+<span class="label">{{ 'Order:'|trans({}, 'Emails.Body', locale)|raw }}</span> {order_name} {{ 'Placed on'|trans({}, 'Emails.Body', locale)|raw }} {date}</div>
                                       </td>
                                     </tr>
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;word-break:break-word;">
-                                        <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:left;color:#363A41;"><span class="label">{{ 'Payment:'|trans({}, 'Emails.Body', locale)|raw }}</span> {payment}</div>
+                                        <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:left;color:#363A41;">
+<span class="label">{{ 'Payment:'|trans({}, 'Emails.Body', locale)|raw }}</span> {payment}</div>
                                       </td>
                                     </tr>
                                   </table>
@@ -327,18 +329,32 @@
                                     <th bgcolor="#FDFDFD">{{ 'Quantity'|trans({}, 'Emails.Body', locale)|raw }}</th>
                                     <th bgcolor="#FDFDFD">{{ 'Total price'|trans({}, 'Emails.Body', locale)|raw }}</th>
                                   </tr>
-                                  {% if templateType == 'html' %}
+                                  <!-- delete -->
+                                  <tr>
+                                    <td style="border:1px solid #D6D4D4;padding:7px 0;text-align:center;" colspan="5">
+                                      <!-- /delete -->
+                                      {% if templateType == 'html' %}
 {products}
 {% endif %}
-                                  {% if templateType == 'txt' %}
+                                      {% if templateType == 'txt' %}
 {products_txt}
 {% endif %}
-                                  {% if templateType == 'html' %}
+                                      <!-- delete -->
+                                    </td>
+                                  </tr>
+                                  <tr class="conf_body">
+                                    <td bgcolor="#f8f8f8" colspan="5" style="border:1px solid #D6D4D4;color:#333;padding:7px 0;text-align:center;">
+                                      <!-- /delete -->
+                                      {% if templateType == 'html' %}
 {discounts}
 {% endif %}
-                                  {% if templateType == 'txt' %}
+                                      {% if templateType == 'txt' %}
 {discounts_txt}
 {% endif %}
+                                      <!-- delete -->
+                                    </td>
+                                  </tr>
+                                  <!-- /delete -->
                                   <tr class="order_summary">
                                     <td bgcolor="#FDFDFD" colspan="3" align="right">
                                       {{ 'Products'|trans({}, 'Emails.Body', locale)|raw }}
@@ -436,8 +452,10 @@
                                   <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%">
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
-                                        <div style="font-family:Open sans, arial, sans-serif;font-size:16px;font-weight:600;line-height:25px;text-align:left;color:#363A41;"><img src="{{ mailThemesUrl }}/modern/assets/baseline-local_shipping-24px.png" style="margin-right:10px">
-                                          {{ 'Shipping'|trans({}, 'Emails.Body', locale)|raw }}</div>
+                                        <div style="font-family:Open sans, arial, sans-serif;font-size:16px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">
+<img src="{{ mailThemesUrl }}/modern/assets/baseline-local_shipping-24px.png" style="margin-right:10px">
+                                          {{ 'Shipping'|trans({}, 'Emails.Body', locale)|raw }}
+                                        </div>
                                       </td>
                                     </tr>
                                   </table>
@@ -502,12 +520,14 @@
                                   <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%">
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                                        <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:left;color:#363A41;"><span class="label">{{ 'Carrier:'|trans({}, 'Emails.Body', locale)|raw }}</span> {carrier}</div>
+                                        <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:left;color:#363A41;">
+<span class="label">{{ 'Carrier:'|trans({}, 'Emails.Body', locale)|raw }}</span> {carrier}</div>
                                       </td>
                                     </tr>
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;word-break:break-word;">
-                                        <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:left;color:#363A41;"><span class="label">{{ 'Payment:'|trans({}, 'Emails.Body', locale)|raw }}</span> {payment}</div>
+                                        <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:left;color:#363A41;">
+<span class="label">{{ 'Payment:'|trans({}, 'Emails.Body', locale)|raw }}</span> {payment}</div>
                                       </td>
                                     </tr>
                                   </table>
