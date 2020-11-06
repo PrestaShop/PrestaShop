@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\NoTagsValidator;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * Validation constraint for address DNI according to the country value and fields requirement
+ * Validation constraint for making sure there are no HTML or PHP tags to be removed by strip_tags
  */
 class NoTags extends Constraint
 {
