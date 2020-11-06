@@ -35,6 +35,7 @@
               alt="{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}"
               loading="lazy"
               data-full-size-image-url="{$product.cover.large.url}"
+              itemprop="image"
               />
           </a>
         {else}
@@ -73,6 +74,8 @@
               <div itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="invisible">
                 <meta itemprop="priceCurrency" content="{$currency.iso_code}" />
                 <meta itemprop="price" content="{$product.price_amount}" />
+                <meta itemprop="url" content="{$product.url}" />
+                <link itemprop="availability" href="{$product.seo_availability}" />
               </div>
 
               {hook h='displayProductPriceBlock' product=$product type='unit_price'}
