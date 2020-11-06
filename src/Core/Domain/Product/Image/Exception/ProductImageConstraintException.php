@@ -36,5 +36,5 @@ class ProductImageConstraintException extends ProductImageException
     /**
      * When image id is invalid
      */
-    const INVALID_ID = 10;
+    public const INVALID_ID = 10;
 }
