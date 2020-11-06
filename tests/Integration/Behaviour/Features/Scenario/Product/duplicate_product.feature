@@ -139,7 +139,6 @@ Feature: Duplicate product from Back Office (BO).
     And product copy_of_product1 should have following seo options:
       | redirect_type   | 301-product |
       | redirect_target | product2    |
-    And product copy_of_product1 redirect target should be product2
     And product "copy_of_product1" should have following shipping information:
       | width                            | 10.5                                                  |
       | height                           | 6                                                     |
