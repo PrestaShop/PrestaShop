@@ -32,7 +32,7 @@ import TranslatableField from '@components/translatable-field';
 import TinyMCEEditor from '@components/tinymce-editor';
 import Serp from '@app/utils/serp/index';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   new ChoiceTree('#cms_page_page_category_id');
@@ -48,9 +48,9 @@ $(() => {
       watchedDescription: 'input[name^="cms_page[meta_description]"]',
       watchedMetaUrl: 'input[name^="cms_page[friendly_url]"]',
       multiLanguageInput: `${translatorInput.localeInputSelector}:not(.d-none)`,
-      multiLanguageItem: translatorInput.localeItemSelector
+      multiLanguageItem: translatorInput.localeItemSelector,
     },
-    $('#serp-app').data('cms-url')
+    $('#serp-app').data('cms-url'),
   );
 
   new TranslatableField();
@@ -59,15 +59,16 @@ $(() => {
   new TaggableField({
     tokenFieldSelector: 'input.js-taggable-field',
     options: {
-      createTokensOnBlur: true
-    }
+      createTokensOnBlur: true,
+    },
   });
 
   new PreviewOpener('.js-preview-url');
 
   textToLinkRewriteCopier({
     sourceElementSelector: 'input.js-copier-source-title',
-    destinationElementSelector: `${translatorInput.localeInputSelector}:not(.d-none) input.js-copier-destination-friendly-url`
+    /* eslint-disable-next-line max-len */
+    destinationElementSelector: `${translatorInput.localeInputSelector}:not(.d-none) input.js-copier-destination-friendly-url`,
   });
 
   new ChoiceTree('#cms_page_shop_association').enableAutoCheckChildren();

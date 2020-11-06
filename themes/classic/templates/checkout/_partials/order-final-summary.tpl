@@ -68,7 +68,7 @@
           <div class="col-md-2">
             <div class="logo-container">
               {if $selected_delivery_option.logo}
-                <img src="{$selected_delivery_option.logo}" alt="{$selected_delivery_option.name}">
+                <img src="{$selected_delivery_option.logo}" alt="{$selected_delivery_option.name}" loading="lazy">
               {else}
                 &nbsp;
               {/if}

@@ -17,8 +17,8 @@ class Languages extends LocalizationBasePage {
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
     // Filters
     this.filterColumn = filterBy => `${this.gridTable} #language_${filterBy}`;
-    this.filterSearchButton = `${this.gridTable} button[name='language[actions][search]']`;
-    this.filterResetButton = `${this.gridTable} button[name='language[actions][reset]']`;
+    this.filterSearchButton = `${this.gridTable} .grid-search-button`;
+    this.filterResetButton = `${this.gridTable} .grid-reset-button`;
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
@@ -26,10 +26,10 @@ class Languages extends LocalizationBasePage {
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
     // Column actions selectors
     this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
-    this.editRowLink = row => `${this.actionsColumn(row)} a[data-original-title='Edit']`;
+    this.editRowLink = row => `${this.actionsColumn(row)} a.grid-edit-row-link`;
     this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
-    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-url*='/delete']`;
+    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
     this.enabledColumnValidIcon = row => `${this.tableColumn(row, 'active')} i.grid-toggler-icon-valid`;
     // Bulk Actions
     this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
@@ -37,7 +37,7 @@ class Languages extends LocalizationBasePage {
     this.bulkActionsEnableButton = '#language_grid_bulk_action_enable_selection';
     this.bulkActionsDisableButton = '#language_grid_bulk_action_disable_selection';
     this.bulkActionsDeleteButton = '#language_grid_bulk_action_delete_selection';
-    this.confirmDeleteModal = '#language_grid_confirm_modal';
+    this.confirmDeleteModal = '#language-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
@@ -155,7 +155,6 @@ class Languages extends LocalizationBasePage {
    * @returns {Promise<string>}
    */
   async deleteLanguage(page, row = 1) {
-    this.dialogListener(page, true);
     await Promise.all([
       page.click(this.dropdownToggleButton(row)),
       this.waitForVisibleSelector(
@@ -163,7 +162,13 @@ class Languages extends LocalizationBasePage {
         `${this.dropdownToggleButton(row)}[aria-expanded='true']`,
       ),
     ]);
-    await this.clickAndWaitForNavigation(page, this.deleteRowLink(row));
+
+    // Click on delete and wait for modal
+    await Promise.all([
+      page.click(this.deleteRowLink(row)),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteLanguages(page, this.bulkActionsDeleteButton);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 

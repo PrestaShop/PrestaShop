@@ -264,10 +264,10 @@ class XmlLoader
         }
 
         $is_multi_lang_entity = $this->isMultilang($entity);
+        $xml_langs = $multilang_columns = [];
+        $default_lang = null;
         if ($is_multi_lang_entity) {
             $multilang_columns = $this->getColumns($entity, true);
-            $xml_langs = [];
-            $default_lang = null;
             foreach ($this->languages as $id_lang => $iso) {
                 if ($iso == $this->language->getLanguageIso()) {
                     $default_lang = $id_lang;
@@ -404,9 +404,10 @@ class XmlLoader
     /**
      * Load an entity XML file.
      *
-     * @param string $entity
+     * @param string $entity Name of the entity to load (eg. 'tab')
+     * @param string|null $iso Language in which to load said entity. If not found, will fall back to default language.
      *
-     * @return \SimpleXMLElement
+     * @return \SimpleXMLElement|void
      */
     protected function loadEntity($entity, $iso = null)
     {
@@ -491,7 +492,7 @@ class XmlLoader
             if ($data_lang) {
                 $object->hydrate($data_lang);
             }
-            $object->add(true, (isset($xml->fields['null'])) ? true : false);
+            $object->add(true, isset($xml->fields['null']));
             $entity_id = $object->id;
             unset($object);
         } else {
@@ -592,6 +593,15 @@ class XmlLoader
         $stock_available->updateQuantity($data['id_product'], $data['id_product_attribute'], $data['quantity'], $data['id_shop']);
     }
 
+    /**
+     * Called from self::populateEntity
+     *
+     * @param string $identifier Tab id
+     * @param array $data Attributes + children of tab element
+     * @param array $data_lang Translated attributes
+     *
+     * @throws PrestashopInstallerException
+     */
     public function createEntityTab($identifier, array $data, array $data_lang)
     {
         static $position = [];
@@ -1183,7 +1193,7 @@ class XmlLoader
         }
 
         // Get multilang columns
-        $alias_multilang = [];
+        $alias_multilang = $multilang_columns = [];
         if ($is_multilang) {
             $columns = $this->getColumns($entity);
             $multilang_columns = $this->getColumns($entity, true);

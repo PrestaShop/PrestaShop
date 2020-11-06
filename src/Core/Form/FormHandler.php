@@ -33,6 +33,8 @@ use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 
 /**
  * Complete implementation of FormHandlerInterface.
+ *
+ * @deprecated since 1.7.8, will be removed in the next major version, use Handler.php instead
  */
 class FormHandler implements FormHandlerInterface
 {

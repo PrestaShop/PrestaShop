@@ -33,6 +33,7 @@ use Hook;
 use Order;
 use OrderDetail;
 use OrderHistory;
+use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\CancellationActionType;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand;

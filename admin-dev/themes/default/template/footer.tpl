@@ -29,7 +29,7 @@
 <div id="footer" class="bootstrap hide">
 
 	<div class="col-sm-2 hidden-xs">
-		<a href="https://www.prestashop.com/" class="_blank">PrestaShop&trade;</a>
+		<a href="https://www.prestashop.com/" target="_blank" rel="noopener noreferrer nofollow">PrestaShop&trade;</a>
 		-
 		<span id="footer-load-time"><i class="icon-time" title="{l s='Load time:' d='Admin.Navigation.Footer'}"></i> {number_format(microtime(true) - $timer_start, 3, '.', '')}s</span>
 	</div>
@@ -52,7 +52,7 @@
 	</div>
 	<div class="col-sm-5">
 		<div class="footer-contact">
-			<a href="https://www.prestashop.com/en/contact_us?utm_source=back-office&amp;utm_medium=footer&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="footer_link _blank">
+			<a href="https://www.prestashop.com/contact?utm_source=back-office&amp;utm_medium=footer&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="footer_link _blank">
 				<i class="icon-envelope"></i>
 				{l s='Contact' d='Admin.Navigation.Footer'}
 			</a>
@@ -82,13 +82,13 @@
 				{l s='Addons' d='Admin.Navigation.Footer'}
 			</a>
 			/&nbsp;
-			<a href="https://www.prestashop.com/en/training-prestashop?utm_source=back-office&amp;utm_medium=footer&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="footer_link _blank">
+			<a href="https://www.prestashop.com/training-prestashop?utm_source=back-office&amp;utm_medium=footer&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="footer_link _blank">
 				<i class="icon-book"></i>
 				{l s='Training' d='Admin.Navigation.Footer'}
 			</a>
 			{if $host_mode}
 			/&nbsp;
-			<a href="http://status.prestashop.com/" class="footer_link _blank">
+			<a href="https://status.prestashop.com/" class="footer_link _blank">
 				<i class="icon-circle status-page-dot"></i>
 				<span class="status-page-description"></span>
 			</a>

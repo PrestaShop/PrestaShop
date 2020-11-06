@@ -23,4 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import Vue from 'vue';
+
 export const EventBus = new Vue();
+
+export default EventBus;

@@ -220,5 +220,7 @@ class UpdateSchemaCommand extends ContainerAwareCommand
 
         $pluralization = (1 > $sqls) ? 'query was' : 'queries were';
         $output->writeln(sprintf('Database schema updated successfully! "<info>%s</info>" %s executed', $sqls, $pluralization));
+
+        return 0;
     }
 }

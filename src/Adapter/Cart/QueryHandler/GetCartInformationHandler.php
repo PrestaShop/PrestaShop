@@ -36,7 +36,7 @@ use Customer;
 use Language;
 use Link;
 use Message;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
@@ -55,6 +55,7 @@ use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShopException;
 use Product;
 use Symfony\Component\Translation\TranslatorInterface;
+use Tools;
 
 /**
  * Handles GetCartInformation query using legacy object models
@@ -141,7 +142,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             $addresses ? $this->extractShippingFromLegacySummary($cart, $legacySummary) : null
         );
 
-        $this->contextStateManager->restoreContext();
+        $this->contextStateManager->restorePreviousContext();
 
         return $result;
     }
@@ -214,20 +215,20 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
                 (int) $discount['id_cart_rule'],
                 $discount['name'],
                 $discount['description'],
-                (new Number((string) $discount['value_tax_exc']))->round($currency->precision)
+                (new DecimalNumber((string) $discount['value_tax_exc']))->round($currency->precision)
             );
         }
 
         foreach ($cart->getCartRules(CartRule::FILTER_ACTION_GIFT) as $giftRule) {
             $giftRuleId = (int) $giftRule['id_cart_rule'];
-            $finalValue = new Number((string) $giftRule['value_tax_exc']);
+            $finalValue = new DecimalNumber((string) $giftRule['value_tax_exc']);
 
             if (isset($cartRules[$giftRuleId])) {
                 // it is possible that one cart rule can have a gift product, but also have other conditions,
                 //so we need to sum their reduction values
                 /** @var CartInformation\CartRule $cartRule */
                 $cartRule = $cartRules[$giftRuleId];
-                $finalValue = $finalValue->plus(new Number($cartRule->getValue()));
+                $finalValue = $finalValue->plus(new DecimalNumber($cartRule->getValue()));
             }
 
             $cartRules[$giftRuleId] = new CartInformation\CartRule(
@@ -497,7 +498,6 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
      * @param Cart $cart
      * @param Currency $currency
      * @param array $product
-     * @param bool $isGift
      *
      * @return CartProduct
      */
@@ -512,9 +512,9 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             $product['name'],
             isset($product['attributes_small']) ? $product['attributes_small'] : '',
             $product['reference'],
-            \Tools::ps_round($product['price'], $currency->precision),
+            Tools::ps_round($product['price'], $currency->precision),
             $product['quantity'],
-            \Tools::ps_round($product['total'], $currency->precision),
+            Tools::ps_round($product['total'], $currency->precision),
             $this->contextLink->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default'),
             $this->getProductCustomizedData($cart, $product),
             !empty($product['is_gift'])

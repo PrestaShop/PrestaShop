@@ -35,7 +35,7 @@ import FiltersSubmitButtonEnablerExtension
   from '@components/grid/extension/filters-submit-button-enabler-extension';
 import PositionExtension from '@components/grid/extension/position-extension';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const grid = new Grid('attribute');

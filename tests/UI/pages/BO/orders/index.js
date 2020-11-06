@@ -20,8 +20,8 @@ class Order extends BOBasePage {
     this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
     // Filters
     this.filterColumn = filterBy => `${this.gridTable} #order_${filterBy}`;
-    this.filterSearchButton = `${this.gridTable} button[name='order[actions][search]']`;
-    this.filterResetButton = `${this.gridTable} button[name='order[actions][reset]']`;
+    this.filterSearchButton = `${this.gridTable} .grid-search-button`;
+    this.filterResetButton = `${this.gridTable} .grid-reset-button`;
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
@@ -34,15 +34,15 @@ class Order extends BOBasePage {
       + ` button[data-value='${statusId}']`;
     // Column actions selectors
     this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
-    this.viewRowLink = row => `${this.actionsColumn(row)} a[data-original-title='View']`;
-    this.viewInvoiceRowLink = row => `${this.actionsColumn(row)} a[data-original-title='View invoice']`;
-    this.viewDeliverySlipsRowLink = row => `${this.actionsColumn(row)} a[data-original-title='View delivery slip']`;
+    this.viewRowLink = row => `${this.actionsColumn(row)} a.grid-view-row-link`;
+    this.viewInvoiceRowLink = row => `${this.actionsColumn(row)} a.grid-view-invoice-row-link`;
+    this.viewDeliverySlipsRowLink = row => `${this.actionsColumn(row)} a.grid-view-delivery-slip-row-link`;
     // Grid Actions
     this.gridActionButton = '#order-grid-actions-button';
-    this.gridActionDropDownMenu = 'div.dropdown-menu[aria-labelledby=\'order-grid-actions-button\']';
-    this.gridActionExportLink = `${this.gridActionDropDownMenu} a[href*='/export']`;
+    this.gridActionDropDownMenu = '#order-grid-actions-dropdown-menu';
+    this.gridActionExportLink = '#order-grid-action-export';
     // Bulk actions
-    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
+    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.bulkUpdateOrdersStatusButton = '#order_grid_bulk_action_change_order_status';
     this.tableColumnOrderBulk = row => `${this.tableRow(row)} td.column-orders_bulk`;

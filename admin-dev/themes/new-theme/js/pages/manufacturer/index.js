@@ -42,7 +42,7 @@ import TranslatableField from '@components/translatable-field';
 import TinyMCEEditor from '@components/tinymce-editor';
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   ['manufacturer', 'manufacturer_address'].forEach((gridName) => {

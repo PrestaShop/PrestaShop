@@ -10,47 +10,46 @@ class ProductSettings extends BOBasePage {
 
     // Selectors
     // Products general form
-    this.productGeneralForm = '#configuration_fieldset_products';
-    this.switchCatalogModeLabel = toggle => `label[for='form_general_catalog_mode_${toggle}']`;
-    this.switchShowPricesLabel = toggle => `label[for='form_general_catalog_mode_with_prices_${toggle}']`;
-    this.maxSizeShortDescriptionInput = '#form_general_short_description_limit';
-    this.newDaysNumberInput = '#form_general_new_days_number';
-    this.switchForceUpdateFriendlyURLLabel = toggle => `label[for='form_general_force_friendly_url_${toggle}']`;
-    this.quantityDiscountBasedOnSelect = '#form_general_quantity_discount';
-    this.switchDefaultActivationStatusLabel = toggle => `label[for='form_general_default_status_${toggle}']`;
-    this.saveProductGeneralFormButton = `${this.productGeneralForm} .card-footer button`;
+    this.switchCatalogModeLabel = toggle => `label[for='general_catalog_mode_${toggle}']`;
+    this.switchShowPricesLabel = toggle => `label[for='general_catalog_mode_with_prices_${toggle}']`;
+    this.maxSizeShortDescriptionInput = '#general_short_description_limit';
+    this.newDaysNumberInput = '#general_new_days_number';
+    this.switchForceUpdateFriendlyURLLabel = toggle => `label[for='general_force_friendly_url_${toggle}']`;
+    this.quantityDiscountBasedOnSelect = '#general_quantity_discount';
+    this.switchDefaultActivationStatusLabel = toggle => `label[for='general_default_status_${toggle}']`;
+    this.saveProductGeneralFormButton = '#form-general-save-button';
+
     // Product page form
-    this.productPageForm = '#configuration_fieldset_fo_product_page';
-    this.switchDisplayAvailableQuantities = toggle => `label[for='form_page_display_quantities_${toggle}']`;
-    this.remainingQuantityInput = '#form_page_display_last_quantities';
-    this.displayUnavailableAttributesLabel = toggle => 'label'
-      + `[for='form_page_display_unavailable_attributes_${toggle}']`;
-    this.separatorAttributeOnProductPageSelect = '#form_page_attribute_anchor_separator';
-    this.displayDiscountedPriceLabel = toggle => `label[for='form_page_display_discount_price_${toggle}']`;
-    this.saveProductPageFormButton = `${this.productPageForm} .card-footer button`;
+    this.switchDisplayAvailableQuantities = toggle => `label[for='page_display_quantities_${toggle}']`;
+    this.remainingQuantityInput = '#page_display_last_quantities';
+    this.displayUnavailableAttributesLabel = toggle => `label[for='page_display_unavailable_attributes_${toggle}']`;
+    this.separatorAttributeOnProductPageSelect = '#page_attribute_anchor_separator';
+    this.displayDiscountedPriceLabel = toggle => `label[for='page_display_discount_price_${toggle}']`;
+    this.saveProductPageFormButton = '#form-page-save-button';
+
     // Products stock form
     this.productsStockForm = '#configuration_fieldset_stock';
     this.allowOrderingOosLabel = toggle => `${this.productsStockForm} label`
-      + `[for='form_stock_allow_ordering_oos_${toggle}']`;
+      + `[for='stock_allow_ordering_oos_${toggle}']`;
     this.enableStockManagementLabel = toggle => `${this.productsStockForm} label`
-      + `[for='form_stock_stock_management_${toggle}']`;
-    this.nameLangButton = '#form_stock_in_stock_label';
-    this.nameLangSpan = lang => 'div.dropdown-menu[aria-labelledby=\'form_stock_in_stock_label\']'
+      + `[for='stock_stock_management_${toggle}']`;
+    this.nameLangButton = '#stock_in_stock_label';
+    this.nameLangSpan = lang => 'div.dropdown-menu[aria-labelledby=\'stock_in_stock_label\']'
       + ` span[data-locale='${lang}']`;
-    this.labelInStock = idLang => `#form_stock_in_stock_label_${idLang}`;
-    this.deliveryTimeInStockInput = '#form_stock_delivery_time_1';
-    this.deliveryTimeOutOfStockInput = '#form_stock_oos_delivery_time_1';
-    this.oosAllowedBackordersLabel = '#form_stock_oos_allowed_backorders_1';
-    this.oosAllowedBackordersLabel = idLang => `#form_stock_oos_allowed_backorders_${idLang}`;
-    this.oosDeniedBackordersLabel = idLang => `#form_stock_oos_denied_backorders_${idLang}`;
-    this.defaultPackStockManagementSelect = '#form_stock_pack_stock_management';
+    this.labelInStock = idLang => `#stock_in_stock_label_${idLang}`;
+    this.deliveryTimeInStockInput = '#stock_delivery_time_1';
+    this.deliveryTimeOutOfStockInput = '#stock_oos_delivery_time_1';
+    this.oosAllowedBackordersLabel = idLang => `#stock_oos_allowed_backorders_${idLang}`;
+    this.oosDeniedBackordersLabel = idLang => `#stock_oos_denied_backorders_${idLang}`;
+    this.defaultPackStockManagementSelect = '#stock_pack_stock_management';
+    this.saveProductsStockForm = '#form-stock-save-button';
     this.saveProductsStockForm = `${this.productsStockForm} .card-footer button`;
+
     // Pagination form
-    this.paginationFormBlock = '#configuration_fieldset_order_by_pagination';
-    this.productsPerPageInput = '#form_pagination_products_per_page';
-    this.productsDefaultOrderBySelect = '#form_pagination_default_order_by';
-    this.productsDefaultOrderMethodSelect = '#form_pagination_default_order_way';
-    this.savePaginationFormButton = `${this.paginationFormBlock} .card-footer button`;
+    this.productsPerPageInput = '#pagination_products_per_page';
+    this.productsDefaultOrderBySelect = '#pagination_default_order_by';
+    this.productsDefaultOrderMethodSelect = '#pagination_default_order_way';
+    this.savePaginationFormButton = '#form-pagination-save-button';
   }
 
   /*
@@ -325,7 +324,7 @@ class ProductSettings extends BOBasePage {
     // Fill label in french
     await this.changeLanguageForSelectors(page, 'fr');
     await this.setValue(page, this.oosAllowedBackordersLabel(2), label);
-    await this.clickAndWaitForNavigation(page, this.savePaginationFormButton);
+    await this.clickAndWaitForNavigation(page, this.saveProductsStockForm);
     return this.getTextContent(page, this.alertSuccessBlock);
   }
 
@@ -342,7 +341,7 @@ class ProductSettings extends BOBasePage {
     // Fill label in french
     await this.changeLanguageForSelectors(page, 'fr');
     await this.setValue(page, this.oosDeniedBackordersLabel(2), label);
-    await this.clickAndWaitForNavigation(page, this.savePaginationFormButton);
+    await this.clickAndWaitForNavigation(page, this.saveProductsStockForm);
     return this.getTextContent(page, this.alertSuccessBlock);
   }
 

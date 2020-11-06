@@ -39,6 +39,14 @@ describe('CRUD language', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+
+    // Create images
+    await Promise.all([
+      files.generateImage(createLanguageData.flag),
+      files.generateImage(createLanguageData.noPicture),
+      files.generateImage(editLanguageData.flag),
+      files.generateImage(editLanguageData.noPicture),
+    ]);
   });
 
   after(async () => {

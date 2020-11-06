@@ -45,9 +45,9 @@
 </template>
 
 <script>
+  import {showGrowl} from '@app/utils/growl';
   import LanguageList from './LanguageList';
   import CurrencyModal from './CurrencyModal';
-  import {showGrowl} from '@app/utils/growl';
 
 
   export default {

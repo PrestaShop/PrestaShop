@@ -27,10 +27,11 @@
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 
 use Configuration;
+use DateTime;
 use Hook;
 use Language;
 use Link;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\Decimal\Operation\Rounding;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
@@ -223,7 +224,7 @@ class ProductLazyArray extends AbstractLazyArray
             case 'new':
                 return [
                     'type' => 'new',
-                    'label' => $this->translator->trans('New product', [], 'Shop.Theme.Catalog'),
+                    'label' => $this->translator->trans('New', [], 'Shop.Theme.Catalog'),
                     'schema_url' => 'https://schema.org/NewCondition',
                 ];
             case 'used':
@@ -291,7 +292,7 @@ class ProductLazyArray extends AbstractLazyArray
         if (!isset($this->product['attachments'])) {
             return null;
         }
-        foreach ($this->product['attachments'] as &$attachment) {
+        foreach ($this->product['attachments'] as $attachment) {
             return Tools::formatBytes($attachment['file_size'], 2);
         }
 
@@ -467,7 +468,7 @@ class ProductLazyArray extends AbstractLazyArray
         if ($this->product['new']) {
             $flags['new'] = [
                 'type' => 'new',
-                'label' => $this->translator->trans('New', [], 'Shop.Theme.Catalog'),
+                'label' => $this->translator->trans('New product', [], 'Shop.Theme.Catalog'),
             ];
         }
 
@@ -571,7 +572,7 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * The "Add to cart" button should be shown for products available for order.
      *
-     * @param $product
+     * @param array $product
      *
      * @return mixed
      */
@@ -671,8 +672,8 @@ class ProductLazyArray extends AbstractLazyArray
             $this->product['has_discount'] = (0 != $product['reduction']);
             $this->product['discount_type'] = $product['specific_prices']['reduction_type'];
 
-            $absoluteReduction = new Number($product['specific_prices']['reduction']);
-            $absoluteReduction = $absoluteReduction->times(new Number('100'));
+            $absoluteReduction = new DecimalNumber($product['specific_prices']['reduction']);
+            $absoluteReduction = $absoluteReduction->times(new DecimalNumber('100'));
             $negativeReduction = $absoluteReduction->toNegative();
             $presAbsoluteReduction = $absoluteReduction->round(2, Rounding::ROUND_HALF_UP);
             $presNegativeReduction = $negativeReduction->round(2, Rounding::ROUND_HALF_UP);
@@ -814,12 +815,19 @@ class ProductLazyArray extends AbstractLazyArray
         $this->product['show_availability'] = $show_availability;
         $product['quantity_wanted'] = $this->getQuantityWanted();
 
-        if (isset($product['available_date']) && '0000-00-00' == $product['available_date']) {
-            $product['available_date'] = null;
+        if (isset($product['available_date'])) {
+            $date = new DateTime($product['available_date']);
+            if ($date < new DateTime()) {
+                $product['available_date'] = null;
+            }
         }
 
         if ($show_availability) {
-            if ($product['quantity'] - $product['quantity_wanted'] >= 0) {
+            $availableQuantity = $product['quantity'] - $product['quantity_wanted'];
+            if (isset($product['stock_quantity'])) {
+                $availableQuantity = $product['stock_quantity'] - $product['quantity_wanted'];
+            }
+            if ($availableQuantity >= 0) {
                 $this->product['availability_date'] = $product['available_date'];
 
                 if ($product['quantity'] < $settings->lastRemainingItems) {

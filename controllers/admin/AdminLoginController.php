@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
+use Symfony\Component\HttpFoundation\IpUtils;
 
 class AdminLoginControllerCore extends AdminController
 {
@@ -61,7 +62,12 @@ class AdminLoginControllerCore extends AdminController
         Media::addJsDefL('one_error', $this->trans('There is one error.', [], 'Admin.Notifications.Error'));
         Media::addJsDefL('more_errors', $this->trans('There are several errors.', [], 'Admin.Notifications.Error'));
 
-        Hook::exec('actionAdminLoginControllerSetMedia');
+        Hook::exec(
+            'actionAdminLoginControllerSetMedia',
+            [
+                'controller' => $this,
+            ]
+        );
 
         // Specific Admin Theme
         $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/overrides.css', 'all', PHP_INT_MAX);
@@ -74,7 +80,7 @@ class AdminLoginControllerCore extends AdminController
             // header('HTTP/1.1 301 Moved Permanently');
             // header('Location: '.Tools::getShopDomainSsl(true).$_SERVER['REQUEST_URI']);
             // exit();
-            $clientIsMaintenanceOrLocal = in_array(Tools::getRemoteAddr(), array_merge(['127.0.0.1'], explode(',', Configuration::get('PS_MAINTENANCE_IP'))));
+            $clientIsMaintenanceOrLocal = IpUtils::checkIp(Tools::getRemoteAddr(), array_merge(['127.0.0.1'], explode(',', Configuration::get('PS_MAINTENANCE_IP'))));
             // If ssl is enabled, https protocol is required. Exception for maintenance and local (127.0.0.1) IP
             if ($clientIsMaintenanceOrLocal) {
                 $warningSslMessage = $this->trans('SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.', [], 'Admin.Login.Notification');
@@ -173,6 +179,13 @@ class AdminLoginControllerCore extends AdminController
 
     public function postProcess()
     {
+        Hook::exec(
+            'actionAdminLoginControllerBefore',
+            [
+                'controller' => $this,
+            ]
+        );
+
         if (Tools::isSubmit('submitLogin')) {
             $this->processLogin();
         } elseif (Tools::isSubmit('submitForgot')) {
@@ -180,6 +193,8 @@ class AdminLoginControllerCore extends AdminController
         } elseif (Tools::isSubmit('submitReset')) {
             $this->processReset();
         }
+
+        // No hook after because of die calls inside process methods
     }
 
     public function processLogin()
@@ -187,6 +202,15 @@ class AdminLoginControllerCore extends AdminController
         /* Check fields validity */
         $passwd = trim(Tools::getValue('passwd'));
         $email = $this->IDNConverter->emailToUtf8(trim(Tools::getValue('email')));
+        Hook::exec(
+            'actionAdminLoginControllerLoginBefore',
+            [
+                'controller' => $this,
+                'password' => $passwd,
+                'email' => $email,
+            ]
+        );
+
         if (empty($email)) {
             $this->errors[] = $this->trans('Email is empty.', [], 'Admin.Notifications.Error');
         } elseif (!Validate::isEmail($email)) {
@@ -237,6 +261,15 @@ class AdminLoginControllerCore extends AdminController
                     $url = $this->context->link->getAdminLink($tab->class_name);
                 }
 
+                Hook::exec(
+                    'actionAdminLoginControllerLoginAfter',
+                    [
+                        'controller' => $this,
+                        'employee' => $this->context->employee,
+                        'redirect' => $url,
+                    ]
+                );
+
                 if (Tools::isSubmit('ajax')) {
                     die(json_encode(['hasErrors' => false, 'redirect' => $url]));
                 } else {
@@ -251,9 +284,18 @@ class AdminLoginControllerCore extends AdminController
 
     public function processForgot()
     {
+        $email = $this->IDNConverter->emailToUtf8(trim(Tools::getValue('email_forgot')));
+        Hook::exec(
+            'actionAdminLoginControllerForgotBefore',
+            [
+                'controller' => $this,
+                'email' => $email,
+            ]
+        );
+
         if (_PS_MODE_DEMO_) {
             $this->errors[] = $this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error');
-        } elseif (!($email = $this->IDNConverter->emailToUtf8(trim(Tools::getValue('email_forgot'))))) {
+        } elseif (!$email) {
             $this->errors[] = $this->trans('Email is empty.', [], 'Admin.Notifications.Error');
         } elseif (!Validate::isEmail($email)) {
             $this->errors[] = $this->trans('Invalid email address.', [], 'Admin.Notifications.Error');
@@ -299,6 +341,15 @@ class AdminLoginControllerCore extends AdminController
             ) {
                 // Update employee only if the mail can be sent
                 Shop::setContext(Shop::CONTEXT_SHOP, (int) min($employee->getAssociatedShops()));
+
+                Hook::exec(
+                    'actionAdminLoginControllerForgotAfter',
+                    [
+                        'controller' => $this,
+                        'employee' => $employee,
+                    ]
+                );
+
                 die(Tools::jsonEncode([
                     'hasErrors' => false,
                     'confirm' => $this->trans('Please, check your mailbox. A link to reset your password has been sent to you.', [], 'Admin.Login.Notification'),
@@ -316,21 +367,38 @@ class AdminLoginControllerCore extends AdminController
 
     public function processReset()
     {
+        $reset_token_value = trim(Tools::getValue('reset_token'));
+        $id_employee = trim(Tools::getValue('id_employee'));
+        $reset_email = $this->IDNConverter->emailToUtf8(trim(Tools::getValue('reset_email')));
+        $reset_password = trim(Tools::getValue('reset_passwd'));
+        $reset_confirm = trim(Tools::getValue('reset_confirm'));
+        Hook::exec(
+            'actionAdminLoginControllerResetBefore',
+            [
+                'controller' => $this,
+                'reset_token_value' => $reset_token_value,
+                'id_employee' => $id_employee,
+                'reset_email' => $reset_email,
+                'reset_password' => $reset_password,
+                'reset_confirm' => $reset_confirm,
+            ]
+        );
+
         if (_PS_MODE_DEMO_) {
             $this->errors[] = $this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error');
-        } elseif (!($reset_token_value = trim(Tools::getValue('reset_token')))) {
+        } elseif (!$reset_token_value) {
             // hidden fields
             $this->errors[] = $this->trans('Some identification information is missing.', [], 'Admin.Login.Notification');
-        } elseif (!($id_employee = trim(Tools::getValue('id_employee')))) {
+        } elseif (!$id_employee) {
             $this->errors[] = $this->trans('Some identification information is missing.', [], 'Admin.Login.Notification');
-        } elseif (!($reset_email = $this->IDNConverter->emailToUtf8(trim(Tools::getValue('reset_email'))))) {
+        } elseif (!$reset_email) {
             $this->errors[] = $this->trans('Some identification information is missing.', [], 'Admin.Login.Notification');
-        } elseif (!($reset_password = trim(Tools::getValue('reset_passwd')))) {
+        } elseif (!$reset_password) {
             // password (twice)
             $this->errors[] = $this->trans('The password is missing: please enter your new password.', [], 'Admin.Login.Notification');
         } elseif (!Validate::isPasswd($reset_password)) {
             $this->errors[] = $this->trans('The password is not in a valid format.', [], 'Admin.Login.Notification');
-        } elseif (!($reset_confirm = trim(Tools::getValue('reset_confirm')))) {
+        } elseif (!$reset_confirm) {
             $this->errors[] = $this->trans('The confirmation is empty: please fill in the password confirmation as well.', [], 'Admin.Login.Notification');
         } elseif ($reset_password !== $reset_confirm) {
             $this->errors[] = $this->trans('The password and its confirmation do not match. Please double check both passwords.', [], 'Admin.Login.Notification');
@@ -382,6 +450,14 @@ class AdminLoginControllerCore extends AdminController
                 } else {
                     $employee->removeResetPasswordToken(); // Delete temporary reset token
                     $employee->update();
+
+                    Hook::exec(
+                        'actionAdminLoginControllerResetAfter',
+                        [
+                            'controller' => $this,
+                            'employee' => $employee,
+                        ]
+                    );
                     die(Tools::jsonEncode([
                         'hasErrors' => false,
                         'confirm' => $this->trans('The password has been changed successfully.', [], 'Admin.Login.Notification'),

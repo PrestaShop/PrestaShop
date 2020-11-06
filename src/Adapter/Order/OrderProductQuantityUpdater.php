@@ -28,11 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
-use Address;
 use Cart;
 use Configuration;
 use Context;
-use Country;
 use Currency;
 use Customer;
 use Customization;
@@ -90,6 +88,7 @@ class OrderProductQuantityUpdater
      * @param OrderDetail $orderDetail
      * @param int $newQuantity
      * @param OrderInvoice|null $orderInvoice
+     * @param bool $updateCart Used when you don't want to update the cart (CartRule removal for example)
      *
      * @return Order
      *
@@ -101,58 +100,110 @@ class OrderProductQuantityUpdater
         Order $order,
         OrderDetail $orderDetail,
         int $newQuantity,
-        ?OrderInvoice $orderInvoice
+        ?OrderInvoice $orderInvoice,
+        bool $updateCart = true
     ): Order {
         $cart = new Cart($order->id_cart);
 
         $this->contextStateManager
+            ->saveCurrentContext()
             ->setCart($cart)
             ->setCurrency(new Currency($cart->id_currency))
             ->setCustomer(new Customer($cart->id_customer))
             ->setLanguage(new Language($cart->id_lang))
-            ->setCountry($this->getTaxCountry($cart))
+            ->setCountry($cart->getTaxCountry())
         ;
 
         try {
-            $oldQuantity = (int) $orderDetail->product_quantity;
-
-            // Perform deletion first, we don't want the OrderDetail to be saved with a quantity 0, this could lead to bugs
-            if (0 === $newQuantity) {
-                // Product deletion
-                $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail);
-                $this->updateCustomizationOnProductDelete($order, $orderDetail, $oldQuantity);
-            } else {
-                $this->assertValidProductQuantity($orderDetail, $newQuantity);
-                if (null !== $orderInvoice) {
-                    $orderDetail->id_order_invoice = $orderInvoice->id;
-                }
-
-                $orderDetail->product_quantity = $newQuantity;
-                $orderDetail->reduction_percent = 0;
-                // update taxes
-                $orderDetail->updateTaxAmount($order);
-                $orderDetail->update();
-
-                if ($orderDetail->id_customization > 0) {
-                    $customization = new Customization($orderDetail->id_customization);
-                    $customization->quantity = $newQuantity;
-                    $customization->save();
-                }
-
-                // Update quantity on the cart and stock
-                $cart = $this->updateProductQuantity($cart, $orderDetail, $oldQuantity, $newQuantity);
-            }
-
-            // Update product stocks
-            $this->updateStocks($cart, $orderDetail, $oldQuantity, $newQuantity);
+            $this->updateOrderDetail($order, $cart, $orderDetail, $newQuantity, $orderInvoice, $updateCart);
 
             // Update prices on the order after cart rules are recomputed
             $this->orderAmountUpdater->update($order, $cart, null !== $orderInvoice ? (int) $orderInvoice->id : null);
         } finally {
-            $this->contextStateManager->restoreContext();
+            $this->contextStateManager->restorePreviousContext();
         }
 
         return $order;
+    }
+
+    /**
+     * @param Order $order
+     * @param Cart $cart
+     * @param OrderDetail $orderDetail
+     * @param int $newQuantity
+     * @param OrderInvoice|null $orderInvoice
+     * @param bool $updateCart
+     *
+     * @throws OrderException
+     * @throws ProductOutOfStockException
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    private function updateOrderDetail(
+        Order $order,
+        Cart $cart,
+        OrderDetail $orderDetail,
+        int $newQuantity,
+        ?OrderInvoice $orderInvoice,
+        bool $updateCart
+    ): void {
+        $oldQuantity = (int) $orderDetail->product_quantity;
+
+        // Perform deletion first, we don't want the OrderDetail to be saved with a quantity 0, this could lead to bugs
+        if (0 === $newQuantity) {
+            // Product deletion
+            $updatedProducts = $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, $updateCart);
+            $this->updateCustomizationOnProductDelete($order, $orderDetail, $oldQuantity);
+
+            // Some products have been affected by the removal of the initial product (probably related to a CartRule)
+            // So we detect the changes that happened in the cart and apply them on the OrderDetail
+            $orderDetails = $order->getOrderDetailList();
+            foreach ($updatedProducts as $updatedProduct) {
+                $updatedOrderDetail = null;
+                foreach ($orderDetails as $orderDetailData) {
+                    if ((int) $orderDetailData['product_id'] === $updatedProduct['id_product']
+                        && (int) $orderDetailData['product_attribute_id'] === $updatedProduct['id_product_attribute']) {
+                        $updatedOrderDetail = new OrderDetail($orderDetailData['id_order_detail']);
+                        break;
+                    }
+                }
+
+                if (null !== $updatedOrderDetail) {
+                    $newUpdatedQuantity = (int) $updatedOrderDetail->product_quantity + $updatedProduct['delta_quantity'];
+                    $this->updateOrderDetail(
+                        $order,
+                        $cart,
+                        $updatedOrderDetail,
+                        $newUpdatedQuantity,
+                        $orderInvoice,
+                        false
+                    );
+                }
+            }
+        } else {
+            $this->assertValidProductQuantity($orderDetail, $newQuantity);
+            if (null !== $orderInvoice) {
+                $orderDetail->id_order_invoice = $orderInvoice->id;
+            }
+
+            $orderDetail->product_quantity = $newQuantity;
+            $orderDetail->reduction_percent = 0;
+            $orderDetail->update();
+
+            if ($orderDetail->id_customization > 0) {
+                $customization = new Customization($orderDetail->id_customization);
+                $customization->quantity = $newQuantity;
+                $customization->save();
+            }
+
+            // Update quantity on the cart and stock
+            if ($updateCart) {
+                $cart = $this->updateProductQuantity($cart, $orderDetail, $oldQuantity, $newQuantity);
+            }
+        }
+
+        // Update product stocks
+        $this->updateStocks($cart, $orderDetail, $oldQuantity, $newQuantity);
     }
 
     /**
@@ -397,23 +448,6 @@ class OrderProductQuantityUpdater
         if (!Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'customization` WHERE `quantity` = 0')) {
             throw new OrderException('Could not delete customization from database.');
         }
-    }
-
-    /**
-     * @param Cart $cart
-     *
-     * @return Country
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
-     */
-    private function getTaxCountry(Cart $cart): Country
-    {
-        $taxAddressType = Configuration::get('PS_TAX_ADDRESS_TYPE');
-        $taxAddressId = property_exists($cart, $taxAddressType) ? $cart->{$taxAddressType} : $cart->id_address_delivery;
-        $taxAddress = new Address($taxAddressId);
-
-        return new Country($taxAddress->id_country);
     }
 
     /**

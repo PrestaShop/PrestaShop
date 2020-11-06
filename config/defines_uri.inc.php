@@ -47,7 +47,9 @@ define('_PS_IMG_', __PS_BASE_URI__.'img/');
 define('_PS_ADMIN_IMG_', _PS_IMG_.'admin/');
 define('_PS_TMP_IMG_', _PS_IMG_.'tmp/');
 define('_THEME_CAT_DIR_', _PS_IMG_.'c/');
+define('_THEME_EMPLOYEE_DIR_', _PS_IMG_.'e/');
 define('_THEME_PROD_DIR_', _PS_IMG_.'p/');
+define('_THEME_PROFILE_DIR_', _PS_IMG_.'pr/');
 define('_THEME_MANU_DIR_', _PS_IMG_.'m/');
 define('_THEME_SUP_DIR_', _PS_IMG_.'su/');
 define('_THEME_SHIP_DIR_', _PS_IMG_.'s/');
@@ -67,6 +69,8 @@ define('_MODULE_DIR_', __PS_BASE_URI__.'modules/');
 /* Define API URLs if not defined before */
 Tools::safeDefine('_PS_API_DOMAIN_', 'api.prestashop.com');
 Tools::safeDefine('_PS_API_URL_', 'http://'._PS_API_DOMAIN_);
-Tools::safeDefine('_PS_TAB_MODULE_LIST_URL_', _PS_API_URL_.'/xml/tab_modules_list_17.xml');
-Tools::safeDefine('_PS_API_MODULES_LIST_16_', _PS_API_DOMAIN_.'/xml/modules_list_16.xml');
+/** @deprecated Since 1.7.7 */
+Tools::safeDefine('_PS_TAB_MODULE_LIST_URL_', '');
+/** @deprecated Since 1.7.7 */
+Tools::safeDefine('_PS_API_MODULES_LIST_16_', '');
 Tools::safeDefine('_PS_CURRENCY_FEED_URL_', _PS_API_URL_.'/xml/currencies.xml');

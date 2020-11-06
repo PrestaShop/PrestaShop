@@ -23,13 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class DeleteCategoriesBulkActionExtension handles submitting of row action
  */
 export default class DeleteCategoriesBulkActionExtension {
-
   constructor() {
     return {
       extend: (grid) => this.extend(grid),

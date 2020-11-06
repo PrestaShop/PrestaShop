@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Toggle DNI input requirement on country selection
@@ -69,7 +69,7 @@ export default class CountryDniRequiredToggler {
   toggle() {
     $(this.countryDniInputLabelDangerSelector).remove();
     this.$countryDniInput.prop('required', false);
-    if (1 === parseInt($(this.countryInputSelectedSelector).attr('need_dni'), 10)) {
+    if (parseInt($(this.countryInputSelectedSelector).attr('need_dni'), 10) === 1) {
       this.$countryDniInput.prop('required', true);
       this.$countryDniInputLabel.prepend($('<span class="text-danger">*</span>'));
     }

@@ -1,7 +1,5 @@
 require('module-alias/register');
 const CommonPage = require('@pages/commonPage');
-const fs = require('fs');
-const imgGen = require('js-image-generator');
 
 module.exports = class BOBasePage extends CommonPage {
   constructor() {
@@ -88,6 +86,7 @@ module.exports = class BOBasePage extends CommonPage {
     // Shipping
     this.shippingLink = '#subtab-AdminParentShipping';
     this.carriersLink = '#subtab-AdminCarriers';
+    this.shippingPreferencesLink = '#subtab-AdminShipping';
 
     // Payment
     this.paymentParentLink = '#subtab-AdminParentPayment';
@@ -119,6 +118,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.contactLink = '#subtab-AdminParentStores';
     // traffic and SEO
     this.trafficAndSeoLink = '#subtab-AdminParentMeta';
+    // Search
+    this.searchLink = '#subtab-AdminParentSearchConf';
 
     // Advanced Parameters
     this.advancedParametersLink = '#subtab-AdminAdvancedParameters';
@@ -145,7 +146,7 @@ module.exports = class BOBasePage extends CommonPage {
     this.growlCloseButton = `${this.growlDefaultDiv} .growl-close`;
 
     // Alert Text
-    this.alertSuccessBlock = 'div.alert.alert-success:not([style=\'display: none;\'])';
+    this.alertSuccessBlock = "div.alert.alert-success:not([style='display: none;'])";
     this.alertSuccessBlockParagraph = `${this.alertSuccessBlock} div.alert-text p`;
     this.alertDangerBlock = 'div.alert.alert-danger';
     this.alertDangerBlockParagraph = `${this.alertDangerBlock} div.alert-text p`;
@@ -162,8 +163,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.modalDialogYesButton = `${this.modalDialog} button.continue`;
 
     // Symfony Toolbar
-    this.sfToolbarMainContentDiv = 'div[id*=\'sfToolbarMainContent\']';
-    this.sfCloseToolbarLink = 'a[id*=\'sfToolbarHideButton\']';
+    this.sfToolbarMainContentDiv = "div[id*='sfToolbarMainContent']";
+    this.sfCloseToolbarLink = "a[id*='sfToolbarHideButton']";
 
     // Sidebar
     this.rightSidebar = '#right-sidebar';
@@ -192,7 +193,7 @@ module.exports = class BOBasePage extends CommonPage {
     }
     await this.scrollTo(page, linkSelector);
     await this.clickAndWaitForNavigation(page, linkSelector);
-    await this.waitForVisibleSelector(page, `${linkSelector}.-active`);
+    await this.waitForVisibleSelector(page, `${linkSelector}.link-active`);
   }
 
   /**
@@ -257,33 +258,6 @@ module.exports = class BOBasePage extends CommonPage {
     if (await this.elementVisible(page, `${this.sfToolbarMainContentDiv}[style='display: block;']`, 1000)) {
       await page.click(this.sfCloseToolbarLink);
     }
-  }
-
-  /**
-   * Generate an image then upload it
-   * @param page
-   * @param selector
-   * @param imageName
-   * @return {Promise<void>}
-   */
-  async generateAndUploadImage(page, selector, imageName) {
-    await imgGen.generateImage(200, 200, 1, (err, image) => {
-      fs.writeFileSync(imageName, image.data);
-    });
-    const input = await page.$(selector);
-    await input.setInputFiles(imageName);
-  }
-
-  /**
-   * Delete a file from the project
-   * @param page
-   * @param file
-   * @param wait
-   * @return {Promise<void>}
-   */
-  async deleteFile(page, file, wait = 0) {
-    fs.unlinkSync(file);
-    await page.waitForTimeout(wait);
   }
 
   /**

@@ -36,7 +36,7 @@
     {% set route_params = route_params|merge({ (name) : (record[field] ?? field) }) %}
   {% endfor %}
 
-<a class="{{ class }}"
+<a class="{{ class }} grid-{{ action.name|lower|replace({' ': '-'}) }}-row-link"
    href="{{ path(action.options.route, route_params ) }}"
    data-confirm-message="{{ action.options.confirm_message }}"
   {% if attributes.tooltip_name %}

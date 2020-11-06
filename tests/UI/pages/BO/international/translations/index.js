@@ -29,10 +29,9 @@ class Translations extends BOBasePage {
     this.searchLanguageResult = 'li.select2-results__option--highlighted';
     this.addUpdateLanguageButton = `${this.addUpdateLanguageForm} .card-footer button`;
     // Export language form
-    this.exportLanguageForm = 'form[action*=\'translations/export\']';
     this.exportLanguageSelect = '#form_iso_code';
     this.exportLanguageThemeSelect = '#form_theme_name';
-    this.exportLanguageButton = `${this.exportLanguageForm} .card-footer button`;
+    this.exportLanguageButton = '#form-export-language-button';
   }
 
   /*

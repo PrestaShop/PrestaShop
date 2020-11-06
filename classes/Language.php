@@ -45,6 +45,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     const PACK_DOWNLOAD_TIMEOUT = 20;
 
+    /** @var int */
     public $id;
 
     /** @var string Name */
@@ -170,8 +171,8 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         }
 
         $themes = (new ThemeManagerBuilder(Context::getContext(), Db::getInstance()))
-                        ->buildRepository()
-                        ->getList();
+            ->buildRepository()
+            ->getList();
         foreach ($themes as $theme) {
             /** @var Theme $theme */
             $theme_dir = $theme->getDirectory();
@@ -291,10 +292,10 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     public static function getFilesList($iso_from, $theme_from, $iso_to = false, $theme_to = false, $select = false, $check = false, $modules = false)
     {
         if (empty($iso_from)) {
-            die(Tools::displayError());
+            throw new PrestaShopException(sprintf('Invalid language ISO code: %s', $iso_from));
         }
 
-        $copy = ($iso_to && $theme_to) ? true : false;
+        $copy = ($iso_to && $theme_to);
 
         $lPath_from = _PS_TRANSLATIONS_DIR_ . (string) $iso_from . '/';
         $tPath_from = _PS_ROOT_DIR_ . '/themes/' . (string) $theme_from . '/';
@@ -584,6 +585,9 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
             $modList = scandir(_PS_MODULE_DIR_, SCANDIR_SORT_NONE);
             foreach ($modList as $mod) {
+                if (!is_dir(_PS_MODULE_DIR_ . $mod)) {
+                    continue;
+                }
                 Tools::deleteDirectory(_PS_MODULE_DIR_ . $mod . '/mails/' . $this->iso_code);
                 $files = @scandir(_PS_MODULE_DIR_ . $mod . '/mails/', SCANDIR_SORT_NONE);
                 if (is_array($files) && count($files) <= 2) {
@@ -643,7 +647,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * @param int|false $id_shop Shop ID
      * @param bool $ids_only If true, returns an array of language IDs
      *
-     * @return array[] Language information
+     * @return array<int|array> Language information
      */
     public static function getLanguages($active = true, $id_shop = false, $ids_only = false)
     {
@@ -748,12 +752,12 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * @param string $iso_code Iso code
      * @param bool $no_cache
      *
-     * @return int|false|null
+     * @return int|null Language id, or null if not found
      */
     public static function getIdByIso($iso_code, $no_cache = false)
     {
         if (!Validate::isLanguageIsoCode($iso_code)) {
-            die(Tools::displayError(Context::getContext()->getTranslator()->trans('Fatal error: ISO code is not correct', [], 'Admin.International.Notification') . ' ' . Tools::safeOutput($iso_code)));
+            throw new PrestaShopException(sprintf('Invalid language ISO code: %s', $iso_code));
         }
 
         $key = 'Language::getIdByIso_' . $iso_code;
@@ -765,7 +769,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
             Cache::store($key, $id_lang);
 
-            return (int) $id_lang;
+            return (int) $id_lang ?: null;
         }
 
         return (int) Cache::retrieve($key);
@@ -865,14 +869,14 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      *
      * @param string $iso_code 2-letter iso code
      *
-     * @return string|false
+     * @return string|false Returns the language code, or false if it doesn't exist
      *
      * @throws PrestaShopException
      */
     public static function getLanguageCodeByIso($iso_code)
     {
         if (!Validate::isLanguageIsoCode($iso_code)) {
-            die(Tools::displayError(Context::getContext()->getTranslator()->trans('Fatal error: ISO code is not correct', [], 'Admin.International.Notification') . ' ' . Tools::safeOutput($iso_code)));
+            throw new PrestaShopException(sprintf('Invalid language ISO code: %s', $iso_code));
         }
 
         return Db::getInstance()->getValue('SELECT `language_code` FROM `' . _DB_PREFIX_ . 'lang` WHERE `iso_code` = \'' . pSQL(strtolower($iso_code)) . '\'');
@@ -891,7 +895,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     public static function getLanguageByIETFCode($code)
     {
         if (!Validate::isLanguageCode($code)) {
-            die(Tools::displayError(Context::getContext()->getTranslator()->trans('Fatal error: IETF code %s is not correct', [Tools::safeOutput($code)], 'Admin.International.Notification')));
+            throw new PrestaShopException(sprintf('Invalid IETF language tag: %s', $code));
         }
 
         // $code is in the form of 'xx-YY' where xx is the language code
@@ -923,7 +927,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     /**
      * Return array (id_lang, iso_code).
      *
-     * @param string $iso_code Iso code
+     * @param bool $active Select only active languages
      *
      * @return array Language (id_lang, iso_code)
      */
@@ -984,6 +988,10 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 				LEFT JOIN `' . _DB_PREFIX_ . 'lang_shop` ls ON (l.id_lang = ls.id_lang)';
 
         $result = Db::getInstance()->executeS($sql);
+        if (!is_array($result)) {
+            // executeS method can return false
+            return;
+        }
 
         foreach ($result as $row) {
             $idLang = (int) $row['id_lang'];
@@ -1345,73 +1353,65 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         return Cache::retrieve($key);
     }
 
-    public static function updateModulesTranslations(array $modules_list)
+    /**
+     * Updates multilanguage tables in all languages using DataLang
+     *
+     * @param array $modules_list [deprecated since 1.7.7] Not used anymore
+     */
+    public static function updateModulesTranslations(array $modules_list = [])
     {
-        $languages = Language::getLanguages(false);
+        $languages = static::getLanguages(false);
         foreach ($languages as $lang) {
-            $gz = false;
-            $files_listing = [];
-            $filegz = _PS_TRANSLATIONS_DIR_ . $lang['iso_code'] . '.gzip';
-
-            clearstatcache();
-            if (@filemtime($filegz) < (time() - (24 * 3600))) {
-                if (Language::downloadAndInstallLanguagePack($lang['iso_code'], null, null, false) !== true) {
-                    break;
-                }
-            }
-
-            $gz = new Archive_Tar($filegz, true);
-            if (!$gz) {
-                continue;
-            }
-            $files_list = Language::getLanguagePackListContent($lang['iso_code'], $gz);
-            foreach ($modules_list as $module_name) {
-                foreach ($files_list as $i => $file) {
-                    if (strpos($file['filename'], 'modules/' . $module_name . '/') !== 0) {
-                        unset($files_list[$i]);
-                    }
-                }
-            }
-            foreach ($files_list as $file) {
-                if (isset($file['filename']) && is_string($file['filename'])) {
-                    $files_listing[] = $file['filename'];
-                }
-            }
-            $gz->extractList($files_listing, _PS_TRANSLATIONS_DIR_ . '../', '');
+            static::updateMultilangTable($lang['iso_code']);
         }
     }
 
     /**
      * Update all table_lang from xlf & DataLang.
      *
-     * @param $iso_code
+     * @param string $iso_code 2-letter language code
      *
      * @return bool
      */
     public static function updateMultilangTable($iso_code)
     {
-        $useLang = Db::getInstance()->getRow('SELECT * FROM `' . _DB_PREFIX_ . 'lang` WHERE `iso_code` = "' . pSQL($iso_code) . '" ', true, false);
+        $langId = Language::getIdByIso($iso_code);
 
-        if (!empty($useLang)) {
-            $lang = new Language($useLang['id_lang']);
+        if (!empty($langId)) {
+            $lang = new Language($langId);
 
-            $tables = Db::getInstance()->executeS('SHOW TABLES LIKE \'' . str_replace('_', '\\_', _DB_PREFIX_) . '%\_lang\' ');
-            foreach ($tables as $table) {
-                foreach ($table as $t) {
-                    $className = ucfirst(Tools::toCamelCase(str_replace(_DB_PREFIX_, '', $t)));
-
-                    if (_DB_PREFIX_ . 'country_lang' == $t) {
-                        self::updateMultilangFromCldr($lang);
-                    } else {
-                        self::updateMultilangFromClass($t, $className, $lang);
-                    }
-                }
+            $rows = Db::getInstance()->executeS('SHOW TABLES LIKE \'' . str_replace('_', '\\_', _DB_PREFIX_) . '%\_lang\' ');
+            if (!empty($rows)) {
+                // get all values
+                $tableNames = array_map('reset', $rows);
+                static::updateMultilangTables($lang, $tableNames);
             }
-
-            Hook::exec('actionUpdateLangAfter', ['lang' => $lang]);
         }
 
         return true;
+    }
+
+    /**
+     * Translates translatable content in the requested database tables
+     *
+     * @param Language $language Language to translate to
+     * @param string[] $tablesToUpdate Tables to update (including datbase prefix, ending in _lang)
+     *
+     * @throws PrestaShopException
+     */
+    public static function updateMultilangTables(Language $language, array $tablesToUpdate)
+    {
+        foreach ($tablesToUpdate as $tableName) {
+            $className = ucfirst(Tools::toCamelCase(str_replace(_DB_PREFIX_, '', $tableName)));
+
+            if (_DB_PREFIX_ . 'country_lang' === $tableName) {
+                self::updateMultilangFromCldr($language);
+            } else {
+                self::updateMultilangFromClass($tableName, $className, $language);
+            }
+        }
+
+        Hook::exec('actionUpdateLangAfter', ['lang' => $language]);
     }
 
     public static function updateMultilangFromCldr($lang)
@@ -1450,7 +1450,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      *
      * @param string $table
      * @param string $className
-     * @param string $lang
+     * @param Language $lang
      *
      * @throws PrestaShopDatabaseException
      */
@@ -1479,7 +1479,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      *
      * @param string $tableName
      * @param DataLang $classObject
-     * @param string $lang
+     * @param Language $lang
      * @param Shop $shop
      * @param array $keys
      * @param array $fieldsToUpdate
@@ -1488,15 +1488,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     private static function updateMultilangFromClassForShop($tableName, $classObject, $lang, $shop, $keys, $fieldsToUpdate)
     {
-        $shopDefaultLangId = Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
-        $shopDefaultLanguage = new Language($shopDefaultLangId);
-
-        $translator = SymfonyContainer::getInstance()->get('translator');
-        if (!$translator->isLanguageLoaded($shopDefaultLanguage->locale)) {
-            (new TranslatorLanguageLoader(true))->loadLanguage($translator, $shopDefaultLanguage->locale);
-        }
-
-        $shopFieldExists = $primary_key_exists = false;
+        $shopFieldExists = false;
         $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `' . $tableName . '`');
         foreach ($columns as $column) {
             $fields[] = '`' . $column['Field'] . '`';
@@ -1515,6 +1507,14 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         );
 
         if (!empty($tableData)) {
+            $shopDefaultLangId = Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
+            $shopDefaultLanguage = new Language($shopDefaultLangId);
+
+            $translator = SymfonyContainer::getInstance()->get('translator');
+            if (!$translator->isLanguageLoaded($shopDefaultLanguage->locale)) {
+                (new TranslatorLanguageLoader(true))->loadLanguage($translator, $shopDefaultLanguage->locale);
+            }
+
             foreach ($tableData as $data) {
                 $updateWhere = '';
                 $updateField = '';

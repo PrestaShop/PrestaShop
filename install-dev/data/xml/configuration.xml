@@ -332,6 +332,9 @@
   <configuration id="PS_COOKIE_CHECKIP" name="PS_COOKIE_CHECKIP">
     <value>1</value>
   </configuration>
+  <configuration id="PS_COOKIE_SAMESITE" name="PS_COOKIE_SAMESITE">
+    <value>Lax</value>
+  </configuration>
   <configuration id="PS_USE_ECOTAX" name="PS_USE_ECOTAX">
     <value>0</value>
   </configuration>
@@ -615,7 +618,7 @@
     <value>1</value>
   </configuration>
   <configuration id="BLOCKADVERT_LINK" name="BLOCKADVERT_LINK">
-    <value>http://www.prestashop.com</value>
+    <value>https://www.prestashop.com</value>
   </configuration>
   <configuration id="BLOCKSTORE_IMG" name="BLOCKSTORE_IMG">
     <value>store.jpg</value>
@@ -630,13 +633,13 @@
     <value/>
   </configuration>
   <configuration id="blocksocial_facebook" name="BLOCKSOCIAL_FACEBOOK">
-    <value>http://www.facebook.com/prestashop</value>
+    <value>https://www.facebook.com/prestashop</value>
   </configuration>
   <configuration id="blocksocial_twitter" name="BLOCKSOCIAL_TWITTER">
-    <value>http://www.twitter.com/prestashop</value>
+    <value>https://www.twitter.com/prestashop</value>
   </configuration>
   <configuration id="blocksocial_rss" name="BLOCKSOCIAL_RSS">
-    <value>http://www.prestashop.com/blog/en/feed/</value>
+    <value>https://www.prestashop.com/blog/feed/</value>
   </configuration>
   <configuration id="blockcontactinfos_company" name="BLOCKCONTACTINFOS_COMPANY">
     <value>Your company</value>

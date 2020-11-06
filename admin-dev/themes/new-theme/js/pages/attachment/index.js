@@ -34,7 +34,7 @@ import SubmitRowActionExtension from '@components/grid/extension/action/row/subm
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import TranslatableInput from '@components/translatable-input';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const attachmentGrid = new Grid('attachment');

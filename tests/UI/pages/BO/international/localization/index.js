@@ -7,9 +7,9 @@ class Localization extends LocalizationBasePage {
 
     this.pageTitle = 'Localization • ';
     this.importLocalizationPackSuccessfulMessage = 'Localization pack imported successfully.';
+    this.successfulSettingsUpdateMessage = 'Update successful';
 
     // Import localization pack selectors
-    this.importLocalizationPackForm = 'form[name=\'import_localization_pack\']';
     this.importlocalizationPackSelect = '#import_localization_pack_iso_localization_pack';
     this.importStatesCheckbox = '#import_localization_pack_content_to_import_0';
     this.importTaxesCheckbox = '#import_localization_pack_content_to_import_1';
@@ -18,12 +18,13 @@ class Localization extends LocalizationBasePage {
     this.importUnitsCheckbox = '#import_localization_pack_content_to_import_4';
     this.updatepriceDisplayForGroupsCHeckbox = '#import_localization_pack_content_to_import_5';
     this.downloadPackDataSwitch = id => `label[for='import_localization_pack_download_pack_data_${id}']`;
-    this.importButton = `${this.importLocalizationPackForm} .card-footer button`;
+    this.importButton = '#form-import-localization-save-button';
     // Configuration form selectors
-    this.defaultLanguageSelector = '#form_configuration_default_language';
-    this.languageFromBrowserLabel = toggle => `label[for='form_configuration_detect_language_from_browser_${toggle}']`;
-    this.defaultCurrencySelect = '#form_configuration_default_currency';
-    this.saveConfigurationFormButton = '#main-div form[name=\'form\'] .card-footer button';
+    this.defaultLanguageSelector = '#form_default_language';
+    this.languageFromBrowserLabel = toggle => `label[for='form_detect_language_from_browser_${toggle}']`;
+    this.defaultCurrencySelect = '#form_default_currency';
+    this.defaultCountrySelect = '#form_default_country';
+    this.saveConfigurationFormButton = '#form-configuration-save-button';
   }
 
   /* Methods */
@@ -81,6 +82,18 @@ class Localization extends LocalizationBasePage {
     this.dialogListener(page);
     await this.selectByVisibleText(page, this.defaultCurrencySelect, currency);
     await this.waitForSelectorAndClick(page, this.saveConfigurationFormButton);
+    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Set default country
+   * @param page
+   * @param country
+   * @return {Promise<string>}
+   */
+  async setDefaultCountry(page, country) {
+    await this.selectByVisibleText(page, this.defaultCountrySelect, country);
+    await this.clickAndWaitForNavigation(page, this.saveConfigurationFormButton);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 }

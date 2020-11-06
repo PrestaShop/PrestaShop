@@ -88,7 +88,7 @@ class DataFormatterExtension extends \Twig_Extension
     /**
      * PHP 'unset()' exposed through twig template engine.
      *
-     * @param string $array Array containing Element to unset
+     * @param array $array Array containing Element to unset
      * @param string $key Element to be unset
      */
     public function unsetElement($array, $key)

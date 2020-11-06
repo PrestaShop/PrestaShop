@@ -375,3 +375,15 @@ admin_orders_products_search:
         _legacy_controller: AdminOrders
     options:
         expose: true
+
+admin_orders_set_internal_note:
+  path: /{orderId}/set-internal-note
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:setInternalNote
+    _legacy_controller: AdminOrders
+    _legacy_link: AdminOrders:updateInternalNote
+    _legacy_parameters:
+      id_order: orderId
+  requirements:
+    orderId: \d+

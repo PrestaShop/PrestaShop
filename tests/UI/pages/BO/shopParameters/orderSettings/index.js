@@ -9,25 +9,29 @@ class OrderSettings extends BOBasePage {
     this.successfulUpdateMessage = 'Update successful';
 
     // Selectors
-    this.generalForm = '#configuration_form';
+    // SubTab
+    this.statusesTab = '#subtab-AdminStatuses';
+    // Form
+    this.generalForm = '#configuration_general_form';
     this.enableFinalSummaryLabel = toggle => `${this.generalForm}`
-      + ` label[for='form_general_enable_final_summary_${toggle}']`;
+      + ` label[for='general_enable_final_summary_${toggle}']`;
     this.enableGuestCheckoutLabel = toggle => `${this.generalForm}`
-      + ` label[for='form_general_enable_guest_checkout_${toggle}']`;
+      + ` label[for='general_enable_guest_checkout_${toggle}']`;
     this.disableReorderingLabel = toggle => `${this.generalForm}`
-      + ` label[for='form_general_disable_reordering_option_${toggle}']`;
-    this.minimumPurchaseRequiredValue = '#form_general_purchase_minimum_value';
-    this.enableTermsOfServiceLabel = toggle => `${this.generalForm} label[for='form_general_enable_tos_${toggle}']`;
-    this.pageForTermsAndConditionsSelect = '#form_general_tos_cms_id';
-    this.saveGeneralFormButton = `${this.generalForm} .card-footer button`;
+      + ` label[for='general_disable_reordering_option_${toggle}']`;
+    this.minimumPurchaseRequiredValue = '#general_purchase_minimum_value';
+    this.enableTermsOfServiceLabel = toggle => `${this.generalForm} label[for='general_enable_tos_${toggle}']`;
+    this.pageForTermsAndConditionsSelect = '#general_tos_cms_id';
+    this.saveGeneralFormButton = `${this.generalForm} #form-general-save-button`;
     // Gift options form
-    this.giftWrappingToggle = toggle => `${this.generalForm}`
-      + ` label[for='form_gift_options_enable_gift_wrapping_${toggle}']`;
-    this.giftWrappingPriceInput = '#form_gift_options_gift_wrapping_price';
-    this.giftWrappingTaxSelect = '#form_gift_options_gift_wrapping_tax_rules_group';
-    this.recycledPackagingToggle = toggle => `${this.generalForm}`
-    + ` label[for='form_gift_options_offer_recyclable_pack_${toggle}']`;
-    this.saveGiftOptionsFormButton = `${this.generalForm} div:nth-of-type(2) .card-footer button`;
+    this.giftForm = '#configuration_gift_options_form';
+    this.giftWrappingToggle = toggle => `${this.giftForm}`
+      + ` label[for='gift_options_enable_gift_wrapping_${toggle}']`;
+    this.giftWrappingPriceInput = '#gift_options_gift_wrapping_price';
+    this.giftWrappingTaxSelect = '#gift_options_gift_wrapping_tax_rules_group';
+    this.recycledPackagingToggle = toggle => `${this.giftForm}`
+    + ` label[for='gift_options_offer_recyclable_pack_${toggle}']`;
+    this.saveGiftOptionsFormButton = `${this.giftForm} #form-gift-save-button`;
   }
 
   /*
@@ -117,6 +121,15 @@ class OrderSettings extends BOBasePage {
     await page.click(this.recycledPackagingToggle(recyclePackagingStatus ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveGiftOptionsFormButton);
     return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /**
+   * Go to statuses page
+   * @param page
+   * @returns {Promise<void>}
+   */
+  async goToStatusesPage(page) {
+    await this.clickAndWaitForNavigation(page, this.statusesTab);
   }
 }
 

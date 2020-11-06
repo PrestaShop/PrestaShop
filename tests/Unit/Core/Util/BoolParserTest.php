@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace Tests\Unit\PrestaShopBundle\Utils;
+namespace Tests\Unit\Core\Util;
 
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;

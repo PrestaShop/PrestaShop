@@ -31,7 +31,7 @@
   </h3>
   <div class="card-block">
     <div class="js-available-field-template d-none"></div>
-    <span class="help-box js-available-field-popover-template d-none" data-toggle="popover"></span>
+    {% include '@Common/HelpBox/helpbox.html.twig' with { "classes" : "js-available-field-popover-template d-none" } %}
     <div
       class="alert alert-info js-available-fields"
       role="alert"

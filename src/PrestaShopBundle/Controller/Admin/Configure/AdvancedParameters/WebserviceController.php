@@ -70,7 +70,7 @@ class WebserviceController extends FrameworkBundleAdminController
             '@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/index.html.twig',
             [
                 'help_link' => $this->generateSidebarLink($request->get('_legacy_controller')),
-                'form' => $form->createView(),
+                'webserviceConfigurationForm' => $form->createView(),
                 'grid' => $presentedGrid,
                 'configurationWarnings' => $configurationWarnings,
             ]
@@ -250,7 +250,7 @@ class WebserviceController extends FrameworkBundleAdminController
         $webserviceToEnable = $request->request->get('webservice_key_bulk_action');
         $statusModifier = $this->get('prestashop.adapter.webservice.webservice_key_status_modifier');
 
-        $statusModifier->setStatus($webserviceToEnable, 1);
+        $statusModifier->setStatus($webserviceToEnable, true);
 
         return $this->redirectToRoute('admin_webservice_keys_index');
     }
@@ -270,7 +270,7 @@ class WebserviceController extends FrameworkBundleAdminController
         $webserviceToEnable = $request->request->get('webservice_key_bulk_action');
         $statusModifier = $this->get('prestashop.adapter.webservice.webservice_key_status_modifier');
 
-        $statusModifier->setStatus($webserviceToEnable, 0);
+        $statusModifier->setStatus($webserviceToEnable, false);
 
         return $this->redirectToRoute('admin_webservice_keys_index');
     }
@@ -335,7 +335,7 @@ class WebserviceController extends FrameworkBundleAdminController
     /**
      * @return FormHandlerInterface
      */
-    private function getFormHandler()
+    private function getFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.adapter.webservice.form_handler');
     }

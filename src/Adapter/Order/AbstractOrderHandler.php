@@ -35,7 +35,7 @@ use Currency;
 use Customer;
 use Group;
 use Order;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Number\RoundModeConverter;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
@@ -188,8 +188,8 @@ abstract class AbstractOrderHandler
     /**
      * Create a specific price, or update it if it already exists
      *
-     * @param \PrestaShop\Decimal\Number $priceTaxIncluded
-     * @param \PrestaShop\Decimal\Number $priceTaxExcluded
+     * @param DecimalNumber $priceTaxIncluded
+     * @param DecimalNumber $priceTaxExcluded
      * @param Order $order
      * @param Product $product
      * @param Combination|null $combination
@@ -198,8 +198,8 @@ abstract class AbstractOrderHandler
      * @throws PrestaShopDatabaseException
      */
     protected function updateSpecificPrice(
-        Number $priceTaxIncluded,
-        Number $priceTaxExcluded,
+        DecimalNumber $priceTaxIncluded,
+        DecimalNumber $priceTaxExcluded,
         Order $order,
         Product $product,
         ?Combination $combination
@@ -246,23 +246,23 @@ abstract class AbstractOrderHandler
     }
 
     /**
-     * @param \PrestaShop\Decimal\Number $priceTaxIncluded
-     * @param \PrestaShop\Decimal\Number $priceTaxExcluded
+     * @param DecimalNumber $priceTaxIncluded
+     * @param DecimalNumber $priceTaxExcluded
      * @param Order $order
      * @param Product $product
      *
-     * @return \PrestaShop\Decimal\Number
+     * @return DecimalNumber
      */
     private function getPrecisePriceTaxExcluded(
-        Number $priceTaxIncluded,
-        Number $priceTaxExcluded,
+        DecimalNumber $priceTaxIncluded,
+        DecimalNumber $priceTaxExcluded,
         Order $order,
         Product $product
-    ): Number {
+    ): DecimalNumber {
         $taxAddress = new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
         $taxManager = TaxManagerFactory::getManager($taxAddress, Product::getIdTaxRulesGroupByIdProduct((int) $product->id, Context::getContext()));
         $productTaxCalculator = $taxManager->getTaxCalculator();
-        $taxFactor = new Number((string) (1 + ($productTaxCalculator->getTotalRate() / 100)));
+        $taxFactor = new DecimalNumber((string) (1 + ($productTaxCalculator->getTotalRate() / 100)));
 
         $computedPriceTaxIncluded = $priceTaxExcluded->times($taxFactor);
         if ($computedPriceTaxIncluded->equals($priceTaxIncluded)) {
@@ -315,16 +315,16 @@ abstract class AbstractOrderHandler
      * @param Order $order
      * @param Combination|null $combination
      *
-     * @return \PrestaShop\Decimal\Number
+     * @return DecimalNumber
      */
     protected function getProductRegularPrice(
         Product $product,
         Order $order,
         ?Combination $combination
-    ): Number {
+    ): DecimalNumber {
         // Get price via getPriceStatic so that the catalog price rules are applied
 
-        return new Number((string) Product::getPriceStatic(
+        return new DecimalNumber((string) Product::getPriceStatic(
             $product->id,
             false,
             null !== $combination ? $combination->id : 0,
@@ -346,5 +346,23 @@ abstract class AbstractOrderHandler
     protected function getNumberRoundMode(): string
     {
         return RoundModeConverter::getNumberRoundMode((int) Configuration::get('PS_PRICE_ROUND_MODE'));
+    }
+
+    /**
+     * Delivery option consists of deliveryAddress and carrierId.
+     *
+     * Legacy multishipping feature used comma separated carriers in delivery option (e.g. {'1':'6,7'}
+     * Now that multishipping is gone - delivery option should consist of one carrier and one address.
+     *
+     * However the structure of deliveryOptions is still used with comma in legacy, so
+     * this method provides assurance for deliveryOption structure until major refactoring
+     *
+     * @param int $carrierId
+     *
+     * @return string
+     */
+    protected function formatLegacyDeliveryOptionFromCarrierId(int $carrierId): string
+    {
+        return sprintf('%d,', $carrierId);
     }
 }

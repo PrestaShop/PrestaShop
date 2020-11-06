@@ -34,6 +34,11 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationC
 class CombinationId
 {
     /**
+     * Indicates that no combination is provided/selected
+     */
+    const NO_COMBINATION = 0;
+
+    /**
      * @var int
      */
     private $combinationId;

@@ -44,12 +44,14 @@ class CustomerDeleteMethod
     const DENY_CUSTOMER_REGISTRATION = 'deny_registration_after';
 
     /**
-     * @var int
+     * @var string
      */
     private $method;
 
     /**
-     * @param $method
+     * @param string $method
+     *
+     * @throws CustomerException
      */
     public function __construct($method)
     {
@@ -76,6 +78,8 @@ class CustomerDeleteMethod
 
     /**
      * @param string $method
+     *
+     * @throws CustomerException
      */
     private function assertMethodIsDefined($method)
     {

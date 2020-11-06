@@ -25,8 +25,8 @@
 
 import TranslationSettingsPage from './TranslationSettingsPage';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
-    new TranslationSettingsPage();
+  new TranslationSettingsPage();
 });

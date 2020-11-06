@@ -38,36 +38,19 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class UrlSchemaType extends AbstractType
 {
     /**
-     * @var bool
-     */
-    private $isRewriteSettingEnabled;
-
-    /**
-     * UrlSchemaType constructor.
-     *
-     * @param bool $isRewriteSettingEnabled
-     */
-    public function __construct($isRewriteSettingEnabled)
-    {
-        $this->isRewriteSettingEnabled = $isRewriteSettingEnabled;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($this->isRewriteSettingEnabled) {
-            $builder
-                ->add('product_rule', TextType::class)
-                ->add('category_rule', TextType::class)
-                ->add('layered_rule', TextType::class)
-                ->add('supplier_rule', TextType::class)
-                ->add('manufacturer_rule', TextType::class)
-                ->add('cms_rule', TextType::class)
-                ->add('cms_category_rule', TextType::class)
-                ->add('module', TextType::class);
-        }
+        $builder
+            ->add('product_rule', TextType::class)
+            ->add('category_rule', TextType::class)
+            ->add('layered_rule', TextType::class)
+            ->add('supplier_rule', TextType::class)
+            ->add('manufacturer_rule', TextType::class)
+            ->add('cms_rule', TextType::class)
+            ->add('cms_category_rule', TextType::class)
+            ->add('module', TextType::class);
     }
 
     /**

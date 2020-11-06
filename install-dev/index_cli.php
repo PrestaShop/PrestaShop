@@ -30,6 +30,9 @@ require_once 'install_version.php';
 if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < _PS_INSTALL_MINIMUM_PHP_VERSION_ID_) {
     die('You need at least PHP '._PS_INSTALL_MINIMUM_PHP_VERSION_.' to install PrestaShop. Your current PHP version is '.PHP_VERSION);
 }
+if (PHP_VERSION_ID > _PS_INSTALL_MAXIMUM_PHP_VERSION_ID_) {
+    die('You need at most PHP '._PS_INSTALL_MAXIMUM_PHP_VERSION_.' to install PrestaShop. Your current PHP version is '.PHP_VERSION);
+}
 
 /* Redefine REQUEST_URI */
 $_SERVER['REQUEST_URI'] = '/install/index_cli.php';
@@ -55,11 +58,7 @@ try {
     exit(0);
 } catch (PrestashopInstallerException $e) {
     $e->displayMessage();
-} catch (Throwable $t) {
-    // Executed only in PHP 7, will not match in PHP 5.
-    // Allows `Error` classes to be catched, without throwing an error on PHP 5.
-    echo $t->getMessage();
-} catch (Exception $e) {
-    echo $e->getMessage();
+} catch (Throwable $e) {
+    echo (string) $e;
 }
 exit(1);

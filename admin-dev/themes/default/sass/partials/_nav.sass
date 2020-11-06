@@ -141,8 +141,20 @@
 				padding: 0.9375rem 1.25rem
 
 .main-menu
-	padding: 0 0 5.313rem 0
+	padding: 0 0 13.313rem 0
 	margin: 0
+
+	&.sidebar-closed
+		.link-levelone
+			.link > span
+				display: none
+
+				&.open
+					> .submenu
+						display: none
+
+		.categort-title > .title
+			display: none
 
 	.category-title > .title
 		text-transform: uppercase
@@ -171,10 +183,7 @@
 					.sub-tabs-arrow
 						visibility: visible
 
-		&.-active
-			+media-breakpoint-down(md)
-				border-right: none
-
+		&.link-active
 			> .link
 				border-left: .25rem solid #25b9d7
 				padding-left: .638rem
@@ -182,6 +191,8 @@
 				.material-icons
 					&:first-child
 						color: #25b9d7
+			+media-breakpoint-down(md)
+				border-right: none
 
 		&:not(#subtab-AdminParentModulesSf)
 			i.material-icons.mi-extension
@@ -214,7 +225,7 @@
 				line-height: inherit
 
 		&.ul-open,
-		&.-active,
+		&.link-active,
 		&.-hover
 			& > .link
 				background: #202226
@@ -258,7 +269,7 @@
 							padding-bottom: 1.5rem
 
 		&.ul-open,
-		&.-active
+		&.link-active
 			.link
 				background: #202226
 
@@ -269,7 +280,7 @@
 	.link-leveltwo
 		@extend .link-levelone
 
-		&.-active
+		&.link-active
 			> .link
 				padding-left: 0
 				border-left: none
@@ -420,4 +431,3 @@
 
 	&.expanded
 		display: block
-

@@ -17,6 +17,8 @@ RUN apt install -y \
     poppler-utils
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN apt install -y nodejs
 
 COPY ["./.docker/prestashop/wait-for-it.sh", "./.docker/prestashop/docker_run.sh", "/tmp/"]
 

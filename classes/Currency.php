@@ -60,7 +60,7 @@ class CurrencyCore extends ObjectModel
     /**
      * Numeric ISO 4217 code of this currency.
      *
-     * @var string
+     * @var string|null
      */
     public $numeric_iso_code;
 
@@ -175,7 +175,7 @@ class CurrencyCore extends ObjectModel
         'multilang' => true,
         'fields' => [
             'iso_code' => ['type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3],
-            'numeric_iso_code' => ['type' => self::TYPE_STRING, 'validate' => 'isNumericIsoCode', 'size' => 3],
+            'numeric_iso_code' => ['type' => self::TYPE_STRING, 'allow_null' => true, 'validate' => 'isNumericIsoCode', 'size' => 3],
             'precision' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
             'conversion_rate' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true, 'shop' => true],
             'deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
@@ -238,7 +238,7 @@ class CurrencyCore extends ObjectModel
      * CurrencyCore constructor.
      *
      * @param int|null $id
-     * @param false|null $idLang if null or false, default language will be used
+     * @param int|false|null $idLang if null or false, default language will be used
      * @param int|null $idShop
      */
     public function __construct($id = null, $idLang = null, $idShop = null)
@@ -293,6 +293,11 @@ class CurrencyCore extends ObjectModel
         }
     }
 
+    /**
+     * @param string|null $ws_params_attribute_name
+     *
+     * @return array
+     */
     public function getWebserviceParameters($ws_params_attribute_name = null)
     {
         $parameters = parent::getWebserviceParameters($ws_params_attribute_name);
@@ -466,12 +471,14 @@ class CurrencyCore extends ObjectModel
     {
         if ($this->id == Configuration::get('PS_CURRENCY_DEFAULT')) {
             $result = Db::getInstance()->getRow('SELECT `id_currency` FROM ' . _DB_PREFIX_ . 'currency WHERE `id_currency` != ' . (int) $this->id . ' AND `deleted` = 0');
-            if (!$result['id_currency']) {
+            if (empty($result['id_currency'])) {
                 return false;
             }
+
             Configuration::updateValue('PS_CURRENCY_DEFAULT', $result['id_currency']);
         }
-        $this->deleted = 1;
+
+        $this->deleted = true;
 
         // Remove currency restrictions
         $res = Db::getInstance()->delete('module_currency', 'id_currency = ' . (int) $this->id);
@@ -540,6 +547,9 @@ class CurrencyCore extends ObjectModel
         return Tools::ucfirst($this->name[$id_lang]);
     }
 
+    /**
+     * @return string
+     */
     public function getSymbol()
     {
         if (is_string($this->symbol)) {
@@ -549,6 +559,10 @@ class CurrencyCore extends ObjectModel
         $id_lang = $this->id_lang;
         if (null === $id_lang) {
             $id_lang = Configuration::get('PS_LANG_DEFAULT');
+        }
+
+        if (!isset($this->symbol[$id_lang])) {
+            return '';
         }
 
         return Tools::ucfirst($this->symbol[$id_lang]);
@@ -698,6 +712,11 @@ class CurrencyCore extends ObjectModel
         return $currencies;
     }
 
+    /**
+     * @param int|null $shopId
+     *
+     * @return array
+     */
     public function getInstalledCurrencies($shopId = null)
     {
         $shopId = $shopId ?: Context::getContext()->shop->id;
@@ -737,6 +756,8 @@ class CurrencyCore extends ObjectModel
      *
      * @param $currencies mixed object|array
      * @param $isObject bool
+     *
+     * @return mixed object|array
      */
     protected static function addCldrDatasToCurrency($currencies, $isObject = false)
     {
@@ -759,6 +780,12 @@ class CurrencyCore extends ObjectModel
         return $currencies;
     }
 
+    /**
+     * @param int $idModule
+     * @param int|null $idShop
+     *
+     * @return array
+     */
     public static function getPaymentCurrenciesSpecial($idModule, $idShop = null)
     {
         if (null === $idShop) {
@@ -777,7 +804,7 @@ class CurrencyCore extends ObjectModel
      * Get payment Currencies.
      *
      * @param int $idModule Module ID
-     * @param null $idShop Shop ID
+     * @param int|null $idShop Shop ID
      *
      * @return array|false|mysqli_result|PDOStatement|resource|null
      */
@@ -803,7 +830,7 @@ class CurrencyCore extends ObjectModel
      * Check payment Currencies.
      *
      * @param int $idModule Module ID
-     * @param null $idShop Shop ID
+     * @param int|null $idShop Shop ID
      *
      * @return array|PDOStatement|resource|null
      */

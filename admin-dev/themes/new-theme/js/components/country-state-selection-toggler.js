@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Displays, fills or hides State selection block depending on selected country.
@@ -83,7 +83,7 @@ export default class CountryStateSelectionToggler {
       this.toggle();
     }).catch((response) => {
       if (typeof response.responseJSON !== 'undefined') {
-        showErrorMessage(response.responseJSON.message);
+        window.showErrorMessage(response.responseJSON.message);
       }
     });
   }
@@ -96,5 +96,4 @@ export default class CountryStateSelectionToggler {
       this.$stateSelectionBlock.fadeOut();
     }
   }
-
 }

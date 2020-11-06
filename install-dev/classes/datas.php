@@ -160,6 +160,12 @@ class Datas
             'default' => 1,
             'help' => 'enable rewrite engine for PrestaShop',
         ),
+        'fixtures' => array(
+            'name' => 'fixtures',
+            'default' => '1',
+            'validate' => 'isInt',
+            'help' => 'enable fixtures installation',
+        ),
     );
 
     protected $datas = array();
@@ -206,6 +212,8 @@ class Datas
 
             if ($res[1] == 'license' && !isset($res[2])) {
                 $res[2] = 1;
+            } elseif ($res[1] == 'prefix' && empty($res[2])) {
+                $res[2] = '';
             } elseif (!isset($res[2])) {
                 continue;
             }

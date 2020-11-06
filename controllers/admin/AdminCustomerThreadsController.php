@@ -641,7 +641,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 $product = new Product((int) $mess['id_product'], false, $this->context->language->id);
                 if (Validate::isLoadedObject($product)) {
                     $messages[$key]['product_name'] = $product->name;
-                    $messages[$key]['product_link'] = $this->context->link->getAdminLink('AdminProducts') . '&updateproduct&id_product=' . (int) $product->id;
+                    $messages[$key]['product_link'] = $this->context->link->getAdminLink('AdminProducts', true, ['id_product' => (int) $product->id, 'updateproduct' => '1']);
                 }
             }
         }
@@ -955,7 +955,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         // Show the errors.
         if (isset($sync_errors['hasError']) && $sync_errors['hasError']) {
             if (isset($sync_errors['errors'])) {
-                foreach ($sync_errors['errors'] as &$error) {
+                foreach ($sync_errors['errors'] as $error) {
                     $this->displayWarning($error);
                 }
             }

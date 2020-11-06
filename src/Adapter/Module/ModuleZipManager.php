@@ -88,8 +88,8 @@ class ModuleZipManager
     {
         $this->initSource($source);
 
-        if ($this->getSource($source)->getName($source) !== null) {
-            return $this->getSource($source)->getName($source);
+        if ($this->getSource($source)->getName() !== null) {
+            return $this->getSource($source)->getName();
         }
 
         if (!file_exists($source)) {
@@ -111,6 +111,7 @@ class ModuleZipManager
             ->ignoreVCS(true);
 
         $validModuleStructure = false;
+        $moduleName = '';
         // We must have only one folder in the zip, which contains the module files
         if (iterator_count($directories->directories()) == 1) {
             $directories = iterator_to_array($directories);
@@ -118,11 +119,11 @@ class ModuleZipManager
 
             // Inside of this folder, we MUST have a file called <module name>.php
             $moduleFolder = Finder::create()
-                    ->files()
-                    ->in($sandboxPath . $moduleName)
-                    ->depth('== 0')
-                    ->exclude(['__MACOSX'])
-                    ->ignoreVCS(true);
+                ->files()
+                ->in($sandboxPath . $moduleName)
+                ->depth('== 0')
+                ->exclude(['__MACOSX'])
+                ->ignoreVCS(true);
             foreach (iterator_to_array($moduleFolder) as $file) {
                 if ($file->getFileName() === $moduleName . '.php') {
                     $validModuleStructure = true;
@@ -171,7 +172,7 @@ class ModuleZipManager
     }
 
     /**
-     * @param $source
+     * @param string $source
      *
      * @return string|null
      */

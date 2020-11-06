@@ -38,7 +38,9 @@ use Tools;
  */
 class LogoUploader
 {
-    /** @var $shop the shop */
+    /**
+     * @var Shop
+     */
     private $shop;
 
     /**
@@ -82,9 +84,9 @@ class LogoUploader
     /**
      * Generic function which allows logo upload.
      *
-     * @param $fieldName
-     * @param $logoPrefix
-     * @param $files[] the array of files to avoid use $_POST
+     * @param string $fieldName
+     * @param string $logoPrefix
+     * @param array<string,array<string,string>> $files[] the array of files to avoid use $_POST
      *
      * @return bool
      *
@@ -177,6 +179,12 @@ class LogoUploader
         return !count($this->errors);
     }
 
+    /**
+     * @param string $logoPrefix
+     * @param string $fileExtension
+     *
+     * @return string
+     */
     private function getLogoName($logoPrefix, $fileExtension)
     {
         $shopId = $this->shop->id;

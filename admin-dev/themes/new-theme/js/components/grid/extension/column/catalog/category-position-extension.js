@@ -23,19 +23,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import tableDnD from "tablednd/dist/jquery.tablednd.min";
+import 'tablednd/dist/jquery.tablednd.min';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class CategoryPositionExtension extends Grid with reorderable category positions
  */
 export default class CategoryPositionExtension {
-
   constructor() {
     return {
       extend: (grid) => this.extend(grid),
-    }
+    };
   }
 
   /**
@@ -46,7 +45,7 @@ export default class CategoryPositionExtension {
   extend(grid) {
     this.grid = grid;
 
-    this._addIdsToGridTableRows();
+    this.addIdsToGridTableRows();
 
     grid.getContainer().find('.js-grid-table').tableDnD({
       dragHandle: '.js-drag-handle',
@@ -54,7 +53,7 @@ export default class CategoryPositionExtension {
       onDragStart: () => {
         this.originalPositions = decodeURIComponent($.tableDnD.serialize());
       },
-      onDrop: (table, row) => this._handleCategoryPositionChange(row),
+      onDrop: (table, row) => this.handleCategoryPositionChange(row),
     });
   }
 
@@ -65,31 +64,31 @@ export default class CategoryPositionExtension {
    *
    * @private
    */
-  _handleCategoryPositionChange(row) {
+  handleCategoryPositionChange(row) {
     const positions = decodeURIComponent($.tableDnD.serialize());
     const way = (this.originalPositions.indexOf(row.id) < positions.indexOf(row.id)) ? 1 : 0;
 
-    const $categoryPositionContainer = $(row).find('.js-' + this.grid.getId() + '-position:first');
+    const $categoryPositionContainer = $(row).find(`.js-${this.grid.getId()}-position:first`);
 
     const categoryId = $categoryPositionContainer.data('id');
     const categoryParentId = $categoryPositionContainer.data('id-parent');
     const positionUpdateUrl = $categoryPositionContainer.data('position-update-url');
 
-    let params = positions.replace(new RegExp(this.grid.getId() + '_grid_table', 'g'), 'positions');
+    let params = positions.replace(new RegExp(`${this.grid.getId()}_grid_table`, 'g'), 'positions');
 
-    let queryParams = {
+    const queryParams = {
       id_category_parent: categoryParentId,
       id_category_to_move: categoryId,
-      way: way
+      way,
     };
 
     if (positions.indexOf('_0&') !== -1) {
       queryParams.found_first = 1;
     }
 
-    params += '&' + $.param(queryParams);
+    params += `&${$.param(queryParams)}`;
 
-    this._updateCategoryPosition(positionUpdateUrl, params);
+    this.updateCategoryPosition(positionUpdateUrl, params);
   }
 
   /**
@@ -97,10 +96,10 @@ export default class CategoryPositionExtension {
    *
    * @private
    */
-  _addIdsToGridTableRows() {
+  addIdsToGridTableRows() {
     this.grid.getContainer()
       .find('.js-grid-table')
-      .find('.js-' + this.grid.getId() + '-position')
+      .find(`.js-${this.grid.getId()}-position`)
       .each((index, positionWrapper) => {
         const $positionWrapper = $(positionWrapper);
 
@@ -108,7 +107,7 @@ export default class CategoryPositionExtension {
         const categoryParentId = $positionWrapper.data('id-parent');
         const position = $positionWrapper.data('position');
 
-        const id = 'tr_' + categoryParentId + '_' + categoryId + '_' + position;
+        const id = `tr_${categoryParentId}_${categoryId}_${position}`;
 
         $positionWrapper.closest('tr').attr('id', id);
       });
@@ -119,10 +118,10 @@ export default class CategoryPositionExtension {
    *
    * @private
    */
-  _updateCategoryIdsAndPositions() {
+  updateCategoryIdsAndPositions() {
     this.grid.getContainer()
       .find('.js-grid-table')
-      .find('.js-' + this.grid.getId() + '-position')
+      .find(`.js-${this.grid.getId()}-position`)
       .each((index, positionWrapper) => {
         const $positionWrapper = $(positionWrapper);
         const $row = $positionWrapper.closest('tr');
@@ -131,7 +130,7 @@ export default class CategoryPositionExtension {
         const newPosition = offset > 0 ? index + offset : index;
 
         const oldId = $row.attr('id');
-        $row.attr('id', oldId.replace(/_[0-9]$/g, '_' + newPosition));
+        $row.attr('id', oldId.replace(/_[0-9]$/g, `_${newPosition}`));
 
         $positionWrapper.find('.js-position').text(newPosition + 1);
         $positionWrapper.data('position', newPosition);
@@ -146,22 +145,22 @@ export default class CategoryPositionExtension {
    *
    * @private
    */
-  _updateCategoryPosition(url, params) {
+  updateCategoryPosition(url, params) {
     $.post({
-      url: url,
+      url,
       headers: {
-        'cache-control': 'no-cache'
+        'cache-control': 'no-cache',
       },
       data: params,
-      dataType: 'json'
+      dataType: 'json',
     }).then((response) => {
       if (response.success) {
-        showSuccessMessage(response.message);
+        window.showSuccessMessage(response.message);
       } else {
-        showErrorMessage(response.message);
+        window.showErrorMessage(response.message);
       }
 
-      this._updateCategoryIdsAndPositions();
+      this.updateCategoryIdsAndPositions();
     });
   }
 }

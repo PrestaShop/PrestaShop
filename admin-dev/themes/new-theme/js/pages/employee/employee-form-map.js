@@ -43,4 +43,4 @@ export default {
   confirmNewPasswordInput: '#employee_change_password_new_password_second',
   generatedPasswordDisplayInput: '#employee_change_password_generated_password',
   passwordStrengthFeedbackContainer: '.js-password-strength-feedback',
-}
+};

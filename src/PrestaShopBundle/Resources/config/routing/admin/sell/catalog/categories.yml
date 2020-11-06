@@ -138,7 +138,7 @@ admin_categories_delete_menu_thumbnail:
             id_category: categoryId
     requirements:
         categoryId: \d+
-        menuThumbnailId: 0|1|2  menu thumbnails only have 3 fixed ids
+        menuThumbnailId: 0|1|2
 
 admin_categories_update_position:
     path: /update-positions

@@ -499,8 +499,8 @@ class SupplierController extends FrameworkBundleAdminController
             UploadedImageConstraintException::class => [
                 UploadedImageConstraintException::EXCEEDED_SIZE => $this->trans(
                     'Maximum image size: %s.', 'Admin.Global', [
-                    $iniConfig->getUploadMaxSizeInBytes(),
-                ]),
+                        $iniConfig->getUploadMaxSizeInBytes(),
+                    ]),
                 UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
                     'Image format not recognized, allowed formats are: .gif, .jpg, .png',
                     'Admin.Notifications.Error'

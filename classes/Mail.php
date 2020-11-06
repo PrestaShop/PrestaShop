@@ -543,6 +543,14 @@ class MailCore extends ObjectModel
                 false,
                 $idShop
             );
+            $templateVars['{order_slip_url}'] = Context::getContext()->link->getPageLink(
+                'order-slip',
+                true,
+                $idLang,
+                null,
+                false,
+                $idShop
+            );
             $templateVars['{color}'] = Tools::safeOutput(Configuration::get('PS_MAIL_COLOR', null, null, $idShop));
             // Get extra template_vars
             $extraTemplateVars = [];
@@ -582,7 +590,7 @@ class MailCore extends ObjectModel
                             (new Swift_Attachment())->setFilename(
                                 $attachment['name']
                             )->setContentType($attachment['mime'])
-                            ->setBody($attachment['content'])
+                                ->setBody($attachment['content'])
                         );
                     }
                 }
@@ -602,7 +610,7 @@ class MailCore extends ObjectModel
             if ($send && Configuration::get('PS_LOG_EMAILS')) {
                 $mail = new Mail();
                 $mail->template = Tools::substr($template, 0, 62);
-                $mail->subject = Tools::substr($subject, 0, 255);
+                $mail->subject = Tools::substr($message->getSubject(), 0, 255);
                 $mail->id_lang = (int) $idLang;
                 $recipientsTo = $message->getTo();
                 $recipientsCc = $message->getCc();

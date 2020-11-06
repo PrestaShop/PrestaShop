@@ -190,6 +190,7 @@ class StockManager
                 'id_product' => $product->id,
                 'id_product_attribute' => $id_product_attribute,
                 'quantity' => $stockAvailable->quantity,
+                'delta_quantity' => $delta_quantity,
             ]
         );
 
@@ -337,37 +338,40 @@ class StockManager
     /**
      * Public method to save a Movement.
      *
-     * @param $productId
-     * @param $productAttributeId
-     * @param $deltaQuantity
+     * @param int $productId
+     * @param int $productAttributeId
+     * @param int $deltaQuantity
      * @param array $params
      *
      * @return bool
      */
     public function saveMovement($productId, $productAttributeId, $deltaQuantity, $params = [])
     {
-        if ($deltaQuantity != 0) {
-            $stockMvt = $this->prepareMovement($productId, $productAttributeId, $deltaQuantity, $params);
-
-            if ($stockMvt) {
-                $sfContainer = SymfonyContainer::getInstance();
-                if (null !== $sfContainer) {
-                    $stockMvtRepository = $sfContainer->get('prestashop.core.api.stock_movement.repository');
-
-                    return $stockMvtRepository->saveStockMvt($stockMvt);
-                }
-            }
+        if ($deltaQuantity == 0) {
+            return false;
         }
 
-        return false;
+        $stockMvt = $this->prepareMovement($productId, $productAttributeId, $deltaQuantity, $params);
+        if (!$stockMvt) {
+            return false;
+        }
+
+        $sfContainer = SymfonyContainer::getInstance();
+        if (null === $sfContainer) {
+            return false;
+        }
+
+        $stockMvtRepository = $sfContainer->get('prestashop.core.api.stock_movement.repository');
+
+        return $stockMvtRepository->saveStockMvt($stockMvt);
     }
 
     /**
      * Prepare a Movement for registration.
      *
-     * @param $productId
-     * @param $productAttributeId
-     * @param $deltaQuantity
+     * @param int $productId
+     * @param int $productAttributeId
+     * @param int $deltaQuantity
      * @param array $params
      *
      * @return bool|StockMvt

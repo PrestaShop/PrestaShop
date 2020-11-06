@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Currency;
 
 use PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Currency\Exception\CurrencyFeedException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
 use SimpleXMLElement;
@@ -95,7 +95,7 @@ class ExchangeRateProvider
     /**
      * @param string $currencyIsoCode
      *
-     * @return Number
+     * @return DecimalNumber
      *
      * @throws CurrencyFeedException
      */
@@ -126,14 +126,14 @@ class ExchangeRateProvider
     /**
      * @param string $currencyIsoCode
      *
-     * @return Number
+     * @return DecimalNumber
      *
      * @throws CurrencyFeedException
      */
     private function getExchangeRateFromFeed(string $currencyIsoCode)
     {
         if ($this->sourceIsoCode == $currencyIsoCode) {
-            return new Number('1.0');
+            return new DecimalNumber('1.0');
         }
 
         if (!isset($this->currencies[$currencyIsoCode])) {
@@ -203,7 +203,7 @@ class ExchangeRateProvider
 
         $this->sourceIsoCode = (string) ($xmlFeed->source['iso_code']);
         foreach ($xmlCurrencies as $currency) {
-            $this->currencies[(string) $currency['iso_code']] = new Number((string) $currency['rate']);
+            $this->currencies[(string) $currency['iso_code']] = new DecimalNumber((string) $currency['rate']);
         }
     }
 

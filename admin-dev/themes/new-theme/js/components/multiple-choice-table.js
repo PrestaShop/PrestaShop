@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * MultipleChoiceTable is responsible for managing common actions in multiple choice table form type
@@ -51,7 +51,7 @@ export default class MultipleChoiceTable {
     const $table = $selectColumnBtn.closest('table');
 
     $table
-      .find('tbody tr td:nth-child(' + $selectColumnBtn.data('column-num') + ') input[type=checkbox]')
+      .find(`tbody tr td:nth-child(${$selectColumnBtn.data('column-num')}) input[type=checkbox]`)
       .prop('checked', !checked);
   }
 }

@@ -35,9 +35,21 @@ use ZipArchive;
 
 class ThemeExporter
 {
+    /**
+     * @var ConfigurationInterface
+     */
     protected $configuration;
+    /**
+     * @var Filesystem
+     */
     protected $fileSystem;
+    /**
+     * @var LangRepository
+     */
     protected $langRepository;
+    /**
+     * @var TranslationsExporter
+     */
     protected $translationsExporter;
 
     public function __construct(
@@ -52,6 +64,11 @@ class ThemeExporter
         $this->translationsExporter = $translationsExporter;
     }
 
+    /**
+     * @param Theme $theme
+     *
+     * @return false|string
+     */
     public function export(Theme $theme)
     {
         $cacheDir = $this->configuration->get('_PS_CACHE_DIR_') . 'export-' . $theme->getName() . '-' . time() . DIRECTORY_SEPARATOR;
@@ -68,6 +85,10 @@ class ThemeExporter
         return realpath($finalFile);
     }
 
+    /**
+     * @param string $themeDir
+     * @param string $cacheDir
+     */
     private function copyTheme($themeDir, $cacheDir)
     {
         $fileList = Finder::create()
@@ -78,6 +99,10 @@ class ThemeExporter
         $this->fileSystem->mirror($themeDir, $cacheDir, $fileList);
     }
 
+    /**
+     * @param array $moduleList
+     * @param string $cacheDir
+     */
     private function copyModuleDependencies(array $moduleList, $cacheDir)
     {
         if (empty($moduleList)) {
@@ -95,7 +120,7 @@ class ThemeExporter
 
     /**
      * @param Theme $theme
-     * @param $cacheDir
+     * @param string $cacheDir
      */
     protected function copyTranslations(Theme $theme, $cacheDir)
     {
@@ -105,23 +130,28 @@ class ThemeExporter
         $this->fileSystem->mkdir($translationsDir);
 
         $languages = $this->langRepository->findAll();
-        if (count($languages) > 0) {
-            /*
-             * @var \PrestaShopBundle\Entity\Lang
-             */
-            foreach ($languages as $lang) {
-                $locale = $lang->getLocale();
-                $catalogueDir = $this->translationsExporter->exportCatalogues($theme->getName(), $locale);
-            }
-
-            $catalogueDirParts = explode(DIRECTORY_SEPARATOR, $catalogueDir);
-            array_pop($catalogueDirParts); // Remove locale
-
-            $cataloguesDir = implode(DIRECTORY_SEPARATOR, $catalogueDirParts);
-            $this->fileSystem->mirror($cataloguesDir, $translationsDir);
+        if (empty($languages)) {
+            return;
         }
+        $catalogueDir = '';
+        foreach ($languages as $lang) {
+            $locale = $lang->getLocale();
+            $catalogueDir = $this->translationsExporter->exportCatalogues($theme->getName(), $locale);
+        }
+
+        $catalogueDirParts = explode(DIRECTORY_SEPARATOR, $catalogueDir);
+        array_pop($catalogueDirParts); // Remove locale
+
+        $cataloguesDir = implode(DIRECTORY_SEPARATOR, $catalogueDirParts);
+        $this->fileSystem->mirror($cataloguesDir, $translationsDir);
     }
 
+    /**
+     * @param string $sourceDir
+     * @param string $destinationFileName
+     *
+     * @return bool
+     */
     private function createZip($sourceDir, $destinationFileName)
     {
         $zip = new ZipArchive();

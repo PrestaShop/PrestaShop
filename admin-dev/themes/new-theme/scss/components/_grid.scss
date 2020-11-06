@@ -9,9 +9,9 @@
 }
 
 table.grid-ordering-column tr {
-  transition-property: all;
-  transition-duration: 0.2s;
   transition-timing-function: ease-out;
+  transition-duration: 0.2s;
+  transition-property: all;
   &.hover {
     background-color: $gray-soft;
   }
@@ -23,32 +23,26 @@ table.grid-ordering-column tr {
 }
 
 table.grid-ordering-column tr.position-row-while-drag {
-  box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, 0.2);
-  color: white;
-  transform: translate(5px, 10px);
+  color: #fff;
   background: none;
+  box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, 0.2);
+  transform: translate(5px, 10px);
   td {
     background-color: $medium-gray;
   }
   td:first-child {
-    border-top-left-radius: 3px;
-  }
-  td:first-child {
-    border-bottom-left-radius: 3px;
+    @include border-left-radius(3px);
   }
   td:last-child {
-    border-top-right-radius: 3px;
-  }
-  td:last-child {
-    border-bottom-right-radius: 3px;
+    @include border-right-radius(3px);
   }
 
   .position-drag-handle,
   .position-drag-handle:hover,
   .btn,
-  .btn:after,
+  .btn::after,
   .btn .material-icons {
-    color: white;
+    color: #fff;
   }
 }
 
@@ -70,7 +64,7 @@ table.grid-ordering-column tr.position-row-while-drag {
   button.dropdown-toggle,
   .dropdown-toggle {
     color: $gray-medium;
-    &:after {
+    &::after {
       content: "more_vert";
     }
 
@@ -109,6 +103,7 @@ table .column-filters td:last-child .grid-reset-button {
             }
             & ~ .form-control {
               display: inline-block;
+              /* stylelint-disable-next-line */
               width: calc(100% - 29px);
             }
           }
@@ -134,13 +129,12 @@ table .column-filters td:last-child .grid-reset-button {
 
         // styling for row that is being dragged
         &.dragging-row {
-          background: #fafbfc;
           cursor: move;
+          background: #fafbfc;
 
           td {
+            color: #fff;
             background: #67868e;
-            color: white;
-            -webkit-transform: translate(5px, 10px);
             transform: translate(5px, 10px);
 
             // make all icons and links white
@@ -148,8 +142,8 @@ table .column-filters td:last-child .grid-reset-button {
             i.grid-toggler-icon-not-valid,
             i.material-icons,
             a,
-            a:after {
-              color: white;
+            a::after {
+              color: #fff;
             }
           }
         }
@@ -168,7 +162,9 @@ table .column-filters td:last-child .grid-reset-button {
 
             @at-root {
               #{$tr}:hover .draggable-column {
+                /* stylelint-disable declaration-no-important */
                 color: #15b7d7 !important;
+                /* stylelint-enable declaration-no-important */
               }
             }
           }
@@ -176,47 +172,41 @@ table .column-filters td:last-child .grid-reset-button {
           &.choice-type {
             @mixin display-dropdown-arrow() {
               &::after {
-                visibility: visible;
                 width: 20px;
+                visibility: visible;
               }
             }
 
             .dropdown {
               .dropdown-toggle {
+                padding: 0 5px;
                 margin-right: 20px;
-                transition: 0.2s ease-out;
+                @include transition(0.2s ease-out);
 
                 &:hover {
-                  margin-right: 0px;
+                  margin-right: 0;
+                  @include display-dropdown-arrow();
+                }
+                &.coloured {
+                  border: 0;
+                }
+
+                &::after {
+                  width: 0;
+                  visibility: hidden;
+                  @include transition(0.2s ease-out);
                 }
               }
 
               &.show {
                 .dropdown-toggle {
                   margin-right: 20px;
-                  transition: 0.2s ease-out;
+                  @include transition(0.2s ease-out);
 
                   &:hover {
-                    margin-right: 0px;
+                    margin-right: 0;
                   }
 
-                  @include display-dropdown-arrow();
-                }
-              }
-
-              .dropdown-toggle {
-                padding: 0 5px 0 5px;
-                &.coloured {
-                  border: 0;
-                }
-
-                &::after {
-                  visibility: hidden;
-                  width: 0;
-                  transition: 0.2s ease-out;
-                }
-
-                &:hover {
                   @include display-dropdown-arrow();
                 }
               }
@@ -248,9 +238,9 @@ table .column-filters td:last-child .grid-reset-button {
 
           &.order_price-type {
             .badge {
+              padding: 5px;
               font-size: 100%;
               font-weight: 600;
-              padding: 5px;
             }
           }
 

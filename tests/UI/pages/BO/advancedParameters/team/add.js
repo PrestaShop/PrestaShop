@@ -17,8 +17,8 @@ class AddEmployee extends BOBasePage {
     this.languageSelect = '#employee_language';
     this.activeSwitchLabel = toggle => `label[for='employee_active_${toggle}']`;
     this.permissionProfileSelect = '#employee_profile';
-    this.saveButton = 'div.card-footer button';
-    this.cancelButton = 'div.card-footer a';
+    this.saveButton = '#save-button';
+    this.cancelButton = '#cancel-link';
   }
 
   /*

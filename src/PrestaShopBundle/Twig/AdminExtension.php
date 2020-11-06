@@ -29,6 +29,9 @@ namespace PrestaShopBundle\Twig;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Twig\Environment;
+use Twig\Extension\InitRuntimeInterface;
+use Twig_Extension;
 
 /**
  * Twig extension for the Symfony Asset component.
@@ -37,7 +40,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * @author Mlanawo Mbechezi <mlanawo.mbechezi@ikimea.com>
  */
-class AdminExtension extends \Twig_Extension implements \Twig_Extension_InitRuntimeInterface
+class AdminExtension extends Twig_Extension implements InitRuntimeInterface
 {
     /**
      * @var RequestStack
@@ -45,12 +48,12 @@ class AdminExtension extends \Twig_Extension implements \Twig_Extension_InitRunt
     private $requestStack;
 
     /**
-     * @var \Twig_Environment
+     * @var Environment
      */
     private $environment;
 
     /**
-     * @var \Symfony\Component\DependencyInjection\Container
+     * @var ContainerInterface
      */
     private $container;
 
@@ -69,7 +72,7 @@ class AdminExtension extends \Twig_Extension implements \Twig_Extension_InitRunt
     /**
      * {@inheritdoc}
      */
-    public function initRuntime(\Twig_Environment $environment)
+    public function initRuntime(Environment $environment)
     {
         $this->environment = $environment;
     }

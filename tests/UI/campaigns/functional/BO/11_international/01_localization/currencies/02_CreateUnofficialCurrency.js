@@ -126,7 +126,7 @@ describe('Create unofficial currency and check it in FO', async () => {
       page = await currenciesPage.viewMyShop(page);
 
       // Check currency in FO
-      await foHomePage.changeCurrency(page, `${Currencies.toman.isoCode} ${Currencies.toman.symbol}`);
+      await foHomePage.changeCurrency(page, Currencies.toman.isoCode, Currencies.toman.symbol);
 
       // Go back to BO
       page = await foHomePage.closePage(browserContext, page, 0);
@@ -185,13 +185,13 @@ describe('Create unofficial currency and check it in FO', async () => {
       let textError = '';
 
       try {
-        await foHomePage.changeCurrency(page, `${Currencies.toman.isoCode} ${Currencies.toman.symbol}`);
+        await foHomePage.changeCurrency(page, Currencies.toman.isoCode, Currencies.toman.symbol);
       } catch (e) {
         textError = e.toString();
       }
 
       await expect(textError).to.contains(
-        `${Currencies.toman.isoCode} ${Currencies.toman.symbol} was not found as option of select`,
+        `${Currencies.toman.isoCode} was not found as option of select`,
       );
 
       // Go back to BO

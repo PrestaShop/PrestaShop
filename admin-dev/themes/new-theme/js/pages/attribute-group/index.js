@@ -37,7 +37,7 @@ import ShowcaseCard from '@components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
 import PositionExtension from '@components/grid/extension/position-extension';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const grid = new Grid('attribute_group');

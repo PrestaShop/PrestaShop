@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Exception;
 
+use Exception;
+use Throwable;
+
 /**
  * Class TranslatableCoreException.
  */

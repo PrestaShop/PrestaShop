@@ -52,14 +52,6 @@
 			<label for="dbPassword"><?php echo $this->translator->trans('Database password', array(), 'Install'); ?> </label>
 			<input class="text" size="10" type="password" id="dbPassword" name="dbPassword" value="<?php echo htmlspecialchars($this->database_password) ?>" />
 		</p>
-		<!--
-		<p>
-			<label for="dbEngine"><?php echo $this->translator->trans('Database Engine', array(), 'Install'); ?></label>
-			<select id="dbEngine" name="dbEngine">
-				<option value="InnoDB" <?php if ($this->database_engine == 'InnoDB'): ?>selected="selected"<?php endif; ?>>InnoDB</option>
-				<option value="MyISAM" <?php if ($this->database_engine == 'MyISAM'): ?>selected="selected"<?php endif; ?>>MyISAM</option>
-			</select>
-		</p>-->
 		<p>
 			<label for="db_prefix"><?php echo $this->translator->trans('Tables prefix', array(), 'Install'); ?></label>
 			<input class="text" type="text" id="db_prefix" name="db_prefix" value="<?php echo htmlspecialchars($this->database_prefix) ?>" />

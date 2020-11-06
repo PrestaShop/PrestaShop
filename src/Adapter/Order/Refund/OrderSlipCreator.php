@@ -43,7 +43,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 use PrestaShopDatabaseException;
 use PrestaShopException;
-use Product;
 use StockAvailable;
 use Symfony\Component\Translation\TranslatorInterface;
 use TaxCalculator;
@@ -208,7 +207,7 @@ class OrderSlipCreator
         $orderSlip->partial = 0;
 
         if ($shipping_cost > 0) {
-            $orderSlip->shipping_cost = true;
+            $orderSlip->shipping_cost = 1;
             $carrier = new Carrier((int) $order->id_carrier);
             // @todo: define if we use invoice or delivery address, or we use configuration PS_TAX_ADDRESS_TYPE
             $address = Address::initialize($order->id_address_delivery, false);
@@ -221,7 +220,7 @@ class OrderSlipCreator
                 $orderSlip->{'total_shipping_tax_' . $inc_or_ex_2} = $orderSlip->{'total_shipping_tax_' . $inc_or_ex_1};
             }
         } else {
-            $orderSlip->shipping_cost = false;
+            $orderSlip->shipping_cost = 0;
         }
 
         $orderSlip->amount = 0;
@@ -252,23 +251,21 @@ class OrderSlipCreator
             }
 
             $product_tax_incl_line = Tools::ps_round($tax_calculator->{$add_or_remove . 'Taxes'}($price) * $quantity, $precision);
-
             switch ($this->configuration->get('PS_ROUND_TYPE')) {
                 case Order::ROUND_ITEM:
                     $product_tax_incl = Tools::ps_round($tax_calculator->{$add_or_remove . 'Taxes'}($price), $precision) * $quantity;
                     $total_products[$id_tax_rules_group] += $product_tax_incl;
-
                     break;
                 case Order::ROUND_LINE:
                     $product_tax_incl = $product_tax_incl_line;
                     $total_products[$id_tax_rules_group] += $product_tax_incl;
-
                     break;
                 case Order::ROUND_TOTAL:
                     $product_tax_incl = $product_tax_incl_line;
                     $total_products[$id_tax_rules_group . '_' . $id_address] += $price * $quantity;
-
                     break;
+                default:
+                    $product_tax_incl = 0;
             }
 
             $product['unit_price_tax_' . $inc_or_ex_1] = $price;

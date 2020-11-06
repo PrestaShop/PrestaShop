@@ -23,9 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = window.$;
+const {$} = window;
 
-export default function() {
+export default function () {
   const $defaultArrowWidth = 35;
   const $arrow = $('.js-arrow');
   const $tabs = $('.js-tabs');
@@ -49,16 +49,11 @@ export default function() {
     if (!$(e.target).hasClass('active')) {
       $('#form_content > .form-contenttab').removeClass('active');
     }
-    if ($(e.target).attr('href') === '#step1') {
-      setTimeout(() => {
-        $('#description_short, #tab_description_short .description-tab').addClass('active');
-      }, 100);
-    }
   });
 
   $arrow.on('click', (e) => {
     if ($arrow.is(':visible')) {
-      $tabWidth = $navWidth > $navWidth ? $navWidth - $tabs.width() : $tabs.width();
+      $tabWidth = $tabs.width();
       $positions = $navTabs.position();
 
       $moveTo = '-=0';
@@ -66,15 +61,13 @@ export default function() {
         if (($tabWidth - $positions.left) < $navWidth) {
           $moveTo = `-=${$tabWidth}`;
         }
-      } else {
-        if ($positions.left < $defaultArrowWidth) {
-          $moveTo = `+=${$tabWidth}`;
-        }
+      } else if ($positions.left < $defaultArrowWidth) {
+        $moveTo = `+=${$tabWidth}`;
       }
 
       $navTabs.animate(
         {
-          left: $moveTo
+          left: $moveTo,
         },
         400,
         'easeOutQuad',
@@ -86,7 +79,7 @@ export default function() {
             $('.right-arrow').addClass('visible');
             $('.left-arrow').removeClass('visible');
           }
-        }
+        },
       );
     }
   });

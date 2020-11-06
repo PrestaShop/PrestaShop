@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+/* eslint-disable max-len */
+
 export default {
   mainDiv: '#order-view-page',
   orderPaymentDetailsBtn: '.js-payment-details-btn',
@@ -78,6 +80,7 @@ export default {
   productsTablePaginationNumberSelector: '#orderProductsTablePaginationNumberSelector',
   productsTableRow: (productId) => `#orderProduct_${productId}`,
   productsTableRowEdited: (productId) => `#editOrderProduct_${productId}`,
+  productsTableRows: 'tr.cellProduct',
   productsCellLocation: 'tr .cellProductLocation',
   productsCellRefunded: 'tr .cellProductRefunded',
   productsCellLocationDisplayed: 'tr:not(.d-none) .cellProductLocation',
@@ -193,4 +196,8 @@ export default {
     },
   },
   printOrderViewPageButton: '.js-print-order-view-page',
+  orderNoteToggleBtn: '.js-order-notes-toggle-btn',
+  orderNoteBlock: '.js-order-notes-block',
+  orderNoteInput: '#internal_note_note',
+  orderNoteSubmitBtn: '.js-order-notes-btn',
 };

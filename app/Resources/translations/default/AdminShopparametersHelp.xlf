@@ -524,8 +524,8 @@
         <note>Line: 38</note>
       </trans-unit>
       <trans-unit id="751e29d82b27256878d1a38f2be4e118">
-        <source>Send an email with summary of the account information (email, password) after registration.</source>
-        <target>Send an email with summary of the account information (email, password) after registration.</target>
+        <source>Send an email with summary of the account information after registration.</source>
+        <target>Send an email with summary of the account information after registration.</target>
         <note>Line: 45</note>
       </trans-unit>
       <trans-unit id="59a84d54ad58aa4bea8aeacd11e47ab2">

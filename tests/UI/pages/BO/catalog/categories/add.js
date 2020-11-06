@@ -16,7 +16,7 @@ class AddCategory extends BOBasePage {
     this.metaTitleInput = '#category_meta_title_1';
     this.metaDescriptionTextarea = '#category_meta_description_1';
     this.selectAllGroupAccessCheckbox = '.choice-table .table-bordered label';
-    this.saveCategoryButton = 'div.card-footer button';
+    this.saveCategoryButton = '#save-button';
     // Selectors fo root category
     this.rootCategoryNameInput = '#root_category_name_1';
     this.rootCategoryDisplayed = id => `label[for='root_category_active_${id}']`;
@@ -40,7 +40,7 @@ class AddCategory extends BOBasePage {
     await this.setValue(page, this.nameInput, categoryData.name);
     await page.click(this.displayed(categoryData.displayed ? 1 : 0));
     await this.setValueOnTinymceInput(page, this.descriptionIframe, categoryData.description);
-    await this.generateAndUploadImage(page, this.categoryCoverImage, `${categoryData.name}.jpg`);
+    await this.uploadFile(page, this.categoryCoverImage, `${categoryData.name}.jpg`);
     await this.setValue(page, this.metaTitleInput, categoryData.metaTitle);
     await this.setValue(page, this.metaDescriptionTextarea, categoryData.metaDescription);
     await page.click(this.selectAllGroupAccessCheckbox);
@@ -59,7 +59,7 @@ class AddCategory extends BOBasePage {
     await this.setValue(page, this.rootCategoryNameInput, categoryData.name);
     await page.click(this.rootCategoryDisplayed(categoryData.displayed ? 1 : 0));
     await this.setValueOnTinymceInput(page, this.rootCategoryDescriptionIframe, categoryData.description);
-    await this.generateAndUploadImage(page, this.rootCategoryCoverImage, `${categoryData.name}.jpg`);
+    await this.uploadFile(page, this.rootCategoryCoverImage, `${categoryData.name}.jpg`);
     await this.setValue(page, this.rootCategoryMetaTitleInput, categoryData.metaTitle);
     await this.setValue(page, this.rootCategoryMetaDescriptionTextarea, categoryData.metaDescription);
     await page.click(this.selectAllGroupAccessCheckbox);

@@ -387,3 +387,8 @@
 </script>
 {/if}
 {/block}
+{if $has_color_field}
+<script type="text/javascript">
+  $.fn.mColorPicker.defaults.imageFolder = baseDir + 'img/admin/';
+</script>
+{/if}

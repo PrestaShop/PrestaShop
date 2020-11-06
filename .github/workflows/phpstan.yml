@@ -1,0 +1,19 @@
+name: PHP Static Analysis
+on: [push, pull_request]
+jobs:
+  phpstan:
+    name: phpstan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v1
+        with:
+          php-version: '7.3'
+          extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - run: composer install --ansi --prefer-dist --no-interaction --no-progress --quiet
+
+      - name: Run phpstan
+        run: ./vendor/bin/phpstan analyse -c phpstan.neon.dist

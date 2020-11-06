@@ -27,8 +27,21 @@ use Defuse\Crypto\Key;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Session\SessionInterface;
 
+/**
+ * @property string $passwd
+ */
 class CookieCore
 {
+    const SAMESITE_NONE = 'None';
+    const SAMESITE_LAX = 'Lax';
+    const SAMESITE_STRICT = 'Strict';
+
+    const SAMESITE_AVAILABLE_VALUES = [
+        self::SAMESITE_NONE => self::SAMESITE_NONE,
+        self::SAMESITE_LAX => self::SAMESITE_LAX,
+        self::SAMESITE_STRICT => self::SAMESITE_STRICT,
+    ];
+
     /** @var array Contain cookie content in a key => value format */
     protected $_content = [];
 
@@ -55,6 +68,7 @@ class CookieCore
 
     protected $_standalone;
 
+    /** @var bool */
     protected $_secure = false;
 
     /**
@@ -75,6 +89,7 @@ class CookieCore
         $this->_path = rawurlencode($this->_path);
         $this->_path = str_replace('%2F', '/', $this->_path);
         $this->_path = str_replace('%7E', '~', $this->_path);
+        $this->_path = str_replace('%2B', '+', $this->_path);
         $this->_domain = $this->getDomain($shared_urls);
         $this->_name = 'PrestaShop-' . md5(($this->_standalone ? '' : _PS_VERSION_) . $name . $this->_domain);
         $this->_allow_writing = true;
@@ -373,7 +388,36 @@ class CookieCore
             $time = 1;
         }
 
-        return setcookie($this->_name, $content, $time, $this->_path, $this->_domain, $this->_secure, true);
+        $sameSite = Configuration::get('PS_COOKIE_SAMESITE');
+
+        /*
+         * The alternative signature supporting an options array is only available since
+         * PHP 7.3.0, before there is no support for SameSite attribute.
+         */
+        if (PHP_VERSION_ID < 70300) {
+            return setcookie(
+                $this->_name,
+                $content,
+                $time,
+                $this->_path,
+                $this->_domain . '; SameSite=' . $sameSite,
+                $this->_secure,
+                true
+            );
+        }
+
+        return setcookie(
+            $this->_name,
+            $content,
+            [
+                'expires' => $time,
+                'path' => $this->_path,
+                'domain' => $this->_domain,
+                'secure' => $this->_secure,
+                'httponly' => true,
+                'samesite' => $sameSite,
+            ]
+        );
     }
 
     public function __destruct()

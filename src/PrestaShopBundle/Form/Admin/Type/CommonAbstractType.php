@@ -39,7 +39,7 @@ abstract class CommonAbstractType extends AbstractType
     /**
      * Get the configuration adapter.
      *
-     * @return object Configuration adapter
+     * @return Configuration Configuration adapter
      */
     protected function getConfiguration()
     {

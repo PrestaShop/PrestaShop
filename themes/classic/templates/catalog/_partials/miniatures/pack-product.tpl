@@ -29,11 +29,21 @@
         <div class="thumb-mask">
           <div class="mask">
             <a href="{$product.url}" title="{$product.name}">
-              <img
-                src="{$product.cover.medium.url}"
-                alt="{$product.cover.legend}"
-                data-full-size-image-url="{$product.cover.large.url}"
-              >
+              {if !empty($product.cover.medium)}
+                <img
+                  src="{$product.cover.medium.url}"
+                  {if !empty($product.cover.legend)}
+                    alt="{$product.cover.legend}"
+                    title="{$product.cover.legend}"
+                  {else}
+                    alt="{$product.name}"
+                  {/if}
+                  loading="lazy"
+                  data-full-size-image-url="{$product.cover.large.url}"
+                >
+              {else}
+                <img src="{$urls.no_picture_image.bySize.medium_default.url}" loading="lazy" />
+              {/if}
             </a>
           </div>
         </div>
@@ -44,12 +54,12 @@
           </a>
         </div>
 
-        {if $showPackProductsPrice} 
+        {if $showPackProductsPrice}
           <div class="pack-product-price">
             <strong>{$product.price}</strong>
           </div>
         {/if}
-        
+
         <div class="pack-product-quantity">
           <span>x {$product.pack_quantity}</span>
         </div>

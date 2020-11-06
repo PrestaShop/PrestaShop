@@ -41,9 +41,16 @@
                 {{ 'Beginning the download ...'|trans({}, 'Admin.Advparameters.Notification') }}
               </p>
             </div>
-            <p>{{ 'Backup files should automatically start downloading.'|trans({}, 'Admin.Advparameters.Notification') }}</p>
-            <p class="mb-0">{{ 'If not,[1][2] please click here[/1]!'|trans({'[1]': ' <a href="'~ downloadFile.url ~'" class="btn btn-outline-primary btn-sm">', '[/1]': '</a> ', '[2]': '<i class="icon-download"></i>'}, 'Admin.Advparameters.Notification')|raw }}</p>
-
+            <p>
+              {{ 'Backup files should automatically start downloading.'|trans({}, 'Admin.Advparameters.Notification') }}
+              {{ 'If not,[1][2] please click here[/1]!'|trans({'[1]': ' <a href="'~ downloadFile.url ~'" class="btn btn-outline-primary btn-sm">', '[/1]': '</a> ', '[2]': '<i class="icon-download"></i>'}, 'Admin.Advparameters.Notification')|raw }}
+          </p>
+          <p class="mb-0">
+            <a class="btn btn-outline-primary btn-sm" href="{{ path('admin_backups_index') }}">
+              <i class="material-icons">keyboard_backspace</i>
+              {{ 'Back to list'|trans({}, 'Admin.Actions') }}
+            </a>
+          </p>
             <iframe src="{{ downloadFile.url }}" class="d-none"></iframe>
           </div>
         </div>

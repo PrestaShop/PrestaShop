@@ -18,21 +18,19 @@ class Customers extends BOBasePage {
     this.customersListTableRow = row => `${this.customersListForm} tbody tr:nth-child(${row})`;
     this.customersListTableColumn = (row, column) => `${this.customersListTableRow(row)} td.column-${column}`;
     this.customersListTableActionsColumn = row => this.customersListTableColumn(row, 'actions');
-    this.customersListTableEditLink = row => `${this.customersListTableActionsColumn(row)}`
-      + ' a[data-original-title=\'Edit\']';
+    this.customersListTableEditLink = row => `${this.customersListTableActionsColumn(row)} a.grid-edit-row-link`;
     this.customersListTableToggleDropDown = row => `${this.customersListTableActionsColumn(row)}`
       + ' a[data-toggle=\'dropdown\']';
-    this.customersListTableViewLink = row => `${this.customersListTableActionsColumn(row)} a[href*='/view']`;
-    this.customersListTableDeleteLink = row => `${this.customersListTableActionsColumn(row)}`
-      + ' a[data-customer-delete-url]';
+    this.customersListTableViewLink = row => `${this.customersListTableActionsColumn(row)} a.grid-view-row-link`;
+    this.customersListTableDeleteLink = row => `${this.customersListTableActionsColumn(row)} a.grid-delete-row-link`;
     this.customersListColumnValidIcon = (row, column) => `${this.customersListTableColumn(row, column)}`
       + ' i.grid-toggler-icon-valid';
     // Filters
     this.customerFilterColumnInput = filterBy => `${this.customersListForm} #customer_${filterBy}`;
-    this.filterSearchButton = `${this.customersListForm} button[name='customer[actions][search]']`;
-    this.filterResetButton = `${this.customersListForm} button[name='customer[actions][reset]']`;
+    this.filterSearchButton = `${this.customersListForm} .grid-search-button`;
+    this.filterResetButton = `${this.customersListForm} .grid-reset-button`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.customersListForm} tr.column-filters .md-checkbox i`;
+    this.selectAllRowsLabel = `${this.customersListForm} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.customersListForm} button.dropdown-toggle`;
     this.bulkActionsEnableButton = `${this.customersListForm} #customer_grid_bulk_action_enable_selection`;
     this.bulkActionsDisableButton = `${this.customersListForm} #customer_grid_bulk_action_disable_selection`;
@@ -57,8 +55,8 @@ class Customers extends BOBasePage {
     this.deleteCustomerModalMethodInput = id => `${this.deleteCustomerModal} #delete_customers_delete_method_${id}`;
     // Grid Actions
     this.customerGridActionsButton = '#customer-grid-actions-button';
-    this.gridActionDropDownMenu = 'div.dropdown-menu[aria-labelledby=\'customer-grid-actions-button\']';
-    this.gridActionExportLink = `${this.gridActionDropDownMenu} a[href*='/export']`;
+    this.gridActionDropDownMenu = '#customer-grid-actions-dropdown-menu';
+    this.gridActionExportLink = '#customer-grid-action-export';
   }
 
   /*
@@ -159,7 +157,10 @@ class Customers extends BOBasePage {
    */
   async updateToggleColumnValue(page, row, column, valueWanted = true) {
     if (await this.getToggleColumnValue(page, row, column) !== valueWanted) {
-      await this.clickAndWaitForNavigation(page, `${this.customersListTableColumn(row, column)} i`);
+      await Promise.all([
+        page.$eval(`${this.customersListTableColumn(row, column)} i`, el => el.click()),
+        page.waitForNavigation({waitUntil: 'networkidle'}),
+      ]);
       return true;
     }
     return false;

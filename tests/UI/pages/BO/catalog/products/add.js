@@ -23,9 +23,7 @@ class AddProduct extends BOBasePage {
     this.previewProductLink = 'a#product_form_preview_btn';
     this.productOnlineSwitch = '.product-footer div.switch-input';
     this.productOnlineTitle = 'h2.for-switch.online-title';
-    this.productShortDescriptionTab = '#tab_description_short a';
     this.productShortDescriptionIframe = '#form_step1_description_short';
-    this.productDescriptionTab = '#tab_description a';
     this.productDescriptionIframe = '#form_step1_description';
     this.productTaxRuleSelect = '#step2_id_tax_rules_group_rendered';
     this.productDeleteLink = '.product-footer a.delete';
@@ -92,9 +90,7 @@ class AddProduct extends BOBasePage {
    */
   async setBasicSetting(page, productData) {
     await this.setValue(page, this.productNameInput, productData.name);
-    await page.click(this.productDescriptionTab);
     await this.setValueOnTinymceInput(page, this.productDescriptionIframe, productData.description);
-    await page.click(this.productShortDescriptionTab);
     await this.setValueOnTinymceInput(page, this.productShortDescriptionIframe, productData.summary);
     await this.selectByVisibleText(page, this.productTypeSelect, productData.type);
     await this.setValue(page, this.productReferenceInput, productData.reference);
@@ -203,6 +199,20 @@ class AddProduct extends BOBasePage {
     await page.type(this.addCombinationsInput, combination);
     await page.keyboard.press('ArrowDown');
     await page.keyboard.press('Enter');
+  }
+
+  /**
+   * @override
+   * Select, unselect checkbox
+   * @param page
+   * @param checkboxSelector, selector of checkbox
+   * @param valueWanted, true if we want to select checkBox, false otherwise
+   * @return {Promise<void>}
+   */
+  async changeCheckboxValue(page, checkboxSelector, valueWanted = true) {
+    if (valueWanted !== (await this.isCheckboxSelected(page, checkboxSelector))) {
+      await page.$eval(checkboxSelector, el => el.click());
+    }
   }
 
   /**

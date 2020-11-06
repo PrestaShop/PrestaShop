@@ -6,7 +6,7 @@
 	</languages>
 
 	<currencies>
-		<currency name="Dollar" iso_code="USD" iso_code_num="840" sign="$" blank="0" conversion_rate="1.31153" format="1" decimals="1" />
+		<currency name="Dollar" iso_code="USD" iso_code_num="840" sign="$" blank="0" format="1" decimals="1" />
 	</currencies>
 	<taxes>
 		<tax id="1" name="Sales-taxes US-AL 4%" rate="4" />

@@ -43,16 +43,16 @@ $(document).ready(() => {
   new CountryStateSelectionToggler(
     addressFormMap.addressCountrySelect,
     addressFormMap.addressStateSelect,
-    addressFormMap.addressStateBlock
+    addressFormMap.addressStateBlock,
   );
   new CountryDniRequiredToggler(
     addressFormMap.addressCountrySelect,
     addressFormMap.addressDniInput,
-    addressFormMap.addressDniInputLabel
+    addressFormMap.addressDniInputLabel,
   );
   new CountryPostcodeRequiredToggler(
     addressFormMap.addressCountrySelect,
     addressFormMap.addressPostcodeInput,
-    addressFormMap.addressPostcodeInputLabel
+    addressFormMap.addressPostcodeInputLabel,
   );
 });

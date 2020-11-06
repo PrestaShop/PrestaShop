@@ -42,7 +42,6 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidEmployeeIdExcept
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\MissingShopAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
@@ -356,7 +355,13 @@ class EmployeeController extends FrameworkBundleAdminController
                 'is_for_editing' => true,
                 'show_addons_connect_button' => $canAccessAddonsConnect,
             ]);
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
+            return $this->redirectToRoute('admin_employees_index');
+        }
+
+        try {
             $employeeForm->handleRequest($request);
             $result = $this->getEmployeeFormHandler()->handleFor((int) $employeeId, $employeeForm);
 

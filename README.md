@@ -1,9 +1,15 @@
 About PrestaShop
 --------
 
-[![Build Status](https://travis-ci.com/PrestaShop/PrestaShop.svg?branch=develop)](https://travis-ci.com/PrestaShop/PrestaShop)
-[![Gitter chat](https://badges.gitter.im/PrestaShop/PrestaShop.png)](https://gitter.im/PrestaShop/General)
+[![Travis build Status](https://travis-ci.com/PrestaShop/PrestaShop.svg?branch=develop)](https://travis-ci.com/PrestaShop/PrestaShop)
+![PHPStan status](https://github.com/PrestaShop/PrestaShop/workflows/PHP%20Static%20Analysis/badge.svg)
+[![Nightly Status](https://img.shields.io/endpoint?url=https%3A%2F%2Fapi-nightly.prestashop.com%2Fdata%2Fbadge&label=Nightly%20Status&cacheSeconds=3600)](https://nightly.prestashop.com/)
 
+[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.1-8892BF.svg?style=flat-square)](https://php.net/)
+[![GitHub release](https://img.shields.io/github/v/release/prestashop/prestashop)](https://github.com/PrestaShop/PrestaShop)
+[![Slack chat](https://img.shields.io/badge/Chat-on%20Slack-red)](https://github.com/PrestaShop/open-source/blob/master/slack/readme.md)
+[![GitHub forks](https://img.shields.io/github/forks/PrestaShop/PrestaShop)](https://github.com/PrestaShop/PrestaShop/network)
+[![GitHub stars](https://img.shields.io/github/stars/PrestaShop/PrestaShop)](https://github.com/PrestaShop/PrestaShop/stargazers)
 
 PrestaShop is an Open Source e-commerce web application, committed to providing the best shopping cart experience for both merchants and customers. It is written in PHP, is highly customizable, supports all the major payment services, is translated in many languages and localized for many countries, has a fully responsive design (both front and back office), etc. [See all the available features][available-features].
 
@@ -56,7 +62,7 @@ MySQL credentials can also be found and modified in this file if needed.
 
 **Note:**  Before auto-installing PrestaShop, this container checks the file *config/settings.inc.php* does not exist on startup.
 If you expect the container to (re)install your shop, remove this file if it exists. And make sure the container user `www-data` 
-as write access to the whole workspace.
+has write access to the whole workspace.
 
 Documentation
 --------
@@ -81,9 +87,11 @@ PrestaShop is an Open Source project, and it wouldn't be possible without the he
 
 If you want to contribute code to PrestaShop, read the [CONTRIBUTING.md][contributing-md] file in this repository or read the [tutorials about contribution][contributing-tutorial] on the documentation site.
 
+Don't know where to start? Check the [good first issue](https://github.com/PrestaShop/PrestaShop/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) label to have a look at all beginner-friendly improvements and bug fixes.
+
 If you want to help translate PrestaShop in your language, [join us on Crowdin][crowdin]!
 
-Current Crowdin status (for 69 registered languages): [![Crowdin](https://crowdin.net/badges/prestashop-official/localized.png)](https://crowdin.net/project/prestashop-official)
+Current Crowdin status (for more than 75 registered languages): [![Crowdin](https://crowdin.net/badges/prestashop-official/localized.png)](https://crowdin.net/project/prestashop-official)
 
 Reporting Issues
 --------
@@ -136,7 +144,7 @@ Thank you for downloading and using the PrestaShop Open Source e-commerce soluti
 [sysadmin-guide]: https://doc.prestashop.com/display/PS16/System+Administrator+Guide
 [addons]: https://addons.prestashop.com/
 [contributors-md]: CONTRIBUTORS.md
-[example-nginx]: docs/server_config/nginx.conf.dist
+[example-nginx]: https://devdocs.prestashop.com/1.7/basics/installation/nginx/
 [docker-compose]: https://docs.docker.com/compose/
 [install-guide-dev]: https://devdocs.prestashop.com/1.7/basics/installation/
 [system-requirements]: https://devdocs.prestashop.com/1.7/basics/installation/system-requirements/

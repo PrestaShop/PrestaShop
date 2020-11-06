@@ -98,15 +98,16 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     {
         // Clear static cache each time you create a cart
         Cart::resetStaticCache();
-        /** @var Customer $customer */
-        $customer = SharedStorage::getStorage()->get($customerReference);
+        $customerId = SharedStorage::getStorage()->get($customerReference);
 
         /** @var CartId $cartIdObject */
         $cartIdObject = $this->getCommandBus()->handle(
             new CreateEmptyCustomerCartCommand(
-                (int) $customer->id
+                (int) $customerId
             )
         );
+        // Reset context's cart to avoid one from former tests to be used with invalid values (like non existent addresses)
+        Context::getContext()->cart = new Cart($cartIdObject->getValue());
 
         SharedStorage::getStorage()->set($cartReference, $cartIdObject->getValue());
     }
@@ -204,7 +205,8 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function selectAddressAsDeliveryAndInvoiceAddress(string $countryIsoCode, string $customerReference, string $cartReference)
     {
-        $customer = SharedStorage::getStorage()->get($customerReference);
+        $customerId = SharedStorage::getStorage()->get($customerReference);
+        $customer = new Customer($customerId);
 
         $getAddressByCountryIsoCode = static function ($isoCode) use ($customer) {
             $customerAddresses = $customer->getAddresses((int) Configuration::get('PS_LANG_DEFAULT'));
@@ -245,7 +247,8 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         string $countryIsoCode,
         string $stateName
     ) {
-        $customer = SharedStorage::getStorage()->get($customerReference);
+        $customerId = SharedStorage::getStorage()->get($customerReference);
+        $customer = new Customer($customerId);
 
         $getAddressByCountryIsoCode = static function ($isoCode) use ($customer, $stateName) {
             $customerAddresses = $customer->getAddresses((int) Configuration::get('PS_LANG_DEFAULT'));
@@ -288,7 +291,6 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         $cartId = (int) SharedStorage::getStorage()->get($cartReference);
         $carrierId = (int) SharedStorage::getStorage()->get($carrierReference);
 
-        $this->lastException = null;
         try {
             $this->getCommandBus()->handle(
                 new UpdateCartCarrierCommand(
@@ -297,7 +299,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
                 )
             );
         } catch (CartConstraintException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -433,7 +435,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
                 $productId
             ));
         } catch (CartException $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 

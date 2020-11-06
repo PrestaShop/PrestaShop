@@ -20,19 +20,19 @@ class Addresses extends BOBasePage {
     this.addressesListTableColumnAction = row => this.addressesListTableColumn(row, 'actions');
     this.addressesListTableToggleDropDown = row => `${this.addressesListTableColumnAction(row)}`
       + ' a[data-toggle=\'dropdown\']';
-    this.addressesListTableDeleteLink = row => `${this.addressesListTableColumnAction(row)} a[data-url]`;
-    this.addressesListTableEditLink = row => `${this.addressesListTableColumnAction(row)} a[href*='edit']`;
+    this.addressesListTableDeleteLink = row => `${this.addressesListTableColumnAction(row)} a.grid-delete-row-link`;
+    this.addressesListTableEditLink = row => `${this.addressesListTableColumnAction(row)} a.grid-edit-row-link`;
     // Filters
     this.addressFilterColumnInput = filterBy => `${this.addressesListForm} #address_${filterBy}`;
-    this.filterSearchButton = `${this.addressesListForm} button[name='address[actions][search]']`;
-    this.filterResetButton = `${this.addressesListForm} button[name='address[actions][reset]']`;
+    this.filterSearchButton = `${this.addressesListForm} .grid-search-button`;
+    this.filterResetButton = `${this.addressesListForm} .grid-reset-button`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.addressesListForm} tr.column-filters .md-checkbox i`;
+    this.selectAllRowsLabel = `${this.addressesListForm} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.addressesListForm} button.dropdown-toggle`;
     this.bulkActionsDeleteButton = '#address_grid_bulk_action_delete_selection';
     // Modal Dialog
-    this.deleteAddressModal = '#address_grid_confirm_modal.show';
-    this.deleteCustomerModalDeleteButton = `${this.deleteAddressModal} button.btn-confirm-submit`;
+    this.deleteAddressModal = '#address-grid-confirm-modal.show';
+    this.deleteAddressModalDeleteButton = `${this.deleteAddressModal} button.btn-confirm-submit`;
     // Sort Selectors
     this.tableHead = `${this.addressesListForm} thead`;
     this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
@@ -153,7 +153,6 @@ class Addresses extends BOBasePage {
    * @returns {Promise<string>}
    */
   async deleteAddress(page, row) {
-    this.dialogListener(page);
     // Click on dropDown
     await Promise.all([
       page.click(this.addressesListTableToggleDropDown(row)),
@@ -162,8 +161,12 @@ class Addresses extends BOBasePage {
         `${this.addressesListTableToggleDropDown(row)}[aria-expanded='true']`,
       ),
     ]);
-    // Click on delete
-    await page.click(this.addressesListTableDeleteLink(row));
+    // Click on delete and wait for modal
+    await Promise.all([
+      page.click(this.addressesListTableDeleteLink(row)),
+      this.waitForVisibleSelector(page, this.deleteAddressModal),
+    ]);
+    await page.click(this.deleteAddressModalDeleteButton);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
@@ -188,7 +191,7 @@ class Addresses extends BOBasePage {
       page.click(this.bulkActionsDeleteButton),
       this.waitForVisibleSelector(page, this.deleteAddressModal),
     ]);
-    await page.click(this.deleteCustomerModalDeleteButton);
+    await page.click(this.deleteAddressModalDeleteButton);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 

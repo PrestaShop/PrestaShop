@@ -24,7 +24,7 @@
  */
 import CreateOrderPage from './create/create-order-page';
 
-const $ = window.$;
+const {$} = window;
 let orderPageManager = null;
 
 /**
@@ -61,11 +61,10 @@ function refreshCart() {
   orderPageManager.refreshCart();
 }
 
-
 $(document).ready(() => {
   orderPageManager = new CreateOrderPage();
 });
 
-export {searchCustomerByString}
-export {refreshAddressesList}
-export {refreshCart}
+export {searchCustomerByString};
+export {refreshAddressesList};
+export {refreshCart};

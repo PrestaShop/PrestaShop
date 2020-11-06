@@ -130,10 +130,14 @@ module.exports = class FOBasePage extends CommonPage {
   /**
    * Change currency in FO
    * @param page
-   * @param currency
+   * @param isoCode
+   * @param symbol
    * @return {Promise<void>}
    */
-  async changeCurrency(page, currency = 'EUR €') {
+  async changeCurrency(page, isoCode = 'EUR', symbol = '€') {
+    // If isoCode and symbol are the same, only isoCode id displayed in FO
+    const currency = isoCode === symbol ? isoCode : `${isoCode} ${symbol}`;
+
     await Promise.all([
       this.selectByVisibleText(page, this.currencySelect, currency),
       page.waitForNavigation('newtorkidle'),

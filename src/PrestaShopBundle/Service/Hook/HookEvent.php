@@ -26,8 +26,6 @@
 
 namespace PrestaShopBundle\Service\Hook;
 
-use AppKernel;
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -37,14 +35,41 @@ use Symfony\Component\EventDispatcher\Event;
  */
 class HookEvent extends Event
 {
+    /**
+     * Hook extra parameters
+     *
+     * @var array
+     */
     private $hookParameters = [];
+
+    /**
+     * Hook context, such as PrestaShop version or request and controller
+     *
+     * @var array
+     */
+    private $contextParameters = [];
+
+    /**
+     * @param array $contextParameters
+     * @param array $hookParameters
+     */
+    public function __construct(array $contextParameters = null, array $hookParameters = null)
+    {
+        if (null !== $contextParameters) {
+            $this->contextParameters = $contextParameters;
+        }
+
+        if (null !== $hookParameters) {
+            $this->hookParameters = $hookParameters;
+        }
+    }
 
     /**
      * Sets the Hook parameters.
      *
-     * @param array hook parameters
+     * @param array $parameters
      *
-     * @return $this, for fluent use of object
+     * @return self
      */
     public function setHookParameters($parameters)
     {
@@ -54,25 +79,12 @@ class HookEvent extends Event
     }
 
     /**
-     * Returns Hook parameters and default values.
+     * Returns Hook parameters and context parameters
      *
-     * More values than the param set is returned:
-     * - _ps_version contains PrestaShop version, and is here only if the Hook is triggered by Symfony architecture.
-     * These values can either be overriden by setHookParameters using the same parameter key.
-     *
-     * @return array the array of hook parameters, more default fixed values
+     * @return array
      */
     public function getHookParameters()
     {
-        $globalParameters = ['_ps_version' => AppKernel::VERSION];
-
-        $sfContainer = SymfonyContainer::getInstance();
-        if (null !== $sfContainer && null !== $sfContainer->get('request_stack')->getCurrentRequest()) {
-            $request = $sfContainer->get('request_stack')->getCurrentRequest();
-            $globalParameters['request'] = $request;
-            $globalParameters['route'] = $request->get('_route');
-        }
-
-        return array_merge($globalParameters, $this->hookParameters);
+        return array_merge($this->contextParameters, $this->hookParameters);
     }
 }

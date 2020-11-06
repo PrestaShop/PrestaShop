@@ -52,9 +52,7 @@ final class SqlRequestSettingsFormDataProvider implements FormDataProviderInterf
      */
     public function getData()
     {
-        return [
-            'settings' => $this->dataConfiguration->getConfiguration(),
-        ];
+        return $this->dataConfiguration->getConfiguration();
     }
 
     /**
@@ -62,6 +60,6 @@ final class SqlRequestSettingsFormDataProvider implements FormDataProviderInterf
      */
     public function setData(array $data)
     {
-        return $this->dataConfiguration->updateConfiguration($data['settings']);
+        return $this->dataConfiguration->updateConfiguration($data);
     }
 }

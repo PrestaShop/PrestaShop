@@ -1,11 +1,11 @@
 .kpi-container {
   position: relative;
-  text-decoration: none;
-  background: white;
+  display: block;
   padding-top: .9375rem;
   padding-bottom: .9375rem;
   text-align: center;
-  display: block;
+  text-decoration: none;
+  background: #fff;
 
   &:hover {
     text-decoration: none;
@@ -14,15 +14,15 @@
 
 .kpi-refresh {
   position: absolute;
-  z-index: 1;
   top: 0;
   right: 0;
+  z-index: 1;
 }
 
 .kpi-content {
   position: relative;
-  text-align: left;
   padding-left: 40px;
+  text-align: left;
 
   > .material-icons {
     position: absolute;
@@ -49,8 +49,8 @@
   .title,
   .subtitle,
   .value {
-    font-size: 0.75rem;
     padding-left: .125rem;
+    font-size: .75rem;
     color: $gray-dark;
   }
 
@@ -59,14 +59,14 @@
   }
 
   .subtitle {
-    text-transform: uppercase;
-    color: $gray-medium;
     display: block;
+    color: $gray-medium;
+    text-transform: uppercase;
   }
   .value {
+    display: block;
     font-size: 1.25rem;
     color: $primary;
-    display: block;
   }
 }
 
@@ -80,8 +80,8 @@
       justify-content: flex-end;
 
       .value {
-        color: $gray-dark;
         padding-right: 10px;
+        color: $gray-dark;
       }
     }
   }
@@ -89,7 +89,7 @@
 
 .container-fluid {
   > .kpi-container {
-    padding-left: 1rem;
     padding-right: 1rem;
+    padding-left: 1rem;
   }
 }

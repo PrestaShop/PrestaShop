@@ -48,15 +48,15 @@ final class CountryStateByIdChoiceProvider implements ConfigurableFormChoiceProv
         $resolvedOptions = $resolver->resolve($options);
         $choices = [];
 
+        $countryId = $resolvedOptions['id_country'];
         try {
-            $countryId = $resolvedOptions['id_country'];
             $countryHasStates = (new Country($countryId))->contains_states;
 
             if (!$countryHasStates) {
                 return [];
             }
 
-            $states = State::getStatesByIdCountry($countryId, $resolvedOptions['only_active']);
+            $states = State::getStatesByIdCountry($countryId, $resolvedOptions['only_active'], 'name', 'asc');
 
             foreach ($states as $state) {
                 $choices[$state['name']] = $state['id_state'];

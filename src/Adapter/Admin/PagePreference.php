@@ -31,6 +31,7 @@ use Db;
 use PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
+use Symfony\Component\Routing\Exception\InvalidParameterException;
 
 /**
  * Adapter to know which page's version to display.
@@ -64,7 +65,7 @@ class PagePreference implements AdminPagePreferenceInterface
     public function getTemporaryShouldUseLegacyPage($page)
     {
         if (!$page) {
-            throw new \InvalidParameterException('$page parameter missing');
+            throw new InvalidParameterException('$page parameter missing');
         }
 
         return $this->session->has('should_use_legacy_page_for_' . $page) && $this->session->get('should_use_legacy_page_for_' . $page, 0) == 1;
@@ -76,7 +77,7 @@ class PagePreference implements AdminPagePreferenceInterface
     public function setTemporaryShouldUseLegacyPage($page, $useLegacy)
     {
         if (!$page) {
-            throw new \InvalidParameterException('$page parameter missing');
+            throw new InvalidParameterException('$page parameter missing');
         }
 
         if ((bool) $useLegacy) {

@@ -275,14 +275,16 @@ class SpecificPriceRuleCore extends ObjectModel
         } else {
             // All products without conditions
             if ($products && count($products)) {
-                $query = new DbQuery();
-                $query->select('p.`id_product`')
-                    ->select('NULL as `id_product_attribute`')
-                    ->from('product', 'p')
-                    ->leftJoin('product_shop', 'ps', 'p.`id_product` = ps.`id_product`')
-                    ->where('ps.id_shop = ' . (int) $current_shop_id);
-                $query->where('p.`id_product` IN (' . implode(', ', array_map('intval', $products)) . ')');
-                $result = Db::getInstance()->executeS($query);
+                if (!SpecificPrice::getByProductId(0, false, false, (int) $this->id)) {
+                    $query = new DbQuery();
+                    $query->select('p.`id_product`')
+                        ->select('NULL as `id_product_attribute`')
+                        ->from('product', 'p')
+                        ->leftJoin('product_shop', 'ps', 'p.`id_product` = ps.`id_product`')
+                        ->where('ps.id_shop = ' . (int) $current_shop_id);
+                    $query->where('p.`id_product` IN (' . implode(', ', array_map('intval', $products)) . ')');
+                    $result = Db::getInstance()->executeS($query);
+                }
             } else {
                 $result = [['id_product' => 0, 'id_product_attribute' => null]];
             }

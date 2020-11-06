@@ -421,7 +421,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @return FormHandlerInterface
      */
-    protected function getSettingsFormHandler()
+    protected function getSettingsFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.admin.request_sql_settings.form_handler');
     }

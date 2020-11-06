@@ -14,10 +14,10 @@ class AddPage extends BOBasePage {
     this.metaKeywordsInput = '#cms_page_meta_keyword_1-tokenfield';
     this.pageContentIframe = '#cms_page_content_1_ifr';
     this.indexation = id => `#cms_page_is_indexed_for_search_${id}`;
-    this.displayed = id => `label[for='cms_page_is_displayed_${id}']`;
-    this.savePageButton = 'div.card-footer button.ml-3';
-    this.saveAndPreviewPageButton = 'div.card-footer button';
-    this.cancelButton = 'div.card-footer .btn-outline-secondary';
+    this.displayedToggle = toggle => `label[for='cms_page_is_displayed_${toggle}']`;
+    this.savePageButton = '#save-button';
+    this.saveAndPreviewPageButton = '#save-and-preview-button';
+    this.cancelButton = '#cancel-link';
   }
 
   /*
@@ -31,14 +31,19 @@ class AddPage extends BOBasePage {
    * @return {Promise<void>}
    */
   async createEditPage(page, pageData) {
+    // Fill form
     await this.setValue(page, this.titleInput, pageData.title);
     await this.setValue(page, this.metaTitleInput, pageData.metaTitle);
     await this.setValue(page, this.metaDescriptionInput, pageData.metaDescription);
     await this.setValue(page, this.metaKeywordsInput, pageData.metaKeywords);
     await this.setValueOnTinymceInput(page, this.pageContentIframe, pageData.content);
     await page.click(this.indexation(pageData.indexation ? 1 : 0));
-    await page.click(this.displayed(pageData.displayed ? 1 : 0));
+    await page.click(this.displayedToggle(pageData.displayed ? 1 : 0));
+
+    // Save form
     await this.clickAndWaitForNavigation(page, this.savePageButton);
+
+    // Return successful message
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 

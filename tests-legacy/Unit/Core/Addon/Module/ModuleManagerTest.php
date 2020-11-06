@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace LegacyTests\Core\Addon\Module;
+namespace LegacyTests\Unit\Core\Addon\Module;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;

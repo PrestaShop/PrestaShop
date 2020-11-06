@@ -7,7 +7,7 @@ const helper = require('@utils/helpers');
 const files = require('@utils/files');
 const urlsList = require('@tools/urls.js');
 
-const LOG_PASSED = !!process.env.LOG_PASSED;
+const LOG_PASSED = process.env.LOG_PASSED || false;
 
 // Report dir and file
 const reportPath = 'campaigns/tools/reports';
@@ -38,7 +38,6 @@ let consoleTextError = '';
 
 let page;
 let browser;
-let browserContext;
 
 describe('Crawl every page for defects and issues', async () => {
   before(async () => {
@@ -48,8 +47,16 @@ describe('Crawl every page for defects and issues', async () => {
 
     // Open browser
     browser = await helper.createBrowser();
-    browserContext = await helper.createBrowserContext(browser);
-    page = await helper.newTab(browserContext);
+    page = await helper.newTab(browser);
+    await page.setExtraHTTPHeaders({
+      'Accept-Language': 'fr-FR',
+    });
+
+    // Intercepts requests
+    await page.setRequestInterception(true);
+    await page.on('request', (request) => {
+      request.continue();
+    });
 
     // Intercepts responses
     await page.on('response', (response) => {
@@ -133,11 +140,11 @@ describe('Crawl every page for defects and issues', async () => {
 
 /**
  * Crawl Page and write result
- * @param browserPage
+ * @param puppeteerPage
  * @param thisPageToCrawl
  * @return {Promise<void>}
  */
-async function crawlPage(browserPage, thisPageToCrawl) {
+async function crawlPage(puppeteerPage, thisPageToCrawl) {
   responseError = false;
   javascriptError = false;
   consoleError = false;
@@ -150,13 +157,10 @@ async function crawlPage(browserPage, thisPageToCrawl) {
     errored: [],
   };
 
-  await Promise.all([
-    browserPage.goto(`${thisPageToCrawl.url}`),
-    browserPage.waitForNavigation('networkidle'),
-  ]);
+  await puppeteerPage.goto(`${thisPageToCrawl.url}`, {waitUntil: 'networkidle0'});
 
   if (typeof (thisPageToCrawl.customAction) !== 'undefined') {
-    await thisPageToCrawl.customAction(browserPage);
+    await thisPageToCrawl.customAction(puppeteerPage);
   }
 
   output.pages.push(outputEntry);

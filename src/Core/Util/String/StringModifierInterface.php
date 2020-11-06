@@ -32,7 +32,7 @@ namespace PrestaShop\PrestaShop\Core\Util\String;
 interface StringModifierInterface
 {
     /**
-     * @param $string
+     * @param string $string
      *
      * @return string
      */

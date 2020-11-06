@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Command;
 
+use PhpParser\Node\Stmt;
 use PhpParser\ParserFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -102,6 +103,8 @@ class UpdateLicensesCommand extends Command
         foreach ($extensions as $extension) {
             $this->findAndCheckExtension($output, $extension);
         }
+
+        return 0;
     }
 
     /**
@@ -151,7 +154,7 @@ class UpdateLicensesCommand extends Command
                 'tests/UI/',
             ])
             ->ignoreDotFiles(false);
-        $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+        $parser = (new ParserFactory())->create(ParserFactory::ONLY_PHP7);
 
         $output->writeln('Updating license in ' . strtoupper($ext) . ' files ...');
         $progress = new ProgressBar($output, count($finder));
@@ -230,7 +233,7 @@ class UpdateLicensesCommand extends Command
     }
 
     /**
-     * @param $fileName
+     * @param string $fileName
      *
      * @return bool
      */
@@ -301,7 +304,7 @@ class UpdateLicensesCommand extends Command
     }
 
     /**
-     * @param $node
+     * @param Stmt $node
      * @param SplFileInfo $file
      */
     private function addLicenseToNode($node, SplFileInfo $file)

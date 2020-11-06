@@ -22,6 +22,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+import _ from 'lodash';
 import * as types from './mutation-types';
 
 export default {
@@ -182,4 +184,3 @@ export default {
     state.selectedProducts.splice(index, 1);
   },
 };
-

@@ -122,7 +122,7 @@ class AdminOutstandingControllerCore extends AdminController
     }
 
     /**
-     * Column callback for print PDF incon.
+     * Column callback for print PDF icon.
      *
      * @param $id_invoice integer Invoice ID
      * @param $tr array Row data

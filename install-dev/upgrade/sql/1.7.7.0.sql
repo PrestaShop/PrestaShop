@@ -541,12 +541,26 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
   (NULL, 'displayBackOfficeOrderActions', 'Admin Order Actions', 'This hook displays content in the order view page after action buttons (or aliased to side column in migrated page)', '1'),
   (NULL, 'actionAdminAdminPreferencesControllerPostProcessBefore', 'On post-process in Admin Preferences', 'This hook is called on Admin Preferences post-process before processing the form', '1'),
   (NULL, 'displayAdditionalCustomerAddressFields', 'Display additional customer address fields', 'This hook allows to display extra field values added in an address form using hook ''additionalCustomerAddressFields''', '1'),
-  (NULL, 'displayAdminProductsExtra', 'Admin Product Extra Module Tab', 'This hook displays extra content in the Module tab on the product edit page', '1')
+  (NULL, 'displayAdminProductsExtra', 'Admin Product Extra Module Tab', 'This hook displays extra content in the Module tab on the product edit page', '1'),
+  (NULL, 'actionFrontControllerInitBefore', 'Perform actions before front office controller initialization', 'This hook is launched before the initialization of all front office controllers'),
+  (NULL, 'actionFrontControllerInitAfter', 'Perform actions after front office controller initialization', 'This hook is launched after the initialization of all front office controllers'),
+  (NULL, 'actionAdminControllerInitAfter', 'Perform actions after admin controller initialization', 'This hook is launched after the initialization of all admin controllers'),
+  (NULL, 'actionAdminControllerInitBefore', 'Perform actions before admin controller initialization', 'This hook is launched before the initialization of all admin controllers'),
+  (NULL, 'actionControllerInitAfter', 'Perform actions after controller initialization', 'This hook is launched after the initialization of all controllers'),
+  (NULL, 'actionControllerInitBefore', 'Perform actions before controller initialization', 'This hook is launched before the initialization of all controllers'),
+  (NULL, 'actionAdminLoginControllerBefore', 'Perform actions before admin login controller initialization', 'This hook is launched before the initialization of the login controller'),
+  (NULL, 'actionAdminLoginControllerLoginBefore', 'Perform actions before admin login controller login action initialization', 'This hook is launched before the initialization of the login action in login controller'),
+  (NULL, 'actionAdminLoginControllerLoginAfter', 'Perform actions after admin login controller login action initialization', 'This hook is launched after the initialization of the login action in login controller'),
+  (NULL, 'actionAdminLoginControllerForgotBefore', 'Perform actions before admin login controller forgot action initialization', 'This hook is launched before the initialization of the forgot action in login controller'),
+  (NULL, 'actionAdminLoginControllerForgotAfter', 'Perform actions after admin login controller forgot action initialization', 'This hook is launched after the initialization of the forgot action in login controller'),
+  (NULL, 'actionAdminLoginControllerResetBefore', 'Perform actions before admin login controller reset action initialization', 'This hook is launched before the initialization of the reset action in login controller'),
+  (NULL, 'actionAdminLoginControllerResetAfter', 'Perform actions after admin login controller reset action initialization', 'This hook is launched after the initialization of the reset action in login controller')
 ;
 
 INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES
   ('displayAdminOrderTop', 'displayInvoice'),
-  ('displayAdminOrderSide', 'displayBackOfficeOrderActions')
+  ('displayAdminOrderSide', 'displayBackOfficeOrderActions'),
+  ('actionFrontControllerInitAfter', 'actionFrontControllerAfterInit')
 ;
 
 /* Add refund amount on order detail, and fill new columns via data in order_slip_detail table */
@@ -843,7 +857,8 @@ VALUES (NULL, 'actionOrderMessageFormBuilderModifier', 'Modify order message ide
        (NULL, 'actionAddressGridPresenterModifier', 'Modify address grid template data',
         'This hook allows to modify data which is about to be used in template for address grid', '1'),
        (NULL, 'actionCreditSlipGridPresenterModifier', 'Modify credit slip grid template data',
-        'This hook allows to modify data which is about to be used in template for credit slip grid', '1')
+        'This hook allows to modify data which is about to be used in template for credit slip grid', '1'),
+       (NULL, 'displayAfterTitleTag', 'After title tag', 'Use this hook to add content after title tag', '1')
 ;
 
 /* Update wrong hook names */
@@ -864,6 +879,12 @@ INNER JOIN `PREFIX_hook` AS hfrom ON hm.id_hook = hfrom.id_hook AND hfrom.name =
 INNER JOIN `PREFIX_hook` AS hto ON hto.name = 'actionPerformancePageSave'
 SET hm.id_hook = hto.id_hook;
 DELETE FROM `PREFIX_hook` WHERE name = 'actionPerformancePageFormSave';
+
+UPDATE `PREFIX_hook_module` AS hm
+INNER JOIN `PREFIX_hook` AS hfrom ON hm.id_hook = hfrom.id_hook AND hfrom.name = 'actionFrontControllerAfterInit'
+INNER JOIN `PREFIX_hook` AS hto ON hto.name = 'actionFrontControllerInitAfter'
+SET hm.id_hook = hto.id_hook;
+DELETE FROM `PREFIX_hook` WHERE name = 'actionFrontControllerAfterInit';
 
 /* Update wrong hook alias */
 UPDATE `PREFIX_hook_alias` SET name = 'displayHeader', alias = 'Header' WHERE name = 'Header' AND alias = 'displayHeader';

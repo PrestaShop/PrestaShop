@@ -38,7 +38,6 @@ use Configuration;
 use Context;
 use Currency;
 use Customer;
-use Exception;
 use Hook;
 use Order;
 use OrderCarrier;
@@ -47,6 +46,7 @@ use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
+use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderInvoiceException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -92,19 +92,27 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     private $computingPrecision;
 
     /**
+     * @var OrderProductQuantityUpdater
+     */
+    private $orderProductQuantityUpdater;
+
+    /**
      * @param TranslatorInterface $translator
      * @param ContextStateManager $contextStateManager
      * @param OrderAmountUpdater $orderAmountUpdater
+     * @param OrderProductQuantityUpdater $orderProductQuantityUpdater
      */
     public function __construct(
         TranslatorInterface $translator,
         ContextStateManager $contextStateManager,
-        OrderAmountUpdater $orderAmountUpdater
+        OrderAmountUpdater $orderAmountUpdater,
+        OrderProductQuantityUpdater $orderProductQuantityUpdater
     ) {
         $this->context = Context::getContext();
         $this->translator = $translator;
         $this->contextStateManager = $contextStateManager;
         $this->orderAmountUpdater = $orderAmountUpdater;
+        $this->orderProductQuantityUpdater = $orderProductQuantityUpdater;
     }
 
     /**
@@ -114,29 +122,27 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     {
         $order = $this->getOrder($command->getOrderId());
 
+        $this->assertOrderWasNotShipped($order);
+        $this->assertProductNotDuplicate($order, $command);
+
+        $cart = Cart::getCartByOrderId($order->id);
+        if (!($cart instanceof Cart)) {
+            throw new OrderException('Cart linked to the order cannot be found.');
+        }
+
+        $product = $this->getProduct($command->getProductId(), (int) $order->id_lang);
+        $combination = null !== $command->getCombinationId() ? $this->getCombination($command->getCombinationId()->getValue()) : null;
+
+        $this->checkProductInStock($product, $command);
+
         $this->contextStateManager
             ->setCurrency(new Currency($order->id_currency))
-            ->setCustomer(new Customer($order->id_customer));
+            ->setCustomer(new Customer($order->id_customer))
+            ->setCart($cart)
+        ;
 
-        // Get context precision just in case
-        $this->computingPrecision = $this->context->getComputingPrecision();
+        $this->computingPrecision = $this->getPrecisionFromCart($cart);
         try {
-            $this->assertOrderWasNotShipped($order);
-            $this->assertProductNotDuplicate($order, $command);
-
-            $product = $this->getProduct($command->getProductId(), (int) $order->id_lang);
-            $combination = null !== $command->getCombinationId() ? $this->getCombination($command->getCombinationId()->getValue()) : null;
-
-            $this->checkProductInStock($product, $command);
-
-            $cart = Cart::getCartByOrderId($order->id);
-            if (!($cart instanceof Cart)) {
-                throw new OrderException('Cart linked to the order cannot be found.');
-            }
-            $this->contextStateManager->setCart($cart);
-            // Cart precision is more adapted
-            $this->computingPrecision = $this->getPrecisionFromCart($cart);
-
             $this->updateSpecificPrice(
                 $command->getProductPriceTaxIncluded(),
                 $command->getProductPriceTaxExcluded(),
@@ -145,11 +151,13 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 $combination
             );
 
+            $oldProducts = $cart->getProducts(true);
             $this->addProductToCart($cart, $product, $combination, $command->getProductQuantity());
+            $newProducts = $cart->getProducts(true);
 
-            // Fetch Cart Product
-            $productCart = $this->getCartProductData(
-                $cart,
+            $additionalProducts = $this->getCartAdditionalProducts(
+                $oldProducts,
+                $newProducts,
                 $product,
                 $combination,
                 $command
@@ -159,31 +167,32 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 $command,
                 $order,
                 $cart,
-                [$productCart]
+                $additionalProducts
             );
 
             // Create Order detail information
-            $orderDetail = $this->createOrderDetail(
+            $this->createOrderDetail(
                 $order,
                 $invoice,
                 $cart,
-                [$productCart]
+                $additionalProducts
             );
-
             StockAvailable::synchronize($product->id);
 
-            // Update Tax lines
-            $orderDetail->updateTaxAmount($order);
+            $this->updateAffectedOrderDetails(
+                $order,
+                $oldProducts,
+                $newProducts,
+                $product,
+                $combination
+            );
 
             // Update totals amount of order
-            $this->orderAmountUpdater->update($order, $cart, (int) $orderDetail->id_order_invoice);
+            $this->orderAmountUpdater->update($order, $cart, null !== $invoice ? (int) $invoice->id : null);
             Hook::exec('actionOrderEdited', ['order' => $order]);
-        } catch (Exception $e) {
-            $this->contextStateManager->restoreContext();
-            throw $e;
+        } finally {
+            $this->contextStateManager->restorePreviousContext();
         }
-
-        $this->contextStateManager->restoreContext();
     }
 
     /**
@@ -202,60 +211,155 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      * @param Order $order
      * @param OrderInvoice|null $invoice
      * @param Cart $cart
-     * @param array $productCart
-     *
-     * @return OrderDetail
+     * @param array $cartProducts
      *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
-    private function createOrderDetail(Order $order, ?OrderInvoice $invoice, Cart $cart, array $productCart): OrderDetail
+    private function createOrderDetail(Order $order, ?OrderInvoice $invoice, Cart $cart, array $cartProducts): void
     {
         $orderDetail = new OrderDetail();
         $orderDetail->createList(
             $order,
             $cart,
             $order->getCurrentOrderState(),
-            $productCart,
+            $cartProducts,
             !empty($invoice->id) ? $invoice->id : 0
         );
-
-        return $orderDetail;
     }
 
     /**
-     * This function extracts the newly added product from the cart and reformat the data in order to create a
-     * dedicated OrderDetail with appropriate amounts
+     * When a product is added some other products may be affected (because of CartRule that would
+     * add some gift for example) So we detect which existent products may have been modified in the
+     * cart and update the related OrderDetail
      *
-     * @param Cart $cart
+     * @param Order $order
+     * @param array $oldProducts
+     * @param array $newProducts
+     * @param Product $product
+     * @param Combination|null $combination
+     *
+     * @throws OrderException
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    private function updateAffectedOrderDetails(
+        Order $order,
+        array $oldProducts,
+        array $newProducts,
+        Product $product,
+        ?Combination $combination
+    ): void {
+        $orderDetails = $order->getOrderDetailList();
+        foreach ($newProducts as $newProduct) {
+            // Created OrderDetail has already been created we don't update it
+            $productMatch = $newProduct['id_product'] == $product->id;
+            $combinationMatch = $combination === null || $newProduct['id_product_attribute'] == $combination->id;
+            if ($productMatch && $combinationMatch) {
+                continue;
+            }
+
+            // New products in the cart have also been created, not need for update
+            $affectedProduct = $this->getMatchingProduct($oldProducts, $newProduct);
+            if (null === $affectedProduct) {
+                continue;
+            }
+
+            $deltaQuantity = (int) $newProduct['cart_quantity'] - (int) $affectedProduct['cart_quantity'];
+            if (0 === $deltaQuantity) {
+                continue;
+            }
+
+            $affectedOrderDetail = null;
+            foreach ($orderDetails as $orderDetailData) {
+                if ((int) $orderDetailData['product_id'] === (int) $affectedProduct['id_product']
+                    && (int) $orderDetailData['product_attribute_id'] === (int) $affectedProduct['id_product_attribute']) {
+                    $affectedOrderDetail = new OrderDetail($orderDetailData['id_order_detail']);
+                    break;
+                }
+            }
+
+            if (null === $affectedOrderDetail) {
+                continue;
+            }
+
+            $newUpdatedQuantity = (int) $affectedOrderDetail->product_quantity + $deltaQuantity;
+            $orderInvoice = (int) $affectedOrderDetail->id_order_invoice !== 0 ? new OrderInvoice($affectedOrderDetail->id_order_invoice) : null;
+            $this->orderProductQuantityUpdater->update(
+                $order,
+                $affectedOrderDetail,
+                $newUpdatedQuantity,
+                $orderInvoice,
+                false
+            );
+        }
+    }
+
+    /**
+     * This function extracts the newly added product from the cart it detects the newly added products,
+     * for the one added via the command it reformats its quantity so that the created OrderDetail has
+     * the appropriate amount It can also detect other added products (like gift related to CartRule)
+     *
+     * @param array $oldProducts
+     * @param array $newProducts
      * @param Product $product
      * @param Combination|null $combination
      * @param AddProductToOrderCommand $command
      *
      * @return array
      */
-    private function getCartProductData(
-        Cart $cart,
+    private function getCartAdditionalProducts(
+        array $oldProducts,
+        array $newProducts,
         Product $product,
         ?Combination $combination,
         AddProductToOrderCommand $command
     ): array {
-        $productItem = array_reduce($cart->getProducts(true), function ($carry, $item) use ($product, $combination) {
+        $additionalProducts = [];
+        foreach ($newProducts as $newProduct) {
+            // First check if it is the command product
+            $productMatch = $newProduct['id_product'] == $product->id;
+            $combinationMatch = $combination === null || $newProduct['id_product_attribute'] == $combination->id;
+            // This is the newly added Product, it is necessarily an new product which requires an OrderDetail
+            if ($productMatch && $combinationMatch) {
+                // We just override the quantity field so that it's correctly injected into new OrderDetail
+                // the unit and total prices will be recomputed by OrderAmountUpdater
+                $newProduct['cart_quantity'] = $command->getProductQuantity();
+                $additionalProducts[] = $newProduct;
+
+                continue;
+            }
+
+            // Then try and find the product in old products
+            $oldProduct = $this->getMatchingProduct($oldProducts, $newProduct);
+            if (null === $oldProduct) {
+                $additionalProducts[] = $newProduct;
+            }
+        }
+
+        return $additionalProducts;
+    }
+
+    /**
+     * Find a specific product among the product array
+     *
+     * @param array $productList
+     * @param array $searchedProduct
+     *
+     * @return array|null
+     */
+    private function getMatchingProduct(array $productList, array $searchedProduct): ?array
+    {
+        return array_reduce($productList, function ($carry, $item) use ($searchedProduct) {
             if (null !== $carry) {
                 return $carry;
             }
 
-            $productMatch = $item['id_product'] == $product->id;
-            $combinationMatch = $combination === null || $item['id_product_attribute'] == $combination->id;
+            $productMatch = $item['id_product'] == $searchedProduct['id_product'];
+            $combinationMatch = $item['id_product_attribute'] == $searchedProduct['id_product_attribute'];
 
             return $productMatch && $combinationMatch ? $item : null;
         });
-
-        // We just override the quantity field so that it's correctly injected into new OrderDetail
-        // the unit and total prices will be recomputed by OrderAmountUpdater
-        $productItem['cart_quantity'] = $command->getProductQuantity();
-
-        return $productItem;
     }
 
     /**
@@ -330,6 +434,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     }
 
     /**
+     * @todo: Most of this method can be simplified, since OrderAmountUpdater computes everything
+     *        the invoice computation here should be removable, as well as $order->addCartRule
+     *
      * @param Order $order
      * @param Cart $cart
      * @param bool $isFreeShipping
@@ -361,7 +468,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $freeShippingCartRule->minimum_amount_currency = $order->id_currency;
             $freeShippingCartRule->reduction_currency = $order->id_currency;
             $freeShippingCartRule->free_shipping = true;
-            $freeShippingCartRule->active = 1;
+            $freeShippingCartRule->active = true;
             $freeShippingCartRule->add();
 
             // Add cart rule to cart and in order
@@ -424,6 +531,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     }
 
     /**
+     * @todo: this whole method should be removable as well since ALL invoices are updated by OrderAmountUpdater
+     *
      * @param int $orderInvoiceId
      * @param Cart $cart
      * @param array $newProducts

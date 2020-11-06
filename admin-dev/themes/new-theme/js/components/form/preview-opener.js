@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Responsible for opening another page with specified url.
@@ -33,9 +33,9 @@ const $ = window.$;
  * The page will be opened once provided 'open_preview' parameter in query url
  */
 export default class PreviewOpener {
-  constructor (previewUrlSelector) {
+  constructor(previewUrlSelector) {
     this.previewUrl = $(previewUrlSelector).data('preview-url');
-    this._open();
+    this.open();
 
     return {};
   }
@@ -45,8 +45,8 @@ export default class PreviewOpener {
    *
    * @private
    */
-  _open() {
-    const urlParams = new URLSearchParams(location.search);
+  open() {
+    const urlParams = new URLSearchParams(window.location.search);
 
     if (this.previewUrl && urlParams.has('open_preview')) {
       window.open(this.previewUrl, '_blank');

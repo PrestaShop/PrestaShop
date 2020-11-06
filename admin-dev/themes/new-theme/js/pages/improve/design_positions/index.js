@@ -24,9 +24,11 @@
  */
 
 import PositionsListHandler from './positions-list-handler';
+import HookStatusHandler from './hook-status-handler';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   new PositionsListHandler();
+  new HookStatusHandler();
 });

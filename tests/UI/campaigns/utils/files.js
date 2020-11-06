@@ -1,5 +1,6 @@
 const fs = require('fs');
 const pdfJs = require('pdfjs-dist/es5/build/pdf.js');
+const imgGen = require('js-image-generator');
 
 module.exports = {
   /**
@@ -81,6 +82,26 @@ module.exports = {
     return imageNumber;
   },
   /**
+   * Generate report filename
+   * @return {Promise<string>}
+   */
+  async generateReportFilename() {
+    const curDate = new Date();
+    return `report-${
+      curDate.toJSON().slice(0, 10)}-${
+      curDate.getHours()}-${
+      curDate.getMinutes()}-${
+      curDate.getSeconds()}`;
+  },
+  /**
+   * Create directory if not exist
+   * @param path
+   * @return {Promise<void>}
+   */
+  async createDirectory(path) {
+    if (!fs.existsSync(path)) await fs.mkdirSync(path);
+  },
+  /**
    * Create file with content
    * @param path
    * @param filename
@@ -117,25 +138,29 @@ module.exports = {
   },
 
   /**
-   * Create directory if not exist
-   * @param path
+   * Generate image
+   * @param imageName
+   * @param width
+   * @param height
+   * @param quality
    * @return {Promise<void>}
    */
-  async createDirectory(path) {
-    if (!fs.existsSync(path)) await fs.mkdirSync(path);
+  async generateImage(imageName, width = 200, height = 200, quality = 1) {
+    await imgGen.generateImage(width, height, quality, (err, image) => {
+      fs.writeFileSync(imageName, image.data);
+    });
   },
 
   /**
-   * Generate report filename
-   * @return {Promise<string>}
+   * Rename files
+   * @param oldPath
+   * @param newPath
+   * @return {Promise<void>}
    */
-  async generateReportFilename() {
-    const curDate = new Date();
-    return `report-${
-      curDate.toJSON().slice(0, 10)}-${
-      curDate.getHours()}-${
-      curDate.getMinutes()}-${
-      curDate.getSeconds()}`;
+  async renameFile(oldPath, newPath) {
+    await fs.rename(oldPath, newPath, (err) => {
+      if (err) throw err;
+    });
   },
 
   /**

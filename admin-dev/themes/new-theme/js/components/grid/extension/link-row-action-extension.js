@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class LinkRowActionExtension handles link row actions
@@ -48,7 +48,7 @@ export default class LinkRowActionExtension {
     grid.getContainer().on('click', '.js-link-row-action', (event) => {
       const confirmMessage = $(event.currentTarget).data('confirm-message');
 
-      if (confirmMessage.length && !confirm(confirmMessage)) {
+      if (confirmMessage.length && !window.confirm(confirmMessage)) {
         event.preventDefault();
       }
     });
@@ -66,16 +66,27 @@ export default class LinkRowActionExtension {
       $('.js-link-row-action[data-clickable-row=1]:first', $parentRow).each(function propagateFirstLinkAction() {
         const $rowAction = $(this);
         const $parentCell = $rowAction.closest('td');
-        
-        const clickableCells = $('td.clickable', $parentRow)
-          .not($parentCell)
-        ;
 
-        clickableCells.addClass('cursor-pointer').click(() => {
-          const confirmMessage = $rowAction.data('confirm-message');
+        const clickableCells = $('td.clickable', $parentRow).not($parentCell);
+        let isDragging = false;
+        clickableCells.addClass('cursor-pointer').mousedown(() => {
+          $(window).mousemove(() => {
+            isDragging = true;
+            $(window).unbind('mousemove');
+          });
+        });
 
-          if (!confirmMessage.length || confirm(confirmMessage)) {
-            document.location = $rowAction.attr('href');
+        clickableCells.mouseup(() => {
+          const wasDragging = isDragging;
+          isDragging = false;
+          $(window).unbind('mousemove');
+
+          if (!wasDragging) {
+            const confirmMessage = $rowAction.data('confirm-message');
+
+            if (!confirmMessage.length || window.confirm(confirmMessage)) {
+              document.location = $rowAction.attr('href');
+            }
           }
         });
       });

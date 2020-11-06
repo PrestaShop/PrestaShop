@@ -159,4 +159,16 @@ class OrderConfirmationControllerCore extends FrontController
             $cart->secure_key
         );
     }
+
+    public function getBreadcrumbLinks()
+    {
+        $breadcrumb = parent::getBreadcrumbLinks();
+
+        $breadcrumb['links'][] = [
+            'title' => $this->trans('Order confirmation', [], 'Shop.Theme.Checkout'),
+            'url' => $this->context->link->getPageLink('order-confirmation'),
+        ];
+
+        return $breadcrumb;
+    }
 }

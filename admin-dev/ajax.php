@@ -96,16 +96,11 @@ require_once __DIR__ . '/bootstrap.php';
 
 $context = Context::getContext();
 
-// Not used anymore, but kept just in case
-if (Tools::getValue('page') == 'prestastore' && @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3)) {
-    readfile('https://addons.prestashop.com/adminmodules.php?lang='.$context->language->iso_code);
-}
-
 /**
  * Import controller: Fields available for a given entity
  * -> Duplicated in Symfony
  */
-elseif (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
+if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
     $import = new AdminImportController();
 
     $fields = array_map(function ($elem) {

@@ -23,7 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
@@ -103,7 +103,7 @@ class AdminControllerCore extends Controller
     /** @var string "shop" or "group_shop" */
     public $shopLinkType;
 
-    /** @var string Default ORDER BY clause when $_orderBy is not defined */
+    /** @var string Default ORDER BY clause when `$_orderBy` is not defined */
     protected $_defaultOrderBy = false;
 
     /** @var string */
@@ -157,7 +157,7 @@ class AdminControllerCore extends Controller
     /** @var array Edit form to be generated */
     protected $fields_form;
 
-    /** @var array Override of $fields_form */
+    /** @var array Override of `$fields_form` */
     protected $fields_form_override;
 
     /** @var string Override form action */
@@ -283,7 +283,7 @@ class AdminControllerCore extends Controller
     /** @var array Ids of the rows selected */
     protected $boxes;
 
-    /** @var string Do not automatically select * anymore but select only what is necessary */
+    /** @var bool Do not automatically select * anymore but select only what is necessary */
     protected $explicitSelect = false;
 
     /** @var string Add fields into data query to display list */
@@ -406,6 +406,21 @@ class AdminControllerCore extends Controller
     /** @var string */
     protected $tabSlug;
 
+    /** @var int Auth cookie lifetime */
+    const AUTH_COOKIE_LIFETIME = 3600;
+
+    /** @var array */
+    public $_conf;
+
+    /** @var float @var */
+    public $timer_start;
+
+    /** @var bool */
+    protected static $is_prestashop_up = true;
+
+    /** @var array */
+    protected $translationsTab = [];
+
     public function __construct($forceControllerName = '', $default_theme_name = 'default')
     {
         global $timer_start;
@@ -523,7 +538,6 @@ class AdminControllerCore extends Controller
             $this->shopLinkType = '';
         }
 
-        //$this->base_template_folder = _PS_BO_ALL_THEMES_DIR_.$this->bo_theme.'/template';
         $this->override_folder = Tools::toUnderscoreCase(substr($this->controller_name, 5)) . '/';
         // Get the name of the folder containing the custom tpl files
         $this->tpl_folder = Tools::toUnderscoreCase(substr($this->controller_name, 5)) . '/';
@@ -551,7 +565,7 @@ class AdminControllerCore extends Controller
             $this->context->mode = Context::MODE_STD;
         }
 
-        //* Check if logged employee has access to AdminImport controller */
+        /* Check if logged employee has access to AdminImport controller */
         $import_access = Profile::getProfileAccess($this->context->employee->id_profile, Tab::getIdFromClassName('AdminImport'));
         if (is_array($import_access) && isset($import_access['view']) && $import_access['view'] == 1) {
             $this->can_import = true;
@@ -1109,7 +1123,7 @@ class AdminControllerCore extends Controller
                         $this->errors[] = $this->trans('Unable to delete associated images.', [], 'Admin.Notifications.Error');
                     }
 
-                    $object->deleted = 1;
+                    $object->deleted = true;
                     if ($res = $object->update()) {
                         $this->redirect_after = self::$currentIndex . '&conf=1&token=' . $this->token;
                     }
@@ -1241,7 +1255,7 @@ class AdminControllerCore extends Controller
                         $object_new = $object->duplicateObject();
                         if (Validate::isLoadedObject($object_new)) {
                             // Update old object to deleted
-                            $object->deleted = 1;
+                            $object->deleted = true;
                             $object->update();
 
                             // Update new object with post values
@@ -1836,7 +1850,7 @@ class AdminControllerCore extends Controller
 
         $template_dirs = $this->context->smarty->getTemplateDir();
 
-        // Check if header/footer have been overriden
+        // Check if header/footer have been overridden
         $dir = $this->context->smarty->getTemplateDir(0) . 'controllers' . DIRECTORY_SEPARATOR . trim($this->override_folder, '\\/') . DIRECTORY_SEPARATOR;
         $module_list_dir = $this->context->smarty->getTemplateDir(0) . 'helpers' . DIRECTORY_SEPARATOR . 'modules_list' . DIRECTORY_SEPARATOR;
 
@@ -1968,7 +1982,7 @@ class AdminControllerCore extends Controller
 
         $tabs = $this->getTabs();
         $currentTabLevel = 0;
-        foreach ($tabs as &$tab) {
+        foreach ($tabs as $tab) {
             $currentTabLevel = isset($tab['current_level']) ? $tab['current_level'] : $currentTabLevel;
         }
 
@@ -2022,7 +2036,7 @@ class AdminControllerCore extends Controller
             'full_cldr_language_code' => $this->context->getCurrentLocale()->getCode(),
             'link' => $this->context->link,
             'shop_name' => Configuration::get('PS_SHOP_NAME'),
-            'base_url' => $this->context->shop->getBaseURL(),
+            'base_url' => $this->context->shop->getBaseURL(true),
             'current_parent_id' => (int) Tab::getCurrentParentId(),
             'tabs' => $tabs,
             'current_tab_level' => $currentTabLevel,
@@ -2300,9 +2314,6 @@ class AdminControllerCore extends Controller
             ]);
         }
 
-        // Iso needed to generate Addons login
-        $iso_code_caps = strtoupper($this->context->language->iso_code);
-
         $this->context->smarty->assign([
             'img_base_path' => __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/',
             'check_url_fopen' => (ini_get('allow_url_fopen') ? 'ok' : 'ko'),
@@ -2524,7 +2535,7 @@ class AdminControllerCore extends Controller
                 if (Tools::getValue('back')) {
                     $helper->tpl_vars['back'] = Tools::safeOutput(Tools::getValue('back'));
                 } else {
-                    $helper->tpl_vars['back'] = Tools::safeOutput(Tools::getValue(self::$currentIndex . '&token=' . $this->token));
+                    $helper->tpl_vars['back'] = Tools::safeOutput(self::$currentIndex . '&token=' . $this->token);
                 }
             }
             $form = $helper->generateForm($this->fields_form);
@@ -2766,6 +2777,12 @@ class AdminControllerCore extends Controller
      */
     public function init()
     {
+        Hook::exec(
+            'actionAdminControllerInitBefore',
+            [
+                'controller' => $this,
+            ]
+        );
         parent::init();
 
         if (Tools::getValue('ajax')) {
@@ -2782,7 +2799,7 @@ class AdminControllerCore extends Controller
             $this->context->employee->logout();
         }
         if (isset(Context::getContext()->cookie->last_activity)) {
-            if ($this->context->cookie->last_activity + 900 < time()) {
+            if ($this->context->cookie->last_activity + self::AUTH_COOKIE_LIFETIME < time()) {
                 $this->context->employee->logout();
             } else {
                 $this->context->cookie->last_activity = time();
@@ -2835,6 +2852,12 @@ class AdminControllerCore extends Controller
         $this->initModal();
         $this->initToolbarFlags();
         $this->initNotifications();
+        Hook::exec(
+            'actionAdminControllerInitAfter',
+            [
+                'controller' => $this,
+            ]
+        );
     }
 
     /**
@@ -2845,9 +2868,8 @@ class AdminControllerCore extends Controller
         $notificationsSettings = [
             'show_new_orders' => Configuration::get('PS_SHOW_NEW_ORDERS'),
             'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS'),
-            'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES '),
+            'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES'),
         ];
-
         $this->context->smarty->assign($notificationsSettings);
 
         Media::addJsDef($notificationsSettings);
@@ -2956,7 +2978,7 @@ class AdminControllerCore extends Controller
                 $this->errors[] = $this->trans('You do not have permission to delete this.', [], 'Admin.Notifications.Error');
             }
         } elseif ((isset($_GET['status' . $this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier)) {
-            /* Change object statuts (active, inactive) */
+            /* Change object status (active, inactive) */
             if ($this->access('edit')) {
                 $this->action = 'status';
             } else {
@@ -3350,8 +3372,8 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * @param $orderBy
-     * @param $orderDirection
+     * @param string|null $orderBy
+     * @param string|null $orderDirection
      *
      * @return string
      */
@@ -3366,7 +3388,7 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * @param $orderBy
+     * @param string|null $orderBy
      *
      * @return false|string
      */
@@ -3408,7 +3430,7 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * @param $orderDirection
+     * @param string|null $orderDirection
      *
      * @return string
      */
@@ -4048,7 +4070,7 @@ class AdminControllerCore extends Controller
                     $to_delete = new $this->className((int) $id);
                     $delete_ok = true;
                     if ($this->deleted) {
-                        $to_delete->deleted = 1;
+                        $to_delete->deleted = true;
                         if (!$to_delete->update()) {
                             $result = false;
                             $delete_ok = false;
@@ -4341,9 +4363,6 @@ class AdminControllerCore extends Controller
             unset($obj);
         }
     }
-
-    /** @var array */
-    protected $translationsTab = [];
 
     /**
      * Display modules list.
@@ -4709,13 +4728,13 @@ class AdminControllerCore extends Controller
      */
     protected function buildContainer()
     {
-        return ContainerBuilder::getContainer('admin', _PS_MODE_DEV_);
+        return SymfonyContainer::getInstance();
     }
 
     /**
      * Return the type of authorization on module page.
      *
-     * @return int(integer)
+     * @return int
      */
     public function authorizationLevel()
     {

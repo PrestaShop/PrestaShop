@@ -36,8 +36,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductExcep
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcher;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Entity\AdminFilter;
+use PrestaShopBundle\Entity\Repository\AttributeRepository;
 use PrestaShopBundle\Exception\UpdateProductException;
 use PrestaShopBundle\Form\Admin\Product\ProductCategories;
 use PrestaShopBundle\Form\Admin\Product\ProductCombination;
@@ -128,7 +130,7 @@ class ProductController extends FrameworkBundleAdminController
         $request->getSession()->set('_locale', $language->locale);
         $request = $this->get('prestashop.adapter.product.filter_categories_request_purifier')->purify($request);
 
-        /** @var $productProvider ProductInterfaceProvider */
+        /** @var ProductInterfaceProvider $productProvider */
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
 
         // Set values from persistence and replace in the request
@@ -272,7 +274,7 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirect('admin_dashboard');
         }
 
-        /** @var $productProvider ProductInterfaceProvider */
+        /** @var ProductInterfaceProvider $productProvider */
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
         $totalCount = 0;
@@ -394,7 +396,7 @@ class ProductController extends FrameworkBundleAdminController
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
         $languages = $this->get('prestashop.adapter.legacy.context')->getLanguages();
 
-        /** @var $productProvider ProductInterfaceProvider */
+        /** @var ProductInterfaceProvider $productProvider */
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
         $productShopCategory = $this->getContext()->shop->id_category;
 
@@ -405,7 +407,7 @@ class ProductController extends FrameworkBundleAdminController
         /** @var TaxRuleDataProvider $taxRuleDataProvider */
         $taxRuleDataProvider = $this->get('prestashop.adapter.data_provider.tax');
         $product->id_tax_rules_group = $taxRuleDataProvider->getIdTaxRulesGroupMostUsed();
-        $product->active = $productProvider->isNewProductDefaultActivated() ? 1 : 0;
+        $product->active = $productProvider->isNewProductDefaultActivated();
         $product->state = Product::STATE_TEMP;
 
         //set name and link_rewrite in each lang
@@ -590,14 +592,14 @@ class ProductController extends FrameworkBundleAdminController
             throw $e;
         }
 
-        /** @var $stockManager StockInterface */
+        /** @var StockInterface $stockManager */
         $stockManager = $this->get('prestashop.core.data_provider.stock_interface');
 
         /** @var WarehouseDataProvider $warehouseProvider */
         $warehouseProvider = $this->get('prestashop.adapter.data_provider.warehouse');
 
         //If context shop is define to a group shop, disable the form
-        if ($shopContext->isShopGroupContext()) {
+        if ($shopContext->isGroupShopContext()) {
             return $this->render('@Product/ProductPage/disabled_form_alert.html.twig', ['showContentHeader' => false]);
         }
 
@@ -615,7 +617,9 @@ class ProductController extends FrameworkBundleAdminController
 
         $doctrine = $this->getDoctrine()->getManager();
         $language = empty($languages[0]) ? ['id_lang' => 1, 'id_shop' => 1] : $languages[0];
-        $attributeGroups = $doctrine->getRepository('PrestaShopBundle:Attribute')->findByLangAndShop((int) $language['id_lang'], (int) $language['id_shop']);
+        /** @var AttributeRepository $attributeRepository */
+        $attributeRepository = $doctrine->getRepository('PrestaShopBundle:Attribute');
+        $attributeGroups = $attributeRepository->findByLangAndShop((int) $language['id_lang'], (int) $language['id_shop']);
 
         $drawerModules = (new HookFinder())->setHookName('displayProductPageDrawer')
             ->setParams(['product' => $product])
@@ -728,10 +732,10 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         $productIdList = $request->request->get('bulk_action_selected_products');
-        /** @var $productUpdater ProductInterfaceUpdater */
+        /** @var ProductInterfaceUpdater $productUpdater */
         $productUpdater = $this->get('prestashop.core.admin.data_updater.product_interface');
 
-        /** @var $logger LoggerInterface */
+        /** @var LoggerInterface $logger */
         $logger = $this->get('logger');
 
         $hookEventParameters = ['product_list_id' => $productIdList];
@@ -764,7 +768,7 @@ class ProductController extends FrameworkBundleAdminController
                         );
                     }
 
-                    $logger->info('Products activated: (' . implode(',', $productIdList) . ').');
+                    $logger->info('Products activated: (' . implode(',', $productIdList) . ').', $this->getLogDataContext());
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminActivateAfter',
                         $hookEventParameters
@@ -793,7 +797,7 @@ class ProductController extends FrameworkBundleAdminController
                         );
                     }
 
-                    $logger->info('Products deactivated: (' . implode(',', $productIdList) . ').');
+                    $logger->info('Products deactivated: (' . implode(',', $productIdList) . ').', $this->getLogDataContext());
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminDeactivateAfter',
                         $hookEventParameters
@@ -822,7 +826,7 @@ class ProductController extends FrameworkBundleAdminController
                         );
                     }
 
-                    $logger->info('Products deleted: (' . implode(',', $productIdList) . ').');
+                    $logger->info('Products deleted: (' . implode(',', $productIdList) . ').', $this->getLogDataContext());
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminDeleteAfter',
                         $hookEventParameters
@@ -851,7 +855,7 @@ class ProductController extends FrameworkBundleAdminController
                         );
                     }
 
-                    $logger->info('Products duplicated: (' . implode(',', $productIdList) . ').');
+                    $logger->info('Products duplicated: (' . implode(',', $productIdList) . ').', $this->getLogDataContext());
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminDuplicateAfter',
                         $hookEventParameters
@@ -867,7 +871,7 @@ class ProductController extends FrameworkBundleAdminController
                      * should never happens since the route parameters are
                      * restricted to a set of action values in YML file.
                      */
-                    $logger->error('Bulk action from ProductController received a bad parameter.');
+                    $logger->error('Bulk action from ProductController received a bad parameter.', $this->getLogDataContext());
 
                     throw new Exception('Bad action received from call to ProductController::bulkAction: "' . $action . '"', 2001);
             }
@@ -875,7 +879,7 @@ class ProductController extends FrameworkBundleAdminController
             //TODO : need to translate this with an domain name
             $message = $due->getMessage();
             $this->addFlash('failure', $message);
-            $logger->warning($message);
+            $logger->warning($message, $this->getLogDataContext());
         }
 
         return new Response(json_encode(['result' => 'ok']));
@@ -904,13 +908,13 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_product_catalog');
         }
 
-        /** @var $productProvider ProductInterfaceProvider */
+        /** @var ProductInterfaceProvider $productProvider */
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
 
-        /** @var $productUpdater ProductInterfaceUpdater */
+        /** @var ProductInterfaceUpdater $productUpdater */
         $productUpdater = $this->get('prestashop.core.admin.data_updater.product_interface');
 
-        /** @var $logger LoggerInterface */
+        /** @var LoggerInterface $logger */
         $logger = $this->get('logger');
 
         /* @var HookDispatcher $hookDispatcher */
@@ -955,7 +959,7 @@ class ProductController extends FrameworkBundleAdminController
                     );
                     $logger->info(
                         'Products sorted: (' . implode(',', $productIdList) .
-                        ') with positions (' . implode(',', $productPositionList) . ').'
+                        ') with positions (' . implode(',', $productPositionList) . ').', $this->getLogDataContext()
                     );
                     $hookEventParameters = [
                         'product_list_id' => $productIdList,
@@ -976,7 +980,7 @@ class ProductController extends FrameworkBundleAdminController
                      * should never happens since the route parameters are
                      * restricted to a set of action values in YML file.
                      */
-                    $logger->error('Mass edit action from ProductController received a bad parameter.');
+                    $logger->error('Mass edit action from ProductController received a bad parameter.', $this->getLogDataContext());
 
                     throw new Exception('Bad action received from call to ProductController::massEditAction: "' . $action . '"', 2001);
             }
@@ -984,7 +988,7 @@ class ProductController extends FrameworkBundleAdminController
             //TODO : need to translate with domain name
             $message = $due->getMessage();
             $this->addFlash('failure', $message);
-            $logger->warning($message);
+            $logger->warning($message, $this->getLogDataContext());
         }
 
         $urlGenerator = $this->get('prestashop.core.admin.url_generator');
@@ -1010,10 +1014,10 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_product_catalog');
         }
 
+        /** @var ProductInterfaceUpdater $productUpdater */
         $productUpdater = $this->get('prestashop.core.admin.data_updater.product_interface');
-        /** @var $productUpdater ProductInterfaceUpdater */
 
-        /** @var $logger LoggerInterface */
+        /** @var LoggerInterface $logger */
         $logger = $this->get('logger');
 
         $hookEventParameters = ['product_id' => $id];
@@ -1041,7 +1045,7 @@ class ProductController extends FrameworkBundleAdminController
                         'success',
                         $this->trans('Product successfully deleted.', 'Admin.Catalog.Notification')
                     );
-                    $logger->info('Product deleted: (' . $id . ').');
+                    $logger->info('Product deleted: (' . $id . ').', $this->getLogDataContext($id));
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminDeleteAfter',
                         $hookEventParameters
@@ -1067,7 +1071,7 @@ class ProductController extends FrameworkBundleAdminController
                         'success',
                         $this->trans('Product successfully duplicated.', 'Admin.Catalog.Notification')
                     );
-                    $logger->info('Product duplicated: (from ' . $id . ' to ' . $duplicateProductId . ').');
+                    $logger->info('Product duplicated: (from ' . $id . ' to ' . $duplicateProductId . ').', $this->getLogDataContext($id));
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminDuplicateAfter',
                         $hookEventParameters
@@ -1093,7 +1097,7 @@ class ProductController extends FrameworkBundleAdminController
                         'success',
                         $this->trans('Product successfully activated.', 'Admin.Catalog.Notification')
                     );
-                    $logger->info('Product activated: ' . $id);
+                    $logger->info('Product activated: ' . $id, $this->getLogDataContext($id));
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminActivateAfter',
                         $hookEventParameters
@@ -1119,7 +1123,7 @@ class ProductController extends FrameworkBundleAdminController
                         'success',
                         $this->trans('Product successfully deactivated.', 'Admin.Catalog.Notification')
                     );
-                    $logger->info('Product deactivated: ' . $id);
+                    $logger->info('Product deactivated: ' . $id, $this->getLogDataContext($id));
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminDeactivateAfter',
                         $hookEventParameters
@@ -1135,7 +1139,7 @@ class ProductController extends FrameworkBundleAdminController
                      * should never happens since the route parameters are
                      * restricted to a set of action values in YML file.
                      */
-                    $logger->error('Unit action from ProductController received a bad parameter.');
+                    $logger->error('Unit action from ProductController received a bad parameter.', $this->getLogDataContext($id));
 
                     throw new Exception('Bad action received from call to ProductController::unitAction: "' . $action . '"', 2002);
             }
@@ -1143,7 +1147,7 @@ class ProductController extends FrameworkBundleAdminController
             //TODO : need to translate with a domain name
             $message = $due->getMessage();
             $this->addFlash('failure', $message);
-            $logger->warning($message);
+            $logger->warning($message, $this->getLogDataContext($id));
         }
 
         return $this->redirect($this->get('prestashop.core.admin.url_generator')->generate('admin_product_catalog'));
@@ -1157,7 +1161,7 @@ class ProductController extends FrameworkBundleAdminController
      *     message="You do not have permission to update this."
      * )
      *
-     * @param $productId
+     * @param int $productId
      *
      * @return JsonResponse
      */
@@ -1259,7 +1263,7 @@ class ProductController extends FrameworkBundleAdminController
             $this->get('prestashop.adapter.data_provider.tax'),
             $this->get('router')
         );
-        $form = $this->createFormBuilder($modelMapper->getFormData());
+        $form = $this->createFormBuilder($modelMapper->getFormData($product));
         switch ($step) {
             case 'step1':
                 $form->add('step1', 'PrestaShopBundle\Form\Admin\Product\ProductInformation');
@@ -1302,6 +1306,19 @@ class ProductController extends FrameworkBundleAdminController
         return [
             ProductNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
             CannotUpdateProductException::class => $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getLogDataContext($id_product = null, $error_code = null, $allow_duplicate = null): array
+    {
+        return [
+            'object_type' => 'Product',
+            'object_id' => $id_product,
+            'error_code' => $error_code,
+            'allow_duplicate' => $allow_duplicate,
         ];
     }
 }

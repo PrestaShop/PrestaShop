@@ -24,6 +24,7 @@
  *#}
 
 {% trans_default_domain 'Admin.International.Feature' %}
+{% form_theme geolocationIpAddressWhitelistForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {% block geolocation_ip_address_whitelist %}
   <div class="card">
@@ -41,16 +42,7 @@
             </div>
           </div>
         </div>
-
-        <div class="form-group row">
-          <label class="form-control-label">
-            {{ 'Whitelisted IP addresses'|trans }}
-          </label>
-          <div class="col-sm">
-            {{ form_errors(geolocationIpAddressWhitelistForm.geolocation_whitelist) }}
-            {{ form_widget(geolocationIpAddressWhitelistForm.geolocation_whitelist) }}
-          </div>
-        </div>
+        {{ form_widget(geolocationIpAddressWhitelistForm) }}
       </div>
     </div>
     <div class="card-footer">

@@ -33,6 +33,12 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+
+    // Create logos
+    await Promise.all([
+      files.generateImage(firstBrandData.logo),
+      files.generateImage(secondBrandData.logo),
+    ]);
   });
 
   after(async () => {

@@ -40,12 +40,12 @@
         </p>
 
         <div class="form-group">
-          {{ form_widget(paymentPreferencesForm.payment_module_preferences.currency_restrictions) }}
+          {{ form_widget(paymentPreferencesForm.currency_restrictions) }}
         </div>
       </div>
       <div class="card-footer">
         <div class="d-flex justify-content-end">
-          <button class="btn btn-primary">
+          <button class="btn btn-primary" id="form-currency-restrictions-save-button">
             {{ 'Save'|trans({}, 'Admin.Actions') }}
           </button>
         </div>
@@ -67,12 +67,12 @@
         </p>
 
         <div class="form-group">
-          {{ form_widget(paymentPreferencesForm.payment_module_preferences.group_restrictions) }}
+          {{ form_widget(paymentPreferencesForm.group_restrictions) }}
         </div>
       </div>
       <div class="card-footer">
         <div class="d-flex justify-content-end">
-          <button class="btn btn-primary">
+          <button class="btn btn-primary" id="form-group-restrictions-save-button">
             {{ 'Save'|trans({}, 'Admin.Actions') }}
           </button>
         </div>
@@ -94,12 +94,12 @@
         </p>
 
         <div class="form-group">
-          {{ form_widget(paymentPreferencesForm.payment_module_preferences.country_restrictions) }}
+          {{ form_widget(paymentPreferencesForm.country_restrictions) }}
         </div>
       </div>
       <div class="card-footer">
         <div class="d-flex justify-content-end">
-          <button class="btn btn-primary">
+          <button class="btn btn-primary" id="form-country-restrictions-save-button">
             {{ 'Save'|trans({}, 'Admin.Actions') }}
           </button>
         </div>
@@ -120,12 +120,12 @@
           </small>
         </p>
         <div class="form-group">
-          {{ form_widget(paymentPreferencesForm.payment_module_preferences.carrier_restrictions) }}
+          {{ form_widget(paymentPreferencesForm.carrier_restrictions) }}
         </div>
       </div>
       <div class="card-footer">
         <div class="d-flex justify-content-end">
-          <button class="btn btn-primary">
+          <button class="btn btn-primary" id="form-carrier-restrictions-save-button">
             {{ 'Save'|trans({}, 'Admin.Actions') }}
           </button>
         </div>

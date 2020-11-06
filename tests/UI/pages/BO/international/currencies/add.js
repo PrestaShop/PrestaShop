@@ -15,7 +15,7 @@ class AddCurrency extends BOBasePage {
     this.exchangeRateInput = '#currency_exchange_rate';
     this.precisionInput = '#currency_precision';
     this.statusSwitch = id => `label[for='currency_active_${id}']`;
-    this.saveButton = 'div.card-footer button[type=\'submit\']';
+    this.saveButton = '#save-button';
 
     // currency modal
     this.currencyLoadingModal = '#currency_loading_data_modal';

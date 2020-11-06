@@ -97,7 +97,7 @@ class CategoryController extends FrameworkBundleAdminController
         $categoryGridFactory = $this->get('prestashop.core.grid.factory.category_decorator');
         $categoryGrid = $categoryGridFactory->getGrid($filters);
 
-        $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
+        $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class, ['categories_to_delete_parent' => (int) $currentCategoryId], []);
 
         $showcaseCardIsClosed = $this->getQueryBus()->handle(
             new GetShowcaseCardIsClosed((int) $this->getContext()->employee->id, ShowcaseCard::CATEGORIES_CARD)
@@ -268,18 +268,24 @@ class CategoryController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_categories_index');
         }
 
+        $categoryFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.category_form_builder');
+        $categoryFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.category_form_handler');
+
+        $categoryFormOptions = [
+            'id_category' => (int) $categoryId,
+            'subcategories' => $editableCategory->getSubCategories(),
+        ];
+
         try {
-            $categoryFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.category_form_builder');
-            $categoryFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.category_form_handler');
-
-            $categoryFormOptions = [
-                'id_category' => (int) $categoryId,
-                'subcategories' => $editableCategory->getSubCategories(),
-            ];
-
             $categoryForm = $categoryFormBuilder->getFormFor((int) $categoryId, [], $categoryFormOptions);
-            $categoryForm->handleRequest($request);
+        } catch (Exception $exception) {
+            $this->addFlash('error', $this->getErrorMessageForException($exception, $this->getErrorMessages()));
 
+            return $this->redirectToRoute('admin_categories_index');
+        }
+
+        try {
+            $categoryForm->handleRequest($request);
             $handlerResult = $categoryFormHandler->handleFor((int) $categoryId, $categoryForm);
 
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
@@ -344,8 +350,14 @@ class CategoryController extends FrameworkBundleAdminController
 
         try {
             $rootCategoryForm = $rootCategoryFormBuilder->getFormFor((int) $categoryId);
-            $rootCategoryForm->handleRequest($request);
+        } catch (Exception $exception) {
+            $this->addFlash('error', $this->getErrorMessageForException($exception, $this->getErrorMessages()));
 
+            return $this->redirectToRoute('admin_categories_index');
+        }
+
+        try {
+            $rootCategoryForm->handleRequest($request);
             $handlerResult = $rootCategoryFormHandler->handleFor((int) $categoryId, $rootCategoryForm);
 
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
@@ -590,10 +602,12 @@ class CategoryController extends FrameworkBundleAdminController
     {
         $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
         $deleteCategoriesForm->handleRequest($request);
+        $idParent = $this->configuration->getInt('PS_HOME_CATEGORY');
 
         if ($deleteCategoriesForm->isSubmitted()) {
             try {
                 $categoriesDeleteData = $deleteCategoriesForm->getData();
+                $idParent = (int) $categoriesDeleteData['categories_to_delete_parent'];
                 $categoryIds = array_map(function ($categoryId) {
                     return (int) $categoryId;
                 }, $categoriesDeleteData['categories_to_delete']);
@@ -614,7 +628,7 @@ class CategoryController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_categories_index');
+        return $this->redirectToRoute('admin_categories_index', ['categoryId' => $idParent]);
     }
 
     /**
@@ -635,9 +649,11 @@ class CategoryController extends FrameworkBundleAdminController
     {
         $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
         $deleteCategoriesForm->handleRequest($request);
+        $idParent = $this->configuration->getInt('PS_HOME_CATEGORY');
 
         if ($deleteCategoriesForm->isSubmitted()) {
             $categoriesDeleteData = $deleteCategoriesForm->getData();
+            $idParent = (int) $categoriesDeleteData['categories_to_delete_parent'];
 
             try {
                 $command = new DeleteCategoryCommand(
@@ -653,7 +669,7 @@ class CategoryController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_categories_index');
+        return $this->redirectToRoute('admin_categories_index', ['categoryId' => $idParent]);
     }
 
     /**
@@ -837,6 +853,6 @@ class CategoryController extends FrameworkBundleAdminController
      */
     private function requestHasSearchParameters(Request $request)
     {
-        return !empty($request->query->get('category')['filters']);
+        return !empty($request->query->get(CategoryGridDefinitionFactory::GRID_ID)['filters']);
     }
 }

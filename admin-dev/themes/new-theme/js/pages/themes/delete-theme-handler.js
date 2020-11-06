@@ -23,14 +23,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * This handler displays delete theme modal and handles the submit action.
  */
 export default class DeleteThemeHandler {
   constructor() {
-    $(document).on('click', '.js-display-delete-theme-modal', e => this._displayDeleteThemeModal(e));
+    $(document).on('click', '.js-display-delete-theme-modal', (e) => this.displayDeleteThemeModal(e));
   }
 
   /**
@@ -39,12 +39,12 @@ export default class DeleteThemeHandler {
    * @param e
    * @private
    */
-  _displayDeleteThemeModal(e) {
+  displayDeleteThemeModal(e) {
     const $modal = $('#delete_theme_modal');
 
     $modal.modal('show');
 
-    this._submitForm($modal, e);
+    this.submitForm($modal, e);
   }
 
   /**
@@ -55,7 +55,7 @@ export default class DeleteThemeHandler {
    *
    * @private
    */
-  _submitForm($modal, originalButtonEvent) {
+  submitForm($modal, originalButtonEvent) {
     const $formButton = $(originalButtonEvent.currentTarget);
 
     $modal.on('click', '.js-submit-delete-theme', () => {

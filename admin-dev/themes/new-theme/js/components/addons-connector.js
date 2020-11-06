@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Responsible for connecting to addons marketplace.
@@ -32,12 +32,12 @@ const $ = window.$;
 export default class AddonsConnector {
   constructor(
     addonsConnectFormSelector,
-    loadingSpinnerSelector
+    loadingSpinnerSelector,
   ) {
     this.addonsConnectFormSelector = addonsConnectFormSelector;
     this.$loadingSpinner = $(loadingSpinnerSelector);
 
-    this._initEvents();
+    this.initEvents();
 
     return {};
   }
@@ -47,14 +47,18 @@ export default class AddonsConnector {
    *
    * @private
    */
-  _initEvents() {
-    $('body').on('submit', this.addonsConnectFormSelector, (event) => {
-      const $form = $(event.currentTarget);
-      event.preventDefault();
-      event.stopPropagation();
+  initEvents() {
+    $('body').on(
+      'submit',
+      this.addonsConnectFormSelector,
+      (event) => {
+        const $form = $(event.currentTarget);
+        event.preventDefault();
+        event.stopPropagation();
 
-      this._connect($form.attr('action'), $form.serialize());
-    });
+        this.connect($form.attr('action'), $form.serialize());
+      },
+    );
   }
 
   /**
@@ -65,7 +69,7 @@ export default class AddonsConnector {
    *
    * @private
    */
-  _connect(addonsConnectUrl, formData) {
+  connect(addonsConnectUrl, formData) {
     $.ajax({
       method: 'POST',
       url: addonsConnectUrl,
@@ -74,13 +78,13 @@ export default class AddonsConnector {
       beforeSend: () => {
         this.$loadingSpinner.show();
         $('button.btn[type="submit"]', this.addonsConnectFormSelector).hide();
-      }
+      },
     }).then((response) => {
       if (response.success === 1) {
-        location.reload();
+        window.location.reload();
       } else {
         $.growl.error({
-          message: response.message
+          message: response.message,
         });
 
         this.$loadingSpinner.hide();

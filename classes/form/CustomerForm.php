@@ -65,6 +65,7 @@ class CustomerFormCore extends AbstractForm
     public function setGuestAllowed($guest_allowed = true)
     {
         $this->formatter->setPasswordRequired(!$guest_allowed);
+        $this->setPasswordRequired(!$guest_allowed);
         $this->guest_allowed = $guest_allowed;
 
         return $this;
@@ -137,6 +138,16 @@ class CustomerFormCore extends AbstractForm
                 $birthdayField->getValue()
             );
             $birthdayField->setValue($dateBuilt->format('Y-m-d'));
+        }
+
+        $passwordField = $this->getField('password');
+        if ((!empty($passwordField->getValue()) || $this->passwordRequired)
+            && Validate::isPasswd($passwordField->getValue()) === false) {
+            $passwordField->AddError($this->translator->trans(
+                'Password must be between 5 and 72 characters long',
+                [],
+                'Shop.Notifications.Error'
+            ));
         }
         $this->validateFieldsLengths();
         $this->validateByModules();

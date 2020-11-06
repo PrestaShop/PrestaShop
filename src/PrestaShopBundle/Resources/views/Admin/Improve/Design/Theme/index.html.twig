@@ -56,7 +56,7 @@
           {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/rtl_configuration.html.twig' %}
         {% endif %}
 
-        {{ form_start(shopLogosForm.shop_logos, {'action': path('admin_themes_upload_logos')}) }}
+        {{ form_start(shopLogosForm, {'action': path('admin_themes_upload_logos')}) }}
           {% if not isInstalledRtlLanguage and isSingleShopContext and isMultiShopFeatureUsed %}
             {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/multishop_switch.html.twig' %}
           {% endif %}
@@ -74,8 +74,8 @@
               <div class="clearfix">&nbsp;</div>
             </div>
           </div>
-          {{ form_rest(shopLogosForm.shop_logos) }}
-        {{ form_end(shopLogosForm.shop_logos) }}
+          {{ form_rest(shopLogosForm) }}
+        {{ form_end(shopLogosForm) }}
 
         <div class="card">
           <div class="card-header">

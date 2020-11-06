@@ -30,7 +30,7 @@ import {EventEmitter} from '@components/event-emitter';
 import ProductRenderer from '@pages/order/create/product-renderer';
 import Router from '@components/router';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Product component Object for "Create order" page
@@ -46,18 +46,14 @@ export default class ProductManager {
     this.router = new Router();
     this.cartEditor = new CartEditor();
 
-    this._initListeners();
+    this.initListeners();
 
     return {
-      search: (searchPhrase) => this._search(searchPhrase),
-
-      addProductToCart: (cartId) => this.cartEditor.addProduct(cartId, this._getProductData()),
-
+      search: (searchPhrase) => this.search(searchPhrase),
+      addProductToCart: (cartId) => this.cartEditor.addProduct(cartId, this.getProductData()),
       removeProductFromCart: (cartId, product) => this.cartEditor.removeProductFromCart(cartId, product),
-
-      changeProductPrice: (cartId, customerId, updatedProduct) =>
-        this.cartEditor.changeProductPrice(cartId, customerId, updatedProduct),
-
+      /* eslint-disable-next-line max-len */
+      changeProductPrice: (cartId, customerId, updatedProduct) => this.cartEditor.changeProductPrice(cartId, customerId, updatedProduct),
       changeProductQty: (cartId, updatedProduct) => this.cartEditor.changeProductQty(cartId, updatedProduct),
     };
   }
@@ -67,15 +63,17 @@ export default class ProductManager {
    *
    * @private
    */
-  _initListeners() {
-    $(createOrderMap.productSelect).on('change', (e) => this._initProductSelect(e));
-    $(createOrderMap.combinationsSelect).on('change', (e) => this._initCombinationSelect(e));
+  initListeners() {
+    $(createOrderMap.productSelect).on('change', (e) => this.initProductSelect(e),
+    );
+    $(createOrderMap.combinationsSelect).on('change', (e) => this.initCombinationSelect(e),
+    );
 
-    this._onProductSearch();
-    this._onAddProductToCart();
-    this._onRemoveProductFromCart();
-    this._onProductPriceChange();
-    this._onProductQtyChange();
+    this.onProductSearch();
+    this.onAddProductToCart();
+    this.onRemoveProductFromCart();
+    this.onProductPriceChange();
+    this.onProductQtyChange();
   }
 
   /**
@@ -83,11 +81,11 @@ export default class ProductManager {
    *
    * @private
    */
-  _onProductSearch() {
+  onProductSearch() {
     EventEmitter.on(eventMap.productSearched, (response) => {
       this.products = response.products;
       this.productRenderer.renderSearchResults(this.products);
-      this._selectFirstResult();
+      this.selectFirstResult();
     });
   }
 
@@ -96,10 +94,11 @@ export default class ProductManager {
    *
    * @private
    */
-  _onAddProductToCart() {
+  onAddProductToCart() {
     // on success
     EventEmitter.on(eventMap.productAddedToCart, (cartInfo) => {
       this.productRenderer.cleanCartBlockAlerts();
+      this.updateStockOnProductAdd();
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
     });
 
@@ -114,9 +113,10 @@ export default class ProductManager {
    *
    * @private
    */
-  _onRemoveProductFromCart() {
-    EventEmitter.on(eventMap.productRemovedFromCart, (cartInfo) => {
-      EventEmitter.emit(eventMap.cartLoaded, cartInfo);
+  onRemoveProductFromCart() {
+    EventEmitter.on(eventMap.productRemovedFromCart, (data) => {
+      this.updateStockOnProductRemove(data.product);
+      EventEmitter.emit(eventMap.cartLoaded, data.cartInfo);
     });
   }
 
@@ -125,7 +125,7 @@ export default class ProductManager {
    *
    * @private
    */
-  _onProductPriceChange() {
+  onProductPriceChange() {
     EventEmitter.on(eventMap.productPriceChanged, (cartInfo) => {
       this.productRenderer.cleanCartBlockAlerts();
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
@@ -137,11 +137,12 @@ export default class ProductManager {
    *
    * @private
    */
-  _onProductQtyChange() {
+  onProductQtyChange() {
     // on success
-    EventEmitter.on(eventMap.productQtyChanged, (cartInfo) => {
+    EventEmitter.on(eventMap.productQtyChanged, (data) => {
       this.productRenderer.cleanCartBlockAlerts();
-      EventEmitter.emit(eventMap.cartLoaded, cartInfo);
+      this.updateStockOnQtyChange(data.product);
+      EventEmitter.emit(eventMap.cartLoaded, data.cartInfo);
     });
 
     // on failure
@@ -157,9 +158,13 @@ export default class ProductManager {
    *
    * @private
    */
-  _initProductSelect(event) {
-    const productId = Number($(event.currentTarget).find(':selected').val());
-    this._selectProduct(productId);
+  initProductSelect(event) {
+    const productId = Number(
+      $(event.currentTarget)
+        .find(':selected')
+        .val(),
+    );
+    this.selectProduct(productId);
   }
 
   /**
@@ -169,9 +174,13 @@ export default class ProductManager {
    *
    * @private
    */
-  _initCombinationSelect(event) {
-    const combinationId = Number($(event.currentTarget).find(':selected').val());
-    this._selectCombination(combinationId);
+  initCombinationSelect(event) {
+    const combinationId = Number(
+      $(event.currentTarget)
+        .find(':selected')
+        .val(),
+    );
+    this.selectCombination(combinationId);
   }
 
   /**
@@ -179,7 +188,7 @@ export default class ProductManager {
    *
    * @private
    */
-  _search(searchPhrase) {
+  search(searchPhrase) {
     if (searchPhrase.length < 2) {
       return;
     }
@@ -192,11 +201,20 @@ export default class ProductManager {
     const params = {
       search_phrase: searchPhrase,
     };
-    if ($(createOrderMap.cartCurrencySelect).data('selectedCurrencyId') != undefined) {
-      params.currency_id = $(createOrderMap.cartCurrencySelect).data('selectedCurrencyId');
+
+    if (
+      $(createOrderMap.cartCurrencySelect).data('selectedCurrencyId')
+      !== undefined
+    ) {
+      params.currency_id = $(createOrderMap.cartCurrencySelect).data(
+        'selectedCurrencyId',
+      );
     }
 
-    const $searchRequest = $.get(this.router.generate('admin_orders_products_search'), params);
+    const $searchRequest = $.get(
+      this.router.generate('admin_orders_products_search'),
+      params,
+    );
     this.activeSearchRequest = $searchRequest;
 
     $searchRequest
@@ -208,7 +226,7 @@ export default class ProductManager {
           return;
         }
 
-        showErrorMessage(response.responseJSON.message);
+        window.showErrorMessage(response.responseJSON.message);
       });
   }
 
@@ -217,13 +235,11 @@ export default class ProductManager {
    *
    * @private
    */
-  _selectFirstResult() {
-    this._unsetProduct();
+  selectFirstResult() {
+    this.unsetProduct();
 
-    const values = Object.values(this.products);
-
-    if (values.length !== 0) {
-      this._selectProduct(values[0].productId);
+    if (this.products.length !== 0) {
+      this.selectProduct(this.products[0].productId);
     }
   }
 
@@ -234,21 +250,20 @@ export default class ProductManager {
    *
    * @param {Number} productId
    */
-  _selectProduct(productId) {
-    this._unsetCombination();
+  selectProduct(productId) {
+    this.unsetCombination();
 
-    for (const key in this.products) {
-      if (this.products[key].productId === productId) {
-        this.selectedProduct = this.products[key];
-
-        break;
-      }
+    const selectedProduct = Object.values(this.products).find(
+      (product) => product.productId === productId,
+    );
+    if (selectedProduct) {
+      this.selectedProduct = selectedProduct;
     }
 
     this.productRenderer.renderProductMetadata(this.selectedProduct);
     // if product has combinations select the first else leave it null
     if (this.selectedProduct.combinations.length !== 0) {
-      this._selectCombination(Object.keys(this.selectedProduct.combinations)[0]);
+      this.selectCombination(Object.keys(this.selectedProduct.combinations)[0]);
     }
 
     return this.selectedProduct;
@@ -261,7 +276,7 @@ export default class ProductManager {
    *
    * @private
    */
-  _selectCombination(combinationId) {
+  selectCombination(combinationId) {
     const combination = this.selectedProduct.combinations[combinationId];
 
     this.selectedCombinationId = combinationId;
@@ -275,7 +290,7 @@ export default class ProductManager {
    *
    * @private
    */
-  _unsetCombination() {
+  unsetCombination() {
     this.selectedCombinationId = null;
   }
 
@@ -284,7 +299,7 @@ export default class ProductManager {
    *
    * @private
    */
-  _unsetProduct() {
+  unsetProduct() {
     this.selectedProduct = null;
   }
 
@@ -295,12 +310,17 @@ export default class ProductManager {
    *
    * @private
    */
-  _getProductData() {
-    const $fileInputs = $(createOrderMap.productCustomizationContainer).find('input[type="file"]');
-    const formData = new FormData(document.querySelector(createOrderMap.productAddForm));
+  getProductData() {
+    const $fileInputs = $(createOrderMap.productCustomizationContainer).find(
+      'input[type="file"]',
+    );
+    const formData = new FormData(
+      document.querySelector(createOrderMap.productAddForm),
+    );
     const fileSizes = {};
 
-    // adds key value pairs {input name: file size} of each file in separate object in case formData size exceeds server settings.
+    // adds key value pairs {input name: file size} of each file in separate object
+    // in case formData size exceeds server settings.
     $.each($fileInputs, (key, input) => {
       if (input.files.length !== 0) {
         fileSizes[$(input).data('customization-field-id')] = input.files[0].size;
@@ -311,5 +331,76 @@ export default class ProductManager {
       product: formData,
       fileSizes,
     };
+  }
+
+  /**
+   * Updates the stock when the product is added to cart in "create new order" page
+   *
+   * @private
+   */
+  updateStockOnProductAdd() {
+    const {productId} = this.selectedProduct;
+    const attributeId = this.selectedCombinationId;
+    const qty = -Number($(createOrderMap.quantityInput).val());
+
+    this.updateStock(productId, attributeId, qty);
+  }
+
+  /**
+   * Updates the stock when the product is removed from cart in Orders/"create new order page"
+   *
+   * @private
+   */
+  updateStockOnProductRemove(product) {
+    const {productId, attributeId, qtyToRemove} = product;
+    const qty = qtyToRemove;
+
+    this.updateStock(productId, attributeId, qty);
+  }
+
+  /**
+   * Updates the stock when the quantity of product is changed from cart in Orders/"create new order page"
+   *
+   * @private
+   */
+  updateStockOnQtyChange(product) {
+    const {
+      productId, attributeId, prevQty, newQty,
+    } = product;
+    const qty = prevQty - newQty;
+
+    this.updateStock(productId, attributeId, qty);
+  }
+
+  /**
+   * Updates the stock in products object and renders the new stock
+   *
+   * @private
+   */
+  updateStock(productId, attributeId, qty) {
+    const productKeys = Object.keys(this.products);
+    const productValues = Object.values(this.products);
+
+    for (let i = 0; i < productKeys.length; i += 1) {
+      if (productValues[i].productId === productId) {
+        // Update the stock value  in products object
+        productValues[i].stock += qty;
+
+        // Update the stock also for combination */
+        if (attributeId && attributeId > 0) {
+          productValues[i].combinations[attributeId].stock += qty;
+        }
+
+        // Render the new stock value
+        if (this.selectedProduct.productId === productId) {
+          if (this.selectedProduct.combinations.length === 0) {
+            this.productRenderer.renderStock(productValues[i].stock);
+          } else if (attributeId && Number(this.selectedCombinationId) === Number(attributeId)) {
+            this.productRenderer.renderStock(productValues[i].combinations[attributeId].stock);
+          }
+        }
+        break;
+      }
+    }
   }
 }

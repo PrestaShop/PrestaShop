@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = global.$;
 // Dependencies
 
 import 'prestakit/dist/js/prestashop-ui-kit';
@@ -37,15 +36,9 @@ import 'typeahead.js/dist/typeahead.jquery';
 import 'typeahead.js/dist/bloodhound.min';
 import 'sprintf-js';
 
-// Plugins CSS
-import 'dropzone/dist/min/dropzone.min.css';
-import 'magnific-popup/dist/magnific-popup.css';
-
-// Theme SCSS
 import '@scss/theme.scss';
 
 // Theme Javascript
-window.Dropzone.autoDiscover = false;
 import NavBar from '@js/nav_bar';
 
 // this needs to be ported into the UI kit
@@ -56,14 +49,21 @@ import '@js/translation-page/index';
 
 import Header from '@js/header';
 
-new NavBar();
-new Header();
-
 import initDatePickers from '@js/app/utils/datepicker';
 import initInvalidFields from '@js/app/utils/fields';
 import initEmailFields from '@js/app/utils/email-idn';
+import initPrestashopComponents from '@js/app/utils/init-components';
+
+const {$} = window;
+
+// Theme Javascript
+window.Dropzone.autoDiscover = false;
+
+new NavBar();
+new Header();
 
 $(() => {
+  initPrestashopComponents();
   initDatePickers();
   initInvalidFields();
   initEmailFields('input[type="email"]');

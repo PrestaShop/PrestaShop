@@ -832,6 +832,7 @@ CREATE TABLE `PREFIX_employee` (
   `last_connection_date` date DEFAULT NULL,
   `reset_password_token` varchar(40) DEFAULT NULL,
   `reset_password_validity` datetime DEFAULT NULL,
+  `has_enabled_gravatar` TINYINT UNSIGNED DEFAULT 0 NOT NULL,
   PRIMARY KEY (`id_employee`),
   KEY `employee_login` (`email`, `passwd`),
   KEY `id_employee_passwd` (`id_employee`, `passwd`),
@@ -985,6 +986,7 @@ CREATE TABLE `PREFIX_hook` (
   `name` varchar(191) NOT NULL,
   `title` varchar(255) NOT NULL,
   `description` text,
+  `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `position` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_hook`),
   UNIQUE KEY `hook_name` (`name`)
@@ -1266,6 +1268,7 @@ CREATE TABLE `PREFIX_orders` (
   `valid` int(1) unsigned NOT NULL DEFAULT '0',
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
+  `note` text,
   PRIMARY KEY (`id_order`),
   KEY `reference` (`reference`),
   KEY `id_customer` (`id_customer`),

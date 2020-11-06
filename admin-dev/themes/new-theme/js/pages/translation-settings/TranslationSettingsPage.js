@@ -23,10 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import FormFieldToggle from "./FormFieldToggle";
+import FormFieldToggle from './FormFieldToggle';
 
 export default class TranslationSettingsPage {
-    constructor() {
-        new FormFieldToggle();
-    }
+  constructor() {
+    new FormFieldToggle();
+  }
 }

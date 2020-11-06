@@ -28,5 +28,7 @@ Modernizr.load([
 		nope: [baseAdminDir + "themes/default/js/vendor/matchMedia.js", baseAdminDir + "themes/default/js/vendor/matchMedia.addListener.js"]
 	},
 	baseAdminDir + "themes/default/js/vendor/enquire.min.js",
+	baseAdminDir + "themes/default/js/bundle/utils/animations.js",
+	baseAdminDir + "themes/default/js/bundle/components/navbar-transition-handler.js",
 	baseAdminDir + "themes/default/js/admin-theme.js",
 ]);

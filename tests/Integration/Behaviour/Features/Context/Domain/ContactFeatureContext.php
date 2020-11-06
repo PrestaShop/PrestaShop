@@ -70,8 +70,8 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
             $editableContact->isMessagesSavingEnabled()
         );
         $addContactCommand->setEmail($editableContact->getEmail()->getValue())
-                          ->setLocalisedDescription($editableContact->getLocalisedDescription())
-                          ->setShopAssociation($editableContact->getShopAssociation());
+            ->setLocalisedDescription($editableContact->getLocalisedDescription())
+            ->setShopAssociation($editableContact->getShopAssociation());
 
         /** @var ContactId $contactId */
         $contactId = $this->getCommandBus()->handle($addContactCommand);

@@ -16,8 +16,8 @@ class OrderMessages extends BOBasePage {
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
     // Filters
     this.filterColumn = filterBy => `${this.gridTable} #order_message_${filterBy}`;
-    this.filterSearchButton = `${this.gridTable} button[name='order_message[actions][search]']`;
-    this.filterResetButton = `${this.gridTable} button[name='order_message[actions][reset]']`;
+    this.filterSearchButton = `${this.gridTable} .grid-search-button`;
+    this.filterResetButton = `${this.gridTable} .grid-reset-button`;
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
@@ -25,16 +25,16 @@ class OrderMessages extends BOBasePage {
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
     // Actions buttons in Row
     this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
-    this.editRowLink = row => `${this.actionsColumn(row)} a[data-original-title='Edit']`;
+    this.editRowLink = row => `${this.actionsColumn(row)} a.grid-edit-row-link`;
     this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
-    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-url*='/delete']`;
+    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
+    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsDeleteButton = '#order_message_grid_bulk_action_delete_selection';
     // Delete modal
-    this.confirmDeleteModal = '#order_message_grid_confirm_modal';
+    this.confirmDeleteModal = '#order_message-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
@@ -120,7 +120,6 @@ class OrderMessages extends BOBasePage {
    * @returns {Promise<string>}
    */
   async deleteOrderMessage(page, row = 1) {
-    this.dialogListener(page, true);
     await Promise.all([
       page.click(this.dropdownToggleButton(row)),
       this.waitForVisibleSelector(
@@ -128,7 +127,15 @@ class OrderMessages extends BOBasePage {
         `${this.dropdownToggleButton(row)}[aria-expanded='true']`,
       ),
     ]);
-    await this.clickAndWaitForNavigation(page, this.deleteRowLink(row));
+
+    // Click on delete and wait for modal
+    await Promise.all([
+      page.click(this.deleteRowLink(row)),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+
+    // Confirm delete in modal
+    await this.confirmDeleteOrderMessages(page);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 

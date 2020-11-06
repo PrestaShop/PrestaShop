@@ -32,13 +32,13 @@ class AddressFormatCore extends ObjectModel
 {
     const FORMAT_NEW_LINE = "\n";
 
-    /** @var int $id_address_format Address format */
+    /** @var int Address format */
     public $id_address_format;
 
-    /** @var int $id_country Country ID */
+    /** @var int Country ID */
     public $id_country;
 
-    /** @var string $format Format */
+    /** @var string Format */
     public $format;
 
     protected $_errorFormatList = [];
@@ -418,10 +418,6 @@ class AddressFormatCore extends ObjectModel
             }
         }
         AddressFormat::cleanOrderedAddress($addressFormat);
-        // Free the instanciate objects
-        foreach ($temporyObject as &$object) {
-            unset($object);
-        }
 
         return $tab;
     }

@@ -24,57 +24,77 @@
  */
 
 import PerfectScrollbar from 'perfect-scrollbar';
-import '@node_modules/perfect-scrollbar/css/perfect-scrollbar.css';
+import 'perfect-scrollbar/css/perfect-scrollbar.css';
+import getAnimationEvent from './app/utils/animations';
+import NavbarTransitionHandler from './components/navbar-transition-handler';
 
-const $ = window.$;
+const {$} = window;
 
 export default class NavBar {
   constructor() {
     $(() => {
+      const $mainMenu = $('.main-menu');
       const $navBar = $('.nav-bar');
+      const $body = $('body');
+
       if ($navBar.length > 0) {
         new PerfectScrollbar('.nav-bar-overflow');
+        const NavBarTransitions = new NavbarTransitionHandler(
+          $navBar,
+          $mainMenu,
+          getAnimationEvent('transition', 'end'),
+          $body,
+        );
 
         $('.nav-bar-overflow').on('scroll', () => {
-          const $menuItems = $('.main-menu .link-levelone.has_submenu.ul-open');
+          const $menuItems = $(
+            '.main-menu .link-levelone.has_submenu.ul-open, .main-menu .link-levelone.has_submenu.link-hover',
+          );
 
           $($menuItems).each((i, e) => {
             const itemOffsetTop = $(e).position().top;
             $(e)
-                .find('ul.submenu')
-                .css('top', itemOffsetTop);
+              .find('ul.submenu')
+              .css('top', itemOffsetTop);
           });
         });
 
         $navBar.find('.link-levelone').hover(
-            function onMouseEnter() {
-              $(this).addClass('-hover');
-            },
-            function onMouseLeave() {
-              $(this).removeClass('-hover');
-            }
+          function onMouseEnter() {
+            const itemOffsetTop = $(this).position().top;
+            $(this).addClass('link-hover');
+            $(this)
+              .find('ul.submenu')
+              .css('top', itemOffsetTop);
+          },
+          function onMouseLeave() {
+            $(this).removeClass('link-hover');
+          },
         );
 
         $('.nav-bar li.link-levelone.has_submenu > a').on('click', function onNavBarClick(e) {
           e.preventDefault();
           e.stopPropagation();
+
+          NavBarTransitions.toggle();
+
           const $submenu = $(this).parent();
           $('.nav-bar li.link-levelone.has_submenu a > i.material-icons.sub-tabs-arrow').text('keyboard_arrow_down');
           const onlyClose = $(e.currentTarget)
-              .parent()
-              .hasClass('ul-open');
+            .parent()
+            .hasClass('ul-open');
 
           if ($('body').is('.page-sidebar-closed:not(.mobile)')) {
-            $('.nav-bar li.link-levelone.has_submenu.ul-open').removeClass('ul-open open -hover');
+            $('.nav-bar li.link-levelone.has_submenu.ul-open').removeClass('ul-open open submenu-hover');
             $('.nav-bar li.link-levelone.has_submenu.ul-open ul.submenu').removeAttr('style');
           } else {
             $('.nav-bar li.link-levelone.has_submenu.ul-open ul.submenu').slideUp({
               complete: function slideUpIsComplete() {
                 $(this)
-                    .parent()
-                    .removeClass('ul-open open');
+                  .parent()
+                  .removeClass('ul-open open');
                 $(this).removeAttr('style');
-              }
+              },
             });
           }
 
@@ -85,14 +105,14 @@ export default class NavBar {
           $submenu.addClass('ul-open');
 
           if ($('body').is('.page-sidebar-closed:not(.mobile)')) {
-            $submenu.addClass('-hover');
+            $submenu.addClass('submenu-hover');
             $submenu.find('ul.submenu').removeAttr('style');
           } else {
             $submenu.find('ul.submenu').slideDown({
               complete: function slideDownIsComplete() {
                 $submenu.addClass('open');
                 $(this).removeAttr('style');
-              }
+              },
             });
           }
           $submenu.find('i.material-icons.sub-tabs-arrow').text('keyboard_arrow_up');
@@ -104,20 +124,22 @@ export default class NavBar {
         $navBar.on('click', '.menu-collapse', function onNavBarClick() {
           $('body').toggleClass('page-sidebar-closed');
 
+          NavBarTransitions.toggle();
+
           $('.popover.show').remove();
           $('.help-box[aria-describedby]').removeAttr('aria-describedby');
 
           if ($('body').hasClass('page-sidebar-closed')) {
             $('nav.nav-bar ul.main-menu > li')
-                .removeClass('ul-open open')
-                .find('a > i.material-icons.sub-tabs-arrow')
-                .text('keyboard_arrow_down');
+              .removeClass('ul-open open')
+              .find('a > i.material-icons.sub-tabs-arrow')
+              .text('keyboard_arrow_down');
             addMobileBodyClickListener();
           } else {
-            $('nav.nav-bar ul.main-menu > li.-active')
-                .addClass('ul-open open')
-                .find('a > i.material-icons.sub-tabs-arrow')
-                .text('keyboard_arrow_up');
+            $('nav.nav-bar ul.main-menu > li.link-active')
+              .addClass('ul-open open')
+              .find('a > i.material-icons.sub-tabs-arrow')
+              .text('keyboard_arrow_up');
             $('body').off('click.mobile');
           }
 
@@ -125,8 +147,8 @@ export default class NavBar {
             url: $(this).data('toggle-url'),
             cache: false,
             data: {
-              shouldCollapse: Number($('body').hasClass('page-sidebar-closed'))
-            }
+              shouldCollapse: Number($('body').hasClass('page-sidebar-closed')),
+            },
           });
         });
 
@@ -144,19 +166,19 @@ export default class NavBar {
             this.mobileNav(MAX_MOBILE_WIDTH);
           }
         });
+      }
 
-        function addMobileBodyClickListener() {
-          if (!$('body').is('.page-sidebar-closed:not(.mobile)')) {
-            return;
-          }
-          // To close submenu on mobile devices
-          $('body').on('click.mobile', () => {
-            if ($('ul.main-menu li.ul-open').length > 0) {
-              $('.nav-bar li.link-levelone.has_submenu.ul-open').removeClass('ul-open open -hover');
-              $('.nav-bar li.link-levelone.has_submenu.ul-open ul.submenu').removeAttr('style');
-            }
-          });
+      function addMobileBodyClickListener() {
+        if (!$('body').is('.page-sidebar-closed:not(.mobile)')) {
+          return;
         }
+        // To close submenu on mobile devices
+        $('body').on('click.mobile', () => {
+          if ($('ul.main-menu li.ul-open').length > 0) {
+            $('.nav-bar li.link-levelone.has_submenu.ul-open').removeClass('ul-open open submenu-hover');
+            $('.nav-bar li.link-levelone.has_submenu.ul-open ul.submenu').removeAttr('style');
+          }
+        });
       }
     });
   }
@@ -171,7 +193,7 @@ export default class NavBar {
     const $mainMenu = $('.main-menu');
 
     $('.nav-bar li.link-levelone.has_submenu:not(.open) a > i.material-icons.sub-tabs-arrow').text(
-      'keyboard_arrow_down'
+      'keyboard_arrow_down',
     );
     $('body').addClass('mobile');
     $('.nav-bar')
@@ -194,16 +216,16 @@ export default class NavBar {
     $mainMenu.prepend(`<li class='link-levelone'>${$employee}</li>`);
 
     $('.collapse').collapse({
-      toggle: false
+      toggle: false,
     });
 
     $mainMenu.find('.employee_avatar .material-icons, .employee_avatar span').wrap(`<a href='${profileLink}'></a>`);
     $('.js-mobile-menu').on('click', expand);
     $('.js-notifs_dropdown').css({
-      height: window.innerHeight
+      height: window.innerHeight,
     });
 
-    function expand(e) {
+    function expand() {
       if ($('div.notification-center.dropdown').hasClass('open')) {
         return;
       }
@@ -215,8 +237,8 @@ export default class NavBar {
             complete: () => {
               $('.nav-bar, .mobile-layer').removeClass('expanded');
               $('.nav-bar, .mobile-layer').addClass('d-none');
-            }
-          }
+            },
+          },
         );
         $('.mobile-layer').off();
         return;

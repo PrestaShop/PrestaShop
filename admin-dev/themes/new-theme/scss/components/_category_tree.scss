@@ -2,19 +2,19 @@ ul.category-tree {
   padding: 0;
   .less,
   .more {
-    background: none;
     position: relative;
+    background: none;
     > .checkbox,
     > .radio {
       cursor: pointer;
       &::before {
         position: absolute;
-        font-family: 'Material Icons';
-        cursor: pointer;
+        top: -.25rem;
+        left: -.1rem;
+        font-family: "Material Icons", Arial, Helvetica, sans-serif;
         font-size: 1.25rem;
         color: $gray-medium;
-        top: -0.25rem;
-        left: -0.1rem;
+        cursor: pointer;
       }
     }
   }
@@ -35,14 +35,15 @@ ul.category-tree {
     }
   }
   .category-label {
-    display: block;
-    padding-left: 0;
     position: relative;
+    display: block;
+    padding-right: 1.563rem;
+
     .category {
-      cursor: pointer;
       position: absolute;
       top: .4em; // relative to the current font size, so "em" and not "rem"
       right: .4em;
+      cursor: pointer;
     }
   }
   ul {
@@ -51,32 +52,33 @@ ul.category-tree {
   li {
     list-style: none;
     background-repeat: no-repeat;
-    background-size: 12px 12px;
     background-position: 0 3px;
+    background-size: 12px 12px;
     .checkbox,
     .radio {
-      padding-left: 20px;
       padding-top: 0;
+      padding-left: 20px;
     }
   }
 }
 
 // category tree on the catalog page
 #tree-categories {
-  padding: 0.625rem;
+  padding: .625rem;
 
   .categories-tree-actions {
-    border-bottom: .063rem solid $gray-light;
     margin-bottom: .625rem;
     white-space: nowrap; // prevent buttons from collapsing
+    border-bottom: .063rem solid $gray-light;
 
     > a {
       display: inline-block;
 
       margin-bottom: .625rem;
+      color: $gray-medium;
 
       + a {
-        margin-left: 0.9375rem;
+        margin-left: .9375rem;
       }
 
       &:hover {
@@ -87,15 +89,14 @@ ul.category-tree {
         font-size: 1.25rem;
         vertical-align: bottom;
       }
-      color: $gray-medium;
     }
   }
 
   label.form-control-label {
-    color: $gray-medium;
     width: 100%;
-    padding-left: 15px;
     padding-right: 15px;
+    padding-left: 15px;
+    color: $gray-medium;
   }
 
   #choice_tree {

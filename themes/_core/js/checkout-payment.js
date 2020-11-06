@@ -22,36 +22,39 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import $ from 'jquery'
+import $ from 'jquery';
+import prestashop from 'prestashop';
 
 class Payment {
   constructor() {
-    this.confirmationSelector = '#payment-confirmation';
-    this.paymentSelector = '#payment-section';
-    this.conditionsSelector = '#conditions-to-approve';
-    this.conditionAlertSelector = '.js-alert-payment-conditions';
-    this.additionalInformatonSelector = '.js-additional-information';
-    this.optionsForm = '.js-payment-option-form';
+    this.confirmationSelector = prestashop.selectors.checkout.confirmationSelector;
+    this.conditionsSelector = prestashop.selectors.checkout.conditionsSelector;
+    this.conditionAlertSelector = prestashop.selectors.checkout.conditionAlertSelector;
+    this.additionalInformatonSelector = prestashop.selectors.checkout.additionalInformatonSelector;
+    this.optionsForm = prestashop.selectors.checkout.optionsForm;
+    this.termsCheckboxSelector = prestashop.selectors.checkout.termsCheckboxSelector;
   }
 
   init() {
-    $(this.paymentSelector + ' input[type="checkbox"][disabled]').attr('disabled', false);
-
     let $body = $('body');
 
-    $body.on('change', this.conditionsSelector + ' input[type="checkbox"]', $.proxy(this.toggleOrderButton, this));
+    $body.on('change', `${this.conditionsSelector} input[type="checkbox"]`, $.proxy(this.toggleOrderButton, this));
     $body.on('change', 'input[name="payment-option"]', $.proxy(this.toggleOrderButton, this));
-    $body.on('click', this.confirmationSelector + ' button', $.proxy(this.confirm, this));
+    $body.on('click', `${this.confirmationSelector} button`, $.proxy(this.confirm, this));
 
     this.collapseOptions();
   }
 
   collapseOptions() {
-    $(this.additionalInformatonSelector + ', ' + this.optionsForm).hide();
+    $(`${this.additionalInformatonSelector}, ${this.optionsForm}`).hide();
   }
 
   getSelectedOption() {
     return $('input[name="payment-option"]:checked').attr('id');
+  }
+
+  haveTermsBeenAccepted() {
+    return $(this.termsCheckboxSelector).prop('checked');
   }
 
   hideConfirmation() {
@@ -64,10 +67,14 @@ class Payment {
 
   toggleOrderButton() {
     var show = true;
-    $(this.conditionsSelector + ' input[type="checkbox"]').each((_, checkbox) => {
+    $(`${this.conditionsSelector} input[type="checkbox"]`).each((_, checkbox) => {
       if (!checkbox.checked) {
         show = false;
       }
+    });
+
+    prestashop.emit('termsUpdated', {
+      isChecked: show,
     });
 
     this.collapseOptions();
@@ -77,14 +84,23 @@ class Payment {
       show = false;
     }
 
-    $('#' + selectedOption + '-additional-information').show();
-    $('#pay-with-' + selectedOption + '-form').show();
+    $(`#${selectedOption}-additional-information`).show();
+    $(`#pay-with-${selectedOption}-form`).show();
 
-    $('.js-payment-binary').hide();
-    if ($('#' + selectedOption).hasClass('binary')) {
+    $(prestashop.selectors.checkout.paymentBinary).hide();
+
+    if ($(`#${selectedOption}`).hasClass('binary')) {
       var paymentOption = this.getPaymentOptionSelector(selectedOption);
       this.hideConfirmation();
       $(paymentOption).show();
+
+      document.querySelectorAll(`${paymentOption} button, ${paymentOption} input`).forEach((element) => {
+        if (show) {
+          element.removeAttribute('disabled');
+        } else {
+          element.setAttribute('disabled', !show);
+        }
+      });
 
       if (show) {
         $(paymentOption).removeClass('disabled');
@@ -93,7 +109,7 @@ class Payment {
       }
     } else {
       this.showConfirmation();
-      $(this.confirmationSelector + ' button').attr('disabled', !show);
+      $(`${this.confirmationSelector} button`).toggleClass('disabled', !show);
 
       if (show) {
         $(this.conditionAlertSelector).hide();
@@ -109,12 +125,24 @@ class Payment {
     return `.js-payment-${moduleName}`;
   }
 
+  showNativeFormErrors() {
+    $(`input[name=payment-option], ${this.termsCheckboxSelector}`).each(function () {
+      this.reportValidity();
+    });
+  }
+
   confirm() {
-    var option = this.getSelectedOption();
-    if (option) {
-      $(this.confirmationSelector + ' button').prop('disabled', true);
-      $('#pay-with-' + option + '-form form').submit();
+    const option = this.getSelectedOption();
+    const termsAccepted = this.haveTermsBeenAccepted();
+
+    if (option === undefined || termsAccepted === false) {
+      this.showNativeFormErrors();
+
+      return;
     }
+
+    $(`${this.confirmationSelector} button`).addClass('disabled');
+    $(`#pay-with-${option}-form form`).submit();
   }
 }
 

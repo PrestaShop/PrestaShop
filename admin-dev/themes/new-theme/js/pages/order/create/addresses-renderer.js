@@ -26,7 +26,7 @@
 import createOrderMap from './create-order-map';
 import Router from '../../../components/router';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Renders Delivery & Invoice addresses select
@@ -35,31 +35,30 @@ export default class AddressesRenderer {
   constructor() {
     this.router = new Router();
   }
+
   /**
    * @param {Array} addresses
    * @param {int} cartId
    */
   render(addresses, cartId) {
-    this._cleanAddresses();
+    this.cleanAddresses();
     if (addresses.length === 0) {
-      this._hideAddressesContent();
-      this._showEmptyAddressesWarning();
-      this._showAddressesBlock();
+      this.hideAddressesContent();
+      this.showEmptyAddressesWarning();
+      this.showAddressesBlock();
 
       return;
     }
 
-    this._showAddressesContent();
-    this._hideEmptyAddressesWarning();
+    this.showAddressesContent();
+    this.hideEmptyAddressesWarning();
 
-    for (const key in addresses) {
-      const address = addresses[key];
+    Object.values(addresses).forEach((address) => {
+      this.renderDeliveryAddress(address, cartId);
+      this.renderInvoiceAddress(address, cartId);
+    });
 
-      this._renderDeliveryAddress(address, cartId);
-      this._renderInvoiceAddress(address, cartId);
-    }
-
-    this._showAddressesBlock();
+    this.showAddressesBlock();
   }
 
   /**
@@ -70,7 +69,7 @@ export default class AddressesRenderer {
    *
    * @private
    */
-  _renderDeliveryAddress(address, cartId) {
+  renderDeliveryAddress(address, cartId) {
     const deliveryAddressOption = {
       value: address.addressId,
       text: address.alias,
@@ -99,7 +98,7 @@ export default class AddressesRenderer {
    *
    * @private
    */
-  _renderInvoiceAddress(address, cartId) {
+  renderInvoiceAddress(address, cartId) {
     const invoiceAddressOption = {
       value: address.addressId,
       text: address.alias,
@@ -125,7 +124,7 @@ export default class AddressesRenderer {
    *
    * @private
    */
-  _showAddressesBlock() {
+  showAddressesBlock() {
     $(createOrderMap.addressesBlock).removeClass('d-none');
   }
 
@@ -134,7 +133,7 @@ export default class AddressesRenderer {
    *
    * @private
    */
-  _cleanAddresses() {
+  cleanAddresses() {
     $(createOrderMap.deliveryAddressDetails).empty();
     $(createOrderMap.deliveryAddressSelect).empty();
     $(createOrderMap.invoiceAddressDetails).empty();
@@ -146,7 +145,7 @@ export default class AddressesRenderer {
    *
    * @private
    */
-  _showAddressesContent() {
+  showAddressesContent() {
     $(createOrderMap.addressesContent).removeClass('d-none');
     $(createOrderMap.addressesWarning).addClass('d-none');
   }
@@ -156,7 +155,7 @@ export default class AddressesRenderer {
    *
    * @private
    */
-  _hideAddressesContent() {
+  hideAddressesContent() {
     $(createOrderMap.addressesContent).addClass('d-none');
     $(createOrderMap.addressesWarning).removeClass('d-none');
   }
@@ -166,7 +165,7 @@ export default class AddressesRenderer {
    *
    * @private
    */
-  _showEmptyAddressesWarning() {
+  showEmptyAddressesWarning() {
     $(createOrderMap.addressesWarning).removeClass('d-none');
   }
 
@@ -175,7 +174,7 @@ export default class AddressesRenderer {
    *
    * @private
    */
-  _hideEmptyAddressesWarning() {
+  hideEmptyAddressesWarning() {
     $(createOrderMap.addressesWarning).addClass('d-none');
   }
 }

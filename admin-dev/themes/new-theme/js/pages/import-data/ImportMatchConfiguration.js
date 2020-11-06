@@ -23,14 +23,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class is responsible for import match configuration
  * in Advanced parameters -> Import -> step 2 form.
  */
-export default class ImportMatchConfiguration
-{
+export default class ImportMatchConfiguration {
   /**
    * Initializes all the processes related with import matches.
    */
@@ -59,27 +58,27 @@ export default class ImportMatchConfiguration
       type: 'POST',
       url: ajaxUrl,
       data: formData,
-    }).then(response => {
+    }).then((response) => {
       if (typeof response.errors !== 'undefined' && response.errors.length) {
-        this._showErrorPopUp(response.errors);
-      } else if (response.matches.length > 0){
-        let $dataMatchesDropdown = this.matchesDropdown;
+        this.showErrorPopUp(response.errors);
+      } else if (response.matches.length > 0) {
+        const $dataMatchesDropdown = this.matchesDropdown;
 
-        for (let key in response.matches) {
-          let $existingMatch = $dataMatchesDropdown.find(`option[value=${response.matches[key].id_import_match}]`);
+        Object.values(response.matches).forEach((resp) => {
+          const $existingMatch = $dataMatchesDropdown.find(`option[value=${resp.id_import_match}]`);
 
           // If match already exists with same id - do nothing
           if ($existingMatch.length > 0) {
-            continue;
+            return;
           }
 
           // Append the new option to the matches dropdown
-          this._appendOptionToDropdown(
+          this.appendOptionToDropdown(
             $dataMatchesDropdown,
-            response.matches[key].name,
-            response.matches[key].id_import_match
+            resp.name,
+            resp.id_import_match,
           );
-        }
+        });
       }
     });
   }
@@ -95,17 +94,16 @@ export default class ImportMatchConfiguration
       type: 'GET',
       url: ajaxUrl,
       data: {
-        import_match_id: this.matchesDropdown.val()
+        import_match_id: this.matchesDropdown.val(),
       },
-    }).then(response => {
+    }).then((response) => {
       if (response) {
         this.rowsSkipInput.val(response.skip);
 
-        let entityFields = response.match.split('|');
-
-        for (let i in entityFields) {
+        const entityFields = response.match.split('|');
+        Object.keys(entityFields).forEach((i) => {
           $(`#type_value_${i}`).val(entityFields[i]);
-        }
+        });
       }
     });
   }
@@ -123,11 +121,11 @@ export default class ImportMatchConfiguration
       type: 'DELETE',
       url: ajaxUrl,
       data: {
-        import_match_id: selectedMatchId
+        import_match_id: selectedMatchId,
       },
     }).then(() => {
-        // Delete the match option from matches dropdown
-        $dataMatchesDropdown.find(`option[value=${selectedMatchId}]`).remove();
+      // Delete the match option from matches dropdown
+      $dataMatchesDropdown.find(`option[value=${selectedMatchId}]`).remove();
     });
   }
 
@@ -139,7 +137,7 @@ export default class ImportMatchConfiguration
    * @param {String} optionValue
    * @private
    */
-  _appendOptionToDropdown($dropdown, optionText, optionValue) {
+  appendOptionToDropdown($dropdown, optionText, optionValue) {
     const $newOption = $('<option>');
 
     $newOption.attr('value', optionValue);
@@ -154,7 +152,7 @@ export default class ImportMatchConfiguration
    * @param {Array} errors
    * @private
    */
-  _showErrorPopUp(errors) {
+  showErrorPopUp(errors) {
     alert(errors);
   }
 

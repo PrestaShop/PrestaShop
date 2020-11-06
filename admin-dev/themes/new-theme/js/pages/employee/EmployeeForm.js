@@ -23,10 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ChoiceTree from "../../components/form/choice-tree";
-import AddonsConnector from "../../components/addons-connector";
-import ChangePasswordControl from "../../components/form/change-password-control";
-import employeeFormMap from "./employee-form-map";
+import ChoiceTree from '../../components/form/choice-tree';
+import AddonsConnector from '../../components/addons-connector';
+import ChangePasswordControl from '../../components/form/change-password-control';
+import employeeFormMap from './employee-form-map';
 
 /**
  * Class responsible for javascript actions in employee add/edit page.
@@ -42,7 +42,7 @@ export default class EmployeeForm {
 
     new AddonsConnector(
       employeeFormMap.addonsConnectForm,
-      employeeFormMap.addonsLoginButton
+      employeeFormMap.addonsLoginButton,
     );
 
     new ChangePasswordControl(
@@ -54,11 +54,11 @@ export default class EmployeeForm {
       employeeFormMap.newPasswordInput,
       employeeFormMap.confirmNewPasswordInput,
       employeeFormMap.generatedPasswordDisplayInput,
-      employeeFormMap.passwordStrengthFeedbackContainer
+      employeeFormMap.passwordStrengthFeedbackContainer,
     );
 
-    this._initEvents();
-    this._toggleShopTree();
+    this.initEvents();
+    this.toggleShopTree();
 
     return {};
   }
@@ -68,23 +68,23 @@ export default class EmployeeForm {
    *
    * @private
    */
-  _initEvents() {
+  initEvents() {
     const $employeeProfilesDropdown = $(this.employeeProfileSelector);
     const getTabsUrl = $employeeProfilesDropdown.data('get-tabs-url');
 
-    $(document).on('change', this.employeeProfileSelector, () => this._toggleShopTree());
+    $(document).on('change', this.employeeProfileSelector, () => this.toggleShopTree());
 
     // Reload tabs dropdown when employee profile is changed.
     $(document).on('change', this.employeeProfileSelector, (event) => {
       $.get(
         getTabsUrl,
         {
-          profileId: $(event.currentTarget).val()
+          profileId: $(event.currentTarget).val(),
         },
         (tabs) => {
-          this._reloadTabsDropdown(tabs);
+          this.reloadTabsDropdown(tabs);
         },
-        'json'
+        'json',
       );
     });
   }
@@ -96,37 +96,37 @@ export default class EmployeeForm {
    *
    * @private
    */
-  _reloadTabsDropdown(accessibleTabs) {
+  reloadTabsDropdown(accessibleTabs) {
     const $tabsDropdown = $(this.tabsDropdownSelector);
 
     $tabsDropdown.empty();
 
-    for (let key in accessibleTabs) {
-      if (accessibleTabs[key]['children'].length > 0 && accessibleTabs[key]['name']) {
+    Object.values(accessibleTabs).forEach((accessibleTab) => {
+      if (accessibleTab.children.length > 0 && accessibleTab.name) {
         // If tab has children - create an option group and put children inside.
-        const $optgroup = this._createOptionGroup(accessibleTabs[key]['name']);
+        const $optgroup = this.createOptionGroup(accessibleTab.name);
 
-        for (let childKey in accessibleTabs[key]['children']) {
-          if (accessibleTabs[key]['children'][childKey]['name']) {
+        Object.keys(accessibleTab.children).forEach((childKey) => {
+          if (accessibleTab.children[childKey].name) {
             $optgroup.append(
-              this._createOption(
-                accessibleTabs[key]['children'][childKey]['name'],
-                accessibleTabs[key]['children'][childKey]['id_tab'])
+              this.createOption(
+                accessibleTab.children[childKey].name,
+                accessibleTab.children[childKey].id_tab),
             );
           }
-        }
+        });
 
         $tabsDropdown.append($optgroup);
-      } else if (accessibleTabs[key]['name']) {
+      } else if (accessibleTab.name) {
         // If tab doesn't have children - create an option.
         $tabsDropdown.append(
-          this._createOption(
-            accessibleTabs[key]['name'],
-            accessibleTabs[key]['id_tab']
-          )
+          this.createOption(
+            accessibleTab.name,
+            accessibleTab.id_tab,
+          ),
         );
       }
-    }
+    });
   }
 
   /**
@@ -134,13 +134,12 @@ export default class EmployeeForm {
    *
    * @private
    */
-  _toggleShopTree() {
+  toggleShopTree() {
     const $employeeProfileDropdown = $(this.employeeProfileSelector);
     const superAdminProfileId = $employeeProfileDropdown.data('admin-profile');
     $(this.shopChoiceTreeSelector)
       .closest('.form-group')
-      .toggleClass('d-none', $employeeProfileDropdown.val() == superAdminProfileId)
-    ;
+      .toggleClass('d-none', $employeeProfileDropdown.val() === superAdminProfileId);
   }
 
   /**
@@ -152,7 +151,7 @@ export default class EmployeeForm {
    *
    * @private
    */
-  _createOptionGroup(name) {
+  createOptionGroup(name) {
     return $(`<optgroup label="${name}">`);
   }
 
@@ -166,7 +165,7 @@ export default class EmployeeForm {
    *
    * @private
    */
-  _createOption(name, value) {
+  createOption(name, value) {
     return $(`<option value="${value}">${name}</option>`);
   }
 }

@@ -63,6 +63,8 @@ services:
     # DISPATCHERS
     prestashop.hook.dispatcher:
         class: PrestaShop\PrestaShop\Adapter\Hook\HookDispatcher
+        arguments:
+            - '@request_stack'
         calls:
             - [addSubscriber, ["@prestashop.adapter.legacy.hook.subscriber"]]
             - [addSubscriber, ["@prestashop.adapter.legacy.block.helper.subscriber"]]

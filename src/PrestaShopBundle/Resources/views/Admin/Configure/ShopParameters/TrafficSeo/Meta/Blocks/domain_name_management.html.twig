@@ -26,7 +26,7 @@
 {% trans_default_domain "Admin.Shopparameters.Feature" %}
 
 {% block domain_name_management %}
-{% if isHostMode %}
+  {% if isHostMode %}
     <div class="card">
       <h3 class="card-header">
         <i class="material-icons">settings</i> {{ 'Manage domain name'|trans }}
@@ -50,7 +50,6 @@
           <a target="_blank" href="https://www.prestashop.com/cloud/" class="btn btn-primary">{{ 'Add a domain name'|trans }}</a>
         </div>
       </div>
-
     </div>
   {% endif %}
 {% endblock %}

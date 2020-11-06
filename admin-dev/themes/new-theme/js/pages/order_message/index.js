@@ -35,7 +35,7 @@ import FiltersSubmitButtonEnablerExtension
   from '@components/grid/extension/filters-submit-button-enabler-extension';
 import SubmitBulkActionExtension from '@components/grid/extension/submit-bulk-action-extension';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const orderMessageGrid = new Grid('order_message');

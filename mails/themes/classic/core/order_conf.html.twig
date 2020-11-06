@@ -274,18 +274,17 @@
               <td>
                 <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
                   {% if templateType == 'html' %}
-
                     <p style="border-bottom:1px solid #D6D4D4;">
                       {{ 'Delivery address'|trans({}, 'Emails.Body', locale)|raw }}
                     </p>
                     <span>
                       {delivery_block_html}
                     </span>
-
-{% endif %}
-                  <span data-text-only="1">
-                    {delivery_block_txt}
-                  </span>
+                  {% endif %}
+                  {% if templateType == 'txt' %}
+										{{ 'Delivery address'|trans({}, 'Emails.Body', locale)|raw }}
+										{delivery_block_txt}
+									{% endif %}
                 </font>
               </td>
               <td width="10">&nbsp;</td>
@@ -300,18 +299,17 @@
               <td>
                 <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
                   {% if templateType == 'html' %}
-
                     <p style="border-bottom:1px solid #D6D4D4;">
                       {{ 'Billing address'|trans({}, 'Emails.Body', locale)|raw }}
                     </p>
                     <span>
                       {invoice_block_html}
                     </span>
-
-{% endif %}
-                  <span data-text-only="1">
-                    {invoice_block_txt}
-                  </span>
+                  {% endif %}
+									{% if templateType == 'txt' %}
+										{{ 'Billing address'|trans({}, 'Emails.Body', locale)|raw }}
+										{invoice_block_txt}
+									{% endif %}
                 </font>
               </td>
               <td width="10">&nbsp;</td>

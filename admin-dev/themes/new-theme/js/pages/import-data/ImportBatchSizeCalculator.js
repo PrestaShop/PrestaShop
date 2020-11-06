@@ -31,14 +31,14 @@
 export default class ImportBatchSizeCalculator {
   constructor() {
     // Target execution time in milliseconds.
-    this._targetExecutionTime = 5000;
+    this.targetExecutionTime = 5000;
 
     // Maximum batch size increase multiplier.
-    this._maxAcceleration = 4;
+    this.maxAcceleration = 4;
 
     // Minimum and maximum import batch sizes.
-    this._minBatchSize = 5;
-    this._maxBatchSize = 100;
+    this.minBatchSize = 5;
+    this.maxBatchSize = 100;
   }
 
   /**
@@ -47,7 +47,7 @@ export default class ImportBatchSizeCalculator {
    * to be able to calculate the import batch size later on.
    */
   markImportStart() {
-    this._importStartTime = new Date().getTime();
+    this.importStartTime = new Date().getTime();
   }
 
   /**
@@ -56,7 +56,7 @@ export default class ImportBatchSizeCalculator {
    * to be able to calculate the import batch size later on.
    */
   markImportEnd() {
-    this._actualExecutionTime = new Date().getTime() - this._importStartTime;
+    this.actualExecutionTime = new Date().getTime() - this.importStartTime;
   }
 
   /**
@@ -65,8 +65,8 @@ export default class ImportBatchSizeCalculator {
    * @returns {number}
    * @private
    */
-  _calculateAcceleration() {
-    return Math.min(this._maxAcceleration, this._targetExecutionTime / this._actualExecutionTime);
+  calculateAcceleration() {
+    return Math.min(this.maxAcceleration, this.targetExecutionTime / this.actualExecutionTime);
   }
 
   /**
@@ -78,17 +78,17 @@ export default class ImportBatchSizeCalculator {
    * @returns {number} recommended import batch size
    */
   calculateBatchSize(currentBatchSize, maxBatchSize = 0) {
-    if (!this._importStartTime) {
-      throw 'Import start is not marked.';
+    if (!this.importStartTime) {
+      throw new Error('Import start is not marked.');
     }
 
-    if (!this._actualExecutionTime) {
-      throw 'Import end is not marked.';
+    if (!this.actualExecutionTime) {
+      throw new Error('Import end is not marked.');
     }
 
-    let candidates = [
-      this._maxBatchSize,
-      Math.max(this._minBatchSize, Math.floor(currentBatchSize * this._calculateAcceleration()))
+    const candidates = [
+      this.maxBatchSize,
+      Math.max(this.minBatchSize, Math.floor(currentBatchSize * this.calculateAcceleration())),
     ];
 
     if (maxBatchSize > 0) {

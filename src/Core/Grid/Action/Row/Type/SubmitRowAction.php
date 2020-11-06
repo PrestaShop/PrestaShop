@@ -66,6 +66,7 @@ final class SubmitRowAction extends AbstractRowAction
                 'confirm_message_type' => self::MESSAGE_TYPE_STATIC,
                 'dynamic_message_field' => '',
                 'extra_route_params' => [],
+                'modal_options' => null,
             ])
             ->setAllowedTypes('route', 'string')
             ->setAllowedTypes('route_param_name', 'string')

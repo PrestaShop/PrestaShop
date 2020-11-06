@@ -23,13 +23,32 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *-->
 <template>
-  <div class="page-head-tabs" id="head_tabs">
+  <div
+    class="page-head-tabs"
+    id="head_tabs"
+  >
     <ul class="nav nav-pills">
       <li class="nav-item">
-        <router-link data-toggle="tab" class="nav-link" :class="{active : isOverview}" to="/" role="tab">{{trans('menu_stock')}}</router-link>
+        <router-link
+          data-toggle="tab"
+          class="nav-link"
+          :class="{active : isOverview}"
+          to="/"
+          role="tab"
+        >
+          {{ trans('menu_stock') }}
+        </router-link>
       </li>
       <li class="nav-item">
-        <router-link data-toggle="tab" class="nav-link" :class="{active : isMovements}" to="/movements" role="tab">{{trans('menu_movements')}}</router-link>
+        <router-link
+          data-toggle="tab"
+          class="nav-link"
+          :class="{active : isMovements}"
+          to="/movements"
+          role="tab"
+        >
+          {{ trans('menu_movements') }}
+        </router-link>
       </li>
     </ul>
   </div>

@@ -18,43 +18,54 @@ class Pages extends BOBasePage {
     this.gridTable = table => `#${table}_grid_table`;
     this.gridHeaderTitle = table => `${this.gridPanel(table)} h3.card-header-title`;
     this.listForm = table => `#${table}_grid`;
+
     // Sort Selectors
     this.tableHead = table => `${this.listForm(table)} thead`;
     this.sortColumnDiv = (table, column) => `${this.tableHead(table)}`
       + ` div.ps-sortable-column[data-sort-col-name='${column}']`;
+
     this.sortColumnSpanButton = (table, column) => `${this.sortColumnDiv(table, column)} span.ps-sort`;
     this.listTableRow = (table, row) => `${this.listForm(table)} tbody tr:nth-child(${row})`;
     this.listTableColumn = (table, row, column) => `${this.listTableRow(table, row)} td.column-${column}`;
     this.columnValidIcon = (table, row) => `${this.listTableColumn(table, row, 'active')}`
       + ' i.grid-toggler-icon-valid';
+
     this.columnNotValidIcon = (table, row) => `${this.listTableColumn(table, row, 'active')}`
       + ' i.grid-toggler-icon-not-valid';
+
     // Bulk Actions
-    this.selectAllRowsLabel = table => `${this.listForm(table)} tr.column-filters .md-checkbox i`;
+    this.selectAllRowsLabel = table => `${this.listForm(table)} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = table => `${this.listForm(table)} button.js-bulk-actions-btn`;
     this.bulkActionsDeleteButton = table => `#${table}_grid_bulk_action_delete_selection`;
     this.bulkActionsEnableButton = table => `#${table}_grid_bulk_action_enable_selection`;
     this.bulkActionsDisableButton = table => `#${table}_grid_bulk_action_disable_selection`;
-    this.confirmDeleteModal = table => `#${table}_grid_confirm_modal`;
+    this.confirmDeleteModal = table => `#${table}-grid-confirm-modal`;
     this.confirmDeleteButton = table => `${this.confirmDeleteModal(table)} button.btn-confirm-submit`;
+
     // Filters
     this.filterColumn = (table, filterBy) => `${this.gridTable(table)} #${table}_${filterBy}`;
-    this.filterSearchButton = table => `${this.gridTable(table)} button[name='${table}[actions][search]']`;
-    this.filterResetButton = table => `${this.gridTable(table)} button[name='${table}[actions][reset]']`;
+    this.filterSearchButton = table => `${this.gridTable(table)} .grid-search-button`;
+    this.filterResetButton = table => `${this.gridTable(table)} .grid-reset-button`;
+
     // Actions buttons in Row
     this.listTableToggleDropDown = (table, row) => `${this.listTableColumn(table, row, 'actions')}`
       + ' a[data-toggle=\'dropdown\']';
-    this.listTableEditLink = (table, row) => `${this.listTableColumn(table, row, 'actions')} a[href*='edit']`;
-    this.deleteRowLink = (table, row) => `${this.listTableColumn(table, row, 'actions')} a[data-method='DELETE']`;
+
+    this.listTableEditLink = (table, row) => `${this.listTableColumn(table, row, 'actions')}`
+      + ' a.grid-edit-row-link';
+
+    this.deleteRowLink = (table, row) => `${this.listTableColumn(table, row, 'actions')} a.grid-delete-row-link`;
 
     // Categories selectors
-    this.backToListButton = '#cms_page_category_grid_panel div.card-footer a';
+    this.backToListButton = '#cms_page_category_grid_panel a.back-to-list-link';
     this.categoriesListTableViewLink = row => `${this.listTableColumn('cms_page_category', row, 'actions')}`
-      + ' a[data-original-title=\'View\']';
+      + ' a.grid-view-row-link';
+
     this.categoriesPaginationLimitSelect = '#paginator_select_page_limit';
     this.categoriesPaginationLabel = `${this.listForm('cms_page_category')} .col-form-label`;
     this.categoriesPaginationNextLink = `${this.listForm('cms_page_category')} #pagination_next_url`;
     this.categoriesPaginationPreviousLink = `${this.listForm('cms_page_category')} [aria-label='Previous']`;
+
     // Pages selectors
     this.pagesPaginationLimitSelect = '#paginator_select_page_limit';
     this.pagesPaginationLabel = `${this.listForm('cms_page')} .col-form-label`;
@@ -120,8 +131,11 @@ class Pages extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.listTableToggleDropDown(table, row)}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
-    this.dialogListener(page);
-    await this.clickAndWaitForNavigation(page, this.deleteRowLink(table, row));
+    await Promise.all([
+      page.click(this.deleteRowLink(table, row)),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal(table)}.show`),
+    ]);
+    await this.confirmDeleteFromTable(page, table);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
@@ -149,7 +163,7 @@ class Pages extends BOBasePage {
       page.click(this.bulkActionsDeleteButton(table)),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal(table)}.show`),
     ]);
-    await this.confirmDeleteWithBulkActions(page, table);
+    await this.confirmDeleteFromTable(page, table);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
@@ -159,7 +173,7 @@ class Pages extends BOBasePage {
    * @param table
    * @return {Promise<void>}
    */
-  async confirmDeleteWithBulkActions(page, table) {
+  async confirmDeleteFromTable(page, table) {
     await this.clickAndWaitForNavigation(page, this.confirmDeleteButton(table));
   }
 

@@ -69,7 +69,7 @@ class CarrierCore extends ObjectModel
     /** @var bool True if carrier has been deleted (staying in database as deleted) */
     public $deleted = 0;
 
-    /** @var bool Active or not the shipping handling */
+    /** @var bool True if extra shipping handling cost should be applied to this Carrier */
     public $shipping_handling = true;
 
     /** @var int Behavior taken for unknown range */
@@ -81,16 +81,24 @@ class CarrierCore extends ObjectModel
     /** @var bool Free carrier */
     public $is_free = false;
 
-    /** @var int shipping behavior: by weight or by price */
+    /** @var int Shipping cost calculation method: by weight or by price or free */
     public $shipping_method = 0;
 
-    /** @var bool Shipping external */
+    /**
+     * @var bool True if external module calculates shipping cost
+     *
+     * @see Cart::getPackageShippingCostFromModule()
+     */
     public $shipping_external = 0;
 
-    /** @var string Shipping external */
+    /** @var string Name of external module responsible for this Carrier */
     public $external_module_name = null;
 
-    /** @var bool Need Range */
+    /**
+     * @var bool True if module needs core range-based shipping cost to calculate final cost
+     *
+     * @see Cart::getPackageShippingCostFromModule()
+     */
     public $need_range = 0;
 
     /** @var int Position */
@@ -639,10 +647,10 @@ class CarrierCore extends ObjectModel
 			ORDER BY cl.name ASC');
 
         $countries = [];
-        foreach ($result as &$country) {
+        foreach ($result as $country) {
             $countries[$country['id_country']] = $country;
         }
-        foreach ($states as &$state) {
+        foreach ($states as $state) {
             if (isset($countries[$state['id_country']])) { /* Does not keep the state if its country has been disabled and not selected */
                 if ($state['active'] == 1) {
                     $countries[$state['id_country']]['states'][] = $state;

@@ -19,16 +19,19 @@ class Profiles extends BOBasePage {
     this.profilesListTableColumnAction = row => this.profilesListTableColumn(row, 'actions');
     this.profilesListTableToggleDropDown = row => `${this.profilesListTableColumnAction(row)
     } a[data-toggle='dropdown']`;
-    this.profilesListTableDeleteLink = row => `${this.profilesListTableColumnAction(row)} a[data-url]`;
-    this.profilesListTableEditLink = row => `${this.profilesListTableColumnAction(row)} a[href*='edit']`;
+    this.profilesListTableDeleteLink = row => `${this.profilesListTableColumnAction(row)} a.grid-delete-row-link`;
+    this.profilesListTableEditLink = row => `${this.profilesListTableColumnAction(row)} a.grid-edit-row-link`;
     // Filters
     this.profileFilterInput = filterBy => `${this.profilesListForm} #profile_${filterBy}`;
-    this.filterSearchButton = `${this.profilesListForm} button[name='profile[actions][search]']`;
-    this.filterResetButton = `${this.profilesListForm} button[name='profile[actions][reset]']`;
+    this.filterSearchButton = `${this.profilesListForm} .grid-search-button`;
+    this.filterResetButton = `${this.profilesListForm} .grid-reset-button`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.profilesListForm} tr.column-filters .md-checkbox i`;
+    this.selectAllRowsLabel = `${this.profilesListForm} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.profilesListForm} button.dropdown-toggle`;
-    this.bulkActionsDeleteButton = `${this.profilesListForm} #profile_grid_bulk_action_bulk_delete_profiles`;
+    this.bulkActionsDeleteButton = `${this.profilesListForm} #profile_grid_bulk_action_delete_selection`;
+    // Delete modal
+    this.confirmDeleteModal = '#profile-grid-confirm-modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
     // Pages selectors
     this.pagesPaginationLimitSelect = '#paginator_select_page_limit';
     this.pagesPaginationLabel = `${this.profilesListForm} .col-form-label`;
@@ -126,7 +129,6 @@ class Profiles extends BOBasePage {
    * @returns {Promise<string>}
    */
   async deleteProfile(page, row) {
-    this.dialogListener(page);
     // Click on dropDown
     await Promise.all([
       page.click(this.profilesListTableToggleDropDown(row)),
@@ -134,9 +136,23 @@ class Profiles extends BOBasePage {
         page,
         `${this.profilesListTableToggleDropDown(row)}[aria-expanded='true']`),
     ]);
-    // Click on delete
-    await this.clickAndWaitForNavigation(page, this.profilesListTableDeleteLink(row));
+    // Click on delete and wait for modal
+    await Promise.all([
+      page.click(this.profilesListTableDeleteLink(row)),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteProfiles(page);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
+  }
+
+
+  /**
+   * Confirm delete with in modal
+   * @param page
+   * @return {Promise<void>}
+   */
+  async confirmDeleteProfiles(page) {
+    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
   }
 
   /**
@@ -145,7 +161,6 @@ class Profiles extends BOBasePage {
    * @returns {Promise<string>}
    */
   async deleteBulkActions(page) {
-    this.dialogListener(page);
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsLabel, el => el.click()),
@@ -154,10 +169,16 @@ class Profiles extends BOBasePage {
     // Click on Button Bulk actions
     await Promise.all([
       page.click(this.bulkActionsToggleButton),
-      this.waitForVisibleSelector(page, this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(page, this.bulkActionsDeleteButton),
     ]);
+
     // Click on delete and wait for modal
-    await this.clickAndWaitForNavigation(page, this.bulkActionsDeleteButton);
+    await Promise.all([
+      page.click(this.bulkActionsDeleteButton),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+
+    await this.confirmDeleteProfiles(page);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 

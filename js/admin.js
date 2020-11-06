@@ -1550,7 +1550,7 @@ function checkLangPack(token){
           content = $.parseJSON(ret.content);
           message = langPackOk + ' <b>'+content['name'] + '</b>) :'
             +'<br />' + langPackVersion + ' ' + content['version']
-            + ' <a href="http://www.prestashop.com/download/lang_packs/gzip/' + content['version'] + '/'
+            + ' <a href="https://www.prestashop.com/download/lang_packs/gzip/' + content['version'] + '/'
             + ($('#iso_code').val()).toLowerCase()+'.gzip" target="_blank" class="link">'+download+'</a><br />' + langPackInfo;
           $('#lang_pack_msg').html(message);
           $('#lang_pack_msg').show();

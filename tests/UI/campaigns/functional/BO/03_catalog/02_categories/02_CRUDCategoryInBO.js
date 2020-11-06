@@ -38,6 +38,13 @@ describe('Create, Read, Update and Delete Category', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+
+    // Create categories images
+    await Promise.all([
+      files.generateImage(`${createCategoryData.name}.jpg`),
+      files.generateImage(`${createSubCategoryData.name}.jpg`),
+      files.generateImage(`${editCategoryData.name}.jpg`),
+    ]);
   });
 
   after(async () => {

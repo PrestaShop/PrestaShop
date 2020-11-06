@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Translation\Constraints;
 
 use Exception;
 use PrestaShopBundle\Entity\Translation;
-use PrestaShopBundle\Translation\PrestaShopTranslatorTrait;
+use PrestaShopBundle\Translation\Translator;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -54,7 +54,7 @@ class PassVsprintfValidator extends ConstraintValidator
     private function countArgumentsOfTranslation($property)
     {
         $matches = [];
-        if (preg_match_all(PrestaShopTranslatorTrait::$regexSprintfParams, $property, $matches) === false) {
+        if (preg_match_all(Translator::$regexSprintfParams, $property, $matches) === false) {
             throw new Exception('Preg_match failed');
         }
 

@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use Product;
+use ProductAssembler;
 use Symfony\Component\Translation\TranslatorInterface;
 use TaxConfiguration;
 use Tools;
@@ -95,6 +96,10 @@ class CartPresenter implements PresenterInterface
      */
     private function presentProduct(array $rawProduct)
     {
+        $assembler = new ProductAssembler(Context::getContext());
+        $assembledProduct = $assembler->assembleProduct($rawProduct);
+        $rawProduct = array_merge($assembledProduct, $rawProduct);
+
         $settings = new ProductPresentationSettings();
 
         $settings->catalog_mode = Configuration::isCatalogMode();
@@ -456,7 +461,7 @@ class CartPresenter implements PresenterInterface
             return !array_key_exists($discount['id_cart_rule'], $cartRulesIds);
         });
 
-        return [
+        $result = [
             'products' => $products,
             'totals' => $totals,
             'subtotals' => $subtotals,
@@ -480,6 +485,12 @@ class CartPresenter implements PresenterInterface
                 ) :
                 '',
         ];
+
+        Hook::exec('actionPresentCart',
+            ['presentedCart' => &$result]
+        );
+
+        return $result;
     }
 
     /**
@@ -514,7 +525,7 @@ class CartPresenter implements PresenterInterface
 
             $deliveryOptionList = $cart->getDeliveryOptionList($defaultCountry);
 
-            if (isset($deliveryOptionList) && count($deliveryOptionList) > 0) {
+            if (count($deliveryOptionList) > 0) {
                 foreach ($deliveryOptionList as $option) {
                     foreach ($option as $currentCarrier) {
                         if (isset($currentCarrier['is_free']) && $currentCarrier['is_free'] > 0) {
@@ -542,6 +553,7 @@ class CartPresenter implements PresenterInterface
             $vouchers[$cartVoucher['id_cart_rule']]['code'] = $cartVoucher['code'];
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_percent'] = $cartVoucher['reduction_percent'];
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_currency'] = $cartVoucher['reduction_currency'];
+            $vouchers[$cartVoucher['id_cart_rule']]['free_shipping'] = (bool) $cartVoucher['free_shipping'];
 
             // Voucher reduction depending of the cart tax rule
             // if $cartHasTax & voucher is tax excluded, set amount voucher to tax included

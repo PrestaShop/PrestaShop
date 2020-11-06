@@ -29,7 +29,7 @@
  */
 class TabCore extends ObjectModel
 {
-    /** @var string Displayed name */
+    /** @var string|array<string> Displayed name */
     public $name;
 
     /** @var string Class and file name */
@@ -58,7 +58,10 @@ class TabCore extends ObjectModel
     /** @var string Icon font */
     public $icon;
 
-    const TAB_MODULE_LIST_URL = _PS_TAB_MODULE_LIST_URL_;
+    /**
+     * @deprecated Since 1.7.7
+     */
+    const TAB_MODULE_LIST_URL = '';
 
     /**
      * @see ObjectModel::$definition

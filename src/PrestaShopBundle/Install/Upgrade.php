@@ -470,6 +470,7 @@ namespace PrestaShopBundle\Install {
                                 foreach ($parameters as &$parameter) {
                                     $parameter = str_replace('\'', '', $parameter);
                                 }
+                                unset($parameter);
                             }
 
                             $phpRes = null;
@@ -528,6 +529,7 @@ namespace PrestaShopBundle\Install {
                 ->removeStatus(AddonListFilterStatus::UNINSTALLED);
 
             $installedProducts = $moduleRepository->getFilteredList($filters);
+            /** @var \PrestaShop\PrestaShop\Adapter\Module\Module $installedProduct */
             foreach ($installedProducts as $installedProduct) {
                 if (!(
                         $installedProduct->attributes->has('origin_filter_value')
@@ -562,6 +564,8 @@ namespace PrestaShopBundle\Install {
             $filters->setStatus(AddonListFilterStatus::ON_DISK | AddonListFilterStatus::INSTALLED);
 
             $list = $moduleManagerRepository->getFilteredList($filters, true);
+            /** @var string $moduleName */
+            /** @var \PrestaShop\PrestaShop\Adapter\Module\Module $module */
             foreach ($list as $moduleName => $module) {
                 if (in_array($moduleName, self::$incompatibleModules)) {
                     $this->logInfo("Uninstalling module $moduleName, not supported in this PrestaShop version.");
@@ -592,6 +596,8 @@ namespace PrestaShopBundle\Install {
             $filters->setOrigin(AddonListFilterOrigin::ADDONS_NATIVE | AddonListFilterOrigin::ADDONS_NATIVE_ALL);
 
             $list = $moduleManagerRepository->getFilteredList($filters, true);
+            /** @var string $moduleName */
+            /** @var \PrestaShop\PrestaShop\Adapter\Module\Module $module */
             foreach ($list as $moduleName => $module) {
                 if ('PrestaShop' === $module->attributes->get('author')) {
                     if (!$moduleManagerBuilder->build()->isInstalled($moduleName)) {
@@ -1091,9 +1097,11 @@ namespace PrestaShopBundle\Install {
 
         const SETTINGS_FILE = 'config/settings.inc.php';
 
+        /* @phpstan-ignore-next-line */
         public static function migrateSettingsFile(Event $event = null)
         {
             if ($event !== null) {
+                /* @phpstan-ignore-next-line */
                 $event->getIO()->write('Migrating old setting file...');
             }
 
@@ -1107,7 +1115,9 @@ namespace PrestaShopBundle\Install {
                     $addNewCookieKey = true;
                 } else {
                     if ($event !== null) {
+                        /* @phpstan-ignore-next-line */
                         $event->getIO()->write('parameters file already exists!');
+                        /* @phpstan-ignore-next-line */
                         $event->getIO()->write('Finished...');
                     }
 
@@ -1118,7 +1128,9 @@ namespace PrestaShopBundle\Install {
             if (!file_exists($phpParametersFilepath) && !file_exists($root_dir . '/app/config/parameters.yml')
                 && !file_exists($root_dir . '/' . self::SETTINGS_FILE)) {
                 if ($event !== null) {
+                    /* @phpstan-ignore-next-line */
                     $event->getIO()->write('No file to migrate!');
+                    /* @phpstan-ignore-next-line */
                     $event->getIO()->write('Finished...');
                 }
 
@@ -1145,8 +1157,11 @@ namespace PrestaShopBundle\Install {
             if ($addNewCookieKey) {
                 $exportPhpConfigFile($default_parameters, $phpParametersFilepath);
                 if ($event !== null) {
+                    /* @phpstan-ignore-next-line */
                     $event->getIO()->write('parameters file already exists!');
+                    /* @phpstan-ignore-next-line */
                     $event->getIO()->write("add new parameter 'new_cookie_key'");
+                    /* @phpstan-ignore-next-line */
                     $event->getIO()->write('Finished...');
                 }
 
@@ -1226,8 +1241,10 @@ namespace PrestaShopBundle\Install {
 
             if ($event !== null) {
                 if (!$fileMigrated) {
+                    /* @phpstan-ignore-next-line */
                     $event->getIO()->write('No old config file present!');
                 }
+                /* @phpstan-ignore-next-line */
                 $event->getIO()->write('Finished...');
             }
 

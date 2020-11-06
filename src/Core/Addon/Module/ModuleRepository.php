@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\Module\PrestaTrust\PrestaTrustChecker;
+use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
@@ -51,37 +52,32 @@ class ModuleRepository implements ModuleRepositoryInterface
     const PARTNER_AUTHOR = 'PrestaShop Partners';
 
     /**
-     * Admin Module Data Provider.
-     *
-     * @var \PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider
+     * @var AdminModuleDataProvider
      */
     private $adminModuleProvider;
 
     /**
-     * Logger.
-     *
-     * @var \Psr\Log\LoggerInterface
+     * @var Finder
+     */
+    private $finder;
+
+    /**
+     * @var LoggerInterface
      */
     private $logger;
 
     /**
-     * Module Data Provider.
-     *
-     * @var \PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider
+     * @var ModuleDataProvider
      */
     private $moduleProvider;
 
     /**
-     * Module Data Updater.
-     *
-     * @var \PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater
+     * @var ModuleDataUpdater
      */
     private $moduleUpdater;
 
     /**
-     * Translator.
-     *
-     * @var \Symfony\Component\Translation\TranslatorInterface
+     * @var TranslatorInterface
      */
     private $translator;
 
@@ -96,8 +92,6 @@ class ModuleRepository implements ModuleRepositoryInterface
      * @var PrestaTrustChecker
      */
     private $prestaTrustChecker = null;
-
-    //### CACHE PROPERTIES ####
 
     /**
      * Key of the cache content.
@@ -126,8 +120,6 @@ class ModuleRepository implements ModuleRepositoryInterface
      * @var ArrayCache
      */
     private $loadedModules;
-
-    //### END OF CACHE PROPERTIES ####
 
     public function __construct(
         AdminModuleDataProvider $adminModulesProvider,
@@ -210,8 +202,10 @@ class ModuleRepository implements ModuleRepositoryInterface
     {
         if ($filter->status >= AddonListFilterStatus::ON_DISK
             && $filter->status != AddonListFilterStatus::ALL) {
+            /** @var Module[] $modules */
             $modules = $this->getModulesOnDisk($skip_main_class_attributes);
         } else {
+            /** @var Module[] $modules */
             $modules = $this->getList();
         }
 
@@ -312,6 +306,7 @@ class ModuleRepository implements ModuleRepositoryInterface
             $filter = new AddonListFilter();
             $filter->setOrigin(AddonListFilterOrigin::ADDONS_NATIVE);
 
+            /** @var Module[] $nativeModules */
             $nativeModules = $this->getFilteredList($filter);
 
             foreach ($nativeModules as $key => $module) {
@@ -333,6 +328,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         $filter = new AddonListFilter();
         $filter->setOrigin(AddonListFilterOrigin::ADDONS_NATIVE);
 
+        /** @var Module[] $partnersModules */
         $partnersModules = $this->getFilteredList($filter);
 
         foreach ($partnersModules as $key => $module) {
@@ -350,6 +346,7 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     public function getInstalledPartnersModules()
     {
+        /** @var Module[] $partnersModules */
         $partnersModules = $this->getPartnersModules();
 
         foreach ($partnersModules as $key => $module) {
@@ -366,6 +363,7 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     public function getNotInstalledPartnersModules()
     {
+        /** @var Module[] $partnersModules */
         $partnersModules = $this->getPartnersModules();
 
         foreach ($partnersModules as $key => $module) {
@@ -525,7 +523,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     /**
      * Send request to get module details on the marketplace, then merge the data received in Module instance.
      *
-     * @param $moduleId
+     * @param int $moduleId
      *
      * @return Module
      */

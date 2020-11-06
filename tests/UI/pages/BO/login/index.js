@@ -28,8 +28,10 @@ class Login extends BOBasePage {
    * @returns {Promise<void>}
    */
   async login(page, email, password, waitForNavigation = true) {
-    await page.type(this.emailInput, email);
-    await page.type(this.passwordInput, password);
+    await this.setValue(page, this.emailInput, email);
+    await this.setValue(page, this.passwordInput, password);
+
+    // Wait for navigation if the login is successful
     if (waitForNavigation) {
       await this.clickAndWaitForNavigation(page, this.submitLoginButton);
     } else {

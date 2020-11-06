@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = window.$;
+const {$} = window;
 
 class TermsAndConditionsOptionHandler {
   constructor() {
@@ -34,7 +34,7 @@ class TermsAndConditionsOptionHandler {
 
   handle() {
     const tosEnabledVal = $('input[name="form[general][enable_tos]"]:checked').val();
-    const isTosEnabled = parseInt(tosEnabledVal);
+    const isTosEnabled = parseInt(tosEnabledVal, 10);
 
     this.handleTermsAndConditionsCmsSelect(isTosEnabled);
   }

@@ -34,24 +34,22 @@ import SubmitRowActionExtension from '@components/grid/extension/action/row/subm
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import CategoryPositionExtension from '@components/grid/extension/column/catalog/category-position-extension';
 import AsyncToggleColumnExtension from '@components/grid/extension/column/common/async-toggle-column-extension';
-import DeleteCategoryRowActionExtension from '@components/grid/extension/action/row/category/delete-category-row-action-extension';
-import DeleteCategoriesBulkActionExtension from '@components/grid/extension/action/bulk/category/delete-categories-bulk-action-extension';
-import TranslatableInput from '@components/translatable-input';
+import DeleteCategoryRowActionExtension
+  from '@components/grid/extension/action/row/category/delete-category-row-action-extension';
+import DeleteCategoriesBulkActionExtension
+  from '@components/grid/extension/action/bulk/category/delete-categories-bulk-action-extension';
 import ChoiceTable from '@components/choice-table';
 import textToLinkRewriteCopier from '@components/text-to-link-rewrite-copier';
 import ChoiceTree from '@components/form/choice-tree';
 import FormSubmitButton from '@components/form-submit-button';
-import TaggableField from '@components/taggable-field';
 import FiltersSubmitButtonEnablerExtension
   from '@components/grid/extension/filters-submit-button-enabler-extension';
 import ShowcaseCard from '@components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
 import TextWithRecommendedLengthCounter from '@components/form/text-with-recommended-length-counter';
-import TranslatableField from '@components/translatable-field';
-import TinyMCEEditor from '@components/tinymce-editor';
 import Serp from '@app/utils/serp/index';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const categoriesGrid = new Grid('category');
@@ -73,19 +71,27 @@ $(() => {
   const showcaseCard = new ShowcaseCard('categoriesShowcaseCard');
   showcaseCard.addExtension(new ShowcaseCardCloseExtension());
 
-  new TranslatableField();
-  new TinyMCEEditor();
-  const translatorInput = new TranslatableInput();
+  window.prestashop.component.initComponents(
+    [
+      'TranslatableField',
+      'TinyMCEEditor',
+      'TranslatableInput',
+    ],
+  );
+
+  const translatorInput = window.prestashop.instance.translatableInput;
   new ChoiceTable();
   new TextWithRecommendedLengthCounter();
 
   textToLinkRewriteCopier({
     sourceElementSelector: 'input[name^="category[name]"]',
+    /* eslint-disable-next-line max-len */
     destinationElementSelector: `${translatorInput.localeInputSelector}:not(.d-none) input[name^="category[link_rewrite]"]`,
   });
 
   textToLinkRewriteCopier({
     sourceElementSelector: 'input[name^="root_category[name]"]',
+    /* eslint-disable-next-line max-len */
     destinationElementSelector: `${translatorInput.localeInputSelector}:not(.d-none) input[name^="root_category[link_rewrite]"]`,
   });
 
@@ -105,7 +111,7 @@ $(() => {
 
   new FormSubmitButton();
 
-  new TaggableField({
+  new window.prestashop.component.TaggableField({
     tokenFieldSelector: 'input.js-taggable-field',
     options: {
       createTokensOnBlur: true,

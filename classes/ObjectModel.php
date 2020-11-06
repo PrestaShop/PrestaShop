@@ -52,7 +52,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     const HAS_ONE = 1;
     const HAS_MANY = 2;
 
-    /** @var int Object ID */
+    /** @var int|null Object ID */
     public $id;
 
     /** @var int Language ID */
@@ -260,6 +260,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         if ($id) {
+            /** @var \PrestaShop\PrestaShop\Adapter\EntityMapper $entity_mapper */
             $entity_mapper = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\EntityMapper');
             $entity_mapper->load($id, $id_lang, $this, $this->def, $this->id_shop, self::$cache_objects);
         }
@@ -533,7 +534,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             unset($this->id);
         }
 
-        // @hook actionObject*AddBefore
+        // @hook actionObject<ObjectClassName>AddBefore
         Hook::exec('actionObjectAddBefore', ['object' => $this]);
         Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'AddBefore', ['object' => $this]);
 
@@ -604,7 +605,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             }
         }
 
-        // @hook actionObject*AddAfter
+        // @hook actionObject<ObjectClassName>AddAfter
         Hook::exec('actionObjectAddAfter', ['object' => $this]);
         Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'AddAfter', ['object' => $this]);
 
@@ -661,10 +662,10 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 return false;
             }
 
-            foreach ($result as &$row) {
-                foreach ($row as $field => &$value) {
+            foreach ($result as $rowKey => $row) {
+                foreach ($row as $field => $value) {
                     if (isset($definition['fields'][$field])) {
-                        $value = ObjectModel::formatValue(
+                        $result[$rowKey][$field] = ObjectModel::formatValue(
                             $value,
                             $definition['fields'][$field]['type'],
                             false,
@@ -703,14 +704,14 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      */
     public function update($null_values = false)
     {
-        // @hook actionObject*UpdateBefore
+        // @hook actionObject<ObjectClassName>UpdateBefore
         Hook::exec('actionObjectUpdateBefore', ['object' => $this]);
         Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'UpdateBefore', ['object' => $this]);
 
         $this->clearCache();
 
         // Automatically fill dates
-        if (array_key_exists('date_upd', $this)) {
+        if (property_exists($this, 'date_upd')) {
             $this->date_upd = date('Y-m-d H:i:s');
             if (isset($this->update_fields) && is_array($this->update_fields) && count($this->update_fields)) {
                 $this->update_fields['date_upd'] = true;
@@ -718,7 +719,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         // Automatically fill dates
-        if (array_key_exists('date_add', $this) && $this->date_add == null) {
+        if (property_exists($this, 'date_add') && $this->date_add == null) {
             $this->date_add = date('Y-m-d H:i:s');
             if (isset($this->update_fields) && is_array($this->update_fields) && count($this->update_fields)) {
                 $this->update_fields['date_add'] = true;
@@ -811,7 +812,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             }
         }
 
-        // @hook actionObject*UpdateAfter
+        // @hook actionObject<ObjectClassName>UpdateAfter
         Hook::exec('actionObjectUpdateAfter', ['object' => $this]);
         Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'UpdateAfter', ['object' => $this]);
 
@@ -827,7 +828,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      */
     public function delete()
     {
-        // @hook actionObject*DeleteBefore
+        // @hook actionObject<ObjectClassName>DeleteBefore
         Hook::exec('actionObjectDeleteBefore', ['object' => $this]);
         Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'DeleteBefore', ['object' => $this]);
 
@@ -862,7 +863,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             return false;
         }
 
-        // @hook actionObject*DeleteAfter
+        // @hook actionObject<ObjectClassName>DeleteAfter
         Hook::exec('actionObjectDeleteAfter', ['object' => $this]);
         Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'DeleteAfter', ['object' => $this]);
 
@@ -906,7 +907,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         if (!array_key_exists('deleted', get_object_vars($this))) {
             throw new PrestaShopException('Property "deleted" is missing in object model ' . get_class($this));
         }
-        $this->deleted = 1;
+        $this->deleted = true;
 
         return $this->update();
     }
@@ -921,7 +922,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     public function toggleStatus()
     {
         // Object must have a variable called 'active'
-        if (!array_key_exists('active', $this)) {
+        if (!property_exists($this, 'active')) {
             throw new PrestaShopException('property "active" is missing in object ' . get_class($this));
         }
 
@@ -1367,10 +1368,10 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             }
             if (isset($details['validate'])) {
                 $current_field['validateMethod'] = (
-                                array_key_exists('validateMethod', $resource_parameters['fields'][$field_name]) ?
-                                array_merge($resource_parameters['fields'][$field_name]['validateMethod'], [$details['validate']]) :
-                                [$details['validate']]
-                            );
+                    array_key_exists('validateMethod', $resource_parameters['fields'][$field_name]) ?
+                    array_merge($resource_parameters['fields'][$field_name]['validateMethod'], [$details['validate']]) :
+                    [$details['validate']]
+                );
             }
             $resource_parameters['fields'][$field_name] = array_merge($resource_parameters['fields'][$field_name], $current_field);
 
@@ -2146,11 +2147,19 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @since 1.5.0.1
      *
-     * @param array $fields
+     * @param array<string, bool|array<int, bool>>|null $fields
      */
-    public function setFieldsToUpdate(array $fields)
+    public function setFieldsToUpdate(?array $fields)
     {
         $this->update_fields = $fields;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getFieldsToUpdate(): ?array
+    {
+        return $this->update_fields;
     }
 
     /**

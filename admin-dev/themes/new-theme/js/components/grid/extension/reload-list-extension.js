@@ -34,7 +34,7 @@ export default class ReloadListExtension {
    */
   extend(grid) {
     grid.getHeaderContainer().on('click', '.js-common_refresh_list-grid-action', () => {
-      location.reload();
+      window.location.reload();
     });
   }
 }

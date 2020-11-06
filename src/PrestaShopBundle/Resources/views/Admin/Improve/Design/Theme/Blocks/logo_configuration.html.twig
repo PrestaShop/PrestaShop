@@ -27,7 +27,7 @@
   {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/logo_card.html.twig' %}
     {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
     {% block card_title %}
-      {{ form_widget(shopLogosForm.shop_logos.header_logo_is_restricted_to_shop) }} {{ 'Header logo'|trans({}, 'Admin.Design.Feature') }}
+      {{ form_widget(shopLogosForm.header_logo_is_restricted_to_shop) }} {{ 'Header logo'|trans({}, 'Admin.Design.Feature') }}
     {% endblock %}
     {% block card_content %}
       <p class="logo-card-description">
@@ -43,7 +43,7 @@
         >
       </div>
 
-      {{ ps.form_group_row(shopLogosForm.shop_logos.header_logo) }}
+      {{ ps.form_group_row(shopLogosForm.header_logo) }}
     {% endblock %}
   {% endembed %}
 
@@ -52,7 +52,7 @@
     {% block card_title %}
       <ul class="nav nav-pills" role="tablist">
         <li class="nav-item">
-          {{ form_widget(shopLogosForm.shop_logos.mail_logo_is_restricted_to_shop) }}
+          {{ form_widget(shopLogosForm.mail_logo_is_restricted_to_shop) }}
           <a class="nav-link active show d-inline-block"
              id="mail-tab"
              data-toggle="tab"
@@ -66,7 +66,7 @@
           </a>
         </li>
         <li class="nav-item">
-          {{ form_widget(shopLogosForm.shop_logos.invoice_logo_is_restricted_to_shop) }}
+          {{ form_widget(shopLogosForm.invoice_logo_is_restricted_to_shop) }}
           <a class="nav-link d-inline-block"
              id="invoice-tab"
              data-toggle="tab"
@@ -97,7 +97,7 @@
             >
           </div>
           <div class="input-in-tab">
-            {{ ps.form_group_row(shopLogosForm.shop_logos.mail_logo, {}, {'help': headerLogoPath == mailLogoPath ? 'Warning: if no email logo is available, the main logo will be used instead.'|trans({}, 'Admin.Design.Notification') : '' }) }}
+            {{ ps.form_group_row(shopLogosForm.mail_logo, {}, {'help': headerLogoPath == mailLogoPath ? 'Warning: if no email logo is available, the main logo will be used instead.'|trans({}, 'Admin.Design.Notification') : '' }) }}
           </div>
         </div>
         <div class="tab-pane" id="invoice-configuration" role="tabpanel" aria-labelledby="logo-tab">
@@ -114,7 +114,7 @@
             >
           </div>
           <div class="input-in-tab">
-            {{ ps.form_group_row(shopLogosForm.shop_logos.invoice_logo, {}, {'help': headerLogoPath == invoiceLogoPath ? 'Warning: if no invoice logo is available, the main logo will be used instead.'|trans({}, 'Admin.Design.Help') : '' }) }}
+            {{ ps.form_group_row(shopLogosForm.invoice_logo, {}, {'help': headerLogoPath == invoiceLogoPath ? 'Warning: if no invoice logo is available, the main logo will be used instead.'|trans({}, 'Admin.Design.Help') : '' }) }}
           </div>
         </div>
       </div>
@@ -124,7 +124,7 @@
   {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/logo_card.html.twig' %}
     {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
     {% block card_title %}
-      {{ form_widget(shopLogosForm.shop_logos.favicon_is_restricted_to_shop) }} {{ 'Favicon'|trans({}, 'Admin.Design.Feature') }}
+      {{ form_widget(shopLogosForm.favicon_is_restricted_to_shop) }} {{ 'Favicon'|trans({}, 'Admin.Design.Feature') }}
     {% endblock %}
     {% block card_content %}
       <p class="logo-card-description">
@@ -135,14 +135,14 @@
           <img
             class="rounded-circle img-thumbnail favicon-logo"
             src="{{ faviconPath }}"
-            alt="{{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}"
-            title="{{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}"
+            alt="{{ 'Favicon image'|trans({}, 'Admin.Design.Feature') }}"
+            title="{{ 'Favicon image'|trans({}, 'Admin.Design.Feature') }}"
           >
       </div>
 
       <div class="form-group row">
         <div class="col-sm">
-          {{ ps.form_widget_with_error(shopLogosForm.shop_logos.favicon) }}
+          {{ ps.form_widget_with_error(shopLogosForm.favicon) }}
           <small class="form-text">
             {{ 'Use our [1]favicon generator on PrestaShop Marketplace[/1] to boost your brand image!'|trans({'[1]': '<a href="https://addons.prestashop.com/create-favicon.php?pab=1" target="_blank">', '[/1]': '</a>'}, 'Admin.Design.Help')|raw }}
           </small>

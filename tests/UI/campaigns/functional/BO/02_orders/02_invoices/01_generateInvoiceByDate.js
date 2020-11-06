@@ -23,7 +23,11 @@ let page;
 let filePath;
 
 const today = new Date();
-// Create a future date that there is no invoices (yyy-mm-dd)
+
+// Get today date format (yyyy-mm-dd
+const todayDate = today.toISOString().slice(0, 10);
+
+// Create a future date that there is no invoices (yyyy-mm-dd)
 today.setFullYear(today.getFullYear() + 1);
 const futureDate = today.toISOString().slice(0, 10);
 
@@ -110,7 +114,7 @@ describe('Generate PDF file by date', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkGeneratedInvoicesPdfFile', baseContext);
 
       // Generate PDF
-      filePath = await invoicesPage.generatePDFByDateAndDownload(page);
+      filePath = await invoicesPage.generatePDFByDateAndDownload(page, todayDate, todayDate);
 
       const exist = await files.doesFileExist(filePath);
       await expect(exist, 'File does not exist').to.be.true;

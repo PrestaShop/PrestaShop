@@ -46,6 +46,15 @@ class StylesheetManagerCore extends AbstractAssetManager
         ];
     }
 
+    /**
+     * @param $id
+     * @param string $relativePath
+     * @param string $media
+     * @param int $priority
+     * @param bool $inline
+     * @param string $server
+     * @param bool $needRtl
+     */
     public function register(
         $id,
         $relativePath,
@@ -79,6 +88,9 @@ class StylesheetManagerCore extends AbstractAssetManager
         }
     }
 
+    /**
+     * @return array
+     */
     public function getList()
     {
         $this->sortList();
@@ -87,6 +99,14 @@ class StylesheetManagerCore extends AbstractAssetManager
         return $this->list;
     }
 
+    /**
+     * @param $id
+     * @param string $fullPath
+     * @param string $media
+     * @param int $priority
+     * @param bool $inline
+     * @param string $server
+     */
     protected function add($id, $fullPath, $media, $priority, $inline, $server)
     {
         $priority = is_int($priority) ? $priority : self::DEFAULT_PRIORITY;

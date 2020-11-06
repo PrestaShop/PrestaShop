@@ -23,21 +23,21 @@ class Categories extends BOBasePage {
     this.categoriesListTableToggleDropDown = (row, column) => `${this.categoriesListTableColumn(row, column)
     } a[data-toggle='dropdown']`;
     this.categoriesListTableDeleteLink = (row, column) => `${this.categoriesListTableColumn(row, column)
-    } a[data-category-delete-url]`;
+    } a.grid-delete-row-link`;
     this.categoriesListTableViewLink = (row, column) => `${this.categoriesListTableColumn(row, column)
-    } a[data-original-title='View']`;
+    } a.grid-view-row-link`;
     this.categoriesListTableEditLink = (row, column) => `${this.categoriesListTableColumn(row, column)
-    } a[href*='edit']`;
+    } a.grid-edit-row-link`;
     this.categoriesListColumnValidIcon = (row, column) => `${this.categoriesListTableColumn(row, column)
     } i.grid-toggler-icon-valid`;
     this.categoriesListColumnNotValidIcon = (row, column) => `${this.categoriesListTableColumn(row, column)
     } i.grid-toggler-icon-not-valid`;
     // Filters
     this.categoryFilterInput = filterBy => `${this.categoriesListForm} #category_${filterBy}`;
-    this.filterSearchButton = `${this.categoriesListForm} button[name='category[actions][search]']`;
-    this.filterResetButton = `${this.categoriesListForm} button[name='category[actions][reset]']`;
+    this.filterSearchButton = `${this.categoriesListForm} .grid-search-button`;
+    this.filterResetButton = `${this.categoriesListForm} .grid-reset-button`;
     // Bulk Actions
-    this.selectAllRowsDiv = `${this.categoriesListForm} tr.column-filters div.md-checkbox`;
+    this.selectAllRowsDiv = `${this.categoriesListForm} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.categoriesListForm} button.dropdown-toggle`;
     this.bulkActionsEnableButton = `${this.categoriesListForm} #category_grid_bulk_action_enable_selection`;
     this.bulkActionsDisableButton = `${this.categoriesListForm} #category_grid_bulk_action_disable_selection`;
@@ -52,8 +52,8 @@ class Categories extends BOBasePage {
     this.deleteCategoryModalModeInput = id => `${this.deleteCategoryModal} #delete_categories_delete_mode_${id}`;
     // Grid Actions
     this.categoryGridActionsButton = '#category-grid-actions-button';
-    this.gridActionDropDownMenu = 'div.dropdown-menu[aria-labelledby=\'category-grid-actions-button\']';
-    this.gridActionExportLink = `${this.gridActionDropDownMenu} a[href*='/export']`;
+    this.gridActionDropDownMenu = '#category-grid-actions-dropdown-menu';
+    this.gridActionExportLink = '#category-grid-action-export';
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.categoryGridPanel} .col-form-label`;
@@ -284,7 +284,7 @@ class Categories extends BOBasePage {
   async changeCategoriesEnabledColumnBulkActions(page, enable = true) {
     // Click on Select All
     await Promise.all([
-      page.$eval(`${this.selectAllRowsDiv} i`, el => el.click()),
+      page.$eval(this.selectAllRowsDiv, el => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
@@ -306,7 +306,7 @@ class Categories extends BOBasePage {
   async deleteCategoriesBulkActions(page, modeID = '0') {
     // Click on Select All
     await Promise.all([
-      page.$eval(`${this.selectAllRowsDiv} i`, el => el.click()),
+      page.$eval(this.selectAllRowsDiv, el => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions

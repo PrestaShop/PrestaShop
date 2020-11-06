@@ -9,7 +9,10 @@ class SeoAndUrls extends BOBasePage {
 
     // Header selectors
     this.addNewSeoPageLink = '#page-header-desc-configuration-add';
-    this.successfulSettingsUpdateMessage = 'The settings have been successfully updated.';
+    this.successfulSettingsUpdateMessage = 'Update successful';
+
+    // Sub tabs selectors
+    this.searchEnginesSubTabLink = '#subtab-AdminSearchEngines';
 
     // Grid selectors
     this.gridPanel = '#meta_grid_panel';
@@ -24,13 +27,12 @@ class SeoAndUrls extends BOBasePage {
     // Bulk Actions
     this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
-    this.bulkActionsDeleteButton = `${this.gridPanel} #meta_grid_bulk_action_delete_seo_urls`;
+    this.bulkActionsDeleteButton = `${this.gridPanel} #meta_grid_bulk_action_delete_selection`;
 
     // Filters
     this.filterColumn = filterBy => `${this.gridTable} #meta_${filterBy}`;
-    this.filterSearchButton = `${this.gridTable} button[name='meta[actions][search]']`;
-    this.filterResetButton = `${this.gridTable} button[name='meta[actions][reset]']`;
-
+    this.filterSearchButton = `${this.gridTable} .grid-search-button`;
+    this.filterResetButton = `${this.gridTable} .grid-reset-button`;
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
@@ -39,26 +41,27 @@ class SeoAndUrls extends BOBasePage {
 
     // Actions buttons in Row
     this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
-    this.editRowLink = row => `${this.actionsColumn(row)} a[href*='/edit']`;
+    this.editRowLink = row => `${this.actionsColumn(row)} a.grid-edit-row-link`;
     this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
-    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-url*='/delete']`;
-
+    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
+    // Set up URL form
+    this.switchFriendlyUrlLabel = toggle => `label[for='meta_settings_set_up_urls_form_friendly_url_${toggle}']`;
+    this.switchAccentedUrlLabel = toggle => `label[for='meta_settings_set_up_urls_form_accented_url_${toggle}']`;
+    this.saveSeoAndUrlFormButton = '#form-set-up-urls-save-button';
+    // Delete modal
+    this.confirmDeleteModal = '#meta-grid-confirm-modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.gridPanel} .col-form-label`;
     this.paginationNextLink = `${this.gridPanel} #pagination_next_url`;
     this.paginationPreviousLink = `${this.gridPanel} [aria-label='Previous']`;
 
-
-    // Set up URL form selectors
-    this.switchFriendlyUrlLabel = toggle => `label[for='meta_settings_form_set_up_urls_friendly_url_${toggle}']`;
-    this.switchAccentedUrlLabel = toggle => `label[for='meta_settings_form_set_up_urls_accented_url_${toggle}']`;
-    this.saveSeoAndUrlFormButton = '#main-div form:nth-child(1) div:nth-child(1) div.card-footer button';
     // Seo options form
-    this.switchDisplayAttributesLabel = toggle => 'label[for=\'meta_settings_form_seo_options_product'
+    this.switchDisplayAttributesLabel = toggle => 'label[for=\'meta_settings_seo_options_form_product'
       + `_attributes_in_title_${toggle}']`;
-    this.saveSeoOptionsFormButton = '#main-div form:nth-child(1) div:nth-child(4) div.card-footer button';
+    this.saveSeoOptionsFormButton = '#meta_settings_seo_options_form_save_button';
   }
 
   /* header methods */
@@ -70,6 +73,15 @@ class SeoAndUrls extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.addNewSeoPageLink);
   }
 
+  /**
+   * Go to search engines page
+   * @param page
+   * @return {Promise<void>}
+   */
+  async goToSearchEnginesPage(page) {
+    await this.clickAndWaitForNavigation(page, this.searchEnginesSubTabLink);
+  }
+
   /* Bulk actions methods */
 
   /**
@@ -78,9 +90,6 @@ class SeoAndUrls extends BOBasePage {
    * @returns {Promise<string>}
    */
   async bulkDeleteSeoUrlPage(page) {
-    // Confirm delete in js modal
-    this.dialogListener(page, true);
-
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsLabel, el => el.click()),
@@ -93,7 +102,13 @@ class SeoAndUrls extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
 
-    await this.clickAndWaitForNavigation(page, this.bulkActionsDeleteButton);
+    // Click on delete and wait for modal
+    await Promise.all([
+      page.click(this.bulkActionsDeleteButton),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+
+    await this.confirmDeleteSeoUrlPage(page);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
@@ -142,7 +157,6 @@ class SeoAndUrls extends BOBasePage {
    * @returns {Promise<string>}
    */
   async deleteSeoUrlPage(page, row = 1) {
-    this.dialogListener(page, true);
     await Promise.all([
       page.click(this.dropdownToggleButton(row)),
       this.waitForVisibleSelector(
@@ -150,8 +164,22 @@ class SeoAndUrls extends BOBasePage {
         `${this.dropdownToggleButton(row)}[aria-expanded='true']`,
       ),
     ]);
-    await this.clickAndWaitForNavigation(page, this.deleteRowLink(row));
+    // Click on delete and wait for modal
+    await Promise.all([
+      page.click(this.deleteRowLink(row)),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteSeoUrlPage(page);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Confirm delete with in modal
+   * @param page
+   * @return {Promise<void>}
+   */
+  async confirmDeleteSeoUrlPage(page) {
+    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
   }
 
   /* Sort functions */

@@ -18,8 +18,8 @@ class Currencies extends LocalizationBasePage {
 
     // Filters
     this.filterColumn = filterBy => `${this.gridTable} #currency_${filterBy}`;
-    this.filterSearchButton = `${this.gridTable} button[name='currency[actions][search]']`;
-    this.filterResetButton = `${this.gridTable} button[name='currency[actions][reset]']`;
+    this.filterSearchButton = `${this.gridTable} .grid-search-button`;
+    this.filterResetButton = `${this.gridTable} .grid-reset-button`;
 
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
@@ -33,11 +33,14 @@ class Currencies extends LocalizationBasePage {
     this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
     this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
-    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-url*='/delete']`;
+    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
     this.editRowLink = row => `${this.actionsColumn(row)} a[href*='/edit']`;
+    // Delete modal
+    this.confirmDeleteModal = '#currency-grid-confirm-modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
+
     // Exchange rate form
-    this.exchangeRateForm = 'form[name=\'exchange_rates\']';
-    this.updateExchangeRatesButton = `${this.exchangeRateForm} .btn.btn-primary`;
+    this.updateExchangeRatesButton = '#update-exchange-rates-button';
   }
 
   /* Header Methods */
@@ -135,7 +138,7 @@ class Currencies extends LocalizationBasePage {
    */
   async getCurrencyFromTable(page, row) {
     return {
-      name: await this.getTextColumnFromTableCurrency(page, row, 'currency'),
+      name: await this.getTextColumnFromTableCurrency(page, row, 'name'),
       symbol: await this.getTextColumnFromTableCurrency(page, row, 'symbol'),
       isoCode: await this.getTextColumnFromTableCurrency(page, row, 'iso_code'),
       exchangeRate: await this.getExchangeRateValue(page, row),
@@ -176,7 +179,6 @@ class Currencies extends LocalizationBasePage {
    * @returns {Promise<string>}
    */
   async deleteCurrency(page, row = 1) {
-    this.dialogListener(page, true);
     await Promise.all([
       page.click(this.dropdownToggleButton(row)),
       this.waitForVisibleSelector(
@@ -184,8 +186,22 @@ class Currencies extends LocalizationBasePage {
         `${this.dropdownToggleButton(row)}[aria-expanded='true']`,
       ),
     ]);
-    await this.clickAndWaitForNavigation(page, this.deleteRowLink(row));
+    // Click on delete and wait for modal
+    await Promise.all([
+      page.click(this.deleteRowLink(row)),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteCurrency(page);
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Confirm delete in modal
+   * @param page
+   * @return {Promise<void>}
+   */
+  async confirmDeleteCurrency(page) {
+    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
   }
 
   /**

@@ -77,7 +77,7 @@ $(document).ready(function() {
  * Reset active tinyMce editor (triggered when switch language, or switching tabs)
  */
 function resetEditor() {
-  const languageEditorsSelector = '.summary-description-container .panel.active div.translation-field.active textarea.autoload_rte';
+  const languageEditorsSelector = '.summary-description-container div.translation-field.active textarea.autoload_rte';
   $(languageEditorsSelector).each(function(index, textarea) {
     if (window.tinyMCE) {
       const editor = window.tinyMCE.get(textarea.id);
@@ -398,7 +398,7 @@ var featuresCollection = (function() {
         e.preventDefault();
         var _this = $(this);
 
-        modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+        modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
           onContinue: function() {
             _this.closest('.product-feature').remove();
           }
@@ -878,7 +878,7 @@ var form = (function() {
       $('.product-footer .delete', elem).click(function(e) {
         e.preventDefault();
         var _this = $(this);
-        modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+        modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
           onContinue: function() {
             window.location = _this.attr('href');
           }
@@ -926,10 +926,40 @@ var form = (function() {
         });
       };
 
-      /** On event "tokenfield:createtoken" : stop event if its not a typehead result */
+      /** On event "tokenfield:createtoken" : check values are valid if its not a typehead result */
       $('#form_step3_attributes').on('tokenfield:createtoken', function(e) {
-        if (!e.attrs.data && e.handleObj.origType !== 'tokenfield:createtoken') {
-          return false;
+        if (!e.attrs.data){
+          if (e.handleObj.origType !== 'tokenfield:createtoken') {
+            return false;
+          }
+
+          const orgLabel = e.attrs.label;
+          if (e.attrs.label === e.attrs.value) {
+            engine.search(e.attrs.label, function(result) {
+              if (result.length >= 1) {
+                e.attrs.label = result[0].label;
+                e.attrs.value = result[0].value;
+                e.attrs.data = [];
+                e.attrs.data['id_group'] = result[0].data.id_group;
+              }
+            });
+          } else {
+            const attr = $(`.js-attribute-checkbox[data-value="${e.attrs.value}"]`);
+
+            if (attr) {
+              e.attrs.label = attr.data('label');
+              e.attrs.value = attr.data('value');
+              e.attrs.data = [];
+              e.attrs.data['id_group'] = attr.data('group-id');
+            }
+          }
+
+          if(e.attrs.data && filter([e.attrs]).length === 0){
+            $('#form_step3_attributes-tokenfield').val((i, value) => {
+              return value.replace(orgLabel,"");
+            });
+            return false;
+          }
         }
       });
 
@@ -937,14 +967,16 @@ var form = (function() {
       $('#form_step3_attributes').on('tokenfield:createdtoken', function(e) {
         if (e.attrs.data) {
           $('#attributes-generator').append('<input type="hidden" id="attribute-generator-' + e.attrs.value + '" class="attribute-generator" value="' + e.attrs.value + '" name="options[' + e.attrs.data.id_group + '][' + e.attrs.value + ']" />');
-        } else if (e.handleObj.origType == 'tokenfield:createdtoken') {
-          $('#attributes-generator').append('<input type="hidden" id="attribute-generator-' + $('.js-attribute-checkbox[data-value="'+e.attrs.value+'"]').data('value') + '" class="attribute-generator" value="' + $('.js-attribute-checkbox[data-value="'+e.attrs.value+'"]').data('value') + '" name="options[' + $('.js-attribute-checkbox[data-value="'+e.attrs.value+'"]').data('group-id') + '][' + $('.js-attribute-checkbox[data-value="'+e.attrs.value+'"]').data('value') + ']" />');
+        } else {
+          $(e.relatedTarget).addClass('invalid');
         }
       });
 
       /** On event "tokenfield:removedtoken" : remove stored attributes input when remove token */
       $('#form_step3_attributes').on('tokenfield:removedtoken', function(e) {
-        $('#attribute-generator-' + e.attrs.value).remove();
+        if (!$(e.relatedTarget).hasClass('invalid')) {
+          $(`#attribute-generator-${e.attrs.value}`).remove();
+        }
       });
     });
     },
@@ -986,7 +1018,7 @@ var customFieldCollection = (function() {
         e.preventDefault();
         var _this = $(this);
 
-        modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+        modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
           onContinue: function() {
             _this.parent().parent().parent().remove();
           }
@@ -1066,7 +1098,7 @@ var virtualProduct = (function() {
         e.preventDefault();
         var $deleteButton = $(this);
 
-        modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+        modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
           onContinue: function() {
             getOnDeleteVirtualProductFileHandler($deleteButton);
           }
@@ -1506,7 +1538,7 @@ var formImagesProduct = (function() {
       });
     },
     'delete': function(id) {
-      modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+      modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
         onContinue: function() {
           $.ajax({
             url: dropZoneElem.find('.dz-preview[data-id="' + id + '"]').attr('url-delete'),

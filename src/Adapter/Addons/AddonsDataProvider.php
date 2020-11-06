@@ -73,13 +73,13 @@ class AddonsDataProvider implements AddonsInterface
     }
 
     /**
-     * @param $module_id
+     * @param int $module_id
      *
      * @return bool
      *
      * @throws Exception
      */
-    public function downloadModule($module_id)
+    public function downloadModule(int $module_id): bool
     {
         $params = [
             'id_module' => $module_id,
@@ -112,7 +112,7 @@ class AddonsDataProvider implements AddonsInterface
      *
      * @todo Does this function should be in a User related class ?
      */
-    public function isAddonsAuthenticated()
+    public function isAddonsAuthenticated(): bool
     {
         $request = Request::createFromGlobals();
 
@@ -222,7 +222,7 @@ class AddonsDataProvider implements AddonsInterface
      *
      * @return bool
      */
-    public function isAddonsUp()
+    public function isAddonsUp(): bool
     {
         return self::$is_addons_up;
     }

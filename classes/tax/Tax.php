@@ -27,7 +27,7 @@ class TaxCore extends ObjectModel
 {
     const TAX_DEFAULT_PRECISION = 3;
 
-    /** @var string Name */
+    /** @var array<int,string> Name */
     public $name;
 
     /** @var float Rate (%) */
@@ -77,7 +77,7 @@ class TaxCore extends ObjectModel
     /**
      * Save the object with the field deleted to true.
      *
-     *  @return bool
+     * @return bool
      */
     public function historize()
     {
@@ -143,6 +143,9 @@ class TaxCore extends ObjectModel
     /**
      * Get all available taxes.
      *
+     * @param int $id_lang
+     * @param bool $active_only (true by default)
+     *
      * @return array Taxes
      */
     public static function getTaxes($id_lang = false, $active_only = true)
@@ -191,7 +194,7 @@ class TaxCore extends ObjectModel
     /**
      * Returns the ecotax tax rate.
      *
-     * @param id_address
+     * @param int $id_address
      *
      * @return float $tax_rate
      */
@@ -208,7 +211,8 @@ class TaxCore extends ObjectModel
     /**
      * Returns the carrier tax rate.
      *
-     * @param id_address
+     * @param int $id_carrier
+     * @param int $id_address
      *
      * @return float $tax_rate
      */
@@ -228,6 +232,8 @@ class TaxCore extends ObjectModel
      *
      * @param int $id_product
      * @param int $id_country
+     * @param int $id_state
+     * @param string $zipcode
      *
      * @return Tax
      *
@@ -246,12 +252,13 @@ class TaxCore extends ObjectModel
     }
 
     /**
-     * Returns the product tax.
+     * Returns the product tax rate.
      *
      * @param int $id_product
-     * @param int $id_country
+     * @param int $id_address
+     * @param Context $context
      *
-     * @return Tax
+     * @return float
      */
     public static function getProductTaxRate($id_product, $id_address = null, Context $context = null)
     {

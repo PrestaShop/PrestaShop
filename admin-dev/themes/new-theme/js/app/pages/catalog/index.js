@@ -25,7 +25,7 @@
 
 import TableSorting from '@app/utils/table-sorting';
 
-const $ = global.$;
+const {$} = window;
 
 $(() => {
   new TableSorting($('table.table')).attach();

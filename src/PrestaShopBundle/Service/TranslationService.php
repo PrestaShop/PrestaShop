@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Service;
 
 use Exception;
+use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Translation;
 use PrestaShopBundle\Exception\InvalidLanguageException;
 use PrestaShopBundle\Translation\Constraints\PassVsprintf;
@@ -102,9 +103,9 @@ class TranslationService
     }
 
     /**
-     * @param $lang
-     * @param $type
-     * @param $theme
+     * @param string $lang
+     * @param string|null $type
+     * @param string $theme
      * @param null $search
      *
      * @return array|mixed
@@ -128,8 +129,8 @@ class TranslationService
     }
 
     /**
-     * @param $theme
-     * @param $type
+     * @param string|null $theme
+     * @param string $type
      *
      * @return bool
      */
@@ -144,9 +145,9 @@ class TranslationService
      * @todo: we need module information here
      * @todo: we need to improve the Vuejs application to send the information
      *
-     * @param $locale
-     * @param $domain
-     * @param null $theme
+     * @param string $locale
+     * @param string $domain
+     * @param string|null $theme
      * @param null $search
      * @param null $module
      *
@@ -211,8 +212,8 @@ class TranslationService
     /**
      * Check if data contains search word.
      *
-     * @param $search
-     * @param $data
+     * @param string|array $search
+     * @param array $data
      *
      * @return bool
      */
@@ -244,10 +245,10 @@ class TranslationService
     /**
      * Save a translation in database.
      *
-     * @param $lang
-     * @param $domain
-     * @param $key
-     * @param $translationValue
+     * @param Lang $lang
+     * @param string $domain
+     * @param string $key
+     * @param string $translationValue
      * @param null $theme
      *
      * @return bool
@@ -288,9 +289,10 @@ class TranslationService
 
         $validator = Validation::createValidator();
         $violations = $validator->validate($translation, new PassVsprintf());
+        $log_context = ['object_type' => 'Translation'];
         if (0 !== count($violations)) {
             foreach ($violations as $violation) {
-                $logger->error($violation->getMessage());
+                $logger->error($violation->getMessage(), $log_context);
             }
 
             return false;
@@ -304,7 +306,7 @@ class TranslationService
 
             $updatedTranslationSuccessfully = true;
         } catch (Exception $exception) {
-            $logger->error($exception->getMessage());
+            $logger->error($exception->getMessage(), $log_context);
         }
 
         return $updatedTranslationSuccessfully;
@@ -313,9 +315,9 @@ class TranslationService
     /**
      * Reset translation from database.
      *
-     * @param $lang
-     * @param $domain
-     * @param $key
+     * @param Lang $lang
+     * @param string $domain
+     * @param string $key
      * @param null $theme
      *
      * @return bool

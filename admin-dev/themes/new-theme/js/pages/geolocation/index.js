@@ -23,10 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ChoiceTable from '@components/choice-table';
-
-const $ = window.$;
+const {$} = window;
 
 $(() => {
-  new ChoiceTable();
+  window.prestashop.component.initComponents(
+    [
+      'ChoiceTable',
+    ],
+  );
 });

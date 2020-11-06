@@ -26,7 +26,7 @@
 import Routing from 'fos-routing';
 import routes from '@js/fos_js_routes.json';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Wraps FOSJsRoutingbundle with exposed routes.

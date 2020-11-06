@@ -84,7 +84,7 @@ abstract class ControllerCore
     /**
      * Set to true to display page footer.
      *
-     * @var string
+     * @var bool
      */
     protected $display_footer;
 
@@ -168,6 +168,13 @@ abstract class ControllerCore
      */
     public function init()
     {
+        Hook::exec(
+            'actionControllerInitBefore',
+            [
+                'controller' => $this,
+            ]
+        );
+
         if (_PS_MODE_DEV_ && $this->controller_type == 'admin') {
             set_error_handler([__CLASS__, 'myErrorHandler']);
         }
@@ -187,6 +194,13 @@ abstract class ControllerCore
         $localeRepo = $this->get(self::SERVICE_LOCALE_REPOSITORY);
         $this->context->currentLocale = $localeRepo->getLocale(
             $this->context->language->getLocale()
+        );
+
+        Hook::exec(
+            'actionControllerInitAfter',
+            [
+                'controller' => $this,
+            ]
         );
     }
 

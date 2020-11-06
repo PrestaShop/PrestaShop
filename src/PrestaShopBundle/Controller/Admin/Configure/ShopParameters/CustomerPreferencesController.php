@@ -59,7 +59,7 @@ class CustomerPreferencesController extends FrameworkBundleAdminController
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
-            'form' => $form->createView(),
+            'generalForm' => $form->createView(),
         ];
     }
 

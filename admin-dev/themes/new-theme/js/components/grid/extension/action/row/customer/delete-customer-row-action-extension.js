@@ -23,13 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class DeleteCustomerRowActionExtension handles submitting of row action
  */
 export default class DeleteCustomerRowActionExtension {
-
   constructor() {
     return {
       extend: (grid) => this.extend(grid),
@@ -52,7 +51,7 @@ export default class DeleteCustomerRowActionExtension {
         const $button = $(event.currentTarget);
         const customerId = $button.data('customer-id');
 
-        this._addCustomerInput(customerId);
+        this.addCustomerInput(customerId);
 
         const $form = $deleteCustomersModal.find('form');
 
@@ -69,7 +68,7 @@ export default class DeleteCustomerRowActionExtension {
    *
    * @private
    */
-  _addCustomerInput(customerId) {
+  addCustomerInput(customerId) {
     const $customersToDeleteInputBlock = $('#delete_customers_customers_to_delete');
 
     const customerInput = $customersToDeleteInputBlock

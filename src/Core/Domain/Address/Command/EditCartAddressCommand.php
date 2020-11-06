@@ -49,7 +49,7 @@ class EditCartAddressCommand extends AbstractEditAddressCommand
     private $cartId;
 
     /**
-     * @var
+     * @var string
      */
     private $addressType;
 

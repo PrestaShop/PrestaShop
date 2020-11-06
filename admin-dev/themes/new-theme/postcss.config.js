@@ -22,8 +22,11 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 module.exports = {
-  plugins: [
-    require('postcss-cssnext'),
-  ],
+  plugins: {
+    'postcss-preset-env': {
+      browsers: '> .5%, last 2 versions',
+    },
+  },
 };

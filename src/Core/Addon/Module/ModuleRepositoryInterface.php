@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
+use PrestaShop\PrestaShop\Adapter\Module\Module;
+use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonRepositoryInterface;
 
@@ -59,7 +61,7 @@ interface ModuleRepositoryInterface extends AddonRepositoryInterface
      *
      * @param string $name The technical name of the module
      *
-     * @return \PrestaShop\PrestaShop\Adapter\Module\Module
+     * @return Module
      */
     public function getModule($name);
 }

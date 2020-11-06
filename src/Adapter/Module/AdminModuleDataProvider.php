@@ -363,7 +363,7 @@ class AdminModuleDataProvider implements ModuleInterface
     }
 
     /**
-     * @param $moduleId
+     * @param int $moduleId
      *
      * @return array
      */
@@ -458,6 +458,7 @@ class AdminModuleDataProvider implements ModuleInterface
                     // so we know whether is bought
 
                     $addons = $this->addonsDataProvider->request($action, $params);
+                    /** @var \stdClass $addon */
                     foreach ($addons as $addonsType => $addon) {
                         if (empty($addon->name)) {
                             $this->logger->error(sprintf('The addon with id %s does not have name.', $addon->id));

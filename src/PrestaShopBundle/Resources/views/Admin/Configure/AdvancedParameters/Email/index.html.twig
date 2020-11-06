@@ -37,7 +37,6 @@
   {{ form_start(emailConfigurationForm, {'action': path('admin_emails_save_options')}) }}
   <div class="row justify-content-center">
     {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Email/Blocks/email_configuration.html.twig' %}
-    {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Email/Blocks/smtp_configuration.html.twig' %}
 
     {% block email_configuration_form_rest %}
       {{ form_rest(emailConfigurationForm) }}

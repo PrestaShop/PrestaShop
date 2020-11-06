@@ -56,7 +56,7 @@ final class CategoryFieldsProvider implements EntityFieldsProviderInterface
         $fields = [
             new EntityField('id', $this->trans('ID', 'Admin.Global')),
             new EntityField('active', $this->trans('Active (0/1)', 'Admin.Advparameters.Feature')),
-            new EntityField('name', $this->trans('Name', 'Admin.Global')),
+            new EntityField('name', $this->trans('Name', 'Admin.Global'), '', true),
             new EntityField('parent', $this->trans('Parent category', 'Admin.Catalog.Feature')),
             new EntityField(
                 'is_root_category',

@@ -92,7 +92,7 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
 
             $this->getCommandBus()->handle($editFeatureCommand);
         } catch (Exception $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -128,7 +128,7 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
         try {
             $this->createProductFeature('');
         } catch (Exception $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 

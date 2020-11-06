@@ -237,7 +237,7 @@
       <trans-unit id="355f26b47eff3302c93a1c49676f078e">
         <source>Fatal error</source>
         <target>Fatal error</target>
-        <note>Line: 1165</note>
+        <note>Line: 1166</note>
       </trans-unit>
     </body>
   </file>
@@ -330,27 +330,27 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="2782e6f430c2658c79aecfcecdc0d0e8">
         <source>The field %field_name% is required at least in %lang%.</source>
         <target>The field %field_name% is required at least in %lang%.</target>
-        <note>Line: 3688</note>
+        <note>Line: 3697</note>
       </trans-unit>
       <trans-unit id="114eadc70de249729e9287a6b450c6e0">
         <source>The %field_name% field (%lang%) is invalid.</source>
         <target>The %field_name% field (%lang%) is invalid.</target>
-        <note>Line: 3723</note>
+        <note>Line: 3732</note>
       </trans-unit>
       <trans-unit id="b4186b9ed7c957a1cd9f4e7ce916e603">
         <source>%s: Incorrect value</source>
         <target>%s: Incorrect value</target>
-        <note>Line: 3929</note>
+        <note>Line: 3938</note>
       </trans-unit>
       <trans-unit id="c87956ad745e55231c633c03fe0f0d5b">
         <source>An error occurred while assigning a zone to the selection.</source>
         <target>An error occurred while assigning a zone to the selection.</target>
-        <note>Line: 4181</note>
+        <note>Line: 4190</note>
       </trans-unit>
       <trans-unit id="93463ceee9a3d376b18ee618bc2fffe4">
         <source>You must select at least one element to assign a new zone.</source>
         <target>You must select at least one element to assign a new zone.</target>
-        <note>Line: 4183</note>
+        <note>Line: 4192</note>
       </trans-unit>
     </body>
   </file>
@@ -502,22 +502,22 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="becfb58422969ec127b4bf1af46650ab">
         <source>Email is empty.</source>
         <target>Email is empty.</target>
-        <note>Line: 257</note>
+        <note>Line: 298</note>
       </trans-unit>
       <trans-unit id="e267e2be02cf3e29f4ba53b5d97cf78a">
         <source>Invalid email address.</source>
         <target>Invalid email address.</target>
-        <note>Line: 259</note>
+        <note>Line: 300</note>
       </trans-unit>
       <trans-unit id="5ee800d2d30225decb5b057d846103b7">
         <source>The password field is blank.</source>
         <target>The password field is blank.</target>
-        <note>Line: 197</note>
+        <note>Line: 220</note>
       </trans-unit>
       <trans-unit id="855eb8db89b4921c42072832d33d2dc2">
         <source>Invalid password.</source>
         <target>Invalid password.</target>
-        <note>Line: 199</note>
+        <note>Line: 222</note>
       </trans-unit>
     </body>
   </file>
@@ -1115,7 +1115,7 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="26c322633921fe508bb9a03de1124986">
         <source>Cannot translate emails body content</source>
         <target>Cannot translate emails body content</target>
-        <note>Line: 374</note>
+        <note>Line: 379</note>
       </trans-unit>
     </body>
   </file>
@@ -1236,7 +1236,7 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="d3ee9a41133f8fc3c83c91d09053f249">
         <source>The value of the PHP.ini setting "max_input_vars" must be increased to %value% in order to be able to submit the product form.</source>
         <target>The value of the PHP.ini setting "max_input_vars" must be increased to %value% in order to be able to submit the product form.</target>
-        <note>Line: 698</note>
+        <note>Line: 694</note>
       </trans-unit>
     </body>
   </file>
@@ -1357,7 +1357,7 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="959c96ec640d353311dd9763d57daad6">
         <source>Please fill in all the required fields.</source>
         <target>Please fill in all the required fields.</target>
-        <note>Line: 562</note>
+        <note>Line: 570</note>
       </trans-unit>
       <trans-unit id="3a092130bd08641faa55f5abc9e4a1f4">
         <source>Positive product quantity is required</source>
@@ -1377,32 +1377,37 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="059cfac7937209448c9fb1cf8f07e321">
         <source>Positive product quantity is required.</source>
         <target>Positive product quantity is required.</target>
-        <note>Line: 536</note>
+        <note>Line: 544</note>
       </trans-unit>
       <trans-unit id="c5064b408c1894a4dbd6db58f119c4a6">
         <source>Selected language cannot be used because it is disabled</source>
         <target>Selected language cannot be used because it is disabled</target>
-        <note>Line: 546</note>
+        <note>Line: 554</note>
       </trans-unit>
       <trans-unit id="ea5d4a7a4ca312b276b1d4ea1f74d724">
         <source>Selected currency cannot be used because it is deleted.</source>
         <target>Selected currency cannot be used because it is deleted.</target>
-        <note>Line: 552</note>
+        <note>Line: 560</note>
       </trans-unit>
       <trans-unit id="021361da28a3e064871e2cbbacd46757">
         <source>Selected currency cannot be used because it is disabled.</source>
         <target>Selected currency cannot be used because it is disabled.</target>
-        <note>Line: 556</note>
+        <note>Line: 564</note>
       </trans-unit>
       <trans-unit id="bc5d37ff246288c98fa45f3903172747">
         <source>Custom field text cannot be longer than %limit% characters.</source>
         <target>Custom field text cannot be longer than %limit% characters.</target>
-        <note>Line: 566</note>
+        <note>Line: 574</note>
       </trans-unit>
       <trans-unit id="e1f19b2938605ab0bdc64ba270815786">
         <source>Same product quantity is already in cart</source>
         <target>Same product quantity is already in cart</target>
-        <note>Line: 540</note>
+        <note>Line: 548</note>
+      </trans-unit>
+      <trans-unit id="aa83c911e54936648591034d74055aa2">
+        <source>Gift message not valid</source>
+        <target>Gift message not valid</target>
+        <note>Line: 594</note>
       </trans-unit>
     </body>
   </file>
@@ -1411,47 +1416,47 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="59af32e406ca8d94850e9a2a696c9dcd">
         <source>Invalid value: the payment must be a positive amount.</source>
         <target>Invalid value: the payment must be a positive amount.</target>
-        <note>Line: 1687</note>
+        <note>Line: 1757</note>
       </trans-unit>
       <trans-unit id="546710db975c663e306008fda9fc5865">
         <source>Invalid action: this order has not been delivered.</source>
         <target>Invalid action: this order has not been delivered.</target>
-        <note>Line: 1696</note>
+        <note>Line: 1766</note>
       </trans-unit>
       <trans-unit id="b5ab864b320f4fcbcd061ee3119cf21c">
         <source>Invalid action: this order has already been delivered.</source>
         <target>Invalid action: this order has already been delivered.</target>
-        <note>Line: 1700</note>
+        <note>Line: 1770</note>
       </trans-unit>
       <trans-unit id="3e19a894b9552d54a62e99b3f7e7cf94">
         <source>Invalid action: this order has already been paid.</source>
         <target>Invalid action: this order has already been paid.</target>
-        <note>Line: 1692</note>
+        <note>Line: 1762</note>
       </trans-unit>
       <trans-unit id="7621aa68f3fb11dce889ba85f3a74758">
         <source>Invalid action: this order has not been paid.</source>
         <target>Invalid action: this order has not been paid.</target>
-        <note>Line: 1704</note>
+        <note>Line: 1774</note>
       </trans-unit>
       <trans-unit id="b19e2fa860ab1d9fdd60f5b7772b6a3e">
         <source>The product customization picture could not be found.</source>
         <target>The product customization picture could not be found.</target>
-        <note>Line: 1554</note>
+        <note>Line: 1585</note>
       </trans-unit>
       <trans-unit id="074ed474a7e0b671a07422f3014dadfb">
         <source>This product is already in your order, please edit the quantity instead.</source>
         <target>This product is already in your order, please edit the quantity instead.</target>
-        <note>Line: 1724</note>
+        <note>Line: 1794</note>
       </trans-unit>
       <trans-unit id="5b5d79a83148583db9a987bc0dbb6265">
         <source>This product is already in the invoice [1], please edit the quantity instead.</source>
         <target>This product is already in the invoice [1], please edit the quantity instead.</target>
-        <note>Line: 1728</note>
+        <note>Line: 1798</note>
       </trans-unit>
       <trans-unit id="963830daedc95e3bd008090ae4c7d1d9">
         <source>You cannot edit the price of a product that no longer exists in your catalog.</source>
         <target>You cannot edit the price of a product that no longer exists in your catalog.</target>
-        <note>Line: 1733</note>
+        <note>Line: 1803</note>
       </trans-unit>
     </body>
   </file>
@@ -1657,8 +1662,8 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/product.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="a9e0d1b71fb7197367e0518bb6b34fdd">
-        <source>The file is too large. Maximum size allowed is: [1]. The file you are trying to upload is [2].</source>
-        <target>The file is too large. Maximum size allowed is: [1]. The file you are trying to upload is [2].</target>
+        <source>The file is too large. Maximum size allowed is: [1] MB. The file you are trying to upload is [2] MB.</source>
+        <target>The file is too large. Maximum size allowed is: [1] MB. The file you are trying to upload is [2] MB.</target>
         <note>Line: 339</note>
       </trans-unit>
     </body>

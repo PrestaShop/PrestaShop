@@ -1,27 +1,31 @@
 .block_newsletter {
-  @include search-box;
-  background: white;
-  font-size: $font-size-sm;
+  @include search-box();
   margin-bottom: 0.625rem;
+  font-size: $font-size-sm;
+  background: #fff;
+
   form {
     .input-wrapper {
       overflow: hidden;
     }
-    input[type=email] {
-      padding: 11px;
+
+    input[type="email"] {
       width: 100%;
+      padding: 11px;
       &:focus {
-        border: 3px $brand-primary solid;
         padding: 8px 8px 9px;
+        border: 3px $brand-primary solid;
         outline: 0;
       }
     }
+
     input {
       height: 42px;
       box-shadow: none;
     }
   }
 }
+
 #footer {
   .block_newsletter {
     p {
@@ -29,10 +33,11 @@
     }
   }
 }
+
 #left-column {
   .block_newsletter {
-    @include box-shadow;
-    margin-bottom: 1.563rem;
+    @include box-shadow();
     padding: 1.563rem 1.25rem;
+    margin-bottom: 1.563rem;
   }
 }

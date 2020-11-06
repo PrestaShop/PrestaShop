@@ -9,15 +9,15 @@ class LinkWidgets extends BOBasePage {
 
     // Header Selectors
     this.newBlockLink = '#page-header-desc-configuration-add';
-    this.gridPanel = hookId => `#link_widget_grid_${hookId}_grid_panel`;
-    this.gridHeaderTitle = hookId => `${this.gridPanel(hookId)} h3.card-header-title`;
-    this.gridTable = hookId => `table#link_widget_grid_${hookId}_grid_table`;
-    this.tableRow = (hookId, row) => `${this.gridTable(hookId)} tbody tr:nth-child(${row})`;
-    this.tableColumn = (hookId, row, column) => `${this.tableRow(hookId, row)} td.column-${column}`;
-    this.actionsColumn = (hookId, row) => `${this.tableRow(hookId, row)} td.column-actions`;
-    this.dropdownToggleButton = (hookId, row) => `${this.actionsColumn(hookId, row)} a.dropdown-toggle`;
-    this.dropdownToggleMenu = (hookId, row) => `${this.actionsColumn(hookId, row)} div.dropdown-menu`;
-    this.deleteRowLink = (hookId, row) => `${this.dropdownToggleMenu(hookId, row)} a[data-url*='/delete']`;
+    this.gridPanel = hookName => `div[data-hook-name='${hookName}']`;
+    this.gridHeaderTitle = hookName => `${this.gridPanel(hookName)} h3.card-header-title`;
+    this.gridTable = hookName => `${this.gridPanel(hookName)} table.grid-table`;
+    this.tableRow = (hookName, row) => `${this.gridTable(hookName)} tbody tr:nth-child(${row})`;
+    this.tableColumn = (hookName, row, column) => `${this.tableRow(hookName, row)} td.column-${column}`;
+    this.actionsColumn = (hookName, row) => `${this.tableRow(hookName, row)} td.column-actions`;
+    this.dropdownToggleButton = (hookName, row) => `${this.actionsColumn(hookName, row)} a.dropdown-toggle`;
+    this.dropdownToggleMenu = (hookName, row) => `${this.actionsColumn(hookName, row)} div.dropdown-menu`;
+    this.deleteRowLink = (hookName, row) => `${this.dropdownToggleMenu(hookName, row)} a.grid-delete-row-link`;
   }
 
   /* Header methods */
@@ -34,27 +34,27 @@ class LinkWidgets extends BOBasePage {
   /**
    * Get Number of element in grid
    * @param page
-   * @param hookId, table to get number from
+   * @param hookName, table to get number from
    * @returns {Promise<number>}
    */
-  async getNumberOfElementInGrid(page, hookId) {
-    return this.getNumberFromText(page, this.gridHeaderTitle(hookId));
+  async getNumberOfElementInGrid(page, hookName) {
+    return this.getNumberFromText(page, this.gridHeaderTitle(hookName));
   }
 
   /**
    * Delete link widget
    * @param page
-   * @param hookId, table to delete from
+   * @param hookName, table to delete from
    * @param row, row to delete
    * @returns {Promise<string>}
    */
-  async deleteLinkWidget(page, hookId, row) {
+  async deleteLinkWidget(page, hookName, row) {
     this.dialogListener(page, true);
     await Promise.all([
-      page.click(this.dropdownToggleButton(hookId, row)),
-      this.waitForVisibleSelector(page, `${this.dropdownToggleButton(hookId, row)}[aria-expanded='true']`),
+      page.click(this.dropdownToggleButton(hookName, row)),
+      this.waitForVisibleSelector(page, `${this.dropdownToggleButton(hookName, row)}[aria-expanded='true']`),
     ]);
-    await this.clickAndWaitForNavigation(page, this.deleteRowLink(hookId, row));
+    await this.clickAndWaitForNavigation(page, this.deleteRowLink(hookName, row));
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 }

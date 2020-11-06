@@ -79,7 +79,7 @@
 
     {block name='product_ecotax'}
       {if $product.ecotax.amount > 0}
-        <p class="price-ecotax">{l s='Including %amount% for ecotax' d='Shop.Theme.Catalog' sprintf=['%amount%' => $product.ecotax.value]}
+        <p class="price-ecotax">{l s='Including %amount% for ecotax' d='Shop.Theme.Catalog' sprintf=['%amount%' => $product.ecotax_tax_inc]}
           {if $product.has_discount}
             {l s='(not impacted by the discount)' d='Shop.Theme.Catalog'}
           {/if}
@@ -97,16 +97,18 @@
       {/if}
       {hook h='displayProductPriceBlock' product=$product type="price"}
       {hook h='displayProductPriceBlock' product=$product type="after_price"}
-      {if $product.additional_delivery_times == 1}
-        {if $product.delivery_information}
-          <span class="delivery-information">{$product.delivery_information}</span>
-        {/if}
-      {elseif $product.additional_delivery_times == 2}
-        {if $product.quantity > 0}
-          <span class="delivery-information">{$product.delivery_in_stock}</span>
-        {* Out of stock message should not be displayed if customer can't order the product. *}
-        {elseif $product.quantity <= 0 && $product.add_to_cart_url}
-          <span class="delivery-information">{$product.delivery_out_stock}</span>
+      {if $product.is_virtual	== 0}
+        {if $product.additional_delivery_times == 1}
+          {if $product.delivery_information}
+            <span class="delivery-information">{$product.delivery_information}</span>
+          {/if}
+        {elseif $product.additional_delivery_times == 2}
+          {if $product.quantity > 0}
+            <span class="delivery-information">{$product.delivery_in_stock}</span>
+          {* Out of stock message should not be displayed if customer can't order the product. *}
+          {elseif $product.quantity <= 0 && $product.add_to_cart_url}
+            <span class="delivery-information">{$product.delivery_out_stock}</span>
+          {/if}
         {/if}
       {/if}
     </div>

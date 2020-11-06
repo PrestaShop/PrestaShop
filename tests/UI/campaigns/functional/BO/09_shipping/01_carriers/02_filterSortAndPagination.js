@@ -39,11 +39,6 @@ describe('Filter, sort and pagination carriers', async () => {
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
-
-    /* Delete the generated images */
-    for (let i = 0; i <= 17; i++) {
-      await files.deleteFile(`todelete${i}.jpg`);
-    }
   });
 
   it('should login in BO', async function () {
@@ -79,7 +74,7 @@ describe('Filter, sort and pagination carriers', async () => {
             testIdentifier: 'filterById',
             filterType: 'input',
             filterBy: 'id_carrier',
-            filterValue: Carriers[3].id,
+            filterValue: Carriers.cheapCarrier.id,
           },
       },
       {
@@ -88,7 +83,7 @@ describe('Filter, sort and pagination carriers', async () => {
             testIdentifier: 'filterByName',
             filterType: 'input',
             filterBy: 'name',
-            filterValue: Carriers[1].name,
+            filterValue: Carriers.myCarrier.name,
           },
       },
       {
@@ -97,7 +92,7 @@ describe('Filter, sort and pagination carriers', async () => {
             testIdentifier: 'filterByDelay',
             filterType: 'input',
             filterBy: 'delay',
-            filterValue: Carriers[0].delay,
+            filterValue: Carriers.default.delay,
           },
       },
       {
@@ -106,7 +101,7 @@ describe('Filter, sort and pagination carriers', async () => {
             testIdentifier: 'filterByStatus',
             filterType: 'select',
             filterBy: 'active',
-            filterValue: true,
+            filterValue: Carriers.default.status,
           },
         expected: 'Enabled',
       },
@@ -116,7 +111,7 @@ describe('Filter, sort and pagination carriers', async () => {
             testIdentifier: 'filterByFreeShipping',
             filterType: 'select',
             filterBy: 'is_free',
-            filterValue: false,
+            filterValue: Carriers.lightCarrier.freeShipping,
           },
         expected: 'Disabled',
       },
@@ -126,7 +121,7 @@ describe('Filter, sort and pagination carriers', async () => {
             testIdentifier: 'filterByPosition',
             filterType: 'input',
             filterBy: 'a!position',
-            filterValue: Carriers[3].position,
+            filterValue: Carriers.lightCarrier.position,
           },
       },
     ];
@@ -172,13 +167,12 @@ describe('Filter, sort and pagination carriers', async () => {
           testIdentifier: 'sortByIdDesc', sortBy: 'id_carrier', sortDirection: 'down', isFloat: true,
         },
       },
-      /* Sort by name not working, skipping it
+      /* Sort by name not working, skipping it https://github.com/PrestaShop/PrestaShop/issues/21640
       {
         args: {
           testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'down',
         },
       },
-
       {
         args: {
           testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'up',
@@ -232,6 +226,8 @@ describe('Filter, sort and pagination carriers', async () => {
 
   creationTests.forEach((test, index) => {
     describe(`Create carrier n°${index + 1} in BO`, async () => {
+      before(() => files.generateImage(`todelete${index}.jpg`));
+
       const carrierData = new CarrierFaker({name: `todelete${index}`});
 
       it('should go to add new carrier page', async function () {
@@ -251,6 +247,8 @@ describe('Filter, sort and pagination carriers', async () => {
         const numberOfCarriersAfterCreation = await carriersPage.getNumberOfElementInGrid(page);
         await expect(numberOfCarriersAfterCreation).to.be.equal(numberOfCarriers + 1 + index);
       });
+
+      after(() => files.deleteFile(`todelete${index}.jpg`));
     });
   });
 

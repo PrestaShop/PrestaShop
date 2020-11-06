@@ -6,7 +6,7 @@ const common = require('./common.js');
  * by merging development specific configuration with the common one.
  */
 function devConfig() {
-  let dev = Object.assign(
+  const dev = Object.assign(
     common,
     {
       devtool: 'inline-source-map',
@@ -15,7 +15,7 @@ function devConfig() {
         contentBase: path.resolve(__dirname, '/../public'),
         publicPath: '/',
       },
-    }
+    },
   );
 
   return dev;

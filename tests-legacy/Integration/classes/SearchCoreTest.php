@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace LegacyTests\Unit\Classes;
+namespace LegacyTests\Integration\classes;
 
 use Configuration;
 use LegacyTests\TestCase\IntegrationTestCase;

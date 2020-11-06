@@ -70,7 +70,7 @@ class Currency implements CurrencyInterface
      *
      * @see https://www.iso.org/iso-4217-currency-codes.html
      *
-     * @var string
+     * @var int
      */
     protected $numericIsoCode;
 

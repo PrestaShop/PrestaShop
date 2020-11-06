@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartDeliverySett
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\InvalidGiftMessageException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CannotDeleteCartRuleException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
 use PrestaShopException;
 use Symfony\Component\Translation\TranslatorInterface;
 use Validate;
@@ -142,7 +143,7 @@ final class UpdateCartDeliverySettingsHandler extends AbstractCartHandler implem
         $freeShippingCartRule->reduction_currency = (int) $cart->id_currency;
         $freeShippingCartRule->date_from = date('Y-m-d H:i:s');
         $freeShippingCartRule->date_to = date('Y-m-d H:i:s', time() + 24 * 36000);
-        $freeShippingCartRule->active = 1;
+        $freeShippingCartRule->active = true;
         $freeShippingCartRule->add();
 
         return $freeShippingCartRule;

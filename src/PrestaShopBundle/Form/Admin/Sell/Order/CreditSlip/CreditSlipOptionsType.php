@@ -27,41 +27,33 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
+ * Backwards compatibility break introduced in 1.7.8.0 due to extension of TranslationAwareType instead of using translator as dependency.
+ *
  * Defines credit slips options form
  */
-final class CreditSlipOptionsType extends CommonAbstractType
+final class CreditSlipOptionsType extends TranslatorAwareType
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
-    }
-
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('slip_prefix', TranslatableType::class, [
+            'label' => $this->trans('Credit slip prefix', 'Admin.Orderscustomers.Feature'),
+            'help' => $this->trans('Prefix used for credit slips.', 'Admin.Orderscustomers.Help'),
             'required' => false,
             'error_bubbling' => true,
             'options' => [
                 'constraints' => [
                     new TypedRegex([
                         'type' => 'file_name',
-                        'message' => $this->translator->trans(
+                        'message' => $this->trans(
                             '%s is invalid.',
-                            [],
                             'Admin.Notifications.Error'
                         ),
                     ]),

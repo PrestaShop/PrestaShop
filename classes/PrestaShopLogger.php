@@ -29,6 +29,14 @@
  */
 class PrestaShopLoggerCore extends ObjectModel
 {
+    /**
+     * List of log level types.
+     */
+    const LOG_SEVERITY_LEVEL_INFORMATIVE = 1;
+    const LOG_SEVERITY_LEVEL_WARNING = 2;
+    const LOG_SEVERITY_LEVEL_ERROR = 3;
+    const LOG_SEVERITY_LEVEL_MAJOR = 4;
+
     /** @var int Log id */
     public $id_log;
 
@@ -47,7 +55,7 @@ class PrestaShopLoggerCore extends ObjectModel
     /** @var int Object ID */
     public $object_id;
 
-    /** @var int Object ID */
+    /** @var int Employee ID */
     public $id_employee;
 
     /** @var string Object creation date */

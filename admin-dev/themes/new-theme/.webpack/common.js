@@ -22,13 +22,14 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const cssExtractedFileName = 'theme';
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
+const bourbon = require('bourbon');
 
 module.exports = {
   externals: {
@@ -83,6 +84,9 @@ module.exports = {
     order_message_form: './js/pages/order_message/form',
     order_message: './js/pages/order_message',
     order_preferences: './js/pages/order-preferences',
+    order_states_form: './js/pages/order-states/form',
+    order_states: './js/pages/order-states',
+    order_return_states_form: './js/pages/order-return-states/form',
     order_view: './js/pages/order/view.js',
     payment_preferences: './js/pages/payment-preferences',
     product_page: './js/product-page/index',
@@ -98,12 +102,20 @@ module.exports = {
     translation_settings: './js/pages/translation-settings',
     translations: './js/app/pages/translations',
     webservice: './js/pages/webservice',
+    theme: './scss/theme.scss',
+    orders: './scss/pages/orders/orders.scss',
+    product: './scss/pages/product/product_page.scss',
+    product_catalog: './scss/pages/product/products_catalog.scss',
+    stock_page: './scss/pages/stock/stock_page.scss',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
     filename: '[name].bundle.js',
     libraryTarget: 'window',
     library: '[name]',
+
+    sourceMapFilename: '[name].[hash:8].map',
+    chunkFilename: '[id].[hash:8].js',
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],
@@ -123,16 +135,15 @@ module.exports = {
       {
         test: /\.js$/,
         include: path.resolve(__dirname, '../js'),
-        use: [{
-          loader: 'babel-loader',
-          options: {
-            presets: [
-              ['es2015', {modules: false}],
-              ['env', {'useBuiltIns': 'usage'}]
-            ],
-            'plugins': ['transform-runtime']
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: [['env', {useBuiltIns: 'usage', modules: false}]],
+              plugins: ['transform-object-rest-spread', 'transform-runtime'],
+            },
           },
-        }],
+        ],
       },
       {
         test: /jquery-ui\.js/,
@@ -172,52 +183,59 @@ module.exports = {
         loader: 'imports-loader?define=>false&exports=>false&this=>window',
       },
       {
+        test: /bootstrap-colorpicker\.js/,
+        loader: 'imports-loader?define=>false&exports=>false&this=>window',
+      },
+      {
         test: /jwerty\/jwerty\.js/,
         loader: 'imports-loader?this=>window&module=>false',
       },
       {
         test: /\.vue$/,
         loader: 'vue-loader',
-        options: {
-          loaders: {
-            js: 'babel-loader?presets[]=es2015&presets[]=stage-2',
-            css: 'postcss-loader',
-            scss: 'style-loader!css-loader!sass-loader',
-          },
-        },
       },
       {
         test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: ['css-loader'],
-        }),
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+          },
+          'css-loader',
+        ],
       },
       {
         test: /\.scss$/,
-        use: ExtractTextPlugin.extract({
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                minimize: true,
-                sourceMap: true,
+        include: /scss/,
+        exclude: /js/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: true,
+            },
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: true,
+            },
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true,
+              sassOptions: {
+                includePaths: [bourbon.includePaths],
               },
             },
-            {
-              loader: 'postcss-loader',
-              options: {
-                sourceMap: true,
-              },
-            },
-            {
-              loader: 'sass-loader',
-              options: {
-                sourceMap: true,
-              },
-            },
-          ],
-        }),
+          },
+        ],
+      },
+      {
+        test: /\.scss$/,
+        include: /js/,
+        use: ['vue-style-loader', 'css-loader', 'sass-loader'],
       },
       // FILES
       {
@@ -227,18 +245,17 @@ module.exports = {
     ],
   },
   plugins: [
-    new ExtractTextPlugin('theme.css'),
-    new CleanWebpackPlugin(['public'], {
-      root: path.resolve(__dirname, '../'),
-      exclude: ['theme.rtlfix']
+    new FixStyleOnlyEntriesPlugin(),
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: ['!theme.rtlfix'],
     }),
+    new MiniCssExtractPlugin({filename: '[name].css'}),
     new webpack.ProvidePlugin({
       moment: 'moment', // needed for bootstrap datetime picker
       $: 'jquery', // needed for jquery-ui
       jQuery: 'jquery',
     }),
-    new CopyPlugin([
-      { from: 'static' },
-    ])
+    new CopyPlugin([{from: 'static'}]),
+    new VueLoaderPlugin(),
   ],
 };

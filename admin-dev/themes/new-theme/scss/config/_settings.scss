@@ -1,14 +1,18 @@
+// Its not a library, no need default flag
+/* stylelint-disable scss/dollar-variable-default */
 // Colors
-
 $gray-dark-text: #bebebe;
 $gray-dark-title: #bbcdd1;
 $gray-dark-hover: #282b30;
 $background-grey: #eaebec;
-$gray-dark-text-hover: #ffffff;
-$gray-dark-divider: #eeeeee;
+$gray-dark-text-hover: #fff;
+$gray-dark-divider: #eee;
 $color-separator: #dfdfdf;
+$background-info: #dcf4f9;
 $purple: #34219e;
 $bright-status-text: #383838;
+$color-error: #c05c67 !default;
+$color-active: #25b9d7 !default;
 
 // Sizes
 
@@ -22,8 +26,8 @@ $header-mobile-padding-y: 0.625rem;
 // Imported from bootstrap
 
 $grid-gutter-width: 1.875rem;
-
 $border-radius: 0;
+$enable-transitions: true;
 
 //UI Kit variables - to be removed
 $gray-soft: #fafbfc;

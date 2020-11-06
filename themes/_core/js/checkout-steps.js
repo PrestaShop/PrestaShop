@@ -23,13 +23,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import $ from 'jquery';
+import prestashop from 'prestashop';
 
-const currentStepClass = 'js-current-step';
+const currentStepClass = prestashop.selectors.checkout.currentStep;
 const currentStepSelector = `.${currentStepClass}`;
 
 export default class Steps {
   constructor() {
-    this.$steps = $('.checkout-step');
+    this.$steps = $(prestashop.selectors.checkout.step);
     this.$steps.off('click');
 
     this.$clickableSteps = $(currentStepSelector).prevAll().andSelf();
@@ -47,7 +48,7 @@ export default class Steps {
   }
 
   static getClickedStep(event) {
-    return new Step($(event.target).closest('.checkout-step'));
+    return new Step($(event.target).closest(prestashop.selectors.checkout.step));
   }
 }
 
@@ -72,12 +73,12 @@ class Step {
   disableAllAfter() {
     const $nextSteps = this.$step.nextAll();
     $nextSteps.addClass('-unreachable').removeClass('-complete');
-    $('.step-title', $nextSteps).addClass('not-allowed');
+    $(prestashop.selectors.checkout.stepTitle, $nextSteps).addClass('not-allowed');
   }
 
   enableAllBefore() {
-    const $nextSteps = this.$step.nextAll('.checkout-step.-clickable');
+    const $nextSteps = this.$step.nextAll(prestashop.selectors.checkout.step + '.-clickable');
     $nextSteps.removeClass('-unreachable').addClass('-complete');
-    $('.step-title', $nextSteps).removeClass('not-allowed');
+    $(prestashop.selectors.checkout.stepTitle, $nextSteps).removeClass('not-allowed');
   }
 }

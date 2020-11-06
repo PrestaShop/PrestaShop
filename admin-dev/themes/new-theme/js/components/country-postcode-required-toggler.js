@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Toggle Postcode input requirement on country selection
@@ -69,7 +69,7 @@ export default class CountryPostcodeRequiredToggler {
   toggle() {
     $(this.countryPostcodeInputLabelDangerSelector).remove();
     this.$countryPostcodeInput.prop('required', false);
-    if (1 === parseInt($(this.countryInputSelectedSelector).attr('need_postcode'), 10)) {
+    if (parseInt($(this.countryInputSelectedSelector).attr('need_postcode'), 10) === 1) {
       this.$countryPostcodeInput.prop('required', true);
       this.$countryPostcodeInputLabel.prepend($('<span class="text-danger">*</span>'));
     }

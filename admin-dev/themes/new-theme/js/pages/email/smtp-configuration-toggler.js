@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class SmtpConfigurationToggler is responsible for showing/hiding SMTP configuration form
@@ -31,28 +31,10 @@ const $ = window.$;
 class SmtpConfigurationToggler {
   constructor() {
     $('.js-email-method').on('change', 'input[type="radio"]', (event) => {
-      const mailMethod = $(event.currentTarget).val();
+      const mailMethod = Number($(event.currentTarget).val());
 
-      this._getSmtpMailMethodOption() == mailMethod ? this._showSmtpConfiguration() : this._hideSmtpConfiguration();
+      $('.js-smtp-configuration').toggleClass('d-none', this.getSmtpMailMethodOption() !== mailMethod);
     });
-  }
-
-  /**
-   * Show SMTP configuration form
-   *
-   * @private
-   */
-  _showSmtpConfiguration() {
-    $('.js-smtp-configuration').removeClass('d-none');
-  }
-
-  /**
-   * Hide SMTP configuration
-   *
-   * @private
-   */
-  _hideSmtpConfiguration() {
-    $('.js-smtp-configuration').addClass('d-none');
   }
 
   /**
@@ -60,9 +42,9 @@ class SmtpConfigurationToggler {
    *
    * @private
    *
-   * @returns {String}
+   * @returns {Number}
    */
-  _getSmtpMailMethodOption() {
+  getSmtpMailMethodOption() {
     return $('.js-email-method').data('smtp-mail-method');
   }
 }

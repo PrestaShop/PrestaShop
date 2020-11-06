@@ -4,6 +4,9 @@
 *.log
 npm-debug.log.*
 .sass-cache/
+*.swp
+*.swo
+.cache/
 
 # Cache
 /cache/*
@@ -31,6 +34,7 @@ npm-debug.log.*
 !/img/.htaccess
 !/img/index.php
 !/img/404.gif
+!/img/app_icon.png
 !/img/bg_500.png
 !/img/bg_loader.png
 !/img/favicon.ico
@@ -51,11 +55,14 @@ npm-debug.log.*
 !/img/c/index.php
 !/img/cms/index.php
 !/img/co/index.php
+!/img/e/index.php
 !/img/jquery-ui
 !/img/l/index.php
 !/img/m/index.php
 !/img/os/index.php
 !/img/p/index.php
+!/img/pr/index.php
+!/img/pr/default.jpg
 !/img/s/index.php
 !/img/scenes
 !/img/st/index.php
@@ -70,7 +77,6 @@ npm-debug.log.*
 
 /vendor/*
 /docs/phpdoc-sf/
-/composer.lock
 *.hot-update.js
 *.hot-update.json
 
@@ -103,10 +109,17 @@ tests-legacy/resources/modules/referralprogram/
 /admin-dev/themes/default/css/vendor/nv.d3_rtl.css
 /admin-dev/themes/default/css/vendor/titatoggle-min_rtl.css
 /admin-dev/themes/default/public/theme_rtl.css
+/admin-dev/themes/default/public/*
 /admin-dev/themes/new-theme/css/module/drop_rtl.css
 /admin-dev/themes/new-theme/css/right-sidebar_rtl.css
+/admin-dev/themes/new-theme/public/*
+!/admin-dev/themes/new-theme/public/theme.rtlfix
+!/admin-dev/themes/default/public/theme.rtlfix
 
 themes/*/cache/*
+themes/core.js.map
+themes/core.js
+
 
 # Config
 
@@ -126,6 +139,7 @@ modules/*
 override/*
 themes/*/
 !themes/classic
+themes/classic/assets
 !themes/_core
 !themes/_libraries
 themes/classic/assets/css/*_rtl.css
@@ -289,8 +303,7 @@ crashlytics.properties
 crashlytics-build.properties
 
 ### NetBeans ###
-nbproject/private/
-/build/
+nbproject/
 nbbuild/
 dist/
 nbdist/

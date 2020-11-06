@@ -49,6 +49,6 @@ export default class PostSizeChecker {
    * @returns {number}
    */
   getRequiredPostSizeInMegabytes(requiredPostSize) {
-    return parseInt(requiredPostSize / (1024 * 1024));
+    return parseInt(requiredPostSize / (1024 * 1024), 10);
   }
 }

@@ -39,6 +39,7 @@ use Exception;
 use Language;
 use Message;
 use Module;
+use PaymentModule;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddOrderFromBackOfficeHandlerInterface;
@@ -70,6 +71,7 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
      */
     public function handle(AddOrderFromBackOfficeCommand $command)
     {
+        /** @var PaymentModule $paymentModule */
         $paymentModule = !Configuration::get('PS_CATALOG_MODE') ?
             Module::getInstanceByName($command->getPaymentModuleName()) :
             new BoOrderCore();
@@ -120,7 +122,7 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
         } catch (Exception $e) {
             throw new OrderException('Failed to add order. ' . $e->getMessage(), 0, $e);
         } finally {
-            $this->contextStateManager->restoreContext();
+            $this->contextStateManager->restorePreviousContext();
         }
 
         if (!$paymentModule->currentOrder) {

@@ -61,8 +61,7 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
 
             SharedStorage::getStorage()->set($reference, new Meta($metaId->getValue()));
         } catch (Exception $exception) {
-            $this->lastException = $exception;
-            $this->lastErrorCode = $exception->getCode();
+            $this->setLastException($exception);
         }
     }
 
@@ -80,8 +79,7 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
 
             SharedStorage::getStorage()->set("editable_{$reference}", $editableMeta);
         } catch (Exception $exception) {
-            $this->lastException = $exception;
-            $this->lastErrorCode = $exception->getCode();
+            $this->setLastException($exception);
         }
     }
 
@@ -101,8 +99,7 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
 
             SharedStorage::getStorage()->set($reference, new Meta((int) $data['metaId']));
         } catch (Exception $exception) {
-            $this->lastException = $exception;
-            $this->lastErrorCode = $exception->getCode();
+            $this->setLastException($exception);
         }
     }
 
@@ -121,8 +118,7 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
         try {
             $this->getCommandBus()->handle($command);
         } catch (Exception $exception) {
-            $this->lastException = $exception;
-            $this->lastErrorCode = $exception->getCode();
+            $this->setLastException($exception);
         }
     }
 
@@ -141,8 +137,7 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
         try {
             $this->getCommandBus()->handle($command);
         } catch (Exception $exception) {
-            $this->lastException = $exception;
-            $this->lastErrorCode = $exception->getCode();
+            $this->setLastException($exception);
         }
     }
 

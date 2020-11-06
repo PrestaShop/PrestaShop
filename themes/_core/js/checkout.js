@@ -24,10 +24,10 @@
  */
 import $ from 'jquery';
 import prestashop from 'prestashop';
-import setUpAddress from './checkout-address'
-import setUpDelivery from './checkout-delivery'
-import setUpPayment from './checkout-payment'
-import Steps from './checkout-steps'
+import setUpAddress from './checkout-address';
+import setUpDelivery from './checkout-delivery';
+import setUpPayment from './checkout-payment';
+import Steps from './checkout-steps';
 
 function setUpCheckout() {
   setUpAddress();
@@ -42,25 +42,23 @@ function handleCheckoutStepChange() {
   const steps = new Steps();
   const clickableSteps = steps.getClickableSteps();
 
-  clickableSteps.on(
-    'click',
-    (event) => {
-      const clickedStep = Steps.getClickedStep(event);
-      if (!clickedStep.isUnreachable()) {
-        steps.makeCurrent(clickedStep);
-        if (clickedStep.hasContinueButton()) {
-          clickedStep.disableAllAfter();
-        } else {
-          clickedStep.enableAllBefore();
-        }
+  clickableSteps.on('click', (event) => {
+    const clickedStep = Steps.getClickedStep(event);
+    if (!clickedStep.isUnreachable()) {
+      steps.makeCurrent(clickedStep);
+      if (clickedStep.hasContinueButton()) {
+        clickedStep.disableAllAfter();
+      } else {
+        clickedStep.enableAllBefore();
       }
-      prestashop.emit('changedCheckoutStep', {event});
-    });
+    }
+    prestashop.emit('changedCheckoutStep', {event});
+  });
 }
 
 function handleSubmitButton() {
   // prevents rage clicking on submit button and related issues
-  const formSelector = '.checkout-step form';
+  const formSelector = prestashop.selectors.checkout.form;
   $(formSelector).submit(function (e) {
     if ($(this).data('disabled') === true) {
       e.preventDefault();

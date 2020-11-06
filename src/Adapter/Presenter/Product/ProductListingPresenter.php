@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 
+use Hook;
 use Language;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 
@@ -45,7 +46,7 @@ class ProductListingPresenter extends ProductPresenter
         array $product,
         Language $language
     ) {
-        return new ProductListingLazyArray(
+        $productListingLazyArray = new ProductListingLazyArray(
             $settings,
             $product,
             $language,
@@ -55,5 +56,11 @@ class ProductListingPresenter extends ProductPresenter
             $this->productColorsRetriever,
             $this->translator
         );
+
+        Hook::exec('actionPresentProductListing',
+            ['presentedProduct' => &$productListingLazyArray]
+        );
+
+        return $productListingLazyArray;
     }
 }

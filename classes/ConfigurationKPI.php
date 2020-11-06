@@ -126,7 +126,7 @@ class ConfigurationKPICore extends Configuration
     public static function getInt($key, $idShopGroup = null, $idShop = null)
     {
         ConfigurationKPI::setKpiDefinition();
-        $values = parent::getInt($key, $idShopGroup, $idShop);
+        $values = parent::getConfigInMultipleLangs($key, $idShopGroup, $idShop);
         ConfigurationKPI::unsetKpiDefinition();
 
         return $values;

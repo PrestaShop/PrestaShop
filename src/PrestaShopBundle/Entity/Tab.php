@@ -109,7 +109,7 @@ class Tab
     private $icon;
 
     /**
-     * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\TabLang", mappedBy="tab")
+     * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\TabLang", mappedBy="id")
      */
     private $tabLangs;
 

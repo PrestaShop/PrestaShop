@@ -41,6 +41,11 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  */
 class TypedRegexValidator extends ConstraintValidator
 {
+    const CATALOG_CHARS = '<>;=#{}';
+    const GENERIC_NAME_CHARS = '<>={}';
+    const MESSAGE_CHARS = '<>{}';
+    const NAME_CHARS = '0-9!<>,;?=+()@#"�{}_$%:';
+
     /**
      * @var CharacterCleaner
      */
@@ -138,11 +143,11 @@ class TypedRegexValidator extends ConstraintValidator
      * matches given subject, 0 if it does not, or FALSE
      * if an error occurred.
      *
-     * @param $pattern
-     * @param $type
-     * @param $value
+     * @param string $pattern
+     * @param string $type
+     * @param string $value
      *
-     * @return false|int
+     * @return bool|int
      */
     private function match($pattern, $type, $value)
     {

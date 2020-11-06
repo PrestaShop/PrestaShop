@@ -152,7 +152,7 @@ class LogsController extends FrameworkBundleAdminController
     /**
      * @return FormHandlerInterface the form handler to set the severity level
      */
-    private function getFormHandler()
+    private function getFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.adapter.logs.form_handler');
     }

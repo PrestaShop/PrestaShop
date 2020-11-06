@@ -43,6 +43,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
             $this->session->shop_name = trim(Tools::getValue('shop_name'));
             $this->session->shop_activity = Tools::getValue('shop_activity');
             $this->session->install_type = Tools::getValue('db_mode');
+            $this->session->enable_ssl = Tools::getValue('enable_ssl');
             $this->session->shop_country = Tools::getValue('shop_country');
             $this->session->shop_timezone = Tools::getValue('shop_timezone');
 

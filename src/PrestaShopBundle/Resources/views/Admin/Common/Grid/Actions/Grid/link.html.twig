@@ -25,7 +25,10 @@
 
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
-<a href="{{ path(action.options.route, action.options.route_params) }}" class="dropdown-item">
+<a id="{{ grid.id }}-grid-action-{{ action.id }}"
+   href="{{ path(action.options.route, action.options.route_params) }}"
+   class="dropdown-item"
+>
   {% if action.icon is not empty %}
     <i class="material-icons">{{ action.icon }}</i>
   {% endif %}

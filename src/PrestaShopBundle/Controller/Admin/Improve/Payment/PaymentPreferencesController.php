@@ -115,7 +115,7 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
     /**
      * @return FormHandlerInterface
      */
-    private function getPaymentPreferencesFormHandler()
+    private function getPaymentPreferencesFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.admin.payment_preferences.form_handler');
     }

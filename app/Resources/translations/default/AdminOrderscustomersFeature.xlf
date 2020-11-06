@@ -456,15 +456,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="0fe067d5d05655a4c80602c1d6e7d0c5">
-        <source>Gift message</source>
-        <target>Gift message</target>
-        <note>Line: 1482</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/default/template/controllers/orders/helpers/list/list_header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="10ea517069300c23c17f113a3d084c57">
@@ -1017,12 +1008,12 @@ Best regards,</target>
       </trans-unit>
     </body>
   </file>
-  <file original="src/Adapter/Cart/CommandHandler/SetFreeShippingToCartHandler.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Adapter/Cart/CommandHandler/UpdateCartDeliverySettingsHandler.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="b00b85425e74ed2c85dc3119b78ff2c3">
         <source>Free Shipping</source>
         <target>Free Shipping</target>
-        <note>Line: 124</note>
+        <note>Line: 132</note>
       </trans-unit>
     </body>
   </file>
@@ -1118,12 +1109,12 @@ Best regards,</target>
       <trans-unit id="c12a553ab6ad810580afa3f07aa9f51f">
         <source>not paid</source>
         <target>not paid</target>
-        <note>Line: 384</note>
+        <note>Line: 383</note>
       </trans-unit>
       <trans-unit id="8d4ac0e8c6f5900930ddfccd45d10abf">
         <source>overpaid</source>
         <target>overpaid</target>
-        <note>Line: 390</note>
+        <note>Line: 389</note>
       </trans-unit>
     </body>
   </file>
@@ -1215,12 +1206,12 @@ Best regards,</target>
       <trans-unit id="e5d61db40a917c78a9d8e821dd0dd8de">
         <source>Add new order</source>
         <target>Add new order</target>
-        <note>Line: 164</note>
+        <note>Line: 167</note>
       </trans-unit>
       <trans-unit id="7442e29d7d53e549b78d93c46b8cdcfc">
         <source>Orders</source>
         <target>Orders</target>
-        <note>Line: 498</note>
+        <note>Line: 509</note>
       </trans-unit>
     </body>
   </file>
@@ -1866,11 +1857,6 @@ Best regards,</target>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/Create/cart.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="0d9175fe89fb80d815e7d03698b6e83a">
-        <source>Gift</source>
-        <target>Gift</target>
-        <note>Line: 238</note>
-      </trans-unit>
       <trans-unit id="a85eba4c6c699122b2bb1387ea4813ad">
         <source>Cart</source>
         <target>Cart</target>
@@ -1943,6 +1929,16 @@ Best regards,</target>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/Create/shipping.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="0fe067d5d05655a4c80602c1d6e7d0c5">
+        <source>Gift message</source>
+        <target>Gift message</target>
+        <note>Line: 106</note>
+      </trans-unit>
+      <trans-unit id="0d9175fe89fb80d815e7d03698b6e83a">
+        <source>Gift</source>
+        <target>Gift</target>
+        <note>Line: 87</note>
+      </trans-unit>
       <trans-unit id="19dfe063714422004b75043eaf74c9b8">
         <source>Delivery option</source>
         <target>Delivery option</target>
@@ -1952,6 +1948,11 @@ Best regards,</target>
         <source>Shipping price (Tax incl.)</source>
         <target>Shipping price (Tax incl.)</target>
         <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="1a747e98fba823d6be62189cbac46dcb">
+        <source>Recycled packaging</source>
+        <target>Recycled packaging</target>
+        <note>Line: 71</note>
       </trans-unit>
     </body>
   </file>
@@ -2297,11 +2298,6 @@ Best regards,</target>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/shipping.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="1a747e98fba823d6be62189cbac46dcb">
-        <source>Recycled packaging</source>
-        <target>Recycled packaging</target>
-        <note>Line: 91</note>
-      </trans-unit>
       <trans-unit id="484f5a79672cebe198ebdde45a1d672f">
         <source>Gift wrapping</source>
         <target>Gift wrapping</target>
