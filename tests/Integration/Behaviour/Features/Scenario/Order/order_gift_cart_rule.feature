@@ -1016,3 +1016,57 @@ Feature: Order from Back Office (BO)
       | total_price_tax_excl        | 30.00 |
     And order "bo_order1" should have cart rule "AutoGiftCartRule" with amount "$15.00"
     And the available stock for product "Test Product Gifted" should be 98
+
+  Scenario: I add the product with associated gift when the cart already has the gift, and the gift product quantity in stock before cart rule applies is 1
+    Given there is a product in the catalog named "product triggering gift" with a price of 12.0 and 100 items in stock
+    Given there is a product in the catalog named "gifted product" with a price of 15.0 and 2 items in stock
+    And there is a cart rule named "GiftAutoCartRule" that applies an amount discount of 1.0 with priority 1, quantity of 100 and quantity per user 100
+    And cart rule "GiftAutoCartRule" has no discount code
+    And cart rule "GiftAutoCartRule" is restricted to product "product triggering gift"
+    And cart rule "GiftAutoCartRule" offers free shipping
+    And cart rule "GiftAutoCartRule" offers a gift product "gifted product"
+    And I add 1 products "gifted product" to the cart "dummy_cart"
+    Given I add order "bo_order1" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    Then order "bo_order1" should have 3 products in total
+    And order "bo_order1" should have 0 invoice
+    And the available stock for product "gifted product" should be 1
+    And order "bo_order1" should have following details:
+      | total_products           | 38.800 |
+      | total_products_wt        | 41.130 |
+      | total_discounts_tax_excl | 0.00   |
+      | total_discounts_tax_incl | 0.00   |
+      | total_paid_tax_excl      | 45.800 |
+      | total_paid_tax_incl      | 48.550 |
+      | total_paid               | 48.550 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | product triggering gift  |
+      | amount        | 1                        |
+      | price         | 12.0                     |
+    Then order "bo_order1" should have 5 products in total
+    And the available stock for product "gifted product" should be 0
+    And product "gifted product" in order "bo_order1" has following details:
+      | product_quantity            | 2     |
+      | product_price               | 15.00 |
+      | unit_price_tax_incl         | 15.90 |
+      | unit_price_tax_excl         | 15.00 |
+      | total_price_tax_incl        | 31.80 |
+      | total_price_tax_excl        | 30.00 |
+    And order "bo_order1" should have following details:
+      | total_products           | 65.800 |
+      | total_products_wt        | 69.750 |
+      | total_discounts_tax_excl | 23.000 |
+      | total_discounts_tax_incl | 24.380 |
+      | total_paid_tax_excl      | 49.800 |
+      | total_paid_tax_incl      | 52.790 |
+      | total_paid               | 52.790 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+
