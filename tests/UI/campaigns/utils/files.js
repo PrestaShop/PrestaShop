@@ -162,16 +162,4 @@ module.exports = {
       if (err) throw err;
     });
   },
-
-  /**
-   * Rename files
-   * @param oldPath
-   * @param newPath
-   * @return {Promise<void>}
-   */
-  async renameFile(oldPath, newPath) {
-    await fs.rename(oldPath, newPath, (err) => {
-      if (err) throw err;
-    });
-  },
 };

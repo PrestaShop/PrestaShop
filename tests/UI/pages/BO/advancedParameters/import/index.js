@@ -5,7 +5,10 @@ class Import extends BOBasePage {
   constructor() {
     super();
 
+
     this.pageTitle = 'Import • ';
+    this.importModalTitle = 'Importing your data...';
+    this.importPanelTitle = 'Match your data';
 
     // Selectors
     this.downloadSampleFileLink = type => `a[href*='import/sample/download/${type}']`;
@@ -39,7 +42,7 @@ class Import extends BOBasePage {
   }
 
   /**
-   * Select the type of the file and add the upload it
+   * Select the type of the file and upload the sample file
    * @param page
    * @param dropdownValue
    * @param filePath

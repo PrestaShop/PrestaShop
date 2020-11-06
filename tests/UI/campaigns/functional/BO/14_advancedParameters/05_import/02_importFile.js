@@ -12,6 +12,10 @@ const dashboardPage = require('@pages/BO/dashboard');
 const importPage = require('@pages/BO/advancedParameters/import');
 const customersPage = require('@pages/BO/customers');
 
+// Import Data
+const {SampleFiles} = require('@data/demo/sampleFiles');
+const {ImportedCustomer} = require('@data/demo/customer');
+
 // Import test context
 const testContext = require('@utils/testContext');
 
@@ -23,19 +27,8 @@ let page;
 
 // Variable Used in the download / rename / upload test
 let sampleFilePath;
-const sampleFile = {
-  args:
-    {
-      dropdownValue: 'Customers',
-      type: 'customers_import',
-    },
-};
-const newPath = `./${sampleFile.args.type}.csv`;
 
-// Variables used for assertions
-const importModalTitle = 'Importing your data...';
-const importPanelTitle = 'Match your data';
-const emailToCheck = 'Tiger.Lily@prestashop.com';
+const renamedSampleFilePath = `./${SampleFiles.customers.name}.csv`;
 
 /*
 Go to the import page
@@ -44,7 +37,7 @@ Import the customer sample file
 Go to customers page
 Check import success
  */
-describe('Import customers.csv file', async () => {
+describe('Import customers', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -53,7 +46,7 @@ describe('Import customers.csv file', async () => {
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
-    await files.deleteFile(newPath);
+    await files.deleteFile(renamedSampleFilePath);
   });
 
   it('should login in BO', async function () {
@@ -75,37 +68,41 @@ describe('Import customers.csv file', async () => {
     await expect(pageTitle).to.contains(importPage.pageTitle);
   });
 
-  it(`should download ${sampleFile.args.type} sample file`, async function () {
+  it(`should download ${SampleFiles.customers.name} sample file`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'downloadFile', baseContext);
 
-    sampleFilePath = await importPage.downloadSampleFile(page, sampleFile.args.type);
+    sampleFilePath = await importPage.downloadSampleFile(page, SampleFiles.customers.name);
 
     const doesFileExist = await files.doesFileExist(sampleFilePath);
-    await expect(doesFileExist, `${sampleFile.args.type} sample file was not downloaded`).to.be.true;
+    await expect(doesFileExist, `${SampleFiles.customers.name} sample file was not downloaded`).to.be.true;
   });
 
   describe('Import file', async () => {
-    it(`should upload ${sampleFile.args.type} sample text file`, async function () {
+    it(`should upload ${SampleFiles.customers.name} sample text file`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'importFile', baseContext);
 
-      await files.renameFile(sampleFilePath, newPath);
+      await files.renameFile(sampleFilePath, renamedSampleFilePath);
 
-      const uploadSuccessText = await importPage.uploadSampleFile(page, sampleFile.args.dropdownValue, newPath);
-      await expect(uploadSuccessText).contain(sampleFile.args.type);
+      const uploadSuccessText = await importPage.uploadSampleFile(
+        page,
+        SampleFiles.customers.dropdownValue,
+        renamedSampleFilePath,
+      );
+      await expect(uploadSuccessText).contain(SampleFiles.customers.name);
     });
 
     it('should go to next import file step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'nextStep', baseContext);
 
       const panelTitle = await importPage.goToImportNextStep(page);
-      await expect(panelTitle).contain(importPanelTitle);
+      await expect(panelTitle).contain(importPage.importPanelTitle);
     });
 
     it('should start import file', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'confirmImport', baseContext);
 
       const modalTitle = await importPage.startFileImport(page);
-      await expect(modalTitle).contain(importModalTitle);
+      await expect(modalTitle).contain(importPage.importModalTitle);
     });
 
     it('should close import progress modal', async function () {
@@ -132,11 +129,27 @@ describe('Import customers.csv file', async () => {
       await expect(pageTitle).to.contains(customersPage.pageTitle);
     });
 
+    it('should filter list by email', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToCheckImportedCustomer', baseContext);
+
+      await customersPage.resetFilter(page);
+
+      await customersPage.filterCustomers(
+        page,
+        'input',
+        'email',
+        ImportedCustomer.email,
+      );
+
+      const textEmail = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
+      await expect(textEmail).to.contains(ImportedCustomer.email);
+    });
+
     it('should check import success', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkImportSuccess', baseContext);
 
       const customersEmailList = await customersPage.getAllRowsColumnContent(page, 'email');
-      await expect(customersEmailList).contain(emailToCheck);
+      await expect(customersEmailList).contain(ImportedCustomer.email);
     });
   });
 });
