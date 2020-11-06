@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Image\Exception\ImageException;
 
 class UploadedImageConstraintException extends ImageException
 {
-    const EXCEEDED_SIZE = 1;
-    const UNRECOGNIZED_FORMAT = 2;
-    const UNKNOWN_ERROR = 4;
+    public const EXCEEDED_SIZE = 1;
+    public const UNRECOGNIZED_FORMAT = 2;
+    public const UNKNOWN_ERROR = 4;
 }

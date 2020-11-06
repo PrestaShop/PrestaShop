@@ -36,6 +36,12 @@ use Symfony\Component\Filesystem\Filesystem;
 class ResourceResetter
 {
     /**
+     * Name for directory of test images in system tmp dir
+     */
+    public const BACKUP_TEST_IMG_DIR = 'ps_backup_test_img';
+    public const BACKUP_TEST_DOWNLOADS_DIR = 'ps_backup_test_download';
+
+    /**
      * @var Filesystem|null
      */
     private $filesystem;
@@ -56,12 +62,6 @@ class ResourceResetter
         $this->filesystem = $filesystem ?: new Filesystem();
         $this->backupRootDir = $backupRootDir ?: sys_get_temp_dir();
     }
-
-    /**
-     * Name for directory of test images in system tmp dir
-     */
-    const BACKUP_TEST_IMG_DIR = 'ps_backup_test_img';
-    const BACKUP_TEST_DOWNLOADS_DIR = 'ps_backup_test_download';
 
     /**
      * Backs up test images directory to allow resetting their original state later in tests

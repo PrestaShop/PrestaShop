@@ -38,7 +38,7 @@ class DummyFileUploader
     /**
      * Prefix for temporary files that are used as a replacement for http upload
      */
-    const UPLOADED_TMP_FILE_PREFIX = 'ps_upload_test_';
+    public const UPLOADED_TMP_FILE_PREFIX = 'ps_upload_test_';
 
     /**
      * Uploads dummy file to temporary dir to mimic http file upload
