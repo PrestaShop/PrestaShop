@@ -24,49 +24,23 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
+namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\NoTagsValidator;
+use Symfony\Component\Validator\Constraint;
 
 /**
- * Class is responsible of managing the data manipulated using invoice options form
- * in "Sell > Orders > Invoices" page.
+ * Validation constraint for address DNI according to the country value and fields requirement
  */
-final class InvoiceOptionsDataProvider implements FormDataProviderInterface
+class NoTags extends Constraint
 {
-    /**
-     * @var DataConfigurationInterface
-     */
-    private $invoiceOptionsConfiguration;
-
-    /**
-     * @var int
-     */
-    private $nextInvoiceNumber;
-
-    /**
-     * @param DataConfigurationInterface $invoiceOptionsConfiguration
-     */
-    public function __construct(
-        DataConfigurationInterface $invoiceOptionsConfiguration
-    ) {
-        $this->invoiceOptionsConfiguration = $invoiceOptionsConfiguration;
-    }
+    public $message = 'Field must not contain HTML or PHP tags';
 
     /**
      * {@inheritdoc}
      */
-    public function getData()
+    public function validatedBy()
     {
-        return $this->invoiceOptionsConfiguration->getConfiguration();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setData(array $data)
-    {
-        return $this->invoiceOptionsConfiguration->updateConfiguration($data);
+        return NoTagsValidator::class;
     }
 }

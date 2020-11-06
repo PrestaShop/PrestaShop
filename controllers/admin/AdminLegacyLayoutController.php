@@ -100,6 +100,10 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $this->useRegularH1Structure = $useRegularH1Structure;
     }
 
+    public function postProcess()
+    {
+    }
+
     /**
      * This helps avoiding handling legacy processes when in Symfony Controllers.
      * Otherwise when using POST action to render form you sometimes get an exception.
