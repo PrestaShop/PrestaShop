@@ -34,9 +34,14 @@ use RuntimeException;
 final class DateTime
 {
     /**
-     * Default format for date time string
+     * Default format for date string
      */
     public const DEFAULT_DATE_FORMAT = 'Y-m-d';
+
+    /**
+     * Default format for date time string
+     */
+    public const DEFAULT_FORMAT = 'Y-m-d H:i:s';
 
     /**
      * DateTime value which should be considered same as null
