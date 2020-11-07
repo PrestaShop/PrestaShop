@@ -245,3 +245,14 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerServiceOrderMessagesChoiceProvider'
     arguments:
       - '@=service("prestashop.adapter.order_message.order_message_provider").getMessages()'
+
+  prestashop.core.form.choice_provider.image_type_category:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImageTypeCategoryChoiceProvider'
+    arguments:
+      - '@prestashop.adapter.image_type.data_provider'
+      - '@translator'
+
+  prestashop.core.form.choice_provider.image_type_formats:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImageTypeFormatsChoiceProvider'
+    arguments:
+      - '@prestashop.adapter.image_type.data_provider.formats'
