@@ -1412,7 +1412,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         if (
             isset($this->context->cookie->last_visited_category) &&
             (int) $this->context->cookie->last_visited_category &&
-            strncmp($this->context->link->getProductLink($id_object), $previousPageLink, strlen($this->context->link->getCategoryLink($id_object))) === 0
+            strncmp($this->context->link->getProductLink($id_object), $previousPageLink, strlen($this->context->link->getProductLink($id_object))) === 0
         ) {
             return (int) $this->context->cookie->last_visited_category;
         }
