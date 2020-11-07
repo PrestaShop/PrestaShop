@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\File\Uploader\VirtualProductFileUploader;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\CommandHandler\AddVirtualProductFileHandlerInterface;
 
@@ -37,10 +38,27 @@ use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\CommandHandler\
 final class AddVirtualProductFileHandler implements AddVirtualProductFileHandlerInterface
 {
     /**
+     * @var VirtualProductFileUploader
+     */
+    private $virtualProductFileUploader;
+
+    /**
+     * @param VirtualProductFileUploader $virtualProductFileUploader
+     */
+    public function __construct(
+        VirtualProductFileUploader $virtualProductFileUploader
+    ) {
+        $this->virtualProductFileUploader = $virtualProductFileUploader;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(AddVirtualProductFileCommand $command): void
     {
-        // TODO: Implement handle() method.
+        $uploadedFilePath = $this->virtualProductFileUploader->upload($command->getFilePath());
+        $fileName = pathinfo($uploadedFilePath, PATHINFO_FILENAME);
+
+        //@todo: repository->add() ProductDownload.
     }
 }
