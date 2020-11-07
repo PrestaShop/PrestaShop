@@ -277,3 +277,14 @@ services:
       class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomizationFieldTypeChoiceProvider'
       arguments:
           - '@translator'
+
+  prestashop.core.form.choice_provider.image_type_category:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImageTypeCategoryChoiceProvider'
+    arguments:
+      - '@prestashop.adapter.image_type.data_provider'
+      - '@translator'
+
+  prestashop.core.form.choice_provider.image_type_formats:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImageTypeFormatsChoiceProvider'
+    arguments:
+      - '@prestashop.adapter.image_type.data_provider.formats'
