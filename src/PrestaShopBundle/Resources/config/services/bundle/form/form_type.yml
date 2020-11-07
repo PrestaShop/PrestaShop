@@ -1430,3 +1430,13 @@ services:
         - '@=service("prestashop.adapter.multistore_feature").isUsed()'
       tags:
         - { name: form.type }
+
+    form.type.improve.design.image_settings.thumbnail_regeneration_type:
+      class: 'PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\ThumbnailRegenerationType'
+      parent: 'form.type.translatable.aware'
+      public: true
+      arguments:
+        - '@prestashop.core.form.choice_provider.image_type_category'
+        - '@prestashop.core.form.choice_provider.image_type_formats'
+      tags:
+        - { name: form.type }
