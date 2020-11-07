@@ -62,6 +62,11 @@ class VirtualProductFileUploader
 
         $destination = _PS_DOWNLOAD_DIR_ . ProductDownload::getNewFilename();
 
+        //@todo: doesnt delete the source file
+        //  in handler scope we cannot ensure that provided path is tmp folder.
+        //  however it introduces issue that file copy will remain in system unless its deleted by gc
+        //  or we don't care and simply use `rename` instead?
+        //  same applies to images https://github.com/PrestaShop/PrestaShop/pull/21510#discussion_r519169510
         if (!copy($filePath, $destination)) {
             throw new FileUploadException(sprintf(
                 'Failed to copy file from "%s" to "%s"', $filePath, $destination

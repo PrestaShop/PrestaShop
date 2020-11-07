@@ -29,11 +29,15 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\File\Uploader\VirtualProductFileUploader;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductDownloadRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\CommandHandler\AddVirtualProductFileHandlerInterface;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
+use ProductDownload;
 
 /**
- * Handles @see AddVirtualProductFileCommand
+ * Handles @see AddVirtualProductFileCommand using legacy object model
  */
 final class AddVirtualProductFileHandler implements AddVirtualProductFileHandlerInterface
 {
@@ -43,12 +47,28 @@ final class AddVirtualProductFileHandler implements AddVirtualProductFileHandler
     private $virtualProductFileUploader;
 
     /**
+     * @var ProductDownloadRepository
+     */
+    private $productDownloadRepository;
+
+    /**
+     * @var ProductRepository
+     */
+    private $productRepository;
+
+    /**
      * @param VirtualProductFileUploader $virtualProductFileUploader
+     * @param ProductDownloadRepository $productDownloadRepository
+     * @param ProductRepository $productRepository
      */
     public function __construct(
-        VirtualProductFileUploader $virtualProductFileUploader
+        VirtualProductFileUploader $virtualProductFileUploader,
+        ProductDownloadRepository $productDownloadRepository,
+        ProductRepository $productRepository
     ) {
         $this->virtualProductFileUploader = $virtualProductFileUploader;
+        $this->productDownloadRepository = $productDownloadRepository;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -56,9 +76,32 @@ final class AddVirtualProductFileHandler implements AddVirtualProductFileHandler
      */
     public function handle(AddVirtualProductFileCommand $command): void
     {
+        $this->productRepository->assertProductExists($command->getProductId());
         $uploadedFilePath = $this->virtualProductFileUploader->upload($command->getFilePath());
-        $fileName = pathinfo($uploadedFilePath, PATHINFO_FILENAME);
+        $productDownload = $this->buildObjectModel($command, pathinfo($uploadedFilePath, PATHINFO_FILENAME));
 
-        //@todo: repository->add() ProductDownload.
+        $this->productDownloadRepository->add($productDownload);
+    }
+
+    /**
+     * @param AddVirtualProductFileCommand $command
+     * @param string $uploadedFileName
+     *
+     * @return ProductDownload
+     */
+    private function buildObjectModel(AddVirtualProductFileCommand $command, string $uploadedFileName): ProductDownload
+    {
+        $productDownload = new ProductDownload();
+        $productDownload->id_product = $command->getProductId()->getValue();
+        $productDownload->display_filename = $command->getDisplayName();
+        $productDownload->filename = $uploadedFileName;
+        $productDownload->nb_days_accessible = $command->getAccessDays() ?: 0;
+        $productDownload->nb_downloadable = $command->getDownloadTimesLimit() ?: 0;
+        $productDownload->date_expiration = $command->getExpirationDate() ?
+            $command->getExpirationDate()->format(DateTime::DEFAULT_FORMAT) :
+            null
+        ;
+
+        return $productDownload;
     }
 }
