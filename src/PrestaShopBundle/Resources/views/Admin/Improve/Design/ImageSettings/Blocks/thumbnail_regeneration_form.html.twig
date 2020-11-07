@@ -1,0 +1,61 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% form_theme thumbnailRegenerationForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+
+{{ form_start(thumbnailRegenerationForm, {'action': path('admin_image_settings_regenerate_thumbnails')}) }}
+<div class="card">
+  <div class="card-header">
+    <i class="material-icons">image</i>
+    {{ 'Regenerate thumbnails'|trans({}, 'Admin.Design.Feature') }}
+  </div>
+
+  <div class="card-block">
+    <div class="alert alert-warning">
+      <div class="alert-text">
+        {{ 'Be careful! Depending on the options selected, former manually uploaded thumbnails might be erased and replaced by automatically generated thumbnails.'|trans({}, 'Admin.Design.Notification') }}
+        {{ 'Also, regenerating thumbnails for all existing images can take several minutes, please be patient.'|trans({}, 'Admin.Design.Notification') }}
+      </div>
+    </div>
+  </div>
+
+  <div class="card-text">
+    {{ form_errors(thumbnailRegenerationForm) }}
+
+    {% block thumbnail_regeneration_form_widget %}
+      {{ form_widget(thumbnailRegenerationForm) }}
+    {% endblock %}
+  </div>
+
+  <div class="card-footer">
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-primary" onclick="return confirm({{ 'Are you sure?'|trans({}, 'Admin.Notifications.Warning') }});">
+        {{ 'Regenerate thumbnails'|trans({}, 'Admin.Design.Feature') }}
+      </button>
+    </div>
+  </div>
+</div>
+{{ form_end(thumbnailRegenerationForm) }}
+
