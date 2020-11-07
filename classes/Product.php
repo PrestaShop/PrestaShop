@@ -4302,7 +4302,6 @@ class ProductCore extends ObjectModel
      */
     public static function getAttributesColorList(array $products, $have_stock = null)
     {
-
         if ($have_stock !== null) {
             Tools::displayParameterAsDeprecated('have_stock');
         }
