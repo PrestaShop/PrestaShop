@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
  * Adds downloadable file for virtual product
+ *
+ * @todo: is VirtualProductFile name correct for Core/Domain? or should I use ProductDownload everywhere
  */
 class AddVirtualProductFileCommand
 {
@@ -49,7 +51,7 @@ class AddVirtualProductFileCommand
     /**
      * @var string
      */
-    private $name;
+    private $displayName;
 
     /**
      * @var DateTimeInterface|null
@@ -69,7 +71,7 @@ class AddVirtualProductFileCommand
     /**
      * @param int $productId
      * @param string $filePath
-     * @param string $name display name of the file
+     * @param string $displayName display name of the file
      * @param int|null $accessDays
      * @param int|null $downloadTimesLimit
      * @param DateTimeInterface|null $expirationDate
@@ -77,15 +79,15 @@ class AddVirtualProductFileCommand
     public function __construct(
         int $productId,
         string $filePath,
-        string $name,
+        string $displayName,
         ?int $accessDays = null,
         ?int $downloadTimesLimit = null,
         ?DateTimeInterface $expirationDate = null
-        //@todo: is_shareable? - there is no input in Product page for that. Is it still usable?
+        //@todo: is_shareable & active? - there is no input in Product page for that. Is it still usable?
     ) {
         $this->productId = new ProductId($productId);
         $this->filePath = $filePath;
-        $this->name = $name;
+        $this->displayName = $displayName;
         $this->accessDays = $accessDays;
         $this->downloadTimesLimit = $downloadTimesLimit;
         $this->expirationDate = $expirationDate;
@@ -110,9 +112,9 @@ class AddVirtualProductFileCommand
     /**
      * @return string
      */
-    public function getName(): string
+    public function getDisplayName(): string
     {
-        return $this->name;
+        return $this->displayName;
     }
 
     /**
