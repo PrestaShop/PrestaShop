@@ -1120,7 +1120,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     {
         $combinations = $this->product->getAttributesGroups($this->context->language->id, $combinationId);
 
-        if (empty($combinations)) {
+        if ($combinations === false || !is_array($combinations) || empty($combinations)) {
             return null;
         }
 
