@@ -37,6 +37,9 @@ import LinkRowActionExtension from '@components/grid/extension/link-row-action-e
 const {$} = window;
 
 $(() => {
+  $(".second-select").addClass('d-none');
+  $(".format_" + $("#thumbnail_regeneration_image_category").val()).removeClass("d-none");
+
   const grid = new Grid('image_type');
 
   grid.addExtension(new BulkActionCheckboxExtension());
@@ -48,4 +51,9 @@ $(() => {
   grid.addExtension(new SubmitRowActionExtension());
   grid.addExtension(new FiltersSubmitButtonEnablerExtension());
   grid.addExtension(new LinkRowActionExtension());
+
+  $("#thumbnail_regeneration_image_category").change(() => {
+    $(".second-select").addClass('d-none');
+    $(".format_" + $("#thumbnail_regeneration_image_category").val()).removeClass("d-none");
+  });
 });
