@@ -186,7 +186,7 @@ class DiscountControllerCore extends FrontController
      */
     protected function buildCartRuleFromVoucher(array $voucher): array
     {
-        $voucher['voucher_date'] = Tools::displayDate($voucher['date_form'], null, false) . ' ' . $this->trans('au', [], 'Shop.Theme.Global') . ' ' . Tools::displayDate($voucher['date_to'], null, false);
+        $voucher['voucher_date'] = Tools::displayDate($voucher['date_from'], null, false) . ' ' . $this->trans('to', [], 'Shop.Theme.Global') . ' ' . Tools::displayDate($voucher['date_to'], null, false);
 
         if ((int) $voucher['minimum_amount'] === 0) {
             $voucher['voucher_minimal'] = $this->trans('None', [], 'Shop.Theme.Global');
