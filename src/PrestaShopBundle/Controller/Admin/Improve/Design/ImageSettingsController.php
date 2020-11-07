@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\ImageType\QueryResult\EditableImageType;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ImageTypeGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\ImageTypeFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\ThumbnailRegenerationType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -67,11 +68,14 @@ class ImageSettingsController extends FrameworkBundleAdminController
 
         $generationSettingsForm = $this->get('prestashop.admin.image_settings.image_generation_options.form_handler')->getForm();
 
+        $thumbnailRegenerationForm = $this->createForm(ThumbnailRegenerationType::class);
+
         return $this->render('@PrestaShop/Admin/Improve/Design/ImageSettings/index.html.twig', [
             'imageTypeGrid' => $this->presentGrid($grid),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'generationSettingsForm' => $generationSettingsForm->createView(),
+            'thumbnailRegenerationForm' => $thumbnailRegenerationForm->createView(),
         ]);
     }
 
@@ -129,6 +133,35 @@ class ImageSettingsController extends FrameworkBundleAdminController
             ImageTypeGridDefinitionFactory::GRID_ID,
             'admin_image_settings_index'
         );
+    }
+
+    /**
+     * Regenerate image thumbnails.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_image_settings_index"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function regenerateThumbnailsAction(Request $request): RedirectResponse
+    {
+        $form = $this->createForm(ThumbnailRegenerationType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $data = $form->getData();
+            $errors = $this->get('prestashop.adapter.image_type.thumbnail_regenerator')->regenerateThumbnails($data);
+
+            if (!empty($errors)) {
+                $this->flashErrors($errors);
+            }
+        }
+
+        return $this->redirectToRoute('admin_image_settings_index');
     }
 
     /**

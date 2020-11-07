@@ -22,6 +22,14 @@ admin_image_settings_search:
         _legacy_controller: AdminImages
         _legacy_link: AdminImages:submitFilterimage_type
 
+admin_image_settings_regenerate_thumbnails:
+    path: /regenerate-thumbnails
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\Design\ImageSettings:regenerateThumbnails'
+        _legacy_controller: AdminImages
+        _legacy_link: AdminImages:submitRegenerateimage_type
+
 admin_image_settings_create:
     path: /new
     methods: [GET, POST]
