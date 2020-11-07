@@ -26,39 +26,48 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\File\Uploader;
 
-use PrestaShop\PrestaShop\Adapter\File\Uploader\VirtualProductFileUploader;
-use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\CommandHandler\AddVirtualProductFileHandlerInterface;
+use PrestaShop\PrestaShop\Adapter\File\Validator\VirtualProductFileValidator;
+use PrestaShop\PrestaShop\Core\File\Exception\FileUploadException;
+use ProductDownload;
 
 /**
- * Handles @see AddVirtualProductFileCommand
+ * Uploads file for virtual product
  */
-final class AddVirtualProductFileHandler implements AddVirtualProductFileHandlerInterface
+class VirtualProductFileUploader
 {
     /**
-     * @var VirtualProductFileUploader
+     * @var VirtualProductFileValidator
      */
-    private $virtualProductFileUploader;
+    private $virtualProductFileValidator;
 
     /**
-     * @param VirtualProductFileUploader $virtualProductFileUploader
+     * @param VirtualProductFileValidator $virtualProductFileValidator
      */
     public function __construct(
-        VirtualProductFileUploader $virtualProductFileUploader
+        VirtualProductFileValidator $virtualProductFileValidator
     ) {
-        $this->virtualProductFileUploader = $virtualProductFileUploader;
+        $this->virtualProductFileValidator = $virtualProductFileValidator;
     }
 
     /**
-     * {@inheritdoc}
+     * @param string file to upload $filePath
+     *
+     * @return string uploaded file path
      */
-    public function handle(AddVirtualProductFileCommand $command): void
+    public function upload(string $filePath): string
     {
-        $uploadedFilePath = $this->virtualProductFileUploader->upload($command->getFilePath());
-        $fileName = pathinfo($uploadedFilePath, PATHINFO_FILENAME);
+        $this->virtualProductFileValidator->validate($filePath);
 
-        //@todo: repository->add() ProductDownload.
+        $destination = _PS_DOWNLOAD_DIR_ . ProductDownload::getNewFilename();
+
+        if (!copy($filePath, $destination)) {
+            throw new FileUploadException(sprintf(
+                'Failed to copy file from "%s" to "%s"', $filePath, $destination
+            ));
+        }
+
+        return $destination;
     }
 }
