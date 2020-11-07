@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command;
 
+use DateTimeInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
@@ -46,13 +47,47 @@ class AddVirtualProductFileCommand
     private $filePath;
 
     /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var DateTimeInterface|null
+     */
+    private $expirationDate;
+
+    /**
+     * @var int|null
+     */
+    private $accessDays;
+
+    /**
+     * @var int|null
+     */
+    private $downloadTimesLimit;
+
+    /**
      * @param int $productId
      * @param string $filePath
+     * @param string $name display name of the file
+     * @param int|null $accessDays
+     * @param int|null $downloadTimesLimit
+     * @param DateTimeInterface|null $expirationDate
      */
-    public function __construct(int $productId, string $filePath)
-    {
+    public function __construct(
+        int $productId,
+        string $filePath,
+        string $name,
+        ?int $accessDays = null,
+        ?int $downloadTimesLimit = null,
+        ?DateTimeInterface $expirationDate = null
+    ) {
         $this->productId = new ProductId($productId);
         $this->filePath = $filePath;
+        $this->name = $name;
+        $this->accessDays = $accessDays;
+        $this->downloadTimesLimit = $downloadTimesLimit;
+        $this->expirationDate = $expirationDate;
     }
 
     /**
@@ -69,5 +104,37 @@ class AddVirtualProductFileCommand
     public function getFilePath(): string
     {
         return $this->filePath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return DateTimeInterface|null
+     */
+    public function getExpirationDate(): ?DateTimeInterface
+    {
+        return $this->expirationDate;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getAccessDays(): ?int
+    {
+        return $this->accessDays;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getDownloadTimesLimit(): ?int
+    {
+        return $this->downloadTimesLimit;
     }
 }
