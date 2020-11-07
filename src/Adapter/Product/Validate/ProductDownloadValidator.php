@@ -34,6 +34,7 @@ use ProductDownload;
 
 /**
  * Validates ProductDownload properties using legacy object model validation
+ *
  * @todo: rename to VirtualProductFileValidator or keep using legacy name as its in adapter?
  */
 class ProductDownloadValidator extends AbstractObjectModelValidator
@@ -41,7 +42,7 @@ class ProductDownloadValidator extends AbstractObjectModelValidator
     /**
      * @param ProductDownload $productDownload
      */
-    public function validateProductDownload(ProductDownload $productDownload): void
+    public function validate(ProductDownload $productDownload): void
     {
         $this->validateProductDownloadProperty($productDownload, 'id_product', VirtualProductFileConstraintException::INVALID_PRODUCT_ID);
         $this->validateProductDownloadProperty($productDownload, 'display_filename', VirtualProductFileConstraintException::INVALID_DISPLAY_NAME);
@@ -52,7 +53,6 @@ class ProductDownloadValidator extends AbstractObjectModelValidator
         $this->validateProductDownloadProperty($productDownload, 'nb_downloadable', VirtualProductFileConstraintException::INVALID_DOWNLOAD_TIMES_LIMIT);
         $this->validateProductDownloadProperty($productDownload, 'active', VirtualProductFileConstraintException::INVALID_ACTIVE);
         $this->validateProductDownloadProperty($productDownload, 'is_shareable', VirtualProductFileConstraintException::INVALID_ACTIVE);
-
     }
 
     /**
