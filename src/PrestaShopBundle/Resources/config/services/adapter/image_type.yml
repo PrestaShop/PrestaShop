@@ -31,3 +31,18 @@ services:
         tags:
             - name: tactician.handler
               command: 'PrestaShop\PrestaShop\Core\Domain\ImageType\Command\BulkDeleteImageTypeCommand'
+
+    prestashop.adapter.image_type.data_provider:
+        class: 'PrestaShop\PrestaShop\Adapter\ImageType\ImageTypeDataProvider'
+        arguments:
+            - '@translator'
+
+    prestashop.adapter.image_type.data_provider.formats:
+        class: 'PrestaShop\PrestaShop\Adapter\ImageType\ImageTypeFormatsDataProvider'
+        arguments:
+            - '@prestashop.adapter.image_type.data_provider'
+
+    prestashop.adapter.image_type.thumbnail_regenerator:
+        class: 'PrestaShop\PrestaShop\Adapter\ImageType\ImageGenerator'
+        arguments:
+            - '@translator'
