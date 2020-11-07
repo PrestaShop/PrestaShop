@@ -28,18 +28,21 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception;
 
+/**
+ * Thrown when virtual product file constraints are violated
+ * Each constant represents violated property
+ */
 class VirtualProductFileConstraintException extends VirtualProductFileException
 {
-    /**
-     * When file name is invalid
-     */
-    public const INVALID_PRODUCT_ID = 10;
-    public const INVALID_DISPLAY_NAME = 20;
-    public const INVALID_FILENAME = 30;
-    public const INVALID_CREATION_DATE = 10;
-    public const INVALID_EXPIRATION_DATE = 10;
-    public const INVALID_ACCESS_DAYS = 10;
-    public const INVALID_DOWNLOAD_TIMES_LIMIT = 10;
-    public const INVALID_ACTIVE = 10;
-    public const INVALID_SHAREABLE = 10;
+    //@todo: check https://github.com/PrestaShop/PrestaShop/pull/21110#discussion_r519180880
+    public const INVALID_ID = 10;
+    public const INVALID_PRODUCT_ID = 20;
+    public const INVALID_DISPLAY_NAME = 30;
+    public const INVALID_FILENAME = 40;
+    public const INVALID_CREATION_DATE = 50;
+    public const INVALID_EXPIRATION_DATE = 60;
+    public const INVALID_ACCESS_DAYS = 70;
+    public const INVALID_DOWNLOAD_TIMES_LIMIT = 80;
+    public const INVALID_ACTIVE = 90;
+    public const INVALID_SHAREABLE = 100;
 }
