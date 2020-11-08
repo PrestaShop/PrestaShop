@@ -26,7 +26,18 @@
   <div class="media-left">
     <a href="{$product.url}" title="{$product.name}">
       {if $product.cover}
-        <img class="media-object" src="{$product.cover.small.url}" alt="{$product.name}" loading="lazy">
+        <img
+          class="media-object"
+          src="{$product.cover.small.url}"
+          {if !empty($product.cover.legend)}
+             alt="{$product.cover.legend}"
+             title="{$product.cover.legend}"
+          {else}
+            alt="{$product.name}"
+            title="{$product.name}"
+          {/if}
+          loading="lazy"
+        >
       {else}
         <img src="{$urls.no_picture_image.bySize.small_default.url}" loading="lazy" />
       {/if}

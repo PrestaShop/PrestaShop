@@ -37,6 +37,7 @@
                     title="{$product.cover.legend}"
                   {else}
                     alt="{$product.name}"
+                    title="{$product.name}"
                   {/if}
                   loading="lazy"
                   data-full-size-image-url="{$product.cover.large.url}"

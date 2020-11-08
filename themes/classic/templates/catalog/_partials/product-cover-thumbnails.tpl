@@ -34,6 +34,7 @@
             title="{$product.default_image.legend}"
           {else}
             alt="{$product.name}"
+            title="{$product.name}"
           {/if}
           style="width:100%;"
           itemprop="image"
@@ -63,6 +64,7 @@
                 title="{$image.legend}"
               {else}
                 alt="{$product.name}"
+                title="{$product.name}"
               {/if}
               width="100"
               itemprop="image"
