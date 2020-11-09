@@ -52,6 +52,7 @@ Feature: Add virtual product file from BO (Back Office).
     Given I add product product2 with following information:
       | name       | en-US:puffin icon |
       | is_virtual | false             |
+    And product product2 type should be standard
     And virtual product "product2" should not have a file
     When I add new virtual product "product2" file "file4" with following details:
       | file name            | dummy_zip.zip       |
