@@ -24,51 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Shop\Exception;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Shop\Query;
-
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\SearchShopException;
-
-/**
- * Query responsible for getting shops for a given search term
- */
-class SearchShops
+class SearchShopException extends ShopException
 {
-    /**
-     * @var string
-     */
-    private $searchTerm;
-
-    /**
-     * SearchShops constructor.
-     *
-     * @param string $searchTerm
-     */
-    public function __construct(string $searchTerm)
-    {
-        $this->assertSearchTermNotEmpty($searchTerm);
-
-        $this->searchTerm = $searchTerm;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSearchTerm(): string
-    {
-        return $this->searchTerm;
-    }
-
-    /**
-     * @param string $searchTerm
-     *
-     * @throws SearchShopException
-     */
-    private function assertSearchTermNotEmpty(string $searchTerm): void
-    {
-        if (empty(trim($searchTerm))) {
-            throw new SearchShopException('Search term cannot be empty.');
-        }
-    }
 }
