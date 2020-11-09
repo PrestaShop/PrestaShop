@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\EntityTranslation;
 
 use DataLangCore;
 use Db;
-use Doctrine\Common\Inflector\Inflector;
 use InvalidArgumentException;
 use Language;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
