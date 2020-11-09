@@ -1403,7 +1403,39 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         return true;
     }
 
-    private static function updateCurrenciesCldr(Language $language)
+    /**
+     * Installs the first language pack (during shop install)
+     *
+     * @param string $iso Language ISO code
+     * @param array $params Optional parameters for self::checkAndAddLanguage
+     * @param array $errors
+     *
+     * @return bool
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    public static function installFirstLanguagePack(string $iso, array $params = [], &$errors = []): bool
+    {
+        $lang_pack = static::getLangDetails($iso);
+
+        if (!Language::checkAndAddLanguage((string) $iso, $lang_pack, false, $params)) {
+            $errors[] = Context::getContext()->getTranslator()->trans('An error occurred while creating the language: %s', [(string) $iso], 'Admin.International.Notification');
+            return false;
+        }
+
+        // extract language pack
+        if (!static::installSfLanguagePack(static::getLocaleByIso($iso), $errors)) {
+            return false;
+        }
+
+        // generate mail templates in the installed language
+        static::generateEmailsLanguagePack($lang_pack, $errors, true);
+
+        return true;
+    }
+
+    private static function updateCurrenciesCldr(self $language): void
     {
         /** @var Currency[] $currencies */
         $currencies = Currency::getCurrencies(true, false, false);
