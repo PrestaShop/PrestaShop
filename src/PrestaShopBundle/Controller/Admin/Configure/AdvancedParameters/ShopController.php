@@ -53,6 +53,7 @@ class ShopController extends FrameworkBundleAdminController
     {
         try {
             $shops = $this->getQueryBus()->handle(new SearchShops((string) $searchTerm));
+            $statusCode = empty($shops) ? Response::HTTP_NOT_FOUND : Response::HTTP_OK;
         } catch (Exception $e) {
             return $this->json(
                 ['message' => $this->getErrorMessage($e)],
@@ -60,7 +61,7 @@ class ShopController extends FrameworkBundleAdminController
             );
         }
 
-        return $this->json($shops);
+        return $this->json($shops, $statusCode);
     }
 
     /**
