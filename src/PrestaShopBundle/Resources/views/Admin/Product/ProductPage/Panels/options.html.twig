@@ -68,9 +68,6 @@
                 {{ form_errors(optionsForm.tags) }}
                 {{ form_widget(optionsForm.tags) }}
                 <div class="alert expandable-alert alert-info mt-3" role="alert">
-                  <button type="button" class="read-more btn-link" data-toggle="collapse" data-target="#tagsInfo" aria-expanded="false" aria-controls="collapseDanger">
-                    {{ 'Read more'|trans({}, 'Admin.Actions')|raw }}
-                  </button>
                   <p class="alert-text">{{ 'Tags are meant to help your customers find your products via the search bar.'|trans({}, 'Admin.Catalog.Help')|raw }}</p>
                   <div class="alert-more collapse" id="tagsInfo">
                     <p>
@@ -83,6 +80,11 @@
                       }}
                     </p>
                   </div>
+                 <div class="read-more-container">
+                   <button type="button" class="read-more btn-link" data-toggle="collapse" data-target="#tagsInfo" aria-expanded="false" aria-controls="collapseDanger">
+                      {{ 'Read more'|trans({}, 'Admin.Actions')|raw }}
+                    </button>
+                 </div>
                 </div>
               </div>
             </div>

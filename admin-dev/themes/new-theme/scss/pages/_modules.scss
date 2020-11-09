@@ -339,11 +339,9 @@
   font-size: 14px;
   font-weight: 600;
 }
-.module-category-recently-used {
-  a {
-    text-align: center;
-    border-bottom: 1px solid #e7e8e8;
-  }
+.dropdown-menu .module-category-recently-used {
+  text-align: center;
+  border-bottom: 1px solid #e7e8e8;
 }
 .module-category-reset,
 .module-status-reset {
@@ -390,12 +388,6 @@
       margin-top: 30px;
       font-size: 14px;
     }
-  }
-}
-
-.toolbar-icons {
-  .btn-primary {
-    @include border-radius(0);
   }
 }
 
@@ -644,6 +636,11 @@ form#importDropzone {
 }
 
 .module-list {
+  &-disabled {
+    @extend .module-list;
+    opacity: 0.5;
+  }
+
   .module-item {
     width: 100%;
     padding: 5px 0;
@@ -784,11 +781,6 @@ form#importDropzone {
   .dropdown-menu {
     min-width: auto;
   }
-}
-
-.module-list-disabled {
-  @extend .module-list;
-  opacity: 0.5;
 }
 
 #unhook-button-position-bottom {
