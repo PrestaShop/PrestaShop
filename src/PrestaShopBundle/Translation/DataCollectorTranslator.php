@@ -38,7 +38,8 @@ class DataCollectorTranslator extends BaseTranslator implements TranslatorInterf
      */
     public function isLanguageLoaded($locale)
     {
-        return $this->__call('isLanguageLoaded', [$locale]);
+        // this will be magically routed to the translator within BaseTranslator
+        return parent::isLanguageLoaded($locale);
     }
 
     /**
@@ -46,6 +47,7 @@ class DataCollectorTranslator extends BaseTranslator implements TranslatorInterf
      */
     public function clearLanguage($locale)
     {
-        return  $this->__call('clearLanguage', [$locale]);
+        // this will be magically routed to the translator within BaseTranslator
+        return parent::clearLanguage($locale);
     }
 }
