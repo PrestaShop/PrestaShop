@@ -61,20 +61,20 @@ class VirtualProductFileForEditing
     private $expirationDate;
 
     /**
-     * @param string $filePath
+     * @param string $fileName
      * @param string $displayName
      * @param int $accessDays
      * @param int $downloadTimesLimit
      * @param DateTimeInterface|null $expirationDate
      */
     public function __construct(
-        string $filePath,
+        string $fileName,
         string $displayName,
         int $accessDays,
         int $downloadTimesLimit,
         ?DateTimeInterface $expirationDate
     ) {
-        $this->filePath = $filePath;
+        $this->filePath = $fileName;
         $this->displayName = $displayName;
         $this->accessDays = $accessDays;
         $this->downloadTimesLimit = $downloadTimesLimit;
@@ -84,7 +84,7 @@ class VirtualProductFileForEditing
     /**
      * @return string
      */
-    public function getFilePath(): string
+    public function getFileName(): string
     {
         return $this->filePath;
     }
