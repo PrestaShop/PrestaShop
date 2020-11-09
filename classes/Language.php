@@ -57,6 +57,9 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     private const TRANSLATION_PACK_CACHE_DIR = _PS_TRANSLATIONS_DIR_;
 
+    /** Path to the symfony translations directory */
+    private const SF_TRANSLATIONS_DIR = _PS_ROOT_DIR_ . '/app/Resources/translations';
+
     /** @var int */
     public $id;
 
@@ -1227,13 +1230,21 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         $lang_pack = static::getLangDetails($iso);
         if (!$lang_pack) {
             $errors[] = Context::getContext()->getTranslator()->trans('Sorry this language is not available', [], 'Admin.International.Notification');
-        } else {
-            static::downloadXLFLanguagePack($lang_pack['locale'], $errors, self::PACK_TYPE_SYMFONY);
+            return false;
         }
 
-        return count($errors) === 0;
+        return static::downloadXLFLanguagePack($lang_pack['locale'], $errors, self::PACK_TYPE_SYMFONY);
     }
 
+    /**
+     * Downloads a language pack into local cache
+     *
+     * @param string $locale IETF language tag
+     * @param array $errors
+     * @param string $type self:PACK_TYPE_SYMFONY|self::PACK_TYPE_EMAILS
+     *
+     * @return bool
+     */
     public static function downloadXLFLanguagePack($locale, &$errors = [], $type = self::PACK_TYPE_SYMFONY)
     {
         $file = static::getPathToCachedTranslationPack($type, $locale);
@@ -1253,34 +1264,51 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         if (!is_writable(dirname($file))) {
             // @todo Throw exception
             $errors[] = Context::getContext()->getTranslator()->trans('Server does not have permissions for writing.', [], 'Admin.International.Notification') . ' (' . $file . ')';
-        } elseif ($content = Tools::file_get_contents($url, false, null, static::PACK_DOWNLOAD_TIMEOUT)) {
-            file_put_contents($file, $content);
-        } else {
-            $errors[] = Context::getContext()->getTranslator()->trans('Language pack unavailable.', [], 'Admin.International.Notification') . ' ' . $url;
+            return false;
         }
 
-        return count($errors) === 0;
+        $content = Tools::file_get_contents($url, false, null, static::PACK_DOWNLOAD_TIMEOUT);
+
+        if (empty($content)) {
+            $errors[] = Context::getContext()->getTranslator()->trans('Language pack unavailable.', [], 'Admin.International.Notification') . ' ' . $url;
+            return false;
+        }
+
+        return (false !== file_put_contents($file, $content));
     }
 
+    /**
+     * Extracts a local translation pack
+     *
+     * @param string $locale IETF language tag
+     * @param array $errors
+     *
+     * @return bool
+     */
     public static function installSfLanguagePack($locale, &$errors = [])
     {
         if (!static::translationPackIsInCache($locale)) {
             // @todo Throw exception
             $errors[] = Context::getContext()->getTranslator()->trans('Language pack unavailable.', [], 'Admin.International.Notification');
-        } else {
-            $zipArchive = new ZipArchive();
-            $zipArchive->open(static::getPathToCachedTranslationPack($locale));
-            $zipArchive->extractTo(_PS_ROOT_DIR_ . '/app/Resources/translations');
-            $zipArchive->close();
+            return false;
         }
+
+        $zipArchive = new ZipArchive();
+        $zipArchive->open(static::getPathToCachedTranslationPack($locale));
+        $zipArchive->extractTo(self::SF_TRANSLATIONS_DIR);
+        $zipArchive->close();
+
+        return true;
     }
 
     /**
      * @param array $langPack
      * @param array $errors
      * @param bool $overwriteTemplates
+     *
+     * @return bool
      */
-    private static function generateEmailsLanguagePack($langPack, &$errors = [], $overwriteTemplates = false)
+    private static function generateEmailsLanguagePack($langPack, &$errors = [], $overwriteTemplates = false): bool
     {
         $locale = $langPack['locale'];
         $sfContainer = SymfonyContainer::getInstance();
@@ -1291,7 +1319,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
                 'Admin.Notifications.Error'
             );
 
-            return;
+            return false;
         }
 
         $mailTheme = Configuration::get('PS_MAIL_THEME', null, null, null, 'modern');
@@ -1312,6 +1340,8 @@ class LanguageCore extends ObjectModel implements LanguageInterface
                 'Admin.Notifications.Error'
             );
         }
+
+        return true;
     }
 
     /**
