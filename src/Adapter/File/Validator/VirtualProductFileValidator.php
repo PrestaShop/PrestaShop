@@ -64,7 +64,7 @@ class VirtualProductFileValidator
         $this->assertIsFile($filePath);
 
         $million = new DecimalNumber('1000000');
-        $maxFileSizeInBytes = $this->maxFileSizeInMegabytes->dividedBy($million);
+        $maxFileSizeInBytes = $this->maxFileSizeInMegabytes->times($million);
         $actualSizeInBytes = new DecimalNumber((string) filesize($filePath));
 
         if ($maxFileSizeInBytes->isLowerThan($actualSizeInBytes)) {
