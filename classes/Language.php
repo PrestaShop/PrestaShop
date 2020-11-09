@@ -77,8 +77,14 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     public $active = true;
 
     protected static $_cache_language_installation = null;
+
     protected static $_cache_language_installation_by_locale = null;
+
+    /** @var array Contains data from all languages, indexed by locale */
     protected static $_cache_all_language_json = null;
+
+    /** @var array Contains data from all languages, indexed by iso code */
+    protected static $_cache_all_languages_iso;
 
     public static $locale_crowdin_lang = 'en-UD';
 
@@ -131,6 +137,30 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         self::$_cache_language_installation = null;
         self::$_cache_language_installation_by_locale = null;
         self::$_cache_all_language_json = null;
+        self::$_cache_all_languages_iso = null;
+    }
+
+    /**
+     * Loads details for all languages
+     *
+     * @return array Data from all languages, indexed by iso code
+     *
+     * @throws RuntimeException If the details cannot be loaded for any reason
+     */
+    private static function loadAllLanguagesDetails(): array
+    {
+        if (null === self::$_cache_all_languages_iso) {
+            $allLanguages = file_get_contents(_PS_ROOT_DIR_ . self::ALL_LANGUAGES_FILE);
+            self::$_cache_all_languages_iso = json_decode($allLanguages, true);
+
+            if (JSON_ERROR_NONE !== json_last_error()) {
+                throw new RuntimeException(
+                    sprintf('The legacy to standard locales JSON could not be decoded %s', json_last_error_msg())
+                );
+            }
+        }
+
+        return self::$_cache_all_languages_iso;
     }
 
     /**
@@ -755,12 +785,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     {
         if (self::$_cache_all_language_json === null) {
             self::$_cache_all_language_json = [];
-            $allLanguages = file_get_contents(_PS_ROOT_DIR_ . self::ALL_LANGUAGES_FILE);
-            $allLanguages = json_decode($allLanguages, true);
-
-            if (JSON_ERROR_NONE !== json_last_error()) {
-                throw new Exception(sprintf('The legacy to standard locales JSON could not be decoded %s', json_last_error_msg()));
-            }
+            $allLanguages = self::loadAllLanguagesDetails();
 
             foreach ($allLanguages as $isoCode => $langDetails) {
                 self::$_cache_all_language_json[$langDetails['locale']] = $langDetails;
@@ -831,7 +856,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      *
      * @param string $iso 2-letter ISO code
      *
-     * @return array|false
+     * @return string[]|false
      *
      * @throws Exception
      */
@@ -839,12 +864,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     {
         $iso = (string) $iso; // $iso often comes from xml and is a SimpleXMLElement
 
-        $allLanguages = file_get_contents(_PS_ROOT_DIR_ . self::ALL_LANGUAGES_FILE);
-        $allLanguages = json_decode($allLanguages, true);
-
-        if (JSON_ERROR_NONE !== json_last_error()) {
-            throw new Exception(sprintf('The legacy to standard locales JSON could not be decoded %s', json_last_error_msg()));
-        }
+        $allLanguages = self::loadAllLanguagesDetails();
 
         return isset($allLanguages[$iso]) ? $allLanguages[$iso] : false;
     }
