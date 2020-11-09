@@ -37,12 +37,13 @@ class VirtualProductFileConstraintException extends VirtualProductFileException
     //@todo: check https://github.com/PrestaShop/PrestaShop/pull/21110#discussion_r519180880
     public const INVALID_ID = 10;
     public const INVALID_PRODUCT_ID = 20;
-    public const INVALID_DISPLAY_NAME = 30;
-    public const INVALID_FILENAME = 40;
-    public const INVALID_CREATION_DATE = 50;
-    public const INVALID_EXPIRATION_DATE = 60;
-    public const INVALID_ACCESS_DAYS = 70;
-    public const INVALID_DOWNLOAD_TIMES_LIMIT = 80;
-    public const INVALID_ACTIVE = 90;
-    public const INVALID_SHAREABLE = 100;
+    public const INVALID_PRODUCT_TYPE = 30;
+    public const INVALID_DISPLAY_NAME = 40;
+    public const INVALID_FILENAME = 50;
+    public const INVALID_CREATION_DATE = 60;
+    public const INVALID_EXPIRATION_DATE = 70;
+    public const INVALID_ACCESS_DAYS = 80;
+    public const INVALID_DOWNLOAD_TIMES_LIMIT = 90;
+    public const INVALID_ACTIVE = 100;
+    public const INVALID_SHAREABLE = 110;
 }

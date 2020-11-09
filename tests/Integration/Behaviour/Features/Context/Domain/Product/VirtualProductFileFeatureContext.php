@@ -32,6 +32,8 @@ use Behat\Gherkin\Node\TableNode;
 use DateTime;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileException;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use RuntimeException;
 
@@ -60,17 +62,32 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
     {
         $dataRows = $dataTable->getRowsHash();
         $filePath = $this->uploadDummyFile($dataRows['file name']);
-
-        $virtualProductId = $this->getCommandBus()->handle(new AddVirtualProductFileCommand(
+        $command = new AddVirtualProductFileCommand(
             $this->getSharedStorage()->get($productReference),
             $filePath,
             $dataRows['display name'],
             isset($dataRows['access days']) ? (int) $dataRows['access days'] : null,
             isset($dataRows['download times limit']) ? (int) $dataRows['download times limit'] : null,
             isset($dataRows['expiration date']) ? new DateTime($dataRows['expiration date']) : null
-        ));
+        );
 
-        $this->getSharedStorage()->set($fileReference, $virtualProductId->getValue());
+        try {
+            $virtualProductId = $this->getCommandBus()->handle($command);
+            $this->getSharedStorage()->set($fileReference, $virtualProductId->getValue());
+        } catch (VirtualProductFileException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then I should get error that only virtual product can have file
+     */
+    public function assertInvalidProductTypeError(): void
+    {
+        $this->assertLastErrorIs(
+            VirtualProductFileConstraintException::class,
+            VirtualProductFileConstraintException::INVALID_PRODUCT_TYPE
+        );
     }
 
     /**

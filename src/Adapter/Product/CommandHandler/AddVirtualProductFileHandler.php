@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductDownloadRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\CommandHandler\AddVirtualProductFileHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\ValueObject\VirtualProductFileId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use ProductDownload;
@@ -78,7 +79,13 @@ final class AddVirtualProductFileHandler implements AddVirtualProductFileHandler
     public function handle(AddVirtualProductFileCommand $command): VirtualProductFileId
     {
         //@todo: assert product can only have one file.
-        $this->productRepository->assertProductExists($command->getProductId());
+        $product = $this->productRepository->get($command->getProductId());
+        if (!$product->is_virtual) {
+            throw new VirtualProductFileConstraintException(
+                'Only virtual product can have file',
+                VirtualProductFileConstraintException::INVALID_PRODUCT_TYPE
+            );
+        }
         $uploadedFilePath = $this->virtualProductFileUploader->upload($command->getFilePath());
         $productDownload = $this->buildObjectModel($command, pathinfo($uploadedFilePath, PATHINFO_FILENAME));
 

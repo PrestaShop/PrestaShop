@@ -47,3 +47,14 @@ Feature: Add virtual product file from BO (Back Office).
       | access days          | 5                   |
       | download times limit | 100                 |
       | expiration date      | 2000-01-20 09:01:01 |
+
+  Scenario: I should not be able to add file to a product which is not virtual
+    Given I add product product2 with following information:
+      | name       | en-US:puffin icon |
+      | is_virtual | false             |
+    And virtual product "product2" should not have a file
+    When I add new virtual product "product2" file "file4" with following details:
+      | file name            | dummy_zip.zip       |
+      | display name         | zipped files pack   |
+    Then I should get error that only virtual product can have file
+    And virtual product "product2" should not have a file
