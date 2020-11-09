@@ -639,12 +639,8 @@ class Install extends AbstractInstall
             }
 
             $this->callWithUnityAutoincrement(function () use ($iso, $params_lang, &$errors) {
-                EntityLanguage::installLanguagePack($iso, $params_lang, $errors);
+                EntityLanguage::installFirstLanguagePack($iso, $params_lang, $errors);
             });
-
-            EntityLanguage::loadLanguages();
-
-            Tools::clearCache();
 
             if (!$id_lang = EntityLanguage::getIdByIso($iso, true)) {
                 throw new PrestashopInstallerException($this->translator->trans(
