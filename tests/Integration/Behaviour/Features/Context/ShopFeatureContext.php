@@ -139,7 +139,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
         foreach ($expectedShops as $key => $currentExpectedShop) {
             $wasCurrentExpectedShopFound = false;
             foreach ($foundShops as $currentFoundShop) {
-                if ($currentExpectedShop['name'] == $currentFoundShop['name']) {
+                if (strtolower($currentExpectedShop['name']) == strtolower($currentFoundShop['name'])) {
                     $wasCurrentExpectedShopFound = true;
                     Assert::assertEquals(
                         $currentExpectedShop['group_name'],
