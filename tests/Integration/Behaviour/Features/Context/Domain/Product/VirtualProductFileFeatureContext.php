@@ -126,7 +126,7 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
     private function uploadDummyFile(string $dummyFileName): string
     {
         $destination = tempnam(sys_get_temp_dir(), 'TEST_PS_');
-        copy(_PS_ROOT_DIR_ . 'tests/Resources/dummyFile/' . $dummyFileName, tempnam(sys_get_temp_dir(), 'TEST_PS_'));
+        copy(_PS_ROOT_DIR_ . '/tests/Resources/dummyFile/' . $dummyFileName, tempnam(sys_get_temp_dir(), 'TEST_PS_'));
 
         return $destination;
     }
