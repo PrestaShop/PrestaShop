@@ -34,7 +34,6 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use RuntimeException;
-use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
 {
@@ -66,8 +65,8 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
             $this->getSharedStorage()->get($productReference),
             $filePath,
             $dataRows['display name'],
-            isset($dataRows['access days']) ? PrimitiveUtils::castStringIntegerIntoInteger($dataRows['access days']) : null,
-            isset($dataRows['download times limit']) ? PrimitiveUtils::castStringIntegerIntoInteger($dataRows['download times limit']) : null,
+            isset($dataRows['access days']) ? (int) $dataRows['access days'] : null,
+            isset($dataRows['download times limit']) ? (int) $dataRows['download times limit'] : null,
             isset($dataRows['expiration date']) ? new DateTime($dataRows['expiration date']) : null
         ));
 
@@ -88,6 +87,11 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
             throw new RuntimeException('Expected virtual product to have a file');
         }
 
+        $fileDestination = _PS_DOWNLOAD_DIR_ . $actualFile->getFileName();
+        if (!is_file($fileDestination)) {
+            throw new RuntimeException(sprintf('Virtual product file "%s" not found in "%s"', $fileReference, $fileDestination));
+        }
+
         Assert::assertEquals(
             $this->getSharedStorage()->get($fileReference),
             $actualFile->getId(),
@@ -98,23 +102,24 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
         Assert::assertEquals($dataRows['display name'], $actualFile->getDisplayName(), 'Unexpected display file name');
         unset($dataRows['display name']);
 
-        Assert::assertEquals($dataRows['file name'], $actualFile->getFileName(), 'Unexpected file name');
-        unset($dataRows['file name']);
-
-        $accessDays = isset($dataRows['access days']) ? PrimitiveUtils::castStringIntegerIntoInteger($dataRows['access days']) : 0;
-        Assert::assertEquals($accessDays, $actualFile->getAccessDays(), 'Unexpected file access days');
+        Assert::assertEquals(
+            (int) $dataRows['access days'],
+            $actualFile->getAccessDays(),
+            'Unexpected file access days'
+        );
         unset($dataRows['access days']);
 
-        $downloadLimit = isset($dataRows['download times limit']) ? PrimitiveUtils::castStringIntegerIntoInteger($dataRows['download times limit']) : 0;
-        Assert::assertEquals($downloadLimit, $actualFile->getDownloadTimesLimit(), 'Unexpected file download times limit');
+        Assert::assertEquals(
+            (int) $dataRows['download times limit'],
+            $actualFile->getDownloadTimesLimit(), 'Unexpected file download times limit'
+        );
         unset($dataRows['download times limit']);
 
-        $expectedExpirationDate = isset($dataRows['expiration date']) ? $dataRows['expiration date'] : DateTimeUtil::NULL_VALUE;
         $actualExpirationDate = $actualFile->getExpirationDate() ?
             $actualFile->getExpirationDate()->format(DateTimeUtil::DEFAULT_FORMAT) :
             DateTimeUtil::NULL_VALUE
         ;
-        Assert::assertEquals($expectedExpirationDate, $actualExpirationDate, 'Unexpected file expiration date');
+        Assert::assertEquals($dataRows['expiration date'], $actualExpirationDate, 'Unexpected file expiration date');
         unset($dataRows['expiration date']);
 
         if (!empty($dataRows)) {
@@ -126,7 +131,7 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
     private function uploadDummyFile(string $dummyFileName): string
     {
         $destination = tempnam(sys_get_temp_dir(), 'TEST_PS_');
-        copy(_PS_ROOT_DIR_ . 'tests/Resources/dummyFile/' . $dummyFileName, tempnam(sys_get_temp_dir(), 'TEST_PS_'));
+        copy(_PS_ROOT_DIR_ . '/tests/Resources/dummyFile/' . $dummyFileName, tempnam(sys_get_temp_dir(), 'TEST_PS_'));
 
         return $destination;
     }
