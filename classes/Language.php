@@ -43,11 +43,19 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     const ALL_LANGUAGES_FILE = '/app/Resources/all_languages.json';
     const SF_LANGUAGE_PACK_URL = 'https://i18n.prestashop.com/translations/%version%/%locale%/%locale%.zip';
     const EMAILS_LANGUAGE_PACK_URL = 'https://i18n.prestashop.com/mails/%version%/%locale%/%locale%.zip';
+    const PACK_TYPE_EMAILS = 'emails';
+    const PACK_TYPE_SYMFONY = 'sf';
 
     /**
      * Timeout for downloading a translation pack, in seconds
      */
     const PACK_DOWNLOAD_TIMEOUT = 20;
+
+    /**
+     * Path to the local translation pack cache directory.
+     * This is usually `/translations`.
+     */
+    private const TRANSLATION_PACK_CACHE_DIR = _PS_TRANSLATIONS_DIR_;
 
     /** @var int */
     public $id;
@@ -1068,6 +1076,19 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         }
     }
 
+    /**
+     * Adds a language
+     *
+     * @param string $iso_code 2-letter language ISO code
+     * @param array|false $lang_pack [default=false] Pack information. By default, this is automatically retrieved from all_languages.json.
+     * @param bool $only_add [default=false] If true, do not create copies of translated fields in *_lang tables
+     * @param ?array $params_lang [default=null] See allow_accented_chars_url
+     *
+     * @return bool
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
     public static function checkAndAddLanguage($iso_code, $lang_pack = false, $only_add = false, $params_lang = null)
     {
         if (Language::getIdByIso($iso_code)) {
@@ -1207,16 +1228,16 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         if (!$lang_pack) {
             $errors[] = Context::getContext()->getTranslator()->trans('Sorry this language is not available', [], 'Admin.International.Notification');
         } else {
-            self::downloadXLFLanguagePack($lang_pack['locale'], $errors, 'sf');
+            self::downloadXLFLanguagePack($lang_pack['locale'], $errors, self::PACK_TYPE_SYMFONY);
         }
 
-        return !count($errors);
+        return count($errors) === 0;
     }
 
-    public static function downloadXLFLanguagePack($locale, &$errors = [], $type = 'sf')
+    public static function downloadXLFLanguagePack($locale, &$errors = [], $type = self::PACK_TYPE_SYMFONY)
     {
-        $file = _PS_TRANSLATIONS_DIR_ . $type . '-' . $locale . '.zip';
-        $url = ('emails' === $type) ? self::EMAILS_LANGUAGE_PACK_URL : self::SF_LANGUAGE_PACK_URL;
+        $file = self::getPathToCachedTranslationPack($type, $locale);
+        $url = (self::PACK_TYPE_EMAILS === $type) ? self::EMAILS_LANGUAGE_PACK_URL : self::SF_LANGUAGE_PACK_URL;
         $url = str_replace(
             [
                 '%version%',
@@ -1237,17 +1258,18 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         } else {
             $errors[] = Context::getContext()->getTranslator()->trans('Language pack unavailable.', [], 'Admin.International.Notification') . ' ' . $url;
         }
+
+        return count($errors) === 0;
     }
 
     public static function installSfLanguagePack($locale, &$errors = [])
     {
-        $zipFilePath = _PS_TRANSLATIONS_DIR_ . 'sf-' . $locale . '.zip';
-        if (!file_exists($zipFilePath)) {
+        if (!self::translationPackIsInCache($locale)) {
             // @todo Throw exception
             $errors[] = Context::getContext()->getTranslator()->trans('Language pack unavailable.', [], 'Admin.International.Notification');
         } else {
             $zipArchive = new ZipArchive();
-            $zipArchive->open($zipFilePath);
+            $zipArchive->open(self::getPathToCachedTranslationPack($locale));
             $zipArchive->extractTo(_PS_ROOT_DIR_ . '/app/Resources/translations');
             $zipArchive->close();
         }
@@ -1582,6 +1604,33 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         );
 
         return $processor;
+    }
+
+
+    /**
+     * Indicates if a given translation pack exists in cache
+     *
+     * @param string $type IETF language tag
+     * @param string $locale self::PACK_TYPE_SYMFONY|self::PACK_TYPE_EMAILS
+     *
+     * @return bool
+     */
+    public static function translationPackIsInCache(string $locale, string $type = self::PACK_TYPE_SYMFONY): bool
+    {
+        return file_exists(self::getPathToCachedTranslationPack($locale, $type));
+    }
+
+    /**
+     * Returns the path to the local translation pack file
+     *
+     * @param string $locale IETF language tag
+     * @param string $type self::PACK_TYPE_SYMFONY|self::PACK_TYPE_EMAILS
+     *
+     * @return string Local path
+     */
+    private static function getPathToCachedTranslationPack(string $locale, string $type = self::PACK_TYPE_SYMFONY): string
+    {
+        return self::TRANSLATION_PACK_CACHE_DIR . $type . '-' . $locale . '.zip';
     }
 
     /**
