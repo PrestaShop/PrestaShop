@@ -1248,7 +1248,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     public static function downloadXLFLanguagePack($locale, &$errors = [], $type = self::PACK_TYPE_SYMFONY)
     {
-        $file = static::getPathToCachedTranslationPack($type, $locale);
+        $file = static::getPathToCachedTranslationPack($locale, $type);
         $url = (self::PACK_TYPE_EMAILS === $type) ? self::EMAILS_LANGUAGE_PACK_URL : self::SF_LANGUAGE_PACK_URL;
         $url = str_replace(
             [
@@ -1480,10 +1480,15 @@ class LanguageCore extends ObjectModel implements LanguageInterface
                 $language->save();
             }
 
-            static::installSfLanguagePack($lang_pack['locale'], $errors);
+            if (!static::installSfLanguagePack($lang_pack['locale'], $errors)) {
+                return false;
+            }
+
             Language::updateMultilangTable($iso);
             static::generateEmailsLanguagePack($lang_pack, $errors, false);
         }
+
+        return true;
     }
 
     /**
