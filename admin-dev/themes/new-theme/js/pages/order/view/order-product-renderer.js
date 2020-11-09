@@ -190,7 +190,7 @@ export default class OrderProductRenderer {
 
   updateNumPerPage(numPerPage) {
     $(OrderViewPageMap.productsTablePagination).data('numPerPage', numPerPage);
-    this.initPagination();
+    this.updatePaginationControls();
   }
 
   togglePaginationControls() {
@@ -222,7 +222,7 @@ export default class OrderProductRenderer {
     $(target).toggleClass('d-none', !isColumnDisplayed);
   }
 
-  initPagination() {
+  updatePaginationControls() {
     const $tablePagination = $(OrderViewPageMap.productsTablePagination);
     const numPerPage = $tablePagination.data('numPerPage');
     const $rows = $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]');

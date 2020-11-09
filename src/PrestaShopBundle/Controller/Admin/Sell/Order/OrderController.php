@@ -78,6 +78,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\QuerySorting;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
@@ -402,7 +403,7 @@ class OrderController extends FrameworkBundleAdminController
     {
         try {
             /** @var OrderForViewing $orderForViewing */
-            $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, 'DESC'));
+            $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
         } catch (OrderException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
@@ -670,6 +671,14 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function addProductAction(int $orderId, Request $request): Response
     {
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, 'DESC'));
+
+        $previousProducts = [];
+        foreach ($orderForViewing->getProducts()->getProducts() as $orderProductForViewing) {
+            $previousProducts[$orderProductForViewing->getOrderDetailId()] = $orderProductForViewing;
+        }
+
         $invoiceId = (int) $request->get('invoice_id');
         try {
             if ($invoiceId > 0) {
@@ -698,14 +707,46 @@ class OrderController extends FrameworkBundleAdminController
                 );
             }
             $this->getCommandBus()->handle($addProductCommand);
-
-            return new Response();
         } catch (Exception $e) {
             return $this->json(
                 ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
                 Response::HTTP_BAD_REQUEST
             );
         }
+
+        /**
+         * Returning the products list view is not required since we reload the whole list
+         * We keep it for now to avoid Breaking Change
+         */
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, 'DESC'));
+
+        $updatedProducts = [];
+        foreach ($orderForViewing->getProducts()->getProducts() as $orderProductForViewing) {
+            $updatedProducts[$orderProductForViewing->getOrderDetailId()] = $orderProductForViewing;
+        }
+
+        $newProducts = array_diff_key($updatedProducts, $previousProducts);
+
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
+        $cancelProductForm = $formBuilder->getFormFor($orderId);
+
+        $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
+        $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
+
+        $addedGridRows = '';
+        foreach ($newProducts as $newProduct) {
+            $addedGridRows .= $this->renderView('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig', [
+                'orderForViewing' => $orderForViewing,
+                'product' => $newProduct,
+                'isColumnLocationDisplayed' => $newProduct->getLocation() !== '',
+                'isColumnRefundedDisplayed' => $newProduct->getQuantityRefunded() > 0,
+                'cancelProductForm' => $cancelProductForm->createView(),
+                'orderCurrency' => $orderCurrency,
+            ]);
+        }
+
+        return new Response($addedGridRows);
     }
 
     /**
@@ -918,7 +959,7 @@ class OrderController extends FrameworkBundleAdminController
         }
 
         /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, 'DESC'));
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
 
         $products = $orderForViewing->getProducts()->getProducts();
         $product = array_reduce($products, function ($result, OrderProductForViewing $item) use ($orderDetailId) {
@@ -1463,21 +1504,12 @@ class OrderController extends FrameworkBundleAdminController
     public function getProductsListAction(int $orderId): Response
     {
         /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, 'DESC'));
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
 
         $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
         $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
 
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
-        $backOfficeOrderButtons = new ActionsBarButtonsCollection();
-
-        $this->dispatchHook(
-            'actionGetAdminOrderButtons', [
-            'controller' => $this,
-            'id_order' => $orderId,
-            'actions_bar_buttons_collection' => $backOfficeOrderButtons,
-        ]);
-
         $cancelProductForm = $formBuilder->getFormFor($orderId);
 
         $paginationNum = $this->configuration->getInt('PS_ORDER_PRODUCTS_NB_PER_PAGE', self::DEFAULT_PRODUCTS_NUMBER);

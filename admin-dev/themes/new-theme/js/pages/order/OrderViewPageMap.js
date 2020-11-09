@@ -196,4 +196,5 @@ export default {
     },
   },
   printOrderViewPageButton: '.js-print-order-view-page',
+  refreshProductsListLoadingSpinner: '#orderProductsPanel .spinner-order-products-container#orderProductsLoading',
 };
