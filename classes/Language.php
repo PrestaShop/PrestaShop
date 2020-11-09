@@ -1360,25 +1360,47 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         static::generateEmailsLanguagePack($lang_pack, $errors, true);
     }
 
+    /**
+     * Installs a language pack and updates language sensitive information
+     *
+     * @param string $iso Language ISO code
+     * @param array $params Optional parameters for self::checkAndAddLanguage
+     * @param array $errors
+     *
+     * @return array|true Array of errors, or true if all goes well
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
     public static function installLanguagePack($iso, $params, &$errors = [])
     {
         // Clear smarty modules cache
         Tools::clearCache();
 
-        if (!Language::checkAndAddLanguage((string) $iso, false, false, $params)) {
+        $lang_pack = static::getLangDetails($iso);
+
+        if (!Language::checkAndAddLanguage((string) $iso, $lang_pack, false, $params)) {
             $errors[] = Context::getContext()->getTranslator()->trans('An error occurred while creating the language: %s', [(string) $iso], 'Admin.International.Notification');
-        } else {
-            // Reset cache
-            Language::loadLanguages();
+            return $errors;
         }
 
-        $lang_pack = self::getLangDetails($iso);
-        self::installSfLanguagePack(self::getLocaleByIso($iso), $errors);
-        self::updateMultilangTable($iso);
-        self::updateCurrenciesCldr(new Language(self::getIdByIso($iso, true)));
-        self::generateEmailsLanguagePack($lang_pack, $errors, true);
+        $langId = static::getIdByIso($iso, true);
 
-        return count($errors) ? $errors : true;
+        // extract language pack
+        if (!static::installSfLanguagePack(static::getLocaleByIso($iso), $errors)) {
+            return $errors;
+        }
+
+        // update multi language tables (*_lang tables in DB)
+        static::updateMultilangTable($iso);
+
+        // update localized information in currencies
+        static::updateCurrenciesCldr(new static($langId));
+
+        // generate mail templates in the installed language
+        static::generateEmailsLanguagePack($lang_pack, $errors, true);
+
+        return true;
     }
 
     private static function updateCurrenciesCldr(Language $language)

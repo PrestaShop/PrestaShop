@@ -627,6 +627,17 @@ class Install extends AbstractInstall
             }
 
             $errors = [];
+            $locale = $params_lang['locale'];
+
+            /* @todo check if a newer pack is available */
+            if (!EntityLanguage::translationPackIsInCache($locale)) {
+                EntityLanguage::downloadXLFLanguagePack($locale, $errors);
+
+                if (!empty($errors)) {
+                    throw new PrestashopInstallerException($this->translator->trans('Cannot download language pack "%iso%"', ['%iso%' => $iso], 'Install'));
+                }
+            }
+
             $this->callWithUnityAutoincrement(function () use ($iso, $params_lang, &$errors) {
                 EntityLanguage::installLanguagePack($iso, $params_lang, $errors);
             });
