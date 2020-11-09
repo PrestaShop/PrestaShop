@@ -32,6 +32,8 @@ use Behat\Gherkin\Node\TableNode;
 use DateTime;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
+use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
@@ -49,7 +51,7 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @When I add new virtual product :productReference file :fileReference with following properties:
+     * @When I add new virtual product :productReference file :fileReference with following details:
      *
      * @param string $productReference
      * @param string $fileReference
@@ -70,6 +72,49 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
         ));
 
         $this->getSharedStorage()->set($fileReference, $virtualProductId->getValue());
+    }
+
+    /**
+     * @Then virtual product :productReference should have a file :fileReference with following details:
+     *
+     * @param string $productReference
+     * @param string $fileReference
+     * @param TableNode $dataTable
+     */
+    public function assertFile(string $productReference, string $fileReference, TableNode $dataTable): void
+    {
+        $actualFile = $this->getProductForEditing($productReference)->getVirtualProductFile();
+        if (!$actualFile) {
+            throw new RuntimeException('Expected virtual product to have a file');
+        }
+
+        $dataRows = $dataTable->getRowsHash();
+        Assert::assertEquals(
+            $dataRows['display name'],
+            $actualFile->getDisplayName(),
+            'Unexpected display file name'
+        );
+        Assert::assertEquals(
+            $dataRows['file name'],
+            $actualFile->getFileName(),
+            'Unexpected file name'
+        );
+        Assert::assertEquals(
+            PrimitiveUtils::castStringIntegerIntoInteger($dataRows['access days']),
+            $actualFile->getAccessDays(),
+            'Unexpected file access days'
+        );
+        Assert::assertEquals(
+            PrimitiveUtils::castStringIntegerIntoInteger($dataRows['download times limit']),
+            $actualFile->getDownloadTimesLimit(),
+            'Unexpected file download times limit'
+        );
+        Assert::assertEquals(
+            $dataRows['expiration date'],
+            //@todo: handle optional cases
+            $actualFile->getExpirationDate()->format(DateTimeUtil::DEFAULT_FORMAT),
+            'Unexpected file download times limit'
+        );
     }
 
     //@todo: use dummyFileUploader from PR https://github.com/PrestaShop/PrestaShop/pull/21510

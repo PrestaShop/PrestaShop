@@ -14,13 +14,13 @@ Feature: Add virtual product file from BO (Back Office).
       | name       | en-US:puffin icon; |
       | is_virtual | true               |
     And virtual product "product1" should not have a file
-    When I add new virtual product "product1" file "file1" with following properties:
+    When I add new virtual product "product1" file "file1" with following details:
       | display name         | puffin-logo.png     |
       | file name            | app_icon.png        |
       | access days          | 3                   |
       | download times limit | 3                   |
       | expiration date      | 2020-11-20 10:00:00 |
-    Then virtual product "product1" should have a file "file1" with following properties:
+    Then virtual product "product1" should have a file "file1" with following details:
       | display name         | puffin-logo.png     |
       | file name            | app_icon.png        |
       | access days          | 3                   |
