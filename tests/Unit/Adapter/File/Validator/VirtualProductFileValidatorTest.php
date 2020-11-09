@@ -26,15 +26,30 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\File\Exception;
+namespace Tests\Unit\Adapter\File\Validator;
 
-/**
- * Thrown when file is invalid
- */
-class InvalidFileException extends FileException
+use Generator;
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\File\Validator\VirtualProductFileValidator;
+use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
+
+class VirtualProductFileValidatorTest extends TestCase
 {
     /**
-     * When file size is too big
+     * @dataProvider getInvalidPaths
+     *
+     * @param string $filePath
      */
-    public const INVALID_SIZE = 10;
+    public function testItThrowsExceptionWhenProvidedPathIsNotLeadingToAFile(string $filePath): void
+    {
+        $this->expectException(FileNotFoundException::class);
+        $validator = new VirtualProductFileValidator('1');
+        $validator->validate($filePath);
+    }
+
+    public function getInvalidPaths(): Generator
+    {
+        yield [__DIR__];
+        yield [__DIR__ . '/' . 'notexistingfile.csv'];
+    }
 }
