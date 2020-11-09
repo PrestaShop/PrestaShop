@@ -71,6 +71,7 @@ services:
         arguments:
             - '@prestashop.core.util.number.number_extractor'
             - '@prestashop.adapter.product.repository.stock_available_repository'
+            - '@prestashop.adapter.product.repository.stock_available_repository'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing
