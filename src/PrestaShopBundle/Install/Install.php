@@ -421,6 +421,7 @@ class Install extends AbstractInstall
 
         // Install languages
         try {
+            $iso_codes_to_install = null;
             if (!$all_languages) {
                 $iso_codes_to_install = [$this->language->getLanguageIso()];
                 if ($iso_country) {
@@ -435,8 +436,6 @@ class Install extends AbstractInstall
                     }
                 }
                 $iso_codes_to_install = array_unique($iso_codes_to_install);
-            } else {
-                $iso_codes_to_install = null;
             }
             $languages = $this->installLanguages($iso_codes_to_install);
         } catch (PrestashopInstallerException $e) {
@@ -620,6 +619,17 @@ class Install extends AbstractInstall
             }
 
             $errors = [];
+            $locale = $params_lang['locale'];
+
+            /* @todo check if a newer pack is available */
+            if (!EntityLanguage::translationPackIsInCache($locale)) {
+                EntityLanguage::downloadXLFLanguagePack($locale, $errors);
+
+                if (!empty($errors)) {
+                    throw new PrestashopInstallerException($this->translator->trans('Cannot download language pack "%iso%"', ['%iso%' => $iso], 'Install'));
+                }
+            }
+
             $this->callWithUnityAutoincrement(function () use ($iso, $params_lang, &$errors) {
                 EntityLanguage::installLanguagePack($iso, $params_lang, $errors);
             });
