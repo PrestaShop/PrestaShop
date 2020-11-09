@@ -23,55 +23,55 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\Query;
+namespace PrestaShop\PrestaShop\Core\Domain\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Exception\InvalidSortingException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\QuerySorting;
 
 /**
- * Get order for view in Back Office
+ * Class QuerySorting is responsible for providing valid sorting parameter.
  */
-class GetOrderForViewing
+class QuerySorting
 {
-    /**
-     * @var OrderId
-     */
-    private $orderId;
+    const ASC = 'ASC';
+    const DESC = 'DESC';
 
     /**
-     * @var QuerySorting
+     * @var string
      */
-    private $productsSorting;
+    private $sorting;
 
     /**
-     * @param int $orderId
-     * @param string $productsSorting
+     * @param string $sorting
      *
-     * @throws OrderException
      * @throws InvalidSortingException
      */
-    public function __construct(int $orderId, string $productsSorting = QuerySorting::ASC)
+    public function __construct(string $sorting)
     {
-        $this->orderId = new OrderId($orderId);
-        $this->productsSorting = new QuerySorting($productsSorting);
+        $sorting = strtoupper($sorting);
+        $this->assertSortingSupported($sorting);
+
+        $this->sorting = $sorting;
     }
 
     /**
-     * @return OrderId
+     * @return string
      */
-    public function getOrderId(): OrderId
+    public function getValue(): string
     {
-        return $this->orderId;
+        return $this->sorting;
     }
 
     /**
-     * @return QuerySorting
+     * @param string $sorting
+     *
+     * @throws InvalidSortingException
      */
-    public function getProductsSorting(): QuerySorting
+    private function assertSortingSupported(string $sorting): void
     {
-        return $this->productsSorting;
+        if (!in_array($sorting, [self::ASC, self::DESC], true)) {
+            throw new InvalidSortingException();
+        }
     }
 }

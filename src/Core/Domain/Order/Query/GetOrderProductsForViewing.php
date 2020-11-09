@@ -27,9 +27,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Query;
 
-use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Exception\InvalidSortingException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\QuerySorting;
 
 /**
  * Query for paginated order products
@@ -52,9 +53,9 @@ class GetOrderProductsForViewing
     private $limit;
 
     /**
-     * @var string
+     * @var QuerySorting
      */
-    private $productsOrder;
+    private $productsSorting;
 
     /**
      * Builds query for paginated results
@@ -62,25 +63,25 @@ class GetOrderProductsForViewing
      * @param int $orderId
      * @param int $offset
      * @param int $limit
+     * @param string $productsSorting
      *
-     * @param string $productsOrder
      * @return GetOrderProductsForViewing
      *
      * @throws OrderException
-     * @throws Exception
+     * @throws InvalidSortingException
      */
     public static function paginated(
         int $orderId,
         int $offset,
         int $limit,
-        string $productsOrder = 'ASC'
+        string $productsSorting = QuerySorting::ASC
     ) {
         $query = new self();
 
         $query->orderId = new OrderId($orderId);
+        $query->productsSorting = new QuerySorting($productsSorting);
         $query->offset = $offset;
         $query->limit = $limit;
-        $query->productsOrder = $query->setProductsOrder($productsOrder);
 
         return $query;
     }
@@ -89,18 +90,18 @@ class GetOrderProductsForViewing
      * Builds query for getting all results
      *
      * @param int $orderId
+     * @param string $productsSorting
      *
-     * @param string $productsOrder
      * @return GetOrderProductsForViewing
      *
      * @throws OrderException
-     * @throws Exception
+     * @throws InvalidSortingException
      */
-    public static function all(int $orderId, string $productsOrder = 'ASC')
+    public static function all(int $orderId, string $productsSorting = QuerySorting::ASC)
     {
         $query = new self();
         $query->orderId = new OrderId($orderId);
-        $query->setProductsOrder($productsOrder);
+        $query->productsSorting = new QuerySorting($productsSorting);
 
         return $query;
     }
@@ -130,36 +131,10 @@ class GetOrderProductsForViewing
     }
 
     /**
-     * @return mixed
+     * @return QuerySorting
      */
-    public function getProductsOrder()
+    public function getProductsSorting(): QuerySorting
     {
-        return $this->productsOrder;
+        return $this->productsSorting;
     }
-
-    /**
-     * @param mixed $productsOrder
-     * @return GetOrderProductsForViewing
-     * @throws Exception
-     */
-    public function setProductsOrder($productsOrder)
-    {
-        $this->assertProductsOrderSupported($productsOrder);
-
-        $this->productsOrder = $productsOrder;
-
-        return $this;
-    }
-
-    /**
-     * @param string $productsOrder
-     * @throws Exception
-     */
-    private function assertProductsOrderSupported(string $productsOrder)
-    {
-        if(!in_array($productsOrder, ['ASC', 'DESC'], true)) {
-            throw new Exception('Products order not supported');
-        }
-    }
-
 }
