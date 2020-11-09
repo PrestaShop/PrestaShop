@@ -1,6 +1,7 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-attachments
 @reset-database-before-feature
 @update-attachments
+@clear-cache-after-feature
 @clear-downloads-after-feature
 Feature: Update product attachments from Back Office (BO).
   As an employee I want to be able to assign/remove existing attachments to product and add new ones.
