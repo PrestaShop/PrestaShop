@@ -37,9 +37,4 @@ class InvalidFileException extends FileException
      * When file size is too big
      */
     public const INVALID_SIZE = 10;
-
-    /**
-     * When file type is invalid
-     */
-    public const INVALID_TYPE = 20;
 }

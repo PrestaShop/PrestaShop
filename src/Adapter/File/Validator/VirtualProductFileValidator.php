@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\File\Validator;
 
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\Decimal\Exception\DivisionByZeroException;
+use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\File\Exception\InvalidFileException;
 
 /**
@@ -63,7 +64,7 @@ class VirtualProductFileValidator
         $this->assertIsFile($filePath);
 
         $million = new DecimalNumber('1000000');
-        $maxFileSizeInBytes = $this->maxFileSizeInMegabytes->dividedBy($million);
+        $maxFileSizeInBytes = $this->maxFileSizeInMegabytes->times($million);
         $actualSizeInBytes = new DecimalNumber((string) filesize($filePath));
 
         if ($maxFileSizeInBytes->isLowerThan($actualSizeInBytes)) {
@@ -86,10 +87,7 @@ class VirtualProductFileValidator
     private function assertIsFile(string $filePath): void
     {
         if (!is_file($filePath)) {
-            throw new InvalidFileException(
-                sprintf('"%s" is not a file', $filePath),
-                InvalidFileException::INVALID_TYPE
-            );
+            throw new FileNotFoundException(sprintf('"%s" is not a file', $filePath));
         }
     }
 }
