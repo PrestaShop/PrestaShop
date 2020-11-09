@@ -108,8 +108,8 @@ describe('Import customers', async () => {
     it('should close import progress modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeImportModal', baseContext);
 
-      const fileTypeDropdownSelector = await importPage.closeImportModal(page);
-      await expect(fileTypeDropdownSelector).to.be.true;
+      const isModalClosed = await importPage.closeImportModal(page);
+      await expect(isModalClosed).to.be.true;
     });
   });
 

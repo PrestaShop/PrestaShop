@@ -26,7 +26,6 @@ class Import extends BOBasePage {
   /*
   Methods
    */
-
   /**
    * Click on simple file link to download it
    * @param page
