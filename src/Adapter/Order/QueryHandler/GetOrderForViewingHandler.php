@@ -185,7 +185,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $this->getOrderCustomer($order),
             $this->getOrderShippingAddress($order),
             $this->getOrderInvoiceAddress($order),
-            $this->getOrderProducts($query->getOrderId()),
+            $this->getOrderProducts($query->getOrderId(), $query->getProductsOrder()),
             $this->getOrderHistory($order),
             $this->getOrderDocuments($order),
             $this->getOrderShipping($order),
@@ -791,14 +791,15 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
     /**
      * @param OrderId $orderId
      *
+     * @param string $productsOrder
      * @return OrderProductsForViewing
      *
      * @throws OrderException
      */
-    private function getOrderProducts(OrderId $orderId): OrderProductsForViewing
+    private function getOrderProducts(OrderId $orderId, string $productsOrder): OrderProductsForViewing
     {
         return $this->getOrderProductsForViewingHandler->handle(
-            GetOrderProductsForViewing::all($orderId->getValue())
+            GetOrderProductsForViewing::all($orderId->getValue(), $productsOrder)
         );
     }
 }

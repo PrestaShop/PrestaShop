@@ -64,22 +64,6 @@ export default class OrderViewPage {
     });
 
     EventEmitter.on(OrderViewEventMap.productDeletedFromOrder, (event) => {
-      const $tablePagination = $(OrderViewPageMap.productsTablePagination);
-      let numPages = $tablePagination.data('numPages');
-      const numRowsPerPage = $tablePagination.data('numPerPage');
-      const numRows = $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]:not(.d-none)').length;
-      let currentPage = parseInt($(OrderViewPageMap.productsTablePaginationActive).html(), 10);
-      const numProducts = parseInt($(OrderViewPageMap.productsCount).html(), 10);
-      if ((numProducts - 1) % numRowsPerPage === 0) {
-        this.orderProductRenderer.paginationRemovePage(numPages);
-      }
-      if (numRows === 1 && currentPage === numPages) {
-        currentPage -= 1;
-      }
-      EventEmitter.emit(OrderViewEventMap.productListPaginated, {
-        numPage: currentPage
-      });
-
       this.orderPricesRefresher.refresh(event.orderId);
       this.refreshProductsList(event.orderId);
       this.orderDiscountsRefresher.refresh(event.orderId);
@@ -96,9 +80,8 @@ export default class OrderViewPage {
     });
 
     EventEmitter.on(OrderViewEventMap.productUpdated, (event) => {
-      this.orderProductRenderer.addOrUpdateProductToList(
-        $(OrderViewPageMap.productsTableRow(event.orderDetailId)),
-        event.newRow
+      $(OrderViewPageMap.productsTableRow(event.orderDetailId)).html(
+          $(event.newRow).html()
       );
       this.orderProductRenderer.resetEditRow(event.orderDetailId);
       this.orderPricesRefresher.refresh(event.orderId);
@@ -106,8 +89,6 @@ export default class OrderViewPage {
       this.orderDiscountsRefresher.refresh(event.orderId);
       this.orderInvoicesRefresher.refresh(event.orderId);
       this.orderDocumentsRefresher.refresh(event.orderId);
-      this.listenForProductDelete();
-      this.listenForProductEdit();
       this.resetToolTips();
 
       const editRowsLeft = $(OrderViewPageMap.productEditRow).not(OrderViewPageMap.productEditRowTemplate).length;
@@ -126,20 +107,14 @@ export default class OrderViewPage {
       this.orderInvoicesRefresher.refresh(event.orderId);
       this.orderDocumentsRefresher.refresh(event.orderId);
       this.orderProductRenderer.moveProductPanelToOriginalPosition();
-
-      // Move to first page to see the added product
-      EventEmitter.emit(OrderViewEventMap.productListPaginated, {
-        numPage: 1
-      });
     });
   }
 
   listenForProductDelete() {
-    $(OrderViewPageMap.productDeleteBtn)
-      .off('click')
-      .on('click', event => {
-        this.orderProductManager.handleDeleteProductEvent(event);
-      }
+    $(OrderViewPageMap.productsTable).on(
+        'click',
+        OrderViewPageMap.productDeleteBtn,
+        (event) => this.orderProductManager.handleDeleteProductEvent(event)
     );
   }
 
@@ -149,21 +124,25 @@ export default class OrderViewPage {
   }
 
   listenForProductEdit() {
-    $(OrderViewPageMap.productEditButtons).off('click').on('click', (event) => {
-      const $btn = $(event.currentTarget);
-      this.orderProductRenderer.moveProductsPanelToModificationPosition();
-      this.orderProductRenderer.editProductFromList(
-        $btn.data('orderDetailId'),
-        $btn.data('productQuantity'),
-        $btn.data('productPriceTaxIncl'),
-        $btn.data('productPriceTaxExcl'),
-        $btn.data('taxRate'),
-        $btn.data('location'),
-        $btn.data('availableQuantity'),
-        $btn.data('availableOutOfStock'),
-        $btn.data('orderInvoiceId'),
-      );
-    });
+    $(OrderViewPageMap.productsTable).on(
+        'click',
+        OrderViewPageMap.productEditButtons,
+        (event) => {
+          const $btn = $(event.currentTarget);
+          this.orderProductRenderer.moveProductsPanelToModificationPosition();
+          this.orderProductRenderer.editProductFromList(
+              $btn.data('orderDetailId'),
+              $btn.data('productQuantity'),
+              $btn.data('productPriceTaxIncl'),
+              $btn.data('productPriceTaxExcl'),
+              $btn.data('taxRate'),
+              $btn.data('location'),
+              $btn.data('availableQuantity'),
+              $btn.data('availableOutOfStock'),
+              $btn.data('orderInvoiceId'),
+          );
+        }
+    );
   }
 
   listenForProductPack() {
@@ -253,8 +232,6 @@ export default class OrderViewPage {
 
     EventEmitter.on(OrderViewEventMap.productListPaginated, (event) => {
       this.orderProductRenderer.paginate(event.numPage);
-      this.listenForProductDelete();
-      this.listenForProductEdit();
       this.resetToolTips();
     });
 
@@ -316,6 +293,7 @@ export default class OrderViewPage {
     const $tablePagination = $(OrderViewPageMap.productsTablePagination);
     const numRowsPerPage = $tablePagination.data('numPerPage');
     const initialNumProducts = $(OrderViewPageMap.productsTableRows).length;
+    let currentPage = parseInt($(OrderViewPageMap.productsTablePaginationActive).html(), 10);
 
     $.ajax(this.router.generate('admin_orders_get_products', {orderId}))
         .done((response) => {
@@ -327,49 +305,44 @@ export default class OrderViewPage {
           $loadingSpinner.hide();
 
           const newNumProducts = $(OrderViewPageMap.productsTableRows).length;
-          const initialPagesNum = Math.max(Math.ceil(initialNumProducts / numRowsPerPage), 1);
           const newPagesNum = Math.ceil(newNumProducts / numRowsPerPage);
 
           this.orderProductRenderer.updateNumProducts(newNumProducts);
-
-          // Update pagination
-          if (newPagesNum > initialPagesNum) {
-            this.orderProductRenderer.paginationAddPage(newPagesNum);
-          }
+          this.orderProductRenderer.initPagination();
 
           // Display alert
-          const $alertBlock = $('#js-order-view-success-block');
-          if (initialNumProducts > newNumProducts) {
-            $alertBlock.find('.alert-text').html(
-                window.translate_javascripts['Items successfully removed']
-                    .replace('[1]', (initialNumProducts-newNumProducts))
-                    .replace('[2]', (initialNumProducts-newNumProducts) > 1 ? 's' : '')
-            );
-            this._fadeAlert($alertBlock);
+          if (initialNumProducts > newNumProducts) { // product deleted
+            $.growl.notice({
+              title: '',
+              message: window.translate_javascripts['Items successfully removed']
+                  .replace('[1]', (initialNumProducts-newNumProducts))
+                  .replace('[2]', (initialNumProducts-newNumProducts) > 1 ? 's' : '')
+            });
+            // Move to page of the deleted item
+            EventEmitter.emit(OrderViewEventMap.productListPaginated, {
+              numPage: (newPagesNum === 1) ? 1 : currentPage
+            });
           }
-          else if (initialNumProducts < newNumProducts) {
-            $alertBlock.find('.alert-text').html(
-                window.translate_javascripts['Items successfully added']
-                    .replace('[1]', (newNumProducts-initialNumProducts))
-                    .replace('[2]', (newNumProducts-initialNumProducts) > 1 ? 's' : '')
-            );
-            this._fadeAlert($alertBlock);
+          else if (initialNumProducts < newNumProducts) { // product added
+            $.growl.notice({
+              title: '',
+              message: window.translate_javascripts['Items successfully added']
+                  .replace('[1]', (newNumProducts-initialNumProducts))
+                  .replace('[2]', (newNumProducts-initialNumProducts) > 1 ? 's' : '')
+            });
+
+            // Move to first page to see the added product
+            EventEmitter.emit(OrderViewEventMap.productListPaginated, {
+              numPage: 1
+            });
           }
 
-          // Bind actions on products
-          this.listenForProductDelete();
-          this.listenForProductEdit();
+          // Bind hover on product rows buttons
           this.resetToolTips();
         })
         .fail(errors => {
           location.reload();
         })
     ;
-  }
-
-  _fadeAlert(alertBlock) {
-    alertBlock.removeClass("d-none").delay(5000).queue(function(){
-      $(this).addClass("d-none").dequeue();
-    });
   }
 }
