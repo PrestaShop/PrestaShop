@@ -56,8 +56,8 @@ class ShopRepository extends \Doctrine\ORM\EntityRepository
             ->join('s.shopGroup', 'sg')
             ->where('s.active = true')
             ->andWhere('s.deleted = false')
-            ->andWhere('s.name LIKE :searchTerm')
-            ->setParameter('searchTerm', '%' . $searchTerm . '%');
+            ->andWhere('LOWER(s.name) LIKE :searchTerm')
+            ->setParameter('searchTerm', '%' . strtolower($searchTerm) . '%');
 
         return $qb->getQuery()->getArrayResult();
     }
