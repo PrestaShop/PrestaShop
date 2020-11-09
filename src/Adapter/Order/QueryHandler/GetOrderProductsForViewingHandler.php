@@ -170,8 +170,13 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
 
         unset($product);
 
-        // reorder products by order_detail_id DESC
-        krsort($products);
+        if ('DESC' === $query->getProductsOrder()) {
+            // reorder products by order_detail_id DESC
+            krsort($products);
+        } else {
+            // reorder products by order_detail_id ASC
+            ksort($products);
+        }
 
         $productsForViewing = [];
 
