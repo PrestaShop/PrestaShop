@@ -398,7 +398,7 @@ class OrderController extends FrameworkBundleAdminController
     {
         try {
             /** @var OrderForViewing $orderForViewing */
-            $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+            $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, 'DESC'));
         } catch (OrderException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
@@ -665,14 +665,6 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function addProductAction(int $orderId, Request $request): Response
     {
-        /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-
-        $previousProducts = [];
-        foreach ($orderForViewing->getProducts()->getProducts() as $orderProductForViewing) {
-            $previousProducts[$orderProductForViewing->getOrderDetailId()] = $orderProductForViewing;
-        }
-
         $invoiceId = (int) $request->get('invoice_id');
         try {
             if ($invoiceId > 0) {
@@ -701,42 +693,14 @@ class OrderController extends FrameworkBundleAdminController
                 );
             }
             $this->getCommandBus()->handle($addProductCommand);
+
+            return new Response();
         } catch (Exception $e) {
             return $this->json(
                 ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
                 Response::HTTP_BAD_REQUEST
             );
         }
-
-        /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-
-        $updatedProducts = [];
-        foreach ($orderForViewing->getProducts()->getProducts() as $orderProductForViewing) {
-            $updatedProducts[$orderProductForViewing->getOrderDetailId()] = $orderProductForViewing;
-        }
-
-        $newProducts = array_diff_key($updatedProducts, $previousProducts);
-
-        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
-        $cancelProductForm = $formBuilder->getFormFor($orderId);
-
-        $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
-        $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
-
-        $addedGridRows = '';
-        foreach ($newProducts as $newProduct) {
-            $addedGridRows .= $this->renderView('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig', [
-                'orderForViewing' => $orderForViewing,
-                'product' => $newProduct,
-                'isColumnLocationDisplayed' => $newProduct->getLocation() !== '',
-                'isColumnRefundedDisplayed' => $newProduct->getQuantityRefunded() > 0,
-                'cancelProductForm' => $cancelProductForm->createView(),
-                'orderCurrency' => $orderCurrency,
-            ]);
-        }
-
-        return new Response($addedGridRows);
     }
 
     /**
@@ -949,7 +913,7 @@ class OrderController extends FrameworkBundleAdminController
         }
 
         /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, 'DESC'));
 
         $products = $orderForViewing->getProducts()->getProducts();
         $product = array_reduce($products, function ($result, OrderProductForViewing $item) use ($orderDetailId) {
@@ -1467,7 +1431,7 @@ class OrderController extends FrameworkBundleAdminController
     public function getProductsListAction(int $orderId): Response
     {
         /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, 'DESC'));
 
         $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
         $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
