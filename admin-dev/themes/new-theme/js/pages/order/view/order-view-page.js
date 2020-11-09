@@ -287,8 +287,7 @@ export default class OrderViewPage {
   }
 
   refreshProductsList(orderId) {
-    const $loadingSpinner = $(OrderViewPageMap.productsPanel).find('.spinner-order-products-container#orderProductsLoading');
-    $loadingSpinner.show();
+    $(OrderViewPageMap.refreshProductsListLoadingSpinner).show();
 
     const $tablePagination = $(OrderViewPageMap.productsTablePagination);
     const numRowsPerPage = $tablePagination.data('numPerPage');
@@ -302,40 +301,40 @@ export default class OrderViewPage {
 
           $(OrderViewPageMap.productsTable + ' tbody').prepend(response);
 
-          $loadingSpinner.hide();
+          $(OrderViewPageMap.refreshProductsListLoadingSpinner).hide();
 
           const newNumProducts = $(OrderViewPageMap.productsTableRows).length;
           const newPagesNum = Math.ceil(newNumProducts / numRowsPerPage);
 
           this.orderProductRenderer.updateNumProducts(newNumProducts);
-          this.orderProductRenderer.initPagination();
+          this.orderProductRenderer.updatePaginationControls();
 
+          let numPage = 1;
           // Display alert
           if (initialNumProducts > newNumProducts) { // product deleted
             $.growl.notice({
               title: '',
               message: window.translate_javascripts['Items successfully removed']
                   .replace('[1]', (initialNumProducts-newNumProducts))
-                  .replace('[2]', (initialNumProducts-newNumProducts) > 1 ? 's' : '')
             });
-            // Move to page of the deleted item
-            EventEmitter.emit(OrderViewEventMap.productListPaginated, {
-              numPage: (newPagesNum === 1) ? 1 : currentPage
-            });
+            // Set target page to the page of the deleted item
+            numPage = (newPagesNum === 1) ? 1 : currentPage;
           }
           else if (initialNumProducts < newNumProducts) { // product added
             $.growl.notice({
               title: '',
               message: window.translate_javascripts['Items successfully added']
                   .replace('[1]', (newNumProducts-initialNumProducts))
-                  .replace('[2]', (newNumProducts-initialNumProducts) > 1 ? 's' : '')
             });
 
             // Move to first page to see the added product
-            EventEmitter.emit(OrderViewEventMap.productListPaginated, {
-              numPage: 1
-            });
+            numPage = 1;
           }
+
+          // Move to page of the deleted item
+          EventEmitter.emit(OrderViewEventMap.productListPaginated, {
+            numPage: numPage
+          });
 
           // Bind hover on product rows buttons
           this.resetToolTips();
