@@ -618,24 +618,18 @@ class Install extends AbstractInstall
                 'locale' => (string) $xml->locale,
             ];
 
-            if (InstallSession::getInstance()->safe_mode) {
-                $this->callWithUnityAutoincrement(function () use ($iso, $params_lang) {
-                    EntityLanguage::checkAndAddLanguage($iso, false, true, $params_lang);
-                });
-            } else {
-                if (file_exists(_PS_TRANSLATIONS_DIR_ . (string) $iso . '.gzip') == false) {
-                    $language = EntityLanguage::downloadLanguagePack($iso, _PS_INSTALL_VERSION_);
+            if (file_exists(_PS_TRANSLATIONS_DIR_ . (string) $iso . '.gzip') == false) {
+                $language = EntityLanguage::downloadLanguagePack($iso, _PS_INSTALL_VERSION_);
 
-                    if ($language == false) {
-                        throw new PrestashopInstallerException($this->translator->trans('Cannot download language pack "%iso%"', ['%iso%' => $iso], 'Install'));
-                    }
+                if ($language == false) {
+                    throw new PrestashopInstallerException($this->translator->trans('Cannot download language pack "%iso%"', ['%iso%' => $iso], 'Install'));
                 }
-
-                $errors = [];
-                $this->callWithUnityAutoincrement(function () use ($iso, $params_lang, &$errors) {
-                    EntityLanguage::installLanguagePack($iso, $params_lang, $errors);
-                });
             }
+
+            $errors = [];
+            $this->callWithUnityAutoincrement(function () use ($iso, $params_lang, &$errors) {
+                EntityLanguage::installLanguagePack($iso, $params_lang, $errors);
+            });
 
             EntityLanguage::loadLanguages();
 
