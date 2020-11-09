@@ -4296,7 +4296,7 @@ class ProductCore extends ObjectModel
 
     /**
      * @param array $products
-     * @param bool $have_stock DEPRECATED
+     * @param bool|null $have_stock DEPRECATED
      *
      * @return array|false
      */
