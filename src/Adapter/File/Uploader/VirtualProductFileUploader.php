@@ -28,7 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\File\Uploader;
 
+use ErrorException;
+use PrestaShop\Decimal\Exception\DivisionByZeroException;
 use PrestaShop\PrestaShop\Adapter\File\Validator\VirtualProductFileValidator;
+use PrestaShop\PrestaShop\Core\File\Exception\CannotUnlinkFileException;
 use PrestaShop\PrestaShop\Core\File\Exception\FileUploadException;
 use ProductDownload;
 
@@ -52,9 +55,13 @@ class VirtualProductFileUploader
     }
 
     /**
-     * @param string file to upload $filePath
+     * @param string $filePath file to upload $filePath
      *
      * @return string uploaded file path
+     *
+     * @throws CannotUnlinkFileException
+     * @throws FileUploadException
+     * @throws DivisionByZeroException
      */
     public function upload(string $filePath): string
     {
@@ -62,15 +69,18 @@ class VirtualProductFileUploader
 
         $destination = _PS_DOWNLOAD_DIR_ . ProductDownload::getNewFilename();
 
-        //@todo: doesnt delete the source file
-        //  in handler scope we cannot ensure that provided path is tmp folder.
-        //  however it introduces issue that file copy will remain in system unless its deleted by gc
-        //  or we don't care and simply use `rename` instead?
-        //  same applies to images https://github.com/PrestaShop/PrestaShop/pull/21510#discussion_r519169510
         if (!copy($filePath, $destination)) {
             throw new FileUploadException(sprintf(
                 'Failed to copy file from "%s" to "%s"', $filePath, $destination
             ));
+        }
+
+        try {
+            if (!unlink($filePath)) {
+                throw new CannotUnlinkFileException(sprintf('Failed to unlink file "%s"', $filePath));
+            }
+        } catch (ErrorException $e) {
+            throw new CannotUnlinkFileException($e->getMessage(), 0, $e);
         }
 
         return $destination;
