@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Install;
 
 use AppKernel;
-use InstallSession;
 use Language as LanguageLegacy;
 use PhpEncryption;
 use PrestaShop\PrestaShop\Adapter\Entity\Cache;
