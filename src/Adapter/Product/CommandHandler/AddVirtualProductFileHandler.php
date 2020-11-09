@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductDownloadRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\CommandHandler\AddVirtualProductFileHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\ValueObject\VirtualProductFileId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use ProductDownload;
 
@@ -74,13 +75,13 @@ final class AddVirtualProductFileHandler implements AddVirtualProductFileHandler
     /**
      * {@inheritdoc}
      */
-    public function handle(AddVirtualProductFileCommand $command): void
+    public function handle(AddVirtualProductFileCommand $command): VirtualProductFileId
     {
         $this->productRepository->assertProductExists($command->getProductId());
         $uploadedFilePath = $this->virtualProductFileUploader->upload($command->getFilePath());
         $productDownload = $this->buildObjectModel($command, pathinfo($uploadedFilePath, PATHINFO_FILENAME));
 
-        $this->productDownloadRepository->add($productDownload);
+        return $this->productDownloadRepository->add($productDownload);
     }
 
     /**

@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\ValueObject\VirtualProductFileId;
 
 /**
  * Defines contract to handle @see AddVirtualProductFileCommand
@@ -38,5 +39,5 @@ interface AddVirtualProductFileHandlerInterface
     /**
      * @param AddVirtualProductFileCommand $command
      */
-    public function handle(AddVirtualProductFileCommand $command): void;
+    public function handle(AddVirtualProductFileCommand $command): VirtualProductFileId;
 }
