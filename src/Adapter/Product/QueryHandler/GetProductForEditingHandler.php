@@ -361,6 +361,7 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
         $productDownload = $this->productDownloadRepository->get(new VirtualProductFileId((int) $productDownloadId));
 
         return new VirtualProductFileForEditing(
+            (int) $productDownload->id,
             $productDownload->filename,
             $productDownload->display_filename,
             (int) $productDownload->nb_days_accessible,

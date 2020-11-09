@@ -6,12 +6,8 @@ Feature: Add virtual product file from BO (Back Office).
   As an employee I want to be able to add file of virtual product.
 
   Scenario: I add virtual product file without limiting access days, download times and without expiration date
-    Given date and time now is "2020-11-09 10:00:00"
-    And language "language1" with locale "en-US" exists
-    And language with iso code "en" is the default one
-    And language "language2" with locale "fr-FR" exists
     And I add product "product1" with following information:
-      | name       | en-US:puffin icon; |
+      | name       | en-US:puffin icon |
       | is_virtual | true               |
     And virtual product "product1" should not have a file
     When I add new virtual product "product1" file "file1" with following details:
