@@ -138,7 +138,7 @@ export default class OrderViewPage {
       this.resetToolTips();
 
       const newNumProducts = $(OrderViewPageMap.productsTableRows).length;
-      const initialPagesNum = Math.ceil(initialNumProducts / numRowsPerPage);
+      const initialPagesNum = Math.max(Math.ceil(initialNumProducts / numRowsPerPage), 1);
       const newPagesNum = Math.ceil(newNumProducts / numRowsPerPage);
 
       // Update pagination
