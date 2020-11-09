@@ -1230,6 +1230,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         $lang_pack = static::getLangDetails($iso);
         if (!$lang_pack) {
             $errors[] = Context::getContext()->getTranslator()->trans('Sorry this language is not available', [], 'Admin.International.Notification');
+
             return false;
         }
 
@@ -1264,6 +1265,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         if (!is_writable(dirname($file))) {
             // @todo Throw exception
             $errors[] = Context::getContext()->getTranslator()->trans('Server does not have permissions for writing.', [], 'Admin.International.Notification') . ' (' . $file . ')';
+
             return false;
         }
 
@@ -1271,10 +1273,11 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
         if (empty($content)) {
             $errors[] = Context::getContext()->getTranslator()->trans('Language pack unavailable.', [], 'Admin.International.Notification') . ' ' . $url;
+
             return false;
         }
 
-        return (false !== file_put_contents($file, $content));
+        return false !== file_put_contents($file, $content);
     }
 
     /**
@@ -1290,6 +1293,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         if (!static::translationPackIsInCache($locale)) {
             // @todo Throw exception
             $errors[] = Context::getContext()->getTranslator()->trans('Language pack unavailable.', [], 'Admin.International.Notification');
+
             return false;
         }
 
@@ -1381,6 +1385,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
         if (!Language::checkAndAddLanguage((string) $iso, $lang_pack, false, $params)) {
             $errors[] = Context::getContext()->getTranslator()->trans('An error occurred while creating the language: %s', [(string) $iso], 'Admin.International.Notification');
+
             return $errors;
         }
 
@@ -1421,6 +1426,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
         if (!Language::checkAndAddLanguage((string) $iso, $lang_pack, false, $params)) {
             $errors[] = Context::getContext()->getTranslator()->trans('An error occurred while creating the language: %s', [(string) $iso], 'Admin.International.Notification');
+
             return false;
         }
 
@@ -1689,7 +1695,6 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
         return $processor;
     }
-
 
     /**
      * Indicates if a given translation pack exists in cache
