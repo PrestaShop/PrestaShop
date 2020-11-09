@@ -32,6 +32,7 @@ use Generator;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\File\Validator\VirtualProductFileValidator;
 use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\File\Exception\InvalidFileException;
 
 class VirtualProductFileValidatorTest extends TestCase
 {
@@ -47,6 +48,18 @@ class VirtualProductFileValidatorTest extends TestCase
         $validator->validate($filePath);
     }
 
+    public function testItThrowsExceptionWhenFileSizeIsTooBig(): void
+    {
+        $this->expectException(InvalidFileException::class);
+        $this->expectExceptionCode(InvalidFileException::INVALID_SIZE);
+
+        $validator = new VirtualProductFileValidator('0.000019');
+        $validator->validate(__DIR__ . '/../../../../Resources/dummyFile/app_icon.png');
+    }
+
+    /**
+     * @return Generator
+     */
     public function getInvalidPaths(): Generator
     {
         yield [__DIR__];
