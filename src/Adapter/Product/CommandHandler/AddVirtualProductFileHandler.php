@@ -77,6 +77,7 @@ final class AddVirtualProductFileHandler implements AddVirtualProductFileHandler
      */
     public function handle(AddVirtualProductFileCommand $command): VirtualProductFileId
     {
+        //@todo: assert product can only have one file.
         $this->productRepository->assertProductExists($command->getProductId());
         $uploadedFilePath = $this->virtualProductFileUploader->upload($command->getFilePath());
         $productDownload = $this->buildObjectModel($command, pathinfo($uploadedFilePath, PATHINFO_FILENAME));

@@ -36,9 +36,14 @@ use DateTimeInterface;
 class VirtualProductFileForEditing
 {
     /**
+     * @var int
+     */
+    private $id;
+
+    /**
      * @var string
      */
-    private $filePath;
+    private $fileName;
 
     /**
      * @var string
@@ -61,6 +66,7 @@ class VirtualProductFileForEditing
     private $expirationDate;
 
     /**
+     * @param int $id
      * @param string $fileName
      * @param string $displayName
      * @param int $accessDays
@@ -68,13 +74,15 @@ class VirtualProductFileForEditing
      * @param DateTimeInterface|null $expirationDate
      */
     public function __construct(
+        int $id,
         string $fileName,
         string $displayName,
         int $accessDays,
         int $downloadTimesLimit,
         ?DateTimeInterface $expirationDate
     ) {
-        $this->filePath = $fileName;
+        $this->id = $id;
+        $this->fileName = $fileName;
         $this->displayName = $displayName;
         $this->accessDays = $accessDays;
         $this->downloadTimesLimit = $downloadTimesLimit;
@@ -82,11 +90,19 @@ class VirtualProductFileForEditing
     }
 
     /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
      * @return string
      */
     public function getFileName(): string
     {
-        return $this->filePath;
+        return $this->fileName;
     }
 
     /**
