@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
+
 /**
  * Product information for editing
  */
@@ -84,6 +86,11 @@ class ProductForEditing
     private $associatedAttachmentIds;
 
     /**
+     * @var VirtualProductFileForEditing|null
+     */
+    private $virtualProductFile;
+
+    /**
      * @param int $productId
      * @param bool $active
      * @param ProductCustomizationOptions $customizationOptions
@@ -94,6 +101,7 @@ class ProductForEditing
      * @param ProductShippingInformation $shippingInformation
      * @param ProductSeoOptions $productSeoOptions
      * @param array $associatedAttachmentIds
+     * @param VirtualProductFileForEditing|null $virtualProductFile
      */
     public function __construct(
         int $productId,
@@ -105,7 +113,8 @@ class ProductForEditing
         ProductOptions $options,
         ProductShippingInformation $shippingInformation,
         ProductSeoOptions $productSeoOptions,
-        array $associatedAttachmentIds
+        array $associatedAttachmentIds,
+        ?VirtualProductFileForEditing $virtualProductFile
     ) {
         $this->productId = $productId;
         $this->active = $active;
@@ -117,6 +126,7 @@ class ProductForEditing
         $this->shippingInformation = $shippingInformation;
         $this->productSeoOptions = $productSeoOptions;
         $this->associatedAttachmentIds = $associatedAttachmentIds;
+        $this->virtualProductFile = $virtualProductFile;
     }
 
     /**
@@ -197,5 +207,13 @@ class ProductForEditing
     public function getAssociatedAttachmentIds(): array
     {
         return $this->associatedAttachmentIds;
+    }
+
+    /**
+     * @return VirtualProductFileForEditing|null
+     */
+    public function getVirtualProductFile(): ?VirtualProductFileForEditing
+    {
+        return $this->virtualProductFile;
     }
 }

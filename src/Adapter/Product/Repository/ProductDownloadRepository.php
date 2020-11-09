@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductDownloadValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\CannotAddVirtualProductFileException;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\ValueObject\VirtualProductFileId;
 use ProductDownload;
 
@@ -53,6 +54,25 @@ class ProductDownloadRepository extends AbstractObjectModelRepository
         ProductDownloadValidator $productDownloadValidator
     ) {
         $this->productDownloadValidator = $productDownloadValidator;
+    }
+
+    /**
+     * @param VirtualProductFileId $virtualProductFileId
+     *
+     * @return ProductDownload
+     *
+     * @throws VirtualProductFileNotFoundException
+     */
+    public function get(VirtualProductFileId $virtualProductFileId): ProductDownload
+    {
+        /** @var ProductDownload $productDownload */
+        $productDownload = $this->getObjectModel(
+            $virtualProductFileId->getValue(),
+            ProductDownload::class,
+            VirtualProductFileNotFoundException::class
+        );
+
+        return $productDownload;
     }
 
     /**

@@ -26,21 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Query\GetVirtualProductFileForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryHandler\GetVirtualProductFileForEditingHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
-
-final class GetVirtualProductFileForEditingHandler implements GetVirtualProductFileForEditingHandlerInterface
+/**
+ * Thrown when virtual product file is not found
+ */
+class VirtualProductFileNotFoundException extends VirtualProductFileException
 {
-    /**
-     * @param GetVirtualProductFileForEditing $query
-     *
-     * @return VirtualProductFileForEditing
-     */
-    public function handle(GetVirtualProductFileForEditing $query): VirtualProductFileForEditing
-    {
-        // TODO: Implement handle() method.
-    }
 }

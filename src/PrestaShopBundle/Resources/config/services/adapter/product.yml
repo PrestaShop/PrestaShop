@@ -466,9 +466,3 @@ services:
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand
-
-    prestashop.adapter.product.command_handler.get_virtual_product_file_for_editing_handler:
-        class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetVirtualProductFileForEditingHandler
-        tags:
-            - name: tactician.handler
-              command: PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Query\GetVirtualProductFileForEditing

@@ -27,8 +27,10 @@
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Customization;
+use DateTime;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductDownloadRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
@@ -43,9 +45,14 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformati
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\ValueObject\VirtualProductFileId;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractorException;
 use Product;
+use ProductDownload;
 use Tag;
 
 /**
@@ -59,12 +66,20 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
     private $numberExtractor;
 
     /**
+     * @var ProductDownloadRepository
+     */
+    private $productDownloadRepository;
+
+    /**
      * @param NumberExtractor $numberExtractor
+     * @param ProductDownloadRepository $productDownloadRepository
      */
     public function __construct(
-        NumberExtractor $numberExtractor
+        NumberExtractor $numberExtractor,
+        ProductDownloadRepository $productDownloadRepository
     ) {
         $this->numberExtractor = $numberExtractor;
+        $this->productDownloadRepository = $productDownloadRepository;
     }
 
     /**
@@ -84,7 +99,8 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
             $this->getOptions($product),
             $this->getShippingInformation($product),
             $this->getSeoOptions($product),
-            $product->getAssociatedAttachmentIds()
+            $product->getAssociatedAttachmentIds(),
+            $this->getVirtualProductFile($product)
         );
     }
 
@@ -267,6 +283,31 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
             $product->link_rewrite,
             $product->redirect_type,
             (int) $product->id_type_redirected
+        );
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return VirtualProductFileForEditing|null
+     *
+     * @throws VirtualProductFileNotFoundException
+     */
+    private function getVirtualProductFile(Product $product): ?VirtualProductFileForEditing
+    {
+        $productDownloadId = ProductDownload::getIdFromIdProduct($product->id);
+        if (!$productDownloadId) {
+            return null;
+        }
+
+        $productDownload = $this->productDownloadRepository->get(new VirtualProductFileId((int) $productDownloadId));
+
+        return new VirtualProductFileForEditing(
+            _PS_DOWNLOAD_DIR_ . $productDownload->filename,
+            $productDownload->display_filename,
+            (int) $productDownload->nb_days_accessible,
+            (int) $productDownload->nb_downloadable,
+            $productDownload->date_expiration === DateTimeUtil::NULL_VALUE ? null : new DateTime($productDownload->date_expiration)
         );
     }
 }
