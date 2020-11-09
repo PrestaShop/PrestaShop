@@ -320,8 +320,7 @@ export default class OrderViewPage {
   }
 
   refreshProductsList(orderId) {
-    const $loadingSpinner = $(OrderViewPageMap.productsPanel).find('.spinner-order-products-container#orderProductsLoading');
-    $loadingSpinner.show();
+    $(OrderViewPageMap.refreshProductsListLoadingSpinner).show();
 
     const $tablePagination = $(OrderViewPageMap.productsTablePagination);
     const numRowsPerPage = $tablePagination.data('numPerPage');
@@ -334,7 +333,7 @@ export default class OrderViewPage {
 
           $(OrderViewPageMap.productsTable + ' tbody').prepend(response);
 
-          $loadingSpinner.hide();
+          $(OrderViewPageMap.refreshProductsListLoadingSpinner).hide();
 
           const newNumProducts = $(OrderViewPageMap.productsTableRows).length;
           const initialPagesNum = Math.max(Math.ceil(initialNumProducts / numRowsPerPage), 1);
@@ -347,6 +346,7 @@ export default class OrderViewPage {
             this.orderProductRenderer.paginationAddPage(newPagesNum);
           }
 
+          let numPage = 1;
           // Display alert
           const $alertBlock = $('#js-order-view-success-block');
           if (initialNumProducts > newNumProducts) {
