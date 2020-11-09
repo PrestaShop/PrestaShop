@@ -5,7 +5,7 @@
 Feature: Add virtual product file from BO (Back Office).
   As an employee I want to be able to add file of virtual product.
 
-  Scenario: I add virtual product file
+  Scenario: I add virtual product file without limiting access days, download times and without expiration date
     Given date and time now is "2020-11-09 10:00:00"
     And language "language1" with locale "en-US" exists
     And language with iso code "en" is the default one
@@ -17,11 +17,19 @@ Feature: Add virtual product file from BO (Back Office).
     When I add new virtual product "product1" file "file1" with following details:
       | display name         | puffin-logo.png     |
       | file name            | app_icon.png        |
+    Then virtual product "product1" should have a file "file1" with following details:
+      | display name         | puffin-logo.png     |
+      | file name            | app_icon.png        |
+
+  Scenario: I add virtual product file with limited access days, downloads and expiration date
+    When I add new virtual product "product1" file "file2" with following details:
+      | display name | puffin-logo2.png |
+      | file name    | app_icon.png     |
       | access days          | 3                   |
       | download times limit | 3                   |
       | expiration date      | 2020-11-20 10:00:00 |
-    Then virtual product "product1" should have a file "file1" with following details:
-      | display name         | puffin-logo.png     |
+    Then virtual product "product1" should have a file "file2" with following details:
+      | display name         | puffin-logo2.png    |
       | file name            | app_icon.png        |
       | access days          | 3                   |
       | download times limit | 3                   |
