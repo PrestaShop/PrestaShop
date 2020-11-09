@@ -247,6 +247,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\RelatedProductsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStatusFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\DuplicateProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\VirtualProductFileFeatureContext
                 - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
                 - Tests\Integration\Behaviour\Features\Transform\StringToArrayTransformContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\ProductImageFeatureContext

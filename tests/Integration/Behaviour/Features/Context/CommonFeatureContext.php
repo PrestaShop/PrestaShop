@@ -121,6 +121,11 @@ use Zone;
 class CommonFeatureContext extends AbstractPrestaShopFeatureContext
 {
     /**
+     * Shared storage key for saving fake current dateTime
+     */
+    public const CURRENT_DATE_TIME_STORAGE_KEY = 'date_time_now';
+
+    /**
      * PrestaShop Symfony AppKernel
      *
      * Required to access services through the container
@@ -260,6 +265,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+
      * @Given I reboot kernel
      */
     public function rebootKernelOnDemand()
