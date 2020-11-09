@@ -316,7 +316,6 @@ export default class OrderViewPage {
               title: '',
               message: window.translate_javascripts['Items successfully removed']
                   .replace('[1]', (initialNumProducts-newNumProducts))
-                  .replace('[2]', (initialNumProducts-newNumProducts) > 1 ? 's' : '')
             });
             // Move to page of the deleted item
             EventEmitter.emit(OrderViewEventMap.productListPaginated, {
@@ -328,7 +327,6 @@ export default class OrderViewPage {
               title: '',
               message: window.translate_javascripts['Items successfully added']
                   .replace('[1]', (newNumProducts-initialNumProducts))
-                  .replace('[2]', (newNumProducts-initialNumProducts) > 1 ? 's' : '')
             });
 
             // Move to first page to see the added product

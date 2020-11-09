@@ -79,6 +79,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\QuerySorting;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
@@ -399,7 +400,7 @@ class OrderController extends FrameworkBundleAdminController
     {
         try {
             /** @var OrderForViewing $orderForViewing */
-            $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, 'DESC'));
+            $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
         } catch (OrderException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
@@ -914,7 +915,7 @@ class OrderController extends FrameworkBundleAdminController
         }
 
         /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, 'DESC'));
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
 
         $products = $orderForViewing->getProducts()->getProducts();
         $product = array_reduce($products, function ($result, OrderProductForViewing $item) use ($orderDetailId) {
@@ -1424,7 +1425,7 @@ class OrderController extends FrameworkBundleAdminController
     public function getProductsListAction(int $orderId): Response
     {
         /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, 'DESC'));
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
 
         $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
         $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
