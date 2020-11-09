@@ -204,8 +204,6 @@ export default class OrderProductAdd {
       response => {
         EventEmitter.emit(OrderViewEventMap.productAddedToOrder, {
           orderId,
-          orderProductId: params.product_id,
-          newRow: response
         });
       },
       response => {

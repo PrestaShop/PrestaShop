@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Query;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
@@ -51,26 +52,35 @@ class GetOrderProductsForViewing
     private $limit;
 
     /**
+     * @var string
+     */
+    private $productsOrder;
+
+    /**
      * Builds query for paginated results
      *
      * @param int $orderId
      * @param int $offset
      * @param int $limit
      *
+     * @param string $productsOrder
      * @return GetOrderProductsForViewing
      *
      * @throws OrderException
+     * @throws Exception
      */
     public static function paginated(
         int $orderId,
         int $offset,
-        int $limit
+        int $limit,
+        string $productsOrder = 'ASC'
     ) {
         $query = new self();
 
         $query->orderId = new OrderId($orderId);
         $query->offset = $offset;
         $query->limit = $limit;
+        $query->productsOrder = $query->setProductsOrder($productsOrder);
 
         return $query;
     }
@@ -80,14 +90,17 @@ class GetOrderProductsForViewing
      *
      * @param int $orderId
      *
+     * @param string $productsOrder
      * @return GetOrderProductsForViewing
      *
      * @throws OrderException
+     * @throws Exception
      */
-    public static function all(int $orderId)
+    public static function all(int $orderId, string $productsOrder = 'ASC')
     {
         $query = new self();
         $query->orderId = new OrderId($orderId);
+        $query->setProductsOrder($productsOrder);
 
         return $query;
     }
@@ -115,4 +128,38 @@ class GetOrderProductsForViewing
     {
         return $this->limit;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getProductsOrder()
+    {
+        return $this->productsOrder;
+    }
+
+    /**
+     * @param mixed $productsOrder
+     * @return GetOrderProductsForViewing
+     * @throws Exception
+     */
+    public function setProductsOrder($productsOrder)
+    {
+        $this->assertProductsOrderSupported($productsOrder);
+
+        $this->productsOrder = $productsOrder;
+
+        return $this;
+    }
+
+    /**
+     * @param string $productsOrder
+     * @throws Exception
+     */
+    private function assertProductsOrderSupported(string $productsOrder)
+    {
+        if(!in_array($productsOrder, ['ASC', 'DESC'], true)) {
+            throw new Exception('Products order not supported');
+        }
+    }
+
 }
