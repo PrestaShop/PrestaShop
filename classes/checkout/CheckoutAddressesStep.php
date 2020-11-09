@@ -189,7 +189,6 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             if (!$this->getCheckoutProcess()->hasErrors()) {
                 $this->setNextStepAsCurrent();
                 $this->setComplete(
-                    !isset($requestParams['saveAddress']) &&
                     $this->getCheckoutSession()->getIdAddressInvoice() &&
                     $this->getCheckoutSession()->getIdAddressDelivery()
                 );
