@@ -23,6 +23,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use Doctrine\Common\Inflector\Inflector;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Translation\TranslatorInterface;
 use PrestaShopBundle\Translation\TranslatorLanguageLoader;
@@ -124,5 +126,17 @@ class DataLangCore
     public function getDomain()
     {
         return $this->domain;
+    }
+
+    /**
+     * Returns the table name where the translations are to be performed
+     *
+     * @return string
+     */
+    public function getTableName(): string
+    {
+        $shortClassName = substr(strrchr('\\' . get_class($this), '\\'), 1);
+
+        return Inflector::tableize($shortClassName);
     }
 }
