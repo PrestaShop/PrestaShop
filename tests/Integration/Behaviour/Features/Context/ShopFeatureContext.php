@@ -29,7 +29,7 @@ namespace Tests\Integration\Behaviour\Features\Context;
 use Configuration;
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\SearchShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops;
 use RuntimeException;
 use Shop;
@@ -110,36 +110,19 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I search for shops with the term :searchTerm
+     * @When I search for shops with the term :searchTerm I should get the following results:
      *
      * @param string $searchTerm
-     */
-    public function searchShopsWithTerm(string $searchTerm): void
-    {
-        try {
-            $shops = $this->getQueryBus()->handle(new SearchShops($searchTerm));
-        } catch (ShopException $e) {
-            $this->setLastException($e);
-
-            return;
-        }
-
-        $this->setLastSearchShopsResult(!empty($shops) ? $shops['shops'] : []);
-    }
-
-    /**
-     * @Then I should get the following shop results:
-     *
      * @param TableNode $table
      */
-    public function assertFoundShops(TableNode $table): void
+    public function assertFoundShops(string $searchTerm, TableNode $table): void
     {
         $expectedShops = $table->getColumnsHash();
-        $foundShops = $this->getLastSearchShopsResult();
+        $foundShops = $this->getQueryBus()->handle(new SearchShops($searchTerm));
 
         foreach ($expectedShops as $key => $currentExpectedShop) {
             $wasCurrentExpectedShopFound = false;
-            foreach ($foundShops as $currentFoundShop) {
+            foreach ($foundShops['shops'] as $currentFoundShop) {
                 if (strtolower($currentExpectedShop['name']) == strtolower($currentFoundShop['name'])) {
                     $wasCurrentExpectedShopFound = true;
                     Assert::assertEquals(
@@ -175,22 +158,19 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * Get a list of shop from the last research
-     *
-     * @return array
+     * @When I search for shops with the term :searchTerm I should get a SearchShopException
      */
-    private function getLastSearchShopsResult(): array
+    public function assertShopException(string $searchTerm): void
     {
-        return $this->getSharedStorage()->get(self::LAST_FOUND_SHOPS_KEY);
-    }
+        $exceptionTriggered = false;
+        try {
+            $this->getQueryBus()->handle(new SearchShops($searchTerm));
+        } catch (SearchShopException $e) {
+            $exceptionTriggered = true;
+        }
 
-    /**
-     * @Then I should get a ShopException
-     */
-    public function assertShopException(): void
-    {
-        $this->assertLastErrorIs(
-            ShopException::class
-        );
+        if (!$exceptionTriggered) {
+            throw new RuntimeException('Expected SearchShopException did not happen');
+        }
     }
 }
