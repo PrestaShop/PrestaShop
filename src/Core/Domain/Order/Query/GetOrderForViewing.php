@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Query;
 
+use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
 /**
@@ -38,12 +40,18 @@ class GetOrderForViewing
      */
     private $orderId;
 
+    private $productsOrder;
+
     /**
      * @param int $orderId
+     * @param string $productsOrder
+     * @throws OrderException
+     * @throws Exception
      */
-    public function __construct(int $orderId)
+    public function __construct(int $orderId, string $productsOrder = 'ASC')
     {
         $this->orderId = new OrderId($orderId);
+        $this->setProductsOrder($productsOrder);
     }
 
     /**
@@ -52,5 +60,38 @@ class GetOrderForViewing
     public function getOrderId(): OrderId
     {
         return $this->orderId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProductsOrder()
+    {
+        return $this->productsOrder;
+    }
+
+    /**
+     * @param mixed $productsOrder
+     * @return GetOrderForViewing
+     * @throws Exception
+     */
+    public function setProductsOrder($productsOrder)
+    {
+        $this->assertProductsOrderSupported($productsOrder);
+
+        $this->productsOrder = $productsOrder;
+
+        return $this;
+    }
+
+    /**
+     * @param string $productsOrder
+     * @throws Exception
+     */
+    private function assertProductsOrderSupported(string $productsOrder)
+    {
+        if(!in_array($productsOrder, ['ASC', 'DESC'], true)) {
+            throw new Exception('Products order not supported');
+        }
     }
 }
