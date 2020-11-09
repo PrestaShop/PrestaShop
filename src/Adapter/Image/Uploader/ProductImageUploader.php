@@ -36,7 +36,9 @@ use PrestaShop\PrestaShop\Adapter\Product\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Image\Exception\CannotUnlinkImageException;
+use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 
 /**
  * Uploads product image to filesystem
@@ -98,9 +100,17 @@ class ProductImageUploader extends AbstractImageUploader
     }
 
     /**
-     * {@inheritdoc}
+     * @param Image $image
+     * @param string $filePath
+     *
+     * @return string destination path of main image
+     *
+     * @throws CannotUnlinkImageException
+     * @throws ImageUploadException
+     * @throws ImageOptimizationException
+     * @throws MemoryLimitException
      */
-    public function upload(Image $image, string $filePath): void
+    public function upload(Image $image, string $filePath): string
     {
         $this->createDestinationDirectory($image);
         $destinationPath = $this->productImagePathFactory->getBasePath($image);
@@ -113,6 +123,8 @@ class ProductImageUploader extends AbstractImageUploader
         );
 
         $this->deleteCachedImages($image);
+
+        return $destinationPath;
     }
 
     /**
