@@ -35,6 +35,7 @@ use CartRule;
 use Category;
 use Context;
 use Currency;
+use DateTime;
 use Employee;
 use Language;
 use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
@@ -45,6 +46,11 @@ use TaxManagerFactory;
 
 class CommonFeatureContext extends AbstractPrestaShopFeatureContext
 {
+    /**
+     * Shared storage key for saving fake current dateTime
+     */
+    public const CURRENT_DATE_TIME_STORAGE_KEY = 'date_time_now';
+
     /**
      * PrestaShop Symfony AppKernel
      *
@@ -177,6 +183,16 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     public function clearEntityManager()
     {
         $this::getContainer()->get('doctrine.orm.entity_manager')->clear();
+    }
+
+    /**
+     * @Given date and time now is :dateTime
+     *
+     * @param string $dateTime
+     */
+    public function setCurrentDateTime(string $dateTime): void
+    {
+        SharedStorage::getStorage()->set(self::CURRENT_DATE_TIME_STORAGE_KEY, new DateTime($dateTime));
     }
 
     /**
