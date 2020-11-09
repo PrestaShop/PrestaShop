@@ -10,6 +10,7 @@ Feature: Add virtual product file from BO (Back Office).
       | name       | en-US:puffin icon |
       | is_virtual | true              |
     And virtual product "product1" should not have a file
+    And product product1 type should be virtual
     When I add new virtual product "product1" file "file1" with following details:
       | display name | puffin-logo.png |
       | file name    | app_icon.png    |
@@ -20,6 +21,7 @@ Feature: Add virtual product file from BO (Back Office).
       | expiration date      | 0000-00-00 00:00:00 |
 
   Scenario: I add virtual product file with limited access days, downloads and expiration date
+    Given product product1 type should be virtual
     When I add new virtual product "product1" file "file2" with following details:
       | file name            | app_icon.png        |
       | display name         | puffin-logo2.png    |
@@ -31,3 +33,17 @@ Feature: Add virtual product file from BO (Back Office).
       | access days          | 3                   |
       | download times limit | 3                   |
       | expiration date      | 2020-11-20 10:00:00 |
+
+  Scenario: I add zip type virtual product file
+    Given product product1 type should be virtual
+    When I add new virtual product "product1" file "file3" with following details:
+      | file name            | dummy_zip.zip       |
+      | display name         | zipped files pack   |
+      | access days          | 5                   |
+      | download times limit | 100                 |
+      | expiration date      | 2000-01-20 09:01:01 |
+    Then virtual product "product1" should have a file "file3" with following details:
+      | display name         | zipped files pack   |
+      | access days          | 5                   |
+      | download times limit | 100                 |
+      | expiration date      | 2000-01-20 09:01:01 |
