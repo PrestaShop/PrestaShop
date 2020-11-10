@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 use Category;
 use GroupReduction;
 use Image;
+use Language;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDuplicateProductException;
@@ -207,11 +208,11 @@ class ProductDuplicator
      */
     private function setName(Product $product): void
     {
-        $namePattern = $this->translator->trans('copy of %s', [], 'Admin.Catalog.Feature');
-
-        foreach ($product->name as $langKey => $oldName) {
+        foreach ($product->name as $langId => $oldName) {
+            $langId = (int) $langId;
+            $namePattern = $this->translator->trans('copy of %s', [], 'Admin.Catalog.Feature', Language::getLocaleById($langId));
             $newName = sprintf($namePattern, $oldName);
-            $product->name[$langKey] = $this->stringModifier->cutEnd($newName, ProductSettings::MAX_NAME_LENGTH);
+            $product->name[$langId] = $this->stringModifier->cutEnd($newName, ProductSettings::MAX_NAME_LENGTH);
         }
     }
 
