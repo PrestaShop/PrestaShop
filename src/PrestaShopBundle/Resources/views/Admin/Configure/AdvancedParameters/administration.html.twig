@@ -43,6 +43,7 @@
                   {{ form_widget(generalForm.check_modules_update, {'attr' : {'class': 'custom-select'} }) }}
                 </div>
               </div>
+              {% if isDebug %}
               <div class="form-group row">
                 {{ ps.label_with_help(
                     ('Addons API stability channel'|trans({}, 'Admin.Advparameters.Feature')),
@@ -53,6 +54,7 @@
                   {{ form_widget(generalForm.check_modules_stability_channel) }}
                 </div>
               </div>
+              {% endif %}
               <div class="form-group row">
                 {{ ps.label_with_help(("Check the cookie's IP address"|trans), ('Check the IP address of the cookie in order to prevent your cookie from being stolen.'|trans({}, 'Admin.Advparameters.Help'))) }}
                 <div class="col-sm">

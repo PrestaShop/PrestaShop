@@ -53,6 +53,7 @@ class AdministrationController extends FrameworkBundleAdminController
         $generalForm = $this->getGeneralFormHandler()->getForm();
         $uploadQuotaForm = $this->getUploadQuotaFormHandler()->getForm();
         $notificationsForm = $this->getNotificationsFormHandler()->getForm();
+        $isDebug = $this->get('prestashop.adapter.environment')->isDebug();
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/administration.html.twig', [
             'layoutHeaderToolbarBtn' => [],
@@ -66,6 +67,7 @@ class AdministrationController extends FrameworkBundleAdminController
             'generalForm' => $generalForm->createView(),
             'uploadQuotaForm' => $uploadQuotaForm->createView(),
             'notificationsForm' => $notificationsForm->createView(),
+            'isDebug' => $isDebug,
         ]);
     }
 
