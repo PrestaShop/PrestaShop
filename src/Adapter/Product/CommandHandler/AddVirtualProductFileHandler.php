@@ -78,7 +78,6 @@ final class AddVirtualProductFileHandler implements AddVirtualProductFileHandler
      */
     public function handle(AddVirtualProductFileCommand $command): VirtualProductFileId
     {
-        //@todo: assert product can only have one file.
         $product = $this->productRepository->get($command->getProductId());
         if (!$product->is_virtual) {
             throw new VirtualProductFileConstraintException(
@@ -86,6 +85,14 @@ final class AddVirtualProductFileHandler implements AddVirtualProductFileHandler
                 VirtualProductFileConstraintException::INVALID_PRODUCT_TYPE
             );
         }
+
+        if ($this->productDownloadRepository->findByProductId($command->getProductId())) {
+            throw new VirtualProductFileConstraintException(
+                sprintf('File already exists for product #%d', $product->id),
+                VirtualProductFileConstraintException::ALREADY_EXISTS
+            );
+        }
+
         $uploadedFilePath = $this->virtualProductFileUploader->upload($command->getFilePath());
         $productDownload = $this->buildObjectModel($command, pathinfo($uploadedFilePath, PATHINFO_FILENAME));
 
