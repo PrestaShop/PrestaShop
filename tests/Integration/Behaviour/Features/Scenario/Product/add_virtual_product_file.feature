@@ -82,8 +82,12 @@ Feature: Add virtual product file from BO (Back Office).
       | access days          | 0                                  |
       | download times limit | 0                                  |
       | expiration date      | 0000-00-00 00:00:00                |
-    When I add virtual product file "file5" to "product5" with following details:
     When I add virtual product file "file5-5" to "product5" with following details:
       | file name            | app_icon.png        |
       | display name         | puffin-logo2.png    |
     Then I should get error that product already has a file
+    And product "product5" should have a virtual product file "file5" with following details:
+      | display name         | zipped files pack for fith product |
+      | access days          | 0                                  |
+      | download times limit | 0                                  |
+      | expiration date      | 0000-00-00 00:00:00                |
