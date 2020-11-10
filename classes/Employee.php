@@ -366,7 +366,7 @@ class EmployeeCore extends ObjectModel
 		    SELECT `id_employee`
 		    FROM `' . _DB_PREFIX_ . 'employee`
 		    WHERE `email` = \'' . pSQL($email) . '\'
-        ');
+        ', false);
     }
 
     /**

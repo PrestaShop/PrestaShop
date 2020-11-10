@@ -1602,7 +1602,7 @@ class CategoryCore extends ObjectModel
         $row = Db::getInstance()->getRow('
 		SELECT `id_category`
 		FROM ' . _DB_PREFIX_ . 'category c
-		WHERE c.`id_category` = ' . (int) $idCategory);
+		WHERE c.`id_category` = ' . (int) $idCategory, false);
 
         return isset($row['id_category']);
     }
@@ -2439,6 +2439,6 @@ class CategoryCore extends ObjectModel
 		SELECT `id_category`
 		FROM `' . _DB_PREFIX_ . 'category_shop`
 		WHERE `id_category` = ' . (int) $this->id . '
-		AND `id_shop` = ' . (int) $idShop);
+		AND `id_shop` = ' . (int) $idShop, false);
     }
 }

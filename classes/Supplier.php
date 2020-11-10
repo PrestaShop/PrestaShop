@@ -462,7 +462,7 @@ class SupplierCore extends ObjectModel
         $query->select('id_supplier');
         $query->from('supplier');
         $query->where('id_supplier = ' . (int) $idSupplier);
-        $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+        $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query, false);
 
         return $res > 0;
     }
