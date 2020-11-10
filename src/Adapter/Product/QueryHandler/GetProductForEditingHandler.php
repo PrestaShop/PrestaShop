@@ -286,6 +286,9 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
     }
 
     /**
+     * Get virtual product file
+     * legacy ProductDownload is referred as VirtualProductFile in Core
+     *
      * @param Product $product
      *
      * @return VirtualProductFileForEditing|null

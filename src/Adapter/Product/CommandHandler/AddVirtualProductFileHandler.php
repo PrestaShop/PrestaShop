@@ -37,6 +37,8 @@ use ProductDownload;
 
 /**
  * Handles @see AddVirtualProductFileCommand using legacy object model
+ *
+ * VirtualProductFile is an alias to ProductDownload
  */
 final class AddVirtualProductFileHandler implements AddVirtualProductFileHandlerInterface
 {

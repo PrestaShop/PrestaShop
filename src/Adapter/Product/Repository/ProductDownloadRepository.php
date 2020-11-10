@@ -40,8 +40,7 @@ use ProductDownload;
 
 /**
  * Provides access to ProductDownload data source
- *
- * @todo: rename to VirtualProductFileRepository or leave legacy name?
+ * ProductDownload is referred as VirtualProductFile in Core
  */
 class ProductDownloadRepository extends AbstractObjectModelRepository
 {

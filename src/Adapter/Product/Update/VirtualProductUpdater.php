@@ -77,6 +77,9 @@ class VirtualProductUpdater
     }
 
     /**
+     * Add virtual product file to a product
+     * Legacy ProductDownload is referred as VirtualProductFile in Core
+     *
      * @param ProductId $productId
      * @param string $filePath
      * @param ProductDownload $productDownload
